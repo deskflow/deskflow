@@ -30,9 +30,9 @@
 ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ActionDialog>()},
-      m_Hotkey(hotkey),
-      m_Action(action),
-      m_pButtonGroupType(new QButtonGroup(this))
+      m_hotkey(hotkey),
+      m_action(action),
+      m_buttonGroupType(new QButtonGroup(this))
 {
   ui->setupUi(this);
 
@@ -49,55 +49,55 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   };
 
   for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
-    m_pButtonGroupType->addButton(typeButtons[i], i);
+    m_buttonGroupType->addButton(typeButtons[i], i);
 
-  ui->m_pKeySequenceWidgetHotkey->setText(m_Action.keySequence().toString());
-  ui->m_pKeySequenceWidgetHotkey->setKeySequence(m_Action.keySequence());
-  m_pButtonGroupType->button(m_Action.type())->setChecked(true);
-  ui->m_pComboSwitchInDirection->setCurrentIndex(m_Action.switchDirection());
-  ui->m_pComboLockCursorToScreen->setCurrentIndex(m_Action.lockCursorMode());
+  ui->m_pKeySequenceWidgetHotkey->setText(m_action.keySequence().toString());
+  ui->m_pKeySequenceWidgetHotkey->setKeySequence(m_action.keySequence());
+  m_buttonGroupType->button(m_action.type())->setChecked(true);
+  ui->m_pComboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
+  ui->m_pComboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
 
-  if (m_Action.activeOnRelease())
+  if (m_action.activeOnRelease())
     ui->m_pRadioHotkeyReleased->setChecked(true);
   else
     ui->m_pRadioHotkeyPressed->setChecked(true);
 
-  ui->m_pGroupBoxScreens->setChecked(m_Action.haveScreens());
+  ui->m_pGroupBoxScreens->setChecked(m_action.haveScreens());
 
   for (const Screen &screen : config.screens()) {
     if (screen.isNull())
       continue;
     QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
     ui->m_pListScreens->addItem(pListItem);
-    if (m_Action.typeScreenNames().indexOf(screen.name()) != -1)
+    if (m_action.typeScreenNames().indexOf(screen.name()) != -1)
       ui->m_pListScreens->setCurrentItem(pListItem);
 
     ui->m_pComboSwitchToScreen->addItem(screen.name());
-    if (screen.name() == m_Action.switchScreenName())
+    if (screen.name() == m_action.switchScreenName())
       ui->m_pComboSwitchToScreen->setCurrentIndex(ui->m_pComboSwitchToScreen->count() - 1);
   }
 }
 
 void ActionDialog::accept()
 {
-  if (!sequenceWidget()->valid() && m_pButtonGroupType->checkedId() >= 0 && m_pButtonGroupType->checkedId() < 3)
+  if (!sequenceWidget()->valid() && m_buttonGroupType->checkedId() >= 0 && m_buttonGroupType->checkedId() < 3)
     return;
 
-  m_Action.setKeySequence(sequenceWidget()->keySequence());
-  m_Action.setType(m_pButtonGroupType->checkedId());
-  m_Action.setHaveScreens(ui->m_pGroupBoxScreens->isChecked());
+  m_action.setKeySequence(sequenceWidget()->keySequence());
+  m_action.setType(m_buttonGroupType->checkedId());
+  m_action.setHaveScreens(ui->m_pGroupBoxScreens->isChecked());
 
-  m_Action.typeScreenNames().clear();
+  m_action.typeScreenNames().clear();
 
   const auto &selection = ui->m_pListScreens->selectedItems();
   for (const QListWidgetItem *pItem : selection)
-    m_Action.typeScreenNames().append(pItem->text());
+    m_action.typeScreenNames().append(pItem->text());
 
-  m_Action.setSwitchScreenName(ui->m_pComboSwitchToScreen->currentText());
-  m_Action.setSwitchDirection(ui->m_pComboSwitchInDirection->currentIndex());
-  m_Action.setLockCursorMode(ui->m_pComboLockCursorToScreen->currentIndex());
-  m_Action.setActiveOnRelease(ui->m_pRadioHotkeyReleased->isChecked());
-  m_Action.setRestartServer(ui->m_pRadioRestartAllConnections->isChecked());
+  m_action.setSwitchScreenName(ui->m_pComboSwitchToScreen->currentText());
+  m_action.setSwitchDirection(ui->m_pComboSwitchInDirection->currentIndex());
+  m_action.setLockCursorMode(ui->m_pComboLockCursorToScreen->currentIndex());
+  m_action.setActiveOnRelease(ui->m_pRadioHotkeyReleased->isChecked());
+  m_action.setRestartServer(ui->m_pRadioRestartAllConnections->isChecked());
 
   QDialog::accept();
 }
