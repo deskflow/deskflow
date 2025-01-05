@@ -6,18 +6,33 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>521</width>
-    <height>428</height>
+    <width>0</width>
+    <height>0</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Configure Action</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>6</number>
+   </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QComboBox" name="comboTriggerOn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>When the hotkey is pressed</string>
@@ -32,6 +47,12 @@
      </item>
      <item>
       <widget class="QComboBox" name="comboActionType">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <item>
         <property name="text">
          <string>Press key(s)</string>
@@ -44,7 +65,7 @@
        </item>
        <item>
         <property name="text">
-         <string>Toggle key(s)</string>
+         <string>Press and release key(s)</string>
         </property>
        </item>
        <item>
@@ -72,183 +93,114 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="m_pGroupType">
-     <property name="title">
-      <string/>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QComboBox" name="comboSwitchToScreen">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboSwitchInDirection">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Move to the screen on the left</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Move to the screen on the right</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Move to the screen above</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Move to the screen below</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="comboLockCursorToScreen">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <item>
+        <property name="text">
+         <string>Toggle the cursor lock</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Enable the cursor lock</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Disable the cursor lock</string>
+        </property>
+       </item>
+      </widget>
+     </item>
+     <item>
+      <widget class="KeySequenceWidget" name="keySequenceWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="groupScreens">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <layout class="QVBoxLayout">
+     <property name="title">
+      <string>Computers to recieve this event</string>
+     </property>
+     <layout class="QHBoxLayout">
       <item>
-       <widget class="KeySequenceWidget" name="keySequenceWidget">
+       <widget class="QListWidget" name="listScreens">
         <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-          <horstretch>1</horstretch>
+         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
           <verstretch>0</verstretch>
          </sizepolicy>
         </property>
-        <property name="minimumSize">
-         <size>
-          <width>256</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="text">
-         <string/>
+        <property name="sizeAdjustPolicy">
+         <enum>QAbstractScrollArea::AdjustToContents</enum>
         </property>
        </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="group_screens">
-        <property name="title">
-         <string>Computers to recieve this event</string>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QListWidget" name="listScreens">
-           <property name="sizeAdjustPolicy">
-            <enum>QAbstractScrollArea::AdjustToContents</enum>
-           </property>
-           <property name="selectionMode">
-            <enum>QAbstractItemView::NoSelection</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="Line" name="line">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Switch to</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QComboBox" name="m_pComboSwitchToScreen">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Direction to move</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QComboBox" name="m_pComboSwitchInDirection">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <item>
-           <property name="text">
-            <string>left</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>right</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>up</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>down</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout">
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Cursor lock will</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QComboBox" name="m_pComboLockCursorToScreen">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <item>
-           <property name="text">
-            <string>toggle</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>on</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>off</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
       </item>
      </layout>
     </widget>
