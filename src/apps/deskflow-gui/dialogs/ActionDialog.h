@@ -56,6 +56,7 @@ private:
   void keySequenceChanged();
   void actionTypeChanged(int index);
   bool isKeyAction(int index);
+  bool canSave();
 
   std::unique_ptr<Ui::ActionDialog> ui;
   Hotkey &m_hotkey;
