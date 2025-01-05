@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>375</width>
-    <height>528</height>
+    <width>521</width>
+    <height>428</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,40 +97,18 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="m_pGroupBoxScreens">
+       <widget class="QGroupBox" name="group_screens">
         <property name="title">
-         <string>only on these screens</string>
+         <string>Computers to recieve this event</string>
         </property>
-        <property name="flat">
-         <bool>true</bool>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-        <layout class="QHBoxLayout">
+        <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <spacer>
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QListWidget" name="m_pListScreens">
-           <property name="minimumSize">
-            <size>
-             <width>128</width>
-             <height>64</height>
-            </size>
+          <widget class="QListWidget" name="listScreens">
+           <property name="sizeAdjustPolicy">
+            <enum>QAbstractScrollArea::AdjustToContents</enum>
            </property>
            <property name="selectionMode">
-            <enum>QAbstractItemView::ExtendedSelection</enum>
+            <enum>QAbstractItemView::NoSelection</enum>
            </property>
           </widget>
          </item>
