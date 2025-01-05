@@ -38,6 +38,9 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   connect(
       ui->comboActionType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ActionDialog::actionTypeChanged
   );
+  connect(ui->listScreens, &QListWidget::itemChanged, this, [&] {
+    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
+  });
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
@@ -78,8 +81,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
 void ActionDialog::accept()
 {
-  if (!ui->keySequenceWidget->valid() && ui->comboActionType->currentIndex() >= 0 &&
-      ui->comboActionType->currentIndex() < 3)
+  if (!canSave())
     return;
 
   m_action.setKeySequence(ui->keySequenceWidget->keySequence());
@@ -115,10 +117,12 @@ void ActionDialog::accept()
 void ActionDialog::keySequenceChanged()
 {
   ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
 }
 
 void ActionDialog::actionTypeChanged(int index)
 {
+  ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
   ui->keySequenceWidget->setVisible(isKeyAction(index));
   ui->groupScreens->setVisible(isKeyAction(index));
   ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
@@ -131,6 +135,20 @@ void ActionDialog::actionTypeChanged(int index)
 bool ActionDialog::isKeyAction(int index)
 {
   return ((index == ActionTypes::PressKey) || (index == ActionTypes::ReleaseKey) || (index == ActionTypes::ToggleKey));
+}
+
+bool ActionDialog::canSave()
+{
+  if (isKeyAction(ui->comboActionType->currentIndex())) {
+    const QList<QListWidgetItem *> items = ui->listScreens->findItems("*", Qt::MatchWildcard);
+    int totalChecked = 0;
+    for (const auto &item : items) {
+      if (item->checkState() == Qt::Checked)
+        totalChecked++;
+    };
+    return (!ui->keySequenceWidget->keySequence().toString().isEmpty() && (totalChecked > 0));
+  }
+  return true;
 }
 
 ActionDialog::~ActionDialog() = default;
