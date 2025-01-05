@@ -37,8 +37,8 @@ KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
 
 void KeySequenceWidget::setKeySequence(const KeySequence &seq)
 {
-  keySequence() = seq;
-  backupSequence() = seq;
+  m_KeySequence = seq;
+  m_BackupSequence = seq;
 
   setStatus(Stopped);
   updateOutput();
@@ -61,7 +61,7 @@ void KeySequenceWidget::mousePressEvent(QMouseEvent *event)
 
 void KeySequenceWidget::startRecording()
 {
-  keySequence() = KeySequence();
+  m_KeySequence = KeySequence();
   setDown(true);
   setFocus();
   grabKeyboard();
@@ -71,7 +71,7 @@ void KeySequenceWidget::startRecording()
 void KeySequenceWidget::stopRecording()
 {
   if (!keySequence().valid()) {
-    keySequence() = backupSequence();
+    m_KeySequence = backupSequence();
     updateOutput();
   }
 
@@ -101,7 +101,7 @@ bool KeySequenceWidget::event(QEvent *event)
     case QEvent::FocusOut:
       stopRecording();
       if (!valid()) {
-        keySequence() = backupSequence();
+        m_KeySequence = backupSequence();
         updateOutput();
       }
       break;

@@ -89,14 +89,6 @@ protected:
   void updateOutput();
   void startRecording();
   void stopRecording();
-  KeySequence &keySequence()
-  {
-    return m_KeySequence;
-  }
-  KeySequence &backupSequence()
-  {
-    return m_BackupSequence;
-  }
 
 private:
   enum Status
