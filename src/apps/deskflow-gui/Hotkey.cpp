@@ -69,15 +69,15 @@ QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
   if (hotkey.actions().size() == 0)
     return outStream;
 
-  outStream << "\t" << hotkey.text() << " = ";
+  QString outText = QStringLiteral("\t%1 = ").arg(hotkey.text());
   for (int i = 0; i < hotkey.actions().size(); i++) {
-    outStream << hotkey.actions()[i];
+    outText.append(hotkey.actions().at(i).text());
     if (i != hotkey.actions().size() - 1) {
-      outStream << ", ";
+      outText.append(QStringLiteral(", "));
     }
   }
+  outText.append(QStringLiteral("\n"));
 
-  outStream << "\n";
-
+  outStream << outText;
   return outStream;
 }
