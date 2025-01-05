@@ -21,17 +21,9 @@
 #include <QSettings>
 #include <QTextStream>
 
-const char *Action::m_actionTypeNames[] = {
-    "keyDown",       "keyUp",     "keystroke", "switchToScreen", "switchInDirection", "lockCursorToScreen",
-    "restartServer", "mouseDown", "mouseUp",   "mousebutton"
-};
-
-const char *Action::m_switchDirectionNames[] = {"left", "right", "up", "down"};
-const char *Action::m_lockCursorModeNames[] = {"toggle", "on", "off"};
-
 QString Action::text() const
 {
-  QString text = QString(m_actionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]);
+  QString text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
 
   switch (type()) {
   case keyDown:
@@ -60,11 +52,11 @@ QString Action::text() const
     break;
 
   case switchInDirection:
-    text.append(m_commandTemplate.arg(m_switchDirectionNames[m_switchDirection]));
+    text.append(m_commandTemplate.arg(m_switchDirectionNames.at(m_switchDirection)));
     break;
 
   case lockCursorToScreen:
-    text.append(m_commandTemplate.arg(m_lockCursorModeNames[m_lockCursorMode]));
+    text.append(m_commandTemplate.arg(m_lockCursorModeNames.at(m_lockCursorMode)));
     break;
 
   default:
