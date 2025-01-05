@@ -23,7 +23,6 @@
 
 class Hotkey;
 class Action;
-class QButtonGroup;
 class ServerConfig;
 class KeySequenceWidget;
 
@@ -36,6 +35,17 @@ class ActionDialog : public QDialog
   Q_OBJECT
 
 public:
+  enum ActionTypes
+  {
+    PressKey,
+    ReleaseKey,
+    ToggleKey,
+    SwitchTo,
+    SwitchInDirection,
+    ModifyCursorLock,
+    RestartServer
+  };
+
   ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action);
   ~ActionDialog() override;
 
@@ -44,10 +54,10 @@ protected slots:
 
 private:
   void keySequenceChanged();
+  void actionTypeChanged(int index);
+  bool isKeyAction(int index);
 
   std::unique_ptr<Ui::ActionDialog> ui;
   Hotkey &m_hotkey;
   Action &m_action;
-
-  QButtonGroup *m_buttonGroupType;
 };

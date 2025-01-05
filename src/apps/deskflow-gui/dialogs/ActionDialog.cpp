@@ -25,42 +25,28 @@
 #include "KeySequence.h"
 #include "ServerConfig.h"
 
-#include <QButtonGroup>
-
 ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ActionDialog>()},
       m_hotkey(hotkey),
-      m_action(action),
-      m_buttonGroupType(new QButtonGroup(this))
+      m_action(action)
 {
   ui->setupUi(this);
   connect(ui->keySequenceWidget, &KeySequenceWidget::keySequenceChanged, this, &ActionDialog::keySequenceChanged);
+  connect(
+      ui->comboActionType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ActionDialog::actionTypeChanged
+  );
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
-  // work around Qt Designer's lack of a QButtonGroup; we need it to get
-  // at the button id of the checked radio button
-  QRadioButton *const typeButtons[] = {
-      ui->m_pRadioPress,
-      ui->m_pRadioRelease,
-      ui->m_pRadioPressAndRelease,
-      ui->m_pRadioSwitchToScreen,
-      ui->m_pRadioSwitchInDirection,
-      ui->m_pRadioLockCursorToScreen,
-      ui->m_pRadioRestartAllConnections
-  };
-
-  for (unsigned int i = 0; i < sizeof(typeButtons) / sizeof(typeButtons[0]); i++)
-    m_buttonGroupType->addButton(typeButtons[i], i);
-
   ui->keySequenceWidget->setText(m_action.keySequence().toString());
   ui->keySequenceWidget->setKeySequence(m_action.keySequence());
-  m_buttonGroupType->button(m_action.type())->setChecked(true);
+
   ui->m_pComboSwitchInDirection->setCurrentIndex(m_action.switchDirection());
   ui->m_pComboLockCursorToScreen->setCurrentIndex(m_action.lockCursorMode());
 
-  ui->comboTriggerOn->setCurrentIndex(m_action.haveScreens());
+  ui->comboActionType->setCurrentIndex(m_action.type());
+  ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
 
   ui->m_pGroupBoxScreens->setChecked(m_action.haveScreens());
 
@@ -80,11 +66,12 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
 void ActionDialog::accept()
 {
-  if (!ui->keySequenceWidget->valid() && m_buttonGroupType->checkedId() >= 0 && m_buttonGroupType->checkedId() < 3)
+  if (!ui->keySequenceWidget->valid() && ui->comboActionType->currentIndex() >= 0 &&
+      ui->comboActionType->currentIndex() < 3)
     return;
 
   m_action.setKeySequence(ui->keySequenceWidget->keySequence());
-  m_action.setType(m_buttonGroupType->checkedId());
+  m_action.setType(ui->comboActionType->currentIndex());
   m_action.setHaveScreens(ui->m_pGroupBoxScreens->isChecked());
 
   m_action.typeScreenNames().clear();
@@ -97,7 +84,7 @@ void ActionDialog::accept()
   m_action.setSwitchDirection(ui->m_pComboSwitchInDirection->currentIndex());
   m_action.setLockCursorMode(ui->m_pComboLockCursorToScreen->currentIndex());
   m_action.setActiveOnRelease(ui->comboTriggerOn->currentIndex());
-  m_action.setRestartServer(ui->m_pRadioRestartAllConnections->isChecked());
+  m_action.setRestartServer(ui->comboActionType->currentIndex() == ActionTypes::RestartServer);
 
   QDialog::accept();
 }
@@ -106,6 +93,20 @@ void ActionDialog::keySequenceChanged()
 {
   ui->m_pGroupBoxScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
   ui->m_pListScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+}
+
+void ActionDialog::actionTypeChanged(int index)
+{
+  ui->keySequenceWidget->setEnabled(isKeyAction(index));
+  ui->m_pListScreens->setEnabled(isKeyAction(index) && ui->m_pGroupBoxScreens->isChecked());
+  ui->m_pComboSwitchToScreen->setEnabled(index == ActionTypes::SwitchTo);
+  ui->m_pComboSwitchInDirection->setEnabled(index == ActionTypes::SwitchInDirection);
+  ui->m_pComboLockCursorToScreen->setEnabled(index == ActionTypes::ModifyCursorLock);
+}
+
+bool ActionDialog::isKeyAction(int index)
+{
+  return ((index == ActionTypes::PressKey) || (index == ActionTypes::ReleaseKey) || (index == ActionTypes::ToggleKey));
 }
 
 ActionDialog::~ActionDialog() = default;
