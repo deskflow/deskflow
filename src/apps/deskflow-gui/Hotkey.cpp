@@ -20,19 +20,19 @@
 
 #include <QSettings>
 
-Hotkey::Hotkey() : m_KeySequence(), m_Actions()
+Hotkey::Hotkey() : m_keySequence{}, m_Actions()
 {
 }
 
 QString Hotkey::text() const
 {
-  return keySequence().isMouseButton() ? kMousebutton.arg(keySequence().toString())
-                                       : kKeystroke.arg(keySequence().toString());
+  return m_keySequence.isMouseButton() ? kMousebutton.arg(m_keySequence.toString())
+                                       : kKeystroke.arg(m_keySequence.toString());
 }
 
 void Hotkey::loadSettings(QSettings &settings)
 {
-  keySequence().loadSettings(settings);
+  m_keySequence.loadSettings(settings);
 
   actions().clear();
   int num = settings.beginReadArray(kSectionActions);
@@ -48,7 +48,7 @@ void Hotkey::loadSettings(QSettings &settings)
 
 void Hotkey::saveSettings(QSettings &settings) const
 {
-  keySequence().saveSettings(settings);
+  m_keySequence.saveSettings(settings);
 
   settings.beginWriteArray(kSectionActions);
   for (int i = 0; i < actions().size(); i++) {
@@ -60,7 +60,7 @@ void Hotkey::saveSettings(QSettings &settings) const
 
 bool Hotkey::operator==(const Hotkey &hk) const
 {
-  return m_KeySequence == hk.m_KeySequence && m_Actions == hk.m_Actions;
+  return m_keySequence == hk.keySequence() && m_Actions == hk.m_Actions;
 }
 
 QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
