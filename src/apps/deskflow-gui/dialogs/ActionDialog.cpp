@@ -36,6 +36,8 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 {
   ui->setupUi(this);
   connect(ui->keySequenceWidget, &KeySequenceWidget::keySequenceChanged, this, &ActionDialog::keySequenceChanged);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
   // work around Qt Designer's lack of a QButtonGroup; we need it to get
   // at the button id of the checked radio button
