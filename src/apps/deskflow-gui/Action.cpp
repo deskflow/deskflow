@@ -31,50 +31,46 @@ const char *Action::m_lockCursorModeNames[] = {"toggle", "on", "off"};
 
 QString Action::text() const
 {
-  QString text = QString(m_actionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]) + "(";
+  QString text = QString(m_actionTypeNames[keySequence().isMouseButton() ? type() + 6 : type()]);
 
   switch (type()) {
   case keyDown:
   case keyUp:
   case keystroke: {
-    text += keySequence().toString();
+    QString commandArgs = keySequence().toString();
 
     if (!keySequence().isMouseButton()) {
       const QStringList &screens = typeScreenNames();
       if (haveScreens() && !screens.isEmpty()) {
-        text += ",";
-
+        QString screenList;
         for (int i = 0; i < screens.size(); i++) {
-          text += screens[i];
+          screenList.append(screens[i]);
           if (i != screens.size() - 1)
-            text += ":";
+            screenList.append(QStringLiteral(":"));
         }
+        commandArgs.append(QStringLiteral(",%1").arg(screenList));
       } else
-        text += ",*";
+        commandArgs.append(QStringLiteral(",*"));
     }
+    text.append(m_commandTemplate.arg(commandArgs));
   } break;
 
   case switchToScreen:
-    text += switchScreenName();
+    text.append(m_commandTemplate.arg(m_switchScreenName));
     break;
 
   case switchInDirection:
-    text += m_switchDirectionNames[m_switchDirection];
+    text.append(m_commandTemplate.arg(m_switchDirectionNames[m_switchDirection]));
     break;
 
   case lockCursorToScreen:
-    text += m_lockCursorModeNames[m_lockCursorMode];
+    text.append(m_commandTemplate.arg(m_lockCursorModeNames[m_lockCursorMode]));
     break;
 
-  case restartAllConnections:
-    text += "restart";
-    break;
   default:
     Q_ASSERT(0);
     break;
   }
-
-  text += ")";
 
   return text;
 }
