@@ -68,7 +68,6 @@ QString Action::text() const
     break;
 
   default:
-    Q_ASSERT(0);
     break;
   }
 
