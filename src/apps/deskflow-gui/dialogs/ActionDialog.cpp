@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -26,10 +27,9 @@
 
 #include <QButtonGroup>
 
-ActionDialog::ActionDialog(QWidget *parent, ServerConfig &config, Hotkey &hotkey, Action &action)
+ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ActionDialog>()},
-      m_ServerConfig(config),
       m_Hotkey(hotkey),
       m_Action(action),
       m_pButtonGroupType(new QButtonGroup(this))
@@ -65,7 +65,7 @@ ActionDialog::ActionDialog(QWidget *parent, ServerConfig &config, Hotkey &hotkey
   ui->m_pGroupBoxScreens->setChecked(m_Action.haveScreens());
 
   int idx = 0;
-  for (const Screen &screen : serverConfig().screens()) {
+  for (const Screen &screen : config.screens()) {
     if (!screen.isNull()) {
       QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
       ui->m_pListScreens->addItem(pListItem);
