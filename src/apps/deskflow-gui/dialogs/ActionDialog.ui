@@ -13,7 +13,21 @@
   <property name="windowTitle">
    <string>Configure Action</string>
   </property>
-  <layout class="QVBoxLayout">
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QComboBox" name="comboTriggerOn">
+     <item>
+      <property name="text">
+       <string>When the hotkey is pressed</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>When the hotkey is released</string>
+      </property>
+     </item>
+    </widget>
+   </item>
    <item>
     <widget class="QGroupBox" name="m_pGroupType">
      <property name="font">
@@ -259,37 +273,6 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="font">
-      <font>
-       <kerning>false</kerning>
-      </font>
-     </property>
-     <property name="title">
-      <string>This action is performed when</string>
-     </property>
-     <layout class="QHBoxLayout">
-      <item>
-       <widget class="QRadioButton" name="m_pRadioHotkeyPressed">
-        <property name="text">
-         <string>the hotkey is pressed</string>
-        </property>
-        <property name="checked">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QRadioButton" name="m_pRadioHotkeyReleased">
-        <property name="text">
-         <string>the hotkey is released</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -310,118 +293,6 @@
  </customwidgets>
  <resources/>
  <connections>
-  <connection>
-   <sender>m_pGroupType</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>104</x>
-     <y>194</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>110</x>
-     <y>132</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioSwitchInDirection</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>118</x>
-     <y>322</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>81</x>
-     <y>129</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioLockCursorToScreen</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>101</x>
-     <y>353</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>68</x>
-     <y>126</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioRestartAllConnections</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>101</x>
-     <y>353</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>68</x>
-     <y>126</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioPress</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>48</x>
-     <y>48</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>45</x>
-     <y>129</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioRelease</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>135</x>
-     <y>70</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>148</x>
-     <y>125</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioPressAndRelease</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>194</x>
-     <y>100</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>201</x>
-     <y>125</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>m_pRadioSwitchToScreen</sender>
    <signal>toggled(bool)</signal>
@@ -579,22 +450,6 @@
     <hint type="destinationlabel">
      <x>79</x>
      <y>234</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pRadioSwitchToScreen</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>keySequenceWidget</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>84</x>
-     <y>280</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>185</x>
-     <y>123</y>
     </hint>
    </hints>
   </connection>
