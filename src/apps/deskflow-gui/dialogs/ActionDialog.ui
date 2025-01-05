@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>0</width>
-    <height>0</height>
+    <width>706</width>
+    <height>256</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,20 +19,11 @@
   <property name="windowTitle">
    <string>Configure Action</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>6</number>
-   </property>
+  <layout class="QVBoxLayout" name="_2">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
      <item>
       <widget class="QComboBox" name="comboTriggerOn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>When the hotkey is pressed</string>
@@ -47,12 +38,6 @@
      </item>
      <item>
       <widget class="QComboBox" name="comboActionType">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>Press key(s)</string>
@@ -106,12 +91,6 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>Move to the screen on the left</string>
@@ -139,12 +118,6 @@
        <property name="enabled">
         <bool>true</bool>
        </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <item>
         <property name="text">
          <string>Toggle the cursor lock</string>
@@ -163,17 +136,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KeySequenceWidget" name="keySequenceWidget">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
+      <widget class="KeySequenceWidget" name="keySequenceWidget"/>
      </item>
     </layout>
    </item>
@@ -188,17 +151,11 @@
      <property name="title">
       <string>Computers to recieve this event</string>
      </property>
-     <layout class="QHBoxLayout">
+     <layout class="QHBoxLayout" name="_3">
       <item>
        <widget class="QListWidget" name="listScreens">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="sizeAdjustPolicy">
-         <enum>QAbstractScrollArea::AdjustToContents</enum>
+         <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContentsOnFirstShow</enum>
         </property>
        </widget>
       </item>
@@ -207,11 +164,8 @@
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Ok</set>
      </property>
     </widget>
    </item>
