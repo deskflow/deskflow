@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * Copyright (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * Copyright (C) 2012-2016 Symless Ltd.
  * Copyright (C) 2008 Volker Lanz (vl@fidra.de)
  *
@@ -45,7 +46,7 @@ public:
   }
   const ActionList &actions() const
   {
-    return m_Actions;
+    return m_actions;
   }
 
   void loadSettings(QSettings &settings);
@@ -64,12 +65,12 @@ protected:
   }
   ActionList &actions()
   {
-    return m_Actions;
+    return m_actions;
   }
 
 private:
   KeySequence m_keySequence;
-  ActionList m_Actions;
+  ActionList m_actions;
   inline static const QString kSectionActions = QStringLiteral("actions");
   inline static const QString kMousebutton = QStringLiteral("mousebutton(%1)");
   inline static const QString kKeystroke = QStringLiteral("keystroke(%1)");
