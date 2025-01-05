@@ -48,8 +48,8 @@ protected:
 
 private:
   std::unique_ptr<Ui::ActionDialog> ui;
-  Hotkey &m_Hotkey;
-  Action &m_Action;
+  Hotkey &m_hotkey;
+  Action &m_action;
 
-  QButtonGroup *m_pButtonGroupType;
+  QButtonGroup *m_buttonGroupType;
 };
