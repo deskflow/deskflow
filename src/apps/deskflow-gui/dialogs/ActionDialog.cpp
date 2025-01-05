@@ -48,15 +48,16 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   ui->comboActionType->setCurrentIndex(m_action.type());
   ui->comboTriggerOn->setCurrentIndex(m_action.activeOnRelease());
 
-  ui->m_pGroupBoxScreens->setChecked(m_action.haveScreens());
-
   for (const Screen &screen : config.screens()) {
     if (screen.isNull())
       continue;
-    QListWidgetItem *pListItem = new QListWidgetItem(screen.name());
-    ui->m_pListScreens->addItem(pListItem);
-    if (m_action.typeScreenNames().indexOf(screen.name()) != -1)
-      ui->m_pListScreens->setCurrentItem(pListItem);
+    auto *newListItem = new QListWidgetItem(screen.name());
+    newListItem->setCheckState(Qt::Checked);
+    if ((m_action.typeScreenNames().indexOf(screen.name()) == -1) &&
+        (m_action.haveScreens() && !m_action.typeScreenNames().isEmpty()))
+      newListItem->setCheckState(Qt::Unchecked);
+
+    ui->listScreens->addItem(newListItem);
 
     ui->m_pComboSwitchToScreen->addItem(screen.name());
     if (screen.name() == m_action.switchScreenName())
@@ -72,13 +73,24 @@ void ActionDialog::accept()
 
   m_action.setKeySequence(ui->keySequenceWidget->keySequence());
   m_action.setType(ui->comboActionType->currentIndex());
-  m_action.setHaveScreens(ui->m_pGroupBoxScreens->isChecked());
 
   m_action.typeScreenNames().clear();
 
-  const auto &selection = ui->m_pListScreens->selectedItems();
-  for (const QListWidgetItem *pItem : selection)
-    m_action.typeScreenNames().append(pItem->text());
+  int screenCount = ui->listScreens->count();
+
+  for (int i = 0; i < ui->listScreens->count(); i++) {
+    const auto &item = ui->listScreens->item(i);
+    m_action.typeScreenNames().append(item->text());
+    if (item->checkState() == Qt::Unchecked) {
+      screenCount--;
+      m_action.typeScreenNames().removeLast();
+    }
+  }
+
+  if (screenCount == ui->listScreens->count())
+    m_action.typeScreenNames().clear();
+
+  m_action.setHaveScreens(screenCount);
 
   m_action.setSwitchScreenName(ui->m_pComboSwitchToScreen->currentText());
   m_action.setSwitchDirection(ui->m_pComboSwitchInDirection->currentIndex());
@@ -91,14 +103,13 @@ void ActionDialog::accept()
 
 void ActionDialog::keySequenceChanged()
 {
-  ui->m_pGroupBoxScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
-  ui->m_pListScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->listScreens->setEnabled(ui->keySequenceWidget->valid() && !ui->keySequenceWidget->keySequence().isMouseButton());
 }
 
 void ActionDialog::actionTypeChanged(int index)
 {
   ui->keySequenceWidget->setEnabled(isKeyAction(index));
-  ui->m_pListScreens->setEnabled(isKeyAction(index) && ui->m_pGroupBoxScreens->isChecked());
+  ui->listScreens->setEnabled(isKeyAction(index));
   ui->m_pComboSwitchToScreen->setEnabled(index == ActionTypes::SwitchTo);
   ui->m_pComboSwitchInDirection->setEnabled(index == ActionTypes::SwitchInDirection);
   ui->m_pComboLockCursorToScreen->setEnabled(index == ActionTypes::ModifyCursorLock);
