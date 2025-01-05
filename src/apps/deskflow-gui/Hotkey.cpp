@@ -26,12 +26,8 @@ Hotkey::Hotkey() : m_KeySequence(), m_Actions()
 
 QString Hotkey::text() const
 {
-  QString text = keySequence().toString();
-
-  if (keySequence().isMouseButton())
-    return "mousebutton(" + text + ")";
-
-  return "keystroke(" + text + ")";
+  return keySequence().isMouseButton() ? kMousebutton.arg(keySequence().toString())
+                                       : kKeystroke.arg(keySequence().toString());
 }
 
 void Hotkey::loadSettings(QSettings &settings)
@@ -39,7 +35,7 @@ void Hotkey::loadSettings(QSettings &settings)
   keySequence().loadSettings(settings);
 
   actions().clear();
-  int num = settings.beginReadArray("actions");
+  int num = settings.beginReadArray(kSectionActions);
   for (int i = 0; i < num; i++) {
     settings.setArrayIndex(i);
     Action a;
@@ -54,7 +50,7 @@ void Hotkey::saveSettings(QSettings &settings) const
 {
   keySequence().saveSettings(settings);
 
-  settings.beginWriteArray("actions");
+  settings.beginWriteArray(kSectionActions);
   for (int i = 0; i < actions().size(); i++) {
     settings.setArrayIndex(i);
     actions()[i].saveSettings(settings);

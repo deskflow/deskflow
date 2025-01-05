@@ -70,6 +70,9 @@ protected:
 private:
   KeySequence m_KeySequence;
   ActionList m_Actions;
+  inline static const QString kSectionActions = QStringLiteral("actions");
+  inline static const QString kMousebutton = QStringLiteral("mousebutton(%1)");
+  inline static const QString kKeystroke = QStringLiteral("keystroke(%1)");
 };
 
 using HotkeyList = QList<Hotkey>;
