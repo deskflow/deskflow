@@ -73,13 +73,13 @@ void updateSetting(const IpcMessage &message)
   }
 }
 
-bool isServerCommandLine(const std::vector<String> &cmd)
+bool isServerCommandLine(const std::vector<std::string> &cmd)
 {
   auto isServer = false;
 
   if (cmd.size() > 1) {
-    isServer = (cmd[0].find("deskflow-server") != String::npos) ||
-               (cmd[0].find("deskflow-core") != String::npos && cmd[1] == "server");
+    isServer = (cmd[0].find("deskflow-server") != std::string::npos) ||
+               (cmd[0].find("deskflow-core") != std::string::npos && cmd[1] == "server");
   }
 
   return isServer;
@@ -188,8 +188,8 @@ int DaemonApp::run(int argc, char **argv)
 
     return kExitSuccess;
   } catch (XArch &e) {
-    String message = e.what();
-    if (uninstall && (message.find("The service has not been started") != String::npos)) {
+    std::string message = e.what();
+    if (uninstall && (message.find("The service has not been started") != std::string::npos)) {
       // TODO: if we're keeping this use error code instead (what is it?!).
       // HACK: this message happens intermittently, not sure where from but
       // it's quite misleading for the user. they thing something has gone
@@ -246,7 +246,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     // install the platform event queue to handle service stop events.
     m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events.get()));
 
-    String command = ARCH->setting("Command");
+    std::string command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";
     if (command != "") {
       LOG((CLOG_INFO "using last known command: %s", command.c_str()));
@@ -301,7 +301,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
   switch (m->type()) {
   case IpcMessageType::Command: {
     IpcCommandMessage *cm = static_cast<IpcCommandMessage *>(m);
-    String command = cm->command();
+    std::string command = cm->command();
 
     // if empty quotes, clear.
     if (command == "\"\"") {
@@ -312,7 +312,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
       LOG((CLOG_DEBUG "daemon got new core command"));
       LOG((CLOG_DEBUG2 "new command, elevate=%d command=%s", cm->elevate(), command.c_str()));
 
-      std::vector<String> argsArray;
+      std::vector<std::string> argsArray;
       ArgParser::splitCommandString(command, argsArray);
       ArgParser argParser(NULL);
       const char **argv = argParser.getArgv(argsArray);
@@ -327,7 +327,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
       }
 
       delete[] argv;
-      String logLevel(ArgParser::argsBase().m_logFilter);
+      std::string logLevel(ArgParser::argsBase().m_logFilter);
       if (!logLevel.empty()) {
         try {
           // change log level based on that in the command string
@@ -348,7 +348,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
       ARCH->setting("Command", command);
 
       // TODO: it would be nice to store bools/ints...
-      ARCH->setting("Elevate", String(cm->elevate() ? "1" : "0"));
+      ARCH->setting("Elevate", std::string(cm->elevate() ? "1" : "0"));
     } catch (XArch &e) {
       LOG((CLOG_ERR "failed to save settings, %s", e.what()));
     }
@@ -364,7 +364,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
 
   case IpcMessageType::Hello: {
     IpcHelloMessage *hm = static_cast<IpcHelloMessage *>(m);
-    String type;
+    std::string type;
     switch (hm->clientType()) {
     case IpcClientType::GUI:
       type = "gui";
@@ -387,7 +387,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
     }
 
 #if SYSAPI_WIN32
-    String watchdogStatus = m_watchdog->isProcessActive() ? "active" : "idle";
+    std::string watchdogStatus = m_watchdog->isProcessActive() ? "active" : "idle";
     LOG((CLOG_INFO "service status: %s", watchdogStatus.c_str()));
 #endif
 

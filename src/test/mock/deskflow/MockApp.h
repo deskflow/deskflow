@@ -32,7 +32,7 @@ public:
 
   MOCK_METHOD(void, help, (), (override));
   MOCK_METHOD(void, loadConfig, (), (override));
-  MOCK_METHOD(bool, loadConfig, (const String &), (override));
+  MOCK_METHOD(bool, loadConfig, (const std::string &), (override));
   MOCK_METHOD(const char *, daemonInfo, (), (const, override));
   MOCK_METHOD(const char *, daemonName, (), (const, override));
   MOCK_METHOD(void, parseArgs, (int, const char *const *), (override));

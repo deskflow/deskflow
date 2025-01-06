@@ -726,7 +726,7 @@ void MSWindowsDesks::deskThread(void *vdesk)
   }
 }
 
-MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const String &name, HDESK hdesk)
+MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const std::string &name, HDESK hdesk)
 {
   Desk *desk = new Desk;
   desk->m_name = name;
@@ -757,7 +757,7 @@ void MSWindowsDesks::checkDesk()
   // get current desktop.  if we already know about it then return.
   Desk *desk;
   HDESK hdesk = openInputDesktop();
-  String name = getDesktopName(hdesk);
+  std::string name = getDesktopName(hdesk);
   Desks::const_iterator index = m_desks.find(name);
   if (index == m_desks.end()) {
     desk = addDesk(name, hdesk);
@@ -866,16 +866,16 @@ void MSWindowsDesks::closeDesktop(HDESK desk)
   }
 }
 
-String MSWindowsDesks::getDesktopName(HDESK desk)
+std::string MSWindowsDesks::getDesktopName(HDESK desk)
 {
   if (desk == NULL) {
-    return String();
+    return std::string();
   } else {
     DWORD size;
     GetUserObjectInformation(desk, UOI_NAME, NULL, 0, &size);
     TCHAR *name = (TCHAR *)alloca(size + sizeof(TCHAR));
     GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
-    String result(name);
+    std::string result(name);
     return result;
   }
 }

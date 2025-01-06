@@ -168,7 +168,7 @@ void ClientProxyUnknown::removeTimer()
   }
 }
 
-void ClientProxyUnknown::initProxy(const String &name, int major, int minor)
+void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor)
 {
   if (major == 1) {
     switch (minor) {
@@ -220,7 +220,7 @@ void ClientProxyUnknown::handleData(const Event &, void *)
 {
   LOG((CLOG_DEBUG1 "parsing hello reply"));
 
-  String name("<unknown>");
+  std::string name("<unknown>");
 
   try {
     // limit the maximum length of the hello

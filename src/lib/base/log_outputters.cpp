@@ -19,6 +19,7 @@
 #include "base/log_outputters.h"
 #include "arch/Arch.h"
 #include "base/Path.h"
+#include "base/String.h"
 #include "base/TMethodJob.h"
 
 #include <fstream>
@@ -205,7 +206,7 @@ bool BufferedLogOutputter::write(ELevel, const char *message)
   while (m_buffer.size() >= m_maxBufferSize) {
     m_buffer.pop_front();
   }
-  m_buffer.push_back(String(message));
+  m_buffer.push_back(std::string(message));
   return true;
 }
 
@@ -246,7 +247,7 @@ bool FileLogOutputter::write(ELevel level, const char *message)
   m_handle.close();
 
   if (moveFile) {
-    String oldLogFilename = deskflow::string::sprintf("%s.1", m_fileName.c_str());
+    std::string oldLogFilename = deskflow::string::sprintf("%s.1", m_fileName.c_str());
     remove(oldLogFilename.c_str());
     rename(m_fileName.c_str(), oldLogFilename.c_str());
   }

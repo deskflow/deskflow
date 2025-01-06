@@ -89,7 +89,7 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(UInt32) override;
   bool isPrimary() const override;
-  String getSecureInputApp() const override;
+  std::string getSecureInputApp() const override;
 
 protected:
   // IPlatformScreen overrides

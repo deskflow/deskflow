@@ -24,7 +24,7 @@
 class ClientProxy1_3 : public ClientProxy1_2
 {
 public:
-  ClientProxy1_3(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
+  ClientProxy1_3(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_3(ClientProxy1_3 const &) = delete;
   ClientProxy1_3(ClientProxy1_3 &&) = delete;
   ~ClientProxy1_3();

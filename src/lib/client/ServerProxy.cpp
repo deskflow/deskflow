@@ -250,7 +250,7 @@ ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code)
   }
 
   else if (memcmp(code, kMsgDKeyDownLang, 4) == 0) {
-    String lang;
+    std::string lang;
     UInt16 id = 0;
     UInt16 mask = 0;
     UInt16 button = 0;
@@ -382,7 +382,7 @@ bool ServerProxy::onGrabClipboard(ClipboardID id)
 
 void ServerProxy::onClipboardChanged(ClipboardID id, const IClipboard *clipboard)
 {
-  String data = IClipboard::marshall(clipboard);
+  std::string data = IClipboard::marshall(clipboard);
   LOG((CLOG_DEBUG "sending clipboard %d seqnum=%d", id, m_seqNum));
 
   StreamChunker::sendClipboard(data, data.size(), id, m_seqNum, m_events, this);
@@ -547,7 +547,7 @@ void ServerProxy::leave()
 void ServerProxy::setClipboard()
 {
   // parse
-  static String dataCached;
+  static std::string dataCached;
   ClipboardID id;
   UInt32 seq;
 
@@ -585,7 +585,7 @@ void ServerProxy::grabClipboard()
   m_client->grabClipboard(id);
 }
 
-void ServerProxy::keyDown(UInt16 id, UInt16 mask, UInt16 button, const String &lang)
+void ServerProxy::keyDown(UInt16 id, UInt16 mask, UInt16 button, const std::string &lang)
 {
   // get mouse up to date
   flushCompressedMouse();
@@ -608,7 +608,7 @@ void ServerProxy::keyRepeat()
 
   // parse
   UInt16 id, mask, count, button;
-  String lang;
+  std::string lang;
   ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
   LOG(
       (CLOG_DEBUG1 "recv key repeat id=0x%08x, mask=0x%04x, count=%d, "
@@ -836,7 +836,7 @@ void ServerProxy::fileChunkReceived()
     m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
   } else if (result == kStart) {
     if (m_client->getDragFileList().size() > 0) {
-      String filename = m_client->getDragFileList().at(0).getFilename();
+      std::string filename = m_client->getDragFileList().at(0).getFilename();
       LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
     }
   }
@@ -846,7 +846,7 @@ void ServerProxy::dragInfoReceived()
 {
   // parse
   UInt32 fileNum = 0;
-  String content;
+  std::string content;
   ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
 
   m_client->dragInfoReceived(fileNum, content);
@@ -864,13 +864,13 @@ void ServerProxy::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
 
 void ServerProxy::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
 {
-  String data(info, size);
+  std::string data(info, size);
   ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);
 }
 
 void ServerProxy::secureInputNotification()
 {
-  String app;
+  std::string app;
   ProtocolUtil::readf(m_stream, kMsgDSecureInputNotification + 4, &app);
 
   // display this notification on the client
@@ -891,12 +891,12 @@ void ServerProxy::secureInputNotification()
 
 void ServerProxy::setServerLanguages()
 {
-  String serverLanguages;
+  std::string serverLanguages;
   ProtocolUtil::readf(m_stream, kMsgDLanguageSynchronisation + 4, &serverLanguages);
   m_languageManager.setRemoteLanguages(serverLanguages);
 }
 
-void ServerProxy::setActiveServerLanguage(const String &language)
+void ServerProxy::setActiveServerLanguage(const std::string &language)
 {
   if (!language.empty() && std::strlen(language.c_str()) > 0) {
     if (m_serverLanguage != language) {

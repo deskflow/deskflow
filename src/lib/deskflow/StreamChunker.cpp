@@ -55,7 +55,7 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTar
   size_t size = (size_t)file.tellg();
 
   // send first message (file size)
-  String fileSize = deskflow::string::sizeTypeToString(size);
+  std::string fileSize = deskflow::string::sizeTypeToString(size);
   FileChunk *sizeMessage = FileChunk::start(fileSize);
 
   events->addEvent(Event(events->forFile().fileChunkSending(), eventTarget, sizeMessage));
@@ -106,11 +106,11 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTar
 }
 
 void StreamChunker::sendClipboard(
-    String &data, size_t size, ClipboardID id, UInt32 sequence, IEventQueue *events, void *eventTarget
+    std::string &data, size_t size, ClipboardID id, UInt32 sequence, IEventQueue *events, void *eventTarget
 )
 {
   // send first message (data size)
-  String dataSize = deskflow::string::sizeTypeToString(size);
+  std::string dataSize = deskflow::string::sizeTypeToString(size);
   ClipboardChunk *sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 
   events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, sizeMessage));
@@ -127,7 +127,7 @@ void StreamChunker::sendClipboard(
       chunkSize = size - sentLength;
     }
 
-    String chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+    std::string chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
     ClipboardChunk *dataChunk = ClipboardChunk::data(id, sequence, chunk);
 
     events->addEvent(Event(events->forClipboard().clipboardSending(), eventTarget, dataChunk));

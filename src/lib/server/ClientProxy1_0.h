@@ -30,7 +30,7 @@ class IEventQueue;
 class ClientProxy1_0 : public ClientProxy
 {
 public:
-  ClientProxy1_0(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
+  ClientProxy1_0(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_0(ClientProxy1_0 const &) = delete;
   ClientProxy1_0(ClientProxy1_0 &&) = delete;
   ~ClientProxy1_0();
@@ -49,8 +49,8 @@ public:
   void setClipboard(ClipboardID, const IClipboard *) override;
   void grabClipboard(ClipboardID) override;
   void setClipboardDirty(ClipboardID, bool) override;
-  void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;
-  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &) override;
+  void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override;
+  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &) override;
   void keyUp(KeyID, KeyModifierMask, KeyButton) override;
   void mouseDown(ButtonID) override;
   void mouseUp(ButtonID) override;
@@ -62,8 +62,8 @@ public:
   void setOptions(const OptionsList &options) override;
   void sendDragInfo(UInt32 fileCount, const char *info, size_t size) override;
   void fileChunkSending(UInt8 mark, char *data, size_t dataSize) override;
-  String getSecureInputApp() const override;
-  void secureInputNotification(const String &app) const override;
+  std::string getSecureInputApp() const override;
+  void secureInputNotification(const std::string &app) const override;
 
 protected:
   virtual bool parseHandshakeMessage(const UInt8 *code);

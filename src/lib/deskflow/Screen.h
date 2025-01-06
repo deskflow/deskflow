@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/clipboard_types.h"
@@ -130,14 +129,14 @@ public:
   synthesize an up or repeat for the same client key synthesized by
   keyDown().
   */
-  void keyDown(KeyID id, KeyModifierMask, KeyButton, const String &);
+  void keyDown(KeyID id, KeyModifierMask, KeyButton, const std::string &);
 
   //! Notify of key repeat
   /*!
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
+  void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang);
 
   //! Notify of key release
   /*!
@@ -241,7 +240,7 @@ public:
   On MacOS check which app causes a secure input state to be enabled. No
   alternative on other platforms
   */
-  String getSecureInputApp() const;
+  std::string getSecureInputApp() const;
 
   //@}
   //! @name accessors
@@ -298,13 +297,13 @@ public:
   bool isFakeDraggingStarted() const;
 
   //! Get the filename of the file being dragged
-  String &getDraggingFilename() const;
+  std::string &getDraggingFilename() const;
 
   //! Clear the filename of the file that was dragged
   void clearDraggingFilename();
 
   //! Get the drop target directory
-  const String &getDropTarget() const;
+  const std::string &getDropTarget() const;
 
   //@}
 

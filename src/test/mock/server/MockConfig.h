@@ -30,5 +30,5 @@ public:
   {
   }
   MOCK_METHOD(InputFilter *, getInputFilter, (), (override));
-  MOCK_METHOD(bool, isScreen, (const String &), (const, override));
+  MOCK_METHOD(bool, isScreen, (const std::string &), (const, override));
 };

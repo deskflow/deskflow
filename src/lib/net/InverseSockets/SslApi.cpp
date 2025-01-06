@@ -6,6 +6,7 @@
 
 #include <base/Log.h>
 #include <base/Path.h>
+#include <base/String.h>
 #include <openssl/err.h>
 
 namespace deskflow {

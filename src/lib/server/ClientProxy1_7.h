@@ -23,10 +23,10 @@
 class ClientProxy1_7 : public ClientProxy1_6
 {
 public:
-  ClientProxy1_7(const String &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
+  ClientProxy1_7(const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
   ~ClientProxy1_7() override = default;
 
-  void secureInputNotification(const String &app) const override;
+  void secureInputNotification(const std::string &app) const override;
 
 private:
   IEventQueue *m_events;

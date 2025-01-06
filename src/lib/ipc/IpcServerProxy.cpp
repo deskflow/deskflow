@@ -86,7 +86,7 @@ void IpcServerProxy::send(const IpcMessage &message)
 
   case IpcMessageType::Command: {
     const IpcCommandMessage &cm = static_cast<const IpcCommandMessage &>(message);
-    const String command = cm.command();
+    const std::string command = cm.command();
     ProtocolUtil::writef(&m_stream, kIpcMsgCommand, &command);
     break;
   }
@@ -99,7 +99,7 @@ void IpcServerProxy::send(const IpcMessage &message)
 
 IpcLogLineMessage *IpcServerProxy::parseLogLine()
 {
-  String logLine;
+  std::string logLine;
   ProtocolUtil::readf(&m_stream, kIpcMsgLogLine + 4, &logLine);
 
   // must be deleted by event handler.

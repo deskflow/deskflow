@@ -57,7 +57,7 @@ using namespace deskflow::client;
 //
 
 Client::Client(
-    IEventQueue *events, const String &name, const NetworkAddress &address, ISocketFactory *socketFactory,
+    IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
     deskflow::Screen *screen, deskflow::ClientArgs const &args
 )
     : m_mock(false),
@@ -299,12 +299,12 @@ void Client::setClipboardDirty(ClipboardID, bool)
   assert(0 && "shouldn't be called");
 }
 
-void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   m_screen->keyDown(id, mask, button, lang);
 }
 
-void Client::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang)
+void Client::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang)
 {
   m_screen->keyRepeat(id, mask, count, button, lang);
 }
@@ -378,7 +378,7 @@ void Client::setOptions(const OptionsList &options)
   m_screen->setOptions(options);
 }
 
-String Client::getName() const
+std::string Client::getName() const
 {
   return m_name;
 }
@@ -402,7 +402,7 @@ void Client::sendClipboard(ClipboardID id)
   // check time
   if (m_timeClipboard[id] == 0 || clipboard.getTime() != m_timeClipboard[id]) {
     // marshall the data
-    String data = clipboard.marshall();
+    std::string data = clipboard.marshall();
     if (data.size() >= m_maximumClipboardSize * 1024) {
       LOG(
           (CLOG_NOTE "skipping clipboard transfer because the clipboard"
@@ -757,7 +757,7 @@ void Client::writeToDropDirThread(void *)
   DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList, m_receivedFileData);
 }
 
-void Client::dragInfoReceived(UInt32 fileNum, String data)
+void Client::dragInfoReceived(UInt32 fileNum, std::string data)
 {
   // TODO: fix duplicate function from CServer
   if (!m_args.m_enableDragDrop) {
@@ -798,7 +798,7 @@ void Client::sendFileThread(void *filename)
   m_sendFileThread.reset(nullptr);
 }
 
-void Client::sendDragInfo(UInt32 fileCount, String &info, size_t size)
+void Client::sendDragInfo(UInt32 fileCount, std::string &info, size_t size)
 {
   m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

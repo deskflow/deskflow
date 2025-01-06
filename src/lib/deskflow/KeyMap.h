@@ -225,10 +225,10 @@ public:
   */
   virtual const KeyItem *mapKey(
       Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-      KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+      KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
   ) const;
 
-  void setLanguageData(std::vector<String> layouts);
+  void setLanguageData(std::vector<std::string> layouts);
 
   //! Get number of groups
   /*!
@@ -310,14 +310,14 @@ public:
   Converts a key and modifier mask into a string representing the
   combination.
   */
-  static String formatKey(KeyID key, KeyModifierMask);
+  static std::string formatKey(KeyID key, KeyModifierMask);
 
   //! Parse a string into a key
   /*!
   Converts a string into a key.  Returns \c true on success and \c false
   if the string cannot be parsed.
   */
-  static bool parseKey(const String &, KeyID &);
+  static bool parseKey(const std::string &, KeyID &);
 
   //! Parse a string into a modifier mask
   /*!
@@ -326,7 +326,7 @@ public:
   remaining leading and trailing whitespace is stripped from the input
   string.
   */
-  static bool parseModifiers(String &, KeyModifierMask &);
+  static bool parseModifiers(std::string &, KeyModifierMask &);
 
   //@}
 
@@ -369,7 +369,7 @@ private:
   // entries since they don't make sense as hotkeys.
   const KeyItem *mapCommandKey(
       Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-      KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+      KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
   ) const;
 
   // maps a character key.  a character key is trying to synthesize a
@@ -377,13 +377,13 @@ private:
   // used to do it.
   const KeyItem *mapCharacterKey(
       Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-      KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+      KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
   ) const;
 
   // maps a modifier key
   const KeyItem *mapModifierKey(
       Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-      KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+      KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
   ) const;
 
   // returns the index into \p entryList of the KeyItemList requiring
@@ -403,7 +403,7 @@ private:
   bool keysForKeyItem(
       const KeyItem &keyItem, SInt32 &group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
       KeyModifierMask desiredState, KeyModifierMask overrideModifiers, bool isAutoRepeat, Keystrokes &keystrokes,
-      const String &lang
+      const std::string &lang
   ) const;
 
   // fills \p keystrokes with the keys to synthesize the modifiers
@@ -442,9 +442,9 @@ private:
   // Ways to synthesize a KeyID over multiple keyboard groups
   using KeyGroupTable = std::vector<KeyEntryList>;
 
-  void addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const String &lang) const;
+  void addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const std::string &lang) const;
 
-  SInt32 getLanguageGroupID(SInt32 group, const String &lang) const;
+  SInt32 getLanguageGroupID(SInt32 group, const std::string &lang) const;
   const KeyItemList *
   getKeyItemList(const KeyGroupTable &keyGroupTable, SInt32 group, KeyModifierMask desiredMask) const;
 
@@ -469,10 +469,10 @@ private:
   using KeyButtonSet = std::set<KeyButton>;
 
   // Key maps for parsing/formatting
-  using NameToKeyMap = std::map<String, KeyID, deskflow::string::CaselessCmp>;
-  using NameToModifierMap = std::map<String, KeyModifierMask, deskflow::string::CaselessCmp>;
-  using KeyToNameMap = std::map<KeyID, String>;
-  using ModifierToNameMap = std::map<KeyModifierMask, String>;
+  using NameToKeyMap = std::map<std::string, KeyID, deskflow::string::CaselessCmp>;
+  using NameToModifierMap = std::map<std::string, KeyModifierMask, deskflow::string::CaselessCmp>;
+  using KeyToNameMap = std::map<KeyID, std::string>;
+  using ModifierToNameMap = std::map<KeyModifierMask, std::string>;
 
   // KeyID info
   KeyIDMap m_keyIDMap;
@@ -490,7 +490,7 @@ private:
   KeyItem m_modifierKeyItem;
 
   // Language sync data
-  std::vector<String> m_keyboardLayouts;
+  std::vector<std::string> m_keyboardLayouts;
 
   // parsing/formatting tables
   static NameToKeyMap *s_nameToKeyMap;

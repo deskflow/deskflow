@@ -48,10 +48,10 @@ public:
   void exitApp(int code) override;
   void beforeAppExit() override;
   void startNode() override;
-  std::vector<String> getKeyboardLayoutList() override;
-  String getCurrentLanguageCode() override;
+  std::vector<std::string> getKeyboardLayoutList() override;
+  std::string getCurrentLanguageCode() override;
   HKL getCurrentKeyboardLayout() const;
-  void showNotification(const String &title, const String &text) const override;
+  void showNotification(const std::string &title, const std::string &text) const override;
 
 private:
   AppExitMode m_exitMode;

@@ -21,6 +21,7 @@
 #include "arch/Arch.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "base/String.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
 #include "common/ipc.h"
@@ -380,7 +381,7 @@ void MSWindowsWatchdog::setStartupInfo(STARTUPINFO &si)
   si.dwFlags |= STARTF_USESTDHANDLES;
 }
 
-BOOL MSWindowsWatchdog::startProcessInForeground(String &command)
+BOOL MSWindowsWatchdog::startProcessInForeground(std::string &command)
 {
   // clear, as we're reusing process info struct
   ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -400,7 +401,7 @@ BOOL MSWindowsWatchdog::startProcessInForeground(String &command)
   return result;
 }
 
-BOOL MSWindowsWatchdog::startProcessAsUser(String &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
+BOOL MSWindowsWatchdog::startProcessAsUser(std::string &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 {
   // clear, as we're reusing process info struct
   ZeroMemory(&m_processInfo, sizeof(PROCESS_INFORMATION));
@@ -601,24 +602,24 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
 void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
 {
-  String installedDir = ARCH->getInstalledDirectory();
+  std::string installedDir = ARCH->getInstalledDirectory();
   if (!installedDir.empty()) {
     MSWindowsSession session;
-    String name = session.getActiveDesktopName();
+    std::string name = session.getActiveDesktopName();
     if (name.empty()) {
       LOG((CLOG_CRIT "failed to get active desktop name"));
     } else {
-      String output = deskflow::string::sprintf("activeDesktop:%s", name.c_str());
+      std::string output = deskflow::string::sprintf("activeDesktop:%s", name.c_str());
       LOG((CLOG_INFO "%s", output.c_str()));
     }
   }
 }
 
-void MSWindowsWatchdog::testOutput(String buffer)
+void MSWindowsWatchdog::testOutput(std::string buffer)
 {
   // HACK: check standard output seems hacky.
   size_t i = buffer.find(g_activeDesktop);
-  if (i != String::npos) {
+  if (i != std::string::npos) {
     size_t s = sizeof(g_activeDesktop);
     std::string defaultScreen = "Default";
     m_activeDesktop = trimDesktopName(buffer.substr(i + s - 1));

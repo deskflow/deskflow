@@ -30,20 +30,21 @@
 #include <iomanip>
 #include <sstream>
 #include <stdio.h>
+#include <string>
 
 namespace deskflow {
 namespace string {
 
-String format(const char *fmt, ...)
+std::string format(const char *fmt, ...)
 {
   va_list args;
   va_start(args, fmt);
-  String result = vformat(fmt, args);
+  std::string result = vformat(fmt, args);
   va_end(args);
   return result;
 }
 
-String vformat(const char *fmt, va_list args)
+std::string vformat(const char *fmt, va_list args)
 {
   // find highest indexed substitution and the locations of substitutions
   std::vector<size_t> pos;
@@ -108,7 +109,7 @@ String vformat(const char *fmt, va_list args)
   }
 
   // substitute
-  String result;
+  std::string result;
   result.reserve(resultLength);
   size_t src = 0;
   for (int i = 0; i < n; ++i) {
@@ -121,12 +122,12 @@ String vformat(const char *fmt, va_list args)
   return result;
 }
 
-String sprintf(const char *fmt, ...)
+std::string sprintf(const char *fmt, ...)
 {
   char tmp[1024];
   char *buffer = tmp;
   int len = (int)(sizeof(tmp) / sizeof(tmp[0]));
-  String result;
+  std::string result;
   while (buffer != NULL) {
     // try printing into the buffer
     va_list args;
@@ -156,27 +157,27 @@ String sprintf(const char *fmt, ...)
   return result;
 }
 
-void findReplaceAll(String &subject, const String &find, const String &replace)
+void findReplaceAll(std::string &subject, const std::string &find, const std::string &replace)
 {
   size_t pos = 0;
-  while ((pos = subject.find(find, pos)) != String::npos) {
+  while ((pos = subject.find(find, pos)) != std::string::npos) {
     subject.replace(pos, find.length(), replace);
     pos += replace.length();
   }
 }
 
-String removeFileExt(String filename)
+std::string removeFileExt(std::string filename)
 {
   size_t dot = filename.find_last_of('.');
 
-  if (dot == String::npos) {
+  if (dot == std::string::npos) {
     return filename;
   }
 
   return filename.substr(0, dot);
 }
 
-void toHex(String &subject, int width, const char fill)
+void toHex(std::string &subject, int width, const char fill)
 {
   std::stringstream ss;
   ss << std::hex;
@@ -187,24 +188,24 @@ void toHex(String &subject, int width, const char fill)
   subject = ss.str();
 }
 
-void uppercase(String &subject)
+void uppercase(std::string &subject)
 {
   std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
-void removeChar(String &subject, const char c)
+void removeChar(std::string &subject, const char c)
 {
   subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
 }
 
-String sizeTypeToString(size_t n)
+std::string sizeTypeToString(size_t n)
 {
   std::stringstream ss;
   ss << n;
   return ss.str();
 }
 
-size_t stringToSizeType(String string)
+size_t stringToSizeType(std::string string)
 {
   std::istringstream iss(string);
   size_t value;
@@ -212,13 +213,13 @@ size_t stringToSizeType(String string)
   return value;
 }
 
-std::vector<String> splitString(String string, const char c)
+std::vector<std::string> splitString(std::string string, const char c)
 {
-  std::vector<String> results;
+  std::vector<std::string> results;
 
   size_t head = 0;
   size_t separator = string.find(c);
-  while (separator != String::npos) {
+  while (separator != std::string::npos) {
     if (head != separator) {
       results.push_back(string.substr(head, separator - head));
     }
@@ -237,31 +238,31 @@ std::vector<String> splitString(String string, const char c)
 // CaselessCmp
 //
 
-bool CaselessCmp::cmpEqual(const String::value_type &a, const String::value_type &b)
+bool CaselessCmp::operator()(const std::string &a, const std::string &b) const
 {
-  // should use std::tolower but not in all versions of libstdc++ have it
-  return tolower(a) == tolower(b);
+  return less(a, b);
 }
 
-bool CaselessCmp::cmpLess(const String::value_type &a, const String::value_type &b)
+bool CaselessCmp::less(const std::string &a, const std::string &b)
+{
+  return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), &deskflow::string::CaselessCmp::cmpLess);
+}
+
+bool CaselessCmp::equal(const std::string &a, const std::string &b)
+{
+  return !(less(a, b) || less(b, a));
+}
+
+bool CaselessCmp::cmpLess(const std::string::value_type &a, const std::string::value_type &b)
 {
   // should use std::tolower but not in all versions of libstdc++ have it
   return tolower(a) < tolower(b);
 }
 
-bool CaselessCmp::less(const String &a, const String &b)
+bool CaselessCmp::cmpEqual(const std::string::value_type &a, const std::string::value_type &b)
 {
-  return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), &deskflow::string::CaselessCmp::cmpLess);
-}
-
-bool CaselessCmp::equal(const String &a, const String &b)
-{
-  return !(less(a, b) || less(b, a));
-}
-
-bool CaselessCmp::operator()(const String &a, const String &b) const
-{
-  return less(a, b);
+  // should use std::tolower but not in all versions of libstdc++ have it
+  return tolower(a) == tolower(b);
 }
 
 } // namespace string

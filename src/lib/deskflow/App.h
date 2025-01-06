@@ -20,7 +20,6 @@
 
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "common/common.h"
 #include "deskflow/IApp.h"
 #include "ipc/IpcClient.h"
@@ -67,7 +66,7 @@ public:
   virtual void help() = 0;
   virtual void parseArgs(int argc, const char *const *argv) = 0;
   virtual void loadConfig() = 0;
-  virtual bool loadConfig(const String &pathname) = 0;
+  virtual bool loadConfig(const std::string &pathname) = 0;
   virtual const char *daemonInfo() const = 0;
   virtual std::string configSection() const = 0;
 
@@ -165,7 +164,7 @@ public:
   virtual int foregroundStartup(int argc, char **argv) override;
   virtual deskflow::Screen *createScreen() override;
   virtual void loadConfig() override;
-  virtual bool loadConfig(const String &pathname) override;
+  virtual bool loadConfig(const std::string &pathname) override;
   virtual const char *daemonInfo() const override;
   virtual const char *daemonName() const override;
   virtual void parseArgs(int argc, const char *const *argv) override;

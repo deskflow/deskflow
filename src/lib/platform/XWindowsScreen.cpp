@@ -23,7 +23,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
@@ -472,7 +471,7 @@ bool XWindowsScreen::isPrimary() const
   return m_isPrimary;
 }
 
-String XWindowsScreen::getSecureInputApp() const
+std::string XWindowsScreen::getSecureInputApp() const
 {
   // ignore on Linux
   return "";

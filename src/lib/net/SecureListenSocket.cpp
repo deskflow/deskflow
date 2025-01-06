@@ -19,6 +19,7 @@
 
 #include "SecureSocket.h"
 #include "arch/XArch.h"
+#include "base/String.h"
 #include "common/constants.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ArgsBase.h"
@@ -53,7 +54,7 @@ IDataSocket *SecureListenSocket::accept()
     }
 
     // default location of the TLS cert file in users dir
-    String certificateFilename = deskflow::string::sprintf(
+    std::string certificateFilename = deskflow::string::sprintf(
         "%s/%s/%s.%s", ARCH->getProfileDirectory().c_str(), s_certificateDir, kAppId, s_certificateFileExt
     );
 

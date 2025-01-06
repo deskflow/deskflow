@@ -846,7 +846,7 @@ IKeyState *EiScreen::getKeyState() const
   return key_state_;
 }
 
-String EiScreen::getSecureInputApp() const
+std::string EiScreen::getSecureInputApp() const
 {
   throw std::runtime_error("get security input app not implemented");
 }

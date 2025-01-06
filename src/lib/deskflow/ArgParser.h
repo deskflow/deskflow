@@ -17,8 +17,9 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/stdvector.h"
+
+#include <string>
 
 namespace deskflow {
 class ArgsBase;
@@ -47,11 +48,12 @@ public:
   static bool isArg(
       int argi, int argc, const char *const *argv, const char *name1, const char *name2, int minRequiredParameters = 0
   );
-  static void splitCommandString(String &command, std::vector<String> &argv);
-  static bool searchDoubleQuotes(String &command, size_t &left, size_t &right, size_t startPos = 0);
-  static void removeDoubleQuotes(String &arg);
-  static const char **getArgv(std::vector<String> &argsArray);
-  static String assembleCommand(std::vector<String> &argsArray, String ignoreArg = "", int parametersRequired = 0);
+  static void splitCommandString(std::string &command, std::vector<std::string> &argv);
+  static bool searchDoubleQuotes(std::string &command, size_t &left, size_t &right, size_t startPos = 0);
+  static void removeDoubleQuotes(std::string &arg);
+  static const char **getArgv(std::vector<std::string> &argsArray);
+  static std::string
+  assembleCommand(std::vector<std::string> &argsArray, std::string ignoreArg = "", int parametersRequired = 0);
 
   static deskflow::ArgsBase &argsBase()
   {

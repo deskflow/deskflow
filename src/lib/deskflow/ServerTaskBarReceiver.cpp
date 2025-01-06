@@ -38,7 +38,7 @@ ServerTaskBarReceiver::~ServerTaskBarReceiver()
   // do nothing
 }
 
-void ServerTaskBarReceiver::updateStatus(Server *server, const String &errorMsg)
+void ServerTaskBarReceiver::updateStatus(Server *server, const std::string &errorMsg)
 {
   {
     // update our status
@@ -72,7 +72,7 @@ ServerTaskBarReceiver::EState ServerTaskBarReceiver::getStatus() const
   return m_state;
 }
 
-const String &ServerTaskBarReceiver::getErrorMessage() const
+const std::string &ServerTaskBarReceiver::getErrorMessage() const
 {
   return m_errorMessage;
 }

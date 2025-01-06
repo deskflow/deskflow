@@ -19,13 +19,13 @@
 #pragma once
 
 #include "base/ILogOutputter.h"
-#include "base/String.h"
 #include "common/basic_types.h"
 #include "common/stddeque.h"
 #include "mt/Thread.h"
 
 #include <fstream>
 #include <list>
+#include <string>
 
 //! Stop traversing log chain outputter
 /*!
@@ -137,7 +137,7 @@ This outputter records the last N log messages.
 class BufferedLogOutputter : public ILogOutputter
 {
 private:
-  using Buffer = std::deque<String>;
+  using Buffer = std::deque<std::string>;
 
 public:
   using const_iterator = Buffer::const_iterator;

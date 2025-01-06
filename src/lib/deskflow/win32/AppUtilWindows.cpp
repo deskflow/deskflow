@@ -169,16 +169,16 @@ void AppUtilWindows::startNode()
   app().startNode();
 }
 
-std::vector<String> AppUtilWindows::getKeyboardLayoutList()
+std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
 {
-  std::vector<String> layoutLangCodes;
+  std::vector<std::string> layoutLangCodes;
   {
     auto uLayouts = GetKeyboardLayoutList(0, NULL);
     auto lpList = (HKL *)LocalAlloc(LPTR, (uLayouts * sizeof(HKL)));
     uLayouts = GetKeyboardLayoutList(uLayouts, lpList);
 
     for (int i = 0; i < uLayouts; ++i) {
-      String code("", 2);
+      std::string code("", 2);
       GetLocaleInfoA(
           MAKELCID(((ULONG_PTR)lpList[i] & 0xffffffff), SORT_DEFAULT), LOCALE_SISO639LANGNAME, &code[0],
           static_cast<int>(code.size())
@@ -193,9 +193,9 @@ std::vector<String> AppUtilWindows::getKeyboardLayoutList()
   return layoutLangCodes;
 }
 
-String AppUtilWindows::getCurrentLanguageCode()
+std::string AppUtilWindows::getCurrentLanguageCode()
 {
-  String code("", 2);
+  std::string code("", 2);
 
   auto hklLayout = getCurrentKeyboardLayout();
   if (hklLayout) {
@@ -243,7 +243,7 @@ public:
 };
 #endif
 
-void AppUtilWindows::showNotification(const String &title, const String &text) const
+void AppUtilWindows::showNotification(const std::string &title, const std::string &text) const
 {
 #if HAVE_WINTOAST
   LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));

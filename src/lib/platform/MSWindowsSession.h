@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "base/String.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -48,7 +48,7 @@ public:
 
   void updateActiveSession();
 
-  String getActiveDesktopName();
+  std::string getActiveDesktopName();
 
 private:
   BOOL nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);

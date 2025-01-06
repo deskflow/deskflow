@@ -16,16 +16,17 @@
  */
 #pragma once
 
-#include "String.h"
+#include <common/common.h>
+#include <string>
 
 namespace deskflow {
 
 namespace filesystem {
 
 #ifdef SYSAPI_WIN32
-std::wstring path(const String &filePath);
+std::wstring path(const std::string &filePath);
 #else
-std::string path(const String &filePath);
+std::string path(const std::string &filePath);
 #endif
 
 } // namespace filesystem

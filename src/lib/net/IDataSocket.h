@@ -19,7 +19,6 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "io/IStream.h"
 #include "net/ISocket.h"
 
@@ -37,7 +36,7 @@ public:
     ConnectionFailedInfo(const char *what) : m_what(what)
     {
     }
-    String m_what;
+    std::string m_what;
   };
 
   IDataSocket(IEventQueue *events)

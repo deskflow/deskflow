@@ -60,9 +60,9 @@ void AppUtilUnix::startNode()
   app().startNode();
 }
 
-std::vector<String> AppUtilUnix::getKeyboardLayoutList()
+std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 {
-  std::vector<String> layoutLangCodes;
+  std::vector<std::string> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
   layoutLangCodes = X11LayoutsParser::getX11LanguageList("/usr/share/X11/xkb/rules/evdev.xml");
@@ -97,9 +97,9 @@ std::vector<String> AppUtilUnix::getKeyboardLayoutList()
   return layoutLangCodes;
 }
 
-String AppUtilUnix::getCurrentLanguageCode()
+std::string AppUtilUnix::getCurrentLanguageCode()
 {
-  String result = "";
+  std::string result = "";
 #if WINAPI_XWINDOWS
 
   auto display = XOpenDisplay(nullptr);
@@ -165,7 +165,7 @@ String AppUtilUnix::getCurrentLanguageCode()
   return result;
 }
 
-void AppUtilUnix::showNotification(const String &title, const String &text) const
+void AppUtilUnix::showNotification(const std::string &title, const std::string &text) const
 {
 #if HAVE_LIBNOTIFY
   LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));

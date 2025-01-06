@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "deskflow/IClient.h"
 
 namespace deskflow {
@@ -32,7 +31,7 @@ public:
   /*!
   \c name is the name of the client.
   */
-  BaseClientProxy(const String &name);
+  BaseClientProxy(const std::string &name);
   ~BaseClientProxy();
 
   //! @name manipulators
@@ -77,8 +76,8 @@ public:
   virtual void setClipboard(ClipboardID, const IClipboard *) = 0;
   virtual void grabClipboard(ClipboardID) = 0;
   virtual void setClipboardDirty(ClipboardID, bool) = 0;
-  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) = 0;
-  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang) = 0;
+  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) = 0;
+  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang) = 0;
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton) = 0;
   virtual void mouseDown(ButtonID) = 0;
   virtual void mouseUp(ButtonID) = 0;
@@ -90,12 +89,12 @@ public:
   virtual void setOptions(const OptionsList &options) = 0;
   virtual void sendDragInfo(UInt32 fileCount, const char *info, size_t size) = 0;
   virtual void fileChunkSending(UInt8 mark, char *data, size_t dataSize) = 0;
-  virtual String getSecureInputApp() const = 0;
-  virtual void secureInputNotification(const String &app) const = 0;
-  virtual String getName() const;
+  virtual std::string getSecureInputApp() const = 0;
+  virtual void secureInputNotification(const std::string &app) const = 0;
+  virtual std::string getName() const;
   virtual deskflow::IStream *getStream() const = 0;
 
 private:
-  String m_name;
+  std::string m_name;
   SInt32 m_x, m_y;
 };

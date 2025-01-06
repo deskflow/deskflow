@@ -19,7 +19,6 @@
 #pragma once
 
 #include "arch/IArchTaskBarReceiver.h"
-#include "base/String.h"
 #include "base/log_outputters.h"
 #include "client/Client.h"
 
@@ -39,9 +38,9 @@ public:
   /*!
   Determine the status and query required information from the client.
   */
-  void updateStatus(Client *, const String &errorMsg);
+  void updateStatus(Client *, const std::string &errorMsg);
 
-  void updateStatus(INode *n, const String &errorMsg)
+  void updateStatus(INode *n, const std::string &errorMsg)
   {
     updateStatus((Client *)n, errorMsg);
   }
@@ -75,7 +74,7 @@ protected:
   EState getStatus() const;
 
   //! Get error message
-  const String &getErrorMessage() const;
+  const std::string &getErrorMessage() const;
 
   //! Quit app
   /*!
@@ -91,8 +90,8 @@ protected:
 
 private:
   EState m_state;
-  String m_errorMessage;
-  String m_server;
+  std::string m_errorMessage;
+  std::string m_server;
   IEventQueue *m_events;
 };
 

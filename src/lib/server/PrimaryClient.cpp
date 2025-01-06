@@ -26,7 +26,7 @@
 // PrimaryClient
 //
 
-PrimaryClient::PrimaryClient(const String &name, deskflow::Screen *screen)
+PrimaryClient::PrimaryClient(const std::string &name, deskflow::Screen *screen)
     : BaseClientProxy(name),
       m_screen(screen),
       m_fakeInputCount(0)
@@ -161,7 +161,7 @@ void PrimaryClient::setClipboardDirty(ClipboardID id, bool dirty)
   m_clipboardDirty[id] = dirty;
 }
 
-void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String &)
+void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &)
 {
   if (m_fakeInputCount > 0) {
     // XXX -- don't forward keystrokes to primary screen for now
@@ -172,7 +172,7 @@ void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, c
   }
 }
 
-void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const String &)
+void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const std::string &)
 {
   // ignore
 }
@@ -228,12 +228,12 @@ void PrimaryClient::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
   // ignore
 }
 
-String PrimaryClient::getSecureInputApp() const
+std::string PrimaryClient::getSecureInputApp() const
 {
   return m_screen->getSecureInputApp();
 }
 
-void PrimaryClient::secureInputNotification(const String &app) const
+void PrimaryClient::secureInputNotification(const std::string &app) const
 {
   if (app != "unknown") {
     AppUtil::instance().showNotification(

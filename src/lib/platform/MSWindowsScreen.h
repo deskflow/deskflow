@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/PlatformScreen.h"
@@ -27,6 +26,8 @@
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 #include "platform/dfwhook.h"
+
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -115,8 +116,8 @@ public:
 
   // IKeyState overrides
   virtual void updateKeys();
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
 
@@ -136,9 +137,9 @@ public:
   virtual void setSequenceNumber(UInt32);
   virtual bool isPrimary() const;
   virtual void fakeDraggingFiles(DragFileList fileList);
-  virtual String &getDraggingFilename();
-  virtual const String &getDropTarget() const;
-  String getSecureInputApp() const override;
+  virtual std::string &getDraggingFilename();
+  virtual const std::string &getDropTarget() const;
+  std::string getSecureInputApp() const override;
 
 protected:
   // IPlatformScreen overrides
@@ -354,7 +355,7 @@ private:
 
   IEventQueue *m_events;
 
-  String m_desktopPath;
+  std::string m_desktopPath;
 
   MSWindowsDropTarget *m_dropTarget;
   HWND m_dropWindow;

@@ -437,7 +437,7 @@ void NetworkTests::sendToServer_mockFile_fileRecieveCompleted(
 
 void NetworkTests::sendMockData(void *eventTarget) {
   // send first message (file size)
-  String size = deskflow::string::sizeTypeToString(kMockDataSize);
+  std::string size = deskflow::string::sizeTypeToString(kMockDataSize);
   FileChunk *sizeMessage = FileChunk::start(size);
 
   m_events.addEvent(

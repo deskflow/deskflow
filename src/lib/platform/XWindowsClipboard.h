@@ -91,12 +91,12 @@ public:
 
   // IClipboard overrides
   virtual bool empty();
-  virtual void add(EFormat, const String &data);
+  virtual void add(EFormat, const std::string &data);
   virtual bool open(Time) const;
   virtual void close() const;
   virtual Time getTime() const;
   virtual bool has(EFormat) const;
-  virtual String get(EFormat) const;
+  virtual std::string get(EFormat) const;
 
 private:
   // remove all converters from our list
@@ -145,7 +145,7 @@ protected:
     // convert the given selection to the given type.  returns
     // true iff the conversion was successful or the conversion
     // cannot be performed (in which case *actualTarget == None).
-    bool readClipboard(Display *display, Atom selection, Atom target, Atom *actualTarget, String *data);
+    bool readClipboard(Display *display, Atom selection, Atom target, Atom *actualTarget, std::string *data);
 
   private:
     bool processEvent(Display *display, XEvent *event);
@@ -166,7 +166,7 @@ protected:
     bool m_reading = false;
 
     // the converted selection data
-    String *m_data = nullptr;
+    std::string *m_data = nullptr;
 
     // the actual type of the data.  if this is None then the
     // selection owner cannot convert to the requested type.
@@ -235,7 +235,7 @@ protected:
   {
   public:
     Reply(Window, Atom target, ::Time);
-    Reply(Window, Atom target, ::Time, Atom property, const String &data, Atom type, int format);
+    Reply(Window, Atom target, ::Time, Atom property, const std::string &data, Atom type, int format);
 
   public:
     // information about the request
@@ -251,7 +251,7 @@ protected:
     bool m_done;
 
     // the data to send and its type and format
-    String m_data;
+    std::string m_data;
     Atom m_type;
     int m_format;
 
@@ -264,7 +264,7 @@ protected:
 
   // ICCCM interoperability methods
   void icccmFillCache();
-  bool icccmGetSelection(Atom target, Atom *actualTarget, String *data) const;
+  bool icccmGetSelection(Atom target, Atom *actualTarget, std::string *data) const;
   Time icccmGetTime() const;
 
   // motif interoperability methods
@@ -272,7 +272,7 @@ protected:
   void motifUnlockClipboard() const;
   bool motifOwnsClipboard() const;
   void motifFillCache();
-  bool motifGetSelection(const MotifClipFormat *, Atom *actualTarget, String *data) const;
+  bool motifGetSelection(const MotifClipFormat *, Atom *actualTarget, std::string *data) const;
   Time motifGetTime() const;
 
   // reply methods
@@ -287,8 +287,8 @@ protected:
   bool wasOwnedAtTime(::Time) const;
 
   // data conversion methods
-  Atom getTargetsData(String &, int *format) const;
-  Atom getTimestampData(String &, int *format) const;
+  Atom getTargetsData(std::string &, int *format) const;
+  Atom getTimestampData(std::string &, int *format) const;
 
 private:
   using ConverterList = std::vector<IXWindowsClipboardConverter *>;
@@ -311,7 +311,7 @@ private:
   bool m_cached;
   Time m_cacheTime;
   bool m_added[kNumFormats];
-  String m_data[kNumFormats];
+  std::string m_data[kNumFormats];
 
   // conversion request replies
   ReplyMap m_replies;
@@ -373,14 +373,14 @@ public:
   getFormat().  The return data will be in the X selection
   format returned by getAtom().
   */
-  virtual String fromIClipboard(const String &) const = 0;
+  virtual std::string fromIClipboard(const std::string &) const = 0;
 
   //! Convert to IClipboard format
   /*!
   Convert from the X selection format to the IClipboard format
   (i.e., the reverse of fromIClipboard()).
   */
-  virtual String toIClipboard(const String &) const = 0;
+  virtual std::string toIClipboard(const std::string &) const = 0;
 
   //@}
 };

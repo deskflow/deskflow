@@ -31,7 +31,7 @@
 // ClientProxy1_5
 //
 
-ClientProxy1_5::ClientProxy1_5(const String &name, deskflow::IStream *stream, Server *server, IEventQueue *events)
+ClientProxy1_5::ClientProxy1_5(const std::string &name, deskflow::IStream *stream, Server *server, IEventQueue *events)
     : ClientProxy1_4(name, stream, server, events),
       m_events(events)
 {
@@ -49,7 +49,7 @@ ClientProxy1_5::~ClientProxy1_5()
 
 void ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
 {
-  String data(info, size);
+  std::string data(info, size);
 
   ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
 }
@@ -81,7 +81,7 @@ void ClientProxy1_5::fileChunkReceived()
     m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
   } else if (result == kStart) {
     if (server->getFakeDragFileList().size() > 0) {
-      String filename = server->getFakeDragFileList().at(0).getFilename();
+      std::string filename = server->getFakeDragFileList().at(0).getFilename();
       LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
     }
   }
@@ -91,7 +91,7 @@ void ClientProxy1_5::dragInfoReceived()
 {
   // parse
   UInt32 fileNum = 0;
-  String content;
+  std::string content;
   ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 
   m_server->dragInfoReceived(fileNum, content);

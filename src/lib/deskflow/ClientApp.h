@@ -50,7 +50,7 @@ public:
   void loadConfig() override
   {
   }
-  bool loadConfig(const String &pathname) override
+  bool loadConfig(const std::string &pathname) override
   {
     return false;
   }
@@ -75,7 +75,7 @@ public:
   //
 
   void updateStatus();
-  void updateStatus(const String &msg);
+  void updateStatus(const std::string &msg);
   void resetRestartTimeout();
   double nextRestartTimeout();
   void handleScreenError(const Event &, void *);
@@ -87,7 +87,7 @@ public:
   void handleClientFailed(const Event &e, void *);
   void handleClientRefused(const Event &e, void *);
   void handleClientDisconnected(const Event &, void *);
-  Client *openClient(const String &name, const NetworkAddress &address, deskflow::Screen *screen);
+  Client *openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen);
   void closeClient(Client *client);
   bool startClient();
   void stopClient();

@@ -31,7 +31,7 @@
 // ClientProxy1_0
 //
 
-ClientProxy1_0::ClientProxy1_0(const String &name, deskflow::IStream *stream, IEventQueue *events)
+ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy(name, stream),
       m_heartbeatTimer(NULL),
       m_parser(&ClientProxy1_0::parseHandshakeMessage),
@@ -278,13 +278,13 @@ void ClientProxy1_0::setClipboardDirty(ClipboardID id, bool dirty)
   m_clipboard[id].m_dirty = dirty;
 }
 
-void ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton, const String &)
+void ClientProxy1_0::keyDown(KeyID key, KeyModifierMask mask, KeyButton, const std::string &)
 {
   LOG((CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x", getName().c_str(), key, mask));
   ProtocolUtil::writef(getStream(), kMsgDKeyDown1_0, key, mask);
 }
 
-void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton, const String &)
+void ClientProxy1_0::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton, const std::string &)
 {
   LOG((CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d", getName().c_str(), key, mask, count));
   ProtocolUtil::writef(getStream(), kMsgDKeyRepeat1_0, key, mask, count);
@@ -338,14 +338,14 @@ void ClientProxy1_0::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
   LOG((CLOG_DEBUG "fileChunkSending not supported"));
 }
 
-String ClientProxy1_0::getSecureInputApp() const
+std::string ClientProxy1_0::getSecureInputApp() const
 {
   // ignore -- not supported on clients
   LOG((CLOG_DEBUG "getSecureInputApp not supported"));
   return "";
 }
 
-void ClientProxy1_0::secureInputNotification(const String &app) const
+void ClientProxy1_0::secureInputNotification(const std::string &app) const
 {
   // ignore -- not supported in protocol 1.0
   LOG((CLOG_DEBUG "secureInputNotification not supported"));

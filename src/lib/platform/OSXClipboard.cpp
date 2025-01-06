@@ -87,7 +87,7 @@ bool OSXClipboard::synchronize()
   return false;
 }
 
-void OSXClipboard::add(EFormat format, const String &data)
+void OSXClipboard::add(EFormat format, const std::string &data)
 {
   if (m_pboard == NULL)
     return;
@@ -107,7 +107,7 @@ void OSXClipboard::add(EFormat format, const String &data)
 
     // skip converters for other formats
     if (converter->getFormat() == format) {
-      String osXData = converter->fromIClipboard(data);
+      std::string osXData = converter->fromIClipboard(data);
       CFStringRef flavorType = converter->getOSXFormat();
       CFDataRef dataRef = CFDataCreate(kCFAllocatorDefault, (UInt8 *)osXData.data(), osXData.size());
       PasteboardItemID itemID = 0;
@@ -168,11 +168,11 @@ bool OSXClipboard::has(EFormat format) const
   return false;
 }
 
-String OSXClipboard::get(EFormat format) const
+std::string OSXClipboard::get(EFormat format) const
 {
   CFStringRef type;
   PasteboardItemID item;
-  String result;
+  std::string result;
 
   if (m_pboard == NULL)
     return result;
@@ -208,7 +208,7 @@ String OSXClipboard::get(EFormat format) const
       throw err;
     }
 
-    result = String((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
+    result = std::string((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
     LOG((CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
   } catch (...) {

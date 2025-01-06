@@ -63,7 +63,7 @@ public:
   virtual bool isEmpty() const;
   virtual IEventJob *getHandler(Event::Type type, void *target) const;
   virtual const char *getTypeName(Event::Type type);
-  virtual Event::Type getRegisteredType(const String &name) const;
+  virtual Event::Type getRegisteredType(const std::string &name) const;
   void *getSystemTarget();
   virtual void waitForReady() const;
 
@@ -107,7 +107,7 @@ private:
   using EventTable = std::map<UInt32, Event>;
   using EventIDList = std::vector<UInt32>;
   using TypeMap = std::map<Event::Type, const char *>;
-  using NameMap = std::map<String, Event::Type>;
+  using NameMap = std::map<std::string, Event::Type>;
   using TypeHandlerTable = std::map<Event::Type, IEventJob *>;
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 

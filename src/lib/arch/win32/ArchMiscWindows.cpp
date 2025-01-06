@@ -384,7 +384,7 @@ void ArchMiscWindows::wakeupDisplay()
 
 bool ArchMiscWindows::wasLaunchedAsService()
 {
-  String name;
+  std::string name;
   if (!getParentProcessName(name)) {
     LOG((CLOG_ERR "cannot determine if process was launched as service"));
     return false;
@@ -393,7 +393,7 @@ bool ArchMiscWindows::wasLaunchedAsService()
   return (name == SERVICE_LAUNCHER);
 }
 
-bool ArchMiscWindows::getParentProcessName(String &name)
+bool ArchMiscWindows::getParentProcessName(std::string &name)
 {
   PROCESSENTRY32 parentEntry;
   if (!getParentProcessEntry(parentEntry)) {

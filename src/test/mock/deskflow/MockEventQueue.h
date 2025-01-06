@@ -41,7 +41,7 @@ public:
   MOCK_METHOD(bool, dispatchEvent, (const Event &), (override));
   MOCK_METHOD(IEventJob *, getHandler, (Event::Type, void *), (const, override));
   MOCK_METHOD(void, deleteTimer, (EventQueueTimer *), (override));
-  MOCK_METHOD(Event::Type, getRegisteredType, (const String &), (const, override));
+  MOCK_METHOD(Event::Type, getRegisteredType, (const std::string &), (const, override));
   MOCK_METHOD(void *, getSystemTarget, (), (override));
   MOCK_METHOD(ClientEvents &, forClient, (), (override));
   MOCK_METHOD(IStreamEvents &, forIStream, (), (override));

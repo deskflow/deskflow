@@ -80,7 +80,7 @@ CFStringRef OSXClipboardBMPConverter::getOSXFormat() const
   return CFSTR("com.microsoft.bmp");
 }
 
-String OSXClipboardBMPConverter::fromIClipboard(const String &bmp) const
+std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) const
 {
   LOG((CLOG_DEBUG1 "getting data from clipboard"));
   // create BMP image
@@ -92,20 +92,20 @@ String OSXClipboardBMPConverter::fromIClipboard(const String &bmp) const
   toLE(dst, static_cast<UInt16>(0));
   toLE(dst, static_cast<UInt16>(0));
   toLE(dst, static_cast<UInt32>(14 + 40));
-  return String(reinterpret_cast<const char *>(header), 14) + bmp;
+  return std::string(reinterpret_cast<const char *>(header), 14) + bmp;
 }
 
-String OSXClipboardBMPConverter::toIClipboard(const String &bmp) const
+std::string OSXClipboardBMPConverter::toIClipboard(const std::string &bmp) const
 {
   // make sure data is big enough for a BMP file
   if (bmp.size() <= 14 + 40) {
-    return String();
+    return std::string();
   }
 
   // check BMP file header
   const UInt8 *rawBMPHeader = reinterpret_cast<const UInt8 *>(bmp.data());
   if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
-    return String();
+    return std::string();
   }
 
   // get offset to image data

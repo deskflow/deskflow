@@ -47,10 +47,10 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, Ke
 }
 
 IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
-    KeyID id, KeyModifierMask mask, KeyButton button, SInt32 count, const std::set<String> &destinations
+    KeyID id, KeyModifierMask mask, KeyButton button, SInt32 count, const std::set<std::string> &destinations
 )
 {
-  String screens = join(destinations);
+  std::string screens = join(destinations);
   const char *buffer = screens.c_str();
 
   // build structure
@@ -82,7 +82,7 @@ bool IKeyState::KeyInfo::isDefault(const char *screens)
   return (screens == NULL || screens[0] == '\0');
 }
 
-bool IKeyState::KeyInfo::contains(const char *screens, const String &name)
+bool IKeyState::KeyInfo::contains(const char *screens, const std::string &name)
 {
   // special cases
   if (isDefault(screens)) {
@@ -93,7 +93,7 @@ bool IKeyState::KeyInfo::contains(const char *screens, const String &name)
   }
 
   // search
-  String match;
+  std::string match;
   match.reserve(name.size() + 2);
   match += ":";
   match += name;
@@ -109,12 +109,12 @@ bool IKeyState::KeyInfo::equal(const KeyInfo *a, const KeyInfo *b)
   );
 }
 
-String IKeyState::KeyInfo::join(const std::set<String> &destinations)
+std::string IKeyState::KeyInfo::join(const std::set<std::string> &destinations)
 {
   // collect destinations into a string.  names are surrounded by ':'
   // which makes searching easy.  the string is empty if there are no
   // destinations and "*" means all destinations.
-  String screens;
+  std::string screens;
   for (auto i = destinations.begin(); i != destinations.end(); ++i) {
     if (*i == "*") {
       screens = "*";
@@ -130,7 +130,7 @@ String IKeyState::KeyInfo::join(const std::set<String> &destinations)
   return screens;
 }
 
-void IKeyState::KeyInfo::split(const char *screens, std::set<String> &dst)
+void IKeyState::KeyInfo::split(const char *screens, std::set<std::string> &dst)
 {
   dst.clear();
   if (isDefault(screens)) {
@@ -144,7 +144,7 @@ void IKeyState::KeyInfo::split(const char *screens, std::set<String> &dst)
   const char *i = screens + 1;
   while (*i != '\0') {
     const char *j = strchr(i, ':');
-    dst.insert(String(i, j - i));
+    dst.insert(std::string(i, j - i));
     i = j + 1;
   }
 }

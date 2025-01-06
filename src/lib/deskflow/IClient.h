@@ -18,12 +18,13 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/clipboard_types.h"
 #include "deskflow/key_types.h"
 #include "deskflow/mouse_types.h"
 #include "deskflow/option_types.h"
+
+#include <string>
 
 //! Client interface
 /*!
@@ -86,14 +87,14 @@ public:
   synthesize an up or repeat for the same client key synthesized by
   keyDown().
   */
-  virtual void keyDown(KeyID id, KeyModifierMask, KeyButton, const String &) = 0;
+  virtual void keyDown(KeyID id, KeyModifierMask, KeyButton, const std::string &) = 0;
 
   //! Notify of key repeat
   /*!
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  virtual void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const String &lang) = 0;
+  virtual void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang) = 0;
 
   //! Notify of key release
   /*!
@@ -161,7 +162,7 @@ public:
   /*!
   Return the client's name.
   */
-  virtual String getName() const = 0;
+  virtual std::string getName() const = 0;
 
   //@}
 

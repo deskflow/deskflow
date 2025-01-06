@@ -68,7 +68,7 @@ public:
   const char *daemonName() const override;
   const char *daemonInfo() const override;
   void loadConfig() override;
-  bool loadConfig(const String &pathname) override;
+  bool loadConfig(const std::string &pathname) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
@@ -97,7 +97,7 @@ public:
   void closeServer(Server *server);
   void stopRetryTimer();
   void updateStatus();
-  void updateStatus(const String &msg);
+  void updateStatus(const std::string &msg);
   void closeClientListener(ClientListener *listen);
   void stopServer();
   void closePrimaryClient(PrimaryClient *primaryClient);
@@ -106,7 +106,7 @@ public:
   bool initServer();
   void retryHandler(const Event &, void *);
   deskflow::Screen *openServerScreen();
-  PrimaryClient *openPrimaryClient(const String &name, deskflow::Screen *screen);
+  PrimaryClient *openPrimaryClient(const std::string &name, deskflow::Screen *screen);
   void handleScreenError(const Event &, void *);
   void handleSuspend(const Event &, void *);
   void handleResume(const Event &, void *);

@@ -17,9 +17,10 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/basic_types.h"
 #include "deskflow/Chunk.h"
+
+#include <string>
 
 #define FILE_CHUNK_META_SIZE 2
 
@@ -32,9 +33,9 @@ class FileChunk : public Chunk
 public:
   FileChunk(size_t size);
 
-  static FileChunk *start(const String &size);
+  static FileChunk *start(const std::string &size);
   static FileChunk *data(UInt8 *data, size_t dataSize);
   static FileChunk *end();
-  static int assemble(deskflow::IStream *stream, String &dataCached, size_t &expectedSize);
+  static int assemble(deskflow::IStream *stream, std::string &dataCached, size_t &expectedSize);
   static void send(deskflow::IStream *stream, UInt8 mark, char *data, size_t dataSize);
 };

@@ -105,7 +105,7 @@ int XWindowsClipboardAnyBitmapConverter::getDataSize() const
   return 8;
 }
 
-String XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) const
+std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::string &bmp) const
 {
   // fill BMP info header with native-endian data
   CBMPInfoHeader infoHeader;
@@ -125,7 +125,7 @@ String XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) co
   // check that format is acceptable
   if (infoHeader.biSize != 40 || infoHeader.biWidth == 0 || infoHeader.biHeight == 0 || infoHeader.biPlanes != 0 ||
       infoHeader.biCompression != 0 || (infoHeader.biBitCount != 24 && infoHeader.biBitCount != 32)) {
-    return String();
+    return std::string();
   }
 
   // convert to image format
@@ -137,13 +137,13 @@ String XWindowsClipboardAnyBitmapConverter::fromIClipboard(const String &bmp) co
   }
 }
 
-String XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) const
+std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string &image) const
 {
   // convert to raw BMP data
   UInt32 w, h, depth;
-  String rawBMP = doToIClipboard(image, w, h, depth);
+  std::string rawBMP = doToIClipboard(image, w, h, depth);
   if (rawBMP.empty() || w == 0 || h == 0 || (depth != 24 && depth != 32)) {
-    return String();
+    return std::string();
   }
 
   // fill BMP info header with little-endian data
@@ -162,5 +162,5 @@ String XWindowsClipboardAnyBitmapConverter::toIClipboard(const String &image) co
   toLE(dst, static_cast<UInt32>(0));
 
   // construct image
-  return String(reinterpret_cast<const char *>(infoHeader), sizeof(infoHeader)) + rawBMP;
+  return std::string(reinterpret_cast<const char *>(infoHeader), sizeof(infoHeader)) + rawBMP;
 }

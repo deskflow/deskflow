@@ -22,7 +22,6 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
@@ -157,7 +156,7 @@ MSWindowsScreen::MSWindowsScreen(
     // SHGetFolderPath is deprecated in vista, but use it for xp support.
     char desktopPath[MAX_PATH];
     if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
-      m_desktopPath = String(desktopPath);
+      m_desktopPath = std::string(desktopPath);
       LOG((CLOG_DEBUG "using desktop for file drag-drop target: %s", m_desktopPath.c_str()));
     } else {
       LOG((CLOG_DEBUG "unable to use desktop as file drag-drop target, code=%d", GetLastError()));
@@ -379,7 +378,7 @@ void MSWindowsScreen::leave()
 
 void MSWindowsScreen::sendDragThread(void *)
 {
-  String &draggingFilename = getDraggingFilename();
+  std::string &draggingFilename = getDraggingFilename();
   size_t size = draggingFilename.size();
 
   if (draggingFilename.empty() == false) {
@@ -791,13 +790,15 @@ void MSWindowsScreen::updateKeys()
   m_desks->updateKeys();
 }
 
-void MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+void MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   PlatformScreen::fakeKeyDown(id, mask, button, lang);
   updateForceShowCursor();
 }
 
-bool MSWindowsScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang)
+bool MSWindowsScreen::fakeKeyRepeat(
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang
+)
 {
   bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
   updateForceShowCursor();
@@ -1777,7 +1778,7 @@ void MSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
   // exception from being thrown.
 }
 
-String &MSWindowsScreen::getDraggingFilename()
+std::string &MSWindowsScreen::getDraggingFilename()
 {
   if (m_draggingStarted) {
     m_dropTarget->clearDraggingFilename();
@@ -1796,7 +1797,7 @@ String &MSWindowsScreen::getDraggingFilename()
     fakeKeyUp(1);
     fakeMouseButton(kButtonLeft, false);
 
-    String filename;
+    std::string filename;
     DOUBLE timeout = ARCH->time() + .5f;
     while (ARCH->time() < timeout) {
       ARCH->sleep(.05f);
@@ -1820,16 +1821,15 @@ String &MSWindowsScreen::getDraggingFilename()
       LOG((CLOG_DEBUG "failed to get drag file name from OLE"));
     }
   }
-
   return m_draggingFilename;
 }
 
-const String &MSWindowsScreen::getDropTarget() const
+const std::string &MSWindowsScreen::getDropTarget() const
 {
   return m_desktopPath;
 }
 
-String MSWindowsScreen::getSecureInputApp() const
+std::string MSWindowsScreen::getSecureInputApp() const
 {
   // ignore on Windows
   return "";

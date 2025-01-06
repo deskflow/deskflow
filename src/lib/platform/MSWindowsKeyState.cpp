@@ -22,7 +22,6 @@
 #include "base/FunctionJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsDesks.h"
@@ -569,7 +568,8 @@ static const Win32Modifiers s_modifiers[] = {{VK_SHIFT, KeyModifierShift},      
                                              {VK_RWIN, KeyModifierSuper}};
 
 MSWindowsKeyState::MSWindowsKeyState(
-    MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled
+    MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector<std::string> layouts,
+    bool isLangSyncEnabled
 )
     : KeyState(events, std::move(layouts), isLangSyncEnabled),
       m_eventTarget(eventTarget),
@@ -587,7 +587,7 @@ MSWindowsKeyState::MSWindowsKeyState(
 
 MSWindowsKeyState::MSWindowsKeyState(
     MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, deskflow::KeyMap &keyMap,
-    std::vector<String> layouts, bool isLangSyncEnabled
+    std::vector<std::string> layouts, bool isLangSyncEnabled
 )
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled),
       m_eventTarget(eventTarget),
@@ -749,13 +749,13 @@ void MSWindowsKeyState::sendKeyEvent(
   }
 }
 
-void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   KeyState::fakeKeyDown(id, mask, button, lang);
 }
 
 bool MSWindowsKeyState::fakeKeyRepeat(
-    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang
 )
 {
   return KeyState::fakeKeyRepeat(id, mask, count, button, lang);

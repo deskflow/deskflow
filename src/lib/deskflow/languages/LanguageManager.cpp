@@ -21,9 +21,9 @@
 
 namespace {
 
-String vectorToString(const std::vector<String> &vector, const String &delimiter = "")
+std::string vectorToString(const std::vector<std::string> &vector, const std::string &delimiter = "")
 {
-  String string;
+  std::string string;
   for (const auto &item : vector) {
     if (&item != &vector[0]) {
       string += delimiter;
@@ -39,12 +39,12 @@ namespace deskflow {
 
 namespace languages {
 
-LanguageManager::LanguageManager(const std::vector<String> &localLanguages) : m_localLanguages(localLanguages)
+LanguageManager::LanguageManager(const std::vector<std::string> &localLanguages) : m_localLanguages(localLanguages)
 {
   LOG((CLOG_INFO "local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
 }
 
-void LanguageManager::setRemoteLanguages(const String &remoteLanguages)
+void LanguageManager::setRemoteLanguages(const std::string &remoteLanguages)
 {
   m_remoteLanguages.clear();
   if (!remoteLanguages.empty()) {
@@ -55,19 +55,19 @@ void LanguageManager::setRemoteLanguages(const String &remoteLanguages)
   LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
 }
 
-const std::vector<String> &LanguageManager::getRemoteLanguages() const
+const std::vector<std::string> &LanguageManager::getRemoteLanguages() const
 {
   return m_remoteLanguages;
 }
 
-const std::vector<String> &LanguageManager::getLocalLanguages() const
+const std::vector<std::string> &LanguageManager::getLocalLanguages() const
 {
   return m_localLanguages;
 }
 
-String LanguageManager::getMissedLanguages() const
+std::string LanguageManager::getMissedLanguages() const
 {
-  String missedLanguages;
+  std::string missedLanguages;
 
   for (const auto &language : m_remoteLanguages) {
     if (!isLanguageInstalled(language)) {
@@ -81,12 +81,12 @@ String LanguageManager::getMissedLanguages() const
   return missedLanguages;
 }
 
-String LanguageManager::getSerializedLocalLanguages() const
+std::string LanguageManager::getSerializedLocalLanguages() const
 {
   return vectorToString(m_localLanguages);
 }
 
-bool LanguageManager::isLanguageInstalled(const String &language) const
+bool LanguageManager::isLanguageInstalled(const std::string &language) const
 {
   bool isInstalled = true;
 

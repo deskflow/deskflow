@@ -59,7 +59,7 @@ public:
     {
     }
     bool m_retry;
-    String m_what;
+    std::string m_what;
   };
 
 public:
@@ -69,7 +69,7 @@ public:
   to create the socket.  \p screen is    the local screen.
   */
   Client(
-      IEventQueue *events, const String &name, const NetworkAddress &address, ISocketFactory *socketFactory,
+      IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
       deskflow::Screen *screen, deskflow::ClientArgs const &args
   );
   Client(Client const &) = delete;
@@ -109,13 +109,13 @@ public:
   virtual void handshakeComplete();
 
   //! Received drag information
-  void dragInfoReceived(UInt32 fileNum, String data);
+  void dragInfoReceived(UInt32 fileNum, std::string data);
 
   //! Create a new thread and use it to send file to Server
   void sendFileToServer(const char *filename);
 
   //! Send dragging file information back to server
-  void sendDragInfo(UInt32 fileCount, String &info, size_t size);
+  void sendDragInfo(UInt32 fileCount, std::string &info, size_t size);
 
   //@}
   //! @name accessors
@@ -151,7 +151,7 @@ public:
   }
 
   //! Return received file data
-  String &getReceivedFileData()
+  std::string &getReceivedFileData()
   {
     return m_receivedFileData;
   }
@@ -182,8 +182,8 @@ public:
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);
   virtual void setClipboardDirty(ClipboardID, bool);
-  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &);
-  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang);
+  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &);
+  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang);
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
   virtual void mouseDown(ButtonID);
   virtual void mouseUp(ButtonID);
@@ -193,7 +193,7 @@ public:
   virtual void screensaver(bool activate);
   virtual void resetOptions();
   virtual void setOptions(const OptionsList &options);
-  virtual String getName() const;
+  virtual std::string getName() const;
 
 private:
   void sendClipboard(ClipboardID);
@@ -233,7 +233,7 @@ public:
   bool m_mock;
 
 private:
-  String m_name;
+  std::string m_name;
   NetworkAddress m_serverAddress;
   ISocketFactory *m_socketFactory;
   deskflow::Screen *m_screen;
@@ -247,12 +247,12 @@ private:
   bool m_ownClipboard[kClipboardEnd];
   bool m_sentClipboard[kClipboardEnd];
   IClipboard::Time m_timeClipboard[kClipboardEnd];
-  String m_dataClipboard[kClipboardEnd];
+  std::string m_dataClipboard[kClipboardEnd];
   IEventQueue *m_events;
   std::size_t m_expectedFileSize;
-  String m_receivedFileData;
+  std::string m_receivedFileData;
   DragFileList m_dragFileList;
-  String m_dragFileExt;
+  std::string m_dragFileExt;
   using AutoThread = std::unique_ptr<Thread>;
   AutoThread m_sendFileThread;
   AutoThread m_writeToDropDirThread;

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/stdset.h"
 #include "common/stdstring.h"
 
@@ -164,7 +163,7 @@ public:
   static bool wasLaunchedAsService();
 
   //! Returns true if we got the parent process name.
-  static bool getParentProcessName(String &name);
+  static bool getParentProcessName(std::string &name);
 
   static HINSTANCE instanceWin32();
 

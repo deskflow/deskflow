@@ -38,10 +38,10 @@ public:
   virtual std::string getPluginDirectory();
   virtual std::string getProfileDirectory();
   virtual std::string concatPath(const std::string &prefix, const std::string &suffix);
-  virtual void setProfileDirectory(const String &s);
-  virtual void setPluginDirectory(const String &s);
+  virtual void setProfileDirectory(const std::string &s);
+  virtual void setPluginDirectory(const std::string &s);
 
 private:
-  String m_profileDirectory;
-  String m_pluginDirectory;
+  std::string m_profileDirectory;
+  std::string m_pluginDirectory;
 };

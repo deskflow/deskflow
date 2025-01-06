@@ -93,12 +93,12 @@ public:
 private:
   void init();
   void bufferThread(void *);
-  String getChunk(size_t count);
-  void appendBuffer(const String &text);
+  std::string getChunk(size_t count);
+  void appendBuffer(const std::string &text);
   bool isRunning();
 
 private:
-  using Buffer = std::deque<String>;
+  using Buffer = std::deque<std::string>;
 
   IpcServer &m_ipcServer;
   Buffer m_buffer;

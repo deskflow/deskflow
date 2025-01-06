@@ -506,7 +506,7 @@ INSTANTIATE_TEST_SUITE_P(WriteIntVectorTest, WriteIntVectorTest,
                                            std::make_tuple("%4I", 4)));
 
 TEST_F(ProtocolUtilTests, write_string_test) {
-  const String Expected = "Expected";
+  const std::string Expected = "Expected";
   const std::vector<UInt8> ExpectedVector = {'E', 'x', 'p', 'e',
                                              'c', 't', 'e', 'd'};
   EXPECT_CALL(stream, write(EqVoidVectorInt1byte(ExpectedVector),

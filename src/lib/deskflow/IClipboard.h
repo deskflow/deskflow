@@ -19,8 +19,9 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "common/IInterface.h"
+
+#include <string>
 
 //! Clipboard interface
 /*!
@@ -81,7 +82,7 @@ public:
   Add data in the given format to the clipboard.  May only be
   called after a successful empty().
   */
-  virtual void add(EFormat, const String &data) = 0;
+  virtual void add(EFormat, const std::string &data) = 0;
 
   //@}
   //! @name accessors
@@ -127,21 +128,21 @@ public:
   if there is no data in that format.  Must be called between
   a successful open() and close().
   */
-  virtual String get(EFormat) const = 0;
+  virtual std::string get(EFormat) const = 0;
 
   //! Marshall clipboard data
   /*!
   Merge \p clipboard's data into a single buffer that can be later
   unmarshalled to restore the clipboard and return the buffer.
   */
-  static String marshall(const IClipboard *clipboard);
+  static std::string marshall(const IClipboard *clipboard);
 
   //! Unmarshall clipboard data
   /*!
   Extract marshalled clipboard data and store it in \p clipboard.
   Sets the clipboard time to \c time.
   */
-  static void unmarshall(IClipboard *clipboard, const String &data, Time time);
+  static void unmarshall(IClipboard *clipboard, const std::string &data, Time time);
 
   //! Copy clipboard
   /*!
@@ -166,5 +167,5 @@ public:
 
 private:
   static UInt32 readUInt32(const char *);
-  static void writeUInt32(String *, UInt32);
+  static void writeUInt32(std::string *, UInt32);
 };

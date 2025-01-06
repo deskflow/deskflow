@@ -64,8 +64,8 @@ public:
   virtual void updateKeyMap();
   virtual void updateKeyState();
   virtual void setHalfDuplexMask(KeyModifierMask);
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
   virtual bool fakeCtrlAltDel();
@@ -84,7 +84,7 @@ public:
   {
     return m_fakeDraggingStarted;
   }
-  virtual String &getDraggingFilename()
+  virtual std::string &getDraggingFilename()
   {
     return m_draggingFilename;
   }
@@ -112,7 +112,7 @@ public:
   {
     throw std::runtime_error("fakeDraggingFiles not implemented");
   }
-  virtual const String &getDropTarget() const
+  virtual const std::string &getDropTarget() const
   {
     throw std::runtime_error("getDropTarget not implemented");
   }
@@ -143,7 +143,7 @@ protected:
   virtual SInt32 mapClientScrollDirection(SInt32) const;
 
 protected:
-  String m_draggingFilename;
+  std::string m_draggingFilename;
   bool m_draggingStarted;
   bool m_fakeDraggingStarted;
 

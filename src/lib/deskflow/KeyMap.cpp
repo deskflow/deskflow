@@ -243,7 +243,7 @@ void KeyMap::foreachKey(ForeachKeyCallback cb, void *userData)
 
 const KeyMap::KeyItem *KeyMap::mapKey(
     Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-    KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
 ) const
 {
   LOG(
@@ -310,12 +310,12 @@ const KeyMap::KeyItem *KeyMap::mapKey(
   return item;
 }
 
-void KeyMap::setLanguageData(std::vector<String> layouts)
+void KeyMap::setLanguageData(std::vector<std::string> layouts)
 {
   m_keyboardLayouts = std::move(layouts);
 }
 
-SInt32 KeyMap::getLanguageGroupID(SInt32 group, const String &lang) const
+SInt32 KeyMap::getLanguageGroupID(SInt32 group, const std::string &lang) const
 {
   SInt32 id = group;
 
@@ -488,7 +488,7 @@ void KeyMap::setModifierKeys()
 
 const KeyMap::KeyItem *KeyMap::mapCommandKey(
     Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-    KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
 ) const
 {
   static const KeyModifierMask s_overrideModifiers = 0xffffu;
@@ -591,7 +591,7 @@ KeyMap::getKeyItemList(const KeyMap::KeyGroupTable &keyGroupTable, SInt32 group,
 
 const KeyMap::KeyItem *KeyMap::mapCharacterKey(
     Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-    KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
 ) const
 {
   // find KeySym in table
@@ -641,7 +641,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
   return &keyItem;
 }
 
-void KeyMap::addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const String &lang) const
+void KeyMap::addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const std::string &lang) const
 {
   group = getLanguageGroupID(group, lang);
   keys.push_back(Keystroke(group, true, false));
@@ -649,7 +649,7 @@ void KeyMap::addGroupToKeystroke(Keystrokes &keys, SInt32 &group, const String &
 
 const KeyMap::KeyItem *KeyMap::mapModifierKey(
     Keystrokes &keys, KeyID id, SInt32 group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
-    KeyModifierMask desiredMask, bool isAutoRepeat, const String &lang
+    KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
 ) const
 {
   return mapCharacterKey(keys, id, group, activeModifiers, currentState, desiredMask, isAutoRepeat, lang);
@@ -708,7 +708,7 @@ const KeyMap::KeyItem *KeyMap::keyForModifier(KeyButton button, SInt32 group, SI
 bool KeyMap::keysForKeyItem(
     const KeyItem &keyItem, SInt32 &group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
     KeyModifierMask desiredState, KeyModifierMask overrideModifiers, bool isAutoRepeat, Keystrokes &keystrokes,
-    const String &lang
+    const std::string &lang
 ) const
 {
   static const KeyModifierMask s_notRequiredMask = KeyModifierAltGr | KeyModifierNumLock | KeyModifierScrollLock;
@@ -1090,12 +1090,12 @@ KeyID KeyMap::getDeadKey(KeyID key)
   }
 }
 
-String KeyMap::formatKey(KeyID key, KeyModifierMask mask)
+std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
 {
   // initialize tables
   initKeyNameMaps();
 
-  String x;
+  std::string x;
   for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
     KeyModifierMask mod = (1u << i);
     if ((mask & mod) != 0 && s_modifierToNameMap->count(mod) > 0) {
@@ -1120,7 +1120,7 @@ String KeyMap::formatKey(KeyID key, KeyModifierMask mask)
   return x;
 }
 
-bool KeyMap::parseKey(const String &x, KeyID &key)
+bool KeyMap::parseKey(const std::string &x, KeyID &key)
 {
   // initialize tables
   initKeyNameMaps();
@@ -1152,20 +1152,20 @@ bool KeyMap::parseKey(const String &x, KeyID &key)
   return true;
 }
 
-bool KeyMap::parseModifiers(String &x, KeyModifierMask &mask)
+bool KeyMap::parseModifiers(std::string &x, KeyModifierMask &mask)
 {
   // initialize tables
   initKeyNameMaps();
 
   mask = 0;
-  String::size_type tb = x.find_first_not_of(" \t", 0);
-  while (tb != String::npos) {
+  std::string::size_type tb = x.find_first_not_of(" \t", 0);
+  while (tb != std::string::npos) {
     // get next component
-    String::size_type te = x.find_first_of(" \t+)", tb);
-    if (te == String::npos) {
+    std::string::size_type te = x.find_first_of(" \t+)", tb);
+    if (te == std::string::npos) {
       te = x.size();
     }
-    String c = x.substr(tb, te - tb);
+    std::string c = x.substr(tb, te - tb);
     if (c.empty()) {
       // missing component
       return false;
@@ -1181,9 +1181,9 @@ bool KeyMap::parseModifiers(String &x, KeyModifierMask &mask)
     } else {
       // unknown string
       x.erase(0, tb);
-      String::size_type tb = x.find_first_not_of(" \t");
-      String::size_type te = x.find_last_not_of(" \t");
-      if (tb == String::npos) {
+      std::string::size_type tb = x.find_first_not_of(" \t");
+      std::string::size_type te = x.find_last_not_of(" \t");
+      if (tb == std::string::npos) {
         x = "";
       } else {
         x = x.substr(tb, te - tb + 1);
@@ -1193,7 +1193,7 @@ bool KeyMap::parseModifiers(String &x, KeyModifierMask &mask)
 
     // check for '+' or end of string
     tb = x.find_first_not_of(" \t", te);
-    if (tb != String::npos) {
+    if (tb != std::string::npos) {
       if (x[tb] != '+') {
         // expected '+'
         return false;

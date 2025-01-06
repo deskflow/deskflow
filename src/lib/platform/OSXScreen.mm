@@ -72,7 +72,7 @@ enum
 };
 
 int getSecureInputEventPID();
-String getProcessName(int pid);
+std::string getProcessName(int pid);
 
 // TODO: upgrade deprecated function usage in these functions.
 void setZeroSuppressionInterval();
@@ -837,7 +837,7 @@ void OSXScreen::leave()
   hideCursor();
 
   if (isDraggingStarted()) {
-    String &fileList = getDraggingFilename();
+    std::string &fileList = getDraggingFilename();
 
     if (!m_isPrimary) {
       if (fileList.empty() == false) {
@@ -848,7 +848,7 @@ void OSXScreen::leave()
         di.setFilename(fileList);
         DragFileList dragFileList;
         dragFileList.push_back(di);
-        String info;
+        std::string info;
         UInt32 fileCount = DragInformation::setupDragInfo(dragFileList, info);
         client->sendDragInfo(fileCount, info, info.size());
         LOG((CLOG_DEBUG "send dragging file to server"));
@@ -1918,7 +1918,7 @@ char *OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 void OSXScreen::fakeDraggingFiles(DragFileList fileList)
 {
   m_fakeDraggingStarted = true;
-  String fileExt;
+  std::string fileExt;
   if (fileList.size() == 1) {
     fileExt = DragInformation::getDragFileExtension(fileList.at(0).getFilename());
   }
@@ -1930,7 +1930,7 @@ void OSXScreen::fakeDraggingFiles(DragFileList fileList)
 #endif
 }
 
-String &OSXScreen::getDraggingFilename()
+std::string &OSXScreen::getDraggingFilename()
 {
   if (m_draggingStarted) {
     m_draggingFilename.clear();
@@ -1977,7 +1977,7 @@ void OSXScreen::waitForCarbonLoop() const
 #endif
 }
 
-String OSXScreen::getSecureInputApp() const
+std::string OSXScreen::getSecureInputApp() const
 {
   if (IsSecureEventInputEnabled()) {
     int secureInputProcessPID = getSecureInputEventPID();
@@ -2044,7 +2044,7 @@ int getSecureInputEventPID()
   return pid;
 }
 
-String getProcessName(int pid)
+std::string getProcessName(int pid)
 {
   if (!pid)
     return "";
