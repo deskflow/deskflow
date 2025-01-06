@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/common.h"
-#include "common/stdstring.h"
+#include <string>
 
 #include <stdarg.h>
 #include <vector>

@@ -22,7 +22,6 @@ add_library(common INTERFACE
   stdpre.h
   stdset.h
   stdsstream.h
-  stdstring.h
   stdvector.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )

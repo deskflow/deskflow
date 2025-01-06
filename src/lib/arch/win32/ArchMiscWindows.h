@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/stdset.h"
-#include "common/stdstring.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
