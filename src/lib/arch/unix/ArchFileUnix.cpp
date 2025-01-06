@@ -146,12 +146,12 @@ std::string ArchFileUnix::concatPath(const std::string &prefix, const std::strin
   return path;
 }
 
-void ArchFileUnix::setProfileDirectory(const String &s)
+void ArchFileUnix::setProfileDirectory(const std::string &s)
 {
   m_profileDirectory = s;
 }
 
-void ArchFileUnix::setPluginDirectory(const String &s)
+void ArchFileUnix::setPluginDirectory(const std::string &s)
 {
   m_pluginDirectory = s;
 }

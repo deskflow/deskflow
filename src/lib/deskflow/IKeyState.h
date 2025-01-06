@@ -21,7 +21,6 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
-#include "base/String.h"
 #include "common/IInterface.h"
 #include "common/stdset.h"
 #include "deskflow/key_types.h"
@@ -46,14 +45,14 @@ public:
   {
   public:
     static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count, const std::set<String> &destinations);
+    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count, const std::set<std::string> &destinations);
     static KeyInfo *alloc(const KeyInfo &);
 
     static bool isDefault(const char *screens);
-    static bool contains(const char *screens, const String &name);
+    static bool contains(const char *screens, const std::string &name);
     static bool equal(const KeyInfo *, const KeyInfo *);
-    static String join(const std::set<String> &destinations);
-    static void split(const char *screens, std::set<String> &);
+    static std::string join(const std::set<std::string> &destinations);
+    static void split(const char *screens, std::set<std::string> &);
 
   public:
     KeyID m_key;
@@ -95,13 +94,14 @@ public:
   /*!
   Synthesizes a key press event and updates the key state.
   */
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) = 0;
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) = 0;
 
   //! Fake a key repeat
   /*!
   Synthesizes a key repeat event and updates the key state.
   */
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang) = 0;
+  virtual bool
+  fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang) = 0;
 
   //! Fake a key release
   /*!

@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "deskflow/IScreenSaver.h"
 
 #define WIN32_LEAN_AND_MEAN

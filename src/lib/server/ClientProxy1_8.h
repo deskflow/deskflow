@@ -21,10 +21,10 @@
 class ClientProxy1_8 : public ClientProxy1_7
 {
 public:
-  ClientProxy1_8(const String &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
+  ClientProxy1_8(const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
   ~ClientProxy1_8() override = default;
 
-  void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override;
+  void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override;
 
 private:
   void synchronizeLanguages() const;

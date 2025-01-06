@@ -19,9 +19,10 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
+
+#include <string>
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow
@@ -44,7 +45,7 @@ public:
   property is deleted after being read.
   */
   static bool getWindowProperty(
-      Display *, Window window, Atom property, String *data, Atom *type, SInt32 *format, bool deleteProperty
+      Display *, Window window, Atom property, std::string *data, Atom *type, SInt32 *format, bool deleteProperty
   );
 
   //! Set property
@@ -79,42 +80,42 @@ public:
   /*!
   Converts \p atom to its string representation.
   */
-  static String atomToString(Display *, Atom atom);
+  static std::string atomToString(Display *, Atom atom);
 
   //! Convert several Atoms to a string
   /*!
   Converts each atom in \p atoms to its string representation and
   concatenates the results.
   */
-  static String atomsToString(Display *display, const Atom *atom, UInt32 num);
+  static std::string atomsToString(Display *display, const Atom *atom, UInt32 num);
 
   //! Prepare a property of atoms for use
   /*!
   64-bit systems may need to modify a property's data if it's a
   list of Atoms before using it.
   */
-  static void convertAtomProperty(String &data);
+  static void convertAtomProperty(std::string &data);
 
   //! Append an Atom to property data
   /*!
   Converts \p atom to a 32-bit on-the-wire format and appends it to
   \p data.
   */
-  static void appendAtomData(String &data, Atom atom);
+  static void appendAtomData(std::string &data, Atom atom);
 
   //! Replace an Atom in property data
   /*!
   Converts \p atom to a 32-bit on-the-wire format and replaces the atom
   at index \p index in \p data.
   */
-  static void replaceAtomData(String &data, UInt32 index, Atom atom);
+  static void replaceAtomData(std::string &data, UInt32 index, Atom atom);
 
   //! Append an Time to property data
   /*!
   Converts \p time to a 32-bit on-the-wire format and appends it to
   \p data.
   */
-  static void appendTimeData(String &data, Time time);
+  static void appendTimeData(std::string &data, Time time);
 
   //! X11 error handler
   /*!

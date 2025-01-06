@@ -43,7 +43,7 @@ NetworkAddress::NetworkAddress(const NetworkAddress &addr) : m_hostname(addr.m_h
   *this = addr;
 }
 
-NetworkAddress::NetworkAddress(const String &hostname, int port) : m_hostname(hostname), m_port(port)
+NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostname(hostname), m_port(port)
 {
   // detect internet protocol version with colom count
   auto isColomPredicate = [](char c) { return c == ':'; };
@@ -64,11 +64,11 @@ NetworkAddress::NetworkAddress(const String &hostname, int port) : m_hostname(ho
     // ipv6 part
     if (m_hostname[0] == '[') {
       // ipv6 with port part
-      String portDelimeter = "]:";
+      std::string portDelimeter = "]:";
       auto hostIt = m_hostname.find(portDelimeter);
 
       // bad syntax of ipv6 with port
-      if (hostIt == String::npos) {
+      if (hostIt == std::string::npos) {
         throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
       }
 
@@ -89,7 +89,7 @@ NetworkAddress::NetworkAddress(const String &hostname, int port) : m_hostname(ho
     }
 
     // ensure that ipv6 link-local adress ended with scope id
-    if (m_hostname.rfind("fe80:", 0) == 0 && m_hostname.find('%') == String::npos) {
+    if (m_hostname.rfind("fe80:", 0) == 0 && m_hostname.find('%') == std::string::npos) {
       throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
     }
   }
@@ -208,7 +208,7 @@ int NetworkAddress::getPort() const
   return m_port;
 }
 
-String NetworkAddress::getHostname() const
+std::string NetworkAddress::getHostname() const
 {
   return m_hostname;
 }

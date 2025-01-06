@@ -22,6 +22,7 @@
 #include "io/XIO.h"
 
 #include <stdarg.h>
+#include <vector>
 
 namespace deskflow {
 class IStream;
@@ -50,7 +51,7 @@ public:
   - \%1I  -- converts std::vector<UInt8>* to 1 byte integers
   - \%2I  -- converts std::vector<UInt16>* to 2 byte integers in NBO
   - \%4I  -- converts std::vector<UInt32>* to 4 byte integers in NBO
-  - \%s   -- converts String* to stream of bytes
+  - \%s   -- converts std::string* to stream of bytes
   - \%S   -- converts integer N and const UInt8* to stream of N bytes
   */
   static void writef(deskflow::IStream *, const char *fmt, ...);
@@ -69,7 +70,7 @@ public:
   - \%1I  -- reads 1 byte integers;  arg is std::vector<UInt8>*
   - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<UInt16>*
   - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*
-  - \%s   -- reads bytes;  argument must be a String*, \b not a char*
+  - \%s   -- reads bytes;  argument must be a std::string*, \b not a char*
   */
   static bool readf(deskflow::IStream *, const char *fmt, ...);
 
@@ -100,7 +101,7 @@ private:
   /**
    * @brief Handles an array of bytes
    */
-  static void readBytes(deskflow::IStream *, UInt32, String *);
+  static void readBytes(deskflow::IStream *, UInt32, std::string *);
 };
 
 //! Mismatched read exception
@@ -112,5 +113,5 @@ class XIOReadMismatch : public XIO
 {
 public:
   // XBase overrides
-  virtual String getWhat() const throw();
+  virtual std::string getWhat() const throw();
 };

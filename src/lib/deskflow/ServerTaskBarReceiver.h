@@ -21,7 +21,6 @@
 #include "arch/IArchTaskBarReceiver.h"
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "common/stdvector.h"
 #include "deskflow/ServerApp.h"
 #include "server/Server.h"
@@ -42,9 +41,9 @@ public:
   /*!
   Determine the status and query required information from the server.
   */
-  void updateStatus(Server *, const String &errorMsg);
+  void updateStatus(Server *, const std::string &errorMsg);
 
-  void updateStatus(INode *n, const String &errorMsg)
+  void updateStatus(INode *n, const std::string &errorMsg)
   {
     updateStatus((Server *)n, errorMsg);
   }
@@ -61,7 +60,7 @@ public:
   virtual std::string getToolTip() const;
 
 protected:
-  using Clients = std::vector<String>;
+  using Clients = std::vector<std::string>;
   enum EState
   {
     kNotRunning,
@@ -75,7 +74,7 @@ protected:
   EState getStatus() const;
 
   //! Get error message
-  const String &getErrorMessage() const;
+  const std::string &getErrorMessage() const;
 
   //! Get connected clients
   const Clients &getClients() const;
@@ -95,7 +94,7 @@ protected:
 
 private:
   EState m_state;
-  String m_errorMessage;
+  std::string m_errorMessage;
   Clients m_clients;
   IEventQueue *m_events;
 };

@@ -49,12 +49,14 @@ void PlatformScreen::setHalfDuplexMask(KeyModifierMask mask)
   getKeyState()->setHalfDuplexMask(mask);
 }
 
-void PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+void PlatformScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   getKeyState()->fakeKeyDown(id, mask, button, lang);
 }
 
-bool PlatformScreen::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang)
+bool PlatformScreen::fakeKeyRepeat(
+    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang
+)
 {
   return getKeyState()->fakeKeyRepeat(id, mask, count, button, lang);
 }

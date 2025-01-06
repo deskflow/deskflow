@@ -20,7 +20,6 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "server/BaseClientProxy.h"
 
 namespace deskflow {
@@ -34,7 +33,7 @@ public:
   /*!
   \c name is the name of the client.
   */
-  ClientProxy(const String &name, deskflow::IStream *adoptedStream);
+  ClientProxy(const std::string &name, deskflow::IStream *adoptedStream);
   ClientProxy(ClientProxy const &) = delete;
   ClientProxy(ClientProxy &&) = delete;
   ~ClientProxy();
@@ -75,8 +74,8 @@ public:
   void setClipboard(ClipboardID, const IClipboard *) override = 0;
   void grabClipboard(ClipboardID) override = 0;
   void setClipboardDirty(ClipboardID, bool) override = 0;
-  void keyDown(KeyID, KeyModifierMask, KeyButton, const String &) override = 0;
-  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &lang) override = 0;
+  void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override = 0;
+  void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang) override = 0;
   void keyUp(KeyID, KeyModifierMask, KeyButton) override = 0;
   void mouseDown(ButtonID) override = 0;
   void mouseUp(ButtonID) override = 0;
@@ -88,7 +87,7 @@ public:
   void setOptions(const OptionsList &options) override = 0;
   void sendDragInfo(UInt32 fileCount, const char *info, size_t size) override = 0;
   void fileChunkSending(UInt8 mark, char *data, size_t dataSize) override = 0;
-  void secureInputNotification(const String &app) const override = 0;
+  void secureInputNotification(const std::string &app) const override = 0;
 
 private:
   deskflow::IStream *m_stream;

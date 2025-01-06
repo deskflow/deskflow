@@ -18,9 +18,10 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/stdvector.h"
 #include "deskflow/KeyState.h"
+
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
@@ -38,11 +39,12 @@ class MSWindowsKeyState : public KeyState
 {
 public:
   MSWindowsKeyState(
-      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled
+      MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector<std::string> layouts,
+      bool isLangSyncEnabled
   );
   MSWindowsKeyState(
       MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, deskflow::KeyMap &keyMap,
-      std::vector<String> layouts, bool isLangSyncEnabled
+      std::vector<std::string> layouts, bool isLangSyncEnabled
   );
   virtual ~MSWindowsKeyState();
 
@@ -140,8 +142,8 @@ public:
   //@}
 
   // IKeyState overrides
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
   virtual bool fakeCtrlAltDel();
   virtual KeyModifierMask pollActiveModifiers() const;
   virtual SInt32 pollActiveGroup() const;

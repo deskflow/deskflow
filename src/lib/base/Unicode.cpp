@@ -84,7 +84,7 @@ inline static void setError(bool *errors)
 UInt32 Unicode::s_invalid = 0x0000ffff;
 UInt32 Unicode::s_replacement = 0x0000fffd;
 
-bool Unicode::isUTF8(const String &src)
+bool Unicode::isUTF8(const std::string &src)
 {
   // convert and test each character
   const UInt8 *data = reinterpret_cast<const UInt8 *>(src.c_str());
@@ -96,14 +96,14 @@ bool Unicode::isUTF8(const String &src)
   return true;
 }
 
-String Unicode::UTF8ToUCS2(const String &src, bool *errors)
+std::string Unicode::UTF8ToUCS2(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
 
   // get size of input string and reserve some space in output
   UInt32 n = (UInt32)src.size();
-  String dst;
+  std::string dst;
   dst.reserve(2 * n);
 
   // convert each character
@@ -123,14 +123,14 @@ String Unicode::UTF8ToUCS2(const String &src, bool *errors)
   return dst;
 }
 
-String Unicode::UTF8ToUCS4(const String &src, bool *errors)
+std::string Unicode::UTF8ToUCS4(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
 
   // get size of input string and reserve some space in output
   UInt32 n = (UInt32)src.size();
-  String dst;
+  std::string dst;
   dst.reserve(4 * n);
 
   // convert each character
@@ -146,14 +146,14 @@ String Unicode::UTF8ToUCS4(const String &src, bool *errors)
   return dst;
 }
 
-String Unicode::UTF8ToUTF16(const String &src, bool *errors)
+std::string Unicode::UTF8ToUTF16(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
 
   // get size of input string and reserve some space in output
   UInt32 n = (UInt32)src.size();
-  String dst;
+  std::string dst;
   dst.reserve(2 * n);
 
   // convert each character
@@ -181,14 +181,14 @@ String Unicode::UTF8ToUTF16(const String &src, bool *errors)
   return dst;
 }
 
-String Unicode::UTF8ToUTF32(const String &src, bool *errors)
+std::string Unicode::UTF8ToUTF32(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
 
   // get size of input string and reserve some space in output
   UInt32 n = (UInt32)src.size();
-  String dst;
+  std::string dst;
   dst.reserve(4 * n);
 
   // convert each character
@@ -207,7 +207,7 @@ String Unicode::UTF8ToUTF32(const String &src, bool *errors)
   return dst;
 }
 
-String Unicode::UTF8ToText(const String &src, bool *errors)
+std::string Unicode::UTF8ToText(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -220,7 +220,7 @@ String Unicode::UTF8ToText(const String &src, bool *errors)
   int len = ARCH->convStringWCToMB(NULL, tmp, size, errors);
   char *mbs = new char[len + 1];
   ARCH->convStringWCToMB(mbs, tmp, size, errors);
-  String text(mbs, len);
+  std::string text(mbs, len);
 
   // clean up
   delete[] mbs;
@@ -229,7 +229,7 @@ String Unicode::UTF8ToText(const String &src, bool *errors)
   return text;
 }
 
-String Unicode::UCS2ToUTF8(const String &src, bool *errors)
+std::string Unicode::UCS2ToUTF8(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -239,7 +239,7 @@ String Unicode::UCS2ToUTF8(const String &src, bool *errors)
   return doUCS2ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::UCS4ToUTF8(const String &src, bool *errors)
+std::string Unicode::UCS4ToUTF8(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -249,7 +249,7 @@ String Unicode::UCS4ToUTF8(const String &src, bool *errors)
   return doUCS4ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::UTF16ToUTF8(const String &src, bool *errors)
+std::string Unicode::UTF16ToUTF8(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -259,7 +259,7 @@ String Unicode::UTF16ToUTF8(const String &src, bool *errors)
   return doUTF16ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::UTF32ToUTF8(const String &src, bool *errors)
+std::string Unicode::UTF32ToUTF8(const std::string &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -269,7 +269,7 @@ String Unicode::UTF32ToUTF8(const String &src, bool *errors)
   return doUTF32ToUTF8(reinterpret_cast<const UInt8 *>(src.data()), n, errors);
 }
 
-String Unicode::textToUTF8(const String &src, bool *errors, IArchString::EWideCharEncoding encoding)
+std::string Unicode::textToUTF8(const std::string &src, bool *errors, IArchString::EWideCharEncoding encoding)
 {
   // default to success
   resetError(errors);
@@ -281,7 +281,7 @@ String Unicode::textToUTF8(const String &src, bool *errors, IArchString::EWideCh
   ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
 
   // convert to UTF8
-  String utf8 = wideCharToUTF8(wcs, len, errors, encoding);
+  std::string utf8 = wideCharToUTF8(wcs, len, errors, encoding);
 
   // clean up
   delete[] wcs;
@@ -289,10 +289,10 @@ String Unicode::textToUTF8(const String &src, bool *errors, IArchString::EWideCh
   return utf8;
 }
 
-wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size, bool *errors)
+wchar_t *Unicode::UTF8ToWideChar(const std::string &src, UInt32 &size, bool *errors)
 {
   // convert to platform's wide character encoding
-  String tmp;
+  std::string tmp;
   switch (ARCH->getWideCharEncoding()) {
   case IArchString::kUCS2:
     tmp = UTF8ToUCS2(src, errors);
@@ -324,7 +324,8 @@ wchar_t *Unicode::UTF8ToWideChar(const String &src, UInt32 &size, bool *errors)
   return dst;
 }
 
-String Unicode::wideCharToUTF8(const wchar_t *src, UInt32 size, bool *errors, IArchString::EWideCharEncoding encoding)
+std::string
+Unicode::wideCharToUTF8(const wchar_t *src, UInt32 size, bool *errors, IArchString::EWideCharEncoding encoding)
 {
   if (encoding == IArchString::kPlatformDetermined) {
     encoding = ARCH->getWideCharEncoding();
@@ -347,14 +348,14 @@ String Unicode::wideCharToUTF8(const wchar_t *src, UInt32 size, bool *errors, IA
 
   default:
     assert(0 && "unknown wide character encoding");
-    return String();
+    return std::string();
   }
 }
 
-String Unicode::doUCS2ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
+std::string Unicode::doUCS2ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
 {
   // make some space
-  String dst;
+  std::string dst;
   dst.reserve(n);
 
   // check if first character is 0xfffe or 0xfeff
@@ -387,10 +388,10 @@ String Unicode::doUCS2ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
   return dst;
 }
 
-String Unicode::doUCS4ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
+std::string Unicode::doUCS4ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
 {
   // make some space
-  String dst;
+  std::string dst;
   dst.reserve(n);
 
   // check if first character is 0xfffe or 0xfeff
@@ -423,10 +424,10 @@ String Unicode::doUCS4ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
   return dst;
 }
 
-String Unicode::doUTF16ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
+std::string Unicode::doUTF16ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
 {
   // make some space
-  String dst;
+  std::string dst;
   dst.reserve(n);
 
   // check if first character is 0xfffe or 0xfeff
@@ -482,10 +483,10 @@ String Unicode::doUTF16ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
   return dst;
 }
 
-String Unicode::doUTF32ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
+std::string Unicode::doUTF32ToUTF8(const UInt8 *data, UInt32 n, bool *errors)
 {
   // make some space
-  String dst;
+  std::string dst;
   dst.reserve(n);
 
   // check if first character is 0xfffe or 0xfeff
@@ -672,7 +673,7 @@ UInt32 Unicode::fromUTF8(const UInt8 *&data, UInt32 &n)
   return c;
 }
 
-void Unicode::toUTF8(String &dst, UInt32 c, bool *errors)
+void Unicode::toUTF8(std::string &dst, UInt32 c, bool *errors)
 {
   UInt8 data[6];
 

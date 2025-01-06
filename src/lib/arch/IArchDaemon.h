@@ -18,8 +18,8 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/IInterface.h"
+#include <string>
 
 //! Interface for architecture dependent daemonizing
 /*!

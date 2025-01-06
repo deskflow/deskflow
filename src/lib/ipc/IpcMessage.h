@@ -18,8 +18,9 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/String.h"
 #include "common/ipc.h"
+
+#include <string>
 
 class IpcMessage : public EventData
 {
@@ -72,27 +73,27 @@ public:
 class IpcLogLineMessage : public IpcMessage
 {
 public:
-  explicit IpcLogLineMessage(const String &logLine);
+  explicit IpcLogLineMessage(const std::string &logLine);
   ~IpcLogLineMessage() override = default;
 
   //! Gets the log line.
-  String logLine() const
+  std::string logLine() const
   {
     return m_logLine;
   }
 
 private:
-  String m_logLine;
+  std::string m_logLine;
 };
 
 class IpcCommandMessage : public IpcMessage
 {
 public:
-  explicit IpcCommandMessage(const String &command, bool elevate);
+  explicit IpcCommandMessage(const std::string &command, bool elevate);
   ~IpcCommandMessage() override = default;
 
   //! Gets the command.
-  String command() const
+  std::string command() const
   {
     return m_command;
   }
@@ -104,6 +105,6 @@ public:
   }
 
 private:
-  String m_command;
+  std::string m_command;
   bool m_elevate;
 };

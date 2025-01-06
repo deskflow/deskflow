@@ -26,7 +26,7 @@ class IEventQueue;
 class ClientProxy1_2 : public ClientProxy1_1
 {
 public:
-  ClientProxy1_2(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
+  ClientProxy1_2(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ~ClientProxy1_2();
 
   // IClient overrides

@@ -20,7 +20,6 @@
 
 #include "arch/IArchNetwork.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 
 //! Network address type
 /*!
@@ -50,7 +49,7 @@ public:
   is thrown with an error of \c XSocketAddress::kBadPort.  The hostname
   is not resolved by the c'tor;  use \c resolve to do that.
   */
-  NetworkAddress(const String &hostname, int port = 0);
+  NetworkAddress(const std::string &hostname, int port = 0);
 
   NetworkAddress(const NetworkAddress &);
 
@@ -112,7 +111,7 @@ public:
   /*!
   Returns the hostname passed to the c'tor sans any port suffix.
   */
-  String getHostname() const;
+  std::string getHostname() const;
 
   //@}
 
@@ -121,6 +120,6 @@ private:
 
 private:
   ArchNetAddress m_address = nullptr;
-  String m_hostname;
+  std::string m_hostname;
   int m_port = 0;
 };

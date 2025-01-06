@@ -49,7 +49,7 @@ TEST(ClipboardTests, add_newValue_valueWasStored)
 
   clipboard.add(IClipboard::kText, "synergy rocks!");
 
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
   EXPECT_EQ("synergy rocks!", actual);
 }
 
@@ -61,7 +61,7 @@ TEST(ClipboardTests, add_replaceValue_valueWasReplaced)
   clipboard.add(IClipboard::kText, "synergy rocks!");
   clipboard.add(IClipboard::kText, "maxivista sucks"); // haha, just kidding.
 
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
   EXPECT_EQ("maxivista sucks", actual);
 }
 
@@ -140,7 +140,7 @@ TEST(ClipboardTests, get_withNoFormats_returnsEmpty)
   Clipboard clipboard;
   clipboard.open(0);
 
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
 
   EXPECT_EQ("", actual);
 }
@@ -151,7 +151,7 @@ TEST(ClipboardTests, get_withFormatAdded_returnsExpected)
   clipboard.open(0);
   clipboard.add(IClipboard::kText, "synergy rocks!");
 
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
 
   EXPECT_EQ("synergy rocks!", actual);
 }
@@ -160,7 +160,7 @@ TEST(ClipboardTests, marshall_addNotCalled_firstCharIsZero)
 {
   Clipboard clipboard;
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // seems to return "\0\0\0\0" but EXPECT_EQ can't assert this,
   // so instead, just assert that first char is '\0'.
@@ -174,7 +174,7 @@ TEST(ClipboardTests, marshall_withTextAdded_typeCharIsText)
   clipboard.add(IClipboard::kText, "synergy rocks!");
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // string contains other data, but 8th char should be kText.
   EXPECT_EQ(IClipboard::kText, (int)actual[7]);
@@ -187,7 +187,7 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
   clipboard.add(IClipboard::kText, "synergy rocks!"); // 14 chars
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   EXPECT_EQ(14, (int)actual[11]);
 }
@@ -198,7 +198,7 @@ TEST(ClipboardTests, marshall_withTextAdded_lastSizeCharIs14)
 TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
 {
   // 285 chars
-  String data;
+  std::string data;
   data.append("Synergy is Free and Open Source Software that lets you ");
   data.append("easily share your mouse and keyboard between multiple ");
   data.append("computers, where each computer has it's own display. No ");
@@ -210,7 +210,7 @@ TEST(ClipboardTests, marshall_withTextSize285_sizeCharsValid)
   clipboard.add(IClipboard::kText, data);
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // 4 asserts here, but that's ok because we're really just asserting 1
   // thing. the 32-bit size value is split into 4 chars. if the size is 285
@@ -232,7 +232,7 @@ TEST(ClipboardTests, marshall_withHtmlAdded_typeCharIsHtml)
   clipboard.add(IClipboard::kHTML, "html sucks");
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // string contains other data, but 8th char should be kHTML.
   EXPECT_EQ(IClipboard::kHTML, (int)actual[7]);
@@ -246,7 +246,7 @@ TEST(ClipboardTests, marshall_withHtmlAndText_has2Formats)
   clipboard.add(IClipboard::kHTML, "html sucks");
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // the number of formats is stored inside the first 4 chars.
   // the writeUInt32 function right-aligns numbers in 4 chars,
@@ -263,7 +263,7 @@ TEST(ClipboardTests, marshall_withTextAdded_endsWithAdded)
   clipboard.add(IClipboard::kText, "synergy rocks!");
   clipboard.close();
 
-  String actual = clipboard.marshall();
+  std::string actual = clipboard.marshall();
 
   // string contains other data, but should end in the string we added.
   EXPECT_EQ("synergy rocks!", actual.substr(12));
@@ -273,7 +273,7 @@ TEST(ClipboardTests, unmarshall_emptyData_hasTextIsFalse)
 {
   Clipboard clipboard;
 
-  String data;
+  std::string data;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -291,14 +291,14 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
   Clipboard clipboard;
 
   // 285 chars
-  String text;
+  std::string text;
   text.append("Synergy is Free and Open Source Software that lets you ");
   text.append("easily share your mouse and keyboard between multiple ");
   text.append("computers, where each computer has it's own display. No ");
   text.append("special hardware is required, all you need is a local area ");
   text.append("network. Synergy is supported on Windows, Mac OS X and Linux.");
 
-  String data;
+  std::string data;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -316,14 +316,14 @@ TEST(ClipboardTests, unmarshall_withTextSize285_getTextIsValid)
   clipboard.unmarshall(data, 0);
 
   clipboard.open(0);
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
   EXPECT_EQ(text, actual);
 }
 
 TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
 {
   Clipboard clipboard;
-  String data;
+  std::string data;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -350,14 +350,14 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getTextIsValid)
   clipboard.unmarshall(data, 0);
 
   clipboard.open(0);
-  String actual = clipboard.get(IClipboard::kText);
+  std::string actual = clipboard.get(IClipboard::kText);
   EXPECT_EQ("synergy rocks!", actual);
 }
 
 TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
 {
   Clipboard clipboard;
-  String data;
+  std::string data;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -384,7 +384,7 @@ TEST(ClipboardTests, unmarshall_withTextAndHtml_getHtmlIsValid)
   clipboard.unmarshall(data, 0);
 
   clipboard.open(0);
-  String actual = clipboard.get(IClipboard::kHTML);
+  std::string actual = clipboard.get(IClipboard::kHTML);
   EXPECT_EQ("html sucks", actual);
 }
 
@@ -399,6 +399,6 @@ TEST(ClipboardTests, copy_withSingleText_clipboardsAreEqual)
   Clipboard::copy(&clipboard2, &clipboard1);
 
   clipboard2.open(0);
-  String actual = clipboard2.get(Clipboard::kText);
+  std::string actual = clipboard2.get(Clipboard::kText);
   EXPECT_EQ("synergy rocks!", actual);
 }

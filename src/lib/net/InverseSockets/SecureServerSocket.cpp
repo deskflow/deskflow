@@ -18,6 +18,7 @@
 #include "SecureServerSocket.h"
 
 #include <arch/XArch.h>
+#include <base/String.h>
 #include <common/constants.h>
 #include <deskflow/ArgParser.h>
 #include <deskflow/ArgsBase.h>

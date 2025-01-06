@@ -24,7 +24,7 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
 {
   ClipboardID id = 0;
   UInt32 sequence = 0;
-  String mockDataSize("10");
+  std::string mockDataSize("10");
   ClipboardChunk *chunk = ClipboardChunk::start(id, sequence, mockDataSize);
   UInt32 temp_m_chunk;
   memcpy(&temp_m_chunk, &(chunk->m_chunk[1]), 4);
@@ -43,7 +43,7 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
 {
   ClipboardID id = 0;
   UInt32 sequence = 1;
-  String mockData("mock data");
+  std::string mockData("mock data");
   ClipboardChunk *chunk = ClipboardChunk::data(id, sequence, mockData);
 
   EXPECT_EQ(id, chunk->m_chunk[0]);

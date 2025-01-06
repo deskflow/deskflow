@@ -21,7 +21,7 @@
 #include "ClientProxy1_8.h"
 
 ClientProxy1_8::ClientProxy1_8(
-    const String &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events
+    const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events
 )
     : ClientProxy1_7(name, adoptedStream, server, events)
 {
@@ -40,7 +40,7 @@ void ClientProxy1_8::synchronizeLanguages() const
   }
 }
 
-void ClientProxy1_8::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String &language)
+void ClientProxy1_8::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &language)
 {
   LOG(
       (CLOG_DEBUG1 "send key down to \"%s\" id=%d, mask=0x%04x, button=0x%04x, language=%s", getName().c_str(), key,

@@ -20,7 +20,6 @@
 
 #include "base/Event.h"
 #include "base/Stopwatch.h"
-#include "base/String.h"
 #include "deskflow/clipboard_types.h"
 #include "deskflow/key_types.h"
 #include "deskflow/languages/LanguageManager.h"
@@ -108,7 +107,7 @@ private:
   void leave();
   void setClipboard();
   void grabClipboard();
-  void keyDown(UInt16 id, UInt16 mask, UInt16 button, const String &lang);
+  void keyDown(UInt16 id, UInt16 mask, UInt16 button, const std::string &lang);
   void keyRepeat();
   void keyUp();
   void mouseDown();
@@ -126,7 +125,7 @@ private:
   void handleClipboardSendingEvent(const Event &, void *);
   void secureInputNotification();
   void setServerLanguages();
-  void setActiveServerLanguage(const String &language);
+  void setActiveServerLanguage(const std::string &language);
   void checkMissedLanguages() const;
 
 private:
@@ -151,7 +150,7 @@ private:
 
   MessageParser m_parser;
   IEventQueue *m_events;
-  String m_serverLanguage = "";
+  std::string m_serverLanguage = "";
   bool m_isUserNotifiedAboutLanguageSyncError = false;
   deskflow::languages::LanguageManager m_languageManager;
 };

@@ -20,8 +20,9 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "base/String.h"
 #include "deskflow/option_types.h"
+
+#include <string>
 
 class ClientProxy;
 class EventQueueTimer;
@@ -67,7 +68,7 @@ private:
   void addStreamHandlers();
   void addProxyHandlers();
   void removeHandlers();
-  void initProxy(const String &name, int major, int minor);
+  void initProxy(const std::string &name, int major, int minor);
   void removeTimer();
   void handleData(const Event &, void *);
   void handleWriteError(const Event &, void *);

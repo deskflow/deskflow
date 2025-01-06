@@ -198,7 +198,7 @@ void Screen::screensaver(bool) const
   // do nothing
 }
 
-void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang)
+void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   // check for ctrl+alt+del emulation
   if (id == kKeyDelete && (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
@@ -210,7 +210,7 @@ void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const Str
   m_screen->fakeKeyDown(id, mask, button, lang);
 }
 
-void Screen::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang)
+void Screen::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang)
 {
   assert(!m_isPrimary);
   m_screen->fakeKeyRepeat(id, mask, count, button, lang);
@@ -400,7 +400,7 @@ void Screen::setEnableDragDrop(bool enabled)
   m_enableDragDrop = enabled;
 }
 
-String &Screen::getDraggingFilename() const
+std::string &Screen::getDraggingFilename() const
 {
   return m_screen->getDraggingFilename();
 }
@@ -410,7 +410,7 @@ void Screen::clearDraggingFilename()
   m_screen->clearDraggingFilename();
 }
 
-const String &Screen::getDropTarget() const
+const std::string &Screen::getDropTarget() const
 {
   return m_screen->getDropTarget();
 }
@@ -488,7 +488,7 @@ void Screen::leaveSecondary()
   m_screen->fakeAllKeysUp();
 }
 
-String Screen::getSecureInputApp() const
+std::string Screen::getSecureInputApp() const
 {
   return m_screen->getSecureInputApp();
 }

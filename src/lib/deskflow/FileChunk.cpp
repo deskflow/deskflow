@@ -19,6 +19,7 @@
 
 #include "base/Log.h"
 #include "base/Stopwatch.h"
+#include "base/String.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/protocol_types.h"
 #include "io/IStream.h"
@@ -30,7 +31,7 @@ FileChunk::FileChunk(size_t size) : Chunk(size)
   m_dataSize = size - FILE_CHUNK_META_SIZE;
 }
 
-FileChunk *FileChunk::start(const String &size)
+FileChunk *FileChunk::start(const std::string &size)
 {
   size_t sizeLength = size.size();
   FileChunk *start = new FileChunk(sizeLength + FILE_CHUNK_META_SIZE);
@@ -63,11 +64,11 @@ FileChunk *FileChunk::end()
   return end;
 }
 
-int FileChunk::assemble(deskflow::IStream *stream, String &dataReceived, size_t &expectedSize)
+int FileChunk::assemble(deskflow::IStream *stream, std::string &dataReceived, size_t &expectedSize)
 {
   // parse
   UInt8 mark = 0;
-  String content;
+  std::string content;
   static size_t receivedDataSize;
   static double elapsedTime;
   static Stopwatch stopwatch;
@@ -130,7 +131,7 @@ int FileChunk::assemble(deskflow::IStream *stream, String &dataReceived, size_t 
 
 void FileChunk::send(deskflow::IStream *stream, UInt8 mark, char *data, size_t dataSize)
 {
-  String chunk(data, dataSize);
+  std::string chunk(data, dataSize);
 
   switch (mark) {
   case kDataStart:

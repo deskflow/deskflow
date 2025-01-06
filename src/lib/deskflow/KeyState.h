@@ -29,8 +29,8 @@ platform specific methods.
 class KeyState : public IKeyState
 {
 public:
-  KeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
-  KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled);
+  KeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);
+  KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
   virtual ~KeyState();
 
   //! @name manipulators
@@ -69,8 +69,8 @@ public:
   }
   void updateKeyState() override;
   void setHalfDuplexMask(KeyModifierMask) override;
-  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) override;
-  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang) override;
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
   bool fakeMediaKey(KeyID id) override;

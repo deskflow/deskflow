@@ -18,6 +18,7 @@
 #include "deskflow/ClipboardChunk.h"
 
 #include "base/Log.h"
+#include "base/String.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/protocol_types.h"
 #include "io/IStream.h"
@@ -30,7 +31,7 @@ ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size)
   m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const String &size)
+ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std::string &size)
 {
   size_t sizeLength = size.size();
   ClipboardChunk *start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
@@ -45,7 +46,7 @@ ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const Str
   return start;
 }
 
-ClipboardChunk *ClipboardChunk::data(ClipboardID id, UInt32 sequence, const String &data)
+ClipboardChunk *ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std::string &data)
 {
   size_t dataSize = data.size();
   ClipboardChunk *chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
@@ -73,10 +74,10 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence)
   return end;
 }
 
-int ClipboardChunk::assemble(deskflow::IStream *stream, String &dataCached, ClipboardID &id, UInt32 &sequence)
+int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, UInt32 &sequence)
 {
   UInt8 mark;
-  String data;
+  std::string data;
 
   if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
     return kError;
@@ -116,7 +117,7 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
   UInt32 sequence;
   std::memcpy(&sequence, &chunk[1], 4);
   UInt8 mark = chunk[5];
-  String dataChunk(&chunk[6], clipboardData->m_dataSize);
+  std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
 
   switch (mark) {
   case kDataStart:

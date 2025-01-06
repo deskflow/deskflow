@@ -67,7 +67,7 @@ template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std:
   }
 }
 
-void writeString(const String *StringData, std::vector<UInt8> &Buffer)
+void writeString(const std::string *StringData, std::vector<UInt8> &Buffer)
 {
   const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
   writeInt(len, sizeof(len), Buffer);
@@ -200,7 +200,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
       }
 
       case 's': {
-        String *destination = va_arg(args, String *);
+        std::string *destination = va_arg(args, std::string *);
 
         if (len > PROTOCOL_MAX_STRING_LENGTH) {
           LOG((CLOG_ERR "read: string length exceeds maximum allowed size: %u", len));
@@ -271,7 +271,7 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args)
 
       case 's':
         assert(len == 0);
-        len = (UInt32)(va_arg(args, String *))->size() + 4;
+        len = (UInt32)(va_arg(args, std::string *))->size() + 4;
         break;
 
       case 'S':
@@ -346,7 +346,7 @@ void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt, va_list a
 
       case 's': {
         assert(len == 0);
-        const String *src = va_arg(args, String *);
+        const std::string *src = va_arg(args, std::string *);
         writeString(src, buffer);
         break;
       }
@@ -520,7 +520,7 @@ UInt32 ProtocolUtil::readVectorSize(deskflow::IStream *stream)
   return size;
 }
 
-void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, String *destination)
+void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, std::string *destination)
 {
   // read the string length
   UInt8 buffer[128];
@@ -575,7 +575,7 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, String *dest
 // XIOReadMismatch
 //
 
-String XIOReadMismatch::getWhat() const throw()
+std::string XIOReadMismatch::getWhat() const throw()
 {
   return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }

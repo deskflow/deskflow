@@ -146,7 +146,7 @@ public:
   On MacOS check which app causes a secure input state to be enabled. No
   alternative on other platforms
   */
-  virtual String getSecureInputApp() const = 0;
+  virtual std::string getSecureInputApp() const = 0;
 
   //@}
   //! @name accessors
@@ -187,8 +187,9 @@ public:
   virtual void updateKeyMap() = 0;
   virtual void updateKeyState() = 0;
   virtual void setHalfDuplexMask(KeyModifierMask) = 0;
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const String &lang) = 0;
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang) = 0;
+  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) = 0;
+  virtual bool
+  fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang) = 0;
   virtual bool fakeKeyUp(KeyButton button) = 0;
   virtual void fakeAllKeysUp() = 0;
   virtual bool fakeCtrlAltDel() = 0;
@@ -199,13 +200,13 @@ public:
   virtual SInt32 pollActiveGroup() const = 0;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const = 0;
 
-  virtual String &getDraggingFilename() = 0;
+  virtual std::string &getDraggingFilename() = 0;
   virtual void clearDraggingFilename() = 0;
   virtual bool isDraggingStarted() = 0;
   virtual bool isFakeDraggingStarted() = 0;
 
   virtual void fakeDraggingFiles(DragFileList fileList) = 0;
-  virtual const String &getDropTarget() const = 0;
+  virtual const std::string &getDropTarget() const = 0;
 
 protected:
   //! Handle system event

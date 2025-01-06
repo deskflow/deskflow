@@ -23,7 +23,6 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "client/Client.h"
 #include "common/constants.h"
@@ -229,7 +228,7 @@ void ClientApp::updateStatus()
   updateStatus("");
 }
 
-void ClientApp::updateStatus(const String &msg)
+void ClientApp::updateStatus(const std::string &msg)
 {
   if (m_taskBarReceiver) {
     m_taskBarReceiver->updateStatus(m_client, msg);
@@ -321,7 +320,7 @@ void ClientApp::handleClientFailed(const Event &e, void *)
   if ((++m_lastServerAddressIndex) < m_client->getLastResolvedAddressesCount()) {
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-    updateStatus(String("Failed to connect to server: ") + info->m_what + " Trying next address...");
+    updateStatus(std::string("Failed to connect to server: ") + info->m_what + " Trying next address...");
     LOG((CLOG_NOTE "failed to connect to server=%s, trying next address", info->m_what.c_str()));
     if (!m_suspended) {
       scheduleClientRestart(nextRestartTimeout());
@@ -336,7 +335,7 @@ void ClientApp::handleClientRefused(const Event &e, void *)
 {
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-  updateStatus(String("Failed to connect to server: ") + info->m_what);
+  updateStatus(std::string("Failed to connect to server: ") + info->m_what);
   if (!args().m_restartable || !info->m_retry) {
     LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
     m_events->addEvent(Event(Event::kQuit));
@@ -359,7 +358,7 @@ void ClientApp::handleClientDisconnected(const Event &, void *)
   updateStatus();
 }
 
-Client *ClientApp::openClient(const String &name, const NetworkAddress &address, deskflow::Screen *screen)
+Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
 {
   Client *client = new Client(m_events, name, address, getSocketFactory(), screen, args());
 
@@ -432,7 +431,7 @@ bool ClientApp::startClient()
   } catch (XScreenUnavailable &e) {
     LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
     closeClientScreen(clientScreen);
-    updateStatus(String("secondary screen unavailable: ") + e.what());
+    updateStatus(std::string("secondary screen unavailable: ") + e.what());
     retryTime = e.getRetryTime();
   } catch (XScreenOpenFailure &e) {
     LOG((CLOG_CRIT "failed to start client: %s", e.what()));

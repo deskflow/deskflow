@@ -19,8 +19,8 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/String.h"
 #include "common/IInterface.h"
+#include <string>
 
 class IEventJob;
 class IEventQueueBuffer;
@@ -211,7 +211,7 @@ public:
   /*!
   Returns the registered type for an event for a given name.
   */
-  virtual Event::Type getRegisteredType(const String &name) const = 0;
+  virtual Event::Type getRegisteredType(const std::string &name) const = 0;
 
   //! Get the system event type target
   /*!

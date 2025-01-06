@@ -24,11 +24,11 @@
 class ClientProxy1_1 : public ClientProxy1_0
 {
 public:
-  ClientProxy1_1(const String &name, deskflow::IStream *adoptedStream, IEventQueue *events);
+  ClientProxy1_1(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ~ClientProxy1_1();
 
   // IClient overrides
-  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const String &);
-  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const String &);
+  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &);
+  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &);
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
 };

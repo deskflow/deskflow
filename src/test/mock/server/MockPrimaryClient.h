@@ -19,7 +19,6 @@
 
 #define TEST_ENV
 
-#include "base/String.h"
 #include "server/PrimaryClient.h"
 
 #include <gmock/gmock.h>

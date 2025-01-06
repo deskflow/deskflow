@@ -43,7 +43,7 @@ using namespace deskflow;
 // TODO Fix the IPC Tests for windows, see #6709
 //  Tests disabled due to gtest/gmock update causing build problems
 //  Decision to disable tests and create issue instead due to time constraints
-// inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const String& s)
+// inline const Matcher<const IpcMessage&> IpcLogLineMessageEq(const std::string& s)
 // {
 //     const Matcher<const IpcLogLineMessage&> m(
 //         Property(&IpcLogLineMessage::logLine, StrEq(s)));

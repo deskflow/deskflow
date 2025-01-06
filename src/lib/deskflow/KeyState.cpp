@@ -653,7 +653,7 @@ static const KeyID s_numpadTable[] = {
 // KeyState
 //
 
-KeyState::KeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled)
+KeyState::KeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled)
     : IKeyState(events),
       m_keyMapPtr(new deskflow::KeyMap()),
       m_keyMap(*m_keyMapPtr),
@@ -665,7 +665,9 @@ KeyState::KeyState(IEventQueue *events, std::vector<String> layouts, bool isLang
   init();
 }
 
-KeyState::KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled)
+KeyState::KeyState(
+    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
+)
     : IKeyState(events),
       m_keyMapPtr(0),
       m_keyMap(keyMap),
@@ -801,7 +803,7 @@ void KeyState::setHalfDuplexMask(KeyModifierMask mask)
   }
 }
 
-void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const String &lang)
+void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, const std::string &lang)
 {
   // if this server key is already down then this is probably a
   // mis-reported autorepeat.
@@ -848,7 +850,7 @@ void KeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton serverID, c
   fakeKeys(keys, 1);
 }
 
-bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton serverID, const String &lang)
+bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton serverID, const std::string &lang)
 {
   LOG((CLOG_DEBUG2 "fakeKeyRepeat"));
   serverID &= kButtonMask;

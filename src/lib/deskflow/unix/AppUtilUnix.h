@@ -32,7 +32,7 @@ public:
 
   int run(int argc, char **argv) override;
   void startNode() override;
-  std::vector<String> getKeyboardLayoutList() override;
-  String getCurrentLanguageCode() override;
-  void showNotification(const String &title, const String &text) const override;
+  std::vector<std::string> getKeyboardLayoutList() override;
+  std::string getCurrentLanguageCode() override;
+  void showNotification(const std::string &title, const std::string &text) const override;
 };

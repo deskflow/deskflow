@@ -37,8 +37,8 @@ class OSXKeyState : public KeyState
 public:
   using KeyIDs = std::vector<KeyID>;
 
-  OSXKeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled);
-  OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled);
+  OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);
+  OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
   virtual ~OSXKeyState();
 
   //! @name modifiers

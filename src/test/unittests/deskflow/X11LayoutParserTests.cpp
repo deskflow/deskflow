@@ -127,7 +127,7 @@ void createTestFiles()
 TEST(X11LayoutsParsingTests, xmlCorrectParsingTest)
 {
   createTestFiles();
-  std::vector<String> expectedResult = {"en", "ru"};
+  std::vector<std::string> expectedResult = {"en", "ru"};
   auto parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/correctEvdev.xml");
 
   EXPECT_EQ(parsedResult, parsedResult);
@@ -141,7 +141,7 @@ TEST(X11LayoutsParsingTests, xmlParsingMissedEvdevFileTest)
 
 TEST(X11LayoutsParsingTests, xmlParsingIncorrectEvdevFileTest)
 {
-  std::vector<String> parsedResult;
+  std::vector<std::string> parsedResult;
   parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev1.xml");
   EXPECT_TRUE(parsedResult.empty());
   parsedResult = X11LayoutsParser::getX11LanguageList(testDir + "/incorrectEvdev2.xml");

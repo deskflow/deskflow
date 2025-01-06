@@ -22,7 +22,7 @@
 // BaseClientProxy
 //
 
-BaseClientProxy::BaseClientProxy(const String &name) : m_name(name), m_x(0), m_y(0)
+BaseClientProxy::BaseClientProxy(const std::string &name) : m_name(name), m_x(0), m_y(0)
 {
   // do nothing
 }
@@ -44,7 +44,7 @@ void BaseClientProxy::getJumpCursorPos(SInt32 &x, SInt32 &y) const
   y = m_y;
 }
 
-String BaseClientProxy::getName() const
+std::string BaseClientProxy::getName() const
 {
   return m_name;
 }

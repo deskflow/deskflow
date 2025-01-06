@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "deskflow/IPlatformScreen.h"
@@ -50,7 +49,7 @@ public:
     virtual ~Condition();
 
     virtual Condition *clone() const = 0;
-    virtual String format() const = 0;
+    virtual std::string format() const = 0;
 
     virtual EFilterStatus match(const Event &) = 0;
 
@@ -71,7 +70,7 @@ public:
 
     // Condition overrides
     virtual Condition *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual EFilterStatus match(const Event &);
     virtual void enablePrimary(PrimaryClient *);
     virtual void disablePrimary(PrimaryClient *);
@@ -96,7 +95,7 @@ public:
 
     // Condition overrides
     virtual Condition *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual EFilterStatus match(const Event &);
 
   private:
@@ -109,16 +108,16 @@ public:
   class ScreenConnectedCondition : public Condition
   {
   public:
-    ScreenConnectedCondition(IEventQueue *events, const String &screen);
+    ScreenConnectedCondition(IEventQueue *events, const std::string &screen);
     virtual ~ScreenConnectedCondition();
 
     // Condition overrides
     virtual Condition *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual EFilterStatus match(const Event &);
 
   private:
-    String m_screen;
+    std::string m_screen;
     IEventQueue *m_events;
   };
 
@@ -133,7 +132,7 @@ public:
     virtual ~Action();
 
     virtual Action *clone() const = 0;
-    virtual String format() const = 0;
+    virtual std::string format() const = 0;
 
     virtual void perform(const Event &) = 0;
   };
@@ -155,7 +154,7 @@ public:
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   private:
@@ -177,7 +176,7 @@ public:
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   private:
@@ -189,17 +188,17 @@ public:
   class SwitchToScreenAction : public Action
   {
   public:
-    SwitchToScreenAction(IEventQueue *events, const String &screen);
+    SwitchToScreenAction(IEventQueue *events, const std::string &screen);
 
-    String getScreen() const;
+    std::string getScreen() const;
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   private:
-    String m_screen;
+    std::string m_screen;
     IEventQueue *m_events;
   };
 
@@ -213,7 +212,7 @@ public:
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   private:
@@ -233,19 +232,19 @@ public:
     };
 
     KeyboardBroadcastAction(IEventQueue *events, Mode = kToggle);
-    KeyboardBroadcastAction(IEventQueue *events, Mode, const std::set<String> &screens);
+    KeyboardBroadcastAction(IEventQueue *events, Mode, const std::set<std::string> &screens);
 
     Mode getMode() const;
-    std::set<String> getScreens() const;
+    std::set<std::string> getScreens() const;
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   private:
     Mode m_mode;
-    String m_screens;
+    std::string m_screens;
     IEventQueue *m_events;
   };
 
@@ -267,7 +266,7 @@ public:
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   protected:
@@ -296,7 +295,7 @@ public:
 
     // Action overrides
     virtual Action *clone() const;
-    virtual String format() const;
+    virtual std::string format() const;
     virtual void perform(const Event &);
 
   protected:
@@ -338,7 +337,7 @@ public:
     bool handleEvent(const Event &);
 
     // convert rule to a string
-    String format() const;
+    std::string format() const;
 
     // get the rule's condition
     const Condition *getCondition() const;
@@ -392,7 +391,7 @@ public:
   virtual void setPrimaryClient(PrimaryClient *client);
 
   // convert rules to a string
-  String format(const String &linePrefix) const;
+  std::string format(const std::string &linePrefix) const;
 
   // get number of rules
   UInt32 getNumRules() const;

@@ -170,9 +170,9 @@ BOOL MSWindowsSession::nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry)
   return gotEntry;
 }
 
-String MSWindowsSession::getActiveDesktopName()
+std::string MSWindowsSession::getActiveDesktopName()
 {
-  String result;
+  std::string result;
   try {
     HDESK hd = OpenInputDesktop(0, TRUE, GENERIC_READ);
     if (hd != NULL) {

@@ -54,11 +54,11 @@ private:
   HANDLE duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
   void startProcess();
-  BOOL startProcessAsUser(String &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
-  BOOL startProcessInForeground(String &command);
+  BOOL startProcessAsUser(std::string &command, HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
+  BOOL startProcessInForeground(std::string &command);
   void sendSas();
   void getActiveDesktop(LPSECURITY_ATTRIBUTES security);
-  void testOutput(String buffer);
+  void testOutput(std::string buffer);
   void setStartupInfo(STARTUPINFO &si);
   void checkChildren();
   /**
@@ -111,12 +111,12 @@ An error occured in the process watchdog.
 class XMSWindowsWatchdogError : public XDeskflow
 {
 public:
-  XMSWindowsWatchdogError(const String &msg) : XDeskflow(msg)
+  XMSWindowsWatchdogError(const std::string &msg) : XDeskflow(msg)
   {
   }
 
   // XBase overrides
-  virtual String getWhat() const throw()
+  virtual std::string getWhat() const throw()
   {
     return what();
   }

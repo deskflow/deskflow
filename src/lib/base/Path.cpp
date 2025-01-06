@@ -26,7 +26,7 @@ namespace filesystem {
 
 #ifdef SYSAPI_WIN32
 
-std::wstring path(const String &filePath)
+std::wstring path(const std::string &filePath)
 {
   std::wstring result;
 
@@ -40,7 +40,7 @@ std::wstring path(const String &filePath)
 }
 
 #else
-std::string path(const String &filePath)
+std::string path(const std::string &filePath)
 {
   return filePath;
 }

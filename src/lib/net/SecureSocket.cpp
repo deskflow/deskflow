@@ -20,6 +20,7 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/Path.h"
+#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "mt/Lock.h"
 #include "net/TCPSocket.h"
@@ -303,7 +304,7 @@ void SecureSocket::initSsl(bool server)
   initContext(server);
 }
 
-bool SecureSocket::loadCertificates(String &filename)
+bool SecureSocket::loadCertificates(std::string &filename)
 {
   std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
 
@@ -316,7 +317,7 @@ bool SecureSocket::loadCertificates(String &filename)
     file.close();
 
     if (!exist) {
-      String errorMsg("tls certificate doesn't exist: ");
+      std::string errorMsg("tls certificate doesn't exist: ");
       errorMsg.append(filename);
       SslLogger::logError(errorMsg.c_str());
       return false;
@@ -620,7 +621,7 @@ void SecureSocket::disconnect()
   sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void SecureSocket::formatFingerprint(String &fingerprint, bool hex, bool separator)
+void SecureSocket::formatFingerprint(std::string &fingerprint, bool hex, bool separator)
 {
   if (hex) {
     // to hexidecimal
@@ -655,17 +656,17 @@ bool SecureSocket::verifyCertFingerprint()
   }
 
   // format fingerprint into hexdecimal format with colon separator
-  String fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
+  std::string fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
   formatFingerprint(fingerprint);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
-  String trustedServersFilename;
+  std::string trustedServersFilename;
   trustedServersFilename = deskflow::string::sprintf(
       "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName, kFingerprintTrustedServersFilename
   );
 
   // check if this fingerprint exist
-  String fileLine;
+  std::string fileLine;
   std::ifstream file;
   file.open(deskflow::filesystem::path(trustedServersFilename));
 

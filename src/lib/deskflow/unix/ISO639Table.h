@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include "base/String.h"
-
+#include <string>
+#include <vector>
 // copy from
 // https://www.loc.gov/standards/iso639-2/php/code_list.php
 // 10.06.2021
 // first param - ISO 639-2, second param - 639-1
-const std::vector<std::pair<String, String>> ISO_Table = {
+const std::vector<std::pair<std::string, std::string>> ISO_Table = {
     std::make_pair("aar", "aa"), std::make_pair("abk", "ab"), std::make_pair("afr", "af"), std::make_pair("aka", "ak"),
     std::make_pair("sqi", "sq"), std::make_pair("amh", "am"), std::make_pair("ara", "ar"), std::make_pair("arg", "an"),
     std::make_pair("hye", "hy"), std::make_pair("asm", "as"), std::make_pair("ava", "av"), std::make_pair("ave", "ae"),

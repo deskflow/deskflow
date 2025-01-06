@@ -94,7 +94,7 @@ bool MSWindowsClipboard::empty()
   return true;
 }
 
-void MSWindowsClipboard::add(EFormat format, const String &data)
+void MSWindowsClipboard::add(EFormat format, const std::string &data)
 {
   // exit early if there is no data to prevent spurious "failed to convert clipboard data" errors
   if (data.empty()) {
@@ -163,7 +163,7 @@ bool MSWindowsClipboard::has(EFormat format) const
   return false;
 }
 
-String MSWindowsClipboard::get(EFormat format) const
+std::string MSWindowsClipboard::get(EFormat format) const
 {
   // find the converter for the first clipboard format we can handle
   IMSWindowsClipboardConverter *converter = NULL;
@@ -179,7 +179,7 @@ String MSWindowsClipboard::get(EFormat format) const
   // if no converter then we don't recognize any formats
   if (converter == NULL) {
     LOG((CLOG_WARN "no converter for format %d", format));
-    return String();
+    return std::string();
   }
 
   // get a handle to the clipboard data
@@ -188,7 +188,7 @@ String MSWindowsClipboard::get(EFormat format) const
     // nb: can't cause this using integ tests; this is only caused when
     // the selected converter returns an invalid format -- which you
     // cannot cause using public functions.
-    return String();
+    return std::string();
   }
 
   // convert

@@ -38,7 +38,7 @@ public:
   Extract marshalled clipboard data and store it in this clipboard.
   Sets the clipboard time to \c time.
   */
-  void unmarshall(const String &data, Time time);
+  void unmarshall(const std::string &data, Time time);
 
   //@}
   //! @name accessors
@@ -49,18 +49,18 @@ public:
   Merge this clipboard's data into a single buffer that can be later
   unmarshalled to restore the clipboard and return the buffer.
   */
-  String marshall() const;
+  std::string marshall() const;
 
   //@}
 
   // IClipboard overrides
   virtual bool empty();
-  virtual void add(EFormat, const String &data);
+  virtual void add(EFormat, const std::string &data);
   virtual bool open(Time) const;
   virtual void close() const;
   virtual Time getTime() const;
   virtual bool has(EFormat) const;
-  virtual String get(EFormat) const;
+  virtual std::string get(EFormat) const;
 
 private:
   mutable bool m_open;
@@ -68,5 +68,5 @@ private:
   bool m_owner;
   Time m_timeOwned;
   bool m_added[kNumFormats];
-  String m_data[kNumFormats];
+  std::string m_data[kNumFormats];
 };

@@ -105,10 +105,10 @@ public:
   void setSequenceNumber(UInt32) override;
   bool isPrimary() const override;
   void fakeDraggingFiles(DragFileList fileList) override;
-  String &getDraggingFilename() override;
-  String getSecureInputApp() const override;
+  std::string &getDraggingFilename() override;
+  std::string getSecureInputApp() const override;
 
-  const String &getDropTarget() const override
+  const std::string &getDropTarget() const override
   {
     return m_dropTarget;
   }
@@ -337,7 +337,7 @@ private:
   IEventQueue *m_events;
 
   std::unique_ptr<Thread> m_getDropTargetThread;
-  String m_dropTarget;
+  std::string m_dropTarget;
 
 #if defined(MAC_OS_X_VERSION_10_7)
   Mutex *m_carbonLoopMutex;

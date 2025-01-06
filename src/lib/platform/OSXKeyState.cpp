@@ -190,14 +190,14 @@ bool isModifier(UInt8 virtualKey)
 // OSXKeyState
 //
 
-OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<String> layouts, bool isLangSyncEnabled)
+OSXKeyState::OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled)
     : KeyState(events, std::move(layouts), isLangSyncEnabled)
 {
   init();
 }
 
 OSXKeyState::OSXKeyState(
-    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<String> layouts, bool isLangSyncEnabled
+    IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
 )
     : KeyState(events, keyMap, std::move(layouts), isLangSyncEnabled)
 {

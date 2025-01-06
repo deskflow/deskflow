@@ -17,7 +17,7 @@
 
 #pragma once
 
-#include "base/String.h"
+#include <string>
 
 namespace deskflow {
 
@@ -65,7 +65,7 @@ public:
   const char *m_display = nullptr;
 
   /// @brief The name of the current computer
-  String m_name;
+  std::string m_name;
 
   /// @brief Should the app add a tray icon
   bool m_disableTray = false;
@@ -83,19 +83,19 @@ public:
   bool m_shouldExitFail = false;
 
   /// @brief Bind to this address
-  String m_deskflowAddress;
+  std::string m_deskflowAddress;
 
   /// @brief Should the connections be TLS encrypted
   bool m_enableCrypto = false;
 
   /// @brief The dir to load settings from
-  String m_profileDirectory;
+  std::string m_profileDirectory;
 
   /// @brief The dir to load plugins from
-  String m_pluginDirectory;
+  std::string m_pluginDirectory;
 
   /// @brief Contains the location of the TLS certificate file
-  String m_tlsCertFile;
+  std::string m_tlsCertFile;
 
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;

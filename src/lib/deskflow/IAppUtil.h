@@ -18,9 +18,11 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/IInterface.h"
 #include "deskflow/IApp.h"
+
+#include <string>
+#include <vector>
 
 class IAppUtil : public IInterface
 {
@@ -30,7 +32,7 @@ public:
   virtual int run(int argc, char **argv) = 0;
   virtual void beforeAppExit() = 0;
   virtual void startNode() = 0;
-  virtual std::vector<String> getKeyboardLayoutList() = 0;
-  virtual String getCurrentLanguageCode() = 0;
-  virtual void showNotification(const String &title, const String &text) const = 0;
+  virtual std::vector<std::string> getKeyboardLayoutList() = 0;
+  virtual std::string getCurrentLanguageCode() = 0;
+  virtual void showNotification(const std::string &title, const std::string &text) const = 0;
 };

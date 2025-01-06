@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "common/IInterface.h"
 #include "common/stdstring.h"
 
@@ -93,12 +92,12 @@ public:
   /*
   Returns the user's profile directory.
   */
-  virtual void setProfileDirectory(const String &s) = 0;
+  virtual void setProfileDirectory(const std::string &s) = 0;
 
   //@}
   //! Set the user's plugin directory
   /*
   Returns the user's plugin directory.
   */
-  virtual void setPluginDirectory(const String &s) = 0;
+  virtual void setPluginDirectory(const std::string &s) = 0;
 };

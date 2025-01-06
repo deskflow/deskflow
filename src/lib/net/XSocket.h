@@ -18,7 +18,6 @@
 
 #pragma once
 
-#include "base/String.h"
 #include "base/XBase.h"
 #include "common/basic_types.h"
 #include "io/XIO.h"
@@ -43,7 +42,7 @@ public:
     kBadPort      //!< The port is invalid
   };
 
-  XSocketAddress(EError, const String &hostname, int port) _NOEXCEPT;
+  XSocketAddress(EError, const std::string &hostname, int port) _NOEXCEPT;
   virtual ~XSocketAddress() _NOEXCEPT
   {
   }
@@ -54,7 +53,7 @@ public:
   //! Get the error code
   EError getError() const throw();
   //! Get the hostname
-  String getHostname() const throw();
+  std::string getHostname() const throw();
   //! Get the port
   int getPort() const throw();
 
@@ -62,11 +61,11 @@ public:
 
 protected:
   // XBase overrides
-  virtual String getWhat() const throw();
+  virtual std::string getWhat() const throw();
 
 private:
   EError m_error;
-  String m_hostname;
+  std::string m_hostname;
   int m_port;
 };
 

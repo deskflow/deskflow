@@ -17,7 +17,6 @@
  */
 
 #pragma once
-#include "base/String.h"
 #include "deskflow/KeyMap.h"
 
 #include <gmock/gmock.h>
@@ -32,7 +31,7 @@ public:
   MOCK_METHOD(bool, isHalfDuplex, (KeyID, KeyButton), (const, override));
   MOCK_METHOD(
       const KeyMap::KeyItem *, mapKey,
-      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const String &),
+      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const std::string &),
       (const, override)
   );
 };

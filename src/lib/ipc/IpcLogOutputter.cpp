@@ -108,7 +108,7 @@ bool IpcLogOutputter::write(ELevel, const char *text)
   return true;
 }
 
-void IpcLogOutputter::appendBuffer(const String &text)
+void IpcLogOutputter::appendBuffer(const std::string &text)
 {
   ArchMutexLock lock(m_bufferMutex);
 
@@ -166,7 +166,7 @@ void IpcLogOutputter::notifyBuffer()
   ARCH->broadcastCondVar(m_notifyCond);
 }
 
-String IpcLogOutputter::getChunk(size_t count)
+std::string IpcLogOutputter::getChunk(size_t count)
 {
   ArchMutexLock lock(m_bufferMutex);
 
@@ -174,7 +174,7 @@ String IpcLogOutputter::getChunk(size_t count)
     count = m_buffer.size();
   }
 
-  String chunk;
+  std::string chunk;
   for (size_t i = 0; i < count; i++) {
     chunk.append(m_buffer.front());
     chunk.append("\n");

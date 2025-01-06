@@ -18,7 +18,6 @@
 #include "deskflow/ArgParser.h"
 
 #include "base/Log.h"
-#include "base/String.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
@@ -284,7 +283,7 @@ bool ArgParser::isArg(
   return false;
 }
 
-void ArgParser::splitCommandString(String &command, std::vector<String> &argv)
+void ArgParser::splitCommandString(std::string &command, std::vector<std::string> &argv)
 {
   if (command.empty()) {
     return;
@@ -297,7 +296,7 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv)
   size_t startPos = 0;
   size_t space = command.find(" ", startPos);
 
-  while (space != String::npos) {
+  while (space != std::string::npos) {
     bool ignoreThisSpace = false;
 
     // check if the space is between two double quotes
@@ -308,7 +307,7 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv)
     }
 
     if (!ignoreThisSpace) {
-      String subString = command.substr(startPos, space - startPos);
+      std::string subString = command.substr(startPos, space - startPos);
 
       removeDoubleQuotes(subString);
       argv.push_back(subString);
@@ -323,21 +322,21 @@ void ArgParser::splitCommandString(String &command, std::vector<String> &argv)
     }
   }
 
-  String subString = command.substr(startPos, command.size());
+  std::string subString = command.substr(startPos, command.size());
   removeDoubleQuotes(subString);
   argv.push_back(subString);
 }
 
-bool ArgParser::searchDoubleQuotes(String &command, size_t &left, size_t &right, size_t startPos)
+bool ArgParser::searchDoubleQuotes(std::string &command, size_t &left, size_t &right, size_t startPos)
 {
   bool result = false;
-  left = String::npos;
-  right = String::npos;
+  left = std::string::npos;
+  right = std::string::npos;
 
   left = command.find("\"", startPos);
-  if (left != String::npos) {
+  if (left != std::string::npos) {
     right = command.find("\"", left + 1);
-    if (right != String::npos) {
+    if (right != std::string::npos) {
       result = true;
     }
   }
@@ -350,7 +349,7 @@ bool ArgParser::searchDoubleQuotes(String &command, size_t &left, size_t &right,
   return result;
 }
 
-void ArgParser::removeDoubleQuotes(String &arg)
+void ArgParser::removeDoubleQuotes(std::string &arg)
 {
   // if string is surrounded by double quotes, remove them
   if (arg[0] == '\"' && arg[arg.size() - 1] == '\"') {
@@ -358,7 +357,7 @@ void ArgParser::removeDoubleQuotes(String &arg)
   }
 }
 
-const char **ArgParser::getArgv(std::vector<String> &argsArray)
+const char **ArgParser::getArgv(std::vector<std::string> &argsArray)
 {
   size_t argc = argsArray.size();
 
@@ -375,18 +374,19 @@ const char **ArgParser::getArgv(std::vector<String> &argsArray)
   return argv;
 }
 
-String ArgParser::assembleCommand(std::vector<String> &argsArray, String ignoreArg, int parametersRequired)
+std::string
+ArgParser::assembleCommand(std::vector<std::string> &argsArray, std::string ignoreArg, int parametersRequired)
 {
-  String result;
+  std::string result;
 
-  for (std::vector<String>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
+  for (std::vector<std::string>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
     if (it->compare(ignoreArg) == 0) {
       it = it + parametersRequired;
       continue;
     }
 
     // if there is a space in this arg, use double quotes surround it
-    if ((*it).find(" ") != String::npos) {
+    if ((*it).find(" ") != std::string::npos) {
       (*it).insert(0, "\"");
       (*it).push_back('\"');
     }

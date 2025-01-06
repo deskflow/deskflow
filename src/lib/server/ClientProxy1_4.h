@@ -26,7 +26,7 @@ class Server;
 class ClientProxy1_4 : public ClientProxy1_3
 {
 public:
-  ClientProxy1_4(const String &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
+  ClientProxy1_4(const std::string &name, deskflow::IStream *adoptedStream, Server *server, IEventQueue *events);
   ~ClientProxy1_4();
 
   //! @name accessors
@@ -41,8 +41,8 @@ public:
   //@}
 
   // IClient overrides
-  virtual void keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const String &);
-  virtual void keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button, const String &lang);
+  virtual void keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &);
+  virtual void keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
   virtual void keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
   virtual void keepAlive();
 

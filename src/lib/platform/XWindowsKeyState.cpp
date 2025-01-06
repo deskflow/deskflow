@@ -26,7 +26,6 @@
 #include "platform/XWindowsKeyState.h"
 
 #include "base/Log.h"
-#include "base/String.h"
 #include "common/stdmap.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/ClientApp.h"

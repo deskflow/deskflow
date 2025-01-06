@@ -143,7 +143,7 @@ std::string ArchFileWindows::getPluginDirectory()
 
 std::string ArchFileWindows::getProfileDirectory()
 {
-  String dir;
+  std::string dir;
   if (!m_profileDirectory.empty()) {
     dir = m_profileDirectory;
   } else {
@@ -173,12 +173,12 @@ std::string ArchFileWindows::concatPath(const std::string &prefix, const std::st
   return path;
 }
 
-void ArchFileWindows::setProfileDirectory(const String &s)
+void ArchFileWindows::setProfileDirectory(const std::string &s)
 {
   m_profileDirectory = s;
 }
 
-void ArchFileWindows::setPluginDirectory(const String &s)
+void ArchFileWindows::setPluginDirectory(const std::string &s)
 {
   m_pluginDirectory = s;
 }

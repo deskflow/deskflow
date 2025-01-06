@@ -24,7 +24,6 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "common/ipc.h"
@@ -57,8 +56,8 @@ public:
   bool m_connectToServer_helloMessageReceived;
   bool m_connectToServer_hasClientNode;
   IpcServer *m_connectToServer_server;
-  String m_sendMessageToServer_receivedString;
-  String m_sendMessageToClient_receivedString;
+  std::string m_sendMessageToServer_receivedString;
+  std::string m_sendMessageToClient_receivedString;
   IpcClient *m_sendMessageToServer_client;
   IpcServer *m_sendMessageToClient_server;
   TestEventQueue m_events;
