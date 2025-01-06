@@ -21,7 +21,7 @@
 #include "arch/IArchDaemon.h"
 #include "arch/IArchMultithread.h"
 #include "common/constants.h"
-#include "common/stdstring.h"
+#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

@@ -20,7 +20,7 @@
 
 #include "common/common.h"
 #include "common/stdexcept.h"
-#include "common/stdstring.h"
+#include <string>
 
 //! Generic thread exception
 /*!
