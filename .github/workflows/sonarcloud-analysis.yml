@@ -1,0 +1,79 @@
+name: "SonarCloud Analysis"
+
+on:
+  workflow_dispatch:
+  workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        required: true
+
+jobs:
+  sonarcloud-analysis:
+    runs-on: ubuntu-latest
+    container: debian:trixie-slim
+    timeout-minutes: 20
+
+    env:
+      SONAR_SCANNER_VERSION: 6.1.0.4477
+      CPU_CORE_COUNT: 8
+
+    steps:
+      - name: Install container dependencies
+        run: |
+          apt update
+          apt install -y git python3 python3-venv
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Config Git safe dir
+        run: git config --global --add safe.directory $GITHUB_WORKSPACE
+
+      - name: Install dependencies
+        run: ./scripts/setup.py ${{ matrix.distro.extra-dep-args }}
+        env:
+          # Prevent apt prompting for input.
+          DEBIAN_FRONTEND: noninteractive
+
+      - name: Install sonar-scanner and build-wrapper
+        uses: sonarsource/sonarcloud-github-c-cpp@v3
+
+      - name: Configure
+        run: cmake -B build --preset=linux-release
+
+      - name: Build
+        run: |
+          build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
+
+      - name: Unit tests coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: cmake --build build --target coverage-unittests
+
+      - name: Integration tests coverage
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: cmake --build build --target coverage-integtests
+
+      - name: Get coverage report paths
+        id: coverage-paths
+        run: |
+          unittests=$(find build -name coverage-unittests.xml)
+          integtests=$(find build -name coverage-integtests.xml)
+          paths="${unittests}${integtests:+,$integtests}"
+          if [ -z "$paths" ]; then
+            echo "Error: No coverage files found"
+            exit 1
+          fi
+          echo "csv=$paths" >> $GITHUB_OUTPUT
+
+      - name: Run SonarScanner
+        run: |
+          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
+          sonar-scanner \
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+            -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
