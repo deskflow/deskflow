@@ -2,10 +2,9 @@ name: "SonarCloud Analysis"
 
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      SONAR_TOKEN:
-        required: true
+  push:
+    branches:
+      - master
 
 jobs:
   sonarcloud-analysis:
