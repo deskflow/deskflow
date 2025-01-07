@@ -70,7 +70,6 @@ jobs:
 
       - name: Run SonarScanner
         run: |
-          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
           sonar-scanner \
             -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
