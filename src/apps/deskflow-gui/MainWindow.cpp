@@ -689,23 +689,11 @@ void MainWindow::setIcon()
 {
   QIcon icon;
 #ifdef Q_OS_MAC
-  switch (getOSXIconsTheme()) {
-  case IconsTheme::ICONS_DARK:
-    icon.addFile(kDarkIconFile);
-    break;
-  case IconsTheme::ICONS_LIGHT:
-    icon.addFile(kLightIconFile);
-    break;
-  case IconsTheme::ICONS_TEMPLATE:
-  default:
-    icon.addFile(kDarkIconFile);
-    icon.setIsMask(true);
-    break;
-  }
+  icon.addFile(kDarkIconFile);
+  icon.setIsMask(true);
 #else
-  icon.addFile(kIconFile);
+  QIcon icon(kIconFile);
 #endif
-
   m_trayIcon->setIcon(icon);
 }
 
