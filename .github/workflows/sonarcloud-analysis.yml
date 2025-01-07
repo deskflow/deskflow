@@ -2,18 +2,19 @@ name: "SonarCloud Analysis"
 
 on:
   workflow_dispatch:
+  pull_request:
   push:
     branches:
       - master*
 
 jobs:
   sonarcloud-analysis:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-16-core-x64
     container: debian:trixie-slim
     timeout-minutes: 20
 
     env:
-      CPU_CORE_COUNT: 8
+      CPU_CORE_COUNT: 16
 
     steps:
       - name: Install container dependencies
