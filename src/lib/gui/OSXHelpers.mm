@@ -118,12 +118,3 @@ void macOSNativeHide()
   [NSApp hide:nil];
   [[NSApplication sharedApplication] setActivationPolicy:NSApplicationActivationPolicyAccessory];
 }
-
-IconsTheme getOSXIconsTheme()
-{
-  if (@available(macOS 11, *))
-    return IconsTheme::ICONS_TEMPLATE;
-  else if (isOSXInterfaceStyleDark())
-    return IconsTheme::ICONS_DARK;
-  return IconsTheme::ICONS_LIGHT;
-}
