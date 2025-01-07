@@ -5,13 +5,6 @@
 # calling CMAKE_CURRENT_LIST_DIR after include would return the wrong scope var
 set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-
-# Configure the windows version rc file
-configure_file(
-  ${MY_DIR}/version.rc.in
-  ${PROJECT_BINARY_DIR}/src/version.rc @ONLY
-)
-
 install(CODE "execute_process(
   COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network \"\${CMAKE_INSTALL_PREFIX}/deskflow.exe\"
 )")
