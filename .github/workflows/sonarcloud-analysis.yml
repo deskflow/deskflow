@@ -31,7 +31,7 @@ jobs:
         run: git config --global --add safe.directory $GITHUB_WORKSPACE
 
       - name: Install dependencies
-        run: ./scripts/setup.py ${{ matrix.distro.extra-dep-args }}
+        run: ./scripts/install_deps.py
         env:
           # Prevent apt prompting for input.
           DEBIAN_FRONTEND: noninteractive
