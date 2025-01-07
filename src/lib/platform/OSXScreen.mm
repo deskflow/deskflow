@@ -1344,14 +1344,14 @@ ButtonID OSXScreen::mapMacButtonToDeskflow(UInt16 macButton) const
   return static_cast<ButtonID>(macButton);
 }
 
-SInt32 OSXScreen::mapScrollWheelToDeskflow(SInt32 x) const
+SInt32 OSXScreen::mapScrollWheelToDeskflow(float x) const
 {
   // return accelerated scrolling
   double d = (1.0 + getScrollSpeed()) * x;
   return static_cast<SInt32>(120.0 * d);
 }
 
-SInt32 OSXScreen::mapScrollWheelFromDeskflow(SInt32 x) const
+SInt32 OSXScreen::mapScrollWheelFromDeskflow(float x) const
 {
   // use server's acceleration with a little boost since other platforms
   // take one wheel step as a larger step than the mac does.
@@ -1818,8 +1818,8 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
     break;
   case kCGEventScrollWheel:
     screen->onMouseWheel(
-        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2)),
-        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1))
+        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis2) / 65536.0f),
+        screen->mapScrollWheelToDeskflow(CGEventGetIntegerValueField(event, kCGScrollWheelEventDeltaAxis1) / 65536.0f)
     );
     break;
   case kCGEventKeyDown:

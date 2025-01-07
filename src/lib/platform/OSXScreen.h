@@ -156,10 +156,10 @@ private:
   ButtonID mapMacButtonToDeskflow(UInt16) const;
 
   // map mac scroll wheel value to a deskflow scroll wheel value
-  SInt32 mapScrollWheelToDeskflow(SInt32) const;
+  SInt32 mapScrollWheelToDeskflow(float) const;
 
   // map deskflow scroll wheel value to a mac scroll wheel value
-  SInt32 mapScrollWheelFromDeskflow(SInt32) const;
+  SInt32 mapScrollWheelFromDeskflow(float) const;
 
   // get the current scroll wheel speed
   double getScrollSpeed() const;
