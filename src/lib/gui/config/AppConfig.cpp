@@ -592,6 +592,11 @@ bool AppConfig::logExpanded() const
   return m_logExpanded;
 }
 
+bool AppConfig::colorfulTrayIcon() const
+{
+  return m_colorfulTrayIcon;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -770,6 +775,13 @@ void AppConfig::setLogExpanded(bool expanded)
   if (expanded == m_logExpanded)
     return;
   m_logExpanded = expanded;
+}
+
+void AppConfig::setColorfulTrayIcon(bool colorful)
+{
+  if (colorful == m_colorfulTrayIcon)
+    return;
+  m_colorfulTrayIcon = colorful;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

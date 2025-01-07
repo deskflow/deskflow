@@ -32,6 +32,7 @@
 #include "gui/diagnostic.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
+#include "gui/style_utils.h"
 #include "gui/styles.h"
 #include "gui/tls/TlsFingerprint.h"
 #include "platform/wayland.h"
@@ -66,12 +67,9 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kIconFile = ":/icons/128x128/tray.png";
-
-#ifdef Q_OS_MAC
+const auto kColorfulIconFile = ":/icons/128x128/tray.png";
 const auto kLightIconFile = ":/icons/128x128/tray-light.png";
 const auto kDarkIconFile = ":/icons/128x128/tray-dark.png";
-#endif // Q_OS_MAC
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : ui{std::make_unique<Ui::MainWindow>()},
@@ -673,6 +671,7 @@ void MainWindow::applyConfig()
   ui->lineHostname->setText(m_AppConfig.serverHostname());
   ui->lineClientIp->setText(m_ServerConfig.getClientAddress());
   updateLocalFingerprint();
+  setIcon();
 }
 
 void MainWindow::saveSettings()
@@ -687,12 +686,16 @@ void MainWindow::saveSettings()
 
 void MainWindow::setIcon()
 {
-  QIcon icon;
 #ifdef Q_OS_MAC
-  icon.addFile(kDarkIconFile);
-  icon.setIsMask(true);
+  QIcon icon;
+  if (appConfig().colorfulTrayIcon())
+    icon.addFile(kColorfulIconFile);
+  else {
+    icon.addFile(kDarkIconFile);
+    icon.setIsMask(true);
+  }
 #else
-  QIcon icon(kIconFile);
+  QIcon icon(appConfig().colorfulTrayIcon() ? kColorfulIconFile : isDarkMode() ? kDarkIconFile : kLightIconFile);
 #endif
   m_trayIcon->setIcon(icon);
 }

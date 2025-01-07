@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>625</height>
+    <height>652</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -159,6 +159,39 @@
              <string>Hide the window when the app starts</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Tray icon style</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rb_icon_colorful">
+              <property name="text">
+               <string>Colorful</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../res/deskflow.qrc">
+                <normaloff>:/icons/128x128/tray.png</normaloff>:/icons/128x128/tray.png</iconset>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QRadioButton" name="rb_icon_mono">
+              <property name="text">
+               <string>Monocolor</string>
+              </property>
+              <property name="icon">
+               <iconset resource="../../res/deskflow.qrc">
+                <normaloff>:/icons/128x128/tray-dark.png</normaloff>:/icons/128x128/tray-dark.png</iconset>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -761,7 +794,9 @@
   <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../../res/deskflow.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>
