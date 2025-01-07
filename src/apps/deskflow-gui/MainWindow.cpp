@@ -104,7 +104,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
 
+#ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
+#else
+  m_actionQuit->setShortcut(QKeySequence(QStringLiteral("Ctrl+Q")));
+#endif
   m_actionQuit->setMenuRole(QAction::QuitRole);
 
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
