@@ -136,7 +136,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   setupControls();
   connectSlots();
 
-  setIcon();
+  setupTrayIcon();
 
   m_ConfigScopes.signalReady();
 
@@ -568,25 +568,6 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::open()
 {
-  auto trayMenu = new QMenu(this);
-  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionQuit});
-  trayMenu->insertSeparator(m_actionQuit);
-
-#ifdef Q_OS_MAC
-  // Duplicate quit needed for mac os tray menu
-  QAction *actionTrayQuit = new QAction(tr("Quit Deskflow"), this);
-  actionTrayQuit->setShortcut(QKeySequence::Quit);
-  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
-
-  m_actionRestore->setText(tr("Open Deskflow"));
-  trayMenu->addActions({m_actionRestore, actionTrayQuit});
-  trayMenu->insertSeparator(actionTrayQuit);
-#endif
-
-  m_trayIcon->setContextMenu(trayMenu);
-  // Show will show the tray when it can (if it can)
-  m_trayIcon->show();
-
   if (!m_AppConfig.enableUpdateCheck().has_value()) {
     m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
     m_ConfigScopes.save();
@@ -661,6 +642,27 @@ void MainWindow::createMenuBar()
   }
 
   setMenuBar(menuBar);
+}
+
+void MainWindow::setupTrayIcon()
+{
+  auto trayMenu = new QMenu(this);
+  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionQuit});
+  trayMenu->insertSeparator(m_actionQuit);
+
+#ifdef Q_OS_MAC
+  // Duplicate quit needed for mac os tray menu
+  QAction *actionTrayQuit = new QAction(tr("Quit Deskflow"), this);
+  actionTrayQuit->setShortcut(QKeySequence::Quit);
+  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
+
+  m_actionRestore->setText(tr("Open Deskflow"));
+  trayMenu->addActions({m_actionRestore, actionTrayQuit});
+  trayMenu->insertSeparator(actionTrayQuit);
+#endif
+  setIcon();
+  m_trayIcon->setContextMenu(trayMenu);
+  m_trayIcon->show();
 }
 
 void MainWindow::applyConfig()
