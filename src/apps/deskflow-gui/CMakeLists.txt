@@ -76,6 +76,11 @@ if(WIN32)
       ".*system32.*"
     RUNTIME DESTINATION .
   )
+
+  add_custom_command(
+    TARGET ${target} POST_BUILD
+      COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network $<TARGET_FILE:${target}>
+  )
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
