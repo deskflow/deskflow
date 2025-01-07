@@ -21,6 +21,7 @@
 
 #include "gui/core/CoreProcess.h"
 #include "gui/messages.h"
+#include "gui/style_utils.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 #include "gui/validators/ScreenNameValidator.h"
@@ -197,6 +198,7 @@ void SettingsDialog::accept()
   m_appConfig.setEnableService(ui->m_pCheckBoxServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
   m_appConfig.setInvertConnection(ui->m_pInvertConnection->isChecked());
+  m_appConfig.setColorfulTrayIcon(ui->rb_icon_colorful->isChecked());
 
   QDialog::accept();
 }
@@ -241,6 +243,16 @@ void SettingsDialog::loadFromConfig()
   }
 
   ui->m_pInvertConnection->setChecked(m_appConfig.invertConnection());
+
+  if (m_appConfig.colorfulTrayIcon())
+    ui->rb_icon_colorful->setChecked(true);
+  else
+    ui->rb_icon_mono->setChecked(true);
+
+  ui->rb_icon_mono->setIcon(
+      isDarkMode() ? QIcon(QStringLiteral(":/icons/128x128/tray-dark.png"))
+                   : QIcon(QStringLiteral(":/icons/128x128/tray-light.png"))
+  );
 
   updateTlsControls();
 }

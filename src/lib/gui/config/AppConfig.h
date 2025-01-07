@@ -110,6 +110,7 @@ private:
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
     kLogExpanded = 44,
+    kColorIcon = 45
   };
 
 public:
@@ -185,6 +186,7 @@ public:
   bool showCloseReminder() const;
   std::optional<bool> enableUpdateCheck() const;
   bool logExpanded() const;
+  bool colorfulTrayIcon() const;
 
   //
   // Setters (overrides)
@@ -226,6 +228,7 @@ public:
   void setShowCloseReminder(bool show);
   void setEnableUpdateCheck(bool value);
   void setLogExpanded(bool expanded);
+  void setColorfulTrayIcon(bool color);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -332,6 +335,7 @@ private:
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
   bool m_logExpanded = true;
+  bool m_colorfulTrayIcon = false;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset
