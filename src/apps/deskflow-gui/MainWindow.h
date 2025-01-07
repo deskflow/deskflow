@@ -27,7 +27,6 @@
 #include <QThread>
 
 #include "ServerConfig.h"
-#include "TrayIcon.h"
 #include "VersionChecker.h"
 #include "common/ipc.h"
 #include "gui/config/AppConfig.h"
@@ -193,7 +192,7 @@ private:
   void showAndActivate();
 
   VersionChecker m_VersionChecker;
-  deskflow::gui::TrayIcon m_TrayIcon;
+  QSystemTrayIcon *m_trayIcon = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
   bool m_SaveWindow = false;

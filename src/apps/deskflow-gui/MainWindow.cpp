@@ -83,6 +83,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig),
       m_WindowSaveTimer(this),
+      m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
@@ -293,7 +294,7 @@ void MainWindow::connectSlots()
 
 // Mac os tray will only show a menu
 #ifndef Q_OS_MAC
-  connect(&m_TrayIcon, &TrayIcon::activated, this, &MainWindow::onTrayIconActivated);
+  connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::onTrayIconActivated);
 #endif
 
   connect(
@@ -567,8 +568,9 @@ void MainWindow::moveEvent(QMoveEvent *event)
 
 void MainWindow::open()
 {
-
-  QList<QAction *> trayActions{m_actionStartCore, m_actionStopCore, nullptr, m_actionQuit};
+  auto trayMenu = new QMenu(this);
+  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionQuit});
+  trayMenu->insertSeparator(m_actionQuit);
 
 #ifdef Q_OS_MAC
   // Duplicate quit needed for mac os tray menu
@@ -577,12 +579,13 @@ void MainWindow::open()
   connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
 
   m_actionRestore->setText(tr("Open Deskflow"));
-  trayActions.insert(3, m_actionRestore);
-  trayActions.append(nullptr);
-  trayActions.append(actionTrayQuit);
+  trayMenu->addActions({m_actionRestore, actionTrayQuit});
+  trayMenu->insertSeparator(actionTrayQuit);
 #endif
 
-  m_TrayIcon.create(trayActions);
+  m_trayIcon->setContextMenu(trayMenu);
+  // Show will show the tray when it can (if it can)
+  m_trayIcon->show();
 
   if (!m_AppConfig.enableUpdateCheck().has_value()) {
     m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
@@ -701,7 +704,7 @@ void MainWindow::setIcon()
   icon.addFile(kIconFile);
 #endif
 
-  m_TrayIcon.setIcon(icon);
+  m_trayIcon->setIcon(icon);
 }
 
 void MainWindow::handleLogLine(const QString &line)
