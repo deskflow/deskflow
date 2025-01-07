@@ -33,6 +33,17 @@ macro(configure_libs)
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
 
+  #Define the location of  qt deployment tool
+  if(WIN32)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT VCPKG_INSTALL_DIR STREQUAL "")
+      find_program(DEPLOYQT windeployqt.debug.bat)
+    else()
+      find_program(DEPLOYQT windeployqt)
+    endif()
+  elseif(APPLE)
+      find_program(DEPLOYQT macdeployqt)
+  endif()
+
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
   # TODO SSL check can happen in lib/net when don't have to deploy it any longer on windows

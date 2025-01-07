@@ -12,8 +12,6 @@ configure_file(
   ${PROJECT_BINARY_DIR}/src/version.rc @ONLY
 )
 
-# Install Qt Depends to stage
-find_program(DEPLOYQT windeployqt6)
 install(CODE "execute_process(
   COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network \"\${CMAKE_INSTALL_PREFIX}/deskflow.exe\"
 )")

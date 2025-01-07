@@ -5,11 +5,8 @@
 # calling CMAKE_CURRENT_LIST_DIR after include would return the wrong scope var
 set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
-# Install depends into our staged copy
-find_program(MACDEPLOYQT_BIN macdeployqt6)
-
 install(CODE "execute_process(COMMAND
-  ${MACDEPLOYQT_BIN}
+  ${DEPLOYQT_BIN}
   \"\${CMAKE_INSTALL_PREFIX}/Deskflow.app\"
   -timestamp -codesign=-
 )")
