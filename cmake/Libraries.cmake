@@ -33,7 +33,7 @@ macro(configure_libs)
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
 
-  #Define the location of  qt deployment tool
+  # Define the location of Qt deployment tool
   if(WIN32)
     if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT VCPKG_INSTALL_DIR STREQUAL "")
       find_program(DEPLOYQT windeployqt.debug.bat)
