@@ -19,7 +19,7 @@ jobs:
       - name: Install container dependencies
         run: |
           apt update
-          apt install -y git python3 python3-venv curl
+          apt install -y git python3 python3-venv curl unzip
 
       - name: Checkout
         uses: actions/checkout@v4
