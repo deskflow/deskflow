@@ -156,8 +156,7 @@ private:
     return m_AppConfig;
   }
   void createMenuBar();
-  void createStatusBar();
-  void createTrayIcon();
+  void setupTrayIcon();
   void applyConfig();
   void setIcon();
   bool checkForApp(int which, QString &app);
