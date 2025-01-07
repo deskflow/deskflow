@@ -13,7 +13,6 @@ jobs:
     timeout-minutes: 20
 
     env:
-      SONAR_SCANNER_VERSION: 6.1.0.4477
       CPU_CORE_COUNT: 8
 
     steps:
