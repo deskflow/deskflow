@@ -39,7 +39,12 @@ jobs:
         uses: sonarsource/sonarcloud-github-c-cpp@v3
 
       - name: Configure
-        run: cmake -B build --preset=linux-release
+        run: |
+          cmake -B build \
+            -G "Ninja" \
+            -DCMAKE_BUILD_TYPE="Release" \
+            -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DENABLE_COVERAGE=ON
 
       - name: Build
         run: |
