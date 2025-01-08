@@ -803,6 +803,7 @@ void OSXScreen::disable()
 
 void OSXScreen::enter()
 {
+  m_isOnScreen = true;
   showCursor();
 
   if (m_isPrimary) {
@@ -822,9 +823,6 @@ void OSXScreen::enter()
 
     avoidSupression();
   }
-
-  // now on screen
-  m_isOnScreen = true;
 }
 
 bool OSXScreen::canLeave()
