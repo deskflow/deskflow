@@ -157,7 +157,7 @@ void MainWindow::restoreWindow()
   const auto &windowSize = m_AppConfig.mainWindowSize();
   if (windowSize.has_value()) {
     qDebug() << "restoring main window size";
-    resize(windowSize.value());
+    m_expandedSize = windowSize.value();
   }
 
   const auto &windowPosition = m_AppConfig.mainWindowPosition();
