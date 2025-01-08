@@ -110,7 +110,7 @@ private:
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
     kLogExpanded = 44,
-    kColorIcon = 45
+    kColorfulIcon = 45
   };
 
 public:
