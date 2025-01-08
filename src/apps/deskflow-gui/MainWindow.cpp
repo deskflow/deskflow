@@ -80,7 +80,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_ServerConnection(this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
       m_ClientConnection(this, appConfig),
       m_TlsUtility(appConfig),
-      m_WindowSaveTimer(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_actionAbout{new QAction(this)},
@@ -186,24 +185,6 @@ void MainWindow::restoreWindow()
     QRect screenGeometry = screen->geometry();
     move(screenGeometry.center() - rect().center());
   }
-
-  // give the window chance to restore its size and position before the window
-  // size and position are saved. this prevents the window from being saved
-  // with the wrong size and position.
-  m_SaveWindow = true;
-}
-
-void MainWindow::saveWindow()
-{
-  if (!m_SaveWindow) {
-    qDebug() << "not yet ready to save window size and position, skipping";
-    return;
-  }
-
-  qDebug() << "saving window size and position";
-  m_AppConfig.setMainWindowSize(size());
-  m_AppConfig.setMainWindowPosition(pos());
-  m_ConfigScopes.save();
 }
 
 void MainWindow::setupControls()
@@ -287,8 +268,6 @@ void MainWindow::connectSlots()
   connect(m_actionTestCriticalError, &QAction::triggered, this, &MainWindow::testCriticalError);
 
   connect(&m_VersionChecker, &VersionChecker::updateFound, this, &MainWindow::onVersionCheckerUpdateFound);
-
-  connect(&m_WindowSaveTimer, &QTimer::timeout, this, &MainWindow::onWindowSaveTimerTimeout);
 
 // Mac os tray will only show a menu
 #ifndef Q_OS_MAC
@@ -527,11 +506,6 @@ void MainWindow::setModeClient()
   m_ConfigScopes.save();
 }
 
-void MainWindow::onWindowSaveTimerTimeout()
-{
-  saveWindow();
-}
-
 void MainWindow::onServerConnectionConfigureClient(const QString &clientName)
 {
   m_ServerConfigDialogState.setVisible(true);
@@ -545,24 +519,6 @@ void MainWindow::onServerConnectionConfigureClient(const QString &clientName)
 //////////////////////////////////////////////////////////////////////////////
 // End slots
 //////////////////////////////////////////////////////////////////////////////
-
-void MainWindow::resizeEvent(QResizeEvent *event)
-{
-  QMainWindow::resizeEvent(event);
-
-  // postpone save so that settings are not written every delta change.
-  m_WindowSaveTimer.setSingleShot(true);
-  m_WindowSaveTimer.start(1000);
-}
-
-void MainWindow::moveEvent(QMoveEvent *event)
-{
-  QMainWindow::moveEvent(event);
-
-  // postpone save so that settings are not written every delta change.
-  m_WindowSaveTimer.setSingleShot(true);
-  m_WindowSaveTimer.start(1000);
-}
 
 void MainWindow::open()
 {
@@ -805,9 +761,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     return;
   }
 
-  if (m_SaveOnExit)
+  if (m_SaveOnExit) {
+    m_AppConfig.setMainWindowPosition(pos());
+    m_AppConfig.setMainWindowSize(size());
     m_ConfigScopes.save();
-
+  }
   qDebug() << "quitting application";
   event->accept();
   QApplication::quit();
