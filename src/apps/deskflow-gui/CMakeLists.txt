@@ -1,4 +1,5 @@
 # Deskflow -- mouse and keyboard sharing utility
+# Copyright (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # Copyright (C) 2024 Symless Ltd.
 #
 # This package is free software; you can redistribute it and/or
@@ -18,6 +19,21 @@ if(APPLE)
 else()
   set(target deskflow)
 endif()
+
+#setup our bundle plist file
+set(BUNDLE_EXECUTABLE_NAME "${target}")
+set(BUNDLE_BUNDLE_NAME "${target}")
+set(BUNDLE_DISPLAY_NAME "${target}")
+set(BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow")
+set(BUNDLE_ICON_FILE ${target}.icns)
+set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
+set(BUNDLE_COPYRIGHT "© 2024 Deskflow Developers")
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/../res/deskflow.plist.in
+  ${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist
+  @ONLY
+)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -83,15 +99,7 @@ if(WIN32)
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
-    MACOSX_BUNDLE_BUNDLE_NAME "Deskflow"
-    MACOSX_BUNDLE_DISPLAY_NAME "Deskflow"
-    MACOSX_BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow"
-    MACOSX_BUNDLE_ICON_FILE Deskflow.icns
-    MACOSX_BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}"
-    MACOSX_BUNDLE_COPYRIGHT "© 2024 Deskflow Developers"
-    MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_PROJECT_VERSION}
-    MACOSX_BUNDLE_LONG_VERSION_STRING ${CMAKE_PROJECT_VERSION}
-    MACOSX_BUNDLE_SHORT_VERSION_STRING ${CMAKE_PROJECT_VERSION}
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist"
   )
   install(TARGETS ${target} BUNDLE DESTINATION .)
 else()
