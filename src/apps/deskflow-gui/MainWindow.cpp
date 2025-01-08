@@ -316,8 +316,8 @@ void MainWindow::toggleLogVisible(bool visible)
     ui->textLog->setVisible(false);
     m_AppConfig.setLogExpanded(false);
   }
-  // 10 ms is long enough to process events and quick enough to not see the visual change.
-  QTimer::singleShot(10, this, &MainWindow::updateSize);
+  // 1 ms delay is to make sure we have left the function before calling updateSize
+  QTimer::singleShot(1, this, &MainWindow::updateSize);
 }
 
 void MainWindow::onShown()
@@ -469,16 +469,10 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-#ifdef Q_OS_MAC
-  // On mac os the titlebar is part of the height so we need to adjust our Y coord to avoid moving the window up
-  const auto kTitleBarOffset = 28;
-#else
-  const auto kTitleBarOffset = 0;
-#endif
   if (ui->textLog->isVisible()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
-    setGeometry(x(), y() + kTitleBarOffset, m_expandedSize.width(), m_expandedSize.height());
+    resize(m_expandedSize);
   } else {
     adjustSize();
     // Prevent Resize with log collapsed
