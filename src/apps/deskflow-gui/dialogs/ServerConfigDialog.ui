@@ -59,7 +59,7 @@
             <bool>true</bool>
            </property>
            <property name="toolTip">
-            <string>Drag a screen from the grid to the trashcan to remove it.</string>
+            <string>Drag a computer from the grid to the trashcan to remove it.</string>
            </property>
            <property name="frameShape">
             <enum>QFrame::StyledPanel</enum>
@@ -461,7 +461,7 @@
           <item>
            <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
             <property name="text">
-             <string>Disable lock to screen (scroll lock key)</string>
+             <string>Disable lock to computer (scroll lock key)</string>
             </property>
            </widget>
           </item>
@@ -902,7 +902,7 @@
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
-          <string>Use a server config file to create complex screen layouts that are not possible with the simple grid-based screen layout editor.
+          <string>Use a server config file to create complex computer layouts that are not possible with the simple grid-based computer layout editor.
 
 Enabling this setting will disable the server config GUI.</string>
          </property>

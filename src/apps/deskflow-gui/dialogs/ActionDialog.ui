@@ -55,12 +55,12 @@
        </item>
        <item>
         <property name="text">
-         <string>Switch to a screen</string>
+         <string>Switch to a computer</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Switch to the screen in a direction</string>
+         <string>Switch in a direction</string>
         </property>
        </item>
        <item>
@@ -93,22 +93,22 @@
        </property>
        <item>
         <property name="text">
-         <string>Move to the screen on the left</string>
+         <string>Switch to the computer on the left</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Move to the screen on the right</string>
+         <string>Switch to the computer on the right</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Move to the screen above</string>
+         <string>Switch to the computer above</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Move to the screen below</string>
+         <string>Switch to the computer below</string>
         </property>
        </item>
       </widget>
