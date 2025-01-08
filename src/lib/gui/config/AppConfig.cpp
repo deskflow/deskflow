@@ -87,6 +87,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "showCloseReminder",
     "enableUpdateCheck",
     "logExpanded",
+    "colorfulIcon",
 };
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -153,6 +154,7 @@ void AppConfig::recallFromCurrentScope()
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
   m_logExpanded = getFromCurrentScope(kLogExpanded, m_logExpanded).toBool();
+  m_colorfulTrayIcon = getFromCurrentScope(kColorfulIcon, m_colorfulTrayIcon).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -211,6 +213,7 @@ void AppConfig::commit()
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
     setInCurrentScope(kLogExpanded, m_logExpanded);
+    setInCurrentScope(kColorfulIcon, m_colorfulTrayIcon);
   }
 
   if (m_TlsChanged) {
