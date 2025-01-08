@@ -125,7 +125,6 @@ private slots:
   void onCoreProcessSecureSocket(bool enabled);
   void onVersionCheckerUpdateFound(const QString &version);
   void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
-  void onWindowSaveTimerTimeout();
   void onServerConnectionConfigureClient(const QString &clientName);
 
   void clearSettings();
@@ -182,10 +181,7 @@ private:
   QString configFilename();
   void showConfigureServer(const QString &message);
   void restoreWindow();
-  void saveWindow();
   void setupControls();
-  void resizeEvent(QResizeEvent *event) override;
-  void moveEvent(QMoveEvent *event) override;
   void showFirstConnectedMessage();
   void updateStatus();
   void showAndActivate();
@@ -194,7 +190,6 @@ private:
   QSystemTrayIcon *m_trayIcon = nullptr;
   QAbstractButton *m_pCancelButton = nullptr;
   bool m_SecureSocket = false;
-  bool m_SaveWindow = false;
   deskflow::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
   bool m_SaveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_WaylandWarnings;
@@ -206,7 +201,6 @@ private:
   deskflow::gui::ServerConnection m_ServerConnection;
   deskflow::gui::ClientConnection m_ClientConnection;
   deskflow::gui::TlsUtility m_TlsUtility;
-  QTimer m_WindowSaveTimer;
   QSize m_expandedSize = QSize();
 
   QLocalServer *m_guiDupeChecker = nullptr;
