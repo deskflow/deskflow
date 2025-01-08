@@ -34,5 +34,24 @@
 	<!-- Don't Allow Os to kill for memory -->
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
+
+	<!-- Local Lan Entitlements -->
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>This app uses local network permissions for communication between a Deskflow server and clients.</string>
+	<key>com.apple.security.networking.local</key>
+	<true/>
+
+	<!-- Accessibility Entitlements -->
+	<key>com.apple.security.accessibility</key>
+	<array>
+		<dict>
+			<key>com.apple.security.accessibility.read</key>
+			<true/>
+			<key>com.apple.security.accessibility.write</key>
+			<true/>
+			<key>com.apple.security.accessibility.execute</key>
+			<true/>
+		</dict>
+	</array>
 </dict>
 </plist>
