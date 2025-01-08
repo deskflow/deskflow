@@ -6,7 +6,7 @@
 set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 install(CODE "execute_process(COMMAND
-  ${DEPLOYQT_BIN}
+  ${DEPLOYQT}
   \"\${CMAKE_INSTALL_PREFIX}/Deskflow.app\"
   -timestamp -codesign=-
 )")
