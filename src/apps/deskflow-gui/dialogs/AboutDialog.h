@@ -31,7 +31,6 @@ public:
 private:
   void copyVersionText();
 
-  QString m_versionString;
   inline static const auto s_lightCopy = QStringLiteral(":/icons/64x64/copy-light.png");
   inline static const auto s_darkCopy = QStringLiteral(":/icons/64x64/copy-dark.png");
   inline static const auto s_lightLogo = QStringLiteral(":/image/logo-light.png");
