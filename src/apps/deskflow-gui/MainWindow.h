@@ -98,12 +98,7 @@ public:
   }
   void autoAddScreen(const QString name);
 
-#ifdef Q_OS_MAC
-  void hide()
-  {
-    macOSNativeHide();
-  }
-#endif
+  void hide();
 
 signals:
   void shown();
@@ -212,6 +207,7 @@ private:
   QAction *m_actionHelp = nullptr;
   QAction *m_actionMinimize = nullptr;
   QAction *m_actionQuit = nullptr;
+  QAction *m_actionTrayQuit = nullptr;
   QAction *m_actionRestore = nullptr;
   QAction *m_actionSave = nullptr;
   QAction *m_actionSettings = nullptr;
