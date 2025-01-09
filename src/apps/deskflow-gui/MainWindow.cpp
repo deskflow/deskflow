@@ -85,9 +85,10 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionHelp{new QAction(tr("Report a Bug"), this)},
-      m_actionMinimize{new QAction(tr("&Hide"), this)},
+      m_actionMinimize{new QAction(tr("&Minimize to tray"), this)},
       m_actionQuit{new QAction(tr("&Quit"), this)},
-      m_actionRestore{new QAction(tr("Show"), this)},
+      m_actionTrayQuit{new QAction(tr("&Quit"), this)},
+      m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
       m_actionSave{new QAction(tr("Save configuration &as..."), this)},
       m_actionSettings{new QAction(tr("Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
@@ -95,7 +96,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_actionTestCriticalError{new QAction(tr("Test Critical Error"), this)},
       m_actionTestFatalError{new QAction(tr("Test Fatal Error"), this)}
 {
-
   ui->setupUi(this);
 
   // Setup Actions
@@ -104,8 +104,10 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
 #ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
+  m_actionTrayQuit->setShortcut(QKeySequence::Quit);
 #else
   m_actionQuit->setShortcut(QKeySequence(QStringLiteral("Ctrl+Q")));
+  m_actionTrayQuit->setShortcut(QKeySequence(QStringLiteral("Ctrl+Q")));
 #endif
   m_actionQuit->setMenuRole(QAction::QuitRole);
 
@@ -259,6 +261,7 @@ void MainWindow::connectSlots()
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
+  connect(m_actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
   connect(m_actionSave, &QAction::triggered, this, &MainWindow::saveConfig);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
@@ -564,9 +567,6 @@ void MainWindow::createMenuBar()
   auto menuEdit = new QMenu(tr("Edit"));
   menuEdit->addAction(m_actionSettings);
 
-  auto menuWindow = new QMenu(tr("Window"));
-  menuWindow->addAction(m_actionMinimize);
-
   auto menuHelp = new QMenu(tr("Help"));
   menuHelp->addAction(m_actionAbout);
   menuHelp->addAction(m_actionHelp);
@@ -576,9 +576,6 @@ void MainWindow::createMenuBar()
   auto menuBar = new QMenuBar(this);
   menuBar->addMenu(menuFile);
   menuBar->addMenu(menuEdit);
-#if !defined(Q_OS_MAC)
-  menuBar->addMenu(menuWindow);
-#endif
   menuBar->addMenu(menuHelp);
 
   const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
@@ -595,21 +592,12 @@ void MainWindow::createMenuBar()
 void MainWindow::setupTrayIcon()
 {
   auto trayMenu = new QMenu(this);
-  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionQuit});
-  trayMenu->insertSeparator(m_actionQuit);
-
-#ifdef Q_OS_MAC
-  // Duplicate quit needed for mac os tray menu
-  QAction *actionTrayQuit = new QAction(tr("Quit Deskflow"), this);
-  actionTrayQuit->setShortcut(QKeySequence::Quit);
-  connect(actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
-
-  m_actionRestore->setText(tr("Open Deskflow"));
-  trayMenu->addActions({m_actionRestore, actionTrayQuit});
-  trayMenu->insertSeparator(actionTrayQuit);
-#endif
-  setIcon();
+  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit});
+  trayMenu->insertSeparator(m_actionMinimize);
+  trayMenu->insertSeparator(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
+
+  setIcon();
   m_trayIcon->show();
 }
 
@@ -892,10 +880,7 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
 void MainWindow::setVisible(bool visible)
 {
   QMainWindow::setVisible(visible);
-  m_actionMinimize->setEnabled(visible);
-#ifndef Q_OS_MAC
-  m_actionRestore->setEnabled(!visible);
-#else
+#ifdef Q_OS_MAC
   // dock hide only supported on lion :(
   ProcessSerialNumber psn = {0, kCurrentProcess};
 #pragma GCC diagnostic push
@@ -973,6 +958,17 @@ void MainWindow::autoAddScreen(const QString name)
       break;
     }
   }
+}
+
+void MainWindow::hide()
+{
+#ifdef Q_OS_MAC
+  macOSNativeHide();
+#else
+  QMainWindow::hide();
+#endif
+  m_actionRestore->setVisible(true);
+  m_actionMinimize->setVisible(false);
 }
 
 void MainWindow::showConfigureServer(const QString &message)
@@ -1057,4 +1053,6 @@ void MainWindow::showAndActivate()
   showNormal();
   raise();
   activateWindow();
+  m_actionRestore->setVisible(false);
+  m_actionMinimize->setVisible(true);
 }
