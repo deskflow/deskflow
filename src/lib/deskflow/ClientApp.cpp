@@ -151,8 +151,6 @@ void ClientApp::help() {
       << HELP_COMMON_INFO_2 << "\n"
       << "* marks defaults.\n"
 
-      << kHelpNoWayland
-
       << "\n"
       << "The server address is of the form: [<hostname>][:<port>].\n"
       << "The hostname must be the address or hostname of the server.\n"
@@ -188,13 +186,13 @@ deskflow::Screen *ClientApp::createScreen() {
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-  if (deskflow::platform::isWayland()) {
+  if (deskflow::platform::isWayland() && args().m_enableLibei) {
 #if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
     return new deskflow::Screen(
         new deskflow::EiScreen(false, m_events, true), m_events);
 #else
-    throw XNoEiSupport();
+    LOG((CLOG_WARN "libei is not supported, falling back to x windows"));
 #endif
   }
 #endif

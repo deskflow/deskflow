@@ -50,6 +50,12 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kService;
 const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
 #endif // Q_OS_WIN
 
+#if defined(Q_OS_LINUX)
+const bool kDefaultEnableLibei = true;
+#else
+const bool kDefaultEnableLibei = false;
+#endif // Q_OS_LINUX
+
 } // namespace deskflow::gui
 
 /**
@@ -112,6 +118,8 @@ private:
     kShowDevThanks = 41,
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
+    kEnableDragAndDrop = 44,
+    kEnableLibei = 45,
   };
 
 public:
@@ -168,6 +176,8 @@ public:
   bool enableService() const override;
   bool closeToTray() const override;
   bool clientGroupChecked() const override;
+  bool enableDragAndDrop() const override;
+  bool enableLibei() const override;
 
   //
   // Getters (new methods)
@@ -206,6 +216,8 @@ public:
   void setTlsCertPath(const QString &path) override;
   void setTlsKeyLength(int length) override;
   void setInvertConnection(bool value) override;
+  void setEnableDragAndDrop(bool value) override;
+  void setEnableLibei(bool value) override;
 
   //
   // Setters (new methods)
@@ -329,6 +341,8 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
+  bool m_EnableDragAndDrop = false;
+  bool m_EnableLibei = deskflow::gui::kDefaultEnableLibei;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

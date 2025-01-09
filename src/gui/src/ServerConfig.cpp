@@ -81,7 +81,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const {
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&
          m_SwitchCorners == sc.m_SwitchCorners && m_Hotkeys == sc.m_Hotkeys &&
          m_pAppConfig == sc.m_pAppConfig &&
-         m_EnableDragAndDrop == sc.m_EnableDragAndDrop &&
          m_DisableLockToScreen == sc.m_DisableLockToScreen &&
          m_ClipboardSharing == sc.m_ClipboardSharing &&
          m_ClipboardSharingSize == sc.m_ClipboardSharingSize &&
@@ -127,7 +126,6 @@ void ServerConfig::commit() {
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
   settings().setValue("disableLockToScreen", disableLockToScreen());
-  settings().setValue("enableDragAndDrop", enableDragAndDrop());
   settings().setValue("clipboardSharing", clipboardSharing());
   settings().setValue(
       "clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
@@ -183,7 +181,6 @@ void ServerConfig::recall() {
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
   setDisableLockToScreen(
       settings().value("disableLockToScreen", false).toBool());
-  setEnableDragAndDrop(settings().value("enableDragAndDrop", false).toBool());
   setClipboardSharingSize(
       settings()
           .value(

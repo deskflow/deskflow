@@ -185,7 +185,9 @@ void SettingsDialog::accept() {
   m_appConfig.setInvertScrollDirection(m_pCheckBoxScrollDirection->isChecked());
   m_appConfig.setEnableService(m_pCheckBoxServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(m_pCheckBoxCloseToTray->isChecked());
-  m_appConfig.setInvertConnection(m_pInvertConnection->isChecked());
+  m_appConfig.setInvertConnection(m_pCheckBoxInvertConnection->isChecked());
+  m_appConfig.setEnableDragAndDrop(m_pCheckBoxDragAndDrop->isChecked());
+  m_appConfig.setEnableLibei(m_pCheckBoxUseLibei->isChecked());
 
   QDialog::accept();
 }
@@ -214,6 +216,8 @@ void SettingsDialog::loadFromConfig() {
   m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
   m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  m_pCheckBoxDragAndDrop->setChecked(m_appConfig.enableDragAndDrop());
+  m_pCheckBoxUseLibei->setChecked(m_appConfig.enableLibei());
 
   if (m_appConfig.isActiveScopeSystem()) {
     m_pRadioSystemScope->setChecked(true);
@@ -221,7 +225,7 @@ void SettingsDialog::loadFromConfig() {
     m_pRadioUserScope->setChecked(true);
   }
 
-  m_pInvertConnection->setChecked(m_appConfig.invertConnection());
+  m_pCheckBoxInvertConnection->setChecked(m_appConfig.invertConnection());
 
   updateTlsControls();
 }
@@ -282,6 +286,14 @@ void SettingsDialog::updateControls() {
   // service not supported on unix yet, so always disable.
   const auto serviceAvailable = false;
   m_pGroupService->setTitle("Service (Windows only)");
+#endif
+
+#ifdef Q_OS_LINUX
+  m_pCheckBoxDragAndDrop->setEnabled(false);
+#endif
+
+#ifndef Q_OS_LINUX
+  m_pCheckBoxUseLibei->setEnabled(false);
 #endif
 
   const bool writable = m_appConfig.isActiveScopeWritable();

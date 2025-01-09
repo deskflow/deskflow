@@ -289,25 +289,26 @@ void showWaylandExperimental(QWidget *parent) {
   QMessageBox::information(
       parent, "Wayland support (experimental)",
       QString(
-          "<p>Heads up!</p>"
-          "<p>Wayland support is experimental and contains bugs.</p>"
-          R"(<p>Please <a href="%1" style="color: %2">report bugs</a> to us if you find any.</p>)"
-          "<p>Happy testing!</p>")
-          .arg(kUrlHelp, kColorSecondary));
+          "<p>You are using the Wayland display server protocol.</p>"
+          "<p>Wayland support for %1 is experimental and contains bugs.</p>"
+          "<p>If you need help or want to report a bug, please "
+          R"(<a href="%2" style="color: %3">contact our support team</a>.</p>)")
+          .arg(kAppName, kUrlHelp, kColorSecondary));
 }
 
-void showWaylandLibraryError(QWidget *parent) {
-  QMessageBox::critical(
-      parent, "Library problem",
+void showWaylandLegacy(QWidget *parent) {
+  QMessageBox::warning(
+      parent, "Wayland support (legacy)",
       QString(
-          "<p>Sorry, while this version of %1 does support Wayland, "
-          "this build was not linked with one or more of the required "
-          "libraries.</p>"
-          "<p>Please either switch to X from your login screen or use a build "
-          "that uses the correct libraries.</p>"
-          "<p>If you think this is incorrect, please "
-          R"(<a href="%2" style="color: %3">report a bug</a>.</p>)"
-          "<p>Please check the logs for more information.</p>")
+          "<p>You are using the Wayland display server protocol.</p>"
+          "<p>The installed version of %1 has only legacy Wayland support "
+          "through XWayland (Xorg emulation layer) as it was not linked with "
+          "libei, which is preferred for Wayland support.</p>"
+          "<p>Newer versions of your Linux distribution may support libei.</p>"
+          "<p>You can either continue with XWayland or switch to Xorg from "
+          "your login screen.</p>"
+          "<p>If you need help, please "
+          R"(<a href="%2" style="color: %3">contact our support team</a>.</p>)")
           .arg(kAppName, kUrlHelp, kColorSecondary));
 }
 

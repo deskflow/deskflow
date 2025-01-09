@@ -95,6 +95,8 @@ const char *const AppConfig::m_SettingsName[] = {
     "showDevThanks",
     "showCloseReminder",
     "enableUpdateCheck",
+    "enableDragAndDrop",
+    "enableLibei",
 };
 
 AppConfig::AppConfig(
@@ -173,6 +175,9 @@ void AppConfig::recallFromCurrentScope() {
       getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(
       kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
+  m_EnableDragAndDrop =
+      getFromCurrentScope(kEnableDragAndDrop, m_EnableDragAndDrop).toBool();
+  m_EnableLibei = getFromCurrentScope(kEnableLibei, m_EnableLibei).toBool();
 }
 
 void AppConfig::recallScreenName() {
@@ -231,6 +236,8 @@ void AppConfig::commit() {
     setInCurrentScope(kShowDevThanks, m_ShowDevThanks);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
+    setInCurrentScope(kEnableDragAndDrop, m_EnableDragAndDrop);
+    setInCurrentScope(kEnableLibei, m_EnableLibei);
   }
 
   if (m_TlsChanged) {
@@ -505,6 +512,10 @@ std::optional<bool> AppConfig::enableUpdateCheck() const {
   return m_EnableUpdateCheck;
 }
 
+bool AppConfig::enableDragAndDrop() const { return m_EnableDragAndDrop; }
+
+bool AppConfig::enableLibei() const { return m_EnableLibei; }
+
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -623,6 +634,12 @@ void AppConfig::setShowCloseReminder(bool value) {
 void AppConfig::setEnableUpdateCheck(bool value) {
   m_EnableUpdateCheck = value;
 }
+
+void AppConfig::setEnableDragAndDrop(bool value) {
+  m_EnableDragAndDrop = value;
+}
+
+void AppConfig::setEnableLibei(bool value) { m_EnableLibei = value; }
 
 ///////////////////////////////////////////////////////////////////////////////
 // End setters

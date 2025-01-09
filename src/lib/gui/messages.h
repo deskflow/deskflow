@@ -54,7 +54,7 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
 void showWaylandExperimental(QWidget *parent);
 
-void showWaylandLibraryError(QWidget *parent);
+void showWaylandLegacy(QWidget *parent);
 
 bool showUpdateCheckOption(QWidget *parent);
 

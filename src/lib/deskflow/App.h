@@ -208,14 +208,3 @@ private:
   "      --exit-pause         wait for key press on exit, can be useful for\n" \
   "                             reading error messages that occur on exit.\n"
 #endif
-
-#if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
-const auto kHelpNoWayland =
-    "\n"
-    "Your Linux distribution does not support Wayland EI (emulated input)\n"
-    "which is required for Wayland support.  Please use a Linux distribution\n"
-    "that supports Wayland EI.\n";
-
-#else
-const auto kHelpNoWayland = "";
-#endif

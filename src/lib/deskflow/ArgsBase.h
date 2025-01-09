@@ -94,6 +94,13 @@ public:
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
 
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+  /// @brief Should libei be used if available
+  /// @note This is only used on Wayland, so it is deliberately set to true even
+  /// if Xorg is used. This is to show a warning if libei is not available.
+  bool m_enableLibei = true;
+#endif
+
 #if SYSAPI_WIN32
   bool m_debugServiceWait = false;
   bool m_pauseOnExit = false;

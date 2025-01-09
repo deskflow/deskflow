@@ -28,7 +28,7 @@ namespace deskflow::gui::core {
 //
 
 void WaylandWarnings::Deps::showWaylandLibraryError(QWidget *parent) {
-  messages::showWaylandLibraryError(parent);
+  messages::showWaylandLegacy(parent);
 }
 
 void WaylandWarnings::Deps::showWaylandExperimental(QWidget *parent) {

@@ -32,7 +32,6 @@ public:
       bool, screenExists, (const QString &screenName), (const, override));
   MOCK_METHOD(bool, save, (const QString &fileName), (const, override));
   MOCK_METHOD(void, save, (QFile & file), (const, override));
-  MOCK_METHOD(bool, enableDragAndDrop, (), (const, override));
   MOCK_METHOD(const ScreenList &, screens, (), (const, override));
 
 private:

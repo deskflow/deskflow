@@ -135,10 +135,6 @@ void ServerApp::help() {
       << " [--display <display>] [--no-xinitthreads]"
 #endif
 
-#ifdef WINAPI_LIBEI
-      << " [--no-wayland-ei]"
-#endif
-
       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
       << "Start the " DESKFLOW_APP_NAME " mouse/keyboard sharing server.\n"
       << "\n"
@@ -154,8 +150,6 @@ void ServerApp::help() {
 
       << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
       << "* marks defaults.\n"
-
-      << kHelpNoWayland
 
       << "\n"
       << "The argument for --address is of the form: [<hostname>][:<port>].  "
@@ -561,13 +555,13 @@ deskflow::Screen *ServerApp::createScreen() {
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-  if (deskflow::platform::isWayland()) {
+  if (deskflow::platform::isWayland() && args().m_enableLibei) {
 #if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
     return new deskflow::Screen(
         new deskflow::EiScreen(true, m_events, true), m_events);
 #else
-    throw XNoEiSupport();
+    LOG((CLOG_WARN "libei is not supported, falling back to x windows"));
 #endif
   }
 #endif

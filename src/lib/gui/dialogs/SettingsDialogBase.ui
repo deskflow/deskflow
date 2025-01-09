@@ -23,13 +23,13 @@
    <property name="spacing">
     <number>15</number>
    </property>
-   <item alignment="Qt::AlignTop">
+   <item alignment="Qt::AlignmentFlag::AlignTop">
     <widget class="QTabWidget" name="m_pTabWidget">
      <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+      <enum>QTabWidget::TabPosition::North</enum>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="m_pTabRegular">
       <attribute name="title">
@@ -42,7 +42,7 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupBasics">
          <property name="title">
           <string>Basics</string>
@@ -72,10 +72,10 @@
             <item>
              <spacer name="horizontalSpacer">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Maximum</enum>
+               <enum>QSizePolicy::Policy::Maximum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -121,7 +121,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupApp">
          <property name="title">
           <string>App</string>
@@ -144,7 +144,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupSecurity">
          <property name="title">
           <string>Security</string>
@@ -177,7 +177,7 @@
             <item>
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -245,10 +245,10 @@
             <item>
              <spacer name="horizontalSpacer_3">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
+               <enum>QSizePolicy::Policy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -277,7 +277,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../../../../../res/gui/app.qrc">
                 <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
@@ -301,7 +301,7 @@
             <item>
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -326,7 +326,7 @@
        <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -349,7 +349,7 @@
        <property name="topMargin">
         <number>15</number>
        </property>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupNetworking">
          <property name="title">
           <string>Networking</string>
@@ -414,17 +414,10 @@
             </item>
            </layout>
           </item>
-          <item>
-           <widget class="QCheckBox" name="m_pInvertConnection">
-            <property name="text">
-             <string>Invert server/client TCP connection</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupLogs">
          <property name="title">
           <string>Logs</string>
@@ -442,7 +435,7 @@
           <item row="0" column="1">
            <spacer name="horizontalSpacer_5">
             <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+             <enum>Qt::Orientation::Horizontal</enum>
             </property>
             <property name="sizeHint" stdset="0">
              <size>
@@ -526,10 +519,10 @@
             <item>
              <spacer name="horizontalSpacer_7">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Orientation::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Minimum</enum>
+               <enum>QSizePolicy::Policy::Minimum</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -564,7 +557,7 @@
                <string/>
               </property>
               <property name="icon">
-               <iconset>
+               <iconset resource="../../../../../res/gui/app.qrc">
                 <normaloff>:/icons/64x64/folder.png</normaloff>:/icons/64x64/folder.png</iconset>
               </property>
               <property name="iconSize">
@@ -583,7 +576,7 @@
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupService">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -625,7 +618,7 @@
                </size>
               </property>
               <property name="toolTip">
-                <string>Specify when the Windows background service should run the server or client
+               <string>Specify when the Windows background service should run the server or client
                   process at an elevated privilege level.</string>
               </property>
               <property name="whatsThis">
@@ -664,11 +657,8 @@
           </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
-            <property name="text">
-             <string>Use background service (daemon)</string>
-            </property>
             <property name="toolTip">
-              <string>Whether to launch the server or client process through the Windows background
+             <string>Whether to launch the server or client process through the Windows background
                 service or direct from the GUI.</string>
             </property>
             <property name="whatsThis">
@@ -681,15 +671,18 @@
               &lt;/ul&gt;
               </string>
             </property>
+            <property name="text">
+             <string>Use background service (daemon)</string>
+            </property>
            </widget>
           </item>
          </layout>
         </widget>
        </item>
-       <item alignment="Qt::AlignTop">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
         <widget class="QGroupBox" name="m_pGroupScope">
          <property name="title">
-          <string>Use settings profile from</string>
+          <string>Settings profile</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
           <property name="topMargin">
@@ -721,7 +714,67 @@
        <item>
         <spacer name="verticalSpacer_3">
          <property name="orientation">
-          <enum>Qt::Vertical</enum>
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="m_pTabExperiment">
+      <attribute name="title">
+       <string>&amp;Experimental</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Experimental features are unstable and should only be used for testing purposes. These features should not be used if stability is important.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="m_pGroupNetworkingExp">
+         <property name="title">
+          <string/>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxUseLibei">
+            <property name="text">
+             <string>Use libei for Wayland support if available (Linux)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxDragAndDrop">
+            <property name="text">
+             <string>Drag and drop files between computers (Windows and macOS)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="m_pCheckBoxInvertConnection">
+            <property name="text">
+             <string>Invert server/client TCP connection</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_4">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -738,7 +791,7 @@
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -751,10 +804,10 @@
    <item>
     <widget class="QDialogButtonBox" name="m_pButtonBox">
      <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <enum>Qt::Orientation::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Save</set>
+      <set>QDialogButtonBox::StandardButton::Cancel|QDialogButtonBox::StandardButton::Save</set>
      </property>
     </widget>
    </item>
@@ -777,6 +830,10 @@
   <tabstop>m_pRadioSystemScope</tabstop>
   <tabstop>m_pComboElevate</tabstop>
  </tabstops>
+ <resources>
+  <include location="../../../../../res/gui/app.qrc"/>
+  <include location="../../../../../res/gui/app.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>m_pButtonBox</sender>

@@ -507,10 +507,16 @@ bool CoreProcess::addGenericArgs(
 
 #ifndef Q_OS_LINUX
 
-  if (m_serverConfig.enableDragAndDrop()) {
+  if (m_appConfig.enableDragAndDrop()) {
     args << "--enable-drag-drop";
   }
 
+#endif
+
+#ifdef Q_OS_LINUX
+  if (!m_appConfig.enableLibei()) {
+    args << "--no-libei";
+  }
 #endif
 
   if (m_appConfig.tlsEnabled()) {
