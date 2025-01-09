@@ -85,7 +85,6 @@ public:
   explicit MainWindow(deskflow::gui::ConfigScopes &configScopes, AppConfig &appConfig);
   ~MainWindow() override;
 
-  void setVisible(bool visible) override;
   CoreMode coreMode() const
   {
     return m_CoreProcess.mode();
