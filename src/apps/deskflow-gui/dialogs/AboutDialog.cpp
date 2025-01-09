@@ -42,16 +42,16 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
   connect(btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   // Set up the displayed version number
-  m_versionString = QString(kVersion);
-  if (m_versionString.endsWith(QStringLiteral(".0"))) {
-    m_versionString.chop(2);
+  auto versionString = QString(kVersion);
+  if (versionString.endsWith(QStringLiteral(".0"))) {
+    versionString.chop(2);
   } else {
-    m_versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
+    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
   }
 
   auto versionLayout = new QHBoxLayout();
   versionLayout->addWidget(new QLabel(tr("Version:")));
-  versionLayout->addWidget(new QLabel(m_versionString, this));
+  versionLayout->addWidget(new QLabel(versionString, this));
   versionLayout->addWidget(btnCopyVersion);
   versionLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed));
 
@@ -89,5 +89,11 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
 
 void AboutDialog::copyVersionText()
 {
-  QGuiApplication::clipboard()->setText(m_versionString);
+  QString infoString = QStringLiteral("Deskflow: %1 (%2)\nQt: %3\nSystem: %4")
+                           .arg(kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName());
+#ifdef Q_OS_LINUX
+  infoString.append(QStringLiteral("\nSession: %1 (%2)")
+                        .arg(qEnvironmentVariable("XDG_CURRENT_DESKTOP"), qEnvironmentVariable("XDG_SESSION_TYPE")));
+#endif
+  QGuiApplication::clipboard()->setText(infoString);
 }
