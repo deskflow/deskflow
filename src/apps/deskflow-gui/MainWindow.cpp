@@ -877,23 +877,6 @@ void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
   }
 }
 
-void MainWindow::setVisible(bool visible)
-{
-  QMainWindow::setVisible(visible);
-#ifdef Q_OS_MAC
-  // dock hide only supported on lion :(
-  ProcessSerialNumber psn = {0, kCurrentProcess};
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  GetCurrentProcess(&psn);
-#pragma GCC diagnostic pop
-  if (visible)
-    TransformProcessType(&psn, kProcessTransformToForegroundApplication);
-  else
-    TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
-#endif
-}
-
 QString MainWindow::getIPAddresses() const
 {
   QStringList result;
