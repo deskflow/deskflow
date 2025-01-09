@@ -18,6 +18,7 @@
  */
 
 #include "AboutDialog.h"
+#include "ui_AboutDialog.h"
 
 #include "common/constants.h"
 #include "gui/style_utils.h"
@@ -29,17 +30,19 @@
 #include <QPushButton>
 #include <QStyle>
 
-AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
+AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique<Ui::AboutDialog>()}
 {
-  setWindowTitle(tr("About Deskflow"));
+  ui->setupUi(this);
 
   auto copyIcon = QIcon::fromTheme(
       QIcon::ThemeIcon::EditCopy, deskflow::gui::isDarkMode() ? QIcon(s_darkCopy) : QIcon(s_lightCopy)
   );
+  ui->lblIcon->setFixedSize(fontMetrics().height() * 6, fontMetrics().height() * 6);
+  ui->lblIcon->setPixmap(QPixmap(QStringLiteral(":/icons/128x128/tray.png"))
+                             .scaledToWidth(fontMetrics().height() * 6, Qt::SmoothTransformation));
 
-  auto btnCopyVersion = new QPushButton(copyIcon, QString(), this);
-  btnCopyVersion->setFlat(true);
-  connect(btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
+  ui->btnCopyVersion->setIcon(copyIcon);
+  connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   // Set up the displayed version number
   auto versionString = QString(kVersion);
@@ -49,42 +52,18 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent)
     versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
   }
 
-  auto versionLayout = new QHBoxLayout();
-  versionLayout->addWidget(new QLabel(tr("Version:")));
-  versionLayout->addWidget(new QLabel(versionString, this));
-  versionLayout->addWidget(btnCopyVersion);
-  versionLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed));
+  ui->lblVersion->setText(versionString);
 
-  auto lblLogo = new QLabel(this);
-  lblLogo->setPixmap(deskflow::gui::isDarkMode() ? s_darkLogo : s_lightLogo);
+  ui->lblDescription->setText(kAppDescription);
+  ui->lblCopyright->setText(kCopyright);
+  ui->lblImportantDevs->setText(QStringLiteral("%1\n").arg(s_awesomeDevs.join(", ")));
 
-  auto lblCopyright = new QLabel(kCopyright, this);
+  ui->btnOk->setDefault(true);
+  connect(ui->btnOk, &QPushButton::clicked, this, [this] { close(); });
 
-  auto boldFont = font();
-  boldFont.setBold(true);
-
-  auto lblDevsTitle = new QLabel(tr("Important developers"));
-  lblDevsTitle->setFont(boldFont);
-
-  auto lblDevsBody = new QLabel(QStringLiteral("%1\n").arg(s_awesomeDevs.join(", ")));
-  lblDevsBody->setWordWrap(true);
-
-  auto btnOk = new QPushButton(tr("Ok"), this);
-  btnOk->setDefault(true);
-  connect(btnOk, &QPushButton::clicked, this, [this] { close(); });
-
-  auto mainLayout = new QVBoxLayout();
-  mainLayout->addWidget(lblLogo);
-  mainLayout->addLayout(versionLayout);
-  mainLayout->addWidget(new QLabel(tr("Keyboard and mouse sharing application"), this));
-  mainLayout->addWidget(lblCopyright);
-  mainLayout->addWidget(lblDevsTitle);
-  mainLayout->addWidget(lblDevsBody);
-  mainLayout->addWidget(btnOk);
-
-  setLayout(mainLayout);
   adjustSize();
-  setFixedSize(size());
+  resize(QSize(parent->width() * 0.65, height()));
+  setMinimumSize(size());
 }
 
 void AboutDialog::copyVersionText()
@@ -97,3 +76,5 @@ void AboutDialog::copyVersionText()
 #endif
   QGuiApplication::clipboard()->setText(infoString);
 }
+
+AboutDialog::~AboutDialog() = default;
