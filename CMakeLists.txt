@@ -95,6 +95,9 @@ project(
   DESCRIPTION "Mouse and keyboard sharing utility"
   LANGUAGES C CXX)
 
+#Used for embedded copyright on binaries, limited space.
+set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2025 Deskflow Devs")
+
 message(STATUS "Building ${CMAKE_PROJECT_NAME}-${CMAKE_PROJECT_VERSION}")
 
 # Set lib versions

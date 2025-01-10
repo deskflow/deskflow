@@ -15,7 +15,7 @@ https://learn.microsoft.com/en-us/windows/win32/menurc/versioninfo-resource?redi
 #define VER_COMPANYNAME_STR         "Deskflow\0"
 #define VER_FILEDESCRIPTION_STR     "Deskflow\0"
 #define VER_INTERNALNAME_STR        "Deskflow\0"
-#define VER_LEGALCOPYRIGHT_STR      "© 2024 Deskflow Developers\0"
+#define VER_LEGALCOPYRIGHT_STR      "@CMAKE_PROJECT_COPYRIGHT@\0"
 #define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved\0"
 #define VER_LEGALTRADEMARKS2_STR    "\0"
 #define VER_ORIGINALFILENAME_STR    "\0"
