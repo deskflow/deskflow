@@ -53,6 +53,7 @@ protected slots:
   void accept() override;
 
 private:
+  void updateSize();
   void keySequenceChanged();
   void actionTypeChanged(int index);
   bool isKeyAction(int index);
