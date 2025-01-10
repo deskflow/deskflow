@@ -114,6 +114,14 @@ void ActionDialog::accept()
   QDialog::accept();
 }
 
+void ActionDialog::updateSize()
+{
+  setMaximumSize(QSize(16777215, 1677215));
+  adjustSize();
+  if (!isKeyAction(ui->comboActionType->currentIndex()))
+    setMaximumSize(size());
+}
+
 void ActionDialog::keySequenceChanged()
 {
   ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
@@ -129,7 +137,7 @@ void ActionDialog::actionTypeChanged(int index)
   ui->comboSwitchToScreen->setVisible(index == ActionTypes::SwitchTo);
   ui->comboSwitchInDirection->setVisible(index == ActionTypes::SwitchInDirection);
   ui->comboLockCursorToScreen->setVisible(index == ActionTypes::ModifyCursorLock);
-  QTimer::singleShot(1, this, &ActionDialog::adjustSize);
+  QTimer::singleShot(1, this, &ActionDialog::updateSize);
 }
 
 bool ActionDialog::isKeyAction(int index)
