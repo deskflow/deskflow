@@ -236,7 +236,7 @@ private:
     void overwrite(UInt32 buttons);
 
     bool test(UInt32 button) const;
-    SInt8 getFirstButtonDown() const;
+    int8_t getFirstButtonDown() const;
 
   private:
     std::bitset<NumButtonIDs> m_buttons;
