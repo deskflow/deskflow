@@ -27,7 +27,7 @@ set(BUNDLE_DISPLAY_NAME "${target}")
 set(BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow")
 set(BUNDLE_ICON_FILE ${target}.icns)
 set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
-set(BUNDLE_COPYRIGHT "© 2024 Deskflow Developers")
+set(BUNDLE_COPYRIGHT "${CMAKE_PROJECT_COPYRIGHT}")
 
 configure_file(
   ${CMAKE_CURRENT_SOURCE_DIR}/../res/deskflow.plist.in

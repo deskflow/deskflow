@@ -58,9 +58,9 @@ TEST(ServerAppTests, version_printsYear)
 
 #ifdef WIN32
   // regex is god awful on windows, so just check that there is a copyright
-  EXPECT_THAT(buffer.str(), testing::HasSubstr("Symless Ltd."));
+  EXPECT_THAT(buffer.str(), testing::HasSubstr("Deskflow Devs"));
 #else
-  std::string expectedPattern = ".*Copyright \\(C\\) [0-9]{4}-[0-9]{4} Symless Ltd.*";
+  std::string expectedPattern = ".*[0-9]{4}-[0-9]{4} Deskflow Devs.*";
   EXPECT_THAT(buffer.str(), testing::MatchesRegex(expectedPattern));
 #endif // WIN32
 }
