@@ -91,8 +91,10 @@ project(
   DESCRIPTION "Mouse and keyboard sharing utility"
   LANGUAGES C CXX)
 
-#Used for embedded copyright on binaries, limited space.
+# Define Additional "PROJECT" vars for packaging and metadata
 set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2025 Deskflow Devs")
+set(CMAKE_PROJECT_PROPER_NAME "Deskflow")
+set(CMAKE_PROJECT_VENDOR "Deskflow Devs")
 
 #Unset the vars used in the project call
 unset(DESKFLOW_VERSION_MAJOR)

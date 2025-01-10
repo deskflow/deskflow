@@ -52,8 +52,12 @@ file(
   widgets/*)
 file(GLOB ui_files *.ui dialogs/*.ui)
 
+
 if(WIN32)
-  set(platform_extra deskflow.rc ${PROJECT_BINARY_DIR}/src/version.rc)
+  set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n Control and configure deskflow")
+  set(EXE_ICON "IDI_ICON1 ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\" ")
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow.rc)
+  set(platform_extra deskflow.rc)
 elseif(APPLE)
   set(platform_extra Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
