@@ -17,16 +17,13 @@
 
 # Daemon is only needed on Windows for elevating processes to deal with UAC.
 if(WIN32)
-  set(target deskflow-daemon)
+  set(target ${CMAKE_PROJECT_NAME}-daemon)
 
   # Generate rc file
-  set(EXE_DESCRIPTION "This service runs in the background to help deskflow deal with UAC prompts")
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow-deamon.rc)
+  set(EXE_DESCRIPTION "This service runs in the background to help ${CMAKE_PROJECT_NAME} deal with UAC prompts")
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in ${target}.rc)
 
-  add_executable(${target} WIN32
-    deskflow-daemon.cpp
-    ${CMAKE_CURRENT_BINARY_DIR}/deskflow-daemon.rc
-  )
+  add_executable(${target} WIN32 ${target}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
 
   target_link_libraries(
     ${target}

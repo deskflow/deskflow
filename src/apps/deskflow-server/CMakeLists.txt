@@ -15,7 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow-server)
+set(target ${CMAKE_PROJECT_NAME}-server)
 
 if(WIN32)
   # Generate rc file
@@ -43,7 +43,7 @@ if(WIN32)
   set(EXE_RC_MENU "
     IDR_TASKBAR MENU DISCARDABLE
     BEGIN
-      POPUP \"Deskflow\"
+      POPUP \"${CMAKE_PROJECT_PROPER_NAME}\"
       BEGIN
         MENUITEM \"Show Status\",               IDC_TASKBAR_STATUS
         MENUITEM \"Show Log\",                  IDC_TASKBAR_SHOW_LOG
@@ -70,16 +70,16 @@ if(WIN32)
   set(EXE_RC_STRINGTABLE "
     STRINGTABLE DISCARDABLE
     BEGIN
-      IDS_FAILED              \"Deskflow is about to quit with errors or warnings.  Please check the log then click OK.\"
-      IDS_INIT_FAILED         \"Deskflow failed to initialize: %{1}\"
+      IDS_FAILED              \"${CMAKE_PROJECT_PROPER_NAME} is about to quit with errors or warnings.  Please check the log then click OK.\"
+      IDS_INIT_FAILED         \"${CMAKE_PROJECT_PROPER_NAME} failed to initialize: %{1}\"
       IDS_UNCAUGHT_EXCEPTION  \"Uncaught exception: %{1}\"
     END
   ")
 
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow-server.rc)
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in ${target}.rc)
 
   set(PLATFORM_SOURCES
-    deskflow-server.exe.manifest
+    ${target}.exe.manifest
     MSWindowsServerTaskBarReceiver.cpp
     MSWindowsServerTaskBarReceiver.h
     resource.h
@@ -87,7 +87,7 @@ if(WIN32)
     ${PROJECT_SOURCE_DIR}/src/apps/res/tb_error.ico
     ${PROJECT_SOURCE_DIR}/src/apps/res/tb_idle.ico
     ${PROJECT_SOURCE_DIR}/src/apps/res/tb_run.ico
-    ${CMAKE_CURRENT_BINARY_DIR}/deskflow-server.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc
   )
 elseif(APPLE)
   set(PLATFORM_SOURCES
@@ -101,7 +101,7 @@ elseif(UNIX)
   )
 endif()
 
-add_executable(${target} ${PLATFORM_SOURCES} deskflow-server.cpp)
+add_executable(${target} ${PLATFORM_SOURCES} ${target}.cpp)
 
 target_link_libraries(
   ${target}
@@ -118,7 +118,7 @@ target_link_libraries(
   ${libs})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:Deskflow>/MacOS)
+  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(TARGETS ${target} DESTINATION bin)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
