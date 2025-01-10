@@ -15,17 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-set(target deskflow-core)
+set(target ${CMAKE_PROJECT_NAME}-core)
 
 add_executable(${target} "${target}.cpp")
 if(WIN32)
   # Generate rc file
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI combined server and client")
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow-core.rc)
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in ${target}.rc)
 
   target_sources(${target} PRIVATE
     "${target}.exe.manifest"
-    ${CMAKE_CURRENT_BINARY_DIR}/deskflow-core.rc
+    ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc
   )
 endif()
 
@@ -44,7 +44,7 @@ target_link_libraries(
   ${libs})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:Deskflow>/MacOS)
+  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   install(TARGETS ${target} DESTINATION bin)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")

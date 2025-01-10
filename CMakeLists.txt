@@ -92,9 +92,10 @@ project(
   LANGUAGES C CXX)
 
 # Define Additional "PROJECT" vars for packaging and metadata
-set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2025 Deskflow Devs")
 set(CMAKE_PROJECT_PROPER_NAME "Deskflow")
-set(CMAKE_PROJECT_VENDOR "Deskflow Devs")
+set(CMAKE_PROJECT_VENDOR "${CMAKE_PROJECT_PROPER_NAME} Devs")
+set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2025 ${CMAKE_PROJECT_VENDOR}")
+set(CMAKE_PROJECT_CONTACT "${CMAKE_PROJECT_PROPER_NAME} <maintainers@deskflow.org>")
 
 #Unset the vars used in the project call
 unset(DESKFLOW_VERSION_MAJOR)
