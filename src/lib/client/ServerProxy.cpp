@@ -652,7 +652,7 @@ void ServerProxy::mouseDown()
   flushCompressedMouse();
 
   // parse
-  SInt8 id;
+  int8_t id;
   ProtocolUtil::readf(m_stream, kMsgDMouseDown + 4, &id);
   LOG((CLOG_DEBUG1 "recv mouse down id=%d", id));
 
@@ -666,7 +666,7 @@ void ServerProxy::mouseUp()
   flushCompressedMouse();
 
   // parse
-  SInt8 id;
+  int8_t id;
   ProtocolUtil::readf(m_stream, kMsgDMouseUp + 4, &id);
   LOG((CLOG_DEBUG1 "recv mouse up id=%d", id));
 
@@ -752,7 +752,7 @@ void ServerProxy::mouseWheel()
 void ServerProxy::screensaver()
 {
   // parse
-  SInt8 on;
+  int8_t on;
   ProtocolUtil::readf(m_stream, kMsgCScreenSaver + 4, &on);
   LOG((CLOG_DEBUG1 "recv screen saver on=%d", on));
 

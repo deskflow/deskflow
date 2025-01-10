@@ -84,7 +84,6 @@
 #if defined(__APPLE__)
 #include <CoreServices/CoreServices.h>
 #else
-using SInt8 = signed TYPE_OF_SIZE_1;
 using SInt16 = signed TYPE_OF_SIZE_2;
 using SInt32 = signed TYPE_OF_SIZE_4;
 using UInt8 = unsigned TYPE_OF_SIZE_1;
