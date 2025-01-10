@@ -19,9 +19,13 @@ set(target deskflow-core)
 
 add_executable(${target} "${target}.cpp")
 if(WIN32)
+  # Generate rc file
+  set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI combined server and client")
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow-core.rc)
+
   target_sources(${target} PRIVATE
     "${target}.exe.manifest"
-    "${PROJECT_BINARY_DIR}/src/version.rc"
+    ${CMAKE_CURRENT_BINARY_DIR}/deskflow-core.rc
   )
 endif()
 
