@@ -1,7 +1,7 @@
 # Maintainer: Deskflow Developers
 
 pkgname=deskflow
-pkgver=@DESKFLOW_VERSION@
+pkgver=@CMAKE_PROJECT_VERSION@
 pkgrel=1
 pkgdesc="Mouse and keyboard sharing utility"
 url='https://deskflow.org'
