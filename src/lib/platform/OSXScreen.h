@@ -69,25 +69,25 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
-  void getCursorPos(SInt32 &x, SInt32 &y) const override;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
+  void getCursorPos(int32_t &x, int32_t &y) const override;
 
   // IPrimaryScreen overrides
   void reconfigure(UInt32 activeSides) override;
-  void warpCursor(SInt32 x, SInt32 y) override;
+  void warpCursor(int32_t x, int32_t y) override;
   UInt32 registerHotKey(KeyID key, KeyModifierMask mask) override;
   void unregisterHotKey(UInt32 id) override;
   void fakeInputBegin() override;
   void fakeInputEnd() override;
-  SInt32 getJumpZoneSize() const override;
+  int32_t getJumpZoneSize() const override;
   bool isAnyMouseButtonDown(UInt32 &buttonID) const override;
-  void getCursorCenter(SInt32 &x, SInt32 &y) const override;
+  void getCursorCenter(int32_t &x, int32_t &y) const override;
 
   // ISecondaryScreen overrides
   void fakeMouseButton(ButtonID id, bool press) override;
-  void fakeMouseMove(SInt32 x, SInt32 y) override;
-  void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const override;
-  void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const override;
+  void fakeMouseMove(int32_t x, int32_t y) override;
+  void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override;
+  void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const override;
 
   // IPlatformScreen overrides
   void enable() override;
@@ -135,7 +135,7 @@ private:
   // event, false if it is a mouseup event.  macButton is the index
   // of the button pressed using the mac button mapping.
   bool onMouseButton(bool pressed, uint16_t macButton);
-  bool onMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+  bool onMouseWheel(int32_t xDelta, int32_t yDelta) const;
 
   void constructMouseButtonEventMap();
 
@@ -156,10 +156,10 @@ private:
   ButtonID mapMacButtonToDeskflow(uint16_t) const;
 
   // map mac scroll wheel value to a deskflow scroll wheel value
-  SInt32 mapScrollWheelToDeskflow(SInt32) const;
+  int32_t mapScrollWheelToDeskflow(int32_t) const;
 
   // map deskflow scroll wheel value to a mac scroll wheel value
-  SInt32 mapScrollWheelFromDeskflow(SInt32) const;
+  int32_t mapScrollWheelFromDeskflow(int32_t) const;
 
   // get the current scroll wheel speed
   double getScrollSpeed() const;
@@ -257,12 +257,12 @@ private:
   CGDirectDisplayID m_displayID;
 
   // screen shape stuff
-  SInt32 m_x, m_y;
-  SInt32 m_w, m_h;
-  SInt32 m_xCenter, m_yCenter;
+  int32_t m_x, m_y;
+  int32_t m_w, m_h;
+  int32_t m_xCenter, m_yCenter;
 
   // mouse state
-  mutable SInt32 m_xCursor, m_yCursor;
+  mutable int32_t m_xCursor, m_yCursor;
   mutable bool m_cursorPosValid;
 
   /* FIXME: this data structure is explicitly marked mutable due
@@ -276,7 +276,7 @@ private:
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
   bool m_cursorHidden;
-  SInt32 m_dragNumButtonsDown;
+  int32_t m_dragNumButtonsDown;
   Point m_dragLastPoint;
   EventQueueTimer *m_dragTimer;
 
@@ -331,8 +331,8 @@ private:
   // for double click coalescing.
   double m_lastClickTime;
   int m_clickState;
-  SInt32 m_lastSingleClickXCursor;
-  SInt32 m_lastSingleClickYCursor;
+  int32_t m_lastSingleClickXCursor;
+  int32_t m_lastSingleClickYCursor;
 
   IEventQueue *m_events;
 

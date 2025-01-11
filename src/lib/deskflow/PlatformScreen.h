@@ -40,39 +40,39 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
-  virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
+  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const = 0;
+  virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
 
   // IPrimaryScreen overrides
   virtual void reconfigure(UInt32 activeSides) = 0;
-  virtual void warpCursor(SInt32 x, SInt32 y) = 0;
+  virtual void warpCursor(int32_t x, int32_t y) = 0;
   virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask) = 0;
   virtual void unregisterHotKey(UInt32 id) = 0;
   virtual void fakeInputBegin() = 0;
   virtual void fakeInputEnd() = 0;
-  virtual SInt32 getJumpZoneSize() const = 0;
+  virtual int32_t getJumpZoneSize() const = 0;
   virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const = 0;
-  virtual void getCursorCenter(SInt32 &x, SInt32 &y) const = 0;
+  virtual void getCursorCenter(int32_t &x, int32_t &y) const = 0;
 
   // ISecondaryScreen overrides
   virtual void fakeMouseButton(ButtonID id, bool press) = 0;
-  virtual void fakeMouseMove(SInt32 x, SInt32 y) = 0;
-  virtual void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const = 0;
-  virtual void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const = 0;
+  virtual void fakeMouseMove(int32_t x, int32_t y) = 0;
+  virtual void fakeMouseRelativeMove(int32_t dx, int32_t dy) const = 0;
+  virtual void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const = 0;
 
   // IKeyState overrides
   virtual void updateKeyMap();
   virtual void updateKeyState();
   virtual void setHalfDuplexMask(KeyModifierMask);
   virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
   virtual bool fakeCtrlAltDel();
   virtual bool isKeyDown(KeyButton) const;
   virtual KeyModifierMask getActiveModifiers() const;
   virtual KeyModifierMask pollActiveModifiers() const;
-  virtual SInt32 pollActiveGroup() const;
+  virtual int32_t pollActiveGroup() const;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
 
   virtual void setDraggingStarted(bool started)
@@ -140,7 +140,7 @@ protected:
    * Convert scroll according to client scroll directio
    * \return converted value according to the client scroll direction
    */
-  virtual SInt32 mapClientScrollDirection(SInt32) const;
+  virtual int32_t mapClientScrollDirection(int32_t) const;
 
 protected:
   std::string m_draggingFilename;

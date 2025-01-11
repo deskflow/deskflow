@@ -31,7 +31,7 @@ public:
   MOCK_METHOD(bool, isHalfDuplex, (KeyID, KeyButton), (const, override));
   MOCK_METHOD(
       const KeyMap::KeyItem *, mapKey,
-      (Keystrokes &, KeyID, SInt32, ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const std::string &),
+      (Keystrokes &, KeyID, int32_t, ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const std::string &),
       (const, override)
   );
 };

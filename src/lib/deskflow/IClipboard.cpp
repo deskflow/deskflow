@@ -125,7 +125,7 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
   if (src->open(time)) {
     if (dst->open(time)) {
       if (dst->empty()) {
-        for (SInt32 format = 0; format != IClipboard::kNumFormats; ++format) {
+        for (int32_t format = 0; format != IClipboard::kNumFormats; ++format) {
           IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
           if (src->has(eFormat)) {
             dst->add(eFormat, src->get(eFormat));

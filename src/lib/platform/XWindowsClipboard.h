@@ -183,7 +183,7 @@ protected:
   };
 
   // Motif structure IDs
-  enum class MotifClip : SInt32
+  enum class MotifClip : int32_t
   {
     Format = 1,
     Item = 2,
@@ -195,13 +195,13 @@ protected:
   {
   public:
     MotifClip m_id;
-    SInt32 m_pad1[3];
-    SInt32 m_item;
-    SInt32 m_pad2[4];
-    SInt32 m_numItems;
-    SInt32 m_pad3[3];
-    SInt32 m_selectionOwner; // a Window
-    SInt32 m_pad4[2];
+    int32_t m_pad1[3];
+    int32_t m_item;
+    int32_t m_pad2[4];
+    int32_t m_numItems;
+    int32_t m_pad3[3];
+    int32_t m_selectionOwner; // a Window
+    int32_t m_pad4[2];
   };
 
   // Motif clip item structure
@@ -209,11 +209,11 @@ protected:
   {
   public:
     MotifClip m_id;
-    SInt32 m_pad1[5];
-    SInt32 m_size;
-    SInt32 m_numFormats;
-    SInt32 m_numDeletedFormats;
-    SInt32 m_pad2[6];
+    int32_t m_pad1[5];
+    int32_t m_size;
+    int32_t m_numFormats;
+    int32_t m_numDeletedFormats;
+    int32_t m_pad2[6];
   };
 
   // Motif clip format structure
@@ -221,13 +221,13 @@ protected:
   {
   public:
     MotifClip m_id;
-    SInt32 m_pad1[6];
-    SInt32 m_length;
-    SInt32 m_data;
-    SInt32 m_type; // an Atom
-    SInt32 m_pad2[1];
-    SInt32 m_deleted;
-    SInt32 m_pad3[4];
+    int32_t m_pad1[6];
+    int32_t m_length;
+    int32_t m_data;
+    int32_t m_type; // an Atom
+    int32_t m_pad2[1];
+    int32_t m_deleted;
+    int32_t m_pad3[4];
   };
 
   // stores data needed to respond to a selection request

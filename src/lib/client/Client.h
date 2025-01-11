@@ -173,23 +173,23 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
-  virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
+  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const;
+  virtual void getCursorPos(int32_t &x, int32_t &y) const;
 
   // IClient overrides
-  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver);
+  virtual void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);
   virtual void setClipboardDirty(ClipboardID, bool);
   virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &);
-  virtual void keyRepeat(KeyID, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang);
+  virtual void keyRepeat(KeyID, KeyModifierMask, int32_t count, KeyButton, const std::string &lang);
   virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
   virtual void mouseDown(ButtonID);
   virtual void mouseUp(ButtonID);
-  virtual void mouseMove(SInt32 xAbs, SInt32 yAbs);
-  virtual void mouseRelativeMove(SInt32 xRel, SInt32 yRel);
-  virtual void mouseWheel(SInt32 xDelta, SInt32 yDelta);
+  virtual void mouseMove(int32_t xAbs, int32_t yAbs);
+  virtual void mouseRelativeMove(int32_t xRel, int32_t yRel);
+  virtual void mouseWheel(int32_t xDelta, int32_t yDelta);
   virtual void screensaver(bool activate);
   virtual void resetOptions();
   virtual void setOptions(const OptionsList &options);

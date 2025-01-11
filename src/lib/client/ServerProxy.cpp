@@ -193,7 +193,7 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
   }
 
   else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
-    SInt32 major, minor;
+    int32_t major, minor;
     ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
     LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
     m_client->refuseConnection("server has incompatible version");

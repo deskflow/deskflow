@@ -64,9 +64,9 @@ public:
 
   Format specifiers are:
   - \%\%   -- read (and discard) a literal `\%'
-  - \%1i  -- reads a 1 byte integer; argument is a SInt32* or UInt32*
-  - \%2i  -- reads an NBO 2 byte integer;  arg is SInt32* or UInt32*
-  - \%4i  -- reads an NBO 4 byte integer;  arg is SInt32* or UInt32*
+  - \%1i  -- reads a 1 byte integer; argument is a int32_t* or UInt32*
+  - \%2i  -- reads an NBO 2 byte integer;  arg is int32_t* or UInt32*
+  - \%4i  -- reads an NBO 4 byte integer;  arg is int32_t* or UInt32*
   - \%1I  -- reads 1 byte integers;  arg is std::vector<uint8_t>*
   - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<uint16_t>*
   - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*

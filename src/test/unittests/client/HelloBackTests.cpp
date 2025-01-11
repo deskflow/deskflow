@@ -36,7 +36,7 @@ void intTo2ByteBuf(int16_t value, std::array<char, 2> &buf)
   buf[1] = static_cast<char>(value & 0xFF);        // LSB
 }
 
-void intTo4ByteBuf(SInt32 value, std::array<char, 4> &buf)
+void intTo4ByteBuf(int32_t value, std::array<char, 4> &buf)
 {
   buf[0] = static_cast<char>((value >> 24) & 0xFF); // MSB
   buf[1] = static_cast<char>((value >> 16) & 0xFF);
@@ -99,7 +99,7 @@ void setupMockHelloBackWrite(
   std::array<char, 4> nameLenBuf;
   intTo2ByteBuf(majorVersion, majorBuf);
   intTo2ByteBuf(minorVersion, minorBuf);
-  intTo4ByteBuf(static_cast<SInt32>(name.size()), nameLenBuf);
+  intTo4ByteBuf(static_cast<int32_t>(name.size()), nameLenBuf);
 
   const auto versionIntSize = 4;
   const auto clientNameIntSize = 4;

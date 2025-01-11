@@ -35,7 +35,7 @@ void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys);
 void assertMaskIsOne(ForeachKeyCallback cb, void *userData);
 
 const deskflow::KeyMap::KeyItem *stubMapKey(
-    deskflow::KeyMap::Keystrokes &keys, KeyID id, SInt32 group, deskflow::KeyMap::ModifierToKeys &activeModifiers,
+    deskflow::KeyMap::Keystrokes &keys, KeyID id, int32_t group, deskflow::KeyMap::ModifierToKeys &activeModifiers,
     KeyModifierMask &currentState, KeyModifierMask desiredMask, bool isAutoRepeat, const std::string &lang
 );
 
@@ -484,7 +484,7 @@ void assertMaskIsOne(ForeachKeyCallback cb, void *userData)
 }
 
 const deskflow::KeyMap::KeyItem *
-stubMapKey(deskflow::KeyMap::Keystrokes &keys, KeyID, SInt32, deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const std::string &)
+stubMapKey(deskflow::KeyMap::Keystrokes &keys, KeyID, int32_t, deskflow::KeyMap::ModifierToKeys &, KeyModifierMask &, KeyModifierMask, bool, const std::string &)
 {
   keys.push_back(s_stubKeystroke);
   return &s_stubKeyItem;

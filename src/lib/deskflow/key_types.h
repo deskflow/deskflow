@@ -93,7 +93,7 @@ static const UInt32 kKeyModifierBitLevel5Lock = 6;
 static const UInt32 kKeyModifierBitCapsLock = 12;
 static const UInt32 kKeyModifierBitNumLock = 13;
 static const UInt32 kKeyModifierBitScrollLock = 14;
-static const SInt32 kKeyModifierNumBits = 16;
+static const int32_t kKeyModifierNumBits = 16;
 //@}
 
 //! @name Modifier key identifiers

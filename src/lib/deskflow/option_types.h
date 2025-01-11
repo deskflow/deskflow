@@ -31,7 +31,7 @@ using OptionID = UInt32;
 /*!
 Type to hold an option value.
 */
-using OptionValue = SInt32;
+using OptionValue = int32_t;
 
 // for now, options are just pairs of integers
 using OptionsList = std::vector<UInt32>;

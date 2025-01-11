@@ -126,7 +126,7 @@ public:
   /*!
   This tells the desks that the display size has changed.
   */
-  void setShape(SInt32 x, SInt32 y, SInt32 width, SInt32 height, SInt32 xCenter, SInt32 yCenter, bool isMultimon);
+  void setShape(int32_t x, int32_t y, int32_t width, int32_t height, int32_t xCenter, int32_t yCenter, bool isMultimon);
 
   //! Install/uninstall screensaver hooks
   /*!
@@ -156,7 +156,7 @@ public:
   /*!
   Return the current position of the cursor in \c x and \c y.
   */
-  void getCursorPos(SInt32 &x, SInt32 &y) const;
+  void getCursorPos(int32_t &x, int32_t &y) const;
 
   //! Fake key press/release
   /*!
@@ -174,19 +174,19 @@ public:
   /*!
   Synthesize a mouse move to the absolute coordinates \c x,y.
   */
-  void fakeMouseMove(SInt32 x, SInt32 y) const;
+  void fakeMouseMove(int32_t x, int32_t y) const;
 
   //! Fake mouse move
   /*!
   Synthesize a mouse move to the relative coordinates \c dx,dy.
   */
-  void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+  void fakeMouseRelativeMove(int32_t dx, int32_t dy) const;
 
   //! Fake mouse wheel
   /*!
   Synthesize a mouse wheel event of amount \c delta in direction \c axis.
   */
-  void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+  void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const;
 
   //@}
 
@@ -214,8 +214,8 @@ private:
   void destroyWindow(HWND) const;
 
   // message handlers
-  void deskMouseMove(SInt32 x, SInt32 y) const;
-  void deskMouseRelativeMove(SInt32 dx, SInt32 dy) const;
+  void deskMouseMove(int32_t x, int32_t y) const;
+  void deskMouseRelativeMove(int32_t dx, int32_t dy) const;
   void deskEnter(Desk *desk);
   void deskLeave(Desk *desk, HKL keyLayout);
   void deskThread(void *vdesk);
@@ -258,9 +258,9 @@ private:
   HCURSOR m_cursor;
 
   // screen shape stuff
-  SInt32 m_x, m_y;
-  SInt32 m_w, m_h;
-  SInt32 m_xCenter, m_yCenter;
+  int32_t m_x, m_y;
+  int32_t m_w, m_h;
+  int32_t m_xCenter, m_yCenter;
 
   // true if system appears to have multiple monitors
   bool m_multimon;

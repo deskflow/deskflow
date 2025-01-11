@@ -729,7 +729,7 @@ void MSWindowsKeyState::onKey(KeyButton button, bool down, KeyModifierMask newSt
 }
 
 void MSWindowsKeyState::sendKeyEvent(
-    void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button
+    void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
 )
 {
   if (press || isAutoRepeat) {
@@ -755,7 +755,7 @@ void MSWindowsKeyState::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton bu
 }
 
 bool MSWindowsKeyState::fakeKeyRepeat(
-    KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang
+    KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
 )
 {
   return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
@@ -824,7 +824,7 @@ KeyModifierMask MSWindowsKeyState::pollActiveModifiers() const
   return state;
 }
 
-SInt32 MSWindowsKeyState::pollActiveGroup() const
+int32_t MSWindowsKeyState::pollActiveGroup() const
 {
   // determine the thread that'll receive this event
   HWND targetWindow = GetForegroundWindow();
@@ -874,8 +874,8 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
   // update keyboard groups
   if (getGroups(m_groups)) {
     m_groupMap.clear();
-    SInt32 numGroups = (SInt32)m_groups.size();
-    for (SInt32 g = 0; g < numGroups; ++g) {
+    int32_t numGroups = (int32_t)m_groups.size();
+    for (int32_t g = 0; g < numGroups; ++g) {
       m_groupMap[m_groups[g]] = g;
     }
   }
@@ -886,8 +886,8 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
   m_keyToVKMap.clear();
 
   deskflow::KeyMap::KeyItem item;
-  SInt32 numGroups = (SInt32)m_groups.size();
-  for (SInt32 g = 0; g < numGroups; ++g) {
+  int32_t numGroups = (int32_t)m_groups.size();
+  for (int32_t g = 0; g < numGroups; ++g) {
     item.m_group = g;
     ActivateKeyboardLayout(m_groups[g], 0);
 
@@ -1259,7 +1259,7 @@ bool MSWindowsKeyState::getGroups(GroupList &groups) const
   return true;
 }
 
-void MSWindowsKeyState::setWindowGroup(SInt32 group)
+void MSWindowsKeyState::setWindowGroup(int32_t group)
 {
   HWND targetWindow = GetForegroundWindow();
 

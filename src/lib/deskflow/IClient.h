@@ -45,7 +45,7 @@ public:
   screen is being entered because the screen saver is starting.
   Subsequent clipboard events should report \p seqNum.
   */
-  virtual void enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
+  virtual void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
 
   //! Leave screen
   /*!
@@ -94,7 +94,7 @@ public:
   Synthesize key events to generate a press and release of key \c id
   \c count times.  If possible match the given modifier mask.
   */
-  virtual void keyRepeat(KeyID id, KeyModifierMask, SInt32 count, KeyButton, const std::string &lang) = 0;
+  virtual void keyRepeat(KeyID id, KeyModifierMask, int32_t count, KeyButton, const std::string &lang) = 0;
 
   //! Notify of key release
   /*!
@@ -120,14 +120,14 @@ public:
   Synthesize mouse events to generate mouse motion to the absolute
   screen position \c xAbs,yAbs.
   */
-  virtual void mouseMove(SInt32 xAbs, SInt32 yAbs) = 0;
+  virtual void mouseMove(int32_t xAbs, int32_t yAbs) = 0;
 
   //! Notify of mouse motion
   /*!
   Synthesize mouse events to generate mouse motion by the relative
   amount \c xRel,yRel.
   */
-  virtual void mouseRelativeMove(SInt32 xRel, SInt32 yRel) = 0;
+  virtual void mouseRelativeMove(int32_t xRel, int32_t yRel) = 0;
 
   //! Notify of mouse wheel motion
   /*!
@@ -136,7 +136,7 @@ public:
   to the right and negative for motion towards the user or to the left.
   Each wheel click should generate a delta of +/-120.
   */
-  virtual void mouseWheel(SInt32 xDelta, SInt32 yDelta) = 0;
+  virtual void mouseWheel(int32_t xDelta, int32_t yDelta) = 0;
 
   //! Notify of screen saver change
   virtual void screensaver(bool activate) = 0;
@@ -169,6 +169,6 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const = 0;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const = 0;
-  virtual void getCursorPos(SInt32 &x, SInt32 &y) const = 0;
+  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const = 0;
+  virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
 };

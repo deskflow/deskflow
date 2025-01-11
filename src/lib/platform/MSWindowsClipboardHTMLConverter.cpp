@@ -79,8 +79,8 @@ std::string MSWindowsClipboardHTMLConverter::doToIClipboard(const std::string &d
   }
 
   // convert args to integers
-  SInt32 start = (SInt32)atoi(startArg.c_str());
-  SInt32 end = (SInt32)atoi(endArg.c_str());
+  int32_t start = (int32_t)atoi(startArg.c_str());
+  int32_t end = (int32_t)atoi(endArg.c_str());
   if (start <= 0 || end <= 0 || start >= end) {
     return std::string();
   }

@@ -44,8 +44,8 @@ public:
   class KeyInfo
   {
   public:
-    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count);
-    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, SInt32 count, const std::set<std::string> &destinations);
+    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, int32_t count);
+    static KeyInfo *alloc(KeyID, KeyModifierMask, KeyButton, int32_t count, const std::set<std::string> &destinations);
     static KeyInfo *alloc(const KeyInfo &);
 
     static bool isDefault(const char *screens);
@@ -58,7 +58,7 @@ public:
     KeyID m_key;
     KeyModifierMask m_mask;
     KeyButton m_button;
-    SInt32 m_count;
+    int32_t m_count;
     char *m_screens;
     char m_screensBuffer[1];
   };
@@ -101,7 +101,7 @@ public:
   Synthesizes a key repeat event and updates the key state.
   */
   virtual bool
-  fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang) = 0;
+  fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) = 0;
 
   //! Fake a key release
   /*!
@@ -159,7 +159,7 @@ public:
   /*!
   Returns the active keyboard layout according to the operating system.
   */
-  virtual SInt32 pollActiveGroup() const = 0;
+  virtual int32_t pollActiveGroup() const = 0;
 
   //! Get the keys currently pressed from OS
   /*!

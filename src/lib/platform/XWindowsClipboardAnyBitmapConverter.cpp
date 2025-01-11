@@ -23,14 +23,14 @@ struct CBMPInfoHeader
 {
 public:
   UInt32 biSize;
-  SInt32 biWidth;
-  SInt32 biHeight;
+  int32_t biWidth;
+  int32_t biHeight;
   uint16_t biPlanes;
   uint16_t biBitCount;
   UInt32 biCompression;
   UInt32 biSizeImage;
-  SInt32 biXPelsPerMeter;
-  SInt32 biYPelsPerMeter;
+  int32_t biXPelsPerMeter;
+  int32_t biYPelsPerMeter;
   UInt32 biClrUsed;
   UInt32 biClrImportant;
 };
@@ -44,7 +44,7 @@ static void toLE(uint8_t *&dst, uint16_t src)
   dst += 2;
 }
 
-static void toLE(uint8_t *&dst, SInt32 src)
+static void toLE(uint8_t *&dst, int32_t src)
 {
   dst[0] = static_cast<uint8_t>(src & 0xffu);
   dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
@@ -67,9 +67,9 @@ static inline uint16_t fromLEU16(const uint8_t *data)
   return static_cast<uint16_t>(data[0]) | (static_cast<uint16_t>(data[1]) << 8);
 }
 
-static inline SInt32 fromLES32(const uint8_t *data)
+static inline int32_t fromLES32(const uint8_t *data)
 {
-  return static_cast<SInt32>(
+  return static_cast<int32_t>(
       static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) | (static_cast<UInt32>(data[2]) << 16) |
       (static_cast<UInt32>(data[3]) << 24)
   );
@@ -150,14 +150,14 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string 
   uint8_t infoHeader[40];
   uint8_t *dst = infoHeader;
   toLE(dst, static_cast<UInt32>(40));
-  toLE(dst, static_cast<SInt32>(w));
-  toLE(dst, static_cast<SInt32>(h));
+  toLE(dst, static_cast<int32_t>(w));
+  toLE(dst, static_cast<int32_t>(h));
   toLE(dst, static_cast<uint16_t>(1));
   toLE(dst, static_cast<uint16_t>(depth));
   toLE(dst, static_cast<UInt32>(0)); // BI_RGB
   toLE(dst, static_cast<UInt32>(image.size()));
-  toLE(dst, static_cast<SInt32>(2834)); // 72 dpi
-  toLE(dst, static_cast<SInt32>(2834)); // 72 dpi
+  toLE(dst, static_cast<int32_t>(2834)); // 72 dpi
+  toLE(dst, static_cast<int32_t>(2834)); // 72 dpi
   toLE(dst, static_cast<UInt32>(0));
   toLE(dst, static_cast<UInt32>(0));
 

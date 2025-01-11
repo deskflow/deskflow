@@ -30,5 +30,5 @@ public:
   ~ClientProxy1_2();
 
   // IClient overrides
-  virtual void mouseRelativeMove(SInt32 xRel, SInt32 yRel);
+  virtual void mouseRelativeMove(int32_t xRel, int32_t yRel);
 };
