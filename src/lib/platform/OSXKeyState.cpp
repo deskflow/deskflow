@@ -177,9 +177,9 @@ io_connect_t getEventDriver()
   return sEventDrvrRef;
 }
 
-bool isModifier(UInt8 virtualKey)
+bool isModifier(uint8_t virtualKey)
 {
-  static std::set<UInt8> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
+  static std::set<uint8_t> modifiers{s_shiftVK, s_superVK, s_altVK, s_controlVK, s_capsLockVK};
 
   return (modifiers.find(virtualKey) != modifiers.end());
 }
@@ -459,7 +459,7 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   ::KeyMap km;
   GetKeys(km);
-  const UInt8 *m = reinterpret_cast<const UInt8 *>(km);
+  const uint8_t *m = reinterpret_cast<const uint8_t *>(km);
   for (UInt32 i = 0; i < 16; ++i) {
     for (UInt32 j = 0; j < 8; ++j) {
       if ((m[i] & (1u << j)) != 0) {
@@ -573,7 +573,7 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
   }
 }
 
-kern_return_t OSXKeyState::postHIDVirtualKey(UInt8 virtualKey, bool postDown)
+kern_return_t OSXKeyState::postHIDVirtualKey(uint8_t virtualKey, bool postDown)
 {
   NXEventData event;
   bzero(&event, sizeof(NXEventData));
@@ -732,11 +732,11 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, SInt32 group, const IOSXKe
 
       // collect the tables that map to the same KeyID.  we know it
       // can't be any earlier tables because of the check above.
-      std::set<UInt8> tables;
-      tables.insert(static_cast<UInt8>(j));
+      std::set<uint8_t> tables;
+      tables.insert(static_cast<uint8_t>(j));
       for (UInt32 k = j + 1; k < r.getNumTables(); ++k) {
         if (buttonKeys[k].first == id) {
-          tables.insert(static_cast<UInt8>(k));
+          tables.insert(static_cast<uint8_t>(k));
         }
       }
 

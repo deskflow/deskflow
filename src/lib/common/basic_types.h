@@ -86,7 +86,6 @@
 #else
 using SInt16 = signed TYPE_OF_SIZE_2;
 using SInt32 = signed TYPE_OF_SIZE_4;
-using UInt8 = unsigned TYPE_OF_SIZE_1;
 using UInt16 = unsigned TYPE_OF_SIZE_2;
 using UInt32 = unsigned TYPE_OF_SIZE_4;
 #endif

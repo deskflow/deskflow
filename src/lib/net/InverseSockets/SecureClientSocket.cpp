@@ -84,7 +84,7 @@ void SecureClientSocket::secureAccept()
 
 InverseClientSocket::EJobResult SecureClientSocket::doRead()
 {
-  UInt8 buffer[4096] = {0};
+  uint8_t buffer[4096] = {0};
   int bytesRead = 0;
   int status = 0;
 

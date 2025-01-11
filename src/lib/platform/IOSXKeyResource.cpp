@@ -19,7 +19,7 @@
 
 #include <Carbon/Carbon.h>
 
-KeyID IOSXKeyResource::getKeyID(UInt8 c)
+KeyID IOSXKeyResource::getKeyID(uint8_t c)
 {
   if (c == 0) {
     return kKeyNone;

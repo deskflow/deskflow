@@ -40,8 +40,8 @@ public:
   void closeSocketForRead();
   void closeSocketForWrite();
 
-  size_t readSocket(UInt8 *buffer, size_t size);
-  size_t writeSocket(const UInt8 *buffer, size_t size);
+  size_t readSocket(uint8_t *buffer, size_t size);
+  size_t writeSocket(const uint8_t *buffer, size_t size);
   void throwErrorOnSocket();
 
   bool isValid() const;

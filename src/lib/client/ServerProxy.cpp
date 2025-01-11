@@ -110,7 +110,7 @@ void ServerProxy::setKeepAliveRate(double rate)
 void ServerProxy::handleData(const Event &, void *)
 {
   // handle messages until there are no more.  first read message code.
-  UInt8 code[4];
+  uint8_t code[4];
   UInt32 n = m_stream->read(code, 4);
   while (n != 0) {
     // verify we got an entire code
@@ -152,7 +152,7 @@ void ServerProxy::handleData(const Event &, void *)
   flushCompressedMouse();
 }
 
-ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code)
+ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgQInfo, 4) == 0) {
     queryInfo();
@@ -225,7 +225,7 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const UInt8 *code)
   return kOkay;
 }
 
-ServerProxy::EResult ServerProxy::parseMessage(const UInt8 *code)
+ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgDMouseMove, 4) == 0) {
     mouseMove();
@@ -857,7 +857,7 @@ void ServerProxy::handleClipboardSendingEvent(const Event &event, void *)
   ClipboardChunk::send(m_stream, event.getDataObject());
 }
 
-void ServerProxy::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
+void ServerProxy::fileChunkSending(uint8_t mark, char *data, size_t dataSize)
 {
   FileChunk::send(m_stream, mark, data, dataSize);
 }

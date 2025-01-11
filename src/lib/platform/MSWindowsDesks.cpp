@@ -346,8 +346,8 @@ MSWindowsDesks::createBlankCursor() const
   // create a transparent cursor
   int cw = GetSystemMetrics(SM_CXCURSOR);
   int ch = GetSystemMetrics(SM_CYCURSOR);
-  UInt8 *cursorAND = new UInt8[ch * ((cw + 31) >> 2)];
-  UInt8 *cursorXOR = new UInt8[ch * ((cw + 31) >> 2)];
+  uint8_t *cursorAND = new uint8_t[ch * ((cw + 31) >> 2)];
+  uint8_t *cursorXOR = new uint8_t[ch * ((cw + 31) >> 2)];
   memset(cursorAND, 0xff, ch * ((cw + 31) >> 2));
   memset(cursorXOR, 0x00, ch * ((cw + 31) >> 2));
   HCURSOR c = CreateCursor(MSWindowsScreen::getWindowInstance(), 0, 0, cw, ch, cursorAND, cursorXOR);

@@ -30,31 +30,31 @@ public:
 };
 
 // BMP is little-endian
-static inline UInt32 fromLEU32(const UInt8 *data)
+static inline UInt32 fromLEU32(const uint8_t *data)
 {
   return static_cast<UInt32>(data[0]) | (static_cast<UInt32>(data[1]) << 8) | (static_cast<UInt32>(data[2]) << 16) |
          (static_cast<UInt32>(data[3]) << 24);
 }
 
-static void toLE(UInt8 *&dst, char src)
+static void toLE(uint8_t *&dst, char src)
 {
-  dst[0] = static_cast<UInt8>(src);
+  dst[0] = static_cast<uint8_t>(src);
   dst += 1;
 }
 
-static void toLE(UInt8 *&dst, UInt16 src)
+static void toLE(uint8_t *&dst, UInt16 src)
 {
-  dst[0] = static_cast<UInt8>(src & 0xffu);
-  dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
+  dst[0] = static_cast<uint8_t>(src & 0xffu);
+  dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
   dst += 2;
 }
 
-static void toLE(UInt8 *&dst, UInt32 src)
+static void toLE(uint8_t *&dst, UInt32 src)
 {
-  dst[0] = static_cast<UInt8>(src & 0xffu);
-  dst[1] = static_cast<UInt8>((src >> 8) & 0xffu);
-  dst[2] = static_cast<UInt8>((src >> 16) & 0xffu);
-  dst[3] = static_cast<UInt8>((src >> 24) & 0xffu);
+  dst[0] = static_cast<uint8_t>(src & 0xffu);
+  dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
+  dst[2] = static_cast<uint8_t>((src >> 16) & 0xffu);
+  dst[3] = static_cast<uint8_t>((src >> 24) & 0xffu);
   dst += 4;
 }
 
@@ -91,8 +91,8 @@ int XWindowsClipboardBMPConverter::getDataSize() const
 std::string XWindowsClipboardBMPConverter::fromIClipboard(const std::string &bmp) const
 {
   // create BMP image
-  UInt8 header[14];
-  UInt8 *dst = header;
+  uint8_t header[14];
+  uint8_t *dst = header;
   toLE(dst, 'B');
   toLE(dst, 'M');
   toLE(dst, static_cast<UInt32>(14 + bmp.size()));
@@ -110,7 +110,7 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string &bmp) 
   }
 
   // check BMP file header
-  const UInt8 *rawBMPHeader = reinterpret_cast<const UInt8 *>(bmp.data());
+  const uint8_t *rawBMPHeader = reinterpret_cast<const uint8_t *>(bmp.data());
   if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
     return std::string();
   }

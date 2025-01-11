@@ -30,7 +30,7 @@ public:
   virtual KeyID getKey(UInt32 table, UInt32 button) const = 0;
 
   // Convert a character in the current script to the equivalent KeyID
-  static KeyID getKeyID(UInt8);
+  static KeyID getKeyID(uint8_t);
 
   // Convert a unicode character to the equivalent KeyID.
   static KeyID unicharToKeyID(UniChar);

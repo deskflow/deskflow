@@ -129,7 +129,7 @@ void ClientProxy1_0::setHeartbeatRate(double, double alarm)
 void ClientProxy1_0::handleData(const Event &, void *)
 {
   // handle messages until there are no more.  first read message code.
-  UInt8 code[4];
+  uint8_t code[4];
   UInt32 n = getStream()->read(code, 4);
   while (n != 0) {
     // verify we got an entire code
@@ -166,7 +166,7 @@ void ClientProxy1_0::handleData(const Event &, void *)
   resetHeartbeatTimer();
 }
 
-bool ClientProxy1_0::parseHandshakeMessage(const UInt8 *code)
+bool ClientProxy1_0::parseHandshakeMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgCNoop, 4) == 0) {
     // discard no-ops
@@ -184,7 +184,7 @@ bool ClientProxy1_0::parseHandshakeMessage(const UInt8 *code)
   return false;
 }
 
-bool ClientProxy1_0::parseMessage(const UInt8 *code)
+bool ClientProxy1_0::parseMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgDInfo, 4) == 0) {
     if (recvInfo()) {
@@ -332,7 +332,7 @@ void ClientProxy1_0::sendDragInfo(UInt32 fileCount, const char *info, size_t siz
   LOG((CLOG_DEBUG "draggingInfoSending not supported"));
 }
 
-void ClientProxy1_0::fileChunkSending(UInt8 mark, char *data, size_t dataSize)
+void ClientProxy1_0::fileChunkSending(uint8_t mark, char *data, size_t dataSize)
 {
   // ignore -- not supported in protocol 1.0
   LOG((CLOG_DEBUG "fileChunkSending not supported"));

@@ -86,7 +86,7 @@ public:
   void resetOptions() override = 0;
   void setOptions(const OptionsList &options) override = 0;
   void sendDragInfo(UInt32 fileCount, const char *info, size_t size) override = 0;
-  void fileChunkSending(UInt8 mark, char *data, size_t dataSize) override = 0;
+  void fileChunkSending(uint8_t mark, char *data, size_t dataSize) override = 0;
   void secureInputNotification(const std::string &app) const override = 0;
 
 private:
