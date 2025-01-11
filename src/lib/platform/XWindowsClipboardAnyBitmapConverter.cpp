@@ -25,8 +25,8 @@ public:
   UInt32 biSize;
   SInt32 biWidth;
   SInt32 biHeight;
-  UInt16 biPlanes;
-  UInt16 biBitCount;
+  uint16_t biPlanes;
+  uint16_t biBitCount;
   UInt32 biCompression;
   UInt32 biSizeImage;
   SInt32 biXPelsPerMeter;
@@ -37,7 +37,7 @@ public:
 
 // BMP is little-endian
 
-static void toLE(uint8_t *&dst, UInt16 src)
+static void toLE(uint8_t *&dst, uint16_t src)
 {
   dst[0] = static_cast<uint8_t>(src & 0xffu);
   dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
@@ -62,9 +62,9 @@ static void toLE(uint8_t *&dst, UInt32 src)
   dst += 4;
 }
 
-static inline UInt16 fromLEU16(const uint8_t *data)
+static inline uint16_t fromLEU16(const uint8_t *data)
 {
-  return static_cast<UInt16>(data[0]) | (static_cast<UInt16>(data[1]) << 8);
+  return static_cast<uint16_t>(data[0]) | (static_cast<uint16_t>(data[1]) << 8);
 }
 
 static inline SInt32 fromLES32(const uint8_t *data)
@@ -152,8 +152,8 @@ std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string 
   toLE(dst, static_cast<UInt32>(40));
   toLE(dst, static_cast<SInt32>(w));
   toLE(dst, static_cast<SInt32>(h));
-  toLE(dst, static_cast<UInt16>(1));
-  toLE(dst, static_cast<UInt16>(depth));
+  toLE(dst, static_cast<uint16_t>(1));
+  toLE(dst, static_cast<uint16_t>(depth));
   toLE(dst, static_cast<UInt32>(0)); // BI_RGB
   toLE(dst, static_cast<UInt32>(image.size()));
   toLE(dst, static_cast<SInt32>(2834)); // 72 dpi

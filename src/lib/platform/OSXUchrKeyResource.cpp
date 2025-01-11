@@ -147,14 +147,14 @@ KeyID OSXUchrKeyResource::getKey(UInt32 table, UInt32 button) const
   return keys.front();
 }
 
-bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const
+bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, uint16_t index) const
 {
   if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
     // XXX -- should we be using some other fallback?
     return false;
   }
 
-  UInt16 state = 0;
+  uint16_t state = 0;
   if (!getKeyRecord(keys, index, state)) {
     return false;
   }
@@ -188,13 +188,13 @@ bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, UInt16 index) const
   return true;
 }
 
-bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &state) const
+bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, uint16_t index, uint16_t &state) const
 {
   const uint8_t *const base = reinterpret_cast<const uint8_t *>(m_resource);
   const UCKeyStateRecord *sr = reinterpret_cast<const UCKeyStateRecord *>(base + m_sri->keyStateRecordOffsets[index]);
   const UCKeyStateEntryTerminal *kset = reinterpret_cast<const UCKeyStateEntryTerminal *>(sr->stateEntryData);
 
-  UInt16 nextState = 0;
+  uint16_t nextState = 0;
   bool found = false;
   if (state == 0) {
     found = true;
@@ -206,7 +206,7 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &s
     // we have a next entry
     switch (sr->stateEntryFormat) {
     case kUCKeyStateEntryTerminalFormat:
-      for (UInt16 j = 0; j < sr->stateEntryCount; ++j) {
+      for (uint16_t j = 0; j < sr->stateEntryCount; ++j) {
         if (kset[j].curState == state) {
           if (!addSequence(keys, kset[j].charData)) {
             return false;
@@ -249,7 +249,7 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &s
 bool OSXUchrKeyResource::addSequence(KeySequence &keys, UCKeyCharSeq c) const
 {
   if ((c & kUCKeyOutputTestForIndexMask) == kUCKeyOutputSequenceIndexMask) {
-    UInt16 index = (c & kUCKeyOutputGetIndexMask);
+    uint16_t index = (c & kUCKeyOutputGetIndexMask);
     if (index < m_sdi->charSequenceCount &&
         m_sdi->charSequenceOffsets[index] != m_sdi->charSequenceOffsets[index + 1]) {
       // XXX -- sequences not supported yet

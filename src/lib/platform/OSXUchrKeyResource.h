@@ -40,8 +40,8 @@ public:
 private:
   using KeySequence = std::vector<KeyID>;
 
-  bool getDeadKey(KeySequence &keys, UInt16 index) const;
-  bool getKeyRecord(KeySequence &keys, UInt16 index, UInt16 &state) const;
+  bool getDeadKey(KeySequence &keys, uint16_t index) const;
+  bool getKeyRecord(KeySequence &keys, uint16_t index, uint16_t &state) const;
   bool addSequence(KeySequence &keys, UCKeyCharSeq c) const;
 
 private:
@@ -51,5 +51,5 @@ private:
   const UCKeySequenceDataIndex *m_sdi;
   const UCKeyStateRecordsIndex *m_sri;
   const UCKeyStateTerminators *m_st;
-  UInt16 m_spaceOutput;
+  uint16_t m_spaceOutput;
 };

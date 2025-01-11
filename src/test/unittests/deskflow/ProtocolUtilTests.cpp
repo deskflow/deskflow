@@ -44,7 +44,7 @@ MATCHER_P(EqVoidPointeeInt8, expected, "")
 
 MATCHER_P(EqVoidPointeeInt16, expected, "")
 {
-  const UInt16 Actual16 = (*static_cast<const UInt16 *>(arg));
+  const uint16_t Actual16 = (*static_cast<const uint16_t *>(arg));
   return (expected == (Actual16 >> 8));
 }
 
@@ -77,7 +77,7 @@ MATCHER_P(EqVoidVectorInt1byte, expected, "")
 MATCHER_P(EqVoidVectorInt2bytes, expected, "")
 {
   bool Result = true;
-  const UInt16 *Actual = (static_cast<const UInt16 *>(arg)) + 2;
+  const uint16_t *Actual = (static_cast<const uint16_t *>(arg)) + 2;
   const size_t Size = *(Actual - 1) >> 8;
 
   if (Size == expected.size()) {
@@ -139,7 +139,7 @@ class ProtocolUtilTests : public ::testing::Test
 public:
   MockStream stream;
   uint8_t ActualInt8 = 0;
-  UInt16 ActualInt16 = 0;
+  uint16_t ActualInt16 = 0;
   UInt32 ActualInt32 = 0;
   std::string ActualString;
 };
@@ -253,11 +253,11 @@ class ReadfIntVectorTestFixture : public ReadfIntTestFixture {};
 
 TEST_P(ReadfIntVectorTestFixture, readf_int_vector) {
   std::vector<uint8_t> Actual1Byte = {};
-  std::vector<UInt16> Actual2Bytes = {};
+  std::vector<uint16_t> Actual2Bytes = {};
   std::vector<UInt32> Actual4Bytes = {};
 
   const std::vector<uint8_t> Expected1Byte = {10, 10};
-  const std::vector<UInt16> Expected2Bytes = {10, 10};
+  const std::vector<uint16_t> Expected2Bytes = {10, 10};
   const std::vector<UInt32> Expected4Bytes = {10, 10};
   std::array<uint8_t, 4> StreamVectorSize{{0, 0, 0, 2}};
 
@@ -298,7 +298,7 @@ INSTANTIATE_TEST_SUITE_P(ReadfIntVectorTests, ReadfIntVectorTestFixture,
 class ReadfIntAndStringTest : public ReadfIntTestFixture {
 public:
   uint8_t ActualInt8 = 0;
-  UInt16 ActualInt16 = 0;
+  uint16_t ActualInt16 = 0;
   UInt32 ActualInt32 = 32;
   std::string ActualString;
 };
@@ -436,7 +436,7 @@ class WriteIntTest
 public:
   MockStream stream;
   uint8_t Expected1Byte = 5;
-  UInt16 Expected2Bytes = 10;
+  uint16_t Expected2Bytes = 10;
   UInt32 Expected4Bytes = 15;
 };
 
@@ -471,7 +471,7 @@ class WriteIntVectorTest
 public:
   MockStream stream;
   const std::vector<uint8_t> Expected1Byte = {10, 20, 30};
-  const std::vector<UInt16> Expected2Byte = {40, 50, 60};
+  const std::vector<uint16_t> Expected2Byte = {40, 50, 60};
   const std::vector<UInt32> Expected4Byte = {70, 80, 90};
 };
 

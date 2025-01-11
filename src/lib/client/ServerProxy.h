@@ -107,7 +107,7 @@ private:
   void leave();
   void setClipboard();
   void grabClipboard();
-  void keyDown(UInt16 id, UInt16 mask, UInt16 button, const std::string &lang);
+  void keyDown(uint16_t id, uint16_t mask, uint16_t button, const std::string &lang);
   void keyRepeat();
   void keyUp();
   void mouseDown();

@@ -23,10 +23,10 @@
 struct CBMPHeader
 {
 public:
-  UInt16 type;
+  uint16_t type;
   UInt32 size;
-  UInt16 reserved1;
-  UInt16 reserved2;
+  uint16_t reserved1;
+  uint16_t reserved2;
   UInt32 offset;
 };
 
@@ -43,7 +43,7 @@ static void toLE(uint8_t *&dst, char src)
   dst += 1;
 }
 
-static void toLE(uint8_t *&dst, UInt16 src)
+static void toLE(uint8_t *&dst, uint16_t src)
 {
   dst[0] = static_cast<uint8_t>(src & 0xffu);
   dst[1] = static_cast<uint8_t>((src >> 8) & 0xffu);
@@ -89,8 +89,8 @@ std::string OSXClipboardBMPConverter::fromIClipboard(const std::string &bmp) con
   toLE(dst, 'B');
   toLE(dst, 'M');
   toLE(dst, static_cast<UInt32>(14 + bmp.size()));
-  toLE(dst, static_cast<UInt16>(0));
-  toLE(dst, static_cast<UInt16>(0));
+  toLE(dst, static_cast<uint16_t>(0));
+  toLE(dst, static_cast<uint16_t>(0));
   toLE(dst, static_cast<UInt32>(14 + 40));
   return std::string(reinterpret_cast<const char *>(header), 14) + bmp;
 }

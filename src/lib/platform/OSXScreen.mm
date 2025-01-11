@@ -429,9 +429,9 @@ void OSXScreen::constructMouseButtonEventMap()
       {kCGEventOtherMouseUp, kCGEventOtherMouseDragged, kCGEventOtherMouseDown}
   };
 
-  for (UInt16 button = 0; button < NumButtonIDs; button++) {
+  for (uint16_t button = 0; button < NumButtonIDs; button++) {
     MouseButtonEventMapType new_map;
-    for (UInt16 state = (UInt32)kMouseButtonUp; state < kMouseButtonStateMax; state++) {
+    for (uint16_t state = (UInt32)kMouseButtonUp; state < kMouseButtonStateMax; state++) {
       CGEventType curEvent = source[button][state];
       new_map[state] = curEvent;
     }
@@ -1073,7 +1073,7 @@ bool OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
   return true;
 }
 
-bool OSXScreen::onMouseButton(bool pressed, UInt16 macButton)
+bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
 {
   // Buttons 2 and 3 are inverted on the mac
   ButtonID button = mapMacButtonToDeskflow(macButton);
@@ -1312,7 +1312,7 @@ bool OSXScreen::onHotKey(EventRef event) const
   return true;
 }
 
-ButtonID OSXScreen::mapDeskflowButtonToMac(UInt16 button) const
+ButtonID OSXScreen::mapDeskflowButtonToMac(uint16_t button) const
 {
   switch (button) {
   case 1:
@@ -1326,7 +1326,7 @@ ButtonID OSXScreen::mapDeskflowButtonToMac(UInt16 button) const
   return static_cast<ButtonID>(button);
 }
 
-ButtonID OSXScreen::mapMacButtonToDeskflow(UInt16 macButton) const
+ButtonID OSXScreen::mapMacButtonToDeskflow(uint16_t macButton) const
 {
   switch (macButton) {
   case 1:
