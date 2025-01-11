@@ -47,7 +47,7 @@ ClientProxy1_5::~ClientProxy1_5()
   m_events->removeHandler(m_events->forFile().keepAlive(), this);
 }
 
-void ClientProxy1_5::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+void ClientProxy1_5::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
 {
   std::string data(info, size);
 
@@ -90,7 +90,7 @@ void ClientProxy1_5::fileChunkReceived()
 void ClientProxy1_5::dragInfoReceived()
 {
   // parse
-  UInt32 fileNum = 0;
+  uint32_t fileNum = 0;
   std::string content;
   ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
 

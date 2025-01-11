@@ -32,7 +32,7 @@ PrimaryClient::PrimaryClient(const std::string &name, deskflow::Screen *screen)
       m_fakeInputCount(0)
 {
   // all clipboards are clean
-  for (UInt32 i = 0; i < kClipboardEnd; ++i) {
+  for (uint32_t i = 0; i < kClipboardEnd; ++i) {
     m_clipboardDirty[i] = false;
   }
 }
@@ -42,17 +42,17 @@ PrimaryClient::~PrimaryClient()
   // do nothing
 }
 
-void PrimaryClient::reconfigure(UInt32 activeSides)
+void PrimaryClient::reconfigure(uint32_t activeSides)
 {
   m_screen->reconfigure(activeSides);
 }
 
-UInt32 PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t PrimaryClient::registerHotKey(KeyID key, KeyModifierMask mask)
 {
   return m_screen->registerHotKey(key, mask);
 }
 
-void PrimaryClient::unregisterHotKey(UInt32 id)
+void PrimaryClient::unregisterHotKey(uint32_t id)
 {
   m_screen->unregisterHotKey(id);
 }
@@ -121,7 +121,7 @@ void PrimaryClient::disable()
   m_screen->disable();
 }
 
-void PrimaryClient::enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool screensaver)
+void PrimaryClient::enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool screensaver)
 {
   m_screen->setSequenceNumber(seqNum);
   if (!screensaver) {
@@ -218,7 +218,7 @@ void PrimaryClient::screensaver(bool)
   // ignore
 }
 
-void PrimaryClient::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+void PrimaryClient::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
 {
   // ignore
 }

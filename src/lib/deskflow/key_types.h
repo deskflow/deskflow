@@ -28,9 +28,9 @@ keys, function keys, modifier keys, etc).
 */
 // Typedef has to be used on mac os as this is used in objective-C
 #if __APPLE__
-typedef UInt32 KeyID;
+typedef uint32_t KeyID;
 #else
-using KeyID = UInt32;
+using KeyID = uint32_t;
 #endif
 
 //! Key Code
@@ -51,9 +51,9 @@ using KeyButton = uint16_t;
 Type to hold a bitmask of key modifiers (e.g. shift keys).
 */
 #if __APPLE__
-typedef UInt32 KeyModifierMask;
+typedef uint32_t KeyModifierMask;
 #else
-using KeyModifierMask = UInt32;
+using KeyModifierMask = uint32_t;
 #endif
 
 //! Modifier key ID
@@ -61,9 +61,9 @@ using KeyModifierMask = UInt32;
 Type to hold the id of a key modifier (e.g. a shift key).
 */
 #if __APPLE__
-typedef UInt32 KeyModifierID;
+typedef uint32_t KeyModifierID;
 #else
-using KeyModifierID = UInt32;
+using KeyModifierID = uint32_t;
 #endif
 
 //! @name Modifier key masks
@@ -82,17 +82,17 @@ static const KeyModifierMask KeyModifierScrollLock = 0x4000;
 
 //! @name Modifier key bits
 //@{
-static const UInt32 kKeyModifierBitNone = 16;
-static const UInt32 kKeyModifierBitShift = 0;
-static const UInt32 kKeyModifierBitControl = 1;
-static const UInt32 kKeyModifierBitAlt = 2;
-static const UInt32 kKeyModifierBitMeta = 3;
-static const UInt32 kKeyModifierBitSuper = 4;
-static const UInt32 kKeyModifierBitAltGr = 5;
-static const UInt32 kKeyModifierBitLevel5Lock = 6;
-static const UInt32 kKeyModifierBitCapsLock = 12;
-static const UInt32 kKeyModifierBitNumLock = 13;
-static const UInt32 kKeyModifierBitScrollLock = 14;
+static const uint32_t kKeyModifierBitNone = 16;
+static const uint32_t kKeyModifierBitShift = 0;
+static const uint32_t kKeyModifierBitControl = 1;
+static const uint32_t kKeyModifierBitAlt = 2;
+static const uint32_t kKeyModifierBitMeta = 3;
+static const uint32_t kKeyModifierBitSuper = 4;
+static const uint32_t kKeyModifierBitAltGr = 5;
+static const uint32_t kKeyModifierBitLevel5Lock = 6;
+static const uint32_t kKeyModifierBitCapsLock = 12;
+static const uint32_t kKeyModifierBitNumLock = 13;
+static const uint32_t kKeyModifierBitScrollLock = 14;
 static const int32_t kKeyModifierNumBits = 16;
 //@}
 

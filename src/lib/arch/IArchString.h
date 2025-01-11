@@ -65,10 +65,10 @@ public:
   virtual int vsnprintf(char *str, int size, const char *fmt, va_list ap);
 
   //! Convert multibyte string to wide character string
-  virtual int convStringMBToWC(wchar_t *, const char *, UInt32 n, bool *errors);
+  virtual int convStringMBToWC(wchar_t *, const char *, uint32_t n, bool *errors);
 
   //! Convert wide character string to multibyte string
-  virtual int convStringWCToMB(char *, const wchar_t *, UInt32 n, bool *errors);
+  virtual int convStringWCToMB(char *, const wchar_t *, uint32_t n, bool *errors);
 
   //! Return the architecture's native wide character encoding
   virtual EWideCharEncoding getWideCharEncoding() = 0;

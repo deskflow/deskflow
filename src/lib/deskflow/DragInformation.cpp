@@ -28,7 +28,7 @@ DragInformation::DragInformation() : m_filename(), m_filesize(0)
 {
 }
 
-void DragInformation::parseDragInfo(DragFileList &dragFileList, UInt32 fileNum, std::string data)
+void DragInformation::parseDragInfo(DragFileList &dragFileList, uint32_t fileNum, std::string data)
 {
   size_t startPos = 0;
   size_t findResult1 = 0;
@@ -39,7 +39,7 @@ void DragInformation::parseDragInfo(DragFileList &dragFileList, UInt32 fileNum, 
     slash = "/";
   }
 
-  UInt32 index = 0;
+  uint32_t index = 0;
   while (index < fileNum) {
     findResult1 = data.find(',', startPos);
     findResult2 = data.find_last_of(slash, findResult1);

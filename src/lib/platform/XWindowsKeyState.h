@@ -120,7 +120,7 @@ private:
   void updateKeysymMapXKB(deskflow::KeyMap &);
   bool hasModifiersXKB() const;
   int getEffectiveGroup(KeyCode, int group) const;
-  UInt32 getGroupFromState(unsigned int state) const;
+  uint32_t getGroupFromState(unsigned int state) const;
 
   //! Create and send language change request to \p group by DBus interface
   /*!
@@ -135,7 +135,7 @@ private:
   {
   public:
     unsigned char m_level;
-    UInt32 m_mask;
+    uint32_t m_mask;
     bool m_lock;
   };
 
@@ -148,7 +148,7 @@ private:
   using KeyModifierToXMask = std::map<KeyModifierMask, unsigned int>;
   using KeyToKeyCodeMap = std::multimap<KeyID, KeyCode>;
   using NonXKBModifierMap = std::map<KeyCode, unsigned int>;
-  using XKBModifierMap = std::map<UInt32, XKBModifierInfo>;
+  using XKBModifierMap = std::map<uint32_t, XKBModifierInfo>;
 
   Display *m_display;
 #if HAVE_XKB_EXTENSION

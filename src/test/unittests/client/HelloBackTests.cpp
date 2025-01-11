@@ -103,8 +103,8 @@ void setupMockHelloBackWrite(
 
   const auto versionIntSize = 4;
   const auto clientNameIntSize = 4;
-  const UInt32 helloBackSize =
-      static_cast<UInt32>(protocolName.size() + versionIntSize + clientNameIntSize + name.size());
+  const uint32_t helloBackSize =
+      static_cast<uint32_t>(protocolName.size() + versionIntSize + clientNameIntSize + name.size());
 
   std::vector<char> expect;
   expect.reserve(helloBackSize);

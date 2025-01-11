@@ -112,7 +112,7 @@ void XWindowsKeyState::setAutoRepeat(const XKeyboardState &state)
 KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
   LOG((CLOG_DEBUG2 "mapping state: %i", state));
-  UInt32 offset = 8 * getGroupFromState(state);
+  uint32_t offset = 8 * getGroupFromState(state);
   KeyModifierMask mask = 0;
   for (int i = 0; i < 8; ++i) {
     if ((state & (1u << i)) != 0) {
@@ -201,8 +201,8 @@ void XWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   char keys[32];
   XQueryKeymap(m_display, keys);
-  for (UInt32 i = 0; i < 32; ++i) {
-    for (UInt32 j = 0; j < 8; ++j) {
+  for (uint32_t i = 0; i < 32; ++i) {
+    for (uint32_t j = 0; j < 8; ++j) {
       if ((keys[i] & (1u << j)) != 0) {
         pressedKeys.insert(8 * i + j);
       }
@@ -666,7 +666,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         // modifier masks.
         item.m_lock = false;
         bool isModifier = false;
-        UInt32 modifierMask = m_xkb->map->modmap[keycode];
+        uint32_t modifierMask = m_xkb->map->modmap[keycode];
         if (XkbKeyHasActions(m_xkb, keycode) == True) {
           XkbAction *action = XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
           if (action->type == XkbSA_SetMods || action->type == XkbSA_LockMods) {
@@ -708,7 +708,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         // record the modifier mask for this key.  don't bother
         // for keys that change the group.
         item.m_generates = 0;
-        UInt32 modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
+        uint32_t modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
         if (isModifier && modifierBit != kKeyModifierBitNone) {
           item.m_generates = (1u << modifierBit);
           for (int32_t j = 0; j < 8; ++j) {
@@ -855,7 +855,7 @@ int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
   return group;
 }
 
-UInt32 XWindowsKeyState::getGroupFromState(unsigned int state) const
+uint32_t XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
 #if HAVE_XKB_EXTENSION
   if (m_xkb != NULL) {

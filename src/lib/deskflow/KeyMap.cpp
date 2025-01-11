@@ -133,7 +133,7 @@ void KeyMap::addKeyAliasEntry(
   }
 }
 
-bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, UInt32 numKeys)
+bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, uint32_t numKeys)
 {
   // disallow kKeyNone
   if (id == kKeyNone) {
@@ -155,7 +155,7 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, 
 
   // convert to buttons
   KeyItemList items;
-  for (UInt32 i = 0; i < numKeys; ++i) {
+  for (uint32_t i = 0; i < numKeys; ++i) {
     KeyIDMap::const_iterator gtIndex = m_keyIDMap.find(keys[i]);
     if (gtIndex == m_keyIDMap.end()) {
       return false;
@@ -926,7 +926,7 @@ void KeyMap::addKeystrokes(
 ) const
 {
   KeyButton button = keyItem.m_button;
-  UInt32 data = keyItem.m_client;
+  uint32_t data = keyItem.m_client;
   switch (type) {
   case kKeystrokePress:
     keystrokes.push_back(Keystroke(button, true, false, data));
@@ -1245,7 +1245,7 @@ bool KeyMap::KeyItem::operator==(const KeyItem &x) const
 // KeyMap::Keystroke
 //
 
-KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, UInt32 data) : m_type(kButton)
+KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t data) : m_type(kButton)
 {
   m_data.m_button.m_button = button;
   m_data.m_button.m_press = press;

@@ -55,14 +55,14 @@ public:
   virtual void *getEventTarget() const;
 
   // IStream overrides
-  virtual UInt32 read(void *buffer, UInt32 n);
-  virtual void write(const void *buffer, UInt32 n);
+  virtual uint32_t read(void *buffer, uint32_t n);
+  virtual void write(const void *buffer, uint32_t n);
   virtual void flush();
   virtual void shutdownInput();
   virtual void shutdownOutput();
   virtual bool isReady() const;
   virtual bool isFatal() const;
-  virtual UInt32 getSize() const;
+  virtual uint32_t getSize() const;
 
   // IDataSocket overrides
   virtual void connect(const NetworkAddress &);

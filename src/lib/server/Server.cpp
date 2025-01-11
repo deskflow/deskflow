@@ -353,7 +353,7 @@ std::string Server::protocolString() const
   throw XInvalidProtocol();
 }
 
-UInt32 Server::getNumClients() const
+uint32_t Server::getNumClients() const
 {
   return (int32_t)m_clients.size();
 }
@@ -375,9 +375,9 @@ std::string Server::getName(const BaseClientProxy *client) const
   return name;
 }
 
-UInt32 Server::getActivePrimarySides() const
+uint32_t Server::getActivePrimarySides() const
 {
-  UInt32 sides = 0;
+  uint32_t sides = 0;
   if (!isLockedToScreenServer()) {
     if (hasAnyNeighbor(m_primaryClient, kLeft)) {
       sides |= kLeftMask;
@@ -855,7 +855,7 @@ bool Server::isSwitchOkay(
   if (options != NULL && options->count(kOptionScreenSwitchCorners) > 0) {
     // get corner mask and size
     Config::ScreenOptions::const_iterator i = options->find(kOptionScreenSwitchCorners);
-    UInt32 corners = static_cast<UInt32>(i->second);
+    uint32_t corners = static_cast<uint32_t>(i->second);
     i = options->find(kOptionScreenSwitchCornerSize);
     int32_t size = 0;
     if (i != options->end()) {
@@ -1000,7 +1000,7 @@ bool Server::isSwitchWaitStarted() const
   return (m_switchWaitTimer != NULL);
 }
 
-UInt32 Server::getCorner(BaseClientProxy *client, int32_t x, int32_t y, int32_t size) const
+uint32_t Server::getCorner(BaseClientProxy *client, int32_t x, int32_t y, int32_t size) const
 {
   assert(client != NULL);
 
@@ -1077,7 +1077,7 @@ void Server::sendOptions(BaseClientProxy *client) const
     optionsList.reserve(2 * options->size());
     for (Config::ScreenOptions::const_iterator index = options->begin(); index != options->end(); ++index) {
       optionsList.push_back(index->first);
-      optionsList.push_back(static_cast<UInt32>(index->second));
+      optionsList.push_back(static_cast<uint32_t>(index->second));
     }
   }
 
@@ -1088,7 +1088,7 @@ void Server::sendOptions(BaseClientProxy *client) const
     optionsList.reserve(optionsList.size() + 2 * options->size());
     for (Config::ScreenOptions::const_iterator index = options->begin(); index != options->end(); ++index) {
       optionsList.push_back(index->first);
-      optionsList.push_back(static_cast<UInt32>(index->second));
+      optionsList.push_back(static_cast<uint32_t>(index->second));
     }
   }
 
@@ -1469,7 +1469,7 @@ void Server::handleFileRecieveCompletedEvent(const Event &event, void *)
   onFileRecieveCompleted();
 }
 
-void Server::onClipboardChanged(BaseClientProxy *sender, ClipboardID id, UInt32 seqNum)
+void Server::onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)
 {
   ClipboardInfo &clipboard = m_clipboards[id];
 
@@ -1792,7 +1792,7 @@ void Server::sendDragInfoThread(void *arg)
 void Server::sendDragInfo(BaseClientProxy *newScreen)
 {
   std::string infoString;
-  UInt32 fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
+  uint32_t fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
 
   if (fileCount > 0) {
     LOG((CLOG_DEBUG2 "sending drag information to client"));
@@ -2291,7 +2291,7 @@ void Server::sendFileThread(void *data)
   m_sendFileThread.reset(nullptr);
 }
 
-void Server::dragInfoReceived(UInt32 fileNum, std::string content)
+void Server::dragInfoReceived(uint32_t fileNum, std::string content)
 {
   if (!m_args.m_enableDragDrop) {
     LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));

@@ -25,7 +25,7 @@
 /*!
 Type to hold an option identifier.
 */
-using OptionID = UInt32;
+using OptionID = uint32_t;
 
 //! Option Value
 /*!
@@ -34,14 +34,14 @@ Type to hold an option value.
 using OptionValue = int32_t;
 
 // for now, options are just pairs of integers
-using OptionsList = std::vector<UInt32>;
+using OptionsList = std::vector<uint32_t>;
 
 // macro for packing 4 character strings into 4 byte integers
 #define OPTION_CODE(_s)                                                                                                \
-  (static_cast<UInt32>(static_cast<unsigned char>(_s[0]) << 24) |                                                      \
-   static_cast<UInt32>(static_cast<unsigned char>(_s[1]) << 16) |                                                      \
-   static_cast<UInt32>(static_cast<unsigned char>(_s[2]) << 8) |                                                       \
-   static_cast<UInt32>(static_cast<unsigned char>(_s[3])))
+  (static_cast<uint32_t>(static_cast<unsigned char>(_s[0]) << 24) |                                                    \
+   static_cast<uint32_t>(static_cast<unsigned char>(_s[1]) << 16) |                                                    \
+   static_cast<uint32_t>(static_cast<unsigned char>(_s[2]) << 8) |                                                     \
+   static_cast<uint32_t>(static_cast<unsigned char>(_s[3])))
 
 //! @name Option identifiers
 //@{

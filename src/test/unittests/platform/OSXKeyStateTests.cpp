@@ -31,27 +31,27 @@ TEST(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask)
 
   KeyModifierMask outMask = 0;
 
-  UInt32 shiftMask = 0 | kCGEventFlagMaskShift;
+  uint32_t shiftMask = 0 | kCGEventFlagMaskShift;
   outMask = keyState.mapModifiersFromOSX(shiftMask);
   EXPECT_EQ(KeyModifierShift, outMask);
 
-  UInt32 ctrlMask = 0 | kCGEventFlagMaskControl;
+  uint32_t ctrlMask = 0 | kCGEventFlagMaskControl;
   outMask = keyState.mapModifiersFromOSX(ctrlMask);
   EXPECT_EQ(KeyModifierControl, outMask);
 
-  UInt32 altMask = 0 | kCGEventFlagMaskAlternate;
+  uint32_t altMask = 0 | kCGEventFlagMaskAlternate;
   outMask = keyState.mapModifiersFromOSX(altMask);
   EXPECT_EQ(KeyModifierAlt, outMask);
 
-  UInt32 cmdMask = 0 | kCGEventFlagMaskCommand;
+  uint32_t cmdMask = 0 | kCGEventFlagMaskCommand;
   outMask = keyState.mapModifiersFromOSX(cmdMask);
   EXPECT_EQ(KeyModifierSuper, outMask);
 
-  UInt32 capsMask = 0 | kCGEventFlagMaskAlphaShift;
+  uint32_t capsMask = 0 | kCGEventFlagMaskAlphaShift;
   outMask = keyState.mapModifiersFromOSX(capsMask);
   EXPECT_EQ(KeyModifierCapsLock, outMask);
 
-  UInt32 numMask = 0 | kCGEventFlagMaskNumericPad;
+  uint32_t numMask = 0 | kCGEventFlagMaskNumericPad;
   outMask = keyState.mapModifiersFromOSX(numMask);
   EXPECT_EQ(KeyModifierNumLock, outMask);
 }

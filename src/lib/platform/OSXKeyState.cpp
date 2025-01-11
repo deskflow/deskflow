@@ -32,25 +32,25 @@
 // first instance of a virtual key code maps to the KeyID that we
 // want to generate for that code.  The others are for mapping
 // different KeyIDs to a single key code.
-static const UInt32 s_shiftVK = kVK_Shift;
-static const UInt32 s_controlVK = kVK_Control;
-static const UInt32 s_altVK = kVK_Option;
-static const UInt32 s_superVK = kVK_Command;
-static const UInt32 s_capsLockVK = kVK_CapsLock;
-static const UInt32 s_numLockVK = kVK_ANSI_KeypadClear; // 71
+static const uint32_t s_shiftVK = kVK_Shift;
+static const uint32_t s_controlVK = kVK_Control;
+static const uint32_t s_altVK = kVK_Option;
+static const uint32_t s_superVK = kVK_Command;
+static const uint32_t s_capsLockVK = kVK_CapsLock;
+static const uint32_t s_numLockVK = kVK_ANSI_KeypadClear; // 71
 
-static const UInt32 s_brightnessUp = 144;
-static const UInt32 s_brightnessDown = 145;
-static const UInt32 s_missionControlVK = 160;
-static const UInt32 s_launchpadVK = 131;
+static const uint32_t s_brightnessUp = 144;
+static const uint32_t s_brightnessDown = 145;
+static const uint32_t s_missionControlVK = 160;
+static const uint32_t s_launchpadVK = 131;
 
-static const UInt32 s_osxNumLock = 1 << 16;
+static const uint32_t s_osxNumLock = 1 << 16;
 
 struct KeyEntry
 {
 public:
   KeyID m_keyID;
-  UInt32 m_virtualKey;
+  uint32_t m_virtualKey;
 };
 static const KeyEntry s_controlKeys[] = {
     // cursor keys.  if we don't do this we'll may still get these from
@@ -224,7 +224,7 @@ void OSXKeyState::init()
   }
 }
 
-KeyModifierMask OSXKeyState::mapModifiersFromOSX(UInt32 mask) const
+KeyModifierMask OSXKeyState::mapModifiersFromOSX(uint32_t mask) const
 {
   KeyModifierMask outMask = 0;
   if ((mask & kCGEventFlagMaskShift) != 0) {
@@ -250,7 +250,7 @@ KeyModifierMask OSXKeyState::mapModifiersFromOSX(UInt32 mask) const
   return outMask;
 }
 
-KeyModifierMask OSXKeyState::mapModifiersToCarbon(UInt32 mask) const
+KeyModifierMask OSXKeyState::mapModifiersToCarbon(uint32_t mask) const
 {
   KeyModifierMask outMask = 0;
   if ((mask & kCGEventFlagMaskShift) != 0) {
@@ -287,10 +287,10 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   }
 
   // get virtual key
-  UInt32 vkCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
+  uint32_t vkCode = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
 
   // handle up events
-  UInt32 eventKind = CGEventGetType(event);
+  uint32_t eventKind = CGEventGetType(event);
   if (eventKind == kCGEventKeyUp) {
     // the id isn't used.  we just need the same button we used on
     // the key press.  note that we don't use or reset the dead key
@@ -317,9 +317,9 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   // get the event modifiers and remove the command and control
   // keys.  note if we used them though.
   // UCKeyTranslate expects old-style Carbon modifiers, so convert.
-  UInt32 modifiers;
+  uint32_t modifiers;
   modifiers = mapModifiersToCarbon(CGEventGetFlags(event));
-  static const UInt32 s_commandModifiers = cmdKey | controlKey | rightControlKey;
+  static const uint32_t s_commandModifiers = cmdKey | controlKey | rightControlKey;
   bool isCommand = ((modifiers & s_commandModifiers) != 0);
   modifiers &= ~s_commandModifiers;
 
@@ -414,7 +414,7 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
   // falsely assumed that the mask returned by GetCurrentKeyModifiers()
   // was the same as a CGEventFlags (which is what mapModifiersFromOSX
   // expects). patch by Marc
-  UInt32 mask = GetCurrentKeyModifiers();
+  uint32_t mask = GetCurrentKeyModifiers();
   KeyModifierMask outMask = 0;
 
   if ((mask & shiftKey) != 0) {
@@ -460,8 +460,8 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
   ::KeyMap km;
   GetKeys(km);
   const uint8_t *m = reinterpret_cast<const uint8_t *>(km);
-  for (UInt32 i = 0; i < 16; ++i) {
-    for (UInt32 j = 0; j < 8; ++j) {
+  for (uint32_t i = 0; i < 16; ++i) {
+    for (uint32_t j = 0; j < 8; ++j) {
       if ((m[i] & (1u << j)) != 0) {
         pressedKeys.insert(mapVirtualKeyToKeyButton(8 * i + j));
       }
@@ -483,7 +483,7 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
     }
   }
 
-  UInt32 keyboardType = LMGetKbdType();
+  uint32_t keyboardType = LMGetKbdType();
   for (int32_t g = 0; g < numGroups; ++g) {
     // add special keys
     getKeyMapForSpecialKeys(keyMap, g);
@@ -611,7 +611,7 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
   switch (keystroke.m_type) {
   case Keystroke::kButton: {
     bool keyDown = keystroke.m_data.m_button.m_press;
-    UInt32 client = keystroke.m_data.m_button.m_client;
+    uint32_t client = keystroke.m_data.m_button.m_client;
     KeyButton button = keystroke.m_data.m_button.m_button;
     CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
 
@@ -692,20 +692,20 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
 
   // iterate over each button
   deskflow::KeyMap::KeyItem item;
-  for (UInt32 i = 0; i < r.getNumButtons(); ++i) {
+  for (uint32_t i = 0; i < r.getNumButtons(); ++i) {
     item.m_button = mapVirtualKeyToKeyButton(i);
 
     // the KeyIDs we've already handled
     std::set<KeyID> keys;
 
     // convert the entry in each table for this button to a KeyID
-    for (UInt32 j = 0; j < r.getNumTables(); ++j) {
+    for (uint32_t j = 0; j < r.getNumTables(); ++j) {
       buttonKeys[j].first = r.getKey(j, i);
       buttonKeys[j].second = deskflow::KeyMap::isDeadKey(buttonKeys[j].first);
     }
 
     // iterate over each character table
-    for (UInt32 j = 0; j < r.getNumTables(); ++j) {
+    for (uint32_t j = 0; j < r.getNumTables(); ++j) {
       // get the KeyID for the button/table
       KeyID id = buttonKeys[j].first;
       if (id == kKeyNone) {
@@ -734,7 +734,7 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       // can't be any earlier tables because of the check above.
       std::set<uint8_t> tables;
       tables.insert(static_cast<uint8_t>(j));
-      for (UInt32 k = j + 1; k < r.getNumTables(); ++k) {
+      for (uint32_t k = j + 1; k < r.getNumTables(); ++k) {
         if (buttonKeys[k].first == id) {
           tables.insert(static_cast<uint8_t>(k));
         }
@@ -742,7 +742,7 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
 
       // collect the modifier combinations that map to any of the
       // tables we just collected
-      for (UInt32 k = 0; k < r.getNumModifierCombinations(); ++k) {
+      for (uint32_t k = 0; k < r.getNumModifierCombinations(); ++k) {
         modifiers[k] = (tables.count(r.getTableForModifier(k)) > 0);
       }
 
@@ -755,13 +755,13 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
       // for generating characters.  in fact, we want to ignore any
       // characters generated by the control key.  we don't map
       // those and instead expect the control modifier plus a key.
-      UInt32 sensitive = 0;
-      for (UInt32 k = 0; (1u << k) < r.getNumModifierCombinations(); ++k) {
-        UInt32 bit = (1u << k);
+      uint32_t sensitive = 0;
+      for (uint32_t k = 0; (1u << k) < r.getNumModifierCombinations(); ++k) {
+        uint32_t bit = (1u << k);
         if ((bit << 8) == cmdKey || (bit << 8) == controlKey || (bit << 8) == rightControlKey) {
           continue;
         }
-        for (UInt32 m = 0; m < r.getNumModifierCombinations(); ++m) {
+        for (uint32_t m = 0; m < r.getNumModifierCombinations(); ++m) {
           if (modifiers[m] != modifiers[m ^ bit]) {
             sensitive |= bit;
             break;
@@ -771,8 +771,8 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
 
       // find each required modifier mask.  the key can be synthesized
       // using any of the masks.
-      std::set<UInt32> required;
-      for (UInt32 k = 0; k < r.getNumModifierCombinations(); ++k) {
+      std::set<uint32_t> required;
+      for (uint32_t k = 0; k < r.getNumModifierCombinations(); ++k) {
         if ((k & sensitive) == k && modifiers[k & sensitive]) {
           required.insert(k);
         }
@@ -780,7 +780,7 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
 
       // now add a key entry for each key/required modifier pair.
       item.m_sensitive = mapModifiersFromOSX(sensitive << 16);
-      for (std::set<UInt32>::iterator k = required.begin(); k != required.end(); ++k) {
+      for (std::set<uint32_t>::iterator k = required.begin(); k != required.end(); ++k) {
         item.m_required = mapModifiersFromOSX(*k << 16);
         keyMap.addKeyEntry(item);
       }
@@ -791,7 +791,7 @@ bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXK
 }
 
 bool OSXKeyState::mapDeskflowHotKeyToMac(
-    KeyID key, KeyModifierMask mask, UInt32 &macVirtualKey, UInt32 &macModifierMask
+    KeyID key, KeyModifierMask mask, uint32_t &macVirtualKey, uint32_t &macModifierMask
 ) const
 {
   // look up button for key
@@ -851,7 +851,7 @@ void OSXKeyState::handleModifierKeys(void *target, KeyModifierMask oldMask, KeyM
   }
 }
 
-void OSXKeyState::handleModifierKey(void *target, UInt32 virtualKey, KeyID id, bool down, KeyModifierMask newMask)
+void OSXKeyState::handleModifierKey(void *target, uint32_t virtualKey, KeyID id, bool down, KeyModifierMask newMask)
 {
   KeyButton button = mapVirtualKeyToKeyButton(virtualKey);
   onKey(button, down, newMask);
@@ -918,13 +918,13 @@ void OSXKeyState::adjustAltGrModifier(const KeyIDs &ids, KeyModifierMask *mask, 
   }
 }
 
-KeyButton OSXKeyState::mapVirtualKeyToKeyButton(UInt32 keyCode)
+KeyButton OSXKeyState::mapVirtualKeyToKeyButton(uint32_t keyCode)
 {
   // 'A' maps to 0 so shift every id
   return static_cast<KeyButton>(keyCode + KeyButtonOffset);
 }
 
-UInt32 OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
+uint32_t OSXKeyState::mapKeyButtonToVirtualKey(KeyButton keyButton)
 {
-  return static_cast<UInt32>(keyButton - KeyButtonOffset);
+  return static_cast<uint32_t>(keyButton - KeyButtonOffset);
 }

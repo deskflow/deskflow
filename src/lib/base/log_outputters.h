@@ -142,7 +142,7 @@ private:
 public:
   using const_iterator = Buffer::const_iterator;
 
-  BufferedLogOutputter(UInt32 maxBufferSize);
+  BufferedLogOutputter(uint32_t maxBufferSize);
   virtual ~BufferedLogOutputter();
 
   //! @name accessors
@@ -163,6 +163,6 @@ public:
   virtual bool write(ELevel level, const char *message);
 
 private:
-  UInt32 m_maxBufferSize;
+  uint32_t m_maxBufferSize;
   Buffer m_buffer;
 };

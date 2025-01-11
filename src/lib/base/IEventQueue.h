@@ -66,7 +66,7 @@ public:
   {
   public:
     EventQueueTimer *m_timer; //!< The timer
-    UInt32 m_count;           //!< Number of repeats
+    uint32_t m_count;         //!< Number of repeats
   };
 
   //! @name manipulators

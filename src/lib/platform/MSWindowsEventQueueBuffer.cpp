@@ -80,7 +80,7 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
   MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLPOSTMESSAGE);
 }
 
-IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
   // NOTE: QS_ALLINPUT was replaced with QS_ALLPOSTMESSAGE.
   //
@@ -103,7 +103,7 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32
     event = Event(Event::kQuit);
     return kSystem;
   } else if (m_event.message == m_userEvent) {
-    dataID = static_cast<UInt32>(m_event.wParam);
+    dataID = static_cast<uint32_t>(m_event.wParam);
     return kUser;
   } else {
     event = Event(Event::kSystem, m_events->getSystemTarget(), &m_event);
@@ -111,7 +111,7 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, UInt32
   }
 }
 
-bool MSWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+bool MSWindowsEventQueueBuffer::addEvent(uint32_t dataID)
 {
   return (PostThreadMessage(m_thread, m_userEvent, static_cast<WPARAM>(dataID), 0) != 0);
 }

@@ -146,7 +146,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
   Thread::testCancel();
 }
 
-IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
   Lock lock(&m_mutex);
 
@@ -158,7 +158,7 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 
 
   // process event
   if (m_event.xany.type == ClientMessage && m_event.xclient.message_type == m_userEvent) {
-    dataID = static_cast<UInt32>(m_event.xclient.data.l[0]);
+    dataID = static_cast<uint32_t>(m_event.xclient.data.l[0]);
     return kUser;
   } else {
     event = Event(Event::kSystem, m_events->getSystemTarget(), &m_event);
@@ -166,7 +166,7 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, UInt32 
   }
 }
 
-bool XWindowsEventQueueBuffer::addEvent(UInt32 dataID)
+bool XWindowsEventQueueBuffer::addEvent(uint32_t dataID)
 {
   // prepare a message
   XEvent xevent;

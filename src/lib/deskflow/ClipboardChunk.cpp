@@ -31,7 +31,7 @@ ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size)
   m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
 }
 
-ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std::string &size)
+ClipboardChunk *ClipboardChunk::start(ClipboardID id, uint32_t sequence, const std::string &size)
 {
   size_t sizeLength = size.size();
   ClipboardChunk *start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
@@ -46,7 +46,7 @@ ClipboardChunk *ClipboardChunk::start(ClipboardID id, UInt32 sequence, const std
   return start;
 }
 
-ClipboardChunk *ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std::string &data)
+ClipboardChunk *ClipboardChunk::data(ClipboardID id, uint32_t sequence, const std::string &data)
 {
   size_t dataSize = data.size();
   ClipboardChunk *chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
@@ -61,7 +61,7 @@ ClipboardChunk *ClipboardChunk::data(ClipboardID id, UInt32 sequence, const std:
   return chunk;
 }
 
-ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence)
+ClipboardChunk *ClipboardChunk::end(ClipboardID id, uint32_t sequence)
 {
   ClipboardChunk *end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
   char *chunk = end->m_chunk;
@@ -74,7 +74,7 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence)
   return end;
 }
 
-int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, UInt32 &sequence)
+int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence)
 {
   uint8_t mark;
   std::string data;
@@ -114,7 +114,7 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 
   char *chunk = clipboardData->m_chunk;
   ClipboardID id = chunk[0];
-  UInt32 sequence;
+  uint32_t sequence;
   std::memcpy(&sequence, &chunk[1], 4);
   uint8_t mark = chunk[5];
   std::string dataChunk(&chunk[6], clipboardData->m_dataSize);

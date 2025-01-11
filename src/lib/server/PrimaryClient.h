@@ -53,20 +53,20 @@ public:
   /*!
   Handles reconfiguration of jump zones.
   */
-  virtual void reconfigure(UInt32 activeSides);
+  virtual void reconfigure(uint32_t activeSides);
 
   //! Register a system hotkey
   /*!
   Registers a system-wide hotkey for key \p key with modifiers \p mask.
   Returns an id used to unregister the hotkey.
   */
-  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask);
+  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
 
   //! Unregister a system hotkey
   /*!
   Unregisters a previously registered hot key.
   */
-  virtual void unregisterHotKey(UInt32 id);
+  virtual void unregisterHotKey(uint32_t id);
 
   //! Prepare to synthesize input on primary screen
   /*!
@@ -127,7 +127,7 @@ public:
   void getCursorPos(int32_t &x, int32_t &y) const override;
 
   // IClient overrides
-  void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) override;
+  void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) override;
   bool leave() override;
   void setClipboard(ClipboardID, const IClipboard *) override;
   void grabClipboard(ClipboardID) override;
@@ -143,7 +143,7 @@ public:
   void screensaver(bool activate) override;
   void resetOptions() override;
   void setOptions(const OptionsList &options) override;
-  void sendDragInfo(UInt32 fileCount, const char *info, size_t size) override;
+  void sendDragInfo(uint32_t fileCount, const char *info, size_t size) override;
   void fileChunkSending(uint8_t mark, char *data, size_t dataSize) override;
   std::string getSecureInputApp() const override;
   void secureInputNotification(const std::string &app) const override;

@@ -23,7 +23,7 @@
 // StreamBuffer
 //
 
-const UInt32 StreamBuffer::kChunkSize = 4096;
+const uint32_t StreamBuffer::kChunkSize = 4096;
 
 StreamBuffer::StreamBuffer() : m_size(0), m_headUsed(0)
 {
@@ -35,7 +35,7 @@ StreamBuffer::~StreamBuffer()
   // do nothing
 }
 
-const void *StreamBuffer::peek(UInt32 n)
+const void *StreamBuffer::peek(uint32_t n)
 {
   assert(n <= m_size);
 
@@ -60,7 +60,7 @@ const void *StreamBuffer::peek(UInt32 n)
   return static_cast<const void *>(&(head->begin()[m_headUsed]));
 }
 
-void StreamBuffer::pop(UInt32 n)
+void StreamBuffer::pop(uint32_t n)
 {
   // discard all chunks if n is greater than or equal to m_size
   if (n >= m_size) {
@@ -77,7 +77,7 @@ void StreamBuffer::pop(UInt32 n)
   ChunkList::iterator scan = m_chunks.begin();
   assert(scan != m_chunks.end());
   while (scan->size() - m_headUsed <= n) {
-    n -= (UInt32)scan->size() - m_headUsed;
+    n -= (uint32_t)scan->size() - m_headUsed;
     m_headUsed = 0;
     scan = m_chunks.erase(scan);
     assert(scan != m_chunks.end());
@@ -89,7 +89,7 @@ void StreamBuffer::pop(UInt32 n)
   }
 }
 
-void StreamBuffer::write(const void *vdata, UInt32 n)
+void StreamBuffer::write(const void *vdata, uint32_t n)
 {
   assert(vdata != NULL);
 
@@ -118,7 +118,7 @@ void StreamBuffer::write(const void *vdata, UInt32 n)
   while (n > 0) {
     // choose number of bytes for next chunk
     assert(scan->size() <= kChunkSize);
-    UInt32 count = kChunkSize - (UInt32)scan->size();
+    uint32_t count = kChunkSize - (uint32_t)scan->size();
     if (count > n)
       count = n;
 
@@ -135,7 +135,7 @@ void StreamBuffer::write(const void *vdata, UInt32 n)
   }
 }
 
-UInt32 StreamBuffer::getSize() const
+uint32_t StreamBuffer::getSize() const
 {
   return m_size;
 }

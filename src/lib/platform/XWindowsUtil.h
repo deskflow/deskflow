@@ -53,8 +53,9 @@ public:
   Sets property \c property on \c window to \c size bytes of data from
   \c data.
   */
-  static bool
-  setWindowProperty(Display *, Window window, Atom property, const void *data, UInt32 size, Atom type, int32_t format);
+  static bool setWindowProperty(
+      Display *, Window window, Atom property, const void *data, uint32_t size, Atom type, int32_t format
+  );
 
   //! Get X server time
   /*!
@@ -67,14 +68,14 @@ public:
   Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
   KeySym cannot be mapped.
   */
-  static UInt32 mapKeySymToKeyID(KeySym);
+  static uint32_t mapKeySymToKeyID(KeySym);
 
   //! Convert KeySym to corresponding KeyModifierMask
   /*!
   Converts a KeySym to the corresponding KeyModifierMask, or 0 if the
   KeySym is not a modifier.
   */
-  static UInt32 getModifierBitForKeySym(KeySym keysym);
+  static uint32_t getModifierBitForKeySym(KeySym keysym);
 
   //! Convert Atom to its string
   /*!
@@ -87,7 +88,7 @@ public:
   Converts each atom in \p atoms to its string representation and
   concatenates the results.
   */
-  static std::string atomsToString(Display *display, const Atom *atom, UInt32 num);
+  static std::string atomsToString(Display *display, const Atom *atom, uint32_t num);
 
   //! Prepare a property of atoms for use
   /*!
@@ -108,7 +109,7 @@ public:
   Converts \p atom to a 32-bit on-the-wire format and replaces the atom
   at index \p index in \p data.
   */
-  static void replaceAtomData(std::string &data, UInt32 index, Atom atom);
+  static void replaceAtomData(std::string &data, uint32_t index, Atom atom);
 
   //! Append an Time to property data
   /*!
@@ -184,7 +185,7 @@ private:
   static void initKeyMaps();
 
 private:
-  typedef std::map<KeySym, UInt32> KeySymMap;
+  typedef std::map<KeySym, uint32_t> KeySymMap;
 
   static KeySymMap s_keySymToUCS4;
 };

@@ -171,7 +171,7 @@ bool Screen::leave()
   return true;
 }
 
-void Screen::reconfigure(UInt32 activeSides)
+void Screen::reconfigure(uint32_t activeSides)
 {
   assert(m_isPrimary);
   m_screen->reconfigure(activeSides);
@@ -261,7 +261,7 @@ void Screen::resetOptions()
 void Screen::setOptions(const OptionsList &options)
 {
   // update options
-  for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+  for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     if (options[i] == kOptionHalfDuplexCapsLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierCapsLock;
@@ -293,17 +293,17 @@ void Screen::setOptions(const OptionsList &options)
   m_screen->setOptions(options);
 }
 
-void Screen::setSequenceNumber(UInt32 seqNum)
+void Screen::setSequenceNumber(uint32_t seqNum)
 {
   m_screen->setSequenceNumber(seqNum);
 }
 
-UInt32 Screen::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t Screen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
   return m_screen->registerHotKey(key, mask);
 }
 
-void Screen::unregisterHotKey(UInt32 id)
+void Screen::unregisterHotKey(uint32_t id)
 {
   m_screen->unregisterHotKey(id);
 }
@@ -333,7 +333,7 @@ bool Screen::isLockedToScreen() const
 {
   // check for pressed mouse buttons
   // HACK: commented out as it breaks new drag drop feature
-  UInt32 buttonID = 0;
+  uint32_t buttonID = 0;
 
   if (m_screen->isAnyMouseButtonDown(buttonID)) {
     if (buttonID != kButtonLeft) {

@@ -23,10 +23,10 @@
 TEST(ClipboardChunkTests, start_formatStartChunk)
 {
   ClipboardID id = 0;
-  UInt32 sequence = 0;
+  uint32_t sequence = 0;
   std::string mockDataSize("10");
   ClipboardChunk *chunk = ClipboardChunk::start(id, sequence, mockDataSize);
-  UInt32 temp_m_chunk;
+  uint32_t temp_m_chunk;
   memcpy(&temp_m_chunk, &(chunk->m_chunk[1]), 4);
 
   EXPECT_EQ(id, chunk->m_chunk[0]);
@@ -42,12 +42,12 @@ TEST(ClipboardChunkTests, start_formatStartChunk)
 TEST(ClipboardChunkTests, data_formatDataChunk)
 {
   ClipboardID id = 0;
-  UInt32 sequence = 1;
+  uint32_t sequence = 1;
   std::string mockData("mock data");
   ClipboardChunk *chunk = ClipboardChunk::data(id, sequence, mockData);
 
   EXPECT_EQ(id, chunk->m_chunk[0]);
-  EXPECT_EQ(sequence, (UInt32)chunk->m_chunk[1]);
+  EXPECT_EQ(sequence, (uint32_t)chunk->m_chunk[1]);
   EXPECT_EQ(kDataChunk, chunk->m_chunk[5]);
   EXPECT_EQ('m', chunk->m_chunk[6]);
   EXPECT_EQ('o', chunk->m_chunk[7]);
@@ -66,11 +66,11 @@ TEST(ClipboardChunkTests, data_formatDataChunk)
 TEST(ClipboardChunkTests, end_formatDataChunk)
 {
   ClipboardID id = 1;
-  UInt32 sequence = 1;
+  uint32_t sequence = 1;
   ClipboardChunk *chunk = ClipboardChunk::end(id, sequence);
 
   EXPECT_EQ(id, chunk->m_chunk[0]);
-  EXPECT_EQ(sequence, (UInt32)chunk->m_chunk[1]);
+  EXPECT_EQ(sequence, (uint32_t)chunk->m_chunk[1]);
   EXPECT_EQ(kDataEnd, chunk->m_chunk[5]);
   EXPECT_EQ('\0', chunk->m_chunk[6]);
 

@@ -90,7 +90,7 @@ public:
   is a bitmask of EDirectionMask indicating which sides of the
   primary screen are linked to clients.
   */
-  void reconfigure(UInt32 activeSides);
+  void reconfigure(uint32_t activeSides);
 
   //! Warp cursor
   /*!
@@ -197,20 +197,20 @@ public:
   /*!
   Sets the sequence number to use in subsequent clipboard events.
   */
-  void setSequenceNumber(UInt32);
+  void setSequenceNumber(uint32_t);
 
   //! Register a system hotkey
   /*!
   Registers a system-wide hotkey for key \p key with modifiers \p mask.
   Returns an id used to unregister the hotkey.
   */
-  UInt32 registerHotKey(KeyID key, KeyModifierMask mask);
+  uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
 
   //! Unregister a system hotkey
   /*!
   Unregisters a previously registered hot key.
   */
-  void unregisterHotKey(UInt32 id);
+  void unregisterHotKey(uint32_t id);
 
   //! Prepare to synthesize input on primary screen
   /*!

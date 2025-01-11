@@ -30,7 +30,7 @@ static HHOOK g_keyboardLL = NULL;
 static HHOOK g_mouseLL = NULL;
 static bool g_screenSaver = false;
 static EHookMode g_mode = kHOOK_DISABLE;
-static UInt32 g_zoneSides = 0;
+static uint32_t g_zoneSides = 0;
 static int32_t g_zoneSize = 0;
 static int32_t g_xScreen = 0;
 static int32_t g_yScreen = 0;
@@ -125,7 +125,7 @@ int MSWindowsHook::cleanup()
   return 1;
 }
 
-void MSWindowsHook::setSides(UInt32 sides)
+void MSWindowsHook::setSides(uint32_t sides)
 {
   g_zoneSides = sides;
 }

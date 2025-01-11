@@ -34,11 +34,11 @@ class ClipboardChunk : public Chunk
 public:
   ClipboardChunk(size_t size);
 
-  static ClipboardChunk *start(ClipboardID id, UInt32 sequence, const std::string &size);
-  static ClipboardChunk *data(ClipboardID id, UInt32 sequence, const std::string &data);
-  static ClipboardChunk *end(ClipboardID id, UInt32 sequence);
+  static ClipboardChunk *start(ClipboardID id, uint32_t sequence, const std::string &size);
+  static ClipboardChunk *data(ClipboardID id, uint32_t sequence, const std::string &data);
+  static ClipboardChunk *end(ClipboardID id, uint32_t sequence);
 
-  static int assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, UInt32 &sequence);
+  static int assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence);
 
   static void send(deskflow::IStream *stream, void *data);
 

@@ -71,7 +71,7 @@ std::string MSWindowsClipboardBitmapConverter::toIClipboard(HANDLE data) const
   if (src == NULL) {
     return std::string();
   }
-  UInt32 srcSize = (UInt32)GlobalSize(data);
+  uint32_t srcSize = (uint32_t)GlobalSize(data);
 
   // check image type
   const BITMAPINFO *bitmap = static_cast<const BITMAPINFO *>(src);

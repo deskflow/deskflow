@@ -74,7 +74,7 @@ IPrimaryScreen::WheelInfo *IPrimaryScreen::WheelInfo::alloc(int32_t xDelta, int3
 // IPrimaryScreen::HotKeyInfo
 //
 
-IPrimaryScreen::HotKeyInfo *IPrimaryScreen::HotKeyInfo::alloc(UInt32 id)
+IPrimaryScreen::HotKeyInfo *IPrimaryScreen::HotKeyInfo::alloc(uint32_t id)
 {
   HotKeyInfo *info = (HotKeyInfo *)malloc(sizeof(HotKeyInfo));
   info->m_id = id;

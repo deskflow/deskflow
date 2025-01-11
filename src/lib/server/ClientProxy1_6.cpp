@@ -70,7 +70,7 @@ bool ClientProxy1_6::recvClipboard()
   // parse message
   static std::string dataCached;
   ClipboardID id;
-  UInt32 seq;
+  uint32_t seq;
 
   int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
 

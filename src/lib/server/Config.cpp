@@ -1752,7 +1752,7 @@ bool ConfigReadContext::readLine(std::string &line)
   return false;
 }
 
-UInt32 ConfigReadContext::getLineNumber() const
+uint32_t ConfigReadContext::getLineNumber() const
 {
   return m_line;
 }

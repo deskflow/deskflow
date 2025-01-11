@@ -50,7 +50,7 @@ public:
   - \%4i  -- converts integer argument to 4 byte integer in NBO
   - \%1I  -- converts std::vector<uint8_t>* to 1 byte integers
   - \%2I  -- converts std::vector<uint16_t>* to 2 byte integers in NBO
-  - \%4I  -- converts std::vector<UInt32>* to 4 byte integers in NBO
+  - \%4I  -- converts std::vector<uint32_t>* to 4 byte integers in NBO
   - \%s   -- converts std::string* to stream of bytes
   - \%S   -- converts integer N and const uint8_t* to stream of N bytes
   */
@@ -64,44 +64,44 @@ public:
 
   Format specifiers are:
   - \%\%   -- read (and discard) a literal `\%'
-  - \%1i  -- reads a 1 byte integer; argument is a int32_t* or UInt32*
-  - \%2i  -- reads an NBO 2 byte integer;  arg is int32_t* or UInt32*
-  - \%4i  -- reads an NBO 4 byte integer;  arg is int32_t* or UInt32*
+  - \%1i  -- reads a 1 byte integer; argument is a int32_t* or uint32_t*
+  - \%2i  -- reads an NBO 2 byte integer;  arg is int32_t* or uint32_t*
+  - \%4i  -- reads an NBO 4 byte integer;  arg is int32_t* or uint32_t*
   - \%1I  -- reads 1 byte integers;  arg is std::vector<uint8_t>*
   - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<uint16_t>*
-  - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*
+  - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<uint32_t>*
   - \%s   -- reads bytes;  argument must be a std::string*, \b not a char*
   */
   static bool readf(deskflow::IStream *, const char *fmt, ...);
 
 private:
-  static void vwritef(deskflow::IStream *, const char *fmt, UInt32 size, va_list);
+  static void vwritef(deskflow::IStream *, const char *fmt, uint32_t size, va_list);
   static void vreadf(deskflow::IStream *, const char *fmt, va_list);
 
-  static UInt32 getLength(const char *fmt, va_list);
+  static uint32_t getLength(const char *fmt, va_list);
   static void writef(std::vector<uint8_t> &, const char *fmt, va_list);
-  static UInt32 eatLength(const char **fmt);
-  static void read(deskflow::IStream *, void *, UInt32);
+  static uint32_t eatLength(const char **fmt);
+  static void read(deskflow::IStream *, void *, uint32_t);
 
   /**
    * @brief Handles 1,2, or 4 byte Integers
    */
   static uint8_t read1ByteInt(deskflow::IStream *stream);
   static uint16_t read2BytesInt(deskflow::IStream *stream);
-  static UInt32 read4BytesInt(deskflow::IStream *stream);
+  static uint32_t read4BytesInt(deskflow::IStream *stream);
 
   /**
    * @brief Handles a Vector of integers
    */
   static void readVector1ByteInt(deskflow::IStream *, std::vector<uint8_t> &);
   static void readVector2BytesInt(deskflow::IStream *, std::vector<uint16_t> &);
-  static void readVector4BytesInt(deskflow::IStream *, std::vector<UInt32> &);
-  static UInt32 readVectorSize(deskflow::IStream *stream);
+  static void readVector4BytesInt(deskflow::IStream *, std::vector<uint32_t> &);
+  static uint32_t readVectorSize(deskflow::IStream *stream);
 
   /**
    * @brief Handles an array of bytes
    */
-  static void readBytes(deskflow::IStream *, UInt32, std::string *);
+  static void readBytes(deskflow::IStream *, uint32_t, std::string *);
 };
 
 //! Mismatched read exception

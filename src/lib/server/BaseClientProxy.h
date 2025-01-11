@@ -71,7 +71,7 @@ public:
   virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
 
   // IClient overrides
-  virtual void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
+  virtual void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
   virtual bool leave() = 0;
   virtual void setClipboard(ClipboardID, const IClipboard *) = 0;
   virtual void grabClipboard(ClipboardID) = 0;
@@ -87,7 +87,7 @@ public:
   virtual void screensaver(bool activate) = 0;
   virtual void resetOptions() = 0;
   virtual void setOptions(const OptionsList &options) = 0;
-  virtual void sendDragInfo(UInt32 fileCount, const char *info, size_t size) = 0;
+  virtual void sendDragInfo(uint32_t fileCount, const char *info, size_t size) = 0;
   virtual void fileChunkSending(uint8_t mark, char *data, size_t dataSize) = 0;
   virtual std::string getSecureInputApp() const = 0;
   virtual void secureInputNotification(const std::string &app) const = 0;

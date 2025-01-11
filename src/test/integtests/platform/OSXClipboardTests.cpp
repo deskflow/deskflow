@@ -97,7 +97,7 @@ TEST(OSXClipboardTests, getTime_openWithNoEmpty_returnsOne) {
 
   // this behavior is different to that of Clipboard which only
   // returns the value passed into open(t) after empty() is called.
-  EXPECT_EQ((UInt32)1, actual);
+  EXPECT_EQ((uint32_t)1, actual);
 }
 
 TEST(OSXClipboardTests, getTime_openAndEmpty_returnsOne) {
@@ -107,7 +107,7 @@ TEST(OSXClipboardTests, getTime_openAndEmpty_returnsOne) {
 
   OSXClipboard::Time actual = clipboard.getTime();
 
-  EXPECT_EQ((UInt32)1, actual);
+  EXPECT_EQ((uint32_t)1, actual);
 }
 
 TEST(OSXClipboardTests, has_withFormatAdded_returnsTrue) {

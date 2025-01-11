@@ -1240,7 +1240,7 @@ KeyModifierMask &MSWindowsKeyState::getActiveModifiersRValue()
 bool MSWindowsKeyState::getGroups(GroupList &groups) const
 {
   // get keyboard layouts
-  UInt32 newNumLayouts = GetKeyboardLayoutList(0, NULL);
+  uint32_t newNumLayouts = GetKeyboardLayoutList(0, NULL);
   if (newNumLayouts == 0) {
     LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
     return false;

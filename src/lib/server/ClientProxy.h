@@ -69,7 +69,7 @@ public:
   void getCursorPos(int32_t &x, int32_t &y) const override = 0;
 
   // IClient overrides
-  void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) override = 0;
+  void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) override = 0;
   bool leave() override = 0;
   void setClipboard(ClipboardID, const IClipboard *) override = 0;
   void grabClipboard(ClipboardID) override = 0;
@@ -85,7 +85,7 @@ public:
   void screensaver(bool activate) override = 0;
   void resetOptions() override = 0;
   void setOptions(const OptionsList &options) override = 0;
-  void sendDragInfo(UInt32 fileCount, const char *info, size_t size) override = 0;
+  void sendDragInfo(uint32_t fileCount, const char *info, size_t size) override = 0;
   void fileChunkSending(uint8_t mark, char *data, size_t dataSize) override = 0;
   void secureInputNotification(const std::string &app) const override = 0;
 

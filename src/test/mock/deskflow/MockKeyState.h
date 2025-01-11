@@ -50,6 +50,6 @@ public:
 
 typedef ::testing::NiceMock<MockKeyState> KeyStateImpl;
 
-using KeyID = UInt32;
+using KeyID = uint32_t;
 
 typedef void (*ForeachKeyCallback)(KeyID, int32_t group, deskflow::KeyMap::KeyItem &, void *userData);

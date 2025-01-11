@@ -36,7 +36,7 @@ public:
   arbitrary starting time.  Timestamps will wrap around to 0
   after about 49 3/4 days.
   */
-  using Time = UInt32;
+  using Time = uint32_t;
 
   //! Clipboard formats
   /*!
@@ -166,6 +166,6 @@ public:
   //@}
 
 private:
-  static UInt32 readUInt32(const char *);
-  static void writeUInt32(std::string *, UInt32);
+  static uint32_t readUInt32(const char *);
+  static void writeUInt32(std::string *, uint32_t);
 };

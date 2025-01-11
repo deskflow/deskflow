@@ -384,7 +384,7 @@ void MSWindowsScreen::sendDragThread(void *)
   if (draggingFilename.empty() == false) {
     ClientApp &app = ClientApp::instance();
     Client *client = app.getClientPtr();
-    UInt32 fileCount = 1;
+    uint32_t fileCount = 1;
     LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
     client->sendDragInfo(fileCount, draggingFilename, size);
     LOG((CLOG_DEBUG "send dragging file to server"));
@@ -479,7 +479,7 @@ void MSWindowsScreen::setOptions(const OptionsList &options)
   m_desks->setOptions(options);
 }
 
-void MSWindowsScreen::setSequenceNumber(UInt32 seqNum)
+void MSWindowsScreen::setSequenceNumber(uint32_t seqNum)
 {
   m_sequenceNumber = seqNum;
 }
@@ -567,7 +567,7 @@ void MSWindowsScreen::updateDesktopThread()
   CloseDesktop(cur_hdesk);
 }
 
-void MSWindowsScreen::reconfigure(UInt32 activeSides)
+void MSWindowsScreen::reconfigure(uint32_t activeSides)
 {
   assert(m_isPrimary);
 
@@ -598,7 +598,7 @@ void MSWindowsScreen::saveMousePosition(int32_t x, int32_t y)
   LOG((CLOG_DEBUG5 "saved mouse position for next delta: %+d,%+d", x, y));
 }
 
-UInt32 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
   // only allow certain modifiers
   if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierSuper)) != 0) {
@@ -637,13 +637,13 @@ UInt32 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
 
   // choose hotkey id
-  UInt32 id;
+  uint32_t id;
   if (!m_oldHotKeyIDs.empty()) {
     id = m_oldHotKeyIDs.back();
     m_oldHotKeyIDs.pop_back();
   } else {
     // id = m_hotKeys.size() + 1;
-    id = (UInt32)m_hotKeys.size() + 1;
+    id = (uint32_t)m_hotKeys.size() + 1;
   }
 
   // if this hot key has modifiers only then we'll handle it specially
@@ -676,7 +676,7 @@ UInt32 MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void MSWindowsScreen::unregisterHotKey(UInt32 id)
+void MSWindowsScreen::unregisterHotKey(uint32_t id)
 {
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -728,12 +728,12 @@ int32_t MSWindowsScreen::getJumpZoneSize() const
   return 1;
 }
 
-bool MSWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const
+bool MSWindowsScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
 {
   static const char *buttonToName[] = {"<invalid>",    "Left Button", "Middle Button",
                                        "Right Button", "X Button 1",  "X Button 2"};
 
-  for (UInt32 i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
+  for (uint32_t i = 1; i < sizeof(m_buttons) / sizeof(m_buttons[0]); ++i) {
     if (m_buttons[i]) {
       buttonID = i;
       LOG((CLOG_DEBUG "locked by \"%s\"", buttonToName[i]));
@@ -976,7 +976,7 @@ bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LP
   // handle event
   switch (message) {
   case DESKFLOW_MSG_MARK:
-    return onMark(static_cast<UInt32>(wParam));
+    return onMark(static_cast<uint32_t>(wParam));
 
   case DESKFLOW_MSG_KEY:
     return onKey(wParam, lParam);
@@ -1078,7 +1078,7 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
   return false;
 }
 
-bool MSWindowsScreen::onMark(UInt32 mark)
+bool MSWindowsScreen::onMark(uint32_t mark)
 {
   m_markReceived = mark;
   return true;

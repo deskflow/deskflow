@@ -67,12 +67,12 @@ public:
   virtual void *getEventTarget() const;
 
   // IStream overrides
-  virtual UInt32 read(void *buffer, UInt32 n) = 0;
-  virtual void write(const void *buffer, UInt32 n) = 0;
+  virtual uint32_t read(void *buffer, uint32_t n) = 0;
+  virtual void write(const void *buffer, uint32_t n) = 0;
   virtual void flush() = 0;
   virtual void shutdownInput() = 0;
   virtual void shutdownOutput() = 0;
   virtual bool isReady() const = 0;
   virtual bool isFatal() const = 0;
-  virtual UInt32 getSize() const = 0;
+  virtual uint32_t getSize() const = 0;
 };

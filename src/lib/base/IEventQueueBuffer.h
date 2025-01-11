@@ -63,7 +63,7 @@ public:
   data in a kSystem event).  Otherwise, return kUser and fill in
   \p dataID with the value passed to \c addEvent().
   */
-  virtual Type getEvent(Event &event, UInt32 &dataID) = 0;
+  virtual Type getEvent(Event &event, uint32_t &dataID) = 0;
 
   //! Post an event
   /*!
@@ -72,7 +72,7 @@ public:
   return \p dataID.  This method must cause \c waitForEvent() to
   return at some future time if it's blocked waiting on an event.
   */
-  virtual bool addEvent(UInt32 dataID) = 0;
+  virtual bool addEvent(uint32_t dataID) = 0;
 
   //@}
   //! @name accessors
