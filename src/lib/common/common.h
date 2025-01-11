@@ -36,6 +36,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// defined in Carbon
+#if !defined(__MACTYPES__)
+#if defined(__APPLE__)
+#include <CoreServices/CoreServices.h>
+#else
+#endif
+#endif
+
 enum
 {
   kExitSuccess = 0,     // successful completion
