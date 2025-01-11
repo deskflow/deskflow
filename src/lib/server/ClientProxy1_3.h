@@ -39,7 +39,7 @@ public:
 
 protected:
   // ClientProxy overrides
-  virtual bool parseMessage(const UInt8 *code);
+  virtual bool parseMessage(const uint8_t *code);
   virtual void resetHeartbeatRate();
   virtual void setHeartbeatRate(double rate, double alarm);
   virtual void resetHeartbeatTimer();

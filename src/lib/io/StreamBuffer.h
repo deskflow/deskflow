@@ -71,7 +71,7 @@ public:
 private:
   static const UInt32 kChunkSize;
 
-  using Chunk = std::vector<UInt8>;
+  using Chunk = std::vector<uint8_t>;
   using ChunkList = std::list<Chunk>;
 
   ChunkList m_chunks;

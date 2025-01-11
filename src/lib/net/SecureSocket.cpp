@@ -127,7 +127,7 @@ void SecureSocket::secureAccept()
 
 TCPSocket::EJobResult SecureSocket::doRead()
 {
-  static UInt8 buffer[4096];
+  static uint8_t buffer[4096];
   memset(buffer, 0, sizeof(buffer));
   int bytesRead = 0;
   int status = 0;

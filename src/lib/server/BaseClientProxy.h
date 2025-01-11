@@ -88,7 +88,7 @@ public:
   virtual void resetOptions() = 0;
   virtual void setOptions(const OptionsList &options) = 0;
   virtual void sendDragInfo(UInt32 fileCount, const char *info, size_t size) = 0;
-  virtual void fileChunkSending(UInt8 mark, char *data, size_t dataSize) = 0;
+  virtual void fileChunkSending(uint8_t mark, char *data, size_t dataSize) = 0;
   virtual std::string getSecureInputApp() const = 0;
   virtual void secureInputNotification(const std::string &app) const = 0;
   virtual std::string getName() const;

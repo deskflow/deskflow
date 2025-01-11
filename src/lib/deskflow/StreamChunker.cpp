@@ -81,7 +81,7 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTar
 
     char *chunkData = new char[chunkSize];
     file.read(chunkData, chunkSize);
-    UInt8 *data = reinterpret_cast<UInt8 *>(chunkData);
+    uint8_t *data = reinterpret_cast<uint8_t *>(chunkData);
     FileChunk *fileChunk = FileChunk::data(data, chunkSize);
     delete[] chunkData;
 

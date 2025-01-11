@@ -63,7 +63,7 @@ public:
   //@}
 
   // sending file chunk to server
-  void fileChunkSending(UInt8 mark, char *data, size_t dataSize);
+  void fileChunkSending(uint8_t mark, char *data, size_t dataSize);
 
   // sending dragging information to server
   void sendDragInfo(UInt32 fileCount, const char *info, size_t size);
@@ -82,8 +82,8 @@ protected:
     kUnknown,
     kDisconnect
   };
-  EResult parseHandshakeMessage(const UInt8 *code);
-  EResult parseMessage(const UInt8 *code);
+  EResult parseHandshakeMessage(const uint8_t *code);
+  EResult parseMessage(const uint8_t *code);
 
 private:
   // if compressing mouse motion then send the last motion now
@@ -129,7 +129,7 @@ private:
   void checkMissedLanguages() const;
 
 private:
-  typedef EResult (ServerProxy::*MessageParser)(const UInt8 *);
+  typedef EResult (ServerProxy::*MessageParser)(const uint8_t *);
 
   Client *m_client;
   deskflow::IStream *m_stream;

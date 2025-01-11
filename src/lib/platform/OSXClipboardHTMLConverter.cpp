@@ -62,7 +62,7 @@ std::string OSXClipboardHTMLConverter::convertString(
     return std::string();
   }
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (UInt8 *)buffer, buffSize, NULL);
+  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (uint8_t *)buffer, buffSize, NULL);
 
   std::string result(buffer, buffSize);
 

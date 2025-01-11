@@ -89,7 +89,7 @@ void IpcClientProxy::handleData(const Event &, void *)
 
   LOG((CLOG_DEBUG "start ipc handle data"));
 
-  UInt8 code[4];
+  uint8_t code[4];
   UInt32 n = m_stream.read(code, 4);
   while (n != 0) {
 
@@ -151,7 +151,7 @@ void IpcClientProxy::send(const IpcMessage &message)
 
 IpcHelloMessage *IpcClientProxy::parseHello()
 {
-  UInt8 type;
+  uint8_t type;
   ProtocolUtil::readf(&m_stream, kIpcMsgHello + 4, &type);
 
   m_clientType = static_cast<IpcClientType>(type);
@@ -163,7 +163,7 @@ IpcHelloMessage *IpcClientProxy::parseHello()
 IpcCommandMessage *IpcClientProxy::parseCommand()
 {
   std::string command;
-  UInt8 elevate;
+  uint8_t elevate;
   ProtocolUtil::readf(&m_stream, kIpcMsgCommand + 4, &command, &elevate);
 
   // must be deleted by event handler.

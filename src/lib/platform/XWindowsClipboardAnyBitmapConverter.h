@@ -39,13 +39,13 @@ protected:
   /*!
   Convert raw BGR pixel data to another image format.
   */
-  virtual std::string doBGRFromIClipboard(const UInt8 *bgrData, UInt32 w, UInt32 h) const = 0;
+  virtual std::string doBGRFromIClipboard(const uint8_t *bgrData, UInt32 w, UInt32 h) const = 0;
 
   //! Convert from IClipboard format
   /*!
   Convert raw BGRA pixel data to another image format.
   */
-  virtual std::string doBGRAFromIClipboard(const UInt8 *bgrData, UInt32 w, UInt32 h) const = 0;
+  virtual std::string doBGRAFromIClipboard(const uint8_t *bgrData, UInt32 w, UInt32 h) const = 0;
 
   //! Convert to IClipboard format
   /*!

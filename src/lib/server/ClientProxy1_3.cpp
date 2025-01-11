@@ -51,7 +51,7 @@ void ClientProxy1_3::mouseWheel(SInt32 xDelta, SInt32 yDelta)
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
 }
 
-bool ClientProxy1_3::parseMessage(const UInt8 *code)
+bool ClientProxy1_3::parseMessage(const uint8_t *code)
 {
   // process message
   if (memcmp(code, kMsgCKeepAlive, 4) == 0) {

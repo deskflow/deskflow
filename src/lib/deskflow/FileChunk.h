@@ -34,8 +34,8 @@ public:
   FileChunk(size_t size);
 
   static FileChunk *start(const std::string &size);
-  static FileChunk *data(UInt8 *data, size_t dataSize);
+  static FileChunk *data(uint8_t *data, size_t dataSize);
   static FileChunk *end();
   static int assemble(deskflow::IStream *stream, std::string &dataCached, size_t &expectedSize);
-  static void send(deskflow::IStream *stream, UInt8 mark, char *data, size_t dataSize);
+  static void send(deskflow::IStream *stream, uint8_t mark, char *data, size_t dataSize);
 };

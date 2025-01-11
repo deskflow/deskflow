@@ -57,9 +57,9 @@ static const double kHeartBeatsUntilDeath = 3.0;
 
 // Messages of very large size indicate a likely protocol error. We don't parse such messages and
 // drop connection instead. Note that e.g. the clipboard messages are already limited to 32kB.
-static constexpr std::uint32_t PROTOCOL_MAX_MESSAGE_LENGTH = 4 * 1024 * 1024;
-static constexpr std::uint32_t PROTOCOL_MAX_LIST_LENGTH = 1024 * 1024;
-static constexpr std::uint32_t PROTOCOL_MAX_STRING_LENGTH = 1024 * 1024;
+static constexpr uint32_t PROTOCOL_MAX_MESSAGE_LENGTH = 4 * 1024 * 1024;
+static constexpr uint32_t PROTOCOL_MAX_LIST_LENGTH = 1024 * 1024;
+static constexpr uint32_t PROTOCOL_MAX_STRING_LENGTH = 1024 * 1024;
 
 // direction constants
 enum EDirection

@@ -24,7 +24,7 @@
 /*!
 Type to hold a clipboard identifier.
 */
-using ClipboardID = UInt8;
+using ClipboardID = uint8_t;
 
 //! @name Clipboard identifiers
 //@{

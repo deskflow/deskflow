@@ -100,7 +100,7 @@ void StreamBuffer::write(const void *vdata, UInt32 n)
   m_size += n;
 
   // cast data to bytes
-  const UInt8 *data = static_cast<const UInt8 *>(vdata);
+  const uint8_t *data = static_cast<const uint8_t *>(vdata);
 
   // point to last chunk if it has space, otherwise append an empty chunk
   ChunkList::iterator scan = m_chunks.end();

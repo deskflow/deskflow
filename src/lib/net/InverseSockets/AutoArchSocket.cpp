@@ -144,7 +144,7 @@ bool AutoArchSocket::connectSocket(const NetworkAddress &addr)
   return result;
 }
 
-size_t AutoArchSocket::readSocket(UInt8 *buffer, size_t size)
+size_t AutoArchSocket::readSocket(uint8_t *buffer, size_t size)
 {
   size_t result = 0;
 
@@ -155,7 +155,7 @@ size_t AutoArchSocket::readSocket(UInt8 *buffer, size_t size)
   return result;
 }
 
-size_t AutoArchSocket::writeSocket(const UInt8 *buffer, size_t size)
+size_t AutoArchSocket::writeSocket(const uint8_t *buffer, size_t size)
 {
   size_t result = 0;
 

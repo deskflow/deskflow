@@ -90,11 +90,11 @@ UInt32 PacketStreamFilter::read(void *buffer, UInt32 n)
 void PacketStreamFilter::write(const void *buffer, UInt32 count)
 {
   // write the length of the payload
-  UInt8 length[4];
-  length[0] = (UInt8)((count >> 24) & 0xff);
-  length[1] = (UInt8)((count >> 16) & 0xff);
-  length[2] = (UInt8)((count >> 8) & 0xff);
-  length[3] = (UInt8)(count & 0xff);
+  uint8_t length[4];
+  length[0] = (uint8_t)((count >> 24) & 0xff);
+  length[1] = (uint8_t)((count >> 16) & 0xff);
+  length[2] = (uint8_t)((count >> 8) & 0xff);
+  length[3] = (uint8_t)(count & 0xff);
   getStream()->write(length, sizeof(length));
 
   // write the payload
@@ -131,7 +131,7 @@ bool PacketStreamFilter::readPacketSize()
   // note -- m_mutex must be locked on entry
 
   if (m_size == 0 && m_buffer.getSize() >= 4) {
-    UInt8 buffer[4];
+    uint8_t buffer[4];
     memcpy(buffer, m_buffer.peek(sizeof(buffer)), sizeof(buffer));
     m_buffer.pop(sizeof(buffer));
     m_size = ((UInt32)buffer[0] << 24) | ((UInt32)buffer[1] << 16) | ((UInt32)buffer[2] << 8) | (UInt32)buffer[3];

@@ -212,7 +212,7 @@ void InverseClientSocket::connect(const NetworkAddress &addr)
 
 InverseClientSocket::EJobResult InverseClientSocket::doRead()
 {
-  UInt8 buffer[4096] = {0};
+  uint8_t buffer[4096] = {0};
   size_t bytesRead = m_socket.readSocket(buffer, sizeof(buffer));
 
   if (bytesRead > 0) {
@@ -248,7 +248,7 @@ InverseClientSocket::EJobResult InverseClientSocket::doRead()
 InverseClientSocket::EJobResult InverseClientSocket::doWrite()
 {
   UInt32 bufferSize = m_outputBuffer.getSize();
-  auto buffer = static_cast<const UInt8 *>(m_outputBuffer.peek(bufferSize));
+  auto buffer = static_cast<const uint8_t *>(m_outputBuffer.peek(bufferSize));
   const auto bytesWrote = static_cast<UInt32>(m_socket.writeSocket(buffer, bufferSize));
 
   if (bytesWrote > 0) {

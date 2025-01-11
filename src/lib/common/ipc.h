@@ -19,7 +19,7 @@
 
 #include "basic_types.h"
 
-enum class IpcMessageType : UInt8
+enum class IpcMessageType : uint8_t
 {
   Hello,
   HelloBack,

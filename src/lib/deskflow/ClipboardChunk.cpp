@@ -76,7 +76,7 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, UInt32 sequence)
 
 int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, UInt32 &sequence)
 {
-  UInt8 mark;
+  uint8_t mark;
   std::string data;
 
   if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
@@ -116,7 +116,7 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
   ClipboardID id = chunk[0];
   UInt32 sequence;
   std::memcpy(&sequence, &chunk[1], 4);
-  UInt8 mark = chunk[5];
+  uint8_t mark = chunk[5];
   std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
 
   switch (mark) {

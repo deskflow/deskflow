@@ -34,21 +34,21 @@
 
 namespace {
 
-void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer)
+void writeInt(UInt32 Value, UInt32 Length, std::vector<uint8_t> &Buffer)
 {
   switch (Length) {
   case 1:
-    Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>(Value & 0xffU));
     break;
   case 4:
-    Buffer.push_back(static_cast<UInt8>((Value >> 24U) & 0xffU));
-    Buffer.push_back(static_cast<UInt8>((Value >> 16U) & 0xffU));
-    Buffer.push_back(static_cast<UInt8>((Value >> 8U) & 0xffU));
-    Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>((Value >> 24U) & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>((Value >> 16U) & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>((Value >> 8U) & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>(Value & 0xffU));
     break;
   case 2:
-    Buffer.push_back(static_cast<UInt8>((Value >> 8U) & 0xffU));
-    Buffer.push_back(static_cast<UInt8>(Value & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>((Value >> 8U) & 0xffU));
+    Buffer.push_back(static_cast<uint8_t>(Value & 0xffU));
     break;
   default:
     assert(0 && "invalid integer format length");
@@ -56,7 +56,7 @@ void writeInt(UInt32 Value, UInt32 Length, std::vector<UInt8> &Buffer)
   }
 }
 
-template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std::vector<UInt8> &Buffer)
+template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std::vector<uint8_t> &Buffer)
 {
   if (VectorData) {
     const std::vector<T> &Vector = *VectorData;
@@ -67,7 +67,7 @@ template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std:
   }
 }
 
-void writeString(const std::string *StringData, std::vector<UInt8> &Buffer)
+void writeString(const std::string *StringData, std::vector<uint8_t> &Buffer)
 {
   const UInt32 len = (StringData != NULL) ? (UInt32)StringData->size() : 0;
   writeInt(len, sizeof(len), Buffer);
@@ -126,7 +126,7 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, UInt32 si
   }
 
   // fill buffer
-  std::vector<UInt8> Buffer;
+  std::vector<uint8_t> Buffer;
   writef(Buffer, fmt, args);
 
   try {
@@ -156,7 +156,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
         switch (len) {
         case 1:
           // 1 byte integer
-          *static_cast<UInt8 *>(destination) = read1ByteInt(stream);
+          *static_cast<uint8_t *>(destination) = read1ByteInt(stream);
           break;
         case 2:
           // 2 byte integer
@@ -180,7 +180,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
         switch (len) {
         case 1:
           // 1 byte integer
-          readVector1ByteInt(stream, *static_cast<std::vector<UInt8> *>(destination));
+          readVector1ByteInt(stream, *static_cast<std::vector<uint8_t> *>(destination));
           break;
         case 2:
           // 2 byte integer
@@ -256,7 +256,7 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args)
         assert(len == 1 || len == 2 || len == 4);
         switch (len) {
         case 1:
-          len = (UInt32)(va_arg(args, std::vector<UInt8> *))->size() + 4;
+          len = (UInt32)(va_arg(args, std::vector<uint8_t> *))->size() + 4;
           break;
 
         case 2:
@@ -300,7 +300,7 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args)
   return n;
 }
 
-void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt, va_list args)
+void ProtocolUtil::writef(std::vector<uint8_t> &buffer, const char *fmt, va_list args)
 {
   while (*fmt) {
     if (*fmt == '%') {
@@ -318,7 +318,7 @@ void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt, va_list a
         switch (len) {
         case 1: {
           // 1 byte integers
-          const std::vector<UInt8> *list = va_arg(args, const std::vector<UInt8> *);
+          const std::vector<uint8_t> *list = va_arg(args, const std::vector<uint8_t> *);
           writeVectorInt(list, buffer);
           break;
         }
@@ -354,7 +354,7 @@ void ProtocolUtil::writef(std::vector<UInt8> &buffer, const char *fmt, va_list a
       case 'S': {
         assert(len == 0);
         const UInt32 len = va_arg(args, UInt32);
-        const UInt8 *src = va_arg(args, UInt8 *);
+        const uint8_t *src = va_arg(args, uint8_t *);
         writeInt(len, sizeof(len), buffer);
         std::copy(src, src + len, std::back_inserter(buffer));
         break;
@@ -429,7 +429,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, UInt32 count)
   assert(stream != NULL);
   assert(vbuffer != NULL);
 
-  UInt8 *buffer = static_cast<UInt8 *>(vbuffer);
+  uint8_t *buffer = static_cast<uint8_t *>(vbuffer);
   while (count > 0) {
     // read more
     UInt32 n = stream->read(buffer, count);
@@ -446,13 +446,13 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, UInt32 count)
   }
 }
 
-UInt8 ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
+uint8_t ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
 {
   const UInt32 BufferSize = 1;
-  std::array<UInt8, 1> buffer = {};
+  std::array<uint8_t, 1> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  UInt8 Result = buffer[0];
+  uint8_t Result = buffer[0];
   LOG((CLOG_DEBUG2 "readf: read 1 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
@@ -461,7 +461,7 @@ UInt8 ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
 UInt16 ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
 {
   const UInt32 BufferSize = 2;
-  std::array<UInt8, BufferSize> buffer = {};
+  std::array<uint8_t, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
   UInt16 Result = static_cast<UInt16>((static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
@@ -473,7 +473,7 @@ UInt16 ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
 UInt32 ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
 {
   const int BufferSize = 4;
-  std::array<UInt8, BufferSize> buffer = {};
+  std::array<uint8_t, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
   UInt32 Result = (static_cast<UInt32>(buffer[0]) << 24) | (static_cast<UInt32>(buffer[1]) << 16) |
@@ -484,7 +484,7 @@ UInt32 ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
   return Result;
 }
 
-void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<UInt8> &destination)
+void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<uint8_t> &destination)
 {
   UInt32 size = readVectorSize(stream);
   for (UInt32 i = 0; i < size; ++i) {
@@ -523,7 +523,7 @@ UInt32 ProtocolUtil::readVectorSize(deskflow::IStream *stream)
 void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, std::string *destination)
 {
   // read the string length
-  UInt8 buffer[128];
+  uint8_t buffer[128];
 
   // when string length is 0, this implies that the size of the string is
   // variable and will be embedded in the stream.
@@ -535,10 +535,10 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, UInt32 len, std::string 
   const bool useFixed = (len <= sizeof(buffer));
 
   // allocate a buffer to read the data
-  UInt8 *sBuffer = buffer;
+  uint8_t *sBuffer = buffer;
   if (!useFixed) {
     try {
-      sBuffer = new UInt8[len];
+      sBuffer = new uint8_t[len];
     } catch (std::bad_alloc &exception) {
       // Added try catch due to GHSA-chfm-333q-gfpp
       LOG((CLOG_ERR "bad alloc, unable to allocate memory %d bytes", len));

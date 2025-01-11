@@ -135,13 +135,13 @@ private:
   );
 
   // internal conversion to UTF8
-  static std::string doUCS2ToUTF8(const UInt8 *src, UInt32 n, bool *errors);
-  static std::string doUCS4ToUTF8(const UInt8 *src, UInt32 n, bool *errors);
-  static std::string doUTF16ToUTF8(const UInt8 *src, UInt32 n, bool *errors);
-  static std::string doUTF32ToUTF8(const UInt8 *src, UInt32 n, bool *errors);
+  static std::string doUCS2ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
+  static std::string doUCS4ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
+  static std::string doUTF16ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
+  static std::string doUTF32ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
 
   // convert characters to/from UTF8
-  static UInt32 fromUTF8(const UInt8 *&src, UInt32 &size);
+  static UInt32 fromUTF8(const uint8_t *&src, UInt32 &size);
   static void toUTF8(std::string &dst, UInt32 c, bool *errors);
 
 private:

@@ -313,7 +313,7 @@ void TCPSocket::init()
 
 TCPSocket::EJobResult TCPSocket::doRead()
 {
-  UInt8 buffer[4096];
+  uint8_t buffer[4096];
   memset(buffer, 0, sizeof(buffer));
   size_t bytesRead = 0;
 

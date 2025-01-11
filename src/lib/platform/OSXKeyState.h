@@ -140,7 +140,7 @@ private:
   // Post a key event to HID manager. It posts an event to HID client, a
   // much lower level than window manager which's the target from carbon
   // CGEventPost
-  kern_return_t postHIDVirtualKey(UInt8 virtualKeyCode, bool postDown);
+  kern_return_t postHIDVirtualKey(uint8_t virtualKeyCode, bool postDown);
 
   // Get keyboard event flags accorfing to keyboard modifiers
   CGEventFlags getKeyboardEventFlags() const;

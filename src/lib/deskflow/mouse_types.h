@@ -24,7 +24,7 @@
 /*!
 Type to hold a mouse button identifier.
 */
-using ButtonID = UInt8;
+using ButtonID = uint8_t;
 
 //! @name Mouse button identifiers
 //@{
@@ -39,4 +39,4 @@ static const ButtonID kMacButtonRight = 2;
 static const ButtonID kMacButtonMiddle = 3;
 //@}
 
-static const UInt8 NumButtonIDs = 5;
+static const uint8_t NumButtonIDs = 5;
