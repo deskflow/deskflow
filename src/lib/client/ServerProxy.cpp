@@ -513,7 +513,7 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
 void ServerProxy::enter()
 {
   // parse
-  SInt16 x, y;
+  int16_t x, y;
   UInt16 mask;
   UInt32 seqNum;
   ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
@@ -678,7 +678,7 @@ void ServerProxy::mouseMove()
 {
   // parse
   bool ignore;
-  SInt16 x, y;
+  int16_t x, y;
   ProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
 
   // note if we should ignore the move
@@ -710,7 +710,7 @@ void ServerProxy::mouseRelativeMove()
 {
   // parse
   bool ignore;
-  SInt16 dx, dy;
+  int16_t dx, dy;
   ProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
 
   // note if we should ignore the move
@@ -741,7 +741,7 @@ void ServerProxy::mouseWheel()
   flushCompressedMouse();
 
   // parse
-  SInt16 xDelta, yDelta;
+  int16_t xDelta, yDelta;
   ProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
   LOG((CLOG_DEBUG2 "recv mouse wheel %+d,%+d", xDelta, yDelta));
 

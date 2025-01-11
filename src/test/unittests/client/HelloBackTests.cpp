@@ -30,7 +30,7 @@ public:
   MOCK_METHOD(void, incompatible, (int major, int minor), (override));
 };
 
-void intTo2ByteBuf(SInt16 value, std::array<char, 2> &buf)
+void intTo2ByteBuf(int16_t value, std::array<char, 2> &buf)
 {
   buf[0] = static_cast<char>((value >> 8) & 0xFF); // MSB
   buf[1] = static_cast<char>(value & 0xFF);        // LSB
@@ -55,7 +55,7 @@ std::string printAsHex(const char *buffer, size_t size)
 }
 
 void setupMockHelloRead(
-    MockStream &stream, const std::string &protocolName, const SInt16 majorVersion, const SInt16 minorVersion
+    MockStream &stream, const std::string &protocolName, const int16_t majorVersion, const int16_t minorVersion
 )
 {
 
@@ -89,7 +89,7 @@ void setupMockHelloRead(
 }
 
 void setupMockHelloBackWrite(
-    MockStream &stream, const std::string &protocolName, const SInt16 majorVersion, const SInt16 minorVersion,
+    MockStream &stream, const std::string &protocolName, const int16_t majorVersion, const int16_t minorVersion,
     const std::string &name
 )
 {
