@@ -67,8 +67,8 @@ Windows 10 or higher is required.
 
 macOS 12 or higher is required.
 
-All Linux distributions are supported, primarily focusing on: 
-Debian, Ubuntu, Linux Mint, Fedora, RHEL, AlmaLinux, Rocky Linux, Arch Linux, openSUSE, Gentoo.
+Linux requires libei 1.3+ and libportal 0.8+ for the server/client. Additionally, Qt 6.7+ is required for the GUI.
+Linux users with systems not meeting these requirements should use flatpak in place of a native package.
 
 We officially support FreeBSD, and would also like to support: OpenBSD, NetBSD, DragonFly, Solaris.
 
