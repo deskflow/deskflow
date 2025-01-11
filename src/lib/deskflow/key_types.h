@@ -41,9 +41,9 @@ invalid key;  platforms that use 0 as a physical key identifier
 will have to remap that value to some arbitrary unused id.
 */
 #if __APPLE__
-typedef UInt16 KeyButton;
+typedef uint16_t KeyButton;
 #else
-using KeyButton = UInt16;
+using KeyButton = uint16_t;
 #endif
 
 //! Modifier key mask

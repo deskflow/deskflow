@@ -49,7 +49,7 @@ public:
   - \%2i  -- converts integer argument to 2 byte integer in NBO
   - \%4i  -- converts integer argument to 4 byte integer in NBO
   - \%1I  -- converts std::vector<uint8_t>* to 1 byte integers
-  - \%2I  -- converts std::vector<UInt16>* to 2 byte integers in NBO
+  - \%2I  -- converts std::vector<uint16_t>* to 2 byte integers in NBO
   - \%4I  -- converts std::vector<UInt32>* to 4 byte integers in NBO
   - \%s   -- converts std::string* to stream of bytes
   - \%S   -- converts integer N and const uint8_t* to stream of N bytes
@@ -68,7 +68,7 @@ public:
   - \%2i  -- reads an NBO 2 byte integer;  arg is SInt32* or UInt32*
   - \%4i  -- reads an NBO 4 byte integer;  arg is SInt32* or UInt32*
   - \%1I  -- reads 1 byte integers;  arg is std::vector<uint8_t>*
-  - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<UInt16>*
+  - \%2I  -- reads NBO 2 byte integers;  arg is std::vector<uint16_t>*
   - \%4I  -- reads NBO 4 byte integers;  arg is std::vector<UInt32>*
   - \%s   -- reads bytes;  argument must be a std::string*, \b not a char*
   */
@@ -87,14 +87,14 @@ private:
    * @brief Handles 1,2, or 4 byte Integers
    */
   static uint8_t read1ByteInt(deskflow::IStream *stream);
-  static UInt16 read2BytesInt(deskflow::IStream *stream);
+  static uint16_t read2BytesInt(deskflow::IStream *stream);
   static UInt32 read4BytesInt(deskflow::IStream *stream);
 
   /**
    * @brief Handles a Vector of integers
    */
   static void readVector1ByteInt(deskflow::IStream *, std::vector<uint8_t> &);
-  static void readVector2BytesInt(deskflow::IStream *, std::vector<UInt16> &);
+  static void readVector2BytesInt(deskflow::IStream *, std::vector<uint16_t> &);
   static void readVector4BytesInt(deskflow::IStream *, std::vector<UInt32> &);
   static UInt32 readVectorSize(deskflow::IStream *stream);
 

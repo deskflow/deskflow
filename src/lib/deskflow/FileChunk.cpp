@@ -24,7 +24,7 @@
 #include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 
-static const UInt16 kIntervalThreshold = 1;
+static const uint16_t kIntervalThreshold = 1;
 
 FileChunk::FileChunk(size_t size) : Chunk(size)
 {

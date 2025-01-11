@@ -195,17 +195,17 @@ void IpcLogOutputter::sendBuffer()
   m_sending = false;
 }
 
-void IpcLogOutputter::bufferMaxSize(UInt16 bufferMaxSize)
+void IpcLogOutputter::bufferMaxSize(uint16_t bufferMaxSize)
 {
   m_bufferMaxSize = bufferMaxSize;
 }
 
-UInt16 IpcLogOutputter::bufferMaxSize() const
+uint16_t IpcLogOutputter::bufferMaxSize() const
 {
   return m_bufferMaxSize;
 }
 
-void IpcLogOutputter::bufferRateLimit(UInt16 writeLimit, double timeLimit)
+void IpcLogOutputter::bufferRateLimit(uint16_t writeLimit, double timeLimit)
 {
   m_bufferRateWriteLimit = writeLimit;
   m_bufferRateTimeLimit = timeLimit;

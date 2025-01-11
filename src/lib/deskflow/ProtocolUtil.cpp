@@ -160,7 +160,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
           break;
         case 2:
           // 2 byte integer
-          *static_cast<UInt16 *>(destination) = read2BytesInt(stream);
+          *static_cast<uint16_t *>(destination) = read2BytesInt(stream);
           break;
         case 4:
           // 4 byte integer
@@ -184,7 +184,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
           break;
         case 2:
           // 2 byte integer
-          readVector2BytesInt(stream, *static_cast<std::vector<UInt16> *>(destination));
+          readVector2BytesInt(stream, *static_cast<std::vector<uint16_t> *>(destination));
           break;
         case 4:
           // 4 byte integer
@@ -260,7 +260,7 @@ UInt32 ProtocolUtil::getLength(const char *fmt, va_list args)
           break;
 
         case 2:
-          len = 2 * (UInt32)(va_arg(args, std::vector<UInt16> *))->size() + 4;
+          len = 2 * (UInt32)(va_arg(args, std::vector<uint16_t> *))->size() + 4;
           break;
 
         case 4:
@@ -325,7 +325,7 @@ void ProtocolUtil::writef(std::vector<uint8_t> &buffer, const char *fmt, va_list
 
         case 2: {
           // 2 byte integers
-          const std::vector<UInt16> *list = va_arg(args, const std::vector<UInt16> *);
+          const std::vector<uint16_t> *list = va_arg(args, const std::vector<uint16_t> *);
           writeVectorInt(list, buffer);
           break;
         }
@@ -458,13 +458,13 @@ uint8_t ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
   return Result;
 }
 
-UInt16 ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
+uint16_t ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
 {
   const UInt32 BufferSize = 2;
   std::array<uint8_t, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  UInt16 Result = static_cast<UInt16>((static_cast<UInt16>(buffer[0]) << 8) | static_cast<UInt16>(buffer[1]));
+  uint16_t Result = static_cast<uint16_t>((static_cast<uint16_t>(buffer[0]) << 8) | static_cast<uint16_t>(buffer[1]));
   LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
@@ -492,7 +492,7 @@ void ProtocolUtil::readVector1ByteInt(deskflow::IStream *stream, std::vector<uin
   }
 }
 
-void ProtocolUtil::readVector2BytesInt(deskflow::IStream *stream, std::vector<UInt16> &destination)
+void ProtocolUtil::readVector2BytesInt(deskflow::IStream *stream, std::vector<uint16_t> &destination)
 {
   UInt32 size = readVectorSize(stream);
   for (UInt32 i = 0; i < size; ++i) {

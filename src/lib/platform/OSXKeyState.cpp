@@ -330,7 +330,7 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
   //}
 
   // choose action
-  UInt16 action;
+  uint16_t action;
   if (eventKind == kCGEventKeyDown) {
     action = kUCKeyActionDown;
   } else if (CGEventGetIntegerValueField(event, kCGKeyboardEventAutorepeat) == 1) {

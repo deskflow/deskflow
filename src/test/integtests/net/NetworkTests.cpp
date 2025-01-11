@@ -55,7 +55,7 @@ using ::testing::Return;
 #define TEST_HOST "localhost"
 
 const size_t kMockDataSize = 1024 * 1024 * 10; // 10MB
-const UInt16 kMockDataChunkIncrement = 1024;   // 1KB
+const uint16_t kMockDataChunkIncrement = 1024;   // 1KB
 const char *kMockFilename = "tmp/test/NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 

@@ -240,9 +240,9 @@ ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
   }
 
   else if (memcmp(code, kMsgDKeyDown, 4) == 0) {
-    UInt16 id = 0;
-    UInt16 mask = 0;
-    UInt16 button = 0;
+    uint16_t id = 0;
+    uint16_t mask = 0;
+    uint16_t button = 0;
     ProtocolUtil::readf(m_stream, kMsgDKeyDown + 4, &id, &mask, &button);
     LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
@@ -251,9 +251,9 @@ ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
 
   else if (memcmp(code, kMsgDKeyDownLang, 4) == 0) {
     std::string lang;
-    UInt16 id = 0;
-    UInt16 mask = 0;
-    UInt16 button = 0;
+    uint16_t id = 0;
+    uint16_t mask = 0;
+    uint16_t button = 0;
 
     ProtocolUtil::readf(m_stream, kMsgDKeyDownLang + 4, &id, &mask, &button, &lang);
     LOG((CLOG_DEBUG1 "recv key down id=0x%08x, mask=0x%04x, button=0x%04x, lang=\"%s\"", id, mask, button, lang.c_str())
@@ -514,7 +514,7 @@ void ServerProxy::enter()
 {
   // parse
   int16_t x, y;
-  UInt16 mask;
+  uint16_t mask;
   UInt32 seqNum;
   ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
   LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
@@ -585,7 +585,7 @@ void ServerProxy::grabClipboard()
   m_client->grabClipboard(id);
 }
 
-void ServerProxy::keyDown(UInt16 id, UInt16 mask, UInt16 button, const std::string &lang)
+void ServerProxy::keyDown(uint16_t id, uint16_t mask, uint16_t button, const std::string &lang)
 {
   // get mouse up to date
   flushCompressedMouse();
@@ -607,7 +607,7 @@ void ServerProxy::keyRepeat()
   flushCompressedMouse();
 
   // parse
-  UInt16 id, mask, count, button;
+  uint16_t id, mask, count, button;
   std::string lang;
   ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
   LOG(
@@ -632,7 +632,7 @@ void ServerProxy::keyUp()
   flushCompressedMouse();
 
   // parse
-  UInt16 id, mask, button;
+  uint16_t id, mask, button;
   ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
   LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 

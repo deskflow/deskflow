@@ -85,7 +85,6 @@
 #include <CoreServices/CoreServices.h>
 #else
 using SInt32 = signed TYPE_OF_SIZE_4;
-using UInt16 = unsigned TYPE_OF_SIZE_2;
 using UInt32 = unsigned TYPE_OF_SIZE_4;
 #endif
 #endif
