@@ -36,11 +36,11 @@ public:
 
   // IStream overrides
   virtual void close();
-  virtual UInt32 read(void *buffer, UInt32 n);
-  virtual void write(const void *buffer, UInt32 n);
+  virtual uint32_t read(void *buffer, uint32_t n);
+  virtual void write(const void *buffer, uint32_t n);
   virtual void shutdownInput();
   virtual bool isReady() const;
-  virtual UInt32 getSize() const;
+  virtual uint32_t getSize() const;
 
 protected:
   // StreamFilter overrides
@@ -53,7 +53,7 @@ private:
 
 private:
   Mutex m_mutex;
-  UInt32 m_size;
+  uint32_t m_size;
   StreamBuffer m_buffer;
   bool m_inputShutdown;
   IEventQueue *m_events;

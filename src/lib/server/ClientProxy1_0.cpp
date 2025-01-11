@@ -130,7 +130,7 @@ void ClientProxy1_0::handleData(const Event &, void *)
 {
   // handle messages until there are no more.  first read message code.
   uint8_t code[4];
-  UInt32 n = getStream()->read(code, 4);
+  uint32_t n = getStream()->read(code, 4);
   while (n != 0) {
     // verify we got an entire code
     if (n != 4) {
@@ -244,7 +244,7 @@ void ClientProxy1_0::getCursorPos(int32_t &x, int32_t &y) const
   y = m_info.m_my;
 }
 
-void ClientProxy1_0::enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool)
+void ClientProxy1_0::enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool)
 {
   LOG((CLOG_DEBUG1 "send enter to \"%s\", %d,%d %d %04x", getName().c_str(), xAbs, yAbs, seqNum, mask));
   ProtocolUtil::writef(getStream(), kMsgCEnter, xAbs, yAbs, seqNum, mask);
@@ -326,7 +326,7 @@ void ClientProxy1_0::mouseWheel(int32_t, int32_t yDelta)
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
 }
 
-void ClientProxy1_0::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+void ClientProxy1_0::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
 {
   // ignore -- not supported in protocol 1.0
   LOG((CLOG_DEBUG "draggingInfoSending not supported"));
@@ -374,7 +374,7 @@ void ClientProxy1_0::setOptions(const OptionsList &options)
   ProtocolUtil::writef(getStream(), kMsgDSetOptions, &options);
 
   // check options
-  for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+  for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     if (options[i] == kOptionHeartbeat) {
       double rate = 1.0e-3 * static_cast<double>(options[i + 1]);
       if (rate <= 0.0) {
@@ -429,7 +429,7 @@ bool ClientProxy1_0::recvGrabClipboard()
 {
   // parse message
   ClipboardID id;
-  UInt32 seqNum;
+  uint32_t seqNum;
   if (!ProtocolUtil::readf(getStream(), kMsgCClipboard + 4, &id, &seqNum)) {
     return false;
   }

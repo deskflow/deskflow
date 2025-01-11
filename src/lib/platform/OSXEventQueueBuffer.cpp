@@ -60,7 +60,7 @@ void OSXEventQueueBuffer::waitForEvent(double timeout)
   ReceiveNextEvent(0, NULL, timeout, false, &event);
 }
 
-IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, UInt32 &dataID)
+IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
   // release the previous event
   if (m_event != NULL) {
@@ -78,7 +78,7 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, UInt32 &data
   } else if (error != noErr) {
     return kNone;
   } else {
-    UInt32 eventClass = GetEventClass(m_event);
+    uint32_t eventClass = GetEventClass(m_event);
     switch (eventClass) {
     case 'Syne':
       dataID = GetEventKind(m_event);
@@ -91,7 +91,7 @@ IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, UInt32 &data
   }
 }
 
-bool OSXEventQueueBuffer::addEvent(UInt32 dataID)
+bool OSXEventQueueBuffer::addEvent(uint32_t dataID)
 {
   EventRef event;
   OSStatus error = CreateEvent(kCFAllocatorDefault, 'Syne', dataID, 0, kEventAttributeNone, &event);

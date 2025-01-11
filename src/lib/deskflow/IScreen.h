@@ -36,7 +36,7 @@ public:
   {
   public:
     ClipboardID m_id;
-    UInt32 m_sequenceNumber;
+    uint32_t m_sequenceNumber;
   };
 
   //! @name accessors

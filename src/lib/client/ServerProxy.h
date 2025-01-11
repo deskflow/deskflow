@@ -66,7 +66,7 @@ public:
   void fileChunkSending(uint8_t mark, char *data, size_t dataSize);
 
   // sending dragging information to server
-  void sendDragInfo(UInt32 fileCount, const char *info, size_t size);
+  void sendDragInfo(uint32_t fileCount, const char *info, size_t size);
 
 #ifdef TEST_ENV
   void handleDataForTest()
@@ -134,7 +134,7 @@ private:
   Client *m_client;
   deskflow::IStream *m_stream;
 
-  UInt32 m_seqNum;
+  uint32_t m_seqNum;
 
   bool m_compressMouse;
   bool m_compressMouseRelative;

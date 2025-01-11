@@ -57,7 +57,7 @@ public:
   (zero if no data is available or input is shutdown).  \p buffer
   may be NULL in which case the data is discarded.
   */
-  virtual UInt32 read(void *buffer, UInt32 n) = 0;
+  virtual uint32_t read(void *buffer, uint32_t n) = 0;
 
   //! Write to stream
   /*!
@@ -66,7 +66,7 @@ public:
   order to return more quickly.  A output error event is generated
   when writing fails.
   */
-  virtual void write(const void *buffer, UInt32 n) = 0;
+  virtual void write(const void *buffer, uint32_t n) = 0;
 
   //! Flush the stream
   /*!
@@ -115,7 +115,7 @@ public:
   Some streams may not be able to determine this and will always
   return zero.
   */
-  virtual UInt32 getSize() const = 0;
+  virtual uint32_t getSize() const = 0;
 
   //@}
 };

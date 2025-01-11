@@ -44,14 +44,14 @@ public:
   virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
 
   // IPrimaryScreen overrides
-  virtual void reconfigure(UInt32 activeSides) = 0;
+  virtual void reconfigure(uint32_t activeSides) = 0;
   virtual void warpCursor(int32_t x, int32_t y) = 0;
-  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask) = 0;
-  virtual void unregisterHotKey(UInt32 id) = 0;
+  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+  virtual void unregisterHotKey(uint32_t id) = 0;
   virtual void fakeInputBegin() = 0;
   virtual void fakeInputEnd() = 0;
   virtual int32_t getJumpZoneSize() const = 0;
-  virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const = 0;
+  virtual bool isAnyMouseButtonDown(uint32_t &buttonID) const = 0;
   virtual void getCursorCenter(int32_t &x, int32_t &y) const = 0;
 
   // ISecondaryScreen overrides
@@ -105,7 +105,7 @@ public:
   virtual void screensaver(bool activate) = 0;
   virtual void resetOptions() = 0;
   virtual void setOptions(const OptionsList &options) = 0;
-  virtual void setSequenceNumber(UInt32) = 0;
+  virtual void setSequenceNumber(uint32_t) = 0;
   virtual bool isPrimary() const = 0;
 
   virtual void fakeDraggingFiles(DragFileList fileList)

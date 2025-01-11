@@ -46,14 +46,14 @@ public:
   // These all just forward to the underlying stream except getEventTarget.
   // Override as necessary.  getEventTarget returns a pointer to this.
   virtual void close();
-  virtual UInt32 read(void *buffer, UInt32 n);
-  virtual void write(const void *buffer, UInt32 n);
+  virtual uint32_t read(void *buffer, uint32_t n);
+  virtual void write(const void *buffer, uint32_t n);
   virtual void flush();
   virtual void shutdownInput();
   virtual void shutdownOutput();
   virtual void *getEventTarget() const;
   virtual bool isReady() const;
-  virtual UInt32 getSize() const;
+  virtual uint32_t getSize() const;
 
   //! Get the stream
   /*!

@@ -165,7 +165,7 @@ SystemLogger::~SystemLogger()
 // BufferedLogOutputter
 //
 
-BufferedLogOutputter::BufferedLogOutputter(UInt32 maxBufferSize) : m_maxBufferSize(maxBufferSize)
+BufferedLogOutputter::BufferedLogOutputter(uint32_t maxBufferSize) : m_maxBufferSize(maxBufferSize)
 {
   // do nothing
 }

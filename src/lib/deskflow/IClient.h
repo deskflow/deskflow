@@ -45,7 +45,7 @@ public:
   screen is being entered because the screen saver is starting.
   Subsequent clipboard events should report \p seqNum.
   */
-  virtual void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
+  virtual void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) = 0;
 
   //! Leave screen
   /*!

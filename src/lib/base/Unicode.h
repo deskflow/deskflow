@@ -125,26 +125,26 @@ private:
   // to the platform).  caller must delete[] the returned string.  the
   // string is *not* nul terminated;  the length (in characters) is
   // returned in size.
-  static wchar_t *UTF8ToWideChar(const std::string &, UInt32 &size, bool *errors);
+  static wchar_t *UTF8ToWideChar(const std::string &, uint32_t &size, bool *errors);
 
   // convert nul terminated wchar_t string (in platform's native
   // encoding) to UTF8.
   static std::string wideCharToUTF8(
-      const wchar_t *, UInt32 size, bool *errors,
+      const wchar_t *, uint32_t size, bool *errors,
       IArchString::EWideCharEncoding encoding = IArchString::kPlatformDetermined
   );
 
   // internal conversion to UTF8
-  static std::string doUCS2ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
-  static std::string doUCS4ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
-  static std::string doUTF16ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
-  static std::string doUTF32ToUTF8(const uint8_t *src, UInt32 n, bool *errors);
+  static std::string doUCS2ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
+  static std::string doUCS4ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
+  static std::string doUTF16ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
+  static std::string doUTF32ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
 
   // convert characters to/from UTF8
-  static UInt32 fromUTF8(const uint8_t *&src, UInt32 &size);
-  static void toUTF8(std::string &dst, UInt32 c, bool *errors);
+  static uint32_t fromUTF8(const uint8_t *&src, uint32_t &size);
+  static void toUTF8(std::string &dst, uint32_t c, bool *errors);
 
 private:
-  static UInt32 s_invalid;
-  static UInt32 s_replacement;
+  static uint32_t s_invalid;
+  static uint32_t s_replacement;
 };

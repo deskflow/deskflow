@@ -256,7 +256,7 @@ protected:
     int m_format;
 
     // index of next byte in m_data to send
-    UInt32 m_ptr;
+    uint32_t m_ptr;
   };
   using ReplyList = std::list<Reply *>;
   using ReplyMap = std::map<Window, ReplyList>;

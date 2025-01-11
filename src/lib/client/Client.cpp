@@ -250,7 +250,7 @@ void Client::getCursorPos(int32_t &x, int32_t &y) const
   m_screen->getCursorPos(x, y);
 }
 
-void Client::enter(int32_t xAbs, int32_t yAbs, UInt32, KeyModifierMask mask, bool)
+void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, bool)
 {
   m_active = true;
   m_screen->mouseMove(xAbs, yAbs);
@@ -757,7 +757,7 @@ void Client::writeToDropDirThread(void *)
   DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList, m_receivedFileData);
 }
 
-void Client::dragInfoReceived(UInt32 fileNum, std::string data)
+void Client::dragInfoReceived(uint32_t fileNum, std::string data)
 {
   // TODO: fix duplicate function from CServer
   if (!m_args.m_enableDragDrop) {
@@ -798,7 +798,7 @@ void Client::sendFileThread(void *filename)
   m_sendFileThread.reset(nullptr);
 }
 
-void Client::sendDragInfo(UInt32 fileCount, std::string &info, size_t size)
+void Client::sendDragInfo(uint32_t fileCount, std::string &info, size_t size)
 {
   m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

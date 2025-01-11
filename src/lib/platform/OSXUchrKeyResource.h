@@ -27,15 +27,15 @@ using KeyLayout = TISInputSourceRef;
 class OSXUchrKeyResource : public IOSXKeyResource
 {
 public:
-  OSXUchrKeyResource(const void *, UInt32 keyboardType);
+  OSXUchrKeyResource(const void *, uint32_t keyboardType);
 
   // KeyResource overrides
   virtual bool isValid() const;
-  virtual UInt32 getNumModifierCombinations() const;
-  virtual UInt32 getNumTables() const;
-  virtual UInt32 getNumButtons() const;
-  virtual UInt32 getTableForModifier(UInt32 mask) const;
-  virtual KeyID getKey(UInt32 table, UInt32 button) const;
+  virtual uint32_t getNumModifierCombinations() const;
+  virtual uint32_t getNumTables() const;
+  virtual uint32_t getNumButtons() const;
+  virtual uint32_t getTableForModifier(uint32_t mask) const;
+  virtual KeyID getKey(uint32_t table, uint32_t button) const;
 
 private:
   using KeySequence = std::vector<KeyID>;

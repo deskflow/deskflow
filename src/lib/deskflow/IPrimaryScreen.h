@@ -69,10 +69,10 @@ public:
   class HotKeyInfo
   {
   public:
-    static HotKeyInfo *alloc(UInt32 id);
+    static HotKeyInfo *alloc(uint32_t id);
 
   public:
-    UInt32 m_id;
+    uint32_t m_id;
   };
 
   class EiConnectInfo
@@ -94,7 +94,7 @@ public:
   primary screen are linked to clients.  Override to handle the
   possible change in jump zones.
   */
-  virtual void reconfigure(UInt32 activeSides) = 0;
+  virtual void reconfigure(uint32_t activeSides) = 0;
 
   //! Warp cursor
   /*!
@@ -125,13 +125,13 @@ public:
   the modifiers in any order or to require the user to press the given key
   last.
   */
-  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask) = 0;
+  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask) = 0;
 
   //! Unregister a system hotkey
   /*!
   Unregisters a previously registered hot key.
   */
-  virtual void unregisterHotKey(UInt32 id) = 0;
+  virtual void unregisterHotKey(uint32_t id) = 0;
 
   //! Prepare to synthesize input on primary screen
   /*!
@@ -165,7 +165,7 @@ public:
   "current" means up to the last processed event but it can mean
   the current physical mouse button state.
   */
-  virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const = 0;
+  virtual bool isAnyMouseButtonDown(uint32_t &buttonID) const = 0;
 
   //! Get cursor center position
   /*!

@@ -450,7 +450,7 @@ void XWindowsScreen::resetOptions()
 
 void XWindowsScreen::setOptions(const OptionsList &options)
 {
-  for (UInt32 i = 0, n = options.size(); i < n; i += 2) {
+  for (uint32_t i = 0, n = options.size(); i < n; i += 2) {
     if (options[i] == kOptionXTestXineramaUnaware) {
       m_xtestIsXineramaUnaware = (options[i + 1] != 0);
       LOG((CLOG_DEBUG1 "library, XTest is Xinerama unaware %s", m_xtestIsXineramaUnaware ? "true" : "false"));
@@ -461,7 +461,7 @@ void XWindowsScreen::setOptions(const OptionsList &options)
   }
 }
 
-void XWindowsScreen::setSequenceNumber(UInt32 seqNum)
+void XWindowsScreen::setSequenceNumber(uint32_t seqNum)
 {
   m_sequenceNumber = seqNum;
 }
@@ -520,7 +520,7 @@ void XWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
   }
 }
 
-void XWindowsScreen::reconfigure(UInt32)
+void XWindowsScreen::reconfigure(uint32_t)
 {
   // do nothing
 }
@@ -544,7 +544,7 @@ void XWindowsScreen::warpCursor(int32_t x, int32_t y)
   m_yCursor = y;
 }
 
-UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
+uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 {
   // only allow certain modifiers
   if ((mask & ~(KeyModifierShift | KeyModifierControl | KeyModifierAlt | KeyModifierSuper)) != 0) {
@@ -573,7 +573,7 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
 
   // choose hotkey id
-  UInt32 id;
+  uint32_t id;
   if (!m_oldHotKeyIDs.empty()) {
     id = m_oldHotKeyIDs.back();
     m_oldHotKeyIDs.pop_back();
@@ -731,7 +731,7 @@ UInt32 XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   return id;
 }
 
-void XWindowsScreen::unregisterHotKey(UInt32 id)
+void XWindowsScreen::unregisterHotKey(uint32_t id)
 {
   // look up hotkey
   HotKeyMap::iterator i = m_hotKeys.find(id);
@@ -775,7 +775,7 @@ int32_t XWindowsScreen::getJumpZoneSize() const
   return 1;
 }
 
-bool XWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const
+bool XWindowsScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
 {
   // query the pointer to get the button state
   Window root, window;
@@ -1878,13 +1878,13 @@ void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
 void XWindowsScreen::updateButtons()
 {
   // query the button mapping
-  UInt32 numButtons = XGetPointerMapping(m_display, NULL, 0);
+  uint32_t numButtons = XGetPointerMapping(m_display, NULL, 0);
   unsigned char *tmpButtons = new unsigned char[numButtons];
   XGetPointerMapping(m_display, tmpButtons, numButtons);
 
   // find the largest logical button id
   unsigned char maxButton = 0;
-  for (UInt32 i = 0; i < numButtons; ++i) {
+  for (uint32_t i = 0; i < numButtons; ++i) {
     if (tmpButtons[i] > maxButton) {
       maxButton = tmpButtons[i];
     }
@@ -1895,10 +1895,10 @@ void XWindowsScreen::updateButtons()
 
   // fill in button array values.  m_buttons[i] is the physical
   // button number for logical button i+1.
-  for (UInt32 i = 0; i < numButtons; ++i) {
+  for (uint32_t i = 0; i < numButtons; ++i) {
     m_buttons[i] = 0;
   }
-  for (UInt32 i = 0; i < numButtons; ++i) {
+  for (uint32_t i = 0; i < numButtons; ++i) {
     m_buttons[tmpButtons[i] - 1] = i + 1;
   }
 

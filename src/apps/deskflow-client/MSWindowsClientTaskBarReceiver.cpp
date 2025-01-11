@@ -45,7 +45,7 @@ MSWindowsClientTaskBarReceiver::MSWindowsClientTaskBarReceiver(
       m_window(NULL),
       m_logBuffer(logBuffer)
 {
-  for (UInt32 i = 0; i < kMaxState; ++i) {
+  for (uint32_t i = 0; i < kMaxState; ++i) {
     m_icon[i] = loadIcon(s_stateToIconID[i]);
   }
   m_menu = LoadMenu(m_appInstance, MAKEINTRESOURCE(IDR_TASKBAR));
@@ -67,7 +67,7 @@ MSWindowsClientTaskBarReceiver::~MSWindowsClientTaskBarReceiver()
 void MSWindowsClientTaskBarReceiver::cleanup()
 {
   ARCH->removeReceiver(this);
-  for (UInt32 i = 0; i < kMaxState; ++i) {
+  for (uint32_t i = 0; i < kMaxState; ++i) {
     deleteIcon(m_icon[i]);
   }
   DestroyMenu(m_menu);

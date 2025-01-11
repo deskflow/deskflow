@@ -51,7 +51,7 @@ void PacketStreamFilter::close()
   StreamFilter::close();
 }
 
-UInt32 PacketStreamFilter::read(void *buffer, UInt32 n)
+uint32_t PacketStreamFilter::read(void *buffer, uint32_t n)
 {
   if (n == 0) {
     return 0;
@@ -87,7 +87,7 @@ UInt32 PacketStreamFilter::read(void *buffer, UInt32 n)
   return n;
 }
 
-void PacketStreamFilter::write(const void *buffer, UInt32 count)
+void PacketStreamFilter::write(const void *buffer, uint32_t count)
 {
   // write the length of the payload
   uint8_t length[4];
@@ -115,7 +115,7 @@ bool PacketStreamFilter::isReady() const
   return isReadyNoLock();
 }
 
-UInt32 PacketStreamFilter::getSize() const
+uint32_t PacketStreamFilter::getSize() const
 {
   Lock lock(&m_mutex);
   return isReadyNoLock() ? m_size : 0;
@@ -134,7 +134,8 @@ bool PacketStreamFilter::readPacketSize()
     uint8_t buffer[4];
     memcpy(buffer, m_buffer.peek(sizeof(buffer)), sizeof(buffer));
     m_buffer.pop(sizeof(buffer));
-    m_size = ((UInt32)buffer[0] << 24) | ((UInt32)buffer[1] << 16) | ((UInt32)buffer[2] << 8) | (UInt32)buffer[3];
+    m_size =
+        ((uint32_t)buffer[0] << 24) | ((uint32_t)buffer[1] << 16) | ((uint32_t)buffer[2] << 8) | (uint32_t)buffer[3];
     if (m_size > PROTOCOL_MAX_MESSAGE_LENGTH) {
       m_events->addEvent(Event(m_events->forIStream().inputFormatError(), getEventTarget()));
       return false;
@@ -150,7 +151,7 @@ bool PacketStreamFilter::readMore()
 
   // read more data
   char buffer[4096];
-  UInt32 n = getStream()->read(buffer, sizeof(buffer));
+  uint32_t n = getStream()->read(buffer, sizeof(buffer));
   while (n > 0) {
     m_buffer.write(buffer, n);
 

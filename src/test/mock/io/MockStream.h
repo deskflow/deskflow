@@ -33,8 +33,8 @@ public:
   {
   }
   MOCK_METHOD(void, close, (), (override));
-  MOCK_METHOD(UInt32, read, (void *, UInt32), (override));
-  MOCK_METHOD(void, write, (const void *, UInt32), (override));
+  MOCK_METHOD(uint32_t, read, (void *, uint32_t), (override));
+  MOCK_METHOD(void, write, (const void *, uint32_t), (override));
   MOCK_METHOD(void, flush, (), (override));
   MOCK_METHOD(void, shutdownInput, (), (override));
   MOCK_METHOD(void, shutdownOutput, (), (override));
@@ -44,7 +44,7 @@ public:
   MOCK_METHOD(Event::Type, getOutputShutdownEvent, ());
   MOCK_METHOD(void *, getEventTarget, (), (const, override));
   MOCK_METHOD(bool, isReady, (), (const, override));
-  MOCK_METHOD(UInt32, getSize, (), (const, override));
+  MOCK_METHOD(uint32_t, getSize, (), (const, override));
 };
 
 } // namespace

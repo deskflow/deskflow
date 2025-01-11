@@ -109,13 +109,13 @@ public:
   virtual void handshakeComplete();
 
   //! Received drag information
-  void dragInfoReceived(UInt32 fileNum, std::string data);
+  void dragInfoReceived(uint32_t fileNum, std::string data);
 
   //! Create a new thread and use it to send file to Server
   void sendFileToServer(const char *filename);
 
   //! Send dragging file information back to server
-  void sendDragInfo(UInt32 fileCount, std::string &info, size_t size);
+  void sendDragInfo(uint32_t fileCount, std::string &info, size_t size);
 
   //@}
   //! @name accessors
@@ -177,7 +177,7 @@ public:
   virtual void getCursorPos(int32_t &x, int32_t &y) const;
 
   // IClient overrides
-  virtual void enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool forScreensaver);
+  virtual void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver);
   virtual bool leave();
   virtual void setClipboard(ClipboardID, const IClipboard *);
   virtual void grabClipboard(ClipboardID);

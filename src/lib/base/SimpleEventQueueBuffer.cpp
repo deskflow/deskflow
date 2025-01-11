@@ -57,7 +57,7 @@ void SimpleEventQueueBuffer::waitForEvent(double timeout)
   }
 }
 
-IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &, UInt32 &dataID)
+IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &, uint32_t &dataID)
 {
   ArchMutexLock lock(m_queueMutex);
   if (!m_queueReady) {
@@ -69,7 +69,7 @@ IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &, UInt32 &dataID
   return kUser;
 }
 
-bool SimpleEventQueueBuffer::addEvent(UInt32 dataID)
+bool SimpleEventQueueBuffer::addEvent(uint32_t dataID)
 {
   ArchMutexLock lock(m_queueMutex);
   m_queue.push_front(dataID);

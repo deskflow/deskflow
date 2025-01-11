@@ -111,7 +111,7 @@ void ServerProxy::handleData(const Event &, void *)
 {
   // handle messages until there are no more.  first read message code.
   uint8_t code[4];
-  UInt32 n = m_stream->read(code, 4);
+  uint32_t n = m_stream->read(code, 4);
   while (n != 0) {
     // verify we got an entire code
     if (n != 4) {
@@ -416,7 +416,7 @@ KeyID ServerProxy::translateKey(KeyID id) const
   };
 
   KeyModifierID id2 = kKeyModifierIDNull;
-  UInt32 side = 0;
+  uint32_t side = 0;
   switch (id) {
   case kKeyShift_L:
     id2 = kKeyModifierIDShift;
@@ -515,7 +515,7 @@ void ServerProxy::enter()
   // parse
   int16_t x, y;
   uint16_t mask;
-  UInt32 seqNum;
+  uint32_t seqNum;
   ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
   LOG((CLOG_DEBUG1 "recv enter, %d,%d %d %04x", x, y, seqNum, mask));
 
@@ -549,7 +549,7 @@ void ServerProxy::setClipboard()
   // parse
   static std::string dataCached;
   ClipboardID id;
-  UInt32 seq;
+  uint32_t seq;
 
   int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
@@ -572,7 +572,7 @@ void ServerProxy::grabClipboard()
 {
   // parse
   ClipboardID id;
-  UInt32 seqNum;
+  uint32_t seqNum;
   ProtocolUtil::readf(m_stream, kMsgCClipboard + 4, &id, &seqNum);
   LOG((CLOG_DEBUG "recv grab clipboard %d", id));
 
@@ -788,7 +788,7 @@ void ServerProxy::setOptions()
   m_client->setOptions(options);
 
   // update modifier table
-  for (UInt32 i = 0, n = (UInt32)options.size(); i < n; i += 2) {
+  for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     KeyModifierID id = kKeyModifierIDNull;
     if (options[i] == kOptionModifierMapForShift) {
       id = kKeyModifierIDShift;
@@ -845,7 +845,7 @@ void ServerProxy::fileChunkReceived()
 void ServerProxy::dragInfoReceived()
 {
   // parse
-  UInt32 fileNum = 0;
+  uint32_t fileNum = 0;
   std::string content;
   ProtocolUtil::readf(m_stream, kMsgDDragInfo + 4, &fileNum, &content);
 
@@ -862,7 +862,7 @@ void ServerProxy::fileChunkSending(uint8_t mark, char *data, size_t dataSize)
   FileChunk::send(m_stream, mark, data, dataSize);
 }
 
-void ServerProxy::sendDragInfo(UInt32 fileCount, const char *info, size_t size)
+void ServerProxy::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
 {
   std::string data(info, size);
   ProtocolUtil::writef(m_stream, kMsgDDragInfo, fileCount, &data);

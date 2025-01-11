@@ -1051,7 +1051,7 @@ void KeyState::addCombinationEntries()
     const KeyID *i = s_decomposeTable;
     while (*i != 0) {
       // count the decomposed keys for this key
-      UInt32 numKeys = 0;
+      uint32_t numKeys = 0;
       const KeyID *j = i;
       while (*++j != 0) {
         ++numKeys;
@@ -1067,7 +1067,7 @@ void KeyState::addCombinationEntries()
   }
 }
 
-void KeyState::fakeKeys(const Keystrokes &keys, UInt32 count)
+void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
 {
   // do nothing if no keys or no repeats
   if (count == 0 || keys.empty()) {

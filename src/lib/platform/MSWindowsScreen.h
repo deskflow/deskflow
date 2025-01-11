@@ -98,14 +98,14 @@ public:
   virtual void updateDesktopThread();
 
   // IPrimaryScreen overrides
-  virtual void reconfigure(UInt32 activeSides);
+  virtual void reconfigure(uint32_t activeSides);
   virtual void warpCursor(int32_t x, int32_t y);
-  virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask);
-  virtual void unregisterHotKey(UInt32 id);
+  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask);
+  virtual void unregisterHotKey(uint32_t id);
   virtual void fakeInputBegin();
   virtual void fakeInputEnd();
   virtual int32_t getJumpZoneSize() const;
-  virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const;
+  virtual bool isAnyMouseButtonDown(uint32_t &buttonID) const;
   virtual void getCursorCenter(int32_t &x, int32_t &y) const;
 
   // ISecondaryScreen overrides
@@ -134,7 +134,7 @@ public:
   virtual void screensaver(bool activate);
   virtual void resetOptions();
   virtual void setOptions(const OptionsList &options);
-  virtual void setSequenceNumber(UInt32);
+  virtual void setSequenceNumber(uint32_t);
   virtual bool isPrimary() const;
   virtual void fakeDraggingFiles(DragFileList fileList);
   virtual std::string &getDraggingFilename();
@@ -185,7 +185,7 @@ private: // HACK
   bool onEvent(HWND, UINT, WPARAM, LPARAM, LRESULT *result);
 
   // message handlers
-  bool onMark(UInt32 mark);
+  bool onMark(uint32_t mark);
   bool onKey(WPARAM, LPARAM);
   bool onHotKey(WPARAM, LPARAM);
   bool onMouseButton(WPARAM, LPARAM);
@@ -261,9 +261,9 @@ private:
     UINT m_keycode;
     UINT m_mask;
   };
-  using HotKeyMap = std::map<UInt32, HotKeyItem>;
-  using HotKeyIDList = std::vector<UInt32>;
-  using HotKeyToIDMap = std::map<HotKeyItem, UInt32>;
+  using HotKeyMap = std::map<uint32_t, HotKeyItem>;
+  using HotKeyIDList = std::vector<uint32_t>;
+  using HotKeyToIDMap = std::map<HotKeyItem, uint32_t>;
   using PrimaryKeyDownList = std::vector<KeyButton>;
 
   static HINSTANCE s_windowInstance;
@@ -292,11 +292,11 @@ private:
   int32_t m_xCursor, m_yCursor;
 
   // last clipboard
-  UInt32 m_sequenceNumber;
+  uint32_t m_sequenceNumber;
 
   // used to discard queued messages that are no longer needed
-  UInt32 m_mark;
-  UInt32 m_markReceived;
+  uint32_t m_mark;
+  uint32_t m_markReceived;
 
   // the main loop's thread id
   DWORD m_threadID;

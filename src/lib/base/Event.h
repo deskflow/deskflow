@@ -39,7 +39,7 @@ A \c Event holds an event type and a pointer to event data.
 class Event
 {
 public:
-  using Type = UInt32;
+  using Type = uint32_t;
   enum
   {
     kUnknown, //!< The event type is unknown
@@ -49,7 +49,7 @@ public:
     kLast     //!< Must be last
   };
 
-  using Flags = UInt32;
+  using Flags = uint32_t;
   enum
   {
     kNone = 0x00,               //!< No flags

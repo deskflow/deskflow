@@ -181,7 +181,7 @@ public:
   void sendFileToClient(const char *filename);
 
   //! Received dragging information from client
-  void dragInfoReceived(UInt32 fileNum, std::string content);
+  void dragInfoReceived(uint32_t fileNum, std::string content);
 
   //! Store ClientListener pointer
   void setListener(ClientListener *p)
@@ -203,7 +203,7 @@ public:
   /*!
   Returns the number of connected clients, including the server itself.
   */
-  UInt32 getNumClients() const;
+  uint32_t getNumClients() const;
 
   //! Get the list of connected clients
   /*!
@@ -242,7 +242,7 @@ private:
   std::string getName(const BaseClientProxy *) const;
 
   // get the sides of the primary screen that have neighbors
-  UInt32 getActivePrimarySides() const;
+  uint32_t getActivePrimarySides() const;
 
   // returns true iff mouse should be locked to the current screen
   // according to this object only, ignoring what the primary client
@@ -327,7 +327,7 @@ private:
 
   // returns the corner (EScreenSwitchCornerMasks) where x,y is on the
   // given client.  corners have the given size.
-  UInt32 getCorner(BaseClientProxy *, int32_t x, int32_t y, int32_t size) const;
+  uint32_t getCorner(BaseClientProxy *, int32_t x, int32_t y, int32_t size) const;
 
   // stop relative mouse moves
   void stopRelativeMoves();
@@ -365,7 +365,7 @@ private:
   void handleFileRecieveCompletedEvent(const Event &, void *);
 
   // event processing
-  void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, UInt32 seqNum);
+  void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
   void onScreensaver(bool activated);
   void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *screens);
   void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *screens);
@@ -426,7 +426,7 @@ private:
     Clipboard m_clipboard;
     std::string m_clipboardData;
     std::string m_clipboardOwner;
-    UInt32 m_clipboardSeqNum;
+    uint32_t m_clipboardSeqNum;
   };
 
   // used in hello message sent to the client
@@ -449,7 +449,7 @@ private:
   BaseClientProxy *m_active;
 
   // the sequence number of enter messages
-  UInt32 m_seqNum;
+  uint32_t m_seqNum;
 
   // current mouse position (in absolute screen coordinates) on
   // whichever screen is active
