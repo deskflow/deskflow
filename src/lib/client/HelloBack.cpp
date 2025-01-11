@@ -36,8 +36,8 @@ void HelloBack::Deps::incompatible(int major, int minor)
 
 void HelloBack::handleHello(deskflow::IStream *stream, const std::string &clientName) const
 {
-  SInt16 serverMajor;
-  SInt16 serverMinor;
+  int16_t serverMajor;
+  int16_t serverMinor;
 
   // as luck would have it, both "Synergy" and "Barrier" are 7 chars,
   // so we eat 7 chars and then test for either protocol name.

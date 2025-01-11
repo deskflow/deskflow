@@ -231,7 +231,7 @@ void ClientProxyUnknown::handleData(const Event &, void *)
     }
 
     // parse the reply to hello
-    SInt16 major, minor;
+    int16_t major, minor;
     std::string protocolName;
     if (!ProtocolUtil::readf(m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
       throw XBadClient();

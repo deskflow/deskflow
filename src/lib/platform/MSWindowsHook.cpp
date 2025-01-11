@@ -587,7 +587,7 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 
     SInt32 x = static_cast<SInt32>(info->pt.x);
     SInt32 y = static_cast<SInt32>(info->pt.y);
-    SInt32 w = static_cast<SInt16>(HIWORD(info->mouseData));
+    SInt32 w = static_cast<int16_t>(HIWORD(info->mouseData));
 
     // handle the message
     if (mouseHookHandler(wParam, x, y, w)) {
