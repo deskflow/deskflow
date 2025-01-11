@@ -7,7 +7,7 @@
 
 #include "client/HelloBack.h"
 
-#include "common/basic_types.h"
+#include "common/common.h"
 #include "mock/io/MockStream.h"
 
 #include <array>

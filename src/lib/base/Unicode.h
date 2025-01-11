@@ -19,7 +19,7 @@
 #pragma once
 
 #include "arch/IArchString.h"
-#include "common/basic_types.h"
+#include "common/common.h"
 #include <string>
 
 //! Unicode utility functions

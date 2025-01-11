@@ -19,7 +19,7 @@
 #pragma once
 
 #include "base/ILogOutputter.h"
-#include "common/basic_types.h"
+#include "common/common.h"
 #include "common/stddeque.h"
 #include "mt/Thread.h"
 

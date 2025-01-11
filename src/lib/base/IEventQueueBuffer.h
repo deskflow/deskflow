@@ -19,7 +19,7 @@
 #pragma once
 
 #include "common/IInterface.h"
-#include "common/basic_types.h"
+#include "common/common.h"
 
 class Event;
 class EventQueueTimer;

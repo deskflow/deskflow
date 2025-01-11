@@ -6,7 +6,6 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common INTERFACE
-  basic_types.h
   common.h
   IInterface.h
   ipc.h

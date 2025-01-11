@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "common/basic_types.h"
+#include "common/common.h"
 #include "mt/Mutex.h"
 
 class Stopwatch;

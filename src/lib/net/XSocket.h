@@ -19,7 +19,7 @@
 #pragma once
 
 #include "base/XBase.h"
-#include "common/basic_types.h"
+#include "common/common.h"
 #include "io/XIO.h"
 
 //! Generic socket exception
