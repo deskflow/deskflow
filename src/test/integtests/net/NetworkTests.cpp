@@ -59,8 +59,8 @@ const uint16_t kMockDataChunkIncrement = 1024;   // 1KB
 const char *kMockFilename = "tmp/test/NetworkTests.mock";
 const size_t kMockFileSize = 1024 * 1024 * 10; // 10MB
 
-void getScreenShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h);
-void getCursorPos(SInt32 &x, SInt32 &y);
+void getScreenShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h);
+void getCursorPos(int32_t &x, int32_t &y);
 uint8_t *newMockData(size_t size);
 void createFile(fstream &file, const char *filename, size_t size);
 
@@ -517,14 +517,14 @@ void createFile(fstream &file, const char *filename, size_t size) {
   delete[] buffer;
 }
 
-void getScreenShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) {
+void getScreenShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) {
   x = 0;
   y = 0;
   w = 1;
   h = 1;
 }
 
-void getCursorPos(SInt32 &x, SInt32 &y) {
+void getCursorPos(int32_t &x, int32_t &y) {
   x = 0;
   y = 0;
 }

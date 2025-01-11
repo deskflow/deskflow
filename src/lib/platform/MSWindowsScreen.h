@@ -74,8 +74,8 @@ public:
   // IScreen overrides
   virtual void *getEventTarget() const;
   virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const;
-  virtual void getCursorPos(SInt32 &x, SInt32 &y) const;
+  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const;
+  virtual void getCursorPos(int32_t &x, int32_t &y) const;
 
   /**
    * \brief Get the position of the cursor on the current machine
@@ -99,25 +99,25 @@ public:
 
   // IPrimaryScreen overrides
   virtual void reconfigure(UInt32 activeSides);
-  virtual void warpCursor(SInt32 x, SInt32 y);
+  virtual void warpCursor(int32_t x, int32_t y);
   virtual UInt32 registerHotKey(KeyID key, KeyModifierMask mask);
   virtual void unregisterHotKey(UInt32 id);
   virtual void fakeInputBegin();
   virtual void fakeInputEnd();
-  virtual SInt32 getJumpZoneSize() const;
+  virtual int32_t getJumpZoneSize() const;
   virtual bool isAnyMouseButtonDown(UInt32 &buttonID) const;
-  virtual void getCursorCenter(SInt32 &x, SInt32 &y) const;
+  virtual void getCursorCenter(int32_t &x, int32_t &y) const;
 
   // ISecondaryScreen overrides
   virtual void fakeMouseButton(ButtonID id, bool press);
-  virtual void fakeMouseMove(SInt32 x, SInt32 y);
-  virtual void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const;
-  virtual void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const;
+  virtual void fakeMouseMove(int32_t x, int32_t y);
+  virtual void fakeMouseRelativeMove(int32_t dx, int32_t dy) const;
+  virtual void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const;
 
   // IKeyState overrides
   virtual void updateKeys();
   virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
+  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang);
   virtual bool fakeKeyUp(KeyButton button);
   virtual void fakeAllKeysUp();
 
@@ -189,14 +189,14 @@ private: // HACK
   bool onKey(WPARAM, LPARAM);
   bool onHotKey(WPARAM, LPARAM);
   bool onMouseButton(WPARAM, LPARAM);
-  bool onMouseMove(SInt32 x, SInt32 y);
-  bool onMouseWheel(SInt32 xDelta, SInt32 yDelta);
+  bool onMouseMove(int32_t x, int32_t y);
+  bool onMouseWheel(int32_t xDelta, int32_t yDelta);
   bool onScreensaver(bool activated);
   bool onDisplayChange();
   void onClipboardChange();
 
   // warp cursor without discarding queued events
-  void warpCursorNoFlush(SInt32 x, SInt32 y);
+  void warpCursorNoFlush(int32_t x, int32_t y);
 
   // discard posted messages
   void nextMark();
@@ -239,7 +239,7 @@ private: // HACK
   static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
 
   // save last position of mouse to compute next delta movement
-  void saveMousePosition(SInt32 x, SInt32 y);
+  void saveMousePosition(int32_t x, int32_t y);
 
   // check if it is a modifier key repeating message
   bool isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const;
@@ -281,15 +281,15 @@ private:
   ATOM m_class;
 
   // screen shape stuff
-  SInt32 m_x, m_y;
-  SInt32 m_w, m_h;
-  SInt32 m_xCenter, m_yCenter;
+  int32_t m_x, m_y;
+  int32_t m_w, m_h;
+  int32_t m_xCenter, m_yCenter;
 
   // true if system appears to have multiple monitors
   bool m_multimon;
 
   // last mouse position
-  SInt32 m_xCursor, m_yCursor;
+  int32_t m_xCursor, m_yCursor;
 
   // last clipboard
   UInt32 m_sequenceNumber;

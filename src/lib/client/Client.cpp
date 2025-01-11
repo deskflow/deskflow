@@ -240,17 +240,17 @@ bool Client::getClipboard(ClipboardID id, IClipboard *clipboard) const
   return m_screen->getClipboard(id, clipboard);
 }
 
-void Client::getShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const
+void Client::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
 {
   m_screen->getShape(x, y, w, h);
 }
 
-void Client::getCursorPos(SInt32 &x, SInt32 &y) const
+void Client::getCursorPos(int32_t &x, int32_t &y) const
 {
   m_screen->getCursorPos(x, y);
 }
 
-void Client::enter(SInt32 xAbs, SInt32 yAbs, UInt32, KeyModifierMask mask, bool)
+void Client::enter(int32_t xAbs, int32_t yAbs, UInt32, KeyModifierMask mask, bool)
 {
   m_active = true;
   m_screen->mouseMove(xAbs, yAbs);
@@ -304,7 +304,7 @@ void Client::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std
   m_screen->keyDown(id, mask, button, lang);
 }
 
-void Client::keyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang)
+void Client::keyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang)
 {
   m_screen->keyRepeat(id, mask, count, button, lang);
 }
@@ -324,17 +324,17 @@ void Client::mouseUp(ButtonID id)
   m_screen->mouseUp(id);
 }
 
-void Client::mouseMove(SInt32 x, SInt32 y)
+void Client::mouseMove(int32_t x, int32_t y)
 {
   m_screen->mouseMove(x, y);
 }
 
-void Client::mouseRelativeMove(SInt32 dx, SInt32 dy)
+void Client::mouseRelativeMove(int32_t dx, int32_t dy)
 {
   m_screen->mouseRelativeMove(dx, dy);
 }
 
-void Client::mouseWheel(SInt32 xDelta, SInt32 yDelta)
+void Client::mouseWheel(int32_t xDelta, int32_t yDelta)
 {
   m_screen->mouseWheel(xDelta, yDelta);
 }

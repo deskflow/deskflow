@@ -169,7 +169,7 @@ private:
   // fake mouse motion position for suppressing the screen saver.
   // xscreensaver since 2.21 requires the mouse to move more than 10
   // pixels to be considered significant.
-  SInt32 m_disablePos;
+  int32_t m_disablePos;
 
   IEventQueue *m_events;
 };

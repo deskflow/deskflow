@@ -1704,7 +1704,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 // ConfigReadContext
 //
 
-ConfigReadContext::ConfigReadContext(std::istream &s, SInt32 firstLine) : m_stream(s), m_line(firstLine - 1)
+ConfigReadContext::ConfigReadContext(std::istream &s, int32_t firstLine) : m_stream(s), m_line(firstLine - 1)
 {
   // do nothing
 }

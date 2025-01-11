@@ -33,7 +33,7 @@ public:
   ClientProxy1_3 &operator=(ClientProxy1_3 &&) = delete;
 
   // IClient overrides
-  virtual void mouseWheel(SInt32 xDelta, SInt32 yDelta);
+  virtual void mouseWheel(int32_t xDelta, int32_t yDelta);
 
   void handleKeepAlive(const Event &, void *);
 

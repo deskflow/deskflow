@@ -498,7 +498,7 @@ bool XWindowsScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
   return Clipboard::copy(clipboard, m_clipboard[id], timestamp);
 }
 
-void XWindowsScreen::getShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const
+void XWindowsScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
 {
   x = m_x;
   y = m_y;
@@ -506,7 +506,7 @@ void XWindowsScreen::getShape(SInt32 &x, SInt32 &y, SInt32 &w, SInt32 &h) const
   h = m_h;
 }
 
-void XWindowsScreen::getCursorPos(SInt32 &x, SInt32 &y) const
+void XWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
 {
   Window root, window;
   int mx, my, xWindow, yWindow;
@@ -525,7 +525,7 @@ void XWindowsScreen::reconfigure(UInt32)
   // do nothing
 }
 
-void XWindowsScreen::warpCursor(SInt32 x, SInt32 y)
+void XWindowsScreen::warpCursor(int32_t x, int32_t y)
 {
   // warp mouse
   warpCursorNoFlush(x, y);
@@ -770,7 +770,7 @@ void XWindowsScreen::fakeInputEnd()
   // FIXME -- not implemented
 }
 
-SInt32 XWindowsScreen::getJumpZoneSize() const
+int32_t XWindowsScreen::getJumpZoneSize() const
 {
   return 1;
 }
@@ -788,7 +788,7 @@ bool XWindowsScreen::isAnyMouseButtonDown(UInt32 &buttonID) const
   return false;
 }
 
-void XWindowsScreen::getCursorCenter(SInt32 &x, SInt32 &y) const
+void XWindowsScreen::getCursorCenter(int32_t &x, int32_t &y) const
 {
   x = m_xCenter;
   y = m_yCenter;
@@ -803,7 +803,7 @@ void XWindowsScreen::fakeMouseButton(ButtonID button, bool press)
   }
 }
 
-void XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
+void XWindowsScreen::fakeMouseMove(int32_t x, int32_t y)
 {
   if (m_xinerama && m_xtestIsXineramaUnaware) {
     XWarpPointer(m_display, None, m_root, 0, 0, 0, 0, x, y);
@@ -813,14 +813,14 @@ void XWindowsScreen::fakeMouseMove(SInt32 x, SInt32 y)
   XFlush(m_display);
 }
 
-void XWindowsScreen::fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const
+void XWindowsScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
 {
   // FIXME -- ignore xinerama for now
   XTestFakeRelativeMotionEvent(m_display, dx, dy, CurrentTime);
   XFlush(m_display);
 }
 
-void XWindowsScreen::fakeMouseWheel(SInt32, SInt32 yDelta) const
+void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
 {
   // XXX -- support x-axis scrolling
   if (yDelta == 0) {
@@ -965,7 +965,7 @@ void XWindowsScreen::saveShape()
 #endif
 }
 
-void XWindowsScreen::setShape(SInt32 width, SInt32 height)
+void XWindowsScreen::setShape(int32_t width, int32_t height)
 {
   // set shape
   m_x = 0;
@@ -1021,7 +1021,7 @@ Window XWindowsScreen::openWindow() const
   attr.cursor = createBlankCursor();
 
   // adjust attributes and get size and shape
-  SInt32 x, y, w, h;
+  int32_t x, y, w, h;
   if (m_isPrimary) {
     // grab window attributes.  this window is used to capture user
     // input when the user is focused on another client.  it covers
@@ -1371,7 +1371,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
 
       case XkbStateNotify:
         LOG((CLOG_INFO "group change: %d", xkbEvent->state.group));
-        m_keyState->setActiveGroup((SInt32)xkbEvent->state.group);
+        m_keyState->setActiveGroup((int32_t)xkbEvent->state.group);
         return;
       }
     }
@@ -1538,8 +1538,8 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
 
   // compute motion delta (relative to the last known
   // mouse position)
-  SInt32 x = xmotion.x_root - m_xCursor;
-  SInt32 y = xmotion.y_root - m_yCursor;
+  int32_t x = xmotion.x_root - m_xCursor;
+  int32_t y = xmotion.y_root - m_yCursor;
 
   // save position to compute delta of next motion
   m_xCursor = xmotion.x_root;
@@ -1577,7 +1577,7 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     // pixel) but the latter is a PITA.  to work around
     // it we only warp when the mouse has moved more
     // than s_size pixels from the center.
-    static const SInt32 s_size = 32;
+    static const int32_t s_size = 32;
     if (xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
         xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
       warpCursorNoFlush(m_xCenter, m_yCenter);
@@ -1843,7 +1843,7 @@ unsigned int XWindowsScreen::mapButtonToX(ButtonID id) const
   return static_cast<unsigned int>(id);
 }
 
-void XWindowsScreen::warpCursorNoFlush(SInt32 x, SInt32 y)
+void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
 {
   assert(m_window != None);
 

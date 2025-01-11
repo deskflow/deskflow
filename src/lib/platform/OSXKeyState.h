@@ -91,7 +91,7 @@ public:
   virtual bool fakeCtrlAltDel();
   virtual bool fakeMediaKey(KeyID id);
   virtual KeyModifierMask pollActiveModifiers() const;
-  virtual SInt32 pollActiveGroup() const;
+  virtual int32_t pollActiveGroup() const;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
 
   CGEventFlags getModifierStateAsOSXFlags() const;
@@ -105,16 +105,16 @@ private:
   class KeyResource;
 
   // Add hard coded special keys to a deskflow::KeyMap.
-  void getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, SInt32 group) const;
+  void getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t group) const;
 
   // Convert keyboard resource to a key map
-  bool getKeyMap(deskflow::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const;
+  bool getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r) const;
 
   // Get the available keyboard groups
   bool getGroups(AutoCFArray &) const;
 
   // Change active keyboard group to group
-  void setGroup(SInt32 group);
+  void setGroup(int32_t group);
 
   // Send an event for the given modifier key
   void handleModifierKey(void *target, UInt32 virtualKey, KeyID id, bool down, KeyModifierMask newMask);
@@ -160,7 +160,7 @@ private:
     KeyButtonOffset = 1
   };
 
-  using GroupMap = std::map<CFDataRef, SInt32>;
+  using GroupMap = std::map<CFDataRef, int32_t>;
   using VirtualKeyMap = std::map<UInt32, KeyID>;
 
   VirtualKeyMap m_virtualKeyMap;

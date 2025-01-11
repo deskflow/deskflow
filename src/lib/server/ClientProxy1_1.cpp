@@ -45,7 +45,9 @@ void ClientProxy1_1::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, 
   ProtocolUtil::writef(getStream(), kMsgDKeyDown, key, mask, button);
 }
 
-void ClientProxy1_1::keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang)
+void ClientProxy1_1::keyRepeat(
+    KeyID key, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang
+)
 {
   LOG(
       (CLOG_DEBUG1 "send key repeat to \"%s\" id=%d, mask=0x%04x, count=%d, "

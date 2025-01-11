@@ -52,7 +52,7 @@ public:
   to the superclass.
   */
   virtual void sendKeyEvent(
-      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button
+      void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
   );
 
   //@}
@@ -70,7 +70,7 @@ public:
   void updateKeyState() override;
   void setHalfDuplexMask(KeyModifierMask) override;
   void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override;
-  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
   bool fakeKeyUp(KeyButton button) override;
   void fakeAllKeysUp() override;
   bool fakeMediaKey(KeyID id) override;
@@ -80,10 +80,10 @@ public:
   // Left abstract
   virtual bool fakeCtrlAltDel() override = 0;
   virtual KeyModifierMask pollActiveModifiers() const override = 0;
-  virtual SInt32 pollActiveGroup() const override = 0;
+  virtual int32_t pollActiveGroup() const override = 0;
   virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
-  SInt32 getKeyState(KeyButton keyButton)
+  int32_t getKeyState(KeyButton keyButton)
   {
     return m_keys[keyButton];
   }
@@ -121,7 +121,7 @@ protected:
   /*!
   Returns the number of the group \p offset groups after group \p group.
   */
-  SInt32 getEffectiveGroup(SInt32 group, SInt32 offset) const;
+  int32_t getEffectiveGroup(int32_t group, int32_t offset) const;
 
   //! Check if key is ignored
   /*!
@@ -135,7 +135,7 @@ protected:
   Return the button mapped to key \p id in group \p group if any,
   otherwise returns 0.
   */
-  KeyButton getButton(KeyID id, SInt32 group) const;
+  KeyButton getButton(KeyID id, int32_t group) const;
 
   //@}
 
@@ -147,10 +147,10 @@ public:
   struct AddActiveModifierContext
   {
   public:
-    AddActiveModifierContext(SInt32 group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
+    AddActiveModifierContext(int32_t group, KeyModifierMask mask, ModifierToKeys &activeModifiers);
 
   public:
-    SInt32 m_activeGroup;
+    int32_t m_activeGroup;
     KeyModifierMask m_mask;
     ModifierToKeys &m_activeModifiers;
 
@@ -197,7 +197,7 @@ private:
   void updateModifierKeyState(KeyButton button, const ModifierToKeys &oldModifiers, const ModifierToKeys &newModifiers);
 
   // active modifiers collection callback
-  static void addActiveModifierCB(KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext);
+  static void addActiveModifierCB(KeyID id, int32_t group, deskflow::KeyMap::KeyItem &keyItem, void *vcontext);
 
 private:
   // must be declared before m_keyMap. used when this class owns the key map.
@@ -215,13 +215,13 @@ private:
   // current keyboard state (> 0 if pressed, 0 otherwise).  this is
   // initialized to the keyboard state according to the system then
   // it tracks synthesized events.
-  SInt32 m_keys[kNumButtons];
+  int32_t m_keys[kNumButtons];
 
   // synthetic keyboard state (> 0 if pressed, 0 otherwise).  this
   // tracks the synthesized keyboard state.  if m_keys[n] > 0 but
   // m_syntheticKeys[n] == 0 then the key was pressed locally and
   // not synthesized yet.
-  SInt32 m_syntheticKeys[kNumButtons];
+  int32_t m_syntheticKeys[kNumButtons];
 
   // client data for each pressed key
   UInt32 m_keyClientData[kNumButtons];

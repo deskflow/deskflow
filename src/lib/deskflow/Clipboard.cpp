@@ -39,7 +39,7 @@ bool Clipboard::empty()
   assert(m_open);
 
   // clear all data
-  for (SInt32 index = 0; index < kNumFormats; ++index) {
+  for (int32_t index = 0; index < kNumFormats; ++index) {
     m_data[index] = "";
     m_added[index] = false;
   }

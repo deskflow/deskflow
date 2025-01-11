@@ -30,8 +30,8 @@ public:
   {
   }
   MOCK_METHOD(void, disable, (), (override));
-  MOCK_METHOD(void, getShape, (SInt32 &, SInt32 &, SInt32 &, SInt32 &), (const, override));
-  MOCK_METHOD(void, getCursorPos, (SInt32 &, SInt32 &), (const, override));
+  MOCK_METHOD(void, getShape, (int32_t &, int32_t &, int32_t &, int32_t &), (const, override));
+  MOCK_METHOD(void, getCursorPos, (int32_t &, int32_t &), (const, override));
   MOCK_METHOD(void, resetOptions, (), (override));
   MOCK_METHOD(void, setOptions, (const OptionsList &), (override));
   MOCK_METHOD(void, enable, (), (override));

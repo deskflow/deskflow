@@ -89,7 +89,7 @@ void XWindowsKeyState::init(Display *display, bool useXKB)
   setActiveGroup(kGroupPoll);
 }
 
-void XWindowsKeyState::setActiveGroup(SInt32 group)
+void XWindowsKeyState::setActiveGroup(int32_t group)
 {
   if (group == kGroupPollAndSet) {
     // we need to set the group to -1 in order for pollActiveGroup() to
@@ -135,7 +135,7 @@ bool XWindowsKeyState::mapModifiersToX(KeyModifierMask mask, unsigned int &modif
 {
   modifiers = 0;
 
-  for (SInt32 i = 0; i < kKeyModifierNumBits; ++i) {
+  for (int32_t i = 0; i < kKeyModifierNumBits; ++i) {
     KeyModifierMask bit = (1u << i);
     if ((mask & bit) != 0) {
       KeyModifierToXMask::const_iterator j = m_modifierToX.find(bit);
@@ -176,7 +176,7 @@ KeyModifierMask XWindowsKeyState::pollActiveModifiers() const
   return mapModifiersFromX(state);
 }
 
-SInt32 XWindowsKeyState::pollActiveGroup() const
+int32_t XWindowsKeyState::pollActiveGroup() const
 {
   // fixed condition where any group < -1 would have undetermined behaviour
   if (m_group >= 0) {
@@ -229,7 +229,7 @@ void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
   updateKeysymMap(keyMap);
 }
 
-bool XWindowsKeyState::setCurrentLanguageWithDBus(SInt32 group) const
+bool XWindowsKeyState::setCurrentLanguageWithDBus(int32_t group) const
 {
   QString service = "org.gnome.Shell";
   QString path = "/org/gnome/Shell";
@@ -711,7 +711,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         UInt32 modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
         if (isModifier && modifierBit != kKeyModifierBitNone) {
           item.m_generates = (1u << modifierBit);
-          for (SInt32 j = 0; j < 8; ++j) {
+          for (int32_t j = 0; j < 8; ++j) {
             // skip modifiers this key doesn't generate
             if ((modifierMask & (1u << j)) == 0) {
               continue;
@@ -789,7 +789,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 }
 #endif
 
-void XWindowsKeyState::remapKeyModifiers(KeyID id, SInt32 group, deskflow::KeyMap::KeyItem &item, void *vself)
+void XWindowsKeyState::remapKeyModifiers(KeyID id, int32_t group, deskflow::KeyMap::KeyItem &item, void *vself)
 {
   XWindowsKeyState *self = static_cast<XWindowsKeyState *>(vself);
   item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));

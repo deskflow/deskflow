@@ -42,7 +42,7 @@ public:
 
   // IClient overrides
   virtual void keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &);
-  virtual void keyRepeat(KeyID key, KeyModifierMask mask, SInt32 count, KeyButton button, const std::string &lang);
+  virtual void keyRepeat(KeyID key, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang);
   virtual void keyUp(KeyID key, KeyModifierMask mask, KeyButton button);
   virtual void keepAlive();
 

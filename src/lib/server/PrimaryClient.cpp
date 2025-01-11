@@ -71,12 +71,12 @@ void PrimaryClient::fakeInputEnd()
   }
 }
 
-SInt32 PrimaryClient::getJumpZoneSize() const
+int32_t PrimaryClient::getJumpZoneSize() const
 {
   return m_screen->getJumpZoneSize();
 }
 
-void PrimaryClient::getCursorCenter(SInt32 &x, SInt32 &y) const
+void PrimaryClient::getCursorCenter(int32_t &x, int32_t &y) const
 {
   m_screen->getCursorCenter(x, y);
 }
@@ -101,12 +101,12 @@ bool PrimaryClient::getClipboard(ClipboardID id, IClipboard *clipboard) const
   return m_screen->getClipboard(id, clipboard);
 }
 
-void PrimaryClient::getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const
+void PrimaryClient::getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const
 {
   m_screen->getShape(x, y, width, height);
 }
 
-void PrimaryClient::getCursorPos(SInt32 &x, SInt32 &y) const
+void PrimaryClient::getCursorPos(int32_t &x, int32_t &y) const
 {
   m_screen->getCursorPos(x, y);
 }
@@ -121,7 +121,7 @@ void PrimaryClient::disable()
   m_screen->disable();
 }
 
-void PrimaryClient::enter(SInt32 xAbs, SInt32 yAbs, UInt32 seqNum, KeyModifierMask mask, bool screensaver)
+void PrimaryClient::enter(int32_t xAbs, int32_t yAbs, UInt32 seqNum, KeyModifierMask mask, bool screensaver)
 {
   m_screen->setSequenceNumber(seqNum);
   if (!screensaver) {
@@ -172,7 +172,7 @@ void PrimaryClient::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, c
   }
 }
 
-void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, SInt32, KeyButton, const std::string &)
+void PrimaryClient::keyRepeat(KeyID, KeyModifierMask, int32_t, KeyButton, const std::string &)
 {
   // ignore
 }
@@ -198,17 +198,17 @@ void PrimaryClient::mouseUp(ButtonID)
   // ignore
 }
 
-void PrimaryClient::mouseMove(SInt32 x, SInt32 y)
+void PrimaryClient::mouseMove(int32_t x, int32_t y)
 {
   m_screen->warpCursor(x, y);
 }
 
-void PrimaryClient::mouseRelativeMove(SInt32, SInt32)
+void PrimaryClient::mouseRelativeMove(int32_t, int32_t)
 {
   // ignore
 }
 
-void PrimaryClient::mouseWheel(SInt32, SInt32)
+void PrimaryClient::mouseWheel(int32_t, int32_t)
 {
   // ignore
 }

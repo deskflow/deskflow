@@ -431,7 +431,7 @@ void XWindowsClipboard::doClearCache()
 {
   m_checkCache = false;
   m_cached = false;
-  for (SInt32 index = 0; index < kNumFormats; ++index) {
+  for (int32_t index = 0; index < kNumFormats; ++index) {
     m_data[index] = "";
     m_added[index] = false;
   }
@@ -615,7 +615,7 @@ bool XWindowsClipboard::motifOwnsClipboard() const
 
   // get the Motif clipboard header property from the root window
   Atom target;
-  SInt32 format;
+  int32_t format;
   std::string data;
   Window root = RootWindow(m_display, DefaultScreen(m_display));
   if (!XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target, &format, False)) {
@@ -640,7 +640,7 @@ void XWindowsClipboard::motifFillCache()
 
   // get the Motif clipboard header property from the root window
   Atom target;
-  SInt32 format;
+  int32_t format;
   std::string data;
   Window root = RootWindow(m_display, DefaultScreen(m_display));
   if (!XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target, &format, False)) {
@@ -676,13 +676,13 @@ void XWindowsClipboard::motifFillCache()
   }
 
   // format list is after static item structure elements
-  const SInt32 numFormats = item.m_numFormats - item.m_numDeletedFormats;
-  auto formats = static_cast<const SInt32 *>(static_cast<const void *>(item.m_size + data.data()));
+  const int32_t numFormats = item.m_numFormats - item.m_numDeletedFormats;
+  auto formats = static_cast<const int32_t *>(static_cast<const void *>(item.m_size + data.data()));
 
   // get the available formats
   using MotifFormatMap = std::map<Atom, std::string>;
   MotifFormatMap motifFormats;
-  for (SInt32 i = 0; i < numFormats; ++i) {
+  for (int32_t i = 0; i < numFormats; ++i) {
     // get Motif format property from the root window
     snprintf(name, buffer_size, "_MOTIF_CLIP_ITEM_%d", formats[i]);
     Atom atomFormat = XInternAtom(m_display, name, False);
@@ -775,7 +775,7 @@ bool XWindowsClipboard::insertMultipleReply(Window requestor, ::Time time, Atom 
 {
   // get the requested targets
   Atom target;
-  SInt32 format;
+  int32_t format;
   std::string data;
   if (!XWindowsUtil::getWindowProperty(m_display, requestor, property, &data, &target, &format, False)) {
     // can't get the requested targets

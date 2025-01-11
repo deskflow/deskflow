@@ -176,7 +176,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_defaultState_returnsZero) {
   MockEventQueue eventQueue;
   XWindowsKeyState keyState(m_display, true, &eventQueue, keyMap);
 
-  SInt32 actual = keyState.pollActiveGroup();
+  int32_t actual = keyState.pollActiveGroup();
 
   ASSERT_EQ(0, actual);
 }
@@ -188,7 +188,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_positiveGroup_returnsGroup) {
 
   keyState.group(3);
 
-  SInt32 actual = keyState.pollActiveGroup();
+  int32_t actual = keyState.pollActiveGroup();
 
   ASSERT_EQ(3, actual);
 }
@@ -206,7 +206,7 @@ TEST_F(XWindowsKeyStateTests, pollActiveGroup_xkb_areEqual) {
 
   // compare pollActiveGroup() with XkbGetState()
   if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
-    SInt32 actual = keyState.pollActiveGroup();
+    int32_t actual = keyState.pollActiveGroup();
 
     ASSERT_EQ(state.group, actual);
   } else {

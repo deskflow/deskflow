@@ -54,25 +54,25 @@ public:
   // IScreen overrides
   void *getEventTarget() const override;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
-  void getShape(SInt32 &x, SInt32 &y, SInt32 &width, SInt32 &height) const override;
-  void getCursorPos(SInt32 &x, SInt32 &y) const override;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
+  void getCursorPos(int32_t &x, int32_t &y) const override;
 
   // IPrimaryScreen overrides
   void reconfigure(UInt32 activeSides) override;
-  void warpCursor(SInt32 x, SInt32 y) override;
+  void warpCursor(int32_t x, int32_t y) override;
   UInt32 registerHotKey(KeyID key, KeyModifierMask mask) override;
   void unregisterHotKey(UInt32 id) override;
   void fakeInputBegin() override;
   void fakeInputEnd() override;
-  SInt32 getJumpZoneSize() const override;
+  int32_t getJumpZoneSize() const override;
   bool isAnyMouseButtonDown(UInt32 &buttonID) const override;
-  void getCursorCenter(SInt32 &x, SInt32 &y) const override;
+  void getCursorCenter(int32_t &x, int32_t &y) const override;
 
   // ISecondaryScreen overrides
   void fakeMouseButton(ButtonID id, bool press) override;
-  void fakeMouseMove(SInt32 x, SInt32 y) override;
-  void fakeMouseRelativeMove(SInt32 dx, SInt32 dy) const override;
-  void fakeMouseWheel(SInt32 xDelta, SInt32 yDelta) const override;
+  void fakeMouseMove(int32_t x, int32_t y) override;
+  void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override;
+  void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const override;
 
   // IPlatformScreen overrides
   void enable() override;
@@ -131,7 +131,7 @@ private:
 
   Display *openDisplay(const char *displayName);
   void saveShape();
-  void setShape(SInt32 width, SInt32 height);
+  void setShape(int32_t width, int32_t height);
   Window openWindow() const;
   void openIM();
 
@@ -154,7 +154,7 @@ private:
   ButtonID mapButtonFromX(const XButtonEvent *) const;
   unsigned int mapButtonToX(ButtonID id) const;
 
-  void warpCursorNoFlush(SInt32 x, SInt32 y);
+  void warpCursorNoFlush(int32_t x, int32_t y);
 
   void refreshKeyboard(XEvent *);
 
@@ -190,12 +190,12 @@ private:
   bool m_isOnScreen;
 
   // screen shape stuff
-  SInt32 m_x, m_y;
-  SInt32 m_w, m_h;
-  SInt32 m_xCenter, m_yCenter;
+  int32_t m_x, m_y;
+  int32_t m_w, m_h;
+  int32_t m_xCenter, m_yCenter;
 
   // last mouse position
-  SInt32 m_xCursor, m_yCursor;
+  int32_t m_xCursor, m_yCursor;
 
   // keyboard stuff
   XWindowsKeyState *m_keyState;

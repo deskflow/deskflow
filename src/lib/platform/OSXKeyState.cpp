@@ -440,7 +440,7 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
   return outMask;
 }
 
-SInt32 OSXKeyState::pollActiveGroup() const
+int32_t OSXKeyState::pollActiveGroup() const
 {
   AutoTISInputSourceRef keyboardLayout(TISCopyCurrentKeyboardLayoutInputSource(), CFRelease);
   CFDataRef id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout.get(), kTISPropertyInputSourceID);
@@ -472,11 +472,11 @@ void OSXKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 {
   // update keyboard groups
-  SInt32 numGroups{0};
+  int32_t numGroups{0};
   if (getGroups(m_groups)) {
     m_groupMap.clear();
     numGroups = CFArrayGetCount(m_groups.get());
-    for (SInt32 g = 0; g < numGroups; ++g) {
+    for (int32_t g = 0; g < numGroups; ++g) {
       TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), g);
       CFDataRef id = (CFDataRef)TISGetInputSourceProperty(keyboardLayout, kTISPropertyInputSourceID);
       m_groupMap[id] = g;
@@ -484,7 +484,7 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
   }
 
   UInt32 keyboardType = LMGetKbdType();
-  for (SInt32 g = 0; g < numGroups; ++g) {
+  for (int32_t g = 0; g < numGroups; ++g) {
     // add special keys
     getKeyMapForSpecialKeys(keyMap, g);
 
@@ -630,7 +630,7 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
   }
 
   case Keystroke::kGroup: {
-    SInt32 group = keystroke.m_data.m_group.m_group;
+    int32_t group = keystroke.m_data.m_group.m_group;
     if (!keystroke.m_data.m_group.m_restore) {
       if (keystroke.m_data.m_group.m_absolute) {
         LOG((CLOG_DEBUG1 "  group %d", group));
@@ -649,7 +649,7 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
   }
 }
 
-void OSXKeyState::getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, SInt32 group) const
+void OSXKeyState::getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, int32_t group) const
 {
   // special keys are insensitive to modifers and none are dead keys
   deskflow::KeyMap::KeyItem item;
@@ -678,7 +678,7 @@ void OSXKeyState::getKeyMapForSpecialKeys(deskflow::KeyMap &keyMap, SInt32 group
   // anyway.
 }
 
-bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, SInt32 group, const IOSXKeyResource &r) const
+bool OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap, int32_t group, const IOSXKeyResource &r) const
 {
   if (!r.isValid()) {
     return false;
@@ -876,7 +876,7 @@ bool OSXKeyState::getGroups(AutoCFArray &groups) const
   return true;
 }
 
-void OSXKeyState::setGroup(SInt32 group)
+void OSXKeyState::setGroup(int32_t group)
 {
   TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
   if (!keyboardLayout) {
