@@ -11,6 +11,7 @@
 #include <QMainWindow>
 #include <QMutex>
 #include <QProcess>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QSystemTrayIcon>
 #include <QThread>
@@ -166,6 +167,8 @@ private:
   void showFirstConnectedMessage();
   void updateStatus();
   void showAndActivate();
+  void showHostNameEditor();
+  void setHostName();
 
   QString getTlsPath();
 
@@ -203,6 +206,7 @@ private:
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
   inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+  inline static const auto m_nameRegEx = QRegularExpression(QStringLiteral("^[\\w\\-_\\.]{0,255}$"));
 
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;

@@ -55,11 +55,6 @@ SettingsDialog::SettingsDialog(
   m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
   updateControls();
 
-  m_pScreenNameError = new validators::ValidationError(this);
-  ui->m_pLineEditScreenName->setValidator(
-      new validators::ScreenNameValidator(ui->m_pLineEditScreenName, m_pScreenNameError, &serverConfig.screens())
-  );
-
   connect(ui->m_pCheckBoxEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
 
   connect(
@@ -167,13 +162,7 @@ void SettingsDialog::showReadOnlyMessage()
 
 void SettingsDialog::accept()
 {
-  if (!ui->m_pLineEditScreenName->hasAcceptableInput()) {
-    QMessageBox::warning(this, tr("Invalid screen name"), m_pScreenNameError->message());
-    return;
-  }
-
   m_appConfig.setLoadFromSystemScope(ui->m_pRadioSystemScope->isChecked());
-  m_appConfig.setScreenName(ui->m_pLineEditScreenName->text());
   m_appConfig.setPort(ui->m_pSpinBoxPort->value());
   m_appConfig.setNetworkInterface(ui->m_pLineEditInterface->text());
   m_appConfig.setLogLevel(ui->m_pComboLogLevel->currentIndex());
@@ -209,7 +198,6 @@ void SettingsDialog::reject()
 void SettingsDialog::loadFromConfig()
 {
 
-  ui->m_pLineEditScreenName->setText(m_appConfig.screenName());
   ui->m_pSpinBoxPort->setValue(m_appConfig.port());
   ui->m_pLineEditInterface->setText(m_appConfig.networkInterface());
   ui->m_pComboLogLevel->setCurrentIndex(m_appConfig.logLevel());
@@ -318,7 +306,6 @@ void SettingsDialog::updateControls()
   const bool serviceChecked = ui->m_pCheckBoxServiceEnabled->isChecked();
   const bool logToFile = ui->m_pCheckBoxLogToFile->isChecked();
 
-  ui->m_pLineEditScreenName->setEnabled(writable);
   ui->m_pSpinBoxPort->setEnabled(writable);
   ui->m_pLineEditInterface->setEnabled(writable);
   ui->m_pComboLogLevel->setEnabled(writable);

@@ -65,8 +65,6 @@ private:
   /// @brief Enables controls when they should be.
   void updateControls();
 
-  validators::ValidationError *m_pScreenNameError;
-
   /// @brief Stores settings scope at start of settings dialog
   /// This is necessary to restore state if user changes
   /// the scope and doesn't save changes

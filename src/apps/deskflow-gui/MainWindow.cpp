@@ -44,6 +44,7 @@
 #include <QNetworkInterface>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QScrollBar>
 
 #include <memory>
@@ -239,6 +240,9 @@ void MainWindow::setupControls()
   if (m_appConfig.clientGroupChecked() || m_appConfig.serverGroupChecked())
     updateModeControls(m_appConfig.serverGroupChecked());
 
+  ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
+  ui->lineEditName->setVisible(false);
+
 #if defined(Q_OS_MAC)
 
   ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -344,6 +348,10 @@ void MainWindow::connectSlots()
   connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
 
   connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
+
+  connect(ui->btnEditName, &QPushButton::clicked, this, &MainWindow::showHostNameEditor);
+
+  connect(ui->lineEditName, &QLineEdit::editingFinished, this, &MainWindow::setHostName);
 }
 
 void MainWindow::toggleLogVisible(bool visible)
@@ -1047,9 +1055,8 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(tr("This computer's name: %1 "
-                                  R"((<a href="#" style="color: %2">change</a>))")
-                                   .arg(m_appConfig.screenName(), kColorSecondary));
+  ui->lblComputerName->setText(m_appConfig.screenName());
+  ui->lineEditName->setText(m_appConfig.screenName());
   m_serverConfig.updateServerName();
 }
 
@@ -1063,6 +1070,48 @@ void MainWindow::showAndActivate()
   activateWindow();
   m_actionRestore->setVisible(false);
   m_actionMinimize->setVisible(true);
+}
+
+void MainWindow::showHostNameEditor()
+{
+  ui->lineEditName->show();
+  ui->lblComputerName->hide();
+  ui->btnEditName->hide();
+  ui->lineEditName->setFocus();
+}
+
+void MainWindow::setHostName()
+{
+  ui->lineEditName->hide();
+  ui->lblComputerName->show();
+  ui->btnEditName->show();
+
+  QString text = ui->lineEditName->text();
+  bool existingScreen = serverConfig().screenExists(text) && text != m_appConfig.screenName();
+
+  if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
+    blockSignals(true);
+    ui->lineEditName->setText(m_appConfig.screenName());
+    blockSignals(false);
+
+    const auto title = tr("Invalid Screen Name");
+    QString body;
+    if (existingScreen) {
+      body = tr("Screen name already exists");
+    } else {
+      body = tr("The name you have chosen is invalid.\n\n"
+                "Valid names:\n"
+                "• Use letters and numbers\n"
+                "• May also use _ or -\n"
+                "• Are between 1 and 255 characters");
+    }
+    QMessageBox::information(this, title, body);
+    return;
+  }
+
+  ui->lblComputerName->setText(ui->lineEditName->text());
+  m_appConfig.setScreenName(ui->lineEditName->text());
+  applyConfig();
 }
 
 QString MainWindow::getTlsPath()
