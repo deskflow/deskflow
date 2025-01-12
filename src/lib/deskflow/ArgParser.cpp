@@ -51,6 +51,9 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
       // save configuration file path
       args.m_configFile = argv[++i];
+    } else if (isArg(i, argc, argv, "--mouse-speed", "-s")) {
+      double speed = atof(argv[++i]);
+      args.m_mouseSpeed = std::clamp(speed, 0.01, 10.0);
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;

@@ -33,6 +33,7 @@
 #include "deskflow/mouse_types.h"
 #include "deskflow/option_types.h"
 #include "server/Config.h"
+#include "gui/config/IAppConfig.h"
 #include <memory>
 
 class BaseClientProxy;
@@ -131,7 +132,7 @@ public:
   */
   Server(
       ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events,
-      deskflow::ServerArgs const &args
+      const deskflow::ServerArgs &args
   );
   Server(Server const &) = delete;
   Server(Server &&) = delete;
@@ -531,5 +532,5 @@ private:
   bool m_waitDragInfoThread;
 
   ClientListener *m_clientListener;
-  deskflow::ServerArgs m_args;
+  const deskflow::ServerArgs &m_args;
 };
