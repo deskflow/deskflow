@@ -76,9 +76,6 @@ SettingsDialog::SettingsDialog(
       Qt::QueuedConnection
   );
 
-#ifdef DESKFLOW_GUI_HOOK_SETTINGS
-  DESKFLOW_GUI_HOOK_SETTINGS
-#endif
   adjustSize();
   QApplication::processEvents();
   setFixedHeight(height());
