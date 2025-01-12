@@ -52,6 +52,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   ui->m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
   ui->m_pCheckBoxWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
+  ui->m_pSpinBoxMouseSpeed->setValue(serverConfig().mouseSpeed());
 
   ui->m_pCheckBoxSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
   ui->m_pSpinBoxSwitchDelay->setValue(serverConfig().switchDelay());
@@ -233,6 +234,13 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       ui->m_pSpinBoxSwitchCornerSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
       [this](const int &v) {
         serverConfig().setSwitchCornerSize(v);
+        onChange();
+      }
+  );
+  connect(
+      ui->m_pSpinBoxMouseSpeed, static_cast<void (QDoubleSpinBox::*)(double)>(&QDoubleSpinBox::valueChanged), this,
+      [this](const double &v) {
+        serverConfig().setMouseSpeed(v);
         onChange();
       }
   );
