@@ -208,7 +208,6 @@ void SettingsDialog::reject()
 
 void SettingsDialog::loadFromConfig()
 {
-
   ui->m_pLineEditScreenName->setText(m_appConfig.screenName());
   ui->m_pSpinBoxPort->setValue(m_appConfig.port());
   ui->m_pLineEditInterface->setText(m_appConfig.networkInterface());
@@ -310,6 +309,7 @@ void SettingsDialog::updateControls()
   const bool writable = m_appConfig.isActiveScopeWritable();
   const bool serviceChecked = ui->m_pCheckBoxServiceEnabled->isChecked();
   const bool logToFile = ui->m_pCheckBoxLogToFile->isChecked();
+  const bool isClient = isClientMode();
 
   ui->m_pLineEditScreenName->setEnabled(writable);
   ui->m_pSpinBoxPort->setEnabled(writable);
@@ -327,8 +327,8 @@ void SettingsDialog::updateControls()
   ui->m_pLabelElevate->setEnabled(writable && serviceChecked && serviceAvailable);
   ui->m_pComboElevate->setEnabled(writable && serviceChecked && serviceAvailable);
 
-  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
-  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());
+  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClient);
+  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClient);
 
   ui->m_pLabelLogPath->setEnabled(writable && logToFile);
   ui->m_pLineEditLogFilename->setEnabled(writable && logToFile);

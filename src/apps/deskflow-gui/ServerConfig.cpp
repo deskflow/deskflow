@@ -80,6 +80,7 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
          m_DisableLockToScreen == sc.m_DisableLockToScreen &&   //
          m_ClipboardSharing == sc.m_ClipboardSharing &&         //
          m_ClipboardSharingSize == sc.m_ClipboardSharingSize && //
+         m_MouseSpeed == sc.m_MouseSpeed &&                     //
          m_pMainWindow == sc.m_pMainWindow;
 }
 
