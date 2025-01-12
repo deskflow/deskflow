@@ -78,6 +78,8 @@ protected:
   void toggleCornerBottomRight(bool enable);
   void toggleCornerTopRight(bool enable);
 
+  void setMouseSpeedModifier(double modifier);
+
   void toggleExternalConfig(bool enable = false);
   bool browseConfigFile();
 

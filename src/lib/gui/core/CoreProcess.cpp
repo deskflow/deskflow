@@ -590,6 +590,10 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     args << "--tls-cert" << m_appConfig.tlsCertPath();
   }
 
+  if (m_appConfig.mouseSpeed() != 1.0) {
+    args << "--mouse-speed" << QString::number(m_appConfig.mouseSpeed());
+  }
+
   return true;
 }
 

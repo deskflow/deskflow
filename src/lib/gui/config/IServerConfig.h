@@ -23,6 +23,7 @@ public:
   virtual void save(QFile &file) const = 0;
   virtual bool enableDragAndDrop() const = 0;
   virtual const ScreenList &screens() const = 0;
+  virtual double mouseSpeed() const = 0;
 };
 
 } // namespace deskflow::gui

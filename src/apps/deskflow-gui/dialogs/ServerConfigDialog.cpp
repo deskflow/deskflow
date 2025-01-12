@@ -71,6 +71,12 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
 
+  ui->sbMouseSpeedMultiplier->setValue(serverConfig().mouseSpeed());
+  connect(
+      ui->sbMouseSpeedMultiplier, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this,
+      &ServerConfigDialog::setMouseSpeedModifier
+  );
+
   ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == ServerProtocol::kSynergy);
   ui->rbProtocolBarrier->setChecked(serverConfig().protocol() == ServerProtocol::kBarrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
@@ -386,6 +392,12 @@ void ServerConfigDialog::toggleCornerBottomRight(bool enable)
 void ServerConfigDialog::toggleCornerTopRight(bool enable)
 {
   serverConfig().setSwitchCorner(static_cast<int>(TopRight), enable);
+  onChange();
+}
+
+void ServerConfigDialog::setMouseSpeedModifier(double modifier)
+{
+  serverConfig().setMouseSpeed(modifier);
   onChange();
 }
 

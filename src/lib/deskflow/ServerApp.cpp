@@ -134,7 +134,8 @@ void ServerApp::help()
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
-       << "instead.\n" HELP_COMMON_INFO_1
+       << "instead.\n"
+       << HELP_COMMON_INFO_1
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"

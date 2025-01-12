@@ -60,6 +60,7 @@ public:
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
+  virtual double mouseSpeed() const = 0;
 
   //
   // Setters
@@ -83,6 +84,7 @@ public:
   virtual void setEnableService(bool enableService) = 0;
   virtual void setCloseToTray(bool closeToTray) = 0;
   virtual void setInvertConnection(bool invertConnection) = 0;
+  virtual void setMouseSpeed(double speed) = 0;
 };
 
 } // namespace deskflow::gui
