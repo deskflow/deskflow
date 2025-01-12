@@ -44,6 +44,7 @@
 #include <QNetworkInterface>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QScrollBar>
 
 #include <memory>
@@ -228,6 +229,9 @@ void MainWindow::setupControls()
     m_appConfig.setLastVersion(kVersion);
   }
 
+  // Setup The name change popup
+  ui->lineEditName->setValidator(new QRegularExpressionValidator(m_PCNameRegEx, this));
+  ui->lineEditName->setVisible(false);
 #if defined(Q_OS_MAC)
 
   ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -301,7 +305,6 @@ void MainWindow::connectSlots()
   connect(ui->lineClientIp, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
-  connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(ui->btnLocalFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
@@ -310,6 +313,10 @@ void MainWindow::connectSlots()
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 
   connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
+
+  connect(ui->btnEditName, &QPushButton::clicked, this, &MainWindow::showHostNameEditor);
+
+  connect(ui->lineEditName, &QLineEdit::editingFinished, this, &MainWindow::setHostName);
 }
 
 void MainWindow::toggleLogVisible(bool visible)
@@ -998,9 +1005,8 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(tr("This computer's name: %1 "
-                                  R"((<a href="#" style="color: %2">change</a>))")
-                                   .arg(m_appConfig.screenName(), kColorSecondary));
+  ui->lblComputerName->setText(m_appConfig.screenName());
+  ui->lineEditName->setText(m_appConfig.screenName());
   m_serverConfig.updateServerName();
 }
 
@@ -1061,6 +1067,30 @@ void MainWindow::showAndActivate()
   activateWindow();
   m_actionRestore->setVisible(false);
   m_actionMinimize->setVisible(true);
+}
+
+void MainWindow::showHostNameEditor()
+{
+  ui->lineEditName->show();
+  ui->lblComputerName->hide();
+  ui->btnEditName->hide();
+  ui->lineEditName->setFocus();
+}
+
+void MainWindow::setHostName()
+{
+  QString text = ui->lineEditName->text();
+  if (serverConfig().screenExists(text) && text != m_appConfig.screenName()) {
+    QMessageBox::information(this, tr("Deskflow"), "Screen name already exists");
+    return;
+  }
+  // TODO Saving breaks the config
+  ui->lineEditName->hide();
+  ui->lblComputerName->show();
+  ui->btnEditName->show();
+  ui->lblComputerName->setText(ui->lineEditName->text());
+  m_appConfig.setScreenName(ui->lineEditName->text());
+  applyConfig();
 }
 
 QString MainWindow::getTlsPath()
