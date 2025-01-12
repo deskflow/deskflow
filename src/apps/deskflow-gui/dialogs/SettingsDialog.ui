@@ -451,6 +451,51 @@
            </layout>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_mouse_speed">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QLabel" name="m_pLabelMouseSpeed">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Mouse Speed</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_pSpinBoxMouseSpeed">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimum">
+               <double>0.1</double>
+              </property>
+              <property name="maximum">
+               <double>10.0</double>
+              </property>
+              <property name="singleStep">
+               <double>0.1</double>
+              </property>
+              <property name="value">
+               <double>1.0</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
            <widget class="QCheckBox" name="m_pInvertConnection">
             <property name="text">
              <string>Invert server/client TCP connection</string>
@@ -773,6 +818,7 @@
   <tabstop>m_pLineEditScreenName</tabstop>
   <tabstop>m_pSpinBoxPort</tabstop>
   <tabstop>m_pLineEditInterface</tabstop>
+  <tabstop>m_pSpinBoxMouseSpeed</tabstop>
   <tabstop>m_pCheckBoxEnableTls</tabstop>
   <tabstop>m_pComboBoxTlsKeyLength</tabstop>
   <tabstop>m_pLineEditTlsCertPath</tabstop>

@@ -40,6 +40,21 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
       // save configuration file path
       args.m_configFile = argv[++i];
+    } else if (isArg(i, argc, argv, nullptr, "--mouse-speed", 1)) {
+      try {
+        double speed = std::stod(argv[++i]);
+        if (speed >= 0.1 && speed <= 10.0) {
+          args.m_mouseSpeed = speed;
+        } else {
+          LOG((CLOG_ERR "mouse speed must be between 0.1 and 10.0"));
+          args.m_shouldExitFail = true;
+          return false;
+        }
+      } catch (const std::exception &e) {
+        LOG((CLOG_ERR "invalid mouse speed value"));
+        args.m_shouldExitFail = true;
+        return false;
+      }
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;

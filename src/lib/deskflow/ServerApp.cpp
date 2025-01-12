@@ -134,7 +134,9 @@ void ServerApp::help()
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
-       << "instead.\n" HELP_COMMON_INFO_1
+       << "instead.\n"
+       << "      --mouse-speed <value> set mouse speed multiplier (0.1 to 10.0).\n"
+       << HELP_COMMON_INFO_1
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
@@ -789,6 +791,9 @@ int ServerApp::runInner(int argc, char **argv, ILogOutputter *outputter, Startup
   if (outputter != NULL) {
     CLOG->insert(outputter);
   }
+
+  // parse command line arguments
+  parseArgs(argc, const_cast<const char *const *>(argv));
 
   // run
   int result = startup(argc, argv);

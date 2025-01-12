@@ -204,7 +204,9 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category)
 {
   ArgParser parser(nullptr);
   deskflow::ServerArgs args;
-  args.m_daemon = false;
+#if WINAPI_MSWINDOWS
+  args.m_daemon = false; // Explicitly disable daemon mode on Windows
+#endif
   char const *argv[] = {
       "deskflow", "--help"
 #if WINAPI_MSWINDOWS
@@ -225,7 +227,6 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help)
 {
   ArgParser parser(nullptr);
   deskflow::ClientArgs args;
-  args.m_daemon = false;
   char const *argv[] = {
       kAppId,
       "--help"

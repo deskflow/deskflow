@@ -192,6 +192,7 @@ void SettingsDialog::accept()
   m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
   m_appConfig.setInvertConnection(ui->m_pInvertConnection->isChecked());
   m_appConfig.setColorfulTrayIcon(ui->rb_icon_colorful->isChecked());
+  m_appConfig.setMouseSpeed(ui->m_pSpinBoxMouseSpeed->value());
 
   QDialog::accept();
 }
@@ -222,6 +223,7 @@ void SettingsDialog::loadFromConfig()
   ui->m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   ui->m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
   ui->m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->m_pSpinBoxMouseSpeed->setValue(m_appConfig.mouseSpeed());
 
   if (m_appConfig.enableUpdateCheck().has_value()) {
     ui->m_pCheckBoxAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
@@ -310,6 +312,7 @@ void SettingsDialog::updateControls()
   const bool writable = m_appConfig.isActiveScopeWritable();
   const bool serviceChecked = ui->m_pCheckBoxServiceEnabled->isChecked();
   const bool logToFile = ui->m_pCheckBoxLogToFile->isChecked();
+  const bool isClient = isClientMode();
 
   ui->m_pLineEditScreenName->setEnabled(writable);
   ui->m_pSpinBoxPort->setEnabled(writable);
@@ -322,13 +325,14 @@ void SettingsDialog::updateControls()
   ui->m_pLineEditTlsCertPath->setEnabled(writable);
   ui->m_pComboBoxTlsKeyLength->setEnabled(writable);
   ui->m_pCheckBoxCloseToTray->setEnabled(writable);
+  ui->m_pSpinBoxMouseSpeed->setEnabled(writable && isClient);
 
   ui->m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);
   ui->m_pLabelElevate->setEnabled(writable && serviceChecked && serviceAvailable);
   ui->m_pComboElevate->setEnabled(writable && serviceChecked && serviceAvailable);
 
-  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
-  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());
+  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClient);
+  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClient);
 
   ui->m_pLabelLogPath->setEnabled(writable && logToFile);
   ui->m_pLineEditLogFilename->setEnabled(writable && logToFile);
