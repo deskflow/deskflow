@@ -168,10 +168,6 @@ int main(int argc, char *argv[])
   MainWindow mainWindow(configScopes, appConfig);
   mainWindow.open();
 
-#ifdef DESKFLOW_GUI_HOOK_START
-  DESKFLOW_GUI_HOOK_START
-#endif
-
   return QApplication::exec();
 }
 
