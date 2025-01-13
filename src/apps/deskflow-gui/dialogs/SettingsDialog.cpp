@@ -46,10 +46,8 @@ SettingsDialog::SettingsDialog(
 
   ui->setupUi(this);
 
-  const auto folderIcon =
-      QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen, QIcon(QStringLiteral(":/icons/64x64/folder.png")));
-  ui->m_pPushButtonTlsCertPath->setIcon(folderIcon);
-  ui->m_pButtonBrowseLog->setIcon(folderIcon);
+  ui->m_pPushButtonTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->m_pButtonBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
@@ -245,11 +243,7 @@ void SettingsDialog::loadFromConfig()
     ui->rb_icon_colorful->setChecked(true);
   else
     ui->rb_icon_mono->setChecked(true);
-
-  ui->rb_icon_mono->setIcon(
-      isDarkMode() ? QIcon(QStringLiteral(":/icons/128x128/tray-dark.png"))
-                   : QIcon(QStringLiteral(":/icons/128x128/tray-light.png"))
-  );
+  ui->rb_icon_mono->setIcon(QIcon(QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow-symbolic").arg(iconMode())));
 
   updateTlsControls();
 }

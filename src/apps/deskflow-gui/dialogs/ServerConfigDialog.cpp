@@ -45,9 +45,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 {
   ui->setupUi(this);
 
-  const auto folderIcon =
-      QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen, QIcon(QStringLiteral(":/icons/64x64/folder.png")));
-  ui->m_pButtonBrowseConfigFile->setIcon(folderIcon);
+  ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->m_pTrashScreenWidget->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.

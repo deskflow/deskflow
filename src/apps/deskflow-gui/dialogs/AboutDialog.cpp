@@ -34,14 +34,13 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
 {
   ui->setupUi(this);
 
-  auto copyIcon = QIcon::fromTheme(
-      QIcon::ThemeIcon::EditCopy, deskflow::gui::isDarkMode() ? QIcon(s_darkCopy) : QIcon(s_lightCopy)
-  );
-  ui->lblIcon->setFixedSize(fontMetrics().height() * 6, fontMetrics().height() * 6);
-  ui->lblIcon->setPixmap(QPixmap(QStringLiteral(":/icons/128x128/tray.png"))
-                             .scaledToWidth(fontMetrics().height() * 6, Qt::SmoothTransformation));
+  const int px = (fontMetrics().height() * 6);
+  const QSize pixmapSize(px, px);
+  ui->lblIcon->setFixedSize(pixmapSize);
 
-  ui->btnCopyVersion->setIcon(copyIcon);
+  ui->lblIcon->setPixmap(QPixmap(QIcon::fromTheme("deskflow").pixmap(QSize().scaled(pixmapSize, Qt::KeepAspectRatio))));
+
+  ui->btnCopyVersion->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   // Set up the displayed version number

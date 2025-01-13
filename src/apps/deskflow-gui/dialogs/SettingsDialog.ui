@@ -176,7 +176,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../res/deskflow.qrc">
-                <normaloff>:/icons/128x128/tray.png</normaloff>:/icons/128x128/tray.png</iconset>
+                <normaloff>:/icons/common/deskflow.svg</normaloff>:/icons/common/deskflow.svg</iconset>
               </property>
              </widget>
             </item>
@@ -187,7 +187,7 @@
               </property>
               <property name="icon">
                <iconset resource="../../res/deskflow.qrc">
-                <normaloff>:/icons/128x128/tray-dark.png</normaloff>:/icons/128x128/tray-dark.png</iconset>
+                <normaloff>:/icons/deskflow-dark/apps/64/deskflow-symbolic.svg</normaloff>:/icons/deskflow-dark/apps/64/deskflow-symbolic.svg</iconset>
               </property>
              </widget>
             </item>

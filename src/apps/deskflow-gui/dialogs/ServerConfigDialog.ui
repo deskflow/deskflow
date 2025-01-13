@@ -70,9 +70,6 @@
            <property name="text">
             <string/>
            </property>
-           <property name="pixmap">
-            <pixmap>:/icons/64x64/user-trash.png</pixmap>
-           </property>
           </widget>
          </item>
          <item>

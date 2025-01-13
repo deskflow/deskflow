@@ -522,7 +522,7 @@
        <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
       </property>
       <item>
-       <widget class="QLabel" name="m_pLabelPadlock">
+       <widget class="QLabel" name="lblConnectionSecurityStatus">
         <property name="enabled">
          <bool>true</bool>
         </property>
@@ -540,12 +540,6 @@
         </property>
         <property name="text">
          <string/>
-        </property>
-        <property name="pixmap">
-         <pixmap resource="../res/deskflow.qrc">:/icons/64x64/padlock.png</pixmap>
-        </property>
-        <property name="scaledContents">
-         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -654,8 +648,6 @@
   <tabstop>btnApplySettings</tabstop>
   <tabstop>btnToggleCore</tabstop>
  </tabstops>
- <resources>
-  <include location="../res/deskflow.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
