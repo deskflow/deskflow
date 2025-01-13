@@ -67,10 +67,6 @@ using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-const auto kColorfulIconFile = ":/icons/128x128/tray.png";
-const auto kLightIconFile = ":/icons/128x128/tray-light.png";
-const auto kDarkIconFile = ":/icons/128x128/tray-dark.png";
-
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : ui{std::make_unique<Ui::MainWindow>()},
       m_ConfigScopes(configScopes),
@@ -96,8 +92,13 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_actionTestCriticalError{new QAction(tr("Test Critical Error"), this)},
       m_actionTestFatalError{new QAction(tr("Test Fatal Error"), this)}
 {
-  ui->setupUi(this);
+  const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
+  if (QIcon::themeName().isEmpty())
+    QIcon::setThemeName(themeName);
+  else
+    QIcon::setFallbackThemeName(themeName);
 
+  ui->setupUi(this);
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
@@ -624,18 +625,18 @@ void MainWindow::saveSettings()
 
 void MainWindow::setIcon()
 {
-#ifdef Q_OS_MAC
-  QIcon icon;
-  if (appConfig().colorfulTrayIcon())
-    icon.addFile(kColorfulIconFile);
-  else {
-    icon.addFile(kDarkIconFile);
-    icon.setIsMask(true);
+  // Using a theme icon that is packed in exe renders an invisible icon
+  // Instead use the resource path of the packed icon
+  // TODO Report to Qt ref the bug here
+  QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
+  if (!appConfig().colorfulTrayIcon()) {
+    iconString.append(QStringLiteral("-symbolic"));
   }
-#else
-  QIcon icon(appConfig().colorfulTrayIcon() ? kColorfulIconFile : isDarkMode() ? kDarkIconFile : kLightIconFile);
+  m_trayIcon->setIcon(QIcon(iconString));
+#ifdef Q_OS_MAC
+  if (!appConfig().colorfulTrayIcon())
+    m_trayIcon->icon().setIsMask(true);
 #endif
-  m_trayIcon->setIcon(icon);
 }
 
 void MainWindow::handleLogLine(const QString &line)
@@ -776,6 +777,7 @@ void MainWindow::updateStatus()
   const auto connection = m_CoreProcess.connectionState();
   const auto process = m_CoreProcess.processState();
 
+  ui->lblConnectionSecurityStatus->setVisible(false);
   switch (process) {
     using enum CoreProcessState;
 
@@ -812,6 +814,7 @@ void MainWindow::updateStatus()
       break;
 
     case Connected: {
+      ui->lblConnectionSecurityStatus->setVisible(true);
       if (m_SecureSocket) {
         setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_CoreProcess.secureSocketVersion()));
       } else {
@@ -967,9 +970,11 @@ void MainWindow::secureSocket(bool secureSocket)
 {
   m_SecureSocket = secureSocket;
   if (secureSocket) {
-    ui->m_pLabelPadlock->show();
+    ui->lblConnectionSecurityStatus->setToolTip(tr("Secure Connection"));
+    ui->lblConnectionSecurityStatus->setPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh).pixmap(QSize(32, 32)));
   } else {
-    ui->m_pLabelPadlock->hide();
+    ui->lblConnectionSecurityStatus->setToolTip(tr("Insecure Connection"));
+    ui->lblConnectionSecurityStatus->setPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow).pixmap(QSize(32, 32)));
   }
 }
 

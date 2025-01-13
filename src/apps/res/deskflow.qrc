@@ -1,14 +1,50 @@
 <RCC>
-    <qresource>
-        <file>icons/64x64/copy-dark.png</file>
-        <file>icons/64x64/copy-light.png</file>
-        <file>icons/64x64/folder.png</file>
-        <file>icons/64x64/padlock.png</file>
-        <file>icons/64x64/user-trash.png</file>
-        <file>icons/64x64/video-display.png</file>
-        <file>icons/128x128/tray.png</file>
-        <file>icons/128x128/tray-dark.png</file>
-        <file>icons/128x128/tray-light.png</file>
+    <qresource prefix="/">
+        <file>icons/deskflow-dark/actions/16/edit-copy.svg</file>
+        <file>icons/deskflow-dark/actions/16/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/22/edit-copy.svg</file>
+        <file>icons/deskflow-dark/actions/22/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/24/edit-copy.svg</file>
+        <file>icons/deskflow-dark/actions/24/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/32/dialog-cancel.svg</file>
+        <file>icons/deskflow-dark/actions/32/dialog-ok.svg</file>
+        <file>icons/deskflow-dark/actions/32/dialog-ok-apply.svg</file>
+        <file>icons/deskflow-dark/actions/32/document-open.svg</file>
+        <file>icons/deskflow-dark/apps/64/deskflow.svg</file>
+        <file>icons/deskflow-dark/apps/64/deskflow-symbolic.svg</file>
+        <file>icons/deskflow-dark/devices/64/video-display.svg</file>
+        <file>icons/deskflow-dark/places/64/user-trash.svg</file>
+        <file>icons/deskflow-dark/status/64/dialog-error.svg</file>
+        <file>icons/deskflow-dark/status/64/dialog-information.svg</file>
+        <file>icons/deskflow-dark/status/64/dialog-positive.svg</file>
+        <file>icons/deskflow-dark/status/64/dialog-question.svg</file>
+        <file>icons/deskflow-dark/status/64/dialog-warning.svg</file>
+        <file>icons/deskflow-dark/status/64/security-high.svg</file>
+        <file>icons/deskflow-dark/status/64/security-low.svg</file>
+        <file>icons/deskflow-dark/status/64/security-medium.svg</file>
+        <file>icons/deskflow-dark/index.theme</file>
+        <file>icons/deskflow-light/actions/16/edit-copy.svg</file>
+        <file>icons/deskflow-light/actions/16/document-open.svg</file>
+        <file>icons/deskflow-light/actions/22/edit-copy.svg</file>
+        <file>icons/deskflow-light/actions/22/document-open.svg</file>
+        <file>icons/deskflow-light/actions/24/edit-copy.svg</file>
+        <file>icons/deskflow-light/actions/24/document-open.svg</file>
+        <file>icons/deskflow-light/actions/32/dialog-cancel.svg</file>
+        <file>icons/deskflow-light/actions/32/dialog-ok.svg</file>
+        <file>icons/deskflow-light/actions/32/dialog-ok-apply.svg</file>
+        <file>icons/deskflow-light/actions/32/document-open.svg</file>
+        <file>icons/deskflow-light/apps/64/deskflow.svg</file>
+        <file>icons/deskflow-light/apps/64/deskflow-symbolic.svg</file>
+        <file>icons/deskflow-light/devices/64/video-display.svg</file>
+        <file>icons/deskflow-light/status/64/dialog-error.svg</file>
+        <file>icons/deskflow-light/status/64/dialog-information.svg</file>
+        <file>icons/deskflow-light/status/64/dialog-positive.svg</file>
+        <file>icons/deskflow-light/status/64/dialog-question.svg</file>
+        <file>icons/deskflow-light/status/64/dialog-warning.svg</file>
+        <file>icons/deskflow-light/status/64/security-high.svg</file>
+        <file>icons/deskflow-light/status/64/security-low.svg</file>
+        <file>icons/deskflow-light/status/64/security-medium.svg</file>
+        <file>icons/deskflow-light/index.theme</file>
         <file>image/placeholder.png</file>
         <file>image/welcome.png</file>
     </qresource>

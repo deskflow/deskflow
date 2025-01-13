@@ -27,6 +27,7 @@
 #include "gui/dotenv.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
+#include "gui/style_utils.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -117,6 +118,9 @@ int main(int argc, char *argv[])
     QApplication::setStyle("fusion");
   }
 #endif
+
+  // Sets the fallback icon path
+  setIconFallbackPaths();
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   qInfo("%s v%s", kAppName, qPrintable(kVersion));

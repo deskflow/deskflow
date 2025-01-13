@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="64" version="1.1" xmlns="http://www.w3.org/2000/svg" height="64" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+ <defs id="defs3811">
+  <linearGradient inkscape:collect="always" id="linearGradient4227">
+   <stop style="stop-color:#292c2f" id="stop4229"/>
+   <stop offset="1" style="stop-opacity:0" id="stop4231"/>
+  </linearGradient>
+  <linearGradient inkscape:collect="always" id="linearGradient4191-1-7" xlink:href="#linearGradient4227" y1="9" y2="23" x1="9.00001" gradientUnits="userSpaceOnUse" x2="23.00004" gradientTransform="matrix(2 0 0 2 735.85719 158.93361)"/>
+  <linearGradient inkscape:collect="always" xlink:href="#linearGradient4298" id="linearGradient4181" y1="6" x1="32" y2="57" x2="31" gradientUnits="userSpaceOnUse"/>
+  <linearGradient inkscape:collect="always" id="linearGradient4374">
+   <stop style="stop-color:#bcfd93" id="stop4376"/>
+   <stop offset="1" style="stop-color:#fafff5" id="stop4378"/>
+  </linearGradient>
+  <linearGradient inkscape:collect="always" id="linearGradient4298">
+   <stop style="stop-color:#42a603" id="stop4300"/>
+   <stop offset="1" style="stop-color:#78da06" id="stop4302"/>
+  </linearGradient>
+  <linearGradient inkscape:collect="always" xlink:href="#linearGradient4374" id="linearGradient4189" y1="199.93361" y2="175.93361" x2="0" gradientUnits="userSpaceOnUse"/>
+ </defs>
+ <metadata id="metadata3814"/>
+ <g inkscape:label="Layer 1" inkscape:groupmode="layer" id="layer1" transform="matrix(1 0 0 1 -736.85718 -157.93361)">
+  <path style="fill:url(#linearGradient4181);stroke-linecap:square;stroke-width:2" id="rect4186-2-1" d="M 32 6 C 25.66667 9.35447 19.33333 10.72491 13 12 L 13 37 C 13 44 23.26331 53.561337 32 57.998047 C 40.73669 53.561337 51 44 51 37 L 51 12 C 44.66667 10.72491 38.33333 9.35447 32 6 z " transform="matrix(1 0 0 1 736.85718 157.93361)"/>
+  <path inkscape:connector-curvature="0" style="fill:url(#linearGradient4191-1-7);opacity:0.2;fill-rule:evenodd" id="path4184-5" d="m 779.85718,175.93361 -8,14 -7,8 -7,-3 8,8 12,13 17,0 0,-27 z"/>
+  <path inkscape:connector-curvature="0" style="shape-rendering:auto;color-interpolation-filters:linearRGB;fill:url(#linearGradient4189);image-rendering:auto;text-rendering:auto;color:#000000;fill-rule:evenodd;stroke-width:2;color-rendering:auto;color-interpolation:sRGB" id="path4179" d="m 779.01953,175.38672 -14.42969,22.12695 -6.15234,-4.39453 -1.16211,1.62891 7.84961,5.60547 15.57031,-23.87305 -1.67578,-1.09375 z"/>
+  <path inkscape:connector-curvature="0" style="fill:#368902;stroke-linecap:square;stroke-width:2" id="rect4186-2-1-5" d="m 749.85718,192.93361 0,2 c 0,7 10.26331,16.56134 19,20.99805 8.73669,-4.43671 19,-13.99805 19,-20.99805 l 0,-2 c 0,7 -10.26331,16.56134 -19,20.99805 -8.73669,-4.43671 -19,-13.99805 -19,-20.99805 z"/>
+ </g>
+</svg>

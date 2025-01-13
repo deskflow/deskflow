@@ -22,6 +22,7 @@
 
 #include "gui/proxy/QSettingsProxy.h"
 
+#include <QIcon>
 #include <QList>
 #include <QPixmap>
 #include <QString>
@@ -174,7 +175,7 @@ protected:
   }
 
 private:
-  QPixmap m_Pixmap = QPixmap(":res/icons/64x64/video-display.png");
+  QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(64, 64));
   QString m_Name;
   QStringList m_Aliases;
   QList<int> m_Modifiers;
