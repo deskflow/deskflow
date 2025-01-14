@@ -59,7 +59,7 @@ if(WIN32)
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow.rc)
   set(platform_extra deskflow.rc)
 elseif(APPLE)
-  set(platform_extra Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
+  set(platform_extra ../res/Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
