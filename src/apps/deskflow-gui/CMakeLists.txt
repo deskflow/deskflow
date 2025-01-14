@@ -20,20 +20,6 @@ else()
   set(target deskflow)
 endif()
 
-#setup our bundle plist file
-set(BUNDLE_EXECUTABLE_NAME "${target}")
-set(BUNDLE_BUNDLE_NAME "${target}")
-set(BUNDLE_DISPLAY_NAME "${target}")
-set(BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow")
-set(BUNDLE_ICON_FILE ${target}.icns)
-set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
-set(BUNDLE_COPYRIGHT "${CMAKE_PROJECT_COPYRIGHT}")
-
-configure_file(
-  ${CMAKE_CURRENT_SOURCE_DIR}/../res/deskflow.plist.in
-  ${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist
-  @ONLY
-)
 
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
@@ -46,6 +32,20 @@ if(WIN32)
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow.rc)
   set(platform_extra deskflow.rc)
 elseif(APPLE)
+  #setup our bundle plist file
+  set(BUNDLE_EXECUTABLE_NAME "${target}")
+  set(BUNDLE_BUNDLE_NAME "${target}")
+  set(BUNDLE_DISPLAY_NAME "${target}")
+  set(BUNDLE_GUI_IDENTIFIER "org.deskflow.deskflow")
+  set(BUNDLE_ICON_FILE ${target}.icns)
+  set(BUNDLE_INFO_STRING "${CMAKE_PROJECT_DESCRIPTION}")
+  set(BUNDLE_COPYRIGHT "${CMAKE_PROJECT_COPYRIGHT}")
+
+  configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/../res/deskflow.plist.in
+    ${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist
+    @ONLY
+  )
   set(platform_extra ../res/Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
