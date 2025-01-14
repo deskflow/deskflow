@@ -40,19 +40,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-file(
-  GLOB
-  sources
-  ../res/deskflow.qrc
-  *.cpp
-  *.h
-  dialogs/*.h
-  dialogs/*.cpp
-  validators/*
-  widgets/*)
-file(GLOB ui_files *.ui dialogs/*.ui)
-
-
 if(WIN32)
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n Control and configure deskflow")
   set(EXE_ICON "IDI_ICON1 ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\" ")
@@ -63,7 +50,64 @@ elseif(APPLE)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
-add_executable(${target} WIN32 MACOSX_BUNDLE ${sources} ${ui_files} ${platform_extra})
+add_executable(${target} WIN32 MACOSX_BUNDLE
+  ${platform_extra}
+  ../res/deskflow.qrc
+  Action.cpp
+  Action.h
+  DataDownloader.cpp
+  DataDownloader.h
+  Hotkey.cpp
+  Hotkey.h
+  KeySequence.cpp
+  KeySequence.h
+  main.cpp
+  MainWindow.cpp
+  MainWindow.h
+  MainWindow.ui
+  ProcessorArch.h
+  QUtility.cpp
+  QUtility.h
+  ScreenSetupModel.cpp
+  ScreenSetupModel.h
+  ServerConfig.cpp
+  ServerConfig.h
+  SetupWizard.cpp
+  SetupWizard.h
+  VersionChecker.cpp
+  VersionChecker.h
+  dialogs/AboutDialog.cpp
+  dialogs/AboutDialog.h
+  dialogs/AboutDialog.ui
+  dialogs/ActionDialog.cpp
+  dialogs/ActionDialog.h
+  dialogs/ActionDialog.ui
+  dialogs/AddClientDialog.cpp
+  dialogs/AddClientDialog.h
+  dialogs/AddClientDialog.ui
+  dialogs/HotkeyDialog.cpp
+  dialogs/HotkeyDialog.h
+  dialogs/HotkeyDialog.ui
+  dialogs/ScreenSettingsDialog.cpp
+  dialogs/ScreenSettingsDialog.h
+  dialogs/ScreenSettingsDialog.ui
+  dialogs/ServerConfigDialog.cpp
+  dialogs/ServerConfigDialog.h
+  dialogs/ServerConfigDialog.ui
+  dialogs/SettingsDialog.cpp
+  dialogs/SettingsDialog.h
+  dialogs/SettingsDialog.ui
+  widgets/ClientStateLabel.cpp
+  widgets/ClientStateLabel.h
+  widgets/KeySequenceWidget.cpp
+  widgets/KeySequenceWidget.h
+  widgets/ScreenSetupView.cpp
+  widgets/ScreenSetupView.h
+  widgets/ServerStateLabel.cpp
+  widgets/ServerStateLabel.h
+  widgets/TrashScreenWidget.cpp
+  widgets/TrashScreenWidget.h
+)
 
 target_link_libraries(
   ${target}
