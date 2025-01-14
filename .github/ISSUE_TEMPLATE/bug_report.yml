@@ -94,28 +94,17 @@ body:
     attributes:
       label: OS versions/distros
       description: |
-        Please provide the version number of your operating system (OS).
-        If you're using Linux, please provide the name of the distribution.
+        Please provide the your operating system (OS) and version.
+        If you're using Linux, please tell us the name of the distribution.
+        Also, let us know which computer is the server and which are clients.
       placeholder: |
-        - Windows 11
-        - macOS 15
-        - Ubuntu 24.04
-        - FreeBSD 14.0
+        - Server: Arch Linux
+        - Client: Windows 11
+        - Client: macOS 15
+        - Client: Ubuntu 24.04
+        - Client: FreeBSD 14.0
     validations:
       required: true
-
-  - type: textarea
-    id: config
-    attributes:
-      label: Deskflow configuration
-      description: |
-        Please provide a very brief description of your configuration.
-        Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Deskflow.
-      placeholder: |
-        - Windows 11 server, macOS 15 client
-        - Each computer has a single monitor
-        - Windows is on the left, macOS is on the right
 
   - type: textarea
     id: repro-steps
