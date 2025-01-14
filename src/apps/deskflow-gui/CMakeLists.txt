@@ -63,13 +63,6 @@ elseif(APPLE)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
-# gui library autogen headers:
-# qt doesn't seem to auto include the autogen headers for libraries.
-include_directories(${PROJECT_BINARY_DIR}/src/lib/gui/gui_autogen/include)
-
-# generated includes
-include_directories(${PROJECT_BINARY_DIR}/config)
-
 add_executable(${target} WIN32 MACOSX_BUNDLE ${sources} ${ui_files} ${platform_extra})
 
 target_link_libraries(
