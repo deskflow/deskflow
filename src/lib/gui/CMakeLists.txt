@@ -27,9 +27,6 @@ if(APPLE)
   )
 endif()
 
-# generated includes
-include_directories(${PROJECT_BINARY_DIR}/config)
-
 add_library(${target} STATIC
   ${platform_sources}
   byte_utils.h
