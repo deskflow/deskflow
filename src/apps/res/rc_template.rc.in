@@ -1,0 +1,52 @@
+// SPDX-FileCopyrightText: 2025 Chris Rizzitello <sithlord48@gmail.com>
+// SPDX-License-Identifier: MIT
+// Generic Template for rc files in deskflow
+#include <windows.h>
+#include <verrsrc.h>
+
+
+@EXE_ICON@
+
+#define VER_VERSION             @CMAKE_PROJECT_VERSION_MAJOR@,@CMAKE_PROJECT_VERSION_MINOR@,@CMAKE_PROJECT_VERSION_PATCH@,@CMAKE_PROJECT_VERSION_TWEAK@
+#define VER_VERSION_STR         "@CMAKE_PROJECT_VERSION@\0"
+#define NAME_STR                "@CMAKE_PROJECT_PROPER_NAME@\0"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION     VER_VERSION
+ PRODUCTVERSION  VER_VERSION
+ FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+ FILEFLAGS       0 // No flags
+ FILEOS          VOS__WINDOWS32
+ FILETYPE        VFT_DLL
+ FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "CompanyName",      "@CMAKE_PROJECT_VENDOR@\0"
+            VALUE "FileDescription",  "@EXE_DESCRIPTION@\0"
+            VALUE "FileVersion",      VER_VERSION_STR
+            VALUE "InternalName",     NAME_STR
+            VALUE "LegalCopyright",   "@CMAKE_PROJECT_COPYRIGHT@\0"
+            VALUE "LegalTrademarks1", "All Rights Reserved\0"
+            VALUE "LegalTrademarks2", "\0"
+            VALUE "OriginalFilename", "@target@.exe\0"
+            VALUE "ProductName",      NAME_STR
+            VALUE "ProductVersion",   VER_VERSION_STR
+        END
+    END
+
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+
+@EXE_RC_MENU@
+
+@EXE_RC_DIALOG@
+
+@EXE_RC_STRINGTABLE@
