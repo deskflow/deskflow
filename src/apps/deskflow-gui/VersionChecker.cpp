@@ -48,11 +48,17 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
   reply->deleteLater();
   qDebug("version check response: %s", qPrintable(newestVersion));
 
-  if (!newestVersion.isEmpty() && compareVersions(kVersion, newestVersion) > 0) {
-    qDebug("update found");
+  if (newestVersion.isEmpty()) {
+    qWarning() << "version check is response is empty";
+    return;
+  }
+
+  if (compareVersions(kVersion, newestVersion) > 0) {
+    qWarning().noquote() //
+        << QStringLiteral("current version %1 out of date, update available: %2").arg(kVersion, newestVersion);
     Q_EMIT updateFound(newestVersion);
   } else {
-    qDebug("no updates found");
+    qDebug().noquote() << QStringLiteral("current version %1 is upto date").arg(kVersion);
   }
 }
 
