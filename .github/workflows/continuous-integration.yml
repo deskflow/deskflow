@@ -141,8 +141,22 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
+          - name: "debian-13-arm64"
+            runs-on: ubuntu-24.04-arm
+            container: debian:trixie-slim
+            like: "debian"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
           - name: "fedora-41-x86_64"
             runs-on: ubuntu-latest
+            container: fedora:41
+            like: "fedora"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "fedora-41-arm64"
+            runs-on: ubuntu-24.04-arm
             container: fedora:41
             like: "fedora"
             timeout: 20
@@ -155,8 +169,22 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
+          - name: "fedora-40-arm64"
+            runs-on: ubuntu-24.04-arm
+            container: fedora:40
+            like: "fedora"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
           - name: "opensuse-x86_84"
             runs-on: ubuntu-latest
+            container: opensuse/tumbleweed:latest
+            like: "suse"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "opensuse-arm64"
+            runs-on: ubuntu-24.04-arm
             container: opensuse/tumbleweed:latest
             like: "suse"
             timeout: 20
@@ -276,7 +304,17 @@ jobs:
             ./build/bin/integtests || true
   flatpak:
     needs: lint-check
-    runs-on: ubuntu-latest
+    name: flatpak-${{matrix.flatpak.arch}}
+    runs-on: ${{matrix.flatpak.runs-on}}
+    strategy:
+      fail-fast: false
+      matrix:
+        flatpak:
+          - runs-on: ubuntu-latest
+            arch: x86_64
+# TODO: Action does not yet provide arm image; re-enable when available
+#          - runs-on: ubuntu-24.04-arm
+#            arch: aarch64
     container:
       image: bilelmoussaoui/flatpak-github-actions:kde-6.7
       options: --privileged
@@ -292,15 +330,16 @@ jobs:
       - uses: flatpak/flatpak-github-actions/flatpak-builder@master
         name: "Build"
         with:
-          bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-x86_64.flatpak
+          bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-${{matrix.flatpak.arch}}.flatpak
           manifest-path: deploy/linux/flatpak/org.deskflow.deskflow.yml
           cache-key: flatpak-builder-${{ github.sha }}
+          arch: ${{matrix.flatpak.arch}}
           upload-artifact: false
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: package-${{ env.PACKAGE_PREFIX }}-flatpak-x86_64
+          name: package-${{ env.PACKAGE_PREFIX }}-flatpak-${{matrix.flatpak.arch}}
           path: ${{github.workspace}}/deskflow[-_]*.flatpak
 
   release:
