@@ -80,7 +80,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_guiDupeChecker{new QLocalServer(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
-      m_actionHelp{new QAction(tr("Report a Bug"), this)},
+      m_actionReportBug{new QAction(tr("Report a Bug"), this)},
       m_actionMinimize{new QAction(tr("&Minimize to tray"), this)},
       m_actionQuit{new QAction(tr("&Quit"), this)},
       m_actionTrayQuit{new QAction(tr("&Quit"), this)},
@@ -116,6 +116,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionSave->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
+
+  m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
 
 #ifdef Q_OS_MAC
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
@@ -258,7 +260,7 @@ void MainWindow::connectSlots()
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
-  connect(m_actionHelp, &QAction::triggered, this, &MainWindow::openHelpUrl);
+  connect(m_actionReportBug, &QAction::triggered, this, &MainWindow::openHelpUrl);
   connect(m_actionMinimize, &QAction::triggered, this, &MainWindow::hide);
 
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
@@ -570,7 +572,7 @@ void MainWindow::createMenuBar()
 
   auto menuHelp = new QMenu(tr("Help"));
   menuHelp->addAction(m_actionAbout);
-  menuHelp->addAction(m_actionHelp);
+  menuHelp->addAction(m_actionReportBug);
   menuHelp->addSeparator();
   menuHelp->addAction(m_actionClearSettings);
 
