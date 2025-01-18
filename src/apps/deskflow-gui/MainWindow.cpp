@@ -112,6 +112,9 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 #endif
   m_actionQuit->setMenuRole(QAction::QuitRole);
 
+  m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
   m_actionSave->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));

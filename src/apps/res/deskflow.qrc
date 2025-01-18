@@ -9,6 +9,7 @@
         <file>icons/deskflow-dark/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/24/document-open.svg</file>
         <file>icons/deskflow-dark/actions/24/tools-report-bug.svg</file>
+        <file>icons/deskflow-dark/actions/32/application-exit.svg</file>
         <file>icons/deskflow-dark/actions/32/dialog-cancel.svg</file>
         <file>icons/deskflow-dark/actions/32/dialog-ok.svg</file>
         <file>icons/deskflow-dark/actions/32/dialog-ok-apply.svg</file>
@@ -35,6 +36,7 @@
         <file>icons/deskflow-light/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/24/document-open.svg</file>
         <file>icons/deskflow-light/actions/24/tools-report-bug.svg</file>
+        <file>icons/deskflow-light/actions/32/application-exit.svg</file>
         <file>icons/deskflow-light/actions/32/dialog-cancel.svg</file>
         <file>icons/deskflow-light/actions/32/dialog-ok.svg</file>
         <file>icons/deskflow-light/actions/32/dialog-ok-apply.svg</file>
