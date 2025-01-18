@@ -50,6 +50,8 @@ SettingsDialog::SettingsDialog(
   ui->m_pComboBoxTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->m_pComboBoxTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
 
+  ui->m_pPushButtonTlsRegenCert->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh));
+
   ui->m_pPushButtonTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->m_pButtonBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
