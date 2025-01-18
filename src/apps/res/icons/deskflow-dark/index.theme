@@ -29,8 +29,8 @@ KDE-Extensions=.svg
 ########## Directories
 ########## ordered by category and alphabetically
 
-Directories=actions/16,actions/22,actions/24,actions/32,apps/64,devices/64,places/64,status/64
-ScaledDirectories=actions/16@2x,actions/16@3x,actions/22@2x,actions/22@3x,actions/24@2x,actions/24@3x,actions/32@2x,actions/32@3x
+Directories=actions/16,actions/22,actions/24,actions/32,apps/64,devices/64,places/64,status/16,status/22,status,24,status/64
+ScaledDirectories=actions/16@2x,actions/16@3x,actions/22@2x,actions/22@3x,actions/24@2x,actions/24@3x,actions/32@2x,actions/32@3x,status/16@2x,status/22@2x,status,24@2x,status/16@3x,status/22@3x,status,24@3x
 
 [apps/64]
 Size=64
@@ -148,8 +148,6 @@ Type=Scalable
 MinSize=16
 MaxSize=256
 
-########## Status
-########## ordered by size
 
 #64x64 - Fixed size - For folder icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
 [places/64]
@@ -159,6 +157,87 @@ Context=Places
 MinSize=48
 MaxSize=256
 
+########## Status
+########## ordered by size
+
+#16x16 - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/16]
+Size=16
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#16x16@2x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/16@2x]
+Size=16
+Scale=2
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#16x16@3x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/16@3x]
+Size=16
+Scale=3
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+
+#22x22 - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/22]
+Size=22
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#22x22@2x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/22@2x]
+Size=22
+Scale=2
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#22x22@3x - Fixed size - For toolbar icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/22@3x]
+Size=22
+Scale=3
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24 - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/24]
+Size=24
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24@2x - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/24@2x]
+Size=24
+Scale=2
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
+
+#24x24@3x - Fixed size - GTK icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Monochrome
+[status/24@3x]
+Size=24
+Scale=3
+Context=Status
+Type=Scalable
+MinSize=16
+MaxSize=256
 
 #64x64 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
 [status/64]
