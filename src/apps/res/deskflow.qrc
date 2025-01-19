@@ -2,14 +2,17 @@
     <qresource prefix="/">
         <file>icons/deskflow-dark/actions/16/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/16/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/16/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/16/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/22/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/22/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/22/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/24/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/24/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/24/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/24/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/32/application-exit.svg</file>
@@ -17,6 +20,7 @@
         <file>icons/deskflow-dark/actions/32/dialog-ok.svg</file>
         <file>icons/deskflow-dark/actions/32/dialog-ok-apply.svg</file>
         <file>icons/deskflow-dark/actions/32/document-open.svg</file>
+        <file>icons/deskflow-dark/actions/32/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/32/view-refresh.svg</file>
         <file>icons/deskflow-dark/apps/64/deskflow.svg</file>
         <file>icons/deskflow-dark/apps/64/deskflow-symbolic.svg</file>
@@ -42,14 +46,17 @@
         <file>icons/deskflow-dark/index.theme</file>
         <file>icons/deskflow-light/actions/16/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/16/document-open.svg</file>
+        <file>icons/deskflow-light/actions/16/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/16/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/22/document-open.svg</file>
+        <file>icons/deskflow-light/actions/22/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/22/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/24/document-open.svg</file>
+        <file>icons/deskflow-light/actions/24/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/24/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/24/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/32/application-exit.svg</file>
@@ -57,6 +64,7 @@
         <file>icons/deskflow-light/actions/32/dialog-ok.svg</file>
         <file>icons/deskflow-light/actions/32/dialog-ok-apply.svg</file>
         <file>icons/deskflow-light/actions/32/document-open.svg</file>
+        <file>icons/deskflow-light/actions/32/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/32/view-refresh.svg</file>
         <file>icons/deskflow-light/apps/64/deskflow.svg</file>
         <file>icons/deskflow-light/apps/64/deskflow-symbolic.svg</file>
