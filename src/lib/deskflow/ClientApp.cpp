@@ -19,7 +19,6 @@
 #include "deskflow/ClientApp.h"
 
 #include "arch/Arch.h"
-#include "arch/IArchTaskBarReceiver.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -74,8 +73,8 @@
 
 #define RETRY_TIME 1.0
 
-ClientApp::ClientApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
-    : App(events, createTaskBarReceiver, new deskflow::ClientArgs()),
+ClientApp::ClientApp(IEventQueue *events)
+    : App(events, new deskflow::ClientArgs()),
       m_client(NULL),
       m_clientScreen(NULL),
       m_serverAddress(NULL)
@@ -230,9 +229,6 @@ void ClientApp::updateStatus()
 
 void ClientApp::updateStatus(const std::string &msg)
 {
-  if (m_taskBarReceiver) {
-    m_taskBarReceiver->updateStatus(m_client, msg);
-  }
 }
 
 void ClientApp::resetRestartTimeout()
@@ -542,11 +538,6 @@ int ClientApp::runInner(int argc, char **argv, ILogOutputter *outputter, Startup
     // run
     result = startup(argc, argv);
   } catch (...) {
-    if (m_taskBarReceiver) {
-      // done with task bar receiver
-      delete m_taskBarReceiver;
-    }
-
     delete m_serverAddress;
 
     throw;

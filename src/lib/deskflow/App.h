@@ -55,7 +55,7 @@ public:
     }
   };
 
-  App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver, deskflow::ArgsBase *args);
+  App(IEventQueue *events, deskflow::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;
   virtual ~App();
@@ -110,11 +110,6 @@ public:
     m_socketMultiplexer = sm;
   }
 
-  virtual IArchTaskBarReceiver *taskBarReceiver() const
-  {
-    return m_taskBarReceiver;
-  }
-
   SocketMultiplexer *getSocketMultiplexer() const
   {
     return m_socketMultiplexer;
@@ -136,7 +131,6 @@ protected:
   void cleanupIpcClient();
   void runEventsLoop(void *);
 
-  IArchTaskBarReceiver *m_taskBarReceiver;
   bool m_suspended;
   IEventQueue *m_events;
 
@@ -201,7 +195,6 @@ private:
   "  -1, --no-restart         do not try to restart on failure.\n"                                                     \
   "*     --restart            restart the server automatically if it fails.\n"                                         \
   "  -l  --log <file>         write log messages to file.\n"                                                           \
-  "      --no-tray            disable the system tray icon.\n"                                                         \
   "      --enable-drag-drop   enable file drag & drop.\n"                                                              \
   "      --enable-crypto      enable TLS encryption.\n"                                                                \
   "      --tls-cert           specify the path to the TLS certificate file.\n"

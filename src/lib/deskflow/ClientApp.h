@@ -36,7 +36,7 @@ class ClientArgs;
 class ClientApp : public App
 {
 public:
-  ClientApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+  ClientApp(IEventQueue *events);
   virtual ~ClientApp();
 
   //

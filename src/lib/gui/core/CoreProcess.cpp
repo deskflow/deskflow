@@ -499,7 +499,6 @@ void CoreProcess::cleanup()
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
 {
   args << "-f"
-       << "--no-tray"
        << "--debug" << m_appConfig.logLevelText();
 
   args << "--name" << m_appConfig.screenName();
