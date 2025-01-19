@@ -126,6 +126,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs));
 
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+  m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
 
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
@@ -874,7 +875,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
     ui->btnToggleCore->setText(tr("&Start"));
-    ui->btnToggleCore->setIcon(QIcon());
+    ui->btnToggleCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
 
     ui->btnApplySettings->setEnabled(false);
 
