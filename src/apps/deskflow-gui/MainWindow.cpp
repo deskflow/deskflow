@@ -115,6 +115,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
   m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
 
+  m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
+
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
