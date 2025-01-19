@@ -26,7 +26,7 @@
 class MockApp : public App
 {
 public:
-  MockApp() : App(NULL, NULL, NULL)
+  MockApp() : App(NULL, NULL)
   {
   }
 

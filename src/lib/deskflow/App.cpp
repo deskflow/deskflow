@@ -67,14 +67,12 @@ App *App::s_instance = nullptr;
 // App
 //
 
-App::App(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver, deskflow::ArgsBase *args)
+App::App(IEventQueue *events, deskflow::ArgsBase *args)
     : m_bye(&exit),
-      m_taskBarReceiver(NULL),
       m_suspended(false),
       m_events(events),
       m_args(args),
       m_fileLog(nullptr),
-      m_createTaskBarReceiver(createTaskBarReceiver),
       m_appUtil(events),
       m_ipcClient(nullptr),
       m_socketMultiplexer(nullptr)
@@ -228,10 +226,6 @@ void App::initApp(int argc, const char **argv)
     // as a tray icon tooltip
     BufferedLogOutputter *logBuffer = new BufferedLogOutputter(1000);
     CLOG->insert(logBuffer, true);
-
-    // make the task bar receiver.  the user can control this app
-    // through the task bar.
-    m_taskBarReceiver = m_createTaskBarReceiver(logBuffer, m_events);
   }
 }
 
@@ -276,7 +270,7 @@ void App::runEventsLoop(void *)
 // MinimalApp
 //
 
-MinimalApp::MinimalApp() : App(NULL, NULL, new deskflow::ArgsBase())
+MinimalApp::MinimalApp() : App(NULL, new deskflow::ArgsBase())
 {
   m_arch.init();
   setEvents(m_events);

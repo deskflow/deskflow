@@ -38,8 +38,6 @@ if(WIN32)
     win32/ArchStringWindows.h
     win32/ArchSystemWindows.cpp
     win32/ArchSystemWindows.h
-    win32/ArchTaskBarWindows.cpp
-    win32/ArchTaskBarWindows.h
     win32/ArchTimeWindows.cpp
     win32/ArchTimeWindows.h
     win32/XArchWindows.cpp
@@ -66,8 +64,6 @@ elseif(UNIX)
     unix/ArchStringUnix.h
     unix/ArchSystemUnix.cpp
     unix/ArchSystemUnix.h
-    unix/ArchTaskBarXWindows.cpp
-    unix/ArchTaskBarXWindows.h
     unix/ArchTimeUnix.cpp
     unix/ArchTimeUnix.h
     unix/XArchUnix.cpp
@@ -92,8 +88,6 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchString.cpp
   IArchString.h
   IArchSystem.h
-  IArchTaskBar.h
-  IArchTaskBarReceiver.h
   IArchTime.h
   multibyte.h
   vsnprintf.h

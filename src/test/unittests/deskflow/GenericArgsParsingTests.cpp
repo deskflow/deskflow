@@ -216,18 +216,6 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_noTrayCmd_disableTrayTrue)
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kNoTrayCmd[argc] = {"stub", "--no-tray"};
-
-  m_argParser->parseGenericArgs(argc, kNoTrayCmd, i);
-
-  EXPECT_EQ(true, argsBase.m_disableTray);
-  EXPECT_EQ(1, i);
-}
-
 TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
 {
   int i = 1;

@@ -56,7 +56,7 @@ class ServerApp : public App
   using ServerConfig = deskflow::server::Config;
 
 public:
-  ServerApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver);
+  ServerApp(IEventQueue *events);
   virtual ~ServerApp();
 
   //

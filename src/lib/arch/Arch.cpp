@@ -50,7 +50,6 @@ void Arch::init()
 {
   ARCH_NETWORK::init();
 #if SYSAPI_WIN32
-  ARCH_TASKBAR::init();
   ArchMiscWindows::init();
 #endif
 }
