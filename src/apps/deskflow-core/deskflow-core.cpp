@@ -57,10 +57,10 @@ int main(int argc, char **argv)
   EventQueue events;
 
   if (isServer(argc, argv)) {
-    ServerApp app(&events, nullptr);
+    ServerApp app(&events);
     return app.run(argc, argv);
   } else if (isClient(argc, argv)) {
-    ClientApp app(&events, nullptr);
+    ClientApp app(&events);
     return app.run(argc, argv);
   } else {
     showHelp();

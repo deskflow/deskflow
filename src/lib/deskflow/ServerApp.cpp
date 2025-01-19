@@ -28,7 +28,6 @@
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/ServerTaskBarReceiver.h"
 #include "deskflow/XScreen.h"
 #include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
@@ -81,8 +80,8 @@ using namespace deskflow::server;
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBarReceiver)
-    : App(events, createTaskBarReceiver, new deskflow::ServerArgs()),
+ServerApp::ServerApp(IEventQueue *events)
+    : App(events, new deskflow::ServerArgs()),
       m_server(NULL),
       m_serverState(kUninitialized),
       m_serverScreen(NULL),
@@ -327,9 +326,6 @@ void ServerApp::updateStatus()
 
 void ServerApp::updateStatus(const std::string &msg)
 {
-  if (m_taskBarReceiver) {
-    m_taskBarReceiver->updateStatus(m_server, msg);
-  }
 }
 
 void ServerApp::closeClientListener(ClientListener *listen)
@@ -807,11 +803,6 @@ int ServerApp::runInner(int argc, char **argv, ILogOutputter *outputter, Startup
 
   // run
   int result = startup(argc, argv);
-
-  if (m_taskBarReceiver) {
-    // done with task bar receiver
-    delete m_taskBarReceiver;
-  }
 
   delete m_deskflowAddress;
   return result;

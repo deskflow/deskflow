@@ -29,7 +29,7 @@ using ::testing::NiceMock;
 class MockServerApp : public ServerApp
 {
 public:
-  MockServerApp() : ServerApp(nullptr, nullptr)
+  MockServerApp() : ServerApp(nullptr)
   {
   }
 };

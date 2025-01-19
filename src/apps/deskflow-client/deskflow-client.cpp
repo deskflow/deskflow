@@ -25,16 +25,6 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#if WINAPI_MSWINDOWS
-#include "MSWindowsClientTaskBarReceiver.h"
-#elif WINAPI_XWINDOWS
-#include "XWindowsClientTaskBarReceiver.h"
-#elif WINAPI_CARBON
-#include "OSXClientTaskBarReceiver.h"
-#else
-#error Platform not supported.
-#endif
-
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
@@ -48,6 +38,6 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
-  ClientApp app(&events, createTaskBarReceiver);
+  ClientApp app(&events);
   return app.run(argc, argv);
 }

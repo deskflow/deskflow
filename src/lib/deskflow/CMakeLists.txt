@@ -94,8 +94,6 @@ add_library(${lib_name} STATIC  ${PLATFORM_CODE}
   ClientApp.h
   ClientArgs.cpp
   ClientArgs.h
-  ClientTaskBarReceiver.cpp
-  ClientTaskBarReceiver.h
   clipboard_types.h
   Clipboard.cpp
   Clipboard.h
@@ -149,8 +147,6 @@ add_library(${lib_name} STATIC  ${PLATFORM_CODE}
   ServerApp.h
   ServerArgs.cpp
   ServerArgs.h
-  ServerTaskBarReceiver.cpp
-  ServerTaskBarReceiver.h
   StreamChunker.cpp
   StreamChunker.h
   XDeskflow.cpp

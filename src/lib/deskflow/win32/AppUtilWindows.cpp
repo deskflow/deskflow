@@ -18,7 +18,6 @@
 
 #include "deskflow/win32/AppUtilWindows.h"
 
-#include "arch/IArchTaskBarReceiver.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Event.h"
