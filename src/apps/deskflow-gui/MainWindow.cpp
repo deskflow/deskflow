@@ -116,6 +116,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
 
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
+  m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
   m_actionSave->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
   m_actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs));
