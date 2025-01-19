@@ -99,9 +99,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     QIcon::setFallbackThemeName(themeName);
 
   ui->setupUi(this);
+
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
+  m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
 
 #ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
