@@ -16,6 +16,7 @@
         <file>icons/deskflow-dark/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/24/document-open.svg</file>
         <file>icons/deskflow-dark/actions/24/document-save-as.svg</file>
+        <file>icons/deskflow-dark/actions/24/edit-clear-all.svg</file>
         <file>icons/deskflow-dark/actions/24/tools-report-bug.svg</file>
         <file>icons/deskflow-dark/actions/24/view-refresh.svg</file>
         <file>icons/deskflow-dark/actions/32/configure.svg</file>
@@ -49,18 +50,21 @@
         <file>icons/deskflow-dark/status/64/security-medium.svg</file>
         <file>icons/deskflow-dark/index.theme</file>
         <file>icons/deskflow-light/actions/16/configure.svg</file>
+        <file>icons/deskflow-light/actions/16/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/16/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/16/document-open.svg</file>
         <file>icons/deskflow-light/actions/16/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/16/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/16/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/22/configure.svg</file>
+        <file>icons/deskflow-light/actions/22/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/22/document-open.svg</file>
         <file>icons/deskflow-light/actions/22/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/22/tools-report-bug.svg</file>
         <file>icons/deskflow-light/actions/22/view-refresh.svg</file>
         <file>icons/deskflow-light/actions/24/configure.svg</file>
+        <file>icons/deskflow-light/actions/24/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/24/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/24/document-open.svg</file>
         <file>icons/deskflow-light/actions/24/document-save-as.svg</file>
