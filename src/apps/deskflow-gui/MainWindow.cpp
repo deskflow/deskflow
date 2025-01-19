@@ -126,7 +126,9 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   m_actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs));
 
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
+  m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
 
   m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
 
@@ -860,6 +862,8 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
     ui->btnToggleCore->setText(tr("&Stop"));
+    ui->btnToggleCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
+
     ui->btnApplySettings->setEnabled(true);
 
     m_actionStartCore->setEnabled(false);
@@ -870,6 +874,8 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
     ui->btnToggleCore->setText(tr("&Start"));
+    ui->btnToggleCore->setIcon(QIcon());
+
     ui->btnApplySettings->setEnabled(false);
 
     m_actionStartCore->setEnabled(true);
