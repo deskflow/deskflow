@@ -107,9 +107,6 @@
 /* Define to the type of arg 5 for `select`. */
 #cmakedefine SELECT_TYPE_ARG5 @SELECT_TYPE_ARG5@
 
-/* Define to 1 if you have the ANSI C header files. */
-#cmakedefine STDC_HEADERS @STDC_HEADERS@
-
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #cmakedefine TIME_WITH_SYS_TIME @TIME_WITH_SYS_TIME@
 
