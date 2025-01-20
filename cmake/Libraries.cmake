@@ -126,7 +126,6 @@ macro(configure_unix_libs)
   check_include_files(inttypes.h HAVE_INTTYPES_H)
   check_include_files(locale.h HAVE_LOCALE_H)
   check_include_files(memory.h HAVE_MEMORY_H)
-  check_include_files(stdlib.h HAVE_STDLIB_H)
   check_include_files(strings.h HAVE_STRINGS_H)
   check_include_files(string.h HAVE_STRING_H)
   check_include_files(sys/select.h HAVE_SYS_SELECT_H)
@@ -228,7 +227,6 @@ macro(configure_unix_libs)
 
   # For config.h, set some static values; it may be a good idea to make these
   # values dynamic for non-standard UNIX compilers.
-  set(HAVE_CXX_STDLIB 1)
   set(HAVE_PTHREAD_SIGNAL 1)
   set(SELECT_TYPE_ARG1 int)
   set(SELECT_TYPE_ARG234 " (fd_set *)")
