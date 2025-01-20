@@ -124,7 +124,6 @@ macro(configure_unix_libs)
   check_include_file_cxx(sstream HAVE_SSTREAM)
 
   check_include_files(locale.h HAVE_LOCALE_H)
-  check_include_files(string.h HAVE_STRING_H)
   check_include_files(sys/select.h HAVE_SYS_SELECT_H)
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
   check_include_files(sys/stat.h HAVE_SYS_STAT_H)
