@@ -92,9 +92,6 @@
 /* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
 #cmakedefine HAVE_X11_EXTENSIONS_XTEST_H @HAVE_X11_EXTENSIONS_XTEST_H@
 
-/* Define to 1 if you have the <X11/XKBlib.h> header file. */
-#cmakedefine HAVE_X11_XKBLIB_H @HAVE_X11_XKBLIB_H@
-
 /* Define to 1 if you have the <X11/extensions/XInput2.h> header file. */
 #cmakedefine HAVE_XI2 @HAVE_XI2@
 
