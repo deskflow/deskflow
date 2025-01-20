@@ -135,8 +135,10 @@ Learn more: [Relationship with Synergy](https://github.com/deskflow/deskflow/wik
 Yes, Deskflow has network compatibility with all forks:
 - Requires Deskflow >= v1.17.0.96
 - Deskflow will *just work* with Input Leap and Barrier (server or client).
-- Connecting a Deskflow client to a Synergy server will also *just work*.
-- To connect a Synergy client, you need to select the Synergy protocol in the Deskflow server settings.
+- Connecting a Deskflow client to a Synergy 1 server will also *just work*.
+- To connect a Synergy 1 client, you need to select the Synergy protocol in the Deskflow server settings.
+
+_Note:_ Only Synergy 1 is compatible with Deskflow (Synergy 3 is not yet compatible).
 
 ### Is Deskflow compatible with Lan Mouse?
 
