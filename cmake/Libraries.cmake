@@ -225,7 +225,6 @@ macro(configure_unix_libs)
   set(SELECT_TYPE_ARG1 int)
   set(SELECT_TYPE_ARG234 " (fd_set *)")
   set(SELECT_TYPE_ARG5 " (struct timeval *)")
-  set(STDC_HEADERS 1)
   set(TIME_WITH_SYS_TIME 1)
   set(HAVE_SOCKLEN_T 1)
 
