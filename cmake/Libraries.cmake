@@ -228,7 +228,6 @@ macro(configure_unix_libs)
 
   # For config.h, set some static values; it may be a good idea to make these
   # values dynamic for non-standard UNIX compilers.
-  set(HAVE_CXX_EXCEPTIONS 1)
   set(HAVE_CXX_MUTABLE 1)
   set(HAVE_CXX_STDLIB 1)
   set(HAVE_PTHREAD_SIGNAL 1)
