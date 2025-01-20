@@ -138,7 +138,6 @@ macro(configure_unix_libs)
   check_function_exists(gmtime_r HAVE_GMTIME_R)
   check_function_exists(nanosleep HAVE_NANOSLEEP)
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
-  check_function_exists(strftime HAVE_STRFTIME)
   check_function_exists(vsnprintf HAVE_VSNPRINTF)
   check_function_exists(inet_aton HAVE_INET_ATON)
 
