@@ -29,9 +29,6 @@
 /* Define if you have the `inet_aton` function. */
 #cmakedefine HAVE_INET_ATON @HAVE_INET_ATON@
 
-/* Define to 1 if you have the <inttypes.h> header file. */
-#cmakedefine HAVE_INTTYPES_H @HAVE_INTTYPES_H@
-
 /* Define to 1 if you have the <istream> header file. */
 #cmakedefine HAVE_ISTREAM @HAVE_ISTREAM@
 
