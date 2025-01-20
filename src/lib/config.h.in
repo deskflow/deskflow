@@ -98,9 +98,6 @@
 /* Define this if the XKB extension is available. */
 #cmakedefine HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@
 
-/* Define to necessary symbol if this constant uses a non-standard name on your system. */
-#cmakedefine PTHREAD_CREATE_JOINABLE @PTHREAD_CREATE_JOINABLE@
-
 /* Define to the type of arg 1 for `select`. */
 #cmakedefine SELECT_TYPE_ARG1 @SELECT_TYPE_ARG1@
 
