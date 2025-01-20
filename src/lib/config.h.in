@@ -89,9 +89,6 @@
 /* Define to 1 if you have the <X11/extensions/Xinerama.h> header file. */
 #cmakedefine HAVE_X11_EXTENSIONS_XINERAMA_H @HAVE_X11_EXTENSIONS_XINERAMA_H@
 
-/* Define to 1 if you have the <X11/extensions/XKBstr.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_XKBSTR_H @HAVE_X11_EXTENSIONS_XKBSTR_H@
-
 /* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
 #cmakedefine HAVE_X11_EXTENSIONS_XTEST_H @HAVE_X11_EXTENSIONS_XTEST_H@
 
