@@ -123,7 +123,6 @@ macro(configure_unix_libs)
   check_include_file_cxx(ostream HAVE_OSTREAM)
   check_include_file_cxx(sstream HAVE_SSTREAM)
 
-  check_include_files(inttypes.h HAVE_INTTYPES_H)
   check_include_files(locale.h HAVE_LOCALE_H)
   check_include_files(strings.h HAVE_STRINGS_H)
   check_include_files(string.h HAVE_STRING_H)
