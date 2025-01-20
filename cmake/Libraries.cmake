@@ -169,11 +169,6 @@ macro(configure_unix_libs)
 
   endif()
 
-  check_type_size(char SIZEOF_CHAR)
-  check_type_size(int SIZEOF_INT)
-  check_type_size(long SIZEOF_LONG)
-  check_type_size(short SIZEOF_SHORT)
-
   # pthread is used on both Linux and Mac
   check_library_exists("pthread" pthread_create "" HAVE_PTHREAD)
   if(HAVE_PTHREAD)

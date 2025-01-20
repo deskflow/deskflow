@@ -157,18 +157,6 @@
 /* Define to the type of arg 5 for `select`. */
 #cmakedefine SELECT_TYPE_ARG5 @SELECT_TYPE_ARG5@
 
-/* The size of `char`, as computed by sizeof. */
-#cmakedefine SIZEOF_CHAR @SIZEOF_CHAR@
-
-/* The size of `int`, as computed by sizeof. */
-#cmakedefine SIZEOF_INT @SIZEOF_INT@
-
-/* The size of `long`, as computed by sizeof. */
-#cmakedefine SIZEOF_LONG @SIZEOF_LONG@
-
-/* The size of `short`, as computed by sizeof. */
-#cmakedefine SIZEOF_SHORT @SIZEOF_SHORT@
-
 /* Define to 1 if you have the ANSI C header files. */
 #cmakedefine STDC_HEADERS @STDC_HEADERS@
 
