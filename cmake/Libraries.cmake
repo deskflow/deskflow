@@ -125,7 +125,6 @@ macro(configure_unix_libs)
 
   check_include_files(inttypes.h HAVE_INTTYPES_H)
   check_include_files(locale.h HAVE_LOCALE_H)
-  check_include_files(memory.h HAVE_MEMORY_H)
   check_include_files(strings.h HAVE_STRINGS_H)
   check_include_files(string.h HAVE_STRING_H)
   check_include_files(sys/select.h HAVE_SYS_SELECT_H)
