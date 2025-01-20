@@ -110,7 +110,8 @@ private:
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
     kLogExpanded = 44,
-    kColorfulIcon = 45
+    kColorfulIcon = 45,
+    kMouseSpeed = 46
   };
 
 public:
@@ -187,6 +188,7 @@ public:
   std::optional<bool> enableUpdateCheck() const;
   bool logExpanded() const;
   bool colorfulTrayIcon() const;
+  double mouseSpeed() const;
 
   //
   // Setters (overrides)
@@ -229,6 +231,7 @@ public:
   void setEnableUpdateCheck(bool value);
   void setLogExpanded(bool expanded);
   void setColorfulTrayIcon(bool color);
+  void setMouseSpeed(double speed);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -336,6 +339,7 @@ private:
   std::optional<bool> m_EnableUpdateCheck;
   bool m_logExpanded = true;
   bool m_colorfulTrayIcon = false;
+  double m_mouseSpeed = 1.0;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset

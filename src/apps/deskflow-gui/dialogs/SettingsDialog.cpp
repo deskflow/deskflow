@@ -190,6 +190,7 @@ void SettingsDialog::accept()
   m_appConfig.setTlsEnabled(ui->m_pCheckBoxEnableTls->isChecked());
   m_appConfig.setLanguageSync(ui->m_pCheckBoxLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->m_pCheckBoxScrollDirection->isChecked());
+  m_appConfig.setMouseSpeed(ui->m_pSpinBoxMouseSpeed->value());
   m_appConfig.setEnableService(ui->m_pCheckBoxServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
   m_appConfig.setInvertConnection(ui->m_pInvertConnection->isChecked());
@@ -221,6 +222,7 @@ void SettingsDialog::loadFromConfig()
   ui->m_pCheckBoxPreventSleep->setChecked(m_appConfig.preventSleep());
   ui->m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
   ui->m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
+  ui->m_pSpinBoxMouseSpeed->setValue(m_appConfig.mouseSpeed());
   ui->m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
   ui->m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
   ui->m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
@@ -332,6 +334,8 @@ void SettingsDialog::updateControls()
 
   ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
   ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());
+  ui->m_pLabelMouseSpeed->setEnabled(writable && isClientMode());
+  ui->m_pSpinBoxMouseSpeed->setEnabled(writable && isClientMode());
 
   ui->m_pLabelLogPath->setEnabled(writable && logToFile);
   ui->m_pLineEditLogFilename->setEnabled(writable && logToFile);

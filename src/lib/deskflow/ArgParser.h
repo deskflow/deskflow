@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "base/XBase.h"
 #include "common/stdvector.h"
 
 #include <string>
@@ -26,6 +27,14 @@ class ArgsBase;
 class ServerArgs;
 class ClientArgs;
 } // namespace deskflow
+
+class XArgError : public XBase
+{
+public:
+  XArgError(const std::string &msg) : XBase(msg)
+  {
+  }
+};
 
 class App;
 

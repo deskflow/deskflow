@@ -469,6 +469,51 @@
         </widget>
        </item>
        <item>
+        <widget class="QGroupBox" name="m_pGroupInput">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Input</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <item>
+           <layout class="QHBoxLayout" name="m_pLayoutMouseSpeed">
+            <item>
+             <widget class="QLabel" name="m_pLabelMouseSpeed">
+              <property name="text">
+               <string>Mouse speed multiplier:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="m_pSpinBoxMouseSpeed">
+              <property name="decimals">
+               <number>2</number>
+              </property>
+              <property name="minimum">
+               <double>0.01</double>
+              </property>
+              <property name="maximum">
+               <double>10.00</double>
+              </property>
+              <property name="singleStep">
+               <double>0.10</double>
+              </property>
+              <property name="value">
+               <double>1.00</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="m_pGroupLogs">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">

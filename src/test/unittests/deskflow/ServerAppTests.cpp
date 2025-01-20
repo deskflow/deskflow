@@ -20,6 +20,7 @@
 #include "deskflow/ArgParser.h"
 #include "deskflow/ServerApp.h"
 #include "deskflow/ServerArgs.h"
+#include "test/shared/gui/mocks/AppConfigMock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -29,9 +30,14 @@ using ::testing::NiceMock;
 class MockServerApp : public ServerApp
 {
 public:
-  MockServerApp() : ServerApp(nullptr, nullptr)
+  MockServerApp() : 
+    m_appConfig(),
+    ServerApp(nullptr, nullptr, m_appConfig)
   {
   }
+
+private:
+  NiceMock<AppConfigMock> m_appConfig;
 };
 
 TEST(ServerAppTests, runInner_will_handle_configuration_lifetime)

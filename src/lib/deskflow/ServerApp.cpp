@@ -95,6 +95,7 @@ ServerApp::ServerApp(IEventQueue *events, CreateTaskBarReceiverFunc createTaskBa
 
 ServerApp::~ServerApp()
 {
+  delete m_deskflowAddress;
 }
 
 void ServerApp::parseArgs(int argc, const char *const *argv)
@@ -153,6 +154,11 @@ void ServerApp::help()
        << "                             at <display>.\n"
        << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
+
+       << "      --mouse-speed <value>       Set mouse movement speed multiplier\n"
+       << "                                  (range: 0.01-10.0, values below 0.01 will\n"
+       << "                                  be set to 0.01, values above 10.0 will be\n"
+       << "                                  set to 10.0, default: 1.0)\n"
 
        << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
        << "* marks defaults.\n"
@@ -639,6 +645,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient)
 {
   Server *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+
   try {
     m_events->adoptHandler(
         m_events->forServer().disconnected(), server, new TMethodEventJob<ServerApp>(this, &ServerApp::handleNoClients)
