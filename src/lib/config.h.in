@@ -56,9 +56,6 @@
 /* Define to 1 if you have the <sstream> header file. */
 #cmakedefine HAVE_SSTREAM @HAVE_SSTREAM@
 
-/* Define to 1 if you have the <stdint.h> header file. */
-#cmakedefine HAVE_STDINT_H @HAVE_STDINT_H@
-
 /* Define to 1 if you have the `strftime` function. */
 #cmakedefine HAVE_STRFTIME @HAVE_STRFTIME@
 
