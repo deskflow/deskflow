@@ -38,9 +38,6 @@
 /* Define to 1 if you have the <locale.h> header file. */
 #cmakedefine HAVE_LOCALE_H @HAVE_LOCALE_H@
 
-/* Define to 1 if you have the <memory.h> header file. */
-#cmakedefine HAVE_MEMORY_H @HAVE_MEMORY_H@
-
 /* Define if you have the `nanosleep` function. */
 #cmakedefine HAVE_NANOSLEEP @HAVE_NANOSLEEP@
 
