@@ -16,6 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 add_library(net STATIC
+  ConnectionSecurityLevel.h
+  FingerprintData.cpp
+  FingerprintData.h
+  FingerprintDatabase.cpp
+  FingerprintDatabase.h
   IDataSocket.cpp
   IDataSocket.h
   IListenSocket.h
@@ -28,6 +33,8 @@ add_library(net STATIC
   SecureListenSocket.h
   SecureSocket.cpp
   SecureSocket.h
+  SecureUtils.h
+  SecureUtils.cpp
   SocketMultiplexer.cpp
   SocketMultiplexer.h
   TCPListenSocket.cpp

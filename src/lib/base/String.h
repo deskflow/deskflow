@@ -19,9 +19,9 @@
 #pragma once
 
 #include "common/common.h"
-#include <string>
-
+#include <cstdint>
 #include <stdarg.h>
+#include <string>
 #include <vector>
 
 namespace deskflow {
@@ -73,6 +73,15 @@ std::string removeFileExt(std::string filename);
 Convert each character in \c subject into hexdecimal form with \c width
 */
 void toHex(std::string &subject, int width, const char fill = '0');
+
+//! Convert into hexdecimal
+/*!
+Convert each character in \c subject into hexdecimal form with \c width
+*/
+std::string to_hex(const std::vector<std::uint8_t> &subject, int width, const char fill = '0');
+
+/// Convert binary data from hexadecimal
+std::vector<std::uint8_t> from_hex(const std::string &data);
 
 //! Convert to all uppercase
 /*!

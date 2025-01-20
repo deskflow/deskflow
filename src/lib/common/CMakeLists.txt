@@ -22,6 +22,8 @@ add_library(common INTERFACE
   stdset.h
   stdsstream.h
   stdvector.h
+  win32/encoding_utilities.cpp
+  win32/encoding_utilities.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 

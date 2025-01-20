@@ -82,6 +82,7 @@ endif()
 add_library(${lib_name} STATIC  ${PLATFORM_CODE}
   App.cpp
   App.h
+  AppRole.h
   AppUtil.cpp
   AppUtil.h
   ArgParser.cpp
