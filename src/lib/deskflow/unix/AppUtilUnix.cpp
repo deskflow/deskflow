@@ -18,6 +18,7 @@
 
 #include "deskflow/unix/AppUtilUnix.h"
 #include "deskflow/ArgsBase.h"
+#include <filesystem>
 #include <thread>
 
 #if WINAPI_XWINDOWS
@@ -65,7 +66,12 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   std::vector<std::string> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-  layoutLangCodes = X11LayoutsParser::getX11LanguageList("/usr/share/X11/xkb/rules/evdev.xml");
+  // Check /usr/local first used on bsd and some systems
+  m_evdev = "/usr/local/share/X11/xkb/rules/evdev.xml";
+  if (!std::filesystem::exists(m_evdev))
+    m_evdev = "/usr/share/X11/xkb/rules/evdev.xml";
+  layoutLangCodes = X11LayoutsParser::getX11LanguageList(m_evdev);
+
 #elif WINAPI_CARBON
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
@@ -146,7 +152,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   XFree(kbdDescr);
   XCloseDisplay(display);
 
-  result = X11LayoutsParser::convertLayotToISO("/usr/share/X11/xkb/rules/evdev.xml", result);
+  result = X11LayoutsParser::convertLayotToISO(m_evdev, result);
 
 #elif WINAPI_CARBON
   auto layoutLanguages =

@@ -35,4 +35,5 @@ public:
   std::vector<std::string> getKeyboardLayoutList() override;
   std::string getCurrentLanguageCode() override;
   void showNotification(const std::string &title, const std::string &text) const override;
+  std::string m_evdev;
 };
