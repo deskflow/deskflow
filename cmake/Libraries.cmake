@@ -257,8 +257,6 @@ macro(configure_xorg_libs)
                       HAVE_X11_EXTENSIONS_DPMS_H)
   check_include_files("X11/extensions/Xinerama.h"
                       HAVE_X11_EXTENSIONS_XINERAMA_H)
-  check_include_files("${XKBlib};X11/extensions/XKBstr.h"
-                      HAVE_X11_EXTENSIONS_XKBSTR_H)
   check_include_files("X11/extensions/XKB.h" HAVE_XKB_EXTENSION)
   check_include_files("X11/extensions/XTest.h" HAVE_X11_EXTENSIONS_XTEST_H)
   check_include_files("${XKBlib}" HAVE_X11_XKBLIB_H)
