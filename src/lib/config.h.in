@@ -17,9 +17,6 @@
 
 // clang-format off
 
-/* Define if your compiler has C++ cast support. */
-#cmakedefine HAVE_CXX_CASTS @HAVE_CXX_CASTS@
-
 /* Define if your compiler has exceptions support. */
 #cmakedefine HAVE_CXX_EXCEPTIONS @HAVE_CXX_EXCEPTIONS@
 
