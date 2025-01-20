@@ -17,9 +17,6 @@
 
 // clang-format off
 
-/* Define if your compiler has mutable support. */
-#cmakedefine HAVE_CXX_MUTABLE @HAVE_CXX_MUTABLE@
-
 /* Define if your compiler has standard C++ library support. */
 #cmakedefine HAVE_CXX_STDLIB @HAVE_CXX_STDLIB@
 
