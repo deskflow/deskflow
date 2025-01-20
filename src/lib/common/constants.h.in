@@ -6,8 +6,8 @@
 
 #pragma once
 
-const auto kAppName = "Deskflow";
-const auto kAppId = "deskflow";
+const auto kAppName = "@CMAKE_PROJECT_PROPER_NAME@";
+const auto kAppId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
 const auto kVersion = "@CMAKE_PROJECT_VERSION@";
 const auto kVersionGitSha = "@GIT_SHA_SHORT@";
