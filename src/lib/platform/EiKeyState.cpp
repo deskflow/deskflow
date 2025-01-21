@@ -60,6 +60,7 @@ void EiKeyState::init_default_keymap()
 void EiKeyState::init(int fd, size_t len)
 {
   auto buffer = std::make_unique<char[]>(len + 1);
+  lseek(fd, 0, SEEK_SET);
   auto sz = read(fd, buffer.get(), len);
 
   if ((size_t)sz < len) {
