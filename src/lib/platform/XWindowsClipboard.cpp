@@ -129,13 +129,13 @@ void XWindowsClipboard::addRequest(Window owner, Window requestor, Atom target, 
         success = true;
       }
     } else {
-      LOG((CLOG_DEBUG1 "failed, not owned at time %d", time));
+      LOG((CLOG_DEBUG1 "clipboard not owned at time %d", time));
     }
   }
 
   if (!success) {
     // send failure
-    LOG((CLOG_DEBUG1 "failed"));
+    LOG((CLOG_DEBUG1 "clipboard request was not added"));
     insertReply(new Reply(requestor, target, time));
   }
 
@@ -179,12 +179,12 @@ bool XWindowsClipboard::addSimpleRequest(Window requestor, Atom target, ::Time t
 
   if (type != None) {
     // success
-    LOG((CLOG_DEBUG1 "success"));
+    LOG((CLOG_DEBUG1 "clipboard request added"));
     insertReply(new Reply(requestor, target, time, property, data, type, format));
     return true;
   } else {
     // failure
-    LOG((CLOG_DEBUG1 "failed"));
+    LOG((CLOG_DEBUG1 "clipboard request not added"));
     insertReply(new Reply(requestor, target, time));
     return false;
   }
@@ -255,7 +255,7 @@ bool XWindowsClipboard::empty()
   // assert ownership of clipboard
   XSetSelectionOwner(m_display, m_selection, m_window, m_time);
   if (XGetSelectionOwner(m_display, m_selection) != m_window) {
-    LOG((CLOG_DEBUG "failed to grab clipboard %d", m_id));
+    LOG((CLOG_WARN "failed to grab clipboard %d", m_id));
     return false;
   }
 
@@ -294,7 +294,7 @@ void XWindowsClipboard::add(EFormat format, const std::string &data)
 bool XWindowsClipboard::open(Time time) const
 {
   if (m_open) {
-    LOG((CLOG_DEBUG "failed to open clipboard: already opened"));
+    LOG((CLOG_WARN "failed to open clipboard: already opened"));
     return false;
   }
 

@@ -558,7 +558,7 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
 
   // add keystrokes to restore modifier keys
   if (!keysToRestoreModifiers(*keyItem, group, newModifiers, newState, activeModifiers, keys)) {
-    LOG((CLOG_DEBUG1 "failed to restore modifiers"));
+    LOG((CLOG_DEBUG1 "modifiers were not restored"));
     keys.clear();
     return NULL;
   }
@@ -629,7 +629,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
 
   // add keystrokes to restore modifier keys
   if (!keysToRestoreModifiers(keyItem, group, newModifiers, newState, activeModifiers, keys)) {
-    LOG((CLOG_DEBUG1 "failed to restore modifiers"));
+    LOG((CLOG_DEBUG1 "modifiers were not restored"));
     keys.clear();
     return NULL;
   }

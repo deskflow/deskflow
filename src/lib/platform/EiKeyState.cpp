@@ -64,7 +64,7 @@ void EiKeyState::init(int fd, size_t len)
   auto sz = read(fd, buffer.get(), len);
 
   if ((size_t)sz < len) {
-    LOG_DEBUG("failed to create xkb context: %s", strerror(errno));
+    LOG_WARN("failed to create xkb context: %s", strerror(errno));
     return;
   }
 
@@ -76,7 +76,7 @@ void EiKeyState::init(int fd, size_t len)
   buffer[len] = '\0'; // guarantee null-termination
   auto keymap = xkb_keymap_new_from_string(xkb_, buffer.get(), XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
   if (!keymap) {
-    LOG_NOTE("failed to compile keymap, falling back to defaults");
+    LOG_WARN("failed to compile keymap, falling back to defaults");
     // Falling back to layout "us" is a lot more useful than segfaulting
     init_default_keymap();
     return;

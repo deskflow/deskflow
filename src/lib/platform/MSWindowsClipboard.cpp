@@ -70,7 +70,7 @@ bool MSWindowsClipboard::emptyUnowned()
   if (!EmptyClipboard()) {
     // unable to cause this in integ tests, but this error has never
     // actually been reported by users.
-    LOG((CLOG_DEBUG "failed to grab clipboard"));
+    LOG((CLOG_WARN "failed to grab clipboard"));
     return false;
   }
 
@@ -86,7 +86,7 @@ bool MSWindowsClipboard::empty()
   // mark clipboard as being owned by deskflow
   HGLOBAL data = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, 1);
   if (NULL == SetClipboardData(getOwnershipFormat(), data)) {
-    LOG((CLOG_DEBUG "failed to set clipboard data"));
+    LOG((CLOG_WARN "failed to set clipboard data"));
     GlobalFree(data);
     return false;
   }

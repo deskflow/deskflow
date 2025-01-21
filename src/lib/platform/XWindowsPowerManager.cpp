@@ -44,7 +44,7 @@ void XWindowsPowerManager::disableSleep() const
 {
   if (!sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
       !sleepInhibitCall(true, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
-    LOG((CLOG_INFO "failed to prevent system from going to sleep"));
+    LOG((CLOG_WARN "failed to prevent system from going to sleep"));
   }
 }
 
@@ -52,6 +52,6 @@ void XWindowsPowerManager::enableSleep() const
 {
   if (!sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kScreenSaver) &&
       !sleepInhibitCall(false, ArchSystemUnix::InhibitScreenServices::kSessionManager)) {
-    LOG((CLOG_INFO "failed to enable system idle sleep"));
+    LOG((CLOG_WARN "failed to enable system idle sleep"));
   }
 }
