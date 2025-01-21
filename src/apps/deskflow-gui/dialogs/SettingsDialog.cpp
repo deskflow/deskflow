@@ -55,8 +55,8 @@ SettingsDialog::SettingsDialog(
   ui->m_pPushButtonTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->m_pButtonBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
-  ui->rb_icon_mono->setIcon(QIcon(QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow-symbolic").arg(iconMode())));
-  ui->rb_icon_colorful->setIcon(QIcon(QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode())));
+  ui->rb_icon_mono->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
+  ui->rb_icon_colorful->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
