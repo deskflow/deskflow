@@ -117,11 +117,11 @@ target_link_libraries(
   app
   ${libs})
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+if(APPLE)
   set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+elseif(UNIX)
   install(TARGETS ${target} DESTINATION bin)
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+elseif(WIN32)
   install(
     TARGETS ${target}
     RUNTIME_DEPENDENCY_SET serverDeps
