@@ -170,19 +170,19 @@ void AppUtilUnix::showNotification(const std::string &title, const std::string &
 #if HAVE_LIBNOTIFY
   LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
   if (!notify_init(kAppName)) {
-    LOG((CLOG_INFO "failed to initialize libnotify"));
+    LOG((CLOG_WARN "failed to initialize libnotify"));
     return;
   }
 
   auto notification = notify_notification_new(title.c_str(), text.c_str(), nullptr);
   if (notification == nullptr) {
-    LOG((CLOG_INFO "failed to create notification"));
+    LOG((CLOG_WARN "failed to create notification"));
     return;
   }
   notify_notification_set_timeout(notification, 10000);
 
   if (!notify_notification_show(notification, nullptr)) {
-    LOG((CLOG_INFO "failed to show notification"));
+    LOG((CLOG_WARN "failed to show notification"));
   }
 
   g_object_unref(G_OBJECT(notification));

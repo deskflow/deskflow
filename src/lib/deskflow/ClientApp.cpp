@@ -321,7 +321,7 @@ void ClientApp::handleClientFailed(const Event &e, void *)
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
     updateStatus(std::string("Failed to connect to server: ") + info->m_what + " Trying next address...");
-    LOG((CLOG_NOTE "failed to connect to server=%s, trying next address", info->m_what.c_str()));
+    LOG((CLOG_WARN "failed to connect to server=%s, trying next address", info->m_what.c_str()));
     if (!m_suspended) {
       scheduleClientRestart(nextRestartTimeout());
     }

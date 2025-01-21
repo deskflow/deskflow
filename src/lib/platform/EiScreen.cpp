@@ -712,7 +712,7 @@ void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
 
   auto rc = ei_setup_backend_fd(ei_, fd);
   if (rc != 0) {
-    LOG_NOTE("failed to set up ei: %s", strerror(-rc));
+    LOG_WARN("failed to set up ei: %s", strerror(-rc));
   }
 }
 

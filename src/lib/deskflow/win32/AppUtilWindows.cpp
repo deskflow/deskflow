@@ -266,7 +266,7 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
     WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
 
     if (!WinToastLib::WinToast::instance()->initialize()) {
-      LOG((CLOG_DEBUG "failed to initialize toast notifications"));
+      LOG((CLOG_WARN "failed to initialize toast notifications"));
       return;
     }
   }
@@ -279,7 +279,7 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
 
   const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
   if (!launched) {
-    LOG((CLOG_DEBUG "failed to show toast notification, error code: %d", error));
+    LOG((CLOG_WARN "failed to show toast notification, error code: %d", error));
     return;
   }
 #else

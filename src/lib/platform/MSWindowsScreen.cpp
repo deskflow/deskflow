@@ -237,7 +237,7 @@ void MSWindowsScreen::enable()
 
   // install our clipboard snooper
   if (!AddClipboardFormatListener(m_window)) {
-    LOG((CLOG_DEBUG "failed to add the clipboard format listener: %d", GetLastError()));
+    LOG((CLOG_WARN "failed to add the clipboard format listener: %d", GetLastError()));
   }
 
   // track the active desk and (re)install the hooks
@@ -270,7 +270,7 @@ void MSWindowsScreen::disable()
 
   // stop snooping the clipboard
   if (!RemoveClipboardFormatListener(m_window)) {
-    LOG((CLOG_DEBUG "failed to remove the clipboard format listener: %d", GetLastError()));
+    LOG((CLOG_WARN "failed to remove the clipboard format listener: %d", GetLastError()));
   }
 
   // uninstall fix timer
@@ -554,7 +554,7 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y)
 
 void MSWindowsScreen::updateDesktopThread()
 {
-  LOG((CLOG_DEBUG3 "failed to set cursor while attempting to switch desktop"));
+  LOG((CLOG_WARN "failed to set cursor while attempting to switch desktop"));
   SetLastError(0);
   HDESK cur_hdesk = OpenInputDesktop(0, true, GENERIC_ALL);
 
@@ -1818,7 +1818,7 @@ std::string &MSWindowsScreen::getDraggingFilename()
     }
 
     if (m_draggingFilename.empty()) {
-      LOG((CLOG_DEBUG "failed to get drag file name from OLE"));
+      LOG((CLOG_WARN "failed to get drag file name from OLE"));
     }
   }
   return m_draggingFilename;

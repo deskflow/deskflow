@@ -22,6 +22,7 @@
 #include "gui/core/CoreTool.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
+#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -406,10 +407,10 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   addGenericArgs(args, processMode);
 
   if (mode() == Mode::Server && !addServerArgs(args, app)) {
-    qDebug("failed to add server args for core process, aborting start");
+    qWarning("failed to add server args for core process, aborting start");
     return;
   } else if (mode() == Mode::Client && !addClientArgs(args, app)) {
-    qDebug("failed to add client args for core process, aborting start");
+    qWarning("failed to add client args for core process, aborting start");
     return;
   }
 

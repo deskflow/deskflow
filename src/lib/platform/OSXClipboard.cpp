@@ -41,7 +41,7 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL)
 
   OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
   if (createErr != noErr) {
-    LOG((CLOG_DEBUG "failed to create clipboard reference: error %i", createErr));
+    LOG((CLOG_WARN "failed to create clipboard reference: error %i", createErr));
     LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled", createErr));
     m_pboard = NULL;
     return;
@@ -49,7 +49,7 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(NULL)
 
   OSStatus syncErr = PasteboardSynchronize(m_pboard);
   if (syncErr != noErr) {
-    LOG((CLOG_DEBUG "failed to syncronize clipboard: error %i", syncErr));
+    LOG((CLOG_WARN "failed to syncronize clipboard: error %i", syncErr));
   }
 }
 
@@ -66,7 +66,7 @@ bool OSXClipboard::empty()
 
   OSStatus err = PasteboardClear(m_pboard);
   if (err != noErr) {
-    LOG((CLOG_DEBUG "failed to clear clipboard: error %i", err));
+    LOG((CLOG_WARN "failed to clear clipboard: error %i", err));
     return false;
   }
 
