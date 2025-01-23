@@ -21,7 +21,7 @@ add_executable(${target} "${target}.cpp")
 if(WIN32)
   # Generate rc file
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI combined server and client")
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in ${target}.rc)
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
   target_sources(${target} PRIVATE
     "${target}.exe.manifest"
