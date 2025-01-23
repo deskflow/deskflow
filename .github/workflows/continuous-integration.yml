@@ -346,7 +346,7 @@ jobs:
         with:
           bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-${{matrix.flatpak.arch}}.flatpak
           manifest-path: deploy/linux/flatpak/org.deskflow.deskflow.yml
-          cache-key: flatpak-builder-${{ github.sha }}
+          cache-key: flatpak-builder-${{matrix.flatpak.arch}}-1.0
           arch: ${{matrix.flatpak.arch}}
           upload-artifact: false
 
