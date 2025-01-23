@@ -21,7 +21,7 @@ if(WIN32)
 
   # Generate rc file
   set(EXE_DESCRIPTION "This service runs in the background to help ${CMAKE_PROJECT_NAME} deal with UAC prompts")
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in ${target}.rc)
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
   add_executable(${target} WIN32 ${target}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
 

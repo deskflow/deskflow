@@ -29,7 +29,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if(WIN32)
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n Control and configure deskflow")
   set(EXE_ICON "IDI_ICON1 ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\" ")
-  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/rc_template.rc.in deskflow.rc)
+  configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in deskflow.rc)
   set(platform_extra deskflow.rc)
 elseif(APPLE)
   #setup our bundle plist file
