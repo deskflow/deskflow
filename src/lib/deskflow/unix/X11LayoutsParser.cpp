@@ -115,11 +115,6 @@ void X11LayoutsParser::convertLayoutToISO639_2(
     const std::vector<std::string> &layoutVariantNames, std::vector<std::string> &iso639_2Codes
 )
 {
-  if (layoutNames.size() != layoutVariantNames.size()) {
-    LOG((CLOG_WARN "error in language layout or language layout variants list"));
-    return;
-  }
-
   static std::vector<X11LayoutsParser::Lang> allLang;
   if (allLang.empty() || needToReloadEvdev) {
     allLang = getAllLanguageData(pathToEvdevFile);
@@ -134,27 +129,31 @@ void X11LayoutsParser::convertLayoutToISO639_2(
     }
 
     const std::vector<std::string> *toCopy = nullptr;
-    if (layoutVariantNames[i].empty()) {
-      toCopy = &langIter->layoutBaseISO639_2;
-    } else {
-      const auto &variantName = layoutVariantNames[i];
-      auto langVariantIter =
-          std::find_if(langIter->variants.begin(), langIter->variants.end(), [&variantName](const Lang &l) {
-            return l.name == variantName;
-          });
-      if (langVariantIter == langIter->variants.end()) {
-        LOG(
-            (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(),
-             layoutNames[i].c_str())
-        );
-        continue;
-      }
-
-      if (langVariantIter->layoutBaseISO639_2.empty()) {
+    if (i < layoutVariantNames.size()) {
+      if (layoutVariantNames[i].empty()) {
         toCopy = &langIter->layoutBaseISO639_2;
       } else {
-        toCopy = &langVariantIter->layoutBaseISO639_2;
+        const auto &variantName = layoutVariantNames[i];
+        auto langVariantIter =
+            std::find_if(langIter->variants.begin(), langIter->variants.end(), [&variantName](const Lang &l) {
+              return l.name == variantName;
+            });
+        if (langVariantIter == langIter->variants.end()) {
+          LOG(
+              (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(),
+               layoutNames[i].c_str())
+          );
+          continue;
+        }
+
+        if (langVariantIter->layoutBaseISO639_2.empty()) {
+          toCopy = &langIter->layoutBaseISO639_2;
+        } else {
+          toCopy = &langVariantIter->layoutBaseISO639_2;
+        }
       }
+    } else {
+      toCopy = &langIter->layoutBaseISO639_2;
     }
 
     if (toCopy) {
