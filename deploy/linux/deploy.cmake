@@ -67,7 +67,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
   # Check if Debian-link
   string(REGEX MATCH debian|buntu DEBTYPE "${DISTRO_LIKE}")
-  if((NOT ("${DEBTYPE}" STREQUAL "")) OR ("${DISTRO_NAME}" STREQUAL "debian"))
+  string(REGEX MATCH debian|deepin|uos DEBNAME "${DISTRO_NAME}")
+  if((NOT ("${DEBTYPE}" STREQUAL "")) OR (NOT ("${DEBNAME}" STREQUAL "")))
     set(CPACK_GENERATOR "DEB")
   endif()
 
