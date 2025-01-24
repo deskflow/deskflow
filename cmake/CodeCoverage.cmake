@@ -1,72 +1,11 @@
 # SOURCE https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake
-# Copyright (c) 2012 - 2017, Lars Bilke
-# All rights reserved.
-#
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#
-# 1. Redistributions of source code must retain the above copyright notice, this
-#    list of conditions and the following disclaimer.
-#
-# 2. Redistributions in binary form must reproduce the above copyright notice,
-#    this list of conditions and the following disclaimer in the documentation
-#    and/or other materials provided with the distribution.
-#
-# 3. Neither the name of the copyright holder nor the names of its contributors
-#    may be used to endorse or promote products derived from this software without
-#    specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-# ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-# ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# CHANGES:
-#
-# 2012-01-31, Lars Bilke
-# - Enable Code Coverage
-#
-# 2013-09-17, Joakim Söderberg
-# - Added support for Clang.
-# - Some additional usage instructions.
-#
-# 2016-02-03, Lars Bilke
-# - Refactored functions to use named parameters
-#
-# 2017-06-02, Lars Bilke
-# - Merged with modified version from github.com/ufz/ogs
-#
-# 2019-05-06, Anatolii Kurotych
-# - Remove unnecessary --coverage flag
-#
-# 2019-12-13, FeRD (Frank Dana)
-# - Deprecate COVERAGE_LCOVR_EXCLUDES and COVERAGE_GCOVR_EXCLUDES lists in favor
-#   of tool-agnostic COVERAGE_EXCLUDES variable, or EXCLUDE setup arguments.
-# - CMake 3.4+: All excludes can be specified relative to BASE_DIRECTORY
-# - All setup functions: accept BASE_DIRECTORY, EXCLUDE list
-# - Set lcov basedir with -b argument
-# - Add automatic --demangle-cpp in lcovr, if 'c++filt' is available (can be
-#   overridden with NO_DEMANGLE option in setup_target_for_coverage_lcovr().)
-# - Delete output dir, .info file on 'make clean'
-# - Remove Python detection, since version mismatches will break gcovr
-# - Minor cleanup (lowercase function names, update examples...)
-#
-# 2019-12-19, FeRD (Frank Dana)
-# - Rename Lcov outputs, make filtered file canonical, fix cleanup for targets
-#
-# 2020-01-19, Bob Apthorpe
-# - Added gfortran support
-#
-# 2020-02-17, FeRD (Frank Dana)
-# - Make all add_custom_target()s VERBATIM to auto-escape wildcard characters
-#   in EXCLUDEs, and remove manual escaping from gcovr targets
-#
+# SPDX-FileCopyrightText: 2020 Bob Apthrope
+# SPDX-FileCopyrightText: 2019 Anatolii Kurotych
+# SPDX-FileCopyrightText: 2019 - 2020 Frank Dana
+# SPDX-FileCopyrightText: 2013 Joakim Söderberg
+# SPDX-FileCopyrightText: 2012 - 2017 Lars Bilke
+# SPDX-License-Identifier: MIT
+
 # USAGE:
 #
 # 1. Copy this file into your cmake modules path.

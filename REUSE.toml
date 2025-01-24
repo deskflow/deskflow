@@ -1,0 +1,206 @@
+# SPDX-FileCopyrightText: 2025 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+version = 1
+SPDX-PackageName = "deskflow"
+SPDX-PackageSupplier = "Deskflow Devs"
+SPDX-PackageDownloadLocation = "https://github.com/deskflow/deskflow"
+
+[[annotations]]
+path = ".github/**"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ".clang-format"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ".editorconfig"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ".gitattributes"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ".gitignore"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "cspell.json"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "README.md"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "sonar-project.properties"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "vcpkg.json"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "vcpkg-configuration.json"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "doc/**"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "deploy/mac/dmg-background.tiff"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "deploy/mac/dmg-volume.icns"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "deploy/linux/deskflow.png"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "deploy/linux/flatpak/org.deskflow.deskflow.yml"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "deploy/linux/org.deskflow.deskflow.metainfo.xml"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+
+[[annotations]]
+path = "deploy/windows/wix-banner.png"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "deploy/windows/wix-dialog.png"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "deploy/windows/wix-patch.xml.in"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "deploy/windows/Microsoft_VC142_CRT_x64.msm"
+precedence = "override"
+SPDX-FileCopyrightText = "Microsoft"
+SPDX-License-Identifier = "LicenseRef-Microsoft-vc-redist"
+
+[[annotations]]
+path = "src/apps/deskflow-client/deskflow-client.exe.manifest"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/apps/deskflow-core/deskflow-core.exe.manifest"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/apps/deskflow-server/deskflow-server.exe.manifest"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/apps/res/icons/deskflow-**/**/**/**.svg"
+precedence = "override"
+SPDX-FileCopyrightText = "Kde Breeze Icons"
+SPDX-License-Identifier = "LGPL-2.1-only"
+
+[[annotations]]
+path = "src/apps/res/icons/deskflow-**/apps/64/deskflow*.svg"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/image/welcome.png"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/Deskflow.icns"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/deskflow.ico"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/deskflow.plist.in"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = "src/apps/res/deskflow.qrc"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only"
+
+[[annotations]]
+path = "src/apps/res/icons/deskflow-**/index.theme"
+precedence = "override"
+SPDX-FileCopyrightText = "Chris Rizzitello <sithlord48@gmail.com>"
+SPDX-License-Identifier = "LGPL-2.1-only"
+
+[[annotations]]
+path = "src/apps/deskflow-gui/MainWindow.ui"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"
+
+[[annotations]]
+path = "src/apps/deskflow-gui/dialogs/*.ui"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"
