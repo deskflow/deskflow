@@ -1,3 +1,6 @@
+-- SPDX-FileCopyrightText: 2020 Chris Rizzitello <sithlord48@gmail.com>
+-- SPDX-License-Identifier: MIT
+
 on run argv
   set image_name to item 1 of argv
 
