@@ -139,17 +139,23 @@ add_subdirectory(src)
 # Install License, License is in the App Bundle on mac os (src/gui)
 if(WIN32)
   install(
-    FILES
-      ${PROJECT_SOURCE_DIR}/LICENSE
-      ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION
+    FILES ${PROJECT_SOURCE_DIR}/LICENSE
     DESTINATION .
+  )
+  install(
+    FILES ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
+    DESTINATION .
+    RENAME LICENSE_EXCEPTION
   )
 elseif(UNIX AND NOT APPLE)
   install(
-    FILES
-      ${PROJECT_SOURCE_DIR}/LICENSE
-      ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION
+    FILES ${PROJECT_SOURCE_DIR}/LICENSE
     DESTINATION share/licenses/deskflow
+  )
+  install(
+    FILES ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
+    DESTINATION share/licenses/deskflow
+    RENAME LICENSE_EXCEPTION
   )
 endif()
 

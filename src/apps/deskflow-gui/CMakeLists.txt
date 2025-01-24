@@ -46,7 +46,14 @@ elseif(APPLE)
     ${CMAKE_CURRENT_BINARY_DIR}/deskflow.plist
     @ONLY
   )
-  set(platform_extra ../res/Deskflow.icns ${PROJECT_SOURCE_DIR}/LICENSE ${PROJECT_SOURCE_DIR}/LICENSE_EXCEPTION)
+
+  file(COPY_FILE
+    ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
+    ${CMAKE_CURRENT_BINARY_DIR}/LICENSE_EXCEPTION
+    ONLY_IF_DIFFERENT
+  )
+
+  set(platform_extra ../res/Deskflow.icns ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_CURRENT_BINARY_DIR}/LICENSE_EXCEPTION)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
