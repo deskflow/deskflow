@@ -82,7 +82,18 @@ jobs:
       - name: Test summary
         uses: ./.github/actions/test-summary
 
+  reuse-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v4
+
   lint-check:
+    needs: [reuse-lint]
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
