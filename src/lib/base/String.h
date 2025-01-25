@@ -75,6 +75,13 @@ Return a new hexString
 */
 std::string toHex(const std::string &subject, int width, const char fill = '0');
 
+/**
+ * @brief fromHexChar Convert a single char to its hexidecmal value
+ * @param c input char 0-F
+ * @return The value of c in Hex or -1 for invalid hex chars
+ */
+int fromHexChar(char c);
+
 //! Convert to all uppercase
 /*!
 Convert each character in \c subject to uppercase
