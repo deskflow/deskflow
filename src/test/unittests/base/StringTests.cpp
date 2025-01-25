@@ -59,6 +59,33 @@ TEST(StringTests, toHex_plaintext_hexString)
   EXPECT_EQ("666f6f626172", string::toHex("foobar", 2));
 }
 
+TEST(StringTests, fromHexChar_plaintext_hexString)
+{
+  EXPECT_EQ(-1, string::fromHexChar('z'));
+  EXPECT_EQ(0, string::fromHexChar('0'));
+  EXPECT_EQ(1, string::fromHexChar('1'));
+  EXPECT_EQ(2, string::fromHexChar('2'));
+  EXPECT_EQ(3, string::fromHexChar('3'));
+  EXPECT_EQ(4, string::fromHexChar('4'));
+  EXPECT_EQ(5, string::fromHexChar('5'));
+  EXPECT_EQ(6, string::fromHexChar('6'));
+  EXPECT_EQ(7, string::fromHexChar('7'));
+  EXPECT_EQ(8, string::fromHexChar('8'));
+  EXPECT_EQ(9, string::fromHexChar('9'));
+  EXPECT_EQ(10, string::fromHexChar('a'));
+  EXPECT_EQ(10, string::fromHexChar('A'));
+  EXPECT_EQ(11, string::fromHexChar('b'));
+  EXPECT_EQ(11, string::fromHexChar('B'));
+  EXPECT_EQ(12, string::fromHexChar('c'));
+  EXPECT_EQ(12, string::fromHexChar('C'));
+  EXPECT_EQ(13, string::fromHexChar('d'));
+  EXPECT_EQ(13, string::fromHexChar('D'));
+  EXPECT_EQ(14, string::fromHexChar('e'));
+  EXPECT_EQ(14, string::fromHexChar('E'));
+  EXPECT_EQ(15, string::fromHexChar('f'));
+  EXPECT_EQ(15, string::fromHexChar('F'));
+}
+
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
 {
   std::string subject = "12foo3BaR";
