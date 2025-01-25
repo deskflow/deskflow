@@ -625,7 +625,7 @@ void SecureSocket::formatFingerprint(std::string &fingerprint, bool hex, bool se
 {
   if (hex) {
     // to hexidecimal
-    deskflow::string::toHex(fingerprint, 2);
+    fingerprint = deskflow::string::toHex(fingerprint, 2);
   }
 
   // all uppercase

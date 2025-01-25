@@ -176,7 +176,7 @@ std::string removeFileExt(std::string filename)
   return filename.substr(0, dot);
 }
 
-void toHex(std::string &subject, int width, const char fill)
+std::string toHex(const std::string &subject, int width, const char fill)
 {
   std::stringstream ss;
   ss << std::hex;
@@ -184,7 +184,7 @@ void toHex(std::string &subject, int width, const char fill)
     ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
   }
 
-  subject = ss.str();
+  return ss.str();
 }
 
 void uppercase(std::string &subject)

@@ -71,8 +71,9 @@ std::string removeFileExt(std::string filename);
 //! Convert into hexdecimal
 /*!
 Convert each character in \c subject into hexdecimal form with \c width
+Return a new hexString
 */
-void toHex(std::string &subject, int width, const char fill = '0');
+std::string toHex(const std::string &subject, int width, const char fill = '0');
 
 //! Convert to all uppercase
 /*!

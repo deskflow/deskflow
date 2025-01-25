@@ -56,12 +56,7 @@ TEST(StringTests, sprintf_formatWithArgument_formatedString)
 
 TEST(StringTests, toHex_plaintext_hexString)
 {
-  std::string subject = "foobar";
-  int width = 2;
-
-  string::toHex(subject, width);
-
-  EXPECT_EQ("666f6f626172", subject);
+  EXPECT_EQ("666f6f626172", string::toHex("foobar", 2));
 }
 
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
