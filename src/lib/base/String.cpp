@@ -16,7 +16,6 @@
  */
 
 #include "base/String.h"
-#include "arch/Arch.h"
 #include "common/stdvector.h"
 
 #include <algorithm>
@@ -132,7 +131,7 @@ std::string sprintf(const char *fmt, ...)
     // try printing into the buffer
     va_list args;
     va_start(args, fmt);
-    int n = ARCH->vsnprintf(buffer, len, fmt, args);
+    int n = vsnprintf(buffer, len, fmt, args);
     va_end(args);
 
     // if the buffer wasn't big enough then make it bigger and try again
