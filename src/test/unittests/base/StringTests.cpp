@@ -86,6 +86,13 @@ TEST(StringTests, fromHexChar_plaintext_hexString)
   EXPECT_EQ(15, string::fromHexChar('F'));
 }
 
+TEST(StringTests, fromHex_plaintext_hexString)
+{
+  EXPECT_EQ(255, string::fromHex("FF")[0]);
+  EXPECT_EQ(255, string::fromHex(":FF:EE")[0]);
+  EXPECT_EQ(238, string::fromHex(":FF:EE")[1]);
+}
+
 TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
 {
   std::string subject = "12foo3BaR";

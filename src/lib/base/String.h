@@ -82,6 +82,13 @@ std::string toHex(const std::string &subject, int width, const char fill = '0');
  */
 int fromHexChar(char c);
 
+/**
+ * @brief fromHex Turn the string into a std::vector<uint8_t>
+ * @param hexString a Hexidecimal string
+ * @return std::vector<uint8_t> version of the hex chars
+ */
+std::vector<uint8_t> fromHex(const std::string &hexString);
+
 //! Convert to all uppercase
 /*!
 Convert each character in \c subject to uppercase
