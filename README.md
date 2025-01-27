@@ -4,7 +4,7 @@
 > [Synergy](https://symless.com/synergy) sponsors the Deskflow project by contributing code and providing financial support.
 > 
 > - [**Bounties**](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22) - Earn while contributing to open source
-> - [**Rewarded**](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%B0%20rewarded%22) - Issues with a rewarded bounty
+> - [**Rewarded**](https://github.com/deskflow/deskflow/issues?q=label%3A%22%F0%9F%92%B0%20rewarded%22%20) - Issues with a rewarded bounty
 > 
 > **Deskflow** is the official upstream project for Synergy.
 > Purchasing a Synergy license is one way to support Deskflow’s growth and sustainability.
