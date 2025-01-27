@@ -668,7 +668,7 @@
                 &lt;ul&gt;
                   &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
                   &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
-                  &lt;li&gt;Never elevate: Turn off compatability with login screen and UAC&lt;/li&gt;
+                  &lt;li&gt;Never elevate: Turn off compatibility with login screen and UAC&lt;/li&gt;
                 &lt;/ul&gt;
                 </string>
               </property>
