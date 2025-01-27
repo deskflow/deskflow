@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -241,7 +242,7 @@ void PortalInputCapture::release(double x, double y)
   is_active_ = false;
 }
 
-void PortalInputCapture::cb_disabled(XdpInputCaptureSession *session)
+void PortalInputCapture::cb_disabled(XdpInputCaptureSession *session, GVariant *option)
 {
   LOG_DEBUG("portal cb disabled");
 
