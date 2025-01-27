@@ -188,4 +188,4 @@ Deskflow is made by possible by these contributors.
 
 ## License
 
-This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](LICENSE_EXCEPTION).
+This project is licensed under [GPL-2.0](LICENSE) with an [OpenSSL exception](LICENSES/LicenseRef-OpenSSL-Exception.txt).
