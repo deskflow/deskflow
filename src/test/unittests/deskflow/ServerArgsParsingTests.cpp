@@ -72,3 +72,44 @@ TEST(ServerArgsParsingTests, parseServerArgs_checkUnexpectedParams)
 
   EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
 }
+
+TEST(ServerArgsParsingTests, parseServerArgs_validMouseSpeed_setsSpeedValue)
+{
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  deskflow::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kMouseSpeedCmd[argc] = {"stub", "--mouse-speed", "2.5"};
+
+  EXPECT_TRUE(argParser.parseServerArgs(serverArgs, argc, kMouseSpeedCmd));
+  EXPECT_DOUBLE_EQ(2.5, serverArgs.m_mouseSpeed);
+}
+
+TEST(ServerArgsParsingTests, parseServerArgs_invalidMouseSpeed_returnsFalseAndKeepsDefault)
+{
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  deskflow::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kMouseSpeedCmd[argc] = {"stub", "--mouse-speed", "invalid"};
+
+  EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kMouseSpeedCmd));
+  EXPECT_TRUE(serverArgs.m_shouldExitFail);
+  EXPECT_DOUBLE_EQ(1.0, serverArgs.m_mouseSpeed);
+}
+
+TEST(ServerArgsParsingTests, parseServerArgs_outOfRangeMouseSpeed_returnsFalseAndKeepsDefault)
+{
+  NiceMock<MockArgParser> argParser;
+  ON_CALL(argParser, parseGenericArgs(_, _, _)).WillByDefault(Invoke(server_stubParseGenericArgs));
+  ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(server_stubCheckUnexpectedArgs));
+  deskflow::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kMouseSpeedCmd[argc] = {"stub", "--mouse-speed", "11.0"};
+
+  EXPECT_FALSE(argParser.parseServerArgs(serverArgs, argc, kMouseSpeedCmd));
+  EXPECT_TRUE(serverArgs.m_shouldExitFail);
+  EXPECT_DOUBLE_EQ(1.0, serverArgs.m_mouseSpeed);
+}

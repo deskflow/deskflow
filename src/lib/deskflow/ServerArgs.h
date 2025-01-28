@@ -29,6 +29,7 @@ public:
 public:
   std::string m_configFile = "";
   std::shared_ptr<Config> m_config;
+  double m_mouseSpeed = 1.0;
 };
 
 } // namespace deskflow
