@@ -5,6 +5,10 @@
 
 add_library(net STATIC
   FingerprintTypes.h
+  FingerprintData.cpp
+  FingerprintData.h
+  FingerprintDatabase.cpp
+  FingerprintDatabase.h
   IDataSocket.cpp
   IDataSocket.h
   IListenSocket.h
@@ -57,5 +61,6 @@ if(WIN32)
   target_link_libraries(
     net
     PUBLIC OpenSSL::applink
-    PRIVATE Crypt32 ws2_32 OpenSSL::applink)
+    PRIVATE Crypt32 ws2_32 OpenSSL::applink
+  )
 endif()
