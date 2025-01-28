@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -417,7 +418,10 @@ bool EiScreen::isPrimary() const
 
 void EiScreen::update_shape()
 {
-
+  w_ = 1;
+  h_ = 1;
+  x_ = std::numeric_limits<uint32_t>::max();
+  y_ = std::numeric_limits<uint32_t>::max();
   for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
     auto idx = 0;
     struct ei_region *r;
