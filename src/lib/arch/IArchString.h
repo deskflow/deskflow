@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -43,15 +44,6 @@ public:
 
   //! @name manipulators
   //@{
-
-  //! printf() to limited size buffer with va_list
-  /*!
-  This method is equivalent to vsprintf() except it will not write
-  more than \c n bytes to the buffer, returning -1 if the output
-  was truncated and the number of bytes written not including the
-  trailing NUL otherwise.
-  */
-  virtual int vsnprintf(char *str, int size, const char *fmt, va_list ap);
 
   //! Convert multibyte string to wide character string
   virtual int convStringMBToWC(wchar_t *, const char *, uint32_t n, bool *errors);

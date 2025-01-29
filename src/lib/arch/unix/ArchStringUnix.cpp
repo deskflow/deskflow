@@ -14,7 +14,6 @@
 //
 
 #include "arch/multibyte.h"
-#include "arch/vsnprintf.h"
 
 ArchStringUnix::ArchStringUnix()
 {
