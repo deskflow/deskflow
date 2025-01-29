@@ -27,4 +27,8 @@ std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool e
 std::vector<std::uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type);
 
 std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, FingerprintType type);
+
+void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
+
+int getCertLength(const std::string &path);
 } // namespace deskflow

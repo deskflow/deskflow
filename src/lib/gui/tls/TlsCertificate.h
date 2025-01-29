@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -19,9 +20,5 @@ public:
   int getCertKeyLength(const QString &path);
 
 private:
-  bool runTool(const QStringList &args);
   bool generateFingerprint(const QString &certificateFilename);
-
-private:
-  QString m_toolStdout;
 };
