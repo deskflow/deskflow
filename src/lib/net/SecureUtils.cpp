@@ -7,6 +7,8 @@
 
 #include "SecureUtils.h"
 #include "base/String.h"
+#include "base/finally.h"
+#include "io/filesystem.h"
 
 #include <openssl/pem.h>
 #include <openssl/x509.h>
@@ -66,4 +68,20 @@ std::vector<uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type)
   return digestVec;
 }
 
+std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, FingerprintType type)
+{
+  auto fp = fopenUtf8Path(path, "r");
+  if (!fp) {
+    throw std::runtime_error("could not open certificate path");
+  }
+  auto fileClose = finally([fp]() { std::fclose(fp); });
+
+  X509 *cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
+  if (!cert) {
+    throw std::runtime_error("certificate could not be parsed");
+  }
+  auto certFree = finally([cert]() { X509_free(cert); });
+
+  return SSLCertFingerprint(cert, type);
+}
 } // namespace deskflow
