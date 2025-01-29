@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 add_library(io STATIC
-    filesystem.cpp
-    filesystem.h
     IStream.h
     StreamBuffer.cpp
     StreamBuffer.h
@@ -14,11 +12,3 @@ add_library(io STATIC
     XIO.cpp
     XIO.h
 )
-
-# Windows-specific files
-if(WIN32)
-    target_sources(io PRIVATE
-        win32/encoding_utilities.cpp
-        win32/encoding_utilities.h
-    )
-endif()
