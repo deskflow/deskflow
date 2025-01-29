@@ -10,12 +10,9 @@
 
 namespace deskflow {
 
-std::string formatSSLFingerprint(const std::string &fingerprint, bool convertToHex, bool enableSeparators)
+std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators)
 {
-  std::string result = fingerprint;
-
-  if (convertToHex)
-    result = deskflow::string::toHex(fingerprint, 2);
+  std::string result = deskflow::string::toHex(fingerprint, 2);
 
   deskflow::string::uppercase(result);
 

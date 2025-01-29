@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2014 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -46,6 +47,14 @@ TEST(StringTests, sprintf_formatWithArgument_formatedString)
 TEST(StringTests, toHex_plaintext_hexString)
 {
   EXPECT_EQ("666f6f626172", string::toHex("foobar", 2));
+}
+
+TEST(StringTests, toHex_vector_uint8_t_hexString)
+{
+  std::vector<std::uint8_t> subject{'f', 'o', 'o', 'b', 'a', 'r'};
+  int width = 2;
+
+  EXPECT_EQ("666f6f626172", string::toHex(subject, width));
 }
 
 TEST(StringTests, fromHexChar_plaintext_hexString)

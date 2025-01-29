@@ -627,8 +627,11 @@ bool SecureSocket::verifyCertFingerprint()
   }
 
   // format fingerprint into hexdecimal format with colon separator
-  std::string fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
-  fingerprint = deskflow::formatSSLFingerprint(fingerprint);
+  std::vector<uint8_t> fingerprint_raw;
+  fingerprint_raw.assign(
+      reinterpret_cast<uint8_t *>(tempFingerprint), reinterpret_cast<uint8_t *>(tempFingerprint) + tempFingerprintLen
+  );
+  auto fingerprint = deskflow::formatSSLFingerprint(fingerprint_raw);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
   std::string trustedServersFilename;

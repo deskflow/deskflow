@@ -7,18 +7,18 @@
 
 #pragma once
 
+#include <stdint.h>
 #include <string>
+#include <vector>
 
 namespace deskflow {
-/**
 
+/**
  * @brief formatSSLFingerprint Format an ssl Fingerprint
  * @param fingerprint input string
- * @param convertToHex when true converts the string to a hex string
  * @param enableSeparators insert : seperator every byte when true
  * @return a Formated Fingerprint String
  */
-std::string
-formatSSLFingerprint(const std::string &fingerprint, bool convertToHex = true, bool enableSeparators = true);
+std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
 
 } // namespace deskflow
