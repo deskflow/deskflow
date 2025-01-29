@@ -178,6 +178,17 @@ std::string toHex(const std::string &subject, int width, const char fill)
   return ss.str();
 }
 
+std::string toHex(const std::vector<uint8_t> &input, int width, const char fill)
+{
+  std::stringstream ss;
+  ss << std::hex;
+  for (unsigned int i = 0; i < input.size(); i++) {
+    ss << std::setw(width) << std::setfill(fill) << static_cast<int>(input[i]);
+  }
+
+  return ss.str();
+}
+
 // clang-format off
 int fromHexChar(char c)
 {
