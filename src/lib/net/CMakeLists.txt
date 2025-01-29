@@ -18,6 +18,8 @@ add_library(net STATIC
   SecureSocket.h
   SocketMultiplexer.cpp
   SocketMultiplexer.h
+  SecureUtils.cpp
+  SecureUtils.h
   TCPListenSocket.cpp
   TCPListenSocket.h
   TCPSocket.cpp
