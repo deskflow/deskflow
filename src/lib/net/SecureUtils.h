@@ -7,7 +7,10 @@
 
 #pragma once
 
-#include <stdint.h>
+#include "FingerprintTypes.h"
+
+#include <cstdint>
+#include <openssl/ossl_typ.h>
 #include <string>
 #include <vector>
 
@@ -21,4 +24,5 @@ namespace deskflow {
  */
 std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
 
+std::vector<std::uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type);
 } // namespace deskflow

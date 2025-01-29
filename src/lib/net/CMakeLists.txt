@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 add_library(net STATIC
+  FingerprintTypes.h
   IDataSocket.cpp
   IDataSocket.h
   IListenSocket.h
@@ -53,5 +54,8 @@ target_link_libraries(
   PRIVATE mt io)
 
 if(WIN32)
-  target_link_libraries(net PRIVATE Crypt32 ws2_32)
+  target_link_libraries(
+    net
+    PUBLIC OpenSSL::applink
+    PRIVATE Crypt32 ws2_32 OpenSSL::applink)
 endif()
