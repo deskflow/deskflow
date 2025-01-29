@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2009 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -62,9 +63,6 @@
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #cmakedefine HAVE_UNISTD_H @HAVE_UNISTD_H@
-
-/* Define to 1 if you have the `vsnprintf` function. */
-#cmakedefine HAVE_VSNPRINTF @HAVE_VSNPRINTF@
 
 /* Define to 1 if you have the <wchar.h> header file. */
 #cmakedefine HAVE_WCHAR_H @HAVE_WCHAR_H@
