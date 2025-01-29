@@ -9,6 +9,7 @@
 #include "TlsFingerprint.h"
 
 #include "common/constants.h"
+#include "net/SecureUtils.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -184,31 +185,14 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
 bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
 {
   qDebug("generating tls fingerprint");
-
-  QStringList arguments;
-  arguments.append("x509");
-  arguments.append("-fingerprint");
-  arguments.append(kCertificateHashAlgorithm);
-  arguments.append("-noout");
-  arguments.append("-in");
-  arguments.append(certificateFilename);
-
-  if (!runTool(arguments)) {
-    qCritical("failed to generate tls fingerprint");
-    return false;
-  }
-
-  // find the fingerprint from the tool output
-  auto i = m_toolStdout.indexOf("=");
-  if (i != -1) {
-    i++;
-    QString fingerprint = m_toolStdout.mid(i, m_toolStdout.size() - i);
-
-    TlsFingerprint::local().trust(fingerprint, false);
+  try {
+    auto fingerprint =
+        deskflow::pemFileCertFingerprint(certificateFilename.toStdString(), deskflow::FingerprintType::SHA1);
+    TlsFingerprint::local().trust(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint)), false);
     qDebug("tls fingerprint generated");
     return true;
-  } else {
-    qCritical("failed to find tls fingerprint in tls tool output");
+  } catch (const std::exception &e) {
+    qCritical() << "failed to find tls fingerprint: " << e.what();
     return false;
   }
 }

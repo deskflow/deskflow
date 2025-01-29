@@ -25,4 +25,6 @@ namespace deskflow {
 std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
 
 std::vector<std::uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type);
+
+std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, FingerprintType type);
 } // namespace deskflow
