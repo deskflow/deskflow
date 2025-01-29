@@ -983,17 +983,11 @@ void MainWindow::showConfigureServer(const QString &message)
 void MainWindow::secureSocket(bool secureSocket)
 {
   m_SecureSocket = secureSocket;
+
   const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
   ui->lblConnectionSecurityStatus->setToolTip(txt);
 
-// mac os will try to use the 16x16 low detail icon when we use the theme name
-// because of this we manually select the 64x64 icon from our packed in set
-#ifdef Q_OS_MAC
-  const auto icon = QIcon(QStringLiteral(":/icons/deskflow-%1/status/64/security-%2")
-                              .arg(iconMode(), secureSocket ? QStringLiteral("high") : QStringLiteral("low")));
-#else
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
-#endif
   ui->lblConnectionSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
 }
 
