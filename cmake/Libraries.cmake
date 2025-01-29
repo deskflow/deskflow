@@ -45,20 +45,6 @@ macro(configure_libs)
   endif()
 
   find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
-  if(WIN32) #Used for dev in TLS and WIX
-    cmake_path(SET OPENSSL_ROOT_DIR NORMALIZE "${OPENSSL_INCLUDE_DIR}/..")
-    message(VERBOSE "Set OPENSSL_ROOT_DIR: ${OPENSSL_ROOT_DIR}")
-    set(OPENSSL_EXE_DIR "${OPENSSL_ROOT_DIR}/tools/openssl")
-    add_definitions(-DOPENSSL_EXE_DIR="${OPENSSL_EXE_DIR}")
-    # HACK Install a copy of openssl on windows
-    install(
-        FILES
-          ${OPENSSL_EXE_DIR}/openssl.exe
-          ${OPENSSL_EXE_DIR}/openssl.cnf
-        DESTINATION .
-    )
-  endif()
-
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
   if(ENABLE_COVERAGE)
