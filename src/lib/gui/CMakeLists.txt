@@ -113,5 +113,6 @@ if(WIN32)
     ${target}
     base
     arch
+    net
   )
 endif()
