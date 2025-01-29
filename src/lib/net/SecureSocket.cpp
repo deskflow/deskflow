@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -614,23 +615,15 @@ void SecureSocket::disconnect()
 bool SecureSocket::verifyCertFingerprint()
 {
   // calculate received certificate fingerprint
-  using AutoX509 = std::unique_ptr<X509, decltype(&X509_free)>;
-  AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
-
-  unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-  unsigned int tempFingerprintLen;
-  int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
-
-  if (digestResult <= 0) {
-    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
+  std::vector<std::uint8_t> fingerprint_raw;
+  try {
+    fingerprint_raw =
+        deskflow::SSLCertFingerprint(SSL_get_peer_certificate(m_ssl->m_ssl), deskflow::FingerprintType::SHA1);
+  } catch (const std::exception &e) {
+    LOG((CLOG_ERR "%s", e.what()));
     return false;
   }
 
-  // format fingerprint into hexdecimal format with colon separator
-  std::vector<uint8_t> fingerprint_raw;
-  fingerprint_raw.assign(
-      reinterpret_cast<uint8_t *>(tempFingerprint), reinterpret_cast<uint8_t *>(tempFingerprint) + tempFingerprintLen
-  );
   auto fingerprint = deskflow::formatSSLFingerprint(fingerprint_raw);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
