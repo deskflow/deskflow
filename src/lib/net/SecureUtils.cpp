@@ -8,7 +8,27 @@
 #include "SecureUtils.h"
 #include "base/String.h"
 
+#include <openssl/pem.h>
+#include <openssl/x509.h>
+#include <openssl/x509v3.h>
+#include <stdexcept>
+
 namespace deskflow {
+
+namespace {
+
+const EVP_MD *digestForType(FingerprintType type)
+{
+  switch (type) {
+  case FingerprintType::SHA1:
+    return EVP_sha1();
+  case FingerprintType::SHA256:
+    return EVP_sha256();
+  }
+  throw std::runtime_error("Unknown fingerprint type " + std::to_string(static_cast<int>(type)));
+}
+
+} // namespace
 
 std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators)
 {
@@ -22,6 +42,25 @@ std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool e
       rtn.insert(i * 3 - 1, ":");
   }
   return rtn;
+}
+
+std::vector<uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type)
+{
+  if (!cert) {
+    throw std::runtime_error("certificate is null");
+  }
+
+  unsigned char digest[EVP_MAX_MD_SIZE];
+  unsigned int digest_length = 0;
+  int result = X509_digest(cert, digestForType(type), digest, &digest_length);
+
+  if (result <= 0) {
+    throw std::runtime_error("failed to calculate fingerprint, digest result: " + std::to_string(result));
+  }
+
+  std::vector<std::uint8_t> digest_vec;
+  digest_vec.assign(reinterpret_cast<std::uint8_t *>(digest), reinterpret_cast<std::uint8_t *>(digest) + digest_length);
+  return digest_vec;
 }
 
 } // namespace deskflow
