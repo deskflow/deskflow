@@ -67,7 +67,6 @@ private:
   bool showCertificate() const;
   void checkResult(int n, int &retry);
   void disconnect();
-  void formatFingerprint(std::string &fingerprint, bool hex = true, bool separator = true);
   bool verifyCertFingerprint();
 
   ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
