@@ -10,6 +10,7 @@
 #include "base/finally.h"
 #include "io/filesystem.h"
 
+#include <openssl/evp.h>
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
@@ -81,4 +82,44 @@ std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, Finger
 
   return SSLCertFingerprint(cert, type);
 }
+
+void generatePemSelfSignedCert(const std::string &path)
+{
+  auto expiration_days = 365;
+
+  auto *private_key = EVP_PKEY_new();
+  if (!private_key) {
+    throw std::runtime_error("Could not allocate private key for certificate");
+  }
+  auto private_key_free = finally([private_key]() { EVP_PKEY_free(private_key); });
+
+  private_key = EVP_RSA_gen(2048);
+
+  auto *cert = X509_new();
+  if (!cert) {
+    throw std::runtime_error("Could not allocate certificate");
+  }
+  auto cert_free = finally([cert]() { X509_free(cert); });
+
+  ASN1_INTEGER_set(X509_get_serialNumber(cert), 1);
+  X509_gmtime_adj(X509_get_notBefore(cert), 0);
+  X509_gmtime_adj(X509_get_notAfter(cert), expiration_days * 24 * 3600);
+  X509_set_pubkey(cert, private_key);
+
+  auto *name = X509_get_subject_name(cert);
+  X509_NAME_add_entry_by_txt(name, "CN", MBSTRING_ASC, reinterpret_cast<const unsigned char *>("Deskflow"), -1, -1, 0);
+  X509_set_issuer_name(cert, name);
+
+  X509_sign(cert, private_key, EVP_sha256());
+
+  auto fp = fopenUtf8Path(path.c_str(), "r");
+  if (!fp) {
+    throw std::runtime_error("Could not open certificate output path");
+  }
+  auto file_close = finally([fp]() { std::fclose(fp); });
+
+  PEM_write_PrivateKey(fp, private_key, nullptr, nullptr, 0, nullptr, nullptr);
+  PEM_write_X509(fp, cert);
+}
+
 } // namespace deskflow
