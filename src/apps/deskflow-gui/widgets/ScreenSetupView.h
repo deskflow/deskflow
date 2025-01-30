@@ -29,6 +29,9 @@ public:
   void setModel(QAbstractItemModel *model) override;
   ScreenSetupModel *model() const;
 
+private:
+  void showScreenConfig(int col, int row);
+
 protected:
   void mouseDoubleClickEvent(QMouseEvent *) override;
   void setTableSize();

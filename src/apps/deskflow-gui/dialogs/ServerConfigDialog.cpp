@@ -36,6 +36,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->m_pTrashScreenWidget->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
+  ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
+  ui->lblNewScreen->setToolTip(tr("Drag to the grid to add a new computer."));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
@@ -87,7 +89,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
     server->markAsServer();
   }
 
-  ui->m_pButtonAddComputer->setEnabled(!model().isFull());
+  ui->lblNewScreen->setEnabled(!model().isFull());
   connect(ui->m_pTrashScreenWidget, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
 
   onChange();
@@ -418,7 +420,7 @@ void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
 
 void ServerConfigDialog::onScreenRemoved()
 {
-  ui->m_pButtonAddComputer->setEnabled(true);
+  ui->lblNewScreen->setEnabled(true);
   onChange();
 }
 
@@ -464,7 +466,7 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
     isAccepted = true;
   }
 
-  ui->m_pButtonAddComputer->setEnabled(!model().isFull());
+  ui->lblNewScreen->setEnabled(!model().isFull());
   return isAccepted;
 }
 

@@ -96,6 +96,8 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   widgets/ClientStateLabel.h
   widgets/KeySequenceWidget.cpp
   widgets/KeySequenceWidget.h
+  widgets/NewScreenWidget.h
+  widgets/NewScreenWidget.cpp
   widgets/ScreenSetupView.cpp
   widgets/ScreenSetupView.h
   widgets/ServerStateLabel.cpp
