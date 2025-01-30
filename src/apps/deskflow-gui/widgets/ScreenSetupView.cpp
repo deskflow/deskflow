@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -27,7 +28,7 @@ ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-  setIconSize(QSize(64, 64));
+  setIconSize(QSize(96, 96));
   horizontalHeader()->hide();
   verticalHeader()->hide();
 }
@@ -140,8 +141,16 @@ void ScreenSetupView::startDrag(Qt::DropActions)
 
 void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
 {
+  // HACK make a basic widget and init from it
+  auto w = new QWidget();
+  option->initFrom(w);
+  w->deleteLater();
+  delete w;
+
+  option->decorationSize = QSize(96, 96);
   option->showDecorationSelected = true;
   option->decorationPosition = QStyleOptionViewItem::Top;
-  option->displayAlignment = Qt::AlignCenter;
+  option->decorationAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
+  option->displayAlignment = Qt::AlignTop | Qt::AlignHCenter;
   option->textElideMode = Qt::ElideMiddle;
 }

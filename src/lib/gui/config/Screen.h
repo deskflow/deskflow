@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -164,7 +165,7 @@ protected:
   }
 
 private:
-  QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(64, 64));
+  QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(96, 96));
   QString m_Name;
   QStringList m_Aliases;
   QList<int> m_Modifiers;
