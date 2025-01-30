@@ -94,8 +94,8 @@ public:
 
   void loadSettings(QSettingsProxy &settings);
   void saveSettings(QSettingsProxy &settings) const;
-  QTextStream &writeScreensSection(QTextStream &outStream) const;
-  QTextStream &writeAliasesSection(QTextStream &outStream) const;
+  QString screensSection() const;
+  QString aliasesSection() const;
 
   bool swapped() const
   {

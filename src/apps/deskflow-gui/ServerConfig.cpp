@@ -239,7 +239,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   for (const Screen &s : config.screens()) {
     if (!s.isNull())
-      s.writeScreensSection(outStream);
+      outStream << s.screensSection();
   }
 
   outStream << "end" << Qt::endl << Qt::endl;
@@ -248,7 +248,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 
   for (const Screen &s : config.screens()) {
     if (!s.isNull())
-      s.writeAliasesSection(outStream);
+      outStream << s.aliasesSection();
   }
 
   outStream << "end" << Qt::endl << Qt::endl;
