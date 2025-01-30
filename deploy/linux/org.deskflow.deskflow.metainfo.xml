@@ -35,9 +35,29 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.19.0" date="2025-1-31" urgency="high">
+			<description>
+				<p>This stable Release fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<ul>
+					<li>Feature: New Fallback icon theme</li>
+					<li>Feature: Allow only one gui instance</li>
+					<li>Fix: Modifier remapping on macOS</li>
+					<li>Fix: Show Screen icons again in the server settings</li>
+					<li>Fix: Show the TLS Label</li>
+					<li>Fix: Mainwindow restore </li>
+					<li>Fix: Hotkey with more then one action now work again</li>
+					<li>Better Detection of evdev on BSD</li>
+					<li>Better language detection on X11</li>
+					<li>Better deal with screen changes on wayland</li>
+					<li>Remove Legacy tray icons</li>
+					<li>Lots of Internal Cleanup</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.19.0</url>
+		</release>
 		<release version="1.18.0" date="2024-12-26" urgency="high">
 			<description>
-				<p>This stable Release Fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the relase page.</p>
+				<p>This stable Release Fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
 				<ul>
 					<li>Fix CVE-2021-42075: Close connection on app-level handshake failure</li>
 					<li>Fix CVE-2021-42074: Handle SSL race conditions and segmentation fault</li>
