@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -37,28 +38,26 @@ ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numR
 
 QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
 {
-  if (index.isValid() && index.row() < m_NumRows && index.column() < m_NumColumns) {
-    switch (role) {
-    case Qt::DecorationRole:
-      if (screen(index).isNull())
-        break;
-      return QIcon(screen(index).pixmap());
+  if (!index.isValid() || index.row() > m_NumRows || index.row() < 0 || index.column() < 0 ||
+      index.column() > m_NumColumns)
+    return QVariant();
 
-    case Qt::ToolTipRole:
-      if (screen(index).isNull())
-        break;
-      return QString(tr("<center>Screen: <b>%1</b></center>"
-                        "<br>Double click to edit settings"
-                        "<br>Drag screen to the trashcan to remove it"))
-          .arg(screen(index).name());
+  if (screen(index).isNull())
+    return QVariant();
 
-    case Qt::DisplayRole:
-      if (screen(index).isNull())
-        break;
-      return screen(index).name();
-    }
+  switch (role) {
+  case Qt::DecorationRole:
+    return screen(index).pixmap();
+
+  case Qt::ToolTipRole:
+    return QString(tr("<center>Screen: <b>%1</b></center>"
+                      "<br>Double click to edit settings"
+                      "<br>Drag screen to the trashcan to remove it"))
+        .arg(screen(index).name());
+
+  case Qt::DisplayRole:
+    return screen(index).name();
   }
-
   return QVariant();
 }
 
