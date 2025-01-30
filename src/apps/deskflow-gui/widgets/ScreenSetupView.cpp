@@ -44,6 +44,13 @@ ScreenSetupModel *ScreenSetupView::model() const
   return qobject_cast<ScreenSetupModel *>(QTableView::model());
 }
 
+void ScreenSetupView::showScreenConfig(int col, int row)
+{
+  ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
+  dlg.exec();
+  Q_EMIT model()->screensChanged();
+}
+
 void ScreenSetupView::setTableSize()
 {
   for (int i = 0; i < model()->columnCount(); i++)
@@ -66,9 +73,7 @@ void ScreenSetupView::mouseDoubleClickEvent(QMouseEvent *event)
     int row = rowAt(event->pos().y());
 
     if (!model()->screen(col, row).isNull()) {
-      ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
-      dlg.exec();
-      Q_EMIT model()->screensChanged();
+      showScreenConfig(col, row);
     }
   } else
     event->ignore();
@@ -100,8 +105,9 @@ void ScreenSetupView::dragMoveEvent(QDragMoveEvent *event)
       // a drop from outside is not allowed if there's a screen already there.
       if (!model()->screen(col, row).isNull())
         event->ignore();
-      else
+      else {
         event->acceptProposedAction();
+      }
     }
   } else
     event->ignore();
