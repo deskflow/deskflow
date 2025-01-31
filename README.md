@@ -154,7 +154,8 @@ free to [start a discussion](https://github.com/deskflow/deskflow/discussions) o
 ### Is clipboard sharing supported?
 
 Absolutely. The clipboard-sharing feature is a cornerstone feature of the product and we are 
-committed to maintaining and improving that feature.
+committed to maintaining and improving that feature. Yet it is not yet support for Wayland.
+See [#8031](https://github.com/deskflow/deskflow/issues/8031).
 
 ### Is Wayland for Linux supported?
 
@@ -166,6 +167,8 @@ Wayland support for Deskflow. We would like to give special thanks to Peter Hutt
 who is the author of `libei`, a major contributor to `libportal`, and the author of the Wayland
 implementation in Deskflow. Others such as Olivier Fourdan and Povilas Kanapickas helped with the
 Wayland implementation.
+
+See above where lack of clipboard-sharing is mentioned.
 
 ### Where did it all start?
 
