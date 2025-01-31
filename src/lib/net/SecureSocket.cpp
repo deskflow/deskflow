@@ -1,10 +1,12 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2015 - 2016 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "SecureSocket.h"
+#include "SecureUtils.h"
 
 #include "arch/XArch.h"
 #include "base/Log.h"
@@ -610,43 +612,19 @@ void SecureSocket::disconnect()
   sendEvent(getEvents()->forIStream().inputShutdown());
 }
 
-void SecureSocket::formatFingerprint(std::string &fingerprint, bool hex, bool separator)
-{
-  if (hex) {
-    // to hexidecimal
-    fingerprint = deskflow::string::toHex(fingerprint, 2);
-  }
-
-  // all uppercase
-  deskflow::string::uppercase(fingerprint);
-
-  if (separator) {
-    // add colon to separate each 2 charactors
-    size_t separators = fingerprint.size() / 2;
-    for (size_t i = 1; i < separators; i++) {
-      fingerprint.insert(i * 3 - 1, ":");
-    }
-  }
-}
-
 bool SecureSocket::verifyCertFingerprint()
 {
   // calculate received certificate fingerprint
-  using AutoX509 = std::unique_ptr<X509, decltype(&X509_free)>;
-  AutoX509 cert(SSL_get_peer_certificate(m_ssl->m_ssl), &X509_free);
-
-  unsigned char tempFingerprint[EVP_MAX_MD_SIZE];
-  unsigned int tempFingerprintLen;
-  int digestResult = X509_digest(cert.get(), EVP_sha256(), tempFingerprint, &tempFingerprintLen);
-
-  if (digestResult <= 0) {
-    LOG((CLOG_ERR "failed to calculate fingerprint, digest result: %d", digestResult));
+  std::vector<std::uint8_t> fingerprint_raw;
+  try {
+    fingerprint_raw =
+        deskflow::SSLCertFingerprint(SSL_get_peer_certificate(m_ssl->m_ssl), deskflow::FingerprintType::SHA1);
+  } catch (const std::exception &e) {
+    LOG((CLOG_ERR "%s", e.what()));
     return false;
   }
 
-  // format fingerprint into hexdecimal format with colon separator
-  std::string fingerprint(static_cast<char *>(static_cast<void *>(tempFingerprint)), tempFingerprintLen);
-  formatFingerprint(fingerprint);
+  auto fingerprint = deskflow::formatSSLFingerprint(fingerprint_raw);
   LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
 
   std::string trustedServersFilename;
