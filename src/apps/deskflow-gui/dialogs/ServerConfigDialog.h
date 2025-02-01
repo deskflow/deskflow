@@ -39,8 +39,6 @@ public slots:
 
 protected slots:
   void onScreenRemoved();
-  void on_m_pCheckBoxUseExternalConfig_toggled(bool checked = false);
-  bool on_m_pButtonBrowseConfigFile_clicked();
 
 protected:
   void addClient();
@@ -56,8 +54,32 @@ protected:
   void removeAction();
   void listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
+  void toggleSwitchDoubleTap(bool enable);
+  void setSwitchDoubleTap(int within);
+
+  void toggleSwitchDelay(bool enable);
+  void setSwitchDelay(int delay);
+
+  void toggleLockToScreen(bool disabled);
+  void toggleWin32Foreground(bool enabled);
+
   void toggleClipboard(bool enabled);
+  void setClipboardLimit(int limit);
+
   void toggleHeartbeat(bool enabled);
+  void setHeartbeat(int rate);
+
+  void toggleRelativeMouseMoves(bool enabled);
+  void toggleProtocol();
+
+  void setSwitchCornerSize(int size);
+  void toggleCornerBottomLeft(bool enable);
+  void toggleCornerTopLeft(bool enable);
+  void toggleCornerBottomRight(bool enable);
+  void toggleCornerTopRight(bool enable);
+
+  void toggleExternalConfig(bool enable = false);
+  bool browseConfigFile();
 
   ServerConfig &serverConfig()
   {

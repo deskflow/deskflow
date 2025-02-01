@@ -22,9 +22,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>2</number>
-     </property>
      <widget class="QWidget" name="tabComputers">
       <attribute name="title">
        <string>Computers</string>
@@ -294,7 +291,7 @@
       </attribute>
       <layout class="QGridLayout" name="m_pGridCorners">
        <item row="0" column="1">
-        <widget class="QGroupBox" name="m_pGroupCorners">
+        <widget class="QGroupBox" name="groupCorners">
          <property name="font">
           <font>
            <kerning>true</kerning>
@@ -313,28 +310,28 @@
           <item>
            <layout class="QGridLayout" name="m_pLayoutCorners">
             <item row="1" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+             <widget class="QCheckBox" name="cbCornerBottomLeft">
               <property name="text">
                <string>&amp;Bottom-left</string>
               </property>
              </widget>
             </item>
             <item row="0" column="0">
-             <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+             <widget class="QCheckBox" name="cbCornerTopLeft">
               <property name="text">
                <string>To&amp;p-left</string>
               </property>
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+             <widget class="QCheckBox" name="cbCornerBottomRight">
               <property name="text">
                <string>Bottom-ri&amp;ght</string>
               </property>
              </widget>
             </item>
             <item row="0" column="1">
-             <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+             <widget class="QCheckBox" name="cbCornerTopRight">
               <property name="text">
                <string>Top-rig&amp;ht</string>
               </property>
@@ -350,7 +347,7 @@
                <string>Cor&amp;ner size</string>
               </property>
               <property name="buddy">
-               <cstring>m_pSpinBoxSwitchCornerSize</cstring>
+               <cstring>sbSwitchCornerSize</cstring>
               </property>
              </widget>
             </item>
@@ -368,7 +365,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize">
+             <widget class="QSpinBox" name="sbSwitchCornerSize">
               <property name="maximum">
                <number>30000</number>
               </property>
@@ -599,14 +596,9 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QLabel" name="m_pLabelProtocol">
+             <widget class="QLabel" name="labelProtocol">
               <property name="whatsThis">
-               <string>&lt;p&gt;Enables compatibility with programs that use either the Synergy or Barrier protocols:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Deskflow uses the Synergy protocol.&lt;/li&gt;
-&lt;li&gt;Input Leap uses the Barrier protocol.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;A Deskflow client will automatically use either the Synergy or Barrier protocol depending on the server protocol.&lt;/p&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables compatibility with programs that use either the Synergy or Barrier protocols:&lt;/p&gt;&lt;ul style=&quot;margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;&quot;&gt;&lt;li style=&quot; margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Synergy 3 uses the Synergy protocol.&lt;/li&gt;&lt;li style=&quot; margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Barrier, Input-Leap and Synergy 1 uses the Barrier protocol.&lt;/li&gt;&lt;/ul&gt;&lt;p&gt;A Deskflow client will automatically use either the Synergy or Barrier protocol depending on the server protocol.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Network protocol</string>
@@ -627,7 +619,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QRadioButton" name="m_pRadioProtocolSynergy">
+             <widget class="QRadioButton" name="rbProtocolSynergy">
               <property name="text">
                <string>&amp;Synergy</string>
               </property>
@@ -637,7 +629,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="m_pRadioProtocolBarrier">
+             <widget class="QRadioButton" name="rbProtocolBarrier">
               <property name="text">
                <string>&amp;Barrier</string>
               </property>
@@ -662,7 +654,7 @@
         </widget>
        </item>
        <item row="1" column="1">
-        <widget class="QGroupBox" name="m_pGroupSwitch">
+        <widget class="QGroupBox" name="groupSwitch">
          <property name="font">
           <font>
            <kerning>true</kerning>
@@ -682,9 +674,9 @@
            <number>6</number>
           </property>
           <item>
-           <layout class="QHBoxLayout">
+           <layout class="QHBoxLayout" name="_5">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxSwitchDelay">
+             <widget class="QCheckBox" name="cbSwitchDelay">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -694,7 +686,7 @@
              </widget>
             </item>
             <item>
-             <spacer>
+             <spacer name="spacerSwitchWait">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
@@ -707,7 +699,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchDelay">
+             <widget class="QSpinBox" name="sbSwitchDelay">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -735,9 +727,9 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout">
+           <layout class="QHBoxLayout" name="_6">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxSwitchDoubleTap">
+             <widget class="QCheckBox" name="cbSwitchDoubleTap">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -747,7 +739,7 @@
              </widget>
             </item>
             <item>
-             <spacer>
+             <spacer name="spacerDoubleTap">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
@@ -760,7 +752,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchDoubleTap">
+             <widget class="QSpinBox" name="sbSwitchDoubleTap">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -818,7 +810,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabAdvancedConfig">
+     <widget class="QWidget" name="tabConfigFile">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
@@ -828,20 +820,8 @@
       <attribute name="title">
        <string>Config file</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>15</number>
-       </property>
-       <property name="leftMargin">
-        <number>120</number>
-       </property>
-       <property name="topMargin">
-        <number>30</number>
-       </property>
-       <property name="rightMargin">
-        <number>120</number>
-       </property>
-       <item alignment="Qt::AlignmentFlag::AlignHCenter">
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
         <widget class="QLabel" name="label_5">
          <property name="font">
           <font>
@@ -892,192 +872,104 @@ Enabling this setting will disable the server config GUI.</string>
         </spacer>
        </item>
        <item>
-        <layout class="QHBoxLayout" name="m_pLayoutConfigCheckbox">
-         <property name="leftMargin">
-          <number>0</number>
+        <widget class="QGroupBox" name="groupExternalConfig">
+         <property name="title">
+          <string>Use a server config file</string>
          </property>
-         <property name="topMargin">
-          <number>0</number>
+         <property name="checkable">
+          <bool>true</bool>
          </property>
-         <item>
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="m_pCheckBoxUseExternalConfig">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>300</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Use a server config file</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_3">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="m_pLayoutConfigPath">
-         <property name="leftMargin">
-          <number>40</number>
+         <property name="checked">
+          <bool>false</bool>
          </property>
-         <property name="topMargin">
-          <number>0</number>
-         </property>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLabel" name="m_pLabelConfigFile">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>96</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>Config file path</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_6">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>10</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="m_pEditConfigFile">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>180</width>
-             <height>0</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="m_pButtonBrowseConfigFile">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="cursor">
-            <cursorShape>PointingHandCursor</cursorShape>
-           </property>
-           <property name="text">
-            <string/>
-           </property>
-           <property name="flat">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Policy::Expanding</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QLabel" name="labelConfigFile">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>96</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Config file path</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_6">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+            <property name="sizeType">
+             <enum>QSizePolicy::Policy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>13</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineConfigFile">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>180</width>
+              <height>0</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnBrowseConfigFile">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="cursor">
+             <cursorShape>PointingHandCursor</cursorShape>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer_1">
@@ -1127,7 +1019,6 @@ Enabling this setting will disable the server config GUI.</string>
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>m_pButtonBrowseConfigFile</tabstop>
   <tabstop>screenSetupView</tabstop>
   <tabstop>listHotkeys</tabstop>
   <tabstop>btnNewHotkey</tabstop>
@@ -1137,53 +1028,19 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>btnNewAction</tabstop>
   <tabstop>btnEditAction</tabstop>
   <tabstop>btnRemoveAction</tabstop>
-  <tabstop>m_pCheckBoxSwitchDelay</tabstop>
-  <tabstop>m_pSpinBoxSwitchDelay</tabstop>
-  <tabstop>m_pCheckBoxSwitchDoubleTap</tabstop>
-  <tabstop>m_pSpinBoxSwitchDoubleTap</tabstop>
+  <tabstop>cbSwitchDelay</tabstop>
+  <tabstop>sbSwitchDelay</tabstop>
+  <tabstop>cbSwitchDoubleTap</tabstop>
+  <tabstop>sbSwitchDoubleTap</tabstop>
   <tabstop>cbEnableClipboard</tabstop>
   <tabstop>sbClipboardSizeLimit</tabstop>
   <tabstop>cbHeartbeat</tabstop>
   <tabstop>sbHeartbeat</tabstop>
   <tabstop>cbRelativeMouseMoves</tabstop>
-  <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
-  <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
-  <tabstop>m_pEditConfigFile</tabstop>
+  <tabstop>sbSwitchCornerSize</tabstop>
+  <tabstop>lineConfigFile</tabstop>
   <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>m_pCheckBoxSwitchDelay</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pSpinBoxSwitchDelay</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>76</x>
-     <y>88</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>86</x>
-     <y>88</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pCheckBoxSwitchDoubleTap</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pSpinBoxSwitchDoubleTap</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>76</x>
-     <y>81</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>86</x>
-     <y>81</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>
