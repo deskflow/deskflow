@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -45,12 +46,12 @@ protected slots:
   void on_m_pButtonEditAction_clicked();
   void on_m_pButtonRemoveAction_clicked();
   void on_m_pCheckBoxEnableClipboard_stateChanged(int state);
-  void on_m_pButtonAddComputer_clicked();
   void onScreenRemoved();
   void on_m_pCheckBoxUseExternalConfig_toggled(bool checked = false);
   bool on_m_pButtonBrowseConfigFile_clicked();
 
 protected:
+  void addClient();
   bool addComputer(const QString &clientName, bool doSilent);
   ServerConfig &serverConfig()
   {

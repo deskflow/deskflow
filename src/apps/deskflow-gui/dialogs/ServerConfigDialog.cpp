@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -413,7 +414,7 @@ void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
   ui->m_pButtonRemoveAction->setEnabled(!ui->m_pListActions->selectedItems().isEmpty());
 }
 
-void ServerConfigDialog::on_m_pButtonAddComputer_clicked()
+void ServerConfigDialog::addClient()
 {
   addComputer("", false);
 }
