@@ -22,6 +22,9 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>2</number>
+     </property>
      <widget class="QWidget" name="tabComputers">
       <attribute name="title">
        <string>Computers</string>
@@ -285,7 +288,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabAdvanced">
+     <widget class="QWidget" name="tabAdvanced">
       <attribute name="title">
        <string>Advanced</string>
       </attribute>
@@ -403,7 +406,7 @@
         </widget>
        </item>
        <item row="0" column="0">
-        <widget class="QGroupBox" name="m_pGroupOptions">
+        <widget class="QGroupBox" name="groupMisc">
          <property name="font">
           <font>
            <kerning>false</kerning>
@@ -414,14 +417,14 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxDisableLockToScreen">
+           <widget class="QCheckBox" name="cbDisableLockToScreen">
             <property name="text">
              <string>Disable lock to computer (scroll lock key)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxRelativeMouseMoves">
+           <widget class="QCheckBox" name="cbRelativeMouseMoves">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -431,7 +434,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxWin32KeepForeground">
+           <widget class="QCheckBox" name="cbWin32KeepForeground">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -441,12 +444,12 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="m_pLayoutClipboard">
+           <layout class="QHBoxLayout" name="layoutClipboard">
             <property name="spacing">
              <number>6</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxEnableClipboard">
+             <widget class="QCheckBox" name="cbEnableClipboard">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
                 <horstretch>0</horstretch>
@@ -482,7 +485,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxClipboardSizeLimit">
+             <widget class="QSpinBox" name="sbClipboardSizeLimit">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -520,13 +523,13 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QGroupBox" name="m_pGroupNetwork">
+        <widget class="QGroupBox" name="groupNetwork">
          <property name="title">
           <string>&amp;Network</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <layout class="QHBoxLayout">
+           <layout class="QHBoxLayout" name="_4">
             <property name="spacing">
              <number>9</number>
             </property>
@@ -534,7 +537,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxHeartbeat">
+             <widget class="QCheckBox" name="cbHeartbeat">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -547,7 +550,7 @@
              </widget>
             </item>
             <item>
-             <spacer>
+             <spacer name="spacerNetwork">
               <property name="orientation">
                <enum>Qt::Orientation::Horizontal</enum>
               </property>
@@ -560,7 +563,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxHeartbeat">
+             <widget class="QSpinBox" name="sbHeartbeat">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -1138,11 +1141,11 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>m_pSpinBoxSwitchDelay</tabstop>
   <tabstop>m_pCheckBoxSwitchDoubleTap</tabstop>
   <tabstop>m_pSpinBoxSwitchDoubleTap</tabstop>
-  <tabstop>m_pCheckBoxEnableClipboard</tabstop>
-  <tabstop>m_pSpinBoxClipboardSizeLimit</tabstop>
-  <tabstop>m_pCheckBoxHeartbeat</tabstop>
-  <tabstop>m_pSpinBoxHeartbeat</tabstop>
-  <tabstop>m_pCheckBoxRelativeMouseMoves</tabstop>
+  <tabstop>cbEnableClipboard</tabstop>
+  <tabstop>sbClipboardSizeLimit</tabstop>
+  <tabstop>cbHeartbeat</tabstop>
+  <tabstop>sbHeartbeat</tabstop>
+  <tabstop>cbRelativeMouseMoves</tabstop>
   <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
   <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
   <tabstop>m_pEditConfigFile</tabstop>
@@ -1179,22 +1182,6 @@ Enabling this setting will disable the server config GUI.</string>
     <hint type="destinationlabel">
      <x>86</x>
      <y>81</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pCheckBoxHeartbeat</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>m_pSpinBoxHeartbeat</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>32</x>
-     <y>91</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>44</x>
-     <y>91</y>
     </hint>
    </hints>
   </connection>

@@ -38,7 +38,6 @@ public slots:
   }
 
 protected slots:
-  void on_m_pCheckBoxEnableClipboard_stateChanged(int state);
   void onScreenRemoved();
   void on_m_pCheckBoxUseExternalConfig_toggled(bool checked = false);
   bool on_m_pButtonBrowseConfigFile_clicked();
@@ -56,6 +55,9 @@ protected:
   void editAction();
   void removeAction();
   void listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+  void toggleClipboard(bool enabled);
+  void toggleHeartbeat(bool enabled);
 
   ServerConfig &serverConfig()
   {

@@ -69,13 +69,13 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
 
   ui->m_pEditConfigFile->setText(serverConfig().configFile());
   ui->m_pCheckBoxUseExternalConfig->setChecked(serverConfig().useExternalConfig());
-  ui->m_pCheckBoxHeartbeat->setChecked(serverConfig().hasHeartbeat());
+  ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
   ui->m_pRadioProtocolSynergy->setChecked(serverConfig().protocol() == ServerProtocol::kSynergy);
   ui->m_pRadioProtocolBarrier->setChecked(serverConfig().protocol() == ServerProtocol::kBarrier);
-  ui->m_pSpinBoxHeartbeat->setValue(serverConfig().heartbeat());
+  ui->sbHeartbeat->setValue(serverConfig().heartbeat());
 
-  ui->m_pCheckBoxRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
-  ui->m_pCheckBoxWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
+  ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
+  ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
 
   ui->m_pCheckBoxSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
   ui->m_pSpinBoxSwitchDelay->setValue(serverConfig().switchDelay());
@@ -88,12 +88,12 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   ui->m_pCheckBoxCornerBottomLeft->setChecked(serverConfig().switchCorner(static_cast<int>(BottomLeft)));
   ui->m_pCheckBoxCornerBottomRight->setChecked(serverConfig().switchCorner(static_cast<int>(BottomRight)));
   ui->m_pSpinBoxSwitchCornerSize->setValue(serverConfig().switchCornerSize());
-  ui->m_pCheckBoxDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
+  ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
 
-  ui->m_pCheckBoxEnableClipboard->setChecked(serverConfig().clipboardSharing());
+  ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
   int clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
-  ui->m_pSpinBoxClipboardSizeLimit->setValue(clipboardSharingSizeM);
-  ui->m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
+  ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
+  ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
@@ -118,6 +118,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   // computers
   connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
 
+  connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
+  connect(ui->cbHeartbeat, &QCheckBox::toggled, this, &ServerConfigDialog::toggleHeartbeat);
+
 // Above Qt 6.7 the checkbox signal signature has changed from int to Qt::CheckState
 #if QT_VERSION <= QT_VERSION_CHECK(6, 7, 0)
   // advanced
@@ -129,23 +132,16 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
     serverConfig().haveSwitchDoubleTap(v);
     onChange();
   });
-  connect(ui->m_pCheckBoxEnableClipboard, &QCheckBox::stateChanged, this, [this](const int &v) {
-    serverConfig().setClipboardSharing(v);
-    onChange();
-  });
-  connect(ui->m_pCheckBoxHeartbeat, &QCheckBox::stateChanged, this, [this](const int &v) {
-    serverConfig().haveHeartbeat(v);
-    onChange();
-  });
-  connect(ui->m_pCheckBoxRelativeMouseMoves, &QCheckBox::stateChanged, this, [this](const int &v) {
+
+  connect(ui->cbRelativeMouseMoves, &QCheckBox::stateChanged, this, [this](const int &v) {
     serverConfig().setRelativeMouseMoves(v);
     onChange();
   });
-  connect(ui->m_pCheckBoxWin32KeepForeground, &QCheckBox::stateChanged, this, [this](const int &v) {
+  connect(ui->cbWin32KeepForeground, &QCheckBox::stateChanged, this, [this](const int &v) {
     serverConfig().setWin32KeepForeground(v);
     onChange();
   });
-  connect(ui->m_pCheckBoxDisableLockToScreen, &QCheckBox::stateChanged, this, [this](const int &v) {
+  connect(ui->cbDisableLockToScreen, &QCheckBox::stateChanged, this, [this](const int &v) {
     serverConfig().setDisableLockToScreen(v);
     onChange();
   });
@@ -179,23 +175,16 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
     serverConfig().haveSwitchDoubleTap(v == Qt::Checked);
     onChange();
   });
-  connect(ui->m_pCheckBoxEnableClipboard, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
-    serverConfig().setClipboardSharing(v == Qt::Checked);
-    onChange();
-  });
-  connect(ui->m_pCheckBoxHeartbeat, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
-    serverConfig().haveHeartbeat(v == Qt::Checked);
-    onChange();
-  });
-  connect(ui->m_pCheckBoxRelativeMouseMoves, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
+
+  connect(ui->cbRelativeMouseMoves, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
     serverConfig().setRelativeMouseMoves(v == Qt::Checked);
     onChange();
   });
-  connect(ui->m_pCheckBoxWin32KeepForeground, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
+  connect(ui->cbWin32KeepForeground, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
     serverConfig().setWin32KeepForeground(v == Qt::Checked);
     onChange();
   });
-  connect(ui->m_pCheckBoxDisableLockToScreen, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
+  connect(ui->cbDisableLockToScreen, &QCheckBox::checkStateChanged, this, [this](const Qt::CheckState &v) {
     serverConfig().setDisableLockToScreen(v == Qt::Checked);
     onChange();
   });
@@ -237,19 +226,16 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       }
   );
   connect(
-      ui->m_pSpinBoxClipboardSizeLimit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
+      ui->sbClipboardSizeLimit, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
       [this](const int &v) {
         serverConfig().setClipboardSharingSize(v * 1024);
         onChange();
       }
   );
-  connect(
-      ui->m_pSpinBoxHeartbeat, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
-      [this](const int &v) {
-        serverConfig().setHeartbeat(v);
-        onChange();
-      }
-  );
+  connect(ui->sbHeartbeat, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, [this](const int &v) {
+    serverConfig().setHeartbeat(v);
+    onChange();
+  });
   connect(
       ui->m_pSpinBoxSwitchCornerSize, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this,
       [this](const int &v) {
@@ -326,7 +312,7 @@ void ServerConfigDialog::editHotkey()
 {
   int row = ui->listHotkeys->currentRow();
   if (row < 0 || row >= serverConfig().hotkeys().size()) {
-    qDebug() << "Atempt to editing out of bounds hotkey row: " << row;
+    qDebug() << "Attempt to editing out of bounds hotkey row: " << row;
     return;
   }
 
@@ -342,7 +328,7 @@ void ServerConfigDialog::removeHotkey()
 {
   int row = ui->listHotkeys->currentRow();
   if (row < 0 || row >= serverConfig().hotkeys().size()) {
-    qDebug() << "Atempt to remove out of bounds hotkey row: " << row;
+    qDebug() << "Attempt to remove out of bounds hotkey row: " << row;
     return;
   }
 
@@ -371,7 +357,7 @@ void ServerConfigDialog::addAction()
 {
   int row = ui->listHotkeys->currentRow();
   if (row < 0 || row >= serverConfig().hotkeys().size()) {
-    qDebug() << "Atempt to add action to out of bounds hotkey row: " << row;
+    qDebug() << "Attempt to add action to out of bounds hotkey row: " << row;
     return;
   }
 
@@ -389,14 +375,14 @@ void ServerConfigDialog::editAction()
 {
   int hotkeyRow = ui->listHotkeys->currentRow();
   if (hotkeyRow < 0 || hotkeyRow >= serverConfig().hotkeys().size()) {
-    qDebug() << "Atempt to edit action from out of bounds hotkey row: " << hotkeyRow;
+    qDebug() << "Attempt to edit action from out of bounds hotkey row: " << hotkeyRow;
     return;
   }
   Hotkey &hotkey = serverConfig().hotkeys()[hotkeyRow];
 
   int actionRow = ui->listActions->currentRow();
   if (actionRow < 0 || actionRow >= hotkey.actions().size()) {
-    qDebug() << "Atempt to remove out of bounds action row: " << actionRow;
+    qDebug() << "Attempt to remove out of bounds action row: " << actionRow;
     return;
   }
   Action &action = hotkey.actions()[actionRow];
@@ -412,14 +398,14 @@ void ServerConfigDialog::removeAction()
 {
   int hotkeyRow = ui->listHotkeys->currentRow();
   if (hotkeyRow < 0 || hotkeyRow >= serverConfig().hotkeys().size()) {
-    qDebug() << "Atempt to remove action from out of bounds hotkey row: " << hotkeyRow;
+    qDebug() << "Attempt to remove action from out of bounds hotkey row: " << hotkeyRow;
     return;
   }
   Hotkey &hotkey = serverConfig().hotkeys()[hotkeyRow];
 
   int actionRow = ui->listActions->currentRow();
   if (actionRow < 0 || actionRow >= hotkey.actions().size()) {
-    qDebug() << "Atempt to remove out of bounds action row: " << actionRow;
+    qDebug() << "Attempt to remove out of bounds action row: " << actionRow;
     return;
   }
 
@@ -428,13 +414,22 @@ void ServerConfigDialog::removeAction()
   onChange();
 }
 
-void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const state)
+void ServerConfigDialog::toggleClipboard(bool enabled)
 {
-  ui->m_pSpinBoxClipboardSizeLimit->setEnabled(state == Qt::Checked);
-  if ((state == Qt::Checked) && (!ui->m_pSpinBoxClipboardSizeLimit->value())) {
+  ui->sbClipboardSizeLimit->setEnabled(enabled);
+  if (enabled && !ui->sbClipboardSizeLimit->value()) {
     int size = static_cast<int>((serverConfig().defaultClipboardSharingSize() + 512) / 1024);
-    ui->m_pSpinBoxClipboardSizeLimit->setValue(size ? size : 1);
+    ui->sbClipboardSizeLimit->setValue(size ? size : 1);
   }
+  serverConfig().setClipboardSharing(enabled);
+  onChange();
+}
+
+void ServerConfigDialog::toggleHeartbeat(bool enabled)
+{
+  ui->sbHeartbeat->setEnabled(enabled);
+  serverConfig().haveHeartbeat(enabled);
+  onChange();
 }
 
 void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
