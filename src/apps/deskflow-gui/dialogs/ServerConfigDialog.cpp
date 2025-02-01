@@ -44,6 +44,24 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   ui->lblNewScreen->setEnabled(!model().isFull());
   ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
 
+  connect(ui->btnNewHotkey, &QPushButton::clicked, this, &ServerConfigDialog::addHotkey);
+  connect(ui->btnEditHotkey, &QPushButton::clicked, this, &ServerConfigDialog::editHotkey);
+  connect(ui->btnRemoveHotkey, &QPushButton::clicked, this, &ServerConfigDialog::removeHotkey);
+  connect(ui->listHotkeys, &QListView::doubleClicked, this, &ServerConfigDialog::editHotkey);
+  connect(
+      ui->listHotkeys->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+      &ServerConfigDialog::listHotkeysSelectionChanged
+  );
+
+  connect(ui->btnNewAction, &QPushButton::clicked, this, &ServerConfigDialog::addAction);
+  connect(ui->btnEditAction, &QPushButton::clicked, this, &ServerConfigDialog::editAction);
+  connect(ui->btnRemoveAction, &QPushButton::clicked, this, &ServerConfigDialog::removeAction);
+  connect(ui->listActions, &QListView::doubleClicked, this, &ServerConfigDialog::editAction);
+  connect(
+      ui->listActions->selectionModel(), &QItemSelectionModel::selectionChanged, this,
+      &ServerConfigDialog::listActionsSelectionChanged
+  );
+
   ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
@@ -78,7 +96,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   ui->m_pSpinBoxClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
-    ui->m_pListHotkeys->addItem(hotkey.text());
+    ui->listHotkeys->addItem(hotkey.text());
 
   ui->screenSetupView->setModel(&m_ScreenSetupModel);
 
@@ -293,111 +311,120 @@ void ServerConfigDialog::reject()
   QDialog::reject();
 }
 
-void ServerConfigDialog::on_m_pButtonNewHotkey_clicked()
+void ServerConfigDialog::addHotkey()
 {
   Hotkey hotkey;
   HotkeyDialog dlg(this, hotkey);
   if (dlg.exec() == QDialog::Accepted) {
     serverConfig().hotkeys().append(hotkey);
-    ui->m_pListHotkeys->addItem(hotkey.text());
+    ui->listHotkeys->addItem(hotkey.text());
     onChange();
   }
 }
 
-void ServerConfigDialog::on_m_pButtonEditHotkey_clicked()
+void ServerConfigDialog::editHotkey()
 {
-  int idx = ui->m_pListHotkeys->currentRow();
-  Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
-  Hotkey &hotkey = serverConfig().hotkeys()[idx];
+  int row = ui->listHotkeys->currentRow();
+  if (row < 0 || row >= serverConfig().hotkeys().size()) {
+    qDebug() << "Atempt to editing out of bounds hotkey row: " << row;
+    return;
+  }
+
+  Hotkey &hotkey = serverConfig().hotkeys()[row];
   HotkeyDialog dlg(this, hotkey);
   if (dlg.exec() == QDialog::Accepted) {
-    ui->m_pListHotkeys->currentItem()->setText(hotkey.text());
+    ui->listHotkeys->currentItem()->setText(hotkey.text());
     onChange();
   }
 }
 
-void ServerConfigDialog::on_m_pButtonRemoveHotkey_clicked()
+void ServerConfigDialog::removeHotkey()
 {
-  int idx = ui->m_pListHotkeys->currentRow();
-  Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
-  serverConfig().hotkeys().removeAt(idx);
-  ui->m_pListActions->clear();
-  delete ui->m_pListHotkeys->item(idx);
+  int row = ui->listHotkeys->currentRow();
+  if (row < 0 || row >= serverConfig().hotkeys().size()) {
+    qDebug() << "Atempt to remove out of bounds hotkey row: " << row;
+    return;
+  }
+
+  serverConfig().hotkeys().removeAt(row);
+  ui->listActions->clear();
+  delete ui->listHotkeys->item(row);
   onChange();
 }
 
-void ServerConfigDialog::on_m_pListHotkeys_itemSelectionChanged()
+void ServerConfigDialog::listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-  bool itemsSelected = !ui->m_pListHotkeys->selectedItems().isEmpty();
-  ui->m_pButtonEditHotkey->setEnabled(itemsSelected);
-  ui->m_pButtonRemoveHotkey->setEnabled(itemsSelected);
-  ui->m_pButtonNewAction->setEnabled(itemsSelected);
+  bool itemsSelected = !selected.isEmpty();
+  ui->btnEditHotkey->setEnabled(itemsSelected);
+  ui->btnRemoveHotkey->setEnabled(itemsSelected);
+  ui->btnNewAction->setEnabled(itemsSelected);
 
-  if (itemsSelected && serverConfig().hotkeys().size() > 0) {
-    ui->m_pListActions->clear();
-
-    int idx = ui->m_pListHotkeys->row(ui->m_pListHotkeys->selectedItems()[0]);
-
-    // There's a bug somewhere around here: We get idx == 1 right after we
-    // deleted the next to last item, so idx can only possibly be 0. GDB shows
-    // we got called indirectly from the delete line in
-    // on_m_pButtonRemoveHotkey_clicked() above, but the delete is of course
-    // necessary and seems correct. The while() is a generalized workaround for
-    // all that and shouldn't be required.
-    while (idx >= 0 && idx >= serverConfig().hotkeys().size())
-      idx--;
-
-    Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
-
-    const Hotkey &hotkey = serverConfig().hotkeys()[idx];
+  if (itemsSelected && !serverConfig().hotkeys().isEmpty()) {
+    ui->listActions->clear();
+    const Hotkey &hotkey = serverConfig().hotkeys().at(selected.indexes().first().row());
     for (const Action &action : hotkey.actions())
-      ui->m_pListActions->addItem(action.text());
+      ui->listActions->addItem(action.text());
   }
 }
 
-void ServerConfigDialog::on_m_pButtonNewAction_clicked()
+void ServerConfigDialog::addAction()
 {
-  int idx = ui->m_pListHotkeys->currentRow();
-  Q_ASSERT(idx >= 0 && idx < serverConfig().hotkeys().size());
-  Hotkey &hotkey = serverConfig().hotkeys()[idx];
+  int row = ui->listHotkeys->currentRow();
+  if (row < 0 || row >= serverConfig().hotkeys().size()) {
+    qDebug() << "Atempt to add action to out of bounds hotkey row: " << row;
+    return;
+  }
 
+  Hotkey &hotkey = serverConfig().hotkeys()[row];
   Action action;
   ActionDialog dlg(this, serverConfig(), hotkey, action);
   if (dlg.exec() == QDialog::Accepted) {
     hotkey.actions().append(action);
-    ui->m_pListActions->addItem(action.text());
+    ui->listActions->addItem(action.text());
     onChange();
   }
 }
 
-void ServerConfigDialog::on_m_pButtonEditAction_clicked()
+void ServerConfigDialog::editAction()
 {
-  int idxHotkey = ui->m_pListHotkeys->currentRow();
-  Q_ASSERT(idxHotkey >= 0 && idxHotkey < serverConfig().hotkeys().size());
-  Hotkey &hotkey = serverConfig().hotkeys()[idxHotkey];
+  int hotkeyRow = ui->listHotkeys->currentRow();
+  if (hotkeyRow < 0 || hotkeyRow >= serverConfig().hotkeys().size()) {
+    qDebug() << "Atempt to edit action from out of bounds hotkey row: " << hotkeyRow;
+    return;
+  }
+  Hotkey &hotkey = serverConfig().hotkeys()[hotkeyRow];
 
-  int idxAction = ui->m_pListActions->currentRow();
-  Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
-  Action &action = hotkey.actions()[idxAction];
+  int actionRow = ui->listActions->currentRow();
+  if (actionRow < 0 || actionRow >= hotkey.actions().size()) {
+    qDebug() << "Atempt to remove out of bounds action row: " << actionRow;
+    return;
+  }
+  Action &action = hotkey.actions()[actionRow];
 
   ActionDialog dlg(this, serverConfig(), hotkey, action);
   if (dlg.exec() == QDialog::Accepted) {
-    ui->m_pListActions->currentItem()->setText(action.text());
+    ui->listActions->currentItem()->setText(action.text());
     onChange();
   }
 }
 
-void ServerConfigDialog::on_m_pButtonRemoveAction_clicked()
+void ServerConfigDialog::removeAction()
 {
-  int idxHotkey = ui->m_pListHotkeys->currentRow();
-  Q_ASSERT(idxHotkey >= 0 && idxHotkey < serverConfig().hotkeys().size());
-  Hotkey &hotkey = serverConfig().hotkeys()[idxHotkey];
+  int hotkeyRow = ui->listHotkeys->currentRow();
+  if (hotkeyRow < 0 || hotkeyRow >= serverConfig().hotkeys().size()) {
+    qDebug() << "Atempt to remove action from out of bounds hotkey row: " << hotkeyRow;
+    return;
+  }
+  Hotkey &hotkey = serverConfig().hotkeys()[hotkeyRow];
 
-  int idxAction = ui->m_pListActions->currentRow();
-  Q_ASSERT(idxAction >= 0 && idxAction < hotkey.actions().size());
+  int actionRow = ui->listActions->currentRow();
+  if (actionRow < 0 || actionRow >= hotkey.actions().size()) {
+    qDebug() << "Atempt to remove out of bounds action row: " << actionRow;
+    return;
+  }
 
-  hotkey.actions().removeAt(idxAction);
-  delete ui->m_pListActions->currentItem();
+  hotkey.actions().removeAt(actionRow);
+  delete ui->listActions->currentItem();
   onChange();
 }
 
@@ -410,10 +437,11 @@ void ServerConfigDialog::on_m_pCheckBoxEnableClipboard_stateChanged(int const st
   }
 }
 
-void ServerConfigDialog::on_m_pListActions_itemSelectionChanged()
+void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
-  ui->m_pButtonEditAction->setEnabled(!ui->m_pListActions->selectedItems().isEmpty());
-  ui->m_pButtonRemoveAction->setEnabled(!ui->m_pListActions->selectedItems().isEmpty());
+  bool enabled = !selected.isEmpty();
+  ui->btnEditAction->setEnabled(enabled);
+  ui->btnRemoveAction->setEnabled(enabled);
 }
 
 void ServerConfigDialog::addClient()
