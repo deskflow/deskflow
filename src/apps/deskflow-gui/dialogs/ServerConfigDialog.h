@@ -14,6 +14,8 @@
 
 #include <QDialog>
 
+class QItemSelection;
+
 namespace Ui {
 class ServerConfigDialog;
 }
@@ -36,15 +38,6 @@ public slots:
   }
 
 protected slots:
-  void on_m_pButtonNewHotkey_clicked();
-  void on_m_pListHotkeys_itemSelectionChanged();
-  void on_m_pButtonEditHotkey_clicked();
-  void on_m_pButtonRemoveHotkey_clicked();
-
-  void on_m_pButtonNewAction_clicked();
-  void on_m_pListActions_itemSelectionChanged();
-  void on_m_pButtonEditAction_clicked();
-  void on_m_pButtonRemoveAction_clicked();
   void on_m_pCheckBoxEnableClipboard_stateChanged(int state);
   void onScreenRemoved();
   void on_m_pCheckBoxUseExternalConfig_toggled(bool checked = false);
@@ -53,6 +46,17 @@ protected slots:
 protected:
   void addClient();
   bool addComputer(const QString &clientName, bool doSilent);
+
+  void addHotkey();
+  void editHotkey();
+  void removeHotkey();
+  void listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
+  void addAction();
+  void editAction();
+  void removeAction();
+  void listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+
   ServerConfig &serverConfig()
   {
     return m_ServerConfig;

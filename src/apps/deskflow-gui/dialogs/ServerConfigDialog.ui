@@ -22,9 +22,6 @@
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="tabComputers">
       <attribute name="title">
        <string>Computers</string>
@@ -166,27 +163,22 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabHotkeys">
+     <widget class="QWidget" name="tabHotkeys">
       <attribute name="title">
        <string>Hotkeys</string>
       </attribute>
-      <layout class="QHBoxLayout">
+      <layout class="QHBoxLayout" name="_2">
        <item>
-        <widget class="QGroupBox" name="groupBox">
-         <property name="font">
-          <font>
-           <kerning>false</kerning>
-          </font>
-         </property>
+        <widget class="QGroupBox" name="groupHotkeys">
          <property name="title">
           <string>&amp;Hotkeys</string>
          </property>
-         <layout class="QGridLayout">
+         <layout class="QGridLayout" name="_3">
           <item row="0" column="0" rowspan="4">
-           <widget class="QListWidget" name="m_pListHotkeys"/>
+           <widget class="QListWidget" name="listHotkeys"/>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="m_pButtonNewHotkey">
+           <widget class="QPushButton" name="btnNewHotkey">
             <property name="enabled">
              <bool>true</bool>
             </property>
@@ -196,7 +188,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="m_pButtonEditHotkey">
+           <widget class="QPushButton" name="btnEditHotkey">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -206,7 +198,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QPushButton" name="m_pButtonRemoveHotkey">
+           <widget class="QPushButton" name="btnRemoveHotkey">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -216,7 +208,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <spacer>
+           <spacer name="hotkeySpacer">
             <property name="orientation">
              <enum>Qt::Orientation::Vertical</enum>
             </property>
@@ -232,7 +224,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupActions">
          <property name="font">
           <font>
            <kerning>true</kerning>
@@ -243,10 +235,10 @@
          </property>
          <layout class="QGridLayout">
           <item row="0" column="0" rowspan="4">
-           <widget class="QListWidget" name="m_pListActions"/>
+           <widget class="QListWidget" name="listActions"/>
           </item>
           <item row="0" column="1">
-           <widget class="QPushButton" name="m_pButtonNewAction">
+           <widget class="QPushButton" name="btnNewAction">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -256,7 +248,7 @@
            </widget>
           </item>
           <item row="1" column="1">
-           <widget class="QPushButton" name="m_pButtonEditAction">
+           <widget class="QPushButton" name="btnEditAction">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -266,7 +258,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QPushButton" name="m_pButtonRemoveAction">
+           <widget class="QPushButton" name="btnRemoveAction">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -276,7 +268,7 @@
            </widget>
           </item>
           <item row="3" column="1">
-           <spacer>
+           <spacer name="actionSpacer">
             <property name="orientation">
              <enum>Qt::Orientation::Vertical</enum>
             </property>
@@ -1134,14 +1126,14 @@ Enabling this setting will disable the server config GUI.</string>
  <tabstops>
   <tabstop>m_pButtonBrowseConfigFile</tabstop>
   <tabstop>screenSetupView</tabstop>
-  <tabstop>m_pListHotkeys</tabstop>
-  <tabstop>m_pButtonNewHotkey</tabstop>
-  <tabstop>m_pButtonEditHotkey</tabstop>
-  <tabstop>m_pButtonRemoveHotkey</tabstop>
-  <tabstop>m_pListActions</tabstop>
-  <tabstop>m_pButtonNewAction</tabstop>
-  <tabstop>m_pButtonEditAction</tabstop>
-  <tabstop>m_pButtonRemoveAction</tabstop>
+  <tabstop>listHotkeys</tabstop>
+  <tabstop>btnNewHotkey</tabstop>
+  <tabstop>btnEditHotkey</tabstop>
+  <tabstop>btnRemoveHotkey</tabstop>
+  <tabstop>listActions</tabstop>
+  <tabstop>btnNewAction</tabstop>
+  <tabstop>btnEditAction</tabstop>
+  <tabstop>btnRemoveAction</tabstop>
   <tabstop>m_pCheckBoxSwitchDelay</tabstop>
   <tabstop>m_pSpinBoxSwitchDelay</tabstop>
   <tabstop>m_pCheckBoxSwitchDoubleTap</tabstop>
@@ -1203,38 +1195,6 @@ Enabling this setting will disable the server config GUI.</string>
     <hint type="destinationlabel">
      <x>44</x>
      <y>91</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pListHotkeys</sender>
-   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
-   <receiver>m_pButtonEditHotkey</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>35</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>45</x>
-     <y>80</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pListActions</sender>
-   <signal>itemDoubleClicked(QListWidgetItem*)</signal>
-   <receiver>m_pButtonEditAction</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>79</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>89</x>
-     <y>80</y>
     </hint>
    </hints>
   </connection>
