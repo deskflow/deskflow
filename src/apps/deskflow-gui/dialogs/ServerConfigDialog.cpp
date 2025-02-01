@@ -34,6 +34,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       m_appConfig(appConfig)
 {
   ui->setupUi(this);
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
 
   ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->m_pTrashScreenWidget->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
@@ -475,6 +477,6 @@ void ServerConfigDialog::onChange()
 {
   bool isAppConfigDataEqual = m_OriginalServerConfigIsExternal == serverConfig().useExternalConfig() &&
                               m_OriginalServerConfigUsesExternalFile == serverConfig().configFile();
-  ui->m_pButtonBox->button(QDialogButtonBox::Ok)
+  ui->buttonBox->button(QDialogButtonBox::Ok)
       ->setEnabled(!isAppConfigDataEqual || !(m_OriginalServerConfig == m_ServerConfig));
 }

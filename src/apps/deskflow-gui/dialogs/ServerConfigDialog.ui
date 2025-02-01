@@ -1133,7 +1133,7 @@ Enabling this setting will disable the server config GUI.</string>
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="m_pButtonBox">
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Orientation::Horizontal</enum>
      </property>
@@ -1190,50 +1190,18 @@ Enabling this setting will disable the server config GUI.</string>
  <resources/>
  <connections>
   <connection>
-   <sender>m_pButtonBox</sender>
-   <signal>accepted()</signal>
-   <receiver>ServerConfigDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>572</x>
-     <y>424</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>377</x>
-     <y>-8</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>m_pButtonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>ServerConfigDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>641</x>
-     <y>424</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>595</x>
-     <y>1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>m_pCheckBoxSwitchDelay</sender>
    <signal>toggled(bool)</signal>
    <receiver>m_pSpinBoxSwitchDelay</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>63</y>
+     <x>76</x>
+     <y>88</y>
     </hint>
     <hint type="destinationlabel">
-     <x>110</x>
-     <y>63</y>
+     <x>86</x>
+     <y>88</y>
     </hint>
    </hints>
   </connection>
@@ -1244,12 +1212,12 @@ Enabling this setting will disable the server config GUI.</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>63</y>
+     <x>76</x>
+     <y>81</y>
     </hint>
     <hint type="destinationlabel">
-     <x>110</x>
-     <y>63</y>
+     <x>86</x>
+     <y>81</y>
     </hint>
    </hints>
   </connection>
@@ -1260,12 +1228,12 @@ Enabling this setting will disable the server config GUI.</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>110</x>
-     <y>63</y>
+     <x>32</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>110</x>
-     <y>63</y>
+     <x>44</x>
+     <y>91</y>
     </hint>
    </hints>
   </connection>
@@ -1276,12 +1244,12 @@ Enabling this setting will disable the server config GUI.</string>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>197</x>
-     <y>115</y>
+     <x>35</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>304</x>
-     <y>115</y>
+     <x>45</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -1292,12 +1260,12 @@ Enabling this setting will disable the server config GUI.</string>
    <slot>click()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>505</x>
-     <y>120</y>
+     <x>79</x>
+     <y>84</y>
     </hint>
     <hint type="destinationlabel">
-     <x>677</x>
-     <y>118</y>
+     <x>89</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
