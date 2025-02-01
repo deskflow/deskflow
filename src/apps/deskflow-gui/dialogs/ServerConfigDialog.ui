@@ -185,6 +185,9 @@
             <property name="text">
              <string>&amp;New</string>
             </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -195,6 +198,9 @@
             <property name="text">
              <string>&amp;Edit</string>
             </property>
+            <property name="icon">
+             <iconset theme="document-edit"/>
+            </property>
            </widget>
           </item>
           <item row="2" column="1">
@@ -204,6 +210,9 @@
             </property>
             <property name="text">
              <string>&amp;Remove</string>
+            </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
             </property>
            </widget>
           </item>
@@ -245,6 +254,9 @@
             <property name="text">
              <string>Ne&amp;w</string>
             </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+            </property>
            </widget>
           </item>
           <item row="1" column="1">
@@ -255,6 +267,9 @@
             <property name="text">
              <string>E&amp;dit</string>
             </property>
+            <property name="icon">
+             <iconset theme="document-edit"/>
+            </property>
            </widget>
           </item>
           <item row="2" column="1">
@@ -264,6 +279,9 @@
             </property>
             <property name="text">
              <string>Re&amp;move</string>
+            </property>
+            <property name="icon">
+             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
             </property>
            </widget>
           </item>
@@ -821,6 +839,9 @@
        <string>Config file</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
+       <property name="topMargin">
+        <number>20</number>
+       </property>
        <item>
         <widget class="QLabel" name="label_5">
          <property name="font">
@@ -834,6 +855,9 @@
          </property>
          <property name="textFormat">
           <enum>Qt::TextFormat::PlainText</enum>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
