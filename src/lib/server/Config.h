@@ -203,7 +203,7 @@ public:
   virtual ~Config();
 
 #ifdef TEST_ENV
-  Config() : m_inputFilter(NULL)
+  Config() : m_inputFilter(nullptr)
   {
   }
 #endif
@@ -475,6 +475,16 @@ public:
    */
   bool isClientMode() const;
 
+  double mouseSpeed() const
+  {
+    return m_mouseSpeed;
+  }
+
+  void setMouseSpeed(double speed)
+  {
+    m_mouseSpeed = speed;
+  }
+
   //@}
 
 private:
@@ -504,6 +514,7 @@ private:
   bool m_hasLockToScreenAction;
   IEventQueue *m_events;
   std::string m_ClientAddress;
+  double m_mouseSpeed = 1.0;
 };
 
 //! Configuration read context
