@@ -21,17 +21,11 @@
   </property>
   <layout class="QVBoxLayout">
    <item>
-    <widget class="QTabWidget" name="m_pTabWidget">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>0</height>
-      </size>
-     </property>
+    <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="m_pTabScreens">
+     <widget class="QWidget" name="tabComputers">
       <attribute name="title">
        <string>Computers</string>
       </attribute>
@@ -49,12 +43,12 @@
         <number>5</number>
        </property>
        <item>
-        <layout class="QHBoxLayout" name="m_pLayoutScreens">
+        <layout class="QHBoxLayout" name="layoutComputers">
          <property name="spacing">
           <number>6</number>
          </property>
          <item>
-          <widget class="TrashScreenWidget" name="m_pTrashScreenWidget">
+          <widget class="TrashScreenWidget" name="lblRemoveScreen">
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
@@ -66,9 +60,6 @@
            </property>
            <property name="frameShadow">
             <enum>QFrame::Shadow::Raised</enum>
-           </property>
-           <property name="text">
-            <string/>
            </property>
           </widget>
          </item>
@@ -128,20 +119,16 @@
          </item>
          <item>
           <widget class="NewScreenWidget" name="lblNewScreen">
-           <property name="text">
-            <string/>
+           <property name="toolTip">
+            <string>Drag to the grid to add a new computer.</string>
+           </property>
+           <property name="frameShape">
+            <enum>QFrame::Shape::StyledPanel</enum>
+           </property>
+           <property name="frameShadow">
+            <enum>QFrame::Shadow::Raised</enum>
            </property>
           </widget>
-         </item>
-         <item>
-          <layout class="QVBoxLayout" name="m_pLayoutAddComputer">
-           <property name="spacing">
-            <number>0</number>
-           </property>
-           <property name="leftMargin">
-            <number>0</number>
-           </property>
-          </layout>
          </item>
         </layout>
        </item>
@@ -162,36 +149,18 @@
         </spacer>
        </item>
        <item>
-        <widget class="ScreenSetupView" name="m_pScreenSetupView">
+        <widget class="ScreenSetupView" name="screenSetupView">
          <property name="sizePolicy">
           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>273</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
          <property name="acceptDrops">
           <bool>true</bool>
          </property>
          <property name="autoFillBackground">
           <bool>false</bool>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::Shape::StyledPanel</enum>
-         </property>
-         <property name="frameShadow">
-          <enum>QFrame::Shadow::Sunken</enum>
          </property>
         </widget>
        </item>
@@ -1164,7 +1133,7 @@ Enabling this setting will disable the server config GUI.</string>
  </customwidgets>
  <tabstops>
   <tabstop>m_pButtonBrowseConfigFile</tabstop>
-  <tabstop>m_pScreenSetupView</tabstop>
+  <tabstop>screenSetupView</tabstop>
   <tabstop>m_pListHotkeys</tabstop>
   <tabstop>m_pButtonNewHotkey</tabstop>
   <tabstop>m_pButtonEditHotkey</tabstop>
@@ -1185,7 +1154,7 @@ Enabling this setting will disable the server config GUI.</string>
   <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
   <tabstop>m_pCheckBoxUseExternalConfig</tabstop>
   <tabstop>m_pEditConfigFile</tabstop>
-  <tabstop>m_pTabWidget</tabstop>
+  <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources/>
  <connections>

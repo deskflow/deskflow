@@ -34,17 +34,20 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       m_appConfig(appConfig)
 {
   ui->setupUi(this);
+
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ServerConfigDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ServerConfigDialog::reject);
 
-  ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
-  ui->m_pTrashScreenWidget->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
-  ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
-  ui->lblNewScreen->setToolTip(tr("Drag to the grid to add a new computer."));
+  ui->lblRemoveScreen->setPixmap(QIcon::fromTheme("user-trash").pixmap(QSize(64, 64)));
+  connect(ui->lblRemoveScreen, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
 
+  ui->lblNewScreen->setEnabled(!model().isFull());
+  ui->lblNewScreen->setPixmap(QIcon::fromTheme("video-display").pixmap(QSize(64, 64)));
+
+  ui->m_pButtonBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
-  ui->m_pTabWidget->setCurrentIndex(0);
+  ui->tabWidget->setCurrentIndex(0);
 
   ui->m_pEditConfigFile->setText(serverConfig().configFile());
   ui->m_pCheckBoxUseExternalConfig->setChecked(serverConfig().useExternalConfig());
@@ -77,7 +80,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->m_pListHotkeys->addItem(hotkey.text());
 
-  ui->m_pScreenSetupView->setModel(&m_ScreenSetupModel);
+  ui->screenSetupView->setModel(&m_ScreenSetupModel);
 
   auto &screens = serverConfig().screens();
   auto server = std::find_if(screens.begin(), screens.end(), [this](const Screen &screen) {
@@ -91,9 +94,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
   } else {
     server->markAsServer();
   }
-
-  ui->lblNewScreen->setEnabled(!model().isFull());
-  connect(ui->m_pTrashScreenWidget, &TrashScreenWidget::screenRemoved, this, &ServerConfigDialog::onScreenRemoved);
 
   onChange();
 
@@ -433,9 +433,9 @@ void ServerConfigDialog::on_m_pCheckBoxUseExternalConfig_toggled(bool checked)
   ui->m_pEditConfigFile->setEnabled(checked);
   ui->m_pButtonBrowseConfigFile->setEnabled(checked);
 
-  ui->m_pTabWidget->setTabEnabled(0, !checked);
-  ui->m_pTabWidget->setTabEnabled(1, !checked);
-  ui->m_pTabWidget->setTabEnabled(2, !checked);
+  ui->tabWidget->setTabEnabled(0, !checked);
+  ui->tabWidget->setTabEnabled(1, !checked);
+  ui->tabWidget->setTabEnabled(2, !checked);
 }
 
 bool ServerConfigDialog::on_m_pButtonBrowseConfigFile_clicked()
