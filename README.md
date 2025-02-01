@@ -167,6 +167,8 @@ who is the author of `libei`, a major contributor to `libportal`, and the author
 implementation in Deskflow. Others such as Olivier Fourdan and Povilas Kanapickas helped with the
 Wayland implementation.
 
+Some features _may_ be unavailable or broken on Wayland. Please see the [known Wayland issues](https://github.com/deskflow/deskflow/discussions/7499).
+
 ### Where did it all start?
 
 Deskflow was first created as Synergy in 2001 by Chris Schoeneman.
