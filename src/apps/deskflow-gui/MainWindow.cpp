@@ -58,13 +58,13 @@ using CoreProcessState = CoreProcess::ProcessState;
 
 MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : ui{std::make_unique<Ui::MainWindow>()},
-      m_ConfigScopes(configScopes),
-      m_AppConfig(appConfig),
-      m_ServerConfig(appConfig, *this),
-      m_CoreProcess(appConfig, m_ServerConfig),
-      m_ServerConnection(this, appConfig, m_ServerConfig, m_ServerConfigDialogState),
-      m_ClientConnection(this, appConfig),
-      m_TlsUtility(appConfig),
+      m_configScopes(configScopes),
+      m_appConfig(appConfig),
+      m_serverConfig(appConfig, *this),
+      m_coreProcess(appConfig, m_serverConfig),
+      m_serverConnection(this, appConfig, m_serverConfig, m_serverConfigDialogState),
+      m_clientConnection(this, appConfig),
+      m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_actionAbout{new QAction(this)},
@@ -127,10 +127,10 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 #endif
 
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
-  if (m_AppConfig.logExpanded())
+  if (m_appConfig.logExpanded())
     ui->btnToggleLog->click();
 
-  toggleLogVisible(m_AppConfig.logExpanded());
+  toggleLogVisible(m_appConfig.logExpanded());
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
@@ -143,13 +143,13 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   setupTrayIcon();
 
-  m_ConfigScopes.signalReady();
+  m_configScopes.signalReady();
 
   updateScreenName();
   applyConfig();
   restoreWindow();
 
-  qDebug().noquote() << "active settings path:" << m_ConfigScopes.activeFilePath();
+  qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
 
   updateSize();
 }
@@ -157,18 +157,18 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 MainWindow::~MainWindow()
 {
   m_guiDupeChecker->close();
-  m_CoreProcess.cleanup();
+  m_coreProcess.cleanup();
 }
 
 void MainWindow::restoreWindow()
 {
-  const auto &windowSize = m_AppConfig.mainWindowSize();
+  const auto &windowSize = m_appConfig.mainWindowSize();
   if (windowSize.has_value()) {
     qDebug() << "restoring main window size";
     m_expandedSize = windowSize.value();
   }
 
-  const auto &windowPosition = m_AppConfig.mainWindowPosition();
+  const auto &windowPosition = m_appConfig.mainWindowPosition();
   if (windowPosition.has_value()) {
     int x = 0;
     int y = 0;
@@ -201,16 +201,16 @@ void MainWindow::setupControls()
 
   secureSocket(false);
 
-  ui->m_pLabelUpdate->setStyleSheet(kStyleNoticeLabel);
-  ui->m_pLabelUpdate->hide();
+  ui->lblUpdate->setStyleSheet(kStyleNoticeLabel);
+  ui->lblUpdate->hide();
 
-  ui->m_pLabelNotice->setStyleSheet(kStyleNoticeLabel);
-  ui->m_pLabelNotice->hide();
+  ui->lblNotice->setStyleSheet(kStyleNoticeLabel);
+  ui->lblNotice->hide();
 
-  ui->m_pLabelIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
+  ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  if (m_AppConfig.lastVersion() != kVersion) {
-    m_AppConfig.setLastVersion(kVersion);
+  if (m_appConfig.lastVersion() != kVersion) {
+    m_appConfig.setLastVersion(kVersion);
   }
 
 #if defined(Q_OS_MAC)
@@ -238,28 +238,28 @@ void MainWindow::connectSlots()
 
   connect(this, &MainWindow::shown, this, &MainWindow::onShown, Qt::QueuedConnection);
 
-  connect(&m_ConfigScopes, &ConfigScopes::saving, this, &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
+  connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
 
-  connect(&m_AppConfig, &AppConfig::tlsChanged, this, &MainWindow::onAppConfigTlsChanged);
+  connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::onAppConfigTlsChanged);
 
-  connect(&m_AppConfig, &AppConfig::screenNameChanged, this, &MainWindow::onAppConfigScreenNameChanged);
+  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::onAppConfigScreenNameChanged);
 
-  connect(&m_AppConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::onAppConfigInvertConnection);
+  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::onAppConfigInvertConnection);
 
-  connect(&m_CoreProcess, &CoreProcess::starting, this, &MainWindow::onCoreProcessStarting, Qt::DirectConnection);
+  connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::onCoreProcessStarting, Qt::DirectConnection);
 
-  connect(&m_CoreProcess, &CoreProcess::error, this, &MainWindow::onCoreProcessError);
+  connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::onCoreProcessError);
 
   connect(
-      &m_CoreProcess, &CoreProcess::logLine, this, //
+      &m_coreProcess, &CoreProcess::logLine, this, //
       [this](const QString &line) { handleLogLine(line); }
   );
 
-  connect(&m_CoreProcess, &CoreProcess::processStateChanged, this, &MainWindow::onCoreProcessStateChanged);
+  connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::onCoreProcessStateChanged);
 
-  connect(&m_CoreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::onCoreConnectionStateChanged);
+  connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::onCoreConnectionStateChanged);
 
-  connect(&m_CoreProcess, &CoreProcess::secureSocket, this, &MainWindow::onCoreProcessSecureSocket);
+  connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::onCoreProcessSecureSocket);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -276,7 +276,7 @@ void MainWindow::connectSlots()
   connect(m_actionTestFatalError, &QAction::triggered, this, &MainWindow::testFatalError);
   connect(m_actionTestCriticalError, &QAction::triggered, this, &MainWindow::testCriticalError);
 
-  connect(&m_VersionChecker, &VersionChecker::updateFound, this, &MainWindow::onVersionCheckerUpdateFound);
+  connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::onVersionCheckerUpdateFound);
 
 // Mac os tray will only show a menu
 #ifndef Q_OS_MAC
@@ -284,11 +284,11 @@ void MainWindow::connectSlots()
 #endif
 
   connect(
-      &m_ServerConnection, &ServerConnection::configureClient, this, &MainWindow::onServerConnectionConfigureClient
+      &m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::onServerConnectionConfigureClient
   );
 
-  connect(&m_ServerConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
-  connect(&m_ClientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
+  connect(&m_serverConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
+  connect(&m_clientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
   connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
@@ -296,10 +296,10 @@ void MainWindow::connectSlots()
   connect(ui->btnConnectToClient, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
+  connect(ui->lineHostname, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
   connect(ui->lineClientIp, &QLineEdit::returnPressed, ui->btnConnectToClient, &QPushButton::click);
-  connect(ui->lineClientIp, &QLineEdit::textChanged, &m_CoreProcess, &deskflow::gui::CoreProcess::setAddress);
+  connect(ui->lineClientIp, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
@@ -318,12 +318,12 @@ void MainWindow::toggleLogVisible(bool visible)
   if (visible) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
     ui->textLog->setVisible(true);
-    m_AppConfig.setLogExpanded(true);
+    m_appConfig.setLogExpanded(true);
   } else {
     ui->btnToggleLog->setArrowType(Qt::RightArrow);
     m_expandedSize = size();
     ui->textLog->setVisible(false);
-    m_AppConfig.setLogExpanded(false);
+    m_appConfig.setLogExpanded(false);
   }
   // 1 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(1, this, &MainWindow::updateSize);
@@ -344,13 +344,13 @@ void MainWindow::onShown()
 
 void MainWindow::onConfigScopesSaving()
 {
-  m_ServerConfig.commit();
+  m_serverConfig.commit();
 }
 
 void MainWindow::onAppConfigTlsChanged()
 {
-  if (m_TlsUtility.isEnabled()) {
-    m_TlsUtility.generateCertificate();
+  if (m_tlsUtility.isEnabled()) {
+    m_tlsUtility.generateCertificate();
   }
 }
 
@@ -366,8 +366,8 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version)
   const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
   const auto text = tr("A new version is available (v%1). %2").arg(version, link);
 
-  ui->m_pLabelUpdate->show();
-  ui->m_pLabelUpdate->setText(text);
+  ui->lblUpdate->show();
+  ui->lblUpdate->setText(text);
 }
 
 void MainWindow::onAppConfigScreenNameChanged()
@@ -399,14 +399,14 @@ void MainWindow::onCoreProcessError(CoreProcess::Error error)
 
 void MainWindow::startCore()
 {
-  m_ClientConnection.setShowMessage();
-  m_CoreProcess.start();
+  m_clientConnection.setShowMessage();
+  m_coreProcess.start();
 }
 
 void MainWindow::stopCore()
 {
   qDebug() << "stopping core process";
-  m_CoreProcess.stop();
+  m_coreProcess.stop();
 }
 
 void MainWindow::testFatalError() const
@@ -426,17 +426,17 @@ void MainWindow::clearSettings()
     return;
   }
 
-  m_CoreProcess.stop();
+  m_coreProcess.stop();
 
-  m_SaveOnExit = false;
-  diagnostic::clearSettings(m_ConfigScopes, true);
+  m_saveOnExit = false;
+  diagnostic::clearSettings(m_configScopes, true);
 }
 
 bool MainWindow::saveConfig()
 {
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
 
-  if (!fileName.isEmpty() && !m_ServerConfig.save(fileName)) {
+  if (!fileName.isEmpty() && !m_serverConfig.save(fileName)) {
     QMessageBox::warning(this, tr("Save failed"), tr("Could not save configuration to file."));
     return true;
   }
@@ -457,23 +457,23 @@ void MainWindow::openHelpUrl() const
 
 void MainWindow::openSettings()
 {
-  auto dialog = SettingsDialog(this, m_AppConfig, m_ServerConfig, m_CoreProcess);
+  auto dialog = SettingsDialog(this, m_appConfig, m_serverConfig, m_coreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
-    m_ConfigScopes.save();
+    m_configScopes.save();
 
     applyConfig();
 
-    if (m_CoreProcess.isStarted()) {
-      m_CoreProcess.restart();
+    if (m_coreProcess.isStarted()) {
+      m_coreProcess.restart();
     }
   }
 }
 
 void MainWindow::resetCore()
 {
-  m_ClientConnection.setShowMessage();
-  m_CoreProcess.restart();
+  m_clientConnection.setShowMessage();
+  m_coreProcess.restart();
 }
 
 void MainWindow::updateSize()
@@ -499,24 +499,24 @@ void MainWindow::setModeServer()
 {
   enableServer(true);
   enableClient(false);
-  m_ConfigScopes.save();
+  m_configScopes.save();
 }
 
 void MainWindow::setModeClient()
 {
   enableClient(true);
   enableServer(false);
-  m_ConfigScopes.save();
+  m_configScopes.save();
 }
 
 void MainWindow::onServerConnectionConfigureClient(const QString &clientName)
 {
-  m_ServerConfigDialogState.setVisible(true);
-  ServerConfigDialog dialog(this, m_ServerConfig, m_AppConfig);
+  m_serverConfigDialogState.setVisible(true);
+  ServerConfigDialog dialog(this, m_serverConfig, m_appConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
-    m_CoreProcess.restart();
+    m_coreProcess.restart();
   }
-  m_ServerConfigDialogState.setVisible(false);
+  m_serverConfigDialogState.setVisible(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -525,22 +525,22 @@ void MainWindow::onServerConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  if (!m_AppConfig.enableUpdateCheck().has_value()) {
-    m_AppConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
-    m_ConfigScopes.save();
+  if (!m_appConfig.enableUpdateCheck().has_value()) {
+    m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
+    m_configScopes.save();
   }
 
-  if (m_AppConfig.enableUpdateCheck().value()) {
-    m_VersionChecker.checkLatest();
+  if (m_appConfig.enableUpdateCheck().value()) {
+    m_versionChecker.checkLatest();
   } else {
     qDebug() << "update check disabled";
   }
 
-  if (m_AppConfig.startedBefore()) {
-    m_CoreProcess.start();
+  if (m_appConfig.startedBefore()) {
+    m_coreProcess.start();
   }
 
-  if (m_AppConfig.autoHide()) {
+  if (m_appConfig.autoHide()) {
     hide();
   } else {
     showAndActivate();
@@ -550,14 +550,14 @@ void MainWindow::open()
 void MainWindow::onCoreProcessStarting()
 {
   if (deskflow::platform::isWayland()) {
-    m_WaylandWarnings.showOnce(this, m_CoreProcess.mode());
+    m_waylandWarnings.showOnce(this, m_coreProcess.mode());
   }
   saveSettings();
 }
 
 void MainWindow::setStatus(const QString &status)
 {
-  ui->m_pStatusLabel->setText(status);
+  ui->lblStatus->setText(status);
 }
 
 void MainWindow::createMenuBar()
@@ -609,23 +609,23 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  enableServer(m_AppConfig.serverGroupChecked());
-  enableClient(m_AppConfig.clientGroupChecked());
+  enableServer(m_appConfig.serverGroupChecked());
+  enableClient(m_appConfig.clientGroupChecked());
 
-  ui->lineHostname->setText(m_AppConfig.serverHostname());
-  ui->lineClientIp->setText(m_ServerConfig.getClientAddress());
+  ui->lineHostname->setText(m_appConfig.serverHostname());
+  ui->lineClientIp->setText(m_serverConfig.getClientAddress());
   updateLocalFingerprint();
   setIcon();
 }
 
 void MainWindow::saveSettings()
 {
-  m_AppConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
-  m_AppConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
-  m_AppConfig.setServerHostname(ui->lineHostname->text());
-  m_ServerConfig.setClientAddress(ui->lineClientIp->text());
+  m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
+  m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
+  m_appConfig.setServerHostname(ui->lineHostname->text());
+  m_serverConfig.setClientAddress(ui->lineClientIp->text());
 
-  m_ConfigScopes.save();
+  m_configScopes.save();
 }
 
 void MainWindow::setIcon()
@@ -640,7 +640,7 @@ void MainWindow::setIcon()
   }
   m_trayIcon->setIcon(QIcon(iconString));
 #else
-  if (m_AppConfig.colorfulTrayIcon()) {
+  if (m_appConfig.colorfulTrayIcon()) {
     m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
   } else {
     m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
@@ -679,10 +679,10 @@ void MainWindow::updateFromLogLine(const QString &line)
 void MainWindow::checkConnected(const QString &line)
 {
   if (ui->rbModeServer->isChecked()) {
-    m_ServerConnection.handleLogLine(line);
-    ui->m_pLabelServerState->updateServerState(line);
+    m_serverConnection.handleLogLine(line);
+    ui->labelServerState->updateServerState(line);
   } else {
-    m_ClientConnection.handleLogLine(line);
+    m_clientConnection.handleLogLine(line);
     ui->m_pLabelClientState->updateClientState(line);
   }
 }
@@ -703,7 +703,7 @@ void MainWindow::checkFingerprint(const QString &line)
   static bool messageBoxAlreadyShown = false;
 
   if (!messageBoxAlreadyShown) {
-    m_CoreProcess.stop();
+    m_coreProcess.stop();
 
     messageBoxAlreadyShown = true;
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
@@ -723,7 +723,7 @@ void MainWindow::checkFingerprint(const QString &line)
     if (fingerprintReply == QMessageBox::Yes) {
       // start core process again after trusting fingerprint.
       TlsFingerprint::trustedServers().trust(fingerprint);
-      m_CoreProcess.start();
+      m_coreProcess.start();
     }
 
     messageBoxAlreadyShown = false;
@@ -743,10 +743,10 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_AppConfig.closeToTray() && event->spontaneous()) {
-    if (m_AppConfig.showCloseReminder()) {
+  if (m_appConfig.closeToTray() && event->spontaneous()) {
+    if (m_appConfig.showCloseReminder()) {
       messages::showCloseReminder(this);
-      m_AppConfig.setShowCloseReminder(false);
+      m_appConfig.setShowCloseReminder(false);
     }
     qDebug() << "hiding to tray";
     hide();
@@ -754,10 +754,10 @@ void MainWindow::closeEvent(QCloseEvent *event)
     return;
   }
 
-  if (m_SaveOnExit) {
-    m_AppConfig.setMainWindowPosition(pos());
-    m_AppConfig.setMainWindowSize(size());
-    m_ConfigScopes.save();
+  if (m_saveOnExit) {
+    m_appConfig.setMainWindowPosition(pos());
+    m_appConfig.setMainWindowSize(size());
+    m_configScopes.save();
   }
   qDebug() << "quitting application";
   event->accept();
@@ -766,15 +766,15 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showFirstConnectedMessage()
 {
-  if (m_AppConfig.startedBefore()) {
+  if (m_appConfig.startedBefore()) {
     return;
   }
 
-  m_AppConfig.setStartedBefore(true);
-  m_ConfigScopes.save();
+  m_appConfig.setStartedBefore(true);
+  m_configScopes.save();
 
-  const auto isServer = m_CoreProcess.mode() == CoreMode::Server;
-  messages::showFirstConnectedMessage(this, m_AppConfig.closeToTray(), m_AppConfig.enableService(), isServer);
+  const auto isServer = m_coreProcess.mode() == CoreMode::Server;
+  messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
 }
 
 void MainWindow::onCoreProcessSecureSocket(bool enabled)
@@ -784,8 +784,8 @@ void MainWindow::onCoreProcessSecureSocket(bool enabled)
 
 void MainWindow::updateStatus()
 {
-  const auto connection = m_CoreProcess.connectionState();
-  const auto process = m_CoreProcess.processState();
+  const auto connection = m_coreProcess.connectionState();
+  const auto process = m_coreProcess.processState();
 
   ui->lblConnectionSecurityStatus->setVisible(false);
   switch (process) {
@@ -812,7 +812,7 @@ void MainWindow::updateStatus()
       using enum CoreConnectionState;
 
     case Listening: {
-      if (m_CoreProcess.mode() == CoreMode::Server) {
+      if (m_coreProcess.mode() == CoreMode::Server) {
         setStatus(tr("%1 is waiting for clients").arg(kAppName));
       }
 
@@ -825,8 +825,8 @@ void MainWindow::updateStatus()
 
     case Connected: {
       ui->lblConnectionSecurityStatus->setVisible(true);
-      if (m_SecureSocket) {
-        setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_CoreProcess.secureSocketVersion()));
+      if (m_secureSocket) {
+        setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_coreProcess.secureSocketVersion()));
       } else {
         setStatus(tr("%1 is connected (without TLS encryption)").arg(kAppName));
       }
@@ -847,8 +847,8 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
-    m_AppConfig.setStartedBefore(true);
-    m_ConfigScopes.save();
+    m_appConfig.setStartedBefore(true);
+    m_configScopes.save();
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
@@ -934,7 +934,7 @@ void MainWindow::updateLocalFingerprint()
     qFatal() << "failed to check if fingerprint exists";
   }
 
-  if (m_AppConfig.tlsEnabled() && fingerprintExists) {
+  if (m_appConfig.tlsEnabled() && fingerprintExists) {
     ui->lblMyFingerprint->setVisible(true);
   } else {
     ui->lblMyFingerprint->setVisible(false);
@@ -944,11 +944,11 @@ void MainWindow::updateLocalFingerprint()
 void MainWindow::autoAddScreen(const QString name)
 {
 
-  int r = m_ServerConfig.autoAddScreen(name);
+  int r = m_serverConfig.autoAddScreen(name);
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(tr("Please add the server (%1) to the grid.").arg(m_AppConfig.screenName()));
+      showConfigureServer(tr("Please add the server (%1) to the grid.").arg(m_appConfig.screenName()));
       break;
 
     case kAutoAddScreenManualClient:
@@ -973,16 +973,16 @@ void MainWindow::hide()
 
 void MainWindow::showConfigureServer(const QString &message)
 {
-  ServerConfigDialog dialog(this, serverConfig(), m_AppConfig);
+  ServerConfigDialog dialog(this, serverConfig(), m_appConfig);
   dialog.message(message);
-  if ((dialog.exec() == QDialog::Accepted) && m_CoreProcess.isStarted()) {
-    m_CoreProcess.restart();
+  if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
+    m_coreProcess.restart();
   }
 }
 
 void MainWindow::secureSocket(bool secureSocket)
 {
-  m_SecureSocket = secureSocket;
+  m_secureSocket = secureSocket;
 
   const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
   ui->lblConnectionSecurityStatus->setToolTip(txt);
@@ -995,34 +995,34 @@ void MainWindow::updateScreenName()
 {
   ui->lblComputerName->setText(tr("This computer's name: %1 "
                                   R"((<a href="#" style="color: %2">change</a>))")
-                                   .arg(m_AppConfig.screenName(), kColorSecondary));
-  m_ServerConfig.updateServerName();
+                                   .arg(m_appConfig.screenName(), kColorSecondary));
+  m_serverConfig.updateServerName();
 }
 
 void MainWindow::enableServer(bool enable)
 {
   QString serverStr = enable ? QStringLiteral("server enabled") : QStringLiteral("server disabled");
   qDebug() << serverStr;
-  m_AppConfig.setServerGroupChecked(enable);
+  m_appConfig.setServerGroupChecked(enable);
   ui->rbModeServer->setChecked(enable);
-  ui->m_pWidgetServer->setEnabled(enable);
-  ui->m_pWidgetServerInput->setVisible(m_AppConfig.invertConnection());
+  ui->widgetServer->setEnabled(enable);
+  ui->widgetServerInput->setVisible(m_appConfig.invertConnection());
 
   if (enable) {
     ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
 
-    if (m_CoreProcess.isStarted() && m_CoreProcess.mode() != CoreProcess::Mode::Server)
-      m_CoreProcess.stop();
+    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Server)
+      m_coreProcess.stop();
 
-    m_CoreProcess.setMode(CoreProcess::Mode::Server);
+    m_coreProcess.setMode(CoreProcess::Mode::Server);
 
     // The server can run without any clients configured, and this is actually
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
-    if (!m_AppConfig.startedBefore() && !m_CoreProcess.isStarted()) {
+    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
-      m_CoreProcess.start();
+      m_coreProcess.start();
       messages::showFirstServerStartMessage(this);
     }
   }
@@ -1032,17 +1032,17 @@ void MainWindow::enableClient(bool enable)
 {
   QString clientStr = enable ? QStringLiteral("client enabled") : QStringLiteral("client disabled");
   qDebug() << clientStr;
-  m_AppConfig.setClientGroupChecked(enable);
+  m_appConfig.setClientGroupChecked(enable);
   ui->rbModeClient->setChecked(enable);
-  ui->m_pWidgetClientInput->setEnabled(enable);
-  ui->m_pWidgetClientInput->setVisible(!m_AppConfig.invertConnection());
+  ui->widgetClientInput->setEnabled(enable);
+  ui->widgetClientInput->setVisible(!m_appConfig.invertConnection());
 
   if (enable) {
     ui->btnToggleCore->setEnabled(true);
     m_actionStartCore->setEnabled(true);
-    if (m_CoreProcess.isStarted() && m_CoreProcess.mode() != CoreProcess::Mode::Client)
-      m_CoreProcess.stop();
-    m_CoreProcess.setMode(CoreProcess::Mode::Client);
+    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Client)
+      m_coreProcess.stop();
+    m_coreProcess.setMode(CoreProcess::Mode::Client);
   }
 }
 
