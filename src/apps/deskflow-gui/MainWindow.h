@@ -91,24 +91,23 @@ public:
 signals:
   void shown();
 
-private slots:
+private:
   void toggleLogVisible(bool visible);
-  //
-  // Manual slots
-  //
-  void onShown();
-  void onConfigScopesSaving();
-  void onAppConfigTlsChanged();
-  void onAppConfigScreenNameChanged();
-  void onAppConfigInvertConnection();
-  void onCoreProcessStarting();
-  void onCoreProcessError(CoreProcess::Error error);
-  void onCoreConnectionStateChanged(CoreProcess::ConnectionState state);
-  void onCoreProcessStateChanged(CoreProcess::ProcessState state);
-  void onCoreProcessSecureSocket(bool enabled);
-  void onVersionCheckerUpdateFound(const QString &version);
-  void onTrayIconActivated(QSystemTrayIcon::ActivationReason reason);
-  void onServerConnectionConfigureClient(const QString &clientName);
+
+  void firstShown();
+
+  void configScopesSaving();
+  void appConfigTlsChanged();
+  void appConfigScreenNameChanged();
+  void appConfigInvertConnection();
+  void coreProcessStarting();
+  void coreProcessError(CoreProcess::Error error);
+  void coreConnectionStateChanged(CoreProcess::ConnectionState state);
+  void coreProcessStateChanged(CoreProcess::ProcessState state);
+  void coreProcessSecureSocket(bool enabled);
+  void versionCheckerUpdateFound(const QString &version);
+  void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
+  void serverConnectionConfigureClient(const QString &clientName);
 
   void clearSettings();
   void openAboutDialog();
@@ -125,7 +124,6 @@ private slots:
   void setModeServer();
   void setModeClient();
 
-private:
   std::unique_ptr<Ui::MainWindow> ui;
 
   void updateSize();
