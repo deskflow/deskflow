@@ -233,27 +233,27 @@ void MainWindow::connectSlots()
 
   connect(&Logger::instance(), &Logger::newLine, this, &MainWindow::handleLogLine);
 
-  connect(this, &MainWindow::shown, this, &MainWindow::onShown, Qt::QueuedConnection);
+  connect(this, &MainWindow::shown, this, &MainWindow::firstShown, Qt::QueuedConnection);
 
-  connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::onConfigScopesSaving, Qt::DirectConnection);
+  connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
 
-  connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::onAppConfigTlsChanged);
+  connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
 
-  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::onAppConfigScreenNameChanged);
+  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::appConfigScreenNameChanged);
 
-  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::onAppConfigInvertConnection);
+  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::appConfigInvertConnection);
 
-  connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::onCoreProcessStarting, Qt::DirectConnection);
+  connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
 
-  connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::onCoreProcessError);
+  connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
 
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
 
-  connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::onCoreProcessStateChanged);
+  connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
 
-  connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::onCoreConnectionStateChanged);
+  connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
 
-  connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::onCoreProcessSecureSocket);
+  connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::coreProcessSecureSocket);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -270,16 +270,14 @@ void MainWindow::connectSlots()
   connect(m_actionTestFatalError, &QAction::triggered, this, &MainWindow::testFatalError);
   connect(m_actionTestCriticalError, &QAction::triggered, this, &MainWindow::testCriticalError);
 
-  connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::onVersionCheckerUpdateFound);
+  connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::versionCheckerUpdateFound);
 
 // Mac os tray will only show a menu
 #ifndef Q_OS_MAC
-  connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::onTrayIconActivated);
+  connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
 #endif
 
-  connect(
-      &m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::onServerConnectionConfigureClient
-  );
+  connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
 
   connect(&m_serverConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
   connect(&m_clientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
@@ -323,7 +321,7 @@ void MainWindow::toggleLogVisible(bool visible)
   QTimer::singleShot(1, this, &MainWindow::updateSize);
 }
 
-void MainWindow::onShown()
+void MainWindow::firstShown()
 {
   // if a critical error was shown just before the main window (i.e. on app
   // load), it will be hidden behind the main window. therefore we need to raise
@@ -336,26 +334,26 @@ void MainWindow::onShown()
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 }
 
-void MainWindow::onConfigScopesSaving()
+void MainWindow::configScopesSaving()
 {
   m_serverConfig.commit();
 }
 
-void MainWindow::onAppConfigTlsChanged()
+void MainWindow::appConfigTlsChanged()
 {
   if (m_tlsUtility.isEnabled()) {
     m_tlsUtility.generateCertificate();
   }
 }
 
-void MainWindow::onTrayIconActivated(QSystemTrayIcon::ActivationReason reason)
+void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
   if (reason != QSystemTrayIcon::Trigger)
     return;
   isVisible() ? hide() : showAndActivate();
 }
 
-void MainWindow::onVersionCheckerUpdateFound(const QString &version)
+void MainWindow::versionCheckerUpdateFound(const QString &version)
 {
   const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
   const auto text = tr("A new version is available (v%1). %2").arg(version, link);
@@ -364,17 +362,17 @@ void MainWindow::onVersionCheckerUpdateFound(const QString &version)
   ui->lblUpdate->setText(text);
 }
 
-void MainWindow::onAppConfigScreenNameChanged()
+void MainWindow::appConfigScreenNameChanged()
 {
   updateScreenName();
 }
 
-void MainWindow::onAppConfigInvertConnection()
+void MainWindow::appConfigInvertConnection()
 {
   applyConfig();
 }
 
-void MainWindow::onCoreProcessError(CoreProcess::Error error)
+void MainWindow::coreProcessError(CoreProcess::Error error)
 {
   if (error == CoreProcess::Error::AddressMissing) {
     QMessageBox::warning(
@@ -503,7 +501,7 @@ void MainWindow::setModeClient()
   m_configScopes.save();
 }
 
-void MainWindow::onServerConnectionConfigureClient(const QString &clientName)
+void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
   m_serverConfigDialogState.setVisible(true);
   ServerConfigDialog dialog(this, m_serverConfig, m_appConfig);
@@ -541,7 +539,7 @@ void MainWindow::open()
   }
 }
 
-void MainWindow::onCoreProcessStarting()
+void MainWindow::coreProcessStarting()
 {
   if (deskflow::platform::isWayland()) {
     m_waylandWarnings.showOnce(this, m_coreProcess.mode());
@@ -771,7 +769,7 @@ void MainWindow::showFirstConnectedMessage()
   messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
 }
 
-void MainWindow::onCoreProcessSecureSocket(bool enabled)
+void MainWindow::coreProcessSecureSocket(bool enabled)
 {
   secureSocket(enabled);
 }
@@ -835,7 +833,7 @@ void MainWindow::updateStatus()
   }
 }
 
-void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
+void MainWindow::coreProcessStateChanged(CoreProcessState state)
 {
   updateStatus();
 
@@ -872,7 +870,7 @@ void MainWindow::onCoreProcessStateChanged(CoreProcessState state)
   }
 }
 
-void MainWindow::onCoreConnectionStateChanged(CoreConnectionState state)
+void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
 {
   qDebug() << "core connection state changed: " << static_cast<int>(state);
 
