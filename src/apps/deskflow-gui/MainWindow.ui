@@ -19,13 +19,13 @@
   <property name="windowTitle">
    <string>Deskflow</string>
   </property>
-  <widget class="QWidget" name="m_pWidgetTopLevel">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+  <widget class="QWidget" name="topLevelWidget">
+   <layout class="QVBoxLayout" name="_2">
     <property name="spacing">
      <number>10</number>
     </property>
     <item>
-     <layout class="QHBoxLayout" name="m_layoutName">
+     <layout class="QHBoxLayout" name="layoutName">
       <property name="sizeConstraint">
        <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
       </property>
@@ -56,7 +56,7 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="m_pLabelUpdate">
+       <widget class="QLabel" name="lblUpdate">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -64,7 +64,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string notr="true">m_pLabelUpdate</string>
+         <string notr="true">lblUpdate</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -74,7 +74,7 @@
      </layout>
     </item>
     <item>
-     <widget class="QLabel" name="m_pLabelIpAddresses">
+     <widget class="QLabel" name="lblIpAddresses">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -106,7 +106,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="m_pWidgetModes" native="true">
+     <widget class="QWidget" name="widgetModes" native="true">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -130,7 +130,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="m_pGroupServer">
+        <widget class="QGroupBox" name="groupServer">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -142,7 +142,7 @@
            <number>15</number>
           </property>
           <item alignment="Qt::AlignmentFlag::AlignTop">
-           <widget class="QWidget" name="m_pWidgetServerRadio" native="true">
+           <widget class="QWidget" name="widgetServerRadio" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -186,7 +186,7 @@
            </widget>
           </item>
           <item alignment="Qt::AlignmentFlag::AlignTop">
-           <widget class="QWidget" name="m_pWidgetServer" native="true">
+           <widget class="QWidget" name="widgetServer" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutServer">
              <property name="spacing">
               <number>15</number>
@@ -204,7 +204,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QWidget" name="m_pWidgetServerInput" native="true">
+              <widget class="QWidget" name="widgetServerInput" native="true">
                <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
                 <property name="spacing">
                  <number>15</number>
@@ -222,7 +222,7 @@
                  <number>0</number>
                 </property>
                 <item>
-                 <widget class="QLabel" name="m_pLabelClientIp">
+                 <widget class="QLabel" name="lblClientIp">
                   <property name="text">
                    <string>Client IP address or hostname:</string>
                   </property>
@@ -252,7 +252,7 @@
               </widget>
              </item>
              <item>
-              <widget class="deskflow::gui::widgets::ServerStateLabel" name="m_pLabelServerState">
+              <widget class="deskflow::gui::widgets::ServerStateLabel" name="labelServerState">
                <property name="text">
                 <string>No clients connected</string>
                </property>
@@ -305,7 +305,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupClient">
+        <widget class="QGroupBox" name="groupClient">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -317,7 +317,7 @@
            <number>15</number>
           </property>
           <item alignment="Qt::AlignmentFlag::AlignTop">
-           <widget class="QWidget" name="m_pWidgetClientRadio" native="true">
+           <widget class="QWidget" name="widgetClientRadio" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -361,7 +361,7 @@
            </widget>
           </item>
           <item alignment="Qt::AlignmentFlag::AlignTop">
-           <widget class="QWidget" name="m_pWidgetClientInput" native="true">
+           <widget class="QWidget" name="widgetClientInput" native="true">
             <layout class="QVBoxLayout" name="m_pLayoutClient">
              <property name="spacing">
               <number>15</number>
@@ -448,17 +448,14 @@
       <property name="frameShadow">
        <enum>QFrame::Shadow::Raised</enum>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QVBoxLayout" name="_3">
        <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QHBoxLayout" name="_4">
          <property name="sizeConstraint">
           <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
          </property>
          <item>
           <widget class="QToolButton" name="btnToggleLog">
-           <property name="text">
-            <string>...</string>
-           </property>
            <property name="checkable">
             <bool>true</bool>
            </property>
@@ -496,9 +493,6 @@
            <kerning>true</kerning>
           </font>
          </property>
-         <property name="undoRedoEnabled">
-          <bool>false</bool>
-         </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
          </property>
@@ -514,7 +508,7 @@
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="m_pLayoutActions">
+     <layout class="QHBoxLayout" name="layoutActions">
       <property name="spacing">
        <number>6</number>
       </property>
@@ -544,7 +538,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="m_pStatusLabel">
+       <widget class="QLabel" name="lblStatus">
         <property name="text">
          <string>Ready</string>
         </property>
@@ -564,12 +558,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="m_pLabelNotice">
+       <widget class="QLabel" name="lblNotice">
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
         <property name="text">
-         <string notr="true">m_pLabelNotice</string>
+         <string notr="true">lblNotice</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>

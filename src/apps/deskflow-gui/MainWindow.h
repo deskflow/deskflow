@@ -76,13 +76,13 @@ public:
 
   CoreMode coreMode() const
   {
-    return m_CoreProcess.mode();
+    return m_coreProcess.mode();
   }
   QString address() const;
   void open();
   ServerConfig &serverConfig()
   {
-    return m_ServerConfig;
+    return m_serverConfig;
   }
   void autoAddScreen(const QString name);
 
@@ -131,11 +131,11 @@ private:
   void updateSize();
   AppConfig &appConfig()
   {
-    return m_AppConfig;
+    return m_appConfig;
   }
   AppConfig const &appConfig() const
   {
-    return m_AppConfig;
+    return m_appConfig;
   }
   void createMenuBar();
   void setupTrayIcon();
@@ -169,21 +169,21 @@ private:
   void updateStatus();
   void showAndActivate();
 
-  VersionChecker m_VersionChecker;
+  VersionChecker m_versionChecker;
   QSystemTrayIcon *m_trayIcon = nullptr;
-  QAbstractButton *m_pCancelButton = nullptr;
-  bool m_SecureSocket = false;
-  deskflow::gui::config::ServerConfigDialogState m_ServerConfigDialogState;
-  bool m_SaveOnExit = true;
-  deskflow::gui::core::WaylandWarnings m_WaylandWarnings;
+  QAbstractButton *m_btnCancel = nullptr;
+  bool m_secureSocket = false;
+  deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
+  bool m_saveOnExit = true;
+  deskflow::gui::core::WaylandWarnings m_waylandWarnings;
 
-  deskflow::gui::ConfigScopes &m_ConfigScopes;
-  AppConfig &m_AppConfig;
-  ServerConfig m_ServerConfig;
-  deskflow::gui::CoreProcess m_CoreProcess;
-  deskflow::gui::ServerConnection m_ServerConnection;
-  deskflow::gui::ClientConnection m_ClientConnection;
-  deskflow::gui::TlsUtility m_TlsUtility;
+  deskflow::gui::ConfigScopes &m_configScopes;
+  AppConfig &m_appConfig;
+  ServerConfig m_serverConfig;
+  deskflow::gui::CoreProcess m_coreProcess;
+  deskflow::gui::ServerConnection m_serverConnection;
+  deskflow::gui::ClientConnection m_clientConnection;
+  deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
 
   QLocalServer *m_guiDupeChecker = nullptr;
