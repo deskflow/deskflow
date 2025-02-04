@@ -231,10 +231,7 @@ void MainWindow::setupControls()
 void MainWindow::connectSlots()
 {
 
-  connect(
-      &Logger::instance(), &Logger::newLine, this, //
-      [this](const QString &line) { handleLogLine(line); }
-  );
+  connect(&Logger::instance(), &Logger::newLine, this, &MainWindow::handleLogLine);
 
   connect(this, &MainWindow::shown, this, &MainWindow::onShown, Qt::QueuedConnection);
 
@@ -250,10 +247,7 @@ void MainWindow::connectSlots()
 
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::onCoreProcessError);
 
-  connect(
-      &m_coreProcess, &CoreProcess::logLine, this, //
-      [this](const QString &line) { handleLogLine(line); }
-  );
+  connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
 
   connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::onCoreProcessStateChanged);
 
@@ -339,7 +333,7 @@ void MainWindow::onShown()
   // this we delay the error dialog raise by a split second. this seems a bit
   // hacky and fragile, so maybe there's a better approach.
   const auto kCriticalDialogDelay = 100;
-  QTimer::singleShot(kCriticalDialogDelay, this, [] { messages::raiseCriticalDialog(); });
+  QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 }
 
 void MainWindow::onConfigScopesSaving()
