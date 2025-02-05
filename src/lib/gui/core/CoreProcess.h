@@ -136,10 +136,10 @@ private slots:
   void onProcessReadyReadStandardError();
 
 private:
-  void startDesktop(const QString &app, const QStringList &args);
-  void startService(const QString &app, const QStringList &args);
-  void stopDesktop() const;
-  void stopService();
+  void startForegroundProcess(const QString &app, const QStringList &args);
+  void startProcessFromDaemon(const QString &app, const QStringList &args);
+  void stopForegroundProcess() const;
+  void stopProcessFromDaemon();
   bool addGenericArgs(QStringList &args, const ProcessMode processMode) const;
   bool addServerArgs(QStringList &args, QString &app);
   bool addClientArgs(QStringList &args, QString &app);
