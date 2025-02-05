@@ -11,17 +11,18 @@
 #include "base/Log.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
-#include <iostream>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
+#include <iostream>
+
 void showHelp()
 {
-  std::cout << "Usage: " CORE_BINARY_NAME " <server | client> [...options]" << std::endl;
-  std::cout << "server - start as a server ( deskflow-server)" << std::endl;
-  std::cout << "client - start as a client ( deslflow-client)" << std::endl;
+  std::cout << "Usage: deskflow-core <server | client> [...options]" << std::endl;
+  std::cout << "server - start as a server (deskflow-server)" << std::endl;
+  std::cout << "client - start as a client (deskflow-client)" << std::endl;
   std::cout << "use deskflow-core <server|client> --help for more information." << std::endl;
 }
 
