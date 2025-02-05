@@ -15,9 +15,6 @@
 #include <QDir>
 #include <QProcess>
 
-static const char *const kCertificateKeyLength = "rsa:";
-static const char *const kCertificateHashAlgorithm = "-sha256";
-
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
 {
 }
@@ -32,8 +29,6 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
     qCritical("failed to create directory for tls certificate");
     return false;
   }
-
-  QString keySize = kCertificateKeyLength + QString::number(keyLength);
 
   try {
     deskflow::generatePemSelfSignedCert(path.toStdString(), keyLength);
