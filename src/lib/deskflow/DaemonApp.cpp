@@ -118,17 +118,17 @@ int DaemonApp::run(int argc, char **argv)
     for (int i = 1; i < argc; ++i) {
       string arg(argv[i]);
 
-      if (arg == "/f" || arg == "-f") {
+      if (arg == "-f") {
         foreground = true;
       }
 #if SYSAPI_WIN32
-      else if (arg == "/install") {
-        LOG((CLOG_PRINT "installing windows daemon"));
+      else if (arg == "--install" || arg == "/install") {
+        LOG((CLOG_NOTE "installing windows daemon"));
         uninstall = true;
         ARCH->installDaemon();
         return kExitSuccess;
-      } else if (arg == "/uninstall") {
-        LOG((CLOG_PRINT "uninstalling windows daemon"));
+      } else if (arg == "--uninstall" || arg == "/uninstall") {
+        LOG((CLOG_NOTE "uninstalling windows daemon"));
         ARCH->uninstallDaemon();
         return kExitSuccess;
       }
@@ -150,7 +150,7 @@ int DaemonApp::run(int argc, char **argv)
 #endif
 
     if (foreground) {
-      LOG((CLOG_PRINT "starting daemon in foreground"));
+      LOG((CLOG_NOTE "starting daemon in foreground"));
 
       // run process in foreground instead of daemonizing.
       // useful for debugging.
