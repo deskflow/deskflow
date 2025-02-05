@@ -11,10 +11,12 @@ add_library(base STATIC
   EventQueue.h
   EventTypes.cpp
   EventTypes.h
+  finally.h
   FunctionEventJob.cpp
   FunctionEventJob.h
   FunctionJob.cpp
   FunctionJob.h
+  finally.h
   IEventJob.h
   IEventQueue.h
   IEventQueueBuffer.h

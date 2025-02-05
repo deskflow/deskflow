@@ -66,6 +66,15 @@ Return a new hexString
 std::string toHex(const std::string &subject, int width, const char fill = '0');
 
 /**
+ * @brief toHex Convert each value in input into a hex string
+ * @param input vector of uint8_t
+ * @param width
+ * @param fill fill character 0 is default
+ * @return a hex string
+ */
+std::string toHex(const std::vector<uint8_t> &input, int width, const char fill = '0');
+
+/**
  * @brief fromHexChar Convert a single char to its hexidecmal value
  * @param c input char 0-F
  * @return The value of c in Hex or -1 for invalid hex chars
