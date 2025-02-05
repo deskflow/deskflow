@@ -259,7 +259,7 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
   }
 }
 
-void CoreProcess::startDesktop(const QString &app, const QStringList &args)
+void CoreProcess::startForegroundProcess(const QString &app, const QStringList &args)
 {
   using enum ProcessState;
 
@@ -282,7 +282,7 @@ void CoreProcess::startDesktop(const QString &app, const QStringList &args)
   }
 }
 
-void CoreProcess::startService(const QString &app, const QStringList &args)
+void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &args)
 {
   using enum ProcessState;
 
@@ -304,7 +304,7 @@ void CoreProcess::startService(const QString &app, const QStringList &args)
   setProcessState(Started);
 }
 
-void CoreProcess::stopDesktop() const
+void CoreProcess::stopForegroundProcess() const
 {
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
@@ -324,7 +324,7 @@ void CoreProcess::stopDesktop() const
   }
 }
 
-void CoreProcess::stopService()
+void CoreProcess::stopProcessFromDaemon()
 {
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
@@ -409,9 +409,9 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
 
   if (processMode == ProcessMode::kDesktop) {
-    startDesktop(app, args);
+    startForegroundProcess(app, args);
   } else if (processMode == ProcessMode::kService) {
-    startService(app, args);
+    startProcessFromDaemon(app, args);
   }
 
   m_lastProcessMode = processMode;
@@ -432,9 +432,9 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
     setProcessState(ProcessState::Stopping);
 
     if (processMode == ProcessMode::kService) {
-      stopService();
+      stopProcessFromDaemon();
     } else if (processMode == ProcessMode::kDesktop) {
-      stopDesktop();
+      stopForegroundProcess();
     }
 
   } else {
