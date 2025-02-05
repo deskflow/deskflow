@@ -17,6 +17,8 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
+#define TEST_DAEMON
+
 #include <iostream>
 
 void showHelp()
@@ -61,7 +63,7 @@ int main(int argc, char **argv)
   EventQueue events;
 
   if (isDaemon(argc, argv)) {
-#ifdef SYSAPI_WIN32
+#if defined(SYSAPI_WIN32) || defined(TEST_DAEMON)
     DaemonApp app;
     return app.run(argc, argv);
 #else

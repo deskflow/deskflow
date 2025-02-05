@@ -9,6 +9,7 @@
 
 #include "deskflow/DaemonApp.h"
 
+#include "arch/Arch.h"
 #include "arch/XArch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
@@ -108,15 +109,6 @@ DaemonApp::~DaemonApp()
 
 int DaemonApp::run(int argc, char **argv)
 {
-#if SYSAPI_WIN32
-  // win32 instance needed for threading, etc.
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-
-  Arch arch;
-  arch.init();
-
-  Log log;
   m_events = std::make_unique<EventQueue>();
 
   bool uninstall = false;
@@ -124,30 +116,32 @@ int DaemonApp::run(int argc, char **argv)
 #if SYSAPI_WIN32
     // TODO: maybe we should only add this if not using /f?
     // sends debug messages to visual studio console window.
-    log.insert(new MSWindowsDebugOutputter());
+    CLOG->insert(new MSWindowsDebugOutputter());
 #endif
 
     // default log level to system setting.
-    if (string logLevel = arch.setting("LogLevel"); logLevel != "")
-      log.setFilter(logLevel.c_str());
+    if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
+      CLOG->setFilter(logLevel.c_str());
 
     bool foreground = false;
 
     for (int i = 1; i < argc; ++i) {
       string arg(argv[i]);
 
-      if (arg == "/f" || arg == "-f") {
+      if (arg == "daemon") {
+        // noop
+      } else if (arg == "-f") {
         foreground = true;
       }
 #if SYSAPI_WIN32
-      else if (arg == "/install") {
-        LOG((CLOG_PRINT "installing windows daemon"));
+      else if (arg == "--install") {
+        LOG((CLOG_NOTE "installing windows daemon"));
         uninstall = true;
-        arch.installDaemon();
+        ARCH->installDaemon();
         return kExitSuccess;
-      } else if (arg == "/uninstall") {
-        LOG((CLOG_PRINT "uninstalling windows daemon"));
-        arch.uninstallDaemon();
+      } else if (arg == "--uninstall") {
+        LOG((CLOG_NOTE "uninstalling windows daemon"));
+        ARCH->uninstallDaemon();
         return kExitSuccess;
       }
 #endif
@@ -160,18 +154,18 @@ int DaemonApp::run(int argc, char **argv)
     }
 
     if (foreground) {
-      LOG((CLOG_PRINT "starting daemon in foreground"));
+      LOG((CLOG_NOTE "starting daemon in foreground"));
 
       // run process in foreground instead of daemonizing.
       // useful for debugging.
       mainLoop(false, foreground);
     } else {
 #if SYSAPI_WIN32
-      LOG((CLOG_PRINT "daemonizing windows service"));
-      arch.daemonize(kAppName, winMainLoopStatic);
+      LOG((CLOG_NOTE "daemonizing windows service"));
+      ARCH->daemonize(kAppName, winMainLoopStatic);
 #elif SYSAPI_UNIX
-      LOG((CLOG_PRINT "daemonizing unix service"));
-      arch.daemonize(kAppName, unixMainLoopStatic);
+      LOG((CLOG_NOTE "daemonizing unix service"));
+      ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
     }
 
