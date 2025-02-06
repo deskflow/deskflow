@@ -9,6 +9,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/constants.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ServerApp.h"
@@ -17,21 +18,25 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#define TEST_DAEMON
+#include <QCoreApplication>
 
 #include <iostream>
 
+#define TEST_DAEMON
+
+const auto kCoreBinName = "deskflow-core";
+
 void showHelp()
 {
-  std::cout << "Usage: deskflow-core <server | client> [...options]" << std::endl;
-  std::cout << "server - start as a server" << std::endl;
-  std::cout << "client - start as a client" << std::endl;
+  std::cout << "Usage: " << kCoreBinName << " <server | client> [...options]" << std::endl;
+  std::cout << "server - start core as server" << std::endl;
+  std::cout << "client - start core as client" << std::endl;
 
 #ifdef SYSAPI_WIN32
   std::cout << "daemon - start as a demon (Windows only)" << std::endl;
-  std::cout << "use deskflow-core <server|client|daemon> --help for more information." << std::endl;
+  std::cout << "use " << kCoreBinName << " <server|client|daemon> --help for more information." << std::endl;
 #else
-  std::cout << "use deskflow-core <server|client> --help for more information." << std::endl;
+  std::cout << "use " << kCoreBinName << " <server|client> --help for more information." << std::endl;
 #endif
 }
 
@@ -63,13 +68,9 @@ int main(int argc, char **argv)
   EventQueue events;
 
   if (isDaemon(argc, argv)) {
-#if defined(SYSAPI_WIN32) || defined(TEST_DAEMON)
-    DaemonApp app;
-    return app.run(argc, argv);
-#else
-    showHelp();
-    return kExitArgs;
-#endif
+    LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
+    DaemonApp app(argc, argv);
+    app.exec();
   } else if (isServer(argc, argv)) {
     ServerApp app(&events);
     return app.run(argc, argv);
