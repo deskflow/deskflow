@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
+#include "common/constants.h"
 #include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
@@ -41,6 +42,10 @@
 #include <iostream>
 
 #endif
+
+#include <QCoreApplication>
+#include <QObject>
+#include <QThread>
 
 #include <memory>
 #include <sstream>
@@ -96,21 +101,37 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp(IEventQueue *events, int argc, char **argv)
-    : QCoreApplication(argc, argv),
-      m_events(events),
-      m_ipcServer{new ipc::DaemonIpcServer(this)}
+DaemonApp::DaemonApp(IEventQueue *events) : m_ipcServer{new ipc::DaemonIpcServer(this)}
 {
+  s_instance = this;
+
   connect(m_ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
   connect(m_ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
   connect(m_ipcServer, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
-
-  s_instance = this;
 }
 
 DaemonApp::~DaemonApp()
 {
   s_instance = nullptr;
+}
+
+void DaemonApp::run()
+{
+  if (m_foreground) {
+    LOG((CLOG_NOTE "starting daemon in foreground"));
+
+    // run process in foreground instead of daemonizing.
+    // useful for debugging.
+    mainLoop(false, m_foreground);
+  } else {
+#if SYSAPI_WIN32
+    LOG((CLOG_NOTE "daemonizing windows service"));
+    ARCH->daemonize(kAppName, winMainLoopStatic);
+#elif SYSAPI_UNIX
+    LOG((CLOG_NOTE "daemonizing unix service"));
+    ARCH->daemonize(kAppName, unixMainLoopStatic);
+#endif
+  }
 }
 
 void DaemonApp::handleElevateModeChanged(int mode)
@@ -135,61 +156,50 @@ void DaemonApp::handleRestartRequested()
 #endif
 }
 
-void DaemonApp::startAsync()
+void DaemonApp::init(int argc, char **argv)
 {
-#if SYSAPI_WIN32
-  m_watchdog->startAsync();
-#endif
-}
-
-int DaemonApp::init(int argc, char **argv)
-{
-  bool uninstall = false;
+  bool isUninstalling = false;
   try {
     // default log level to system setting.
     if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
       CLOG->setFilter(logLevel.c_str());
 
-    bool foreground = false;
-
     for (int i = 1; i < argc; ++i) {
       string arg(argv[i]);
 
       if (arg == "-f") {
-        foreground = true;
+        m_foreground = true;
       }
 #if SYSAPI_WIN32
       else if (arg == "--install" || arg == "/install") {
         LOG((CLOG_NOTE "installing windows daemon"));
-        uninstall = true;
         ARCH->installDaemon();
-        return kExitSuccess;
+        Q_EMIT serviceInstalled();
       } else if (arg == "--uninstall" || arg == "/uninstall") {
         LOG((CLOG_NOTE "uninstalling windows daemon"));
+        isUninstalling = true;
         ARCH->uninstallDaemon();
-        return kExitSuccess;
+        Q_EMIT serviceUninstalled();
       }
 #endif
       else {
         stringstream ss;
         ss << "Unrecognized argument: " << arg;
         foregroundError(ss.str().c_str());
-        return kExitArgs;
+        Q_EMIT fatalError();
       }
     }
 
-    if (!foreground) {
+    if (!m_foreground) {
 #if SYSAPI_WIN32
       // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
       // in that case, but is accessible when running in the foreground.
       CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
 #endif
     }
-
-    return kExitSuccess;
   } catch (XArch &e) {
     std::string message = e.what();
-    if (uninstall && (message.find("The service has not been started") != std::string::npos)) {
+    if (isUninstalling && (message.find("The service has not been started") != std::string::npos)) {
       // TODO: if we're keeping this use error code instead (what is it?!).
       // HACK: this message happens intermittently, not sure where from but
       // it's quite misleading for the user. they thing something has gone
@@ -198,13 +208,13 @@ int DaemonApp::init(int argc, char **argv)
     } else {
       foregroundError(message.c_str());
     }
-    return kExitFailed;
+    Q_EMIT fatalError();
   } catch (std::exception &e) {
     foregroundError(e.what());
-    return kExitFailed;
+    Q_EMIT fatalError();
   } catch (...) {
     foregroundError("Unrecognized error.");
-    return kExitFailed;
+    Q_EMIT fatalError();
   }
 }
 

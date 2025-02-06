@@ -5,6 +5,9 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "arch/Arch.h"
+#include "base/EventQueue.h"
+#include "base/Log.h"
 #include "deskflow/DaemonApp.h"
 
 #include "arch/Arch.h"
@@ -20,10 +23,13 @@
 
 #endif
 
+#include <QCoreApplication>
+#include <QThread>
+
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
-  // win32 instance needed for threading, etc.
+  // Save window instance for later use, e.g. `GetModuleFileName` which is used when installing the daemon.
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
@@ -33,8 +39,24 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
-  DaemonApp app(&events, __argc, __argv);
-  return DaemonApp::exec();
+  LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
+
+  QCoreApplication app(argc, argv);
+
+  // Must be on the heap, as we're moving it to a thread.
+  DaemonApp *pDaemon = new DaemonApp(&events);
+  QObject::connect(pDaemon, &DaemonApp::serviceInstalled, &app, &QCoreApplication::quit);
+  QObject::connect(pDaemon, &DaemonApp::serviceUninstalled, &app, &QCoreApplication::quit);
+  pDaemon->init(argc, argv);
+
+  QThread *thread = new QThread();
+  pDaemon->moveToThread(thread);
+  QObject::connect(thread, &QThread::started, pDaemon, &DaemonApp::run);
+  QObject::connect(thread, &QThread::finished, pDaemon, &QObject::deleteLater);
+  QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
+  thread->start();
+
+  return QCoreApplication::exec();
 }
 
 #if SYSAPI_WIN32

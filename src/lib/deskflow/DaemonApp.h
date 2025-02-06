@@ -11,7 +11,7 @@
 #include <memory>
 #include <string>
 
-#include <QCoreApplication>
+#include <QObject>
 
 #include "common/common.h"
 
@@ -20,6 +20,7 @@ class IEventQueue;
 class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
+class QCoreApplication;
 
 namespace deskflow::core::ipc {
 class DaemonIpcServer;
@@ -31,14 +32,21 @@ class MSWindowsWatchdog;
 
 extern const char *const kLogFilename;
 
-class DaemonApp : public QCoreApplication
+class DaemonApp : public QObject
 {
+  Q_OBJECT
+
 public:
-  DaemonApp(IEventQueue *events, int argc, char **argv);
+  DaemonApp(IEventQueue *events);
   ~DaemonApp();
-  int init(int argc, char **argv);
-  void startAsync();
+  void init(int argc, char **argv);
+  void run();
   void mainLoop(bool logToFile, bool foreground = false);
+
+signals:
+  void fatalError();
+  void serviceInstalled();
+  void serviceUninstalled();
 
 private:
   void daemonize();
@@ -65,4 +73,5 @@ private:
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
   std::string m_command = "";
   int m_elevateMode = 0;
+  bool m_foreground = false;
 };
