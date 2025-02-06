@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include "ipc/IpcServer.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -27,7 +25,7 @@ public:
 
   BOOL startInForeground();
   BOOL startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa);
-  void shutdown(IpcServer &ipcServer, int timeout = kDefaultShutdownTimeout);
+  void shutdown(int timeout = kDefaultShutdownTimeout);
   DWORD waitForExit();
   void createPipes();
   std::string readStdOutput();
@@ -38,7 +36,7 @@ public:
     return m_info;
   }
 
-  static void shutdown(HANDLE handle, DWORD pid, IpcServer &ipcServer, int timeout = kDefaultShutdownTimeout);
+  static void shutdown(HANDLE handle, DWORD pid, int timeout = kDefaultShutdownTimeout);
 
 private:
   void setStartupInfo(STARTUPINFO &si);

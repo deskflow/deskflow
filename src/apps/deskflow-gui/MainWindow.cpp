@@ -21,6 +21,7 @@
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
@@ -70,6 +71,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
+      m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
       m_btnFingerprint{new QToolButton(this)},
@@ -167,6 +169,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       regenerateLocalFingerprints();
     }
   }
+
+  m_daemonIpcClient->connect();
 }
 
 MainWindow::~MainWindow()

@@ -54,6 +54,10 @@ namespace Ui {
 class MainWindow;
 }
 
+namespace deskflow::gui::ipc {
+class DaemonIpcClient;
+}
+
 class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
@@ -208,6 +212,7 @@ private:
   QStringList m_checkedServers;
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
+  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;

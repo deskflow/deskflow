@@ -10,18 +10,21 @@
 
 class QLocalServer;
 
-namespace deskflow::ipc {
+namespace deskflow::core::ipc {
 
-class IpcServer2 : public QObject
+class DaemonIpcServer : public QObject
 {
   Q_OBJECT
 
 public:
-  IpcServer2(QObject *parent);
-  ~IpcServer2();
+  DaemonIpcServer(QObject *parent);
+  ~DaemonIpcServer();
+
+private slots:
+  void handleNewConnection();
 
 private:
   QLocalServer *m_server;
 };
 
-} // namespace deskflow::ipc
+} // namespace deskflow::core::ipc
