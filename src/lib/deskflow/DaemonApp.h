@@ -11,9 +11,16 @@
 #include <memory>
 #include <string>
 
+#include <QCoreApplication>
+
 class Event;
 class IpcLogOutputter;
 class FileLogOutputter;
+class QLocalServer;
+
+namespace deskflow::ipc {
+class IpcServer2;
+}
 
 #if SYSAPI_WIN32
 class MSWindowsWatchdog;
@@ -21,16 +28,16 @@ class MSWindowsWatchdog;
 
 extern const char *const kLogFilename;
 
-class DaemonApp
+class DaemonApp : public QCoreApplication
 {
-
 public:
-  DaemonApp(IEventQueue *events);
+  DaemonApp(IEventQueue *events, int argc, char **argv);
   ~DaemonApp();
-  int run(int argc, char **argv);
+  void startAsync();
   void mainLoop(bool logToFile, bool foreground = false);
 
 private:
+  int init(int argc, char **argv);
   void daemonize();
   void foregroundError(const char *message);
   std::string logFilename();
@@ -48,4 +55,5 @@ private:
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
+  std::unique_ptr<deskflow::ipc::IpcServer2> m_ipcServer2;
 };
