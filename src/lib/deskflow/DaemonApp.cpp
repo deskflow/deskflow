@@ -24,6 +24,7 @@
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
+#include "ipc/IpcServer2.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
 
@@ -79,16 +80,16 @@ bool isServerCommandLine(const std::vector<std::string> &cmd)
 
 DaemonApp *DaemonApp::s_instance = nullptr;
 
-int mainLoopStatic()
-{
-  DaemonApp::s_instance->mainLoop(true);
-  return kExitSuccess;
-}
+// int mainLoopStatic()
+// {
+//   DaemonApp::s_instance->mainLoop(true);
+//   return kExitSuccess;
+// }
 
-int unixMainLoopStatic(int, const char **)
-{
-  return mainLoopStatic();
-}
+// int unixMainLoopStatic(int, const char **)
+// {
+//   return mainLoopStatic();
+// }
 
 #if SYSAPI_WIN32
 int winMainLoopStatic(int, const char **)
@@ -97,8 +98,15 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp()
+DaemonApp::DaemonApp(int argc, char **argv)
+    : QCoreApplication(argc, argv),
+      m_ipcServer2{new deskflow::ipc::IpcServer2(this)}
 {
+  // HACK: init used to be run, which was the main loop.
+  // now it's used for arg parsing, install/uninstall, etc.
+  if (init(argc, argv) != kExitSuccess) {
+    exit(kExitFailed);
+  }
   s_instance = this;
 }
 
@@ -107,7 +115,14 @@ DaemonApp::~DaemonApp()
   s_instance = nullptr;
 }
 
-int DaemonApp::run(int argc, char **argv)
+void DaemonApp::startAsync()
+{
+#if SYSAPI_WIN32
+  m_watchdog->startAsync();
+#endif
+}
+
+int DaemonApp::init(int argc, char **argv)
 {
   m_events = std::make_unique<EventQueue>();
 
@@ -151,21 +166,21 @@ int DaemonApp::run(int argc, char **argv)
       }
     }
 
-    if (foreground) {
-      LOG((CLOG_NOTE "starting daemon in foreground"));
+    // if (foreground) {
+    //   LOG((CLOG_NOTE "starting daemon in foreground"));
 
-      // run process in foreground instead of daemonizing.
-      // useful for debugging.
-      mainLoop(false, foreground);
-    } else {
-#if SYSAPI_WIN32
-      LOG((CLOG_NOTE "daemonizing windows service"));
-      ARCH->daemonize(kAppName, winMainLoopStatic);
-#elif SYSAPI_UNIX
-      LOG((CLOG_NOTE "daemonizing unix service"));
-      ARCH->daemonize(kAppName, unixMainLoopStatic);
-#endif
-    }
+    //   // run process in foreground instead of daemonizing.
+    //   // useful for debugging.
+    //   mainLoop(false, foreground);
+    // } else {
+    //   #if SYSAPI_WIN32
+    //         LOG((CLOG_NOTE "daemonizing windows service"));
+    //         ARCH->daemonize(kAppName, winMainLoopStatic);
+    //   #elif SYSAPI_UNIX
+    //         LOG((CLOG_NOTE "daemonizing unix service"));
+    //         ARCH->daemonize(kAppName, unixMainLoopStatic);
+    //   #endif
+    // }
 
     return kExitSuccess;
   } catch (XArch &e) {
