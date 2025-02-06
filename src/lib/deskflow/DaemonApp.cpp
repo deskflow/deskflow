@@ -101,12 +101,38 @@ DaemonApp::DaemonApp(IEventQueue *events, int argc, char **argv)
       m_events(events),
       m_ipcServer{new ipc::DaemonIpcServer(this)}
 {
+  connect(m_ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
+  connect(m_ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
+  connect(m_ipcServer, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
+
   s_instance = this;
 }
 
 DaemonApp::~DaemonApp()
 {
   s_instance = nullptr;
+}
+
+void DaemonApp::handleElevateModeChanged(int mode)
+{
+  LOG_DEBUG("elevate mode changed: %d", mode);
+  m_elevateMode = mode;
+}
+
+void DaemonApp::handleCommandChanged(const QString &command)
+{
+  LOG_DEBUG("service command updated");
+  m_command = command.toStdString();
+}
+
+void DaemonApp::handleRestartRequested()
+{
+  LOG_DEBUG("service restart requested");
+#if SYSAPI_WIN32
+  m_watchdog->setCommand(m_command, m_elevateMode);
+#else
+  LOG_ERR("restart not implemented on this platform");
+#endif
 }
 
 void DaemonApp::startAsync()
@@ -205,7 +231,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     std::string command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";
     if (command != "") {
-      LOG((CLOG_INFO "using last known command: %s", command.c_str()));
+      LOG_DEBUG("using last known command: %s", command.c_str());
       m_watchdog->setCommand(command, elevate);
     }
 
@@ -216,8 +242,6 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 #if SYSAPI_WIN32
     m_watchdog->stop();
 #endif
-
-    m_events->removeHandler(m_events->forIpcServer().messageReceived(), m_ipcServer.get());
 
     CLOG->remove(m_ipcLogOutputter.get());
 
