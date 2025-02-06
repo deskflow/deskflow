@@ -175,8 +175,6 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       qDebug("retry cancelled, process state is not retry pending");
     }
   });
-
-  m_daemonIpcClient->connectToServer();
 }
 
 void CoreProcess::onIpcClientServiceReady()
@@ -276,8 +274,7 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
   }
 
   if (!m_daemonIpcClient->isConnected()) {
-    qFatal("cannot start process, daemon ipc not connected");
-    return;
+    m_daemonIpcClient->connectToServer();
   }
 
   QString commandQuoted = makeQuotedArgs(app, args);

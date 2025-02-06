@@ -26,6 +26,8 @@ DaemonIpcClient::~DaemonIpcClient()
 
 void DaemonIpcClient::connectToServer()
 {
+  qInfo("connecting to daemon ipc");
+
   m_socket->connectToServer(kDaemonIpcName);
   if (!m_socket->waitForConnected(kTimeout)) {
     qCritical() << "ipc client failed to connect to server:" << kDaemonIpcName;
