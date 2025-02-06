@@ -52,6 +52,10 @@ namespace Ui {
 class MainWindow;
 }
 
+namespace deskflow::gui::ipc {
+class DaemonIpcClient;
+}
+
 class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
@@ -167,6 +171,8 @@ private:
   void updateStatus();
   void showAndActivate();
 
+  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+
   VersionChecker m_versionChecker;
   QSystemTrayIcon *m_trayIcon = nullptr;
   QAbstractButton *m_btnCancel = nullptr;
@@ -174,7 +180,6 @@ private:
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-
   deskflow::gui::ConfigScopes &m_configScopes;
   AppConfig &m_appConfig;
   ServerConfig m_serverConfig;
@@ -183,9 +188,8 @@ private:
   deskflow::gui::ClientConnection m_clientConnection;
   deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
-
   QLocalServer *m_guiDupeChecker = nullptr;
-  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;

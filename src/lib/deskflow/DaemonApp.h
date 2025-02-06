@@ -18,8 +18,8 @@ class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
 
-namespace deskflow::ipc {
-class IpcServer2;
+namespace deskflow::core::ipc {
+class DaemonIpcServer;
 }
 
 #if SYSAPI_WIN32
@@ -55,5 +55,5 @@ private:
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   std::unique_ptr<IEventQueue> m_events;
   std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
-  std::unique_ptr<deskflow::ipc::IpcServer2> m_ipcServer2;
+  std::unique_ptr<deskflow::core::ipc::DaemonIpcServer> m_ipcServer2;
 };

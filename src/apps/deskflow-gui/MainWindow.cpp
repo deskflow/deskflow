@@ -7,6 +7,7 @@
  */
 
 #include "MainWindow.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "ui_MainWindow.h"
 
 #include "dialogs/AboutDialog.h"
@@ -19,6 +20,7 @@
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
@@ -67,6 +69,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
+      m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionReportBug{new QAction(tr("Report a Bug"), this)},
@@ -152,6 +155,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
 
   updateSize();
+
+  m_daemonIpcClient->connect();
 }
 
 MainWindow::~MainWindow()
