@@ -52,10 +52,6 @@ namespace Ui {
 class MainWindow;
 }
 
-namespace deskflow::gui::ipc {
-class DaemonIpcClient;
-}
-
 class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
@@ -205,7 +201,6 @@ private:
 
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
-  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
