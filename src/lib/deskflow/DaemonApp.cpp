@@ -22,6 +22,7 @@
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
+#include "ipc/IpcServer2.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
 
@@ -95,8 +96,16 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp(IEventQueue *events) : m_events(events)
+DaemonApp::DaemonApp(IEventQueue *events, int argc, char **argv)
+    : QCoreApplication(argc, argv),
+      m_events(events),
+      m_ipcServer2{new deskflow::ipc::IpcServer2(this)}
 {
+  // HACK: init used to be run, which was the main loop.
+  // now it's used for arg parsing, install/uninstall, etc.
+  if (init(argc, argv) != kExitSuccess) {
+    exit(kExitFailed);
+  }
   s_instance = this;
 }
 
@@ -105,7 +114,14 @@ DaemonApp::~DaemonApp()
   s_instance = nullptr;
 }
 
-int DaemonApp::run(int argc, char **argv)
+void DaemonApp::startAsync()
+{
+#if SYSAPI_WIN32
+  m_watchdog->startAsync();
+#endif
+}
+
+int DaemonApp::init(int argc, char **argv)
 {
   bool uninstall = false;
   try {
@@ -141,27 +157,11 @@ int DaemonApp::run(int argc, char **argv)
       }
     }
 
-#if SYSAPI_WIN32
     if (!foreground) {
+#if SYSAPI_WIN32
       // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
       // in that case, but is accessible when running in the foreground.
-      CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR -- Adopted by `Log`
-    }
-#endif
-
-    if (foreground) {
-      LOG((CLOG_NOTE "starting daemon in foreground"));
-
-      // run process in foreground instead of daemonizing.
-      // useful for debugging.
-      mainLoop(false, foreground);
-    } else {
-#if SYSAPI_WIN32
-      LOG((CLOG_PRINT "daemonizing windows service"));
-      ARCH->daemonize(kAppName, winMainLoopStatic);
-#elif SYSAPI_UNIX
-      LOG((CLOG_PRINT "daemonizing unix service"));
-      ARCH->daemonize(kAppName, unixMainLoopStatic);
+      CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
 #endif
     }
 
@@ -255,7 +255,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 void DaemonApp::foregroundError(const char *message)
 {
 #if SYSAPI_WIN32
-  MessageBox(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
+  MessageBoxA(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
 #elif SYSAPI_UNIX
   cerr << message << endl;
 #endif

@@ -49,6 +49,8 @@ endif()
 ####################Start Making Library#########################
 set(lib_name app)
 
+set(CMAKE_AUTOMOC ON)
+
 # arch
 if(WIN32)
   set(PLATFORM_CODE
@@ -143,8 +145,12 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   XScreen.h
   languages/LanguageManager.cpp
   languages/LanguageManager.h
+  ipc/IpcServer2.cpp
+  ipc/IpcServer2.h
 )
 
+find_package(Qt6 COMPONENTS Core Network)
+target_link_libraries(${lib_name} PRIVATE Qt6::Core Qt6::Network)
 
 if(WIN32)
     target_compile_definitions(${lib_name} PUBLIC HAVE_WINTOAST)
@@ -161,6 +167,7 @@ target_include_directories(
 if(UNIX)
   target_link_libraries(
     ${lib_name}
+    PRIVATE
     arch
     client
     ipc
@@ -174,12 +181,13 @@ if(UNIX)
   )
 
   if(NOT APPLE)
-    target_link_libraries(${lib_name} pugixml)
+    target_link_libraries(${lib_name} PRIVATE pugixml)
 
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
-      target_link_libraries(${lib_name} PkgConfig::lib_glib
-                            PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
+      target_link_libraries(${lib_name} 
+      PRIVATE
+      PkgConfig::lib_glib PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
     endif()
   endif()
 endif()

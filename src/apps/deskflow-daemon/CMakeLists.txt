@@ -14,6 +14,8 @@ if(WIN32)
 
   add_executable(${target} WIN32 ${target}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
 
+  find_package(Qt6 COMPONENTS Core Network)
+
   target_link_libraries(
     ${target}
     arch
@@ -24,7 +26,8 @@ if(WIN32)
     net
     platform
     app
-    ${libs})
+    ${libs}
+    Qt6::Core)
 
   install(
     TARGETS ${target}
