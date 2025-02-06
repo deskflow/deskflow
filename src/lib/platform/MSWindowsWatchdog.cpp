@@ -57,17 +57,13 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground
-)
+MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true),
       m_commandChanged(false),
       m_outputWritePipe(nullptr),
       m_outputReadPipe(nullptr),
-      m_ipcServer(ipcServer),
-      m_ipcLogOutputter(ipcLogOutputter),
       m_elevateProcess(false),
       m_processFailures(0),
       m_processStarted(false),
@@ -265,7 +261,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "terminated running process on exit"));
-    m_process->shutdown(m_ipcServer);
+    m_process->shutdown();
     m_process.reset();
     m_processStarted = false;
   }
@@ -301,7 +297,7 @@ void MSWindowsWatchdog::startProcess()
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "closing existing process to make way for new one"));
-    m_process->shutdown(m_ipcServer);
+    m_process->shutdown();
     m_process.reset();
     m_processStarted = false;
   }
@@ -409,8 +405,6 @@ void MSWindowsWatchdog::outputLoop(void *)
     } else {
       buffer[bytesRead] = '\0';
 
-      m_ipcLogOutputter.write(kINFO, buffer);
-
       if (m_fileLogOutputter != NULL) {
         m_fileLogOutputter->write(kINFO, buffer);
       }
@@ -433,7 +427,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   LOG_INFO("daemon shutting down existing processes");
 
   if (m_process != nullptr) {
-    m_process->shutdown(m_ipcServer);
+    m_process->shutdown();
     m_process.reset();
     m_processStarted = false;
   }
@@ -468,7 +462,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
           _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
 
         HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-        deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID, m_ipcServer);
+        deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID);
         CloseHandle(handle);
       }
     }

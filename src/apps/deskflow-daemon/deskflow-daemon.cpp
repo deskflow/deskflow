@@ -15,20 +15,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#ifdef SYSAPI_UNIX
-
 int main(int argc, char **argv)
-{
-  DaemonApp app;
-  return app.run(argc, argv);
-}
-
-#elif SYSAPI_WIN32
-
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-
-int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 #if SYSAPI_WIN32
   // win32 instance needed for threading, etc.
@@ -43,6 +30,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
   DaemonApp app(&events, __argc, __argv);
   return DaemonApp::exec();
+}
+
+#if SYSAPI_WIN32
+
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+  return main(__argc, __argv);
 }
 
 #endif

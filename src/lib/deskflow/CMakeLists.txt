@@ -145,8 +145,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   XScreen.h
   languages/LanguageManager.cpp
   languages/LanguageManager.h
-  ipc/IpcServer2.cpp
-  ipc/IpcServer2.h
+  ipc/DaemonIpcServer.cpp
+  ipc/DaemonIpcServer.h
 )
 
 find_package(Qt6 COMPONENTS Core Network)

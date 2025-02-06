@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -13,10 +13,11 @@ const auto kAppId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
 const auto kVersion = "@CMAKE_PROJECT_VERSION@";
 const auto kVersionGitSha = "@GIT_SHA_SHORT@";
+const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 
 const auto kCopyright = //
     "Copyright @CMAKE_PROJECT_COPYRIGHT@\n"
-    "Copyright (C) 2012-2024 Symless Ltd.\n"
+    "Copyright (C) 2012-2025 Symless Ltd.\n"
     "Copyright (C) 2009-2012 Nick Bolton\n"
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
@@ -25,7 +26,6 @@ const auto kDebugBuild = true;
 #else
 const auto kDebugBuild = false;
 #endif
-
 
 const auto kSslDir = "tls";
 const auto kTlsDbSize = 2;

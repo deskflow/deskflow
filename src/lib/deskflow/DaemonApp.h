@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "ipc/IpcServer.h"
+#include "common/common.h"
 
 #include <memory>
 #include <string>
@@ -14,12 +14,13 @@
 #include <QCoreApplication>
 
 class Event;
+class IEventQueue;
 class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
 
-namespace deskflow::ipc {
-class IpcServer2;
+namespace deskflow::core::ipc {
+class DaemonIpcServer;
 }
 
 #if SYSAPI_WIN32
@@ -33,11 +34,11 @@ class DaemonApp : public QCoreApplication
 public:
   DaemonApp(IEventQueue *events, int argc, char **argv);
   ~DaemonApp();
+  int init(int argc, char **argv);
   void startAsync();
   void mainLoop(bool logToFile, bool foreground = false);
 
 private:
-  int init(int argc, char **argv);
   void daemonize();
   void foregroundError(const char *message);
   std::string logFilename();
@@ -51,9 +52,8 @@ public:
 #endif
 
 private:
-  std::unique_ptr<IpcServer> m_ipcServer;
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
-  std::unique_ptr<deskflow::ipc::IpcServer2> m_ipcServer2;
+  std::unique_ptr<deskflow::core::ipc::DaemonIpcServer> m_ipcServer;
 };
