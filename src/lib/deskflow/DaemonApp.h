@@ -13,6 +13,8 @@
 
 #include <QCoreApplication>
 
+#include "common/common.h"
+
 class Event;
 class IEventQueue;
 class IpcLogOutputter;
@@ -44,6 +46,11 @@ private:
   std::string logFilename();
   void handleIpcMessage(const Event &, void *);
 
+private slots:
+  void handleElevateModeChanged(int mode);
+  void handleCommandChanged(const QString &command);
+  void handleRestartRequested();
+
 public:
   static DaemonApp *s_instance;
 
@@ -55,5 +62,7 @@ private:
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
-  std::unique_ptr<deskflow::core::ipc::DaemonIpcServer> m_ipcServer;
+  deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
+  std::string m_command = "";
+  int m_elevateMode = 0;
 };

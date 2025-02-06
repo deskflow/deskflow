@@ -169,8 +169,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       regenerateLocalFingerprints();
     }
   }
-
-  m_daemonIpcClient->connect();
 }
 
 MainWindow::~MainWindow()
