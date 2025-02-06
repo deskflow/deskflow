@@ -18,8 +18,8 @@ class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
 
-namespace deskflow::ipc {
-class IpcServer2;
+namespace deskflow::core::ipc {
+class DaemonIpcServer;
 }
 
 #if SYSAPI_WIN32
@@ -33,11 +33,11 @@ class DaemonApp : public QCoreApplication
 public:
   DaemonApp(int argc, char **argv);
   ~DaemonApp();
+  int init(int argc, char **argv);
   void startAsync();
+  void mainLoop(bool logToFile, bool foreground = false);
 
 private:
-  int init(int argc, char **argv);
-  void mainLoop(bool logToFile, bool foreground = false);
   void daemonize();
   void foregroundError(const char *message);
   std::string logFilename();
@@ -55,5 +55,5 @@ private:
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   std::unique_ptr<IEventQueue> m_events;
   std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
-  std::unique_ptr<deskflow::ipc::IpcServer2> m_ipcServer2;
+  std::unique_ptr<deskflow::core::ipc::DaemonIpcServer> m_ipcServer2;
 };

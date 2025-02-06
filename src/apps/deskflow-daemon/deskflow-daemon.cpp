@@ -7,25 +7,20 @@
 
 #include "deskflow/DaemonApp.h"
 
-#include <iostream>
-
-#ifdef SYSAPI_UNIX
-
 int main(int argc, char **argv)
 {
-  DaemonApp app;
-  return app.run(argc, argv);
+  DaemonApp daemon(argc, argv);
+  return daemon.init(argc, argv);
 }
 
-#elif SYSAPI_WIN32
+#if SYSAPI_WIN32
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-  DaemonApp app;
-  return app.run(__argc, __argv);
+  return main(__argc, __argv);
 }
 
 #endif

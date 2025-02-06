@@ -52,6 +52,10 @@ namespace Ui {
 class MainWindow;
 }
 
+namespace deskflow::gui::ipc {
+class DaemonIpcClient;
+}
+
 class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
@@ -183,12 +187,13 @@ private:
   // Returns true if successful
   bool regenerateLocalFingerprints();
 
+  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-
   deskflow::gui::ConfigScopes &m_configScopes;
   AppConfig &m_appConfig;
   ServerConfig m_serverConfig;
@@ -200,7 +205,7 @@ private:
 
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
-  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;

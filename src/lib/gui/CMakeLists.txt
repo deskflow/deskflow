@@ -69,6 +69,8 @@ add_library(${target} STATIC
   ipc/QDataStreamProxy.h
   ipc/QIpcClient.cpp
   ipc/QIpcClient.h
+  ipc/DaemonIpcClient.cpp
+  ipc/DaemonIpcClient.h
   proxy/QNetworkAccessManagerProxy.cpp
   proxy/QNetworkAccessManagerProxy.h
   proxy/QProcessProxy.cpp

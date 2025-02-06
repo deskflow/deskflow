@@ -15,16 +15,16 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
-#include "common/constants.h"
+// #include "common/constants.h"
 #include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
+#include "ipc/DaemonIpcServer.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
-#include "ipc/IpcServer2.h"
 #include "ipc/IpcSettingMessage.h"
 #include "net/SocketMultiplexer.h"
 
@@ -50,6 +50,7 @@
 #include <string>
 
 using namespace std;
+using namespace deskflow::core;
 
 const char *const kLogFilename = "deskflow-daemon.log";
 
@@ -80,16 +81,16 @@ bool isServerCommandLine(const std::vector<std::string> &cmd)
 
 DaemonApp *DaemonApp::s_instance = nullptr;
 
-// int mainLoopStatic()
-// {
-//   DaemonApp::s_instance->mainLoop(true);
-//   return kExitSuccess;
-// }
+int mainLoopStatic()
+{
+  DaemonApp::s_instance->mainLoop(true);
+  return kExitSuccess;
+}
 
-// int unixMainLoopStatic(int, const char **)
-// {
-//   return mainLoopStatic();
-// }
+int unixMainLoopStatic(int, const char **)
+{
+  return mainLoopStatic();
+}
 
 #if SYSAPI_WIN32
 int winMainLoopStatic(int, const char **)
@@ -98,15 +99,8 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp(int argc, char **argv)
-    : QCoreApplication(argc, argv),
-      m_ipcServer2{new deskflow::ipc::IpcServer2(this)}
+DaemonApp::DaemonApp(int argc, char **argv) : QCoreApplication(argc, argv), m_ipcServer2{new ipc::DaemonIpcServer(this)}
 {
-  // HACK: init used to be run, which was the main loop.
-  // now it's used for arg parsing, install/uninstall, etc.
-  if (init(argc, argv) != kExitSuccess) {
-    exit(kExitFailed);
-  }
   s_instance = this;
 }
 
@@ -272,7 +266,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 void DaemonApp::foregroundError(const char *message)
 {
 #if SYSAPI_WIN32
-  MessageBox(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
+  MessageBoxA(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
 #elif SYSAPI_UNIX
   cerr << message << endl;
 #endif
