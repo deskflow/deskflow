@@ -52,10 +52,6 @@ namespace Ui {
 class MainWindow;
 }
 
-namespace deskflow::gui::ipc {
-class DaemonIpcClient;
-}
-
 class MainWindow : public QMainWindow
 {
   using CoreMode = deskflow::gui::CoreProcess::Mode;
@@ -189,7 +185,6 @@ private:
   deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
   QLocalServer *m_guiDupeChecker = nullptr;
-  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;

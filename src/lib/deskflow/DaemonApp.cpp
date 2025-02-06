@@ -106,12 +106,39 @@ DaemonApp::DaemonApp(int argc, char **argv) : QCoreApplication(argc, argv), m_ip
   if (init(argc, argv) != kExitSuccess) {
     exit(kExitFailed);
   }
+
+  connect(m_ipcServer2, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
+  connect(m_ipcServer2, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
+  connect(m_ipcServer2, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
+
   s_instance = this;
 }
 
 DaemonApp::~DaemonApp()
 {
   s_instance = nullptr;
+}
+
+void DaemonApp::handleElevateModeChanged(int mode)
+{
+  LOG((CLOG_DEBUG "elevate mode changed: %d", mode));
+  m_elevateMode = mode;
+}
+
+void DaemonApp::handleCommandChanged(const QString &command)
+{
+  LOG((CLOG_INFO "service command updated"));
+  m_command = command.toStdString();
+}
+
+void DaemonApp::handleRestartRequested()
+{
+  LOG((CLOG_INFO "service restart requested"));
+#if SYSAPI_WIN32
+  m_watchdog->setCommand(m_command, m_elevateMode);
+#else
+  LOG_ERR("restart not implemented on this platform");
+#endif
 }
 
 void DaemonApp::startAsync()

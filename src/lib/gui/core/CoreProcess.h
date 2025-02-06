@@ -20,6 +20,10 @@
 
 namespace deskflow::gui {
 
+namespace ipc {
+class DaemonIpcClient;
+}
+
 class CoreProcess : public QObject
 {
   using IServerConfig = deskflow::gui::IServerConfig;
@@ -169,6 +173,7 @@ private:
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
   QTimer m_retryTimer;
+  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 };
 
 } // namespace deskflow::gui

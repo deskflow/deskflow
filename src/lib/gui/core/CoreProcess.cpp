@@ -9,15 +9,16 @@
 #include "common/constants.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
-#include <qlogging.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
 #endif
 
 #include <QCoreApplication>
+#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QMessageBox>
@@ -25,7 +26,6 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimer>
-#include <QtGlobal>
 
 namespace deskflow::gui {
 
@@ -156,18 +156,19 @@ QString CoreProcess::Deps::getProfileRoot() const
 CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
     : m_appConfig(appConfig),
       m_serverConfig(serverConfig),
-      m_pDeps(deps)
+      m_pDeps(deps),
+      m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
 
-  connect(
-      &m_pDeps->ipcClient(), &QIpcClient::read, this, //
-      &CoreProcess::onIpcClientRead
-  );
+  // connect(
+  //     &m_pDeps->ipcClient(), &QIpcClient::read, this, //
+  //     &CoreProcess::onIpcClientRead
+  // );
 
-  connect(
-      &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
-      &CoreProcess::onIpcClientServiceReady
-  );
+  // connect(
+  //     &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
+  //     &CoreProcess::onIpcClientServiceReady
+  // );
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 
@@ -186,6 +187,8 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       qDebug("retry cancelled, process state is not retry pending");
     }
   });
+
+  m_daemonIpcClient->connectToServer();
 }
 
 void CoreProcess::onIpcClientServiceReady()
@@ -209,7 +212,7 @@ void CoreProcess::onIpcClientError(const QString &text) const
   if (m_appConfig.processMode() != ProcessMode::kService) {
     // if not meant to be in service mode and there is an ipc connection error,
     // then abandon the ipc client connection.
-    m_pDeps->ipcClient().disconnectFromHost();
+    // m_pDeps->ipcClient().disconnectFromHost();
   }
 }
 
@@ -290,17 +293,23 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
     qFatal("core process must be in starting state");
   }
 
-  if (!m_pDeps->ipcClient().isConnected()) {
-    // when service state changes, start will be called again.
-    qDebug("cannot start process, ipc not connected, connecting instead");
-    m_pDeps->ipcClient().connectToHost();
+  // if (!m_pDeps->ipcClient().isConnected()) {
+  //   // when service state changes, start will be called again.
+  //   qDebug("cannot start process, ipc not connected, connecting instead");
+  //   m_pDeps->ipcClient().connectToHost();
+  //   return;
+  // }
+
+  if (!m_daemonIpcClient->isConnected()) {
+    qFatal("cannot start process, daemon ipc not connected");
     return;
   }
 
   QString commandQuoted = makeQuotedArgs(app, args);
 
   qInfo("running command: %s", qPrintable(commandQuoted));
-  m_pDeps->ipcClient().sendCommand(commandQuoted, m_appConfig.elevateMode());
+  // m_pDeps->ipcClient().sendCommand(commandQuoted, m_appConfig.elevateMode());
+  m_daemonIpcClient->sendCommand(commandQuoted, m_appConfig.elevateMode());
   setProcessState(Started);
 }
 
