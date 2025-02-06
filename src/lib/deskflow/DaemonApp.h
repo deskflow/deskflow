@@ -37,11 +37,16 @@ class DaemonApp : public QObject
 public:
   DaemonApp(QCoreApplication *app);
   ~DaemonApp();
-  int init(int argc, char **argv);
-  void startAsync();
+  void init(int argc, char **argv);
+  void run();
+  void mainLoop(bool logToFile, bool foreground = false);
+
+signals:
+  void fatalError();
+  void serviceInstalled();
+  void serviceUninstalled();
 
 private:
-  void mainLoop(bool logToFile, bool foreground = false);
   void daemonize();
   void foregroundError(const char *message);
   std::string logFilename();
@@ -67,4 +72,5 @@ private:
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer2 = nullptr;
   std::string m_command = "";
   int m_elevateMode = 0;
+  bool m_foreground = false;
 };

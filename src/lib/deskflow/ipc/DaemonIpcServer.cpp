@@ -105,7 +105,7 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
       return;
     } else {
       LOG_INFO("ipc server got new elevate mode: %d", elevateMode);
-      Q_SIGNAL elevateModeChanged(elevateMode);
+      Q_EMIT elevateModeChanged(elevateMode);
       clientSocket->write(kAckMessage);
     }
   } else if (message.startsWith("command=")) {
@@ -115,12 +115,12 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
       clientSocket->write(kErrorMessage);
     } else {
       LOG_INFO("ipc server got new command: %s", command.toUtf8().constData());
-      Q_SIGNAL commandChanged(command);
+      Q_EMIT commandChanged(command);
       clientSocket->write(kAckMessage);
     }
   } else if (message == "restart") {
     LOG_INFO("ipc server got restart message");
-    Q_SIGNAL restartRequested();
+    Q_EMIT restartRequested();
     clientSocket->write(kAckMessage);
   } else {
     LOG_WARN("ipc server got unknown message: %s", message.toUtf8().constData());
