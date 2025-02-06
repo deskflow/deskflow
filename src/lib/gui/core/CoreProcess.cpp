@@ -12,6 +12,7 @@
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
+#include <qcontainerfwd.h>
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
@@ -399,6 +400,13 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   QString app;
   QStringList args;
+
+  if (mode() == Mode::Server) {
+    args << "server";
+  } else if (mode() == Mode::Client) {
+    args << "client";
+  }
+
   addGenericArgs(args, processMode);
 
   if (mode() == Mode::Server && !addServerArgs(args, app)) {
@@ -547,8 +555,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreServerName());
-
+  app = m_pDeps->appPath(coreProcessName());
   if (!m_pDeps->fileExists(app)) {
     qFatal("core server binary does not exist");
     return false;
@@ -601,8 +608,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 
 bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreClientName());
-
+  app = m_pDeps->appPath(coreProcessName());
   if (!m_pDeps->fileExists(app)) {
     qFatal("core client binary does not exist");
     return false;
@@ -759,6 +765,17 @@ QString CoreProcess::correctedInterface() const
 QString CoreProcess::correctedAddress() const
 {
   return wrapIpv6(m_address);
+}
+
+QString CoreProcess::coreProcessName() const
+{
+  static const auto binName = QStringLiteral("deskflow-core");
+#ifdef Q_OS_WIN
+  static const auto exeTemplate = QStringLiteral("%1.exe");
+  return exeTemplate.arg(binName);
+#else
+  return kCoreBinName;
+#endif
 }
 
 } // namespace deskflow::gui

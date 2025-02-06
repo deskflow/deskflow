@@ -157,6 +157,7 @@ private:
   void handleLogLines(const QString &text);
   QString correctedInterface() const;
   QString correctedAddress() const;
+  QString coreProcessName() const;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

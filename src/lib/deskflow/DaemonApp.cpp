@@ -30,7 +30,7 @@
 
 #if SYSAPI_WIN32
 
-#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchMiscWindows.h" // IWYU pragma: keep
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -44,6 +44,9 @@
 #include <iostream>
 
 #endif
+
+#include <QCoreApplication>
+#include <QObject>
 
 #include <memory>
 #include <sstream>
@@ -92,21 +95,15 @@ DaemonApp *DaemonApp::s_instance = nullptr;
 //   return mainLoopStatic();
 // }
 
-#if SYSAPI_WIN32
-int winMainLoopStatic(int, const char **)
-{
-  return ArchMiscWindows::runDaemon(mainLoopStatic);
-}
-#endif
+// #if SYSAPI_WIN32
+// int winMainLoopStatic(int, const char **)
+// {
+//   return ArchMiscWindows::runDaemon(mainLoopStatic);
+// }
+// #endif
 
-DaemonApp::DaemonApp(int argc, char **argv) : QCoreApplication(argc, argv), m_ipcServer2{new ipc::DaemonIpcServer(this)}
+DaemonApp::DaemonApp(QCoreApplication *app) : QObject(app), m_ipcServer2{new ipc::DaemonIpcServer(this)}
 {
-  // HACK: init used to be run, which was the main loop.
-  // now it's used for arg parsing, install/uninstall, etc.
-  if (init(argc, argv) != kExitSuccess) {
-    exit(kExitFailed);
-  }
-
   connect(m_ipcServer2, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
   connect(m_ipcServer2, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
   connect(m_ipcServer2, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
@@ -300,7 +297,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 void DaemonApp::foregroundError(const char *message)
 {
 #if SYSAPI_WIN32
-  MessageBox(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
+  MessageBoxA(NULL, message, "Deskflow daemon error", MB_OK | MB_ICONERROR);
 #elif SYSAPI_UNIX
   cerr << message << endl;
 #endif

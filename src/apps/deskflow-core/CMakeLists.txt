@@ -5,18 +5,33 @@
 
 set(target ${CMAKE_PROJECT_NAME}-core)
 
-add_executable(${target} "${target}.cpp")
 if(WIN32)
   # Generate rc file
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI combined server and client")
+
+  set(EXE_ICON "
+    IDI_DESKFLOW              ICON  DISCARDABLE  \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\"
+  ")
+
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
-  target_sources(${target} PRIVATE
-    "${target}.exe.manifest"
+  set(platform_sources
+    ${target}.exe.manifest
+    ${PROJECT_SOURCE_DIR}/src/apps/res/deskflow.ico
     ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc
   )
 endif()
 
+# Runs the program in the "invisible" Win32 subsystem instead of attaching a console.
+# If you want to run from CLI, then turn this off to see the console output.
+option(CORE_WINDOWS_SUBSYSTEM "Use Windows subsystem" ON)
+if (CORE_WINDOWS_SUBSYSTEM)
+  set(subsystem WIN32)
+endif()
+
+add_executable(${target} ${subsystem} ${platform_sources} ${target}.cpp)
+
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core)
 target_link_libraries(
   ${target}
   arch
@@ -29,7 +44,8 @@ target_link_libraries(
   platform
   server
   app
-  ${libs})
+  ${libs}
+  Qt6::Core)
 
 if(APPLE)
   set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS)

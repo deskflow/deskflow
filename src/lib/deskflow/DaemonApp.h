@@ -11,12 +11,14 @@
 #include <memory>
 #include <string>
 
-#include <QCoreApplication>
+#include <QObject>
+
+class QLocalServer;
+class QCoreApplication;
 
 class Event;
 class IpcLogOutputter;
 class FileLogOutputter;
-class QLocalServer;
 
 namespace deskflow::core::ipc {
 class DaemonIpcServer;
@@ -28,15 +30,17 @@ class MSWindowsWatchdog;
 
 extern const char *const kLogFilename;
 
-class DaemonApp : public QCoreApplication
+class DaemonApp : public QObject
 {
+  Q_OBJECT
+
 public:
-  DaemonApp(int argc, char **argv);
+  DaemonApp(QCoreApplication *app);
   ~DaemonApp();
+  int init(int argc, char **argv);
   void startAsync();
 
 private:
-  int init(int argc, char **argv);
   void mainLoop(bool logToFile, bool foreground = false);
   void daemonize();
   void foregroundError(const char *message);

@@ -456,24 +456,6 @@ QString AppConfig::lastVersion() const
   return m_LastVersion;
 }
 
-QString AppConfig::coreServerName() const
-{
-#ifdef Q_OS_WIN
-  return s_winExeTemplate.arg(s_CoreServerName);
-#else
-  return s_CoreServerName;
-#endif
-}
-
-QString AppConfig::coreClientName() const
-{
-#ifdef Q_OS_WIN
-  return s_winExeTemplate.arg(s_CoreClientName);
-#else
-  return s_CoreClientName;
-#endif
-}
-
 ElevateMode AppConfig::elevateMode() const
 {
   return m_ElevateMode;

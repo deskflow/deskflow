@@ -8,6 +8,7 @@ add_subdirectory(deskflow-core)
 
 option(BUILD_LEGACY "Build legacy binaries" OFF)
 if(BUILD_LEGACY)
+  message(WARNING "Legacy binaries are deprecated will be removed")
   add_subdirectory(deskflow-client)
   add_subdirectory(deskflow-server)
 endif(BUILD_LEGACY)

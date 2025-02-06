@@ -183,7 +183,7 @@ if(UNIX)
     ${libs})
 
   if(NOT APPLE)
-    find_package(Qt6 COMPONENTS DBus)
+    find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus)
     target_link_libraries(platform Qt6::DBus)
 
     link_wayland_libs()

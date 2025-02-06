@@ -9,6 +9,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/common.h"
 #include "common/constants.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/DaemonApp.h"
@@ -69,8 +70,13 @@ int main(int argc, char **argv)
 
   if (isDaemon(argc, argv)) {
     LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
-    DaemonApp app(argc, argv);
-    app.exec();
+    QCoreApplication app(argc, argv);
+    DaemonApp daemon(&app);
+    const auto result = daemon.init(argc, argv);
+    if (result != kExitSuccess) {
+      return result;
+    }
+    return QCoreApplication::exec();
   } else if (isServer(argc, argv)) {
     ServerApp app(&events);
     return app.run(argc, argv);

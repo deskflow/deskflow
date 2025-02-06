@@ -69,7 +69,7 @@ elseif(UNIX)
   )
 endif()
 
-add_library(${lib_name} STATIC  ${PLATFORM_CODE}
+add_library(${lib_name} STATIC ${PLATFORM_CODE}
   App.cpp
   App.h
   AppUtil.cpp
@@ -149,6 +149,9 @@ add_library(${lib_name} STATIC  ${PLATFORM_CODE}
   ipc/DaemonIpcServer.h
 )
 
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Network)
+target_link_libraries(${lib_name} PRIVATE Qt6::Core Qt6::Network)
+
 if(WIN32)
     target_compile_definitions(${lib_name} PUBLIC HAVE_WINTOAST)
     target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib} ${wintoast-lib})
@@ -160,9 +163,6 @@ target_include_directories(
       ${cli11_inc_dir}
       ${tomlPP_inc_dir}
 )
-
-find_package(Qt6 COMPONENTS Core Network)
-target_link_libraries(${lib_name} Qt6::Core Qt6::Network)
 
 if(UNIX)
   target_link_libraries(
