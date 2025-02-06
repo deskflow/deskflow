@@ -41,8 +41,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
   Log log;
   EventQueue events;
 
-  DaemonApp app(&events);
-  return app.run(__argc, __argv);
+  DaemonApp app(&events, __argc, __argv);
+  return DaemonApp::exec();
 }
 
 #endif
