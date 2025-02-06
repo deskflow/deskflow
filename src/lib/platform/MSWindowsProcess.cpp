@@ -113,12 +113,12 @@ DWORD MSWindowsProcess::waitForExit()
   return exitCode;
 }
 
-void MSWindowsProcess::shutdown(IpcServer &ipcServer, int timeout)
+void MSWindowsProcess::shutdown(int timeout)
 {
-  shutdown(m_info.hProcess, m_info.dwProcessId, ipcServer, timeout);
+  shutdown(m_info.hProcess, m_info.dwProcessId, timeout);
 }
 
-void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, IpcServer &ipcServer, int timeout)
+void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
 {
   LOG_DEBUG("shutting down process %d", pid);
 
@@ -128,9 +128,6 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, IpcServer &ipcServer, 
     LOG_DEBUG("process %d is already shutdown", pid);
     return;
   }
-
-  IpcShutdownMessage shutdown;
-  ipcServer.send(shutdown, IpcClientType::Node);
 
   // wait for process to exit gracefully.
   double start = ARCH->time();
