@@ -37,18 +37,26 @@ class DaemonApp : public QObject
   Q_OBJECT
 
 public:
-  DaemonApp(IEventQueue *events);
-  ~DaemonApp();
-  void init(int argc, char **argv);
+  void init(IEventQueue *events, int argc, char **argv);
   void run();
   void mainLoop(bool logToFile, bool foreground = false);
 
+  static DaemonApp &instance()
+  {
+    static DaemonApp instance; // NOSONAR - Meyers' Singleton
+    return instance;
+  }
+
 signals:
-  void fatalError();
+  void mainLoopFinished();
+  void fatalErrorOccurred();
   void serviceInstalled();
   void serviceUninstalled();
 
 private:
+  explicit DaemonApp();
+  ~DaemonApp() override;
+
   void daemonize();
   void foregroundError(const char *message);
   std::string logFilename();
@@ -58,9 +66,6 @@ private slots:
   void handleElevateModeChanged(int mode);
   void handleCommandChanged(const QString &command);
   void handleRestartRequested();
-
-public:
-  static DaemonApp *s_instance;
 
 #if SYSAPI_WIN32
   std::unique_ptr<MSWindowsWatchdog> m_watchdog;

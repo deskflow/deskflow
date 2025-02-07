@@ -81,11 +81,9 @@ bool isServerCommandLine(const std::vector<std::string> &cmd)
 
 } // namespace
 
-DaemonApp *DaemonApp::s_instance = nullptr;
-
 int mainLoopStatic()
 {
-  DaemonApp::s_instance->mainLoop(true);
+  DaemonApp::instance().mainLoop(true);
   return kExitSuccess;
 }
 
@@ -101,19 +99,14 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp(IEventQueue *events) : m_ipcServer{new ipc::DaemonIpcServer(this)}
+DaemonApp::DaemonApp() : m_ipcServer{new ipc::DaemonIpcServer(this)}
 {
-  s_instance = this;
-
   connect(m_ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
   connect(m_ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
   connect(m_ipcServer, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
 }
 
-DaemonApp::~DaemonApp()
-{
-  s_instance = nullptr;
-}
+DaemonApp::~DaemonApp() = default;
 
 void DaemonApp::run()
 {
@@ -132,6 +125,8 @@ void DaemonApp::run()
     ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
   }
+
+  Q_EMIT mainLoopFinished();
 }
 
 void DaemonApp::handleElevateModeChanged(int mode)
@@ -156,8 +151,14 @@ void DaemonApp::handleRestartRequested()
 #endif
 }
 
-void DaemonApp::init(int argc, char **argv)
+void DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR
 {
+  if (events == nullptr) {
+    throw XDeskflow("event queue not set");
+  }
+
+  m_events = events;
+
   bool isUninstalling = false;
   try {
     // default log level to system setting.
@@ -186,7 +187,7 @@ void DaemonApp::init(int argc, char **argv)
         stringstream ss;
         ss << "Unrecognized argument: " << arg;
         foregroundError(ss.str().c_str());
-        Q_EMIT fatalError();
+        Q_EMIT fatalErrorOccurred();
       }
     }
 
@@ -208,18 +209,22 @@ void DaemonApp::init(int argc, char **argv)
     } else {
       foregroundError(message.c_str());
     }
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   } catch (std::exception &e) {
     foregroundError(e.what());
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   } catch (...) {
     foregroundError("Unrecognized error.");
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   }
 }
 
 void DaemonApp::mainLoop(bool logToFile, bool foreground)
 {
+  if (m_events == nullptr) {
+    throw XDeskflow("event queue not set");
+  }
+
   try {
     DAEMON_RUNNING(true);
 

@@ -6,8 +6,8 @@
  */
 
 #include "arch/Arch.h"
-#include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/constants.h"
 #include "deskflow/DaemonApp.h"
 
 #include "arch/Arch.h"
@@ -43,13 +43,18 @@ int main(int argc, char **argv)
 
   QCoreApplication app(argc, argv);
 
-  // Must be on the heap, as we're moving it to a thread.
-  DaemonApp *pDaemon = new DaemonApp(&events);
+  const auto pDaemon = &DaemonApp::instance();
+  QObject::connect(pDaemon, &DaemonApp::mainLoopFinished, &app, &QCoreApplication::quit);
+  QObject::connect(pDaemon, &DaemonApp::fatalErrorOccurred, &app, &QCoreApplication::quit);
   QObject::connect(pDaemon, &DaemonApp::serviceInstalled, &app, &QCoreApplication::quit);
   QObject::connect(pDaemon, &DaemonApp::serviceUninstalled, &app, &QCoreApplication::quit);
-  pDaemon->init(argc, argv);
+  pDaemon->init(&events, argc, argv);
 
-  QThread *thread = new QThread();
+  // Thread must be on the heap, as the thread needs to be deleted only when the loop finishes,
+  // and not when we go out of scope.
+  // Deliberately do not set ownership of the thread to the daemon, as we want to delete the thread
+  // when the loop finishes, and not when the daemon is deleted.
+  QThread *thread = new QThread(); // NOSONAR
   pDaemon->moveToThread(thread);
   QObject::connect(thread, &QThread::started, pDaemon, &DaemonApp::run);
   QObject::connect(thread, &QThread::finished, pDaemon, &QObject::deleteLater);
