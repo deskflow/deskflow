@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2010 - 2018, 2024 - 2025 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2002 - 2007 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -22,8 +22,8 @@
 // make assert available since we use it a lot
 #include <assert.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include <stdlib.h> // IWYU pragma: keep
+#include <string.h> // IWYU pragma: keep
 
 // defined in Carbon
 #if !defined(__MACTYPES__)
@@ -35,10 +35,9 @@
 
 enum
 {
-  kExitSuccess = 0,     // successful completion
-  kExitFailed = 1,      // general failure
-  kExitTerminated = 2,  // killed by signal
-  kExitArgs = 3,        // bad arguments
-  kExitConfig = 4,      // cannot read configuration
-  kExitSubscription = 5 // subscription error
+  kExitSuccess = 0,    // successful completion
+  kExitFailed = 1,     // general failure
+  kExitTerminated = 2, // killed by signal
+  kExitArgs = 3,       // bad arguments
+  kExitConfig = 4,     // cannot read configuration
 };
