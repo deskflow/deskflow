@@ -342,4 +342,5 @@ private:
 signals:
   void tlsChanged();
   void screenNameChanged();
+  void logLevelChanged();
 };
