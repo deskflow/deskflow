@@ -34,14 +34,20 @@ class DaemonApp : public QObject
   Q_OBJECT
 
 public:
-  DaemonApp(QCoreApplication *app);
+  explicit DaemonApp();
   ~DaemonApp();
   void init(int argc, char **argv);
   void run();
   void mainLoop(bool logToFile, bool foreground = false);
 
+  static DaemonApp *instance()
+  {
+    return s_instance;
+  }
+
 signals:
-  void fatalError();
+  void mainLoopFinished();
+  void fatalErrorOccurred();
   void serviceInstalled();
   void serviceUninstalled();
 
@@ -56,7 +62,7 @@ private slots:
   void handleCommandChanged(const QString &command);
   void handleRestartRequested();
 
-public:
+private:
   static DaemonApp *s_instance;
 
 #if SYSAPI_WIN32

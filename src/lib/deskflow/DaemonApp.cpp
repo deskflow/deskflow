@@ -87,7 +87,7 @@ DaemonApp *DaemonApp::s_instance = nullptr;
 
 int mainLoopStatic()
 {
-  DaemonApp::s_instance->mainLoop(true);
+  DaemonApp::instance()->mainLoop(true);
   return kExitSuccess;
 }
 
@@ -103,7 +103,7 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp(QCoreApplication *app) : QObject(app), m_ipcServer2{new ipc::DaemonIpcServer(this)}
+DaemonApp::DaemonApp() : m_ipcServer2{new ipc::DaemonIpcServer(this)}
 {
   s_instance = this;
 
@@ -134,6 +134,8 @@ void DaemonApp::run()
     ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
   }
+
+  Q_EMIT mainLoopFinished();
 }
 
 void DaemonApp::handleElevateModeChanged(int mode)
@@ -158,18 +160,12 @@ void DaemonApp::handleRestartRequested()
 #endif
 }
 
-void DaemonApp::init(int argc, char **argv)
+void DaemonApp::init(int argc, char **argv) // NOSONAR
 {
   m_events = std::make_unique<EventQueue>();
 
   bool uninstall = false;
   try {
-#if SYSAPI_WIN32
-    // TODO: maybe we should only add this if not using /f?
-    // sends debug messages to visual studio console window.
-    CLOG->insert(new MSWindowsDebugOutputter());
-#endif
-
     // default log level to system setting.
     if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
       CLOG->setFilter(logLevel.c_str());
@@ -196,8 +192,16 @@ void DaemonApp::init(int argc, char **argv)
         stringstream ss;
         ss << "Unrecognized argument: " << arg;
         foregroundError(ss.str().c_str());
-        Q_EMIT fatalError();
+        Q_EMIT fatalErrorOccurred();
       }
+    }
+
+    if (!m_foreground) {
+#if SYSAPI_WIN32
+      // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
+      // in that case, but is accessible when running in the foreground.
+      CLOG->insert(new MSWindowsDebugOutputter());
+#endif
     }
 
   } catch (XArch &e) {
@@ -211,13 +215,13 @@ void DaemonApp::init(int argc, char **argv)
     } else {
       foregroundError(message.c_str());
     }
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   } catch (std::exception &e) {
     foregroundError(e.what());
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   } catch (...) {
     foregroundError("Unrecognized error.");
-    Q_EMIT fatalError();
+    Q_EMIT fatalErrorOccurred();
   }
 }
 

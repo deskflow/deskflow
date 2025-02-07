@@ -533,8 +533,37 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
   closeProcessHandles(pid);
 }
 
+HANDLE openProcessForKill(PROCESSENTRY32 entry)
+{
+  // pid 0 is 'system idle process'
+  if (entry.th32ProcessID == 0)
+    return nullptr;
+
+  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+    return nullptr;
+  }
+
+  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+  if (handle == nullptr) {
+    LOG((CLOG_ERR "could not open process handle for kill"));
+    throw XArch(new XArchEvalWindows);
+  }
+
+  // only shut down if not current process (daemon is now the same unified binary).
+  if (entry.th32ProcessID == GetCurrentProcessId()) {
+    CloseHandle(handle);
+    return nullptr;
+  }
+
+  return handle;
+}
+
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
+  LOG_DEBUG("shutting down existing processes");
+
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
   if (snapshot == INVALID_HANDLE_VALUE) {
@@ -557,17 +586,11 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   DWORD pid = 0;
   while (gotEntry) {
 
-    // make sure we're not checking the system process
-    if (entry.th32ProcessID != 0) {
-
-      if (_stricmp(entry.szExeFile, "deskflow-client.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-server.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
-
-        HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-        shutdownProcess(handle, entry.th32ProcessID, 10);
-        CloseHandle(handle);
-      }
+    HANDLE handle = openProcessForKill(entry);
+    if (handle) {
+      LOG((CLOG_INFO "shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID));
+      shutdownProcess(handle, entry.th32ProcessID, 10);
+      CloseHandle(handle);
     }
 
     // now move on to the next entry (if we're not at the end)
@@ -578,7 +601,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
       if (err != ERROR_NO_MORE_FILES) {
 
         // only worry about error if it's not the end of the snapshot
-        LOG((CLOG_ERR "could not get subsiquent process entry"));
+        LOG((CLOG_ERR "could not get next process entry"));
         throw XArch(new XArchEvalWindows);
       }
     }
