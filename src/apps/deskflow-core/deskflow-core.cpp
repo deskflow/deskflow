@@ -14,13 +14,14 @@
 #include "deskflow/ClientApp.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ServerApp.h"
-#include <qobject.h>
+#include "deskflow/ipc/DaemonIpcServer.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
 #include <QCoreApplication>
+#include <QObject>
 #include <QThread>
 
 #include <filesystem>
@@ -30,8 +31,6 @@
 
 void showHelp(int argc, char **argv)
 {
-  std::cout << "Usage: " << kCoreBinName << " <server | client> [...options]" << std::endl;
-  std::cout << "server - start core as server" << std::endl;
   const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
   std::cout << "Usage: " << binName << " <mode> [...options]" << std::endl;
 
@@ -61,6 +60,8 @@ bool isDaemon(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+  using namespace deskflow::core;
+
 #if SYSAPI_WIN32
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
@@ -73,30 +74,59 @@ int main(int argc, char **argv)
 
   if (isDaemon(argc, argv)) {
     LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
-    QCoreApplication app(argc, argv);
 
-    // Daemon app must be on the heap, as we're moving it to a thread.
-    // Deliberately do not set ownership of the daemon to the app, as this would prevent us
-    // being able to move it to a thread and delete it when the thread finishes.
+    // Daemon and thread must be heap-allocated to allow thread migration and deferred deletion.
+    // Avoid setting Qt ownership to prevent premature deletion.
     auto *pDaemon = new DaemonApp(); // NOSONAR
-    QObject::connect(pDaemon, &DaemonApp::mainLoopFinished, &app, &QCoreApplication::quit);
-    QObject::connect(pDaemon, &DaemonApp::fatalErrorOccurred, &app, &QCoreApplication::quit);
-    QObject::connect(pDaemon, &DaemonApp::serviceInstalled, &app, &QCoreApplication::quit);
-    QObject::connect(pDaemon, &DaemonApp::serviceUninstalled, &app, &QCoreApplication::quit);
-    pDaemon->init(argc, argv);
+    const auto initResult = pDaemon->init(argc, argv);
 
-    // Thread must be on the heap, as the thread needs to be deleted only when the loop finishes,
-    // and not when we go out of scope.
-    // Deliberately do not set ownership of the thread to the daemon, as we want to delete the thread
-    // when the loop finishes, and not when the daemon is deleted.
-    QThread *thread = new QThread(); // NOSONAR
-    pDaemon->moveToThread(thread);
-    QObject::connect(thread, &QThread::started, pDaemon, &DaemonApp::run);
-    QObject::connect(thread, &QThread::finished, pDaemon, &QObject::deleteLater);
-    QObject::connect(thread, &QThread::finished, thread, &QThread::deleteLater);
-    thread->start();
+    switch (initResult) {
+      using enum DaemonApp::InitResult;
 
-    return QCoreApplication::exec();
+    case StartDaemon: {
+      QCoreApplication app(argc, argv);
+
+      auto *pDaemonThread = new QThread(); // NOSONAR
+      pDaemon->moveToThread(pDaemonThread);
+
+      QObject::connect(pDaemonThread, &QThread::started, pDaemon, &DaemonApp::run);
+      QObject::connect(pDaemonThread, &QThread::finished, pDaemon, &QObject::deleteLater);
+      QObject::connect(pDaemonThread, &QThread::finished, pDaemonThread, &QThread::deleteLater);
+      QObject::connect(pDaemonThread, &QThread::finished, QCoreApplication::instance(), &QCoreApplication::quit);
+
+      // The daemon app is on it's own thread which doesn't have a Qt event loop, so we need to use direct connection.
+      auto *ipcServer = new ipc::DaemonIpcServer(&app); // NOSONAR
+      QObject::connect(
+          ipcServer, &ipc::DaemonIpcServer::logLevelChanged, pDaemon, &DaemonApp::setLogLevel, //
+          Qt::DirectConnection
+      );
+      QObject::connect(
+          ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, pDaemon, &DaemonApp::setElevate, //
+          Qt::DirectConnection
+      );
+      QObject::connect(
+          ipcServer, &ipc::DaemonIpcServer::commandChanged, pDaemon, &DaemonApp::setCommand, //
+          Qt::DirectConnection
+      );
+      QObject::connect(
+          ipcServer, &ipc::DaemonIpcServer::restartRequested, pDaemon, &DaemonApp::restartCoreProcess, //
+          Qt::DirectConnection
+      );
+      pDaemonThread->start();
+      return QCoreApplication::exec();
+    }
+
+    case ArgsError:
+      showHelp(argc, argv);
+      return kExitArgs;
+
+    case FatalError:
+      return kExitFailed;
+
+    default:
+      return kExitSuccess;
+    }
+
   } else if (isServer(argc, argv)) {
     ServerApp app(&events);
     return app.run(argc, argv);
@@ -104,8 +134,9 @@ int main(int argc, char **argv)
     ClientApp app(&events);
     return app.run(argc, argv);
   } else {
-    showHelp();
+    showHelp(argc, argv);
+    return kExitArgs;
   }
 
-  return 0;
+  return kExitSuccess;
 }
