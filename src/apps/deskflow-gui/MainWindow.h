@@ -99,7 +99,7 @@ private:
   void configScopesSaving();
   void appConfigTlsChanged();
   void appConfigScreenNameChanged();
-  void appConfigInvertConnection();
+  void appConfigInvertConnectionChanged();
   void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);

@@ -40,7 +40,6 @@ void raiseCriticalDialog()
 
 void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType type)
 {
-
   auto title = type == QtFatalMsg ? "Fatal error" : "Critical error";
   QString text;
   if (type == QtFatalMsg) {
@@ -96,7 +95,6 @@ QString fileLine(const QMessageLogContext &context)
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
-
   const auto fileLine = messages::fileLine(context);
   Logger::instance().handleMessage(type, fileLine, message);
 

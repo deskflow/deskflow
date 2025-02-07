@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVariant>
+
 #include <functional>
 
 using namespace deskflow::gui;
@@ -660,7 +661,10 @@ void AppConfig::setNetworkInterface(const QString &s)
 
 void AppConfig::setLogLevel(int i)
 {
+  const auto changed = (m_LogLevel != i);
   m_LogLevel = i;
+  if (changed)
+    Q_EMIT logLevelChanged();
 }
 
 void AppConfig::setLogToFile(bool b)
