@@ -16,6 +16,9 @@ namespace deskflow::core::ipc {
 
 DaemonIpcServer::DaemonIpcServer(QObject *parent) : QObject(parent), m_server{new QLocalServer(this)}
 {
+  // Daemon runs as system, but GUI runs as regular user, so we need to allow world access.
+  m_server->setSocketOptions(QLocalServer::WorldAccessOption);
+
   connect(m_server, &QLocalServer::newConnection, this, &DaemonIpcServer::handleNewConnection);
   m_server->removeServer(kDaemonIpcName);
   if (m_server->listen(kDaemonIpcName)) {
