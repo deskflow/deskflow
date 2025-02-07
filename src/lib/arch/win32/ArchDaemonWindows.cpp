@@ -603,16 +603,16 @@ void ArchDaemonWindows::installDaemon()
 {
   // install default daemon if not already installed.
   if (!isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
-    char path[MAX_PATH];
-    GetModuleFileName(ArchMiscWindows::instanceWin32(), path, MAX_PATH);
+    char binPath[MAX_PATH];
+    GetModuleFileName(ArchMiscWindows::instanceWin32(), binPath, MAX_PATH);
 
     // wrap in quotes so a malicious user can't start \Program.exe as admin.
-    std::stringstream ss;
-    ss << '"';
-    ss << path;
-    ss << '"';
+    std::stringstream command;
+    command << '"';
+    command << binPath;
+    command << '"' << " daemon";
 
-    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, ss.str().c_str(), "", "");
+    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, command.str().c_str(), "", "");
   }
 
   start(DEFAULT_DAEMON_NAME);
