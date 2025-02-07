@@ -23,24 +23,25 @@
 #include <QCoreApplication>
 #include <QThread>
 
+#include <filesystem>
 #include <iostream>
 
 #define TEST_DAEMON
 
-const auto kCoreBinName = "deskflow-core";
-
-void showHelp()
+void showHelp(int argc, char **argv)
 {
   std::cout << "Usage: " << kCoreBinName << " <server | client> [...options]" << std::endl;
   std::cout << "server - start core as server" << std::endl;
-  std::cout << "client - start core as client" << std::endl;
+  const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
+  std::cout << "Usage: " << binName << " <mode> [...options]" << std::endl;
 
 #ifdef SYSAPI_WIN32
-  std::cout << "daemon - start as a demon (Windows only)" << std::endl;
-  std::cout << "use " << kCoreBinName << " <server|client|daemon> --help for more information." << std::endl;
+  std::cout << "Modes: server, client, daemon" << std::endl;
 #else
-  std::cout << "use " << kCoreBinName << " <server|client> --help for more information." << std::endl;
+  std::cout << "Modes: server, client" << std::endl;
 #endif
+
+  std::cout << "Use " << binName << " <mode> --help for mode specific help." << std::endl;
 }
 
 bool isServer(int argc, char **argv)
