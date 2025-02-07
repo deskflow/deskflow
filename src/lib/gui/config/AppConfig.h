@@ -346,4 +346,5 @@ signals:
   void tlsChanged();
   void screenNameChanged();
   void invertConnectionChanged();
+  void logLevelChanged();
 };

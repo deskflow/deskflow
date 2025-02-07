@@ -260,6 +260,16 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
   }
 }
 
+void CoreProcess::applyLogLevel()
+{
+  if (m_appConfig.processMode() == ProcessMode::kService) {
+    qDebug() << "setting daemon log level:" << m_appConfig.logLevelText();
+    if (!m_daemonIpcClient->sendLogLevel(m_appConfig.logLevelText())) {
+      qCritical() << "failed to set daemon ipc log level";
+    }
+  }
+}
+
 void CoreProcess::startForegroundProcess(const QString &app, const QStringList &args)
 {
   using enum ProcessState;
@@ -298,15 +308,16 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
   //   return;
   // }
 
-  if (!m_daemonIpcClient->isConnected()) {
-    m_daemonIpcClient->connectToServer();
-  }
-
   QString commandQuoted = makeQuotedArgs(app, args);
 
   qInfo("running command: %s", qPrintable(commandQuoted));
   // m_pDeps->ipcClient().sendCommand(commandQuoted, m_appConfig.elevateMode());
-  m_daemonIpcClient->sendCommand(commandQuoted, m_appConfig.elevateMode());
+
+  if (!m_daemonIpcClient->sendCommand(commandQuoted, m_appConfig.elevateMode())) {
+    qCritical("aborting process start, ipc connect failed");
+    return;
+  }
+
   setProcessState(Started);
 }
 

@@ -90,6 +90,7 @@ public:
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
   void restart();
   void cleanup();
+  void applyLogLevel();
 
   // getters
   Mode mode() const
