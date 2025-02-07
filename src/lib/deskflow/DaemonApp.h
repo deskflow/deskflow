@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -34,33 +34,38 @@ class DaemonApp : public QObject
   Q_OBJECT
 
 public:
+  enum class InitResult
+  {
+    Installed,
+    Uninstalled,
+    StartDaemon,
+    ShowHelp,
+    ArgsError,
+    FatalError,
+  };
+
   explicit DaemonApp();
   ~DaemonApp();
-  void init(int argc, char **argv);
+  InitResult init(int argc, char **argv);
   void run();
   void mainLoop(bool logToFile, bool foreground = false);
+  void restartCoreProcess();
+
+  // Setters
+  void setLogLevel(const QString &logLevel);
+  void setElevate(bool elevate);
+  void setCommand(const QString &command);
 
   static DaemonApp *instance()
   {
     return s_instance;
   }
 
-signals:
-  void mainLoopFinished();
-  void fatalErrorOccurred();
-  void serviceInstalled();
-  void serviceUninstalled();
-
 private:
   void daemonize();
-  void foregroundError(const char *message);
+  void handleError(const char *message);
   std::string logFilename();
-  void handleIpcMessage(const Event &, void *);
-
-private slots:
-  void handleElevateModeChanged(int mode);
-  void handleCommandChanged(const QString &command);
-  void handleRestartRequested();
+  void handleIpcMessage(const Event &e, void *);
 
 private:
   static DaemonApp *s_instance;
@@ -76,6 +81,6 @@ private:
   std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer2 = nullptr;
   std::string m_command = "";
-  int m_elevateMode = 0;
+  bool m_elevate = false;
   bool m_foreground = false;
 };
