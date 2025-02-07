@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QLocalSocket>
 #include <QObject>
+#include <QString>
 
 namespace deskflow::gui::ipc {
 
@@ -20,27 +21,27 @@ DaemonIpcClient::DaemonIpcClient(QObject *parent) : QObject(parent), m_socket{ne
 {
 }
 
-DaemonIpcClient::~DaemonIpcClient()
-{
-}
-
-void DaemonIpcClient::connectToServer()
+bool DaemonIpcClient::connectToServer()
 {
   qInfo("connecting to daemon ipc");
 
   m_socket->connectToServer(kDaemonIpcName);
   if (!m_socket->waitForConnected(kTimeout)) {
-    qCritical() << "ipc client failed to connect to server:" << kDaemonIpcName;
-    return;
+    qWarning() << "ipc client failed to connect to server:" << kDaemonIpcName;
+    return false;
   }
 
-  sendMessage("hello", "hello", false);
+  if (!sendMessage("hello", "hello", false)) {
+    qWarning() << "ipc client failed to send hello";
+    return false;
+  }
 
   connect(m_socket, &QLocalSocket::disconnected, this, &DaemonIpcClient::handleDisconnected);
   connect(m_socket, &QLocalSocket::errorOccurred, this, &DaemonIpcClient::handleErrorOccurred);
 
   m_connected = true;
   qInfo() << "ipc client connected to server:" << kDaemonIpcName;
+  return true;
 }
 
 void DaemonIpcClient::handleDisconnected()
@@ -55,50 +56,80 @@ void DaemonIpcClient::handleErrorOccurred()
   m_connected = false;
 }
 
-void DaemonIpcClient::sendCommand(const QString &command, ElevateMode elevateMode)
+bool DaemonIpcClient::keepAlive()
 {
-  sendMessage("elevate=" + QString::number(static_cast<int>(elevateMode)));
-  sendMessage("command=" + command);
-  sendMessage("restart");
+  if (!isConnected() && !connectToServer()) {
+    qWarning() << "ipc client keep alive failed to connect";
+    return false;
+  }
+
+  if (!sendMessage("noop")) {
+    qWarning() << "ipc client keep alive ping failed";
+    m_connected = false;
+    return false;
+  }
+
+  return true;
 }
 
-void DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
+bool DaemonIpcClient::sendLogLevel(const QString &logLevel)
+{
+  if (!keepAlive())
+    return false;
+
+  sendMessage("logLevel=" + logLevel);
+  return true;
+}
+
+bool DaemonIpcClient::sendCommand(const QString &command, ElevateMode elevateMode)
+{
+  if (!keepAlive())
+    return false;
+
+  sendMessage("elevate=" + (elevateMode == ElevateMode::kAlways ? QStringLiteral("yes") : QStringLiteral("no")));
+  sendMessage("command=" + command);
+  sendMessage("restart");
+  return true;
+}
+
+bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
 {
   if (expectConnected && !m_connected) {
-    qCritical() << "cannot send command, ipc not connected";
-    return;
+    qWarning() << "cannot send command, ipc not connected";
+    return false;
   }
 
   QByteArray messageData = message.toUtf8() + "\n";
   m_socket->write(messageData);
   if (!m_socket->waitForBytesWritten(kTimeout)) {
-    qCritical() << "ipc client failed to write command";
-    return;
+    qWarning() << "ipc client failed to write command";
+    return false;
   }
 
   if (!m_socket->waitForReadyRead(kTimeout)) {
-    qCritical() << "ipc client failed to read response";
-    return;
+    qWarning() << "ipc client failed to read response";
+    return false;
   }
 
   QByteArray response = m_socket->readAll();
   if (response.isEmpty()) {
-    qCritical() << "ipc client got empty response";
-    return;
+    qWarning() << "ipc client got empty response";
+    return false;
   }
 
   QString responseData = QString::fromUtf8(response);
   if (responseData.isEmpty()) {
-    qCritical() << "ipc client failed to convert response to string";
-    return;
+    qWarning() << "ipc client failed to convert response to string";
+    return false;
   }
 
   if (responseData != expectAck + "\n") {
-    qCritical() << "ipc client got unexpected response: " << responseData;
-    return;
+    qWarning() << "ipc client got unexpected response: " << responseData;
+    return false;
   }
 
-  qInfo() << "ipc client sent message: " << messageData;
+  qDebug() << "ipc client sent message: " << messageData;
+  return true;
 }
 
 } // namespace deskflow::gui::ipc
