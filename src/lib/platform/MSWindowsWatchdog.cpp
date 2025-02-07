@@ -168,11 +168,17 @@ void MSWindowsWatchdog::mainLoop(void *)
   LOG_DEBUG("starting main loop");
   shutdownExistingProcesses();
 
+  // the SendSAS function is used to send a sas (secure attention sequence) to the
+  // winlogon process. this is used to switch to the login screen.
   SendSas sendSasFunc = NULL;
   HINSTANCE sasLib = LoadLibrary("sas.dll");
   if (sasLib) {
-    LOG((CLOG_DEBUG "loaded sas.dll, used to simulate ctrl-alt-del"));
+    LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
     sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+    if (!sendSasFunc) {
+      LOG_ERR("could not find SendSAS function in sas.dll");
+      throw XArch(new XArchEvalWindows());
+    }
   }
 
   SECURITY_ATTRIBUTES saAttr;
@@ -227,23 +233,20 @@ void MSWindowsWatchdog::mainLoop(void *)
         LOG((CLOG_WARN "detected application not running, pid=%d", m_process->info().dwProcessId));
       }
 
-      if (sendSasFunc != NULL) {
+      HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+      if (sendSasEvent != NULL) {
 
-        HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-        if (sendSasEvent != NULL) {
-
-          // use SendSAS event to wait for next session (timeout 1 second).
-          if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-            LOG((CLOG_DEBUG "calling SendSAS"));
-            sendSasFunc(FALSE);
-          }
-
-          CloseHandle(sendSasEvent);
-          continue;
+        // use SendSAS event to wait for next session (timeout 1 second).
+        if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+          LOG_DEBUG("calling SendSAS from sas.dll");
+          sendSasFunc(FALSE);
         }
+
+        CloseHandle(sendSasEvent);
+      } else {
+        LOG((CLOG_ERR "could not create SendSAS event"));
       }
 
-      // if the sas event failed, wait by sleeping.
       ARCH->sleep(1);
 
     } catch (std::exception &e) {
