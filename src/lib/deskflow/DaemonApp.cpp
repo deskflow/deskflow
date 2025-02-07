@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -19,7 +19,6 @@
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ServerArgs.h"
-#include "ipc/DaemonIpcServer.h"
 #include "ipc/IpcClientProxy.h"
 #include "ipc/IpcLogOutputter.h"
 #include "ipc/IpcMessage.h"
@@ -37,16 +36,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#elif SYSAPI_UNIX
-
-#include <iostream>
-
 #endif
 
-#include <QCoreApplication>
-#include <QObject>
-#include <QThread>
-
+#include <filesystem>
+#include <iostream>
 #include <memory>
 #include <sstream>
 #include <string>
@@ -99,13 +92,13 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp() : m_ipcServer{new ipc::DaemonIpcServer(this)}
+void showHelp(int argc, char **argv) // NOSONAR - CLI args
 {
-  connect(m_ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::handleElevateModeChanged);
-  connect(m_ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::handleCommandChanged);
-  connect(m_ipcServer, &ipc::DaemonIpcServer::restartRequested, this, &DaemonApp::handleRestartRequested);
+  const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
+  std::cout << "Usage: " << binName << " daemon [-f|--foreground] [--install] [--uninstall]" << std::endl;
 }
 
+DaemonApp::DaemonApp() = default;
 DaemonApp::~DaemonApp() = default;
 
 void DaemonApp::run()
@@ -125,34 +118,62 @@ void DaemonApp::run()
     ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
   }
-
-  Q_EMIT mainLoopFinished();
 }
 
-void DaemonApp::handleElevateModeChanged(int mode)
+void DaemonApp::saveLogLevel(const QString &logLevel) const
 {
-  LOG_DEBUG("elevate mode changed: %d", mode);
-  m_elevateMode = mode;
+  LOG_DEBUG("log level changed: %s", logLevel.toUtf8().constData());
+  CLOG->setFilter(logLevel.toUtf8().constData());
+
+  try {
+    // saves setting for next time the daemon starts.
+    ARCH->setting("LogLevel", logLevel.toStdString());
+  } catch (XArch &e) {
+    LOG((CLOG_ERR "failed to save log level setting: %s", e.what()));
+  }
 }
 
-void DaemonApp::handleCommandChanged(const QString &command)
+void DaemonApp::setElevate(bool elevate)
+{
+  LOG((CLOG_DEBUG "elevate value changed: %s", elevate ? "yes" : "no"));
+  m_elevate = elevate;
+
+  try {
+    // saves setting for next time the daemon starts.
+    ARCH->setting("Elevate", std::string(elevate ? "1" : "0"));
+  } catch (XArch &e) {
+    LOG((CLOG_ERR "failed to save elevate setting: %s", e.what()));
+  }
+}
+
+void DaemonApp::setCommand(const QString &command)
 {
   LOG_DEBUG("service command updated");
   m_command = command.toStdString();
+
+  try {
+    // saves setting for next time the daemon starts.
+    ARCH->setting("Command", command.toStdString());
+  } catch (XArch &e) {
+    LOG((CLOG_ERR "failed to save command setting: %s", e.what()));
+  }
 }
 
-void DaemonApp::handleRestartRequested()
+void DaemonApp::restartCoreProcess()
 {
   LOG_DEBUG("service restart requested");
+
 #if SYSAPI_WIN32
-  m_watchdog->setCommand(m_command, m_elevateMode);
+  m_watchdog->setCommand(m_command, m_elevate);
 #else
   LOG_ERR("restart not implemented on this platform");
 #endif
 }
 
-void DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR
+DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR - CLI args
 {
+  using enum InitResult;
+
   if (events == nullptr) {
     throw XDeskflow("event queue not set");
   }
@@ -168,26 +189,30 @@ void DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR
     for (int i = 1; i < argc; ++i) {
       string arg(argv[i]);
 
-      if (arg == "-f") {
+      if (arg == "-h" || arg == "--help") {
+        showHelp(argc, argv);
+        return ShowHelp;
+      } else if (arg == "-f" || arg == "--foreground") {
         m_foreground = true;
       }
 #if SYSAPI_WIN32
       else if (arg == "--install" || arg == "/install") {
         LOG((CLOG_NOTE "installing windows daemon"));
         ARCH->installDaemon();
-        Q_EMIT serviceInstalled();
+        return Installed;
       } else if (arg == "--uninstall" || arg == "/uninstall") {
         LOG((CLOG_NOTE "uninstalling windows daemon"));
         isUninstalling = true;
         ARCH->uninstallDaemon();
-        Q_EMIT serviceUninstalled();
+        return Uninstalled;
       }
 #endif
       else {
         stringstream ss;
         ss << "Unrecognized argument: " << arg;
-        foregroundError(ss.str().c_str());
-        Q_EMIT fatalErrorOccurred();
+        handleError(ss.str().c_str());
+        showHelp(argc, argv);
+        return ArgsError;
       }
     }
 
@@ -198,6 +223,9 @@ void DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR
       CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
 #endif
     }
+
+    return StartDaemon;
+
   } catch (XArch &e) {
     std::string message = e.what();
     if (isUninstalling && (message.find("The service has not been started") != std::string::npos)) {
@@ -207,16 +235,15 @@ void DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR
       // horribly wrong, but it's just the service manager reporting a false
       // positive (the service has actually shut down in most cases).
     } else {
-      foregroundError(message.c_str());
+      handleError(message.c_str());
     }
-    Q_EMIT fatalErrorOccurred();
   } catch (std::exception &e) {
-    foregroundError(e.what());
-    Q_EMIT fatalErrorOccurred();
+    handleError(e.what());
   } catch (...) {
-    foregroundError("Unrecognized error.");
-    Q_EMIT fatalErrorOccurred();
+    handleError("Unrecognized error.");
   }
+
+  return FatalError;
 }
 
 void DaemonApp::mainLoop(bool logToFile, bool foreground)
@@ -268,12 +295,14 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
   }
 }
 
-void DaemonApp::foregroundError(const char *message)
+void DaemonApp::handleError(const char *message)
 {
+  // Always print error to stdout in case run as CLI program.
+  LOG_ERR("%s", message);
+
 #if SYSAPI_WIN32
-  MessageBoxA(NULL, message, "Deskflow Service", MB_OK | MB_ICONERROR);
-#elif SYSAPI_UNIX
-  cerr << message << endl;
+  // Show a message box for when run from MSI in Win32 subsystem.
+  MessageBoxA(nullptr, message, "Deskflow daemon error", MB_OK | MB_ICONERROR);
 #endif
 }
 

@@ -100,15 +100,27 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
   LOG_DEBUG("ipc server got message: %s", message.toUtf8().constData());
   if (message == "hello") {
     clientSocket->write("hello\n");
+  } else if (message == "noop") {
+    clientSocket->write(kAckMessage);
+  } else if (message.startsWith("logLevel=")) {
+    const auto logLevel = message.split('=')[1];
+    if (logLevel.isEmpty()) {
+      LOG_ERR("ipc server got empty log level");
+      clientSocket->write(kErrorMessage);
+    } else {
+      LOG_DEBUG("ipc server got new log level: %s", logLevel.toUtf8().constData());
+      Q_EMIT logLevelChanged(logLevel);
+      clientSocket->write(kAckMessage);
+    }
   } else if (message.startsWith("elevate=")) {
-    const auto elevateMode = message.split('=')[1].toInt();
-    if (elevateMode < 0 || elevateMode > 2) {
-      LOG_ERR("ipc server got invalid elevate mode: %d", elevateMode);
+    const auto elevateMode = message.split('=')[1];
+    if (elevateMode != "yes" && elevateMode != "no") {
+      LOG_ERR("ipc server got invalid elevate value: %s", elevateMode.toUtf8().constData());
       clientSocket->write(kErrorMessage);
       return;
     } else {
-      LOG_DEBUG("ipc server got new elevate mode: %d", elevateMode);
-      Q_EMIT elevateModeChanged(elevateMode);
+      LOG_DEBUG("ipc server got new elevate value: %s", elevateMode.toUtf8().constData());
+      Q_EMIT elevateModeChanged(elevateMode == "yes");
       clientSocket->write(kAckMessage);
     }
   } else if (message.startsWith("command=")) {

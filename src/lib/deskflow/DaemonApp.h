@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -37,9 +37,23 @@ class DaemonApp : public QObject
   Q_OBJECT
 
 public:
-  void init(IEventQueue *events, int argc, char **argv);
+  enum class InitResult
+  {
+    Installed,
+    Uninstalled,
+    StartDaemon,
+    ShowHelp,
+    ArgsError,
+    FatalError,
+  };
+
+  InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
   void mainLoop(bool logToFile, bool foreground = false);
+  void restartCoreProcess();
+  void saveLogLevel(const QString &logLevel) const;
+  void setElevate(bool elevate);
+  void setCommand(const QString &command);
 
   static DaemonApp &instance()
   {
@@ -47,25 +61,14 @@ public:
     return instance;
   }
 
-signals:
-  void mainLoopFinished();
-  void fatalErrorOccurred();
-  void serviceInstalled();
-  void serviceUninstalled();
-
 private:
   explicit DaemonApp();
   ~DaemonApp() override;
 
   void daemonize();
-  void foregroundError(const char *message);
+  void handleError(const char *message);
   std::string logFilename();
-  void handleIpcMessage(const Event &, void *);
-
-private slots:
-  void handleElevateModeChanged(int mode);
-  void handleCommandChanged(const QString &command);
-  void handleRestartRequested();
+  void handleIpcMessage(const Event &e, void *);
 
 #if SYSAPI_WIN32
   std::unique_ptr<MSWindowsWatchdog> m_watchdog;
@@ -77,6 +80,6 @@ private:
   FileLogOutputter *m_fileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
   std::string m_command = "";
-  int m_elevateMode = 0;
+  bool m_elevate = false;
   bool m_foreground = false;
 };
