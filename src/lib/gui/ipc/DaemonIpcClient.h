@@ -19,10 +19,10 @@ class DaemonIpcClient : public QObject
   Q_OBJECT
 
 public:
-  DaemonIpcClient(QObject *parent = nullptr);
-  ~DaemonIpcClient();
-  void connectToServer();
-  void sendCommand(const QString &command, ElevateMode elevateMode);
+  explicit DaemonIpcClient(QObject *parent = nullptr);
+  bool connectToServer();
+  bool sendLogLevel(const QString &logLevel);
+  bool sendCommand(const QString &command, ElevateMode elevateMode);
 
   bool isConnected() const
   {
@@ -34,7 +34,8 @@ private slots:
   void handleErrorOccurred();
 
 private:
-  void sendMessage(const QString &message, const QString &expectAck = "ok", const bool expectConnected = true);
+  bool keepAlive();
+  bool sendMessage(const QString &message, const QString &expectAck = "ok", const bool expectConnected = true);
 
 private:
   QLocalSocket *m_socket;

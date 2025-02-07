@@ -296,6 +296,7 @@ void MainWindow::connectSlots()
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
+  connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -630,6 +631,8 @@ void MainWindow::open()
   } else {
     qDebug() << "update check disabled";
   }
+
+  m_coreProcess.applyLogLevel();
 
   if (m_appConfig.startedBefore()) {
     m_coreProcess.start();
