@@ -23,7 +23,8 @@ public:
   ~DaemonIpcServer();
 
 signals:
-  void elevateModeChanged(int mode);
+  void logLevelChanged(const QString &logLevel);
+  void elevateModeChanged(bool elevate);
   void commandChanged(const QString &command);
   void restartRequested();
 
