@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,6 +13,7 @@
 #include "dialogs/ServerConfigDialog.h"
 #include "dialogs/SettingsDialog.h"
 
+#include "base/String.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/config/ConfigScopes.h"
@@ -23,7 +24,9 @@
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
 #include "gui/styles.h"
-#include "gui/tls/TlsFingerprint.h"
+#include "net/FingerprintDatabase.h"
+#include "net/SecureUtils.h"
+
 #include "platform/wayland.h"
 
 #if defined(Q_OS_LINUX)
@@ -466,7 +469,29 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  QMessageBox::information(this, "TLS fingerprint", TlsFingerprint::local().readFirst());
+  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
+  if (!QFile::exists(QString::fromStdString(localPath))) {
+    QMessageBox::information(
+        this, tr("TLS fingerprint Error"),
+        tr("Unable to read localfinger print: %1\n You may want to regenerate your keys.")
+            .arg(QString::fromStdString(localPath))
+    );
+    return;
+  }
+
+  deskflow::FingerprintDatabase db;
+  db.read(localPath);
+  if (db.fingerprints().empty()) {
+    QMessageBox::information(
+        this, tr("TLS fingerprint Error"),
+        tr("Unable to read localDatabase\n You may want to regenerate your keys.")
+            .arg(QString::fromStdString(localPath))
+    );
+    return;
+  }
+
+  const auto fingerprint = QString::fromStdString(deskflow::formatSSLFingerprint(db.fingerprints().front().data));
+  QMessageBox::information(this, "TLS fingerprint", fingerprint);
 }
 
 void MainWindow::setModeServer()
@@ -669,8 +694,13 @@ void MainWindow::checkFingerprint(const QString &line)
     return;
   }
 
-  auto fingerprint = match.captured(1);
-  if (TlsFingerprint::trustedServers().isTrusted(fingerprint)) {
+  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
+
+  deskflow::FingerprintDatabase db;
+  db.read(localPath);
+
+  const deskflow::FingerprintData fingerprint{"sha1", deskflow::string::fromHex(match.captured(1).toStdString())};
+  if (db.isTrusted(fingerprint)) {
     return;
   }
 
@@ -690,13 +720,13 @@ void MainWindow::checkFingerprint(const QString &line)
            "you're expecting (it could be a malicious user).</p>"
            "<p>Do you want to trust this fingerprint for future "
            "connections? If you don't, a connection cannot be made.</p>")
-            .arg(fingerprint),
+            .arg(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint.data))),
         QMessageBox::Yes | QMessageBox::No
     );
 
     if (fingerprintReply == QMessageBox::Yes) {
-      // start core process again after trusting fingerprint.
-      TlsFingerprint::trustedServers().trust(fingerprint);
+      db.addTrusted(fingerprint);
+      db.write(localPath);
       m_coreProcess.start();
     }
 
@@ -897,7 +927,8 @@ void MainWindow::updateLocalFingerprint()
 {
   bool fingerprintExists = false;
   try {
-    fingerprintExists = TlsFingerprint::local().fileExists();
+    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
+    fingerprintExists = QFile::exists(QString::fromStdString(localPath));
   } catch (const std::exception &e) {
     qDebug() << e.what();
     qFatal() << "failed to check if fingerprint exists";
@@ -1025,4 +1056,10 @@ void MainWindow::showAndActivate()
   activateWindow();
   m_actionRestore->setVisible(false);
   m_actionMinimize->setVisible(true);
+}
+
+QString MainWindow::getTlsPath()
+{
+  CoreTool coreTool;
+  return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
 }
