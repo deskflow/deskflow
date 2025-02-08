@@ -13,6 +13,7 @@
 #include "base/Path.h"
 #include "base/String.h"
 #include "base/TMethodEventJob.h"
+#include "common/constants.h"
 #include "mt/Lock.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
@@ -41,10 +42,6 @@ enum
 {
   kMsgSize = 128
 };
-
-// TODO: Reduce duplication of these strings between here and TlsFingerprint.cpp
-static const char kFingerprintDirName[] = "tls";
-static const char kFingerprintTrustedServersFilename[] = "trusted-servers";
 
 struct Ssl
 {
@@ -629,7 +626,7 @@ bool SecureSocket::verifyCertFingerprint()
 
   std::string trustedServersFilename;
   trustedServersFilename = deskflow::string::sprintf(
-      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kFingerprintDirName, kFingerprintTrustedServersFilename
+      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
   );
 
   // check if this fingerprint exist
