@@ -7,9 +7,10 @@
 
 #include "TlsCertificate.h"
 
-#include "TlsFingerprint.h"
-
 #include "common/constants.h"
+#include "gui/core/CoreTool.h"
+#include "net/FingerprintData.h"
+#include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
 #include <QCoreApplication>
@@ -47,7 +48,18 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
   try {
     auto fingerprint =
         deskflow::pemFileCertFingerprint(certificateFilename.toStdString(), deskflow::FingerprintType::SHA1);
-    TlsFingerprint::local().trust(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint)), false);
+
+    CoreTool coreTool;
+    QString profileDir = coreTool.getProfileDir();
+
+    auto localPath = QStringLiteral("%1/%2/%3").arg(profileDir, kSslDir, kFingerprintLocalFilename).toStdString();
+
+    const deskflow::FingerprintData data{"sha1", fingerprint};
+
+    deskflow::FingerprintDatabase db;
+    db.addTrusted(data);
+    db.write(localPath);
+
     qDebug("tls fingerprint generated");
     return true;
   } catch (const std::exception &e) {

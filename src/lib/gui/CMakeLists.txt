@@ -77,8 +77,6 @@ add_library(${target} STATIC
   proxy/QSettingsProxy.h
   tls/TlsCertificate.cpp
   tls/TlsCertificate.h
-  tls/TlsFingerprint.cpp
-  tls/TlsFingerprint.h
   tls/TlsUtility.cpp
   tls/TlsUtility.h
   validators/AliasValidator.cpp

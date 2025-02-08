@@ -15,6 +15,7 @@
 #include "base/TMethodEventJob.h"
 #include "common/constants.h"
 #include "mt/Lock.h"
+#include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
 #include <net/InverseSockets/SslLogger.h>
@@ -621,34 +622,35 @@ bool SecureSocket::verifyCertFingerprint()
     return false;
   }
 
-  auto fingerprint = deskflow::formatSSLFingerprint(fingerprint_raw);
-  LOG((CLOG_NOTE "server fingerprint: %s", fingerprint.c_str()));
+  LOG((CLOG_NOTE "server fingerprint: %s", deskflow::formatSSLFingerprint(fingerprint_raw).c_str()));
 
-  std::string trustedServersFilename;
-  trustedServersFilename = deskflow::string::sprintf(
+  std::string trustedServersFilename = deskflow::string::sprintf(
       "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
   );
 
   // check if this fingerprint exist
   std::string fileLine;
   std::ifstream file;
-  file.open(deskflow::filesystem::path(trustedServersFilename));
 
-  bool isValid = false;
-  if (file.is_open()) {
-    while (!file.eof()) {
-      getline(file, fileLine);
-      if (!fileLine.empty() && !fileLine.compare(fingerprint)) {
-        isValid = true;
-        break;
-      }
-    }
+  deskflow::openUtf8Path(file, trustedServersFilename);
+  deskflow::FingerprintDatabase db;
+  db.read(trustedServersFilename);
+  if (!db.fingerprints().empty()) {
+    LOG((CLOG_NOTE "read %d fingerprints from %s", db.fingerprints().size(), trustedServersFilename.c_str()));
   } else {
-    LOG((CLOG_ERR "fail to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
+    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
+    return false;
   }
 
-  file.close();
-  return isValid;
+  deskflow::FingerprintData fingerprint{"sha1", fingerprint_raw};
+
+  if (!db.isTrusted(fingerprint)) {
+    LOG((CLOG_WARN "fingerprint does not match trusted fingerprint"));
+    return false;
+  }
+
+  LOG((CLOG_NOTE "fingerprint matches trusted fingerprint"));
+  return true;
 }
 
 ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, bool, bool write, bool error)
