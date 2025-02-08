@@ -25,3 +25,8 @@ const auto kDebugBuild = true;
 #else
 const auto kDebugBuild = false;
 #endif
+
+
+const auto kSslDir = "tls";
+const auto kCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
+const auto kFingerprintTrustedServersFilename = "trusted-servers";

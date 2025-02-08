@@ -13,10 +13,6 @@
 #include <QStandardPaths>
 #include <QString>
 
-// TODO: Reduce duplication of these strings between here and SecureSocket.cpp
-const auto kCertificateFilename = QStringLiteral("%1.pem").arg(kAppId);
-const auto kSslDir = "tls";
-
 namespace deskflow::gui::paths {
 
 /**
