@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 add_library(net STATIC
-  FingerprintTypes.h
   FingerprintData.cpp
   FingerprintData.h
   FingerprintDatabase.cpp

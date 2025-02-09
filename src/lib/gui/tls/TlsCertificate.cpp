@@ -54,10 +54,8 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
 
     auto localPath = QStringLiteral("%1/%2/%3").arg(profileDir, kSslDir, kFingerprintLocalFilename).toStdString();
 
-    const deskflow::FingerprintData data{"sha1", fingerprint};
-
     deskflow::FingerprintDatabase db;
-    db.addTrusted(data);
+    db.addTrusted(fingerprint);
     db.write(localPath);
 
     qDebug("tls fingerprint generated");
