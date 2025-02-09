@@ -10,6 +10,7 @@
 #include "ui_MainWindow.h"
 
 #include "dialogs/AboutDialog.h"
+#include "dialogs/FingerprintDialog.h"
 #include "dialogs/ServerConfigDialog.h"
 #include "dialogs/SettingsDialog.h"
 
@@ -25,8 +26,6 @@
 #include "gui/style_utils.h"
 #include "gui/styles.h"
 #include "net/FingerprintDatabase.h"
-#include "net/SecureUtils.h"
-
 #include "platform/wayland.h"
 
 #if defined(Q_OS_LINUX)
@@ -36,7 +35,6 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
-#include <QFont>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QMenu>
@@ -485,31 +483,12 @@ void MainWindow::showMyFingerprint()
     return;
   }
 
-  QString message = QStringLiteral("\n");
-  for (const auto &fingerprint : db.fingerprints()) {
-    if (fingerprint.algorithm == "sha1") {
-      message.append(
-          QStringLiteral("\nSHA1\n%1\n").arg(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint.data)))
-      );
-    }
+  QList<deskflow::FingerprintData> fingerprints;
+  fingerprints.reserve(db.fingerprints().size());
+  std::copy(db.fingerprints().begin(), db.fingerprints().end(), std::back_inserter(fingerprints));
 
-    if (fingerprint.algorithm == "sha256") {
-      message.append(QStringLiteral("\nSHA256\n%1\n%2\n")
-                         .arg(
-                             QString::fromStdString(deskflow::formatSSLFingerprintColumns(fingerprint.data)),
-                             QString::fromStdString(deskflow::generateFingerprintArt(fingerprint.data))
-                         ));
-    }
-  }
-
-  // TODO This dialog better in the future
-  QMessageBox mbox(this);
-  mbox.setWindowTitle(tr("Your Fingerprints"));
-  auto font = new QFont("Monospace");
-  font->setStyleHint(QFont::TypeWriter);
-  mbox.setFont(*font);
-  mbox.setText(message);
-  mbox.exec();
+  FingerprintDialog fingerprintDialog(this, fingerprints);
+  fingerprintDialog.exec();
 }
 
 void MainWindow::setModeServer()
@@ -722,7 +701,6 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::string::fromHex(match.captured(2).toStdString())
   };
 
-
   // Only Save the sha256
   auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
   deskflow::FingerprintDatabase db;
@@ -731,39 +709,13 @@ void MainWindow::checkFingerprint(const QString &line)
     return;
   }
 
-  static bool messageBoxAlreadyShown = false;
-
-  if (!messageBoxAlreadyShown) {
-    m_coreProcess.stop();
-
-    messageBoxAlreadyShown = true;
-    QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
-        this, tr("Security question"),
-        tr("<p>You are connecting to a server.</p>"
-           "<p>Here is it's TLS fingerprint:</p>\n\n"
-           "<p>SHA256:%1\n"
-           "<p>%2\n\n"
-           "<p>SHA1(Obsolete): Compare for old versions only: %3</p>"
-           "<p>Compare this fingerprint to the one on your server's screen. "
-           "If the two don't match exactly, then it's probably not the server "
-           "you're expecting (it could be a malicious user).</p>"
-           "<p>Do you want to trust this fingerprint for future "
-           "connections? If you don't, a connection cannot be made.</p>")
-            .arg(
-                QString::fromStdString(deskflow::formatSSLFingerprint(sha256.data)),
-                QString::fromStdString(deskflow::generateFingerprintArt(sha256.data)),
-                QString::fromStdString(deskflow::formatSSLFingerprint(sha1.data))
-            ),
-        QMessageBox::Yes | QMessageBox::No
-    );
-
-    if (fingerprintReply == QMessageBox::Yes) {
-      db.addTrusted(sha256);
-      db.write(localPath);
-      m_coreProcess.start();
-    }
-
-    messageBoxAlreadyShown = false;
+  m_coreProcess.stop();
+  const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
+  FingerprintDialog fingerprintDialog(this, fingerprints, FingerprintDialogMode::Remote);
+  if (fingerprintDialog.exec() == QDialog::Accepted) {
+    db.addTrusted(sha256);
+    db.write(localPath);
+    m_coreProcess.start();
   }
 }
 
