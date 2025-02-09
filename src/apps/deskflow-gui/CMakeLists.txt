@@ -80,6 +80,9 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/AddClientDialog.cpp
   dialogs/AddClientDialog.h
   dialogs/AddClientDialog.ui
+  dialogs/FingerprintDialog.h
+  dialogs/FingerprintDialog.cpp
+  dialogs/FingerprintDialog.ui
   dialogs/HotkeyDialog.cpp
   dialogs/HotkeyDialog.h
   dialogs/HotkeyDialog.ui
