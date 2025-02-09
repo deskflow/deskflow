@@ -613,16 +613,15 @@ void SecureSocket::disconnect()
 bool SecureSocket::verifyCertFingerprint()
 {
   // calculate received certificate fingerprint
-  std::vector<std::uint8_t> fingerprint_raw;
+  deskflow::FingerprintData fingerprint;
   try {
-    fingerprint_raw =
-        deskflow::SSLCertFingerprint(SSL_get_peer_certificate(m_ssl->m_ssl), deskflow::FingerprintType::SHA1);
+    fingerprint = deskflow::sslCertFingerprint(SSL_get_peer_certificate(m_ssl->m_ssl), deskflow::FingerprintType::SHA1);
   } catch (const std::exception &e) {
     LOG((CLOG_ERR "%s", e.what()));
     return false;
   }
 
-  LOG((CLOG_NOTE "server fingerprint: %s", deskflow::formatSSLFingerprint(fingerprint_raw).c_str()));
+  LOG((CLOG_NOTE "server fingerprint: %s", deskflow::formatSSLFingerprint(fingerprint.data).c_str()));
 
   std::string trustedServersFilename = deskflow::string::sprintf(
       "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
@@ -641,8 +640,6 @@ bool SecureSocket::verifyCertFingerprint()
     LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", trustedServersFilename.c_str()));
     return false;
   }
-
-  deskflow::FingerprintData fingerprint{"sha1", fingerprint_raw};
 
   if (!db.isTrusted(fingerprint)) {
     LOG((CLOG_WARN "fingerprint does not match trusted fingerprint"));

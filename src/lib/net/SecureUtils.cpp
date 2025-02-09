@@ -6,6 +6,7 @@
  */
 
 #include "SecureUtils.h"
+#include "FingerprintDatabase.h"
 #include "base/String.h"
 #include "base/finally.h"
 #include "io/filesystem.h"
@@ -50,7 +51,7 @@ std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool e
   return result;
 }
 
-std::vector<uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type)
+FingerprintData sslCertFingerprint(X509 *cert, FingerprintType type)
 {
   if (!cert) {
     throw std::runtime_error("certificate is null");
@@ -66,10 +67,10 @@ std::vector<uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type)
 
   std::vector<std::uint8_t> digestVec;
   digestVec.assign(reinterpret_cast<std::uint8_t *>(digest), reinterpret_cast<std::uint8_t *>(digest) + digestLength);
-  return digestVec;
+  return {fingerprintTypeToString(type), digestVec};
 }
 
-std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, FingerprintType type)
+FingerprintData pemFileCertFingerprint(const std::string &path, FingerprintType type)
 {
   auto fp = fopenUtf8Path(path, "r");
   if (!fp) {
@@ -83,7 +84,7 @@ std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, Finger
   }
   auto certFree = finally([cert]() { X509_free(cert); });
 
-  return SSLCertFingerprint(cert, type);
+  return sslCertFingerprint(cert, type);
 }
 
 void generatePemSelfSignedCert(const std::string &path, int keyLength)

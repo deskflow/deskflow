@@ -7,13 +7,18 @@
 
 #pragma once
 
-#include "FingerprintTypes.h"
-
 #include <cstdint>
 #include <string>
 #include <vector>
 
 namespace deskflow {
+
+enum FingerprintType
+{
+  Invalid,
+  SHA1,
+  SHA256
+};
 
 struct FingerprintData
 {

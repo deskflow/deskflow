@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "FingerprintTypes.h"
+#include "FingerprintData.h"
 
 #include <cstdint>
 #include <openssl/ossl_typ.h>
@@ -24,9 +24,9 @@ namespace deskflow {
  */
 std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
 
-std::vector<std::uint8_t> SSLCertFingerprint(X509 *cert, FingerprintType type);
+FingerprintData sslCertFingerprint(X509 *cert, FingerprintType type);
 
-std::vector<std::uint8_t> pemFileCertFingerprint(const std::string &path, FingerprintType type);
+FingerprintData pemFileCertFingerprint(const std::string &path, FingerprintType type);
 
 void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
 
