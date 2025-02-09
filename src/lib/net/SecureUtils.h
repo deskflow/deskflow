@@ -24,6 +24,8 @@ namespace deskflow {
  */
 std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
 
+std::string formatSSLFingerprintColumns(const std::vector<uint8_t> &fingerprint);
+
 FingerprintData sslCertFingerprint(X509 *cert, FingerprintType type);
 
 FingerprintData pemFileCertFingerprint(const std::string &path, FingerprintType type);
@@ -31,4 +33,6 @@ FingerprintData pemFileCertFingerprint(const std::string &path, FingerprintType 
 void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
 
 int getCertLength(const std::string &path);
+
+std::string generateFingerprintArt(const std::vector<std::uint8_t> &rawDigest);
 } // namespace deskflow

@@ -166,6 +166,10 @@ private:
 
   QString getTlsPath();
 
+  // Generate prints if they are missing
+  // Returns true if successful
+  bool regenerateLocalFingerprints();
+
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
