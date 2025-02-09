@@ -612,16 +612,22 @@ void SecureSocket::disconnect()
 
 bool SecureSocket::verifyCertFingerprint()
 {
-  // calculate received certificate fingerprint
-  deskflow::FingerprintData fingerprint;
+  deskflow::FingerprintData sha1;
+  deskflow::FingerprintData sha256;
   try {
-    fingerprint = deskflow::sslCertFingerprint(SSL_get_peer_certificate(m_ssl->m_ssl), deskflow::FingerprintType::SHA1);
+    auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+    sha1 = deskflow::sslCertFingerprint(cert, deskflow::FingerprintType::SHA1);
+    sha256 = deskflow::sslCertFingerprint(cert, deskflow::FingerprintType::SHA256);
   } catch (const std::exception &e) {
     LOG((CLOG_ERR "%s", e.what()));
     return false;
   }
 
-  LOG((CLOG_NOTE "server fingerprint: %s", deskflow::formatSSLFingerprint(fingerprint.data).c_str()));
+  // Gui Must Parse these two lines, DO NOT CHANGE
+  LOG(
+      (CLOG_NOTE "server fingerprint: (SHA1) %s (SHA256) %s", deskflow::formatSSLFingerprint(sha1.data).c_str(),
+       deskflow::formatSSLFingerprint(sha256.data).c_str())
+  );
 
   std::string trustedServersFilename = deskflow::string::sprintf(
       "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
@@ -641,7 +647,7 @@ bool SecureSocket::verifyCertFingerprint()
     return false;
   }
 
-  if (!db.isTrusted(fingerprint)) {
+  if (!db.isTrusted(sha256)) {
     LOG((CLOG_WARN "fingerprint does not match trusted fingerprint"));
     return false;
   }

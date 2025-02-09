@@ -6,7 +6,7 @@
  */
 
 #include "SecureUtils.h"
-#include "FingerprintDatabase.h"
+
 #include "base/String.h"
 #include "base/finally.h"
 #include "io/filesystem.h"
@@ -15,6 +15,8 @@
 #include <openssl/pem.h>
 #include <openssl/x509.h>
 #include <openssl/x509v3.h>
+
+#include <algorithm>
 #include <stdexcept>
 
 namespace deskflow {
@@ -152,6 +154,109 @@ int getCertLength(const std::string &path)
   EVP_PKEY_free(privateKey);
 
   return size;
+}
+
+std::string formatSSLFingerprintColumns(const std::vector<uint8_t> &fingerprint)
+{
+  auto kmaxColumns = 8;
+
+  std::string hex = deskflow::string::toHex(fingerprint, 2);
+  deskflow::string::uppercase(hex);
+  if (hex.empty() || hex.size() % 2 != 0) {
+    return hex;
+  }
+
+  std::string separated;
+  for (std::size_t i = 0; i < hex.size(); i += kmaxColumns * 2) {
+    for (std::size_t j = i; j < i + 16 && j < hex.size() - 1; j += 2) {
+      separated.push_back(hex[j]);
+      separated.push_back(hex[j + 1]);
+      separated.push_back(':');
+    }
+    separated.push_back('\n');
+  }
+  separated.pop_back(); // we don't need last newline character
+  return separated;
+}
+
+/*
+    Draw an ASCII-Art representing the fingerprint so human brain can
+    profit from its built-in pattern recognition ability.
+    This technique is called "random art" and can be found in some
+    scientific publications like this original paper:
+    "Hash Visualization: a New Technique to improve Real-World Security",
+    Perrig A. and Song D., 1999, International Workshop on Cryptographic
+    Techniques and E-Commerce (CrypTEC '99)
+    sparrow.ece.cmu.edu/~adrian/projects/validation/validation.pdf
+    The subject came up in a talk by Dan Kaminsky, too.
+    If you see the picture is different, the key is different.
+    If the picture looks the same, you still know nothing.
+    The algorithm used here is a worm crawling over a discrete plane,
+    leaving a trace (augmenting the field) everywhere it goes.
+    Movement is taken from rawDigest 2bit-wise.  Bumping into walls
+    makes the respective movement vector be ignored for this turn.
+    Graphs are not unambiguous, because circles in graphs can be
+walked in either direction.
+ */
+
+/*
+    Field sizes for the random art.  Have to be odd, so the starting point
+    can be in the exact middle of the picture, and `baseSize` should be >=8 .
+    Else pictures would be too dense, and drawing the frame would
+    fail, too, because the key type would not fit in anymore.
+*/
+
+std::string generateFingerprintArt(const std::vector<std::uint8_t> &rawDigest)
+{
+  const auto baseSize = 8;
+  const auto rows = (baseSize + 1);
+  const auto columns = (baseSize * 2 + 1);
+  const std::string characterPool = " .o+=*BOX@%&#/^SE";
+  const std::size_t len = characterPool.length() - 1;
+
+  std::uint8_t field[columns][rows];
+  memset(field, 0, columns * rows * sizeof(char));
+  int x = columns / 2;
+  int y = rows / 2;
+
+  /* process raw key */
+  for (size_t i = 0; i < rawDigest.size(); i++) {
+    /* each byte conveys four 2-bit move commands */
+    int input = rawDigest[i];
+    for (uint32_t b = 0; b < 4; b++) {
+      /* evaluate 2 bit, rest is shifted later */
+      x += (input & 0x1) ? 1 : -1;
+      y += (input & 0x2) ? 1 : -1;
+
+      /* assure we are still in bounds */
+      x = std::clamp(x, 0, columns - 1);
+      y = std::clamp(y, 0, rows - 1);
+
+      /* augment the field */
+      if (field[x][y] < len - 2)
+        field[x][y]++;
+      input = input >> 2;
+    }
+  }
+
+  /* mark starting point and end point*/
+  field[columns / 2][rows / 2] = len - 1;
+  field[x][y] = len;
+
+  std::string result;
+  result.reserve((columns + 3) * (rows + 2));
+  result.append("╔═════════════════╗\n");
+
+  /* output content */
+  for (y = 0; y < rows; y++) {
+    result.append("║");
+    for (x = 0; x < columns; x++)
+      result.append(characterPool.substr(std::min<int>(field[x][y], len), 1));
+    result.append("║\n");
+  }
+
+  result.append("╚═════════════════╝");
+  return result;
 }
 
 } // namespace deskflow

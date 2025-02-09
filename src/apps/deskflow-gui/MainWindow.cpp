@@ -36,6 +36,7 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
+#include <QFont>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <QMenu>
@@ -471,27 +472,44 @@ void MainWindow::showMyFingerprint()
 {
   auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
   if (!QFile::exists(QString::fromStdString(localPath))) {
-    QMessageBox::information(
-        this, tr("TLS fingerprint Error"),
-        tr("Unable to read localfinger print: %1\n You may want to regenerate your keys.")
-            .arg(QString::fromStdString(localPath))
-    );
+    if (regenerateLocalFingerprints())
+      showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
   db.read(localPath);
-  if (db.fingerprints().empty()) {
-    QMessageBox::information(
-        this, tr("TLS fingerprint Error"),
-        tr("Unable to read localDatabase\n You may want to regenerate your keys.")
-            .arg(QString::fromStdString(localPath))
-    );
+  if (db.fingerprints().size() != 2) {
+    if (regenerateLocalFingerprints())
+      showMyFingerprint();
     return;
   }
 
-  const auto fingerprint = QString::fromStdString(deskflow::formatSSLFingerprint(db.fingerprints().front().data));
-  QMessageBox::information(this, "TLS fingerprint", fingerprint);
+  QString message = QStringLiteral("\n");
+  for (const auto &fingerprint : db.fingerprints()) {
+    if (fingerprint.algorithm == "sha1") {
+      message.append(
+          QStringLiteral("\nSHA1\n%1\n").arg(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint.data)))
+      );
+    }
+
+    if (fingerprint.algorithm == "sha256") {
+      message.append(QStringLiteral("\nSHA256\n%1\n%2\n")
+                         .arg(
+                             QString::fromStdString(deskflow::formatSSLFingerprintColumns(fingerprint.data)),
+                             QString::fromStdString(deskflow::generateFingerprintArt(fingerprint.data))
+                         ));
+    }
+  }
+
+  // TODO This dialog better in the future
+  QMessageBox mbox(this);
+  mbox.setWindowTitle(tr("Your Fingerprints"));
+  auto font = new QFont("Monospace");
+  font->setStyleHint(QFont::TypeWriter);
+  mbox.setFont(*font);
+  mbox.setText(message);
+  mbox.exec();
 }
 
 void MainWindow::setModeServer()
@@ -688,19 +706,28 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(".*server fingerprint: ([A-F0-9:]+)");
+  static const QRegularExpression re(R"(.*server fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;
   }
 
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
+  const deskflow::FingerprintData sha1 = {
+      deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA1),
+      deskflow::string::fromHex(match.captured(1).toStdString())
+  };
 
+  const deskflow::FingerprintData sha256 = {
+      deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA256),
+      deskflow::string::fromHex(match.captured(2).toStdString())
+  };
+
+
+  // Only Save the sha256
+  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
   deskflow::FingerprintDatabase db;
   db.read(localPath);
-
-  const deskflow::FingerprintData fingerprint{"sha1", deskflow::string::fromHex(match.captured(1).toStdString())};
-  if (db.isTrusted(fingerprint)) {
+  if (db.isTrusted(sha256)) {
     return;
   }
 
@@ -713,19 +740,25 @@ void MainWindow::checkFingerprint(const QString &line)
     QMessageBox::StandardButton fingerprintReply = QMessageBox::information(
         this, tr("Security question"),
         tr("<p>You are connecting to a server.</p>"
-           "<p>Here is it's TLS fingerprint:</p>"
-           "<p>%1</p>"
+           "<p>Here is it's TLS fingerprint:</p>\n\n"
+           "<p>SHA256:%1\n"
+           "<p>%2\n\n"
+           "<p>SHA1(Obsolete): Compare for old versions only: %3</p>"
            "<p>Compare this fingerprint to the one on your server's screen. "
            "If the two don't match exactly, then it's probably not the server "
            "you're expecting (it could be a malicious user).</p>"
            "<p>Do you want to trust this fingerprint for future "
            "connections? If you don't, a connection cannot be made.</p>")
-            .arg(QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint.data))),
+            .arg(
+                QString::fromStdString(deskflow::formatSSLFingerprint(sha256.data)),
+                QString::fromStdString(deskflow::generateFingerprintArt(sha256.data)),
+                QString::fromStdString(deskflow::formatSSLFingerprint(sha1.data))
+            ),
         QMessageBox::Yes | QMessageBox::No
     );
 
     if (fingerprintReply == QMessageBox::Yes) {
-      db.addTrusted(fingerprint);
+      db.addTrusted(sha256);
       db.write(localPath);
       m_coreProcess.start();
     }
@@ -1062,4 +1095,14 @@ QString MainWindow::getTlsPath()
 {
   CoreTool coreTool;
   return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
+}
+
+bool MainWindow::regenerateLocalFingerprints()
+{
+  TlsCertificate tls;
+  if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
+    QMessageBox::critical(this, tr("TLS Fingerprint Error"), tr("Failed to calculate  keys"));
+    return false;
+  }
+  return true;
 }
