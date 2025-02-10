@@ -159,17 +159,6 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       m_pDeps(deps),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
-
-  // connect(
-  //     &m_pDeps->ipcClient(), &QIpcClient::read, this, //
-  //     &CoreProcess::onIpcClientRead
-  // );
-
-  // connect(
-  //     &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
-  //     &CoreProcess::onIpcClientServiceReady
-  // );
-
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
@@ -189,36 +178,6 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       qDebug("retry cancelled, process state is not retry pending");
     }
   });
-}
-
-void CoreProcess::onIpcClientServiceReady()
-{
-  if (m_processState == ProcessState::Starting) {
-    qDebug("service ready, continuing core process start");
-    start();
-  } else if (m_processState == ProcessState::Stopping) {
-    qDebug("service ready, continuing core process stop");
-    stop();
-  } else {
-    // This may happen when the IPC connection fails and then reconnects.
-    qWarning("ignoring service ready, process state is not starting or stopping");
-  }
-}
-
-void CoreProcess::onIpcClientError(const QString &text) const
-{
-  qCritical().noquote() << text;
-
-  if (m_appConfig.processMode() != ProcessMode::kService) {
-    // if not meant to be in service mode and there is an ipc connection error,
-    // then abandon the ipc client connection.
-    // m_pDeps->ipcClient().disconnectFromHost();
-  }
-}
-
-void CoreProcess::onIpcClientRead(const QString &text)
-{
-  handleLogLines(text);
 }
 
 void CoreProcess::onProcessReadyReadStandardOutput()
@@ -320,17 +279,9 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
     qFatal("core process must be in starting state");
   }
 
-  // if (!m_pDeps->ipcClient().isConnected()) {
-  //   // when service state changes, start will be called again.
-  //   qDebug("cannot start process, ipc not connected, connecting instead");
-  //   m_pDeps->ipcClient().connectToHost();
-  //   return;
-  // }
-
   QString commandQuoted = makeQuotedArgs(app, args);
 
   qInfo("running command: %s", qPrintable(commandQuoted));
-  // m_pDeps->ipcClient().sendCommand(commandQuoted, m_appConfig.elevateMode());
 
   if (!m_daemonIpcClient->sendStartProcess(commandQuoted, m_appConfig.elevateMode())) {
     qCritical("cannot start process, ipc command failed");
@@ -365,13 +316,6 @@ void CoreProcess::stopProcessFromDaemon()
   if (m_processState != ProcessState::Stopping) {
     qFatal("core process must be in stopping state");
   }
-
-  // if (!m_pDeps->ipcClient().isConnected()) {
-  //   qDebug("cannot stop process, ipc not connected");
-  //   return;
-  // }
-
-  // m_pDeps->ipcClient().sendCommand("", m_appConfig.elevateMode());
 
   if (!m_daemonIpcClient->sendStopProcess()) {
     qCritical("cannot stop process, ipc command failed");
@@ -523,8 +467,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-
-  m_pDeps->ipcClient().disconnectFromHost();
 }
 
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
@@ -535,9 +477,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   args << "--name" << m_appConfig.screenName();
 
   if (processMode != ProcessMode::kDesktop) {
-    // tell client/server to talk to daemon through ipc.
-    args << "--ipc";
-
 #if defined(Q_OS_WIN)
     // tell the client/server to shut down when a ms windows desk
     // is switched; this is because we may need to elevate or not
@@ -808,7 +747,7 @@ QString CoreProcess::coreProcessName() const
   static const auto exeTemplate = QStringLiteral("%1.exe");
   return exeTemplate.arg(binName);
 #else
-  return kCoreBinName;
+  return binName;
 #endif
 }
 

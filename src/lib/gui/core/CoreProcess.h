@@ -9,7 +9,6 @@
 #include "gui/FileTail.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
-#include "gui/ipc/QIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
 
 #include <memory>
@@ -31,7 +30,6 @@ class CoreProcess : public QObject
 {
   using IServerConfig = deskflow::gui::IServerConfig;
   using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
-  using IQIpcClient = deskflow::gui::ipc::IQIpcClient;
 
   Q_OBJECT
 
@@ -43,17 +41,12 @@ public:
     {
       return m_process;
     }
-    virtual IQIpcClient &ipcClient()
-    {
-      return m_ipcClient;
-    }
     virtual QString appPath(const QString &name) const;
     virtual bool fileExists(const QString &path) const;
     virtual QString getProfileRoot() const;
 
   private:
     QProcessProxy m_process;
-    QIpcClient m_ipcClient;
   };
 
   enum class Mode
@@ -136,9 +129,6 @@ signals:
   void secureSocket(bool enabled);
 
 private slots:
-  void onIpcClientServiceReady();
-  void onIpcClientRead(const QString &text);
-  void onIpcClientError(const QString &text) const;
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();

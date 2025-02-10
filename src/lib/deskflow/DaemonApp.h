@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "ipc/IpcServer.h"
+#include "base/IEventQueue.h"
 
 #include <memory>
 #include <string>
@@ -48,7 +48,7 @@ public:
   ~DaemonApp();
   InitResult init(int argc, char **argv);
   void run();
-  void mainLoop(bool logToFile, bool foreground = false);
+  void mainLoop(bool foreground = false);
   void applyWatchdogCommand();
   void clearWatchdogCommand();
 
@@ -78,11 +78,8 @@ private:
 #endif
 
 private:
-  std::unique_ptr<IpcServer> m_ipcServer;
-  std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   std::unique_ptr<IEventQueue> m_events;
   std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
-  deskflow::core::ipc::DaemonIpcServer *m_ipcServer2 = nullptr;
   std::string m_command = "";
   bool m_elevate = false;
   bool m_foreground = false;
