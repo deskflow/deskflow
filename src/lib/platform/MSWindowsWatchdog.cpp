@@ -207,7 +207,7 @@ void MSWindowsWatchdog::mainLoop(void *)
         // only start sleeping at 1 second to avoid unnecessary delay when the process stops
         // for the first failure (i.e. when the process just stopped running).
         int timeout = m_processFailures < 10 ? m_processFailures : 10;
-        LOG_WARN("backing off, wait=%ds, failures=%d", timeout, m_processFailures);
+        LOG_WARN("backing off after failure, wait=%ds, failures=%d", timeout, m_processFailures);
         ARCH->sleep(timeout);
       }
 
@@ -225,6 +225,9 @@ void MSWindowsWatchdog::mainLoop(void *)
         if (startNeeded) {
           startProcess();
         }
+      } else {
+        // prevent backoff when no command is set.
+        m_processFailures = 0;
       }
 
       if (m_processStarted && !isProcessRunning()) {
