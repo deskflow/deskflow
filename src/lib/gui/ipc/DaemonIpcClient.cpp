@@ -21,6 +21,8 @@ DaemonIpcClient::DaemonIpcClient(QObject *parent)
     : QObject(parent),
       m_socket{new QLocalSocket(this)} // NOSONAR - Qt memory
 {
+  connect(m_socket, &QLocalSocket::disconnected, this, &DaemonIpcClient::handleDisconnected);
+  connect(m_socket, &QLocalSocket::errorOccurred, this, &DaemonIpcClient::handleErrorOccurred);
 }
 
 bool DaemonIpcClient::connectToServer()
@@ -37,9 +39,6 @@ bool DaemonIpcClient::connectToServer()
     qWarning() << "ipc client failed to send hello";
     return false;
   }
-
-  connect(m_socket, &QLocalSocket::disconnected, this, &DaemonIpcClient::handleDisconnected);
-  connect(m_socket, &QLocalSocket::errorOccurred, this, &DaemonIpcClient::handleErrorOccurred);
 
   m_connected = true;
   qInfo() << "ipc client connected to server:" << kDaemonIpcName;
