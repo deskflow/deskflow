@@ -31,6 +31,9 @@ public:
     return m_connected;
   }
 
+signals:
+  void connected();
+
 private slots:
   void handleDisconnected();
   void handleErrorOccurred();
