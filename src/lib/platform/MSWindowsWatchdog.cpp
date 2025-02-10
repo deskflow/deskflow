@@ -178,8 +178,6 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
-  shutdownExistingProcesses();
-
   // the SendSAS function is used to send a sas (secure attention sequence) to the
   // winlogon process. this is used to switch to the login screen.
   SendSas sendSasFunc = NULL;
