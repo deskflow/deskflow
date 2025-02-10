@@ -23,6 +23,7 @@
 #include "deskflow/protocol_types.h"
 #include "ipc/IpcMessage.h"
 #include "ipc/IpcServerProxy.h"
+#include <thread>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -165,7 +166,6 @@ void App::loggingFilterWarning()
 
 void App::initApp(int argc, const char **argv)
 {
-
   std::string configFilename;
   CLI::App cliApp{kAppDescription};
   cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
