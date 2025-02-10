@@ -170,17 +170,7 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
   //     &CoreProcess::onIpcClientServiceReady
   // );
 
-  if (m_appConfig.processMode() == ProcessMode::kService) {
-
-    connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
-
-    const auto logPath = requestDaemonLogPath();
-    if (!logPath.isEmpty()) {
-      qInfo() << "daemon log path:" << logPath;
-      m_daemonFileTail = new FileTail(logPath, this);
-      connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
-    }
-  }
+  connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 
@@ -248,6 +238,13 @@ void CoreProcess::onProcessReadyReadStandardError()
 void CoreProcess::daemonIpcClientConnected()
 {
   applyLogLevel();
+
+  const auto logPath = requestDaemonLogPath();
+  if (!logPath.isEmpty()) {
+    qInfo() << "daemon log path:" << logPath;
+    m_daemonFileTail = new FileTail(logPath, this);
+    connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
+  }
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
