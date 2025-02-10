@@ -12,7 +12,6 @@
 #include <QLocalSocket>
 #include <QObject>
 #include <QStringLiteral>
-#include <qstringliteral.h>
 
 namespace deskflow::gui::ipc {
 
@@ -49,8 +48,12 @@ bool DaemonIpcClient::connectToServer()
 
 void DaemonIpcClient::handleDisconnected()
 {
-  qInfo() << "ipc client disconnected from server";
+  qWarning() << "ipc client disconnected from server";
   m_connected = false;
+
+  if (!connectToServer()) {
+    qCritical() << "ipc client failed to reconnect to server";
+  }
 }
 
 void DaemonIpcClient::handleErrorOccurred()
