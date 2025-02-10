@@ -235,6 +235,11 @@ void CoreProcess::daemonIpcClientConnected()
 
   const auto logPath = requestDaemonLogPath();
   if (!logPath.isEmpty()) {
+    if (m_daemonFileTail != nullptr) {
+      disconnect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
+      m_daemonFileTail->deleteLater();
+    }
+
     qInfo() << "daemon log path:" << logPath;
     m_daemonFileTail = new FileTail(logPath, this);
     connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
