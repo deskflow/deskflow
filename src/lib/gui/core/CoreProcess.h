@@ -142,6 +142,7 @@ private slots:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();
+  void daemonIpcClientConnected();
 
 private:
   void startForegroundProcess(const QString &app, const QStringList &args);

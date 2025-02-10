@@ -43,74 +43,80 @@ bool DaemonIpcClient::connectToServer()
 
   m_connected = true;
   qInfo() << "ipc client connected to server:" << kDaemonIpcName;
+  Q_EMIT connected();
+
   return true;
 }
 
 void DaemonIpcClient::handleDisconnected()
 {
-  qInfo() << "ipc client disconnected from server";
+  qWarning() << "ipc client disconnected from server";
   m_connected = false;
+
+  if (!connectToServer()) {
+    qWarning() << "ipc client failed to reconnect to server";
+  }
 }
 
 void DaemonIpcClient::handleErrorOccurred()
 {
-  qCritical() << "ipc client error:" << m_socket->errorString();
+  qWarning() << "ipc client error:" << m_socket->errorString();
   m_connected = false;
 }
 
 bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
 {
   if (expectConnected && !m_connected) {
-    qWarning() << "cannot send command, ipc not connected";
+    qWarning() << "cannot send command, ipc client not connected";
     return false;
   }
 
   QByteArray messageData = message.toUtf8() + "\n";
   m_socket->write(messageData);
   if (!m_socket->waitForBytesWritten(kTimeout)) {
-    qWarning() << "ipc failed to write command";
+    qWarning() << "ipc client failed to write command";
     return false;
   }
 
   if (!expectAck.isEmpty()) {
-    qDebug() << "ipc waiting for ack: " << expectAck;
+    qDebug() << "ipc client waiting for ack: " << expectAck;
 
     if (!m_socket->waitForReadyRead(kTimeout)) {
-      qWarning() << "ipc failed to read response";
+      qWarning() << "ipc client failed to read response";
       return false;
     }
 
     QByteArray response = m_socket->readAll();
     if (response.isEmpty()) {
-      qWarning() << "ipc got empty response";
+      qWarning() << "ipc client got empty response";
       return false;
     }
 
     QString responseData = QString::fromUtf8(response);
     if (responseData.isEmpty()) {
-      qWarning() << "ipc failed to convert response to string";
+      qWarning() << "ipc client failed to convert response to string";
       return false;
     }
 
     if (responseData != expectAck + "\n") {
-      qWarning() << "ipc got unexpected response: " << responseData;
+      qWarning() << "ipc client got unexpected response: " << responseData;
       return false;
     }
   }
 
-  qDebug() << "ipc sent message: " << messageData;
+  qDebug() << "ipc client sent message: " << messageData;
   return true;
 }
 
 bool DaemonIpcClient::keepAlive()
 {
   if (!isConnected() && !connectToServer()) {
-    qWarning() << "ipc keep alive failed to connect";
+    qWarning() << "ipc client keep alive failed to connect";
     return false;
   }
 
   if (!sendMessage("noop")) {
-    qWarning() << "ipc keep alive ping failed";
+    qWarning() << "ipc client keep alive ping failed";
     m_connected = false;
     return false;
   }
@@ -158,31 +164,31 @@ QString DaemonIpcClient::requestLogPath()
   }
 
   if (!m_socket->waitForReadyRead(kTimeout)) {
-    qWarning() << "ipc failed to read log path response";
+    qWarning() << "ipc client failed to read log path response";
     return QString();
   }
 
   QByteArray response = m_socket->readAll();
   if (response.isEmpty()) {
-    qWarning() << "ipc got empty log path response";
+    qWarning() << "ipc client got empty log path response";
     return QString();
   }
 
   QString responseData = QString::fromUtf8(response);
   if (responseData.isEmpty()) {
-    qWarning() << "ipc failed to convert log path response to string";
+    qWarning() << "ipc client failed to convert log path response to string";
     return QString();
   }
 
   // Trimming removes newline from end of message.
   QStringList parts = responseData.trimmed().split("=");
   if (parts.size() != 2) {
-    qWarning() << "ipc got invalid log path response: " << responseData;
+    qWarning() << "ipc client got invalid log path response: " << responseData;
     return QString();
   }
 
   if (parts[0] != "logPath") {
-    qWarning() << "ipc got unexpected log path response: " << responseData;
+    qWarning() << "ipc client got unexpected log path response: " << responseData;
     return QString();
   }
 

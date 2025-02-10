@@ -159,6 +159,9 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
   if (m_appConfig.processMode() == ProcessMode::kService) {
+
+    connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
+
     const auto logPath = requestDaemonLogPath();
     if (!logPath.isEmpty()) {
       qInfo() << "daemon log path:" << logPath;
@@ -166,6 +169,8 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
     }
   }
+
+  connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 
@@ -221,6 +226,18 @@ void CoreProcess::onProcessReadyReadStandardError()
 {
   if (m_pDeps->process()) {
     handleLogLines(m_pDeps->process().readAllStandardError());
+  }
+}
+
+void CoreProcess::daemonIpcClientConnected()
+{
+  applyLogLevel();
+
+  const auto logPath = requestDaemonLogPath();
+  if (!logPath.isEmpty()) {
+    qInfo() << "daemon log path:" << logPath;
+    m_daemonFileTail = new FileTail(logPath, this);
+    connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
   }
 }
 
