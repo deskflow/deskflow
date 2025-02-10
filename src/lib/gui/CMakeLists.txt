@@ -25,6 +25,8 @@ add_library(${target} STATIC
   dotenv.cpp
   dotenv.h
   env_vars.h
+  FileTail.cpp
+  FileTail.h
   Logger.cpp
   Logger.h
   messages.cpp

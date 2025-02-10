@@ -58,6 +58,9 @@ public:
   void setElevate(bool elevate);
   void setCommand(const QString &command);
 
+  // Getters
+  std::string logFilename();
+
   static DaemonApp &instance()
   {
     static DaemonApp instance; // NOSONAR - Meyers' Singleton
@@ -70,7 +73,6 @@ private:
 
   void daemonize();
   void handleError(const char *message);
-  std::string logFilename();
   void handleIpcMessage(const Event &e, void *);
 
 #if SYSAPI_WIN32
