@@ -291,8 +291,8 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
-  if (!m_daemonIpcClient->sendCommand(commandQuoted, m_appConfig.elevateMode())) {
-    qCritical("aborting process start, ipc connect failed");
+  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, m_appConfig.elevateMode())) {
+    qCritical("cannot start process, ipc command failed");
     return;
   }
 
@@ -325,12 +325,11 @@ void CoreProcess::stopProcessFromDaemon()
     qFatal("core process must be in stopping state");
   }
 
-  if (!m_pDeps->ipcClient().isConnected()) {
-    qDebug("cannot stop process, ipc not connected");
+  if (!m_daemonIpcClient->sendStopProcess()) {
+    qCritical("cannot stop process, ipc command failed");
     return;
   }
 
-  m_pDeps->ipcClient().sendCommand("", m_appConfig.elevateMode());
   setProcessState(ProcessState::Stopped);
 }
 

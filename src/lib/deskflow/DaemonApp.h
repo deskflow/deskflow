@@ -50,7 +50,8 @@ public:
   InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
   void mainLoop(bool logToFile, bool foreground = false);
-  void restartCoreProcess();
+  void applyWatchdogCommand();
+  void clearWatchdogCommand();
 
   // Setters
   void setLogLevel(const QString &logLevel);
