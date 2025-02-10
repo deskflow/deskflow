@@ -215,7 +215,7 @@ void MSWindowsWatchdog::mainLoop(void *)
       if (m_processFailures != 0) {
         // increasing backoff period, maximum of 10 seconds.
         int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
-        LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
+        LOG_DEBUG("backing off after failure, wait=%ds, failures=%d", timeout, m_processFailures);
         ARCH->sleep(timeout);
       }
 
@@ -233,6 +233,9 @@ void MSWindowsWatchdog::mainLoop(void *)
         if (startNeeded) {
           startProcess();
         }
+      } else {
+        // prevent backoff when no command is set.
+        m_processFailures = 0;
       }
 
       if (m_processRunning && !isProcessActive()) {
