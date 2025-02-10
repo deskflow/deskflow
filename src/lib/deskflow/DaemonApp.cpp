@@ -178,6 +178,9 @@ void DaemonApp::clearWatchdogCommand()
 {
   LOG((CLOG_INFO "clearing watchdog command"));
 
+  // Clear the setting to prevent it from being next time the daemon starts.
+  setCommand("");
+
 #if SYSAPI_WIN32
   m_watchdog->setCommand("", false);
 #else
