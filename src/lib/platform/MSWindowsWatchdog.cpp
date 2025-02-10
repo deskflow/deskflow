@@ -519,8 +519,18 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
     return;
   }
 
-  IpcShutdownMessage shutdown;
-  m_ipcServer.send(shutdown, IpcClientType::Node);
+  // IpcShutdownMessage shutdown;
+  // m_ipcServer.send(shutdown, IpcClientType::Node);
+
+  LOG_DEBUG("sending close event to close process gracefully");
+  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\DeskflowCloseEvent");
+  if (hCloseEvent) {
+    SetEvent(hCloseEvent);
+    CloseHandle(hCloseEvent);
+  } else {
+    LOG((CLOG_WARN "could not send close event to process"));
+    throw XArch(new XArchEvalWindows);
+  }
 
   // wait for process to exit gracefully.
   double start = ARCH->time();

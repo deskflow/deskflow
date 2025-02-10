@@ -10,7 +10,9 @@
 #include "deskflow/AppUtil.h"
 
 #define WIN32_LEAN_AND_MEAN
-#include "Windows.h"
+#include "Windows.h" // IWYU pragma: keep
+
+#include <thread>
 
 #define ARCH_APP_UTIL AppUtilWindows
 
@@ -45,6 +47,9 @@ public:
 private:
   AppExitMode m_exitMode;
   IEventQueue *m_events;
+  std::thread m_eventThread; // NOSONAR - Windows only has thread, no jthread
+
+  void eventLoop() const;
 
   static BOOL WINAPI consoleHandler(DWORD Event);
 };
