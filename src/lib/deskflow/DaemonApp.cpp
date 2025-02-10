@@ -159,14 +159,25 @@ void DaemonApp::setCommand(const QString &command)
   }
 }
 
-void DaemonApp::restartCoreProcess()
+void DaemonApp::applyWatchdogCommand() const
 {
-  LOG_DEBUG("service restart requested");
+  LOG_DEBUG("applying watchdog command");
 
 #if SYSAPI_WIN32
   m_watchdog->setCommand(m_command, m_elevate);
 #else
-  LOG_ERR("restart not implemented on this platform");
+  LOG_ERR("applying watchdog command not implemented on this platform");
+#endif
+}
+
+void DaemonApp::clearWatchdogCommand()
+{
+  LOG_DEBUG("clearing watchdog command");
+
+#if SYSAPI_WIN32
+  m_watchdog->setCommand("", false);
+#else
+  LOG_ERR("clearing watchdog command not implemented on this platform");
 #endif
 }
 

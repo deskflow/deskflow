@@ -14,13 +14,18 @@
 
 namespace deskflow::core::ipc {
 
-DaemonIpcServer::DaemonIpcServer(QObject *parent) : QObject(parent), m_server{new QLocalServer(this)}
+const auto kAckMessage = "ok\n";
+const auto kErrorMessage = "error\n";
+
+DaemonIpcServer::DaemonIpcServer(QObject *parent)
+    : QObject(parent),                 //
+      m_server{new QLocalServer(this)} // NOSONAR
 {
   // Daemon runs as system, but GUI runs as regular user, so we need to allow world access.
   m_server->setSocketOptions(QLocalServer::WorldAccessOption);
 
   connect(m_server, &QLocalServer::newConnection, this, &DaemonIpcServer::handleNewConnection);
-  m_server->removeServer(kDaemonIpcName);
+  QLocalServer::removeServer(kDaemonIpcName);
   if (m_server->listen(kDaemonIpcName)) {
     LOG_DEBUG("ipc server listening on: %s", kDaemonIpcName);
   } else {
@@ -68,7 +73,7 @@ void DaemonIpcServer::handleReadyRead()
 
   // each message is delimited by a newline to keep the protocol super simple.
   while (data.contains('\n')) {
-    int index = data.indexOf('\n');
+    const auto index = data.indexOf('\n');
     QByteArray messageData = data.left(index);
     data.remove(0, index + 1);
     QString message = QString::fromUtf8(messageData);
@@ -94,53 +99,101 @@ void DaemonIpcServer::handleErrorOccurred()
 
 void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &message)
 {
-  const auto kAckMessage = "ok\n";
-  const auto kErrorMessage = "error\n";
-
   LOG_DEBUG("ipc server got message: %s", message.toUtf8().constData());
-  if (message == "hello") {
+  const auto parts = message.split('=');
+  if (parts.size() < 1) {
+    LOG_ERR("ipc server got invalid message: %s", message.toUtf8().constData());
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  const auto &command = parts[0];
+  if (command == "hello") { // NOSONAR
     clientSocket->write("hello\n");
-  } else if (message == "noop") {
+  } else if (command == "noop") {
     clientSocket->write(kAckMessage);
-  } else if (message.startsWith("logLevel=")) {
-    const auto logLevel = message.split('=')[1];
-    if (logLevel.isEmpty()) {
-      LOG_ERR("ipc server got empty log level");
-      clientSocket->write(kErrorMessage);
-    } else {
-      LOG_DEBUG("ipc server got new log level: %s", logLevel.toUtf8().constData());
-      Q_EMIT logLevelChanged(logLevel);
-      clientSocket->write(kAckMessage);
-    }
-  } else if (message.startsWith("elevate=")) {
-    const auto elevateMode = message.split('=')[1];
-    if (elevateMode != "yes" && elevateMode != "no") {
-      LOG_ERR("ipc server got invalid elevate value: %s", elevateMode.toUtf8().constData());
-      clientSocket->write(kErrorMessage);
-      return;
-    } else {
-      LOG_DEBUG("ipc server got new elevate value: %s", elevateMode.toUtf8().constData());
-      Q_EMIT elevateModeChanged(elevateMode == "yes");
-      clientSocket->write(kAckMessage);
-    }
-  } else if (message.startsWith("command=")) {
-    const auto command = message.split('=')[1];
-    if (command.isEmpty()) {
-      LOG_ERR("ipc server got empty command");
-      clientSocket->write(kErrorMessage);
-    } else {
-      LOG_DEBUG("ipc server got new command: %s", command.toUtf8().constData());
-      Q_EMIT commandChanged(command);
-      clientSocket->write(kAckMessage);
-    }
-  } else if (message == "restart") {
-    LOG_DEBUG("ipc server got restart message");
-    Q_EMIT restartRequested();
+  } else if (command == "logLevel") {
+    processLogLevel(clientSocket, parts);
+  } else if (command == "elevate") {
+    processElevate(clientSocket, parts);
+  } else if (command == "command") {
+    processCommand(clientSocket, parts);
+  } else if (command == "start") {
+    LOG_DEBUG("ipc server got start message");
+    Q_EMIT startProcessRequested();
     clientSocket->write(kAckMessage);
+  } else if (command == "stop") {
+    LOG_DEBUG("ipc server got stop message");
+    Q_EMIT stopProcessRequested();
+    clientSocket->write(kAckMessage);
+  } else if (command == "logPath") {
+    LOG_DEBUG("ipc server got log path request");
+    // TODO: send log path
   } else {
     LOG_WARN("ipc server got unknown message: %s", message.toUtf8().constData());
   }
+
   clientSocket->flush();
+}
+
+void DaemonIpcServer::processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts)
+{
+  if (messageParts.size() < 2) {
+    LOG_ERR("ipc server got invalid log level message");
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  const auto &logLevel = messageParts[1];
+  if (logLevel.isEmpty()) {
+    LOG_ERR("ipc server got empty log level");
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  LOG_DEBUG("ipc server got new log level: %s", logLevel.toUtf8().constData());
+  Q_EMIT logLevelChanged(logLevel);
+  clientSocket->write(kAckMessage);
+}
+
+void DaemonIpcServer::processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts)
+{
+  if (messageParts.size() < 2) {
+    LOG_ERR("ipc server got invalid elevate message");
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  const auto &elevate = messageParts[1];
+  if (elevate != "yes" && elevate != "no") {
+    LOG_ERR("ipc server got invalid elevate value: %s", elevate.toUtf8().constData());
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  LOG_DEBUG("ipc server got new elevate value: %s", elevate.toUtf8().constData());
+  Q_EMIT elevateModeChanged(elevate == "yes");
+  clientSocket->write(kAckMessage);
+}
+
+void DaemonIpcServer::processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts)
+{
+  if (messageParts.size() < 2) {
+    LOG_ERR("ipc server got invalid command message");
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  const auto &command = messageParts[1];
+  if (command.isEmpty()) {
+    LOG_ERR("ipc server got empty command");
+    clientSocket->write(kErrorMessage);
+    return;
+  }
+
+  LOG_DEBUG("ipc server got new command: %s", command.toUtf8().constData());
+  Q_EMIT commandChanged(command);
+  clientSocket->write(kAckMessage);
 }
 
 } // namespace deskflow::core::ipc

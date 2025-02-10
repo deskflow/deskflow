@@ -17,7 +17,9 @@ namespace deskflow::gui::ipc {
 
 const auto kTimeout = 1000;
 
-DaemonIpcClient::DaemonIpcClient(QObject *parent) : QObject(parent), m_socket{new QLocalSocket(this)}
+DaemonIpcClient::DaemonIpcClient(QObject *parent)
+    : QObject(parent),                 //
+      m_socket{new QLocalSocket(this)} // NOSONAR
 {
 }
 
@@ -81,15 +83,25 @@ bool DaemonIpcClient::sendLogLevel(const QString &logLevel)
   return true;
 }
 
-bool DaemonIpcClient::sendCommand(const QString &command, ElevateMode elevateMode)
+bool DaemonIpcClient::sendStartProcess(const QString &command, ElevateMode elevateMode)
 {
   if (!keepAlive())
     return false;
 
-  sendMessage("elevate=" + (elevateMode == ElevateMode::kAlways ? QStringLiteral("yes") : QStringLiteral("no")));
-  sendMessage("command=" + command);
-  sendMessage("restart");
-  return true;
+  if (!sendMessage("elevate=" + (elevateMode == ElevateMode::kAlways ? QStringLiteral("yes") : QStringLiteral("no")))) {
+    return false;
+  }
+
+  if (!sendMessage("command=" + command)) {
+    return false;
+  }
+
+  return sendMessage("start");
+}
+
+bool DaemonIpcClient::sendStopProcess()
+{
+  return sendMessage("stop");
 }
 
 bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)

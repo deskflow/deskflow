@@ -19,17 +19,21 @@ class DaemonIpcServer : public QObject
   Q_OBJECT
 
 public:
-  DaemonIpcServer(QObject *parent);
-  ~DaemonIpcServer();
+  explicit DaemonIpcServer(QObject *parent);
+  ~DaemonIpcServer() override;
 
 signals:
   void logLevelChanged(const QString &logLevel);
   void elevateModeChanged(bool elevate);
   void commandChanged(const QString &command);
-  void restartRequested();
+  void startProcessRequested();
+  void stopProcessRequested();
 
 private:
   void processMessage(QLocalSocket *clientSocket, const QString &message);
+  void processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts);
+  void processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts);
+  void processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts);
 
 private slots:
   void handleNewConnection();
