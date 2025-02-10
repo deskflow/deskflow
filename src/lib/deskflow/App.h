@@ -20,6 +20,7 @@
 #endif
 
 #include <stdexcept>
+#include <thread>
 
 class IArchTaskBarReceiver;
 class BufferedLogOutputter;
