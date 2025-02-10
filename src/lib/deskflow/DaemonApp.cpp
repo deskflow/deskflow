@@ -277,18 +277,18 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     m_ipcServer = std::make_unique<IpcServer>(m_events.get(), &multiplexer);
 
     // send logging to gui via ipc, log system adopts outputter.
-    m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(*m_ipcServer, IpcClientType::GUI, true);
-    CLOG->insert(m_ipcLogOutputter.get());
+    // m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(*m_ipcServer, IpcClientType::GUI, true);
+    // CLOG->insert(m_ipcLogOutputter.get());
 
 #if SYSAPI_WIN32
-    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, *m_ipcServer, *m_ipcLogOutputter, foreground);
+    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, *m_ipcServer, /* *m_ipcLogOutputter,*/ foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter.get());
 #endif
 
-    m_events->adoptHandler(
-        m_events->forIpcServer().messageReceived(), m_ipcServer.get(),
-        new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage)
-    );
+    // m_events->adoptHandler(
+    //     m_events->forIpcServer().messageReceived(), m_ipcServer.get(),
+    //     new TMethodEventJob<DaemonApp>(this, &DaemonApp::handleIpcMessage)
+    // );
 
     m_ipcServer->listen();
 
@@ -312,7 +312,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     m_watchdog->stop();
 #endif
 
-    m_events->removeHandler(m_events->forIpcServer().messageReceived(), m_ipcServer.get());
+    // m_events->removeHandler(m_events->forIpcServer().messageReceived(), m_ipcServer.get());
 
     CLOG->remove(m_ipcLogOutputter.get());
 

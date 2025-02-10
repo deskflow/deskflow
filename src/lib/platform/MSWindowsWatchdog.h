@@ -25,7 +25,9 @@ class FileLogOutputter;
 class MSWindowsWatchdog
 {
 public:
-  MSWindowsWatchdog(bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground);
+  MSWindowsWatchdog(
+      bool autoDetectCommand, IpcServer &ipcServer, /*IpcLogOutputter &ipcLogOutputter,*/ bool foreground
+  );
   virtual ~MSWindowsWatchdog();
 
   void startAsync();
@@ -73,7 +75,7 @@ private:
   HANDLE m_stdOutRead;
   Thread *m_outputThread;
   IpcServer &m_ipcServer;
-  IpcLogOutputter &m_ipcLogOutputter;
+  // IpcLogOutputter &m_ipcLogOutputter;
   bool m_elevateProcess;
   MSWindowsSession m_session;
   PROCESS_INFORMATION m_processInfo;

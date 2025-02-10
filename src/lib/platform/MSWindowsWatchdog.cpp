@@ -9,6 +9,7 @@
 
 #include "arch/Arch.h"
 #include "arch/win32/XArchWindows.h"
+#include "base/ELevel.h"
 #include "base/Log.h"
 #include "base/String.h"
 #include "base/TMethodJob.h"
@@ -73,7 +74,7 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 const char g_activeDesktop[] = {"activeDesktop:"};
 
 MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground
+    bool autoDetectCommand, IpcServer &ipcServer, /*IpcLogOutputter &ipcLogOutputter,*/ bool foreground
 )
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
@@ -82,7 +83,7 @@ MSWindowsWatchdog::MSWindowsWatchdog(
       m_stdOutWrite(NULL),
       m_stdOutRead(NULL),
       m_ipcServer(ipcServer),
-      m_ipcLogOutputter(ipcLogOutputter),
+      // m_ipcLogOutputter(ipcLogOutputter),
       m_elevateProcess(false),
       m_processFailures(0),
       m_processRunning(false),
@@ -477,10 +478,24 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       testOutput(buffer);
 
-      m_ipcLogOutputter.write(kINFO, buffer);
+      // m_ipcLogOutputter.write(kINFO, buffer);
+
+      // strip out windows \r chars to prevent extra lines in log file.
+      std::string output(buffer);
+      if (!output.empty()) {
+        size_t pos = 0;
+        while ((pos = output.find("\r", pos)) != std::string::npos) {
+          output.replace(pos, 1, "");
+        }
+
+        // trip ending newline, as file writer will add it's own newline.
+        if (output[output.length() - 1] == '\n') {
+          output = output.substr(0, output.length() - 1);
+        }
+      }
 
       if (m_fileLogOutputter != NULL) {
-        m_fileLogOutputter->write(kINFO, buffer);
+        m_fileLogOutputter->write(kPRINT, output.c_str());
       }
 
 #if SYSAPI_WIN32
@@ -489,7 +504,7 @@ void MSWindowsWatchdog::outputLoop(void *)
         // process output to the VS debug output window.
         // we could use the MSWindowsDebugOutputter, but it's really fiddly to
         // so, and there doesn't seem to be an advantage of doing that.
-        OutputDebugString(buffer);
+        OutputDebugString(output.c_str());
       }
 #endif
     }
