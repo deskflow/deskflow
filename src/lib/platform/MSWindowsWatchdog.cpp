@@ -1,7 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2009 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -11,15 +10,10 @@
 #include "arch/win32/XArchWindows.h"
 #include "base/ELevel.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
 #include <Shellapi.h>
@@ -73,17 +67,13 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand, IpcServer &ipcServer, /*IpcLogOutputter &ipcLogOutputter,*/ bool foreground
-)
+MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true),
       m_commandChanged(false),
       m_stdOutWrite(NULL),
       m_stdOutRead(NULL),
-      m_ipcServer(ipcServer),
-      // m_ipcLogOutputter(ipcLogOutputter),
       m_elevateProcess(false),
       m_processFailures(0),
       m_processRunning(false),
@@ -479,8 +469,6 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       testOutput(buffer);
 
-      // m_ipcLogOutputter.write(kINFO, buffer);
-
       // strip out windows \r chars to prevent extra lines in log file.
       std::string output(buffer);
       if (!output.empty()) {
@@ -505,7 +493,7 @@ void MSWindowsWatchdog::outputLoop(void *)
         // process output to the VS debug output window.
         // we could use the MSWindowsDebugOutputter, but it's really fiddly to
         // so, and there doesn't seem to be an advantage of doing that.
-        OutputDebugString(output.c_str());
+        OutputDebugString(buffer);
       }
 #endif
     }
@@ -519,9 +507,6 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
   if (exitCode != STILL_ACTIVE) {
     return;
   }
-
-  // IpcShutdownMessage shutdown;
-  // m_ipcServer.send(shutdown, IpcClientType::Node);
 
   LOG_DEBUG("sending close event to close process gracefully");
   HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\DeskflowCloseEvent");

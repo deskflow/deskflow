@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
-# SPDX-FileCopyrightText: 2012 - 2024 Symless Ltd
+# SPDX-FileCopyrightText: 2012 - 2025 Symless Ltd
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
@@ -167,9 +167,9 @@ target_include_directories(
 if(UNIX)
   target_link_libraries(
     ${lib_name}
+    PRIVATE
     arch
     client
-    ipc
     net
     base
     platform
@@ -180,12 +180,13 @@ if(UNIX)
   )
 
   if(NOT APPLE)
-    target_link_libraries(${lib_name} pugixml)
+    target_link_libraries(${lib_name} PRIVATE pugixml)
 
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
-      target_link_libraries(${lib_name} PkgConfig::lib_glib
-                            PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
+      target_link_libraries(
+        ${lib_name} PRIVATE
+        PkgConfig::lib_glib PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
     endif()
   endif()
 endif()
