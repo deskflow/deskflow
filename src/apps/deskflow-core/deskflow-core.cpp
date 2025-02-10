@@ -75,8 +75,8 @@ int main(int argc, char **argv)
   if (isDaemon(argc, argv)) {
     LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
 
-    // Daemon and thread must be heap-allocated to allow thread migration and deferred deletion.
-    // Avoid setting Qt ownership to prevent premature deletion.
+    // Daemon must be heap-allocated to allow thread migration and deletion on thread exit.
+    // Avoid setting Qt ownership to prevent premature deletion (thread may run longer than Qt loop).
     auto *pDaemon = new DaemonApp(); // NOSONAR
     const auto initResult = pDaemon->init(argc, argv);
 
@@ -86,6 +86,8 @@ int main(int argc, char **argv)
     case StartDaemon: {
       QCoreApplication app(argc, argv);
 
+      // Thread must be heap-allocated for deferred deletion on thread exit.
+      // Avoid setting Qt ownership to prevent premature deletion (thread may run longer than Qt loop).
       auto *pDaemonThread = new QThread(); // NOSONAR
       pDaemon->moveToThread(pDaemonThread);
 
@@ -109,9 +111,14 @@ int main(int argc, char **argv)
           Qt::DirectConnection
       );
       QObject::connect(
-          ipcServer, &ipc::DaemonIpcServer::restartRequested, pDaemon, &DaemonApp::restartCoreProcess, //
+          ipcServer, &ipc::DaemonIpcServer::startProcessRequested, pDaemon, &DaemonApp::applyWatchdogCommand, //
           Qt::DirectConnection
       );
+      QObject::connect(
+          ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, pDaemon, &DaemonApp::clearWatchdogCommand, //
+          Qt::DirectConnection
+      );
+
       pDaemonThread->start();
       return QCoreApplication::exec();
     }
