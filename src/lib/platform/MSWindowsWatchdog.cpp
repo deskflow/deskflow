@@ -596,10 +596,9 @@ void MSWindowsWatchdog::getActiveDesktop(LPSECURITY_ATTRIBUTES security)
     MSWindowsSession session;
     std::string name = session.getActiveDesktopName();
     if (name.empty()) {
-      LOG((CLOG_CRIT "failed to get active desktop name"));
+      LOG((CLOG_DEBUG "no active desktop in current session"));
     } else {
-      std::string output = deskflow::string::sprintf("activeDesktop:%s", name.c_str());
-      LOG((CLOG_INFO "%s", output.c_str()));
+      LOG((CLOG_INFO "active desktop name: %s", name.c_str()));
     }
   }
 }
