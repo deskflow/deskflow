@@ -205,18 +205,6 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
   EXPECT_EQ(1, i);
 }
 
-TEST_F(GenericArgsParsingTests, parseGenericArgs_ipcCmd_enableIpcTrue)
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kIpcCmd[argc] = {"stub", "--ipc"};
-
-  m_argParser->parseGenericArgs(argc, kIpcCmd, i);
-
-  EXPECT_EQ(true, argsBase.m_enableIpc);
-  EXPECT_EQ(1, i);
-}
-
 #ifndef WINAPI_XWINDOWS
 TEST_F(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
 {

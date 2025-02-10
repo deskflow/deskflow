@@ -13,11 +13,8 @@
 
 #include <QObject>
 
-#include "common/common.h"
-
 class Event;
 class IEventQueue;
-class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
 class QCoreApplication;
@@ -49,15 +46,14 @@ public:
 
   InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
-  void mainLoop(bool logToFile, bool foreground = false);
   void restartCoreProcess();
   void saveLogLevel(const QString &logLevel) const;
+  void mainLoop(bool foreground = false);
+  void setLogLevel(const QString &logLevel);
   void setElevate(bool elevate);
   void setCommand(const QString &command);
   void applyWatchdogCommand() const;
   void clearWatchdogCommand();
-
-  // Getters
   std::string logFilename();
 
   static DaemonApp &instance()
@@ -79,7 +75,6 @@ private:
 #endif
 
 private:
-  std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;

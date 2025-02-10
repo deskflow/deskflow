@@ -6,7 +6,6 @@
  */
 
 #include "base/Event.h"
-#include "base/EventQueue.h"
 
 //
 // Event

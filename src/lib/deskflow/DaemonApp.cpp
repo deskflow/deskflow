@@ -4,26 +4,13 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-// TODO: split this class into windows and unix to get rid
-// of all the #ifdefs!
-
 #include "deskflow/DaemonApp.h"
 
 #include "arch/XArch.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
 #include "common/constants.h"
-#include "common/ipc.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgParser.h"
-#include "deskflow/ClientArgs.h"
-#include "deskflow/ServerArgs.h"
-#include "ipc/IpcClientProxy.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcSettingMessage.h"
-#include "net/SocketMultiplexer.h"
 
 #if SYSAPI_WIN32
 
@@ -50,16 +37,6 @@ using namespace deskflow::core;
 const char *const kLogFilename = "deskflow-daemon.log";
 
 namespace {
-void updateSetting(const IpcMessage &message)
-{
-  try {
-    auto setting = static_cast<const IpcSettingMessage &>(message);
-    ARCH->setting(setting.getName(), setting.getValue());
-  } catch (const XArch &e) {
-    LOG((CLOG_ERR "failed to save setting: %s", e.what()));
-  }
-}
-
 bool isServerCommandLine(const std::vector<std::string> &cmd)
 {
   auto isServer = false;
@@ -76,7 +53,7 @@ bool isServerCommandLine(const std::vector<std::string> &cmd)
 
 int mainLoopStatic()
 {
-  DaemonApp::instance().mainLoop(true);
+  DaemonApp::instance().mainLoop();
   return kExitSuccess;
 }
 
@@ -108,7 +85,7 @@ void DaemonApp::run()
 
     // run process in foreground instead of daemonizing.
     // useful for debugging.
-    mainLoop(false, m_foreground);
+    mainLoop(m_foreground);
   } else {
 #if SYSAPI_WIN32
     LOG((CLOG_NOTE "daemonizing windows service"));
@@ -260,7 +237,7 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
   return FatalError;
 }
 
-void DaemonApp::mainLoop(bool logToFile, bool foreground)
+void DaemonApp::mainLoop(bool foreground)
 {
   if (m_events == nullptr) {
     throw XDeskflow("event queue not set");
@@ -269,17 +246,12 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
   try {
     DAEMON_RUNNING(true);
 
-    if (logToFile) {
-      m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR -- Adopted by `Log`
-      CLOG->insert(m_fileLogOutputter);
-    }
+    m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
+    CLOG->insert(m_fileLogOutputter);
 
 #if SYSAPI_WIN32
     m_watchdog = std::make_unique<MSWindowsWatchdog>(false, foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-#endif
-
-#if SYSAPI_WIN32
 
     // install the platform event queue to handle service stop events.
     m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
@@ -293,13 +265,12 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 
     m_watchdog->startAsync();
 #endif
+
     m_events->loop();
 
 #if SYSAPI_WIN32
     m_watchdog->stop();
 #endif
-
-    CLOG->remove(m_ipcLogOutputter.get());
 
     DAEMON_RUNNING(false);
   } catch (std::exception &e) {

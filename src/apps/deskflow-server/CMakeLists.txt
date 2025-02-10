@@ -32,7 +32,6 @@ target_link_libraries(
   io
   mt
   net
-  ipc
   platform
   server
   app

@@ -46,26 +46,6 @@ REGISTER_EVENT(IStream, outputShutdown)
 REGISTER_EVENT(IStream, inputFormatError)
 
 //
-// IpcClient
-//
-
-REGISTER_EVENT(IpcClient, connected)
-REGISTER_EVENT(IpcClient, messageReceived)
-
-//
-// IpcClientProxy
-//
-
-REGISTER_EVENT(IpcClientProxy, messageReceived)
-REGISTER_EVENT(IpcClientProxy, disconnected)
-
-//
-// IpcServerProxy
-//
-
-REGISTER_EVENT(IpcServerProxy, messageReceived)
-
-//
 // IDataSocket
 //
 
@@ -166,13 +146,6 @@ REGISTER_EVENT(IScreen, error)
 REGISTER_EVENT(IScreen, shapeChanged)
 REGISTER_EVENT(IScreen, suspend)
 REGISTER_EVENT(IScreen, resume)
-
-//
-// IpcServer
-//
-
-REGISTER_EVENT(IpcServer, clientConnected)
-REGISTER_EVENT(IpcServer, messageReceived)
 
 //
 // Clipboard
