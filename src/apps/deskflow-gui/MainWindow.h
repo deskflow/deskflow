@@ -165,8 +165,6 @@ private:
   void showAndActivate();
 
   VersionChecker m_versionChecker;
-  QSystemTrayIcon *m_trayIcon = nullptr;
-  QAbstractButton *m_btnCancel = nullptr;
   bool m_secureSocket = false;
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
@@ -181,6 +179,7 @@ private:
   deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
 
+  QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
   inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
 
