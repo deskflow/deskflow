@@ -167,6 +167,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 void MSWindowsWatchdog::mainLoop(void *)
 {
   LOG_DEBUG("starting main loop");
+
   shutdownExistingProcesses();
 
   // the SendSAS function is used to send a sas (secure attention sequence) to the
