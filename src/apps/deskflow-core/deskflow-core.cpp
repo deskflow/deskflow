@@ -22,6 +22,7 @@
 
 #include <QCoreApplication>
 #include <QObject>
+#include <QString>
 #include <QThread>
 
 #include <filesystem>
@@ -77,7 +78,7 @@ int main(int argc, char **argv)
 
     // Daemon must be heap-allocated to allow thread migration and deletion on thread exit.
     // Avoid setting Qt ownership to prevent premature deletion (thread may run longer than Qt loop).
-    auto *pDaemon = new DaemonApp(); // NOSONAR
+    auto *pDaemon = new DaemonApp(); // NOSONAR - Qt memory
     const auto initResult = pDaemon->init(argc, argv);
 
     switch (initResult) {
@@ -88,7 +89,7 @@ int main(int argc, char **argv)
 
       // Thread must be heap-allocated for deferred deletion on thread exit.
       // Avoid setting Qt ownership to prevent premature deletion (thread may run longer than Qt loop).
-      auto *pDaemonThread = new QThread(); // NOSONAR
+      auto *pDaemonThread = new QThread(); // NOSONAR - Qt memory
       pDaemon->moveToThread(pDaemonThread);
 
       QObject::connect(pDaemonThread, &QThread::started, pDaemon, &DaemonApp::run);
@@ -97,7 +98,7 @@ int main(int argc, char **argv)
       QObject::connect(pDaemonThread, &QThread::finished, QCoreApplication::instance(), &QCoreApplication::quit);
 
       // The daemon app is on it's own thread which doesn't have a Qt event loop, so we need to use direct connection.
-      auto *ipcServer = new ipc::DaemonIpcServer(&app); // NOSONAR
+      auto *ipcServer = new ipc::DaemonIpcServer(&app, QString::fromStdString(pDaemon->logFilename())); // NOSONAR
       QObject::connect(
           ipcServer, &ipc::DaemonIpcServer::logLevelChanged, pDaemon, &DaemonApp::setLogLevel, //
           Qt::DirectConnection

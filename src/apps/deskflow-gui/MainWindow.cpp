@@ -31,6 +31,7 @@
 #endif
 
 #include <QApplication>
+#include <QDebug>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QLocalServer>

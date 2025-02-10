@@ -58,6 +58,9 @@ public:
   void setElevate(bool elevate);
   void setCommand(const QString &command);
 
+  // Getters
+  std::string logFilename();
+
   static DaemonApp *instance()
   {
     return s_instance;
@@ -66,7 +69,6 @@ public:
 private:
   void daemonize();
   void handleError(const char *message);
-  std::string logFilename();
   void handleIpcMessage(const Event &e, void *);
 
 private:
