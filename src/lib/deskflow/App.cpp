@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,36 +9,23 @@
 
 #include "DisplayInvalidException.h"
 #include "arch/Arch.h"
-#include "arch/XArch.h"
-#include "base/EventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
-#include "base/XBase.h"
 #include "base/log_outputters.h"
 #include "common/constants.h"
-#include "common/ipc.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/XDeskflow.h"
 #include "deskflow/protocol_types.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServerProxy.h"
-#include <thread>
 
 #if SYSAPI_WIN32
-#include "arch/win32/ArchMiscWindows.h"
 #include "base/IEventQueue.h"
-#include "base/TMethodJob.h"
 #endif
 
 #if WINAPI_CARBON
 #include "platform/OSXDragSimulator.h"
 #endif
 
-#include <charconv>
-#include <filesystem>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <stdio.h>
 #include <vector>
@@ -64,7 +51,6 @@ App::App(IEventQueue *events, deskflow::ArgsBase *args)
       m_args(args),
       m_fileLog(nullptr),
       m_appUtil(events),
-      m_ipcClient(nullptr),
       m_socketMultiplexer(nullptr)
 {
   assert(s_instance == nullptr);
@@ -206,32 +192,6 @@ void App::initApp(int argc, const char **argv)
 
   // load configuration
   loadConfig();
-}
-
-void App::initIpcClient()
-{
-  m_ipcClient = new IpcClient(m_events, m_socketMultiplexer);
-  m_ipcClient->connect();
-
-  m_events->adoptHandler(
-      m_events->forIpcClient().messageReceived(), m_ipcClient, new TMethodEventJob<App>(this, &App::handleIpcMessage)
-  );
-}
-
-void App::cleanupIpcClient()
-{
-  m_ipcClient->disconnect();
-  m_events->removeHandler(m_events->forIpcClient().messageReceived(), m_ipcClient);
-  delete m_ipcClient;
-}
-
-void App::handleIpcMessage(const Event &e, void *)
-{
-  IpcMessage *m = static_cast<IpcMessage *>(e.getDataObject());
-  if (m->type() == IpcMessageType::Shutdown) {
-    LOG((CLOG_INFO "got ipc shutdown message"));
-    m_events->addEvent(Event(Event::kQuit));
-  }
 }
 
 void App::runEventsLoop(void *)

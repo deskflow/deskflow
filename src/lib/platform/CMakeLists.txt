@@ -179,7 +179,6 @@ if(UNIX)
     platform
     io
     net
-    ipc
     app
     client
     ${libs})

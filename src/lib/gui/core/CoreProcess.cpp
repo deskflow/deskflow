@@ -158,18 +158,6 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       m_pDeps(deps),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
-  if (m_appConfig.processMode() == ProcessMode::kService) {
-
-    connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
-
-    const auto logPath = requestDaemonLogPath();
-    if (!logPath.isEmpty()) {
-      qInfo() << "daemon log path:" << logPath;
-      m_daemonFileTail = new FileTail(logPath, this);
-      connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
-    }
-  }
-
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
@@ -189,30 +177,6 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
       qDebug("retry cancelled, process state is not retry pending");
     }
   });
-}
-
-void CoreProcess::onIpcClientServiceReady()
-{
-  if (m_processState == ProcessState::Starting) {
-    qDebug("service ready, continuing core process start");
-    start();
-  } else if (m_processState == ProcessState::Stopping) {
-    qDebug("service ready, continuing core process stop");
-    stop();
-  } else {
-    // This may happen when the IPC connection fails and then reconnects.
-    qWarning("ignoring service ready, process state is not starting or stopping");
-  }
-}
-
-void CoreProcess::onIpcClientError(const QString &text) const
-{
-  qCritical().noquote() << text;
-}
-
-void CoreProcess::onIpcClientRead(const QString &text)
-{
-  handleLogLines(text);
 }
 
 void CoreProcess::onProcessReadyReadStandardOutput()
@@ -312,10 +276,6 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   if (m_processState != Starting) {
     qFatal("core process must be in starting state");
-  }
-
-  if (!m_daemonIpcClient->isConnected()) {
-    m_daemonIpcClient->connectToServer();
   }
 
   QString commandQuoted = makeQuotedArgs(app, args);
@@ -506,8 +466,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-
-  m_pDeps->ipcClient().disconnectFromHost();
 }
 
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
@@ -518,9 +476,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   args << "--name" << m_appConfig.screenName();
 
   if (processMode != ProcessMode::kDesktop) {
-    // tell client/server to talk to daemon through ipc.
-    args << "--ipc";
-
 #if defined(Q_OS_WIN)
     // tell the client/server to shut down when a ms windows desk
     // is switched; this is because we may need to elevate or not

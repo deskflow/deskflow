@@ -64,13 +64,6 @@ add_library(${target} STATIC
   core/ServerMessage.h
   core/WaylandWarnings.cpp
   core/WaylandWarnings.h
-  ipc/IpcReader.cpp
-  ipc/IpcReader.h
-  ipc/IQIpcClient.cpp
-  ipc/IQIpcClient.h
-  ipc/QDataStreamProxy.h
-  ipc/QIpcClient.cpp
-  ipc/QIpcClient.h
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
   proxy/QNetworkAccessManagerProxy.cpp

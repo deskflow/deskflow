@@ -21,7 +21,6 @@ if(WIN32)
     arch
     base
     io
-    ipc
     mt
     net
     platform

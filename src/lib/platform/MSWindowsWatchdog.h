@@ -1,7 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2009 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -19,8 +18,6 @@
 #include <string>
 
 class Thread;
-class IpcLogOutputter;
-class IpcServer;
 class FileLogOutputter;
 
 class MSWindowsWatchdog
