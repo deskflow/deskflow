@@ -18,7 +18,6 @@
 
 #include "ServerConfig.h"
 #include "VersionChecker.h"
-#include "common/ipc.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/config/ServerConfigDialogState.h"
@@ -146,7 +145,6 @@ private:
   void setIcon();
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
-  void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses() const;
   void enableServer(bool enable);

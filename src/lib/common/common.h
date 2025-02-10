@@ -45,7 +45,7 @@ enum
 #if WINAPI_MSWINDOWS
 namespace deskflow::common {
 
-const auto kCloseEventName = "Global\\DeskflowCloseEvent";
+const auto kCloseEventName = "Global\\DeskflowClose";
 
 }
 #endif

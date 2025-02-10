@@ -1,7 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2009 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -13,12 +12,8 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
 #include <Shellapi.h>
@@ -437,7 +432,7 @@ void MSWindowsWatchdog::outputLoop(void *)
         // process output to the VS debug output window.
         // we could use the MSWindowsDebugOutputter, but it's really fiddly to
         // so, and there doesn't seem to be an advantage of doing that.
-        OutputDebugString(output.c_str());
+        OutputDebugString(buffer);
       }
 #endif
     }

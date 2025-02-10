@@ -13,11 +13,8 @@
 
 #include <QObject>
 
-#include "common/common.h"
-
 class Event;
 class IEventQueue;
-class IpcLogOutputter;
 class FileLogOutputter;
 class QLocalServer;
 class QCoreApplication;
@@ -49,7 +46,7 @@ public:
 
   InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
-  void mainLoop(bool logToFile, bool foreground = false);
+  void mainLoop(bool foreground = false);
   void applyWatchdogCommand();
   void clearWatchdogCommand();
 
@@ -80,7 +77,6 @@ private:
 #endif
 
 private:
-  std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;

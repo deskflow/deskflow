@@ -34,10 +34,6 @@ public:
   MOCK_METHOD(void *, getSystemTarget, (), (override));
   MOCK_METHOD(ClientEvents &, forClient, (), (override));
   MOCK_METHOD(IStreamEvents &, forIStream, (), (override));
-  MOCK_METHOD(IpcClientEvents &, forIpcClient, (), (override));
-  MOCK_METHOD(IpcClientProxyEvents &, forIpcClientProxy, (), (override));
-  MOCK_METHOD(IpcServerEvents &, forIpcServer, (), (override));
-  MOCK_METHOD(IpcServerProxyEvents &, forIpcServerProxy, (), (override));
   MOCK_METHOD(IDataSocketEvents &, forIDataSocket, (), (override));
   MOCK_METHOD(IListenSocketEvents &, forIListenSocket, (), (override));
   MOCK_METHOD(ISocketEvents &, forISocket, (), (override));

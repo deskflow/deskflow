@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,7 +11,6 @@
 #include "base/Log.h"
 #include "common/common.h"
 #include "deskflow/IApp.h"
-#include "ipc/IpcClient.h"
 
 #if SYSAPI_WIN32
 #include "deskflow/win32/AppUtilWindows.h"
@@ -20,7 +19,6 @@
 #endif
 
 #include <stdexcept>
-#include <thread>
 
 namespace deskflow {
 class Screen;
@@ -110,12 +108,7 @@ public:
 
   void (*m_bye)(int);
 
-private:
-  void handleIpcMessage(const Event &, void *);
-
 protected:
-  void initIpcClient();
-  void cleanupIpcClient();
   void runEventsLoop(void *);
 
   bool m_suspended;
@@ -126,7 +119,6 @@ private:
   static App *s_instance;
   FileLogOutputter *m_fileLog;
   ARCH_APP_UTIL m_appUtil;
-  IpcClient *m_ipcClient;
   SocketMultiplexer *m_socketMultiplexer;
 };
 
