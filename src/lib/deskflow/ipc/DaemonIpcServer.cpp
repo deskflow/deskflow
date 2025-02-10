@@ -17,9 +17,10 @@ namespace deskflow::core::ipc {
 const auto kAckMessage = "ok\n";
 const auto kErrorMessage = "error\n";
 
-DaemonIpcServer::DaemonIpcServer(QObject *parent)
-    : QObject(parent),                 //
-      m_server{new QLocalServer(this)} // NOSONAR
+DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
+    : QObject(parent),
+      m_logFilename(logFilename),
+      m_server{new QLocalServer(this)} // NOSONAR - Qt memory
 {
   // Daemon runs as system, but GUI runs as regular user, so we need to allow world access.
   m_server->setSocketOptions(QLocalServer::WorldAccessOption);
@@ -108,7 +109,7 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
   }
 
   const auto &command = parts[0];
-  if (command == "hello") { // NOSONAR
+  if (command == "hello") { // NOSONAR - if-init is confusing here
     clientSocket->write("hello\n");
   } else if (command == "noop") {
     clientSocket->write(kAckMessage);
@@ -128,7 +129,7 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
     clientSocket->write(kAckMessage);
   } else if (command == "logPath") {
     LOG_DEBUG("ipc server got log path request");
-    // TODO: send log path
+    clientSocket->write("logPath=" + m_logFilename.toUtf8());
   } else {
     LOG_WARN("ipc server got unknown message: %s", message.toUtf8().constData());
   }

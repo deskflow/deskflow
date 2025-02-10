@@ -27,6 +27,8 @@
 #include <QCoreApplication>
 #include <QThread>
 
+using namespace deskflow::core;
+
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
@@ -51,13 +53,11 @@ int main(int argc, char **argv)
     using enum DaemonApp::InitResult;
 
   case StartDaemon: {
-    using namespace deskflow::core;
-
     QCoreApplication app(argc, argv);
 
     // Thread must be heap-allocated for deferred deletion on thread exit.
     // Avoid setting Qt ownership to prevent premature deletion (thread may run longer than Qt loop).
-    auto *pDaemonThread = new QThread(); // NOSONAR
+    auto *pDaemonThread = new QThread(); // NOSONAR - Qt memory
     pDaemon->moveToThread(pDaemonThread);
 
     QObject::connect(pDaemonThread, &QThread::started, pDaemon, &DaemonApp::run);
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
     QObject::connect(pDaemonThread, &QThread::finished, QCoreApplication::instance(), &QCoreApplication::quit);
 
     // The daemon app is on it's own thread which doesn't have a Qt event loop, so we need to use direct connection.
-    auto *ipcServer = new ipc::DaemonIpcServer(&app); // NOSONAR
+    auto *ipcServer = new ipc::DaemonIpcServer(&app, QString::fromStdString(pDaemon->logFilename())); // NOSONAR
     QObject::connect(
         ipcServer, &ipc::DaemonIpcServer::logLevelChanged, pDaemon, &DaemonApp::saveLogLevel, //
         Qt::DirectConnection

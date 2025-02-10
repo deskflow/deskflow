@@ -18,8 +18,8 @@ namespace deskflow::gui::ipc {
 const auto kTimeout = 1000;
 
 DaemonIpcClient::DaemonIpcClient(QObject *parent)
-    : QObject(parent),                 //
-      m_socket{new QLocalSocket(this)} // NOSONAR
+    : QObject(parent),
+      m_socket{new QLocalSocket(this)} // NOSONAR - Qt memory
 {
 }
 
@@ -58,15 +58,59 @@ void DaemonIpcClient::handleErrorOccurred()
   m_connected = false;
 }
 
+bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
+{
+  if (expectConnected && !m_connected) {
+    qWarning() << "cannot send command, ipc not connected";
+    return false;
+  }
+
+  QByteArray messageData = message.toUtf8() + "\n";
+  m_socket->write(messageData);
+  if (!m_socket->waitForBytesWritten(kTimeout)) {
+    qWarning() << "ipc failed to write command";
+    return false;
+  }
+
+  if (!expectAck.isEmpty()) {
+    qDebug() << "ipc waiting for ack: " << expectAck;
+
+    if (!m_socket->waitForReadyRead(kTimeout)) {
+      qWarning() << "ipc failed to read response";
+      return false;
+    }
+
+    QByteArray response = m_socket->readAll();
+    if (response.isEmpty()) {
+      qWarning() << "ipc got empty response";
+      return false;
+    }
+
+    QString responseData = QString::fromUtf8(response);
+    if (responseData.isEmpty()) {
+      qWarning() << "ipc failed to convert response to string";
+      return false;
+    }
+
+    if (responseData != expectAck + "\n") {
+      qWarning() << "ipc got unexpected response: " << responseData;
+      return false;
+    }
+  }
+
+  qDebug() << "ipc sent message: " << messageData;
+  return true;
+}
+
 bool DaemonIpcClient::keepAlive()
 {
   if (!isConnected() && !connectToServer()) {
-    qWarning() << "ipc client keep alive failed to connect";
+    qWarning() << "ipc keep alive failed to connect";
     return false;
   }
 
   if (!sendMessage("noop")) {
-    qWarning() << "ipc client keep alive ping failed";
+    qWarning() << "ipc keep alive ping failed";
     m_connected = false;
     return false;
   }
@@ -104,44 +148,45 @@ bool DaemonIpcClient::sendStopProcess()
   return sendMessage("stop");
 }
 
-bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
+QString DaemonIpcClient::requestLogPath()
 {
-  if (expectConnected && !m_connected) {
-    qWarning() << "cannot send command, ipc not connected";
-    return false;
-  }
+  if (!keepAlive())
+    return QString();
 
-  QByteArray messageData = message.toUtf8() + "\n";
-  m_socket->write(messageData);
-  if (!m_socket->waitForBytesWritten(kTimeout)) {
-    qWarning() << "ipc client failed to write command";
-    return false;
+  if (!sendMessage("logPath", QString())) {
+    return QString();
   }
 
   if (!m_socket->waitForReadyRead(kTimeout)) {
-    qWarning() << "ipc client failed to read response";
-    return false;
+    qWarning() << "ipc failed to read log path response";
+    return QString();
   }
 
   QByteArray response = m_socket->readAll();
   if (response.isEmpty()) {
-    qWarning() << "ipc client got empty response";
-    return false;
+    qWarning() << "ipc got empty log path response";
+    return QString();
   }
 
   QString responseData = QString::fromUtf8(response);
   if (responseData.isEmpty()) {
-    qWarning() << "ipc client failed to convert response to string";
-    return false;
+    qWarning() << "ipc failed to convert log path response to string";
+    return QString();
   }
 
-  if (responseData != expectAck + "\n") {
-    qWarning() << "ipc client got unexpected response: " << responseData;
-    return false;
+  // Trimming removes newline from end of message.
+  QStringList parts = responseData.trimmed().split("=");
+  if (parts.size() != 2) {
+    qWarning() << "ipc got invalid log path response: " << responseData;
+    return QString();
   }
 
-  qDebug() << "ipc client sent message: " << messageData;
-  return true;
+  if (parts[0] != "logPath") {
+    qWarning() << "ipc got unexpected log path response: " << responseData;
+    return QString();
+  }
+
+  return parts[1];
 }
 
 } // namespace deskflow::gui::ipc

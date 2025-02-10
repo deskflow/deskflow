@@ -24,6 +24,7 @@ public:
   bool sendLogLevel(const QString &logLevel);
   bool sendStartProcess(const QString &command, ElevateMode elevateMode);
   bool sendStopProcess();
+  QString requestLogPath();
 
   bool isConnected() const
   {

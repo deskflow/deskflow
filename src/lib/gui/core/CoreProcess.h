@@ -1,22 +1,25 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2024 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
 
+#include "gui/FileTail.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/ipc/QIpcClient.h"
 #include "gui/proxy/QProcessProxy.h"
 
+#include <memory>
+
+#include <QFileSystemWatcher>
 #include <QMutex>
 #include <QObject>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
-#include <memory>
 
 namespace deskflow::gui {
 
@@ -158,6 +161,7 @@ private:
   void handleLogLines(const QString &text);
   QString correctedInterface() const;
   QString correctedAddress() const;
+  QString requestDaemonLogPath();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
@@ -176,6 +180,7 @@ private:
   QTimer m_retryTimer;
   int m_connections = 0;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
+  FileTail *m_daemonFileTail = nullptr;
 };
 
 } // namespace deskflow::gui
