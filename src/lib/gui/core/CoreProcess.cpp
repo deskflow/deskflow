@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2024 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -169,6 +169,15 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
   //     &m_pDeps->ipcClient(), &QIpcClient::serviceReady, this, //
   //     &CoreProcess::onIpcClientServiceReady
   // );
+
+  if (m_appConfig.processMode() == ProcessMode::kService) {
+    const auto logPath = requestDaemonLogPath();
+    if (!logPath.isEmpty()) {
+      qInfo() << "daemon log path:" << logPath;
+      m_daemonFileTail = new FileTail(logPath, this);
+      connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
+    }
+  }
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 
@@ -780,6 +789,34 @@ QString CoreProcess::correctedInterface() const
 QString CoreProcess::correctedAddress() const
 {
   return wrapIpv6(m_address);
+}
+
+QString CoreProcess::coreProcessName() const
+{
+  static const auto binName = QStringLiteral("deskflow-core");
+#ifdef Q_OS_WIN
+  static const auto exeTemplate = QStringLiteral("%1.exe");
+  return exeTemplate.arg(binName);
+#else
+  return kCoreBinName;
+#endif
+}
+
+QString CoreProcess::requestDaemonLogPath()
+{
+  qDebug() << "requesting daemon log path";
+  const auto logPath = m_daemonIpcClient->requestLogPath();
+  if (logPath.isEmpty()) {
+    qCritical() << "failed to get daemon log path";
+    return QString();
+  }
+
+  if (QFileInfo logFile(logPath); !logFile.exists() || !logFile.isFile()) {
+    qWarning() << "daemon log path file does not exist:" << logPath;
+    return QString();
+  }
+
+  return logPath;
 }
 
 } // namespace deskflow::gui
