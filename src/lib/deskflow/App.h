@@ -20,6 +20,7 @@
 #endif
 
 #include <stdexcept>
+#include <thread>
 
 namespace deskflow {
 class Screen;

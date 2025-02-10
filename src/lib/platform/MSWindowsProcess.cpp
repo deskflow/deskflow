@@ -122,6 +122,16 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
 {
   LOG_DEBUG("shutting down process %d", pid);
 
+  LOG_DEBUG("sending close event to close process gracefully");
+  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, deskflow::common::kCloseEventName);
+  if (hCloseEvent) { // NOSONAR -- Readability
+    SetEvent(hCloseEvent);
+    CloseHandle(hCloseEvent);
+  } else {
+    LOG((CLOG_WARN "could not send close event to process"));
+    throw XArch(new XArchEvalWindows);
+  }
+
   DWORD exitCode;
   GetExitCodeProcess(handle, &exitCode);
   if (exitCode != STILL_ACTIVE) {
