@@ -19,7 +19,7 @@ class DaemonIpcServer : public QObject
   Q_OBJECT
 
 public:
-  explicit DaemonIpcServer(QObject *parent);
+  explicit DaemonIpcServer(QObject *parent, const QString &logFilename);
   ~DaemonIpcServer() override;
 
 signals:
@@ -42,6 +42,7 @@ private slots:
   void handleErrorOccurred();
 
 private:
+  const QString m_logFilename;
   QLocalServer *m_server;
   QSet<QLocalSocket *> m_clients;
 };
