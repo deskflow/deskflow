@@ -54,6 +54,8 @@ public:
   void saveLogLevel(const QString &logLevel) const;
   void setElevate(bool elevate);
   void setCommand(const QString &command);
+  void applyWatchdogCommand() const;
+  void clearWatchdogCommand();
 
   static DaemonApp &instance()
   {
