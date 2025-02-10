@@ -171,6 +171,9 @@ CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serve
   // );
 
   if (m_appConfig.processMode() == ProcessMode::kService) {
+
+    connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
+
     const auto logPath = requestDaemonLogPath();
     if (!logPath.isEmpty()) {
       qInfo() << "daemon log path:" << logPath;
@@ -240,6 +243,11 @@ void CoreProcess::onProcessReadyReadStandardError()
   if (m_pDeps->process()) {
     handleLogLines(m_pDeps->process().readAllStandardError());
   }
+}
+
+void CoreProcess::daemonIpcClientConnected()
+{
+  applyLogLevel();
 }
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
