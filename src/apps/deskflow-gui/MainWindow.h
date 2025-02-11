@@ -98,13 +98,10 @@ private:
 
   void configScopesSaving();
   void appConfigTlsChanged();
-  void appConfigScreenNameChanged();
-  void appConfigInvertConnection();
   void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);
   void coreProcessStateChanged(CoreProcess::ProcessState state);
-  void coreProcessSecureSocket(bool enabled);
   void versionCheckerUpdateFound(const QString &version);
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void serverConnectionConfigureClient(const QString &clientName);
