@@ -9,10 +9,12 @@ add_executable(${target} "${target}.cpp")
 if(WIN32)
   # Generate rc file
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI combined server and client")
+  set(EXE_ICON "IDI_DESKFLOW ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\"")
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
   target_sources(${target} PRIVATE
-    "${target}.exe.manifest"
+    ${target}.exe.manifest
+    ${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico
     ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc
   )
 endif()
