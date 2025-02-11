@@ -67,7 +67,7 @@ elseif(UNIX)
   )
 endif()
 
-add_library(${lib_name} STATIC  ${PLATFORM_CODE}
+add_library(${lib_name} STATIC ${PLATFORM_CODE}
   App.cpp
   App.h
   AppUtil.cpp
