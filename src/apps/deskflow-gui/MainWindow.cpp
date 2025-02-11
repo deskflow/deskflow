@@ -237,15 +237,15 @@ void MainWindow::connectSlots()
   connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
-  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::appConfigScreenNameChanged);
-  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::appConfigInvertConnection);
+  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
+  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::applyConfig);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
   connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
   connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
-  connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::coreProcessSecureSocket);
+  connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::secureSocket);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -352,16 +352,6 @@ void MainWindow::versionCheckerUpdateFound(const QString &version)
 
   ui->lblUpdate->show();
   ui->lblUpdate->setText(text);
-}
-
-void MainWindow::appConfigScreenNameChanged()
-{
-  updateScreenName();
-}
-
-void MainWindow::appConfigInvertConnection()
-{
-  applyConfig();
 }
 
 void MainWindow::coreProcessError(CoreProcess::Error error)
@@ -759,11 +749,6 @@ void MainWindow::showFirstConnectedMessage()
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
   messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
-}
-
-void MainWindow::coreProcessSecureSocket(bool enabled)
-{
-  secureSocket(enabled);
 }
 
 void MainWindow::updateStatus()
