@@ -154,6 +154,21 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
 
   updateSize();
+
+  // Force generation of SHA256 for the localhost
+  if (m_appConfig.tlsEnabled()) {
+    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
+    if (!QFile::exists(QString::fromStdString(localPath))) {
+      regenerateLocalFingerprints();
+      return;
+    }
+
+    deskflow::FingerprintDatabase db;
+    db.read(localPath);
+    if (db.fingerprints().size() != 2) {
+      regenerateLocalFingerprints();
+    }
+  }
 }
 
 MainWindow::~MainWindow()
