@@ -87,12 +87,17 @@ class CoreProcessTests : public Test
 public:
   CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
   {
+    ON_CALL(m_appConfig, useExternalConfig()).WillByDefault(testing::Return(true));
+    ON_CALL(m_appConfig, configFile()).WillByDefault(testing::ReturnRef(m_configFile));
   }
 
   NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
   std::shared_ptr<NiceMock<DepsMock>> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;
+
+private:
+  const QString m_configFile = "tmp/deskflow-server.conf";
 };
 
 } // namespace
