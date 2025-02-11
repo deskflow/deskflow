@@ -230,7 +230,6 @@ void MainWindow::setupControls()
 // signal is emitted from the thread that owns the receiver's object.
 void MainWindow::connectSlots()
 {
-
   connect(&Logger::instance(), &Logger::newLine, this, &MainWindow::handleLogLine);
 
   connect(this, &MainWindow::shown, this, &MainWindow::firstShown, Qt::QueuedConnection);
@@ -238,21 +237,14 @@ void MainWindow::connectSlots()
   connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
-
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::appConfigScreenNameChanged);
-
   connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::appConfigInvertConnection);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
-
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
-
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
-
   connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
-
   connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
-
   connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::coreProcessSecureSocket);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
