@@ -37,10 +37,13 @@ AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMo
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
     throw XArch(new XArchEvalWindows());
   }
+
+  m_eventThread = std::thread(&AppUtilWindows::eventLoop, this);
 }
 
 AppUtilWindows::~AppUtilWindows()
 {
+  m_eventThread.join();
 }
 
 BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
@@ -273,4 +276,35 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
 #else
   LOG((CLOG_INFO "toast notifications are not supported"));
 #endif
+}
+
+void AppUtilWindows::eventLoop() const
+{
+  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, "Global\\DeskflowCloseEvent");
+  if (!hCloseEvent) {
+    LOG_CRIT("failed to create event for windows event loop");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  LOG_DEBUG("windows event loop running");
+
+  bool running = true;
+  while (running) {
+    DWORD result = MsgWaitForMultipleObjects(1, &hCloseEvent, FALSE, INFINITE, QS_ALLINPUT);
+
+    if (result == WAIT_OBJECT_0) {
+      LOG_INFO("windows event loop received close event");
+      m_events->addEvent(Event(Event::kQuit));
+      running = false;
+    } else if (result == WAIT_OBJECT_0 + 1) {
+      MSG msg;
+      while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+      }
+    }
+  }
+
+  CloseHandle(hCloseEvent);
+  LOG_DEBUG("windows event loop finished");
 }

@@ -13,6 +13,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVariant>
+
 #include <functional>
 
 using namespace deskflow::gui;
@@ -456,24 +457,6 @@ QString AppConfig::lastVersion() const
   return m_LastVersion;
 }
 
-QString AppConfig::coreServerName() const
-{
-#ifdef Q_OS_WIN
-  return s_winExeTemplate.arg(s_CoreServerName);
-#else
-  return s_CoreServerName;
-#endif
-}
-
-QString AppConfig::coreClientName() const
-{
-#ifdef Q_OS_WIN
-  return s_winExeTemplate.arg(s_CoreClientName);
-#else
-  return s_CoreClientName;
-#endif
-}
-
 ElevateMode AppConfig::elevateMode() const
 {
   return m_ElevateMode;
@@ -678,7 +661,10 @@ void AppConfig::setNetworkInterface(const QString &s)
 
 void AppConfig::setLogLevel(int i)
 {
+  const auto changed = (m_LogLevel != i);
   m_LogLevel = i;
+  if (changed)
+    Q_EMIT logLevelChanged();
 }
 
 void AppConfig::setLogToFile(bool b)

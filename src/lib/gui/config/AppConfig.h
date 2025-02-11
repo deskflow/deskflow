@@ -141,8 +141,6 @@ public:
   bool logToFile() const override;
   bool preventSleep() const override;
   const QString &logFilename() const override;
-  QString coreServerName() const override;
-  QString coreClientName() const override;
   bool invertConnection() const override;
   void persistLogDir() const override;
   bool languageSync() const override;
@@ -276,12 +274,6 @@ private:
    */
   QString defaultTlsCertPath() const;
 
-  // Used to make the server and client names on windows.
-#ifdef Q_OS_WIN
-  inline static const auto s_winExeTemplate = QStringLiteral("%1.exe");
-#endif
-  inline static const auto s_CoreServerName = QStringLiteral("deskflow-server");
-  inline static const auto s_CoreClientName = QStringLiteral("deskflow-client");
   static const char m_LogDir[];
 
   /// @brief Contains the string values of the settings names that will be saved
@@ -341,4 +333,5 @@ signals:
   void tlsChanged();
   void screenNameChanged();
   void invertConnectionChanged();
+  void logLevelChanged();
 };

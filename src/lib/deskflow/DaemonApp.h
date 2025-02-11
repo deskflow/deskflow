@@ -1,19 +1,28 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
 
-#include "ipc/IpcServer.h"
+#include "base/IEventQueue.h"
 
 #include <memory>
 #include <string>
 
+#include <QObject>
+
+class QLocalServer;
+class QCoreApplication;
+
 class Event;
 class IpcLogOutputter;
 class FileLogOutputter;
+
+namespace deskflow::core::ipc {
+class DaemonIpcServer;
+}
 
 #if SYSAPI_WIN32
 class MSWindowsWatchdog;
@@ -21,22 +30,48 @@ class MSWindowsWatchdog;
 
 extern const char *const kLogFilename;
 
-class DaemonApp
+class DaemonApp : public QObject
 {
+  Q_OBJECT
 
 public:
-  DaemonApp();
+  enum class InitResult
+  {
+    Installed,
+    Uninstalled,
+    StartDaemon,
+    ShowHelp,
+    ArgsError,
+    FatalError,
+  };
+
+  explicit DaemonApp();
   ~DaemonApp();
-  int run(int argc, char **argv);
-  void mainLoop(bool logToFile, bool foreground = false);
+  InitResult init(int argc, char **argv);
+  void run();
+  void mainLoop(bool foreground = false);
+  void applyWatchdogCommand();
+  void clearWatchdogCommand();
+
+  // Setters
+  void setLogLevel(const QString &logLevel);
+  void setElevate(bool elevate);
+  void setCommand(const QString &command);
+
+  // Getters
+  std::string logFilename();
+
+  static DaemonApp *instance()
+  {
+    return s_instance;
+  }
 
 private:
   void daemonize();
-  void foregroundError(const char *message);
-  std::string logFilename();
-  void handleIpcMessage(const Event &, void *);
+  void handleError(const char *message);
+  void handleIpcMessage(const Event &e, void *);
 
-public:
+private:
   static DaemonApp *s_instance;
 
 #if SYSAPI_WIN32
@@ -44,8 +79,9 @@ public:
 #endif
 
 private:
-  std::unique_ptr<IpcServer> m_ipcServer;
-  std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   std::unique_ptr<IEventQueue> m_events;
   std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
+  std::string m_command = "";
+  bool m_elevate = false;
+  bool m_foreground = false;
 };
