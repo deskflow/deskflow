@@ -128,6 +128,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
+  ui->btnLocalFingerprint->setStyleSheet(QStringLiteral("border: none;"));
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
   if (m_appConfig.logExpanded())
     ui->btnToggleLog->click();
@@ -304,7 +305,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+  connect(ui->btnLocalFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
@@ -731,6 +732,10 @@ void MainWindow::checkFingerprint(const QString &line)
   const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
   FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
+  connect(
+      &fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint,
+      Qt::UniqueConnection
+  );
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(localPath);
@@ -938,11 +943,7 @@ void MainWindow::updateLocalFingerprint()
     qFatal() << "failed to check if fingerprint exists";
   }
 
-  if (m_appConfig.tlsEnabled() && fingerprintExists) {
-    ui->lblMyFingerprint->setVisible(true);
-  } else {
-    ui->lblMyFingerprint->setVisible(false);
-  }
+  ui->btnLocalFingerprint->setVisible(m_appConfig.tlsEnabled() && fingerprintExists);
 }
 
 void MainWindow::autoAddScreen(const QString name)

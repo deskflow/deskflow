@@ -82,7 +82,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/AddClientDialog.ui
   dialogs/FingerprintDialog.h
   dialogs/FingerprintDialog.cpp
-  dialogs/FingerprintDialog.ui
   dialogs/HotkeyDialog.cpp
   dialogs/HotkeyDialog.h
   dialogs/HotkeyDialog.ui
@@ -97,6 +96,8 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/SettingsDialog.ui
   widgets/ClientStateLabel.cpp
   widgets/ClientStateLabel.h
+  widgets/FingerprintPreview.h
+  widgets/FingerprintPreview.cpp
   widgets/KeySequenceWidget.cpp
   widgets/KeySequenceWidget.h
   widgets/NewScreenWidget.h

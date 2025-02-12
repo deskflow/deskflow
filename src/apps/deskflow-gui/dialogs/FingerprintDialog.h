@@ -11,16 +11,15 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 
-namespace Ui {
-class FingerprintDialog;
-}
-
 enum FingerprintDialogMode
 {
   Local,
   Client,
   Server
 };
+
+class QLabel;
+class FingerprintPreview;
 
 class FingerprintDialog : public QDialog
 {
@@ -31,8 +30,14 @@ public:
       QWidget *parent = nullptr, const QList<deskflow::FingerprintData> &fingerprints = {},
       FingerprintDialogMode mode = FingerprintDialogMode::Local
   );
-  ~FingerprintDialog();
+  ~FingerprintDialog() = default;
+
+signals:
+  void requestLocalPrintsDialog();
 
 private:
-  Ui::FingerprintDialog *ui = nullptr;
+  QLabel *m_lblHeader = nullptr;
+  QLabel *m_lblFooter = nullptr;
+  FingerprintPreview *m_fingerprintPreview = nullptr;
+  QDialogButtonBox *m_buttonBox = nullptr;
 };

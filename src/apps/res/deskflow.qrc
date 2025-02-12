@@ -13,6 +13,7 @@
         <file>icons/deskflow-dark/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-dark/actions/22/document-open.svg</file>
         <file>icons/deskflow-dark/actions/22/document-save-as.svg</file>
+        <file>icons/deskflow-dark/actions/22/fingerprint.svg</file>
         <file>icons/deskflow-dark/actions/22/help-about.svg</file>
         <file>icons/deskflow-dark/actions/22/process-stop.svg</file>
         <file>icons/deskflow-dark/actions/22/system-run.svg</file>
@@ -23,6 +24,7 @@
         <file>icons/deskflow-dark/actions/24/document-open.svg</file>
         <file>icons/deskflow-dark/actions/24/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/24/edit-clear-all.svg</file>
+        <file>icons/deskflow-dark/actions/24/fingerprint.svg</file>
         <file>icons/deskflow-dark/actions/24/help-about.svg</file>
         <file>icons/deskflow-dark/actions/24/process-stop.svg</file>
         <file>icons/deskflow-dark/actions/24/system-run.svg</file>
@@ -65,6 +67,7 @@
         <file>icons/deskflow-light/actions/22/edit-copy.svg</file>
         <file>icons/deskflow-light/actions/22/document-open.svg</file>
         <file>icons/deskflow-light/actions/22/document-save-as.svg</file>
+        <file>icons/deskflow-light/actions/22/fingerprint.svg</file>
         <file>icons/deskflow-light/actions/22/help-about.svg</file>
         <file>icons/deskflow-light/actions/22/process-stop.svg</file>
         <file>icons/deskflow-light/actions/22/system-run.svg</file>
@@ -73,6 +76,7 @@
         <file>icons/deskflow-light/actions/24/configure.svg</file>
         <file>icons/deskflow-light/actions/24/edit-clear-all.svg</file>
         <file>icons/deskflow-light/actions/24/edit-copy.svg</file>
+        <file>icons/deskflow-light/actions/24/fingerprint.svg</file>
         <file>icons/deskflow-light/actions/24/document-open.svg</file>
         <file>icons/deskflow-light/actions/24/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/24/help-about.svg</file>
