@@ -749,6 +749,10 @@ void MainWindow::checkFingerprint(const QString &line)
   const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
   FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
+  connect(
+      &fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint,
+      Qt::UniqueConnection
+  );
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(localPath);
