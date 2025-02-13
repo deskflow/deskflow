@@ -48,6 +48,26 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
+#if SYSAPI_WIN32
+  for (int i = 1; i < argc; ++i) {
+    std::string arg(argv[i]);
+    // This is called by the daemon (running in session 0) when it needs to know the name of the
+    // interactive desktop.
+    // It is necessary to run a utility process because the daemon runs in session 0, which does not
+    // have access to the active desktop, and so cannot query it's name.
+    if (arg == "--active-desktop") {
+      const auto name = ArchMiscWindows::getActiveDesktopName();
+      if (name.empty()) {
+        LOG((CLOG_CRIT "failed to get active desktop name"));
+        return kExitFailed;
+      } else {
+        LOG((CLOG_PRINT "%s", name.c_str()));
+        return kExitSuccess;
+      }
+    }
+  }
+#endif
+
   if (isServer(argc, argv)) {
     ServerApp app(&events);
     return app.run(argc, argv);
@@ -56,7 +76,6 @@ int main(int argc, char **argv)
     return app.run(argc, argv);
   } else {
     showHelp();
+    return kExitArgs;
   }
-
-  return 0;
 }
