@@ -376,7 +376,7 @@ void DaemonApp::handleIpcMessage(const Event &e, void *)
     }
 
 #if SYSAPI_WIN32
-    std::string watchdogStatus = m_watchdog->isProcessActive() ? "active" : "idle";
+    std::string watchdogStatus = m_watchdog->isProcessRunning() ? "active" : "idle";
     LOG((CLOG_INFO "service status: %s", watchdogStatus.c_str()));
 #endif
 
