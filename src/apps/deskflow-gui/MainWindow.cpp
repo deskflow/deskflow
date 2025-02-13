@@ -168,7 +168,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
     deskflow::FingerprintDatabase db;
     db.read(localPath);
-    if (db.fingerprints().size() != 2) {
+    if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
   }
@@ -495,7 +495,7 @@ void MainWindow::showMyFingerprint()
 
   deskflow::FingerprintDatabase db;
   db.read(localPath);
-  if (db.fingerprints().size() != 2) {
+  if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
