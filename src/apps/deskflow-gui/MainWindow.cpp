@@ -353,7 +353,7 @@ void MainWindow::configScopesSaving()
 
 void MainWindow::appConfigTlsChanged()
 {
-  if (m_tlsUtility.isEnabled()) {
+  if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
     m_tlsUtility.generateCertificate();
   }
 }
