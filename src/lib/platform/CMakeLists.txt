@@ -43,6 +43,8 @@ if(WIN32)
     MSWindowsKeyState.h
     MSWindowsPowerManager.cpp
     MSWindowsPowerManager.h
+    MSWindowsProcess.cpp
+    MSWindowsProcess.h
     MSWindowsScreen.cpp
     MSWindowsScreen.h
     MSWindowsScreenSaver.cpp
