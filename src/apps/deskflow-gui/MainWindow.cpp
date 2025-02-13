@@ -128,6 +128,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
+  ui->btnLocalFingerprint->setStyleSheet(QStringLiteral("border: none;"));
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
   if (m_appConfig.logExpanded())
     ui->btnToggleLog->click();
@@ -165,7 +166,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
     deskflow::FingerprintDatabase db;
     db.read(localPath);
-    if (db.fingerprints().size() != 2) {
+    if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
   }
@@ -304,7 +305,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+  connect(ui->btnLocalFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
@@ -350,7 +351,7 @@ void MainWindow::configScopesSaving()
 
 void MainWindow::appConfigTlsChanged()
 {
-  if (m_tlsUtility.isEnabled()) {
+  if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
     m_tlsUtility.generateCertificate();
   }
 }
@@ -492,7 +493,7 @@ void MainWindow::showMyFingerprint()
 
   deskflow::FingerprintDatabase db;
   db.read(localPath);
-  if (db.fingerprints().size() != 2) {
+  if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
@@ -700,7 +701,7 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(R"(.*server fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
+  static const QRegularExpression re(R"(.*peer fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;
@@ -717,7 +718,10 @@ void MainWindow::checkFingerprint(const QString &line)
   };
 
   // Only Save the sha256
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  const auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), trustFile).toStdString();
+
   deskflow::FingerprintDatabase db;
   db.read(localPath);
   if (db.isTrusted(sha256)) {
@@ -726,7 +730,12 @@ void MainWindow::checkFingerprint(const QString &line)
 
   m_coreProcess.stop();
   const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
-  FingerprintDialog fingerprintDialog(this, fingerprints, FingerprintDialogMode::Remote);
+  auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
+  FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
+  connect(
+      &fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint,
+      Qt::UniqueConnection
+  );
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(localPath);
@@ -934,11 +943,7 @@ void MainWindow::updateLocalFingerprint()
     qFatal() << "failed to check if fingerprint exists";
   }
 
-  if (m_appConfig.tlsEnabled() && fingerprintExists) {
-    ui->lblMyFingerprint->setVisible(true);
-  } else {
-    ui->lblMyFingerprint->setVisible(false);
-  }
+  ui->btnLocalFingerprint->setVisible(m_appConfig.tlsEnabled() && fingerprintExists);
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1068,8 +1073,9 @@ bool MainWindow::regenerateLocalFingerprints()
 {
   TlsCertificate tls;
   if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
-    QMessageBox::critical(this, tr("TLS Fingerprint Error"), tr("Failed to calculate  keys"));
-    return false;
+    if (!m_tlsUtility.generateCertificate()) {
+      return false;
+    }
   }
   return true;
 }

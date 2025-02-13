@@ -1,0 +1,18 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+/**
+ * \enum SecurityLevel
+ * \brief This enum is used to set how the client and server will communicate.
+ */
+enum class SecurityLevel
+{
+  PlainText, /** The connection is not encrypted */
+  Encrypted, /** The connection is encrypted */
+  PeerAuth   /** The connection is encrypted and the peer has been authenticated */
+};
