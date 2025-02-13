@@ -1082,8 +1082,9 @@ bool MainWindow::regenerateLocalFingerprints()
 {
   TlsCertificate tls;
   if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
-    QMessageBox::critical(this, tr("TLS Fingerprint Error"), tr("Failed to calculate  keys"));
-    return false;
+    if (!m_tlsUtility.generateCertificate()) {
+      return false;
+    }
   }
   return true;
 }
