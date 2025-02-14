@@ -1086,5 +1086,7 @@ bool MainWindow::regenerateLocalFingerprints()
       return false;
     }
   }
+
+  updateLocalFingerprint();
   return true;
 }
