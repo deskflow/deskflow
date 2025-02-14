@@ -128,6 +128,9 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
+  // Hide the security label
+  ui->lblConnectionSecurityStatus->setVisible(false);
+
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
   if (m_appConfig.logExpanded())
     ui->btnToggleLog->click();
@@ -520,6 +523,21 @@ void MainWindow::setModeClient()
   m_configScopes.save();
 }
 
+void MainWindow::updateSecurityIcon(bool visible)
+{
+  ui->lblConnectionSecurityStatus->setVisible(visible);
+  if (!visible)
+    return;
+
+  bool secureSocket = m_appConfig.tlsEnabled();
+
+  const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
+  ui->lblConnectionSecurityStatus->setToolTip(txt);
+
+  const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
+  ui->lblConnectionSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+}
+
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
   m_serverConfigDialogState.setVisible(true);
@@ -786,7 +804,7 @@ void MainWindow::updateStatus()
   const auto connection = m_coreProcess.connectionState();
   const auto process = m_coreProcess.processState();
 
-  ui->lblConnectionSecurityStatus->setVisible(false);
+  updateSecurityIcon(false);
   switch (process) {
     using enum CoreProcessState;
 
@@ -812,6 +830,7 @@ void MainWindow::updateStatus()
 
     case Listening: {
       if (m_coreProcess.mode() == CoreMode::Server) {
+        updateSecurityIcon(true);
         setStatus(tr("%1 is waiting for clients").arg(kAppName));
       }
 
@@ -823,7 +842,7 @@ void MainWindow::updateStatus()
       break;
 
     case Connected: {
-      ui->lblConnectionSecurityStatus->setVisible(true);
+      updateSecurityIcon(true);
       if (m_secureSocket) {
         setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_coreProcess.secureSocketVersion()));
       } else {
@@ -983,12 +1002,7 @@ void MainWindow::showConfigureServer(const QString &message)
 void MainWindow::secureSocket(bool secureSocket)
 {
   m_secureSocket = secureSocket;
-
-  const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
-  ui->lblConnectionSecurityStatus->setToolTip(txt);
-
-  const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
-  ui->lblConnectionSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+  updateSecurityIcon(ui->lblConnectionSecurityStatus->isVisible());
 }
 
 void MainWindow::updateScreenName()

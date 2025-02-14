@@ -120,6 +120,7 @@ private:
   void showMyFingerprint();
   void setModeServer();
   void setModeClient();
+  void updateSecurityIcon(bool visible);
 
   std::unique_ptr<Ui::MainWindow> ui;
 
