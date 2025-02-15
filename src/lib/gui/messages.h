@@ -38,7 +38,7 @@ void showCloseReminder(QWidget *parent);
 
 void showClientConnectError(QWidget *parent, ClientError error, const QString &address);
 
-NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName);
+NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool tlsAcceptedClient = false);
 
 bool showClearSettings(QWidget *parent);
 
