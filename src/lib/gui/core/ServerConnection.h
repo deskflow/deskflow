@@ -25,7 +25,8 @@ public:
   struct Deps
   {
     virtual ~Deps() = default;
-    virtual messages::NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName) const;
+    virtual messages::NewClientPromptResult
+    showNewClientPrompt(QWidget *parent, const QString &clientName, bool previouslyAccepted = false) const;
   };
 
   explicit ServerConnection(

@@ -20,9 +20,9 @@ namespace deskflow::gui {
 //
 
 messages::NewClientPromptResult
-ServerConnection::Deps::showNewClientPrompt(QWidget *parent, const QString &clientName) const
+ServerConnection::Deps::showNewClientPrompt(QWidget *parent, const QString &clientName, bool previouslyAccepted) const
 {
-  return messages::showNewClientPrompt(parent, clientName);
+  return messages::showNewClientPrompt(parent, clientName, previouslyAccepted);
 }
 
 //
@@ -93,7 +93,8 @@ void ServerConnection::handleNewClient(const QString &clientName)
   Q_EMIT messageShowing();
 
   m_messageShowing = true;
-  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName);
+  const auto result =
+      m_pDeps->showNewClientPrompt(m_pParent, clientName, m_appConfig.tlsEnabled() && m_appConfig.requireClientCerts());
   m_messageShowing = false;
 
   if (result == Add) {
