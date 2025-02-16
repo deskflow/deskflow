@@ -18,7 +18,12 @@
 	<url type="bugtracker">https://github.com/deskflow/deskflow/issues</url>
 	<screenshots>
 		<screenshot type="default">
-			<image>https://github.com/user-attachments/assets/883660dc-f3f5-4b69-8821-a079a58d3882</image>
+			<image>https://deskflow.org/screenshots/deskflow.png</image>
+			<caption>Deskflow's mainwindow on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-dark.png</image>
+			<caption>Deskflow's mainwindow on KDE (dark mode)</caption>
 		</screenshot>
 	</screenshots>
 	<provides> <id>org.deskflow.deskflow.desktop</id> </provides>
