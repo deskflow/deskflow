@@ -331,18 +331,18 @@ jobs:
     needs: lint-check
     name: flatpak-${{matrix.flatpak.arch}}
     runs-on: ${{matrix.flatpak.runs-on}}
+    timeout-minutes: 60
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.8
+      options: --privileged
     strategy:
       fail-fast: false
       matrix:
         flatpak:
           - runs-on: ubuntu-latest
             arch: x86_64
-# TODO: Action does not yet provide arm image; re-enable when available
-#          - runs-on: ubuntu-24.04-arm
-#            arch: aarch64
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
-      options: --privileged
+          - runs-on: ubuntu-24.04-arm
+            arch: aarch64
     steps:
       - name: Check out repository
         uses: sithlord48/fancy-checkout@v1
@@ -352,14 +352,24 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@master
-        name: "Build"
+      - name: Lint appsteam
+        run: flatpak-builder-lint appstream deploy/linux/org.deskflow.deskflow.metainfo.xml
+
+      - name: Lint manifest
+        run: flatpak-builder-lint manifest deploy/linux/flatpak/org.deskflow.deskflow.yml
+
+      - name: Build
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@53987ffa5f687586936d85fdce3f440848bea04d
         with:
           bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-${{matrix.flatpak.arch}}.flatpak
           manifest-path: deploy/linux/flatpak/org.deskflow.deskflow.yml
-          cache-key: flatpak-builder-${{matrix.flatpak.arch}}-1.0
+          cache-key: flatpak-builder-${{matrix.flatpak.arch}}-2.0
           arch: ${{matrix.flatpak.arch}}
           upload-artifact: false
+          mirror-screenshots-url: https://dl.flathub.org/media
+
+      - name: Validate build
+        run: flatpak-builder-lint repo repo
 
       - name: Upload
         uses: actions/upload-artifact@v4
