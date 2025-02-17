@@ -454,12 +454,54 @@
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Don't take &amp;foreground window (Windows only)</string>
+             <string>&amp;Don't take foreground window (Windows only)</string>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="layoutClipboard">
+           <layout class="QHBoxLayout" name="layout_MouseSpeedMultiplier">
+            <item>
+             <widget class="QLabel" name="lblMouseSpeedMultiplier">
+              <property name="text">
+               <string>Mouse speed multiplier:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDoubleSpinBox" name="sbMouseSpeedMultiplier">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="m_pLayoutClipboard">
             <property name="spacing">
              <number>6</number>
             </property>
