@@ -146,18 +146,14 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   createMenuBar();
   setupControls();
   connectSlots();
-
   setupTrayIcon();
-
   m_configScopes.signalReady();
-
   updateScreenName();
   applyConfig();
   restoreWindow();
+  updateSize();
 
   qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
-
-  updateSize();
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
