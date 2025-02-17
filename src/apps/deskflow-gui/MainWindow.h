@@ -160,7 +160,6 @@ private:
   void showFirstConnectedMessage();
   void updateStatus();
   void showAndActivate();
-  QString getTlsPath();
 
   /**
    * @brief Generate prints if they are missing.
@@ -169,7 +168,10 @@ private:
    */
   bool regenerateLocalFingerprints();
 
+  static QString getTlsFingerprintPath();
+
   inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+  inline static const QString m_tlsFingerprintPath = getTlsFingerprintPath();
 
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;

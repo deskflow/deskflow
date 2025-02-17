@@ -157,14 +157,14 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    if (!QFile::exists(QString::fromStdString(localPath))) {
+    if (!QFile::exists(m_tlsFingerprintPath)) {
       regenerateLocalFingerprints();
       return;
     }
 
+    qDebug().noquote() << "reading fingerprints from: " << m_tlsFingerprintPath;
     deskflow::FingerprintDatabase db;
-    db.read(localPath);
+    db.read(m_tlsFingerprintPath.toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -483,15 +483,15 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-  if (!QFile::exists(QString::fromStdString(localPath))) {
+  if (!QFile::exists(m_tlsFingerprintPath)) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
+  qDebug().noquote() << "reading fingerprints from: " << m_tlsFingerprintPath;
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(m_tlsFingerprintPath.toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -730,21 +730,21 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA256),
       deskflow::string::fromHex(match.captured(2).toStdString())
   };
-
-  // Only Save the sha256
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
+  qDebug().noquote() << "reading fingerprints from: " << m_tlsFingerprintPath;
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(m_tlsFingerprintPath.toStdString());
   if (db.isTrusted(sha256)) {
     return;
   }
 
   m_coreProcess.stop();
+
+  // Only save the SHA256 fingerprint; don't save the SHA1 fingerprint because it's unsafe.
   const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
   FingerprintDialog fingerprintDialog(this, fingerprints, FingerprintDialogMode::Remote);
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(localPath);
+    db.write(m_tlsFingerprintPath.toStdString());
     m_coreProcess.start();
   }
 }
@@ -943,8 +943,8 @@ void MainWindow::updateLocalFingerprint()
 {
   bool fingerprintExists = false;
   try {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    fingerprintExists = QFile::exists(QString::fromStdString(localPath));
+
+    fingerprintExists = QFile::exists(m_tlsFingerprintPath);
   } catch (const std::exception &e) {
     qDebug() << e.what();
     qFatal() << "failed to check if fingerprint exists";
@@ -1069,11 +1069,6 @@ void MainWindow::showAndActivate()
   m_actionMinimize->setVisible(true);
 }
 
-QString MainWindow::getTlsPath()
-{
-  return QStringLiteral("%1/%2").arg(core_utils::getProfileDir(), kSslDir);
-}
-
 bool MainWindow::regenerateLocalFingerprints()
 {
   TlsCertificate tls;
@@ -1085,4 +1080,10 @@ bool MainWindow::regenerateLocalFingerprints()
 
   updateLocalFingerprint();
   return true;
+}
+
+QString MainWindow::getTlsFingerprintPath()
+{
+  const auto tlsDir = QStringLiteral("%1/%2").arg(core_utils::getProfileDir(), kSslDir);
+  return QStringLiteral("%1/%2").arg(tlsDir, kFingerprintLocalFilename);
 }
