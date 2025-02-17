@@ -54,8 +54,8 @@ add_library(${target} STATIC
   core/CommandProcess.h
   core/CoreProcess.cpp
   core/CoreProcess.h
-  core/CoreTool.cpp
-  core/CoreTool.h
+  core/core_utils.cpp
+  core/core_utils.h
   core/ServerConnection.cpp
   core/ServerConnection.h
   core/ServerMessage.cpp
