@@ -355,6 +355,7 @@ void MainWindow::appConfigTlsChanged()
   if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
     m_tlsUtility.generateCertificate();
   }
+  updateSecurityIcon(ui->lblConnectionSecurityStatus->isVisible());
 }
 
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -529,7 +530,7 @@ void MainWindow::updateSecurityIcon(bool visible)
 
   bool secureSocket = m_appConfig.tlsEnabled();
 
-  const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
+  const auto txt = secureSocket ? tr("Encryption Enabled") : tr("Encryption Disabled");
   ui->lblConnectionSecurityStatus->setToolTip(txt);
 
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
