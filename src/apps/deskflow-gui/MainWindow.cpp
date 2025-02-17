@@ -132,10 +132,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->lblConnectionSecurityStatus->setVisible(false);
 
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
-  if (m_appConfig.logExpanded())
-    ui->btnToggleLog->click();
-
-  toggleLogVisible(m_appConfig.logExpanded());
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
@@ -637,6 +633,11 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
+  if (m_appConfig.logExpanded())
+    ui->btnToggleLog->click();
+
+  toggleLogVisible(m_appConfig.logExpanded());
+
   enableServer(m_appConfig.serverGroupChecked());
   enableClient(m_appConfig.clientGroupChecked());
 
