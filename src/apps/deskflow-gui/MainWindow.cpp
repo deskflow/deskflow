@@ -734,8 +734,6 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::string::fromHex(match.captured(2).toStdString())
   };
 
-  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-
   // Only Save the sha256
   deskflow::FingerprintDatabase db;
   db.read(trustedFingerprintDb().toStdString());
@@ -744,13 +742,13 @@ void MainWindow::checkFingerprint(const QString &line)
   }
 
   m_coreProcess.stop();
-  const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
+
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
-  FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
-  connect(
-      &fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint,
-      Qt::UniqueConnection
-  );
+
+  FingerprintDialog fingerprintDialog(this, {sha1, sha256}, dialogMode);
+  connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
+
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(trustedFingerprintDb().toStdString());
