@@ -734,13 +734,11 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::string::fromHex(match.captured(2).toStdString())
   };
 
-  // Only Save the sha256
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
-  const auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), trustFile).toStdString();
 
+  // Only Save the sha256
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(trustedFingerprintDb().toStdString());
   if (db.isTrusted(sha256)) {
     return;
   }
@@ -755,7 +753,7 @@ void MainWindow::checkFingerprint(const QString &line)
   );
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(localPath);
+    db.write(trustedFingerprintDb().toStdString());
     m_coreProcess.start();
   }
 }
@@ -1076,6 +1074,13 @@ QString MainWindow::getTlsPath()
 QString MainWindow::localFingerPrintDb()
 {
   return QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+}
+
+QString MainWindow::trustedFingerprintDb()
+{
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  return QStringLiteral("%1/%2").arg(getTlsPath(), trustFile);
 }
 
 bool MainWindow::regenerateLocalFingerprints()
