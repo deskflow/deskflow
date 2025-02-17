@@ -160,14 +160,14 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    if (!QFile::exists(QString::fromStdString(localPath))) {
+    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+    if (!QFile::exists(localPath)) {
       regenerateLocalFingerprints();
       return;
     }
 
     deskflow::FingerprintDatabase db;
-    db.read(localPath);
+    db.read(localPath.toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -486,15 +486,15 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-  if (!QFile::exists(QString::fromStdString(localPath))) {
+  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+  if (!QFile::exists(localPath)) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(localPath.toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -954,8 +954,8 @@ void MainWindow::updateLocalFingerprint()
 {
   bool fingerprintExists = false;
   try {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    fingerprintExists = QFile::exists(QString::fromStdString(localPath));
+    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+    fingerprintExists = QFile::exists(localPath);
   } catch (const std::exception &e) {
     qDebug() << e.what();
     qFatal() << "failed to check if fingerprint exists";
