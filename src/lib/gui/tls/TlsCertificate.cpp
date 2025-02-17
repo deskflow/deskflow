@@ -9,7 +9,7 @@
 
 #include "base/finally.h"
 #include "common/constants.h"
-#include "gui/core/CoreTool.h"
+#include "gui/core/core_utils.h"
 #include "net/FingerprintData.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
@@ -25,8 +25,7 @@
 
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
 {
-  CoreTool coreTool;
-  m_profileDir = coreTool.getProfileDir();
+  m_profileDir = deskflow::gui::core_utils::getProfileDir();
   if (m_profileDir.isEmpty())
     qCritical() << "unable to get profile dir";
 }

@@ -8,7 +8,7 @@
 
 #include "common/constants.h"
 #include "gui/config/IAppConfig.h"
-#include "gui/core/CoreTool.h"
+#include "gui/core/core_utils.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
 #include <qlogging.h>
@@ -138,8 +138,7 @@ bool CoreProcess::Deps::fileExists(const QString &path) const
 
 QString CoreProcess::Deps::getProfileRoot() const
 {
-  CoreTool coreTool;
-  QDir appDir = coreTool.getProfileDir();
+  QDir appDir = core_utils::getProfileDir();
 
   // the core expects the profile root dir, not the app-specific profile dir.
   if (!appDir.cdUp()) {

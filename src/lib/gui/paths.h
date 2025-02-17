@@ -7,7 +7,7 @@
 #pragma once
 
 #include "common/constants.h"
-#include "core/CoreTool.h"
+#include "core/core_utils.h"
 
 #include <QDir>
 #include <QStandardPaths>
@@ -42,8 +42,7 @@ inline QDir configDir(const bool persist = false)
  */
 inline QDir coreProfileDir()
 {
-  CoreTool coreTool;
-  return QDir(coreTool.getProfileDir());
+  return QDir(core_utils::getProfileDir());
 }
 
 inline QString defaultTlsCertPath()

@@ -20,6 +20,7 @@
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/core/core_utils.h"
 #include "gui/diagnostic.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
@@ -1074,8 +1075,7 @@ void MainWindow::showAndActivate()
 
 QString MainWindow::getTlsPath()
 {
-  CoreTool coreTool;
-  return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
+  return QStringLiteral("%1/%2").arg(core_utils::getProfileDir(), kSslDir);
 }
 
 bool MainWindow::regenerateLocalFingerprints()
