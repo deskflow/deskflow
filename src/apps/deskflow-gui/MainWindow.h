@@ -166,6 +166,7 @@ private:
   void showAndActivate();
 
   QString getTlsPath();
+  QString localFingerPrintDb();
 
   // Generate prints if they are missing
   // Returns true if successful

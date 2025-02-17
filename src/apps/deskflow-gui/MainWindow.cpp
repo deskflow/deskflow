@@ -160,14 +160,13 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
-    if (!QFile::exists(localPath)) {
+    if (!QFile::exists(localFingerPrintDb())) {
       regenerateLocalFingerprints();
       return;
     }
 
     deskflow::FingerprintDatabase db;
-    db.read(localPath.toStdString());
+    db.read(localFingerPrintDb().toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -486,15 +485,14 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
-  if (!QFile::exists(localPath)) {
+  if (!QFile::exists(localFingerPrintDb())) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
-  db.read(localPath.toStdString());
+  db.read(localFingerPrintDb().toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -952,20 +950,7 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  bool fingerprintExists = false;
-  try {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
-    fingerprintExists = QFile::exists(localPath);
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    qFatal() << "failed to check if fingerprint exists";
-  }
-
-  if (m_appConfig.tlsEnabled() && fingerprintExists) {
-    ui->lblMyFingerprint->setVisible(true);
-  } else {
-    ui->lblMyFingerprint->setVisible(false);
-  }
+  ui->lblMyFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerPrintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1084,6 +1069,11 @@ QString MainWindow::getTlsPath()
 {
   CoreTool coreTool;
   return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
+}
+
+QString MainWindow::localFingerPrintDb()
+{
+  return QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
 }
 
 bool MainWindow::regenerateLocalFingerprints()
