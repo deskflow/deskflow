@@ -78,24 +78,33 @@ public:
   {
     return m_coreProcess.mode();
   }
-  QString address() const;
-  void open();
+
   ServerConfig &serverConfig()
   {
     return m_serverConfig;
   }
-  void autoAddScreen(const QString name);
 
+  void autoAddScreen(const QString name);
+  QString address() const;
+  void open();
   void hide();
 
 signals:
   void shown();
 
 private:
+  AppConfig &appConfig()
+  {
+    return m_appConfig;
+  }
+
+  AppConfig const &appConfig() const
+  {
+    return m_appConfig;
+  }
+
   void toggleLogVisible(bool visible);
-
   void firstShown();
-
   void configScopesSaving();
   void appConfigTlsChanged();
   void coreProcessStarting();
@@ -105,7 +114,6 @@ private:
   void versionCheckerUpdateFound(const QString &version);
   void trayIconActivated(QSystemTrayIcon::ActivationReason reason);
   void serverConnectionConfigureClient(const QString &clientName);
-
   void clearSettings();
   void openAboutDialog();
   void openHelpUrl() const;
@@ -116,23 +124,11 @@ private:
   void testFatalError() const;
   void testCriticalError() const;
   void resetCore();
-
   void showMyFingerprint();
   void setModeServer();
   void setModeClient();
   void updateSecurityIcon(bool visible);
-
-  std::unique_ptr<Ui::MainWindow> ui;
-
   void updateSize();
-  AppConfig &appConfig()
-  {
-    return m_appConfig;
-  }
-  AppConfig const &appConfig() const
-  {
-    return m_appConfig;
-  }
   void createMenuBar();
   void setupTrayIcon();
   void applyConfig();
@@ -164,19 +160,22 @@ private:
   void showFirstConnectedMessage();
   void updateStatus();
   void showAndActivate();
-
   QString getTlsPath();
 
-  // Generate prints if they are missing
-  // Returns true if successful
+  /**
+   * @brief Generate prints if they are missing.
+   *
+   * @returns Returns true if successful.
+   */
   bool regenerateLocalFingerprints();
+
+  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
 
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-
   deskflow::gui::ConfigScopes &m_configScopes;
   AppConfig &m_appConfig;
   ServerConfig m_serverConfig;
@@ -186,11 +185,20 @@ private:
   deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
 
+  //
+  // Qt UI
+  //
+  std::unique_ptr<Ui::MainWindow> ui;
+
+  //
+  // Qt object pointers
+  //
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
-  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
 
-  // Window Actions
+  //
+  // Window actions
+  //
   QAction *m_actionAbout = nullptr;
   QAction *m_actionClearSettings = nullptr;
   QAction *m_actionReportBug = nullptr;
