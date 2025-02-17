@@ -166,7 +166,12 @@ private:
   void showAndActivate();
 
   QString getTlsPath();
-  QString localFingerPrintDb();
+
+  /**
+   * @brief localFingerprintDb
+   * @return The path to the local fingerprint file
+   */
+  QString localFingerprintDb();
 
   /**
    * @brief trustedFingerprintDb get the fingerprintDb for the trusted clients or trusted servers.
