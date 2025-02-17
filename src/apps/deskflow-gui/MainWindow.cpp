@@ -302,7 +302,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+  connect(ui->btnLocalFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
@@ -948,7 +948,7 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  ui->lblMyFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
+  ui->btnLocalFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
