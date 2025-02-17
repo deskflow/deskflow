@@ -1080,11 +1080,13 @@ QString MainWindow::localFingerPrintDb()
 
 bool MainWindow::regenerateLocalFingerprints()
 {
+  if (!QFile::exists(m_appConfig.tlsCertPath()) && !m_tlsUtility.generateCertificate()) {
+    return false;
+  }
+
   TlsCertificate tls;
   if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
-    if (!m_tlsUtility.generateCertificate()) {
-      return false;
-    }
+    return false;
   }
 
   updateLocalFingerprint();
