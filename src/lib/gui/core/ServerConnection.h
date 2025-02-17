@@ -26,7 +26,7 @@ public:
   {
     virtual ~Deps() = default;
     virtual messages::NewClientPromptResult
-    showNewClientPrompt(QWidget *parent, const QString &clientName, bool previouslyAccepted = false) const;
+    showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false) const;
   };
 
   explicit ServerConnection(
