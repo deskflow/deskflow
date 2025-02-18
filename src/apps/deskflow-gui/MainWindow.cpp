@@ -132,8 +132,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
-  ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
-
   // Setup the Instance Checking
   // In case of a previous crash remove first
   m_guiDupeChecker->removeServer(m_guiSocketName);
@@ -221,6 +219,16 @@ void MainWindow::setupControls()
 
   if (m_appConfig.lastVersion() != kVersion) {
     m_appConfig.setLastVersion(kVersion);
+  }
+
+  // Setup the log toggle, set its initial state to closed
+  ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
+  if (m_appConfig.logExpanded()) {
+    ui->btnToggleLog->setArrowType(Qt::DownArrow);
+    ui->textLog->setVisible(true);
+    ui->btnToggleLog->click();
+  } else {
+    ui->textLog->setVisible(false);
   }
 
 #if defined(Q_OS_MAC)
@@ -491,7 +499,7 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-  if (ui->textLog->isVisible()) {
+  if (m_appConfig.logExpanded()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
     resize(m_expandedSize);
@@ -657,11 +665,6 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  if (m_appConfig.logExpanded())
-    ui->btnToggleLog->click();
-
-  toggleLogVisible(m_appConfig.logExpanded());
-
   enableServer(m_appConfig.serverGroupChecked());
   enableClient(m_appConfig.clientGroupChecked());
 
