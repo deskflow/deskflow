@@ -17,7 +17,6 @@
 
 #include "ServerConfig.h"
 #include "VersionChecker.h"
-#include "common/ipc.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/config/ServerConfigDialogState.h"
@@ -139,7 +138,6 @@ private:
   void setIcon();
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
-  void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses() const;
   void enableServer(bool enable);
@@ -183,12 +181,13 @@ private:
   // Returns true if successful
   bool regenerateLocalFingerprints();
 
+  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
   deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-
   deskflow::gui::ConfigScopes &m_configScopes;
   AppConfig &m_appConfig;
   ServerConfig m_serverConfig;
@@ -197,10 +196,8 @@ private:
   deskflow::gui::ClientConnection m_clientConnection;
   deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
-
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
-  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
 
   // Window Actions
   QAction *m_actionAbout = nullptr;

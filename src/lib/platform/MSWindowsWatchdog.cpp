@@ -1,7 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2009 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -9,16 +8,12 @@
 
 #include "arch/Arch.h"
 #include "arch/win32/XArchWindows.h"
+#include "base/ELevel.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
 #include <Shellapi.h>
@@ -72,17 +67,13 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground
-)
+MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true),
       m_commandChanged(false),
       m_stdOutWrite(NULL),
       m_stdOutRead(NULL),
-      m_ipcServer(ipcServer),
-      m_ipcLogOutputter(ipcLogOutputter),
       m_elevateProcess(false),
       m_processFailures(0),
       m_processRunning(false),
@@ -177,13 +168,17 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security)
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
-  shutdownExistingProcesses();
-
+  // the SendSAS function is used to send a sas (secure attention sequence) to the
+  // winlogon process. this is used to switch to the login screen.
   SendSas sendSasFunc = NULL;
   HINSTANCE sasLib = LoadLibrary("sas.dll");
   if (sasLib) {
-    LOG((CLOG_DEBUG "found sas.dll"));
+    LOG((CLOG_DEBUG "found sas.dll (secure attention sequence)"));
     sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+    if (!sendSasFunc) {
+      LOG((CLOG_ERR "could not find SendSAS function in sas.dll"));
+      throw XArch(new XArchEvalWindows());
+    }
   }
 
   SECURITY_ATTRIBUTES saAttr;
@@ -210,7 +205,7 @@ void MSWindowsWatchdog::mainLoop(void *)
       if (m_processFailures != 0) {
         // increasing backoff period, maximum of 10 seconds.
         int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
-        LOG((CLOG_INFO "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
+        LOG_DEBUG("backing off after failure, wait=%ds, failures=%d", timeout, m_processFailures);
         ARCH->sleep(timeout);
       }
 
@@ -228,6 +223,9 @@ void MSWindowsWatchdog::mainLoop(void *)
         if (startNeeded) {
           startProcess();
         }
+      } else {
+        // prevent backoff when no command is set.
+        m_processFailures = 0;
       }
 
       if (m_processRunning && !isProcessActive()) {
@@ -238,23 +236,20 @@ void MSWindowsWatchdog::mainLoop(void *)
         LOG((CLOG_WARN "detected application not running, pid=%d", m_processInfo.dwProcessId));
       }
 
-      if (sendSasFunc != NULL) {
+      HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+      if (sendSasEvent != NULL) {
 
-        HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-        if (sendSasEvent != NULL) {
-
-          // use SendSAS event to wait for next session (timeout 1 second).
-          if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-            LOG((CLOG_DEBUG "calling SendSAS"));
-            sendSasFunc(FALSE);
-          }
-
-          CloseHandle(sendSasEvent);
-          continue;
+        // use SendSAS event to wait for next session (timeout 1 second).
+        if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+          LOG_DEBUG(CLOG_DEBUG "calling SendSAS from sas.dll");
+          sendSasFunc(FALSE);
         }
+
+        CloseHandle(sendSasEvent);
+      } else {
+        LOG((CLOG_ERR "could not create SendSAS event"));
       }
 
-      // if the sas event failed, wait by sleeping.
       ARCH->sleep(1);
 
     } catch (std::exception &e) {
@@ -474,10 +469,22 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       testOutput(buffer);
 
-      m_ipcLogOutputter.write(kINFO, buffer);
+      // strip out windows \r chars to prevent extra lines in log file.
+      std::string output(buffer);
+      if (!output.empty()) {
+        size_t pos = 0;
+        while ((pos = output.find("\r", pos)) != std::string::npos) {
+          output.replace(pos, 1, "");
+        }
+
+        // trip ending newline, as file writer will add it's own newline.
+        if (output[output.length() - 1] == '\n') {
+          output = output.substr(0, output.length() - 1);
+        }
+      }
 
       if (m_fileLogOutputter != NULL) {
-        m_fileLogOutputter->write(kINFO, buffer);
+        m_fileLogOutputter->write(kPRINT, output.c_str());
       }
 
 #if SYSAPI_WIN32
@@ -501,8 +508,15 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
     return;
   }
 
-  IpcShutdownMessage shutdown;
-  m_ipcServer.send(shutdown, IpcClientType::Node);
+  LOG_DEBUG("sending close event to close process gracefully");
+  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\DeskflowCloseEvent");
+  if (hCloseEvent) {
+    SetEvent(hCloseEvent);
+    CloseHandle(hCloseEvent);
+  } else {
+    LOG((CLOG_WARN "could not send close event to process"));
+    throw XArch(new XArchEvalWindows);
+  }
 
   // wait for process to exit gracefully.
   double start = ARCH->time();
@@ -533,8 +547,37 @@ void MSWindowsWatchdog::shutdownProcess(HANDLE handle, DWORD pid, int timeout)
   closeProcessHandles(pid);
 }
 
+HANDLE openProcessForKill(PROCESSENTRY32 entry)
+{
+  // pid 0 is 'system idle process'
+  if (entry.th32ProcessID == 0)
+    return nullptr;
+
+  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+    return nullptr;
+  }
+
+  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+  if (handle == nullptr) {
+    LOG((CLOG_ERR "could not open process handle for kill"));
+    throw XArch(new XArchEvalWindows);
+  }
+
+  // only shut down if not current process (daemon is now the same unified binary).
+  if (entry.th32ProcessID == GetCurrentProcessId()) {
+    CloseHandle(handle);
+    return nullptr;
+  }
+
+  return handle;
+}
+
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
+  LOG_DEBUG("shutting down existing processes");
+
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
   if (snapshot == INVALID_HANDLE_VALUE) {
@@ -557,17 +600,11 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   DWORD pid = 0;
   while (gotEntry) {
 
-    // make sure we're not checking the system process
-    if (entry.th32ProcessID != 0) {
-
-      if (_stricmp(entry.szExeFile, "deskflow-client.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-server.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
-
-        HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-        shutdownProcess(handle, entry.th32ProcessID, 10);
-        CloseHandle(handle);
-      }
+    HANDLE handle = openProcessForKill(entry);
+    if (handle) {
+      LOG((CLOG_INFO "shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID));
+      shutdownProcess(handle, entry.th32ProcessID, 10);
+      CloseHandle(handle);
     }
 
     // now move on to the next entry (if we're not at the end)
@@ -578,7 +615,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
       if (err != ERROR_NO_MORE_FILES) {
 
         // only worry about error if it's not the end of the snapshot
-        LOG((CLOG_ERR "could not get subsiquent process entry"));
+        LOG((CLOG_ERR "could not get next process entry"));
         throw XArch(new XArchEvalWindows);
       }
     }
