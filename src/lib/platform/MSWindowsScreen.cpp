@@ -308,10 +308,9 @@ bool MSWindowsScreen::canLeave()
 {
   POINT pos;
   if (!getThisCursorPos(&pos)) {
-    LOG((CLOG_DEBUG "unable to leave screen as windows security has disabled "
-                    "critical functions"));
-    // unable to get position this means deskflow will break if the cursor
-    // leaves the screen
+    // prevent screen leave when cursor position is not available; if unable to get cursor position,
+    // screen will become inaccessible if the cursor leaves the screen.
+    LOG_DEBUG("unable to leave screen, cursor position not available");
     return false;
   }
 
