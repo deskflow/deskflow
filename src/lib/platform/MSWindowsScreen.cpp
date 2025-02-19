@@ -9,6 +9,7 @@
 
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/XArchWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
@@ -515,27 +516,38 @@ void MSWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
 bool MSWindowsScreen::getThisCursorPos(LPPOINT pos)
 {
   auto result = GetCursorPos(pos);
-  auto error = GetLastError();
-  LOG((CLOG_DEBUG3 "%s Attempt: 1 , status %d, code: %d Pos {%d, %d}", __func__, result, error, pos->x, pos->y));
   if (!result) {
+    XArchEvalWindows error1;
+    LOG_DEBUG("could not get cursor pos, error: %s", error1.eval().c_str());
+
+    LOG_DEBUG("retrying get cursor pos");
     result = GetCursorPos(pos);
-    error = GetLastError();
-    LOG((CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d Pos {%d, %d}", __func__, result, error, pos->x, pos->y));
-    updateDesktopThread();
+    if (!result) {
+      XArchEvalWindows error2;
+      LOG((CLOG_DEBUG "could not get cursor pos, error: %s", error2.eval().c_str()));
+
+      updateDesktopThread();
+    }
   }
+
   return result;
 }
 
 bool MSWindowsScreen::setThisCursorPos(int x, int y)
 {
   auto result = SetCursorPos(x, y);
-  auto error = GetLastError();
-  LOG((CLOG_DEBUG3 "%s Attempt: 1, status %d, code: %d", __func__, result, error));
   if (!result) {
+    XArchEvalWindows error1;
+    LOG_DEBUG("could not set cursor pos, error: %s", error1.eval().c_str());
+
+    LOG_DEBUG("retrying to set cursor pos");
     result = SetCursorPos(x, y);
-    error = GetLastError();
-    LOG((CLOG_DEBUG3 "%s Attempt: 2, status %d, code: %d", __func__, result, error));
-    updateDesktopThread();
+    if (!result) {
+      XArchEvalWindows error2;
+      LOG((CLOG_DEBUG "could not set cursor pos, error: %s", error2.eval().c_str()));
+
+      updateDesktopThread();
+    }
   }
 
   return result;
@@ -543,17 +555,24 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y)
 
 void MSWindowsScreen::updateDesktopThread()
 {
-  LOG((CLOG_WARN "failed to set cursor while attempting to switch desktop"));
-  SetLastError(0);
-  HDESK cur_hdesk = OpenInputDesktop(0, true, GENERIC_ALL);
+  LOG_DEBUG("updating desktop thread");
 
-  auto error = GetLastError();
-  LOG((CLOG_DEBUG3 "current desktop, handle=%p code=%d", cur_hdesk, error));
+  HDESK hDesk = OpenInputDesktop(0, true, GENERIC_ALL);
+  if (hDesk == NULL) {
+    XArchEvalWindows error1;
+    LOG_DEBUG("could not open input desktop, error: %s", error1.eval().c_str());
+    return;
+  }
 
-  error = GetLastError();
-  LOG((CLOG_DEBUG3 "setting desktop, return=%d code=%d", SetThreadDesktop(cur_hdesk), GetLastError()));
+  if (!SetThreadDesktop(hDesk)) {
+    XArchEvalWindows error1;
+    LOG_DEBUG("could not set thread desktop, error: %s", error1.eval().c_str());
+  }
 
-  CloseDesktop(cur_hdesk);
+  if (!CloseDesktop(hDesk)) {
+    XArchEvalWindows error1;
+    LOG_DEBUG("could not close desktop, error: %s", error1.eval().c_str());
+  }
 }
 
 void MSWindowsScreen::reconfigure(uint32_t activeSides)
