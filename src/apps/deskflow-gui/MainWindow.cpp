@@ -69,6 +69,8 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
+      m_lblSecurityStatus{new QLabel(this)},
+      m_lblStatus{new QLabel(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionReportBug{new QAction(tr("Report a Bug"), this)},
@@ -127,9 +129,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 #ifdef Q_OS_MAC
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
-
-  // Hide the security label
-  ui->lblConnectionSecurityStatus->setVisible(false);
 
   ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
 
@@ -219,9 +218,6 @@ void MainWindow::setupControls()
   ui->lblUpdate->setStyleSheet(kStyleNoticeLabel);
   ui->lblUpdate->hide();
 
-  ui->lblNotice->setStyleSheet(kStyleNoticeLabel);
-  ui->lblNotice->hide();
-
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_appConfig.lastVersion() != kVersion) {
@@ -234,6 +230,13 @@ void MainWindow::setupControls()
   ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
 #endif
+
+  m_lblSecurityStatus->setVisible(false);
+  m_lblSecurityStatus->setFixedSize(QSize(24, 24));
+  m_lblSecurityStatus->setScaledContents(true);
+  ui->statusBar->insertPermanentWidget(0, m_lblSecurityStatus);
+
+  ui->statusBar->insertPermanentWidget(1, m_lblStatus, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -351,7 +354,7 @@ void MainWindow::appConfigTlsChanged()
   if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
     m_tlsUtility.generateCertificate();
   }
-  updateSecurityIcon(ui->lblConnectionSecurityStatus->isVisible());
+  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -520,17 +523,17 @@ void MainWindow::setModeClient()
 
 void MainWindow::updateSecurityIcon(bool visible)
 {
-  ui->lblConnectionSecurityStatus->setVisible(visible);
+  m_lblSecurityStatus->setVisible(visible);
   if (!visible)
     return;
 
   bool secureSocket = m_appConfig.tlsEnabled();
 
   const auto txt = secureSocket ? tr("Encryption Enabled") : tr("Encryption Disabled");
-  ui->lblConnectionSecurityStatus->setToolTip(txt);
+  m_lblSecurityStatus->setToolTip(txt);
 
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
-  ui->lblConnectionSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+  m_lblSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
 }
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
@@ -581,7 +584,7 @@ void MainWindow::coreProcessStarting()
 
 void MainWindow::setStatus(const QString &status)
 {
-  ui->lblStatus->setText(status);
+  m_lblStatus->setText(status);
 }
 
 void MainWindow::createMenuBar()
@@ -993,7 +996,7 @@ void MainWindow::showConfigureServer(const QString &message)
 void MainWindow::secureSocket(bool secureSocket)
 {
   m_secureSocket = secureSocket;
-  updateSecurityIcon(ui->lblConnectionSecurityStatus->isVisible());
+  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::updateScreenName()

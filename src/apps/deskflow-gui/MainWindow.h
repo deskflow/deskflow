@@ -33,6 +33,7 @@
 
 class QAction;
 class QMenu;
+class QLabel;
 class QLineEdit;
 class QGroupBox;
 class QPushButton;
@@ -201,6 +202,9 @@ private:
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
   inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
+
+  QLabel *m_lblSecurityStatus = nullptr;
+  QLabel *m_lblStatus = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
