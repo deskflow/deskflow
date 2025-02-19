@@ -49,6 +49,12 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
+path = "SECURITY.md"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
 path = "sonar-project.properties"
 precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"

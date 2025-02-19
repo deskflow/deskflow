@@ -205,12 +205,12 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
   dialog.exec();
 }
 
-NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool tlsAcceptedClient)
+NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
 {
   using enum NewClientPromptResult;
 
-  if (tlsAcceptedClient) {
-    // When peer checking is enabled you will be prompted to allow the connection before seeing this dialog.
+  if (serverRequiresPeerAuth) {
+    // When peer auth is enabled you will be prompted to allow the connection before seeing this dialog.
     // This is why we do not show a dialog with an option to ignore the new client
     QMessageBox::information(
         parent, QString("New Client"),
