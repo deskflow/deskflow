@@ -71,6 +71,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_guiDupeChecker{new QLocalServer(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
+      m_btnFingerprint{new QToolButton(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionReportBug{new QAction(tr("Report a Bug"), this)},
@@ -231,12 +232,19 @@ void MainWindow::setupControls()
 
 #endif
 
+  m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
+  m_btnFingerprint->setFixedSize(QSize(24, 24));
+  m_btnFingerprint->setIconSize(QSize(24, 24));
+  m_btnFingerprint->setAutoRaise(true);
+  m_btnFingerprint->setToolTip(tr("View local fingerprint"));
+  ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
+
   m_lblSecurityStatus->setVisible(false);
   m_lblSecurityStatus->setFixedSize(QSize(24, 24));
   m_lblSecurityStatus->setScaledContents(true);
-  ui->statusBar->insertPermanentWidget(0, m_lblSecurityStatus);
+  ui->statusBar->insertPermanentWidget(1, m_lblSecurityStatus);
 
-  ui->statusBar->insertPermanentWidget(1, m_lblStatus, 1);
+  ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -305,7 +313,7 @@ void MainWindow::connectSlots()
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+  connect(m_btnFingerprint, &QToolButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
   connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
@@ -951,7 +959,7 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  ui->lblMyFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
+  m_btnFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)

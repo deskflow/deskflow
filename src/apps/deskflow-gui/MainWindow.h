@@ -40,6 +40,7 @@ class QPushButton;
 class QTextEdit;
 class QComboBox;
 class QTabWidget;
+class QToolButton;
 class QCheckBox;
 class QRadioButton;
 class QMessageBox;
@@ -205,6 +206,7 @@ private:
 
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;
+  QToolButton *m_btnFingerprint = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
