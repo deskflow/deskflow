@@ -71,6 +71,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_guiDupeChecker{new QLocalServer(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
+      m_btnUpdate{new QPushButton(this)},
       m_btnFingerprint{new QToolButton(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
@@ -216,9 +217,6 @@ void MainWindow::setupControls()
 
   secureSocket(false);
 
-  ui->lblUpdate->setStyleSheet(kStyleNoticeLabel);
-  ui->lblUpdate->hide();
-
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_appConfig.lastVersion() != kVersion) {
@@ -232,19 +230,29 @@ void MainWindow::setupControls()
 
 #endif
 
+  const auto trayItemSize = QSize(24, 24);
   m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
-  m_btnFingerprint->setFixedSize(QSize(24, 24));
-  m_btnFingerprint->setIconSize(QSize(24, 24));
+  m_btnFingerprint->setFixedSize(trayItemSize);
+  m_btnFingerprint->setIconSize(trayItemSize);
   m_btnFingerprint->setAutoRaise(true);
   m_btnFingerprint->setToolTip(tr("View local fingerprint"));
   ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
 
   m_lblSecurityStatus->setVisible(false);
-  m_lblSecurityStatus->setFixedSize(QSize(24, 24));
+  m_lblSecurityStatus->setFixedSize(trayItemSize);
   m_lblSecurityStatus->setScaledContents(true);
   ui->statusBar->insertPermanentWidget(1, m_lblSecurityStatus);
 
   ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
+
+  m_btnUpdate->setVisible(false);
+  m_btnUpdate->setText(tr("Update available"));
+  m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
+  m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
+  m_btnUpdate->setFixedHeight(24);
+  m_btnUpdate->setIconSize(trayItemSize);
+  m_btnUpdate->setFlat(true);
+  ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -320,6 +328,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 
+  connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
+
   connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
 }
 
@@ -374,11 +384,8 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::versionCheckerUpdateFound(const QString &version)
 {
-  const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
-  const auto text = tr("A new version is available (v%1). %2").arg(version, link);
-
-  ui->lblUpdate->show();
-  ui->lblUpdate->setText(text);
+  m_btnUpdate->setVisible(true);
+  m_btnUpdate->setToolTip(tr("A new version v%1 is avilable").arg(version));
 }
 
 void MainWindow::coreProcessError(CoreProcess::Error error)
@@ -454,6 +461,11 @@ void MainWindow::openAboutDialog()
 void MainWindow::openHelpUrl() const
 {
   QDesktopServices::openUrl(QUrl(kUrlHelp));
+}
+
+void MainWindow::openGetNewVersionUrl() const
+{
+  QDesktopServices::openUrl(kUrlDownload);
 }
 
 void MainWindow::openSettings()

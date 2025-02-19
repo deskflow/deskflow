@@ -15,8 +15,6 @@ namespace deskflow::gui {
 // notation (rdn), e.g. org.deskflow
 const auto kOrgDomain = QStringLiteral("deskflow.org");
 
-const auto kLinkDownload = R"(<a href="%1" style="color: %2">Download now</a>)";
-
 const auto kUrlSourceQuery = "source=gui";
 const auto kUrlApp = QStringLiteral("https://deskflow.org");
 const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
