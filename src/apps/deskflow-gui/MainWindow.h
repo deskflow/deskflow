@@ -111,6 +111,7 @@ private:
   void clearSettings();
   void openAboutDialog();
   void openHelpUrl() const;
+  void openGetNewVersionUrl() const;
   void openSettings();
   void startCore();
   void stopCore();
@@ -207,6 +208,7 @@ private:
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;
   QToolButton *m_btnFingerprint = nullptr;
+  QPushButton *m_btnUpdate = nullptr;
 
   // Window Actions
   QAction *m_actionAbout = nullptr;
