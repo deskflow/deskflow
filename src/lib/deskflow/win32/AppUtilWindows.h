@@ -35,7 +35,6 @@ public:
   void debugServiceWait();
   int run(int argc, char **argv) override;
   void exitApp(int code) override;
-  void beforeAppExit() override;
   void startNode() override;
   std::vector<std::string> getKeyboardLayoutList() override;
   std::string getCurrentLanguageCode() override;

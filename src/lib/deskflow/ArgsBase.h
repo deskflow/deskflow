@@ -91,7 +91,6 @@ public:
 
 #if SYSAPI_WIN32
   bool m_debugServiceWait = false;
-  bool m_pauseOnExit = false;
   bool m_stopOnDeskSwitch = false;
 #endif
 

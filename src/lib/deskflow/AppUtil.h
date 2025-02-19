@@ -28,9 +28,6 @@ public:
   {
     instance().exitApp(code);
   }
-  virtual void beforeAppExit()
-  {
-  }
 
 private:
   IApp *m_app;
