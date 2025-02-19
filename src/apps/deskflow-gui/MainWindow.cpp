@@ -156,13 +156,13 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
-    if (!QFile::exists(localFingerPrintDb())) {
+    if (!QFile::exists(localFingerprintDb())) {
       regenerateLocalFingerprints();
       return;
     }
 
     deskflow::FingerprintDatabase db;
-    db.read(localFingerPrintDb().toStdString());
+    db.read(localFingerprintDb().toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -482,14 +482,14 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  if (!QFile::exists(localFingerPrintDb())) {
+  if (!QFile::exists(localFingerprintDb())) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
-  db.read(localFingerPrintDb().toStdString());
+  db.read(localFingerprintDb().toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -735,27 +735,23 @@ void MainWindow::checkFingerprint(const QString &line)
   };
 
   // Only Save the sha256
-  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
-  const auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), trustFile).toStdString();
-
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(trustedFingerprintDb().toStdString());
   if (db.isTrusted(sha256)) {
     return;
   }
 
   m_coreProcess.stop();
-  const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
+
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
-  FingerprintDialog fingerprintDialog(this, fingerprints, dialogMode);
-  connect(
-      &fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint,
-      Qt::UniqueConnection
-  );
+
+  FingerprintDialog fingerprintDialog(this, {sha1, sha256}, dialogMode);
+  connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
+
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(localPath);
+    db.write(trustedFingerprintDb().toStdString());
     m_coreProcess.start();
   }
 }
@@ -952,7 +948,7 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  ui->lblMyFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerPrintDb()));
+  ui->lblMyFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1073,9 +1069,16 @@ QString MainWindow::getTlsPath()
   return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
 }
 
-QString MainWindow::localFingerPrintDb()
+QString MainWindow::localFingerprintDb()
 {
   return QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+}
+
+QString MainWindow::trustedFingerprintDb()
+{
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  return QStringLiteral("%1/%2").arg(getTlsPath(), trustFile);
 }
 
 bool MainWindow::regenerateLocalFingerprints()

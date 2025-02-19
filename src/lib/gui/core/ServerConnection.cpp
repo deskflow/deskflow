@@ -19,10 +19,11 @@ namespace deskflow::gui {
 // ServerConnection::Deps
 //
 
-messages::NewClientPromptResult
-ServerConnection::Deps::showNewClientPrompt(QWidget *parent, const QString &clientName, bool previouslyAccepted) const
+messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
+    QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth
+) const
 {
-  return messages::showNewClientPrompt(parent, clientName, previouslyAccepted);
+  return messages::showNewClientPrompt(parent, clientName, serverRequiresPeerAuth);
 }
 
 //
