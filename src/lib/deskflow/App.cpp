@@ -129,8 +129,6 @@ int App::run(int argc, char **argv)
     LOG((CLOG_CRIT "an unknown error occurred\n"));
   }
 
-  appUtil().beforeAppExit();
-
   return result;
 }
 

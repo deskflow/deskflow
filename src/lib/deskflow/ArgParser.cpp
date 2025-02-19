@@ -121,9 +121,7 @@ bool ArgParser::parsePlatformArgs(
 )
 {
 #if WINAPI_MSWINDOWS
-  if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
-    argsBase.m_pauseOnExit = true;
-  } else if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
+  if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
     argsBase.m_stopOnDeskSwitch = true;
   } else {
     // option not supported here

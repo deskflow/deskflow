@@ -209,16 +209,14 @@ private:
 #elif SYSAPI_WIN32
 
 // windows args
-#define HELP_SYS_ARGS " [--service <action>] [--relaunch] [--exit-pause]"
+#define HELP_SYS_ARGS " [--service <action>] [--relaunch]"
 #define HELP_SYS_INFO                                                                                                  \
   "      --service <action>   manage the windows service, valid options "                                              \
   "are:\n"                                                                                                             \
   "                             install/uninstall/start/stop\n"                                                        \
   "      --relaunch           persistently relaunches process in current "                                             \
   "user \n"                                                                                                            \
-  "                             session (useful for vista and upward).\n"                                              \
-  "      --exit-pause         wait for key press on exit, can be useful for\n"                                         \
-  "                             reading error messages that occur on exit.\n"
+  "                             session (useful for vista and upward).\n"
 #endif
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS

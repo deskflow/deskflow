@@ -99,17 +99,6 @@ static int foregroundStartupStatic(int argc, char **argv)
   return AppUtil::instance().app().foregroundStartup(argc, argv);
 }
 
-void AppUtilWindows::beforeAppExit()
-{
-  // this can be handy for debugging, since the application is launched in
-  // a new console window, and will normally close on exit (making it so
-  // that we can't see error messages).
-  if (app().argsBase().m_pauseOnExit) {
-    std::cout << std::endl << "press any key to exit..." << std::endl;
-    int c = _getch();
-  }
-}
-
 int AppUtilWindows::run(int argc, char **argv)
 {
   if (!IsWindowsXPSP3OrGreater()) {
