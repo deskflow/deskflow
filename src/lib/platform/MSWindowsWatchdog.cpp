@@ -198,10 +198,12 @@ void MSWindowsWatchdog::mainLoop(void *)
         continue;
       }
 
-      if (m_processFailures != 0) {
+      if (m_processFailures > 1) {
         // increasing backoff period, maximum of 10 seconds.
-        int timeout = (m_processFailures * 2) < 10 ? (m_processFailures * 2) : 10;
-        LOG((CLOG_WARN "backing off, wait=%ds, failures=%d", timeout, m_processFailures));
+        // only start sleeping at 1 second to avoid unnecessary delay when the process stops
+        // for the first failure (i.e. when the process just stopped running).
+        int timeout = m_processFailures < 10 ? m_processFailures : 10;
+        LOG_WARN("backing off, wait=%ds, failures=%d", timeout, m_processFailures);
         ARCH->sleep(timeout);
       }
 
@@ -428,7 +430,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
-  LOG_INFO("deamon shutting down existing processes");
+  LOG_INFO("daemon shutting down existing processes");
 
   if (m_process != nullptr) {
     m_process->shutdown(m_ipcServer);
