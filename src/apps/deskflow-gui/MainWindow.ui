@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>883</width>
-    <height>650</height>
+    <height>583</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -220,16 +220,6 @@
               </widget>
              </item>
              <item>
-              <widget class="deskflow::gui::widgets::ServerStateLabel" name="labelServerState">
-               <property name="text">
-                <string>No clients connected</string>
-               </property>
-               <property name="indent">
-                <number>20</number>
-               </property>
-              </widget>
-             </item>
-             <item>
               <spacer name="verticalSpacer_2">
                <property name="orientation">
                 <enum>Qt::Orientation::Vertical</enum>
@@ -383,16 +373,6 @@
                </item>
               </layout>
              </item>
-             <item>
-              <widget class="deskflow::gui::widgets::ClientStateLabel" name="m_pLabelClientState">
-               <property name="text">
-                <string>Connected to server</string>
-               </property>
-               <property name="indent">
-                <number>20</number>
-               </property>
-              </widget>
-             </item>
             </layout>
            </widget>
           </item>
@@ -512,18 +492,6 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
- <customwidgets>
-  <customwidget>
-   <class>deskflow::gui::widgets::ServerStateLabel</class>
-   <extends>QLabel</extends>
-   <header>widgets/ServerStateLabel.h</header>
-  </customwidget>
-  <customwidget>
-   <class>deskflow::gui::widgets::ClientStateLabel</class>
-   <extends>QLabel</extends>
-   <header>widgets/ClientStateLabel.h</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>rbModeServer</tabstop>
   <tabstop>lineClientIp</tabstop>
