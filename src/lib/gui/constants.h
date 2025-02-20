@@ -15,13 +15,13 @@ namespace deskflow::gui {
 // notation (rdn), e.g. org.deskflow
 const auto kOrgDomain = QStringLiteral("deskflow.org");
 
-const auto kUrlSourceQuery = "source=gui";
+const auto kUrlSourceQuery = QStringLiteral("source=gui");
 const auto kUrlApp = QStringLiteral("https://deskflow.org");
-const auto kUrlHelp = QString("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
-const auto kUrlDownload = QString("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
+const auto kUrlHelp = QStringLiteral("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
+const auto kUrlDownload = QStringLiteral("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
 
 #if defined(Q_OS_LINUX)
-const auto kUrlGnomeTrayFix = "https://extensions.gnome.org/extension/615/appindicator-support/";
+const auto kUrlGnomeTrayFix = QStringLiteral("https://extensions.gnome.org/extension/615/appindicator-support/");
 #endif
 
 } // namespace deskflow::gui
