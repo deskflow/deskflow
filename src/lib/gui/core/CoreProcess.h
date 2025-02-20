@@ -169,6 +169,7 @@ private:
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
   QTimer m_retryTimer;
+  int m_connections = 0;
 };
 
 } // namespace deskflow::gui
