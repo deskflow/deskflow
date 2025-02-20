@@ -549,7 +549,8 @@ void MainWindow::updateSecurityIcon(bool visible)
 
   bool secureSocket = m_appConfig.tlsEnabled();
 
-  const auto txt = secureSocket ? tr("Encryption Enabled") : tr("Encryption Disabled");
+  const auto txt =
+      secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
   m_lblSecurityStatus->setToolTip(txt);
 
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
@@ -870,11 +871,7 @@ void MainWindow::updateStatus()
 
     case Connected: {
       updateSecurityIcon(true);
-      if (m_secureSocket) {
-        setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_coreProcess.secureSocketVersion()));
-      } else {
-        setStatus(tr("%1 is connected (without TLS encryption)").arg(kAppName));
-      }
+      setStatus(tr("%1 is connected").arg(kAppName));
       break;
     }
 
