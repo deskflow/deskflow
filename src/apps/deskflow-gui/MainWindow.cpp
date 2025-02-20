@@ -733,10 +733,8 @@ void MainWindow::checkConnected(const QString &line)
 {
   if (ui->rbModeServer->isChecked()) {
     m_serverConnection.handleLogLine(line);
-    ui->labelServerState->updateServerState(line);
   } else {
     m_clientConnection.handleLogLine(line);
-    ui->m_pLabelClientState->updateClientState(line);
   }
 }
 

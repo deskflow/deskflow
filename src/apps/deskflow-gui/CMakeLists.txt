@@ -94,8 +94,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/SettingsDialog.cpp
   dialogs/SettingsDialog.h
   dialogs/SettingsDialog.ui
-  widgets/ClientStateLabel.cpp
-  widgets/ClientStateLabel.h
   widgets/FingerprintPreview.h
   widgets/FingerprintPreview.cpp
   widgets/KeySequenceWidget.cpp
@@ -104,8 +102,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   widgets/NewScreenWidget.cpp
   widgets/ScreenSetupView.cpp
   widgets/ScreenSetupView.h
-  widgets/ServerStateLabel.cpp
-  widgets/ServerStateLabel.h
   widgets/TrashScreenWidget.cpp
   widgets/TrashScreenWidget.h
 )
