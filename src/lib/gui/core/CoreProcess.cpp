@@ -700,14 +700,21 @@ void CoreProcess::checkLogLine(const QString &line)
   using enum ConnectionState;
 
   if (line.contains("connected to server") || line.contains("has connected")) {
+    m_connections++;
     setConnectionState(Connected);
-
   } else if (line.contains("started server")) {
+    m_connections = 0;
     setConnectionState(Listening);
   } else if (line.contains("disconnected from server") || line.contains("process exited")) {
+    m_connections = 0;
     setConnectionState(Disconnected);
   } else if (line.contains("connecting to")) {
     setConnectionState(Connecting);
+  } else if (line.contains("has disconnected")) {
+    m_connections--;
+    if (m_connections < 1) {
+      setConnectionState(Listening);
+    }
   }
 
   checkSecureSocket(line);
