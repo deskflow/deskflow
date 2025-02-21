@@ -48,7 +48,6 @@ class QAbstractButton;
 class QLocalServer;
 
 class DeskflowApplication;
-class SetupWizard;
 
 namespace Ui {
 class MainWindow;
@@ -62,7 +61,6 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
   friend class DeskflowApplication;
-  friend class SetupWizard;
   friend class SettingsDialog;
 
 public:
