@@ -17,18 +17,24 @@ const auto kColorError = "#ec4c47";
 const auto kColorLightGrey = "#666666";
 
 const auto kStyleLink = //
-    QString("color: %1").arg(kColorSecondary);
+    QStringLiteral("color: %1").arg(kColorSecondary);
 
 const auto kStyleLineEditErrorBorder =
-    QString("border: 1px solid %1; border-radius: 2px; padding: 2px;").arg(kColorError);
+    QStringLiteral("border: 1px solid %1; border-radius: 2px; padding: 2px;").arg(kColorError);
 
 const auto kStyleErrorActiveLabel = //
-    QString("padding: 3px 5px; border-radius: 3px; "
-            "background-color: %1; color: %2")
+    QStringLiteral("padding: 3px 5px; border-radius: 3px; "
+                   "background-color: %1; color: %2")
         .arg(kColorError, kColorWhite);
 
 const auto kStyleErrorInactiveLabel = //
-    QString("padding: 3px 5px; border-radius: 3px;"
-            "background-color: none");
+    QStringLiteral("padding: 3px 5px; border-radius: 3px;"
+                   "background-color: none");
+
+const auto kStyleFlatButton = QStringLiteral("QAbstractButton{background: none; border: none; border-radius: 4}");
+
+const auto kStyleFlatButtonHoverable =
+    QStringLiteral("%1\n"
+                   "QAbstractButton:hover{border-color: palette(highlight); border-width: 1px; border-radius: 6");
 
 } // namespace deskflow::gui
