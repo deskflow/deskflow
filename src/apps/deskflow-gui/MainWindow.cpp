@@ -222,7 +222,7 @@ void MainWindow::setupControls()
   }
 
   // Setup the log toggle, set its initial state to closed
-  ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
+  ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
   if (m_appConfig.logExpanded()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
     ui->textLog->setVisible(true);
@@ -247,6 +247,7 @@ void MainWindow::setupControls()
 #endif
 
   const auto trayItemSize = QSize(24, 24);
+  m_btnFingerprint->setStyleSheet(kStyleFlatButtonHoverable);
   m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
   m_btnFingerprint->setFixedSize(trayItemSize);
   m_btnFingerprint->setIconSize(trayItemSize);
@@ -262,12 +263,13 @@ void MainWindow::setupControls()
   ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
 
   m_btnUpdate->setVisible(false);
+  m_btnUpdate->setStyleSheet(kStyleFlatButtonHoverable);
+  m_btnUpdate->setFlat(true);
   m_btnUpdate->setText(tr("Update available"));
   m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
   m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
   m_btnUpdate->setFixedHeight(24);
   m_btnUpdate->setIconSize(trayItemSize);
-  m_btnUpdate->setFlat(true);
   ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
 }
 
