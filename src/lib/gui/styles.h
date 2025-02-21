@@ -31,4 +31,10 @@ const auto kStyleErrorInactiveLabel = //
     QStringLiteral("padding: 3px 5px; border-radius: 3px;"
                    "background-color: none");
 
+const auto kStyleFlatButton = QStringLiteral("QAbstractButton{background: none; border: none; border-radius: 4}");
+
+const auto kStyleFlatButtonHoverable =
+    QStringLiteral("%1\n"
+                   "QAbstractButton:hover{border-color: palette(highlight); border-width: 1px; border-radius: 6");
+
 } // namespace deskflow::gui
