@@ -67,8 +67,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   ScreenSetupModel.h
   ServerConfig.cpp
   ServerConfig.h
-  SetupWizard.cpp
-  SetupWizard.h
   VersionChecker.cpp
   VersionChecker.h
   dialogs/AboutDialog.cpp
