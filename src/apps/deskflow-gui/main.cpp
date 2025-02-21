@@ -7,7 +7,6 @@
  */
 
 #include "MainWindow.h"
-#include "SetupWizard.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/config/AppConfig.h"
@@ -147,17 +146,6 @@ int main(int argc, char *argv[])
   QObject::connect(
       &configScopes, &ConfigScopes::saving, &appConfig, [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection
   );
-
-  if (appConfig.wizardShouldRun()) {
-    SetupWizard wizard(appConfig);
-    auto result = wizard.exec();
-    if (result != QDialog::Accepted) {
-      qInfo("wizard cancelled, exiting");
-      return 0;
-    }
-
-    configScopes.save();
-  }
 
   MainWindow mainWindow(configScopes, appConfig);
   mainWindow.open();
