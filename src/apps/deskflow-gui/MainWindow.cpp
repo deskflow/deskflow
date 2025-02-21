@@ -582,6 +582,7 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 void MainWindow::open()
 {
   if (!m_appConfig.enableUpdateCheck().has_value()) {
+    showAndActivate();
     m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
     m_configScopes.save();
   }
