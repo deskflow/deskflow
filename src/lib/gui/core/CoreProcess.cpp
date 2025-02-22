@@ -564,16 +564,6 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     return false;
   }
 
-  if (m_appConfig.invertConnection()) {
-    qDebug("inverting server connection");
-
-    if (correctedAddress().isEmpty()) {
-      Q_EMIT error(Error::AddressMissing);
-      qDebug("address is missing for server args");
-      return false;
-    }
-  }
-
   // the address arg is dual purpose; when in listening mode, it's the address
   // that the server listens on. when tcp sockets are inverted, it connects to
   // that address. this is a bit confusing, and there should be probably be
@@ -619,20 +609,13 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     args << "--invert-scroll";
   }
 
-  if (m_appConfig.invertConnection()) {
-    qDebug("inverting client connection");
-    args << "--host";
-    args << ":" + QString::number(m_appConfig.port());
-  } else {
-
-    if (correctedAddress().isEmpty()) {
-      Q_EMIT error(Error::AddressMissing);
-      qDebug("address is missing for client args");
-      return false;
-    }
-
-    args << correctedAddress() + ":" + QString::number(m_appConfig.port());
+  if (correctedAddress().isEmpty()) {
+    Q_EMIT error(Error::AddressMissing);
+    qDebug("address is missing for client args");
+    return false;
   }
+
+  args << correctedAddress() + ":" + QString::number(m_appConfig.port());
 
   return true;
 }

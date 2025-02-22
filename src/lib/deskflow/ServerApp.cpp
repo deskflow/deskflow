@@ -19,7 +19,6 @@
 #include "deskflow/Screen.h"
 #include "deskflow/ServerArgs.h"
 #include "deskflow/XScreen.h"
-#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
@@ -660,15 +659,7 @@ void ServerApp::handleScreenSwitched(const Event &e, void *)
 
 ISocketFactory *ServerApp::getSocketFactory() const
 {
-  ISocketFactory *socketFactory = nullptr;
-
-  if (args().m_config->isClientMode()) {
-    socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
-  } else {
-    socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
-  }
-
-  return socketFactory;
+  return new TCPSocketFactory(m_events, getSocketMultiplexer());
 }
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress &address) const
