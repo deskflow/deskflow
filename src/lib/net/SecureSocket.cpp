@@ -18,7 +18,7 @@
 #include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
-#include <net/InverseSockets/SslLogger.h>
+#include <net/SslLogger.h>
 
 #include <cstdlib>
 #include <cstring>
