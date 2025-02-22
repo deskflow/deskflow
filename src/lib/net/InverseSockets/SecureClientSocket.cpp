@@ -5,7 +5,7 @@
  */
 
 #include "SecureClientSocket.h"
-#include "SslLogger.h"
+#include "../SslLogger.h"
 
 #include <fstream>
 #include <set>

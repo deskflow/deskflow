@@ -25,6 +25,8 @@ add_library(net STATIC
   SocketMultiplexer.h
   SecureUtils.cpp
   SecureUtils.h
+  SslLogger.cpp
+  SslLogger.h
   TCPListenSocket.cpp
   TCPListenSocket.h
   TCPSocket.cpp
@@ -48,8 +50,6 @@ add_library(net STATIC
   InverseSockets/SecureServerSocket.h
   InverseSockets/SslApi.cpp
   InverseSockets/SslApi.h
-  InverseSockets/SslLogger.cpp
-  InverseSockets/SslLogger.h
 )
 
 target_link_libraries(

@@ -5,7 +5,7 @@
  */
 
 #include "SslApi.h"
-#include "SslLogger.h"
+#include "../SslLogger.h"
 
 #include <fstream>
 #include <memory>
