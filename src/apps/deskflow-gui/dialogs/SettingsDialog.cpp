@@ -190,7 +190,6 @@ void SettingsDialog::accept()
   m_appConfig.setInvertScrollDirection(ui->m_pCheckBoxScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->m_pCheckBoxServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
-  m_appConfig.setInvertConnection(ui->m_pInvertConnection->isChecked());
   m_appConfig.setColorfulTrayIcon(ui->rb_icon_colorful->isChecked());
   m_appConfig.setRequireClientCerts(ui->chkRequireClientCert->isChecked());
 
@@ -235,8 +234,6 @@ void SettingsDialog::loadFromConfig()
   } else {
     ui->m_pRadioUserScope->setChecked(true);
   }
-
-  ui->m_pInvertConnection->setChecked(m_appConfig.invertConnection());
 
   if (m_appConfig.colorfulTrayIcon())
     ui->rb_icon_colorful->setChecked(true);

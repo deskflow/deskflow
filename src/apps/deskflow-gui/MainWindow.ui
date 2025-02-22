@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>883</width>
-    <height>583</height>
+    <height>521</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -171,54 +171,6 @@
              <property name="bottomMargin">
               <number>0</number>
              </property>
-             <item>
-              <widget class="QWidget" name="widgetServerInput" native="true">
-               <layout class="QVBoxLayout" name="m_pLayoutServerInverse">
-                <property name="spacing">
-                 <number>15</number>
-                </property>
-                <property name="leftMargin">
-                 <number>0</number>
-                </property>
-                <property name="topMargin">
-                 <number>0</number>
-                </property>
-                <property name="rightMargin">
-                 <number>0</number>
-                </property>
-                <property name="bottomMargin">
-                 <number>0</number>
-                </property>
-                <item>
-                 <widget class="QLabel" name="lblClientIp">
-                  <property name="text">
-                   <string>Client IP address or hostname:</string>
-                  </property>
-                  <property name="indent">
-                   <number>20</number>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <layout class="QHBoxLayout" name="horizontalLayout_3">
-                  <property name="leftMargin">
-                   <number>20</number>
-                  </property>
-                  <item>
-                   <widget class="QLineEdit" name="lineClientIp"/>
-                  </item>
-                  <item>
-                   <widget class="QPushButton" name="btnConnectToClient">
-                    <property name="text">
-                     <string>Connect</string>
-                    </property>
-                   </widget>
-                  </item>
-                 </layout>
-                </item>
-               </layout>
-              </widget>
-             </item>
              <item>
               <spacer name="verticalSpacer_2">
                <property name="orientation">
@@ -494,8 +446,6 @@
  </widget>
  <tabstops>
   <tabstop>rbModeServer</tabstop>
-  <tabstop>lineClientIp</tabstop>
-  <tabstop>btnConnectToClient</tabstop>
   <tabstop>btnConfigureServer</tabstop>
   <tabstop>rbModeClient</tabstop>
   <tabstop>lineHostname</tabstop>

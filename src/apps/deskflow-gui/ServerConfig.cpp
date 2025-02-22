@@ -130,10 +130,6 @@ void ServerConfig::commit()
   settings().setValue("clipboardSharing", clipboardSharing());
   settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
 
-  if (!getClientAddress().isEmpty()) {
-    settings().setValue("clientAddress", getClientAddress());
-  }
-
   writeSettings(settings(), switchCorners(), "switchCorner");
 
   settings().beginWriteArray("screens");
@@ -186,7 +182,6 @@ void ServerConfig::recall()
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
   );
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
-  setClientAddress(settings().value("clientAddress", "").toString());
 
   readSettings(settings(), switchCorners(), "switchCorner", 0, static_cast<int>(NumSwitchCorners));
 
@@ -292,11 +287,6 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "clipboardSharing = " << (config.clipboardSharing() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "clipboardSharingSize = " << config.clipboardSharingSize() << Qt::endl;
-
-  if (!config.getClientAddress().isEmpty()) {
-    outStream << "\t"
-              << "clientAddress = " << config.getClientAddress() << Qt::endl;
-  }
 
   if (config.hasSwitchDelay())
     outStream << "\t"
@@ -543,24 +533,6 @@ size_t ServerConfig::setClipboardSharingSize(size_t size)
   using std::swap;
   swap(size, m_ClipboardSharingSize);
   return size;
-}
-
-void ServerConfig::setClientAddress(const QString &address)
-{
-  if (m_pAppConfig->invertConnection()) {
-    m_ClientAddress = address;
-  }
-}
-
-QString ServerConfig::getClientAddress() const
-{
-  QString clientAddress;
-
-  if (m_pAppConfig->invertConnection()) {
-    clientAddress = m_ClientAddress.trimmed();
-  }
-
-  return clientAddress;
 }
 
 QSettingsProxy &ServerConfig::settings()
