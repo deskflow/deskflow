@@ -19,7 +19,6 @@
 #include "deskflow/Screen.h"
 #include "deskflow/XScreen.h"
 #include "deskflow/protocol_types.h"
-#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -547,13 +546,5 @@ void ClientApp::startNode()
 
 ISocketFactory *ClientApp::getSocketFactory() const
 {
-  ISocketFactory *socketFactory = nullptr;
-
-  if (args().m_hostMode) {
-    socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
-  } else {
-    socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
-  }
-
-  return socketFactory;
+  return new TCPSocketFactory(m_events, getSocketMultiplexer());
 }
