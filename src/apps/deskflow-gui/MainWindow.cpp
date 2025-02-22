@@ -280,7 +280,6 @@ void MainWindow::connectSlots()
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
-  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::applyConfig);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -319,13 +318,9 @@ void MainWindow::connectSlots()
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
   connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
   connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
-  connect(ui->btnConnectToClient, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
-
-  connect(ui->lineClientIp, &QLineEdit::returnPressed, ui->btnConnectToClient, &QPushButton::click);
-  connect(ui->lineClientIp, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
@@ -670,7 +665,6 @@ void MainWindow::applyConfig()
   enableClient(m_appConfig.clientGroupChecked());
 
   ui->lineHostname->setText(m_appConfig.serverHostname());
-  ui->lineClientIp->setText(m_serverConfig.getClientAddress());
   updateLocalFingerprint();
   setIcon();
 }
@@ -680,7 +674,6 @@ void MainWindow::saveSettings()
   m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
   m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
   m_appConfig.setServerHostname(ui->lineHostname->text());
-  m_serverConfig.setClientAddress(ui->lineClientIp->text());
 
   m_configScopes.save();
 }
@@ -1033,7 +1026,6 @@ void MainWindow::enableServer(bool enable)
   m_appConfig.setServerGroupChecked(enable);
   ui->rbModeServer->setChecked(enable);
   ui->widgetServer->setEnabled(enable);
-  ui->widgetServerInput->setVisible(m_appConfig.invertConnection());
 
   if (enable) {
     ui->btnToggleCore->setEnabled(true);
@@ -1062,7 +1054,7 @@ void MainWindow::enableClient(bool enable)
   m_appConfig.setClientGroupChecked(enable);
   ui->rbModeClient->setChecked(enable);
   ui->widgetClientInput->setEnabled(enable);
-  ui->widgetClientInput->setVisible(!m_appConfig.invertConnection());
+  ui->widgetClientInput->setVisible(true);
 
   if (enable) {
     ui->btnToggleCore->setEnabled(true);

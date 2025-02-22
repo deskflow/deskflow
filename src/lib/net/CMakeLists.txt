@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
@@ -36,20 +36,6 @@ add_library(net STATIC
   TSocketMultiplexerMethodJob.h
   XSocket.cpp
   XSocket.h
-  InverseSockets/AutoArchSocket.cpp
-  InverseSockets/AutoArchSocket.h
-  InverseSockets/InverseClientSocket.cpp
-  InverseSockets/InverseClientSocket.h
-  InverseSockets/InverseServerSocket.cpp
-  InverseSockets/InverseServerSocket.h
-  InverseSockets/InverseSocketFactory.cpp
-  InverseSockets/InverseSocketFactory.h
-  InverseSockets/SecureClientSocket.cpp
-  InverseSockets/SecureClientSocket.h
-  InverseSockets/SecureServerSocket.cpp
-  InverseSockets/SecureServerSocket.h
-  InverseSockets/SslApi.cpp
-  InverseSockets/SslApi.h
 )
 
 target_link_libraries(

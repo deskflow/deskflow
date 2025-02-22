@@ -63,12 +63,12 @@ const char *const AppConfig::m_SettingsName[] = {
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
-    "",                             // 31 = guid, obsolete
-    "",                             // 32 = licenseRegistryUrl, obsolete
-    "",                             // 33 = licenseNextCheck, obsolete
-    "initiateConnectionFromServer", // kInvertConnection
-    "",                             // 35 = clientHostMode, obsolete
-    "",                             // 36 = serverClientMode, obsolete
+    "", // 31 = guid, obsolete
+    "", // 32 = licenseRegistryUrl, obsolete
+    "", // 33 = licenseNextCheck, obsolete
+    "", // 34 = kInvertConnection, obsolete
+    "", // 35 = clientHostMode, obsolete
+    "", // 36 = serverClientMode, obsolete
     "enableService",
     "closeToTray",
     "mainWindowSize",
@@ -133,7 +133,6 @@ void AppConfig::recallFromCurrentScope()
   m_PreventSleep = getFromCurrentScope(kPreventSleep, m_PreventSleep).toBool();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
-  m_InvertConnection = getFromCurrentScope(kInvertConnection, m_InvertConnection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
   m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
@@ -197,7 +196,6 @@ void AppConfig::commit()
     setInCurrentScope(kPreventSleep, m_PreventSleep);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
-    setInCurrentScope(kInvertConnection, m_InvertConnection);
     setInCurrentScope(kEnableService, m_EnableService);
     setInCurrentScope(kCloseToTray, m_CloseToTray);
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
@@ -508,11 +506,6 @@ bool AppConfig::preventSleep() const
   return m_PreventSleep;
 }
 
-bool AppConfig::invertConnection() const
-{
-  return m_InvertConnection;
-}
-
 QString AppConfig::tlsCertPath() const
 {
   return m_TlsCertPath;
@@ -743,12 +736,6 @@ void AppConfig::setEnableService(bool enabled)
 void AppConfig::setCloseToTray(bool minimize)
 {
   m_CloseToTray = minimize;
-}
-
-void AppConfig::setInvertConnection(bool value)
-{
-  m_InvertConnection = value;
-  Q_EMIT invertConnectionChanged();
 }
 
 void AppConfig::setRequireClientCerts(bool requireClientCerts)

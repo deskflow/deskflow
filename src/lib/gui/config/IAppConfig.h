@@ -44,7 +44,6 @@ public:
   virtual const QString &logFilename() const = 0;
   virtual QString coreServerName() const = 0;
   virtual QString coreClientName() const = 0;
-  virtual bool invertConnection() const = 0;
   virtual void persistLogDir() const = 0;
   virtual bool languageSync() const = 0;
   virtual bool invertScrollDirection() const = 0;
@@ -83,7 +82,6 @@ public:
   virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;
   virtual void setCloseToTray(bool closeToTray) = 0;
-  virtual void setInvertConnection(bool invertConnection) = 0;
   virtual void setRequireClientCerts(bool requireClientCerts) = 0;
 };
 

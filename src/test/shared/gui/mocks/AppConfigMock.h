@@ -45,7 +45,6 @@ public:
   MOCK_METHOD(const QString &, logFilename, (), (const, override));
   MOCK_METHOD(QString, coreServerName, (), (const, override));
   MOCK_METHOD(QString, coreClientName, (), (const, override));
-  MOCK_METHOD(bool, invertConnection, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
   MOCK_METHOD(bool, languageSync, (), (const, override));
   MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
@@ -84,7 +83,6 @@ public:
   MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
   MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
-  MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));
   MOCK_METHOD(void, setRequireClientCerts, (bool requireClientCerts), (override));
 
 private:
