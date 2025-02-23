@@ -119,9 +119,10 @@ private:
   void resetCore();
 
   void showMyFingerprint();
-  void setModeServer();
-  void setModeClient();
   void updateSecurityIcon(bool visible);
+
+  void coreModeToggled();
+  void updateModeControls(bool serverMode);
 
   std::unique_ptr<Ui::MainWindow> ui;
 

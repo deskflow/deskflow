@@ -231,6 +231,14 @@ void MainWindow::setupControls()
     ui->textLog->setVisible(false);
   }
 
+  ui->serverOptions->setVisible(false);
+  ui->clientOptions->setVisible(false);
+  ui->rbModeClient->setChecked(m_appConfig.clientGroupChecked());
+  ui->rbModeServer->setChecked(m_appConfig.serverGroupChecked());
+
+  if (m_appConfig.clientGroupChecked() || m_appConfig.serverGroupChecked())
+    updateModeControls(m_appConfig.serverGroupChecked());
+
 #if defined(Q_OS_MAC)
 
   ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
@@ -326,8 +334,8 @@ void MainWindow::connectSlots()
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(m_btnFingerprint, &QToolButton::clicked, this, &MainWindow::showMyFingerprint);
 
-  connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
-  connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
+  connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
+  connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 
@@ -530,18 +538,41 @@ void MainWindow::showMyFingerprint()
   fingerprintDialog.exec();
 }
 
-void MainWindow::setModeServer()
+void MainWindow::coreModeToggled()
 {
-  enableServer(true);
-  enableClient(false);
+  auto serverMode = ui->rbModeServer->isChecked();
+
+  const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
+  qDebug() << mode;
+
+  m_appConfig.setServerGroupChecked(serverMode);
+  m_appConfig.setClientGroupChecked(!serverMode);
   m_configScopes.save();
+
+  updateModeControls(serverMode);
 }
 
-void MainWindow::setModeClient()
+void MainWindow::updateModeControls(bool serverMode)
 {
-  enableClient(true);
-  enableServer(false);
-  m_configScopes.save();
+  ui->serverOptions->setVisible(serverMode);
+  ui->clientOptions->setVisible(!serverMode);
+  ui->lblNoMode->setVisible(false);
+  ui->btnToggleCore->setEnabled(true);
+  m_actionStartCore->setEnabled(true);
+  auto expectedCoreMode = serverMode ? CoreProcess::Mode::Server : CoreProcess::Mode::Client;
+  if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
+    m_coreProcess.stop();
+  m_coreProcess.setMode(expectedCoreMode);
+  if (serverMode) {
+    // The server can run without any clients configured, and this is actually
+    // what you'll want to do the first time since you'll be prompted when an
+    // unrecognized client tries to connect.
+    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
+      qDebug() << "auto-starting core server for first time";
+      m_coreProcess.start();
+      messages::showFirstServerStartMessage(this);
+    }
+  }
 }
 
 void MainWindow::updateSecurityIcon(bool visible)
@@ -661,12 +692,13 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  enableServer(m_appConfig.serverGroupChecked());
-  enableClient(m_appConfig.clientGroupChecked());
-
   ui->lineHostname->setText(m_appConfig.serverHostname());
   updateLocalFingerprint();
   setIcon();
+
+  if (!m_appConfig.serverGroupChecked() && !m_appConfig.clientGroupChecked())
+    return;
+  updateModeControls(m_appConfig.serverGroupChecked());
 }
 
 void MainWindow::saveSettings()
@@ -1017,52 +1049,6 @@ void MainWindow::updateScreenName()
                                   R"((<a href="#" style="color: %2">change</a>))")
                                    .arg(m_appConfig.screenName(), kColorSecondary));
   m_serverConfig.updateServerName();
-}
-
-void MainWindow::enableServer(bool enable)
-{
-  QString serverStr = enable ? QStringLiteral("server enabled") : QStringLiteral("server disabled");
-  qDebug() << serverStr;
-  m_appConfig.setServerGroupChecked(enable);
-  ui->rbModeServer->setChecked(enable);
-  ui->widgetServer->setEnabled(enable);
-
-  if (enable) {
-    ui->btnToggleCore->setEnabled(true);
-    m_actionStartCore->setEnabled(true);
-
-    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Server)
-      m_coreProcess.stop();
-
-    m_coreProcess.setMode(CoreProcess::Mode::Server);
-
-    // The server can run without any clients configured, and this is actually
-    // what you'll want to do the first time since you'll be prompted when an
-    // unrecognized client tries to connect.
-    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
-      qDebug() << "auto-starting core server for first time";
-      m_coreProcess.start();
-      messages::showFirstServerStartMessage(this);
-    }
-  }
-}
-
-void MainWindow::enableClient(bool enable)
-{
-  QString clientStr = enable ? QStringLiteral("client enabled") : QStringLiteral("client disabled");
-  qDebug() << clientStr;
-  m_appConfig.setClientGroupChecked(enable);
-  ui->rbModeClient->setChecked(enable);
-  ui->widgetClientInput->setEnabled(enable);
-  ui->widgetClientInput->setVisible(true);
-
-  if (enable) {
-    ui->btnToggleCore->setEnabled(true);
-    m_actionStartCore->setEnabled(true);
-    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Client)
-      m_coreProcess.stop();
-    m_coreProcess.setMode(CoreProcess::Mode::Client);
-  }
 }
 
 void MainWindow::showAndActivate()
