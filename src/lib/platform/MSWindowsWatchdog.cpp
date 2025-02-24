@@ -188,7 +188,7 @@ void MSWindowsWatchdog::mainLoop(void *)
   saAttr.lpSecurityDescriptor = NULL;
 
   if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
-    LOG((CLOG_ERR "could not create output pipe"));
+    LOG_ERR("could not create output pipe");
     throw XArch(new XArchEvalWindows());
   }
 
@@ -196,6 +196,7 @@ void MSWindowsWatchdog::mainLoop(void *)
   // in order to speed up the shutdown process when the Windows service needs to stop.
   DWORD mode = PIPE_NOWAIT;
   if (!SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
+    LOG_ERR("could not set pipe to non-blocking mode");
     throw XArch(new XArchEvalWindows());
   }
 
