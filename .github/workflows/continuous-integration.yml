@@ -133,17 +133,20 @@ jobs:
             runs-on: "windows-2022"
             timeout: 120 #Windows can take while if it has to build vcpkg cache
             config-args: "-G Ninja"
+            qt-install-dir: "C:"
 
           - name: "macos-14-arm64"
             runs-on: "macos-14"
             timeout: 10
             arch: arm64
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\""
+            qt-install-dir: "/Users/runner"
 
           - name: "macos-13-x64"
             runs-on: macos-13
             timeout: 20
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\""
+            qt-install-dir: "/Users/runner"
 
           - name: "debian-13-x86_64"
             runs-on: ubuntu-latest
@@ -255,7 +258,8 @@ jobs:
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
-          mac-qt-version: 6.8.2
+          qt-version: 6.8.2
+          qt-install-dir: ${{matrix.target.qt-install-dir}}
           like: ${{ matrix.target.like }}
 
       - name: Get version
