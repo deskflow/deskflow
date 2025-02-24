@@ -188,6 +188,13 @@ void MSWindowsWatchdog::mainLoop(void *)
     throw XArch(new XArchEvalWindows());
   }
 
+  // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
+  // in order to speed up the shutdown process when the Windows service needs to stop.
+  DWORD mode = PIPE_NOWAIT;
+  if (!SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
+    throw XArch(new XArchEvalWindows());
+  }
+
   while (m_monitoring) {
     try {
 
@@ -247,7 +254,8 @@ void MSWindowsWatchdog::mainLoop(void *)
         LOG((CLOG_ERR "could not create SendSAS event"));
       }
 
-      ARCH->sleep(1);
+      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+      ARCH->sleep(0.1);
 
     } catch (std::exception &e) {
       LOG((CLOG_CRIT "failed to launch, error: %s", e.what()));
@@ -401,10 +409,9 @@ void MSWindowsWatchdog::outputLoop(void *)
     DWORD bytesRead;
     BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, NULL);
 
-    // assume the process has gone away? slow down
-    // the reads until another one turns up.
     if (!success || bytesRead == 0) {
-      ARCH->sleep(1);
+      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+      ARCH->sleep(0.1);
     } else {
       buffer[bytesRead] = '\0';
 
