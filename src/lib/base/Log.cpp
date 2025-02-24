@@ -128,7 +128,7 @@ Log::Log(bool singleton)
 
   // other initalization
   m_maxPriority = g_defaultMaxPriority;
-  insert(new ConsoleLogOutputter); // NOSONAR -- Adopted by `Log`
+  insert(new ConsoleLogOutputter); // NOSONAR - Adopted by `Log`
 
   if (singleton) {
     s_log = this;

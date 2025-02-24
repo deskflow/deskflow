@@ -220,7 +220,7 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
 #if SYSAPI_WIN32
     // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
     // in that case, but is accessible when running in the foreground.
-    CLOG->insert(new MSWindowsDebugOutputter());
+    CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
 #endif
   }
 
