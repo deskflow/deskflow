@@ -171,70 +171,58 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
 
   m_events = events;
 
-  bool isUninstalling = false;
-  try {
-    // default log level to system setting.
-    if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
-      CLOG->setFilter(logLevel.c_str());
+  // default log level to system setting.
+  if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
+    CLOG->setFilter(logLevel.c_str());
 
-    for (int i = 1; i < argc; ++i) {
-      string arg(argv[i]);
+  for (int i = 1; i < argc; ++i) {
+    string arg(argv[i]);
 
-      if (arg == "-h" || arg == "--help") {
-        showHelp(argc, argv);
-        return ShowHelp;
-      } else if (arg == "-f" || arg == "--foreground") {
-        m_foreground = true;
-      }
+    if (arg == "-h" || arg == "--help") {
+      showHelp(argc, argv);
+      return ShowHelp;
+    } else if (arg == "-f" || arg == "--foreground") {
+      m_foreground = true;
+    }
 #if SYSAPI_WIN32
-      else if (arg == "--install" || arg == "/install") {
-        LOG((CLOG_NOTE "installing windows daemon"));
-        ARCH->installDaemon();
-        return Installed;
-      } else if (arg == "--uninstall" || arg == "/uninstall") {
-        LOG((CLOG_NOTE "uninstalling windows daemon"));
-        isUninstalling = true;
+    else if (arg == "--install" || arg == "/install") {
+      LOG((CLOG_NOTE "installing windows daemon"));
+      ARCH->installDaemon();
+      return Installed;
+    } else if (arg == "--uninstall" || arg == "/uninstall") {
+      LOG((CLOG_NOTE "uninstalling windows daemon"));
+      try {
         ARCH->uninstallDaemon();
-        return Uninstalled;
+      } catch (XArch &e) {
+        std::string message = e.what();
+        if (message.find("The service has not been started") != std::string::npos) {
+          // HACK: this message happens intermittently, not sure where from but
+          // it's quite misleading for the user. they thing something has gone
+          // horribly wrong, but it's just the service manager reporting a false
+          // positive (the service has actually shut down in most cases).
+          LOG_DEBUG("ignoring service start error on uninstall: %s", message.c_str());
+        } else {
+          throw e;
+        }
       }
+      return Uninstalled;
+    }
 #endif
-      else {
-        stringstream ss;
-        ss << "Unrecognized argument: " << arg;
-        handleError(ss.str().c_str());
-        showHelp(argc, argv);
-        return ArgsError;
-      }
+    else {
+      LOG_ERR("unknown argument: %s", arg.c_str());
+      return ArgsError;
     }
-
-    if (!m_foreground) {
-#if SYSAPI_WIN32
-      // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
-      // in that case, but is accessible when running in the foreground.
-      CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
-#endif
-    }
-
-    return StartDaemon;
-
-  } catch (XArch &e) {
-    std::string message = e.what();
-    if (isUninstalling && (message.find("The service has not been started") != std::string::npos)) {
-      // TODO: if we're keeping this use error code instead (what is it?!).
-      // HACK: this message happens intermittently, not sure where from but
-      // it's quite misleading for the user. they thing something has gone
-      // horribly wrong, but it's just the service manager reporting a false
-      // positive (the service has actually shut down in most cases).
-    } else {
-      handleError(message.c_str());
-    }
-  } catch (std::exception &e) {
-    handleError(e.what());
-  } catch (...) {
-    handleError("Unrecognized error.");
   }
 
-  return FatalError;
+  if (!m_foreground) {
+#if SYSAPI_WIN32
+    // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
+    // in that case, but is accessible when running in the foreground.
+    CLOG->insert(new MSWindowsDebugOutputter());
+#endif
+  }
+
+  return StartDaemon;
 }
 
 void DaemonApp::mainLoop(bool foreground)
@@ -278,17 +266,6 @@ void DaemonApp::mainLoop(bool foreground)
   } catch (...) {
     LOG((CLOG_CRIT "an unknown error occurred.\n"));
   }
-}
-
-void DaemonApp::handleError(const char *message)
-{
-  // Always print error to stdout in case run as CLI program.
-  LOG_ERR("%s", message);
-
-#if SYSAPI_WIN32
-  // Show a message box for when run from MSI in Win32 subsystem.
-  MessageBoxA(nullptr, message, "Deskflow daemon error", MB_OK | MB_ICONERROR);
-#endif
 }
 
 std::string DaemonApp::logFilename()
