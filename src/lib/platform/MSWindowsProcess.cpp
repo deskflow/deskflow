@@ -127,12 +127,16 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
     SetEvent(hCloseEvent);
     CloseHandle(hCloseEvent);
   } else {
-    LOG((CLOG_WARN "could not send close event to process"));
+    LOG_WARN("could not send close event to process");
     throw XArch(new XArchEvalWindows);
   }
 
   DWORD exitCode;
-  GetExitCodeProcess(handle, &exitCode);
+  if (!GetExitCodeProcess(handle, &exitCode)) {
+    LOG_ERR("failed to get process exit code for process %d", pid);
+    throw XArch(new XArchEvalWindows);
+  }
+
   if (exitCode != STILL_ACTIVE) {
     LOG_DEBUG("process %d is already shutdown", pid);
     return;

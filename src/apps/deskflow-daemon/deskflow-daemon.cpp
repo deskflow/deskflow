@@ -69,8 +69,10 @@ int main(int argc, char **argv)
     daemon.moveToThread(&daemonThread);
 
     QObject::connect(&daemonThread, &QThread::started, [&daemon, &daemonThread]() {
+      LOG_DEBUG("daemon thread started");
       daemon.run();
       daemonThread.quit();
+      LOG_DEBUG("daemon thread finished");
     });
     QObject::connect(&daemonThread, &QThread::finished, &app, &QCoreApplication::quit);
 
