@@ -123,47 +123,53 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
 
   LOG_DEBUG("sending close event to close process gracefully");
   HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, deskflow::common::kCloseEventName);
-  if (hCloseEvent) { // NOSONAR -- Readability
+  if (hCloseEvent != nullptr) { // NOSONAR -- Readability
     SetEvent(hCloseEvent);
     CloseHandle(hCloseEvent);
   } else {
-    LOG_WARN("could not send close event to process");
-    throw XArch(new XArchEvalWindows);
+    // This is expected to fail when no server/client is running.
+    LOG_DEBUG("could not send close event to process");
   }
 
   DWORD exitCode;
-  if (!GetExitCodeProcess(handle, &exitCode)) {
-    LOG_ERR("failed to get process exit code for process %d", pid);
-    throw XArch(new XArchEvalWindows);
+  if (GetExitCodeProcess(handle, &exitCode)) {
+    if (exitCode == STILL_ACTIVE) {
+      LOG_DEBUG("process %d is still running", pid);
+    } else {
+      // Don't bother shutting down a process that has already exited.
+      LOG_DEBUG("process %d is already shutdown", pid);
+      return;
+    }
+  } else {
+    XArchEvalWindows error;
+    LOG_ERR("failed to get process exit code for process %d, error:", pid, error.eval().c_str());
   }
 
-  if (exitCode != STILL_ACTIVE) {
-    LOG_DEBUG("process %d is already shutdown", pid);
+  // Wait for process to exit gracefully.
+  LOG_DEBUG("waiting for process %d to exit gracefully", pid);
+  DWORD waitResult = WaitForSingleObject(handle, timeout * 1000);
+  if (waitResult == WAIT_OBJECT_0) { // NOSONAR - Readability
+    if (!GetExitCodeProcess(handle, &exitCode)) {
+      XArchEvalWindows error;
+      LOG_ERR("failed to retrieve exit code after process exit for process %d, error:", pid, error.eval().c_str());
+    }
+
+    LOG_DEBUG("process %d was shutdown gracefully with exit code %d", pid, exitCode);
     return;
+
+  } else if (waitResult == WAIT_TIMEOUT) {
+    LOG_WARN("process %d did not exit within the expected time", pid);
+  } else {
+    XArchEvalWindows error;
+    LOG_ERR("error waiting for process %d to exit, error:", pid, error.eval().c_str());
   }
 
-  // wait for process to exit gracefully.
-  double start = ARCH->time();
-  while (true) { // NOSONAR -- Multiple breaks necessary
-
-    GetExitCodeProcess(handle, &exitCode);
-    if (exitCode != STILL_ACTIVE) {
-      // yay, we got a graceful shutdown. there should be no hook in use errors!
-      LOG((CLOG_DEBUG "process %d was shutdown gracefully", pid));
-      break;
-    }
-
-    if (double elapsed = (ARCH->time() - start); elapsed > timeout) {
-      // if timeout reached, kill forcefully.
-      // calling TerminateProcess on deskflow is very bad!
-      // it causes the hook DLL to stay loaded in some apps,
-      // making it impossible to start deskflow again.
-      LOG((CLOG_WARN "shutdown timed out after %d secs, forcefully terminating", (int)elapsed));
-      TerminateProcess(handle, kExitSuccess);
-      break;
-    }
-
-    ARCH->sleep(1);
+  // Last resort, terminate the process forcefully.
+  if (TerminateProcess(handle, kExitSuccess)) {
+    LOG_WARN("forcefully terminated process %d", pid);
+  } else {
+    XArchEvalWindows error;
+    LOG_ERR("failed to terminate process %d, error:", pid, error.eval().c_str());
   }
 }
 
