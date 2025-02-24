@@ -80,17 +80,17 @@ DaemonApp::~DaemonApp() = default;
 void DaemonApp::run()
 {
   if (m_foreground) {
-    LOG_INFO("starting daemon in foreground");
+    LOG_DEBUG("starting daemon in foreground");
 
     // run process in foreground instead of daemonizing.
     // useful for debugging.
     mainLoop(m_foreground);
   } else {
 #if SYSAPI_WIN32
-    LOG_INFO("daemonizing windows service");
+    LOG_DEBUG("daemonizing windows service");
     ARCH->daemonize(kAppName, winMainLoopStatic);
 #elif SYSAPI_UNIX
-    LOG_INFO("daemonizing unix service");
+    LOG_DEBUG("daemonizing unix service");
     ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
   }
@@ -253,9 +253,12 @@ void DaemonApp::mainLoop(bool foreground)
     m_watchdog->startAsync();
 #endif
 
+    LOG_INFO("daemon is running");
     m_events->loop();
+    LOG_INFO("daemon is stopping");
 
 #if SYSAPI_WIN32
+    LOG_DEBUG("stopping process watchdog");
     m_watchdog->stop();
 #endif
 

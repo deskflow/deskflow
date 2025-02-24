@@ -93,10 +93,14 @@ void MSWindowsWatchdog::stop()
 {
   m_monitoring = false;
 
-  m_thread->wait(5);
+  if (!m_thread->wait(5)) {
+    LOG((CLOG_WARN "could not stop main thread"));
+  }
   delete m_thread;
 
-  m_outputThread->wait(5);
+  if (!m_outputThread->wait(5)) {
+    LOG((CLOG_WARN "could not stop output thread"));
+  }
   delete m_outputThread;
 }
 
@@ -161,7 +165,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
-  LOG_DEBUG("starting main loop");
+  LOG_DEBUG("starting watchdog main loop");
 
   shutdownExistingProcesses();
 
@@ -277,7 +281,7 @@ void MSWindowsWatchdog::mainLoop(void *)
     m_processStarted = false;
   }
 
-  LOG((CLOG_DEBUG "watchdog main thread finished"));
+  LOG((CLOG_DEBUG "watchdog main loop finished"));
 }
 
 bool MSWindowsWatchdog::isProcessRunning()
@@ -347,8 +351,10 @@ void MSWindowsWatchdog::startProcess()
     LOG((CLOG_ERR "exit code: %d", exitCode));
     throw XArch(new XArchEvalWindows);
   } else {
-    // wait for program to fail.
+    // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
+    LOG_DEBUG("waiting for process start result");
     ARCH->sleep(1);
+
     if (!isProcessRunning()) {
       m_process.reset();
       throw XMSWindowsWatchdogError("process immediately stopped");
