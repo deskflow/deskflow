@@ -6,12 +6,11 @@
  */
 
 #include "arch/win32/ArchDaemonWindows.h"
+
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
-#include "common/stdvector.h"
-
-#include <sstream>
+#include "base/Log.h"
 
 //
 // ArchDaemonWindows
@@ -61,6 +60,8 @@ void ArchDaemonWindows::installDaemon(
     const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
 )
 {
+  LOG_DEBUG("installing windows service: %s", name);
+
   // open service manager
   SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
   if (mgr == NULL) {
@@ -127,6 +128,8 @@ void ArchDaemonWindows::installDaemon(
 
 void ArchDaemonWindows::uninstallDaemon(const char *name)
 {
+  LOG_DEBUG("uninstalling windows service: %s", name);
+
   // remove parameters for this service.  ignore failures.
   HKEY key = openNTServicesKey();
   key = ArchMiscWindows::openKey(key, name);
