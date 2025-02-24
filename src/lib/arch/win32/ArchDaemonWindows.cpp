@@ -165,9 +165,10 @@ void ArchDaemonWindows::uninstallDaemon(const char *name)
   CloseServiceHandle(service);
   CloseServiceHandle(mgr);
 
-  // give windows a chance to remove the service before
-  // we check if it still exists.
-  ARCH->sleep(1);
+  // give windows a chance to remove the service before we check if it still exists.
+  // 100ms should be plenty of time.
+  LOG_DEBUG("waiting for service to be removed");
+  ARCH->sleep(0.1);
 
   // handle failure.  ignore error if service isn't installed anymore.
   if (!okay && isDaemonInstalled(name)) {
