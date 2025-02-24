@@ -131,7 +131,7 @@ jobs:
         target:
           - name: "windows-2022-x64"
             runs-on: "windows-2022"
-            timeout: 120 #Windows can take while if it has to build vcpkg cache
+            timeout: 30
             config-args: "-G Ninja"
             qt-install-dir: "C:"
 
