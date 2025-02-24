@@ -57,6 +57,7 @@ int main(int argc, char **argv)
     using enum DaemonApp::InitResult;
 
   case StartDaemon: {
+    LOG_INFO("starting daemon");
     QCoreApplication app(argc, argv);
 
     QThread daemonThread;
@@ -110,6 +111,7 @@ int main(int argc, char **argv)
 
 #if SYSAPI_WIN32
 
+// TODO: move to top of file
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
