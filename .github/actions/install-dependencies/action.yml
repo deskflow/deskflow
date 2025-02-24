@@ -9,8 +9,12 @@ inputs:
     description: "Used only on linux distro type: debian, fedora, suse, arch"
     required: false
 
-  mac-qt-version:
-    description: "The verison of Qt to install on mac os"
+  qt-version:
+    description: "The version of Qt to install (Windows & macOS)"
+    required: false
+
+  qt-install-dir:
+    description: "The path to install Qt into (Windows & macOS)"
     required: false
 
 outputs:
@@ -67,13 +71,13 @@ runs:
       shell: bash
 
     - name: Install Qt
-      if: ${{runner.os == 'macOS' }}
+      if: ${{runner.os != 'Linux' }}
       uses: jurplel/install-qt-action@v4
       with:
-        dir: "/Users/runner"
-        version: ${{inputs.mac-qt-version}}
+        dir: ${{inputs.qt-install-dir}}
+        version: ${{inputs.qt-version}}
         cache: true
-        cache-key-prefix: ${{matrix.target.os}}-${{env.qt-version}}
+        cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
 
     # Install Ninja with an action instead of using Chocolatey, as it's more
     # reliable and faster. The Ninja install action is pretty good as it
