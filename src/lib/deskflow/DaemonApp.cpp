@@ -28,7 +28,6 @@
 #include <filesystem>
 #include <iostream>
 #include <memory>
-#include <sstream>
 #include <string>
 
 using namespace std;
@@ -81,17 +80,17 @@ DaemonApp::~DaemonApp() = default;
 void DaemonApp::run()
 {
   if (m_foreground) {
-    LOG((CLOG_NOTE "starting daemon in foreground"));
+    LOG_INFO("starting daemon in foreground");
 
     // run process in foreground instead of daemonizing.
     // useful for debugging.
     mainLoop(m_foreground);
   } else {
 #if SYSAPI_WIN32
-    LOG((CLOG_NOTE "daemonizing windows service"));
+    LOG_INFO("daemonizing windows service");
     ARCH->daemonize(kAppName, winMainLoopStatic);
 #elif SYSAPI_UNIX
-    LOG((CLOG_NOTE "daemonizing unix service"));
+    LOG_INFO("daemonizing unix service");
     ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
   }
@@ -171,6 +170,9 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
 
   m_events = events;
 
+  m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
+  CLOG->insert(m_fileLogOutputter);
+
   // default log level to system setting.
   if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
     CLOG->setFilter(logLevel.c_str());
@@ -233,9 +235,6 @@ void DaemonApp::mainLoop(bool foreground)
 
   try {
     DAEMON_RUNNING(true);
-
-    m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
-    CLOG->insert(m_fileLogOutputter);
 
 #if SYSAPI_WIN32
     m_watchdog = std::make_unique<MSWindowsWatchdog>(false, foreground);
