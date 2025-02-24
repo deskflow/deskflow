@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2012 Nick Bolton
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -29,6 +29,8 @@
 
 using namespace deskflow::core;
 
+void handleError(const char *message);
+
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
@@ -45,7 +47,16 @@ int main(int argc, char **argv)
   LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
 
   auto &daemon = DaemonApp::instance();
-  const auto initResult = daemon.init(&events, argc, argv);
+  DaemonApp::InitResult initResult;
+  try {
+    initResult = daemon.init(&events, argc, argv);
+  } catch (std::exception &e) {
+    handleError(e.what());
+    return kExitFailed;
+  } catch (...) {
+    handleError("Unrecognized error.");
+    return kExitFailed;
+  }
 
   switch (initResult) {
     using enum DaemonApp::InitResult;
@@ -112,3 +123,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 }
 
 #endif
+
+void handleError(const char *message)
+{
+  // Always print error to stdout in case run as CLI program.
+  LOG_ERR("%s", message);
+
+#if SYSAPI_WIN32
+  // Show a message box for when run from MSI in Win32 subsystem.
+  MessageBoxA(nullptr, message, "Deskflow daemon error", MB_OK | MB_ICONERROR);
+#endif
+}
