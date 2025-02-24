@@ -62,6 +62,7 @@ int main(int argc, char **argv)
     using enum DaemonApp::InitResult;
 
   case StartDaemon: {
+    LOG_INFO("starting daemon");
     QCoreApplication app(argc, argv);
 
     QThread daemonThread;
