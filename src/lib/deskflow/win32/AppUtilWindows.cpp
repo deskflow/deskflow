@@ -67,7 +67,6 @@ static int mainLoopStatic()
 int AppUtilWindows::daemonNTMainLoop(int argc, const char **argv)
 {
   app().initApp(argc, argv);
-  debugServiceWait();
 
   return ArchMiscWindows::runDaemon(mainLoopStatic);
 }
@@ -133,20 +132,6 @@ int AppUtilWindows::run(int argc, char **argv)
 AppUtilWindows &AppUtilWindows::instance()
 {
   return (AppUtilWindows &)AppUtil::instance();
-}
-
-void AppUtilWindows::debugServiceWait()
-{
-  if (app().argsBase().m_debugServiceWait) {
-    while (true) {
-      // this code is only executed when the process is launched via the
-      // windows service controller (and --debug-service-wait arg is
-      // used). to debug, set a breakpoint on this line so that
-      // execution is delayed until the debugger is attached.
-      ARCH->sleep(1);
-      LOG((CLOG_INFO "waiting for debugger to attach"));
-    }
-  }
 }
 
 void AppUtilWindows::startNode()

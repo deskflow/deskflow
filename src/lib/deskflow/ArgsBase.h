@@ -87,7 +87,6 @@ public:
   bool m_preventSleep = false;
 
 #if SYSAPI_WIN32
-  bool m_debugServiceWait = false;
   bool m_stopOnDeskSwitch = false;
 #endif
 
