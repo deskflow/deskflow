@@ -206,14 +206,6 @@ void App::initApp(int argc, const char **argv)
 
   // load configuration
   loadConfig();
-
-  if (!argsBase().m_disableTray && m_createTaskBarReceiver) {
-
-    // create a log buffer so we can show the latest message
-    // as a tray icon tooltip
-    BufferedLogOutputter *logBuffer = new BufferedLogOutputter(1000);
-    CLOG->insert(logBuffer, true);
-  }
 }
 
 void App::initIpcClient()
