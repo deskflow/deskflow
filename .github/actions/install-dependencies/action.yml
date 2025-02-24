@@ -91,7 +91,8 @@ runs:
       id: vcpkg
       uses: johnwason/vcpkg-action@v6
       with:
-        manifest-dir: ${{ github.workspace }}
+        pkgs: wintoast gtest pkgconf openssl
+        extra-args: --classic
         triplet: x64-windows-release
         token: ${{ github.token }}
         github-binarycache: true
