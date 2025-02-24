@@ -21,8 +21,6 @@
 
 #include <stdexcept>
 
-class IArchTaskBarReceiver;
-class BufferedLogOutputter;
 class ILogOutputter;
 class FileLogOutputter;
 namespace deskflow {
@@ -30,8 +28,6 @@ class Screen;
 }
 class IEventQueue;
 class SocketMultiplexer;
-
-typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(const BufferedLogOutputter *, IEventQueue *events);
 
 class App : public IApp
 {
@@ -127,7 +123,6 @@ private:
   deskflow::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog;
-  CreateTaskBarReceiverFunc m_createTaskBarReceiver;
   ARCH_APP_UTIL m_appUtil;
   IpcClient *m_ipcClient;
   SocketMultiplexer *m_socketMultiplexer;
