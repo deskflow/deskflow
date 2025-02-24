@@ -5,11 +5,6 @@
     "wintoast",
     "gtest",
     "pkgconf",
-    {
-      "name": "openssl",
-      "features": [
-        "tools"
-      ]
-    }
+    "openssl"
   ]
 }
