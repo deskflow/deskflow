@@ -240,6 +240,7 @@ void SettingsDialog::loadFromConfig()
   else
     ui->rb_icon_mono->setChecked(true);
 
+  qDebug() << "load from config done";
   updateTlsControls();
 }
 
@@ -255,12 +256,18 @@ void SettingsDialog::updateTlsControls()
 
   const auto tlsEnabled = m_tlsUtility.isEnabled();
   const auto writable = m_appConfig.isActiveScopeWritable();
+  const auto enabled = writable && tlsEnabled;
+
+  ui->m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
+  ui->chkRequireClientCert->setChecked(m_appConfig.requireClientCerts());
+  ui->m_pCheckBoxEnableTls->setChecked(tlsEnabled);
 
   ui->m_pCheckBoxEnableTls->setEnabled(writable);
-  ui->m_pCheckBoxEnableTls->setChecked(writable && tlsEnabled);
-  ui->m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
-  ui->chkRequireClientCert->setEnabled(writable);
-  ui->chkRequireClientCert->setChecked(m_appConfig.requireClientCerts());
+  ui->m_pComboBoxTlsKeyLength->setEnabled(enabled);
+  ui->widgetTlsCert->setEnabled(enabled);
+  ui->m_pLabelTlsKeyLength->setEnabled(enabled);
+  ui->m_pPushButtonTlsRegenCert->setEnabled(enabled);
+  ui->chkRequireClientCert->setEnabled(enabled);
 }
 
 void SettingsDialog::updateTlsControlsEnabled()
@@ -273,8 +280,7 @@ void SettingsDialog::updateTlsControlsEnabled()
   ui->m_pLabelTlsKeyLength->setEnabled(enabled);
   ui->m_pComboBoxTlsKeyLength->setEnabled(enabled);
   ui->m_pLabelTlsCert->setEnabled(enabled);
-  ui->m_pLineEditTlsCertPath->setEnabled(enabled);
-  ui->m_pPushButtonTlsCertPath->setEnabled(enabled);
+  ui->widgetTlsCert->setEnabled(enabled);
   ui->m_pPushButtonTlsRegenCert->setEnabled(enabled);
   ui->chkRequireClientCert->setEnabled(enabled);
 }
