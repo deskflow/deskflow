@@ -35,21 +35,6 @@ using namespace deskflow::core;
 
 const char *const kLogFilename = "deskflow-daemon.log";
 
-namespace {
-bool isServerCommandLine(const std::vector<std::string> &cmd)
-{
-  auto isServer = false;
-
-  if (cmd.size() > 1) {
-    isServer = (cmd[0].find("deskflow-server") != std::string::npos) ||
-               (cmd[0].find("deskflow-core") != std::string::npos && cmd[1] == "server");
-  }
-
-  return isServer;
-}
-
-} // namespace
-
 void showHelp(int argc, char **argv) // NOSONAR - CLI args
 {
   const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
