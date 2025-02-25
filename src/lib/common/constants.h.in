@@ -12,7 +12,9 @@ const auto kAppId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
 const auto kVersion = "@CMAKE_PROJECT_VERSION@";
 const auto kVersionGitSha = "@GIT_SHA_SHORT@";
+const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
+const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";
 
 const auto kCopyright = //
     "Copyright @CMAKE_PROJECT_COPYRIGHT@\n"

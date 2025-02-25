@@ -33,12 +33,10 @@
 using namespace std;
 using namespace deskflow::core;
 
-const char *const kLogFilename = "deskflow-daemon.log";
-
 void showHelp(int argc, char **argv) // NOSONAR - CLI args
 {
-  const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
-  std::cout << "Usage: " << binName << " daemon [-f|--foreground] [--install] [--uninstall]" << std::endl;
+  const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : kDaemonBinName;
+  std::cout << "Usage: " << binName << " [-f|--foreground] [--install] [--uninstall]" << std::endl;
 }
 
 DaemonApp::DaemonApp() = default;
@@ -254,7 +252,7 @@ std::string DaemonApp::logFilename()
   if (logFilename.empty()) {
     logFilename = ARCH->getLogDirectory();
     logFilename.append("/");
-    logFilename.append(kLogFilename);
+    logFilename.append(kDaemonLogFilename);
   }
 
   return logFilename;
