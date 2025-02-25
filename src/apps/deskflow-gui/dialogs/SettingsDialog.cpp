@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -34,6 +35,9 @@ SettingsDialog::SettingsDialog(
 {
 
   ui->setupUi(this);
+
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
 
   ui->m_pComboBoxTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow));
   ui->m_pComboBoxTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
