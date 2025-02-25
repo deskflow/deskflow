@@ -64,7 +64,7 @@ void DaemonApp::run()
 {
   if (m_foreground) {
     LOG_DEBUG("running daemon in foreground");
-    mainLoop(m_foreground);
+    mainLoop();
   } else {
     LOG_DEBUG("running daemon in background (daemonizing)");
     ARCH->daemonize(kAppName, daemonLoop);
@@ -202,7 +202,7 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
   return StartDaemon;
 }
 
-void DaemonApp::mainLoop(bool foreground)
+void DaemonApp::mainLoop()
 {
   if (m_events == nullptr) {
     throw XDeskflow("event queue not set");
@@ -212,7 +212,7 @@ void DaemonApp::mainLoop(bool foreground)
     DAEMON_RUNNING(true);
 
 #if SYSAPI_WIN32
-    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, foreground);
+    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, m_foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 
     // install the platform event queue to handle service stop events.

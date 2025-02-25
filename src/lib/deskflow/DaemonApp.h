@@ -46,10 +46,8 @@ public:
 
   InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
-  void restartCoreProcess();
+  void mainLoop();
   void saveLogLevel(const QString &logLevel) const;
-  void mainLoop(bool foreground = false);
-  void setLogLevel(const QString &logLevel);
   void setElevate(bool elevate);
   void setCommand(const QString &command);
   void applyWatchdogCommand() const;
