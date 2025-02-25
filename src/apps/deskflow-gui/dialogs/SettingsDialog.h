@@ -36,16 +36,15 @@ public:
 signals:
   void shown();
 
-private slots:
-  void on_m_pCheckBoxEnableTls_clicked(bool checked);
-  void on_m_pCheckBoxLogToFile_stateChanged(int);
-  void on_m_pButtonBrowseLog_clicked();
-  void on_m_pRadioSystemScope_toggled(bool checked);
-  void on_m_pPushButtonTlsCertPath_clicked();
-  void on_m_pPushButtonTlsRegenCert_clicked();
-  void on_m_pCheckBoxServiceEnabled_toggled(bool checked);
-
 private:
+  void initConnections();
+
+  void regenCertificates();
+  void browseCertificatePath();
+  void browseLogPath();
+  void setLogToFile(bool logToFile);
+  void setSystemScope(bool systemScope);
+
   void accept() override;
   void reject() override;
   void showEvent(QShowEvent *event) override;
