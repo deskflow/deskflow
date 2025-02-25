@@ -50,24 +50,6 @@ bool isServerCommandLine(const std::vector<std::string> &cmd)
 
 } // namespace
 
-int mainLoopStatic()
-{
-  DaemonApp::instance().mainLoop();
-  return kExitSuccess;
-}
-
-int unixMainLoopStatic(int, const char **)
-{
-  return mainLoopStatic();
-}
-
-#if SYSAPI_WIN32
-int winMainLoopStatic(int, const char **)
-{
-  return ArchMiscWindows::runDaemon(mainLoopStatic);
-}
-#endif
-
 void showHelp(int argc, char **argv) // NOSONAR - CLI args
 {
   const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : "deskflow-core";
@@ -77,22 +59,32 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
 DaemonApp::DaemonApp() = default;
 DaemonApp::~DaemonApp() = default;
 
+int daemonLoop()
+{
+  DaemonApp::instance().mainLoop();
+  return kExitSuccess;
+}
+
+#if SYSAPI_WIN32
+int daemonLoop(int, const char **)
+{
+  return ArchMiscWindows::runDaemon(daemonLoop);
+}
+#elif SYSAPI_UNIX
+int daemonLoop(int, const char **)
+{
+  return daemonLoop();
+}
+#endif
+
 void DaemonApp::run()
 {
   if (m_foreground) {
-    LOG_DEBUG("starting daemon in foreground");
-
-    // run process in foreground instead of daemonizing.
-    // useful for debugging.
+    LOG_DEBUG("running daemon in foreground");
     mainLoop(m_foreground);
   } else {
-#if SYSAPI_WIN32
-    LOG_DEBUG("daemonizing windows service");
-    ARCH->daemonize(kAppName, winMainLoopStatic);
-#elif SYSAPI_UNIX
-    LOG_DEBUG("daemonizing unix service");
-    ARCH->daemonize(kAppName, unixMainLoopStatic);
-#endif
+    LOG_DEBUG("running daemon in background (daemonizing)");
+    ARCH->daemonize(kAppName, daemonLoop);
   }
 }
 
