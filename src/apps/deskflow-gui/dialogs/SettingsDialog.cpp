@@ -36,9 +36,6 @@ SettingsDialog::SettingsDialog(
 
   ui->setupUi(this);
 
-  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
-
   ui->m_pComboBoxTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow));
   ui->m_pComboBoxTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->m_pComboBoxTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
@@ -59,66 +56,40 @@ SettingsDialog::SettingsDialog(
   m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
   updateControls();
 
-  connect(ui->m_pCheckBoxEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
-
-  connect(
-      this, &SettingsDialog::shown, this,
-      [this] {
-        if (!m_appConfig.isActiveScopeWritable()) {
-          showReadOnlyMessage();
-        }
-      },
-      Qt::QueuedConnection
-  );
-
   adjustSize();
   QApplication::processEvents();
   setFixedHeight(height());
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
+
+  initConnections();
 }
 
-//
-// Auto-connect slots
-//
-
-void SettingsDialog::on_m_pCheckBoxLogToFile_stateChanged(int i)
+void SettingsDialog::initConnections()
 {
-  bool checked = i == 2;
+  connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
 
-  ui->m_pLabelLogPath->setEnabled(checked);
-  ui->m_pLineEditLogFilename->setEnabled(checked);
-  ui->m_pButtonBrowseLog->setEnabled(checked);
-}
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
 
-void SettingsDialog::on_m_pButtonBrowseLog_clicked()
-{
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Save log file to..."), ui->m_pLineEditLogFilename->text(), "Logs (*.log *.txt)"
-  );
+  connect(ui->m_pCheckBoxEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
+  connect(ui->m_pCheckBoxServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
+  connect(ui->m_pPushButtonTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
+  connect(ui->m_pPushButtonTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
+  connect(ui->m_pButtonBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
+  connect(ui->m_pCheckBoxLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
 
-  if (!fileName.isEmpty()) {
-    ui->m_pLineEditLogFilename->setText(fileName);
-  }
-}
-
-void SettingsDialog::on_m_pCheckBoxEnableTls_clicked(bool)
-{
-  updateTlsControlsEnabled();
-}
-
-void SettingsDialog::on_m_pRadioSystemScope_toggled(bool checked)
-{
   // We only need to test the System scoped Radio as they are connected
-  m_appConfig.setLoadFromSystemScope(checked);
-  loadFromConfig();
-  updateControls();
+  connect(ui->m_pRadioSystemScope, &QRadioButton::toggled, this, &SettingsDialog::setSystemScope);
+}
 
-  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
-    showReadOnlyMessage();
+void SettingsDialog::regenCertificates()
+{
+  if (m_tlsUtility.generateCertificate()) {
+    QMessageBox::information(this, tr("TLS Certificate Regenerated"), tr("TLS certificate regenerated successfully."));
   }
 }
 
-void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked()
+void SettingsDialog::browseCertificatePath()
 {
   QString fileName = QFileDialog::getSaveFileName(
       this, tr("Select a TLS certificate to use..."), ui->m_pLineEditTlsCertPath->text(), "Cert (*.pem)", nullptr,
@@ -136,21 +107,34 @@ void SettingsDialog::on_m_pPushButtonTlsCertPath_clicked()
   }
 }
 
-void SettingsDialog::on_m_pPushButtonTlsRegenCert_clicked()
+void SettingsDialog::browseLogPath()
 {
-  if (m_tlsUtility.generateCertificate()) {
-    QMessageBox::information(this, tr("TLS Certificate Regenerated"), tr("TLS certificate regenerated successfully."));
+  QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Save log file to..."), ui->m_pLineEditLogFilename->text(), "Logs (*.log *.txt)"
+  );
+
+  if (!fileName.isEmpty()) {
+    ui->m_pLineEditLogFilename->setText(fileName);
   }
 }
 
-void SettingsDialog::on_m_pCheckBoxServiceEnabled_toggled(bool)
+void SettingsDialog::setLogToFile(bool logToFile)
 {
-  updateControls();
+  ui->m_pLabelLogPath->setEnabled(logToFile);
+  ui->m_pLineEditLogFilename->setEnabled(logToFile);
+  ui->m_pButtonBrowseLog->setEnabled(logToFile);
 }
 
-//
-// End of auto-connect slots
-//
+void SettingsDialog::setSystemScope(bool systemScope)
+{
+  m_appConfig.setLoadFromSystemScope(systemScope);
+  loadFromConfig();
+  updateControls();
+
+  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
+    showReadOnlyMessage();
+  }
+}
 
 void SettingsDialog::showEvent(QShowEvent *event)
 {
@@ -160,6 +144,8 @@ void SettingsDialog::showEvent(QShowEvent *event)
 
 void SettingsDialog::showReadOnlyMessage()
 {
+  if (m_appConfig.isActiveScopeWritable())
+    return;
   const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
   messages::showReadOnlySettings(this, activeScopeFilename);
 }
