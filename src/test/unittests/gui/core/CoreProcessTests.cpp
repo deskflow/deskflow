@@ -70,6 +70,7 @@ public:
   {
     ON_CALL(m_appConfig, useExternalConfig()).WillByDefault(testing::Return(true));
     ON_CALL(m_appConfig, configFile()).WillByDefault(testing::ReturnRef(m_configFile));
+    ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
   }
 
   NiceMock<AppConfigMock> m_appConfig;
