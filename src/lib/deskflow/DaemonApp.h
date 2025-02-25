@@ -46,7 +46,7 @@ public:
 
   InitResult init(IEventQueue *events, int argc, char **argv);
   void run();
-  void mainLoop(bool foreground = false);
+  void mainLoop();
   void applyWatchdogCommand();
   void clearWatchdogCommand();
 
