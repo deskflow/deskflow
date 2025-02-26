@@ -47,7 +47,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
     return;
   }
 
-  qDebug() << QStringLiteral("version check server success, http status: %1").arg(QString::number(httpStatus));
+  qDebug("version check server success, http status: %d", httpStatus);
 
   const auto newestVersion = QString(reply->readAll());
   qDebug("version check response: %s", qPrintable(newestVersion));
