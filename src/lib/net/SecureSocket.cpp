@@ -675,11 +675,15 @@ bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDb
   deskflow::openUtf8Path(file, fingerprintDbPath);
   deskflow::FingerprintDatabase db;
   db.read(fingerprintDbPath);
-  if (!db.fingerprints().empty()) {
-    LOG((CLOG_NOTE "read %d fingerprints from %s", db.fingerprints().size(), fingerprintDbPath.c_str()));
-  } else {
+  const bool emptyDB = db.fingerprints().empty();
+
+  if (file.good() && emptyDB) {
     LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", fingerprintDbPath.c_str()));
     return false;
+  }
+
+  if (!emptyDB) {
+    LOG((CLOG_NOTE "read %d fingerprints from %s", db.fingerprints().size(), fingerprintDbPath.c_str()));
   }
 
   if (!db.isTrusted(sha256)) {
