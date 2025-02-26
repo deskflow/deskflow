@@ -790,19 +790,26 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::string::fromHex(match.captured(1).toStdString())
   };
 
+  const auto sha256Text = match.captured(2);
+
   const deskflow::FingerprintData sha256 = {
       deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA256),
-      deskflow::string::fromHex(match.captured(2).toStdString())
+      deskflow::string::fromHex(sha256Text.toStdString())
   };
 
-  // Only Save the sha256
-  deskflow::FingerprintDatabase db;
-  db.read(trustedFingerprintDb().toStdString());
-  if (db.isTrusted(sha256)) {
+  if (m_checkedPeers.contains(sha256Text)) {
+    qDebug("ignoring fingerprint, already handled");
     return;
   }
+  m_checkedPeers.append(sha256Text);
 
-  m_coreProcess.stop();
+  deskflow::FingerprintDatabase db;
+  db.read(trustedFingerprintDb().toStdString());
+
+  if (db.isTrusted(sha256)) {
+    qDebug("fingerprint is trusted");
+    return;
+  }
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
@@ -813,7 +820,7 @@ void MainWindow::checkFingerprint(const QString &line)
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
     db.write(trustedFingerprintDb().toStdString());
-    m_coreProcess.start();
+    m_checkedPeers.removeAll(sha256Text);
   }
 }
 
