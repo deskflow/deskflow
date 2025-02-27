@@ -21,14 +21,11 @@
     <number>20</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="m_pTabWidget">
+    <widget class="QTabWidget" name="tabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::TabPosition::North</enum>
      </property>
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
-     <widget class="QWidget" name="m_pTabRegular">
+     <widget class="QWidget" name="tabRegular">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -43,7 +40,7 @@
         <number>15</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="m_pGroupBasics">
+        <widget class="QGroupBox" name="groupBasics">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -55,21 +52,21 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxPreventSleep">
+           <widget class="QCheckBox" name="cbPreventSleep">
             <property name="text">
              <string>Prevent this computer from going to sleep</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxLanguageSync">
+           <widget class="QCheckBox" name="cbLanguageSync">
             <property name="text">
              <string>Use server's keyboard language on this computer (client mode)</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxScrollDirection">
+           <widget class="QCheckBox" name="cbScrollDirection">
             <property name="text">
              <string>Invert scroll direction on this computer (client mode)</string>
             </property>
@@ -79,7 +76,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupApp">
+        <widget class="QGroupBox" name="groupApp">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -91,21 +88,21 @@
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxAutoUpdate">
+           <widget class="QCheckBox" name="cbAutoUpdate">
             <property name="text">
              <string>Check for updates on startup </string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxCloseToTray">
+           <widget class="QCheckBox" name="cbCloseToTray">
             <property name="text">
              <string>Leave app running in notification area when the window is closed</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxAutoHide">
+           <widget class="QCheckBox" name="cbAutoHide">
             <property name="text">
              <string>Hide the window when the app starts</string>
             </property>
@@ -121,14 +118,14 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rb_icon_colorful">
+             <widget class="QRadioButton" name="rbIconColorful">
               <property name="text">
                <string>Colorful</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="rb_icon_mono">
+             <widget class="QRadioButton" name="rbIconMono">
               <property name="text">
                <string>Monocolor</string>
               </property>
@@ -140,7 +137,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupSecurity">
+        <widget class="QGroupBox" name="groupSecurity">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -166,7 +163,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxEnableTls">
+             <widget class="QCheckBox" name="cbEnableTls">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -189,7 +186,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabelTlsKeyLength">
+             <widget class="QLabel" name="lblTlsKeyLength">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -202,7 +199,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="m_pComboBoxTlsKeyLength">
+             <widget class="QComboBox" name="comboTlsKeyLength">
               <property name="currentText">
                <string>1024</string>
               </property>
@@ -232,7 +229,7 @@
               <number>1</number>
              </property>
              <item>
-              <widget class="QLabel" name="m_pLabelTlsCert">
+              <widget class="QLabel" name="lblTlsCert">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -261,7 +258,7 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLineEdit" name="m_pLineEditTlsCertPath">
+              <widget class="QLineEdit" name="lineTlsCertPath">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -271,7 +268,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="m_pPushButtonTlsCertPath">
+              <widget class="QPushButton" name="btnTlsCertPath">
                <property name="cursor">
                 <cursorShape>PointingHandCursor</cursorShape>
                </property>
@@ -305,7 +302,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="m_pPushButtonTlsRegenCert">
+             <widget class="QPushButton" name="btnTlsRegenCert">
               <property name="text">
                <string>Regenerate certificate</string>
               </property>
@@ -314,7 +311,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="chkRequireClientCert">
+           <widget class="QCheckBox" name="cbRequireClientCert">
             <property name="text">
              <string>Require client certificates</string>
             </property>
@@ -325,7 +322,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="m_pTabAdvanced">
+     <widget class="QWidget" name="tabAdvanced">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -340,7 +337,7 @@
         <number>15</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="m_pGroupNetworking">
+        <widget class="QGroupBox" name="groupNetworking">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -357,7 +354,7 @@
              <number>0</number>
             </property>
             <item>
-             <widget class="QLabel" name="m_pLabel_20">
+             <widget class="QLabel" name="lblPort">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -370,7 +367,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxPort">
+             <widget class="QSpinBox" name="sbPort">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -389,7 +386,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLabel" name="m_pLabel_21">
+             <widget class="QLabel" name="lblNetworkIp">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -402,7 +399,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="m_pLineEditInterface">
+             <widget class="QLineEdit" name="lineInterface">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -414,7 +411,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupLogs">
+        <widget class="QGroupBox" name="groupLogs">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -448,14 +445,14 @@
            </spacer>
           </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxLogToFile">
+           <widget class="QCheckBox" name="cbLogToFile">
             <property name="text">
              <string>Log to file</string>
             </property>
            </widget>
           </item>
           <item row="0" column="3">
-           <widget class="QComboBox" name="m_pComboLogLevel">
+           <widget class="QComboBox" name="comboLogLevel">
             <item>
              <property name="text">
               <string>Info</string>
@@ -479,7 +476,7 @@
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QLabel" name="m_pLabel_3">
+           <widget class="QLabel" name="lblLogLevel">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
               <horstretch>0</horstretch>
@@ -498,78 +495,86 @@
            </widget>
           </item>
           <item row="1" column="0" colspan="4">
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
-            <property name="spacing">
-             <number>3</number>
+           <widget class="QWidget" name="widgetLogFilename" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="m_pLabelLogPath">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Log path</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_7">
-              <property name="orientation">
-               <enum>Qt::Orientation::Horizontal</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Policy::Minimum</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>30</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="m_pLineEditLogFilename">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="m_pButtonBrowseLog">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="cursor">
-               <cursorShape>PointingHandCursor</cursorShape>
-              </property>
-              <property name="text">
-               <string/>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <property name="topMargin">
+              <number>1</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="labelLogPath">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Log path</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_7">
+               <property name="orientation">
+                <enum>Qt::Orientation::Horizontal</enum>
+               </property>
+               <property name="sizeType">
+                <enum>QSizePolicy::Policy::Minimum</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>30</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="lineLogFilename">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="btnBrowseLog">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+               <property name="flat">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
           </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupService">
+        <widget class="QGroupBox" name="groupService">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -580,75 +585,8 @@
           <string>Service</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_9">
-            <item>
-             <widget class="QLabel" name="m_pLabelElevate">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Launch with elevated privileges</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="m_pComboElevate">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="toolTip">
-               <string>Specify when the Windows background service should run the server or client
-                  process at an elevated privilege level.</string>
-              </property>
-              <property name="whatsThis">
-               <string>
-                &lt;p&gt;You may want to alter whether or not the privilege level of the server or client 
-                  process is automatically changed depending on your use case. In some cases it can help
-                  to diagnose or solve some problems related to elevated processes in Windows.&lt;/p&gt;
-                &lt;ul&gt;
-                  &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
-                  &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
-                  &lt;li&gt;Never elevate: Turn off compatibility with login screen and UAC&lt;/li&gt;
-                &lt;/ul&gt;
-                </string>
-              </property>
-              <property name="currentIndex">
-               <number>0</number>
-              </property>
-              <item>
-               <property name="text">
-                <string>Automatic (as needed)</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Always elevate</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Never elevate</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
           <item row="0" column="0">
-           <widget class="QCheckBox" name="m_pCheckBoxServiceEnabled">
+           <widget class="QCheckBox" name="cbServiceEnabled">
             <property name="toolTip">
              <string>Whether to launch the server or client process through the Windows background
                 service or direct from the GUI.</string>
@@ -668,11 +606,86 @@
             </property>
            </widget>
           </item>
+          <item row="1" column="0">
+           <widget class="QWidget" name="widgetElevate" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <item>
+              <widget class="QLabel" name="lblElevate">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Launch with elevated privileges</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboElevate">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Specify when the Windows background service should run the server or client
+                  process at an elevated privilege level.</string>
+               </property>
+               <property name="whatsThis">
+                <string>
+                &lt;p&gt;You may want to alter whether or not the privilege level of the server or client 
+                  process is automatically changed depending on your use case. In some cases it can help
+                  to diagnose or solve some problems related to elevated processes in Windows.&lt;/p&gt;
+                &lt;ul&gt;
+                  &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
+                  &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
+                  &lt;li&gt;Never elevate: Turn off compatibility with login screen and UAC&lt;/li&gt;
+                &lt;/ul&gt;
+                </string>
+               </property>
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Automatic (as needed)</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Always elevate</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Never elevate</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="m_pGroupScope">
+        <widget class="QGroupBox" name="groupScope">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -684,7 +697,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
-           <widget class="QRadioButton" name="m_pRadioUserScope">
+           <widget class="QRadioButton" name="rbScopeUser">
             <property name="text">
              <string>Current user</string>
             </property>
@@ -694,7 +707,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QRadioButton" name="m_pRadioSystemScope">
+           <widget class="QRadioButton" name="rbScopeSystem">
             <property name="text">
              <string>All users</string>
             </property>
@@ -723,20 +736,20 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>m_pSpinBoxPort</tabstop>
-  <tabstop>m_pLineEditInterface</tabstop>
-  <tabstop>m_pCheckBoxEnableTls</tabstop>
-  <tabstop>m_pComboBoxTlsKeyLength</tabstop>
-  <tabstop>m_pLineEditTlsCertPath</tabstop>
-  <tabstop>m_pPushButtonTlsCertPath</tabstop>
-  <tabstop>m_pPushButtonTlsRegenCert</tabstop>
-  <tabstop>m_pCheckBoxLogToFile</tabstop>
-  <tabstop>m_pComboLogLevel</tabstop>
-  <tabstop>m_pLineEditLogFilename</tabstop>
-  <tabstop>m_pButtonBrowseLog</tabstop>
-  <tabstop>m_pRadioUserScope</tabstop>
-  <tabstop>m_pRadioSystemScope</tabstop>
-  <tabstop>m_pComboElevate</tabstop>
+  <tabstop>sbPort</tabstop>
+  <tabstop>lineInterface</tabstop>
+  <tabstop>cbEnableTls</tabstop>
+  <tabstop>comboTlsKeyLength</tabstop>
+  <tabstop>lineTlsCertPath</tabstop>
+  <tabstop>btnTlsCertPath</tabstop>
+  <tabstop>btnTlsRegenCert</tabstop>
+  <tabstop>cbLogToFile</tabstop>
+  <tabstop>comboLogLevel</tabstop>
+  <tabstop>lineLogFilename</tabstop>
+  <tabstop>btnBrowseLog</tabstop>
+  <tabstop>rbScopeUser</tabstop>
+  <tabstop>rbScopeSystem</tabstop>
+  <tabstop>comboElevate</tabstop>
  </tabstops>
  <resources/>
  <connections/>

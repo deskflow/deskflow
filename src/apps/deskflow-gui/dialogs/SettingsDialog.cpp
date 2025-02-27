@@ -36,21 +36,21 @@ SettingsDialog::SettingsDialog(
 
   ui->setupUi(this);
 
-  ui->m_pComboBoxTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow));
-  ui->m_pComboBoxTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
-  ui->m_pComboBoxTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
+  ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow));
+  ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
+  ui->comboTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
 
-  ui->m_pPushButtonTlsRegenCert->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh));
+  ui->btnTlsRegenCert->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh));
 
-  ui->m_pPushButtonTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
-  ui->m_pButtonBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->btnTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->btnBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
 
-  ui->rb_icon_mono->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
-  ui->rb_icon_colorful->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+  ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
+  ui->rbIconColorful->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
-  ui->m_pTabWidget->setCurrentIndex(0);
+  ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
   m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
@@ -71,15 +71,15 @@ void SettingsDialog::initConnections()
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
 
-  connect(ui->m_pCheckBoxEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
-  connect(ui->m_pCheckBoxServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
-  connect(ui->m_pPushButtonTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
-  connect(ui->m_pPushButtonTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
-  connect(ui->m_pButtonBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
-  connect(ui->m_pCheckBoxLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
+  connect(ui->cbEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
+  connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
+  connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
+  connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
+  connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
+  connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
 
   // We only need to test the System scoped Radio as they are connected
-  connect(ui->m_pRadioSystemScope, &QRadioButton::toggled, this, &SettingsDialog::setSystemScope);
+  connect(ui->rbScopeSystem, &QRadioButton::toggled, this, &SettingsDialog::setSystemScope);
 }
 
 void SettingsDialog::regenCertificates()
@@ -92,12 +92,12 @@ void SettingsDialog::regenCertificates()
 void SettingsDialog::browseCertificatePath()
 {
   QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Select a TLS certificate to use..."), ui->m_pLineEditTlsCertPath->text(), "Cert (*.pem)", nullptr,
+      this, tr("Select a TLS certificate to use..."), ui->lineTlsCertPath->text(), "Cert (*.pem)", nullptr,
       QFileDialog::DontConfirmOverwrite
   );
 
   if (!fileName.isEmpty()) {
-    ui->m_pLineEditTlsCertPath->setText(fileName);
+    ui->lineTlsCertPath->setText(fileName);
 
     if (QFile(fileName).exists()) {
       updateKeyLengthOnFile(fileName);
@@ -109,20 +109,17 @@ void SettingsDialog::browseCertificatePath()
 
 void SettingsDialog::browseLogPath()
 {
-  QString fileName = QFileDialog::getSaveFileName(
-      this, tr("Save log file to..."), ui->m_pLineEditLogFilename->text(), "Logs (*.log *.txt)"
-  );
+  QString fileName =
+      QFileDialog::getSaveFileName(this, tr("Save log file to..."), ui->lineLogFilename->text(), "Logs (*.log *.txt)");
 
   if (!fileName.isEmpty()) {
-    ui->m_pLineEditLogFilename->setText(fileName);
+    ui->lineLogFilename->setText(fileName);
   }
 }
 
 void SettingsDialog::setLogToFile(bool logToFile)
 {
-  ui->m_pLabelLogPath->setEnabled(logToFile);
-  ui->m_pLineEditLogFilename->setEnabled(logToFile);
-  ui->m_pButtonBrowseLog->setEnabled(logToFile);
+  ui->widgetLogFilename->setEnabled(logToFile);
 }
 
 void SettingsDialog::setSystemScope(bool systemScope)
@@ -152,25 +149,25 @@ void SettingsDialog::showReadOnlyMessage()
 
 void SettingsDialog::accept()
 {
-  m_appConfig.setLoadFromSystemScope(ui->m_pRadioSystemScope->isChecked());
-  m_appConfig.setPort(ui->m_pSpinBoxPort->value());
-  m_appConfig.setNetworkInterface(ui->m_pLineEditInterface->text());
-  m_appConfig.setLogLevel(ui->m_pComboLogLevel->currentIndex());
-  m_appConfig.setLogToFile(ui->m_pCheckBoxLogToFile->isChecked());
-  m_appConfig.setLogFilename(ui->m_pLineEditLogFilename->text());
-  m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->m_pComboElevate->currentIndex()));
-  m_appConfig.setAutoHide(ui->m_pCheckBoxAutoHide->isChecked());
-  m_appConfig.setEnableUpdateCheck(ui->m_pCheckBoxAutoUpdate->isChecked());
-  m_appConfig.setPreventSleep(ui->m_pCheckBoxPreventSleep->isChecked());
-  m_appConfig.setTlsCertPath(ui->m_pLineEditTlsCertPath->text());
-  m_appConfig.setTlsKeyLength(ui->m_pComboBoxTlsKeyLength->currentText().toInt());
-  m_appConfig.setTlsEnabled(ui->m_pCheckBoxEnableTls->isChecked());
-  m_appConfig.setLanguageSync(ui->m_pCheckBoxLanguageSync->isChecked());
-  m_appConfig.setInvertScrollDirection(ui->m_pCheckBoxScrollDirection->isChecked());
-  m_appConfig.setEnableService(ui->m_pCheckBoxServiceEnabled->isChecked());
-  m_appConfig.setCloseToTray(ui->m_pCheckBoxCloseToTray->isChecked());
-  m_appConfig.setColorfulTrayIcon(ui->rb_icon_colorful->isChecked());
-  m_appConfig.setRequireClientCerts(ui->chkRequireClientCert->isChecked());
+  m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
+  m_appConfig.setPort(ui->sbPort->value());
+  m_appConfig.setNetworkInterface(ui->lineInterface->text());
+  m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
+  m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
+  m_appConfig.setLogFilename(ui->lineLogFilename->text());
+  m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
+  m_appConfig.setAutoHide(ui->cbAutoHide->isChecked());
+  m_appConfig.setEnableUpdateCheck(ui->cbAutoUpdate->isChecked());
+  m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
+  m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
+  m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
+  m_appConfig.setTlsEnabled(ui->cbEnableTls->isChecked());
+  m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
+  m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
+  m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
+  m_appConfig.setCloseToTray(ui->cbCloseToTray->isChecked());
+  m_appConfig.setColorfulTrayIcon(ui->rbIconColorful->isChecked());
+  m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
 
   QDialog::accept();
 }
@@ -188,35 +185,35 @@ void SettingsDialog::reject()
 void SettingsDialog::loadFromConfig()
 {
 
-  ui->m_pSpinBoxPort->setValue(m_appConfig.port());
-  ui->m_pLineEditInterface->setText(m_appConfig.networkInterface());
-  ui->m_pComboLogLevel->setCurrentIndex(m_appConfig.logLevel());
-  ui->m_pCheckBoxLogToFile->setChecked(m_appConfig.logToFile());
-  ui->m_pLineEditLogFilename->setText(m_appConfig.logFilename());
-  ui->m_pCheckBoxAutoHide->setChecked(m_appConfig.autoHide());
-  ui->m_pCheckBoxPreventSleep->setChecked(m_appConfig.preventSleep());
-  ui->m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
-  ui->m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  ui->m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
-  ui->m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
-  ui->m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->sbPort->setValue(m_appConfig.port());
+  ui->lineInterface->setText(m_appConfig.networkInterface());
+  ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
+  ui->cbLogToFile->setChecked(m_appConfig.logToFile());
+  ui->lineLogFilename->setText(m_appConfig.logFilename());
+  ui->cbAutoHide->setChecked(m_appConfig.autoHide());
+  ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
+  ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
+  ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
+  ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
+  ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
+  ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
   if (m_appConfig.enableUpdateCheck().has_value()) {
-    ui->m_pCheckBoxAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
+    ui->cbAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
   } else {
-    ui->m_pCheckBoxAutoUpdate->setChecked(false);
+    ui->cbAutoUpdate->setChecked(false);
   }
 
   if (m_appConfig.isActiveScopeSystem()) {
-    ui->m_pRadioSystemScope->setChecked(true);
+    ui->rbScopeSystem->setChecked(true);
   } else {
-    ui->m_pRadioUserScope->setChecked(true);
+    ui->rbScopeUser->setChecked(true);
   }
 
   if (m_appConfig.colorfulTrayIcon())
-    ui->rb_icon_colorful->setChecked(true);
+    ui->rbIconColorful->setChecked(true);
   else
-    ui->rb_icon_mono->setChecked(true);
+    ui->rbIconMono->setChecked(true);
 
   qDebug() << "load from config done";
   updateTlsControls();
@@ -229,38 +226,38 @@ void SettingsDialog::updateTlsControls()
     updateKeyLengthOnFile(m_appConfig.tlsCertPath());
   } else {
     const auto keyLengthText = QString::number(m_appConfig.tlsKeyLength());
-    ui->m_pComboBoxTlsKeyLength->setCurrentIndex(ui->m_pComboBoxTlsKeyLength->findText(keyLengthText));
+    ui->comboTlsKeyLength->setCurrentIndex(ui->comboTlsKeyLength->findText(keyLengthText));
   }
 
   const auto tlsEnabled = m_tlsUtility.isEnabled();
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto enabled = writable && tlsEnabled;
 
-  ui->m_pLineEditTlsCertPath->setText(m_appConfig.tlsCertPath());
-  ui->chkRequireClientCert->setChecked(m_appConfig.requireClientCerts());
-  ui->m_pCheckBoxEnableTls->setChecked(tlsEnabled);
+  ui->lineTlsCertPath->setText(m_appConfig.tlsCertPath());
+  ui->cbRequireClientCert->setChecked(m_appConfig.requireClientCerts());
+  ui->cbEnableTls->setChecked(tlsEnabled);
 
-  ui->m_pCheckBoxEnableTls->setEnabled(writable);
-  ui->m_pComboBoxTlsKeyLength->setEnabled(enabled);
+  ui->cbEnableTls->setEnabled(writable);
+  ui->comboTlsKeyLength->setEnabled(enabled);
   ui->widgetTlsCert->setEnabled(enabled);
-  ui->m_pLabelTlsKeyLength->setEnabled(enabled);
-  ui->m_pPushButtonTlsRegenCert->setEnabled(enabled);
-  ui->chkRequireClientCert->setEnabled(enabled);
+  ui->lblTlsKeyLength->setEnabled(enabled);
+  ui->btnTlsRegenCert->setEnabled(enabled);
+  ui->cbRequireClientCert->setEnabled(enabled);
 }
 
 void SettingsDialog::updateTlsControlsEnabled()
 {
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto clientMode = m_appConfig.clientGroupChecked();
-  const auto tlsChecked = ui->m_pCheckBoxEnableTls->isChecked();
+  const auto tlsChecked = ui->cbEnableTls->isChecked();
 
   auto enabled = writable && tlsChecked && !clientMode;
-  ui->m_pLabelTlsKeyLength->setEnabled(enabled);
-  ui->m_pComboBoxTlsKeyLength->setEnabled(enabled);
-  ui->m_pLabelTlsCert->setEnabled(enabled);
+  ui->lblTlsKeyLength->setEnabled(enabled);
+  ui->comboTlsKeyLength->setEnabled(enabled);
+  ui->lblTlsCert->setEnabled(enabled);
   ui->widgetTlsCert->setEnabled(enabled);
-  ui->m_pPushButtonTlsRegenCert->setEnabled(enabled);
-  ui->chkRequireClientCert->setEnabled(enabled);
+  ui->btnTlsRegenCert->setEnabled(enabled);
+  ui->cbRequireClientCert->setEnabled(enabled);
 }
 
 bool SettingsDialog::isClientMode() const
@@ -276,8 +273,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   }
 
   auto length = ssl.getCertKeyLength(path);
-  auto index = ui->m_pComboBoxTlsKeyLength->findText(QString::number(length));
-  ui->m_pComboBoxTlsKeyLength->setCurrentIndex(index);
+  auto index = ui->comboTlsKeyLength->findText(QString::number(length));
+  ui->comboTlsKeyLength->setCurrentIndex(index);
   m_appConfig.setTlsKeyLength(length);
 }
 
@@ -289,34 +286,31 @@ void SettingsDialog::updateControls()
 #else
   // service not supported on unix yet, so always disable.
   const auto serviceAvailable = false;
-  ui->m_pGroupService->setTitle("Service (Windows only)");
+  ui->groupService->setTitle("Service (Windows only)");
 #endif
 
   const bool writable = m_appConfig.isActiveScopeWritable();
-  const bool serviceChecked = ui->m_pCheckBoxServiceEnabled->isChecked();
-  const bool logToFile = ui->m_pCheckBoxLogToFile->isChecked();
+  const bool serviceChecked = ui->cbServiceEnabled->isChecked();
+  const bool logToFile = ui->cbLogToFile->isChecked();
 
-  ui->m_pSpinBoxPort->setEnabled(writable);
-  ui->m_pLineEditInterface->setEnabled(writable);
-  ui->m_pComboLogLevel->setEnabled(writable);
-  ui->m_pCheckBoxLogToFile->setEnabled(writable);
-  ui->m_pCheckBoxAutoHide->setEnabled(writable);
-  ui->m_pCheckBoxAutoUpdate->setEnabled(writable);
-  ui->m_pCheckBoxPreventSleep->setEnabled(writable);
-  ui->m_pLineEditTlsCertPath->setEnabled(writable);
-  ui->m_pComboBoxTlsKeyLength->setEnabled(writable);
-  ui->m_pCheckBoxCloseToTray->setEnabled(writable);
+  ui->sbPort->setEnabled(writable);
+  ui->lineInterface->setEnabled(writable);
+  ui->comboLogLevel->setEnabled(writable);
+  ui->cbLogToFile->setEnabled(writable);
+  ui->cbAutoHide->setEnabled(writable);
+  ui->cbAutoUpdate->setEnabled(writable);
+  ui->cbPreventSleep->setEnabled(writable);
+  ui->lineTlsCertPath->setEnabled(writable);
+  ui->comboTlsKeyLength->setEnabled(writable);
+  ui->cbCloseToTray->setEnabled(writable);
 
-  ui->m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);
-  ui->m_pLabelElevate->setEnabled(writable && serviceChecked && serviceAvailable);
-  ui->m_pComboElevate->setEnabled(writable && serviceChecked && serviceAvailable);
+  ui->cbServiceEnabled->setEnabled(writable && serviceAvailable);
+  ui->widgetElevate->setEnabled(writable && serviceChecked && serviceAvailable);
 
-  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClientMode());
-  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClientMode());
+  ui->cbLanguageSync->setEnabled(writable && isClientMode());
+  ui->cbScrollDirection->setEnabled(writable && isClientMode());
 
-  ui->m_pLabelLogPath->setEnabled(writable && logToFile);
-  ui->m_pLineEditLogFilename->setEnabled(writable && logToFile);
-  ui->m_pButtonBrowseLog->setEnabled(writable && logToFile);
+  ui->widgetLogFilename->setEnabled(writable && logToFile);
 
   updateTlsControls();
 }
