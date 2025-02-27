@@ -22,12 +22,16 @@ body:
     validations:
       required: true
 
-  - type: input
+  - type: textarea
     id: version
     attributes:
-      label: Deskflow version number
-      description: You can find the Deskflow version number on the about screen.
-      placeholder: 1.2.3.4
+      label: Deskflow version info
+      description: You can find the Deskflow version number on the About screen.
+      placeholder: |
+        Deskflow: 1.2.3.4 (deadc0de)
+        Qt: 3.2.1
+        System: Hannah Montana Linux (Workstation Edition)
+        Session: Unity (Compiz)
     validations:
       required: true
 
@@ -51,7 +55,7 @@ body:
     id: os
     attributes:
       label: Operating systems (OS)
-      description: Which operating systems (OS) are you using?
+      description: Operating systems (OS) in use for all servers and clients
       options:
         - label: Windows
         - label: macOS
@@ -110,8 +114,7 @@ body:
       label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
-        Let us know the OS of the server/host/primary and the OS of the client/guest/secondary.
-        This will help us understand how you're using Deskflow.
+        Let us know what OS your server and client are running.
       placeholder: |
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor
@@ -122,9 +125,8 @@ body:
     attributes:
       label: What steps will reproduce the problem?
       description: |
-        Please list the steps to reproduce the issue.
+        Please list the _numbered steps_ to reproduce the issue.
         If you're not sure, please provide as much detail as possible.
-        This will help us understand the problem.
       placeholder: |
         1. Start Deskflow
         2. Click 'Configure Server'
