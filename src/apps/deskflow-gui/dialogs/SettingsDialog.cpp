@@ -11,11 +11,8 @@
 
 #include "gui/core/CoreProcess.h"
 #include "gui/messages.h"
-#include "gui/style_utils.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
-#include "gui/validators/ScreenNameValidator.h"
-#include "gui/validators/ValidationError.h"
 
 #include <QDir>
 #include <QFileDialog>
