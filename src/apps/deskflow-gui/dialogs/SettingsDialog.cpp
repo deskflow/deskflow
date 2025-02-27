@@ -66,7 +66,7 @@ void SettingsDialog::initConnections()
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
 
-  connect(ui->cbEnableTls, &QCheckBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
+  connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
   connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
@@ -156,7 +156,7 @@ void SettingsDialog::accept()
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
   m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
-  m_appConfig.setTlsEnabled(ui->cbEnableTls->isChecked());
+  m_appConfig.setTlsEnabled(ui->groupSecurity->isChecked());
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
@@ -230,9 +230,9 @@ void SettingsDialog::updateTlsControls()
 
   ui->lineTlsCertPath->setText(m_appConfig.tlsCertPath());
   ui->cbRequireClientCert->setChecked(m_appConfig.requireClientCerts());
-  ui->cbEnableTls->setChecked(tlsEnabled);
+  ui->groupSecurity->setChecked(tlsEnabled);
 
-  ui->cbEnableTls->setEnabled(writable);
+  ui->groupSecurity->setEnabled(writable);
   ui->comboTlsKeyLength->setEnabled(enabled);
   ui->widgetTlsCert->setEnabled(enabled);
   ui->lblTlsKeyLength->setEnabled(enabled);
@@ -244,7 +244,7 @@ void SettingsDialog::updateTlsControlsEnabled()
 {
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto clientMode = m_appConfig.clientGroupChecked();
-  const auto tlsChecked = ui->cbEnableTls->isChecked();
+  const auto tlsChecked = ui->groupSecurity->isChecked();
 
   auto enabled = writable && tlsChecked && !clientMode;
   ui->lblTlsKeyLength->setEnabled(enabled);
