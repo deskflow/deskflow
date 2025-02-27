@@ -40,11 +40,6 @@ SettingsDialog::SettingsDialog(
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->comboTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
 
-  ui->btnTlsRegenCert->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ViewRefresh));
-
-  ui->btnTlsCertPath->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
-  ui->btnBrowseLog->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
-
   ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
   ui->rbIconColorful->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 

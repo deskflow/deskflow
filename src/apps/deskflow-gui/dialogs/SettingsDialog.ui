@@ -275,6 +275,9 @@
                <property name="text">
                 <string/>
                </property>
+               <property name="icon">
+                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+               </property>
                <property name="flat">
                 <bool>true</bool>
                </property>
@@ -305,6 +308,9 @@
              <widget class="QPushButton" name="btnTlsRegenCert">
               <property name="text">
                <string>Regenerate certificate</string>
+              </property>
+              <property name="icon">
+               <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
               </property>
              </widget>
             </item>
@@ -561,6 +567,9 @@
                </property>
                <property name="text">
                 <string/>
+               </property>
+               <property name="icon">
+                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
                </property>
                <property name="flat">
                 <bool>true</bool>
