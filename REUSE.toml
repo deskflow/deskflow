@@ -97,7 +97,7 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "GPL-2.0-only"
 
 [[annotations]]
-path = "deploy/linux/flatpak/org.deskflow.deskflow.yml"
+path = "deploy/linux/flatpak/**"
 precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
