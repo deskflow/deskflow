@@ -38,13 +38,11 @@ signals:
 
 private:
   void initConnections();
-
   void regenCertificates();
   void browseCertificatePath();
   void browseLogPath();
   void setLogToFile(bool logToFile);
   void setSystemScope(bool systemScope);
-
   void accept() override;
   void reject() override;
   void showEvent(QShowEvent *event) override;
