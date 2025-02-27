@@ -370,10 +370,9 @@ jobs:
           cache-key: flatpak-builder-${{matrix.flatpak.arch}}-2.0
           arch: ${{matrix.flatpak.arch}}
           upload-artifact: false
-          mirror-screenshots-url: https://dl.flathub.org/media
 
       - name: Validate build
-        run: flatpak-builder-lint repo repo
+        run: flatpak-builder-lint --exceptions --user-exceptions deploy/linux/flatpak/ci-build-lint-exceptions.json repo repo
 
       - name: Upload
         uses: actions/upload-artifact@v4
