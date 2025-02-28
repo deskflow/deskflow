@@ -18,7 +18,6 @@
 
 #include "ServerConfig.h"
 #include "VersionChecker.h"
-#include "common/ipc.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/config/ServerConfigDialogState.h"
@@ -52,6 +51,10 @@ class DeskflowApplication;
 
 namespace Ui {
 class MainWindow;
+}
+
+namespace deskflow::gui::ipc {
+class DaemonIpcClient;
 }
 
 class MainWindow : public QMainWindow
@@ -142,7 +145,6 @@ private:
   void setIcon();
   bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
-  void sendIpcMessage(IpcMessageType type, const char *buffer, bool showErrors);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses() const;
   void enableServer(bool enable);
@@ -208,6 +210,7 @@ private:
   QStringList m_checkedServers;
   QSystemTrayIcon *m_trayIcon = nullptr;
   QLocalServer *m_guiDupeChecker = nullptr;
+  deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;

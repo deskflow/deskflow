@@ -6,12 +6,11 @@
  */
 
 #include "arch/win32/ArchDaemonWindows.h"
+
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
-#include "common/stdvector.h"
-
-#include <sstream>
+#include "base/Log.h"
 
 //
 // ArchDaemonWindows
@@ -61,6 +60,8 @@ void ArchDaemonWindows::installDaemon(
     const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
 )
 {
+  LOG_DEBUG("installing windows service: %s", name);
+
   // open service manager
   SC_HANDLE mgr = OpenSCManager(NULL, NULL, GENERIC_WRITE);
   if (mgr == NULL) {
@@ -127,6 +128,8 @@ void ArchDaemonWindows::installDaemon(
 
 void ArchDaemonWindows::uninstallDaemon(const char *name)
 {
+  LOG_DEBUG("uninstalling windows service: %s", name);
+
   // remove parameters for this service.  ignore failures.
   HKEY key = openNTServicesKey();
   key = ArchMiscWindows::openKey(key, name);
@@ -165,9 +168,10 @@ void ArchDaemonWindows::uninstallDaemon(const char *name)
   CloseServiceHandle(service);
   CloseServiceHandle(mgr);
 
-  // give windows a chance to remove the service before
-  // we check if it still exists.
-  ARCH->sleep(1);
+  // give windows a chance to remove the service before we check if it still exists.
+  // 100ms should be plenty of time.
+  LOG_DEBUG("waiting for service to be removed");
+  ARCH->sleep(0.1);
 
   // handle failure.  ignore error if service isn't installed anymore.
   if (!okay && isDaemonInstalled(name)) {
@@ -603,16 +607,13 @@ void ArchDaemonWindows::installDaemon()
 {
   // install default daemon if not already installed.
   if (!isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
-    char path[MAX_PATH];
-    GetModuleFileName(ArchMiscWindows::instanceWin32(), path, MAX_PATH);
+    char binPath[MAX_PATH];
+    GetModuleFileName(ArchMiscWindows::instanceWin32(), binPath, MAX_PATH);
 
     // wrap in quotes so a malicious user can't start \Program.exe as admin.
-    std::stringstream ss;
-    ss << '"';
-    ss << path;
-    ss << '"';
+    const auto command = "\"" + std::string(binPath) + "\"";
 
-    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, ss.str().c_str(), "", "");
+    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, command.c_str(), "", "");
   }
 
   start(DEFAULT_DAEMON_NAME);

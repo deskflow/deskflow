@@ -8,21 +8,17 @@
 #include "base/EventQueue.h"
 
 #include "arch/Arch.h"
-#include "base/EventTypes.h"
 #include "base/IEventJob.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "base/Stopwatch.h"
-#include "base/XBase.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 
+#include <stdexcept>
+
 EVENT_TYPE_ACCESSOR(Client)
 EVENT_TYPE_ACCESSOR(IStream)
-EVENT_TYPE_ACCESSOR(IpcClient)
-EVENT_TYPE_ACCESSOR(IpcClientProxy)
-EVENT_TYPE_ACCESSOR(IpcServer)
-EVENT_TYPE_ACCESSOR(IpcServerProxy)
 EVENT_TYPE_ACCESSOR(IDataSocket)
 EVENT_TYPE_ACCESSOR(IListenSocket)
 EVENT_TYPE_ACCESSOR(ISocket)
@@ -55,10 +51,6 @@ EventQueue::EventQueue()
       m_nextType(Event::kLast),
       m_typesForClient(NULL),
       m_typesForIStream(NULL),
-      m_typesForIpcClient(NULL),
-      m_typesForIpcClientProxy(NULL),
-      m_typesForIpcServer(NULL),
-      m_typesForIpcServerProxy(NULL),
       m_typesForIDataSocket(NULL),
       m_typesForIListenSocket(NULL),
       m_typesForISocket(NULL),

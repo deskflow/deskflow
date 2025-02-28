@@ -1,7 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2009 Chris Schoeneman
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -9,15 +8,12 @@
 
 #include "arch/Arch.h"
 #include "arch/win32/XArchWindows.h"
+#include "base/ELevel.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
-#include "common/ipc.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "ipc/IpcLogOutputter.h"
-#include "ipc/IpcMessage.h"
-#include "ipc/IpcServer.h"
 #include "mt/Thread.h"
 
 #include <Shellapi.h>
@@ -57,17 +53,13 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-MSWindowsWatchdog::MSWindowsWatchdog(
-    bool autoDetectCommand, IpcServer &ipcServer, IpcLogOutputter &ipcLogOutputter, bool foreground
-)
+MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
       m_monitoring(true),
       m_commandChanged(false),
       m_outputWritePipe(nullptr),
       m_outputReadPipe(nullptr),
-      m_ipcServer(ipcServer),
-      m_ipcLogOutputter(ipcLogOutputter),
       m_elevateProcess(false),
       m_processFailures(0),
       m_processStarted(false),
@@ -101,10 +93,14 @@ void MSWindowsWatchdog::stop()
 {
   m_monitoring = false;
 
-  m_thread->wait(5);
+  if (!m_thread->wait(5)) {
+    LOG((CLOG_WARN "could not stop main thread"));
+  }
   delete m_thread;
 
-  m_outputThread->wait(5);
+  if (!m_outputThread->wait(5)) {
+    LOG((CLOG_WARN "could not stop output thread"));
+  }
   delete m_outputThread;
 }
 
@@ -169,14 +165,21 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
-  LOG_DEBUG("starting main loop");
+  LOG_DEBUG("starting watchdog main loop");
+
   shutdownExistingProcesses();
 
+  // the SendSAS function is used to send a sas (secure attention sequence) to the
+  // winlogon process. this is used to switch to the login screen.
   SendSas sendSasFunc = NULL;
   HINSTANCE sasLib = LoadLibrary("sas.dll");
   if (sasLib) {
-    LOG((CLOG_DEBUG "loaded sas.dll, used to simulate ctrl-alt-del"));
+    LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
     sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+    if (!sendSasFunc) {
+      LOG_ERR("could not find SendSAS function in sas.dll");
+      throw XArch(new XArchEvalWindows());
+    }
   }
 
   SECURITY_ATTRIBUTES saAttr;
@@ -185,7 +188,15 @@ void MSWindowsWatchdog::mainLoop(void *)
   saAttr.lpSecurityDescriptor = NULL;
 
   if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
-    LOG((CLOG_ERR "could not create output pipe"));
+    LOG_ERR("could not create output pipe");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
+  // in order to speed up the shutdown process when the Windows service needs to stop.
+  DWORD mode = PIPE_NOWAIT;
+  if (!SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
+    LOG_ERR("could not set pipe to non-blocking mode");
     throw XArch(new XArchEvalWindows());
   }
 
@@ -203,7 +214,7 @@ void MSWindowsWatchdog::mainLoop(void *)
         // only start sleeping at 1 second to avoid unnecessary delay when the process stops
         // for the first failure (i.e. when the process just stopped running).
         int timeout = m_processFailures < 10 ? m_processFailures : 10;
-        LOG_WARN("backing off, wait=%ds, failures=%d", timeout, m_processFailures);
+        LOG_WARN("backing off after failure, wait=%ds, failures=%d", timeout, m_processFailures);
         ARCH->sleep(timeout);
       }
 
@@ -221,6 +232,9 @@ void MSWindowsWatchdog::mainLoop(void *)
         if (startNeeded) {
           startProcess();
         }
+      } else {
+        // prevent backoff when no command is set.
+        m_processFailures = 0;
       }
 
       if (m_processStarted && !isProcessRunning()) {
@@ -231,24 +245,22 @@ void MSWindowsWatchdog::mainLoop(void *)
         LOG((CLOG_WARN "detected application not running, pid=%d", m_process->info().dwProcessId));
       }
 
-      if (sendSasFunc != NULL) {
+      HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
+      if (sendSasEvent != NULL) {
 
-        HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-        if (sendSasEvent != NULL) {
-
-          // use SendSAS event to wait for next session (timeout 1 second).
-          if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-            LOG((CLOG_DEBUG "calling SendSAS"));
-            sendSasFunc(FALSE);
-          }
-
-          CloseHandle(sendSasEvent);
-          continue;
+        // use SendSAS event to wait for next session (timeout 1 second).
+        if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+          LOG_DEBUG("calling SendSAS from sas.dll");
+          sendSasFunc(FALSE);
         }
+
+        CloseHandle(sendSasEvent);
+      } else {
+        LOG((CLOG_ERR "could not create SendSAS event"));
       }
 
-      // if the sas event failed, wait by sleeping.
-      ARCH->sleep(1);
+      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+      ARCH->sleep(0.1);
 
     } catch (std::exception &e) {
       LOG((CLOG_CRIT "failed to launch, error: %s", e.what()));
@@ -265,12 +277,12 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "terminated running process on exit"));
-    m_process->shutdown(m_ipcServer);
+    m_process->shutdown();
     m_process.reset();
     m_processStarted = false;
   }
 
-  LOG((CLOG_DEBUG "watchdog main thread finished"));
+  LOG((CLOG_DEBUG "watchdog main loop finished"));
 }
 
 bool MSWindowsWatchdog::isProcessRunning()
@@ -301,7 +313,7 @@ void MSWindowsWatchdog::startProcess()
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "closing existing process to make way for new one"));
-    m_process->shutdown(m_ipcServer);
+    m_process->shutdown();
     m_process.reset();
     m_processStarted = false;
   }
@@ -340,8 +352,10 @@ void MSWindowsWatchdog::startProcess()
     LOG((CLOG_ERR "exit code: %d", exitCode));
     throw XArch(new XArchEvalWindows);
   } else {
-    // wait for program to fail.
+    // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
+    LOG_DEBUG("waiting for process start result");
     ARCH->sleep(1);
+
     if (!isProcessRunning()) {
       m_process.reset();
       throw XMSWindowsWatchdogError("process immediately stopped");
@@ -402,17 +416,28 @@ void MSWindowsWatchdog::outputLoop(void *)
     DWORD bytesRead;
     BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, NULL);
 
-    // assume the process has gone away? slow down
-    // the reads until another one turns up.
     if (!success || bytesRead == 0) {
-      ARCH->sleep(1);
+      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+      ARCH->sleep(0.1);
     } else {
       buffer[bytesRead] = '\0';
 
-      m_ipcLogOutputter.write(kINFO, buffer);
+      // strip out windows \r chars to prevent extra lines in log file.
+      std::string output(buffer);
+      if (!output.empty()) {
+        size_t pos = 0;
+        while ((pos = output.find("\r", pos)) != std::string::npos) {
+          output.replace(pos, 1, "");
+        }
+
+        // trip ending newline, as file writer will add it's own newline.
+        if (output[output.length() - 1] == '\n') {
+          output = output.substr(0, output.length() - 1);
+        }
+      }
 
       if (m_fileLogOutputter != NULL) {
-        m_fileLogOutputter->write(kINFO, buffer);
+        m_fileLogOutputter->write(kPRINT, output.c_str());
       }
 
 #if SYSAPI_WIN32
@@ -428,15 +453,36 @@ void MSWindowsWatchdog::outputLoop(void *)
   }
 }
 
+HANDLE openProcessForKill(PROCESSENTRY32 entry)
+{
+  // pid 0 is 'system idle process'
+  if (entry.th32ProcessID == 0)
+    return nullptr;
+
+  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+    return nullptr;
+  }
+
+  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+  if (handle == nullptr) {
+    LOG((CLOG_ERR "could not open process handle for kill"));
+    throw XArch(new XArchEvalWindows);
+  }
+
+  // only shut down if not current process (daemon is now the same unified binary).
+  if (entry.th32ProcessID == GetCurrentProcessId()) {
+    CloseHandle(handle);
+    return nullptr;
+  }
+
+  return handle;
+}
+
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
-  LOG_INFO("daemon shutting down existing processes");
-
-  if (m_process != nullptr) {
-    m_process->shutdown(m_ipcServer);
-    m_process.reset();
-    m_processStarted = false;
-  }
+  LOG_DEBUG("shutting down existing processes");
 
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
@@ -460,17 +506,11 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   DWORD pid = 0;
   while (gotEntry) {
 
-    // make sure we're not checking the system process
-    if (entry.th32ProcessID != 0) {
-
-      if (_stricmp(entry.szExeFile, "deskflow-client.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-server.exe") == 0 ||
-          _stricmp(entry.szExeFile, "deskflow-core.exe") == 0) {
-
-        HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-        deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID, m_ipcServer);
-        CloseHandle(handle);
-      }
+    HANDLE handle = openProcessForKill(entry);
+    if (handle) {
+      LOG((CLOG_INFO "shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID));
+      deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID);
+      CloseHandle(handle);
     }
 
     // now move on to the next entry (if we're not at the end)

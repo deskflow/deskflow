@@ -21,6 +21,7 @@
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
@@ -70,6 +71,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
+      m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
       m_btnFingerprint{new QToolButton(this)},
@@ -294,6 +296,7 @@ void MainWindow::connectSlots()
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
+  connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -628,6 +631,8 @@ void MainWindow::open()
   } else {
     qDebug() << "update check disabled";
   }
+
+  m_coreProcess.applyLogLevel();
 
   if (m_appConfig.startedBefore()) {
     m_coreProcess.start();
