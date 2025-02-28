@@ -42,7 +42,7 @@ int standardStartupStatic(int argc, char **argv)
 
 int AppUtilUnix::run(int argc, char **argv)
 {
-  return app().runInner(argc, argv, NULL, &standardStartupStatic);
+  return app().runInner(argc, argv, &standardStartupStatic);
 }
 
 void AppUtilUnix::startNode()

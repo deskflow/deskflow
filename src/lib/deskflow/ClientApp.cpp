@@ -510,16 +510,11 @@ int ClientApp::standardStartup(int argc, char **argv)
   }
 }
 
-int ClientApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
   args().m_pname = ARCH->getBasename(argv[0]);
-
-  // install caller's output filter
-  if (outputter != NULL) {
-    CLOG->insert(outputter);
-  }
 
   int result;
   try {

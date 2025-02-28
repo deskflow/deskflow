@@ -776,17 +776,12 @@ void ServerApp::resetServer(const Event &, void *)
   startServer();
 }
 
-int ServerApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
   args().m_config = std::make_shared<Config>(m_events);
   args().m_pname = ARCH->getBasename(argv[0]);
-
-  // install caller's output filter
-  if (outputter != NULL) {
-    CLOG->insert(outputter);
-  }
 
   // run
   int result = startup(argc, argv);

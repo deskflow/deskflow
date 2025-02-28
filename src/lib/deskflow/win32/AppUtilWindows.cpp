@@ -119,7 +119,7 @@ int AppUtilWindows::run(int argc, char **argv)
     app().argsBase().m_daemon = false;
   }
 
-  return app().runInner(argc, argv, NULL, startup);
+  return app().runInner(argc, argv, startup);
 }
 
 AppUtilWindows &AppUtilWindows::instance()

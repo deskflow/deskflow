@@ -264,7 +264,7 @@ int MinimalApp::standardStartup(int argc, char **argv)
   return 0;
 }
 
-int MinimalApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+int MinimalApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   return 0;
 }

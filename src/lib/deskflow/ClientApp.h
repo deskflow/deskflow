@@ -11,16 +11,14 @@
 
 namespace deskflow {
 class Screen;
-}
+class ClientArgs;
+} // namespace deskflow
+
 class Event;
 class Client;
 class NetworkAddress;
 class Thread;
 class ISocketFactory;
-
-namespace deskflow {
-class ClientArgs;
-}
 
 class ClientApp : public App
 {
@@ -45,7 +43,7 @@ public:
   }
   int foregroundStartup(int argc, char **argv) override;
   int standardStartup(int argc, char **argv) override;
-  int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
+  int runInner(int argc, char **argv, StartupFunc startup) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   void startNode() override;

@@ -21,11 +21,12 @@
 
 #include <stdexcept>
 
-class ILogOutputter;
-class FileLogOutputter;
 namespace deskflow {
 class Screen;
 }
+
+class ILogOutputter;
+class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -136,7 +137,7 @@ public:
 
   // IApp overrides
   virtual int standardStartup(int argc, char **argv) override;
-  virtual int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
+  virtual int runInner(int argc, char **argv, StartupFunc startup) override;
   virtual void startNode() override;
   virtual int mainLoop() override;
   virtual int foregroundStartup(int argc, char **argv) override;
