@@ -25,7 +25,7 @@ class DaemonApp
 {
 
 public:
-  DaemonApp();
+  DaemonApp(IEventQueue *events);
   ~DaemonApp();
   int run(int argc, char **argv);
   void mainLoop(bool logToFile, bool foreground = false);
@@ -46,6 +46,6 @@ public:
 private:
   std::unique_ptr<IpcServer> m_ipcServer;
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
-  std::unique_ptr<IEventQueue> m_events;
+  IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
 };

@@ -10,7 +10,6 @@
 #include "deskflow/DaemonApp.h"
 
 #include "arch/XArch.h"
-#include "base/EventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/log_outputters.h"
@@ -96,7 +95,7 @@ int winMainLoopStatic(int, const char **)
 }
 #endif
 
-DaemonApp::DaemonApp()
+DaemonApp::DaemonApp(IEventQueue *events) : m_events(events)
 {
   s_instance = this;
 }
@@ -108,22 +107,11 @@ DaemonApp::~DaemonApp()
 
 int DaemonApp::run(int argc, char **argv)
 {
-#if SYSAPI_WIN32
-  // win32 instance needed for threading, etc.
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
-#endif
-
-  Arch arch;
-  arch.init();
-
-  Log log;
-  m_events = std::make_unique<EventQueue>();
-
   bool uninstall = false;
   try {
     // default log level to system setting.
-    if (string logLevel = arch.setting("LogLevel"); logLevel != "")
-      log.setFilter(logLevel.c_str());
+    if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
+      CLOG->setFilter(logLevel.c_str());
 
     bool foreground = false;
 
@@ -137,11 +125,11 @@ int DaemonApp::run(int argc, char **argv)
       else if (arg == "/install") {
         LOG((CLOG_PRINT "installing windows daemon"));
         uninstall = true;
-        arch.installDaemon();
+        ARCH->installDaemon();
         return kExitSuccess;
       } else if (arg == "/uninstall") {
         LOG((CLOG_PRINT "uninstalling windows daemon"));
-        arch.uninstallDaemon();
+        ARCH->uninstallDaemon();
         return kExitSuccess;
       }
 #endif
@@ -157,7 +145,7 @@ int DaemonApp::run(int argc, char **argv)
     if (!foreground) {
       // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
       // in that case, but is accessible when running in the foreground.
-      log.insert(new MSWindowsDebugOutputter()); // NOSONAR -- Adopted by `Log`
+      CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR -- Adopted by `Log`
     }
 #endif
 
@@ -170,10 +158,10 @@ int DaemonApp::run(int argc, char **argv)
     } else {
 #if SYSAPI_WIN32
       LOG((CLOG_PRINT "daemonizing windows service"));
-      arch.daemonize(kAppName, winMainLoopStatic);
+      ARCH->daemonize(kAppName, winMainLoopStatic);
 #elif SYSAPI_UNIX
       LOG((CLOG_PRINT "daemonizing unix service"));
-      arch.daemonize(kAppName, unixMainLoopStatic);
+      ARCH->daemonize(kAppName, unixMainLoopStatic);
 #endif
     }
 
@@ -214,7 +202,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     SocketMultiplexer multiplexer;
 
     // uses event queue, must be created here.
-    m_ipcServer = std::make_unique<IpcServer>(m_events.get(), &multiplexer);
+    m_ipcServer = std::make_unique<IpcServer>(m_events, &multiplexer);
 
     // send logging to gui via ipc, log system adopts outputter.
     m_ipcLogOutputter = std::make_unique<IpcLogOutputter>(*m_ipcServer, IpcClientType::GUI, true);
@@ -235,7 +223,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 #if SYSAPI_WIN32
 
     // install the platform event queue to handle service stop events.
-    m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events.get()));
+    m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
 
     std::string command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";

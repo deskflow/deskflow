@@ -7,7 +7,13 @@
 
 #include "deskflow/DaemonApp.h"
 
-#include <iostream>
+#include "arch/Arch.h"
+#include "base/EventQueue.h"
+#include "base/Log.h"
+
+#if SYSAPI_WIN32
+#include "arch/win32/ArchMiscWindows.h"
+#endif
 
 #ifdef SYSAPI_UNIX
 
@@ -24,7 +30,18 @@ int main(int argc, char **argv)
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-  DaemonApp app;
+#if SYSAPI_WIN32
+  // win32 instance needed for threading, etc.
+  ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
+#endif
+
+  Arch arch;
+  arch.init();
+
+  Log log;
+  EventQueue events;
+
+  DaemonApp app(&events);
   return app.run(__argc, __argv);
 }
 
