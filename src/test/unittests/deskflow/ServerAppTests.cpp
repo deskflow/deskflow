@@ -30,7 +30,7 @@ TEST(ServerAppTests, runInner_will_handle_configuration_lifetime)
   EXPECT_FALSE(app.args().m_config);
 
   const char *argv[]{"deskflow-server"};
-  app.runInner(1, const_cast<char **>(argv), nullptr, [](int, char **) { return 0; });
+  app.runInner(1, const_cast<char **>(argv), [](int, char **) { return 0; });
 
   EXPECT_TRUE(app.args().m_config);
 }
