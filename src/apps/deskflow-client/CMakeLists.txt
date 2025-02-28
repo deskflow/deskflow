@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
@@ -38,7 +38,11 @@ target_link_libraries(
   ${libs})
 
 if(APPLE)
-  set_target_properties(${target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS)
+  set_target_properties(${target} PROPERTIES
+      BUILD_WITH_INSTALL_RPATH TRUE
+      INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
+      RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
+  )
 elseif(UNIX)
   install(TARGETS ${target} DESTINATION bin)
 elseif(WIN32)
