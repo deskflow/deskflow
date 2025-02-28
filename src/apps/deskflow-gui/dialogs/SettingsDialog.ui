@@ -727,6 +727,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>tabWidget</tabstop>
   <tabstop>cbPreventSleep</tabstop>
   <tabstop>cbLanguageSync</tabstop>
   <tabstop>cbScrollDirection</tabstop>
@@ -741,7 +742,6 @@
   <tabstop>comboTlsKeyLength</tabstop>
   <tabstop>btnTlsRegenCert</tabstop>
   <tabstop>cbRequireClientCert</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>sbPort</tabstop>
   <tabstop>lineInterface</tabstop>
   <tabstop>cbLogToFile</tabstop>
