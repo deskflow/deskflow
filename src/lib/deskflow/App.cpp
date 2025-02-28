@@ -145,7 +145,7 @@ int App::daemonMainLoop(int, const char **)
 void App::setupFileLogging()
 {
   if (argsBase().m_logFile != NULL) {
-    m_fileLog = new FileLogOutputter(argsBase().m_logFile);
+    m_fileLog = new FileLogOutputter(argsBase().m_logFile); // NOSONAR -- Adopted by `Log`
     CLOG->insert(m_fileLog);
     LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
   }
