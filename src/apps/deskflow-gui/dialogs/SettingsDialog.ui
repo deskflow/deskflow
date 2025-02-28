@@ -16,15 +16,12 @@
   <property name="modal">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_7">
+  <layout class="QVBoxLayout" name="_13">
    <property name="spacing">
     <number>20</number>
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="tabPosition">
-      <enum>QTabWidget::TabPosition::North</enum>
-     </property>
      <widget class="QWidget" name="tabRegular">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -35,7 +32,7 @@
       <attribute name="title">
        <string>&amp;Regular</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="_8">
        <property name="spacing">
         <number>15</number>
        </property>
@@ -50,7 +47,7 @@
          <property name="title">
           <string>Basics</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="_10">
           <item>
            <widget class="QCheckBox" name="cbPreventSleep">
             <property name="text">
@@ -86,7 +83,7 @@
          <property name="title">
           <string>App</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_5">
+         <layout class="QVBoxLayout" name="_9">
           <item>
            <widget class="QCheckBox" name="cbAutoUpdate">
             <property name="text">
@@ -111,7 +108,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="lblTrayIconStyle">
               <property name="text">
                <string>Tray icon style</string>
               </property>
@@ -150,24 +147,15 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="topMargin">
-           <number>9</number>
-          </property>
-          <property name="bottomMargin">
-           <number>9</number>
-          </property>
+         <layout class="QVBoxLayout" name="_11">
           <item>
            <widget class="QWidget" name="widgetTlsCert" native="true">
-            <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <layout class="QHBoxLayout" name="_12">
              <property name="leftMargin">
               <number>0</number>
              </property>
              <property name="topMargin">
-              <number>1</number>
+              <number>0</number>
              </property>
              <property name="rightMargin">
               <number>0</number>
@@ -253,9 +241,6 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboTlsKeyLength">
-              <property name="currentText">
-               <string>1024</string>
-              </property>
               <item>
                <property name="text">
                 <string>1024</string>
@@ -320,7 +305,7 @@
       <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
+      <layout class="QVBoxLayout" name="_2">
        <property name="spacing">
         <number>15</number>
        </property>
@@ -335,65 +320,58 @@
          <property name="title">
           <string>Networking</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QHBoxLayout" name="horizontalLayout">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <property name="topMargin">
-             <number>0</number>
+           <widget class="QLabel" name="lblPort">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
             </property>
-            <item>
-             <widget class="QLabel" name="lblPort">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Port</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSpinBox" name="sbPort">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="maximum">
-               <number>65535</number>
-              </property>
-              <property name="value">
-               <number>24800</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="lblNetworkIp">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Network IP</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLineEdit" name="lineInterface">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="text">
+             <string>Port</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSpinBox" name="sbPort">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="maximum">
+             <number>65535</number>
+            </property>
+            <property name="value">
+             <number>24800</number>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblNetworkIp">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Network IP</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineInterface">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -409,7 +387,7 @@
          <property name="title">
           <string>Logs</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout">
+         <layout class="QGridLayout" name="_3">
           <property name="topMargin">
            <number>15</number>
           </property>
@@ -471,12 +449,6 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
             <property name="text">
              <string>Level</string>
             </property>
@@ -490,12 +462,21 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <layout class="QHBoxLayout" name="_4">
              <property name="spacing">
               <number>3</number>
              </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
              <property name="topMargin">
-              <number>1</number>
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
              </property>
              <item>
               <widget class="QLabel" name="labelLogPath">
@@ -520,7 +501,7 @@
                </property>
                <property name="sizeHint" stdset="0">
                 <size>
-                 <width>30</width>
+                 <width>20</width>
                  <height>20</height>
                 </size>
                </property>
@@ -575,7 +556,7 @@
          <property name="title">
           <string>Service</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3">
+         <layout class="QGridLayout" name="_6">
           <item row="0" column="0">
            <widget class="QCheckBox" name="cbServiceEnabled">
             <property name="toolTip">
@@ -605,7 +586,7 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <layout class="QHBoxLayout" name="_7">
              <item>
               <widget class="QLabel" name="lblElevate">
                <property name="sizePolicy">
@@ -686,7 +667,7 @@
          <property name="title">
           <string>Use settings profile from</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <layout class="QHBoxLayout" name="_5">
           <item>
            <widget class="QRadioButton" name="rbScopeUser">
             <property name="text">
@@ -701,9 +682,6 @@
            <widget class="QRadioButton" name="rbScopeSystem">
             <property name="text">
              <string>All users</string>
-            </property>
-            <property name="checked">
-             <bool>false</bool>
             </property>
            </widget>
           </item>
