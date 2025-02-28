@@ -46,7 +46,9 @@ IpcLogOutputter::IpcLogOutputter(IpcServer &ipcServer, IpcClientType clientType,
       m_runningMutex(ARCH->newMutex())
 {
   if (useThread) {
-    m_bufferThread = new Thread(new TMethodJob<IpcLogOutputter>(this, &IpcLogOutputter::bufferThread));
+    const auto outputter =
+        new TMethodJob<IpcLogOutputter>(this, &IpcLogOutputter::bufferThread); // NOSONAR -- Adopted by `Log`
+    m_bufferThread = new Thread(outputter);
   }
 }
 

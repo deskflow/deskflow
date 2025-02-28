@@ -133,10 +133,10 @@ SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(NULL)
 {
   // redirect log messages
   if (blockConsole) {
-    m_stop = new StopLogOutputter;
+    m_stop = new StopLogOutputter; // NOSONAR -- Adopted by `Log`
     CLOG->insert(m_stop);
   }
-  m_syslog = new SystemLogOutputter;
+  m_syslog = new SystemLogOutputter; // NOSONAR -- Adopted by `Log`
   m_syslog->open(title);
   CLOG->insert(m_syslog);
 }
