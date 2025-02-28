@@ -42,10 +42,12 @@ public:
   //! @name manipulators
   //@{
 
-  //! Add an outputter to the head of the list
+  //! Add an outputter to the head of the list and adopts it.
   /*!
-  Inserts an outputter to the head of the outputter list.  When the
-  logger writes a message, it goes to the outputter at the head of
+  Inserts an outputter to the head of the outputter list. The outputter
+  is deleted when Log destructor is called.
+
+  When the logger writes a message, it goes to the outputter at the head of
   the outputter list.  If that outputter's \c write() method returns
   true then it also goes to the next outputter, as so on until an
   outputter returns false or there are no more outputters.  Outputters
@@ -57,7 +59,7 @@ public:
   By default, the logger has one outputter installed which writes to
   the console.
   */
-  void insert(ILogOutputter *adopted, bool alwaysAtHead = false);
+  void insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead = false);
 
   //! Remove an outputter from the list
   /*!

@@ -208,27 +208,18 @@ void Log::print(const char *file, int line, const char *fmt, ...)
   }
 }
 
-void Log::insert(ILogOutputter *outputter, bool alwaysAtHead)
+void Log::insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead)
 {
-  assert(outputter != NULL);
+  assert(adoptedOutputter != NULL);
 
   ArchMutexLock lock(m_mutex);
   if (alwaysAtHead) {
-    m_alwaysOutputters.push_front(outputter);
+    m_alwaysOutputters.push_front(adoptedOutputter);
   } else {
-    m_outputters.push_front(outputter);
+    m_outputters.push_front(adoptedOutputter);
   }
 
-  outputter->open(kAppName);
-
-  // Issue 41
-  // don't show log unless user requests it, as some users find this
-  // feature irritating (i.e. when they lose network connectivity).
-  // in windows the log window can be displayed by selecting "show log"
-  // from the deskflow system tray icon.
-  // if this causes problems for other architectures, then a different
-  // work around should be attempted.
-  // outputter->show(false);
+  adoptedOutputter->open(kAppName);
 }
 
 void Log::remove(ILogOutputter *outputter)
