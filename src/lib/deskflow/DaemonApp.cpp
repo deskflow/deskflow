@@ -121,12 +121,6 @@ int DaemonApp::run(int argc, char **argv)
 
   bool uninstall = false;
   try {
-#if SYSAPI_WIN32
-    // TODO: maybe we should only add this if not using /f?
-    // sends debug messages to visual studio console window.
-    log.insert(new MSWindowsDebugOutputter());
-#endif
-
     // default log level to system setting.
     if (string logLevel = arch.setting("LogLevel"); logLevel != "")
       log.setFilter(logLevel.c_str());
@@ -158,6 +152,14 @@ int DaemonApp::run(int argc, char **argv)
         return kExitArgs;
       }
     }
+
+#if SYSAPI_WIN32
+    if (!foreground) {
+      // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
+      // in that case, but is accessible when running in the foreground.
+      log.insert(new MSWindowsDebugOutputter()); // NOSONAR -- Adopted by `Log`
+    }
+#endif
 
     if (foreground) {
       LOG((CLOG_PRINT "starting daemon in foreground"));
