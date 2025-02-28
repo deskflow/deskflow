@@ -7,7 +7,7 @@ set(target ${CMAKE_PROJECT_NAME}-client)
 
 if(WIN32)
   # Generate rc file
-  set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n CLI client application")
+  set(EXE_DESCRIPTION "${CMAKE_PROJECT_PROPER_NAME} client application")
 
   set(EXE_ICON "
     IDI_DESKFLOW              ICON  DISCARDABLE  \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\"
