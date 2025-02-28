@@ -47,5 +47,5 @@ private:
   std::unique_ptr<IpcServer> m_ipcServer;
   std::unique_ptr<IpcLogOutputter> m_ipcLogOutputter;
   std::unique_ptr<IEventQueue> m_events;
-  std::unique_ptr<FileLogOutputter> m_fileLogOutputter;
+  FileLogOutputter *m_fileLogOutputter = nullptr;
 };

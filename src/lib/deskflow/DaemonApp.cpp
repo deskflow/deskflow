@@ -203,8 +203,8 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
     DAEMON_RUNNING(true);
 
     if (logToFile) {
-      m_fileLogOutputter = std::make_unique<FileLogOutputter>(logFilename().c_str());
-      CLOG->insert(m_fileLogOutputter.get());
+      m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR -- Adopted by `Log`
+      CLOG->insert(m_fileLogOutputter);
     }
 
     // create socket multiplexer.  this must happen after daemonization
@@ -220,7 +220,7 @@ void DaemonApp::mainLoop(bool logToFile, bool foreground)
 
 #if SYSAPI_WIN32
     m_watchdog = std::make_unique<MSWindowsWatchdog>(false, *m_ipcServer, *m_ipcLogOutputter, foreground);
-    m_watchdog->setFileLogOutputter(m_fileLogOutputter.get());
+    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 #endif
 
     m_events->adoptHandler(
