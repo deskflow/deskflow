@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -183,7 +184,7 @@ void ServerConfig::recall()
   );
   setClipboardSharing(settings().value("clipboardSharing", true).toBool());
 
-  readSettings(settings(), switchCorners(), "switchCorner", 0, static_cast<int>(NumSwitchCorners));
+  readSettings(settings(), switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
 
   int numScreens = settings().beginReadArray("screens");
   Q_ASSERT(numScreens <= screens().size());
