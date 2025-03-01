@@ -809,18 +809,19 @@ void MainWindow::checkFingerprint(const QString &line)
     return;
   }
 
-  if (isClient) {
-    m_checkedServers.append(sha256Text);
-  } else {
-    m_checkedClients.append(sha256Text);
-  }
-
   deskflow::FingerprintDatabase db;
   db.read(trustedFingerprintDb().toStdString());
 
   if (db.isTrusted(sha256)) {
     qDebug("fingerprint is trusted");
     return;
+  }
+
+  if (isClient) {
+    m_checkedServers.append(sha256Text);
+    m_coreProcess.stop();
+  } else {
+    m_checkedClients.append(sha256Text);
   }
 
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
@@ -833,6 +834,7 @@ void MainWindow::checkFingerprint(const QString &line)
     db.write(trustedFingerprintDb().toStdString());
     if (isClient) {
       m_checkedServers.removeAll(sha256Text);
+      m_coreProcess.start();
     } else {
       m_checkedClients.removeAll(sha256Text);
     }
