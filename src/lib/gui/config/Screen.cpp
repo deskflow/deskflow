@@ -90,12 +90,13 @@ QString Screen::screensSection() const
   for (int i = 0; i < fixes().size(); i++)
     out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? QStringLiteral("true") : QStringLiteral("false")));
 
-  out.append(QStringLiteral("\t\tswitchCorners = none"));
-  for (int i = 0; i < switchCorners().size(); i++)
+  auto corners = QStringLiteral("none");
+  for (int i = 0; i < switchCorners().size(); i++) {
     if (switchCorners()[i])
-      out.append(QStringLiteral("+%1 ").arg(switchCornerName(i)));
+      corners.append(QStringLiteral(" +%1 ").arg(switchCornerName(i)));
+  }
+  out.append(lineTemplate.arg(QStringLiteral("switchCorners"), corners));
 
-  out.append("\n");
   out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
 
   return out;
