@@ -384,21 +384,11 @@
             </item>
             <item>
              <widget class="QSpinBox" name="sbSwitchCornerSize">
+              <property name="suffix">
+               <string>px</string>
+              </property>
               <property name="maximum">
                <number>30000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>px</string>
               </property>
              </widget>
             </item>
@@ -504,18 +494,14 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="suffix">
+               <string>MB</string>
+              </property>
               <property name="maximum">
                <number>10000</number>
               </property>
               <property name="value">
                <number>3</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>MB</string>
               </property>
              </widget>
             </item>
@@ -588,6 +574,9 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
+              <property name="suffix">
+               <string>ms</string>
+              </property>
               <property name="minimum">
                <number>1000</number>
               </property>
@@ -599,13 +588,6 @@
               </property>
               <property name="value">
                <number>5000</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabel_16">
-              <property name="text">
-               <string>ms</string>
               </property>
              </widget>
             </item>
@@ -721,6 +703,9 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="suffix">
+               <string>ms</string>
+              </property>
               <property name="minimum">
                <number>10</number>
               </property>
@@ -732,13 +717,6 @@
               </property>
               <property name="value">
                <number>250</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabel_14">
-              <property name="text">
-               <string>ms</string>
               </property>
              </widget>
             </item>
@@ -774,6 +752,9 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="suffix">
+               <string>ms</string>
+              </property>
               <property name="minimum">
                <number>10</number>
               </property>
@@ -785,13 +766,6 @@
               </property>
               <property name="value">
                <number>250</number>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="m_pLabel_15">
-              <property name="text">
-               <string>ms</string>
               </property>
              </widget>
             </item>
