@@ -384,6 +384,12 @@
             </item>
             <item>
              <widget class="QSpinBox" name="sbSwitchCornerSize">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="suffix">
                <string>px</string>
               </property>
@@ -450,9 +456,6 @@
           </item>
           <item>
            <layout class="QHBoxLayout" name="layoutClipboard">
-            <property name="spacing">
-             <number>6</number>
-            </property>
             <item>
              <widget class="QCheckBox" name="cbEnableClipboard">
               <property name="sizePolicy">
@@ -493,6 +496,12 @@
              <widget class="QSpinBox" name="sbClipboardSizeLimit">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="suffix">
                <string>MB</string>
@@ -703,6 +712,12 @@
               <property name="enabled">
                <bool>false</bool>
               </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="suffix">
                <string>ms</string>
               </property>
@@ -751,6 +766,12 @@
              <widget class="QSpinBox" name="sbSwitchDoubleTap">
               <property name="enabled">
                <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
               </property>
               <property name="suffix">
                <string>ms</string>
