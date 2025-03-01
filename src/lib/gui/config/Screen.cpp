@@ -58,7 +58,7 @@ void Screen::loadSettings(QSettingsProxy &settings)
 
   readSettings(settings, aliases(), "alias", QString(""));
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
-  readSettings(settings, switchCorners(), "switchCorner", 0, static_cast<int>(NumSwitchCorners));
+  readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 }
 
