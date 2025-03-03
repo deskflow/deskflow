@@ -368,27 +368,6 @@ void MSWindowsWatchdog::setProcessConfig(const std::string &command, bool elevat
   }
 }
 
-std::string MSWindowsWatchdog::getCommand() const
-{
-  // seems like a fairly convoluted way to get the process name
-  const char *launchName = App::instance().argsBase().m_pname;
-  std::string args = ARCH->commandLine();
-
-  // build up a full command line
-  std::stringstream cmdTemp;
-  cmdTemp << launchName << args;
-
-  std::string cmd = cmdTemp.str();
-
-  size_t i;
-  std::string find = "--relaunch";
-  while ((i = cmd.find(find)) != std::string::npos) {
-    cmd.replace(i, find.length(), "");
-  }
-
-  return cmd;
-}
-
 void MSWindowsWatchdog::outputLoop(void *)
 {
   // +1 char for \0

@@ -35,7 +35,6 @@ public:
   ~MSWindowsWatchdog() = default;
 
   void startAsync();
-  std::string getCommand() const;
   void setProcessConfig(const std::string &command, bool elevate);
   void stop();
   bool isProcessRunning();
