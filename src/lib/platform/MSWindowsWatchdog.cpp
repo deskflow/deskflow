@@ -24,7 +24,8 @@
 #include <Windows.h>
 
 #define CURRENT_PROCESS_ID 0
-#define MAXIMUM_WAIT_TIME 3
+
+const auto kStartDelaySeconds = 1;
 
 namespace {
 std::string trimDesktopName(const std::string &nameFromTraces)
@@ -56,30 +57,14 @@ const char g_activeDesktop[] = {"activeDesktop:"};
 MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
     : m_thread(NULL),
       m_autoDetectCommand(autoDetectCommand),
-      m_monitoring(true),
-      m_commandChanged(false),
       m_outputWritePipe(nullptr),
       m_outputReadPipe(nullptr),
       m_elevateProcess(false),
-      m_processFailures(0),
-      m_processStarted(false),
+      m_startFailures(0),
       m_fileLogOutputter(NULL),
       m_ready(false),
       m_foreground(foreground)
 {
-  m_mutex = ARCH->newMutex();
-  m_condVar = ARCH->newCondVar();
-}
-
-MSWindowsWatchdog::~MSWindowsWatchdog()
-{
-  if (m_condVar != NULL) {
-    ARCH->closeCondVar(m_condVar);
-  }
-
-  if (m_mutex != NULL) {
-    ARCH->closeMutex(m_mutex);
-  }
 }
 
 void MSWindowsWatchdog::startAsync()
@@ -91,7 +76,7 @@ void MSWindowsWatchdog::startAsync()
 
 void MSWindowsWatchdog::stop()
 {
-  m_monitoring = false;
+  m_running = false;
 
   if (!m_thread->wait(5)) {
     LOG((CLOG_WARN "could not stop main thread"));
@@ -194,60 +179,74 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
   // in order to speed up the shutdown process when the Windows service needs to stop.
-  DWORD mode = PIPE_NOWAIT;
-  if (!SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
+  if (DWORD mode = PIPE_NOWAIT; !SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
     LOG_ERR("could not set pipe to non-blocking mode");
     throw XArch(new XArchEvalWindows());
   }
 
-  while (m_monitoring) {
-    try {
+  while (m_running) {
+    if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
+      LOG_DEBUG("session changed, queueing process start");
+      m_processState = ProcessState::StartPending;
+      m_nextStartTime.reset();
+    }
 
-      if (m_processStarted && getCommand().empty()) {
-        LOG((CLOG_DEBUG "process started but command is empty, shutting down"));
-        shutdownExistingProcesses();
-        continue;
+    switch (m_processState) {
+      using enum ProcessState;
+
+    case Idle:
+      LOG_DEBUG3("watchdog: process idle");
+      break;
+
+    case StartScheduled: {
+      LOG_DEBUG3("watchdog: process start scheduled");
+      if (m_nextStartTime.has_value() && m_nextStartTime.value() <= ARCH->time()) {
+        LOG_DEBUG("start time reached, queueing process start");
+        m_processState = StartPending;
       }
+    } break;
 
-      if (m_processFailures > 1) {
-        // increasing backoff period, maximum of 10 seconds.
-        // only start sleeping at 1 second to avoid unnecessary delay when the process stops
-        // for the first failure (i.e. when the process just stopped running).
-        int timeout = m_processFailures < 10 ? m_processFailures : 10;
-        LOG_WARN("backing off after failure, wait=%ds, failures=%d", timeout, m_processFailures);
-        ARCH->sleep(timeout);
+    case StartPending: {
+      LOG_INFO("daemon starting new process");
+      try {
+        startProcess();
+        m_startFailures = 0;
+        m_processState = Running;
+      } catch (std::exception &e) { // NOSONAR - Catching all exceptions
+        handleStartError(e.what());
+        m_processState = StartPending;
+      } catch (...) { // NOSONAR - Catching remaining exceptions
+        handleStartError();
+        m_processState = StartPending;
       }
+    } break;
 
-      if (!getCommand().empty()) {
-        bool startNeeded = false;
-
-        if (m_processFailures != 0) {
-          startNeeded = true;
-        } else if (!m_foreground && m_session.hasChanged()) {
-          startNeeded = true;
-        } else if (m_commandChanged) {
-          startNeeded = true;
-        }
-
-        if (startNeeded) {
-          startProcess();
-        }
-      } else {
-        // prevent backoff when no command is set.
-        m_processFailures = 0;
-      }
-
-      if (m_processStarted && !isProcessRunning()) {
-
-        m_processFailures++;
-        m_processStarted = false;
-
+    case Running: {
+      LOG_DEBUG3("watchdog: process running");
+      if (!isProcessRunning()) {
         LOG((CLOG_WARN "detected application not running, pid=%d", m_process->info().dwProcessId));
+        m_processState = StartPending;
       }
+    } break;
 
+    case StopPending: {
+      LOG_INFO("stopping running process");
+      if (m_process != nullptr) {
+        m_process->shutdown();
+        m_process.reset();
+      } else {
+        LOG_WARN("no process to stop");
+      }
+      shutdownExistingProcesses();
+      m_processState = Idle;
+    } break;
+    }
+
+    // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
+    // This slows down both the process relaunch speed and the watchdog thread loop shut down time.
+    if (sendSasFunc != NULL) {
       HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
       if (sendSasEvent != NULL) {
-
         // use SendSAS event to wait for next session (timeout 1 second).
         if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
           LOG_DEBUG("calling SendSAS from sas.dll");
@@ -256,31 +255,22 @@ void MSWindowsWatchdog::mainLoop(void *)
 
         CloseHandle(sendSasEvent);
       } else {
-        LOG((CLOG_ERR "could not create SendSAS event"));
+        XArchEvalWindows e;
+        LOG_ERR("could not create SendSAS event");
       }
-
-      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
-      ARCH->sleep(0.1);
-
-    } catch (std::exception &e) {
-      LOG((CLOG_CRIT "failed to launch, error: %s", e.what()));
-      m_processFailures++;
-      m_processStarted = false;
-      continue;
-    } catch (...) {
-      LOG((CLOG_CRIT "failed to launch, unknown error."));
-      m_processFailures++;
-      m_processStarted = false;
-      continue;
     }
+
+    // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+    ARCH->sleep(0.1);
   }
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "terminated running process on exit"));
     m_process->shutdown();
     m_process.reset();
-    m_processStarted = false;
   }
+
+  shutdownExistingProcesses();
 
   LOG((CLOG_DEBUG "watchdog main loop finished"));
 }
@@ -303,19 +293,14 @@ void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter *outputter)
 
 void MSWindowsWatchdog::startProcess()
 {
-  LOG_INFO("daemon starting new process");
-
   if (m_command.empty()) {
     throw XMSWindowsWatchdogError("cannot start process, command is empty");
   }
-
-  m_commandChanged = false;
 
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "closing existing process to make way for new one"));
     m_process->shutdown();
     m_process.reset();
-    m_processStarted = false;
   }
 
   m_process = std::make_unique<deskflow::platform::MSWindowsProcess>(m_command, m_outputWritePipe, m_outputWritePipe);
@@ -361,9 +346,6 @@ void MSWindowsWatchdog::startProcess()
       throw XMSWindowsWatchdogError("process immediately stopped");
     }
 
-    m_processStarted = true;
-    m_processFailures = 0;
-
     LOG((CLOG_DEBUG "started core process from daemon"));
     LOG(
         (CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s", m_session.getActiveSessionId(),
@@ -372,13 +354,20 @@ void MSWindowsWatchdog::startProcess()
   }
 }
 
-void MSWindowsWatchdog::setCommand(const std::string &command, bool elevate)
+void MSWindowsWatchdog::setProcessConfig(const std::string &command, bool elevate)
 {
-  LOG_DEBUG("command parameters updated");
+  LOG_DEBUG("watchdog process config updated");
   m_command = command;
   m_elevateProcess = elevate;
-  m_commandChanged = true;
-  m_processFailures = 0;
+
+  if (m_command.empty()) {
+    LOG_DEBUG("command cleared, queueing process stop");
+    m_processState = ProcessState::StopPending;
+  } else {
+    LOG_DEBUG("command changed, queueing process start");
+    m_processState = ProcessState::StartPending;
+    m_nextStartTime.reset();
+  }
 }
 
 std::string MSWindowsWatchdog::getCommand() const
@@ -411,7 +400,7 @@ void MSWindowsWatchdog::outputLoop(void *)
   // +1 char for \0
   CHAR buffer[kOutputBufferSize + 1];
 
-  while (m_monitoring) {
+  while (m_running) {
 
     DWORD bytesRead;
     BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, NULL);
@@ -482,7 +471,7 @@ HANDLE openProcessForKill(PROCESSENTRY32 entry)
 
 void MSWindowsWatchdog::shutdownExistingProcesses()
 {
-  LOG_DEBUG("shutting down existing processes");
+  LOG_DEBUG("shutting down any existing processes");
 
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
@@ -570,4 +559,25 @@ std::string MSWindowsWatchdog::runActiveDesktopUtility()
 
   output.erase(output.find_last_not_of("\r\n") + 1);
   return output;
+}
+
+void MSWindowsWatchdog::handleStartError(const std::string_view &message)
+{
+  m_startFailures++;
+
+  if (!message.empty()) {
+    LOG_CRIT("failed to launch, error: %s", message.data());
+  } else {
+    LOG_CRIT("failed to launch, unknown error");
+  }
+
+  // When there has been more than one consecutive failure, slow down the retry rate.
+  if (m_startFailures > 1) {
+    m_nextStartTime = ARCH->time() + kStartDelaySeconds;
+    LOG_WARN("start failed %d times, delaying start", m_startFailures);
+    LOG_DEBUG("start delay, seconds=%d, time=%f", kStartDelaySeconds, m_nextStartTime.value());
+  } else {
+    LOG_INFO("retrying process start immediately");
+    m_nextStartTime.reset();
+  }
 }

@@ -6,15 +6,14 @@
 
 #pragma once
 
-#include "arch/IArchMultithread.h"
 #include "deskflow/XDeskflow.h"
 #include "platform/MSWindowsProcess.h"
 #include "platform/MSWindowsSession.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #include <memory>
+#include <optional>
 #include <string>
 
 class Thread;
@@ -22,9 +21,18 @@ class FileLogOutputter;
 
 class MSWindowsWatchdog
 {
+  enum class ProcessState
+  {
+    Idle,
+    StartScheduled,
+    StartPending,
+    StopPending,
+    Running
+  };
+
 public:
   MSWindowsWatchdog(bool autoDetectCommand, bool foreground);
-  virtual ~MSWindowsWatchdog();
+  ~MSWindowsWatchdog() = default;
 
   void startAsync();
   std::string getCommand() const;
@@ -42,6 +50,7 @@ private:
   void startProcess();
   void sendSas();
   void setStartupInfo(STARTUPINFO &si);
+  void handleStartError(const std::string_view &message = "");
 
   /**
    * @brief Re-run the process to get the active desktop name.
@@ -56,23 +65,21 @@ private:
 private:
   Thread *m_thread;
   bool m_autoDetectCommand;
-  std::string m_command;
-  bool m_monitoring;
-  bool m_commandChanged;
+  bool m_running;
   HANDLE m_outputWritePipe;
   HANDLE m_outputReadPipe;
   Thread *m_outputThread;
   bool m_elevateProcess;
   MSWindowsSession m_session;
-  int m_processFailures;
-  bool m_processStarted;
+  int m_startFailures;
   FileLogOutputter *m_fileLogOutputter;
-  ArchMutex m_mutex;
-  ArchCond m_condVar;
   bool m_ready;
   bool m_foreground;
   std::string m_activeDesktop;
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;
+  std::optional<double> m_nextStartTime = std::nullopt;
+  ProcessState m_processState = ProcessState::Idle;
+  std::string m_command = "";
 };
 
 //! Relauncher error
