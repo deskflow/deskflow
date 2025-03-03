@@ -285,6 +285,28 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   }
 }
 
+std::string trimOutputBuffer(const CHAR *buffer)
+{
+  // strip out windows \r chars to prevent extra lines in log file.
+  std::string output(buffer);
+  if (output.empty()) {
+    LOG_DEBUG1("output buffer is empty");
+    return output;
+  }
+
+  size_t pos = 0;
+  while ((pos = output.find("\r", pos)) != std::string::npos) {
+    output.replace(pos, 1, "");
+  }
+
+  // trip ending newline, as file writer will add it's own newline.
+  if (output[output.length() - 1] == '\n') {
+    output = output.substr(0, output.length() - 1);
+  }
+
+  return output;
+}
+
 void MSWindowsWatchdog::outputLoop(void *)
 {
   const auto kOutputBufferSize = 4096;
@@ -304,18 +326,7 @@ void MSWindowsWatchdog::outputLoop(void *)
       buffer[bytesRead] = '\0';
 
       // strip out windows \r chars to prevent extra lines in log file.
-      std::string output(buffer);
-      if (!output.empty()) {
-        size_t pos = 0;
-        while ((pos = output.find("\r", pos)) != std::string::npos) {
-          output.replace(pos, 1, "");
-        }
-
-        // trip ending newline, as file writer will add it's own newline.
-        if (output[output.length() - 1] == '\n') {
-          output = output.substr(0, output.length() - 1);
-        }
-      }
+      std::string output = trimOutputBuffer(buffer);
 
       if (m_fileLogOutputter != nullptr) {
         m_fileLogOutputter->write(kPRINT, output.c_str());
