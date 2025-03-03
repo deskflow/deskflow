@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include "deskflow/XDeskflow.h"
 #include "platform/MSWindowsProcess.h"
 #include "platform/MSWindowsSession.h"
+
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
