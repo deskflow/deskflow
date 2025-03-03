@@ -42,9 +42,25 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.20.0" date="2025-3-03" urgency="high">
+			<description>
+				<p>This stable release fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<ul>
+					<li>Feature: Peer Id Checking - Fixes CVE-2021-42072 and CVE-2021-42073</li>
+					<li>Feature: Use Sha256 fingerprints</li>
+					<li>Feature: Gui cleanup and improvements</li>
+					<li>Remove: Inverse connection option</li>
+					<li>Fix: Screen Corner option</li>
+					<li>Fix: Show new client dialog</li>
+					<li>Win32: Daemon Improvements</li>
+					<li>Win32: Fix clear settings</li>
+				</ul>
+			</description>
+		<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.0</url>
+		</release>
 		<release version="1.19.0" date="2025-1-31" urgency="high">
 			<description>
-				<p>This stable Release fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<p>This stable release fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
 				<ul>
 					<li>Feature: New Fallback icon theme</li>
 					<li>Feature: Allow only one gui instance</li>
@@ -64,7 +80,7 @@
 		</release>
 		<release version="1.18.0" date="2024-12-26" urgency="high">
 			<description>
-				<p>This stable Release Fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
+				<p>This stable release fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
 				<ul>
 					<li>Fix CVE-2021-42075: Close connection on app-level handshake failure</li>
 					<li>Fix CVE-2021-42074: Handle SSL race conditions and segmentation fault</li>
@@ -137,7 +153,7 @@
 		</release>
 		<release version="1.17.1" date="2024-11-7" urgency="high">
 			<description>
-				<p>This stable Release Has a very long chagelog some notable ones are.</p>
+				<p>This stable release has a very long changelog some notable ones are.</p>
 				<ul>
 					<li>Remove word 'beta' from Wayland message</li>
 					<li>docs: Update `README.md` with Matrix link</li>
@@ -254,7 +270,7 @@
 		</release>
 		<release version="1.17.0" date="2024-10-02" urgency="low">
 			<description>
-				<p>This is the first Deskflow Release.</p>
+				<p>This is the first Deskflow release.</p>
 				<ul>
 					<li>Use Deskflow Name</li>
 					<li>fix: windows build typos</li>
