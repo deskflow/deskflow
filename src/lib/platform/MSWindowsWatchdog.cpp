@@ -54,9 +54,8 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
 
-MSWindowsWatchdog::MSWindowsWatchdog(bool autoDetectCommand, bool foreground)
+MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
     : m_thread(NULL),
-      m_autoDetectCommand(autoDetectCommand),
       m_outputWritePipe(nullptr),
       m_outputReadPipe(nullptr),
       m_elevateProcess(false),
@@ -372,10 +371,6 @@ void MSWindowsWatchdog::setProcessConfig(const std::string &command, bool elevat
 
 std::string MSWindowsWatchdog::getCommand() const
 {
-  if (!m_autoDetectCommand) {
-    return m_command;
-  }
-
   // seems like a fairly convoluted way to get the process name
   const char *launchName = App::instance().argsBase().m_pname;
   std::string args = ARCH->commandLine();

@@ -212,7 +212,7 @@ void DaemonApp::mainLoop()
     DAEMON_RUNNING(true);
 
 #if SYSAPI_WIN32
-    m_watchdog = std::make_unique<MSWindowsWatchdog>(false, m_foreground);
+    m_watchdog = std::make_unique<MSWindowsWatchdog>(m_foreground);
     m_watchdog->setFileLogOutputter(m_fileLogOutputter);
 
     // install the platform event queue to handle service stop events.
