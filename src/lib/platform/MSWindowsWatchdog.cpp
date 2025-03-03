@@ -24,6 +24,7 @@
 #define CURRENT_PROCESS_ID 0
 
 const auto kStartDelaySeconds = 1;
+const auto kOutputBufferSize = 4096;
 
 namespace {
 std::string trimDesktopName(const std::string &nameFromTraces)
@@ -42,11 +43,6 @@ std::string trimDesktopName(const std::string &nameFromTraces)
 }
 
 } // namespace
-
-enum
-{
-  kOutputBufferSize = 4096
-};
 
 typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
