@@ -72,7 +72,6 @@ private:
   MSWindowsSession m_session;
   int m_startFailures;
   FileLogOutputter *m_fileLogOutputter;
-  bool m_ready;
   bool m_foreground;
   std::string m_activeDesktop;
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;

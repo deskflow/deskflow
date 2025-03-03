@@ -61,7 +61,6 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
       m_elevateProcess(false),
       m_startFailures(0),
       m_fileLogOutputter(NULL),
-      m_ready(false),
       m_foreground(foreground)
 {
 }
