@@ -26,24 +26,6 @@
 const auto kStartDelaySeconds = 1;
 const auto kOutputBufferSize = 4096;
 
-namespace {
-std::string trimDesktopName(const std::string &nameFromTraces)
-{
-  std::string name;
-
-  for (const auto &symbol : nameFromTraces) {
-    if (std::isalpha(symbol)) {
-      name.push_back(symbol);
-    } else {
-      break;
-    }
-  }
-
-  return name;
-}
-
-} // namespace
-
 typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
 const char g_activeDesktop[] = {"activeDesktop:"};
