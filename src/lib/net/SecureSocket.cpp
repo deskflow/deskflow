@@ -684,7 +684,7 @@ bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDb
   }
 
   if (!emptyDB) {
-    LOG((CLOG_NOTE "read %d fingerprint(s) from file: %s", db.fingerprints().size(), path.c_str()));
+    LOG((CLOG_DEBUG "read %d fingerprint(s) from file: %s", db.fingerprints().size(), path.c_str()));
   }
 
   if (!db.isTrusted(sha256)) {
@@ -692,7 +692,7 @@ bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDb
     return false;
   }
 
-  LOG((CLOG_NOTE "fingerprint matches trusted fingerprint"));
+  LOG((CLOG_DEBUG "fingerprint matches trusted fingerprint"));
   return true;
 }
 
