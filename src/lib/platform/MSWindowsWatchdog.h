@@ -28,7 +28,7 @@ public:
 
   void startAsync();
   std::string getCommand() const;
-  void setCommand(const std::string &command, bool elevate);
+  void setProcessConfig(const std::string &command, bool elevate);
   void stop();
   bool isProcessRunning();
   void setFileLogOutputter(FileLogOutputter *outputter);

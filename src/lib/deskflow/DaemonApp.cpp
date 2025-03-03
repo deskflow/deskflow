@@ -115,7 +115,7 @@ void DaemonApp::applyWatchdogCommand() const
   LOG_DEBUG("applying watchdog command");
 
 #if SYSAPI_WIN32
-  m_watchdog->setCommand(m_command, m_elevate);
+  m_watchdog->setProcessConfig(m_command, m_elevate);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");
 #endif
@@ -129,7 +129,7 @@ void DaemonApp::clearWatchdogCommand()
   setCommand("");
 
 #if SYSAPI_WIN32
-  m_watchdog->setCommand("", false);
+  m_watchdog->setProcessConfig("", false);
 #else
   LOG_ERR("clearing watchdog command not implemented on this platform");
 #endif
@@ -222,7 +222,7 @@ void DaemonApp::mainLoop()
     bool elevate = ARCH->setting("Elevate") == "1";
     if (command != "") {
       LOG_DEBUG("using last known command: %s", command.c_str());
-      m_watchdog->setCommand(command, elevate);
+      m_watchdog->setProcessConfig(command, elevate);
     }
 
     m_watchdog->startAsync();
