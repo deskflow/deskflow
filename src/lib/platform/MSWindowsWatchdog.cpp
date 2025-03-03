@@ -26,8 +26,6 @@
 const auto kStartDelaySeconds = 1;
 const auto kOutputBufferSize = 4096;
 
-typedef VOID(WINAPI *SendSas)(BOOL asUser);
-
 MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
     : m_thread(nullptr),
       m_outputWritePipe(nullptr),
@@ -37,6 +35,8 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
       m_fileLogOutputter(nullptr),
       m_foreground(foreground)
 {
+  initSasFunc();
+  initOutputReadPipe();
 }
 
 void MSWindowsWatchdog::startAsync()
@@ -104,7 +104,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
     HANDLE process;
     if (!m_session.isProcessInSession("winlogon.exe", &process)) {
-      throw XMSWindowsWatchdogError("cannot get user token without winlogon.exe");
+      throw XArch("cannot get user token without winlogon.exe");
     }
 
     try {
@@ -122,40 +122,9 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
-  LOG_DEBUG("starting watchdog main loop");
-
   shutdownExistingProcesses();
 
-  // the SendSAS function is used to send a sas (secure attention sequence) to the
-  // winlogon process. this is used to switch to the login screen.
-  SendSas sendSasFunc = nullptr;
-  HINSTANCE sasLib = LoadLibrary("sas.dll");
-  if (sasLib) {
-    LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
-    sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
-    if (!sendSasFunc) {
-      LOG_ERR("could not find SendSAS function in sas.dll");
-      throw XArch(new XArchEvalWindows());
-    }
-  }
-
-  SECURITY_ATTRIBUTES saAttr;
-  saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
-  saAttr.bInheritHandle = TRUE;
-  saAttr.lpSecurityDescriptor = nullptr;
-
-  if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
-    LOG_ERR("could not create output pipe");
-    throw XArch(new XArchEvalWindows());
-  }
-
-  // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
-  // in order to speed up the shutdown process when the Windows service needs to stop.
-  if (DWORD mode = PIPE_NOWAIT; !SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
-    LOG_ERR("could not set pipe to non-blocking mode");
-    throw XArch(new XArchEvalWindows());
-  }
-
+  LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
     if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
       LOG_DEBUG("session changed, queueing process start");
@@ -216,21 +185,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
     // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
     // This slows down both the process relaunch speed and the watchdog thread loop shut down time.
-    if (sendSasFunc != nullptr) {
-      HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, "Global\\SendSAS");
-      if (sendSasEvent != nullptr) {
-        // use SendSAS event to wait for next session (timeout 1 second).
-        if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-          LOG_DEBUG("calling SendSAS from sas.dll");
-          sendSasFunc(FALSE);
-        }
-
-        CloseHandle(sendSasEvent);
-      } else {
-        XArchEvalWindows e;
-        LOG_ERR("could not create SendSAS event");
-      }
-    }
+    sendSas();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
     ARCH->sleep(0.1);
@@ -266,7 +221,7 @@ void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter *outputter)
 void MSWindowsWatchdog::startProcess()
 {
   if (m_command.empty()) {
-    throw XMSWindowsWatchdogError("cannot start process, command is empty");
+    throw XArch("cannot start process, command is empty");
   }
 
   if (m_process != nullptr) {
@@ -315,7 +270,7 @@ void MSWindowsWatchdog::startProcess()
 
     if (!isProcessRunning()) {
       m_process.reset();
-      throw XMSWindowsWatchdogError("process immediately stopped");
+      throw XArch("process immediately stopped");
     }
 
     LOG((CLOG_DEBUG "started core process from daemon"));
@@ -489,7 +444,7 @@ std::string MSWindowsWatchdog::runActiveDesktopUtility()
   LOG_DEBUG("started active desktop process, pid=%d", process.info().dwProcessId);
   if (const auto exitCode = process.waitForExit(); exitCode != kExitSuccess) {
     LOG_ERR("active desktop process, exit code: %d", exitCode);
-    throw XMSWindowsWatchdogError("could not get active desktop");
+    throw XArch("could not get active desktop");
   }
 
   LOG_DEBUG("reading active desktop std error");
@@ -501,7 +456,7 @@ std::string MSWindowsWatchdog::runActiveDesktopUtility()
   auto output = process.readStdOutput();
   if (output.empty()) {
     LOG_ERR("could not get active desktop, no output");
-    throw XMSWindowsWatchdogError("could not get active desktop");
+    throw XArch("could not get active desktop");
   }
 
   output.erase(output.find_last_not_of("\r\n") + 1);
@@ -527,4 +482,85 @@ void MSWindowsWatchdog::handleStartError(const std::string_view &message)
     LOG_INFO("retrying process start immediately");
     m_nextStartTime.reset();
   }
+}
+
+std::string MSWindowsWatchdog::processStateToString(MSWindowsWatchdog::ProcessState state)
+{
+  switch (state) {
+    using enum MSWindowsWatchdog::ProcessState;
+
+  case Idle:
+    return "Idle";
+  case StartScheduled:
+    return "StartScheduled";
+  case StartPending:
+    return "StartPending";
+  case StopPending:
+    return "StopPending";
+  case Running:
+    return "Running";
+  }
+
+  return "Unknown";
+}
+
+void MSWindowsWatchdog::initOutputReadPipe()
+{
+  SECURITY_ATTRIBUTES saAttr;
+  saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
+  saAttr.bInheritHandle = TRUE;
+  saAttr.lpSecurityDescriptor = nullptr;
+
+  if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
+    LOG_ERR("could not create output pipe");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
+  // in order to speed up the shutdown process when the Windows service needs to stop.
+  if (DWORD mode = PIPE_NOWAIT; !SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
+    LOG_ERR("could not set pipe to non-blocking mode");
+    throw XArch(new XArchEvalWindows());
+  }
+}
+
+void MSWindowsWatchdog::initSasFunc()
+{
+  // the SendSAS function is used to send a sas (secure attention sequence) to the
+  // winlogon process. this is used to switch to the login screen.
+  HINSTANCE sasLib = LoadLibrary("sas.dll");
+  if (!sasLib) {
+    LOG_ERR("could not load sas.dll");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
+  m_sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
+  if (!m_sendSasFunc) {
+    LOG_ERR("could not find SendSAS function in sas.dll");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  LOG_DEBUG("found SendSAS function in sas.dll");
+}
+
+void MSWindowsWatchdog::sendSas() const
+{
+  if (m_sendSasFunc == nullptr) {
+    throw XArch("SendSAS function not initialized");
+  }
+
+  HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, "Global\\SendSAS");
+  if (sendSasEvent == nullptr) {
+    LOG_ERR("could not create SendSAS event");
+    throw XArch(new XArchEvalWindows());
+  }
+
+  // use SendSAS event to wait for next session (timeout 1 second).
+  if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
+    LOG_DEBUG("calling SendSAS from sas.dll");
+    m_sendSasFunc(FALSE);
+  }
+
+  CloseHandle(sendSasEvent);
 }

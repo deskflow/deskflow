@@ -16,6 +16,8 @@
 #include <optional>
 #include <string>
 
+typedef VOID(WINAPI *SendSas)(BOOL asUser);
+
 class Thread;
 class FileLogOutputter;
 
@@ -47,9 +49,11 @@ private:
   HANDLE duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedToken);
   void startProcess();
-  void sendSas();
   void setStartupInfo(STARTUPINFO &si);
   void handleStartError(const std::string_view &message = "");
+  void initOutputReadPipe();
+  void initSasFunc();
+  void sendSas() const;
 
   /**
    * @brief Re-run the process to get the active desktop name.
@@ -60,6 +64,8 @@ private:
    * @return std::string The name of the active desktop.
    */
   std::string runActiveDesktopUtility();
+
+  static std::string processStateToString(ProcessState state);
 
 private:
   Thread *m_thread;
@@ -77,22 +83,5 @@ private:
   std::optional<double> m_nextStartTime = std::nullopt;
   ProcessState m_processState = ProcessState::Idle;
   std::string m_command = "";
-};
-
-//! Relauncher error
-/*!
-An error occured in the process watchdog.
-*/
-class XMSWindowsWatchdogError : public XDeskflow
-{
-public:
-  XMSWindowsWatchdogError(const std::string &msg) : XDeskflow(msg)
-  {
-  }
-
-  // XBase overrides
-  virtual std::string getWhat() const throw()
-  {
-    return what();
-  }
+  SendSas m_sendSasFunc = nullptr;
 };
