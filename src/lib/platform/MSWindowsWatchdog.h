@@ -13,6 +13,7 @@
 #include <Windows.h>
 
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <string>
 
@@ -161,4 +162,5 @@ private:
   ProcessState m_processState = ProcessState::Idle;
   std::string m_command = "";
   SendSas m_sendSasFunc = nullptr;
+  std::mutex m_processStateMutex;
 };

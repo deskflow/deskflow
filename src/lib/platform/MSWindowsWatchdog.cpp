@@ -171,6 +171,8 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
+    std::unique_lock lock(m_processStateMutex);
+
     if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
       LOG_DEBUG("session changed, queueing process start");
       m_processState = ProcessState::StartPending;
@@ -227,6 +229,8 @@ void MSWindowsWatchdog::mainLoop(void *)
       m_processState = Idle;
     } break;
     }
+
+    lock.unlock();
 
     // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
     // This slows down both the process relaunch speed and the watchdog thread loop shut down time.
@@ -328,7 +332,9 @@ void MSWindowsWatchdog::startProcess()
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
-  LOG_DEBUG("watchdog process config updated");
+  LOG_DEBUG("updating watchdog process config");
+  std::unique_lock lock(m_processStateMutex);
+
   m_command = command;
   m_elevateProcess = elevate;
 
