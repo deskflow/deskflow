@@ -179,6 +179,8 @@ void MSWindowsWatchdog::mainLoop(void *)
     ARCH->sleep(0.1);
   }
 
+  LOG_DEBUG("watchdog main loop finished");
+
   if (m_process != nullptr) {
     LOG((CLOG_DEBUG "terminated running process on exit"));
     m_process->shutdown();
@@ -186,8 +188,6 @@ void MSWindowsWatchdog::mainLoop(void *)
   }
 
   shutdownExistingProcesses();
-
-  LOG((CLOG_DEBUG "watchdog main loop finished"));
 }
 
 bool MSWindowsWatchdog::isProcessRunning()
