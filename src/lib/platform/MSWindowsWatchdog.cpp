@@ -269,7 +269,7 @@ void MSWindowsWatchdog::startProcess()
   }
 }
 
-void MSWindowsWatchdog::setProcessConfig(const std::string &command, bool elevate)
+void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
   LOG_DEBUG("watchdog process config updated");
   m_command = command;
