@@ -58,7 +58,7 @@ void DaemonIpcServer::handleNewConnection()
 void DaemonIpcServer::handleReadyRead()
 {
   const auto clientSocket = qobject_cast<QLocalSocket *>(sender());
-  LOG_DEBUG("ipc server ready to read data");
+  LOG_DEBUG1("ipc server ready to read data");
 
   QByteArray data = clientSocket->readAll();
   if (data.isEmpty()) {
@@ -100,7 +100,7 @@ void DaemonIpcServer::handleErrorOccurred()
 
 void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &message)
 {
-  LOG_DEBUG("ipc server got message: %s", message.toUtf8().constData());
+  LOG_DEBUG1("ipc server got message: %s", message.toUtf8().constData());
   const auto parts = message.split('=');
   if (parts.size() < 1) {
     LOG_ERR("ipc server got invalid message: %s", message.toUtf8().constData());
