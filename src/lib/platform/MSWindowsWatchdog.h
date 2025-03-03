@@ -68,15 +68,15 @@ private:
   static std::string processStateToString(ProcessState state);
 
 private:
-  Thread *m_thread;
-  bool m_running;
-  HANDLE m_outputWritePipe;
-  HANDLE m_outputReadPipe;
-  Thread *m_outputThread;
-  bool m_elevateProcess;
+  Thread *m_thread = nullptr;
+  bool m_running = true;
+  HANDLE m_outputWritePipe = nullptr;
+  HANDLE m_outputReadPipe = nullptr;
+  Thread *m_outputThread = nullptr;
+  bool m_elevateProcess = false;
   MSWindowsSession m_session;
-  int m_startFailures;
-  FileLogOutputter *m_fileLogOutputter;
+  int m_startFailures = 0;
+  FileLogOutputter *m_fileLogOutputter = nullptr;
   bool m_foreground;
   std::string m_activeDesktop;
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;

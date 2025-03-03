@@ -26,14 +26,7 @@
 const auto kStartDelaySeconds = 1;
 const auto kOutputBufferSize = 4096;
 
-MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
-    : m_thread(nullptr),
-      m_outputWritePipe(nullptr),
-      m_outputReadPipe(nullptr),
-      m_elevateProcess(false),
-      m_startFailures(0),
-      m_fileLogOutputter(nullptr),
-      m_foreground(foreground)
+MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 {
   initSasFunc();
   initOutputReadPipe();
