@@ -49,7 +49,6 @@ private:
   HANDLE duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES security);
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedToken);
   void startProcess();
-  void setStartupInfo(STARTUPINFO &si);
   void handleStartError(const std::string_view &message = "");
   void initOutputReadPipe();
   void initSasFunc();
