@@ -21,6 +21,63 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+//
+// Free functions
+//
+
+std::string trimOutputBuffer(const CHAR *buffer)
+{
+  // strip out windows \r chars to prevent extra lines in log file.
+  std::string output(buffer);
+  if (output.empty()) {
+    LOG_DEBUG1("output buffer is empty");
+    return output;
+  }
+
+  size_t pos = 0;
+  while ((pos = output.find("\r", pos)) != std::string::npos) {
+    output.replace(pos, 1, "");
+  }
+
+  // trip ending newline, as file writer will add it's own newline.
+  if (output[output.length() - 1] == '\n') {
+    output = output.substr(0, output.length() - 1);
+  }
+
+  return output;
+}
+
+HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
+{
+  // pid 0 is 'system idle process'
+  if (entry.th32ProcessID == 0)
+    return nullptr;
+
+  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
+      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+    return nullptr;
+  }
+
+  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
+  if (handle == nullptr) {
+    LOG((CLOG_ERR "could not open process handle for kill"));
+    throw XArch(new XArchEvalWindows);
+  }
+
+  // only shut down if not current process (daemon is now the same unified binary).
+  if (entry.th32ProcessID == GetCurrentProcessId()) {
+    CloseHandle(handle);
+    return nullptr;
+  }
+
+  return handle;
+}
+
+//
+// MSWindowsWatchdog
+//
+
 MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 {
   initSasFunc();
@@ -285,28 +342,6 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   }
 }
 
-std::string trimOutputBuffer(const CHAR *buffer)
-{
-  // strip out windows \r chars to prevent extra lines in log file.
-  std::string output(buffer);
-  if (output.empty()) {
-    LOG_DEBUG1("output buffer is empty");
-    return output;
-  }
-
-  size_t pos = 0;
-  while ((pos = output.find("\r", pos)) != std::string::npos) {
-    output.replace(pos, 1, "");
-  }
-
-  // trip ending newline, as file writer will add it's own newline.
-  if (output[output.length() - 1] == '\n') {
-    output = output.substr(0, output.length() - 1);
-  }
-
-  return output;
-}
-
 void MSWindowsWatchdog::outputLoop(void *)
 {
   const auto kOutputBufferSize = 4096;
@@ -343,33 +378,6 @@ void MSWindowsWatchdog::outputLoop(void *)
 #endif
     }
   }
-}
-
-HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
-{
-  // pid 0 is 'system idle process'
-  if (entry.th32ProcessID == 0)
-    return nullptr;
-
-  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
-    return nullptr;
-  }
-
-  HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
-  if (handle == nullptr) {
-    LOG((CLOG_ERR "could not open process handle for kill"));
-    throw XArch(new XArchEvalWindows);
-  }
-
-  // only shut down if not current process (daemon is now the same unified binary).
-  if (entry.th32ProcessID == GetCurrentProcessId()) {
-    CloseHandle(handle);
-    return nullptr;
-  }
-
-  return handle;
 }
 
 void MSWindowsWatchdog::shutdownExistingProcesses()
