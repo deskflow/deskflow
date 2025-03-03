@@ -33,7 +33,7 @@ class MSWindowsWatchdog
   };
 
 public:
-  MSWindowsWatchdog(bool foreground);
+  explicit MSWindowsWatchdog(bool foreground);
   ~MSWindowsWatchdog() = default;
 
   void startAsync();
