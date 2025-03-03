@@ -37,7 +37,7 @@ public:
   ~MSWindowsWatchdog() = default;
 
   void startAsync();
-  void setProcessConfig(const std::string &command, bool elevate);
+  void setProcessConfig(const std::string_view &command, bool elevate);
   void stop();
   bool isProcessRunning();
   void setFileLogOutputter(FileLogOutputter *outputter);
