@@ -394,11 +394,9 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   }
 
   // now just iterate until we can find winlogon.exe pid
-  DWORD pid = 0;
   while (gotEntry) {
 
-    HANDLE handle = openProcessForKill(entry);
-    if (handle) {
+    if (HANDLE handle = openProcessForKill(entry); handle != nullptr) {
       LOG((CLOG_INFO "shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID));
       deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID);
       CloseHandle(handle);
