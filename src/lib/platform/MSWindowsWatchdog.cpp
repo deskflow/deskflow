@@ -53,12 +53,12 @@ typedef VOID(WINAPI *SendSas)(BOOL asUser);
 const char g_activeDesktop[] = {"activeDesktop:"};
 
 MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
-    : m_thread(NULL),
+    : m_thread(nullptr),
       m_outputWritePipe(nullptr),
       m_outputReadPipe(nullptr),
       m_elevateProcess(false),
       m_startFailures(0),
-      m_fileLogOutputter(NULL),
+      m_fileLogOutputter(nullptr),
       m_foreground(foreground)
 {
 }
@@ -122,7 +122,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
   // elevate for the uac dialog (consent.exe) but this would be pointless,
   // since deskflow would re-launch as non-elevated after the desk switch,
   // and so would be unusable with the new elevated process taking focus.
-  if (elevatedToken || m_session.isProcessInSession("logonui.exe", NULL)) {
+  if (elevatedToken || m_session.isProcessInSession("logonui.exe", nullptr)) {
 
     LOG((CLOG_DEBUG "getting elevated token, %s", (elevatedToken ? "elevation required" : "at login screen")));
 
@@ -152,7 +152,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   // the SendSAS function is used to send a sas (secure attention sequence) to the
   // winlogon process. this is used to switch to the login screen.
-  SendSas sendSasFunc = NULL;
+  SendSas sendSasFunc = nullptr;
   HINSTANCE sasLib = LoadLibrary("sas.dll");
   if (sasLib) {
     LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
@@ -166,7 +166,7 @@ void MSWindowsWatchdog::mainLoop(void *)
   SECURITY_ATTRIBUTES saAttr;
   saAttr.nLength = sizeof(SECURITY_ATTRIBUTES);
   saAttr.bInheritHandle = TRUE;
-  saAttr.lpSecurityDescriptor = NULL;
+  saAttr.lpSecurityDescriptor = nullptr;
 
   if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
     LOG_ERR("could not create output pipe");
@@ -240,9 +240,9 @@ void MSWindowsWatchdog::mainLoop(void *)
 
     // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
     // This slows down both the process relaunch speed and the watchdog thread loop shut down time.
-    if (sendSasFunc != NULL) {
-      HANDLE sendSasEvent = CreateEvent(NULL, FALSE, FALSE, "Global\\SendSAS");
-      if (sendSasEvent != NULL) {
+    if (sendSasFunc != nullptr) {
+      HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, "Global\\SendSAS");
+      if (sendSasEvent != nullptr) {
         // use SendSAS event to wait for next session (timeout 1 second).
         if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
           LOG_DEBUG("calling SendSAS from sas.dll");
@@ -374,7 +374,7 @@ void MSWindowsWatchdog::outputLoop(void *)
   while (m_running) {
 
     DWORD bytesRead;
-    BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, NULL);
+    BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, nullptr);
 
     if (!success || bytesRead == 0) {
       // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
@@ -396,7 +396,7 @@ void MSWindowsWatchdog::outputLoop(void *)
         }
       }
 
-      if (m_fileLogOutputter != NULL) {
+      if (m_fileLogOutputter != nullptr) {
         m_fileLogOutputter->write(kPRINT, output.c_str());
       }
 
