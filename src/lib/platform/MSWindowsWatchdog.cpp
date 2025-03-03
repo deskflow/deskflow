@@ -21,11 +21,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#define CURRENT_PROCESS_ID 0
-
-const auto kStartDelaySeconds = 1;
-const auto kOutputBufferSize = 4096;
-
 MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 {
   initSasFunc();
@@ -292,6 +287,8 @@ void MSWindowsWatchdog::setProcessConfig(const std::string &command, bool elevat
 
 void MSWindowsWatchdog::outputLoop(void *)
 {
+  const auto kOutputBufferSize = 4096;
+
   // +1 char for \0
   CHAR buffer[kOutputBufferSize + 1];
 
@@ -368,8 +365,10 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 {
   LOG_DEBUG("shutting down any existing processes");
 
+  const auto kAllProcesses = 0;
+
   // first we need to take a snapshot of the running processes
-  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, CURRENT_PROCESS_ID);
+  HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, kAllProcesses);
   if (snapshot == INVALID_HANDLE_VALUE) {
     LOG((CLOG_ERR "could not get process snapshot"));
     throw XArch(new XArchEvalWindows);
@@ -456,6 +455,8 @@ std::string MSWindowsWatchdog::runActiveDesktopUtility()
 
 void MSWindowsWatchdog::handleStartError(const std::string_view &message)
 {
+  const auto kStartDelaySeconds = 1;
+
   m_startFailures++;
 
   if (!message.empty()) {
