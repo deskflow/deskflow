@@ -99,6 +99,9 @@ public:
   //! Delete a value
   static void deleteValue(HKEY parent, const TCHAR *name);
 
+  //! Delete a tree of keys from the registry
+  static void deleteKeyTree(HKEY parent, const TCHAR *name);
+
   //! Test if a value exists
   static bool hasValue(HKEY key, const TCHAR *name);
 

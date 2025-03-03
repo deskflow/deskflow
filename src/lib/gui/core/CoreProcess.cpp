@@ -746,4 +746,19 @@ QString CoreProcess::requestDaemonLogPath()
   return logPath;
 }
 
+void CoreProcess::clearSettings()
+{
+  if (m_appConfig.processMode() == ProcessMode::kDesktop) {
+    qDebug("no core settings to clear in desktop mode");
+    return;
+  }
+
+  if (m_appConfig.processMode() != ProcessMode::kService) {
+    qFatal("invalid process mode");
+  }
+
+  qInfo("clearing core settings through daemon");
+  m_daemonIpcClient->sendClearSettings();
+}
+
 } // namespace deskflow::gui

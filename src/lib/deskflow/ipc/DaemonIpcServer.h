@@ -28,6 +28,7 @@ signals:
   void commandChanged(const QString &command);
   void startProcessRequested();
   void stopProcessRequested();
+  void clearSettingsRequested();
 
 private:
   void processMessage(QLocalSocket *clientSocket, const QString &message);

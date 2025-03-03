@@ -52,6 +52,7 @@ public:
   void setCommand(const QString &command);
   void applyWatchdogCommand() const;
   void clearWatchdogCommand();
+  void clearSettings();
   std::string logFilename();
 
   static DaemonApp &instance()

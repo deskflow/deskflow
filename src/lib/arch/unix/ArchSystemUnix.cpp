@@ -67,6 +67,11 @@ void ArchSystemUnix::setting(const std::string &, const std::string &) const
 {
 }
 
+void ArchSystemUnix::clearSettings() const
+{
+  // Not implemented
+}
+
 std::string ArchSystemUnix::getLibsUsed(void) const
 {
   return "not implemented.\nuse lsof on shell";

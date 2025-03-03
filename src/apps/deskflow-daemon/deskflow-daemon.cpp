@@ -99,6 +99,10 @@ int main(int argc, char **argv)
         &ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, &daemon, &DaemonApp::clearWatchdogCommand, //
         Qt::DirectConnection
     );
+    QObject::connect(
+        &ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, &daemon, &DaemonApp::clearSettings, //
+        Qt::DirectConnection
+    );
 
     daemonThread.start();
     const auto exitCode = QCoreApplication::exec();

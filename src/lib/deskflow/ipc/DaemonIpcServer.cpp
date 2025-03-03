@@ -130,6 +130,10 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
   } else if (command == "logPath") {
     LOG_DEBUG("ipc server got log path request");
     clientSocket->write("logPath=" + m_logFilename.toUtf8());
+  } else if (command == "clearSettings") {
+    LOG_DEBUG("ipc server got clear settings message");
+    Q_EMIT clearSettingsRequested();
+    clientSocket->write(kAckMessage);
   } else {
     LOG_WARN("ipc server got unknown message: %s", message.toUtf8().constData());
   }
