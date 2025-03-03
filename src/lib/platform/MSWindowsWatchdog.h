@@ -31,7 +31,7 @@ class MSWindowsWatchdog
   };
 
 public:
-  MSWindowsWatchdog(bool autoDetectCommand, bool foreground);
+  MSWindowsWatchdog(bool foreground);
   ~MSWindowsWatchdog() = default;
 
   void startAsync();
@@ -64,7 +64,6 @@ private:
 
 private:
   Thread *m_thread;
-  bool m_autoDetectCommand;
   bool m_running;
   HANDLE m_outputWritePipe;
   HANDLE m_outputReadPipe;
