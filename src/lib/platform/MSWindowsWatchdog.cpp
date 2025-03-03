@@ -13,12 +13,10 @@
 #include "base/TMethodJob.h"
 #include "base/log_outputters.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 #include "mt/Thread.h"
 
 #include <Shellapi.h>
 #include <UserEnv.h>
-#include <sstream>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
