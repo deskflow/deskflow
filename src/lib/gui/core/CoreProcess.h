@@ -87,6 +87,7 @@ public:
   void restart();
   void cleanup();
   void applyLogLevel();
+  void clearSettings();
 
   // getters
   Mode mode() const

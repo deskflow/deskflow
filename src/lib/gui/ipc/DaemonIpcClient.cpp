@@ -194,4 +194,9 @@ QString DaemonIpcClient::requestLogPath()
   return parts[1];
 }
 
+bool DaemonIpcClient::sendClearSettings()
+{
+  return sendMessage("clearSettings");
+}
+
 } // namespace deskflow::gui::ipc

@@ -135,6 +135,12 @@ void DaemonApp::clearWatchdogCommand()
 #endif
 }
 
+void DaemonApp::clearSettings()
+{
+  LOG_INFO("clearing daemon settings");
+  ARCH->clearSettings();
+}
+
 DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR - CLI args
 {
   using enum InitResult;

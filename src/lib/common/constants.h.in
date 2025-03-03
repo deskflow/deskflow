@@ -15,6 +15,7 @@ const auto kVersionGitSha = "@GIT_SHA_SHORT@";
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";
+const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 
 const auto kCopyright = //
     "Copyright @CMAKE_PROJECT_COPYRIGHT@\n"
