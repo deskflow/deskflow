@@ -334,7 +334,7 @@ void MSWindowsWatchdog::outputLoop(void *)
   }
 }
 
-HANDLE openProcessForKill(PROCESSENTRY32 entry)
+HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 {
   // pid 0 is 'system idle process'
   if (entry.th32ProcessID == 0)
