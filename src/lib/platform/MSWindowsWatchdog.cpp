@@ -28,8 +28,6 @@ const auto kOutputBufferSize = 4096;
 
 typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
-const char g_activeDesktop[] = {"activeDesktop:"};
-
 MSWindowsWatchdog::MSWindowsWatchdog(bool foreground)
     : m_thread(nullptr),
       m_outputWritePipe(nullptr),
