@@ -77,8 +77,8 @@ private:
   MSWindowsSession m_session;
   int m_startFailures = 0;
   FileLogOutputter *m_fileLogOutputter = nullptr;
-  bool m_foreground;
-  std::string m_activeDesktop;
+  bool m_foreground = false;
+  std::string m_activeDesktop = "";
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;
   std::optional<double> m_nextStartTime = std::nullopt;
   ProcessState m_processState = ProcessState::Idle;
