@@ -87,7 +87,6 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 void MSWindowsWatchdog::startAsync()
 {
   m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::mainLoop, nullptr));
-
   m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::outputLoop, nullptr));
 }
 
@@ -171,6 +170,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
+    LOG_DEBUG3("watchdog: main loop iteration, lock mutex");
     std::unique_lock lock(m_processStateMutex);
 
     if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
@@ -230,6 +230,8 @@ void MSWindowsWatchdog::mainLoop(void *)
     } break;
     }
 
+    LOG_DEBUG3("watchdog: main loop unlock mutex");
+    // TODO: better to use RAII pattern?
     lock.unlock();
 
     // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
@@ -237,6 +239,7 @@ void MSWindowsWatchdog::mainLoop(void *)
     sendSas();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+    LOG_DEBUG3("watchdog: main loop sleep");
     ARCH->sleep(0.1);
   }
 
@@ -563,6 +566,8 @@ void MSWindowsWatchdog::initSasFunc()
 
 void MSWindowsWatchdog::sendSas() const
 {
+  LOG_DEBUG3("watchdog: creating sas event");
+
   if (m_sendSasFunc == nullptr) {
     throw XArch("SendSAS function not initialized");
   }

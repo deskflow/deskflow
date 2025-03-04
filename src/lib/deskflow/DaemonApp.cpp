@@ -231,6 +231,7 @@ void DaemonApp::mainLoop()
       m_watchdog->setProcessConfig(command, elevate);
     }
 
+    LOG_DEBUG("starting watchdog threads");
     m_watchdog->startAsync();
 #endif
 
