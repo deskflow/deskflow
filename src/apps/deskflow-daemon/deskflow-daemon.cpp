@@ -118,11 +118,22 @@ int main(int argc, char **argv)
   }
 
   case FatalError:
+    LOG_ERR("fatal error during daemon init");
     return kExitFailed;
 
-  default:
+  case Installed:
+  case Uninstalled:
+  case ShowHelp:
+    LOG_DEBUG("app exiting (non-daemon mode)");
     return kExitSuccess;
+
+  case ArgsError:
+    LOG_ERR("bad arguments");
+    return kExitArgs;
   }
+
+  LOG_ERR("unknown daemon init result");
+  return kExitFailed;
 }
 
 #if SYSAPI_WIN32
