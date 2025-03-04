@@ -335,7 +335,7 @@ void MSWindowsWatchdog::startProcess()
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
-  LOG_DEBUG("updating watchdog process config");
+  LOG_DEBUG("updating watchdog process config, locking mutex");
   std::unique_lock lock(m_processStateMutex);
 
   m_command = command;
@@ -349,6 +349,8 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
     m_processState = ProcessState::StartPending;
     m_nextStartTime.reset();
   }
+
+  LOG_DEBUG("watchdog process config updated, unlocking mutex");
 }
 
 void MSWindowsWatchdog::outputLoop(void *)
