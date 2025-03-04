@@ -8,7 +8,7 @@ if(WIN32)
   set(target ${CMAKE_PROJECT_NAME}-daemon)
 
   # Generate rc file
-  set(EXE_DESCRIPTION "Windows service to run ${CMAKE_PROJECT_NAME} in secure desktops (UAC prompts, login screen, etc)")
+  set(EXE_DESCRIPTION "${CMAKE_PROJECT_PROPER_NAME} Daemon for handling secure desktops (UAC prompts, login screen, etc)")
   set(EXE_ICON "IDI_DESKFLOW ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\"")
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
