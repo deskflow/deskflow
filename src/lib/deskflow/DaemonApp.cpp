@@ -199,13 +199,23 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
     }
   }
 
-  if (!m_foreground) {
 #if SYSAPI_WIN32
+  if (!m_foreground) {
     // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
     // in that case, but is accessible when running in the foreground.
     CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
-#endif
   }
+
+  m_watchdog = std::make_unique<MSWindowsWatchdog>(m_foreground);
+  m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+
+  std::string command = ARCH->setting("Command");
+  bool elevate = ARCH->setting("Elevate") == "1";
+  if (!command.empty()) {
+    LOG_DEBUG("using last known command: %s", command.c_str());
+    m_watchdog->setProcessConfig(command, elevate);
+  }
+#endif
 
   return StartDaemon;
 }
@@ -213,44 +223,44 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
 void DaemonApp::mainLoop()
 {
   if (m_events == nullptr) {
-    throw XDeskflow("event queue not set");
+    LOG((CLOG_CRIT "event queue not set for main loop"));
+    return;
   }
 
+  DAEMON_RUNNING(true);
+
   try {
-    DAEMON_RUNNING(true);
-
 #if SYSAPI_WIN32
-    m_watchdog = std::make_unique<MSWindowsWatchdog>(m_foreground);
-    m_watchdog->setFileLogOutputter(m_fileLogOutputter);
-
-    // install the platform event queue to handle service stop events.
+    // Install the platform event queue to handle service stop events.
+    // This must be done on the same thread as the event loop, otherwise the service stop
+    // request will not add the quit event to the event queue, and the service won't stop.
     m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
 
-    std::string command = ARCH->setting("Command");
-    bool elevate = ARCH->setting("Elevate") == "1";
-    if (!command.empty()) {
-      LOG_DEBUG("using last known command: %s", command.c_str());
-      m_watchdog->setProcessConfig(command, elevate);
-    }
-
+    LOG_DEBUG("starting watchdog threads");
     m_watchdog->startAsync();
 #endif
 
     LOG_INFO("daemon is running");
     m_events->loop();
     LOG_INFO("daemon is stopping");
+  } catch (std::exception &e) { // NOSONAR - Catching all exceptions
+    LOG((CLOG_CRIT "daemon error: %s", e.what()));
+  } catch (...) { // NOSONAR - Catching remaining exceptions
+    LOG((CLOG_CRIT "daemon unknown error"));
+  }
 
 #if SYSAPI_WIN32
+  try {
     LOG_DEBUG("stopping process watchdog");
     m_watchdog->stop();
+  } catch (std::exception &e) { // NOSONAR - Catching all exceptions
+    LOG((CLOG_CRIT "stop watchdog error: %s", e.what()));
+  } catch (...) { // NOSONAR - Catching remaining exceptions
+    LOG((CLOG_CRIT "stop watchdog unknown error"));
+  }
 #endif
 
-    DAEMON_RUNNING(false);
-  } catch (std::exception &e) {
-    LOG((CLOG_CRIT "an error occurred: %s", e.what()));
-  } catch (...) {
-    LOG((CLOG_CRIT "an unknown error occurred.\n"));
-  }
+  DAEMON_RUNNING(false);
 }
 
 std::string DaemonApp::logFilename()
