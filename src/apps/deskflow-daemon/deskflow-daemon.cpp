@@ -76,6 +76,13 @@ int main(int argc, char **argv)
     LOG_DEBUG("log level: %s", logLevel.c_str());
   }
 
+#if SYSAPI_WIN32
+  // Show warning if not running as admin as daemon will behave differently.
+  if (!ArchMiscWindows::isProcessElevated()) {
+    LOG_WARN("not running as admin, some features may not work");
+  }
+#endif
+
   switch (initResult) {
     using enum DaemonApp::InitResult;
 
