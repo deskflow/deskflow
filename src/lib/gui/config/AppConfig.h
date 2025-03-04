@@ -61,7 +61,7 @@ private:
     kLogLevel = 3,
     kLogToFile = 4,
     kLogFilename = 5,
-    kWizardLastRun = 6,
+    // 6 = show first run wizard, obsolete
     kStartedBefore = 7,
     kElevateModeLegacy = 8,
     kElevateMode = 9,
@@ -166,7 +166,6 @@ public:
   // Getters (new methods)
   //
 
-  bool wizardShouldRun() const;
   bool startedBefore() const;
   QString logDir() const;
   bool serverGroupChecked() const;
@@ -206,7 +205,6 @@ public:
   //
 
   void setStartedBefore(bool b);
-  void setWizardHasRun();
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
@@ -301,7 +299,6 @@ private:
   int m_LogLevel = 0;
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
-  int m_WizardLastRun = 0;
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_TlsEnabled = true;
