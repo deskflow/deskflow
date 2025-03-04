@@ -97,8 +97,11 @@ int VersionChecker::compareVersions(const QString &left, const QString &right)
   QStringList leftParts = left.split("-");
   QStringList rightParts = right.split("-");
 
-  QStringList leftNumberParts = left.split(".");
-  QStringList rightNumberParts = right.split(".");
+  QString leftNumber = leftParts.at(0);
+  QString rightNumber = rightParts.at(0);
+
+  QStringList leftNumberParts = leftNumber.split(".");
+  QStringList rightNumberParts = rightNumber.split(".");
 
   auto leftStagePart = leftParts.size() > 1 ? leftParts.at(1) : "";
   auto rightStagePart = rightParts.size() > 1 ? rightParts.at(1) : "";
