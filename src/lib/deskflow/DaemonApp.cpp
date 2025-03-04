@@ -39,7 +39,12 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
   std::cout << "Usage: " << binName << " [-f|--foreground] [--install] [--uninstall]" << std::endl;
 }
 
-DaemonApp::DaemonApp() = default;
+DaemonApp::DaemonApp()
+{
+  m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
+  CLOG->insert(m_fileLogOutputter);
+}
+
 DaemonApp::~DaemonApp() = default;
 
 int daemonLoop()
@@ -150,13 +155,6 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
   }
 
   m_events = events;
-
-  m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
-  CLOG->insert(m_fileLogOutputter);
-
-  // default log level to system setting.
-  if (string logLevel = ARCH->setting("LogLevel"); logLevel != "")
-    CLOG->setFilter(logLevel.c_str());
 
   for (int i = 1; i < argc; ++i) {
     string arg(argv[i]);
