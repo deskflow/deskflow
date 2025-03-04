@@ -61,7 +61,14 @@ int main(int argc, char **argv)
   // which is not useful for troubleshooting Windows services.
   // It's important to write the version number to the log file so we can be certain the old daemon
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
-  LOG_PRINT("%s Daemon (v%s)", kAppName, kVersion);
+  // TODO: move the version number logic to a shared function for all Qt apps.
+  auto versionString = QString(kVersion);
+  if (versionString.endsWith(QStringLiteral(".0"))) {
+    versionString.chop(2);
+  } else {
+    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
+  }
+  LOG_PRINT("%s Daemon v%s", kAppName, versionString.toStdString().c_str());
 
   // Default log level to system setting (found in Registry).
   if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
