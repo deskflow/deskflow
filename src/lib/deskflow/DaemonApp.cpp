@@ -226,7 +226,7 @@ void DaemonApp::mainLoop()
 
     std::string command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";
-    if (command != "") {
+    if (!command.empty()) {
       LOG_DEBUG("using last known command: %s", command.c_str());
       m_watchdog->setProcessConfig(command, elevate);
     }
