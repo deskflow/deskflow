@@ -59,6 +59,7 @@ public:
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
+  virtual double mouseSpeed() const = 0;
   virtual bool requireClientCerts() const = 0;
 
   //
@@ -82,6 +83,8 @@ public:
   virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;
   virtual void setCloseToTray(bool closeToTray) = 0;
+  virtual void setInvertConnection(bool invertConnection) = 0;
+  virtual void setMouseSpeed(double speed) = 0;
   virtual void setRequireClientCerts(bool requireClientCerts) = 0;
 };
 

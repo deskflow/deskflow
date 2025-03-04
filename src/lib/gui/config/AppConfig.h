@@ -228,6 +228,15 @@ public:
   ///             scope settings.
   void setLoadFromSystemScope(bool value) override;
 
+  double mouseSpeed() const override
+  {
+    return m_mouseSpeed;
+  }
+  void setMouseSpeed(double speed) override
+  {
+    m_mouseSpeed = speed;
+  }
+
 private:
   static QString settingName(AppConfig::Setting name);
 
@@ -326,6 +335,7 @@ private:
   std::optional<bool> m_EnableUpdateCheck;
   bool m_logExpanded = true;
   bool m_colorfulTrayIcon = false;
+  double m_mouseSpeed = 1.0;
   bool m_RequireClientCert = true;
 
   /**

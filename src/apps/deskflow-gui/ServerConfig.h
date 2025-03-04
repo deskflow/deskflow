@@ -141,6 +141,16 @@ public:
   }
   static size_t defaultClipboardSharingSize();
 
+  double mouseSpeed() const override
+  {
+    return m_MouseSpeed;
+  }
+
+  void setMouseSpeed(double speed)
+  {
+    m_MouseSpeed = speed;
+  }
+
   //
   // Overrides
   //
@@ -284,6 +294,7 @@ private:
   int m_Columns;
   int m_Rows;
   size_t m_ClipboardSharingSize;
+  double m_MouseSpeed = 1.0;
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);

@@ -60,6 +60,7 @@ public:
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
+  MOCK_METHOD(double, mouseSpeed, (), (const, override));
   MOCK_METHOD(bool, requireClientCerts, (), (const, override));
 
   //
@@ -83,6 +84,8 @@ public:
   MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
   MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
+  MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));
+  MOCK_METHOD(void, setMouseSpeed, (double speed), (override));
   MOCK_METHOD(void, setRequireClientCerts, (bool requireClientCerts), (override));
 
 private:

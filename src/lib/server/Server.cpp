@@ -1794,22 +1794,11 @@ void Server::sendDragInfo(BaseClientProxy *newScreen)
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
   LOG((CLOG_DEBUG2 "onMouseMoveSecondary initial %+d,%+d", dx, dy));
-  const char *envVal = std::getenv("DESKFLOW_MOUSE_ADJUSTMENT");
-  if (envVal != nullptr) {
-    try {
-      double multiplier = std::stod(envVal);                                  // Convert to double
-      int32_t adjustedDx = static_cast<int32_t>(std::round(dx * multiplier)); // Apply multiplier and round
-      int32_t adjustedDy = static_cast<int32_t>(std::round(dy * multiplier));
-      LOG((CLOG_DEBUG2 "Adjusted to %+d,%+d using multiplier %.2f", adjustedDx, adjustedDy, multiplier));
-      dx = adjustedDx; // Update dx and dy to adjusted values
-      dy = adjustedDy;
-    } catch (const std::exception &e) {
-      // Log the error message from the exception
-      LOG((CLOG_ERR "Invalid DESKFLOW_MOUSE_ADJUSTMENT value: %s. Exception: %s", envVal, e.what()));
-    }
-  } else {
-    LOG((CLOG_DEBUG1 "DESKFLOW_MOUSE_ADJUSTMENT not set, using original values %+d,%+d", dx, dy));
-  }
+
+  double mouseSpeed = m_config->mouseSpeed();
+  dx = static_cast<int32_t>(std::round(dx * mouseSpeed));
+  dy = static_cast<int32_t>(std::round(dy * mouseSpeed));
+  LOG((CLOG_DEBUG2 "set mouse speed to %f", mouseSpeed));
 
   // mouse move on secondary (client's) screen
   assert(m_active != NULL);

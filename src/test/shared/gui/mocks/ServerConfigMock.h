@@ -24,6 +24,7 @@ public:
   MOCK_METHOD(void, save, (QFile & file), (const, override));
   MOCK_METHOD(bool, enableDragAndDrop, (), (const, override));
   MOCK_METHOD(const ScreenList &, screens, (), (const, override));
+  MOCK_METHOD(double, mouseSpeed, (), (const, override));
 
 private:
   ScreenList m_screensStub;
