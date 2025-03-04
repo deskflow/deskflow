@@ -169,7 +169,11 @@ public:
   //! Saves the window instance for later use.
   static void setInstanceWin32(HINSTANCE instance);
 
+  //! Get the name of the active input desktop.
   static std::string getActiveDesktopName();
+
+  //! Returns true if the process is running with elevated privileges (i.e. as admin).
+  static bool isProcessElevated();
 
 private:
   //! Open and return a registry key, closing the parent key
