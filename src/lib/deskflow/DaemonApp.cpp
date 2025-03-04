@@ -254,10 +254,12 @@ void DaemonApp::initForRun()
 
 void DaemonApp::mainLoop()
 {
+#if SYSAPI_WIN32
   if (m_watchdog == nullptr) {
     LOG_CRIT("watchdog not set for main loop");
     return;
   }
+#endif
 
   if (m_events == nullptr) {
     LOG_CRIT("event queue not set for main loop");
@@ -267,8 +269,10 @@ void DaemonApp::mainLoop()
   DAEMON_RUNNING(true);
 
   try {
+#if SYSAPI_WIN32
     LOG_DEBUG("starting watchdog threads");
     m_watchdog->startAsync();
+#endif
 
     LOG_INFO("daemon is running");
     m_events->loop();
