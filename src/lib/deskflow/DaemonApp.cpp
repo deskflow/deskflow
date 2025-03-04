@@ -166,6 +166,13 @@ DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv
       return ShowHelp;
     } else if (arg == "-f" || arg == "--foreground") {
       m_foreground = true;
+
+#if SYSAPI_WIN32
+      // The daemon bin is compiled using the Win32 subsystem which works best for Windows services,
+      // so when running as a foreground process we need to allocate a console (or we won't see output).
+      AllocConsole();
+      freopen("CONOUT$", "w", stdout);
+#endif
     }
 #if SYSAPI_WIN32
     else if (arg == "--install" || arg == "/install") {
