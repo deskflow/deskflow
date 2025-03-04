@@ -44,8 +44,6 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
-  LOG((CLOG_PRINT "%s daemon (v%s)", kAppName, kVersion));
-
   auto &daemon = DaemonApp::instance();
   DaemonApp::InitResult initResult;
   try {
@@ -57,6 +55,13 @@ int main(int argc, char **argv)
     handleError("Unrecognized error.");
     return kExitFailed;
   }
+
+  // Important: Log the app name and version number to the log file after the daemon app init
+  // because the file log outputter is created there. Logging before would only log to stdout
+  // which is not useful for troubleshooting Windows services.
+  // It's important to write the version number to the log file so we can be certain the old daemon
+  // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
+  LOG_PRINT("%s Daemon (v%s)", kAppName, kVersion);
 
   switch (initResult) {
     using enum DaemonApp::InitResult;
