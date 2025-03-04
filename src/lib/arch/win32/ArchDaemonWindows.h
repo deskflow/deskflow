@@ -135,7 +135,7 @@ private:
 };
 
 #define DEFAULT_DAEMON_NAME _T(kAppName)
-#define DEFAULT_DAEMON_INFO _T("Manages the Deskflow foreground processes.")
+#define DEFAULT_DAEMON_INFO _T("Runs the Core process on secure desktops (UAC prompts, login screen, etc).")
 
 #define LEGACY_SERVER_DAEMON_NAME _T("Deskflow Server")
 #define LEGACY_CLIENT_DAEMON_NAME _T("Deskflow Client")
