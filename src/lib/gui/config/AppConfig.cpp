@@ -39,7 +39,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "logLevel2",
     "logToFile",
     "logFilename",
-    "wizardLastRun",
+    "", // 6 wizardLastRun, obsolete
     "startedBefore",
     "elevateMode",
     "elevateModeEnum",
@@ -105,8 +105,6 @@ void AppConfig::recall()
 void AppConfig::recallFromAllScopes()
 {
   using enum Setting;
-
-  m_WizardLastRun = findInAllScopes(kWizardLastRun, m_WizardLastRun).toInt();
   m_LoadFromSystemScope = findInAllScopes(kLoadSystemSettings, m_LoadFromSystemScope).toBool();
 }
 
@@ -172,7 +170,6 @@ void AppConfig::commit()
 
   qDebug("committing app config");
 
-  saveToAllScopes(kWizardLastRun, m_WizardLastRun);
   saveToAllScopes(kLoadSystemSettings, m_LoadFromSystemScope);
   saveToAllScopes(kClientGroupChecked, m_ClientGroupChecked);
   saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
@@ -444,11 +441,6 @@ ProcessMode AppConfig::processMode() const
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
-bool AppConfig::wizardShouldRun() const
-{
-  return m_WizardLastRun < kWizardVersion;
-}
-
 bool AppConfig::startedBefore() const
 {
   return m_StartedBefore;
@@ -695,11 +687,6 @@ void AppConfig::setLogToFile(bool b)
 void AppConfig::setLogFilename(const QString &s)
 {
   m_LogFilename = s;
-}
-
-void AppConfig::setWizardHasRun()
-{
-  m_WizardLastRun = kWizardVersion;
 }
 
 void AppConfig::setStartedBefore(bool b)
