@@ -54,6 +54,7 @@ public:
   void clearWatchdogCommand();
   void clearSettings() const;
   std::string logFilename();
+  void initForRun();
 
   static DaemonApp &instance()
   {
@@ -68,6 +69,8 @@ private:
   void daemonize();
   void handleError(const char *message);
   void handleIpcMessage(const Event &e, void *);
+  void initDebugOutput() const;
+  void showConsole() const;
 
 #if SYSAPI_WIN32
   std::unique_ptr<MSWindowsWatchdog> m_watchdog;

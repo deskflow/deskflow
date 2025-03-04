@@ -63,12 +63,28 @@ int main(int argc, char **argv)
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
   LOG_PRINT("%s Daemon (v%s)", kAppName, kVersion);
 
+  // Default log level to system setting (found in Registry).
+  if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
+    CLOG->setFilter(logLevel.c_str());
+    LOG_DEBUG("log level: %s", logLevel.c_str());
+  }
+
   switch (initResult) {
     using enum DaemonApp::InitResult;
 
   case StartDaemon: {
     LOG_INFO("starting daemon");
     QCoreApplication app(argc, argv);
+
+    try {
+      daemon.initForRun();
+    } catch (std::exception &e) {
+      handleError(e.what());
+      return kExitFailed;
+    } catch (...) {
+      handleError("Unrecognized error.");
+      return kExitFailed;
+    }
 
     QThread daemonThread;
     daemon.moveToThread(&daemonThread);
