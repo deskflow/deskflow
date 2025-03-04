@@ -43,6 +43,8 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
+    } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
+      args.m_chkPeerCert = false;
     } else {
       LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
       return false;
@@ -119,9 +121,7 @@ bool ArgParser::parsePlatformArgs(
 )
 {
 #if WINAPI_MSWINDOWS
-  if (isArg(i, argc, argv, nullptr, "--exit-pause")) {
-    argsBase.m_pauseOnExit = true;
-  } else if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
+  if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
     argsBase.m_stopOnDeskSwitch = true;
   } else {
     // option not supported here
@@ -188,8 +188,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
       m_app->version();
     }
     argsBase().m_shouldExitOk = true;
-  } else if (isArg(i, argc, argv, nullptr, "--ipc")) {
-    argsBase().m_enableIpc = true;
   } else if (isArg(i, argc, argv, nullptr, "--server")) {
     // HACK: stop error happening when using portable (deskflowp)
   } else if (isArg(i, argc, argv, nullptr, "--client")) {

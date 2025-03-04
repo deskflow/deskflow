@@ -19,7 +19,6 @@ public:
   MSWindowsSession();
   ~MSWindowsSession();
 
-  //!
   /*!
   Returns true if the session ID has changed since updateActiveSession was
   called.
@@ -27,17 +26,13 @@ public:
   BOOL hasChanged();
 
   bool isProcessInSession(const char *name, PHANDLE process);
-
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
+  void updateActiveSession();
 
   DWORD getActiveSessionId()
   {
     return m_activeSessionId;
   }
-
-  void updateActiveSession();
-
-  std::string getActiveDesktopName();
 
 private:
   BOOL nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);

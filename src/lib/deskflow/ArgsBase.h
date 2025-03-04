@@ -59,9 +59,6 @@ public:
   /// @brief Should the app add a tray icon
   bool m_disableTray = false;
 
-  /// @brief Tell the client to talk through IPC to the daemon
-  bool m_enableIpc = false;
-
   /// @brief Should drag drop support be enabled
   bool m_enableDragDrop = false;
 
@@ -90,8 +87,6 @@ public:
   bool m_preventSleep = false;
 
 #if SYSAPI_WIN32
-  bool m_debugServiceWait = false;
-  bool m_pauseOnExit = false;
   bool m_stopOnDeskSwitch = false;
 #endif
 

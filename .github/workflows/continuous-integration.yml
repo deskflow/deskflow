@@ -131,19 +131,22 @@ jobs:
         target:
           - name: "windows-2022-x64"
             runs-on: "windows-2022"
-            timeout: 120 #Windows can take while if it has to build vcpkg cache
+            timeout: 30
             config-args: "-G Ninja"
+            qt-install-dir: "C:"
 
           - name: "macos-14-arm64"
             runs-on: "macos-14"
             timeout: 10
             arch: arm64
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\""
+            qt-install-dir: "/Users/runner"
 
           - name: "macos-13-x64"
             runs-on: macos-13
             timeout: 20
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\""
+            qt-install-dir: "/Users/runner"
 
           - name: "debian-13-x86_64"
             runs-on: ubuntu-latest
@@ -255,7 +258,8 @@ jobs:
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
-          mac-qt-version: 6.7.3
+          qt-version: 6.8.2
+          qt-install-dir: ${{matrix.target.qt-install-dir}}
           like: ${{ matrix.target.like }}
 
       - name: Get version
@@ -331,18 +335,18 @@ jobs:
     needs: lint-check
     name: flatpak-${{matrix.flatpak.arch}}
     runs-on: ${{matrix.flatpak.runs-on}}
+    timeout-minutes: 60
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.8
+      options: --privileged
     strategy:
       fail-fast: false
       matrix:
         flatpak:
           - runs-on: ubuntu-latest
             arch: x86_64
-# TODO: Action does not yet provide arm image; re-enable when available
-#          - runs-on: ubuntu-24.04-arm
-#            arch: aarch64
-    container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
-      options: --privileged
+          - runs-on: ubuntu-24.04-arm
+            arch: aarch64
     steps:
       - name: Check out repository
         uses: sithlord48/fancy-checkout@v1
@@ -352,14 +356,23 @@ jobs:
       - name: Get version
         uses: ./.github/actions/get-version
 
-      - uses: flatpak/flatpak-github-actions/flatpak-builder@master
-        name: "Build"
+      - name: Lint appsteam
+        run: flatpak-builder-lint appstream deploy/linux/org.deskflow.deskflow.metainfo.xml
+
+      - name: Lint manifest
+        run: flatpak-builder-lint manifest deploy/linux/flatpak/org.deskflow.deskflow.yml
+
+      - name: Build
+        uses: flathub-infra/flatpak-github-actions/flatpak-builder@53987ffa5f687586936d85fdce3f440848bea04d
         with:
           bundle: deskflow-${{env.DESKFLOW_PACKAGE_VERSION}}-linux-${{matrix.flatpak.arch}}.flatpak
           manifest-path: deploy/linux/flatpak/org.deskflow.deskflow.yml
-          cache-key: flatpak-builder-${{matrix.flatpak.arch}}-1.0
+          cache-key: flatpak-builder-${{matrix.flatpak.arch}}-2.0
           arch: ${{matrix.flatpak.arch}}
           upload-artifact: false
+
+      - name: Validate build
+        run: flatpak-builder-lint --exceptions --user-exceptions deploy/linux/flatpak/ci-build-lint-exceptions.json repo repo
 
       - name: Upload
         uses: actions/upload-artifact@v4

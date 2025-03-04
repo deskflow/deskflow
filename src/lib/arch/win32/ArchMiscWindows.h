@@ -99,6 +99,9 @@ public:
   //! Delete a value
   static void deleteValue(HKEY parent, const TCHAR *name);
 
+  //! Delete a tree of keys from the registry
+  static void deleteKeyTree(HKEY parent, const TCHAR *name);
+
   //! Test if a value exists
   static bool hasValue(HKEY key, const TCHAR *name);
 
@@ -155,12 +158,11 @@ public:
   static bool getParentProcessName(std::string &name);
 
   static HINSTANCE instanceWin32();
-
   static void setInstanceWin32(HINSTANCE instance);
-
   static BOOL WINAPI getProcessEntry(PROCESSENTRY32 &entry, DWORD processID);
   static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32 &entry);
   static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32 &entry);
+  static std::string getActiveDesktopName();
 
 private:
   //! Open and return a registry key, closing the parent key

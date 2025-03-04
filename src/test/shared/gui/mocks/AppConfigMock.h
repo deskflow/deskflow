@@ -45,7 +45,6 @@ public:
   MOCK_METHOD(const QString &, logFilename, (), (const, override));
   MOCK_METHOD(QString, coreServerName, (), (const, override));
   MOCK_METHOD(QString, coreClientName, (), (const, override));
-  MOCK_METHOD(bool, invertConnection, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
   MOCK_METHOD(bool, languageSync, (), (const, override));
   MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
@@ -62,6 +61,7 @@ public:
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
   MOCK_METHOD(double, mouseSpeed, (), (const, override));
+  MOCK_METHOD(bool, requireClientCerts, (), (const, override));
 
   //
   // Setters
@@ -86,6 +86,7 @@ public:
   MOCK_METHOD(void, setCloseToTray, (bool closeToTray), (override));
   MOCK_METHOD(void, setInvertConnection, (bool invertConnection), (override));
   MOCK_METHOD(void, setMouseSpeed, (double speed), (override));
+  MOCK_METHOD(void, setRequireClientCerts, (bool requireClientCerts), (override));
 
 private:
   const QString m_stub = "stub";

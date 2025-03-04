@@ -25,8 +25,6 @@ private:
   std::unique_ptr<Ui::AboutDialog> ui;
   void copyVersionText();
 
-  inline static const auto s_lightCopy = QStringLiteral(":/icons/64x64/copy-light.png");
-  inline static const auto s_darkCopy = QStringLiteral(":/icons/64x64/copy-dark.png");
   inline static const auto s_awesomeDevs = QStringList{
       // Chris is the ultimate creator, and the one who started it all in 2001.
       QStringLiteral("Chris Schoeneman"),

@@ -44,7 +44,6 @@ public:
   virtual const QString &logFilename() const = 0;
   virtual QString coreServerName() const = 0;
   virtual QString coreClientName() const = 0;
-  virtual bool invertConnection() const = 0;
   virtual void persistLogDir() const = 0;
   virtual bool languageSync() const = 0;
   virtual bool invertScrollDirection() const = 0;
@@ -61,6 +60,7 @@ public:
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
   virtual double mouseSpeed() const = 0;
+  virtual bool requireClientCerts() const = 0;
 
   //
   // Setters
@@ -85,6 +85,7 @@ public:
   virtual void setCloseToTray(bool closeToTray) = 0;
   virtual void setInvertConnection(bool invertConnection) = 0;
   virtual void setMouseSpeed(double speed) = 0;
+  virtual void setRequireClientCerts(bool requireClientCerts) = 0;
 };
 
 } // namespace deskflow::gui

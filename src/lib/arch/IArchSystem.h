@@ -46,4 +46,11 @@ public:
   */
   virtual void setting(const std::string &valueName, const std::string &valueString) const = 0;
   //@}
+
+  //! Delete settings
+  /*!
+  Deletes all Core settings from the system.
+  */
+  virtual void clearSettings() const = 0;
+  //@}
 };

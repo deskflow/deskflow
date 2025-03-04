@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -88,7 +89,7 @@ private:
     // 31 = guid, obsolete
     // 32 = license registry url, obsolete
     // 33 = license next check, obsolete
-    kInvertConnection = 34,
+    // 34 = InvertConnection, obsolete
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
     kEnableService = 37,
@@ -99,7 +100,8 @@ private:
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
     kLogExpanded = 44,
-    kColorfulIcon = 45
+    kColorfulIcon = 45,
+    kRequireClientCert = 46
   };
 
 public:
@@ -143,7 +145,6 @@ public:
   const QString &logFilename() const override;
   QString coreServerName() const override;
   QString coreClientName() const override;
-  bool invertConnection() const override;
   void persistLogDir() const override;
   bool languageSync() const override;
   bool invertScrollDirection() const override;
@@ -159,6 +160,7 @@ public:
   bool enableService() const override;
   bool closeToTray() const override;
   bool clientGroupChecked() const override;
+  bool requireClientCerts() const override;
 
   //
   // Getters (new methods)
@@ -197,7 +199,7 @@ public:
   void setCloseToTray(bool minimize) override;
   void setTlsCertPath(const QString &path) override;
   void setTlsKeyLength(int length) override;
-  void setInvertConnection(bool value) override;
+  void setRequireClientCerts(bool requireClientCerts) override;
 
   //
   // Setters (new methods)
@@ -317,7 +319,6 @@ private:
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
-  bool m_InvertConnection = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
   QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
@@ -335,6 +336,7 @@ private:
   bool m_logExpanded = true;
   bool m_colorfulTrayIcon = false;
   double m_mouseSpeed = 1.0;
+  bool m_RequireClientCert = true;
 
   /**
    * @brief Flag is set when any TLS is setting is changed, and is reset
@@ -350,5 +352,5 @@ private:
 signals:
   void tlsChanged();
   void screenNameChanged();
-  void invertConnectionChanged();
+  void logLevelChanged();
 };

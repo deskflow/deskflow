@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,6 +14,7 @@
 #include <QMessageBox>
 #include <QPushButton>
 #include <QVariant>
+
 #include <functional>
 
 using namespace deskflow::gui;
@@ -62,12 +64,12 @@ const char *const AppConfig::m_SettingsName[] = {
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
-    "",                             // 31 = guid, obsolete
-    "",                             // 32 = licenseRegistryUrl, obsolete
-    "",                             // 33 = licenseNextCheck, obsolete
-    "initiateConnectionFromServer", // kInvertConnection
-    "",                             // 35 = clientHostMode, obsolete
-    "",                             // 36 = serverClientMode, obsolete
+    "", // 31 = guid, obsolete
+    "", // 32 = licenseRegistryUrl, obsolete
+    "", // 33 = licenseNextCheck, obsolete
+    "", // 34 = kInvertConnection, obsolete
+    "", // 35 = clientHostMode, obsolete
+    "", // 36 = serverClientMode, obsolete
     "enableService",
     "closeToTray",
     "mainWindowSize",
@@ -77,6 +79,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "enableUpdateCheck",
     "logExpanded",
     "colorfulIcon",
+    "requireClientCerts",
 };
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -131,12 +134,12 @@ void AppConfig::recallFromCurrentScope()
   m_PreventSleep = getFromCurrentScope(kPreventSleep, m_PreventSleep).toBool();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
-  m_InvertConnection = getFromCurrentScope(kInvertConnection, m_InvertConnection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
   m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
+  m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
   m_MainWindowPosition =
       getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
@@ -194,7 +197,6 @@ void AppConfig::commit()
     setInCurrentScope(kPreventSleep, m_PreventSleep);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
-    setInCurrentScope(kInvertConnection, m_InvertConnection);
     setInCurrentScope(kEnableService, m_EnableService);
     setInCurrentScope(kCloseToTray, m_CloseToTray);
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
@@ -203,6 +205,7 @@ void AppConfig::commit()
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
     setInCurrentScope(kLogExpanded, m_logExpanded);
     setInCurrentScope(kColorfulIcon, m_colorfulTrayIcon);
+    setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
   if (m_TlsChanged) {
@@ -504,11 +507,6 @@ bool AppConfig::preventSleep() const
   return m_PreventSleep;
 }
 
-bool AppConfig::invertConnection() const
-{
-  return m_InvertConnection;
-}
-
 QString AppConfig::tlsCertPath() const
 {
   return m_TlsCertPath;
@@ -552,6 +550,11 @@ bool AppConfig::useInternalConfig() const
 bool AppConfig::clientGroupChecked() const
 {
   return m_ClientGroupChecked;
+}
+
+bool AppConfig::requireClientCerts() const
+{
+  return m_RequireClientCert;
 }
 
 const QString &AppConfig::serverHostname() const
@@ -678,7 +681,10 @@ void AppConfig::setNetworkInterface(const QString &s)
 
 void AppConfig::setLogLevel(int i)
 {
+  const auto changed = (m_LogLevel != i);
   m_LogLevel = i;
+  if (changed)
+    Q_EMIT logLevelChanged();
 }
 
 void AppConfig::setLogToFile(bool b)
@@ -736,10 +742,11 @@ void AppConfig::setCloseToTray(bool minimize)
   m_CloseToTray = minimize;
 }
 
-void AppConfig::setInvertConnection(bool value)
+void AppConfig::setRequireClientCerts(bool requireClientCerts)
 {
-  m_InvertConnection = value;
-  Q_EMIT invertConnectionChanged();
+  if (requireClientCerts == m_RequireClientCert)
+    return;
+  m_RequireClientCert = requireClientCerts;
 }
 
 void AppConfig::setMainWindowSize(const QSize &size)

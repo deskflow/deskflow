@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -117,41 +118,4 @@ public:
 private:
   ILogOutputter *m_syslog;
   ILogOutputter *m_stop;
-};
-
-//! Save log history
-/*!
-This outputter records the last N log messages.
-*/
-class BufferedLogOutputter : public ILogOutputter
-{
-private:
-  using Buffer = std::deque<std::string>;
-
-public:
-  using const_iterator = Buffer::const_iterator;
-
-  BufferedLogOutputter(uint32_t maxBufferSize);
-  virtual ~BufferedLogOutputter();
-
-  //! @name accessors
-  //@{
-
-  //! Get start of buffer
-  const_iterator begin() const;
-
-  //! Get end of buffer
-  const_iterator end() const;
-
-  //@}
-
-  // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
-
-private:
-  uint32_t m_maxBufferSize;
-  Buffer m_buffer;
 };

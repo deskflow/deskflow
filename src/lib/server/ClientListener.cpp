@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -24,12 +25,12 @@
 //
 
 ClientListener::ClientListener(
-    const NetworkAddress &address, ISocketFactory *socketFactory, IEventQueue *events, bool enableCrypto
+    const NetworkAddress &address, ISocketFactory *socketFactory, IEventQueue *events, SecurityLevel securityLevel
 )
     : m_socketFactory(socketFactory),
       m_server(NULL),
       m_events(events),
-      m_useSecureNetwork(enableCrypto),
+      m_securityLevel(securityLevel),
       m_address(address)
 {
   assert(m_socketFactory != NULL);
@@ -73,7 +74,7 @@ ClientProxy *ClientListener::getNextClient()
 
 void ClientListener::start()
 {
-  m_listen = m_socketFactory->createListen(m_useSecureNetwork, ARCH->getAddrFamily(m_address.getAddress()));
+  m_listen = m_socketFactory->createListen(ARCH->getAddrFamily(m_address.getAddress()), m_securityLevel);
 
   // setup event handler
   m_events->adoptHandler(
@@ -147,7 +148,7 @@ void ClientListener::handleClientConnecting(const Event &, void *)
 
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
-  if (!m_useSecureNetwork) {
+  if (m_securityLevel == SecurityLevel::PlainText) {
     m_events->addEvent(Event(m_events->forClientListener().accepted(), socket->getEventTarget()));
   }
 }

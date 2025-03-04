@@ -21,6 +21,7 @@
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
+#include "gui/ipc/DaemonIpcClient.h"
 #include "gui/messages.h"
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
@@ -44,6 +45,7 @@
 #include <QNetworkInterface>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QRegularExpressionValidator>
 #include <QScrollBar>
 
 #include <memory>
@@ -69,6 +71,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_tlsUtility(appConfig),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
+      m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
+      m_lblSecurityStatus{new QLabel(this)},
+      m_lblStatus{new QLabel(this)},
+      m_btnFingerprint{new QToolButton(this)},
+      m_btnUpdate{new QPushButton(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionReportBug{new QAction(tr("Report a Bug"), this)},
@@ -128,15 +135,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
 #endif
 
-  // Hide the security label
-  ui->lblConnectionSecurityStatus->setVisible(false);
-
-  ui->btnToggleLog->setStyleSheet(QStringLiteral("background:rgba(0,0,0,0);"));
-  if (m_appConfig.logExpanded())
-    ui->btnToggleLog->click();
-
-  toggleLogVisible(m_appConfig.logExpanded());
-
   // Setup the Instance Checking
   // In case of a previous crash remove first
   m_guiDupeChecker->removeServer(m_guiSocketName);
@@ -160,14 +158,13 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   // Force generation of SHA256 for the localhost
   if (m_appConfig.tlsEnabled()) {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    if (!QFile::exists(QString::fromStdString(localPath))) {
+    if (!QFile::exists(localFingerprintDb())) {
       regenerateLocalFingerprints();
       return;
     }
 
     deskflow::FingerprintDatabase db;
-    db.read(localPath);
+    db.read(localFingerprintDb().toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -221,17 +218,32 @@ void MainWindow::setupControls()
 
   secureSocket(false);
 
-  ui->lblUpdate->setStyleSheet(kStyleNoticeLabel);
-  ui->lblUpdate->hide();
-
-  ui->lblNotice->setStyleSheet(kStyleNoticeLabel);
-  ui->lblNotice->hide();
-
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (m_appConfig.lastVersion() != kVersion) {
     m_appConfig.setLastVersion(kVersion);
   }
+
+  // Setup the log toggle, set its initial state to closed
+  ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
+  if (m_appConfig.logExpanded()) {
+    ui->btnToggleLog->setArrowType(Qt::DownArrow);
+    ui->textLog->setVisible(true);
+    ui->btnToggleLog->click();
+  } else {
+    ui->textLog->setVisible(false);
+  }
+
+  ui->serverOptions->setVisible(false);
+  ui->clientOptions->setVisible(false);
+  ui->rbModeClient->setChecked(m_appConfig.clientGroupChecked());
+  ui->rbModeServer->setChecked(m_appConfig.serverGroupChecked());
+
+  if (m_appConfig.clientGroupChecked() || m_appConfig.serverGroupChecked())
+    updateModeControls(m_appConfig.serverGroupChecked());
+
+  ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
+  ui->lineEditName->setVisible(false);
 
 #if defined(Q_OS_MAC)
 
@@ -239,6 +251,32 @@ void MainWindow::setupControls()
   ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
 
 #endif
+
+  const auto trayItemSize = QSize(24, 24);
+  m_btnFingerprint->setStyleSheet(kStyleFlatButtonHoverable);
+  m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
+  m_btnFingerprint->setFixedSize(trayItemSize);
+  m_btnFingerprint->setIconSize(trayItemSize);
+  m_btnFingerprint->setAutoRaise(true);
+  m_btnFingerprint->setToolTip(tr("View local fingerprint"));
+  ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
+
+  m_lblSecurityStatus->setVisible(false);
+  m_lblSecurityStatus->setFixedSize(trayItemSize);
+  m_lblSecurityStatus->setScaledContents(true);
+  ui->statusBar->insertPermanentWidget(1, m_lblSecurityStatus);
+
+  ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
+
+  m_btnUpdate->setVisible(false);
+  m_btnUpdate->setStyleSheet(kStyleFlatButtonHoverable);
+  m_btnUpdate->setFlat(true);
+  m_btnUpdate->setText(tr("Update available"));
+  m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
+  m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
+  m_btnUpdate->setFixedHeight(24);
+  m_btnUpdate->setIconSize(trayItemSize);
+  ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -258,7 +296,7 @@ void MainWindow::connectSlots()
 
   connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
-  connect(&m_appConfig, &AppConfig::invertConnectionChanged, this, &MainWindow::applyConfig);
+  connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -297,24 +335,26 @@ void MainWindow::connectSlots()
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
   connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
   connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
-  connect(ui->btnConnectToClient, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
-  connect(ui->lineClientIp, &QLineEdit::returnPressed, ui->btnConnectToClient, &QPushButton::click);
-  connect(ui->lineClientIp, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
-
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(ui->lblMyFingerprint, &QLabel::linkActivated, this, &MainWindow::showMyFingerprint);
+  connect(m_btnFingerprint, &QToolButton::clicked, this, &MainWindow::showMyFingerprint);
 
-  connect(ui->rbModeServer, &QRadioButton::clicked, this, &MainWindow::setModeServer);
-  connect(ui->rbModeClient, &QRadioButton::clicked, this, &MainWindow::setModeClient);
+  connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
+  connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
   connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
 
+  connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
+
   connect(m_guiDupeChecker, &QLocalServer::newConnection, this, &MainWindow::showAndActivate);
+
+  connect(ui->btnEditName, &QPushButton::clicked, this, &MainWindow::showHostNameEditor);
+
+  connect(ui->lineEditName, &QLineEdit::editingFinished, this, &MainWindow::setHostName);
 }
 
 void MainWindow::toggleLogVisible(bool visible)
@@ -356,6 +396,7 @@ void MainWindow::appConfigTlsChanged()
   if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
     m_tlsUtility.generateCertificate();
   }
+  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -367,11 +408,8 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 
 void MainWindow::versionCheckerUpdateFound(const QString &version)
 {
-  const auto link = QString(kLinkDownload).arg(kUrlDownload, kColorWhite);
-  const auto text = tr("A new version is available (v%1). %2").arg(version, link);
-
-  ui->lblUpdate->show();
-  ui->lblUpdate->setText(text);
+  m_btnUpdate->setVisible(true);
+  m_btnUpdate->setToolTip(tr("A new version v%1 is avilable").arg(version));
 }
 
 void MainWindow::coreProcessError(CoreProcess::Error error)
@@ -421,6 +459,7 @@ void MainWindow::clearSettings()
   }
 
   m_coreProcess.stop();
+  m_coreProcess.clearSettings();
 
   m_saveOnExit = false;
   diagnostic::clearSettings(m_configScopes, true);
@@ -449,6 +488,11 @@ void MainWindow::openHelpUrl() const
   QDesktopServices::openUrl(QUrl(kUrlHelp));
 }
 
+void MainWindow::openGetNewVersionUrl() const
+{
+  QDesktopServices::openUrl(kUrlDownload);
+}
+
 void MainWindow::openSettings()
 {
   auto dialog = SettingsDialog(this, m_appConfig, m_serverConfig, m_coreProcess);
@@ -472,7 +516,7 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-  if (ui->textLog->isVisible()) {
+  if (m_appConfig.logExpanded()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
     resize(m_expandedSize);
@@ -486,15 +530,14 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-  if (!QFile::exists(QString::fromStdString(localPath))) {
+  if (!QFile::exists(localFingerprintDb())) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
-  db.read(localPath);
+  db.read(localFingerprintDb().toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -509,33 +552,57 @@ void MainWindow::showMyFingerprint()
   fingerprintDialog.exec();
 }
 
-void MainWindow::setModeServer()
+void MainWindow::coreModeToggled()
 {
-  enableServer(true);
-  enableClient(false);
+  auto serverMode = ui->rbModeServer->isChecked();
+
+  const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
+  qDebug() << mode;
+
+  m_appConfig.setServerGroupChecked(serverMode);
+  m_appConfig.setClientGroupChecked(!serverMode);
   m_configScopes.save();
+
+  updateModeControls(serverMode);
 }
 
-void MainWindow::setModeClient()
+void MainWindow::updateModeControls(bool serverMode)
 {
-  enableClient(true);
-  enableServer(false);
-  m_configScopes.save();
+  ui->serverOptions->setVisible(serverMode);
+  ui->clientOptions->setVisible(!serverMode);
+  ui->lblNoMode->setVisible(false);
+  ui->btnToggleCore->setEnabled(true);
+  m_actionStartCore->setEnabled(true);
+  auto expectedCoreMode = serverMode ? CoreProcess::Mode::Server : CoreProcess::Mode::Client;
+  if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
+    m_coreProcess.stop();
+  m_coreProcess.setMode(expectedCoreMode);
+  if (serverMode) {
+    // The server can run without any clients configured, and this is actually
+    // what you'll want to do the first time since you'll be prompted when an
+    // unrecognized client tries to connect.
+    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
+      qDebug() << "auto-starting core server for first time";
+      m_coreProcess.start();
+      messages::showFirstServerStartMessage(this);
+    }
+  }
 }
 
 void MainWindow::updateSecurityIcon(bool visible)
 {
-  ui->lblConnectionSecurityStatus->setVisible(visible);
+  m_lblSecurityStatus->setVisible(visible);
   if (!visible)
     return;
 
   bool secureSocket = m_appConfig.tlsEnabled();
 
-  const auto txt = secureSocket ? tr("Secure Connection") : tr("Insecure Connection");
-  ui->lblConnectionSecurityStatus->setToolTip(txt);
+  const auto txt =
+      secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
+  m_lblSecurityStatus->setToolTip(txt);
 
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
-  ui->lblConnectionSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+  m_lblSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
 }
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
@@ -555,6 +622,7 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 void MainWindow::open()
 {
   if (!m_appConfig.enableUpdateCheck().has_value()) {
+    showAndActivate();
     m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
     m_configScopes.save();
   }
@@ -564,6 +632,8 @@ void MainWindow::open()
   } else {
     qDebug() << "update check disabled";
   }
+
+  m_coreProcess.applyLogLevel();
 
   if (m_appConfig.startedBefore()) {
     m_coreProcess.start();
@@ -586,7 +656,7 @@ void MainWindow::coreProcessStarting()
 
 void MainWindow::setStatus(const QString &status)
 {
-  ui->lblStatus->setText(status);
+  m_lblStatus->setText(status);
 }
 
 void MainWindow::createMenuBar()
@@ -638,13 +708,13 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  enableServer(m_appConfig.serverGroupChecked());
-  enableClient(m_appConfig.clientGroupChecked());
-
   ui->lineHostname->setText(m_appConfig.serverHostname());
-  ui->lineClientIp->setText(m_serverConfig.getClientAddress());
   updateLocalFingerprint();
   setIcon();
+
+  if (!m_appConfig.serverGroupChecked() && !m_appConfig.clientGroupChecked())
+    return;
+  updateModeControls(m_appConfig.serverGroupChecked());
 }
 
 void MainWindow::saveSettings()
@@ -652,7 +722,6 @@ void MainWindow::saveSettings()
   m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
   m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
   m_appConfig.setServerHostname(ui->lineHostname->text());
-  m_serverConfig.setClientAddress(ui->lineClientIp->text());
 
   m_configScopes.save();
 }
@@ -709,16 +778,14 @@ void MainWindow::checkConnected(const QString &line)
 {
   if (ui->rbModeServer->isChecked()) {
     m_serverConnection.handleLogLine(line);
-    ui->labelServerState->updateServerState(line);
   } else {
     m_clientConnection.handleLogLine(line);
-    ui->m_pLabelClientState->updateClientState(line);
   }
 }
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(R"(.*server fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
+  static const QRegularExpression re(R"(.*peer fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
   auto match = re.match(line);
   if (!match.hasMatch()) {
     return;
@@ -729,26 +796,49 @@ void MainWindow::checkFingerprint(const QString &line)
       deskflow::string::fromHex(match.captured(1).toStdString())
   };
 
+  const auto sha256Text = match.captured(2);
+
   const deskflow::FingerprintData sha256 = {
       deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA256),
-      deskflow::string::fromHex(match.captured(2).toStdString())
+      deskflow::string::fromHex(sha256Text.toStdString())
   };
 
-  // Only Save the sha256
-  auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintTrustedServersFilename).toStdString();
-  deskflow::FingerprintDatabase db;
-  db.read(localPath);
-  if (db.isTrusted(sha256)) {
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+
+  if ((isClient && m_checkedServers.contains(sha256Text)) || (!isClient && m_checkedClients.contains(sha256Text))) {
+    qDebug("ignoring fingerprint, already handled");
     return;
   }
 
-  m_coreProcess.stop();
-  const QList<deskflow::FingerprintData> fingerprints{sha1, sha256};
-  FingerprintDialog fingerprintDialog(this, fingerprints, FingerprintDialogMode::Remote);
+  deskflow::FingerprintDatabase db;
+  db.read(trustedFingerprintDb().toStdString());
+
+  if (db.isTrusted(sha256)) {
+    qDebug("fingerprint is trusted");
+    return;
+  }
+
+  if (isClient) {
+    m_checkedServers.append(sha256Text);
+    m_coreProcess.stop();
+  } else {
+    m_checkedClients.append(sha256Text);
+  }
+
+  auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
+
+  FingerprintDialog fingerprintDialog(this, {sha1, sha256}, dialogMode);
+  connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
+
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(localPath);
-    m_coreProcess.start();
+    db.write(trustedFingerprintDb().toStdString());
+    if (isClient) {
+      m_checkedServers.removeAll(sha256Text);
+      m_coreProcess.start();
+    } else {
+      m_checkedClients.removeAll(sha256Text);
+    }
   }
 }
 
@@ -843,11 +933,7 @@ void MainWindow::updateStatus()
 
     case Connected: {
       updateSecurityIcon(true);
-      if (m_secureSocket) {
-        setStatus(tr("%1 is connected (with %2)").arg(kAppName, m_coreProcess.secureSocketVersion()));
-      } else {
-        setStatus(tr("%1 is connected (without TLS encryption)").arg(kAppName));
-      }
+      setStatus(tr("%1 is connected").arg(kAppName));
       break;
     }
 
@@ -944,20 +1030,7 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  bool fingerprintExists = false;
-  try {
-    auto localPath = QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename).toStdString();
-    fingerprintExists = QFile::exists(QString::fromStdString(localPath));
-  } catch (const std::exception &e) {
-    qDebug() << e.what();
-    qFatal() << "failed to check if fingerprint exists";
-  }
-
-  if (m_appConfig.tlsEnabled() && fingerprintExists) {
-    ui->lblMyFingerprint->setVisible(true);
-  } else {
-    ui->lblMyFingerprint->setVisible(false);
-  }
+  m_btnFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1002,62 +1075,14 @@ void MainWindow::showConfigureServer(const QString &message)
 void MainWindow::secureSocket(bool secureSocket)
 {
   m_secureSocket = secureSocket;
-  updateSecurityIcon(ui->lblConnectionSecurityStatus->isVisible());
+  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(tr("This computer's name: %1 "
-                                  R"((<a href="#" style="color: %2">change</a>))")
-                                   .arg(m_appConfig.screenName(), kColorSecondary));
+  ui->lblComputerName->setText(m_appConfig.screenName());
+  ui->lineEditName->setText(m_appConfig.screenName());
   m_serverConfig.updateServerName();
-}
-
-void MainWindow::enableServer(bool enable)
-{
-  QString serverStr = enable ? QStringLiteral("server enabled") : QStringLiteral("server disabled");
-  qDebug() << serverStr;
-  m_appConfig.setServerGroupChecked(enable);
-  ui->rbModeServer->setChecked(enable);
-  ui->widgetServer->setEnabled(enable);
-  ui->widgetServerInput->setVisible(m_appConfig.invertConnection());
-
-  if (enable) {
-    ui->btnToggleCore->setEnabled(true);
-    m_actionStartCore->setEnabled(true);
-
-    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Server)
-      m_coreProcess.stop();
-
-    m_coreProcess.setMode(CoreProcess::Mode::Server);
-
-    // The server can run without any clients configured, and this is actually
-    // what you'll want to do the first time since you'll be prompted when an
-    // unrecognized client tries to connect.
-    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
-      qDebug() << "auto-starting core server for first time";
-      m_coreProcess.start();
-      messages::showFirstServerStartMessage(this);
-    }
-  }
-}
-
-void MainWindow::enableClient(bool enable)
-{
-  QString clientStr = enable ? QStringLiteral("client enabled") : QStringLiteral("client disabled");
-  qDebug() << clientStr;
-  m_appConfig.setClientGroupChecked(enable);
-  ui->rbModeClient->setChecked(enable);
-  ui->widgetClientInput->setEnabled(enable);
-  ui->widgetClientInput->setVisible(!m_appConfig.invertConnection());
-
-  if (enable) {
-    ui->btnToggleCore->setEnabled(true);
-    m_actionStartCore->setEnabled(true);
-    if (m_coreProcess.isStarted() && m_coreProcess.mode() != CoreProcess::Mode::Client)
-      m_coreProcess.stop();
-    m_coreProcess.setMode(CoreProcess::Mode::Client);
-  }
 }
 
 void MainWindow::showAndActivate()
@@ -1072,19 +1097,75 @@ void MainWindow::showAndActivate()
   m_actionMinimize->setVisible(true);
 }
 
+void MainWindow::showHostNameEditor()
+{
+  ui->lineEditName->show();
+  ui->lblComputerName->hide();
+  ui->btnEditName->hide();
+  ui->lineEditName->setFocus();
+}
+
+void MainWindow::setHostName()
+{
+  ui->lineEditName->hide();
+  ui->lblComputerName->show();
+  ui->btnEditName->show();
+
+  QString text = ui->lineEditName->text();
+  bool existingScreen = serverConfig().screenExists(text) && text != m_appConfig.screenName();
+
+  if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
+    blockSignals(true);
+    ui->lineEditName->setText(m_appConfig.screenName());
+    blockSignals(false);
+
+    const auto title = tr("Invalid Screen Name");
+    QString body;
+    if (existingScreen) {
+      body = tr("Screen name already exists");
+    } else {
+      body = tr("The name you have chosen is invalid.\n\n"
+                "Valid names:\n"
+                "• Use letters and numbers\n"
+                "• May also use _ or -\n"
+                "• Are between 1 and 255 characters");
+    }
+    QMessageBox::information(this, title, body);
+    return;
+  }
+
+  ui->lblComputerName->setText(ui->lineEditName->text());
+  m_appConfig.setScreenName(ui->lineEditName->text());
+  applyConfig();
+}
+
 QString MainWindow::getTlsPath()
 {
   CoreTool coreTool;
   return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
 }
 
+QString MainWindow::localFingerprintDb()
+{
+  return QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+}
+
+QString MainWindow::trustedFingerprintDb()
+{
+  const bool isClient = m_coreProcess.mode() == CoreMode::Client;
+  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  return QStringLiteral("%1/%2").arg(getTlsPath(), trustFile);
+}
+
 bool MainWindow::regenerateLocalFingerprints()
 {
+  if (!QFile::exists(m_appConfig.tlsCertPath()) && !m_tlsUtility.generateCertificate()) {
+    return false;
+  }
+
   TlsCertificate tls;
   if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
-    if (!m_tlsUtility.generateCertificate()) {
-      return false;
-    }
+    return false;
   }
 
   updateLocalFingerprint();

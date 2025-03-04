@@ -29,7 +29,7 @@ KDE-Extensions=.svg
 ########## Directories
 ########## ordered by category and alphabetically
 
-Directories=actions/16,actions/22,actions/24,actions/32,apps/64,devices/64,places/64,status/16,status/22,status,24,status/64
+Directories=actions/16,actions/22,actions/24,actions/32,apps/64,devices/64,places/64,status/16,status/22,status,24,status/32,status/64
 ScaledDirectories=actions/16@2x,actions/16@3x,actions/22@2x,actions/22@3x,actions/24@2x,actions/24@3x,actions/32@2x,actions/32@3x
 
 [apps/64]
@@ -154,6 +154,14 @@ Size=64
 Type=Scalable
 Context=Places
 MinSize=48
+MaxSize=256
+
+#32x32 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color
+[status/32]
+Size=32
+Context=Status
+Type=Scalable
+MinSize=22
 MaxSize=256
 
 #64x64 - Fixed size - For dialog icons >!!!ONLY!!!< - DO_NOT_USE_ANYWHERE_ELSE - Color

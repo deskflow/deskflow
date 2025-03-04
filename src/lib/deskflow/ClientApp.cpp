@@ -19,7 +19,6 @@
 #include "deskflow/Screen.h"
 #include "deskflow/XScreen.h"
 #include "deskflow/protocol_types.h"
-#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -455,12 +454,6 @@ int ClientApp::mainLoop()
   // start client, etc
   appUtil().startNode();
 
-  // init ipc client after node start, since create a new screen wipes out
-  // the event queue (the screen ctors call adoptBuffer).
-  if (argsBase().m_enableIpc) {
-    initIpcClient();
-  }
-
   // run event loop.  if startClient() failed we're supposed to retry
   // later.  the timer installed by startClient() will take care of
   // that.
@@ -487,10 +480,6 @@ int ClientApp::mainLoop()
   updateStatus();
   LOG((CLOG_NOTE "stopped client"));
 
-  if (argsBase().m_enableIpc) {
-    cleanupIpcClient();
-  }
-
   return kExitSuccess;
 }
 
@@ -511,16 +500,11 @@ int ClientApp::standardStartup(int argc, char **argv)
   }
 }
 
-int ClientApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
   args().m_pname = ARCH->getBasename(argv[0]);
-
-  // install caller's output filter
-  if (outputter != NULL) {
-    CLOG->insert(outputter);
-  }
 
   int result;
   try {
@@ -547,13 +531,5 @@ void ClientApp::startNode()
 
 ISocketFactory *ClientApp::getSocketFactory() const
 {
-  ISocketFactory *socketFactory = nullptr;
-
-  if (args().m_hostMode) {
-    socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
-  } else {
-    socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
-  }
-
-  return socketFactory;
+  return new TCPSocketFactory(m_events, getSocketMultiplexer());
 }

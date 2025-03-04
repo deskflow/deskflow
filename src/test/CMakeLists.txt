@@ -140,7 +140,6 @@ macro(config_test_deps)
       server
       app
       mt
-      ipc
       gui
       GTest::gtest
       GTest::gmock

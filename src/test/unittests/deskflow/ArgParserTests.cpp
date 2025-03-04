@@ -207,10 +207,7 @@ TEST(ArgParserTests, parseServerArgs_parses_each_category)
   args.m_daemon = false;
   char const *argv[] = {
       "deskflow", "--help"
-#if WINAPI_MSWINDOWS
-      ,
-      "--exit-pause"
-#elif WINAPI_XWINDOWS
+#if WINAPI_XWINDOWS
       ,
       "--no-xinitthreads"
 #endif
@@ -229,10 +226,7 @@ TEST(ArgParserTests, parseClientArgs_parses_single_help)
   char const *argv[] = {
       kAppId,
       "--help"
-#if WINAPI_MSWINDOWS
-      ,
-      "--exit-pause"
-#elif WINAPI_XWINDOWS
+#if WINAPI_XWINDOWS
       ,
       "--no-xinitthreads"
 #endif

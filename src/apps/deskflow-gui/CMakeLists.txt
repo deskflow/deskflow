@@ -15,7 +15,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 if(WIN32)
-  set(EXE_DESCRIPTION "${CMAKE_PROJECT_DESCRIPTION}\\n Control and configure deskflow")
+  set(EXE_DESCRIPTION "${CMAKE_PROJECT_PROPER_NAME} GUI configuration tool")
   set(EXE_ICON "IDI_ICON1 ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\" ")
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in deskflow.rc)
   set(platform_extra deskflow.rc)
@@ -67,8 +67,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   ScreenSetupModel.h
   ServerConfig.cpp
   ServerConfig.h
-  SetupWizard.cpp
-  SetupWizard.h
   VersionChecker.cpp
   VersionChecker.h
   dialogs/AboutDialog.cpp
@@ -82,7 +80,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/AddClientDialog.ui
   dialogs/FingerprintDialog.h
   dialogs/FingerprintDialog.cpp
-  dialogs/FingerprintDialog.ui
   dialogs/HotkeyDialog.cpp
   dialogs/HotkeyDialog.h
   dialogs/HotkeyDialog.ui
@@ -95,16 +92,14 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/SettingsDialog.cpp
   dialogs/SettingsDialog.h
   dialogs/SettingsDialog.ui
-  widgets/ClientStateLabel.cpp
-  widgets/ClientStateLabel.h
+  widgets/FingerprintPreview.h
+  widgets/FingerprintPreview.cpp
   widgets/KeySequenceWidget.cpp
   widgets/KeySequenceWidget.h
   widgets/NewScreenWidget.h
   widgets/NewScreenWidget.cpp
   widgets/ScreenSetupView.cpp
   widgets/ScreenSetupView.h
-  widgets/ServerStateLabel.cpp
-  widgets/ServerStateLabel.h
   widgets/TrashScreenWidget.cpp
   widgets/TrashScreenWidget.h
 )

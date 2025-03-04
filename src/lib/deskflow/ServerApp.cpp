@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -18,7 +19,6 @@
 #include "deskflow/Screen.h"
 #include "deskflow/ServerArgs.h"
 #include "deskflow/XScreen.h"
-#include "net/InverseSockets/InverseSocketFactory.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
@@ -134,8 +134,10 @@ void ServerApp::help()
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  use the named configuration file "
-       << "instead.\n"
-       << HELP_COMMON_INFO_1
+       << "instead.\n" HELP_COMMON_INFO_1
+       << "      --disable-client-cert-check disable client SSL certificate \n"
+          "                                     checking (deprecated)\n"
+       << HELP_SYS_INFO HELP_COMMON_INFO_2 << "\n"
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
@@ -612,7 +614,10 @@ void ServerApp::handleResume(const Event &, void *)
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, args().m_enableCrypto);
+  auto securityLevel = args().m_enableCrypto ? args().m_chkPeerCert ? SecurityLevel::PeerAuth : SecurityLevel::Encrypted
+                                             : SecurityLevel::PlainText;
+
+  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
       m_events->forClientListener().connected(), listen,
@@ -654,15 +659,7 @@ void ServerApp::handleScreenSwitched(const Event &e, void *)
 
 ISocketFactory *ServerApp::getSocketFactory() const
 {
-  ISocketFactory *socketFactory = nullptr;
-
-  if (args().m_config->isClientMode()) {
-    socketFactory = new InverseSocketFactory(m_events, getSocketMultiplexer());
-  } else {
-    socketFactory = new TCPSocketFactory(m_events, getSocketMultiplexer());
-  }
-
-  return socketFactory;
+  return new TCPSocketFactory(m_events, getSocketMultiplexer());
 }
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress &address) const
@@ -708,12 +705,6 @@ int ServerApp::mainLoop()
 
   // start server, etc
   appUtil().startNode();
-
-  // init ipc client after node start, since create a new screen wipes out
-  // the event queue (the screen ctors call adoptBuffer).
-  if (argsBase().m_enableIpc) {
-    initIpcClient();
-  }
 
   // handle hangup signal by reloading the server's configuration
   ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
@@ -764,10 +755,6 @@ int ServerApp::mainLoop()
   updateStatus();
   LOG((CLOG_NOTE "stopped server"));
 
-  if (argsBase().m_enableIpc) {
-    cleanupIpcClient();
-  }
-
   return kExitSuccess;
 }
 
@@ -779,17 +766,12 @@ void ServerApp::resetServer(const Event &, void *)
   startServer();
 }
 
-int ServerApp::runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup)
+int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
   args().m_config = std::make_shared<Config>(m_events);
   args().m_pname = ARCH->getBasename(argv[0]);
-
-  // install caller's output filter
-  if (outputter != NULL) {
-    CLOG->insert(outputter);
-  }
 
   // run
   int result = startup(argc, argv);

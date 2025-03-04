@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -11,7 +11,6 @@
 #include "base/Log.h"
 #include "common/common.h"
 #include "deskflow/IApp.h"
-#include "ipc/IpcClient.h"
 
 #if SYSAPI_WIN32
 #include "deskflow/win32/AppUtilWindows.h"
@@ -21,17 +20,14 @@
 
 #include <stdexcept>
 
-class IArchTaskBarReceiver;
-class BufferedLogOutputter;
-class ILogOutputter;
-class FileLogOutputter;
 namespace deskflow {
 class Screen;
 }
+
+class ILogOutputter;
+class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
-
-typedef IArchTaskBarReceiver *(*CreateTaskBarReceiverFunc)(const BufferedLogOutputter *, IEventQueue *events);
 
 class App : public IApp
 {
@@ -112,12 +108,7 @@ public:
 
   void (*m_bye)(int);
 
-private:
-  void handleIpcMessage(const Event &, void *);
-
 protected:
-  void initIpcClient();
-  void cleanupIpcClient();
   void runEventsLoop(void *);
 
   bool m_suspended;
@@ -127,9 +118,7 @@ private:
   deskflow::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog;
-  CreateTaskBarReceiverFunc m_createTaskBarReceiver;
   ARCH_APP_UTIL m_appUtil;
-  IpcClient *m_ipcClient;
   SocketMultiplexer *m_socketMultiplexer;
 };
 
@@ -141,7 +130,7 @@ public:
 
   // IApp overrides
   virtual int standardStartup(int argc, char **argv) override;
-  virtual int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) override;
+  virtual int runInner(int argc, char **argv, StartupFunc startup) override;
   virtual void startNode() override;
   virtual int mainLoop() override;
   virtual int foregroundStartup(int argc, char **argv) override;
@@ -209,16 +198,14 @@ private:
 #elif SYSAPI_WIN32
 
 // windows args
-#define HELP_SYS_ARGS " [--service <action>] [--relaunch] [--exit-pause]"
+#define HELP_SYS_ARGS " [--service <action>] [--relaunch]"
 #define HELP_SYS_INFO                                                                                                  \
   "      --service <action>   manage the windows service, valid options "                                              \
   "are:\n"                                                                                                             \
   "                             install/uninstall/start/stop\n"                                                        \
   "      --relaunch           persistently relaunches process in current "                                             \
   "user \n"                                                                                                            \
-  "                             session (useful for vista and upward).\n"                                              \
-  "      --exit-pause         wait for key press on exit, can be useful for\n"                                         \
-  "                             reading error messages that occur on exit.\n"
+  "                             session (useful for vista and upward).\n"
 #endif
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS

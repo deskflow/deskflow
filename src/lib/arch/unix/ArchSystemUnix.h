@@ -24,6 +24,7 @@ public:
   virtual std::string setting(const std::string &) const;
   virtual void setting(const std::string &, const std::string &) const;
   virtual std::string getLibsUsed(void) const;
+  virtual void clearSettings() const;
 
 #ifndef __APPLE__
   enum class InhibitScreenServices

@@ -760,7 +760,11 @@ void MSWindowsDesks::checkDesk()
   // if we are told to shut down on desk switch, and this is not the
   // first switch, then shut down.
   if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
-    LOG((CLOG_DEBUG "shutting down because of desk switch to \"%s\"", name.c_str()));
+    if (name.empty()) {
+      LOG_DEBUG("shutting down because of desk switch, desktop name unknown");
+    } else {
+      LOG_DEBUG("shutting down because of desk switch to: %s", name.c_str());
+    }
     m_events->addEvent(Event(Event::kQuit));
     return;
   }

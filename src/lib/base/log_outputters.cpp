@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -132,10 +133,10 @@ SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(NULL)
 {
   // redirect log messages
   if (blockConsole) {
-    m_stop = new StopLogOutputter;
+    m_stop = new StopLogOutputter; // NOSONAR - Adopted by `Log`
     CLOG->insert(m_stop);
   }
-  m_syslog = new SystemLogOutputter;
+  m_syslog = new SystemLogOutputter; // NOSONAR - Adopted by `Log`
   m_syslog->open(title);
   CLOG->insert(m_syslog);
 }
@@ -148,55 +149,6 @@ SystemLogger::~SystemLogger()
     CLOG->remove(m_stop);
     delete m_stop;
   }
-}
-
-//
-// BufferedLogOutputter
-//
-
-BufferedLogOutputter::BufferedLogOutputter(uint32_t maxBufferSize) : m_maxBufferSize(maxBufferSize)
-{
-  // do nothing
-}
-
-BufferedLogOutputter::~BufferedLogOutputter()
-{
-  // do nothing
-}
-
-BufferedLogOutputter::const_iterator BufferedLogOutputter::begin() const
-{
-  return m_buffer.begin();
-}
-
-BufferedLogOutputter::const_iterator BufferedLogOutputter::end() const
-{
-  return m_buffer.end();
-}
-
-void BufferedLogOutputter::open(const char *)
-{
-  // do nothing
-}
-
-void BufferedLogOutputter::close()
-{
-  // remove all elements from the buffer
-  m_buffer.clear();
-}
-
-void BufferedLogOutputter::show(bool)
-{
-  // do nothing
-}
-
-bool BufferedLogOutputter::write(ELevel, const char *message)
-{
-  while (m_buffer.size() >= m_maxBufferSize) {
-    m_buffer.pop_front();
-  }
-  m_buffer.push_back(std::string(message));
-  return true;
 }
 
 //

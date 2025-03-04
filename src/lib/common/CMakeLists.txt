@@ -8,7 +8,6 @@ configure_file(constants.h.in constants.h @ONLY)
 add_library(common INTERFACE
   common.h
   IInterface.h
-  ipc.h
   stdbitset.h
   stddeque.h
   stdexcept.h

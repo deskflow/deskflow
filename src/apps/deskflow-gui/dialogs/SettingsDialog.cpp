@@ -208,39 +208,38 @@ void SettingsDialog::reject()
 
 void SettingsDialog::loadFromConfig()
 {
-  ui->m_pLineEditScreenName->setText(m_appConfig.screenName());
-  ui->m_pSpinBoxPort->setValue(m_appConfig.port());
-  ui->m_pLineEditInterface->setText(m_appConfig.networkInterface());
-  ui->m_pComboLogLevel->setCurrentIndex(m_appConfig.logLevel());
-  ui->m_pCheckBoxLogToFile->setChecked(m_appConfig.logToFile());
-  ui->m_pLineEditLogFilename->setText(m_appConfig.logFilename());
-  ui->m_pCheckBoxAutoHide->setChecked(m_appConfig.autoHide());
-  ui->m_pCheckBoxPreventSleep->setChecked(m_appConfig.preventSleep());
-  ui->m_pCheckBoxLanguageSync->setChecked(m_appConfig.languageSync());
-  ui->m_pCheckBoxScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  ui->m_pCheckBoxServiceEnabled->setChecked(m_appConfig.enableService());
-  ui->m_pCheckBoxCloseToTray->setChecked(m_appConfig.closeToTray());
-  ui->m_pComboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->sbPort->setValue(m_appConfig.port());
+  ui->lineInterface->setText(m_appConfig.networkInterface());
+  ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
+  ui->cbLogToFile->setChecked(m_appConfig.logToFile());
+  ui->lineLogFilename->setText(m_appConfig.logFilename());
+  ui->cbAutoHide->setChecked(m_appConfig.autoHide());
+  ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
+  ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
+  ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
+  ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
+  ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
+  ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->sbMouseSpeedMultiplier->setValue(m_appConfig.mouseSpeedMultiplier());
 
   if (m_appConfig.enableUpdateCheck().has_value()) {
-    ui->m_pCheckBoxAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
+    ui->cbAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
   } else {
-    ui->m_pCheckBoxAutoUpdate->setChecked(false);
+    ui->cbAutoUpdate->setChecked(false);
   }
 
   if (m_appConfig.isActiveScopeSystem()) {
-    ui->m_pRadioSystemScope->setChecked(true);
+    ui->rbScopeSystem->setChecked(true);
   } else {
-    ui->m_pRadioUserScope->setChecked(true);
+    ui->rbScopeUser->setChecked(true);
   }
 
-  ui->m_pInvertConnection->setChecked(m_appConfig.invertConnection());
-
   if (m_appConfig.colorfulTrayIcon())
-    ui->rb_icon_colorful->setChecked(true);
+    ui->rbIconColorful->setChecked(true);
   else
-    ui->rb_icon_mono->setChecked(true);
+    ui->rbIconMono->setChecked(true);
 
+  qDebug() << "load from config done";
   updateTlsControls();
 }
 
@@ -297,42 +296,37 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 
 void SettingsDialog::updateControls()
 {
-
 #if defined(Q_OS_WIN)
   const auto serviceAvailable = true;
 #else
   // service not supported on unix yet, so always disable.
   const auto serviceAvailable = false;
-  ui->m_pGroupService->setTitle("Service (Windows only)");
+  ui->groupService->setTitle("Service (Windows only)");
 #endif
 
   const bool writable = m_appConfig.isActiveScopeWritable();
-  const bool serviceChecked = ui->m_pCheckBoxServiceEnabled->isChecked();
-  const bool logToFile = ui->m_pCheckBoxLogToFile->isChecked();
-  const bool isClient = isClientMode();
+  const bool serviceChecked = ui->cbServiceEnabled->isChecked();
+  const bool logToFile = ui->cbLogToFile->isChecked();
 
-  ui->m_pLineEditScreenName->setEnabled(writable);
-  ui->m_pSpinBoxPort->setEnabled(writable);
-  ui->m_pLineEditInterface->setEnabled(writable);
-  ui->m_pComboLogLevel->setEnabled(writable);
-  ui->m_pCheckBoxLogToFile->setEnabled(writable);
-  ui->m_pCheckBoxAutoHide->setEnabled(writable);
-  ui->m_pCheckBoxAutoUpdate->setEnabled(writable);
-  ui->m_pCheckBoxPreventSleep->setEnabled(writable);
-  ui->m_pLineEditTlsCertPath->setEnabled(writable);
-  ui->m_pComboBoxTlsKeyLength->setEnabled(writable);
-  ui->m_pCheckBoxCloseToTray->setEnabled(writable);
+  ui->sbPort->setEnabled(writable);
+  ui->lineInterface->setEnabled(writable);
+  ui->comboLogLevel->setEnabled(writable);
+  ui->cbLogToFile->setEnabled(writable);
+  ui->cbAutoHide->setEnabled(writable);
+  ui->cbAutoUpdate->setEnabled(writable);
+  ui->cbPreventSleep->setEnabled(writable);
+  ui->lineTlsCertPath->setEnabled(writable);
+  ui->comboTlsKeyLength->setEnabled(writable);
+  ui->cbCloseToTray->setEnabled(writable);
+  ui->sbMouseSpeedMultiplier->setEnabled(writable);
 
-  ui->m_pCheckBoxServiceEnabled->setEnabled(writable && serviceAvailable);
-  ui->m_pLabelElevate->setEnabled(writable && serviceChecked && serviceAvailable);
-  ui->m_pComboElevate->setEnabled(writable && serviceChecked && serviceAvailable);
+  ui->cbServiceEnabled->setEnabled(writable && serviceAvailable);
+  ui->widgetElevate->setEnabled(writable && serviceChecked && serviceAvailable);
 
-  ui->m_pCheckBoxLanguageSync->setEnabled(writable && isClient);
-  ui->m_pCheckBoxScrollDirection->setEnabled(writable && isClient);
+  ui->cbLanguageSync->setEnabled(writable && isClientMode());
+  ui->cbScrollDirection->setEnabled(writable && isClientMode());
 
-  ui->m_pLabelLogPath->setEnabled(writable && logToFile);
-  ui->m_pLineEditLogFilename->setEnabled(writable && logToFile);
-  ui->m_pButtonBrowseLog->setEnabled(writable && logToFile);
+  ui->widgetLogFilename->setEnabled(writable && logToFile);
 
   updateTlsControls();
 }

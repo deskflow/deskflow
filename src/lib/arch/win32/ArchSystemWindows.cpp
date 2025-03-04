@@ -9,6 +9,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 
 #include "arch/XArch.h"
+#include "base/Log.h"
 #include "common/constants.h"
 
 #include "tchar.h"
@@ -17,7 +18,7 @@
 #include <psapi.h>
 #include <windows.h>
 
-static const char *s_settingsKeyNames[] = {_T("SOFTWARE"), _T(kAppName), NULL};
+static const TCHAR *s_settingsKeyNames[] = {_T("SOFTWARE"), _T(kAppName), NULL};
 
 //
 // ArchSystemWindows
@@ -84,6 +85,11 @@ void ArchSystemWindows::setting(const std::string &valueName, const std::string 
   if (key == NULL)
     throw XArch(std::string("could not access registry key: ") + valueName);
   ArchMiscWindows::setValue(key, valueName.c_str(), valueString.c_str());
+}
+
+void ArchSystemWindows::clearSettings() const
+{
+  ArchMiscWindows::deleteKeyTree(HKEY_LOCAL_MACHINE, kWindowsRegistryKey);
 }
 
 bool ArchSystemWindows::isWOW64() const

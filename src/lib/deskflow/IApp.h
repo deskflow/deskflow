@@ -13,12 +13,9 @@ typedef int (*StartupFunc)(int, char **);
 
 namespace deskflow {
 class ArgsBase;
-}
-
-class ILogOutputter;
-namespace deskflow {
 class Screen;
-}
+} // namespace deskflow
+
 class IEventQueue;
 
 class IApp : public IInterface
@@ -27,7 +24,7 @@ public:
   virtual void setByeFunc(void (*bye)(int)) = 0;
   virtual deskflow::ArgsBase &argsBase() const = 0;
   virtual int standardStartup(int argc, char **argv) = 0;
-  virtual int runInner(int argc, char **argv, ILogOutputter *outputter, StartupFunc startup) = 0;
+  virtual int runInner(int argc, char **argv, StartupFunc startup) = 0;
   virtual void startNode() = 0;
   virtual void bye(int error) = 0;
   virtual int mainLoop() = 0;
