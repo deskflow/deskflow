@@ -135,7 +135,7 @@ void DaemonApp::clearWatchdogCommand()
 #endif
 }
 
-void DaemonApp::clearSettings()
+void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
   ARCH->clearSettings();
@@ -228,7 +228,7 @@ void DaemonApp::mainLoop()
 
     std::string command = ARCH->setting("Command");
     bool elevate = ARCH->setting("Elevate") == "1";
-    if (command != "") {
+    if (!command.empty()) {
       LOG_DEBUG("using last known command: %s", command.c_str());
       m_watchdog->setProcessConfig(command, elevate);
     }
