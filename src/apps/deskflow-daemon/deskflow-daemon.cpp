@@ -62,6 +62,12 @@ int main(int argc, char **argv)
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
   LOG_PRINT("%s Daemon v%s", kAppName, kDisplayVersion);
 
+  // Default log level to system setting (found in Registry).
+  if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
+    CLOG->setFilter(logLevel.c_str());
+    LOG_DEBUG("log level: %s", logLevel.c_str());
+  }
+
   switch (initResult) {
     using enum DaemonApp::InitResult;
 
