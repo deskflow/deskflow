@@ -147,6 +147,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   languages/LanguageManager.h
   ipc/DaemonIpcServer.cpp
   ipc/DaemonIpcServer.h
+  DeskflowSettings.cpp
+  DeskflowSettings.h
 )
 
 find_package(Qt6 COMPONENTS Core Network)
