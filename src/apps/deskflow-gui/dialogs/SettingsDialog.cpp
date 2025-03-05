@@ -159,7 +159,7 @@ void SettingsDialog::accept()
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
   m_appConfig.setCloseToTray(ui->cbCloseToTray->isChecked());
-  m_appConfig.setColorfulTrayIcon(ui->rbIconColorful->isChecked());
+  Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
 
   QDialog::accept();
@@ -203,10 +203,10 @@ void SettingsDialog::loadFromConfig()
     ui->rbScopeUser->setChecked(true);
   }
 
-  if (m_appConfig.colorfulTrayIcon())
-    ui->rbIconColorful->setChecked(true);
-  else
+  if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
+  else
+    ui->rbIconColorful->setChecked(true);
 
   qDebug() << "load from config done";
   updateTlsControls();

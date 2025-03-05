@@ -78,7 +78,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "showCloseReminder",
     "enableUpdateCheck",
     "", // 44, Moved to deskflow settings.
-    "colorfulIcon",
+    "", // 45 Moved to deskflow settings
     "requireClientCerts",
 };
 
@@ -142,7 +142,6 @@ void AppConfig::recallFromCurrentScope()
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
-  m_colorfulTrayIcon = getFromCurrentScope(kColorfulIcon, m_colorfulTrayIcon).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -197,7 +196,6 @@ void AppConfig::commit()
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
-    setInCurrentScope(kColorfulIcon, m_colorfulTrayIcon);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
@@ -565,11 +563,6 @@ std::optional<bool> AppConfig::enableUpdateCheck() const
   return m_EnableUpdateCheck;
 }
 
-bool AppConfig::colorfulTrayIcon() const
-{
-  return m_colorfulTrayIcon;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -735,13 +728,6 @@ void AppConfig::setShowCloseReminder(bool value)
 void AppConfig::setEnableUpdateCheck(bool value)
 {
   m_EnableUpdateCheck = value;
-}
-
-void AppConfig::setColorfulTrayIcon(bool colorful)
-{
-  if (colorful == m_colorfulTrayIcon)
-    return;
-  m_colorfulTrayIcon = colorful;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
