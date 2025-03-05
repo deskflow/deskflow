@@ -21,12 +21,13 @@
 
 #endif
 
+#include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QThread>
 
 using namespace deskflow::core;
 
-void handleError(const char *message);
+void handleError(const char *message = "Unrecognized error.");
 
 int main(int argc, char **argv)
 {
@@ -43,24 +44,40 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
-  auto &daemon = DaemonApp::instance();
-  DaemonApp::InitResult initResult;
-  try {
-    initResult = daemon.init(&events, argc, argv);
-  } catch (std::exception &e) {
-    handleError(e.what());
-    return kExitFailed;
-  } catch (...) {
-    handleError("Unrecognized error.");
-    return kExitFailed;
+  // Daemon deliberately does not have a parent, as it will be moved to a new thread.
+  DaemonApp daemon(events);
+
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
+
+  const auto foregroundOption = QCommandLineOption({"f", "foreground"}, "Run in the foreground (show console)");
+  parser.addOption(foregroundOption);
+
+  const auto installOption = QCommandLineOption({"i", "install"}, "Install as a Windows service");
+  parser.addOption(installOption);
+
+  const auto uninstallOption = QCommandLineOption({"u", "uninstall"}, "Uninstall the Windows service");
+  parser.addOption(uninstallOption);
+
+  parser.process(app);
+
+  if (parser.isSet(foregroundOption)) {
+    daemon.setForeground();
   }
 
-  // Important: Log the app name and version number to the log file after the daemon app init
-  // because the file log outputter is created there. Logging before would only log to stdout
-  // which is not useful for troubleshooting Windows services.
+  // Depends on whether foreground option was set.
+  daemon.initLogging();
+
+  // Important: Log the app name and version number to the log file daemon app has initialized
+  // logging as it creates the file logger. Logging before would only log to stdout which is not
+  // useful for troubleshooting Windows services.
   // It's important to write the version number to the log file so we can be certain the old daemon
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
-  LOG_PRINT("%s Daemon v%s", kAppName, kDisplayVersion);
+  LOG_PRINT("%s v%s", QCoreApplication::applicationName().toStdString().c_str(), kDisplayVersion);
 
   // Default log level to system setting (found in Registry).
   if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
@@ -68,72 +85,43 @@ int main(int argc, char **argv)
     LOG_DEBUG("log level: %s", logLevel.c_str());
   }
 
+  try {
+
 #if SYSAPI_WIN32
-  // Show warning if not running as admin as daemon will behave differently.
-  if (!ArchMiscWindows::isProcessElevated()) {
-    LOG_WARN("not running as admin, some features may not work");
-  }
+    // Show warning if not running as admin as daemon will behave differently.
+    if (!ArchMiscWindows::isProcessElevated()) {
+      LOG_WARN("not running as admin, some features may not work");
+    }
 #endif
 
-  switch (initResult) {
-    using enum DaemonApp::InitResult;
+    if (parser.isSet(installOption)) {
+      daemon.install();
+      return kExitSuccess;
+    } else if (parser.isSet(uninstallOption)) {
+      daemon.uninstall();
+      return kExitSuccess;
+    }
 
-  case StartDaemon: {
-    LOG_INFO("starting daemon");
-    QCoreApplication app(argc, argv);
+    const auto ipcServer = new ipc::DaemonIpcServer(&app, DaemonApp::logFilename().c_str()); // NOSONAR - Qt managed
+    ipcServer->listen();
+    daemon.connectIpcServer(ipcServer);
 
     QThread daemonThread;
-    daemon.moveToThread(&daemonThread);
-
-    QObject::connect(&daemonThread, &QThread::started, [&daemon, &daemonThread]() {
-      LOG_DEBUG("daemon thread started");
-      daemon.run();
-      daemonThread.quit();
-      LOG_DEBUG("daemon thread finished");
-    });
     QObject::connect(&daemonThread, &QThread::finished, &app, &QCoreApplication::quit);
+    daemon.run(daemonThread);
 
-    ipc::DaemonIpcServer ipcServer(&app, QString::fromStdString(daemon.logFilename()));
-
-    // Use direct connection as the daemon app is on it's own thread, and so is on a different event loop.
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::logLevelChanged, &daemon, &DaemonApp::saveLogLevel, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, &daemon, &DaemonApp::setElevate, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::commandChanged, &daemon, &DaemonApp::setCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::startProcessRequested, &daemon, &DaemonApp::applyWatchdogCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, &daemon, &DaemonApp::clearWatchdogCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, &daemon, &DaemonApp::clearSettings, //
-        Qt::DirectConnection
-    );
-
-    daemonThread.start();
     const auto exitCode = QCoreApplication::exec();
     daemonThread.wait();
 
     LOG_DEBUG("daemon exited, code: %d", exitCode);
     return exitCode;
-  }
 
-  case FatalError:
+  } catch (std::exception &e) {
+    handleError(e.what());
     return kExitFailed;
-
-  default:
-    return kExitSuccess;
+  } catch (...) {
+    handleError();
+    return kExitFailed;
   }
 }
 

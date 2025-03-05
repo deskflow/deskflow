@@ -8,10 +8,10 @@
 
 #include "common/common.h"
 
-#include <memory>
 #include <string>
 
 #include <QObject>
+#include <QThread>
 
 class Event;
 class IEventQueue;
@@ -44,40 +44,40 @@ public:
     FatalError,
   };
 
-  InitResult init(IEventQueue *events, int argc, char **argv);
-  void run();
-  void mainLoop();
+  explicit DaemonApp(IEventQueue &events);
+  ~DaemonApp() override;
+
+  InitResult init(int argc, char **argv);
+  void install() const;
+  void uninstall() const;
+  void run(QThread &daemonThread);
+  void setForeground();
+  void initLogging();
+  void connectIpcServer(const deskflow::core::ipc::DaemonIpcServer *ipcServer) const;
+
+  static std::string logFilename();
+
+private:
+  void daemonize();
+  void handleError(const char *message);
+  void handleIpcMessage(const Event &e, void *);
+  int mainLoop();
+  int daemonLoop();
   void saveLogLevel(const QString &logLevel) const;
   void setElevate(bool elevate);
   void setCommand(const QString &command);
   void applyWatchdogCommand() const;
   void clearWatchdogCommand();
   void clearSettings() const;
-  std::string logFilename();
-  int daemonLoop();
-
-  static DaemonApp &instance()
-  {
-    static DaemonApp instance; // NOSONAR - Meyers' Singleton
-    return instance;
-  }
-
-private:
-  explicit DaemonApp();
-  ~DaemonApp() override;
-
-  void daemonize();
-  void handleError(const char *message);
-  void handleIpcMessage(const Event &e, void *);
 
   static void showConsole();
 
 #if SYSAPI_WIN32
-  std::unique_ptr<MSWindowsWatchdog> m_watchdog;
+  std::unique_ptr<MSWindowsWatchdog> m_pWatchdog;
 #endif
 
-  IEventQueue *m_events = nullptr;
-  FileLogOutputter *m_fileLogOutputter = nullptr;
+  IEventQueue &m_events;
+  FileLogOutputter *m_pFileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
   std::string m_command = "";
   bool m_elevate = false;
