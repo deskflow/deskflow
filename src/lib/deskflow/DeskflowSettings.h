@@ -35,6 +35,7 @@ struct Settings
   struct Core
   {
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
+    inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
   struct Gui
   {
@@ -77,7 +78,8 @@ private:
   QSettings *userSettings = nullptr;
   QSettings *m_settings = nullptr;
 
-  inline static const QStringList validKeys = {Settings::Core::Scope,          Settings::Gui::Autohide,
-                                               Settings::Gui::LogExpanded,     Settings::Gui::SymbolicTrayIcon,
-                                               Settings::Gui::AutoUpdateCheck, Settings::Gui::CloseToTray};
+  inline static const QStringList validKeys = {Settings::Core::Scope,           Settings::Core::StartedBefore,
+                                               Settings::Gui::Autohide,         Settings::Gui::LogExpanded,
+                                               Settings::Gui::SymbolicTrayIcon, Settings::Gui::AutoUpdateCheck,
+                                               Settings::Gui::CloseToTray};
 };
