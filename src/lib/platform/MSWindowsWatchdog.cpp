@@ -79,7 +79,9 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 // MSWindowsWatchdog
 //
 
-MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
+MSWindowsWatchdog::MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogOutputter)
+    : m_fileLogOutputter(fileLogOutputter),
+      m_foreground(foreground)
 {
   initSasFunc();
   initOutputReadPipe();
@@ -263,11 +265,6 @@ bool MSWindowsWatchdog::isProcessRunning()
   return exitCode == STILL_ACTIVE;
 }
 
-void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter *outputter)
-{
-  m_fileLogOutputter = outputter;
-}
-
 void MSWindowsWatchdog::startProcess()
 {
   if (m_command.empty()) {
@@ -369,10 +366,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       // strip out windows \r chars to prevent extra lines in log file.
       std::string output = trimOutputBuffer(buffer);
-
-      if (m_fileLogOutputter != nullptr) {
-        m_fileLogOutputter->write(kPRINT, output.c_str());
-      }
+      m_fileLogOutputter.write(kPRINT, output.c_str());
 
 #if SYSAPI_WIN32
       if (m_foreground) {
