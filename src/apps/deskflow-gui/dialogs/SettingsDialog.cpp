@@ -150,7 +150,7 @@ void SettingsDialog::accept()
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
-  m_appConfig.setEnableUpdateCheck(ui->cbAutoUpdate->isChecked());
+  Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
   m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
@@ -191,11 +191,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
-  if (m_appConfig.enableUpdateCheck().has_value()) {
-    ui->cbAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
-  } else {
-    ui->cbAutoUpdate->setChecked(false);
-  }
+  ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
 
   if (m_appConfig.isActiveScopeSystem()) {
     ui->rbScopeSystem->setChecked(true);
