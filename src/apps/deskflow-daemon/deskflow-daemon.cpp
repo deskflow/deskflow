@@ -6,15 +6,12 @@
  */
 
 #include "arch/Arch.h"
+#include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/constants.h"
 #include "common/version.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
-
-#include "arch/Arch.h"
-#include "base/EventQueue.h"
-#include "base/Log.h"
 
 #if SYSAPI_WIN32
 
