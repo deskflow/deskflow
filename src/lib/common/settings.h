@@ -38,13 +38,15 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
+    inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
   };
 
   // clang-format off
   inline static const QStringList validKeys = {
-    Settings::Core::Scope
+      Settings::Core::Scope
     , Settings::Gui::Autohide
     , Settings::Gui::LogExpanded
+    , Settings::Gui::SymbolicTrayIcon
   };
   // clang-format on
 };

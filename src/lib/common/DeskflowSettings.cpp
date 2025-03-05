@@ -74,7 +74,7 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return false;
   }
 
-  if (key == Settings::Gui::LogExpanded) {
+  if ((key == Settings::Gui::LogExpanded) || (key == Settings::Gui::SymbolicTrayIcon)) {
     return true;
   }
 
