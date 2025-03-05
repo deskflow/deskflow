@@ -7,6 +7,7 @@ configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common INTERFACE
   common.h
+  version.h
   IInterface.h
   stdbitset.h
   stddeque.h
@@ -24,7 +25,9 @@ add_library(common INTERFACE
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
+find_package(Qt6 COMPONENTS Core)
+target_link_libraries(common INTERFACE Qt6::Core)
+
 if(APPLE)
   target_sources(common INTERFACE MacOSXPrecomp.h)
 endif()
-
