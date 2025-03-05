@@ -25,6 +25,7 @@ if(WIN32)
     net
     platform
     app
+    common
     ${libs}
     Qt6::Core)
 

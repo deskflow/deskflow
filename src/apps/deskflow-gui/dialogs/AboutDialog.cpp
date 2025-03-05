@@ -10,7 +10,7 @@
 #include "ui_AboutDialog.h"
 
 #include "common/constants.h"
-#include "gui/style_utils.h"
+#include "common/version.h"
 
 #include <QClipboard>
 #include <QDateTime>
@@ -32,15 +32,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   ui->btnCopyVersion->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
-  // Set up the displayed version number
-  auto versionString = QString(kVersion);
-  if (versionString.endsWith(QStringLiteral(".0"))) {
-    versionString.chop(2);
-  } else {
-    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
-  }
-
-  ui->lblVersion->setText(versionString);
+  ui->lblVersion->setText(displayVersion());
 
   ui->lblDescription->setText(kAppDescription);
   ui->lblCopyright->setText(kCopyright);
