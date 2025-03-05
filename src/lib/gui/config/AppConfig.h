@@ -93,7 +93,7 @@ private:
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
     kEnableService = 37,
-    kCloseToTray = 38,
+    // 38, close to tray moved to deskflow settings
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
     // 41 = show dev thanks, obsolete
@@ -157,7 +157,6 @@ public:
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
   bool enableService() const override;
-  bool closeToTray() const override;
   bool clientGroupChecked() const override;
   bool requireClientCerts() const override;
 
@@ -190,7 +189,6 @@ public:
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
-  void setCloseToTray(bool minimize) override;
   void setTlsCertPath(const QString &path) override;
   void setTlsKeyLength(int length) override;
   void setRequireClientCerts(bool requireClientCerts) override;
@@ -305,7 +303,6 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
-  bool m_CloseToTray = true;
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
