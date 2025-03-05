@@ -850,7 +850,7 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_appConfig.closeToTray() && event->spontaneous()) {
+  if (Settings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
     if (m_appConfig.showCloseReminder()) {
       messages::showCloseReminder(this);
       m_appConfig.setShowCloseReminder(false);
@@ -881,7 +881,8 @@ void MainWindow::showFirstConnectedMessage()
   m_configScopes.save();
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
-  messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
+  const auto closeToTray = Settings::value(Settings::Gui::CloseToTray).toBool();
+  messages::showFirstConnectedMessage(this, closeToTray, m_appConfig.enableService(), isServer);
 }
 
 void MainWindow::updateStatus()

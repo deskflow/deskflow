@@ -71,7 +71,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 35 = clientHostMode, obsolete
     "", // 36 = serverClientMode, obsolete
     "enableService",
-    "closeToTray",
+    "", // 38 Moved to deskflow settings
     "mainWindowSize",
     "mainWindowPosition",
     "", // 41 = Show dev thanks, obsolete
@@ -132,7 +132,6 @@ void AppConfig::recallFromCurrentScope()
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-  m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
@@ -190,7 +189,6 @@ void AppConfig::commit()
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
-    setInCurrentScope(kCloseToTray, m_CloseToTray);
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
@@ -501,11 +499,6 @@ bool AppConfig::enableService() const
   return m_EnableService;
 }
 
-bool AppConfig::closeToTray() const
-{
-  return m_CloseToTray;
-}
-
 bool AppConfig::serverGroupChecked() const
 {
   return m_ServerGroupChecked;
@@ -689,11 +682,6 @@ void AppConfig::setPreventSleep(bool newValue)
 void AppConfig::setEnableService(bool enabled)
 {
   m_EnableService = enabled;
-}
-
-void AppConfig::setCloseToTray(bool minimize)
-{
-  m_CloseToTray = minimize;
 }
 
 void AppConfig::setRequireClientCerts(bool requireClientCerts)

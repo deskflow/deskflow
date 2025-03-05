@@ -38,6 +38,7 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
+    inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
   };
@@ -75,6 +76,7 @@ private:
       Core::Scope
     , Gui::Autohide
     , Gui::AutoUpdateCheck
+    , Gui::CloseToTray
     , Gui::LogExpanded
     , Gui::SymbolicTrayIcon
   };
