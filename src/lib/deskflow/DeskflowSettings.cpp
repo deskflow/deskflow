@@ -53,7 +53,7 @@ void DeskflowSettings::cleanSettings()
 
 QVariant DeskflowSettings::defaultValue(const QString &key)
 {
-  if (key == Settings::Core::Scope) {
+  if ((key == Settings::Core::Scope) || (key == Settings::Gui::Autohide)) {
     return false;
   }
 

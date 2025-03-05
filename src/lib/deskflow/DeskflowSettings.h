@@ -38,6 +38,7 @@ struct Settings
   };
   struct Gui
   {
+    inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
   };
 };
@@ -73,5 +74,7 @@ private:
   QSettings *userSettings = nullptr;
   QSettings *m_settings = nullptr;
 
-  inline static const QStringList validKeys = {Settings::Core::Scope, Settings::Gui::LogExpanded};
+  inline static const QStringList validKeys = {
+      Settings::Core::Scope, Settings::Gui::Autohide, Settings::Gui::LogExpanded
+  };
 };

@@ -54,7 +54,6 @@ public:
   MOCK_METHOD(const QString &, networkInterface, (), (const, override));
   MOCK_METHOD(const QString &, serverHostname, (), (const, override));
   MOCK_METHOD(int, logLevel, (), (const, override));
-  MOCK_METHOD(bool, autoHide, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, closeToTray, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
@@ -74,7 +73,6 @@ public:
   MOCK_METHOD(void, setLogToFile, (bool logToFile), (override));
   MOCK_METHOD(void, setLogFilename, (const QString &logFilename), (override));
   MOCK_METHOD(void, setElevateMode, (ElevateMode elevateMode), (override));
-  MOCK_METHOD(void, setAutoHide, (bool autoHide), (override));
   MOCK_METHOD(void, setPreventSleep, (bool preventSleep), (override));
   MOCK_METHOD(void, setTlsCertPath, (const QString &tlsCertPath), (override));
   MOCK_METHOD(void, setTlsKeyLength, (int tlsKeyLength), (override));
