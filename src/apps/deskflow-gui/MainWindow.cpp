@@ -852,9 +852,9 @@ void MainWindow::showEvent(QShowEvent *event)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   if (Settings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
-    if (m_appConfig.showCloseReminder()) {
+    if (Settings::value(Settings::Gui::CloseReminder).toBool()) {
       messages::showCloseReminder(this);
-      m_appConfig.setShowCloseReminder(false);
+      Settings::setValue(Settings::Gui::CloseReminder, false);
     }
     qDebug() << "hiding to tray";
     hide();

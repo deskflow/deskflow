@@ -75,7 +75,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "mainWindowSize",
     "mainWindowPosition",
     "", // 41 = Show dev thanks, obsolete
-    "showCloseReminder",
+    "", // 42 show Close Reminder moved to deskflow settings
     "", // 43 Moved to deskflow settings
     "", // 44, Moved to deskflow settings.
     "", // 45 Moved to deskflow settings
@@ -138,7 +138,6 @@ void AppConfig::recallFromCurrentScope()
   m_MainWindowPosition =
       getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
-  m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -189,7 +188,6 @@ void AppConfig::commit()
     setInCurrentScope(kEnableService, m_EnableService);
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
-    setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
@@ -537,11 +535,6 @@ std::optional<QPoint> AppConfig::mainWindowPosition() const
   return m_MainWindowPosition;
 }
 
-bool AppConfig::showCloseReminder() const
-{
-  return m_ShowCloseReminder;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -687,11 +680,6 @@ void AppConfig::setMainWindowSize(const QSize &size)
 void AppConfig::setMainWindowPosition(const QPoint &position)
 {
   m_MainWindowPosition = position;
-}
-
-void AppConfig::setShowCloseReminder(bool value)
-{
-  m_ShowCloseReminder = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

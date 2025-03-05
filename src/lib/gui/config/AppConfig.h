@@ -97,7 +97,7 @@ private:
     kMainWindowSize = 39,
     kMainWindowPosition = 40,
     // 41 = show dev thanks, obsolete
-    kShowCloseReminder = 42,
+    // 42, close reminder moved to deskflow settings
     // 43 = Enable Update Check,
     // 44 = LogExpanded, Moved to deskflow settings
     // 45 = Colorful Icon, Moved to deskflow settings
@@ -170,7 +170,6 @@ public:
   QString lastVersion() const;
   std::optional<QSize> mainWindowSize() const;
   std::optional<QPoint> mainWindowPosition() const;
-  bool showCloseReminder() const;
 
   //
   // Setters (overrides)
@@ -205,7 +204,6 @@ public:
   void setLastVersion(const QString &version);
   void setMainWindowSize(const QSize &size);
   void setMainWindowPosition(const QPoint &position);
-  void setShowCloseReminder(bool show);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -304,7 +302,6 @@ private:
   std::optional<QSize> m_MainWindowSize;
   std::optional<QPoint> m_MainWindowPosition;
   bool m_LoadFromSystemScope = false;
-  bool m_ShowCloseReminder = true;
   bool m_RequireClientCert = true;
 
   /**
