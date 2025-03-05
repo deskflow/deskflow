@@ -33,6 +33,7 @@ public:
   struct Core
   {
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
+    inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
   struct Gui
   {
@@ -74,6 +75,7 @@ private:
   // clang-format off
   inline static const QStringList m_validKeys = {
       Core::Scope
+    , Core::StartedBefore
     , Gui::Autohide
     , Gui::AutoUpdateCheck
     , Gui::CloseToTray

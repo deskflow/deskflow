@@ -40,7 +40,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "logToFile",
     "logFilename",
     "", // 6 wizardLastRun, obsolete
-    "startedBefore",
+    "", // 7 statedBefore moved to deskflow settings
     "elevateMode",
     "elevateModeEnum",
     "",              // 10 = edition, obsolete (using serial key instead)
@@ -120,7 +120,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
-  m_StartedBefore = getFromCurrentScope(kStartedBefore, m_StartedBefore).toBool();
   m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig = getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
@@ -176,7 +175,6 @@ void AppConfig::commit()
     setInCurrentScope(kLogLevel, m_LogLevel);
     setInCurrentScope(kLogToFile, m_LogToFile);
     setInCurrentScope(kLogFilename, m_LogFilename);
-    setInCurrentScope(kStartedBefore, m_StartedBefore);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kTlsEnabled, m_TlsEnabled);
@@ -431,11 +429,6 @@ ProcessMode AppConfig::processMode() const
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
-bool AppConfig::startedBefore() const
-{
-  return m_StartedBefore;
-}
-
 QString AppConfig::lastVersion() const
 {
   return m_LastVersion;
@@ -652,11 +645,6 @@ void AppConfig::setLogToFile(bool b)
 void AppConfig::setLogFilename(const QString &s)
 {
   m_LogFilename = s;
-}
-
-void AppConfig::setStartedBefore(bool b)
-{
-  m_StartedBefore = b;
 }
 
 void AppConfig::setElevateMode(ElevateMode em)

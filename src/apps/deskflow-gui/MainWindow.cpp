@@ -579,7 +579,8 @@ void MainWindow::updateModeControls(bool serverMode)
     // The server can run without any clients configured, and this is actually
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
-    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
+    const auto startedBefore = Settings::value(Settings::Core::StartedBefore).toBool();
+    if (!startedBefore && !m_coreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
       m_coreProcess.start();
       messages::showFirstServerStartMessage(this);
@@ -633,7 +634,7 @@ void MainWindow::open()
 
   m_coreProcess.applyLogLevel();
 
-  if (m_appConfig.startedBefore()) {
+  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
     m_coreProcess.start();
   }
 
@@ -873,12 +874,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showFirstConnectedMessage()
 {
-  if (m_appConfig.startedBefore()) {
+  if (Settings::value(Settings::Core::StartedBefore).toBool())
     return;
-  }
-
-  m_appConfig.setStartedBefore(true);
-  m_configScopes.save();
+  Settings::setValue(Settings::Core::StartedBefore, true);
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
   const auto closeToTray = Settings::value(Settings::Gui::CloseToTray).toBool();
@@ -947,8 +945,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
-    m_appConfig.setStartedBefore(true);
-    m_configScopes.save();
+    Settings::setValue(Settings::Core::StartedBefore, true);
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
