@@ -726,18 +726,18 @@ void MainWindow::setIcon()
   // Using a theme icon that is packed in exe renders an invisible icon
   // Instead use the resource path of the packed icon
   // TODO Report to Qt ref the bug here
+  const bool symbolicIcon = DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool();
 #ifndef Q_OS_MAC
   QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
-  if (!appConfig().colorfulTrayIcon()) {
+  if (symbolicIcon)
     iconString.append(QStringLiteral("-symbolic"));
-  }
   m_trayIcon->setIcon(QIcon(iconString));
 #else
-  if (m_appConfig.colorfulTrayIcon()) {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
-  } else {
+  if (symbolicIcon) {
     m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
     m_trayIcon->icon().setIsMask(true);
+  } else {
+    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
   }
 #endif
 }
