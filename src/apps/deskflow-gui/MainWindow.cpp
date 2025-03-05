@@ -637,11 +637,7 @@ void MainWindow::open()
     m_coreProcess.start();
   }
 
-  if (m_appConfig.autoHide()) {
-    hide();
-  } else {
-    showAndActivate();
-  }
+  Settings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
 }
 
 void MainWindow::coreProcessStarting()

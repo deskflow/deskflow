@@ -67,7 +67,7 @@ private:
     kElevateMode = 9,
     // 10 = edition, obsolete (related to obsolete licensing)
     kTlsEnabled = 11,
-    kAutoHide = 12,
+    // 12 = auto hide, Moved to Settings
     // 13 = serial key, obsolete
     kLastVersion = 14,
     // 15 = last expire time, obsolete
@@ -156,7 +156,6 @@ public:
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
-  bool autoHide() const override;
   bool enableService() const override;
   bool closeToTray() const override;
   bool clientGroupChecked() const override;
@@ -189,7 +188,6 @@ public:
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setTlsEnabled(bool e) override;
-  void setAutoHide(bool b) override;
   void setInvertScrollDirection(bool b) override;
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
@@ -300,7 +298,6 @@ private:
   bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_TlsEnabled = true;
-  bool m_AutoHide = false;
   QString m_LastVersion = "";
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;

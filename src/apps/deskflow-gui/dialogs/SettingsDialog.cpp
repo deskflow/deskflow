@@ -9,6 +9,7 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 
+#include "common/Settings.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
@@ -148,7 +149,7 @@ void SettingsDialog::accept()
   m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
-  m_appConfig.setAutoHide(ui->cbAutoHide->isChecked());
+  Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   m_appConfig.setEnableUpdateCheck(ui->cbAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
@@ -182,7 +183,7 @@ void SettingsDialog::loadFromConfig()
   ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
-  ui->cbAutoHide->setChecked(m_appConfig.autoHide());
+  ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
   ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
