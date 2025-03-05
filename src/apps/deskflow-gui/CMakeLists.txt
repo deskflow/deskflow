@@ -107,6 +107,7 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
 target_link_libraries(
   ${target}
   gui
+  common
   Qt6::Core
   Qt6::Widgets
   Qt6::Network)
