@@ -179,36 +179,33 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-  const auto &windowSize = m_appConfig.mainWindowSize();
-  if (windowSize.has_value()) {
-    qDebug() << "restoring main window size";
-    m_expandedSize = windowSize.value();
-  }
-
-  const auto &windowPosition = m_appConfig.mainWindowPosition();
-  if (windowPosition.has_value()) {
-    int x = 0;
-    int y = 0;
-    int w = 0;
-    int h = 0;
-    for (auto screen : QGuiApplication::screens()) {
-      auto geo = screen->geometry();
-      x = std::min(geo.x(), x);
-      y = std::min(geo.y(), y);
-      w = std::max(geo.x() + geo.width(), w);
-      h = std::max(geo.y() + geo.height(), h);
-    }
-    const QSize totalScreenSize(w, h);
-    const QPoint point = windowPosition.value();
-    if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
-      qDebug() << "restoring main window position";
-      move(point);
-    }
-  } else {
+  const auto windowGeometry = Settings::value(Settings::Gui::WindowGeometry).toRect();
+  if (!windowGeometry.isValid()) {
     // center main window in middle of screen
     const auto screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen->geometry();
     move(screenGeometry.center() - rect().center());
+    return;
+  }
+
+  m_expandedSize = windowGeometry.size();
+
+  int x = 0;
+  int y = 0;
+  int w = 0;
+  int h = 0;
+  const auto screens = QGuiApplication::screens();
+  for (auto screen : screens) {
+    auto geo = screen->geometry();
+    x = std::min(geo.x(), x);
+    y = std::min(geo.y(), y);
+    w = std::max(geo.x() + geo.width(), w);
+    h = std::max(geo.y() + geo.height(), h);
+  }
+  const QRect screensGeometry(x, y, w, h);
+  if (screensGeometry.contains(windowGeometry)) {
+    qDebug() << "restoring main window position";
+    move(windowGeometry.topLeft());
   }
 }
 
@@ -863,9 +860,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   }
 
   if (m_saveOnExit) {
-    m_appConfig.setMainWindowPosition(pos());
-    m_appConfig.setMainWindowSize(size());
-    m_configScopes.save();
+    Settings::setValue(Settings::Gui::WindowGeometry, frameGeometry());
   }
   qDebug() << "quitting application";
   event->accept();

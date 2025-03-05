@@ -7,6 +7,7 @@
 #include "Settings.h"
 
 #include <QFile>
+#include <QRect>
 
 Settings *Settings::instance()
 {
@@ -77,6 +78,9 @@ QVariant Settings::defaultValue(const QString &key)
       || (key == Gui::CloseReminder)) {
     return true;
   }
+
+  if (key == Gui::WindowGeometry)
+    return QRect();
 
   return QVariant();
 }
