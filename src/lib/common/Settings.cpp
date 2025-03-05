@@ -73,7 +73,8 @@ QVariant Settings::defaultValue(const QString &key)
     return false;
   }
 
-  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon)) {
+  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon)
+      || (key == Gui::CloseReminder)) {
     return true;
   }
 
