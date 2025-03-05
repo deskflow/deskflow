@@ -158,7 +158,7 @@ void SettingsDialog::accept()
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
-  m_appConfig.setCloseToTray(ui->cbCloseToTray->isChecked());
+  Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
 
@@ -188,7 +188,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
   ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
-  ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
+  ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::Autohide).toBool());

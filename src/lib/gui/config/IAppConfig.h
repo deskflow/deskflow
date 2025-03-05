@@ -54,7 +54,6 @@ public:
   virtual const QString &serverHostname() const = 0;
   virtual int logLevel() const = 0;
   virtual bool enableService() const = 0;
-  virtual bool closeToTray() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
@@ -79,7 +78,6 @@ public:
   virtual void setLanguageSync(bool languageSync) = 0;
   virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;
-  virtual void setCloseToTray(bool closeToTray) = 0;
   virtual void setRequireClientCerts(bool requireClientCerts) = 0;
 };
 
