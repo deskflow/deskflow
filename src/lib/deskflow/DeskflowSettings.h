@@ -36,6 +36,10 @@ struct Settings
   {
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
   };
+  struct Gui
+  {
+    inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
+  };
 };
 
 class DeskflowSettings : public QObject
@@ -43,13 +47,13 @@ class DeskflowSettings : public QObject
   Q_OBJECT
 public:
   static DeskflowSettings *instance();
-  static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
-  static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
   static bool isSystemScope();
   static void setScope(bool systemScope);
+  static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
+  static QVariant value(const QString &key = QString());
 
 signals:
   void scopeChanged(bool isSystemScope);
@@ -69,5 +73,5 @@ private:
   QSettings *userSettings = nullptr;
   QSettings *m_settings = nullptr;
 
-  inline static const QStringList validKeys = {Settings::Core::Scope};
+  inline static const QStringList validKeys = {Settings::Core::Scope, Settings::Gui::LogExpanded};
 };

@@ -57,6 +57,10 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return false;
   }
 
+  if (key == Settings::Gui::LogExpanded) {
+    return true;
+  }
+
   return QVariant();
 }
 
@@ -120,7 +124,7 @@ void DeskflowSettings::restoreDefaultSettings()
 {
   for (const auto &key : instance()->validKeys) {
     instance()->blockSignals(true);
-    instance()->m_settings->setValue(key, defaultValue(key));
+    instance()->setValue(key, defaultValue(key));
     instance()->blockSignals(false);
     Q_EMIT instance()->settingsChanged();
   }

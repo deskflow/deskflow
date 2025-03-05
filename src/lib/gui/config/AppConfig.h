@@ -99,7 +99,7 @@ private:
     // 41 = show dev thanks, obsolete
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
-    kLogExpanded = 44,
+    // 44 = LogExpanded, Moved to deskflow settings
     kColorfulIcon = 45,
     kRequireClientCert = 46
   };
@@ -321,7 +321,6 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
-  bool m_logExpanded = true;
   bool m_colorfulTrayIcon = false;
   bool m_RequireClientCert = true;
 

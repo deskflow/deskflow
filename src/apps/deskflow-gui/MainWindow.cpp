@@ -9,6 +9,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "deskflow/DeskflowSettings.h"
 #include "dialogs/AboutDialog.h"
 #include "dialogs/FingerprintDialog.h"
 #include "dialogs/ServerConfigDialog.h"
@@ -226,7 +227,7 @@ void MainWindow::setupControls()
 
   // Setup the log toggle, set its initial state to closed
   ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
     ui->textLog->setVisible(true);
     ui->btnToggleLog->click();
@@ -361,14 +362,12 @@ void MainWindow::toggleLogVisible(bool visible)
 {
   if (visible) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    ui->textLog->setVisible(true);
-    m_appConfig.setLogExpanded(true);
   } else {
     ui->btnToggleLog->setArrowType(Qt::RightArrow);
     m_expandedSize = size();
-    ui->textLog->setVisible(false);
-    m_appConfig.setLogExpanded(false);
   }
+  ui->textLog->setVisible(visible);
+  DeskflowSettings::setValue(Settings::Gui::LogExpanded, visible);
   // 1 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(1, this, &MainWindow::updateSize);
 }
@@ -516,7 +515,7 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
     resize(m_expandedSize);
