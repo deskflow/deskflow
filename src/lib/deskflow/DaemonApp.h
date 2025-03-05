@@ -73,7 +73,6 @@ private:
   std::unique_ptr<MSWindowsWatchdog> m_watchdog;
 #endif
 
-private:
   IEventQueue *m_events = nullptr;
   FileLogOutputter *m_fileLogOutputter = nullptr;
   deskflow::core::ipc::DaemonIpcServer *m_ipcServer = nullptr;
