@@ -483,3 +483,29 @@ std::string ArchMiscWindows::getActiveDesktopName()
   CloseDesktop(desk);
   return name;
 }
+
+bool ArchMiscWindows::isProcessElevated()
+{
+  LOG_DEBUG("checking if process is elevated");
+
+  HANDLE hToken = nullptr;
+  if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+    throw XArch(new XArchEvalWindows());
+  }
+
+  TOKEN_ELEVATION elevation;
+
+  try {
+    DWORD dwSize = sizeof(TOKEN_ELEVATION);
+    if (!GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize)) {
+      throw XArch(new XArchEvalWindows());
+    }
+  } catch (...) {
+    CloseHandle(hToken);
+    throw;
+  }
+
+  const auto isElevated = elevation.TokenIsElevated;
+  LOG_DEBUG("process is %s", isElevated ? "elevated" : "not elevated");
+  return isElevated;
+}

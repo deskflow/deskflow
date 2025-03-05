@@ -22,6 +22,15 @@ DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
       m_logFilename(logFilename),
       m_server{new QLocalServer(this)} // NOSONAR - Qt memory
 {
+}
+
+DaemonIpcServer::~DaemonIpcServer()
+{
+  m_server->close();
+}
+
+void DaemonIpcServer::listen()
+{
   // Daemon runs as system, but GUI runs as regular user, so we need to allow world access.
   m_server->setSocketOptions(QLocalServer::WorldAccessOption);
 
@@ -32,11 +41,6 @@ DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
   } else {
     LOG_ERR("ipc server failed to listen on: %s", kDaemonIpcName);
   }
-}
-
-DaemonIpcServer::~DaemonIpcServer()
-{
-  m_server->close();
 }
 
 void DaemonIpcServer::handleNewConnection()

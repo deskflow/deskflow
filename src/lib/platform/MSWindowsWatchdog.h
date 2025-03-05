@@ -37,7 +37,7 @@ class MSWindowsWatchdog
   };
 
 public:
-  explicit MSWindowsWatchdog(bool foreground);
+  explicit MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogOutputter);
   ~MSWindowsWatchdog() = default;
 
   /**
@@ -59,15 +59,6 @@ public:
    * @return True if the process is running.
    */
   bool isProcessRunning();
-
-  /**
-   * @brief Set the file log outputter.
-   *
-   * Outputter is not adopted by the watchdog, so the caller must manage the memory.
-   *
-   * Standard out/error from the launched core process is written to the file log outputter.
-   */
-  void setFileLogOutputter(FileLogOutputter *outputter);
 
 private:
   /**
@@ -154,7 +145,7 @@ private:
   bool m_elevateProcess = false;
   MSWindowsSession m_session;
   int m_startFailures = 0;
-  FileLogOutputter *m_fileLogOutputter = nullptr;
+  FileLogOutputter &m_fileLogOutputter;
   bool m_foreground = false;
   std::string m_activeDesktop = "";
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;

@@ -163,6 +163,7 @@ public:
   static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32 &entry);
   static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32 &entry);
   static std::string getActiveDesktopName();
+  static bool isProcessElevated();
 
 private:
   //! Open and return a registry key, closing the parent key

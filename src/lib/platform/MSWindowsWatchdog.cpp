@@ -78,8 +78,11 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 // MSWindowsWatchdog
 //
 
-MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
+MSWindowsWatchdog::MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogOutputter)
+    : m_fileLogOutputter(fileLogOutputter),
+      m_foreground(foreground)
 {
+  LOG_DEBUG("watchdog constructed, mutex initialized");
   initSasFunc();
   initOutputReadPipe();
 }
@@ -87,7 +90,6 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 void MSWindowsWatchdog::startAsync()
 {
   m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::mainLoop, nullptr));
-
   m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::outputLoop, nullptr));
 }
 
@@ -171,6 +173,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
+    LOG_DEBUG3("watchdog: main loop iteration, lock mutex");
     std::unique_lock lock(m_processStateMutex);
 
     if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
@@ -230,6 +233,8 @@ void MSWindowsWatchdog::mainLoop(void *)
     } break;
     }
 
+    LOG_DEBUG3("watchdog: main loop unlock mutex");
+    // TODO: better to use RAII pattern?
     lock.unlock();
 
     // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
@@ -237,6 +242,7 @@ void MSWindowsWatchdog::mainLoop(void *)
     sendSas();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+    LOG_DEBUG3("watchdog: main loop sleep");
     ARCH->sleep(0.1);
   }
 
@@ -260,11 +266,6 @@ bool MSWindowsWatchdog::isProcessRunning()
   DWORD exitCode;
   GetExitCodeProcess(m_process->info().hProcess, &exitCode);
   return exitCode == STILL_ACTIVE;
-}
-
-void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter *outputter)
-{
-  m_fileLogOutputter = outputter;
 }
 
 void MSWindowsWatchdog::startProcess()
@@ -332,7 +333,8 @@ void MSWindowsWatchdog::startProcess()
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
-  LOG_DEBUG("updating watchdog process config");
+  LOG_DEBUG("updating watchdog process config, locking mutex");
+  LOG_DEBUG("mutex address: %p", static_cast<void *>(&m_processStateMutex));
   std::unique_lock lock(m_processStateMutex);
 
   m_command = command;
@@ -346,6 +348,8 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
     m_processState = ProcessState::StartPending;
     m_nextStartTime.reset();
   }
+
+  LOG_DEBUG("watchdog process config updated, unlocking mutex");
 }
 
 void MSWindowsWatchdog::outputLoop(void *)
@@ -368,10 +372,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       // strip out windows \r chars to prevent extra lines in log file.
       std::string output = trimOutputBuffer(buffer);
-
-      if (m_fileLogOutputter != nullptr) {
-        m_fileLogOutputter->write(kPRINT, output.c_str());
-      }
+      m_fileLogOutputter.write(kPRINT, output.c_str());
 
 #if SYSAPI_WIN32
       if (m_foreground) {
@@ -563,6 +564,8 @@ void MSWindowsWatchdog::initSasFunc()
 
 void MSWindowsWatchdog::sendSas() const
 {
+  LOG_DEBUG3("watchdog: creating sas event");
+
   if (m_sendSasFunc == nullptr) {
     throw XArch("SendSAS function not initialized");
   }
