@@ -5,8 +5,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 configure_file(constants.h.in constants.h @ONLY)
 
-add_library(common INTERFACE
+add_library(common
   common.h
+  version.h
+  version.cpp
   IInterface.h
   stdbitset.h
   stddeque.h
@@ -24,7 +26,9 @@ add_library(common INTERFACE
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
-if(APPLE)
-  target_sources(common INTERFACE MacOSXPrecomp.h)
-endif()
+find_package(Qt6 COMPONENTS Core)
+target_link_libraries(common Qt6::Core)
 
+if(APPLE)
+  target_sources(common MacOSXPrecomp.h)
+endif()
