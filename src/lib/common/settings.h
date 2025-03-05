@@ -43,6 +43,7 @@ public:
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
+    inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
   };
 
   // clang-format off
@@ -55,6 +56,7 @@ public:
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded
     , Settings::Gui::SymbolicTrayIcon
+    , Settings::Gui::WindowGeometry
   };
   // clang-format on
 };

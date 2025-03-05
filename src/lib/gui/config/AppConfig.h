@@ -94,8 +94,8 @@ private:
     // 36 = server-client-mode, obsolete
     kEnableService = 37,
     // 38, close to tray moved to deskflow settings
-    kMainWindowSize = 39,
-    kMainWindowPosition = 40,
+    // 39 window size moved to deskflow settings
+    // 40 window position moved to deskflow settings
     // 41 = show dev thanks, obsolete
     // 42, close reminder moved to deskflow settings
     // 43 = Enable Update Check,
@@ -168,8 +168,6 @@ public:
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
   QString lastVersion() const;
-  std::optional<QSize> mainWindowSize() const;
-  std::optional<QPoint> mainWindowPosition() const;
 
   //
   // Setters (overrides)
@@ -202,8 +200,6 @@ public:
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
   void setLastVersion(const QString &version);
-  void setMainWindowSize(const QSize &size);
-  void setMainWindowPosition(const QPoint &position);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -299,8 +295,6 @@ private:
   QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
-  std::optional<QSize> m_MainWindowSize;
-  std::optional<QPoint> m_MainWindowPosition;
   bool m_LoadFromSystemScope = false;
   bool m_RequireClientCert = true;
 

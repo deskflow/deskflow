@@ -72,8 +72,8 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 36 = serverClientMode, obsolete
     "enableService",
     "", // 38 Moved to deskflow settings
-    "mainWindowSize",
-    "mainWindowPosition",
+    "", // 39 window size moved to deskflow settings
+    "", // 40 window position moved to deskflow settings
     "", // 41 = Show dev thanks, obsolete
     "", // 42 show Close Reminder moved to deskflow settings
     "", // 43 Moved to deskflow settings
@@ -135,9 +135,6 @@ void AppConfig::recallFromCurrentScope()
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
   m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
-  m_MainWindowPosition =
-      getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
-  m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
 }
 
 void AppConfig::recallScreenName()
@@ -186,8 +183,6 @@ void AppConfig::commit()
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
-    setInCurrentScope(kMainWindowSize, m_MainWindowSize);
-    setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
@@ -525,16 +520,6 @@ const QString &AppConfig::serverHostname() const
   return m_ServerHostname;
 }
 
-std::optional<QSize> AppConfig::mainWindowSize() const
-{
-  return m_MainWindowSize;
-}
-
-std::optional<QPoint> AppConfig::mainWindowPosition() const
-{
-  return m_MainWindowPosition;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -670,16 +655,6 @@ void AppConfig::setRequireClientCerts(bool requireClientCerts)
   if (requireClientCerts == m_RequireClientCert)
     return;
   m_RequireClientCert = requireClientCerts;
-}
-
-void AppConfig::setMainWindowSize(const QSize &size)
-{
-  m_MainWindowSize = size;
-}
-
-void AppConfig::setMainWindowPosition(const QPoint &position)
-{
-  m_MainWindowPosition = position;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
