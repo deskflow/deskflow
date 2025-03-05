@@ -62,7 +62,7 @@ private:
     kLogToFile = 4,
     kLogFilename = 5,
     // 6 = show first run wizard, obsolete
-    kStartedBefore = 7,
+    // 7 Started before moved to deskflow settings
     kElevateModeLegacy = 8,
     kElevateMode = 9,
     // 10 = edition, obsolete (related to obsolete licensing)
@@ -164,7 +164,6 @@ public:
   // Getters (new methods)
   //
 
-  bool startedBefore() const;
   QString logDir() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
@@ -197,7 +196,6 @@ public:
   // Setters (new methods)
   //
 
-  void setStartedBefore(bool b);
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
@@ -289,7 +287,6 @@ private:
   int m_LogLevel = 0;
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
-  bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_TlsEnabled = true;
   QString m_LastVersion = "";
