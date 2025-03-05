@@ -36,6 +36,7 @@ public:
   };
   struct Gui
   {
+    inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
   };
 
@@ -70,6 +71,7 @@ private:
   // clang-format off
   inline static const QStringList m_validKeys = {
       Core::Scope
+    , Gui::Autohide
     , Gui::LogExpanded
   };
   // clang-format on

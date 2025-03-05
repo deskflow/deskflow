@@ -45,8 +45,8 @@ const char *const AppConfig::m_SettingsName[] = {
     "elevateModeEnum",
     "",              // 10 = edition, obsolete (using serial key instead)
     "cryptoEnabled", // 11 = kTlsEnabled (retain legacy string value)
-    "autoHide",
-    "", // 13 = serialKey, obsolete
+    "",              // 12 AutoHide, moved to Settings
+    "",              // 13 = serialKey, obsolete
     "lastVersion",
     "", // 15 = lastExpiringWarningTime, obsolete
     "", // 16 = activationHasRun, obsolete
@@ -121,7 +121,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_StartedBefore = getFromCurrentScope(kStartedBefore, m_StartedBefore).toBool();
-  m_AutoHide = getFromCurrentScope(kAutoHide, m_AutoHide).toBool();
   m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig = getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
@@ -184,7 +183,6 @@ void AppConfig::commit()
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kTlsEnabled, m_TlsEnabled);
-    setInCurrentScope(kAutoHide, m_AutoHide);
     setInCurrentScope(kLastVersion, m_LastVersion);
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
@@ -477,11 +475,6 @@ bool AppConfig::tlsEnabled() const
   return m_TlsEnabled;
 }
 
-bool AppConfig::autoHide() const
-{
-  return m_AutoHide;
-}
-
 bool AppConfig::invertScrollDirection() const
 {
   return m_InvertScrollDirection;
@@ -690,11 +683,6 @@ void AppConfig::setStartedBefore(bool b)
 void AppConfig::setElevateMode(ElevateMode em)
 {
   m_ElevateMode = em;
-}
-
-void AppConfig::setAutoHide(bool b)
-{
-  m_AutoHide = b;
 }
 
 void AppConfig::setInvertScrollDirection(bool newValue)
