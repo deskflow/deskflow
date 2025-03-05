@@ -38,6 +38,7 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
+    inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
   };
 
   static Settings *instance();
@@ -73,6 +74,7 @@ private:
       Core::Scope
     , Gui::Autohide
     , Gui::LogExpanded
+    , Gui::SymbolicTrayIcon
   };
   // clang-format on
 };
