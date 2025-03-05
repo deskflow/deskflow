@@ -7,6 +7,7 @@
 #include "DeskflowSettings.h"
 
 #include <QFile>
+#include <QRect>
 
 DeskflowSettings *DeskflowSettings::instance()
 {
@@ -61,6 +62,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
       (key == Settings::Gui::SymbolicTrayIcon) || (key == Settings::Gui::CloseReminder)) {
     return true;
   }
+
+  if (key == Settings::Gui::WindowGeometry)
+    return QRect();
 
   return QVariant();
 }
