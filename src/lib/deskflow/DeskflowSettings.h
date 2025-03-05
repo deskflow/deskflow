@@ -42,6 +42,7 @@ struct Settings
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
+    inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
   };
@@ -81,5 +82,5 @@ private:
   inline static const QStringList validKeys = {Settings::Core::Scope,           Settings::Core::StartedBefore,
                                                Settings::Gui::Autohide,         Settings::Gui::LogExpanded,
                                                Settings::Gui::SymbolicTrayIcon, Settings::Gui::AutoUpdateCheck,
-                                               Settings::Gui::CloseToTray};
+                                               Settings::Gui::CloseToTray,      Settings::Gui::CloseReminder};
 };
