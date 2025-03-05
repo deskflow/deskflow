@@ -638,11 +638,7 @@ void MainWindow::open()
     m_coreProcess.start();
   }
 
-  if (m_appConfig.autoHide()) {
-    hide();
-  } else {
-    showAndActivate();
-  }
+  DeskflowSettings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
 }
 
 void MainWindow::coreProcessStarting()
