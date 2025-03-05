@@ -6,14 +6,11 @@
  */
 
 #include "arch/Arch.h"
+#include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/constants.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
-
-#include "arch/Arch.h"
-#include "base/EventQueue.h"
-#include "base/Log.h"
 
 #if SYSAPI_WIN32
 
@@ -24,12 +21,15 @@
 
 #endif
 
+#include <QCommandLineParser>
 #include <QCoreApplication>
 #include <QThread>
 
 using namespace deskflow::core;
 
-void handleError(const char *message);
+void handleError(const char *message = "Unrecognized error.");
+QStringList processArguments(const QStringList &args);
+QString versionString();
 
 int main(int argc, char **argv)
 {
@@ -44,16 +44,33 @@ int main(int argc, char **argv)
   Log log;
   EventQueue events;
 
-  auto &daemon = DaemonApp::instance();
-  DaemonApp::InitResult initResult;
-  try {
-    initResult = daemon.init(&events, argc, argv);
-  } catch (std::exception &e) {
-    handleError(e.what());
-    return kExitFailed;
-  } catch (...) {
-    handleError("Unrecognized error.");
-    return kExitFailed;
+  // Daemon deliberately does not have a parent, as it will be moved to a new thread.
+  DaemonApp daemon(events);
+
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
+
+  const auto foregroundOption = QCommandLineOption({"f", "foreground"}, "Run in the foreground (show console)");
+  parser.addOption(foregroundOption);
+
+  const auto installOption = QCommandLineOption({"i", "install"}, "Install as a Windows service");
+  parser.addOption(installOption);
+
+  const auto uninstallOption = QCommandLineOption({"u", "uninstall"}, "Uninstall the Windows service");
+  parser.addOption(uninstallOption);
+
+  // Allows for some Windows-style "switch" arguments.
+  // Remember: App will end here if --help or --version is passed.
+  parser.process(processArguments(QCoreApplication::arguments()));
+
+  daemon.initLogging();
+
+  if (parser.isSet(foregroundOption)) {
+    daemon.setForeground();
   }
 
   // Important: Log the app name and version number to the log file after the daemon app init
@@ -61,14 +78,7 @@ int main(int argc, char **argv)
   // which is not useful for troubleshooting Windows services.
   // It's important to write the version number to the log file so we can be certain the old daemon
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
-  // TODO: move the version number logic to a shared function for all Qt apps.
-  auto versionString = QString(kVersion);
-  if (versionString.endsWith(QStringLiteral(".0"))) {
-    versionString.chop(2);
-  } else {
-    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
-  }
-  LOG_PRINT("%s Daemon v%s", kAppName, versionString.toStdString().c_str());
+  LOG_PRINT("%s v%s", QCoreApplication::applicationName().toStdString().c_str(), versionString().toStdString().c_str());
 
   // Default log level to system setting (found in Registry).
   if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
@@ -76,94 +86,44 @@ int main(int argc, char **argv)
     LOG_DEBUG("log level: %s", logLevel.c_str());
   }
 
+  try {
+
 #if SYSAPI_WIN32
-  // Show warning if not running as admin as daemon will behave differently.
-  if (!ArchMiscWindows::isProcessElevated()) {
-    LOG_WARN("not running as admin, some features may not work");
-  }
+    // Show warning if not running as admin as daemon will behave differently.
+    if (!ArchMiscWindows::isProcessElevated()) {
+      LOG_WARN("not running as admin, some features may not work");
+    }
 #endif
 
-  switch (initResult) {
-    using enum DaemonApp::InitResult;
-
-  case StartDaemon: {
-    LOG_INFO("starting daemon");
-    QCoreApplication app(argc, argv);
-
-    try {
-      daemon.initForRun();
-    } catch (std::exception &e) {
-      handleError(e.what());
-      return kExitFailed;
-    } catch (...) {
-      handleError("Unrecognized error.");
-      return kExitFailed;
+    if (parser.isSet(installOption)) {
+      daemon.install();
+      return kExitSuccess;
+    } else if (parser.isSet(uninstallOption)) {
+      daemon.uninstall();
+      return kExitSuccess;
     }
 
+    const auto ipcServer = new ipc::DaemonIpcServer(&app, DaemonApp::logFilename().c_str()); // NOSONAR - Qt managed
+    ipcServer->listen();
+    daemon.connectIpcServer(ipcServer);
+
     QThread daemonThread;
-    daemon.moveToThread(&daemonThread);
-
-    QObject::connect(&daemonThread, &QThread::started, [&daemon, &daemonThread]() {
-      LOG_DEBUG("daemon thread started");
-      daemon.run();
-      daemonThread.quit();
-      LOG_DEBUG("daemon thread finished");
-    });
     QObject::connect(&daemonThread, &QThread::finished, &app, &QCoreApplication::quit);
+    daemon.run(daemonThread);
 
-    ipc::DaemonIpcServer ipcServer(&app, QString::fromStdString(daemon.logFilename()));
-
-    // Use direct connection as the daemon app is on it's own thread, and so is on a different event loop.
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::logLevelChanged, &daemon, &DaemonApp::saveLogLevel, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, &daemon, &DaemonApp::setElevate, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::commandChanged, &daemon, &DaemonApp::setCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::startProcessRequested, &daemon, &DaemonApp::applyWatchdogCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, &daemon, &DaemonApp::clearWatchdogCommand, //
-        Qt::DirectConnection
-    );
-    QObject::connect(
-        &ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, &daemon, &DaemonApp::clearSettings, //
-        Qt::DirectConnection
-    );
-
-    daemonThread.start();
     const auto exitCode = QCoreApplication::exec();
     daemonThread.wait();
 
     LOG_DEBUG("daemon exited, code: %d", exitCode);
     return exitCode;
-  }
 
-  case FatalError:
-    LOG_ERR("fatal error during daemon init");
+  } catch (std::exception &e) {
+    handleError(e.what());
     return kExitFailed;
-
-  case Installed:
-  case Uninstalled:
-  case ShowHelp:
-    LOG_DEBUG("app exiting (non-daemon mode)");
-    return kExitSuccess;
-
-  case ArgsError:
-    LOG_ERR("bad arguments");
-    return kExitArgs;
+  } catch (...) {
+    handleError();
+    return kExitFailed;
   }
-
-  LOG_ERR("unknown daemon init result");
-  return kExitFailed;
 }
 
 #if SYSAPI_WIN32
@@ -186,4 +146,31 @@ void handleError(const char *message)
   // Show a message box for when run from MSI in Win32 subsystem.
   MessageBoxA(nullptr, message, "Deskflow daemon error", MB_OK | MB_ICONERROR);
 #endif
+}
+
+// CPack seems to require that /install and /uninstall are used instead of --install and --uninstall.
+QStringList processArguments(const QStringList &args)
+{
+  QStringList modifiedArgs;
+  for (const QString &arg : args) {
+    if (arg == "/install") {
+      modifiedArgs << "--install";
+    } else if (arg == "/uninstall") {
+      modifiedArgs << "--uninstall";
+    } else {
+      modifiedArgs << arg;
+    }
+  }
+  return modifiedArgs;
+}
+
+QString versionString()
+{
+  auto versionString = QString(kVersion);
+  if (versionString.endsWith(QStringLiteral(".0"))) {
+    versionString.chop(2);
+  } else {
+    versionString.append(QStringLiteral(" (%1)").arg(kVersionGitSha));
+  }
+  return versionString;
 }

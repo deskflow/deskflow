@@ -7,6 +7,7 @@
 #include "deskflow/DaemonApp.h"
 
 #include "arch/XArch.h"
+#include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/log_outputters.h"
 #include "common/constants.h"
@@ -14,8 +15,9 @@
 
 #if SYSAPI_WIN32
 
-#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchMiscWindows.h" // IWYU pragma: keep
 #include "deskflow/Screen.h"
+#include "deskflow/ipc/DaemonIpcServer.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 #include "platform/MSWindowsWatchdog.h"
@@ -27,7 +29,6 @@
 
 #include <filesystem>
 #include <iostream>
-#include <memory>
 #include <string>
 
 using namespace std;
@@ -39,42 +40,11 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
   std::cout << "Usage: " << binName << " [-f|--foreground] [--install] [--uninstall]" << std::endl;
 }
 
-DaemonApp::DaemonApp()
+DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
 {
-  m_fileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
-  CLOG->insert(m_fileLogOutputter);
 }
 
 DaemonApp::~DaemonApp() = default;
-
-int daemonLoop()
-{
-  DaemonApp::instance().mainLoop();
-  return kExitSuccess;
-}
-
-#if SYSAPI_WIN32
-int daemonLoop(int, const char **)
-{
-  return ArchMiscWindows::runDaemon(daemonLoop);
-}
-#elif SYSAPI_UNIX
-int daemonLoop(int, const char **)
-{
-  return daemonLoop();
-}
-#endif
-
-void DaemonApp::run()
-{
-  if (m_foreground) {
-    LOG_DEBUG("running daemon in foreground");
-    mainLoop();
-  } else {
-    LOG_DEBUG("running daemon in background (daemonizing)");
-    ARCH->daemonize(kAppName, daemonLoop);
-  }
-}
 
 void DaemonApp::saveLogLevel(const QString &logLevel) const
 {
@@ -120,7 +90,7 @@ void DaemonApp::applyWatchdogCommand() const
   LOG_DEBUG("applying watchdog command");
 
 #if SYSAPI_WIN32
-  m_watchdog->setProcessConfig(m_command, m_elevate);
+  m_pWatchdog->setProcessConfig(m_command, m_elevate);
 #else
   LOG_ERR("applying watchdog command not implemented on this platform");
 #endif
@@ -134,7 +104,7 @@ void DaemonApp::clearWatchdogCommand()
   setCommand("");
 
 #if SYSAPI_WIN32
-  m_watchdog->setProcessConfig("", false);
+  m_pWatchdog->setProcessConfig("", false);
 #else
   LOG_ERR("clearing watchdog command not implemented on this platform");
 #endif
@@ -144,63 +114,6 @@ void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
   ARCH->clearSettings();
-}
-
-DaemonApp::InitResult DaemonApp::init(IEventQueue *events, int argc, char **argv) // NOSONAR - CLI args
-{
-  using enum InitResult;
-
-  if (events == nullptr) {
-    throw XDeskflow("event queue not set");
-  }
-
-  m_events = events;
-
-  for (int i = 1; i < argc; ++i) {
-    string arg(argv[i]);
-
-    if (arg == "-h" || arg == "--help") {
-      showConsole();
-      showHelp(argc, argv);
-      return ShowHelp;
-    } else if (arg == "-f" || arg == "--foreground") {
-      m_foreground = true;
-      showConsole();
-    }
-#if SYSAPI_WIN32
-    else if (arg == "--install" || arg == "/install") {
-      initDebugOutput();
-      LOG((CLOG_NOTE "installing windows daemon"));
-      ARCH->installDaemon();
-      return Installed;
-    } else if (arg == "--uninstall" || arg == "/uninstall") {
-      initDebugOutput();
-      LOG((CLOG_NOTE "uninstalling windows daemon"));
-      try {
-        ARCH->uninstallDaemon();
-      } catch (XArch &e) {
-        std::string message = e.what();
-        if (message.find("The service has not been started") != std::string::npos) {
-          // HACK: this message happens intermittently, not sure where from but
-          // it's quite misleading for the user. they thing something has gone
-          // horribly wrong, but it's just the service manager reporting a false
-          // positive (the service has actually shut down in most cases).
-          LOG_DEBUG("ignoring service start error on uninstall: %s", message.c_str());
-        } else {
-          throw e;
-        }
-      }
-      return Uninstalled;
-    }
-#endif
-    else {
-      LOG_ERR("unknown argument: %s", arg.c_str());
-      return ArgsError;
-    }
-  }
-
-  initDebugOutput();
-  return StartDaemon;
 }
 
 void DaemonApp::showConsole() const
@@ -216,66 +129,105 @@ void DaemonApp::showConsole() const
 #endif
 }
 
-void DaemonApp::initDebugOutput() const
+void DaemonApp::connectIpcServer(ipc::DaemonIpcServer *ipcServer) const
 {
-#if SYSAPI_WIN32
-  if (!m_foreground) {
-    // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
-    // in that case, but is accessible when running in the foreground.
-    CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
-  }
-#endif
+  // Use direct connection as this object is on it's own thread,
+  // and so is on a different event loop to the main Qt loop.
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::logLevelChanged, this, &DaemonApp::saveLogLevel, //
+      Qt::DirectConnection
+  );
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::setElevate, //
+      Qt::DirectConnection
+  );
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::setCommand, //
+      Qt::DirectConnection
+  );
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::startProcessRequested, this, &DaemonApp::applyWatchdogCommand, //
+      Qt::DirectConnection
+  );
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, this, &DaemonApp::clearWatchdogCommand, //
+      Qt::DirectConnection
+  );
+  QObject::connect(
+      ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, this, &DaemonApp::clearSettings, //
+      Qt::DirectConnection
+  );
 }
 
-void DaemonApp::initForRun()
+void DaemonApp::install() const
 {
+  LOG_NOTE("installing windows daemon");
+  ARCH->installDaemon();
+}
+
+void DaemonApp::uninstall() const
+{
+  LOG_NOTE("uninstalling windows daemon");
+  ARCH->uninstallDaemon();
+}
+
+void DaemonApp::run(QThread &daemonThread)
+{
+  LOG_NOTE("starting daemon");
+
+  // Important: Move the daemon app to the daemon thread before creating any more Qt objects
+  // owned by the daemon app, as they will be created on the daemon thread.
+  moveToThread(&daemonThread);
+
+  QObject::connect(&daemonThread, &QThread::started, [this, &daemonThread]() {
+    LOG_DEBUG("daemon thread started");
+
+    if (m_foreground) {
+      LOG_DEBUG("running daemon in foreground");
+      mainLoop();
+    } else {
+      LOG_DEBUG("running daemon in background (daemonizing)");
+      ARCH->daemonize(kAppName, [this](int, const char **) {
+        mainLoop();
+        return kExitSuccess;
+      });
+    }
+
+    daemonThread.quit();
+    LOG_DEBUG("daemon thread finished");
+  });
+
 #if SYSAPI_WIN32
-  LOG_DEBUG("initializing daemon for run mode");
-
-  if (m_events == nullptr) {
-    throw XDeskflow("event queue not set for pre-run init");
-  }
-
-  m_watchdog = std::make_unique<MSWindowsWatchdog>(m_foreground);
-  m_watchdog->setFileLogOutputter(m_fileLogOutputter);
+  m_pWatchdog = std::make_unique<MSWindowsWatchdog>(m_foreground, *m_pFileLogOutputter);
 
   // install the platform event queue to handle service stop events.
-  m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
+  m_events.adoptBuffer(new MSWindowsEventQueueBuffer(&m_events));
 
   std::string command = ARCH->setting("Command");
   bool elevate = ARCH->setting("Elevate") == "1";
 
   if (!command.empty()) {
     LOG_DEBUG("using last known command: %s", command.c_str());
-    m_watchdog->setProcessConfig(command, elevate);
+    m_pWatchdog->setProcessConfig(command, elevate);
   }
 #endif
+
+  LOG_DEBUG("starting daemon thread");
+  daemonThread.start();
 }
 
 void DaemonApp::mainLoop()
 {
-#if SYSAPI_WIN32
-  if (m_watchdog == nullptr) {
-    LOG_CRIT("watchdog not set for main loop");
-    return;
-  }
-#endif
-
-  if (m_events == nullptr) {
-    LOG_CRIT("event queue not set for main loop");
-    return;
-  }
-
   DAEMON_RUNNING(true);
 
   try {
 #if SYSAPI_WIN32
     LOG_DEBUG("starting watchdog threads");
-    m_watchdog->startAsync();
+    m_pWatchdog->startAsync();
 #endif
 
     LOG_INFO("daemon is running");
-    m_events->loop();
+    m_events.loop();
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
     LOG_CRIT("daemon runtime error: %s", e.what());
   } catch (...) { // NOSONAR - Catching remaining exceptions
@@ -287,7 +239,7 @@ void DaemonApp::mainLoop()
 #if SYSAPI_WIN32
   try {
     LOG_DEBUG("stopping process watchdog");
-    m_watchdog->stop();
+    m_pWatchdog->stop();
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
     LOG_CRIT("daemon stop watchdog error: %s", e.what());
   } catch (...) { // NOSONAR - Catching remaining exceptions
@@ -309,4 +261,24 @@ std::string DaemonApp::logFilename()
   }
 
   return logFilename;
+}
+
+void DaemonApp::setForeground()
+{
+  m_foreground = true;
+  showConsole();
+}
+
+void DaemonApp::initLogging()
+{
+#if SYSAPI_WIN32
+  if (!m_foreground) {
+    // Only use MS debug outputter when the process is daemonized, since stdout won't be accessible
+    // in that case, but is accessible when running in the foreground.
+    CLOG->insert(new MSWindowsDebugOutputter()); // NOSONAR - Adopted by `Log`
+  }
+#endif
+
+  m_pFileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
+  CLOG->insert(m_pFileLogOutputter);
 }
