@@ -41,12 +41,11 @@ enum
   kExitArgs = 3,       // bad arguments
   kExitConfig = 4,     // cannot read configuration
 };
-namespace deskflow::common {
 
 #if WINAPI_MSWINDOWS
+namespace deskflow::common {
 
 const auto kCloseEventName = "Global\\DeskflowClose";
 
+}
 #endif
-
-} // namespace deskflow::common
