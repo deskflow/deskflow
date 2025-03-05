@@ -135,7 +135,7 @@ void DaemonApp::clearWatchdogCommand()
 #endif
 }
 
-void DaemonApp::clearSettings()
+void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
   ARCH->clearSettings();
