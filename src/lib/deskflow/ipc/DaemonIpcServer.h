@@ -22,6 +22,8 @@ public:
   explicit DaemonIpcServer(QObject *parent, const QString &logFilename);
   ~DaemonIpcServer() override;
 
+  void listen();
+
 signals:
   void logLevelChanged(const QString &logLevel);
   void elevateModeChanged(bool elevate);

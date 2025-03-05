@@ -78,8 +78,11 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 // MSWindowsWatchdog
 //
 
-MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
+MSWindowsWatchdog::MSWindowsWatchdog(bool foreground, FileLogOutputter &fileLogOutputter)
+    : m_fileLogOutputter(fileLogOutputter),
+      m_foreground(foreground)
 {
+  LOG_DEBUG("watchdog constructed, mutex initialized");
   initSasFunc();
   initOutputReadPipe();
 }
@@ -265,11 +268,6 @@ bool MSWindowsWatchdog::isProcessRunning()
   return exitCode == STILL_ACTIVE;
 }
 
-void MSWindowsWatchdog::setFileLogOutputter(FileLogOutputter *outputter)
-{
-  m_fileLogOutputter = outputter;
-}
-
 void MSWindowsWatchdog::startProcess()
 {
   if (m_command.empty()) {
@@ -336,6 +334,7 @@ void MSWindowsWatchdog::startProcess()
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
   LOG_DEBUG("updating watchdog process config, locking mutex");
+  LOG_DEBUG("mutex address: %p", static_cast<void *>(&m_processStateMutex));
   std::unique_lock lock(m_processStateMutex);
 
   m_command = command;
@@ -373,10 +372,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       // strip out windows \r chars to prevent extra lines in log file.
       std::string output = trimOutputBuffer(buffer);
-
-      if (m_fileLogOutputter != nullptr) {
-        m_fileLogOutputter->write(kPRINT, output.c_str());
-      }
+      m_fileLogOutputter.write(kPRINT, output.c_str());
 
 #if SYSAPI_WIN32
       if (m_foreground) {
