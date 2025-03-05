@@ -620,13 +620,13 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  if (!m_appConfig.enableUpdateCheck().has_value()) {
+
+  if (!DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
     showAndActivate();
-    m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
   }
 
-  if (m_appConfig.enableUpdateCheck().value()) {
+  if (DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
     m_versionChecker.checkLatest();
   } else {
     qDebug() << "update check disabled";

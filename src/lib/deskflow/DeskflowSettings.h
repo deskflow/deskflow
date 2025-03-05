@@ -39,6 +39,7 @@ struct Settings
   struct Gui
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
+    inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
   };
@@ -76,6 +77,7 @@ private:
   QSettings *m_settings = nullptr;
 
   inline static const QStringList validKeys = {
-      Settings::Core::Scope, Settings::Gui::Autohide, Settings::Gui::LogExpanded, Settings::Gui::SymbolicTrayIcon
+      Settings::Core::Scope, Settings::Gui::Autohide, Settings::Gui::LogExpanded, Settings::Gui::SymbolicTrayIcon,
+      Settings::Gui::AutoUpdateCheck
   };
 };

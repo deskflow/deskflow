@@ -76,7 +76,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "mainWindowPosition",
     "", // 41 = Show dev thanks, obsolete
     "showCloseReminder",
-    "enableUpdateCheck",
+    "", // 43 Moved to deskflow settings
     "", // 44, Moved to deskflow settings.
     "", // 45 Moved to deskflow settings
     "requireClientCerts",
@@ -141,7 +141,6 @@ void AppConfig::recallFromCurrentScope()
       getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
-  m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
 }
 
 void AppConfig::recallScreenName()
@@ -195,7 +194,6 @@ void AppConfig::commit()
     setInCurrentScope(kMainWindowSize, m_MainWindowSize);
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
-    setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
@@ -558,11 +556,6 @@ bool AppConfig::showCloseReminder() const
   return m_ShowCloseReminder;
 }
 
-std::optional<bool> AppConfig::enableUpdateCheck() const
-{
-  return m_EnableUpdateCheck;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -723,11 +716,6 @@ void AppConfig::setMainWindowPosition(const QPoint &position)
 void AppConfig::setShowCloseReminder(bool value)
 {
   m_ShowCloseReminder = value;
-}
-
-void AppConfig::setEnableUpdateCheck(bool value)
-{
-  m_EnableUpdateCheck = value;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
