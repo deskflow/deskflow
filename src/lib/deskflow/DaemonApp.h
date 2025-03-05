@@ -69,6 +69,8 @@ private:
   void handleError(const char *message);
   void handleIpcMessage(const Event &e, void *);
 
+  static void showConsole();
+
 #if SYSAPI_WIN32
   std::unique_ptr<MSWindowsWatchdog> m_watchdog;
 #endif
