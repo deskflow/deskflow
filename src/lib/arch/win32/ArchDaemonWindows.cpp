@@ -350,6 +350,8 @@ void ArchDaemonWindows::setStatus(DWORD state, DWORD step, DWORD waitHint)
 {
   assert(s_daemon != NULL);
 
+  LOG_DEBUG("setting service status: state=%d, step=%d, waitHint=%d", state, step, waitHint);
+
   SERVICE_STATUS status;
   status.dwServiceType = SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS;
   status.dwCurrentState = state;
