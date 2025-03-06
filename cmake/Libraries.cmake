@@ -8,7 +8,6 @@ macro(configure_libs)
   if(UNIX)
     configure_unix_libs()
   elseif(WIN32)
-    find_package(Python REQUIRED QUIET)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP /D _BIND_TO_CURRENT_VCLIBS_VERSION=1")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MD /O2 /Ob2")
     list(APPEND libs Wtsapi32 Userenv Wininet comsuppw Shlwapi)
@@ -21,6 +20,9 @@ macro(configure_libs)
   endif()
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
+  if(UNIX AND NOT APPLE)
+      find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus)
+  endif()
 
   # Define the location of Qt deployment tool
   if(WIN32)
@@ -34,17 +36,6 @@ macro(configure_libs)
   endif()
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
-
-  # TODO SSL check can happen in lib/net when don't have to deploy it any longer on windows
-
-  # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
-  # libraries by apps is strongly discouraged."
-  # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
-  if(APPLE)
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
-  endif()
-
-  find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
   if(ENABLE_COVERAGE)

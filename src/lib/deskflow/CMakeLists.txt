@@ -149,7 +149,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ipc/DaemonIpcServer.h
 )
 
-find_package(Qt6 COMPONENTS Core Network)
 target_link_libraries(${lib_name} PRIVATE Qt6::Core Qt6::Network)
 
 if(WIN32)
