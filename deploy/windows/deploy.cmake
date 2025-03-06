@@ -6,7 +6,7 @@
 set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 install(CODE "execute_process(
-  COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network \"\${CMAKE_INSTALL_PREFIX}/deskflow.exe\"
+  COMMAND ${DEPLOYQT} --no-system-d3d-compiler --no-quick-import -network \"\${CMAKE_INSTALL_PREFIX}/deskflow.exe\"
 )")
 
 # Setup OS_STRING
