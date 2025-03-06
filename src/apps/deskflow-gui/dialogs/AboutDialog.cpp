@@ -10,7 +10,6 @@
 #include "ui_AboutDialog.h"
 
 #include "common/constants.h"
-#include "common/version.h"
 
 #include <QClipboard>
 #include <QDateTime>
@@ -32,7 +31,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   ui->btnCopyVersion->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
-  ui->lblVersion->setText(displayVersion());
+  ui->lblVersion->setText(kDisplayVersion);
 
   ui->lblDescription->setText(kAppDescription);
   ui->lblCopyright->setText(kCopyright);
