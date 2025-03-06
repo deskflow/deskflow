@@ -35,7 +35,6 @@ public:
   MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(QString, tlsCertPath, (), (const, override));
   MOCK_METHOD(int, tlsKeyLength, (), (const, override));
-  MOCK_METHOD(bool, tlsEnabled, (), (const, override));
   MOCK_METHOD(ProcessMode, processMode, (), (const, override));
   MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
   MOCK_METHOD(QString, logLevelText, (), (const, override));
@@ -75,7 +74,6 @@ public:
   MOCK_METHOD(void, setPreventSleep, (bool preventSleep), (override));
   MOCK_METHOD(void, setTlsCertPath, (const QString &tlsCertPath), (override));
   MOCK_METHOD(void, setTlsKeyLength, (int tlsKeyLength), (override));
-  MOCK_METHOD(void, setTlsEnabled, (bool tlsEnabled), (override));
   MOCK_METHOD(void, setLanguageSync, (bool languageSync), (override));
   MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));

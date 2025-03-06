@@ -7,7 +7,7 @@
 #include "TlsUtility.h"
 
 #include "TlsCertificate.h"
-
+#include "common/Settings.h"
 #include <QFile>
 #include <QString>
 
@@ -19,8 +19,7 @@ TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig)
 
 bool TlsUtility::isEnabled() const
 {
-  const auto &config = m_appConfig;
-  return config.tlsEnabled();
+  return Settings::value(Settings::Security::TlsEnabled).toBool();
 }
 
 bool TlsUtility::generateCertificate()

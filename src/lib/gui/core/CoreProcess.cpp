@@ -6,7 +6,7 @@
 
 #include "CoreProcess.h"
 
-#include "common/constants.h"
+#include "common/Settings.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
 #include "gui/ipc/DaemonIpcClient.h"
@@ -500,7 +500,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 #endif
 
-  if (m_appConfig.tlsEnabled()) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
   }
 
@@ -555,7 +555,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  if (m_appConfig.tlsEnabled()) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     TlsUtility tlsUtility(m_appConfig);
     if (!tlsUtility.persistCertificate()) {
       qCritical("failed to persist tls certificate");
