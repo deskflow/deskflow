@@ -3,6 +3,15 @@
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
+# Apple has to use static libraries because "Use of the Apple-provided OpenSSL
+# libraries by apps is strongly discouraged."
+# https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
+if(APPLE)
+  set(OPENSSL_USE_STATIC_LIBS TRUE)
+endif()
+
+find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
+
 add_library(net STATIC
   FingerprintData.cpp
   FingerprintData.h

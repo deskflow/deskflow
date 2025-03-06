@@ -37,17 +37,6 @@ macro(configure_libs)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
-  # TODO SSL check can happen in lib/net when don't have to deploy it any longer on windows
-
-  # Apple has to use static libraries because "Use of the Apple-provided OpenSSL
-  # libraries by apps is strongly discouraged."
-  # https://developer.apple.com/library/archive/documentation/Security/Conceptual/cryptoservices/SecureNetworkCommunicationAPIs/SecureNetworkCommunicationAPIs.html
-  if(APPLE)
-    set(OPENSSL_USE_STATIC_LIBS TRUE)
-  endif()
-
-  find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
-
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
   if(ENABLE_COVERAGE)
     message(STATUS "Enabling code coverage")
