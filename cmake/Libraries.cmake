@@ -21,6 +21,9 @@ macro(configure_libs)
   endif()
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
+  if(UNIX AND NOT APPLE)
+      find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus)
+  endif()
 
   # Define the location of Qt deployment tool
   if(WIN32)
