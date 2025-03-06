@@ -40,13 +40,13 @@ const char *const AppConfig::m_SettingsName[] = {
     "logToFile",
     "logFilename",
     "", // 6 wizardLastRun, obsolete
-    "startedBefore",
+    "", // 7 statedBefore moved to deskflow settings
     "elevateMode",
     "elevateModeEnum",
     "",              // 10 = edition, obsolete (using serial key instead)
     "cryptoEnabled", // 11 = kTlsEnabled (retain legacy string value)
-    "autoHide",
-    "", // 13 = serialKey, obsolete
+    "",              // 12 AutoHide, moved to DeskflowSettings
+    "",              // 13 = serialKey, obsolete
     "lastVersion",
     "", // 15 = lastExpiringWarningTime, obsolete
     "", // 16 = activationHasRun, obsolete
@@ -71,14 +71,14 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 35 = clientHostMode, obsolete
     "", // 36 = serverClientMode, obsolete
     "enableService",
-    "closeToTray",
-    "mainWindowSize",
-    "mainWindowPosition",
+    "", // 38 Moved to deskflow settings
+    "", // 39 window size moved to deskflow settings
+    "", // 40 window position moved to deskflow settings
     "", // 41 = Show dev thanks, obsolete
-    "showCloseReminder",
-    "enableUpdateCheck",
-    "logExpanded",
-    "colorfulIcon",
+    "", // 42 show Close Reminder moved to deskflow settings
+    "", // 43 Moved to deskflow settings
+    "", // 44, Moved to deskflow settings.
+    "", // 45 Moved to deskflow settings
     "requireClientCerts",
 };
 
@@ -120,8 +120,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
-  m_StartedBefore = getFromCurrentScope(kStartedBefore, m_StartedBefore).toBool();
-  m_AutoHide = getFromCurrentScope(kAutoHide, m_AutoHide).toBool();
   m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig = getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
@@ -133,18 +131,10 @@ void AppConfig::recallFromCurrentScope()
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-  m_CloseToTray = getFromCurrentScope(kCloseToTray, m_CloseToTray).toBool();
   m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
   m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
-  m_MainWindowPosition =
-      getFromCurrentScope<QPoint>(kMainWindowPosition, [](const QVariant &v) { return v.toPoint(); });
-  m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
-  m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
-  m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
-  m_logExpanded = getFromCurrentScope(kLogExpanded, m_logExpanded).toBool();
-  m_colorfulTrayIcon = getFromCurrentScope(kColorfulIcon, m_colorfulTrayIcon).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -181,11 +171,9 @@ void AppConfig::commit()
     setInCurrentScope(kLogLevel, m_LogLevel);
     setInCurrentScope(kLogToFile, m_LogToFile);
     setInCurrentScope(kLogFilename, m_LogFilename);
-    setInCurrentScope(kStartedBefore, m_StartedBefore);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kTlsEnabled, m_TlsEnabled);
-    setInCurrentScope(kAutoHide, m_AutoHide);
     setInCurrentScope(kLastVersion, m_LastVersion);
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
@@ -195,13 +183,6 @@ void AppConfig::commit()
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
-    setInCurrentScope(kCloseToTray, m_CloseToTray);
-    setInCurrentScope(kMainWindowSize, m_MainWindowSize);
-    setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
-    setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
-    setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
-    setInCurrentScope(kLogExpanded, m_logExpanded);
-    setInCurrentScope(kColorfulIcon, m_colorfulTrayIcon);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 
@@ -441,11 +422,6 @@ ProcessMode AppConfig::processMode() const
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
-bool AppConfig::startedBefore() const
-{
-  return m_StartedBefore;
-}
-
 QString AppConfig::lastVersion() const
 {
   return m_LastVersion;
@@ -479,11 +455,6 @@ bool AppConfig::tlsEnabled() const
   return m_TlsEnabled;
 }
 
-bool AppConfig::autoHide() const
-{
-  return m_AutoHide;
-}
-
 bool AppConfig::invertScrollDirection() const
 {
   return m_InvertScrollDirection;
@@ -512,11 +483,6 @@ int AppConfig::tlsKeyLength() const
 bool AppConfig::enableService() const
 {
   return m_EnableService;
-}
-
-bool AppConfig::closeToTray() const
-{
-  return m_CloseToTray;
 }
 
 bool AppConfig::serverGroupChecked() const
@@ -552,36 +518,6 @@ bool AppConfig::requireClientCerts() const
 const QString &AppConfig::serverHostname() const
 {
   return m_ServerHostname;
-}
-
-std::optional<QSize> AppConfig::mainWindowSize() const
-{
-  return m_MainWindowSize;
-}
-
-std::optional<QPoint> AppConfig::mainWindowPosition() const
-{
-  return m_MainWindowPosition;
-}
-
-bool AppConfig::showCloseReminder() const
-{
-  return m_ShowCloseReminder;
-}
-
-std::optional<bool> AppConfig::enableUpdateCheck() const
-{
-  return m_EnableUpdateCheck;
-}
-
-bool AppConfig::logExpanded() const
-{
-  return m_logExpanded;
-}
-
-bool AppConfig::colorfulTrayIcon() const
-{
-  return m_colorfulTrayIcon;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -689,19 +625,9 @@ void AppConfig::setLogFilename(const QString &s)
   m_LogFilename = s;
 }
 
-void AppConfig::setStartedBefore(bool b)
-{
-  m_StartedBefore = b;
-}
-
 void AppConfig::setElevateMode(ElevateMode em)
 {
   m_ElevateMode = em;
-}
-
-void AppConfig::setAutoHide(bool b)
-{
-  m_AutoHide = b;
 }
 
 void AppConfig::setInvertScrollDirection(bool newValue)
@@ -724,50 +650,11 @@ void AppConfig::setEnableService(bool enabled)
   m_EnableService = enabled;
 }
 
-void AppConfig::setCloseToTray(bool minimize)
-{
-  m_CloseToTray = minimize;
-}
-
 void AppConfig::setRequireClientCerts(bool requireClientCerts)
 {
   if (requireClientCerts == m_RequireClientCert)
     return;
   m_RequireClientCert = requireClientCerts;
-}
-
-void AppConfig::setMainWindowSize(const QSize &size)
-{
-  m_MainWindowSize = size;
-}
-
-void AppConfig::setMainWindowPosition(const QPoint &position)
-{
-  m_MainWindowPosition = position;
-}
-
-void AppConfig::setShowCloseReminder(bool value)
-{
-  m_ShowCloseReminder = value;
-}
-
-void AppConfig::setEnableUpdateCheck(bool value)
-{
-  m_EnableUpdateCheck = value;
-}
-
-void AppConfig::setLogExpanded(bool expanded)
-{
-  if (expanded == m_logExpanded)
-    return;
-  m_logExpanded = expanded;
-}
-
-void AppConfig::setColorfulTrayIcon(bool colorful)
-{
-  if (colorful == m_colorfulTrayIcon)
-    return;
-  m_colorfulTrayIcon = colorful;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

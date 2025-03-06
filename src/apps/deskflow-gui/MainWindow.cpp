@@ -9,6 +9,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "deskflow/DeskflowSettings.h"
 #include "dialogs/AboutDialog.h"
 #include "dialogs/FingerprintDialog.h"
 #include "dialogs/ServerConfigDialog.h"
@@ -179,36 +180,33 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-  const auto &windowSize = m_appConfig.mainWindowSize();
-  if (windowSize.has_value()) {
-    qDebug() << "restoring main window size";
-    m_expandedSize = windowSize.value();
-  }
-
-  const auto &windowPosition = m_appConfig.mainWindowPosition();
-  if (windowPosition.has_value()) {
-    int x = 0;
-    int y = 0;
-    int w = 0;
-    int h = 0;
-    for (auto screen : QGuiApplication::screens()) {
-      auto geo = screen->geometry();
-      x = std::min(geo.x(), x);
-      y = std::min(geo.y(), y);
-      w = std::max(geo.x() + geo.width(), w);
-      h = std::max(geo.y() + geo.height(), h);
-    }
-    const QSize totalScreenSize(w, h);
-    const QPoint point = windowPosition.value();
-    if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
-      qDebug() << "restoring main window position";
-      move(point);
-    }
-  } else {
+  const auto windowGeometry = DeskflowSettings::value(Settings::Gui::WindowGeometry).toRect();
+  if (!windowGeometry.isValid()) {
     // center main window in middle of screen
     const auto screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen->geometry();
     move(screenGeometry.center() - rect().center());
+    return;
+  }
+
+  m_expandedSize = windowGeometry.size();
+
+  int x = 0;
+  int y = 0;
+  int w = 0;
+  int h = 0;
+  for (auto screen : QGuiApplication::screens()) {
+    auto geo = screen->geometry();
+    x = std::min(geo.x(), x);
+    y = std::min(geo.y(), y);
+    w = std::max(geo.x() + geo.width(), w);
+    h = std::max(geo.y() + geo.height(), h);
+  }
+  const QSize totalScreenSize(w, h);
+  const QPoint point = windowGeometry.bottomRight();
+  if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
+    qDebug() << "restoring main window position";
+    move(point);
   }
 }
 
@@ -226,7 +224,7 @@ void MainWindow::setupControls()
 
   // Setup the log toggle, set its initial state to closed
   ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
     ui->textLog->setVisible(true);
     ui->btnToggleLog->click();
@@ -361,14 +359,12 @@ void MainWindow::toggleLogVisible(bool visible)
 {
   if (visible) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    ui->textLog->setVisible(true);
-    m_appConfig.setLogExpanded(true);
   } else {
     ui->btnToggleLog->setArrowType(Qt::RightArrow);
     m_expandedSize = size();
-    ui->textLog->setVisible(false);
-    m_appConfig.setLogExpanded(false);
   }
+  ui->textLog->setVisible(visible);
+  DeskflowSettings::setValue(Settings::Gui::LogExpanded, visible);
   // 1 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(1, this, &MainWindow::updateSize);
 }
@@ -516,7 +512,7 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
     resize(m_expandedSize);
@@ -581,7 +577,8 @@ void MainWindow::updateModeControls(bool serverMode)
     // The server can run without any clients configured, and this is actually
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
-    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
+    const auto startedBefore = DeskflowSettings::value(Settings::Core::StartedBefore).toBool();
+    if (!startedBefore && !m_coreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
       m_coreProcess.start();
       messages::showFirstServerStartMessage(this);
@@ -621,13 +618,13 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  if (!m_appConfig.enableUpdateCheck().has_value()) {
+
+  if (!DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
     showAndActivate();
-    m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
   }
 
-  if (m_appConfig.enableUpdateCheck().value()) {
+  if (DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
     m_versionChecker.checkLatest();
   } else {
     qDebug() << "update check disabled";
@@ -635,15 +632,11 @@ void MainWindow::open()
 
   m_coreProcess.applyLogLevel();
 
-  if (m_appConfig.startedBefore()) {
+  if (DeskflowSettings::value(Settings::Core::StartedBefore).toBool()) {
     m_coreProcess.start();
   }
 
-  if (m_appConfig.autoHide()) {
-    hide();
-  } else {
-    showAndActivate();
-  }
+  DeskflowSettings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
 }
 
 void MainWindow::coreProcessStarting()
@@ -731,18 +724,18 @@ void MainWindow::setIcon()
   // Using a theme icon that is packed in exe renders an invisible icon
   // Instead use the resource path of the packed icon
   // TODO Report to Qt ref the bug here
+  const bool symbolicIcon = DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool();
 #ifndef Q_OS_MAC
   QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
-  if (!appConfig().colorfulTrayIcon()) {
+  if (symbolicIcon)
     iconString.append(QStringLiteral("-symbolic"));
-  }
   m_trayIcon->setIcon(QIcon(iconString));
 #else
-  if (m_appConfig.colorfulTrayIcon()) {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
-  } else {
+  if (symbolicIcon) {
     m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
     m_trayIcon->icon().setIsMask(true);
+  } else {
+    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
   }
 #endif
 }
@@ -855,10 +848,10 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_appConfig.closeToTray() && event->spontaneous()) {
-    if (m_appConfig.showCloseReminder()) {
+  if (DeskflowSettings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
+    if (DeskflowSettings::value(Settings::Gui::CloseReminder).toBool()) {
       messages::showCloseReminder(this);
-      m_appConfig.setShowCloseReminder(false);
+      DeskflowSettings::setValue(Settings::Gui::CloseReminder, false);
     }
     qDebug() << "hiding to tray";
     hide();
@@ -867,9 +860,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   }
 
   if (m_saveOnExit) {
-    m_appConfig.setMainWindowPosition(pos());
-    m_appConfig.setMainWindowSize(size());
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Gui::WindowGeometry, geometry());
   }
   qDebug() << "quitting application";
   event->accept();
@@ -878,15 +869,13 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showFirstConnectedMessage()
 {
-  if (m_appConfig.startedBefore()) {
+  if (DeskflowSettings::value(Settings::Core::StartedBefore).toBool())
     return;
-  }
-
-  m_appConfig.setStartedBefore(true);
-  m_configScopes.save();
+  DeskflowSettings::setValue(Settings::Core::StartedBefore, true);
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
-  messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
+  const auto closeToTray = DeskflowSettings::value(Settings::Gui::CloseToTray).toBool();
+  messages::showFirstConnectedMessage(this, closeToTray, m_appConfig.enableService(), isServer);
 }
 
 void MainWindow::updateStatus()
@@ -951,8 +940,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
-    m_appConfig.setStartedBefore(true);
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Core::StartedBefore, true);
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||

@@ -62,12 +62,12 @@ private:
     kLogToFile = 4,
     kLogFilename = 5,
     // 6 = show first run wizard, obsolete
-    kStartedBefore = 7,
+    // 7 Started before moved to deskflow settings
     kElevateModeLegacy = 8,
     kElevateMode = 9,
     // 10 = edition, obsolete (related to obsolete licensing)
     kTlsEnabled = 11,
-    kAutoHide = 12,
+    // 12 = auto hide, Moved to DeskflowSettings
     // 13 = serial key, obsolete
     kLastVersion = 14,
     // 15 = last expire time, obsolete
@@ -93,14 +93,14 @@ private:
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
     kEnableService = 37,
-    kCloseToTray = 38,
-    kMainWindowSize = 39,
-    kMainWindowPosition = 40,
+    // 38, close to tray moved to deskflow settings
+    // 39 window size moved to deskflow settings
+    // 40 window position moved to deskflow settings
     // 41 = show dev thanks, obsolete
-    kShowCloseReminder = 42,
-    kEnableUpdateCheck = 43,
-    kLogExpanded = 44,
-    kColorfulIcon = 45,
+    // 42, close reminder moved to deskflow settings
+    // 43 = Enable Update Check,
+    // 44 = LogExpanded, Moved to deskflow settings
+    // 45 = Colorful Icon, Moved to deskflow settings
     kRequireClientCert = 46
   };
 
@@ -156,9 +156,7 @@ public:
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
-  bool autoHide() const override;
   bool enableService() const override;
-  bool closeToTray() const override;
   bool clientGroupChecked() const override;
   bool requireClientCerts() const override;
 
@@ -166,17 +164,11 @@ public:
   // Getters (new methods)
   //
 
-  bool startedBefore() const;
   QString logDir() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
   QString lastVersion() const;
-  std::optional<QSize> mainWindowSize() const;
-  std::optional<QPoint> mainWindowPosition() const;
-  bool showCloseReminder() const;
-  std::optional<bool> enableUpdateCheck() const;
   bool logExpanded() const;
-  bool colorfulTrayIcon() const;
 
   //
   // Setters (overrides)
@@ -190,12 +182,10 @@ public:
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setTlsEnabled(bool e) override;
-  void setAutoHide(bool b) override;
   void setInvertScrollDirection(bool b) override;
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
-  void setCloseToTray(bool minimize) override;
   void setTlsCertPath(const QString &path) override;
   void setTlsKeyLength(int length) override;
   void setRequireClientCerts(bool requireClientCerts) override;
@@ -204,7 +194,6 @@ public:
   // Setters (new methods)
   //
 
-  void setStartedBefore(bool b);
   void setServerGroupChecked(bool);
   void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
@@ -212,12 +201,7 @@ public:
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
   void setLastVersion(const QString &version);
-  void setMainWindowSize(const QSize &size);
-  void setMainWindowPosition(const QPoint &position);
-  void setShowCloseReminder(bool show);
-  void setEnableUpdateCheck(bool value);
   void setLogExpanded(bool expanded);
-  void setColorfulTrayIcon(bool color);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -299,10 +283,8 @@ private:
   int m_LogLevel = 0;
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
-  bool m_StartedBefore = false;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_TlsEnabled = true;
-  bool m_AutoHide = false;
   QString m_LastVersion = "";
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
@@ -314,15 +296,8 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
-  bool m_CloseToTray = true;
   int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
-  std::optional<QSize> m_MainWindowSize;
-  std::optional<QPoint> m_MainWindowPosition;
   bool m_LoadFromSystemScope = false;
-  bool m_ShowCloseReminder = true;
-  std::optional<bool> m_EnableUpdateCheck;
-  bool m_logExpanded = true;
-  bool m_colorfulTrayIcon = false;
   bool m_RequireClientCert = true;
 
   /**

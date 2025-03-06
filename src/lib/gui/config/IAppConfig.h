@@ -53,9 +53,7 @@ public:
   virtual const QString &networkInterface() const = 0;
   virtual const QString &serverHostname() const = 0;
   virtual int logLevel() const = 0;
-  virtual bool autoHide() const = 0;
   virtual bool enableService() const = 0;
-  virtual bool closeToTray() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
@@ -73,7 +71,6 @@ public:
   virtual void setLogToFile(bool logToFile) = 0;
   virtual void setLogFilename(const QString &logFilename) = 0;
   virtual void setElevateMode(ElevateMode elevateMode) = 0;
-  virtual void setAutoHide(bool autoHide) = 0;
   virtual void setPreventSleep(bool preventSleep) = 0;
   virtual void setTlsCertPath(const QString &tlsCertPath) = 0;
   virtual void setTlsKeyLength(int tlsKeyLength) = 0;
@@ -81,7 +78,6 @@ public:
   virtual void setLanguageSync(bool languageSync) = 0;
   virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;
-  virtual void setCloseToTray(bool closeToTray) = 0;
   virtual void setRequireClientCerts(bool requireClientCerts) = 0;
 };
 

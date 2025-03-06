@@ -9,6 +9,7 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 
+#include "deskflow/DeskflowSettings.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
@@ -148,8 +149,8 @@ void SettingsDialog::accept()
   m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
-  m_appConfig.setAutoHide(ui->cbAutoHide->isChecked());
-  m_appConfig.setEnableUpdateCheck(ui->cbAutoUpdate->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
   m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
@@ -157,8 +158,8 @@ void SettingsDialog::accept()
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
-  m_appConfig.setCloseToTray(ui->cbCloseToTray->isChecked());
-  m_appConfig.setColorfulTrayIcon(ui->rbIconColorful->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
 
   QDialog::accept();
@@ -182,19 +183,15 @@ void SettingsDialog::loadFromConfig()
   ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
-  ui->cbAutoHide->setChecked(m_appConfig.autoHide());
+  ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
   ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
-  ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
+  ui->cbCloseToTray->setChecked(DeskflowSettings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
-  if (m_appConfig.enableUpdateCheck().has_value()) {
-    ui->cbAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
-  } else {
-    ui->cbAutoUpdate->setChecked(false);
-  }
+  ui->cbAutoUpdate->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
 
   if (m_appConfig.isActiveScopeSystem()) {
     ui->rbScopeSystem->setChecked(true);
@@ -202,10 +199,10 @@ void SettingsDialog::loadFromConfig()
     ui->rbScopeUser->setChecked(true);
   }
 
-  if (m_appConfig.colorfulTrayIcon())
-    ui->rbIconColorful->setChecked(true);
-  else
+  if (DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
+  else
+    ui->rbIconColorful->setChecked(true);
 
   qDebug() << "load from config done";
   updateTlsControls();
