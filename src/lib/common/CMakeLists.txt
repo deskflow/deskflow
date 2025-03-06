@@ -19,7 +19,6 @@ add_library(common INTERFACE
   stdpost.h
   stdpre.h
   stdset.h
-  stdsstream.h
   stdvector.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
