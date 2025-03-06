@@ -27,7 +27,6 @@ namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
 const QString kDefaultLogFile = QStringLiteral("%1.log").arg(kAppId);
-const int kDefaultTlsKeyLength = 2048;
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -82,7 +81,7 @@ private:
     kClientGroupChecked = 24,
     kServerHostname = 25,
     kTlsCertPath = 26,
-    kTlsKeyLength = 27,
+    // 27 = tlsKeyLength Moved to deskflow settings
     kPreventSleep = 28,
     kLanguageSync = 29,
     kInvertScrollDirection = 30,
@@ -136,7 +135,6 @@ public:
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   QString tlsCertPath() const override;
-  int tlsKeyLength() const override;
   QString logLevelText() const override;
   const QString &screenName() const override;
   bool logToFile() const override;
@@ -184,7 +182,6 @@ public:
   void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
   void setTlsCertPath(const QString &path) override;
-  void setTlsKeyLength(int length) override;
   void setRequireClientCerts(bool requireClientCerts) override;
 
   //
@@ -291,7 +288,6 @@ private:
   bool m_ClientGroupChecked = false;
   QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
-  int m_TlsKeyLength = deskflow::gui::kDefaultTlsKeyLength;
   bool m_LoadFromSystemScope = false;
   bool m_RequireClientCert = true;
 

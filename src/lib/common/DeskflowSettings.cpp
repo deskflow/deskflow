@@ -84,6 +84,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Gui::WindowGeometry)
     return QRect();
 
+  if (key == Settings::Security::KeySize)
+    return 2048;
+
   return QVariant();
 }
 
