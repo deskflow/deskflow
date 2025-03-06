@@ -15,22 +15,21 @@
   </CPackWiXFragment>
 
   <CPackWiXFragment Id="#PRODUCT">
+    <CustomAction 
+      Id="Run_VCRedist"
+      ExeCommand=""
+      FileRef="CM_FP_vc_redist.x64.exe"
+      Execute="deferred"
+      Impersonate="no"
+      Return="check"
+    />
+    <InstallExecuteSequence>
+      <Custom Action="Run_VCRedist" After="InstallFiles" Condition="NOT Installed"/>
+    </InstallExecuteSequence>
+
     <CustomAction Id="Run_Deskflow" ExeCommand="Deskflow" FileRef="CM_FP_deskflow.exe" Return="asyncNoWait"/>
     <InstallExecuteSequence>
       <Custom Action="Run_Deskflow" OnExit="success" Condition="NOT Installed"/>
     </InstallExecuteSequence>
-    <Property Id="VCREDIST">
-      <RegistrySearch Id="VCRedistCheck"
-        Root="HKLM"
-        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
-        Name="Installed"
-        Type="raw"/>
-    </Property>
-  </CPackWiXFragment>
-
-  <CPackWiXFragment Id="#PRODUCTFEATURE">
-    <Condition Message="Microsoft Visual C++ Redistributable 2015-2022 (x64) is required. Please install it before running this installer.">
-      <![CDATA[VCREDIST]]>
-    </Condition>
   </CPackWiXFragment>
 </CPackWiXPatch>
