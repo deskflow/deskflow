@@ -60,7 +60,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "groupClientChecked",
     "serverHostname",
     "tlsCertPath",
-    "tlsKeyLength",
+    "", // 27 key length Moved to Deskflow settings
     "preventSleep",
     "languageSync",
     "invertScrollDirection",
@@ -132,7 +132,6 @@ void AppConfig::recallFromCurrentScope()
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
-  m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
   m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
 }
 
@@ -468,11 +467,6 @@ QString AppConfig::tlsCertPath() const
   return m_TlsCertPath;
 }
 
-int AppConfig::tlsKeyLength() const
-{
-  return m_TlsKeyLength;
-}
-
 bool AppConfig::enableService() const
 {
   return m_EnableService;
@@ -529,16 +523,6 @@ void AppConfig::setTlsCertPath(const QString &value)
     m_TlsChanged = true;
   }
   m_TlsCertPath = value;
-}
-
-void AppConfig::setTlsKeyLength(int value)
-{
-  if (m_TlsKeyLength != value) {
-    // deliberately only set the changed flag if there was a change.
-    // it's important not to set this flag to false here.
-    m_TlsChanged = true;
-  }
-  m_TlsKeyLength = value;
 }
 
 void AppConfig::setServerGroupChecked(bool newValue)

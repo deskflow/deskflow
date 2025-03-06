@@ -37,7 +37,7 @@ bool TlsUtility::generateCertificate()
     return false;
   }
 
-  auto length = m_appConfig.tlsKeyLength();
+  auto length = Settings::value(Settings::Security::KeySize).toInt();
 
   return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
 }

@@ -82,6 +82,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Gui::WindowGeometry)
     return QRect();
 
+  if (key == Security::KeySize)
+    return 2048;
+
   return QVariant();
 }
 
