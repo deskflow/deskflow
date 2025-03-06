@@ -45,11 +45,10 @@ list(APPEND CPACK_WIX_EXTENSIONS "WixToolset.Util.wixext" "WixToolset.Firewall.w
 # Make sure to also put the xmlns for the ext into the wix block on generated files
 list(APPEND CPACK_WIX_CUSTOM_XMLNS "util=http://wixtoolset.org/schemas/v4/wxs/util" "firewall=http://wixtoolset.org/schemas/v4/wxs/firewall")
 
-# The patch has to know the full path of our msm file
 configure_file(
   ${MY_DIR}/wix-patch.xml.in
   ${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml @ONLY
 )
 
-# This patch set ups filewall rules, the service and msm module
+# This patch configures the firewall rules, installs the daemon as a service, and installs the MSVC Runtime.
 set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml")

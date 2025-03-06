@@ -5,16 +5,32 @@
     </ServiceInstall>
     <ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
   </CPackWiXFragment>
+  
   <CPackWiXFragment Id="CM_CP_deskflow_server.exe">
     <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-server.exe" Scope="any"/>
   </CPackWiXFragment>
+
   <CPackWiXFragment Id="CM_CP_deskflow_client.exe">
     <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-client.exe" Scope="any"/>
   </CPackWiXFragment>
+
   <CPackWiXFragment Id="#PRODUCT">
     <CustomAction Id="Run_Deskflow" ExeCommand="Deskflow" FileRef="CM_FP_deskflow.exe" Return="asyncNoWait"/>
     <InstallExecuteSequence>
       <Custom Action="Run_Deskflow" OnExit="success" Condition="NOT Installed"/>
     </InstallExecuteSequence>
+    <Property Id="VCREDIST">
+      <RegistrySearch Id="VCRedistCheck"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+        Name="Installed"
+        Type="raw"/>
+    </Property>
+  </CPackWiXFragment>
+
+  <CPackWiXFragment Id="#PRODUCTFEATURE">
+    <Condition Message="Microsoft Visual C++ Redistributable 2015-2022 (x64) is required. Please install it before running this installer.">
+      <![CDATA[VCREDIST]]>
+    </Condition>
   </CPackWiXFragment>
 </CPackWiXPatch>
