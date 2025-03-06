@@ -43,10 +43,10 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 7 statedBefore moved to deskflow settings
     "elevateMode",
     "elevateModeEnum",
-    "",              // 10 = edition, obsolete (using serial key instead)
-    "cryptoEnabled", // 11 = kTlsEnabled (retain legacy string value)
-    "",              // 12 AutoHide, moved to Settings
-    "",              // 13 = serialKey, obsolete
+    "", // 10 = edition, obsolete (using serial key instead)
+    "", // 11 = kTlsEnabled (retain legacy string value) Moved to Settings
+    "", // 12 AutoHide, moved to Settings
+    "", // 13 = serialKey, obsolete
     "lastVersion",
     "", // 15 = lastExpiringWarningTime, obsolete
     "", // 16 = activationHasRun, obsolete
@@ -131,7 +131,6 @@ void AppConfig::recallFromCurrentScope()
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-  m_TlsEnabled = getFromCurrentScope(kTlsEnabled, m_TlsEnabled).toBool();
   m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_TlsKeyLength = getFromCurrentScope(kTlsKeyLength, m_TlsKeyLength).toInt();
   m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
@@ -173,7 +172,6 @@ void AppConfig::commit()
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
-    setInCurrentScope(kTlsEnabled, m_TlsEnabled);
     setInCurrentScope(kLastVersion, m_LastVersion);
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
@@ -450,11 +448,6 @@ ElevateMode AppConfig::elevateMode() const
   return m_ElevateMode;
 }
 
-bool AppConfig::tlsEnabled() const
-{
-  return m_TlsEnabled;
-}
-
 bool AppConfig::invertScrollDirection() const
 {
   return m_InvertScrollDirection;
@@ -527,15 +520,6 @@ const QString &AppConfig::serverHostname() const
 ///////////////////////////////////////////////////////////////////////////////
 // Begin setters
 ///////////////////////////////////////////////////////////////////////////////
-
-void AppConfig::setTlsEnabled(bool value)
-{
-  // we purposefully do not set the 'tls changed' flag when enabling/disabling
-  // tls, since that would cause the certificate to regenerate, which could get
-  // pretty annoying.
-
-  m_TlsEnabled = value;
-}
 
 void AppConfig::setTlsCertPath(const QString &value)
 {

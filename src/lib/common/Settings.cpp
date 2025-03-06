@@ -75,7 +75,7 @@ QVariant Settings::defaultValue(const QString &key)
   }
 
   if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon)
-      || (key == Gui::CloseReminder)) {
+      || (key == Gui::CloseReminder) || (key == Security::TlsEnabled)) {
     return true;
   }
 

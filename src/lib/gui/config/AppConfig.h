@@ -66,7 +66,7 @@ private:
     kElevateModeLegacy = 8,
     kElevateMode = 9,
     // 10 = edition, obsolete (related to obsolete licensing)
-    kTlsEnabled = 11,
+    // 11 = tlsEnagled moved to Settigns
     // 12 = auto hide, Moved to Settings
     // 13 = serial key, obsolete
     kLastVersion = 14,
@@ -135,7 +135,6 @@ public:
   IConfigScopes &scopes() const override;
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
-  bool tlsEnabled() const override;
   QString tlsCertPath() const override;
   int tlsKeyLength() const override;
   QString logLevelText() const override;
@@ -180,7 +179,6 @@ public:
   void setLogToFile(bool b) override;
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
-  void setTlsEnabled(bool e) override;
   void setInvertScrollDirection(bool b) override;
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
@@ -282,7 +280,6 @@ private:
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
-  bool m_TlsEnabled = true;
   QString m_LastVersion = "";
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;

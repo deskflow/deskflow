@@ -7,6 +7,7 @@
 #include "ServerConnection.h"
 
 #include "ServerMessage.h"
+#include "common/Settings.h"
 #include "gui/config/ServerConfigDialogState.h"
 #include "messages.h"
 
@@ -94,8 +95,9 @@ void ServerConnection::handleNewClient(const QString &clientName)
   Q_EMIT messageShowing();
 
   m_messageShowing = true;
+  const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
   const auto result =
-      m_pDeps->showNewClientPrompt(m_pParent, clientName, m_appConfig.tlsEnabled() && m_appConfig.requireClientCerts());
+      m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && m_appConfig.requireClientCerts());
   m_messageShowing = false;
 
   if (result == Add) {

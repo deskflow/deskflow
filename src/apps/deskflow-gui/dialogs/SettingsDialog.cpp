@@ -154,7 +154,7 @@ void SettingsDialog::accept()
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
   m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
-  m_appConfig.setTlsEnabled(ui->groupSecurity->isChecked());
+  Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
@@ -218,7 +218,7 @@ void SettingsDialog::updateTlsControls()
     ui->comboTlsKeyLength->setCurrentIndex(ui->comboTlsKeyLength->findText(keyLengthText));
   }
 
-  const auto tlsEnabled = m_tlsUtility.isEnabled();
+  const auto tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto enabled = writable && tlsEnabled;
 
