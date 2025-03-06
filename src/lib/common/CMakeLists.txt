@@ -16,10 +16,11 @@ add_library(common STATIC
   stdpre.h
   stdset.h
   stdvector.h
+  Settings.h
+  Settings.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
-set_target_properties(common PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(common PUBLIC Qt6::Core)
 
 if(APPLE)
