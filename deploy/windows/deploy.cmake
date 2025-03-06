@@ -39,6 +39,7 @@ set(CPACK_WIX_UPGRADE_GUID "027D1C8A-E7A5-4754-BB93-B2D45BFDBDC8")
 set(CPACK_WIX_UI_BANNER "${MY_DIR}/wix-banner.png")
 set(CPACK_WIX_UI_DIALOG "${MY_DIR}/wix-dialog.png")
 
+
 # Required Extra Extenstions
 list(APPEND CPACK_WIX_EXTENSIONS "WixToolset.Util.wixext" "WixToolset.Firewall.wixext")
 
@@ -51,5 +52,12 @@ configure_file(
   ${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml @ONLY
 )
 
+
 # This patch set ups filewall rules, the service and msm module
 set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml")
+
+configure_file(
+  ${MY_DIR}/wix-template.in
+  ${CMAKE_CURRENT_BINARY_DIR}/wix-template @ONLY
+)
+set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_BINARY_DIR}/wix-template")
