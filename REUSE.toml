@@ -128,12 +128,6 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = "deploy/windows/Microsoft_VC142_CRT_x64.msm"
-precedence = "override"
-SPDX-FileCopyrightText = "Microsoft"
-SPDX-License-Identifier = "LicenseRef-Microsoft-vc-redist"
-
-[[annotations]]
 path = "src/apps/deskflow-client/deskflow-client.exe.manifest"
 precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
