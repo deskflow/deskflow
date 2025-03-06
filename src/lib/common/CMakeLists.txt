@@ -5,7 +5,6 @@ configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common STATIC
   common.h
-  version.h
   IInterface.h
   stddeque.h
   stdexcept.h

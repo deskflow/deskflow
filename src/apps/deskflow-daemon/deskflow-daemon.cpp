@@ -9,7 +9,6 @@
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/constants.h"
-#include "common/version.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
 
@@ -61,7 +60,7 @@ int main(int argc, char **argv)
   // which is not useful for troubleshooting Windows services.
   // It's important to write the version number to the log file so we can be certain the old daemon
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
-  LOG_PRINT("%s Daemon v%s", kAppName, displayVersion().toStdString().c_str());
+  LOG_PRINT("%s Daemon v%s", kAppName, kDisplayVersion);
 
   switch (initResult) {
     using enum DaemonApp::InitResult;
