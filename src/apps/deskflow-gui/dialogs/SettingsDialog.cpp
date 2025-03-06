@@ -153,7 +153,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
   m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
-  m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
+  Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
   m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
@@ -210,12 +210,11 @@ void SettingsDialog::loadFromConfig()
 
 void SettingsDialog::updateTlsControls()
 {
-
   if (QFile(m_appConfig.tlsCertPath()).exists()) {
     updateKeyLengthOnFile(m_appConfig.tlsCertPath());
   } else {
-    const auto keyLengthText = QString::number(m_appConfig.tlsKeyLength());
-    ui->comboTlsKeyLength->setCurrentIndex(ui->comboTlsKeyLength->findText(keyLengthText));
+    const auto keyLengthText = Settings::value(Settings::Security::KeySize).toString();
+    ui->comboTlsKeyLength->setCurrentText(keyLengthText);
   }
 
   const auto tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
@@ -262,9 +261,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   }
 
   auto length = ssl.getCertKeyLength(path);
-  auto index = ui->comboTlsKeyLength->findText(QString::number(length));
-  ui->comboTlsKeyLength->setCurrentIndex(index);
-  m_appConfig.setTlsKeyLength(length);
+  ui->comboTlsKeyLength->setCurrentText(QString::number(length));
+  Settings::setValue(Settings::Security::KeySize, length);
 }
 
 void SettingsDialog::updateControls()
