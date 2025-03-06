@@ -1,11 +1,9 @@
-# SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
-
-set(CMAKE_INCLUDE_CURRENT_DIR_IN_INTERFACE ON)
 
 configure_file(constants.h.in constants.h @ONLY)
 
-add_library(common INTERFACE
+add_library(common STATIC
   common.h
   version.h
   IInterface.h
@@ -21,9 +19,9 @@ add_library(common INTERFACE
   stdvector.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
-
-target_link_libraries(common INTERFACE Qt6::Core)
+set_target_properties(common PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(common PUBLIC Qt6::Core)
 
 if(APPLE)
-  target_sources(common INTERFACE MacOSXPrecomp.h)
+  target_sources(common PUBLIC MacOSXPrecomp.h)
 endif()
