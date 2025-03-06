@@ -64,7 +64,7 @@ For instructions on building Deskflow, use the wiki page: [Building](https://git
 
 We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
 
-Windows 10 or higher is required.
+Windows 10 or higher is required. You will need to have installed the Visual C++ libaries from microsoft see this [page](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version) for more details or use this [link](https://aka.ms/vs/17/release/vc_redist.x64.exe) to download the latest version.
 
 macOS 12 or higher is required.
 
