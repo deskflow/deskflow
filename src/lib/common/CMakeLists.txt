@@ -11,7 +11,6 @@ add_library(common INTERFACE
   IInterface.h
   stddeque.h
   stdexcept.h
-  stdfstream.h
   stdistream.h
   stdlist.h
   stdmap.h
