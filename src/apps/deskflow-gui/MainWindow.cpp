@@ -158,7 +158,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   updateSize();
 
   // Force generation of SHA256 for the localhost
-  if (m_appConfig.tlsEnabled()) {
+  if (DeskflowSettings::value(Settings::Security::TlsEnabled).toBool()) {
     if (!QFile::exists(localFingerprintDb())) {
       regenerateLocalFingerprints();
       return;
@@ -592,7 +592,7 @@ void MainWindow::updateSecurityIcon(bool visible)
   if (!visible)
     return;
 
-  bool secureSocket = m_appConfig.tlsEnabled();
+  bool secureSocket = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
 
   const auto txt =
       secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
@@ -1019,7 +1019,8 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  m_btnFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
+  const bool tlsEnabled = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
+  m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)

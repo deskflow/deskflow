@@ -45,6 +45,10 @@ public:
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
   };
+  struct Security
+  {
+    inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
+  };
 
   // clang-format off
   inline static const QStringList validKeys = {
@@ -57,6 +61,7 @@ public:
     , Settings::Gui::LogExpanded
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Gui::WindowGeometry
+    , Settings::Security::TlsEnabled
   };
   // clang-format on
 };
