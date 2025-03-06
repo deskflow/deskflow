@@ -9,7 +9,6 @@ add_library(common INTERFACE
   common.h
   version.h
   IInterface.h
-  stdbitset.h
   stddeque.h
   stdexcept.h
   stdfstream.h
