@@ -35,6 +35,10 @@ macro(configure_libs)
       find_program(DEPLOYQT macdeployqt)
   endif()
 
+  set(CMAKE_AUTOMOC ON)
+  set(CMAKE_AUTOUIC ON)
+  set(CMAKE_AUTORCC ON)
+
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)

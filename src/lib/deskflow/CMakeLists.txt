@@ -49,8 +49,6 @@ endif()
 ####################Start Making Library#########################
 set(lib_name app)
 
-set(CMAKE_AUTOMOC ON)
-
 # arch
 if(WIN32)
   set(PLATFORM_CODE
