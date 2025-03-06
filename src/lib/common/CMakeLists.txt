@@ -25,7 +25,6 @@ add_library(common INTERFACE
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
-find_package(Qt6 COMPONENTS Core)
 target_link_libraries(common INTERFACE Qt6::Core)
 
 if(APPLE)
