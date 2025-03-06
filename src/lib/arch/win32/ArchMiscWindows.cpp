@@ -6,15 +6,27 @@
  */
 
 #include "arch/win32/ArchMiscWindows.h"
+
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
-#include "common/constants.h"
+#include "base/String.h"
 
 #include <Wtsapi32.h>
 #pragma warning(disable : 4099)
 #include <Userenv.h>
 #pragma warning(default : 4099)
+
+#include <array>
+
+#if _MSC_VER >= 1942 // Visual Studio 2022 Update 12
+const auto kRequiredMajor = 14;
+const auto kRequiredMinor = 42;
+const auto kRuntimeDll = "vcruntime140.dll";
+#else
+#pragma message("MSC version: " STRINGIFY(_MSC_VER))
+#error "Unsupported MSC version"
+#endif
 
 // parent process name for services in Vista
 #define SERVICE_LAUNCHER "services.exe"
@@ -29,6 +41,11 @@
 #define ES_CONTINUOUS ((DWORD)0x80000000)
 #endif
 using EXECUTION_STATE = DWORD;
+
+void errorMessageBox(const char *message, const char *title = "Fatal Error")
+{
+  MessageBoxA(nullptr, message, title, MB_ICONERROR | MB_OK);
+}
 
 //
 // ArchMiscWindows
@@ -482,4 +499,55 @@ std::string ArchMiscWindows::getActiveDesktopName()
   GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
   CloseDesktop(desk);
   return name;
+}
+
+void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not available
+{
+  HMODULE hModule = nullptr;
+  if (!GetModuleHandleEx(0, kRuntimeDll, &hModule) && hModule) {
+    errorMessageBox("Microsoft Visual C++ Runtime is not installed.");
+    abort();
+  }
+
+  std::array<char, MAX_PATH> pathBuffer;
+  const auto path = pathBuffer.data();
+  if (!GetModuleFileNameA(hModule, path, MAX_PATH)) {
+    errorMessageBox("Failed to get the path of Microsoft Visual C++ Runtime.");
+    abort();
+  }
+
+  DWORD handle;
+  DWORD size = GetFileVersionInfoSizeA(path, &handle);
+  if (size <= 0) {
+    errorMessageBox("Failed to get the version info size for Microsoft Visual C++ Runtime.");
+    abort();
+  }
+
+  std::vector<BYTE> versionInfo(size);
+  if (!GetFileVersionInfoA(path, handle, size, versionInfo.data())) {
+    errorMessageBox("Failed to get the file version info for Microsoft Visual C++ Runtime.");
+    abort();
+  }
+
+  VS_FIXEDFILEINFO *fileInfo = nullptr;
+  const auto lplpFileInfo = reinterpret_cast<void **>(&fileInfo); // NOSONAR - Idiomatic Win32
+  if (UINT len = 0; !VerQueryValueA(versionInfo.data(), "\\", lplpFileInfo, &len)) {
+    errorMessageBox("Failed to get the version information for Microsoft Visual C++ Runtime.");
+    abort();
+  }
+
+  const auto currentMajor = HIWORD(fileInfo->dwFileVersionMS);
+  const auto currentMinor = LOWORD(fileInfo->dwFileVersionMS);
+  const auto currentBuild = HIWORD(fileInfo->dwFileVersionLS);
+
+  if (currentMajor < kRequiredMajor || currentMinor < kRequiredMinor) {
+    const auto message = deskflow::string::sprintf(
+        "Installed Microsoft Visual C++ Runtime v%d.%d.%d is outdated.\n\n"
+        "Minimum required version: v%d.%d\n\n"
+        "Please update to the latest Microsoft Visual C++ Redistributable.",
+        currentMajor, currentMinor, currentBuild, kRequiredMajor, kRequiredMinor
+    );
+    MessageBoxA(nullptr, message.c_str(), "Dependency Error", MB_ICONERROR | MB_OK);
+    exit(1);
+  }
 }

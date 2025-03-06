@@ -157,6 +157,9 @@ public:
   //! Returns true if we got the parent process name.
   static bool getParentProcessName(std::string &name);
 
+  //! Prevent hard to troubleshoot errors, e.g. access violations.
+  static void guardRuntimeVersion();
+
   static HINSTANCE instanceWin32();
   static void setInstanceWin32(HINSTANCE instance);
   static BOOL WINAPI getProcessEntry(PROCESSENTRY32 &entry, DWORD processID);
