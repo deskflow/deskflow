@@ -32,6 +32,7 @@ public:
   struct Core
   {
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
+    inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
@@ -84,6 +85,7 @@ private:
   // clang-format off
   inline static const QStringList m_validKeys = {
       Core::LastVersion
+    , Core::PreventSleep
     , Core::Scope
     , Core::StartedBefore
     , Gui::Autohide

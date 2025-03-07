@@ -70,7 +70,8 @@ void Settings::cleanSettings()
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if ((key == Core::Scope) || (key == Gui::Autohide) || (key == Core::StartedBefore)) {
+  if ((key == Core::Scope) || (key == Gui::Autohide) || (key == Core::StartedBefore) ||
+      (key == Core::PreventSleep)) {
     return false;
   }
 

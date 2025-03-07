@@ -151,7 +151,7 @@ void SettingsDialog::accept()
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
-  m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
+  Settings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
   Settings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
   Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
@@ -184,7 +184,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
   ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
-  ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
+  ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
   ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
