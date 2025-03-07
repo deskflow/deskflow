@@ -61,7 +61,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "serverHostname",
     "", // 26 cert path moved to deskflow settings
     "", // 27 key length Moved to Deskflow settings
-    "preventSleep",
+    "", // 28 Prevent sleep moved to deskflow settings
     "languageSync",
     "invertScrollDirection",
     "", // 31 = guid, obsolete
@@ -125,7 +125,6 @@ void AppConfig::recallFromCurrentScope()
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
   m_ServerHostname = getFromCurrentScope(kServerHostname, m_ServerHostname).toString();
-  m_PreventSleep = getFromCurrentScope(kPreventSleep, m_PreventSleep).toBool();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
@@ -171,7 +170,6 @@ void AppConfig::commit()
     setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
     setInCurrentScope(kServerHostname, m_ServerHostname);
-    setInCurrentScope(kPreventSleep, m_PreventSleep);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
@@ -441,11 +439,6 @@ bool AppConfig::languageSync() const
   return m_LanguageSync;
 }
 
-bool AppConfig::preventSleep() const
-{
-  return m_PreventSleep;
-}
-
 bool AppConfig::enableService() const
 {
   return m_EnableService;
@@ -566,11 +559,6 @@ void AppConfig::setInvertScrollDirection(bool newValue)
 void AppConfig::setLanguageSync(bool newValue)
 {
   m_LanguageSync = newValue;
-}
-
-void AppConfig::setPreventSleep(bool newValue)
-{
-  m_PreventSleep = newValue;
 }
 
 void AppConfig::setEnableService(bool enabled)

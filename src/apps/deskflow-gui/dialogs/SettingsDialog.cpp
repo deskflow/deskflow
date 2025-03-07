@@ -151,7 +151,7 @@ void SettingsDialog::accept()
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
-  m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
+  DeskflowSettings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
   DeskflowSettings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
   DeskflowSettings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   DeskflowSettings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
@@ -184,7 +184,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
   ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
-  ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
+  ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
   ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
   ui->cbServiceEnabled->setChecked(m_appConfig.enableService());

@@ -36,7 +36,6 @@ public:
   virtual ElevateMode elevateMode() const = 0;
   virtual QString logLevelText() const = 0;
   virtual const QString &screenName() const = 0;
-  virtual bool preventSleep() const = 0;
   virtual bool logToFile() const = 0;
   virtual const QString &logFilename() const = 0;
   virtual QString coreServerName() const = 0;
@@ -67,7 +66,6 @@ public:
   virtual void setLogToFile(bool logToFile) = 0;
   virtual void setLogFilename(const QString &logFilename) = 0;
   virtual void setElevateMode(ElevateMode elevateMode) = 0;
-  virtual void setPreventSleep(bool preventSleep) = 0;
   virtual void setLanguageSync(bool languageSync) = 0;
   virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;

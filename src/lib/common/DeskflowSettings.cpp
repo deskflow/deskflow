@@ -71,7 +71,8 @@ void DeskflowSettings::cleanSettings()
 
 QVariant DeskflowSettings::defaultValue(const QString &key)
 {
-  if ((key == Settings::Core::Scope) || (key == Settings::Gui::Autohide) || (key == Settings::Core::StartedBefore)) {
+  if ((key == Settings::Core::Scope) || (key == Settings::Gui::Autohide) || (key == Settings::Core::StartedBefore) ||
+      (key == Settings::Core::PreventSleep)) {
     return false;
   }
 

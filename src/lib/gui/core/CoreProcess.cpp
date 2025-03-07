@@ -513,7 +513,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   args << "--profile-dir" << m_pDeps->getProfileRoot();
 #endif
 
-  if (m_appConfig.preventSleep()) {
+  if (DeskflowSettings::value(Settings::Core::PreventSleep).toBool()) {
     args << "--prevent-sleep";
   }
 

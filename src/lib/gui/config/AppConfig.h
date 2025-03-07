@@ -82,7 +82,7 @@ private:
     kServerHostname = 25,
     // 26 = kTlsCertPath moved to deskflow settings
     // 27 = tlsKeyLength Moved to deskflow settings
-    kPreventSleep = 28,
+    // 28 = Prevent Sleep moved to deskflow settings
     kLanguageSync = 29,
     kInvertScrollDirection = 30,
     // 31 = guid, obsolete
@@ -133,7 +133,6 @@ public:
   QString logLevelText() const override;
   const QString &screenName() const override;
   bool logToFile() const override;
-  bool preventSleep() const override;
   const QString &logFilename() const override;
   QString coreServerName() const override;
   QString coreClientName() const override;
@@ -172,7 +171,6 @@ public:
   void setElevateMode(ElevateMode em) override;
   void setInvertScrollDirection(bool b) override;
   void setLanguageSync(bool b) override;
-  void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
 
   //
@@ -264,7 +262,6 @@ private:
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
-  bool m_PreventSleep = false;
   bool m_ServerGroupChecked = false;
   bool m_UseExternalConfig = false;
   QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
