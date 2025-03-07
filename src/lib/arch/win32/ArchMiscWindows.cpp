@@ -19,10 +19,30 @@
 
 #include <array>
 
-#if _MSC_VER >= 1942 // Visual Studio 2022 Update 12
+// Welcome to DLL hell! :)
+//
+// Microsoft lets you run a program with an old runtime DLL, as long as the name matches.
+// Unfortunately if you compile on VS2022 and then use the VS2019 runtime, which both have the
+// same runtime DLL name, the app will randomly crash (e.g. access violation) or break in strange
+// and unpredictable ways due to ABI differences.
+//
+// In Windows, there is no concept of requiring a minimum version of the runtime DLL, so we have
+// to check the version ourselves.
+//
+// Our CI is set up to build with the latest compiler, so in this case we should insist on the
+// latest runtime DLL.
+//
+// As a developer convenience, we also allow builds on older compilers such as the minimum
+// requirements for the current Qt version we support.
+//
+// See table of the compiler versions and the matching runtime DLL versions:
+// https://dev.to/yumetodo/list-of-mscver-and-mscfullver-8nd
+#if _MSC_VER >= 1942 // Visual Studio 2022 Update 12 (v17.12.4)
 const auto kRequiredMajor = 14;
 const auto kRequiredMinor = 42;
-const auto kRuntimeDll = "vcruntime140.dll";
+#elif _MSC_VER >= 1920 // Visual Studio 2019 Update 7 (v16.7)
+const auto kRequiredMajor = 14;
+const auto kRequiredMinor = 27;
 #else
 #pragma message("MSC version: " STRINGIFY(_MSC_VER))
 #error "Unsupported MSC version"
@@ -503,6 +523,8 @@ std::string ArchMiscWindows::getActiveDesktopName()
 
 void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not available
 {
+  const auto kRuntimeDll = "vcruntime140.dll";
+
   HMODULE hModule = nullptr;
   if (!GetModuleHandleEx(0, kRuntimeDll, &hModule) && hModule) {
     errorMessageBox("Microsoft Visual C++ Runtime is not installed.");
