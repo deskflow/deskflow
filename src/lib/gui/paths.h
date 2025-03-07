@@ -46,11 +46,4 @@ inline QDir coreProfileDir()
   return QDir(coreTool.getProfileDir());
 }
 
-inline QString defaultTlsCertPath()
-{
-  const auto root = coreProfileDir();
-  const auto sslDirPath = QDir(root.filePath(kSslDir));
-  return sslDirPath.filePath(kCertificateFilename);
-}
-
 } // namespace deskflow::gui::paths

@@ -34,15 +34,16 @@ bool TlsUtility::generateCertificate()
   }
 
   auto length = DeskflowSettings::value(Settings::Security::KeySize).toInt();
+  const auto certificate = DeskflowSettings::value(Settings::Security::Certificate).toString();
 
-  return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
+  return m_certificate.generateCertificate(certificate, length);
 }
 
 bool TlsUtility::persistCertificate()
 {
   qDebug("persisting tls certificate");
 
-  if (QFile::exists(m_appConfig.tlsCertPath())) {
+  if (QFile::exists(DeskflowSettings::value(Settings::Security::Certificate).toString())) {
     qDebug("tls certificate already exists");
     return true;
   }

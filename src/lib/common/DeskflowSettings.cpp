@@ -87,6 +87,10 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Security::KeySize)
     return 2048;
 
+  if (key == Settings::Security::Certificate) {
+    const auto baseDir = QDir().absoluteFilePath(instance()->m_settings->fileName());
+    return QStringLiteral("%1/%2/%3").arg(baseDir, kSslDir, kCertificateFilename);
+  }
   return QVariant();
 }
 
