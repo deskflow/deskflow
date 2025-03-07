@@ -556,7 +556,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    TlsUtility tlsUtility(m_appConfig);
+    TlsUtility tlsUtility(this);
     if (!tlsUtility.persistCertificate()) {
       qCritical("failed to persist tls certificate");
       return false;
