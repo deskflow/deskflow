@@ -13,7 +13,7 @@
 
 namespace deskflow::gui {
 
-TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig)
+TlsUtility::TlsUtility(QObject *parent) : QObject(parent)
 {
 }
 

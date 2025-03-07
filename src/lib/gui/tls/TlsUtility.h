@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include "gui/config/IAppConfig.h"
-
 #include "TlsCertificate.h"
 
 #include <QObject>
@@ -19,7 +17,7 @@ class TlsUtility : public QObject
   Q_OBJECT
 
 public:
-  explicit TlsUtility(const IAppConfig &appConfig);
+  explicit TlsUtility(QObject *parent = nullptr);
 
   bool generateCertificate();
   bool persistCertificate();
@@ -34,7 +32,6 @@ public:
   bool isEnabled() const;
 
 private:
-  const IAppConfig &m_appConfig;
   TlsCertificate m_certificate;
 };
 

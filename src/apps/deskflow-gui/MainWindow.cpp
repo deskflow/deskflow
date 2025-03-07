@@ -68,7 +68,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_coreProcess(appConfig, m_serverConfig),
       m_serverConnection(this, appConfig, m_serverConfig, m_serverConfigDialogState),
       m_clientConnection(this, appConfig),
-      m_tlsUtility(appConfig),
+      m_tlsUtility(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
