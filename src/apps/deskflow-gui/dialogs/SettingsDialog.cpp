@@ -29,7 +29,7 @@ SettingsDialog::SettingsDialog(
       m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_coreProcess(coreProcess),
-      m_tlsUtility(appConfig)
+      m_tlsUtility(this)
 {
 
   ui->setupUi(this);

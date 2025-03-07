@@ -280,18 +280,11 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_RequireClientCert = true;
 
-  /**
-   * @brief Flag is set when any TLS is setting is changed, and is reset
-   * when the TLS changed event is emitted.
-   */
-  bool m_TlsChanged = false;
-
   deskflow::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
 
 signals:
-  void tlsChanged();
   void screenNameChanged();
   void logLevelChanged();
 };
