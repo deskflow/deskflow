@@ -741,8 +741,9 @@ void MainWindow::setIcon()
   if (m_appConfig.colorfulTrayIcon()) {
     m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
   } else {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
-    m_trayIcon->icon().setIsMask(true);
+    auto icon = QIcon::fromTheme(QStringLiteral("deskflow-symbolic"));
+    icon.setIsMask(true);
+    m_trayIcon->setIcon(icon);
   }
 #endif
 }
