@@ -388,7 +388,8 @@ void MainWindow::configScopesSaving()
 
 void MainWindow::appConfigTlsChanged()
 {
-  if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
+  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+  if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
     m_tlsUtility.generateCertificate();
   }
   updateSecurityIcon(m_lblSecurityStatus->isVisible());
@@ -1149,12 +1150,13 @@ QString MainWindow::trustedFingerprintDb()
 
 bool MainWindow::regenerateLocalFingerprints()
 {
-  if (!QFile::exists(m_appConfig.tlsCertPath()) && !m_tlsUtility.generateCertificate()) {
+  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+  if (!QFile::exists(certificate) && !m_tlsUtility.generateCertificate()) {
     return false;
   }
 
   TlsCertificate tls;
-  if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
+  if (!tls.generateFingerprint(certificate)) {
     return false;
   }
 

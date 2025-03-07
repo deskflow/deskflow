@@ -9,7 +9,7 @@
 #include "config/ConfigScopes.h"
 #include "paths.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
 
@@ -27,7 +27,7 @@ void restart()
   QProcess::startDetached(program, arguments);
 
   qDebug("exiting current process");
-  QApplication::exit();
+  QCoreApplication::exit();
 }
 
 void clearSettings(ConfigScopes &scopes, bool enableRestart)

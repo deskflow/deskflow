@@ -80,7 +80,7 @@ private:
     kUseInternalConfig = 23,
     kClientGroupChecked = 24,
     kServerHostname = 25,
-    kTlsCertPath = 26,
+    // 26 = kTlsCertPath moved to deskflow settings
     // 27 = tlsKeyLength Moved to deskflow settings
     kPreventSleep = 28,
     kLanguageSync = 29,
@@ -107,10 +107,6 @@ public:
   struct Deps
   {
     virtual ~Deps() = default;
-    virtual QString defaultTlsCertPath() const
-    {
-      return deskflow::gui::paths::defaultTlsCertPath();
-    }
     virtual QString hostname() const
     {
       return QHostInfo::localHostName();
@@ -134,7 +130,6 @@ public:
   IConfigScopes &scopes() const override;
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
-  QString tlsCertPath() const override;
   QString logLevelText() const override;
   const QString &screenName() const override;
   bool logToFile() const override;
@@ -181,7 +176,6 @@ public:
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
-  void setTlsCertPath(const QString &path) override;
   void setRequireClientCerts(bool requireClientCerts) override;
 
   //
@@ -248,11 +242,6 @@ private:
   /// @param [in] scope which should be loaded.
   void loadScope(IConfigScopes::Scope scope);
 
-  /**
-   * @brief Gets a TLS certificate path based on the user's profile dir.
-   */
-  QString defaultTlsCertPath() const;
-
   // Used to make the server and client names on windows.
 #ifdef Q_OS_WIN
   inline static const auto s_winExeTemplate = QStringLiteral("%1.exe");
@@ -300,7 +289,6 @@ private:
   deskflow::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;
   QString m_ScreenName;
-  QString m_TlsCertPath;
 
 signals:
   void tlsChanged();

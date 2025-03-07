@@ -59,7 +59,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "useInternalConfig",
     "groupClientChecked",
     "serverHostname",
-    "tlsCertPath",
+    "", // 26 cert path moved to deskflow settings
     "", // 27 key length Moved to Deskflow settings
     "preventSleep",
     "languageSync",
@@ -85,8 +85,7 @@ const char *const AppConfig::m_SettingsName[] = {
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
     : m_Scopes(scopes),
       m_pDeps(deps),
-      m_ScreenName(deps->hostname()),
-      m_TlsCertPath(deps->defaultTlsCertPath())
+      m_ScreenName(deps->hostname())
 {
   determineScope();
   recall();
@@ -131,7 +130,6 @@ void AppConfig::recallFromCurrentScope()
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-  m_TlsCertPath = getFromCurrentScope(kTlsCertPath, m_TlsCertPath).toString();
   m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
 }
 
@@ -181,11 +179,6 @@ void AppConfig::commit()
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
-  }
-
-  if (m_TlsChanged) {
-    m_TlsChanged = false;
-    Q_EMIT tlsChanged();
   }
 }
 
@@ -462,11 +455,6 @@ bool AppConfig::preventSleep() const
   return m_PreventSleep;
 }
 
-QString AppConfig::tlsCertPath() const
-{
-  return m_TlsCertPath;
-}
-
 bool AppConfig::enableService() const
 {
   return m_EnableService;
@@ -514,16 +502,6 @@ const QString &AppConfig::serverHostname() const
 ///////////////////////////////////////////////////////////////////////////////
 // Begin setters
 ///////////////////////////////////////////////////////////////////////////////
-
-void AppConfig::setTlsCertPath(const QString &value)
-{
-  if (m_TlsCertPath != value) {
-    // deliberately only set the changed flag if there was a change.
-    // it's important not to set this flag to false here.
-    m_TlsChanged = true;
-  }
-  m_TlsCertPath = value;
-}
 
 void AppConfig::setServerGroupChecked(bool newValue)
 {
