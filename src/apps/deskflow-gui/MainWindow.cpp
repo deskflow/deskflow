@@ -291,7 +291,8 @@ void MainWindow::connectSlots()
 
   connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
 
-  connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
+  connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
+
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
   connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
 
@@ -381,18 +382,21 @@ void MainWindow::firstShown()
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 }
 
+void MainWindow::settingsChanged(const QString &key)
+{
+  if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
+      (key == Settings::Security::TlsEnabled)) {
+    const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+    if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
+      m_tlsUtility.generateCertificate();
+    }
+    updateSecurityIcon(m_lblSecurityStatus->isVisible());
+  }
+}
+
 void MainWindow::configScopesSaving()
 {
   m_serverConfig.commit();
-}
-
-void MainWindow::appConfigTlsChanged()
-{
-  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
-  if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
-    m_tlsUtility.generateCertificate();
-  }
-  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
