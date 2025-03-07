@@ -47,7 +47,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 11 = kTlsEnabled (retain legacy string value) Moved to Settings
     "", // 12 AutoHide, moved to Settings
     "", // 13 = serialKey, obsolete
-    "lastVersion",
+    "", // 14 last Version moved ot deskflow settings
     "", // 15 = lastExpiringWarningTime, obsolete
     "", // 16 = activationHasRun, obsolete
     "", // 17 = minimizeToTray, obsolete
@@ -119,7 +119,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
-  m_LastVersion = getFromCurrentScope(kLastVersion, m_LastVersion).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseExternalConfig = getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
   m_ConfigFile = getFromCurrentScope(kConfigFile, m_ConfigFile).toString();
@@ -168,7 +167,6 @@ void AppConfig::commit()
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
-    setInCurrentScope(kLastVersion, m_LastVersion);
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
@@ -410,11 +408,6 @@ ProcessMode AppConfig::processMode() const
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
-QString AppConfig::lastVersion() const
-{
-  return m_LastVersion;
-}
-
 QString AppConfig::coreServerName() const
 {
 #ifdef Q_OS_WIN
@@ -524,10 +517,6 @@ void AppConfig::setClientGroupChecked(bool newValue)
 void AppConfig::setServerHostname(const QString &newValue)
 {
   m_ServerHostname = newValue;
-}
-void AppConfig::setLastVersion(const QString &version)
-{
-  m_LastVersion = version;
 }
 
 void AppConfig::setScreenName(const QString &s)

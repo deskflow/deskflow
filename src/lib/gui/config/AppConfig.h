@@ -68,7 +68,7 @@ private:
     // 11 = tlsEnagled moved to Settigns
     // 12 = auto hide, Moved to Settings
     // 13 = serial key, obsolete
-    kLastVersion = 14,
+    // 14 = kLastVersion, moved to deskflow settings
     // 15 = last expire time, obsolete
     // 16 = activation has run, obsolete
     // 17 = minimize to tray, obsolete
@@ -158,7 +158,6 @@ public:
   QString logDir() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
-  QString lastVersion() const;
 
   //
   // Setters (overrides)
@@ -186,7 +185,6 @@ public:
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
   void setServerHostname(const QString &);
-  void setLastVersion(const QString &version);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -264,7 +262,6 @@ private:
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
-  QString m_LastVersion = "";
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_PreventSleep = false;
