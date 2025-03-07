@@ -42,7 +42,18 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
-		<release version="1.20.0" date="2025-3-03" urgency="high">
+		<release version="1.20.1" date="2025-03-07" urgency="low">
+			<description>
+				<p>This stable release introduces a Windows dependency requirement and fixes a macOS bug.</p>
+				<ul>
+					<li>Fix: macOS menu bar icon invisible when menu bar is light</li>
+					<li>Feature: Add Windows installer check for Visual C++ Redistributable</li>
+					<li>Feature: Prevent Windows binaries running if MSVC runtime too old</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.1</url>
+		</release>
+		<release version="1.20.0" date="2025-03-03" urgency="high">
 			<description>
 				<p>This stable release fixes a few security issues, additionally fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
 				<ul>
@@ -56,9 +67,9 @@
 					<li>Win32: Fix clear settings</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.0</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.20.0</url>
 		</release>
-		<release version="1.19.0" date="2025-1-31" urgency="high">
+		<release version="1.19.0" date="2025-01-31" urgency="high">
 			<description>
 				<p>This stable release fixes several bugs and adds a few new features. For the full changelog see the release page.</p>
 				<ul>
@@ -76,7 +87,7 @@
 					<li>Lots of Internal Cleanup</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.19.0</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.19.0</url>
 		</release>
 		<release version="1.18.0" date="2024-12-26" urgency="high">
 			<description>
@@ -95,7 +106,7 @@
 					<li>Update the windows clipboard format listener to monitor the clipboard</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.18.0</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.18.0</url>
 		</release>
 		<release version="1.17.2" date="2024-11-20" urgency="medium">
 			<description>
@@ -149,9 +160,9 @@
 					<li>ci: build flatpaks</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.2</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.2</url>
 		</release>
-		<release version="1.17.1" date="2024-11-7" urgency="high">
+		<release version="1.17.1" date="2024-11-07" urgency="high">
 			<description>
 				<p>This stable release has a very long changelog some notable ones are.</p>
 				<ul>
@@ -266,7 +277,7 @@
 					<li>ci: adjust pacakge script to use the names we would like when in cpack</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.1</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.1</url>
 		</release>
 		<release version="1.17.0" date="2024-10-02" urgency="low">
 			<description>
@@ -316,7 +327,7 @@
 					<li>Use sonarsource/sonarcloud-github-c-cpp</li>
 				</ul>
 			</description>
-		<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.0</url>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.17.0</url>
 		</release>
 	</releases>
 </component>
