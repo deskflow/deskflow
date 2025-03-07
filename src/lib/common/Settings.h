@@ -31,6 +31,7 @@ public:
 
   struct Core
   {
+    inline static const auto LastVersion = QStringLiteral("core/lastVersion");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
@@ -82,7 +83,8 @@ private:
   QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
   // clang-format off
   inline static const QStringList m_validKeys = {
-      Core::Scope
+      Core::LastVersion
+    , Core::Scope
     , Core::StartedBefore
     , Gui::Autohide
     , Gui::AutoUpdateCheck
