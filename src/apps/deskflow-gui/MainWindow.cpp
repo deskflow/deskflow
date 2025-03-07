@@ -218,8 +218,8 @@ void MainWindow::setupControls()
 
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  if (m_appConfig.lastVersion() != kVersion) {
-    m_appConfig.setLastVersion(kVersion);
+  if (DeskflowSettings::value(Settings::Core::LastVersion).toString() != kVersion) {
+    DeskflowSettings::setValue(Settings::Core::LastVersion, kVersion);
   }
 
   // Setup the log toggle, set its initial state to closed
