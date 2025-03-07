@@ -100,7 +100,7 @@ private:
     // 43 = Enable Update Check,
     // 44 = LogExpanded, Moved to deskflow settings
     // 45 = Colorful Icon, Moved to deskflow settings
-    kRequireClientCert = 46
+    // kRequireClientCert = 46 Moved to deskflow settings
   };
 
 public:
@@ -150,7 +150,6 @@ public:
   int logLevel() const override;
   bool enableService() const override;
   bool clientGroupChecked() const override;
-  bool requireClientCerts() const override;
 
   //
   // Getters (new methods)
@@ -176,7 +175,6 @@ public:
   void setLanguageSync(bool b) override;
   void setPreventSleep(bool b) override;
   void setEnableService(bool enabled) override;
-  void setRequireClientCerts(bool requireClientCerts) override;
 
   //
   // Setters (new methods)
@@ -278,7 +276,6 @@ private:
   QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_LoadFromSystemScope = false;
-  bool m_RequireClientCert = true;
 
   deskflow::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;

@@ -385,7 +385,7 @@ void MainWindow::firstShown()
 void MainWindow::settingsChanged(const QString &key)
 {
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
-      (key == Settings::Security::TlsEnabled)) {
+      (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
     const auto certificate = Settings::value(Settings::Security::Certificate).toString();
     if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
       m_tlsUtility.generateCertificate();

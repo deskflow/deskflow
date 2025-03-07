@@ -17,18 +17,17 @@ class Settings : public QObject
   Q_OBJECT
 public:
 #if defined(Q_OS_WIN)
-  inline const static auto UserSettingFile =
-      QStringLiteral("%1/AppData/Local/%2/%3.conf").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingFile = QStringLiteral("C:/ProgramData/%2/%3.conf").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/AppData/Local/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = QStringLiteral("C:/ProgramData/%1").arg(kAppName);
 #elif defined(Q_OS_MAC)
-  inline const static auto UserSettingFile =
-      QStringLiteral("%1/Library/%2/%3.conf").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingFile = QStringLiteral("/Libaray/%2/%3.conf").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/Library/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = QStringLiteral("/Library/%1").arg(kAppName);
 #else
-  inline const static auto UserSettingFile =
-      QStringLiteral("%1/.config/%2/%3.conf").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingFile = QStringLiteral("/etc/%2/%3.conf").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/.config/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = QStringLiteral("/etc/%1").arg(kAppName);
 #endif
+  inline const static auto UserSettingFile = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
+  inline const static auto SystemSettingFile = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 
   struct Core
   {
@@ -47,6 +46,7 @@ public:
   };
   struct Security
   {
+    inline static const auto CheckPeers = QStringLiteral("security/checkpeerfingerprints");
     inline static const auto Certificate = QStringLiteral("security/certificate");
     inline static const auto KeySize = QStringLiteral("security/keySize");
     inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
@@ -92,6 +92,7 @@ private:
     , Gui::SymbolicTrayIcon
     , Gui::WindowGeometry
     , Security::Certificate
+    , Security::CheckPeers
     , Security::KeySize
     , Security::TlsEnabled
   };

@@ -74,8 +74,8 @@ QVariant Settings::defaultValue(const QString &key)
     return false;
   }
 
-  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon) ||
-      (key == Gui::CloseReminder) || (key == Security::TlsEnabled)) {
+  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon)
+      || (key == Gui::CloseReminder) || (key == Security::TlsEnabled) || (key == Security::CheckPeers)) {
     return true;
   }
 
@@ -85,7 +85,7 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Security::KeySize)
     return 2048;
 
-  if (key == Settings::Security::Certificate)
+  if (key == Security::Certificate)
     return QStringLiteral("%1/%2/%3").arg(instance()->settingsPath(), kTlsDirName, kTlsCertificateFilename);
 
   return QVariant();
