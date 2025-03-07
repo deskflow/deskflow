@@ -18,15 +18,33 @@
     </ServiceInstall>
     <ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
   </CPackWiXFragment>
+
   <CPackWiXFragment Id="CM_CP_deskflow_server.exe">
     <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-server.exe" Scope="any"/>
   </CPackWiXFragment>
+
   <CPackWiXFragment Id="CM_CP_deskflow_client.exe">
     <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-client.exe" Scope="any"/>
   </CPackWiXFragment>
+
   <CPackWiXFragment Id="#PRODUCT">
+    <Property Id="VC_REDIST_INSTALLED">
+      <RegistrySearch
+        Id="FindVCRedist"
+        Root="HKLM"
+        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+        Name="Installed"
+        Type="raw" />
+    </Property>
+
     <CustomAction Id="Run_Deskflow" ExeCommand="Deskflow" FileRef="CM_FP_deskflow.exe" Return="asyncNoWait"/>
+    
+    <CustomAction
+      Id="ShowVCRedistError"
+      Error="Latest Microsoft Visual C++ Redistributable is required. Please install it before proceeding."/>
+
     <InstallExecuteSequence>
+      <Custom Action="ShowVCRedistError" Before="InstallServices" Condition="NOT Installed AND NOT VC_REDIST_INSTALLED"/>
       <Custom Action="Run_Deskflow" OnExit="success" Condition="NOT Installed"/>
     </InstallExecuteSequence>
   </CPackWiXFragment>
