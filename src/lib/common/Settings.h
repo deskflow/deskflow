@@ -47,6 +47,7 @@ public:
   };
   struct Security
   {
+    inline static const auto Certificate = QStringLiteral("security/certificate");
     inline static const auto KeySize = QStringLiteral("security/keySize");
     inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
   };
@@ -90,6 +91,7 @@ private:
     , Gui::LogExpanded
     , Gui::SymbolicTrayIcon
     , Gui::WindowGeometry
+    , Security::Certificate
     , Security::KeySize
     , Security::TlsEnabled
   };

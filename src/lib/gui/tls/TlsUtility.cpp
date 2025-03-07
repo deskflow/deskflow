@@ -38,15 +38,15 @@ bool TlsUtility::generateCertificate()
   }
 
   auto length = Settings::value(Settings::Security::KeySize).toInt();
-
-  return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
+  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+  return m_certificate.generateCertificate(certificate, length);
 }
 
 bool TlsUtility::persistCertificate()
 {
   qDebug("persisting tls certificate");
 
-  if (QFile::exists(m_appConfig.tlsCertPath())) {
+  if (QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
     qDebug("tls certificate already exists");
     return true;
   }

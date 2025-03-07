@@ -561,7 +561,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
       qCritical("failed to persist tls certificate");
       return false;
     }
-    args << "--tls-cert" << m_appConfig.tlsCertPath();
+    args << "--tls-cert" << Settings::value(Settings::Security::Certificate).toString();
   }
 
   return true;

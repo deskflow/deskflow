@@ -152,7 +152,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
-  m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
+  Settings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
   Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
@@ -210,8 +210,9 @@ void SettingsDialog::loadFromConfig()
 
 void SettingsDialog::updateTlsControls()
 {
-  if (QFile(m_appConfig.tlsCertPath()).exists()) {
-    updateKeyLengthOnFile(m_appConfig.tlsCertPath());
+  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+  if (QFile(certificate).exists()) {
+    updateKeyLengthOnFile(certificate);
   } else {
     const auto keyLengthText = Settings::value(Settings::Security::KeySize).toString();
     ui->comboTlsKeyLength->setCurrentText(keyLengthText);
@@ -221,7 +222,7 @@ void SettingsDialog::updateTlsControls()
   const auto writable = m_appConfig.isActiveScopeWritable();
   const auto enabled = writable && tlsEnabled;
 
-  ui->lineTlsCertPath->setText(m_appConfig.tlsCertPath());
+  ui->lineTlsCertPath->setText(certificate);
   ui->cbRequireClientCert->setChecked(m_appConfig.requireClientCerts());
   ui->groupSecurity->setChecked(tlsEnabled);
 
