@@ -77,7 +77,7 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
 
   if ((key == Settings::Gui::CloseToTray) || (key == Settings::Gui::LogExpanded) ||
       (key == Settings::Gui::SymbolicTrayIcon) || (key == Settings::Gui::CloseReminder) ||
-      (key == Settings::Security::TlsEnabled)) {
+      (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
     return true;
   }
 

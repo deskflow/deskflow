@@ -18,18 +18,22 @@ class Settings
   Q_GADGET
 public:
 #if defined(Q_OS_WIN)
-  inline const static auto UserSettingPath =
-      QStringLiteral("%1/AppData/Local/%2/%3.ini").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingPath = QStringLiteral("C:/ProgramData/%2/%3.ini").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/AppData/Local/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto UserSettingPath = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
+  inline const static auto SystemDir = QStringLiteral("C:/ProgramData/%1").arg(kAppName);
+  inline const static auto SystemSettingPath = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 #elif defined(Q_OS_MAC)
-  inline const static auto UserSettingPath =
-      QStringLiteral("%1/Library/%2/%3.conf").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingPath = QStringLiteral("/Libaray/%2/%3.conf").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/Library/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto UserSettingPath = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
+  inline const static auto SystemDir = QStringLiteral("/Library/%1").arg(kAppName);
+  inline const static auto SystemSettingPath = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 #else
-  inline const static auto UserSettingPath =
-      QStringLiteral("%1/.config/%2/%3.conf").arg(QDir::homePath(), kAppName, kAppName);
-  inline const static auto SystemSettingPath = QStringLiteral("/etc/%2/%3.conf").arg(kAppName, kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/.config/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto UserSettingPath = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
+  inline const static auto SystemDir = QStringLiteral("/etc/%1").arg(kAppName);
+  inline const static auto SystemSettingPath = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 #endif
+
   struct Core
   {
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
@@ -47,6 +51,7 @@ public:
   };
   struct Security
   {
+    inline static const auto CheckPeers = QStringLiteral("security/checkpeerfingerprints");
     inline static const auto Certificate = QStringLiteral("security/certificate");
     inline static const auto KeySize = QStringLiteral("security/keySize");
     inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
@@ -64,6 +69,7 @@ public:
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Gui::WindowGeometry
     , Settings::Security::Certificate
+    , Settings::Security::CheckPeers
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
   };
