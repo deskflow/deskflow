@@ -79,7 +79,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 43 Moved to deskflow settings
     "", // 44, Moved to deskflow settings.
     "", // 45 Moved to deskflow settings
-    "requireClientCerts",
+    "", // 46 require peer certs, Moved to deskflow settings
 };
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
@@ -130,7 +130,6 @@ void AppConfig::recallFromCurrentScope()
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-  m_RequireClientCert = getFromCurrentScope(kRequireClientCert, m_RequireClientCert).toBool();
 }
 
 void AppConfig::recallScreenName()
@@ -178,7 +177,6 @@ void AppConfig::commit()
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
-    setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
 }
 
@@ -485,11 +483,6 @@ bool AppConfig::clientGroupChecked() const
   return m_ClientGroupChecked;
 }
 
-bool AppConfig::requireClientCerts() const
-{
-  return m_RequireClientCert;
-}
-
 const QString &AppConfig::serverHostname() const
 {
   return m_ServerHostname;
@@ -594,13 +587,6 @@ void AppConfig::setPreventSleep(bool newValue)
 void AppConfig::setEnableService(bool enabled)
 {
   m_EnableService = enabled;
-}
-
-void AppConfig::setRequireClientCerts(bool requireClientCerts)
-{
-  if (requireClientCerts == m_RequireClientCert)
-    return;
-  m_RequireClientCert = requireClientCerts;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

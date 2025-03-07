@@ -534,7 +534,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     args << "--log" << m_appConfig.logFilename();
   }
 
-  if (!m_appConfig.requireClientCerts()) {
+  if (!Settings::value(Settings::Security::CheckPeers).toBool()) {
     args << "--disable-client-cert-check";
   }
 

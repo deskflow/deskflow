@@ -55,7 +55,6 @@ public:
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
-  MOCK_METHOD(bool, requireClientCerts, (), (const, override));
 
   //
   // Setters
@@ -73,7 +72,6 @@ public:
   MOCK_METHOD(void, setLanguageSync, (bool languageSync), (override));
   MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
-  MOCK_METHOD(void, setRequireClientCerts, (bool requireClientCerts), (override));
 
 private:
   const QString m_stub = "stub";

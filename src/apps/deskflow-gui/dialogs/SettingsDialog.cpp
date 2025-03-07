@@ -160,7 +160,7 @@ void SettingsDialog::accept()
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
   Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
-  m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
+  Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
 
   QDialog::accept();
 }
@@ -223,7 +223,7 @@ void SettingsDialog::updateTlsControls()
   const auto enabled = writable && tlsEnabled;
 
   ui->lineTlsCertPath->setText(certificate);
-  ui->cbRequireClientCert->setChecked(m_appConfig.requireClientCerts());
+  ui->cbRequireClientCert->setChecked(Settings::value(Settings::Security::CheckPeers).toBool());
   ui->groupSecurity->setChecked(tlsEnabled);
 
   ui->groupSecurity->setEnabled(writable);

@@ -96,8 +96,8 @@ void ServerConnection::handleNewClient(const QString &clientName)
 
   m_messageShowing = true;
   const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
-  const auto result =
-      m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && m_appConfig.requireClientCerts());
+  const bool requireCerts = Settings::value(Settings::Security::CheckPeers).toBool();
+  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && requireCerts);
   m_messageShowing = false;
 
   if (result == Add) {
