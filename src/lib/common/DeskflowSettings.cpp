@@ -93,6 +93,11 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2/%3").arg(baseDir, kSslDir, kCertificateFilename);
   }
 
+  if (key == Settings::Server::ExternalConfigFile) {
+    const auto baseDir = QFileInfo(instance()->m_settings->fileName()).absolutePath();
+    return QStringLiteral("%1/%2.conf").arg(baseDir, kAppId);
+  }
+
   if (key == Settings::Client::Binary)
     return kClientBinName;
 

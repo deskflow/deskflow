@@ -43,7 +43,6 @@ public:
   MOCK_METHOD(bool, languageSync, (), (const, override));
   MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
   MOCK_METHOD(int, port, (), (const, override));
-  MOCK_METHOD(const QString &, configFile, (), (const, override));
   MOCK_METHOD(const QString &, networkInterface, (), (const, override));
   MOCK_METHOD(int, logLevel, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));

@@ -55,7 +55,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "loadFromSystemScope",
     "groupServerChecked", // kServerGroupChecked
     "",                   // 21 = use external config moved to deskflow settings
-    "configFile",
+    "",                   // 22 config file moved to dekflow settings
     "useInternalConfig",
     "groupClientChecked",
     "", // 25 server host name moved to deskflow settings
@@ -120,7 +120,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
-  m_ConfigFile = getFromCurrentScope(kConfigFile, m_ConfigFile).toString();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
@@ -164,7 +163,6 @@ void AppConfig::commit()
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
-    setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
@@ -427,11 +425,6 @@ bool AppConfig::serverGroupChecked() const
   return m_ServerGroupChecked;
 }
 
-const QString &AppConfig::configFile() const
-{
-  return m_ConfigFile;
-}
-
 bool AppConfig::useInternalConfig() const
 {
   return m_UseInternalConfig;
@@ -453,11 +446,6 @@ bool AppConfig::clientGroupChecked() const
 void AppConfig::setServerGroupChecked(bool newValue)
 {
   m_ServerGroupChecked = newValue;
-}
-
-void AppConfig::setConfigFile(const QString &newValue)
-{
-  m_ConfigFile = newValue;
 }
 
 void AppConfig::setUseInternalConfig(bool newValue)
