@@ -79,7 +79,7 @@ private:
     kConfigFile = 22,
     kUseInternalConfig = 23,
     kClientGroupChecked = 24,
-    kServerHostname = 25,
+    // 25 = serverHostName moved to deskflow settings
     // 26 = kTlsCertPath moved to deskflow settings
     // 27 = tlsKeyLength Moved to deskflow settings
     // 28 = Prevent Sleep moved to deskflow settings
@@ -141,7 +141,6 @@ public:
   bool useExternalConfig() const override;
   const QString &configFile() const override;
   const QString &networkInterface() const override;
-  const QString &serverHostname() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
@@ -180,7 +179,6 @@ public:
   void setConfigFile(const QString &);
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
-  void setServerHostname(const QString &);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -259,7 +257,6 @@ private:
   QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
-  QString m_ServerHostname = "";
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
   bool m_LoadFromSystemScope = false;
 

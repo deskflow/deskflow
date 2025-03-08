@@ -32,6 +32,7 @@ public:
   struct Client
   {
     inline static const auto Binary = QStringLiteral("client/binary");
+    inline static const auto RemoteHost = QStringLiteral("client/remotehost");
   };
   struct Core
   {
@@ -93,6 +94,7 @@ private:
   // clang-format off
   inline static const QStringList m_validKeys = {
       Client::Binary
+    , Client::RemoteHost
     , Core::LastVersion
     , Core::PreventSleep
     , Core::Scope

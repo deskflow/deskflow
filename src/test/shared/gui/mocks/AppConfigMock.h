@@ -46,7 +46,6 @@ public:
   MOCK_METHOD(bool, useExternalConfig, (), (const, override));
   MOCK_METHOD(const QString &, configFile, (), (const, override));
   MOCK_METHOD(const QString &, networkInterface, (), (const, override));
-  MOCK_METHOD(const QString &, serverHostname, (), (const, override));
   MOCK_METHOD(int, logLevel, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));

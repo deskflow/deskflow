@@ -58,7 +58,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "configFile",
     "useInternalConfig",
     "groupClientChecked",
-    "serverHostname",
+    "", // 25 server host name moved to deskflow settings
     "", // 26 cert path moved to deskflow settings
     "", // 27 key length Moved to Deskflow settings
     "", // 28 Prevent sleep moved to deskflow settings
@@ -124,7 +124,6 @@ void AppConfig::recallFromCurrentScope()
   m_ConfigFile = getFromCurrentScope(kConfigFile, m_ConfigFile).toString();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
-  m_ServerHostname = getFromCurrentScope(kServerHostname, m_ServerHostname).toString();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
@@ -169,7 +168,6 @@ void AppConfig::commit()
     setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
-    setInCurrentScope(kServerHostname, m_ServerHostname);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
@@ -451,11 +449,6 @@ bool AppConfig::clientGroupChecked() const
   return m_ClientGroupChecked;
 }
 
-const QString &AppConfig::serverHostname() const
-{
-  return m_ServerHostname;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -487,11 +480,6 @@ void AppConfig::setUseInternalConfig(bool newValue)
 void AppConfig::setClientGroupChecked(bool newValue)
 {
   m_ClientGroupChecked = newValue;
-}
-
-void AppConfig::setServerHostname(const QString &newValue)
-{
-  m_ServerHostname = newValue;
 }
 
 void AppConfig::setScreenName(const QString &s)
