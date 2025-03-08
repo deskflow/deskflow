@@ -32,11 +32,10 @@ messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
 //
 
 ServerConnection::ServerConnection(
-    QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
-    const config::ServerConfigDialogState &serverConfigDialogState, std::shared_ptr<Deps> deps
+    QWidget *parent, IServerConfig &serverConfig, const config::ServerConfigDialogState &serverConfigDialogState,
+    std::shared_ptr<Deps> deps
 )
     : m_pParent(parent),
-      m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_serverConfigDialogState(serverConfigDialogState),
       m_pDeps(deps)
