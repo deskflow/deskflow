@@ -33,6 +33,7 @@ public:
   {
     inline static const auto Binary = QStringLiteral("client/binary");
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertscolldirection");
+    inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remotehost");
   };
   struct Core
@@ -98,6 +99,7 @@ private:
   inline static const QStringList m_validKeys = {
       Client::Binary
     , Client::InvertScrollDirection
+    , Client::LanguageSync
     , Client::RemoteHost
     , Core::LastVersion
     , Core::PreventSleep

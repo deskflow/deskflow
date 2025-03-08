@@ -62,7 +62,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 26 cert path moved to deskflow settings
     "", // 27 key length Moved to Deskflow settings
     "", // 28 Prevent sleep moved to deskflow settings
-    "languageSync",
+    "", // 29 Language sync moved to deskflow settings
     "", // 30 = invertscrolldriection moved to deskflow settings
     "", // 31 = guid, obsolete
     "", // 32 = licenseRegistryUrl, obsolete
@@ -122,7 +122,6 @@ void AppConfig::recallFromCurrentScope()
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
-  m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
 }
 
@@ -163,7 +162,6 @@ void AppConfig::commit()
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
-    setInCurrentScope(kLanguageSync, m_LanguageSync);
     setInCurrentScope(kEnableService, m_EnableService);
   }
 }
@@ -403,11 +401,6 @@ ElevateMode AppConfig::elevateMode() const
   return m_ElevateMode;
 }
 
-bool AppConfig::languageSync() const
-{
-  return m_LanguageSync;
-}
-
 bool AppConfig::enableService() const
 {
   return m_EnableService;
@@ -488,11 +481,6 @@ void AppConfig::setLogFilename(const QString &s)
 void AppConfig::setElevateMode(ElevateMode em)
 {
   m_ElevateMode = em;
-}
-
-void AppConfig::setLanguageSync(bool newValue)
-{
-  m_LanguageSync = newValue;
 }
 
 void AppConfig::setEnableService(bool enabled)
