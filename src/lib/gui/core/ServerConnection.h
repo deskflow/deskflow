@@ -9,7 +9,6 @@
 #include <QString>
 #include <QStringList>
 
-#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/config/ServerConfigDialogState.h"
 #include "gui/messages.h"
@@ -30,8 +29,7 @@ public:
   };
 
   explicit ServerConnection(
-      QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
-      const config::ServerConfigDialogState &serverConfigDialogState,
+      QWidget *parent, IServerConfig &serverConfig, const config::ServerConfigDialogState &serverConfigDialogState,
       std::shared_ptr<Deps> deps = std::make_shared<Deps>()
   );
   void handleLogLine(const QString &logLine);
@@ -44,7 +42,6 @@ private:
   void handleNewClient(const QString &clientName);
 
   QWidget *m_pParent;
-  IAppConfig &m_appConfig;
   IServerConfig &m_serverConfig;
   const config::ServerConfigDialogState &m_serverConfigDialogState;
   std::shared_ptr<Deps> m_pDeps;
