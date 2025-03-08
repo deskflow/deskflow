@@ -63,7 +63,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 27 key length Moved to Deskflow settings
     "", // 28 Prevent sleep moved to deskflow settings
     "languageSync",
-    "invertScrollDirection",
+    "", // 30 = invertscrolldriection moved to deskflow settings
     "", // 31 = guid, obsolete
     "", // 32 = licenseRegistryUrl, obsolete
     "", // 33 = licenseNextCheck, obsolete
@@ -123,7 +123,6 @@ void AppConfig::recallFromCurrentScope()
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
   m_LanguageSync = getFromCurrentScope(kLanguageSync, m_LanguageSync).toBool();
-  m_InvertScrollDirection = getFromCurrentScope(kInvertScrollDirection, m_InvertScrollDirection).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
 }
 
@@ -165,7 +164,6 @@ void AppConfig::commit()
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
-    setInCurrentScope(kInvertScrollDirection, m_InvertScrollDirection);
     setInCurrentScope(kEnableService, m_EnableService);
   }
 }
@@ -405,11 +403,6 @@ ElevateMode AppConfig::elevateMode() const
   return m_ElevateMode;
 }
 
-bool AppConfig::invertScrollDirection() const
-{
-  return m_InvertScrollDirection;
-}
-
 bool AppConfig::languageSync() const
 {
   return m_LanguageSync;
@@ -495,11 +488,6 @@ void AppConfig::setLogFilename(const QString &s)
 void AppConfig::setElevateMode(ElevateMode em)
 {
   m_ElevateMode = em;
-}
-
-void AppConfig::setInvertScrollDirection(bool newValue)
-{
-  m_InvertScrollDirection = newValue;
 }
 
 void AppConfig::setLanguageSync(bool newValue)
