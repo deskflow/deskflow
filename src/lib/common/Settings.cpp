@@ -73,6 +73,10 @@ QVariant Settings::defaultValue(const QString &key)
     return false;
   }
 
+  if (key == Gui::LogExpanded) {
+    return true;
+  }
+
   return QVariant();
 }
 
@@ -101,11 +105,11 @@ void Settings::setScope(bool systemScope)
   const bool wasWritable = instance()->m_settings->isWritable();
 
   QSettings userSettings(Settings::UserSettingFile, QSettings::IniFormat);
-  userSettings.setValue(Settings::Core::Scope, systemScope);
+  userSettings.setValue(Core::Scope, systemScope);
   userSettings.sync();
 
   QSettings systemSettings(Settings::SystemSettingFile, QSettings::IniFormat);
-  systemSettings.setValue(Settings::Core::Scope, systemScope);
+  systemSettings.setValue(Core::Scope, systemScope);
   systemSettings.sync();
 
   instance()->initSettings();

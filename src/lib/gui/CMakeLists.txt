@@ -95,6 +95,7 @@ add_library(${target} STATIC
 
 target_link_libraries(
   ${target}
+  common
   platform
   Qt6::Core
   Qt6::Widgets

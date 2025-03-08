@@ -77,7 +77,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 41 = Show dev thanks, obsolete
     "showCloseReminder",
     "enableUpdateCheck",
-    "logExpanded",
+    "", // 44, Moved to deskflow settings.
     "colorfulIcon",
     "requireClientCerts",
 };
@@ -143,7 +143,6 @@ void AppConfig::recallFromCurrentScope()
   m_MainWindowSize = getFromCurrentScope<QSize>(kMainWindowSize, [](const QVariant &v) { return v.toSize(); });
   m_ShowCloseReminder = getFromCurrentScope(kShowCloseReminder, m_ShowCloseReminder).toBool();
   m_EnableUpdateCheck = getFromCurrentScope<bool>(kEnableUpdateCheck, [](const QVariant &v) { return v.toBool(); });
-  m_logExpanded = getFromCurrentScope(kLogExpanded, m_logExpanded).toBool();
   m_colorfulTrayIcon = getFromCurrentScope(kColorfulIcon, m_colorfulTrayIcon).toBool();
 }
 
@@ -200,7 +199,6 @@ void AppConfig::commit()
     setInCurrentScope(kMainWindowPosition, m_MainWindowPosition);
     setInCurrentScope(kShowCloseReminder, m_ShowCloseReminder);
     setInCurrentScope(kEnableUpdateCheck, m_EnableUpdateCheck);
-    setInCurrentScope(kLogExpanded, m_logExpanded);
     setInCurrentScope(kColorfulIcon, m_colorfulTrayIcon);
     setInCurrentScope(kRequireClientCert, m_RequireClientCert);
   }
@@ -574,11 +572,6 @@ std::optional<bool> AppConfig::enableUpdateCheck() const
   return m_EnableUpdateCheck;
 }
 
-bool AppConfig::logExpanded() const
-{
-  return m_logExpanded;
-}
-
 bool AppConfig::colorfulTrayIcon() const
 {
   return m_colorfulTrayIcon;
@@ -754,13 +747,6 @@ void AppConfig::setShowCloseReminder(bool value)
 void AppConfig::setEnableUpdateCheck(bool value)
 {
   m_EnableUpdateCheck = value;
-}
-
-void AppConfig::setLogExpanded(bool expanded)
-{
-  if (expanded == m_logExpanded)
-    return;
-  m_logExpanded = expanded;
 }
 
 void AppConfig::setColorfulTrayIcon(bool colorful)

@@ -34,6 +34,10 @@ public:
   {
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
   };
+  struct Gui
+  {
+    inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
+  };
 
   static Settings *instance();
   static void setSettingFile(const QString &settingsFile = QString());
@@ -63,5 +67,10 @@ private:
 
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
-  inline static const QStringList m_validKeys = {Settings::Core::Scope};
+  // clang-format off
+  inline static const QStringList m_validKeys = {
+      Core::Scope
+    , Gui::LogExpanded
+  };
+  // clang-format on
 };
