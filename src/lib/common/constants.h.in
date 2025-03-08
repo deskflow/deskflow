@@ -51,9 +51,11 @@ const auto kCloseEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
 const auto kSendSasEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
 
 const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client.exe";
+const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server.exe";
 
 #else
 
 const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client";
+const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server";
 
 #endif

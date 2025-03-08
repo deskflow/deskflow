@@ -92,6 +92,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Client::Binary)
     return kClientBinName;
 
+  if (key == Server::Binary)
+    return kServerBinName;
+
   return QVariant();
 }
 
