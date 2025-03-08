@@ -40,7 +40,6 @@ public:
   virtual const QString &logFilename() const = 0;
   virtual void persistLogDir() const = 0;
   virtual int port() const = 0;
-  virtual const QString &networkInterface() const = 0;
   virtual int logLevel() const = 0;
   virtual bool enableService() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
@@ -54,7 +53,6 @@ public:
   virtual void setLoadFromSystemScope(bool loadFromSystemScope) = 0;
   virtual void setScreenName(const QString &screenName) = 0;
   virtual void setPort(int port) = 0;
-  virtual void setNetworkInterface(const QString &networkInterface) = 0;
   virtual void setLogLevel(int logLevel) = 0;
   virtual void setLogToFile(bool logToFile) = 0;
   virtual void setLogFilename(const QString &logFilename) = 0;

@@ -43,6 +43,7 @@ public:
   };
   struct Core
   {
+    inline static const auto Interface = QStringLiteral("core/interface");
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
@@ -78,6 +79,7 @@ public:
     , Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
+    , Settings::Core::Interface
     , Settings::Core::LastVersion
     , Settings::Core::PreventSleep
     , Settings::Core::Scope

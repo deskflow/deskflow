@@ -21,8 +21,6 @@ public:
   {
     ON_CALL(*this, screenName()).WillByDefault(testing::ReturnRef(m_stub));
 
-    ON_CALL(*this, networkInterface()).WillByDefault(testing::ReturnRef(m_stub));
-
     ON_CALL(*this, logLevelText()).WillByDefault(testing::Return(m_stub));
 
     ON_CALL(*this, logFilename()).WillByDefault(testing::ReturnRef(m_stub));
@@ -41,7 +39,6 @@ public:
   MOCK_METHOD(const QString &, logFilename, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
   MOCK_METHOD(int, port, (), (const, override));
-  MOCK_METHOD(const QString &, networkInterface, (), (const, override));
   MOCK_METHOD(int, logLevel, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
@@ -55,7 +52,6 @@ public:
   MOCK_METHOD(void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
   MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
   MOCK_METHOD(void, setPort, (int port), (override));
-  MOCK_METHOD(void, setNetworkInterface, (const QString &networkInterface), (override));
   MOCK_METHOD(void, setLogLevel, (int logLevel), (override));
   MOCK_METHOD(void, setLogToFile, (bool logToFile), (override));
   MOCK_METHOD(void, setLogFilename, (const QString &logFilename), (override));

@@ -56,7 +56,7 @@ private:
   {
     kScreenName = 0,
     kPort = 1,
-    kInterface = 2,
+    // kInterface = 2, moved to deskflow settings
     kLogLevel = 3,
     kLogToFile = 4,
     kLogFilename = 5,
@@ -136,7 +136,6 @@ public:
   const QString &logFilename() const override;
   void persistLogDir() const override;
   int port() const override;
-  const QString &networkInterface() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
@@ -157,7 +156,6 @@ public:
 
   void setScreenName(const QString &s) override;
   void setPort(int i) override;
-  void setNetworkInterface(const QString &s) override;
   void setLogLevel(int i) override;
   void setLogToFile(bool b) override;
   void setLogFilename(const QString &s) override;
@@ -230,7 +228,6 @@ private:
   static const char *const m_SettingsName[];
 
   int m_Port = 24800;
-  QString m_Interface = "";
   int m_LogLevel = 0;
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
