@@ -61,6 +61,7 @@ public:
   struct Server
   {
     inline static const auto Binary = QStringLiteral("server/binary");
+    inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
   };
 
   static Settings *instance();
@@ -111,6 +112,7 @@ private:
     , Security::KeySize
     , Security::TlsEnabled
     , Server::Binary
+    , Server::ExternalConfig
   };
   // clang-format on
 };

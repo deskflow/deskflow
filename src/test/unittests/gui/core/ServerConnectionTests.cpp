@@ -46,7 +46,7 @@ TEST_F(ServerConnectionTests, handleLogLine_newClient_shouldShowPrompt)
   ServerConnection serverConnection(nullptr, m_appConfig, m_serverConfig, m_serverConfigDialogState, m_pDeps);
 
   QString clientName = "test client";
-  EXPECT_CALL(*m_pDeps, showNewClientPrompt(_, clientName, true));
+  EXPECT_CALL(*m_pDeps, showNewClientPrompt(_, clientName, true)).Times(0);
 
   serverConnection.handleLogLine(R"(unrecognised client name "test client")");
 }

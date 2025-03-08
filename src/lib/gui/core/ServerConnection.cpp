@@ -61,7 +61,7 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (m_appConfig.useExternalConfig()) {
+  if (Settings::value(Settings::Server::ExternalConfig).toBool()) {
     qDebug("external config enabled, skipping new client prompt");
     return;
   }

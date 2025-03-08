@@ -75,7 +75,7 @@ private:
     // 18 = activate email, obsolete
     kLoadSystemSettings = 19,
     kServerGroupChecked = 20,
-    kUseExternalConfig = 21,
+    // 21 = use external config moved to deskflow settings
     kConfigFile = 22,
     kUseInternalConfig = 23,
     kClientGroupChecked = 24,
@@ -138,7 +138,6 @@ public:
   bool languageSync() const override;
   bool invertScrollDirection() const override;
   int port() const override;
-  bool useExternalConfig() const override;
   const QString &configFile() const override;
   const QString &networkInterface() const override;
   bool isActiveScopeWritable() const override;
@@ -175,7 +174,6 @@ public:
   //
 
   void setServerGroupChecked(bool);
-  void setUseExternalConfig(bool);
   void setConfigFile(const QString &);
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
@@ -253,7 +251,6 @@ private:
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_ServerGroupChecked = false;
-  bool m_UseExternalConfig = false;
   QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
