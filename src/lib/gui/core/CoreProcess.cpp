@@ -582,7 +582,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     args << "--log" << m_appConfig.logFilename();
   }
 
-  if (m_appConfig.languageSync()) {
+  if (DeskflowSettings::value(Settings::Client::LanguageSync).toBool()) {
     args << "--sync-language";
   }
 

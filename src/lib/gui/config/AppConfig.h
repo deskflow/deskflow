@@ -83,7 +83,7 @@ private:
     // 26 = kTlsCertPath moved to deskflow settings
     // 27 = tlsKeyLength Moved to deskflow settings
     // 28 = Prevent Sleep moved to deskflow settings
-    kLanguageSync = 29,
+    // 29 = language Sync moved to deskflow settings
     // 30 = InvertScrollDirection moved to deskflow settings
     // 31 = guid, obsolete
     // 32 = license registry url, obsolete
@@ -135,7 +135,6 @@ public:
   bool logToFile() const override;
   const QString &logFilename() const override;
   void persistLogDir() const override;
-  bool languageSync() const override;
   int port() const override;
   const QString &networkInterface() const override;
   bool isActiveScopeWritable() const override;
@@ -163,7 +162,6 @@ public:
   void setLogToFile(bool b) override;
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
-  void setLanguageSync(bool b) override;
   void setEnableService(bool enabled) override;
 
   //
@@ -237,7 +235,6 @@ private:
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
-  bool m_LanguageSync = true;
   bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
