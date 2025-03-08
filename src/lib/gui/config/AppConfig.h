@@ -99,7 +99,7 @@ private:
     // 41 = show dev thanks, obsolete
     kShowCloseReminder = 42,
     kEnableUpdateCheck = 43,
-    kLogExpanded = 44,
+    // 44 = LogExpanded, Moved to deskflow settings
     kColorfulIcon = 45,
     kRequireClientCert = 46
   };
@@ -175,7 +175,6 @@ public:
   std::optional<QPoint> mainWindowPosition() const;
   bool showCloseReminder() const;
   std::optional<bool> enableUpdateCheck() const;
-  bool logExpanded() const;
   bool colorfulTrayIcon() const;
 
   //
@@ -216,7 +215,6 @@ public:
   void setMainWindowPosition(const QPoint &position);
   void setShowCloseReminder(bool show);
   void setEnableUpdateCheck(bool value);
-  void setLogExpanded(bool expanded);
   void setColorfulTrayIcon(bool color);
 
   /// @brief Sets the user preference to load from SystemScope.
@@ -321,7 +319,6 @@ private:
   bool m_LoadFromSystemScope = false;
   bool m_ShowCloseReminder = true;
   std::optional<bool> m_EnableUpdateCheck;
-  bool m_logExpanded = true;
   bool m_colorfulTrayIcon = false;
   bool m_RequireClientCert = true;
 

@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
+set(CMAKE_AUTOMOC ON)
+
 configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common STATIC

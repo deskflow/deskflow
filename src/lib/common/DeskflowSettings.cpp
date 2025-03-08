@@ -74,6 +74,10 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return false;
   }
 
+  if (key == Settings::Gui::LogExpanded) {
+    return true;
+  }
+
   return QVariant();
 }
 
