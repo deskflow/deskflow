@@ -41,7 +41,6 @@ public:
   MOCK_METHOD(const QString &, logFilename, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
   MOCK_METHOD(bool, languageSync, (), (const, override));
-  MOCK_METHOD(bool, invertScrollDirection, (), (const, override));
   MOCK_METHOD(int, port, (), (const, override));
   MOCK_METHOD(const QString &, networkInterface, (), (const, override));
   MOCK_METHOD(int, logLevel, (), (const, override));
@@ -63,7 +62,6 @@ public:
   MOCK_METHOD(void, setLogFilename, (const QString &logFilename), (override));
   MOCK_METHOD(void, setElevateMode, (ElevateMode elevateMode), (override));
   MOCK_METHOD(void, setLanguageSync, (bool languageSync), (override));
-  MOCK_METHOD(void, setInvertScrollDirection, (bool invertScrollDirection), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
 
 private:

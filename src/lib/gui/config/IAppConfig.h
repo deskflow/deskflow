@@ -40,7 +40,6 @@ public:
   virtual const QString &logFilename() const = 0;
   virtual void persistLogDir() const = 0;
   virtual bool languageSync() const = 0;
-  virtual bool invertScrollDirection() const = 0;
   virtual int port() const = 0;
   virtual const QString &networkInterface() const = 0;
   virtual int logLevel() const = 0;
@@ -62,7 +61,6 @@ public:
   virtual void setLogFilename(const QString &logFilename) = 0;
   virtual void setElevateMode(ElevateMode elevateMode) = 0;
   virtual void setLanguageSync(bool languageSync) = 0;
-  virtual void setInvertScrollDirection(bool invertScrollDirection) = 0;
   virtual void setEnableService(bool enableService) = 0;
 };
 
