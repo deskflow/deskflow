@@ -404,9 +404,9 @@ void ServerConfig::updateServerName()
   }
 }
 
-const QString &ServerConfig::configFile() const
+const QString ServerConfig::configFile() const
 {
-  return m_pAppConfig->configFile();
+  return Settings::value(Settings::Server::ExternalConfigFile).toString();
 }
 
 bool ServerConfig::useExternalConfig() const
@@ -457,7 +457,7 @@ void ServerConfig::addClient(const QString &clientName)
 
 void ServerConfig::setConfigFile(const QString &configFile)
 {
-  m_pAppConfig->setConfigFile(configFile);
+  Settings::setValue(Settings::Server::ExternalConfigFile, configFile);
 }
 
 void ServerConfig::setUseExternalConfig(bool useExternalConfig)

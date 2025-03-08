@@ -70,7 +70,7 @@ public:
   CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
   {
     Settings::setValue(Settings::Server::ExternalConfig, true);
-    ON_CALL(m_appConfig, configFile()).WillByDefault(testing::ReturnRef(m_configFile));
+    Settings::setValue(Settings::Server::ExternalConfigFile, m_configFile);
     ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
   }
 

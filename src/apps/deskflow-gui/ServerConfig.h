@@ -157,7 +157,7 @@ public:
   int autoAddScreen(const QString name);
   const QString &getServerName() const;
   void updateServerName();
-  const QString &configFile() const;
+  const QString configFile() const;
   bool useExternalConfig() const;
   void addClient(const QString &clientName);
   QString getClientAddress() const;

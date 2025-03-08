@@ -76,7 +76,7 @@ private:
     kLoadSystemSettings = 19,
     kServerGroupChecked = 20,
     // 21 = use external config moved to deskflow settings
-    kConfigFile = 22,
+    // 22 = k config file moved to deskflow settings
     kUseInternalConfig = 23,
     kClientGroupChecked = 24,
     // 25 = serverHostName moved to deskflow settings
@@ -138,7 +138,6 @@ public:
   bool languageSync() const override;
   bool invertScrollDirection() const override;
   int port() const override;
-  const QString &configFile() const override;
   const QString &networkInterface() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
@@ -174,7 +173,6 @@ public:
   //
 
   void setServerGroupChecked(bool);
-  void setConfigFile(const QString &);
   void setUseInternalConfig(bool);
   void setClientGroupChecked(bool);
 
@@ -235,13 +233,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  /// @brief Core config file extention (not the Qt settings filename)
-#ifdef Q_OS_WIN
-  inline static const auto s_ConfigFileExt = QStringLiteral("sgc");
-#else
-  inline static const auto s_ConfigFileExt = QStringLiteral("conf");
-#endif
-
   int m_Port = 24800;
   QString m_Interface = "";
   int m_LogLevel = 0;
@@ -251,7 +242,6 @@ private:
   bool m_InvertScrollDirection = false;
   bool m_LanguageSync = true;
   bool m_ServerGroupChecked = false;
-  QString m_ConfigFile = QStringLiteral("%1/%2.%3").arg(QDir::homePath(), kAppId, s_ConfigFileExt);
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
   bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;

@@ -62,6 +62,7 @@ public:
   {
     inline static const auto Binary = QStringLiteral("server/binary");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
+    inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
   };
 
   static Settings *instance();
@@ -113,6 +114,7 @@ private:
     , Security::TlsEnabled
     , Server::Binary
     , Server::ExternalConfig
+    , Server::ExternalConfigFile
   };
   // clang-format on
 };
