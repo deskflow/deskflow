@@ -38,7 +38,6 @@ public:
   virtual const QString &screenName() const = 0;
   virtual bool logToFile() const = 0;
   virtual const QString &logFilename() const = 0;
-  virtual QString coreServerName() const = 0;
   virtual void persistLogDir() const = 0;
   virtual bool languageSync() const = 0;
   virtual bool invertScrollDirection() const = 0;

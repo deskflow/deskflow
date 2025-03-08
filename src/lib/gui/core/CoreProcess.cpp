@@ -522,7 +522,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreServerName());
+  app = m_pDeps->appPath(DeskflowSettings::value(Settings::Server::Binary).toString());
 
   if (!m_pDeps->fileExists(app)) {
     qFatal("core server binary does not exist");

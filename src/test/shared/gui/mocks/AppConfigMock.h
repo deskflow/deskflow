@@ -39,7 +39,6 @@ public:
   MOCK_METHOD(const QString &, screenName, (), (const, override));
   MOCK_METHOD(bool, logToFile, (), (const, override));
   MOCK_METHOD(const QString &, logFilename, (), (const, override));
-  MOCK_METHOD(QString, coreServerName, (), (const, override));
   MOCK_METHOD(void, persistLogDir, (), (const, override));
   MOCK_METHOD(bool, languageSync, (), (const, override));
   MOCK_METHOD(bool, invertScrollDirection, (), (const, override));

@@ -16,8 +16,10 @@ const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VER
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 #ifndef Q_OS_WIN
+const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server";
 const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client";
 #else
+const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server.exe";
 const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client.exe";
 #endif
 const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";

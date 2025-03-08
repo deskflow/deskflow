@@ -96,6 +96,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Client::Binary)
     return kClientBinName;
 
+  if (key == Settings::Server::Binary)
+    return kServerBinName;
+
   return QVariant();
 }
 

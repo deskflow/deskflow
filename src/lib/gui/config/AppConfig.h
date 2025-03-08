@@ -134,7 +134,6 @@ public:
   const QString &screenName() const override;
   bool logToFile() const override;
   const QString &logFilename() const override;
-  QString coreServerName() const override;
   void persistLogDir() const override;
   bool languageSync() const override;
   bool invertScrollDirection() const override;
@@ -235,11 +234,6 @@ private:
   /// @param [in] scope which should be loaded.
   void loadScope(IConfigScopes::Scope scope);
 
-  // Used to make the server and client names on windows.
-#ifdef Q_OS_WIN
-  inline static const auto s_winExeTemplate = QStringLiteral("%1.exe");
-#endif
-  inline static const auto s_CoreServerName = QStringLiteral("deskflow-server");
   static const char m_LogDir[];
 
   /// @brief Contains the string values of the settings names that will be saved

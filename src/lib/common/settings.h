@@ -62,6 +62,10 @@ public:
     inline static const auto KeySize = QStringLiteral("security/keySize");
     inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
   };
+  struct Server
+  {
+    inline static const auto Binary = QStringLiteral("server/binary");
+  };
 
   // clang-format off
   inline static const QStringList validKeys = {
@@ -81,6 +85,7 @@ public:
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
+    , Settings::Server::Binary
   };
   // clang-format on
 };
