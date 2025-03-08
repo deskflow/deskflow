@@ -34,6 +34,10 @@ public:
   inline const static auto SystemSettingPath = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 #endif
 
+  struct Client
+  {
+    inline static const auto Binary = QStringLiteral("client/binary");
+  };
   struct Core
   {
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
@@ -61,7 +65,8 @@ public:
 
   // clang-format off
   inline static const QStringList validKeys = {
-      Settings::Core::LastVersion
+      Settings::Client::Binary
+    , Settings::Core::LastVersion
     , Settings::Core::PreventSleep
     , Settings::Core::Scope
     , Settings::Core::StartedBefore

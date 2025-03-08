@@ -92,6 +92,10 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     const auto baseDir = QDir().absoluteFilePath(instance()->m_settings->fileName());
     return QStringLiteral("%1/%2/%3").arg(baseDir, kSslDir, kCertificateFilename);
   }
+
+  if (key == Settings::Client::Binary)
+    return kClientBinName;
+
   return QVariant();
 }
 
