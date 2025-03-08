@@ -5,4 +5,4 @@
 config_test()
 set(target unittests)
 add_executable(${target} ${sources} ${headers})
-target_link_libraries(${target} ${test_libs})
+target_link_libraries(${target} ${test_libs} common)
