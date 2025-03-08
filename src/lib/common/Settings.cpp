@@ -89,6 +89,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Security::Certificate)
     return QStringLiteral("%1/%2/%3").arg(instance()->settingsPath(), kTlsDirName, kTlsCertificateFilename);
 
+  if (key == Client::Binary)
+    return kClientBinName;
+
   return QVariant();
 }
 

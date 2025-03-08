@@ -29,6 +29,10 @@ public:
   inline const static auto UserSettingFile = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
   inline const static auto SystemSettingFile = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 
+  struct Client
+  {
+    inline static const auto Binary = QStringLiteral("client/binary");
+  };
   struct Core
   {
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
@@ -84,7 +88,8 @@ private:
   QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
   // clang-format off
   inline static const QStringList m_validKeys = {
-      Core::LastVersion
+      Client::Binary
+    , Core::LastVersion
     , Core::PreventSleep
     , Core::Scope
     , Core::StartedBefore

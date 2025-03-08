@@ -50,4 +50,10 @@ const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 const auto kCloseEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
 const auto kSendSasEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
 
+const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client.exe";
+
+#else
+
+const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client";
+
 #endif

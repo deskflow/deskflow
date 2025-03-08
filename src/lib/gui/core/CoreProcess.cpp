@@ -569,7 +569,7 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 
 bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreClientName());
+  app = m_pDeps->appPath(Settings::value(Settings::Client::Binary).toString());
 
   if (!m_pDeps->fileExists(app)) {
     qFatal("core client binary does not exist");
