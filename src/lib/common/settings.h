@@ -66,6 +66,7 @@ public:
   struct Server
   {
     inline static const auto Binary = QStringLiteral("server/binary");
+    inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
   };
 
   // clang-format off
@@ -88,6 +89,7 @@ public:
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
     , Settings::Server::Binary
+    , Settings::Server::ExternalConfig
   };
   // clang-format on
 };

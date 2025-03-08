@@ -54,7 +54,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 18 = ActivateEmail, obsolete
     "loadFromSystemScope",
     "groupServerChecked", // kServerGroupChecked
-    "useExternalConfig",
+    "",                   // 21 = use external config moved to deskflow settings
     "configFile",
     "useInternalConfig",
     "groupClientChecked",
@@ -120,7 +120,6 @@ void AppConfig::recallFromCurrentScope()
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
-  m_UseExternalConfig = getFromCurrentScope(kUseExternalConfig, m_UseExternalConfig).toBool();
   m_ConfigFile = getFromCurrentScope(kConfigFile, m_ConfigFile).toString();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
@@ -165,7 +164,6 @@ void AppConfig::commit()
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
-    setInCurrentScope(kUseExternalConfig, m_UseExternalConfig);
     setInCurrentScope(kConfigFile, m_ConfigFile);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
     setInCurrentScope(kLanguageSync, m_LanguageSync);
@@ -429,11 +427,6 @@ bool AppConfig::serverGroupChecked() const
   return m_ServerGroupChecked;
 }
 
-bool AppConfig::useExternalConfig() const
-{
-  return m_UseExternalConfig;
-}
-
 const QString &AppConfig::configFile() const
 {
   return m_ConfigFile;
@@ -460,11 +453,6 @@ bool AppConfig::clientGroupChecked() const
 void AppConfig::setServerGroupChecked(bool newValue)
 {
   m_ServerGroupChecked = newValue;
-}
-
-void AppConfig::setUseExternalConfig(bool newValue)
-{
-  m_UseExternalConfig = newValue;
 }
 
 void AppConfig::setConfigFile(const QString &newValue)

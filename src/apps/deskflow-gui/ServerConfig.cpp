@@ -10,6 +10,7 @@
 
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "common/DeskflowSettings.h"
 #include "dialogs/AddClientDialog.h"
 
 #include <QAbstractButton>
@@ -410,7 +411,7 @@ const QString &ServerConfig::configFile() const
 
 bool ServerConfig::useExternalConfig() const
 {
-  return m_pAppConfig->useExternalConfig();
+  return DeskflowSettings::value(Settings::Server::ExternalConfig).toBool();
 }
 
 bool ServerConfig::isFull() const
@@ -461,7 +462,7 @@ void ServerConfig::setConfigFile(const QString &configFile)
 
 void ServerConfig::setUseExternalConfig(bool useExternalConfig)
 {
-  m_pAppConfig->setUseExternalConfig(useExternalConfig);
+  DeskflowSettings::setValue(Settings::Server::ExternalConfig, useExternalConfig);
 }
 
 bool ServerConfig::findScreenName(const QString &name, int &index)
