@@ -95,6 +95,11 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
+  if (key == Server::ExternalConfigFile) {
+    const auto baseDir = QFileInfo(instance()->m_settings->fileName()).absolutePath();
+    return QStringLiteral("%1/%2.conf").arg(baseDir, kAppId);
+  }
+
   return QVariant();
 }
 
