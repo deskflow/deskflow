@@ -6,6 +6,7 @@
 
 #include "ClientConnection.h"
 
+#include "common/settings.h"
 #include "messages.h"
 
 #include <QHostAddress>
@@ -57,7 +58,7 @@ void ClientConnection::showMessage(const QString &logLine)
 
   Q_EMIT messageShowing();
 
-  const auto address = m_appConfig.serverHostname();
+  const auto address = Settings::value(Settings::Client::RemoteHost).toString();
 
   if (logLine.contains("server already has a connected client with our name")) {
     m_deps->showError(m_pParent, AlreadyConnected, address);
