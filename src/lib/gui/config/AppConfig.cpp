@@ -406,15 +406,6 @@ ProcessMode AppConfig::processMode() const
   return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
 }
 
-QString AppConfig::coreServerName() const
-{
-#ifdef Q_OS_WIN
-  return s_winExeTemplate.arg(s_CoreServerName);
-#else
-  return s_CoreServerName;
-#endif
-}
-
 ElevateMode AppConfig::elevateMode() const
 {
   return m_ElevateMode;
