@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "common/Settings.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/proxy/QProcessProxy.h"
@@ -68,7 +69,7 @@ class CoreProcessTests : public Test
 public:
   CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
   {
-    ON_CALL(m_appConfig, useExternalConfig()).WillByDefault(testing::Return(true));
+    Settings::setValue(Settings::Server::ExternalConfig, true);
     ON_CALL(m_appConfig, configFile()).WillByDefault(testing::ReturnRef(m_configFile));
     ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
   }

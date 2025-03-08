@@ -602,7 +602,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 
 QString CoreProcess::persistServerConfig() const
 {
-  if (m_appConfig.useExternalConfig()) {
+  if (Settings::value(Settings::Server::ExternalConfig).toBool()) {
     return m_appConfig.configFile();
   }
 
