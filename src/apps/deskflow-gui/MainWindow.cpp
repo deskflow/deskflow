@@ -706,7 +706,7 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  ui->lineHostname->setText(m_appConfig.serverHostname());
+  ui->lineHostname->setText(DeskflowSettings::value(Settings::Client::RemoteHost).toString());
   updateLocalFingerprint();
   setIcon();
 
@@ -719,7 +719,7 @@ void MainWindow::saveSettings()
 {
   m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
   m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
-  m_appConfig.setServerHostname(ui->lineHostname->text());
+  DeskflowSettings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
 
   m_configScopes.save();
 }

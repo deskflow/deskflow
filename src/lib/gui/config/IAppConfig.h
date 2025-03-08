@@ -45,7 +45,6 @@ public:
   virtual bool useExternalConfig() const = 0;
   virtual const QString &configFile() const = 0;
   virtual const QString &networkInterface() const = 0;
-  virtual const QString &serverHostname() const = 0;
   virtual int logLevel() const = 0;
   virtual bool enableService() const = 0;
   virtual bool isActiveScopeSystem() const = 0;

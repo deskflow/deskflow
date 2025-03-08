@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "common/DeskflowSettings.h"
 #include "gui/core/ClientConnection.h"
 
 #include "shared/gui/mocks/AppConfigMock.h"
@@ -34,7 +35,7 @@ class ClientConnectionTests : public testing::Test
 public:
   ClientConnectionTests()
   {
-    ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(stub));
+    DeskflowSettings::setValue(Settings::Client::RemoteHost, stub);
   }
 
   std::shared_ptr<DepsMock> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
@@ -47,8 +48,9 @@ private:
 TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
 {
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+
   const QString serverName = "test server";
-  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
+  DeskflowSettings::setValue(Settings::Client::RemoteHost, serverName);
 
   EXPECT_CALL(*m_pDeps, showError(_, AlreadyConnected, serverName));
 
@@ -59,8 +61,9 @@ TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
 TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
 {
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
-  const QString serverName = "test-hostname";
-  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
+
+  const QString serverName = "test hostname";
+  DeskflowSettings::setValue(Settings::Client::RemoteHost, serverName);
 
   EXPECT_CALL(*m_pDeps, showError(_, HostnameError, serverName));
 
@@ -70,8 +73,9 @@ TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
 TEST_F(ClientConnectionTests, handleLogLine_withIpAddress_showError)
 {
   ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+
   const QString serverName = "1.1.1.1";
-  ON_CALL(m_appConfig, serverHostname()).WillByDefault(testing::ReturnRef(serverName));
+  DeskflowSettings::setValue(Settings::Client::RemoteHost, serverName);
 
   EXPECT_CALL(*m_pDeps, showError(_, GenericError, serverName));
 
