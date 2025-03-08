@@ -720,7 +720,7 @@ void CoreProcess::checkOSXNotification(const QString &line)
 
 QString CoreProcess::correctedInterface() const
 {
-  QString interface = wrapIpv6(m_appConfig.networkInterface());
+  QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
   return interface + ":" + QString::number(m_appConfig.port());
 }
 

@@ -144,7 +144,7 @@ void SettingsDialog::accept()
 {
   m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
   m_appConfig.setPort(ui->sbPort->value());
-  m_appConfig.setNetworkInterface(ui->lineInterface->text());
+  Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
   m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
@@ -179,7 +179,7 @@ void SettingsDialog::loadFromConfig()
 {
 
   ui->sbPort->setValue(m_appConfig.port());
-  ui->lineInterface->setText(m_appConfig.networkInterface());
+  ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
   ui->lineLogFilename->setText(m_appConfig.logFilename());

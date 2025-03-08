@@ -35,7 +35,7 @@ const char AppConfig::m_LogDir[] = "/var/log/";
 const char *const AppConfig::m_SettingsName[] = {
     "screenName",
     "port",
-    "interface",
+    "", // interface moved to deskflow settings
     "logLevel2",
     "logToFile",
     "logFilename",
@@ -115,7 +115,6 @@ void AppConfig::recallFromCurrentScope()
   recallElevateMode();
 
   m_Port = getFromCurrentScope(kPort, m_Port).toInt();
-  m_Interface = getFromCurrentScope(kInterface, m_Interface).toString();
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
@@ -155,7 +154,6 @@ void AppConfig::commit()
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
     setInCurrentScope(kPort, m_Port);
-    setInCurrentScope(kInterface, m_Interface);
     setInCurrentScope(kLogLevel, m_LogLevel);
     setInCurrentScope(kLogToFile, m_LogToFile);
     setInCurrentScope(kLogFilename, m_LogFilename);
@@ -366,11 +364,6 @@ int AppConfig::port() const
   return m_Port;
 }
 
-const QString &AppConfig::networkInterface() const
-{
-  return m_Interface;
-}
-
 int AppConfig::logLevel() const
 {
   return m_LogLevel;
@@ -453,11 +446,6 @@ void AppConfig::setScreenName(const QString &s)
 void AppConfig::setPort(int i)
 {
   m_Port = i;
-}
-
-void AppConfig::setNetworkInterface(const QString &s)
-{
-  m_Interface = s;
 }
 
 void AppConfig::setLogLevel(int i)
