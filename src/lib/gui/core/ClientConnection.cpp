@@ -6,7 +6,7 @@
 
 #include "ClientConnection.h"
 
-#include "common/settings.h"
+#include "common/Settings.h"
 #include "messages.h"
 
 #include <QHostAddress>

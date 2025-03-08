@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include "gui/config/IAppConfig.h"
-
 #include "gui/messages.h"
 
 #include <QObject>
@@ -30,11 +28,8 @@ public:
     virtual void showError(QWidget *parent, messages::ClientError error, const QString &address) const;
   };
 
-  explicit ClientConnection(
-      QWidget *parent, IAppConfig &appConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>()
-  )
+  explicit ClientConnection(QWidget *parent, std::shared_ptr<Deps> deps = std::make_shared<Deps>())
       : m_pParent(parent),
-        m_appConfig(appConfig),
         m_deps(deps)
   {
   }
@@ -52,7 +47,6 @@ private:
   void showMessage(const QString &logLine);
 
   QWidget *m_pParent;
-  IAppConfig &m_appConfig;
   std::shared_ptr<Deps> m_deps;
   bool m_showMessage = true;
 };
