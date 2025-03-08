@@ -586,7 +586,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     args << "--sync-language";
   }
 
-  if (m_appConfig.invertScrollDirection()) {
+  if (DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool()) {
     args << "--invert-scroll";
   }
 

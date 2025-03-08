@@ -156,7 +156,7 @@ void SettingsDialog::accept()
   DeskflowSettings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
   DeskflowSettings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
-  m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
+  DeskflowSettings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
   m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
   DeskflowSettings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   DeskflowSettings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
@@ -186,7 +186,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
-  ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
+  ui->cbScrollDirection->setChecked(DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
   ui->cbCloseToTray->setChecked(DeskflowSettings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
