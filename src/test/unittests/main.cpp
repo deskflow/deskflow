@@ -7,6 +7,7 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
+#include "common/Settings.h"
 #include "shared/ExitTimeout.h"
 
 #if SYSAPI_WIN32
@@ -24,6 +25,8 @@ int main(int argc, char **argv)
 {
   // HACK: Unit tests should not use the filesystem.
   std::filesystem::create_directories(testDir);
+
+  Settings::setSettingFile("tmp/test/settings.ini");
 
   ExitTimeout exitTimeout(1, "Unit tests");
 
