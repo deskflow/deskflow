@@ -67,7 +67,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_serverConfig(appConfig, *this),
       m_coreProcess(appConfig, m_serverConfig),
       m_serverConnection(this, appConfig, m_serverConfig, m_serverConfigDialogState),
-      m_clientConnection(this, appConfig),
+      m_clientConnection(this),
       m_tlsUtility(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},

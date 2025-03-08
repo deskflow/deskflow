@@ -4,10 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "common/settings.h"
+#include "common/Settings.h"
 #include "gui/core/ClientConnection.h"
-
-#include "shared/gui/mocks/AppConfigMock.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -39,7 +37,6 @@ public:
   }
 
   std::shared_ptr<DepsMock> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
-  NiceMock<AppConfigMock> m_appConfig;
 
 private:
   const QString stub = "stub";
@@ -47,7 +44,7 @@ private:
 
 TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   const QString serverName = "test server";
   Settings::setValue(Settings::Client::RemoteHost, serverName);
@@ -62,7 +59,7 @@ TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
 
 TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   const QString serverName = "test hostname";
   Settings::setValue(Settings::Client::RemoteHost, serverName);
@@ -74,7 +71,7 @@ TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
 
 TEST_F(ClientConnectionTests, handleLogLine_withIpAddress_showError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   const QString serverName = "1.1.1.1";
   Settings::setValue(Settings::Client::RemoteHost, serverName);
@@ -86,7 +83,7 @@ TEST_F(ClientConnectionTests, handleLogLine_withIpAddress_showError)
 
 TEST_F(ClientConnectionTests, handleLogLine_messageShown_shouldNotShowAgain)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   clientConnection.handleLogLine("failed to connect to server");
 
@@ -97,7 +94,7 @@ TEST_F(ClientConnectionTests, handleLogLine_messageShown_shouldNotShowAgain)
 
 TEST_F(ClientConnectionTests, handleLogLine_serverRefusedClient_shouldNotShowError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);
 
@@ -109,7 +106,7 @@ TEST_F(ClientConnectionTests, handleLogLine_serverRefusedClient_shouldNotShowErr
 
 TEST_F(ClientConnectionTests, handleLogLine_connected_shouldPreventFutureError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
   clientConnection.handleLogLine("connected to server");
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);
@@ -119,7 +116,7 @@ TEST_F(ClientConnectionTests, handleLogLine_connected_shouldPreventFutureError)
 
 TEST_F(ClientConnectionTests, handleLogLine_otherMessage_shouldNotShowError)
 {
-  ClientConnection clientConnection(nullptr, m_appConfig, m_pDeps);
+  ClientConnection clientConnection(nullptr, m_pDeps);
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);
 
