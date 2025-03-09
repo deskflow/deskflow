@@ -47,6 +47,7 @@ bool Settings::isPortableSettings()
 
 void Settings::initSettings()
 {
+
   if (m_settings)
     m_settings->deleteLater();
 
@@ -70,14 +71,15 @@ void Settings::cleanSettings()
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if ((key == Core::Scope) || (key == Gui::Autohide) || (key == Core::StartedBefore) ||
-      (key == Core::PreventSleep) || (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection)) {
+  if ((key == Core::Scope) || (key == Settings::Gui::Autohide) || (key == Core::StartedBefore) ||
+      (key == Core::PreventSleep) || (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) ||
+      (key == Log::ToFile)) {
     return false;
   }
 
-  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon)
-      || (key == Gui::CloseReminder) || (key == Security::TlsEnabled) || (key == Security::CheckPeers)
-      || (key == Client::LanguageSync)) {
+  if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon) ||
+      (key == Gui::CloseReminder) || (key == Security::TlsEnabled) || (key == Security::CheckPeers) ||
+      (key == Client::LanguageSync)) {
     return true;
   }
 

@@ -37,7 +37,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // port moved to deskflow settings
     "", // interface moved to deskflow settings
     "logLevel2",
-    "logToFile",
+    "", // Log to file Moved to Deskflow settings
     "logFilename",
     "", // 6 wizardLastRun, obsolete
     "", // 7 statedBefore moved to deskflow settings
@@ -115,7 +115,6 @@ void AppConfig::recallFromCurrentScope()
   recallElevateMode();
 
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
-  m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
@@ -153,7 +152,6 @@ void AppConfig::commit()
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
     setInCurrentScope(kLogLevel, m_LogLevel);
-    setInCurrentScope(kLogToFile, m_LogToFile);
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
@@ -362,11 +360,6 @@ int AppConfig::logLevel() const
   return m_LogLevel;
 }
 
-bool AppConfig::logToFile() const
-{
-  return m_LogToFile;
-}
-
 const QString &AppConfig::logFilename() const
 {
   return m_LogFilename;
@@ -442,11 +435,6 @@ void AppConfig::setLogLevel(int i)
   m_LogLevel = i;
   if (changed)
     Q_EMIT logLevelChanged();
-}
-
-void AppConfig::setLogToFile(bool b)
-{
-  m_LogToFile = b;
 }
 
 void AppConfig::setLogFilename(const QString &s)
