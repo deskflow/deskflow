@@ -193,7 +193,6 @@ void SettingsDialog::loadFromConfig()
   ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(DeskflowSettings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool());
-  ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
   ui->cbCloseToTray->setChecked(DeskflowSettings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
@@ -203,6 +202,11 @@ void SettingsDialog::loadFromConfig()
     ui->rbScopeSystem->setChecked(true);
   } else {
     ui->rbScopeUser->setChecked(true);
+  }
+
+  const auto processMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  if (processMode == Settings::ProcessMode::Service) {
+    ui->cbServiceEnabled->setChecked(true);
   }
 
   if (DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool())

@@ -26,7 +26,6 @@ public:
 
   MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
-  MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
   MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
@@ -37,7 +36,6 @@ public:
 
   MOCK_METHOD(void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
   MOCK_METHOD(void, setElevateMode, (ElevateMode elevateMode), (override));
-  MOCK_METHOD(void, setEnableService, (bool enableService), (override));
 
 private:
   const QString m_stub = "stub";

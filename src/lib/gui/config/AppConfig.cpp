@@ -68,7 +68,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 34 = kInvertConnection, obsolete
     "", // 35 = clientHostMode, obsolete
     "", // 36 = serverClientMode, obsolete
-    "enableService",
+    "", // 37 enable service moved to deskflow settings
     "", // 38 Moved to deskflow settings
     "", // 39 window size moved to deskflow settings
     "", // 40 window position moved to deskflow settings
@@ -111,7 +111,6 @@ void AppConfig::recallFromCurrentScope()
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
-  m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
 }
 
 void AppConfig::commit()
@@ -128,7 +127,6 @@ void AppConfig::commit()
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
-    setInCurrentScope(kEnableService, m_EnableService);
   }
 }
 
@@ -311,11 +309,6 @@ ElevateMode AppConfig::elevateMode() const
   return m_ElevateMode;
 }
 
-bool AppConfig::enableService() const
-{
-  return m_EnableService;
-}
-
 bool AppConfig::serverGroupChecked() const
 {
   return m_ServerGroupChecked;
@@ -357,11 +350,6 @@ void AppConfig::setClientGroupChecked(bool newValue)
 void AppConfig::setElevateMode(ElevateMode em)
 {
   m_ElevateMode = em;
-}
-
-void AppConfig::setEnableService(bool enabled)
-{
-  m_EnableService = enabled;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
