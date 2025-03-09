@@ -147,7 +147,7 @@ void SettingsDialog::accept()
   DeskflowSettings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   DeskflowSettings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   DeskflowSettings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
-  m_appConfig.setLogFilename(ui->lineLogFilename->text());
+  DeskflowSettings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
@@ -182,7 +182,7 @@ void SettingsDialog::loadFromConfig()
   ui->lineInterface->setText(DeskflowSettings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(DeskflowSettings::value(Settings::Log::Level).toInt());
   ui->cbLogToFile->setChecked(DeskflowSettings::value(Settings::Log::ToFile).toBool());
-  ui->lineLogFilename->setText(m_appConfig.logFilename());
+  ui->lineLogFilename->setText(DeskflowSettings::value(Settings::Log::File).toString());
   ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(DeskflowSettings::value(Settings::Client::LanguageSync).toBool());

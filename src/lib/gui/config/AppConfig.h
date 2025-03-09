@@ -26,7 +26,6 @@
 namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
-const QString kDefaultLogFile = QStringLiteral("%1.log").arg(kAppId);
 
 #if defined(Q_OS_WIN)
 const ProcessMode kDefaultProcessMode = ProcessMode::kService;
@@ -59,7 +58,7 @@ private:
     // kInterface = 2, moved to deskflow settings
     // kLogLevel = 3, moved to deskflow settings
     // 4 = LogToFile moved to deskflow settings
-    kLogFilename = 5,
+    // 5 = logfilename moved to deskflow settings
     // 6 = show first run wizard, obsolete
     // 7 Started before moved to deskflow settings
     kElevateModeLegacy = 8,
@@ -131,8 +130,6 @@ public:
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   const QString &screenName() const override;
-  const QString &logFilename() const override;
-  void persistLogDir() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   bool enableService() const override;
@@ -142,7 +139,6 @@ public:
   // Getters (new methods)
   //
 
-  QString logDir() const;
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
 
@@ -151,7 +147,6 @@ public:
   //
 
   void setScreenName(const QString &s) override;
-  void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setEnableService(bool enabled) override;
 
@@ -220,7 +215,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;

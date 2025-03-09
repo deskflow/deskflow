@@ -96,6 +96,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Log::Level)
     return 0;
 
+  if (key == Settings::Log::File)
+    return QStringLiteral("%1/%2").arg(QDir::homePath(), kDefaultLogFile);
+
   if (key == Settings::Security::Certificate) {
     const auto baseDir = QFileInfo(instance()->m_settings->fileName()).absolutePath();
     return QStringLiteral("%1/%2/%3").arg(baseDir, kSslDir, kCertificateFilename);

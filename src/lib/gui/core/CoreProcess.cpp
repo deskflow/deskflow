@@ -392,7 +392,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   qDebug().noquote() << "log level:" << DeskflowSettings::logLevelText();
 
   if (DeskflowSettings::value(Settings::Log::ToFile).toBool())
-    qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
+    qInfo().noquote() << "log file:" << DeskflowSettings::value(Settings::Log::File).toString();
 
   if (processMode == ProcessMode::kDesktop) {
     startForegroundProcess(app, args);
@@ -530,8 +530,8 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   }
 
   if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
-    m_appConfig.persistLogDir();
-    args << "--log" << m_appConfig.logFilename();
+    persistLogDir();
+    args << "--log" << DeskflowSettings::value(Settings::Log::File).toString();
   }
 
   if (!DeskflowSettings::value(Settings::Security::CheckPeers).toBool()) {
@@ -577,8 +577,8 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
   }
 
   if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
-    m_appConfig.persistLogDir();
-    args << "--log" << m_appConfig.logFilename();
+    persistLogDir();
+    args << "--log" << DeskflowSettings::value(Settings::Log::File).toString();
   }
 
   if (DeskflowSettings::value(Settings::Client::LanguageSync).toBool()) {
@@ -745,6 +745,11 @@ QString CoreProcess::requestDaemonLogPath()
   }
 
   return logPath;
+}
+
+void CoreProcess::persistLogDir()
+{
+  QDir(QFileInfo(DeskflowSettings::value(Settings::Log::File).toString()).absolutePath()).mkpath(".");
 }
 
 void CoreProcess::clearSettings()
