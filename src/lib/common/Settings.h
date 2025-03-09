@@ -42,6 +42,7 @@ public:
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
     inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
+    inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
@@ -76,6 +77,20 @@ public:
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
   };
 
+  // Enums types used in settings
+  // The use of enum classes is not use for these
+  // enum classes are more specific when used with QVariant
+  // This leads longer function calls in code
+  // and longer more cryptic output in the settings file
+  // The using of standard enum will just write ints
+  // and we can read / write them as if they were ints
+  enum ProcessMode
+  {
+    Service,
+    Desktop
+  };
+  Q_ENUM(ProcessMode)
+
   static Settings *instance();
   static void setSettingFile(const QString &settingsFile = QString());
   static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
@@ -105,6 +120,7 @@ private:
 
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
+
   // clang-format off
   inline static const QStringList m_logLevels = {
      QStringLiteral("INFO")
@@ -122,6 +138,7 @@ private:
     , Core::LastVersion
     , Core::Port
     , Core::PreventSleep
+    , Core::ProcessMode
     , Core::Scope
     , Core::ScreenName
     , Core::StartedBefore
@@ -144,4 +161,10 @@ private:
     , Server::ExternalConfigFile
   };
   // clang-format on
+
+#ifdef Q_OS_WIN
+  inline static const auto defaultProcessMode = Settings::ProcessMode::Service;
+#else
+  inline static const auto defaultProcessMode = Settings::ProcessMode::Desktop;
+#endif
 };

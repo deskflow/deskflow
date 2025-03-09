@@ -112,6 +112,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Core::Port)
     return 24800;
 
+  if (key == Core::ProcessMode)
+    return defaultProcessMode;
+
   return QVariant();
 }
 

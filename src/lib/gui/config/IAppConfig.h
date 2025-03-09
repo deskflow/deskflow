@@ -14,12 +14,6 @@
 
 namespace deskflow::gui {
 
-enum class ProcessMode
-{
-  kService,
-  kDesktop
-};
-
 class IAppConfig
 {
   using IConfigScopes = deskflow::gui::IConfigScopes;
@@ -32,7 +26,6 @@ public:
   //
 
   virtual IConfigScopes &scopes() const = 0;
-  virtual ProcessMode processMode() const = 0;
   virtual ElevateMode elevateMode() const = 0;
   virtual bool enableService() const = 0;
   virtual bool isActiveScopeSystem() const = 0;

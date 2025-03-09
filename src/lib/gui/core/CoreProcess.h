@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "common/Settings.h"
 #include "gui/FileTail.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
@@ -28,6 +29,7 @@ class DaemonIpcClient;
 
 class CoreProcess : public QObject
 {
+  using ProcessMode = Settings::ProcessMode;
   using IServerConfig = deskflow::gui::IServerConfig;
   using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
 
