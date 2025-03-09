@@ -34,7 +34,7 @@ const char AppConfig::m_LogDir[] = "/var/log/";
 // TODO: instead, use key value pair table, which would be less fragile.
 const char *const AppConfig::m_SettingsName[] = {
     "screenName",
-    "port",
+    "", // port moved to deskflow settings
     "", // interface moved to deskflow settings
     "logLevel2",
     "logToFile",
@@ -114,7 +114,6 @@ void AppConfig::recallFromCurrentScope()
   recallScreenName();
   recallElevateMode();
 
-  m_Port = getFromCurrentScope(kPort, m_Port).toInt();
   m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogToFile = getFromCurrentScope(kLogToFile, m_LogToFile).toBool();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
@@ -153,7 +152,6 @@ void AppConfig::commit()
 
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
-    setInCurrentScope(kPort, m_Port);
     setInCurrentScope(kLogLevel, m_LogLevel);
     setInCurrentScope(kLogToFile, m_LogToFile);
     setInCurrentScope(kLogFilename, m_LogFilename);
@@ -359,11 +357,6 @@ const QString &AppConfig::screenName() const
   return m_ScreenName;
 }
 
-int AppConfig::port() const
-{
-  return m_Port;
-}
-
 int AppConfig::logLevel() const
 {
   return m_LogLevel;
@@ -441,11 +434,6 @@ void AppConfig::setScreenName(const QString &s)
 {
   m_ScreenName = s;
   Q_EMIT screenNameChanged();
-}
-
-void AppConfig::setPort(int i)
-{
-  m_Port = i;
 }
 
 void AppConfig::setLogLevel(int i)
