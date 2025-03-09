@@ -106,6 +106,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
+  if (key == Core::ElevateMode)
+    return Settings::ElevateMode::Always;
+
   if (key == Server::ExternalConfigFile)
     return QStringLiteral("%1/%2.conf").arg(instance()->settingsPath(), kAppId);
 

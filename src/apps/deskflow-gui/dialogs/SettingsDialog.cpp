@@ -148,7 +148,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
-  m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
+  Settings::setValue(Settings::Core::ElevateMode, ui->comboElevate->currentIndex());
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   Settings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
@@ -194,8 +194,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
-  ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
-
+  ui->comboElevate->setCurrentIndex(Settings::value(Settings::Core::ElevateMode).toInt());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
 
   if (m_appConfig.isActiveScopeSystem()) {

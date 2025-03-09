@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "ElevateMode.h"
 #include "IAppConfig.h"
 #include "IConfigScopes.h"
 #include "common/constants.h"
@@ -21,12 +20,6 @@
 #include <QString>
 #include <QVariant>
 #include <optional>
-
-namespace deskflow::gui {
-
-const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
-
-} // namespace deskflow::gui
 
 /**
  * @brief Simply reads and writes app settings.
@@ -53,8 +46,8 @@ private:
     // 5 = logfilename moved to deskflow settings
     // 6 = show first run wizard, obsolete
     // 7 Started before moved to deskflow settings
-    kElevateModeLegacy = 8,
-    kElevateMode = 9,
+    // kElevateModeLegacy = 8,
+    // kElevateMode = 9,
     // 10 = edition, obsolete (related to obsolete licensing)
     // 11 = tlsEnagled moved to Settigns
     // 12 = auto hide, Moved to Settings
@@ -115,7 +108,6 @@ public:
   //
 
   IConfigScopes &scopes() const override;
-  ElevateMode elevateMode() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   bool clientGroupChecked() const override;
@@ -126,12 +118,6 @@ public:
 
   bool serverGroupChecked() const;
   bool useInternalConfig() const;
-
-  //
-  // Setters (overrides)
-  //
-
-  void setElevateMode(ElevateMode em) override;
 
   //
   // Setters (new methods)
@@ -153,7 +139,6 @@ private:
 
   void recall();
   void recallScreenName();
-  void recallElevateMode();
   void recallFromAllScopes();
   void recallFromCurrentScope();
 
@@ -198,7 +183,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;

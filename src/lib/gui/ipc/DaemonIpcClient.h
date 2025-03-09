@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-#include "gui/config/ElevateMode.h"
+#include "common/Settings.h"
 
 class QLocalSocket;
 
@@ -22,7 +22,7 @@ public:
   explicit DaemonIpcClient(QObject *parent = nullptr);
   bool connectToServer();
   bool sendLogLevel(const QString &logLevel);
-  bool sendStartProcess(const QString &command, ElevateMode elevateMode);
+  bool sendStartProcess(const QString &command, Settings::ElevateMode elevateMode);
   bool sendStopProcess();
   bool sendClearSettings();
   QString requestLogPath();

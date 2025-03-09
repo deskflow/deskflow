@@ -39,8 +39,8 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 5 logFilename, moved to deskflow settings
     "", // 6 wizardLastRun, obsolete
     "", // 7 statedBefore moved to deskflow settings
-    "elevateMode",
-    "elevateModeEnum",
+    "", // 8 elevateMode,
+    "", // 9 elevateModeEnum,
     "", // 10 = edition, obsolete (using serial key instead)
     "", // 11 = kTlsEnabled (retain legacy string value) Moved to Settings
     "", // 12 AutoHide, moved to Settings
@@ -106,8 +106,6 @@ void AppConfig::recallFromCurrentScope()
 {
   using enum Setting;
 
-  recallElevateMode();
-
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
@@ -124,8 +122,6 @@ void AppConfig::commit()
   saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
 
   if (isActiveScopeWritable()) {
-    setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
-    setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
   }
 }
@@ -157,24 +153,6 @@ void AppConfig::determineScope()
     qDebug("system settings scope contains screen name, using system scope");
     setLoadFromSystemScope(true);
   }
-}
-
-void AppConfig::recallElevateMode()
-{
-  using enum Setting;
-
-  if (!m_Scopes.scopeContains(settingName(kElevateMode))) {
-    qDebug("elevate mode not set yet, skipping");
-    return;
-  }
-
-  QVariant elevateMode = getFromCurrentScope(kElevateMode);
-  if (!elevateMode.isValid()) {
-    qDebug("elevate mode not valid, loading legacy setting");
-    elevateMode = getFromCurrentScope(kElevateModeLegacy, QVariant(static_cast<int>(kDefaultElevateMode)));
-  }
-
-  m_ElevateMode = static_cast<ElevateMode>(elevateMode.toInt());
 }
 
 QString AppConfig::settingName(Setting name)
@@ -304,11 +282,6 @@ IConfigScopes &AppConfig::scopes() const
   return m_Scopes;
 }
 
-ElevateMode AppConfig::elevateMode() const
-{
-  return m_ElevateMode;
-}
-
 bool AppConfig::serverGroupChecked() const
 {
   return m_ServerGroupChecked;
@@ -345,11 +318,6 @@ void AppConfig::setUseInternalConfig(bool newValue)
 void AppConfig::setClientGroupChecked(bool newValue)
 {
   m_ClientGroupChecked = newValue;
-}
-
-void AppConfig::setElevateMode(ElevateMode em)
-{
-  m_ElevateMode = em;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
