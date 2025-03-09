@@ -36,14 +36,12 @@ const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 // free functions
 //
 
-QString processModeToString(ProcessMode mode)
+QString processModeToString(Settings::ProcessMode mode)
 {
-  using enum ProcessMode;
-
   switch (mode) {
-  case kDesktop:
+  case Settings::ProcessMode::Desktop:
     return "desktop";
-  case kService:
+  case Settings::ProcessMode::Service:
     return "service";
   default:
     qFatal("invalid process mode");
@@ -239,7 +237,8 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 
 void CoreProcess::applyLogLevel()
 {
-  if (m_appConfig.processMode() == ProcessMode::kService) {
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  if (processMode == ProcessMode::Service) {
     qDebug() << "setting daemon log level:" << Settings::logLevelText();
     if (!m_daemonIpcClient->sendLogLevel(Settings::logLevelText())) {
       qCritical() << "failed to set daemon ipc log level";
@@ -349,9 +348,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
+  const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  const auto processMode = processModeOption.value_or(currentMode);
 
-  qInfo("starting core %s process (%s mode)", qPrintable(modeString()), qPrintable(processModeToString(processMode)));
+  qInfo().noquote(
+  ) << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
 
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
@@ -372,7 +373,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   setConnectionState(ConnectionState::Connecting);
 
-  if (processMode == ProcessMode::kDesktop) {
+  if (processMode == ProcessMode::Desktop) {
     m_pDeps->process().create();
   }
 
@@ -393,9 +394,9 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   if (Settings::value(Settings::Log::ToFile).toBool())
     qInfo().noquote() << "log file:" << Settings::value(Settings::Log::File).toString();
 
-  if (processMode == ProcessMode::kDesktop) {
+  if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(app, args);
-  } else if (processMode == ProcessMode::kService) {
+  } else if (processMode == ProcessMode::Service) {
     startProcessFromDaemon(app, args);
   }
 
@@ -406,7 +407,8 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 {
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
+  const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  const auto processMode = processModeOption.value_or(currentMode);
 
   qInfo("stopping core process (%s mode)", qPrintable(processModeToString(processMode)));
 
@@ -416,9 +418,9 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   } else if (m_processState != ProcessState::Stopped) {
     setProcessState(ProcessState::Stopping);
 
-    if (processMode == ProcessMode::kService) {
+    if (processMode == ProcessMode::Service) {
       stopProcessFromDaemon();
-    } else if (processMode == ProcessMode::kDesktop) {
+    } else if (processMode == ProcessMode::Desktop) {
       stopForegroundProcess();
     }
 
@@ -431,19 +433,17 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 
 void CoreProcess::restart()
 {
-  using enum ProcessMode;
-
   qDebug("restarting core process");
 
-  const auto processMode = m_appConfig.processMode();
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
 
   if (m_lastProcessMode != processMode) {
-    if (processMode == kDesktop) {
+    if (processMode == ProcessMode::Desktop) {
       qDebug("process mode changed to desktop, stopping service process");
-      stop(kService);
-    } else if (processMode == kService) {
+      stop(ProcessMode::Service);
+    } else if (processMode == ProcessMode::Service) {
       qDebug("process mode changed to service, stopping desktop process");
-      stop(kDesktop);
+      stop(ProcessMode::Desktop);
     } else {
       qFatal("invalid process mode");
     }
@@ -461,7 +461,7 @@ void CoreProcess::cleanup()
 {
   qInfo("cleaning up core process");
 
-  const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
+  const auto isDesktop = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop;
   const auto isRunning = m_processState == ProcessState::Started;
   if (isDesktop && isRunning) {
     stop();
@@ -475,7 +475,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
   args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
 
-  if (processMode != ProcessMode::kDesktop) {
+  if (processMode != ProcessMode::Desktop) {
 #if defined(Q_OS_WIN)
     // tell the client/server to shut down when a ms windows desk
     // is switched; this is because we may need to elevate or not
@@ -753,12 +753,13 @@ void CoreProcess::persistLogDir()
 
 void CoreProcess::clearSettings()
 {
-  if (m_appConfig.processMode() == ProcessMode::kDesktop) {
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  if (processMode == ProcessMode::Desktop) {
     qDebug("no core settings to clear in desktop mode");
     return;
   }
 
-  if (m_appConfig.processMode() != ProcessMode::kService) {
+  if (processMode != ProcessMode::Service) {
     qFatal("invalid process mode");
   }
 

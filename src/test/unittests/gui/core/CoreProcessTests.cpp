@@ -71,7 +71,7 @@ public:
   {
     Settings::setValue(Settings::Server::ExternalConfig, true);
     Settings::setValue(Settings::Server::ExternalConfigFile, m_configFile);
-    ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
+    Settings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
   }
 
   NiceMock<AppConfigMock> m_appConfig;
@@ -91,7 +91,7 @@ TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart)
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
 
-  m_coreProcess.start(ProcessMode::kDesktop);
+  m_coreProcess.start(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
@@ -101,7 +101,7 @@ TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
 
-  m_coreProcess.start(ProcessMode::kDesktop);
+  m_coreProcess.start(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
@@ -111,7 +111,7 @@ TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
 
-  m_coreProcess.stop(ProcessMode::kDesktop);
+  m_coreProcess.stop(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
@@ -122,12 +122,12 @@ TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
 
-  m_coreProcess.stop(ProcessMode::kDesktop);
+  m_coreProcess.stop(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, restart_serverDesktop_callsProcessStart)
 {
-  ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
+  Settings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
   m_coreProcess.setMode(CoreProcess::Mode::Server);
   m_coreProcess.start();
 

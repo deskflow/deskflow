@@ -26,12 +26,6 @@ namespace deskflow::gui {
 
 const ElevateMode kDefaultElevateMode = ElevateMode::kAutomatic;
 
-#if defined(Q_OS_WIN)
-const ProcessMode kDefaultProcessMode = ProcessMode::kService;
-#else
-const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
-#endif // Q_OS_WIN
-
 } // namespace deskflow::gui
 
 /**
@@ -44,7 +38,6 @@ const ProcessMode kDefaultProcessMode = ProcessMode::kDesktop;
  */
 class AppConfig : public QObject, public deskflow::gui::IAppConfig
 {
-  using ProcessMode = deskflow::gui::ProcessMode;
   using IConfigScopes = deskflow::gui::IConfigScopes;
 
   Q_OBJECT
@@ -122,7 +115,6 @@ public:
   //
 
   IConfigScopes &scopes() const override;
-  ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
@@ -212,7 +204,7 @@ private:
   bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
-  bool m_EnableService = deskflow::gui::kDefaultProcessMode == ProcessMode::kService;
+  bool m_EnableService = false;
   bool m_LoadFromSystemScope = false;
 
   deskflow::gui::IConfigScopes &m_Scopes;
