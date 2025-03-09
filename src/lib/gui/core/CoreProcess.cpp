@@ -8,7 +8,6 @@
 
 #include "common/DeskflowSettings.h"
 #include "common/constants.h"
-#include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/paths.h"
@@ -151,9 +150,8 @@ QString CoreProcess::Deps::getProfileRoot() const
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
-    : m_appConfig(appConfig),
-      m_serverConfig(serverConfig),
+CoreProcess::CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
+    : m_serverConfig(serverConfig),
       m_pDeps(deps),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
