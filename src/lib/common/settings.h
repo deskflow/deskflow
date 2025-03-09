@@ -45,6 +45,7 @@ public:
   {
     inline static const auto Interface = QStringLiteral("core/interface");
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
+    inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
@@ -81,6 +82,7 @@ public:
     , Settings::Client::RemoteHost
     , Settings::Core::Interface
     , Settings::Core::LastVersion
+    , Settings::Core::Port
     , Settings::Core::PreventSleep
     , Settings::Core::Scope
     , Settings::Core::StartedBefore

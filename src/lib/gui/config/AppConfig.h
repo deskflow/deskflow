@@ -55,7 +55,7 @@ private:
   enum class Setting
   {
     kScreenName = 0,
-    kPort = 1,
+    // kPort = 1, moved to deskflow settings
     // kInterface = 2, moved to deskflow settings
     kLogLevel = 3,
     kLogToFile = 4,
@@ -135,7 +135,6 @@ public:
   bool logToFile() const override;
   const QString &logFilename() const override;
   void persistLogDir() const override;
-  int port() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   int logLevel() const override;
@@ -155,7 +154,6 @@ public:
   //
 
   void setScreenName(const QString &s) override;
-  void setPort(int i) override;
   void setLogLevel(int i) override;
   void setLogToFile(bool b) override;
   void setLogFilename(const QString &s) override;
@@ -227,7 +225,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  int m_Port = 24800;
   int m_LogLevel = 0;
   bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
