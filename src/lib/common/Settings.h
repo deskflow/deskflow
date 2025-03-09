@@ -57,6 +57,7 @@ public:
   };
   struct Log
   {
+    inline static const auto File = QStringLiteral("log/file");
     inline static const auto Level = QStringLiteral("log/level");
     inline static const auto ToFile = QStringLiteral("log/toFile");
   };
@@ -122,6 +123,7 @@ private:
     , Core::PreventSleep
     , Core::Scope
     , Core::StartedBefore
+    , Log::File
     , Log::Level
     , Log::ToFile
     , Gui::Autohide

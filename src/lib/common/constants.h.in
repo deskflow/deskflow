@@ -15,6 +15,7 @@ const auto kVersionGitSha = "@GIT_SHA_SHORT@";
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";
+const auto kDefaultLogFile = "@CMAKE_PROJECT_NAME@.log";
 
 // clang-format off
 const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)" : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
@@ -59,3 +60,4 @@ const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client";
 const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server";
 
 #endif
+
