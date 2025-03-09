@@ -84,11 +84,11 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Gui::WindowGeometry)
     return QRect();
 
-  if (key == Security::KeySize)
-    return 2048;
-
   if (key == Security::Certificate)
     return QStringLiteral("%1/%2/%3").arg(instance()->settingsPath(), kTlsDirName, kTlsCertificateFilename);
+
+  if (key == Security::KeySize)
+    return 2048;
 
   if (key == Client::Binary)
     return kClientBinName;
@@ -96,10 +96,14 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
-  if (key == Server::ExternalConfigFile) {
-    const auto baseDir = QFileInfo(instance()->m_settings->fileName()).absolutePath();
-    return QStringLiteral("%1/%2.conf").arg(baseDir, kAppId);
-  }
+  if (key == Server::ExternalConfigFile)
+    return QStringLiteral("%1/%2.conf").arg(instance()->settingsPath(), kAppId);
+
+  if (key == Security::KeySize)
+    return 2048;
+
+  if (key == Core::Port)
+    return 24800;
 
   return QVariant();
 }

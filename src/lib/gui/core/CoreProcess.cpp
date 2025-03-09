@@ -595,7 +595,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     return false;
   }
 
-  args << correctedAddress() + ":" + QString::number(m_appConfig.port());
+  args << correctedAddress() + ":" + Settings::value(Settings::Core::Port).toString();
 
   return true;
 }
@@ -720,8 +720,9 @@ void CoreProcess::checkOSXNotification(const QString &line)
 
 QString CoreProcess::correctedInterface() const
 {
-  QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
-  return interface + ":" + QString::number(m_appConfig.port());
+  const QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
+  const auto port = Settings::value(Settings::Core::Port).toString();
+  return QStringLiteral("%1:%2").arg(interface, port);
 }
 
 QString CoreProcess::correctedAddress() const

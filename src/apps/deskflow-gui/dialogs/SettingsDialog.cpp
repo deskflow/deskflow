@@ -143,7 +143,7 @@ void SettingsDialog::showReadOnlyMessage()
 void SettingsDialog::accept()
 {
   m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
-  m_appConfig.setPort(ui->sbPort->value());
+  Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
   m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
@@ -178,7 +178,7 @@ void SettingsDialog::reject()
 void SettingsDialog::loadFromConfig()
 {
 
-  ui->sbPort->setValue(m_appConfig.port());
+  ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
   ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
   ui->cbLogToFile->setChecked(m_appConfig.logToFile());
