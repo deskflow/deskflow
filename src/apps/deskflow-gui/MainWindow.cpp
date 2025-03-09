@@ -65,7 +65,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_configScopes(configScopes),
       m_appConfig(appConfig),
       m_serverConfig(appConfig, *this),
-      m_coreProcess(appConfig, m_serverConfig),
+      m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig, m_serverConfigDialogState),
       m_clientConnection(this),
       m_tlsUtility(this),

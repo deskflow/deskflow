@@ -8,7 +8,6 @@
 
 #include "common/Settings.h"
 #include "gui/FileTail.h"
-#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/proxy/QProcessProxy.h"
 
@@ -78,10 +77,7 @@ public:
     Listening
   };
 
-  explicit CoreProcess(
-      const IAppConfig &appConfig, const IServerConfig &serverConfig,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>()
-  );
+  explicit CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
@@ -162,7 +158,6 @@ private:
   void checkOSXNotification(const QString &line);
 #endif
 
-  const IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;
