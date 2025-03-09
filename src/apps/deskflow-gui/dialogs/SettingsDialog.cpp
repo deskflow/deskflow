@@ -157,10 +157,16 @@ void SettingsDialog::accept()
   DeskflowSettings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   DeskflowSettings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
   DeskflowSettings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
-  m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
   DeskflowSettings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   DeskflowSettings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   DeskflowSettings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
+
+  Settings::ProcessMode mode;
+  if (ui->cbServiceEnabled->isChecked())
+    mode = Settings::ProcessMode::Service;
+  else
+    mode = Settings::ProcessMode::Desktop;
+  DeskflowSettings::setValue(Settings::Core::ProcessMode, mode);
 
   QDialog::accept();
 }
