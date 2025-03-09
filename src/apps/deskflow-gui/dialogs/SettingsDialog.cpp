@@ -147,7 +147,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
-  m_appConfig.setLogFilename(ui->lineLogFilename->text());
+  Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
@@ -182,7 +182,7 @@ void SettingsDialog::loadFromConfig()
   ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
   ui->cbLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
-  ui->lineLogFilename->setText(m_appConfig.logFilename());
+  ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
   ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());

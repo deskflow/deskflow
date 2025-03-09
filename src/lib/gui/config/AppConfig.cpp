@@ -36,7 +36,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // interface moved to deskflow settings
     "", // log level moved to deskflow settings
     "", // Log to file Moved to Deskflow settings
-    "logFilename",
+    "", // 5 logFilename, moved to deskflow settings
     "", // 6 wizardLastRun, obsolete
     "", // 7 statedBefore moved to deskflow settings
     "elevateMode",
@@ -112,7 +112,6 @@ void AppConfig::recallFromCurrentScope()
   recallScreenName();
   recallElevateMode();
 
-  m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
@@ -148,7 +147,6 @@ void AppConfig::commit()
 
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
-    setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
@@ -321,22 +319,6 @@ bool AppConfig::isActiveScopeSystem() const
   return m_Scopes.activeScope() == ConfigScopes::Scope::System;
 }
 
-QString AppConfig::logDir() const
-{
-  // by default log to home dir
-  return QDir::home().absolutePath() + "/";
-}
-
-void AppConfig::persistLogDir() const
-{
-  QDir dir = logDir();
-
-  // persist the log directory
-  if (!dir.exists()) {
-    dir.mkpath(dir.path());
-  }
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // Begin getters
 ///////////////////////////////////////////////////////////////////////////////
@@ -349,11 +331,6 @@ IConfigScopes &AppConfig::scopes() const
 const QString &AppConfig::screenName() const
 {
   return m_ScreenName;
-}
-
-const QString &AppConfig::logFilename() const
-{
-  return m_LogFilename;
 }
 
 ProcessMode AppConfig::processMode() const
@@ -413,11 +390,6 @@ void AppConfig::setScreenName(const QString &s)
 {
   m_ScreenName = s;
   Q_EMIT screenNameChanged();
-}
-
-void AppConfig::setLogFilename(const QString &s)
-{
-  m_LogFilename = s;
 }
 
 void AppConfig::setElevateMode(ElevateMode em)

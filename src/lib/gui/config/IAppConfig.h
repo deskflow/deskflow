@@ -35,8 +35,6 @@ public:
   virtual ProcessMode processMode() const = 0;
   virtual ElevateMode elevateMode() const = 0;
   virtual const QString &screenName() const = 0;
-  virtual const QString &logFilename() const = 0;
-  virtual void persistLogDir() const = 0;
   virtual bool enableService() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
@@ -48,7 +46,6 @@ public:
 
   virtual void setLoadFromSystemScope(bool loadFromSystemScope) = 0;
   virtual void setScreenName(const QString &screenName) = 0;
-  virtual void setLogFilename(const QString &logFilename) = 0;
   virtual void setElevateMode(ElevateMode elevateMode) = 0;
   virtual void setEnableService(bool enableService) = 0;
 };
