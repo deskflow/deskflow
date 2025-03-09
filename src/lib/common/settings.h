@@ -48,6 +48,7 @@ public:
     inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
+    inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
   struct Gui
@@ -98,6 +99,7 @@ public:
     , Settings::Core::Port
     , Settings::Core::PreventSleep
     , Settings::Core::Scope
+    , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
     , Settings::Log::File
     , Settings::Log::Level

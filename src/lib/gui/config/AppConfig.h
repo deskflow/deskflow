@@ -15,7 +15,6 @@
 #include "gui/paths.h"
 
 #include <QDir>
-#include <QHostInfo>
 #include <QObject>
 #include <QPoint>
 #include <QSize>
@@ -53,7 +52,7 @@ class AppConfig : public QObject, public deskflow::gui::IAppConfig
 private:
   enum class Setting
   {
-    kScreenName = 0,
+    // kScreenName = 0, Moved to deskflow settings
     // kPort = 1, moved to deskflow settings
     // kInterface = 2, moved to deskflow settings
     // kLogLevel = 3, moved to deskflow settings
@@ -106,10 +105,6 @@ public:
   struct Deps
   {
     virtual ~Deps() = default;
-    virtual QString hostname() const
-    {
-      return QHostInfo::localHostName();
-    }
   };
 
   explicit AppConfig(IConfigScopes &scopes, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
@@ -129,7 +124,6 @@ public:
   IConfigScopes &scopes() const override;
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
-  const QString &screenName() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
   bool enableService() const override;
@@ -146,7 +140,6 @@ public:
   // Setters (overrides)
   //
 
-  void setScreenName(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setEnableService(bool enabled) override;
 
@@ -224,8 +217,4 @@ private:
 
   deskflow::gui::IConfigScopes &m_Scopes;
   std::shared_ptr<Deps> m_pDeps;
-  QString m_ScreenName;
-
-signals:
-  void screenNameChanged();
 };

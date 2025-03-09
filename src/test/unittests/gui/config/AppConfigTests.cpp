@@ -41,15 +41,12 @@ struct DepsMock : public AppConfig::Deps
 {
   DepsMock()
   {
-    ON_CALL(*this, hostname()).WillByDefault(Return("stub"));
   }
 
   static std::shared_ptr<NiceMock<DepsMock>> makeNice()
   {
     return std::make_shared<NiceMock<DepsMock>>();
   }
-
-  MOCK_METHOD(QString, hostname, (), (const, override));
 };
 
 } // namespace
@@ -57,17 +54,6 @@ struct DepsMock : public AppConfig::Deps
 class AppConfigTests : public Test
 {
 };
-
-TEST_F(AppConfigTests, ctor_byDefault_screenNameIsHostname)
-{
-  NiceMock<ConfigScopesMock> scopes;
-  auto deps = DepsMock::makeNice();
-  ON_CALL(*deps, hostname()).WillByDefault(Return("test hostname"));
-
-  AppConfig appConfig(scopes, deps);
-
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test hostname");
-}
 
 TEST_F(AppConfigTests, ctor_byDefault_getsFromScope)
 {
@@ -79,8 +65,6 @@ TEST_F(AppConfigTests, ctor_byDefault_getsFromScope)
   EXPECT_CALL(scopes, getFromScope(_, _, _)).Times(AnyNumber());
 
   AppConfig appConfig(scopes, deps);
-
-  ASSERT_EQ(appConfig.screenName().toStdString(), "test screen");
 }
 
 TEST_F(AppConfigTests, commit_byDefault_setsToScope)

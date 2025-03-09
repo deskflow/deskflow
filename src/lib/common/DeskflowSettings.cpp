@@ -109,6 +109,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2.conf").arg(baseDir, kAppId);
   }
 
+  if (key == Settings::Core::ScreenName)
+    return QSysInfo::machineHostName();
+
   if (key == Settings::Client::Binary)
     return kClientBinName;
 
