@@ -281,7 +281,8 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
-  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, m_appConfig.elevateMode())) {
+  auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
+  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, elevateMode)) {
     qCritical("cannot start process, ipc command failed");
     return;
   }
@@ -486,7 +487,8 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
     // unnecessary restarts when deskflow was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
-    if (m_appConfig.elevateMode() == ElevateMode::kAutomatic) {
+    auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
+    if (elevateMode == Settings::ElevateMode::Automatic) {
       args << "--stop-on-desk-switch";
     }
 #endif

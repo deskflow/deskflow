@@ -132,12 +132,13 @@ bool DaemonIpcClient::sendLogLevel(const QString &logLevel)
   return true;
 }
 
-bool DaemonIpcClient::sendStartProcess(const QString &command, ElevateMode elevateMode)
+bool DaemonIpcClient::sendStartProcess(const QString &command, Settings::ElevateMode elevateMode)
 {
   if (!keepAlive())
     return false;
 
-  if (!sendMessage("elevate=" + (elevateMode == ElevateMode::kAlways ? QStringLiteral("yes") : QStringLiteral("no")))) {
+  using ElevateMode = Settings::ElevateMode;
+  if (!sendMessage("elevate=" + (elevateMode == ElevateMode::Always ? QStringLiteral("yes") : QStringLiteral("no")))) {
     return false;
   }
 
