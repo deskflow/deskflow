@@ -148,7 +148,7 @@ void SettingsDialog::accept()
   DeskflowSettings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   DeskflowSettings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   DeskflowSettings::setValue(Settings::Log::File, ui->lineLogFilename->text());
-  m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
+  DeskflowSettings::setValue(Settings::Core::ElevateMode, ui->comboElevate->currentIndex());
   DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   DeskflowSettings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
@@ -194,7 +194,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(DeskflowSettings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(DeskflowSettings::value(Settings::Gui::CloseToTray).toBool());
-  ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->comboElevate->setCurrentIndex(DeskflowSettings::value(Settings::Core::ElevateMode).toInt());
 
   ui->cbAutoUpdate->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
 
