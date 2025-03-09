@@ -157,10 +157,16 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
   Settings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
   Settings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
-  m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
   Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
+
+  Settings::ProcessMode mode;
+  if (ui->cbServiceEnabled->isChecked())
+    mode = Settings::ProcessMode::Service;
+  else
+    mode = Settings::ProcessMode::Desktop;
+  Settings::setValue(Settings::Core::ProcessMode, mode);
 
   QDialog::accept();
 }
