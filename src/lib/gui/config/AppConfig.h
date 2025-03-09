@@ -82,7 +82,7 @@ private:
     // 34 = InvertConnection, obsolete
     // 35 = client-host-mode, obsolete
     // 36 = server-client-mode, obsolete
-    kEnableService = 37,
+    // kEnableService = 37, moved to deskflow settings
     // 38, close to tray moved to deskflow settings
     // 39 window size moved to deskflow settings
     // 40 window position moved to deskflow settings
@@ -118,7 +118,6 @@ public:
   ElevateMode elevateMode() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
-  bool enableService() const override;
   bool clientGroupChecked() const override;
 
   //
@@ -133,7 +132,6 @@ public:
   //
 
   void setElevateMode(ElevateMode em) override;
-  void setEnableService(bool enabled) override;
 
   //
   // Setters (new methods)
@@ -204,7 +202,6 @@ private:
   bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;
   bool m_ClientGroupChecked = false;
-  bool m_EnableService = false;
   bool m_LoadFromSystemScope = false;
 
   deskflow::gui::IConfigScopes &m_Scopes;

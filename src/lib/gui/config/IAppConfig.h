@@ -27,7 +27,6 @@ public:
 
   virtual IConfigScopes &scopes() const = 0;
   virtual ElevateMode elevateMode() const = 0;
-  virtual bool enableService() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
   virtual bool clientGroupChecked() const = 0;
@@ -38,7 +37,6 @@ public:
 
   virtual void setLoadFromSystemScope(bool loadFromSystemScope) = 0;
   virtual void setElevateMode(ElevateMode elevateMode) = 0;
-  virtual void setEnableService(bool enableService) = 0;
 };
 
 } // namespace deskflow::gui
