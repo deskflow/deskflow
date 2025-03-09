@@ -294,7 +294,6 @@ void MainWindow::connectSlots()
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
   connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
-  connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -384,6 +383,11 @@ void MainWindow::firstShown()
 
 void MainWindow::settingsChanged(const QString &key)
 {
+  if (key == Settings::Log::Level) {
+    m_coreProcess.applyLogLevel();
+    return;
+  }
+
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
     const auto certificate = Settings::value(Settings::Security::Certificate).toString();
@@ -391,6 +395,7 @@ void MainWindow::settingsChanged(const QString &key)
       m_tlsUtility.generateCertificate();
     }
     updateSecurityIcon(m_lblSecurityStatus->isVisible());
+    return;
   }
 }
 

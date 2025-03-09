@@ -92,6 +92,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Security::KeySize)
     return 2048;
 
+  if (key == Log::Level)
+    return 0;
+
   if (key == Client::Binary)
     return kClientBinName;
 
@@ -101,13 +104,15 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::ExternalConfigFile)
     return QStringLiteral("%1/%2.conf").arg(instance()->settingsPath(), kAppId);
 
-  if (key == Security::KeySize)
-    return 2048;
-
   if (key == Core::Port)
     return 24800;
 
   return QVariant();
+}
+
+const QString Settings::logLevelText()
+{
+  return instance()->m_logLevels.at(instance()->value(Log::Level).toInt());
 }
 
 bool Settings::isWritable()

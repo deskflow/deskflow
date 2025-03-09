@@ -145,7 +145,7 @@ void SettingsDialog::accept()
   m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
-  m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
+  Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
@@ -180,7 +180,7 @@ void SettingsDialog::loadFromConfig()
 
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
   ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
-  ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
+  ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
   ui->cbLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
   ui->cbAutoHide->setChecked(Settings::value(Settings::Gui::Autohide).toBool());

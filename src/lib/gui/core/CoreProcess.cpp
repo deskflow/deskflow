@@ -240,8 +240,8 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 void CoreProcess::applyLogLevel()
 {
   if (m_appConfig.processMode() == ProcessMode::kService) {
-    qDebug() << "setting daemon log level:" << m_appConfig.logLevelText();
-    if (!m_daemonIpcClient->sendLogLevel(m_appConfig.logLevelText())) {
+    qDebug() << "setting daemon log level:" << Settings::logLevelText();
+    if (!m_daemonIpcClient->sendLogLevel(Settings::logLevelText())) {
       qCritical() << "failed to set daemon ipc log level";
     }
   }
@@ -388,7 +388,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     return;
   }
 
-  qDebug("log level: %s", qPrintable(m_appConfig.logLevelText()));
+  qDebug().noquote() << "log level:" << Settings::logLevelText();
 
   if (Settings::value(Settings::Log::ToFile).toBool())
     qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
@@ -471,7 +471,7 @@ void CoreProcess::cleanup()
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
 {
   args << "-f"
-       << "--debug" << m_appConfig.logLevelText();
+       << "--debug" << Settings::logLevelText();
 
   args << "--name" << m_appConfig.screenName();
 
