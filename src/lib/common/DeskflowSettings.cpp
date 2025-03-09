@@ -93,6 +93,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Core::Port)
     return 24800;
 
+  if (key == Settings::Log::Level)
+    return 0;
+
   if (key == Settings::Security::Certificate) {
     const auto baseDir = QFileInfo(instance()->m_settings->fileName()).absolutePath();
     return QStringLiteral("%1/%2/%3").arg(baseDir, kSslDir, kCertificateFilename);
@@ -110,6 +113,11 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
     return kServerBinName;
 
   return QVariant();
+}
+
+QString DeskflowSettings::logLevelText()
+{
+  return Settings::logLevels.at(DeskflowSettings::value(Settings::Log::Level).toInt());
 }
 
 bool DeskflowSettings::isWritable()

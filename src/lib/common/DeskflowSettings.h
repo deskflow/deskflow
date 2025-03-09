@@ -21,6 +21,7 @@ public:
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
+  static QString logLevelText();
   static bool isWritable();
   static bool isSystemScope();
   static void setScope(bool systemScope);

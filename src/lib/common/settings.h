@@ -62,6 +62,7 @@ public:
   };
   struct Log
   {
+    inline static const auto Level = QStringLiteral("log/level");
     inline static const auto ToFile = QStringLiteral("log/toFile");
   };
   struct Security
@@ -79,6 +80,13 @@ public:
   };
 
   // clang-format off
+  inline static const QStringList logLevels = {
+     QStringLiteral("INFO")
+    , QStringLiteral("DEBUG")
+    , QStringLiteral("DEBUG1")
+    , QStringLiteral("DEBUG2")
+  };
+
   inline static const QStringList validKeys = {
       Settings::Client::Binary
     , Settings::Client::InvertScrollDirection
@@ -90,6 +98,7 @@ public:
     , Settings::Core::PreventSleep
     , Settings::Core::Scope
     , Settings::Core::StartedBefore
+    , Settings::Log::Level
     , Settings::Log::ToFile
     , Settings::Gui::Autohide
     , Settings::Gui::AutoUpdateCheck

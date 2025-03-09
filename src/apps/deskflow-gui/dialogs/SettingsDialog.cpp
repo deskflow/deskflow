@@ -145,7 +145,7 @@ void SettingsDialog::accept()
   m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
   DeskflowSettings::setValue(Settings::Core::Port, ui->sbPort->value());
   DeskflowSettings::setValue(Settings::Core::Interface, ui->lineInterface->text());
-  m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
+  DeskflowSettings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   DeskflowSettings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
@@ -180,7 +180,7 @@ void SettingsDialog::loadFromConfig()
 
   ui->sbPort->setValue(DeskflowSettings::value(Settings::Core::Port).toInt());
   ui->lineInterface->setText(DeskflowSettings::value(Settings::Core::Interface).toString());
-  ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
+  ui->comboLogLevel->setCurrentIndex(DeskflowSettings::value(Settings::Log::Level).toInt());
   ui->cbLogToFile->setChecked(DeskflowSettings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
   ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());

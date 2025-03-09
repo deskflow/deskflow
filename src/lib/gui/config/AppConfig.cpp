@@ -23,8 +23,6 @@ using namespace deskflow::gui;
 // which will force it to re-run for existing installations.
 const int kWizardVersion = 8;
 
-static const char *const kLogLevelNames[] = {"INFO", "DEBUG", "DEBUG1", "DEBUG2"};
-
 #if defined(Q_OS_WIN)
 const char AppConfig::m_LogDir[] = "log/";
 #else
@@ -36,7 +34,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "screenName",
     "", // port moved to deskflow settings
     "", // interface moved to deskflow settings
-    "logLevel2",
+    "", // log level moved to deskflow settings
     "", // Log to file Moved to Deskflow settings
     "logFilename",
     "", // 6 wizardLastRun, obsolete
@@ -114,7 +112,6 @@ void AppConfig::recallFromCurrentScope()
   recallScreenName();
   recallElevateMode();
 
-  m_LogLevel = getFromCurrentScope(kLogLevel, m_LogLevel).toInt();
   m_LogFilename = getFromCurrentScope(kLogFilename, m_LogFilename).toString();
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
@@ -151,7 +148,6 @@ void AppConfig::commit()
 
   if (isActiveScopeWritable()) {
     setInCurrentScope(kScreenName, m_ScreenName);
-    setInCurrentScope(kLogLevel, m_LogLevel);
     setInCurrentScope(kLogFilename, m_LogFilename);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
@@ -355,19 +351,9 @@ const QString &AppConfig::screenName() const
   return m_ScreenName;
 }
 
-int AppConfig::logLevel() const
-{
-  return m_LogLevel;
-}
-
 const QString &AppConfig::logFilename() const
 {
   return m_LogFilename;
-}
-
-QString AppConfig::logLevelText() const
-{
-  return kLogLevelNames[logLevel()];
 }
 
 ProcessMode AppConfig::processMode() const
@@ -427,14 +413,6 @@ void AppConfig::setScreenName(const QString &s)
 {
   m_ScreenName = s;
   Q_EMIT screenNameChanged();
-}
-
-void AppConfig::setLogLevel(int i)
-{
-  const auto changed = (m_LogLevel != i);
-  m_LogLevel = i;
-  if (changed)
-    Q_EMIT logLevelChanged();
 }
 
 void AppConfig::setLogFilename(const QString &s)
