@@ -118,6 +118,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Server::Binary)
     return kServerBinName;
 
+  if (key == Settings::Core::ProcessMode)
+    return QVariant::fromValue(Settings::defaultProcessMode);
+
   return QVariant();
 }
 

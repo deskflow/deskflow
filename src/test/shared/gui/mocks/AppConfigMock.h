@@ -14,7 +14,6 @@
 
 class AppConfigMock : public deskflow::gui::IAppConfig
 {
-  using ProcessMode = deskflow::gui::ProcessMode;
 
 public:
   AppConfigMock()
@@ -26,7 +25,6 @@ public:
   //
 
   MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
-  MOCK_METHOD(ProcessMode, processMode, (), (const, override));
   MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));

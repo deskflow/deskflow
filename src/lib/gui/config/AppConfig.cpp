@@ -306,11 +306,6 @@ IConfigScopes &AppConfig::scopes() const
   return m_Scopes;
 }
 
-ProcessMode AppConfig::processMode() const
-{
-  return m_EnableService ? ProcessMode::kService : ProcessMode::kDesktop;
-}
-
 ElevateMode AppConfig::elevateMode() const
 {
   return m_ElevateMode;

@@ -47,6 +47,7 @@ public:
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
     inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
+    inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
@@ -81,6 +82,13 @@ public:
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
   };
 
+  enum ProcessMode
+  {
+    Service,
+    Desktop
+  };
+  Q_ENUM(ProcessMode)
+
   // clang-format off
   inline static const QStringList logLevels = {
      QStringLiteral("INFO")
@@ -98,6 +106,7 @@ public:
     , Settings::Core::LastVersion
     , Settings::Core::Port
     , Settings::Core::PreventSleep
+    , Settings::Core::ProcessMode
     , Settings::Core::Scope
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
@@ -120,4 +129,10 @@ public:
     , Settings::Server::ExternalConfigFile
   };
   // clang-format on
+
+#ifdef Q_OS_WIN
+  inline static const auto defaultProcessMode = Settings::ProcessMode::Service;
+#else
+  inline static const auto defaultProcessMode = Settings::ProcessMode::Desktop;
+#endif
 };
