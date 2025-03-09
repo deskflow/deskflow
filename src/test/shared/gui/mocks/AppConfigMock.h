@@ -19,7 +19,6 @@ class AppConfigMock : public deskflow::gui::IAppConfig
 public:
   AppConfigMock()
   {
-    ON_CALL(*this, screenName()).WillByDefault(testing::ReturnRef(m_stub));
   }
 
   //
@@ -29,7 +28,6 @@ public:
   MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(ProcessMode, processMode, (), (const, override));
   MOCK_METHOD(ElevateMode, elevateMode, (), (const, override));
-  MOCK_METHOD(const QString &, screenName, (), (const, override));
   MOCK_METHOD(bool, enableService, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
@@ -40,7 +38,6 @@ public:
   //
 
   MOCK_METHOD(void, setLoadFromSystemScope, (bool loadFromSystemScope), (override));
-  MOCK_METHOD(void, setScreenName, (const QString &screenName), (override));
   MOCK_METHOD(void, setElevateMode, (ElevateMode elevateMode), (override));
   MOCK_METHOD(void, setEnableService, (bool enableService), (override));
 
