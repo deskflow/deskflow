@@ -67,14 +67,13 @@ public:
 class CoreProcessTests : public Test
 {
 public:
-  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
+  CoreProcessTests() : m_coreProcess(m_serverConfig, m_pDeps)
   {
     Settings::setValue(Settings::Server::ExternalConfig, true);
     Settings::setValue(Settings::Server::ExternalConfigFile, m_configFile);
     Settings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
   }
 
-  NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
   std::shared_ptr<NiceMock<DepsMock>> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;
