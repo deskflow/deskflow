@@ -886,7 +886,10 @@ void MainWindow::showFirstConnectedMessage()
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
   const auto closeToTray = Settings::value(Settings::Gui::CloseToTray).toBool();
-  messages::showFirstConnectedMessage(this, closeToTray, m_appConfig.enableService(), isServer);
+
+  using ProcessMode = Settings::ProcessMode;
+  const auto enableService = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Service;
+  messages::showFirstConnectedMessage(this, closeToTray, enableService, isServer);
 }
 
 void MainWindow::updateStatus()

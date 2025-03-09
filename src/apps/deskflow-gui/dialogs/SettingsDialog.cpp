@@ -193,7 +193,6 @@ void SettingsDialog::loadFromConfig()
   ui->cbPreventSleep->setChecked(Settings::value(Settings::Core::PreventSleep).toBool());
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
-  ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
 
@@ -204,6 +203,9 @@ void SettingsDialog::loadFromConfig()
   } else {
     ui->rbScopeUser->setChecked(true);
   }
+
+  const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  ui->cbServiceEnabled->setChecked(processMode == Settings::ProcessMode::Service);
 
   if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
