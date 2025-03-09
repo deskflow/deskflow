@@ -58,7 +58,7 @@ private:
     // kPort = 1, moved to deskflow settings
     // kInterface = 2, moved to deskflow settings
     kLogLevel = 3,
-    kLogToFile = 4,
+    // 4 = LogToFile moved to deskflow settings
     kLogFilename = 5,
     // 6 = show first run wizard, obsolete
     // 7 Started before moved to deskflow settings
@@ -132,7 +132,6 @@ public:
   ElevateMode elevateMode() const override;
   QString logLevelText() const override;
   const QString &screenName() const override;
-  bool logToFile() const override;
   const QString &logFilename() const override;
   void persistLogDir() const override;
   bool isActiveScopeWritable() const override;
@@ -155,7 +154,6 @@ public:
 
   void setScreenName(const QString &s) override;
   void setLogLevel(int i) override;
-  void setLogToFile(bool b) override;
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setEnableService(bool enabled) override;
@@ -226,7 +224,6 @@ private:
   static const char *const m_SettingsName[];
 
   int m_LogLevel = 0;
-  bool m_LogToFile = false;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_ServerGroupChecked = false;

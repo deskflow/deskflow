@@ -73,7 +73,7 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
 {
   if ((key == Settings::Core::Scope) || (key == Settings::Gui::Autohide) || (key == Settings::Core::StartedBefore) ||
       (key == Settings::Core::PreventSleep) || (key == Settings::Server::ExternalConfig) ||
-      (key == Settings::Client::InvertScrollDirection)) {
+      (key == Settings::Client::InvertScrollDirection) || (key == Settings::Log::ToFile)) {
     return false;
   }
 

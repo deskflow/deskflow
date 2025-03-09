@@ -60,6 +60,10 @@ public:
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
   };
+  struct Log
+  {
+    inline static const auto ToFile = QStringLiteral("log/toFile");
+  };
   struct Security
   {
     inline static const auto CheckPeers = QStringLiteral("security/checkpeerfingerprints");
@@ -86,6 +90,7 @@ public:
     , Settings::Core::PreventSleep
     , Settings::Core::Scope
     , Settings::Core::StartedBefore
+    , Settings::Log::ToFile
     , Settings::Gui::Autohide
     , Settings::Gui::AutoUpdateCheck
     , Settings::Gui::CloseReminder

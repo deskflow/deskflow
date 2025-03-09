@@ -146,7 +146,7 @@ void SettingsDialog::accept()
   DeskflowSettings::setValue(Settings::Core::Port, ui->sbPort->value());
   DeskflowSettings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
-  m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
+  DeskflowSettings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   m_appConfig.setLogFilename(ui->lineLogFilename->text());
   m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
   DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
@@ -181,7 +181,7 @@ void SettingsDialog::loadFromConfig()
   ui->sbPort->setValue(DeskflowSettings::value(Settings::Core::Port).toInt());
   ui->lineInterface->setText(DeskflowSettings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
-  ui->cbLogToFile->setChecked(m_appConfig.logToFile());
+  ui->cbLogToFile->setChecked(DeskflowSettings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(m_appConfig.logFilename());
   ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
   ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());

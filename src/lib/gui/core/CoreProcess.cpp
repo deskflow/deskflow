@@ -391,7 +391,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   qDebug("log level: %s", qPrintable(m_appConfig.logLevelText()));
 
-  if (m_appConfig.logToFile())
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool())
     qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
 
   if (processMode == ProcessMode::kDesktop) {
@@ -529,9 +529,8 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     return false;
   }
 
-  if (m_appConfig.logToFile()) {
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
     m_appConfig.persistLogDir();
-
     args << "--log" << m_appConfig.logFilename();
   }
 
@@ -577,7 +576,7 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     return false;
   }
 
-  if (m_appConfig.logToFile()) {
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
     m_appConfig.persistLogDir();
     args << "--log" << m_appConfig.logFilename();
   }
