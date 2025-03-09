@@ -57,6 +57,7 @@ public:
   };
   struct Log
   {
+    inline static const auto Level = QStringLiteral("log/level");
     inline static const auto ToFile = QStringLiteral("log/toFile");
   };
   struct Security
@@ -84,6 +85,7 @@ public:
   static void setScope(bool systemScope);
   static const QString settingsFile();
   static const QString settingsPath();
+  static const QString logLevelText();
 
 signals:
   void scopeChanged(bool isSystemScope);
@@ -102,6 +104,13 @@ private:
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
   // clang-format off
+  inline static const QStringList m_logLevels = {
+     QStringLiteral("INFO")
+    , QStringLiteral("DEBUG")
+    , QStringLiteral("DEBUG1")
+    , QStringLiteral("DEBUG2")
+  };
+
   inline static const QStringList m_validKeys = {
       Client::Binary
     , Client::InvertScrollDirection
@@ -113,6 +122,7 @@ private:
     , Core::PreventSleep
     , Core::Scope
     , Core::StartedBefore
+    , Log::Level
     , Log::ToFile
     , Gui::Autohide
     , Gui::AutoUpdateCheck

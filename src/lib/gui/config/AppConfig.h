@@ -57,7 +57,7 @@ private:
     kScreenName = 0,
     // kPort = 1, moved to deskflow settings
     // kInterface = 2, moved to deskflow settings
-    kLogLevel = 3,
+    // kLogLevel = 3, moved to deskflow settings
     // 4 = LogToFile moved to deskflow settings
     kLogFilename = 5,
     // 6 = show first run wizard, obsolete
@@ -130,13 +130,11 @@ public:
   IConfigScopes &scopes() const override;
   ProcessMode processMode() const override;
   ElevateMode elevateMode() const override;
-  QString logLevelText() const override;
   const QString &screenName() const override;
   const QString &logFilename() const override;
   void persistLogDir() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
-  int logLevel() const override;
   bool enableService() const override;
   bool clientGroupChecked() const override;
 
@@ -153,7 +151,6 @@ public:
   //
 
   void setScreenName(const QString &s) override;
-  void setLogLevel(int i) override;
   void setLogFilename(const QString &s) override;
   void setElevateMode(ElevateMode em) override;
   void setEnableService(bool enabled) override;
@@ -223,7 +220,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  int m_LogLevel = 0;
   QString m_LogFilename = logDir() + deskflow::gui::kDefaultLogFile;
   ElevateMode m_ElevateMode = deskflow::gui::kDefaultElevateMode;
   bool m_ServerGroupChecked = false;
@@ -238,5 +234,4 @@ private:
 
 signals:
   void screenNameChanged();
-  void logLevelChanged();
 };
