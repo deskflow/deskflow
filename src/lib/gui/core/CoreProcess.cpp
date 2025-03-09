@@ -473,7 +473,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   args << "-f"
        << "--debug" << Settings::logLevelText();
 
-  args << "--name" << m_appConfig.screenName();
+  args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
 
   if (processMode != ProcessMode::kDesktop) {
 #if defined(Q_OS_WIN)

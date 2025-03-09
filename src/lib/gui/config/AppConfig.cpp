@@ -31,7 +31,7 @@ const char AppConfig::m_LogDir[] = "/var/log/";
 
 // TODO: instead, use key value pair table, which would be less fragile.
 const char *const AppConfig::m_SettingsName[] = {
-    "screenName",
+    "", // screenName moved to deskflow settings
     "", // port moved to deskflow settings
     "", // interface moved to deskflow settings
     "", // log level moved to deskflow settings
@@ -80,10 +80,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 46 require peer certs, Moved to deskflow settings
 };
 
-AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps)
-    : m_Scopes(scopes),
-      m_pDeps(deps),
-      m_ScreenName(deps->hostname())
+AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps) : m_Scopes(scopes), m_pDeps(deps)
 {
   determineScope();
   recall();
@@ -109,30 +106,12 @@ void AppConfig::recallFromCurrentScope()
 {
   using enum Setting;
 
-  recallScreenName();
   recallElevateMode();
 
   m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
   m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
   m_EnableService = getFromCurrentScope(kEnableService, m_EnableService).toBool();
-}
-
-void AppConfig::recallScreenName()
-{
-  using enum Setting;
-
-  const auto &screenName = getFromCurrentScope(kScreenName, m_ScreenName).toString().trimmed();
-
-  // for some reason, the screen name can be saved as an empty string
-  // in the config file. this is probably a bug. if this happens, then default
-  // back to the hostname.
-  if (screenName.isEmpty()) {
-    qWarning("screen name was empty in config, setting to hostname");
-    m_ScreenName = m_pDeps->hostname();
-  } else {
-    m_ScreenName = screenName;
-  }
 }
 
 void AppConfig::commit()
@@ -146,7 +125,6 @@ void AppConfig::commit()
   saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
 
   if (isActiveScopeWritable()) {
-    setInCurrentScope(kScreenName, m_ScreenName);
     setInCurrentScope(kElevateMode, static_cast<int>(m_ElevateMode));
     setInCurrentScope(kElevateModeLegacy, m_ElevateMode == ElevateMode::kAlways);
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
@@ -177,7 +155,7 @@ void AppConfig::determineScope()
   // ...failing that, check the system scope instead to see if an arbitrary
   // required setting is present. if it is, then we can assume that the system
   // scope should be used.
-  else if (m_Scopes.scopeContains(settingName(Setting::kScreenName), ConfigScopes::Scope::System)) {
+  else if (m_Scopes.scopeContains(settingName(Setting::kUseInternalConfig), ConfigScopes::Scope::System)) {
     qDebug("system settings scope contains screen name, using system scope");
     setLoadFromSystemScope(true);
   }
@@ -288,7 +266,7 @@ void AppConfig::loadScope(ConfigScopes::Scope scope)
 
   // only signal ready if there is at least one setting in the required scope.
   // this prevents the current settings from being set back to default.
-  if (m_Scopes.scopeContains(settingName(Setting::kScreenName), m_Scopes.activeScope())) {
+  if (m_Scopes.scopeContains(settingName(Setting::kUseInternalConfig), m_Scopes.activeScope())) {
     m_Scopes.signalReady();
   } else {
     qDebug("no screen name in scope, skipping");
@@ -326,11 +304,6 @@ bool AppConfig::isActiveScopeSystem() const
 IConfigScopes &AppConfig::scopes() const
 {
   return m_Scopes;
-}
-
-const QString &AppConfig::screenName() const
-{
-  return m_ScreenName;
 }
 
 ProcessMode AppConfig::processMode() const
@@ -384,12 +357,6 @@ void AppConfig::setUseInternalConfig(bool newValue)
 void AppConfig::setClientGroupChecked(bool newValue)
 {
   m_ClientGroupChecked = newValue;
-}
-
-void AppConfig::setScreenName(const QString &s)
-{
-  m_ScreenName = s;
-  Q_EMIT screenNameChanged();
 }
 
 void AppConfig::setElevateMode(ElevateMode em)

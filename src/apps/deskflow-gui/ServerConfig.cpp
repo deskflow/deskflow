@@ -139,8 +139,9 @@ void ServerConfig::commit()
     settings().setArrayIndex(i);
     auto &screen = screens()[i];
     screen.saveSettings(settings());
-    if (screen.isServer() && m_pAppConfig->screenName() != screen.name()) {
-      m_pAppConfig->setScreenName(screen.name());
+    auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+    if (screen.isServer() && screenName != screen.name()) {
+      Settings::setValue(Settings::Core::ScreenName, screen.name());
     }
   }
   settings().endArray();
@@ -332,8 +333,8 @@ int ServerConfig::autoAddScreen(const QString name)
 {
   int serverIndex = -1;
   int targetIndex = -1;
-  if (!findScreenName(m_pAppConfig->screenName(), serverIndex) &&
-      !fixNoServer(m_pAppConfig->screenName(), serverIndex)) {
+  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  if (!findScreenName(screenName, serverIndex) && !fixNoServer(screenName, serverIndex)) {
     return kAutoAddScreenManualServer;
   }
 
@@ -389,16 +390,16 @@ int ServerConfig::autoAddScreen(const QString name)
   return kAutoAddScreenOk;
 }
 
-const QString &ServerConfig::getServerName() const
+const QString ServerConfig::getServerName() const
 {
-  return m_pAppConfig->screenName();
+  return Settings::value(Settings::Core::ScreenName).toString();
 }
 
 void ServerConfig::updateServerName()
 {
   for (auto &screen : screens()) {
     if (screen.isServer()) {
-      screen.setName(m_pAppConfig->screenName());
+      screen.setName(Settings::value(Settings::Core::ScreenName).toString());
       break;
     }
   }
@@ -445,11 +446,12 @@ bool ServerConfig::screenExists(const QString &screenName) const
 void ServerConfig::addClient(const QString &clientName)
 {
   int serverIndex = -1;
+  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
 
-  if (findScreenName(m_pAppConfig->screenName(), serverIndex)) {
+  if (findScreenName(screenName, serverIndex)) {
     m_Screens[serverIndex].markAsServer();
   } else {
-    fixNoServer(m_pAppConfig->screenName(), serverIndex);
+    fixNoServer(screenName, serverIndex);
   }
 
   m_Screens.addScreenByPriority(Screen(clientName));

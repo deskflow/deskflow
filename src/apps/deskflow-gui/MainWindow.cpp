@@ -293,8 +293,6 @@ void MainWindow::connectSlots()
 
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
-  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
-
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
@@ -387,6 +385,9 @@ void MainWindow::settingsChanged(const QString &key)
     m_coreProcess.applyLogLevel();
     return;
   }
+
+  if (key == Settings::Core::ScreenName)
+    updateScreenName();
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
@@ -1039,13 +1040,15 @@ void MainWindow::autoAddScreen(const QString name)
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(tr("Please add the server (%1) to the grid.").arg(m_appConfig.screenName()));
+      showConfigureServer(
+          tr("Please add the server (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
+      );
       break;
 
     case kAutoAddScreenManualClient:
-      showConfigureServer(tr("Please drag the new client screen (%1) "
-                             "to the desired position on the grid.")
-                              .arg(name));
+      showConfigureServer(
+          tr("Please add the server (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
+      );
       break;
     }
   }
@@ -1079,8 +1082,9 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(m_appConfig.screenName());
-  ui->lineEditName->setText(m_appConfig.screenName());
+  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  ui->lblComputerName->setText(screenName);
+  ui->lineEditName->setText(screenName);
   m_serverConfig.updateServerName();
 }
 
@@ -1111,11 +1115,12 @@ void MainWindow::setHostName()
   ui->btnEditName->show();
 
   QString text = ui->lineEditName->text();
-  bool existingScreen = serverConfig().screenExists(text) && text != m_appConfig.screenName();
+  const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
+  bool existingScreen = serverConfig().screenExists(text) && (text != screenName);
 
   if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
     blockSignals(true);
-    ui->lineEditName->setText(m_appConfig.screenName());
+    ui->lineEditName->setText(screenName);
     blockSignals(false);
 
     const auto title = tr("Invalid Screen Name");
@@ -1135,7 +1140,7 @@ void MainWindow::setHostName()
   }
 
   ui->lblComputerName->setText(ui->lineEditName->text());
-  m_appConfig.setScreenName(ui->lineEditName->text());
+  Settings::setValue(Settings::Core::ScreenName, ui->lineEditName->text());
   applyConfig();
 }
 

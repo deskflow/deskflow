@@ -155,7 +155,7 @@ public:
   void commit();
   int numScreens() const;
   int autoAddScreen(const QString name);
-  const QString &getServerName() const;
+  const QString getServerName() const;
   void updateServerName();
   const QString configFile() const;
   bool useExternalConfig() const;
