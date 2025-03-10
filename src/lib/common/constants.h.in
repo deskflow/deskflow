@@ -15,7 +15,6 @@ const auto kVersionGitSha = "@GIT_SHA_SHORT@";
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";
-const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 
 // clang-format off
 const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)" : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
@@ -46,5 +45,7 @@ const auto kTlsFingerprintTrustedClientsFilename = "trusted-clients";
 const auto kWindowsRuntimeMajor = @REQUIRED_MSVC_RUNTIME_MAJOR@;
 const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
 // clang-format on
+
+const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 
 #endif
