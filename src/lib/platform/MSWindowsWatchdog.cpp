@@ -567,7 +567,7 @@ void MSWindowsWatchdog::sendSas() const
     throw XArch("SendSAS function not initialized");
   }
 
-  HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, deskflow::common::kSendSasEventName);
+  HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName);
   if (sendSasEvent == nullptr) {
     LOG_ERR("could not create SendSAS event");
     throw XArch(new XArchEvalWindows());
