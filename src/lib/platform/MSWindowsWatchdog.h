@@ -81,11 +81,6 @@ private:
   void outputLoop(void *);
 
   /**
-   * @brief Stops any core processes which were not started by the watchdog.
-   */
-  void shutdownExistingProcesses();
-
-  /**
    * @brief Duplicates the process token for the given process.
    *
    * Required for starting a process in the user session; when we start an elevated process
@@ -144,6 +139,11 @@ private:
    * @brief Convert the process state enum to a string (useful for logging).
    */
   static std::string processStateToString(ProcessState state);
+
+  /**
+   * @brief Stops any core processes which were not started by the watchdog.
+   */
+  static void shutdownExistingProcesses();
 
 private:
   Thread *m_thread = nullptr;
