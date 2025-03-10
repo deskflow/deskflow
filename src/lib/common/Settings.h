@@ -39,6 +39,7 @@ public:
   };
   struct Core
   {
+    inline static const auto CoreMode = QStringLiteral("core/coreMode");
     inline static const auto ElevateMode = QStringLiteral("core/elevateMode");
     inline static const auto Interface = QStringLiteral("core/interface");
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
@@ -115,6 +116,14 @@ public:
   };
   Q_ENUM(ElevateMode)
 
+  enum CoreMode
+  {
+    None,
+    Client,
+    Server
+  };
+  Q_ENUM(CoreMode)
+
   static Settings *instance();
   static void setSettingFile(const QString &settingsFile = QString());
   static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
@@ -158,6 +167,7 @@ private:
     , Client::InvertScrollDirection
     , Client::LanguageSync
     , Client::RemoteHost
+    , Core::CoreMode
     , Core::ElevateMode
     , Core::Interface
     , Core::LastVersion

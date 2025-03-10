@@ -29,10 +29,11 @@ TEST(WaylandWarningsTests, showOnce_serverNoEi_showLibraryError)
   const bool hasPortal = false;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
+  Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
 
   EXPECT_CALL(*deps, showWaylandLibraryError(nullptr)).Times(1);
 
-  waylandWarnings.showOnce(nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(nullptr, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(WaylandWarningsTests, showOnce_serverNoPortal_showLibraryError)
@@ -42,10 +43,11 @@ TEST(WaylandWarningsTests, showOnce_serverNoPortal_showLibraryError)
   const bool hasPortal = false;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
+  Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
 
   EXPECT_CALL(*deps, showWaylandLibraryError(nullptr)).Times(1);
 
-  waylandWarnings.showOnce(nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(nullptr, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(WaylandWarningsTests, showOnce_serverNoPortalIc_showLibraryError)
@@ -55,10 +57,11 @@ TEST(WaylandWarningsTests, showOnce_serverNoPortalIc_showLibraryError)
   const bool hasPortal = true;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
+  Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
 
   EXPECT_CALL(*deps, showWaylandLibraryError(nullptr)).Times(1);
 
-  waylandWarnings.showOnce(nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(nullptr, hasEi, hasPortal, hasPortalIC);
 }
 
 TEST(WaylandWarningsTests, showOnce_failureCalledTwice_messageOnlyShownOnce)
@@ -68,9 +71,10 @@ TEST(WaylandWarningsTests, showOnce_failureCalledTwice_messageOnlyShownOnce)
   const bool hasPortal = false;
   const bool hasPortalIC = false;
   WaylandWarnings waylandWarnings(deps);
+  Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
 
   EXPECT_CALL(*deps, showWaylandLibraryError(nullptr)).Times(1);
 
-  waylandWarnings.showOnce(nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
-  waylandWarnings.showOnce(nullptr, CoreProcess::Mode::Server, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(nullptr, hasEi, hasPortal, hasPortalIC);
+  waylandWarnings.showOnce(nullptr, hasEi, hasPortal, hasPortalIC);
 }

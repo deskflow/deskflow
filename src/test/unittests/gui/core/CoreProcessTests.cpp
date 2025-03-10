@@ -86,7 +86,7 @@ private:
 
 TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
 
@@ -95,7 +95,7 @@ TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart)
 
 TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Client);
+  m_coreProcess.setMode(Settings::CoreMode::Client);
   m_coreProcess.setAddress("stub address");
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
@@ -105,7 +105,7 @@ TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
 
 TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
   m_coreProcess.start();
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
@@ -115,7 +115,7 @@ TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
 
 TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Client);
+  m_coreProcess.setMode(Settings::CoreMode::Client);
   m_coreProcess.setAddress("stub address");
   m_coreProcess.start();
 
@@ -127,7 +127,7 @@ TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
 TEST_F(CoreProcessTests, restart_serverDesktop_callsProcessStart)
 {
   Settings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
   m_coreProcess.start();
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);

@@ -6,6 +6,7 @@
 
 #include "WaylandWarnings.h"
 
+#include "common/Settings.h"
 #include "messages.h"
 
 using namespace deskflow::platform;
@@ -25,12 +26,10 @@ void WaylandWarnings::Deps::showWaylandLibraryError(QWidget *parent)
 // WaylandWarnings
 //
 
-void WaylandWarnings::showOnce(
-    QWidget *parent, CoreProcess::Mode mode, bool hasEi, bool hasPortal, bool hasPortalInputCapture
-)
+void WaylandWarnings::showOnce(QWidget *parent, bool hasEi, bool hasPortal, bool hasPortalInputCapture)
 {
-
-  const auto portalIcProblem = !hasPortalInputCapture && mode == CoreProcess::Mode::Server;
+  const auto mode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
+  const bool portalIcProblem = !hasPortalInputCapture && mode == Settings::CoreMode::Server;
 
   if (!hasEi || !hasPortal || portalIcProblem) {
     if (!m_errorShown) {
