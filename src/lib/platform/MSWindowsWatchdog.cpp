@@ -14,6 +14,7 @@
 #include "base/log_outputters.h"
 #include "deskflow/App.h"
 #include "mt/Thread.h"
+#include "platform/MSWindowsHandle.h"
 
 #include <Shellapi.h>
 #include <UserEnv.h>
@@ -86,24 +87,28 @@ MSWindowsWatchdog::MSWindowsWatchdog(bool foreground) : m_foreground(foreground)
 
 void MSWindowsWatchdog::startAsync()
 {
-  m_thread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::mainLoop, nullptr));
-
-  m_outputThread = new Thread(new TMethodJob<MSWindowsWatchdog>(this, &MSWindowsWatchdog::outputLoop, nullptr));
+  m_mainThread = std::make_unique<Thread>(new TMethodJob(this, &MSWindowsWatchdog::mainLoop, nullptr));
+  m_outputThread = std::make_unique<Thread>(new TMethodJob(this, &MSWindowsWatchdog::outputLoop, nullptr));
+  m_sasThread = std::make_unique<Thread>(new TMethodJob(this, &MSWindowsWatchdog::sasLoop, nullptr));
 }
 
 void MSWindowsWatchdog::stop()
 {
+  const auto kThreadWaitSeconds = 5;
+
   m_running = false;
 
-  if (!m_thread->wait(5)) {
+  if (!m_mainThread->wait(kThreadWaitSeconds)) {
     LOG((CLOG_WARN "could not stop main thread"));
   }
-  delete m_thread;
 
-  if (!m_outputThread->wait(5)) {
+  if (!m_outputThread->wait(kThreadWaitSeconds)) {
     LOG((CLOG_WARN "could not stop output thread"));
   }
-  delete m_outputThread;
+
+  if (!m_sasThread->wait(kThreadWaitSeconds)) {
+    LOG((CLOG_WARN "could not stop sas thread"));
+  }
 }
 
 HANDLE
@@ -231,10 +236,6 @@ void MSWindowsWatchdog::mainLoop(void *)
     }
 
     lock.unlock();
-
-    // TODO: This seems like a hack, why would we need to send the SAS function every loop iteration?
-    // This slows down both the process relaunch speed and the watchdog thread loop shut down time.
-    sendSas();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
     ARCH->sleep(0.1);
@@ -561,23 +562,36 @@ void MSWindowsWatchdog::initSasFunc()
   LOG_DEBUG("found SendSAS function in sas.dll");
 }
 
-void MSWindowsWatchdog::sendSas() const
+void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signature
 {
   if (m_sendSasFunc == nullptr) {
     throw XArch("SendSAS function not initialized");
   }
 
-  HANDLE sendSasEvent = CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName);
-  if (sendSasEvent == nullptr) {
-    LOG_ERR("could not create SendSAS event");
-    throw XArch(new XArchEvalWindows());
-  }
+  while (m_running) {
+    if (m_processState != ProcessState::Running) {
+      LOG_DEBUG2("watchdog: not running, skipping SendSAS");
+      ARCH->sleep(1);
+      continue;
+    }
 
-  // use SendSAS event to wait for next session (timeout 1 second).
-  if (WaitForSingleObject(sendSasEvent, 1000) == WAIT_OBJECT_0) {
-    LOG_DEBUG("calling SendSAS from sas.dll");
-    m_sendSasFunc(FALSE);
-  }
+    // Create a an event so that other processes can tell the daemon to call the `SendSAS` function.
+    MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName));
+    if (sendSasEvent.get() == nullptr) {
+      XArchEvalWindows error;
+      LOG_ERR("could not create SAS event, error: %s", error.eval().c_str());
+      ARCH->sleep(1);
+      continue;
+    }
 
-  CloseHandle(sendSasEvent);
+    // Wait for the Core client to tell the daemon to call the `SendSAS` function.
+    if (WaitForSingleObject(sendSasEvent.get(), 1000) == WAIT_OBJECT_0) {
+
+      // The SoftwareSASGeneration registry key must be set for this to work:
+      //   Set-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System
+      //     -Name SoftwareSASGeneration -Value 1
+      LOG_DEBUG("calling SendSAS to simulate ctrl+alt+del");
+      m_sendSasFunc(FALSE);
+    }
+  }
 }

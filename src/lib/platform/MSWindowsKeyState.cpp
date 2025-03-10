@@ -1,19 +1,17 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2022, 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "platform/MSWindowsKeyState.h"
 
-#include "arch/win32/ArchMiscWindows.h"
-#include "base/FunctionJob.h"
+#include "arch/win32/XArchWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
-#include "mt/Thread.h"
 #include "platform/MSWindowsDesks.h"
+#include "platform/MSWindowsHandle.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)
@@ -750,26 +748,39 @@ bool MSWindowsKeyState::fakeKeyRepeat(
   return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
 }
 
+// We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del (since Windows Vista).
+//
+// According to the MS docs:
+// > To successfully call the SendSAS function, an application must either be running as a
+// > service or have the uiAccess attribute of the requestedExecutionLevel element set to "true"
+// > in its application manifest.
+//
+// Since the daemon is running as a service, we can use it to send the event.
+// We do this by calling `SetEvent` on the `SendSAS` event (created by the daemon).
+//
+// History: It used to be possible to use `PostMessage` to send `MOD_CONTROL | MOD_ALT, VK_DELETE`
+// as a backup but this ability was removed by Microsoft for security in favor of requiring the
+// `SendSAS` event to be used, which makes DoS and social engineering attacks more difficult.
 bool MSWindowsKeyState::fakeCtrlAltDel()
 {
-  // We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del as of Windows Vista.
-  // The SoftwareSASGeneration registry key must be set for this to work:
-  //   Set-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System
-  //     -Name SoftwareSASGeneration -Value 1
-  //
-  // History: It used to be possible to use `PostMessage` to send `MOD_CONTROL | MOD_ALT, VK_DELETE`
-  // as a backup but this ability was removed by Microsoft for security in favor of requiring the
-  // `SendSAS` event to be used, which makes DoS and social engineering attacks more difficult.
-  HANDLE hSendSasEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName);
-  if (hSendSasEvent) {
-    LOG_DEBUG("found SendSAS event, simulating ctrl+alt+del");
-    SetEvent(hSendSasEvent);
-    CloseHandle(hSendSasEvent);
-    return true;
-  } else {
-    LOG_ERR("couldn't find SendSAS event, unable to simulate ctrl+alt+del");
+  // The daemon creates this event with default permissions, which means this process must be
+  // elevated to be able to open it. If not elevated, an access denied error will be returned.
+  MSWindowsHandle sendSasEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName));
+  if (!sendSasEvent.get()) {
+    XArchEvalWindows error;
+    LOG_ERR("couldn't open SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
     return false;
   }
+
+  // Note: We don't directly call SendSAS, but rather we tell the daemon to do it by setting the event.
+  LOG_DEBUG("setting SAS event to simulate ctrl+alt+del");
+  if (!SetEvent(sendSasEvent.get())) {
+    XArchEvalWindows error;
+    LOG_ERR("failed to set SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
+    return false;
+  }
+
+  return true;
 }
 
 KeyModifierMask MSWindowsKeyState::pollActiveModifiers() const
