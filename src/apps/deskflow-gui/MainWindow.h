@@ -20,7 +20,6 @@
 #include "VersionChecker.h"
 #include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
-#include "gui/config/ServerConfigDialogState.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
@@ -195,7 +194,6 @@ private:
 
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
-  deskflow::gui::config::ServerConfigDialogState m_serverConfigDialogState;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
   deskflow::gui::ConfigScopes &m_configScopes;

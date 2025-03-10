@@ -45,7 +45,6 @@ add_library(${target} STATIC
   config/ScreenConfig.h
   config/ScreenList.cpp
   config/ScreenList.h
-  config/ServerConfigDialogState.h
   core/ClientConnection.cpp
   core/ClientConnection.h
   core/CommandProcess.cpp

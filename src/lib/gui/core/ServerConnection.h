@@ -10,7 +10,6 @@
 #include <QStringList>
 
 #include "gui/config/IServerConfig.h"
-#include "gui/config/ServerConfigDialogState.h"
 #include "gui/messages.h"
 
 namespace deskflow::gui {
@@ -29,8 +28,7 @@ public:
   };
 
   explicit ServerConnection(
-      QWidget *parent, IServerConfig &serverConfig, const config::ServerConfigDialogState &serverConfigDialogState,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>()
+      QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>()
   );
   void handleLogLine(const QString &logLine);
 
@@ -43,7 +41,6 @@ private:
 
   QWidget *m_pParent;
   IServerConfig &m_serverConfig;
-  const config::ServerConfigDialogState &m_serverConfigDialogState;
   std::shared_ptr<Deps> m_pDeps;
   QStringList m_receivedClients;
   bool m_messageShowing = false;
