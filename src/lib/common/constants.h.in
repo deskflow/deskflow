@@ -12,11 +12,14 @@ const auto kAppId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
 const auto kVersion = "@CMAKE_PROJECT_VERSION@";
 const auto kVersionGitSha = "@GIT_SHA_SHORT@";
-const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)" : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonLogFilename = "@CMAKE_PROJECT_NAME@-daemon.log";
 const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
+
+// clang-format off
+const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)" : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
+// clang-format on
 
 const auto kCopyright = //
     "Copyright @CMAKE_PROJECT_COPYRIGHT@\n"
@@ -30,9 +33,9 @@ const auto kDebugBuild = true;
 const auto kDebugBuild = false;
 #endif
 
-const auto kSslDir = "tls";
+const auto kTlsDirName = "tls";
 const auto kTlsDbSize = 2;
-const auto kCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
-const auto kFingerprintLocalFilename = "local-fingerprint";
-const auto kFingerprintTrustedServersFilename = "trusted-servers";
-const auto kFingerprintTrustedClientsFilename = "trusted-clients";
+const auto kTlsCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
+const auto kTlsFingerprintLocalFilename = "local-fingerprint";
+const auto kTlsFingerprintTrustedServersFilename = "trusted-servers";
+const auto kTlsFingerprintTrustedClientsFilename = "trusted-clients";

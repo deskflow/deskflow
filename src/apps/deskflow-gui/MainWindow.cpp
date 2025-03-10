@@ -1143,18 +1143,18 @@ void MainWindow::setHostName()
 QString MainWindow::getTlsPath()
 {
   CoreTool coreTool;
-  return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kSslDir);
+  return QStringLiteral("%1/%2").arg(coreTool.getProfileDir(), kTlsDirName);
 }
 
 QString MainWindow::localFingerprintDb()
 {
-  return QStringLiteral("%1/%2").arg(getTlsPath(), kFingerprintLocalFilename);
+  return QStringLiteral("%1/%2").arg(getTlsPath(), kTlsFingerprintLocalFilename);
 }
 
 QString MainWindow::trustedFingerprintDb()
 {
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-  const auto trustFile = isClient ? kFingerprintTrustedServersFilename : kFingerprintTrustedClientsFilename;
+  const auto trustFile = isClient ? kTlsFingerprintTrustedServersFilename : kTlsFingerprintTrustedClientsFilename;
   return QStringLiteral("%1/%2").arg(getTlsPath(), trustFile);
 }
 

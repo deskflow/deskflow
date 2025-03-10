@@ -449,7 +449,7 @@ int SecureSocket::secureAccept(int socket)
   if (retry == 0) {
     if (m_securityLevel == SecurityLevel::PeerAuth) {
       std::string dbDir = deskflow::string::sprintf(
-          "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedClientsFilename
+          "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kTlsDirName, kTlsFingerprintTrustedClientsFilename
       );
       if (!verifyCertFingerprint(dbDir)) {
         retry = 0;
@@ -481,7 +481,7 @@ int SecureSocket::secureConnect(int socket)
 {
 
   std::string certDir =
-      deskflow::string::sprintf("%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kCertificateFilename);
+      deskflow::string::sprintf("%s/%s/%s", ARCH->getProfileDirectory().c_str(), kTlsDirName, kTlsCertificateFilename);
 
   if (!loadCertificates(certDir)) {
     LOG((CLOG_ERR "could not load client certificates"));
@@ -525,7 +525,7 @@ int SecureSocket::secureConnect(int socket)
   // No error, set ready, process and return ok
   m_secureReady = true;
   std::string dbDir = deskflow::string::sprintf(
-      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kSslDir, kFingerprintTrustedServersFilename
+      "%s/%s/%s", ARCH->getProfileDirectory().c_str(), kTlsDirName, kTlsFingerprintTrustedServersFilename
   );
   if (verifyCertFingerprint(dbDir)) {
     LOG((CLOG_INFO "connected to secure socket"));
