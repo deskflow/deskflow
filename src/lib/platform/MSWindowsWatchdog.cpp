@@ -333,7 +333,7 @@ void MSWindowsWatchdog::startProcess()
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
   LOG_DEBUG("updating watchdog process config");
-  std::unique_lock lock(m_processStateMutex);
+  std::lock_guard lock(m_processStateMutex);
 
   m_command = command;
   m_elevateProcess = elevate;
