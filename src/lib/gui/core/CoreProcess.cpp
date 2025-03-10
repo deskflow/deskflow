@@ -380,10 +380,10 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QStringList args;
   addGenericArgs(args, processMode);
 
-  if (mode() == Mode::Server && !addServerArgs(args, app)) {
+  if (mode() == Settings::CoreMode::Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
     return;
-  } else if (mode() == Mode::Client && !addClientArgs(args, app)) {
+  } else if (mode() == Settings::CoreMode::Client && !addClientArgs(args, app)) {
     qWarning("failed to add client args for core process, aborting start");
     return;
   }
@@ -620,12 +620,10 @@ QString CoreProcess::persistServerConfig() const
 
 QString CoreProcess::modeString() const
 {
-  using enum Mode;
-
   switch (m_mode) {
-  case Server:
+  case Settings::CoreMode::Server:
     return "server";
-  case Client:
+  case Settings::CoreMode::Client:
     return "client";
   default:
     qFatal("invalid core mode");

@@ -244,7 +244,8 @@ void SettingsDialog::updateTlsControls()
 void SettingsDialog::updateTlsControlsEnabled()
 {
   const auto writable = m_appConfig.isActiveScopeWritable();
-  const auto clientMode = m_appConfig.clientGroupChecked();
+  const auto clientMode =
+      Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>() == Settings::CoreMode::Client;
   const auto tlsChecked = ui->groupSecurity->isChecked();
 
   auto enabled = writable && tlsChecked && !clientMode;
@@ -258,7 +259,7 @@ void SettingsDialog::updateTlsControlsEnabled()
 
 bool SettingsDialog::isClientMode() const
 {
-  return m_coreProcess.mode() == deskflow::gui::CoreProcess::Mode::Client;
+  return m_coreProcess.mode() == Settings::CoreMode::Client;
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path)

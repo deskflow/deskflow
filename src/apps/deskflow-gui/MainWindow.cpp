@@ -56,7 +56,6 @@
 
 using namespace deskflow::gui;
 
-using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
@@ -233,11 +232,13 @@ void MainWindow::setupControls()
 
   ui->serverOptions->setVisible(false);
   ui->clientOptions->setVisible(false);
-  ui->rbModeClient->setChecked(m_appConfig.clientGroupChecked());
-  ui->rbModeServer->setChecked(m_appConfig.serverGroupChecked());
 
-  if (m_appConfig.clientGroupChecked() || m_appConfig.serverGroupChecked())
-    updateModeControls(m_appConfig.serverGroupChecked());
+  const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
+  ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
+  ui->rbModeServer->setChecked(coreMode == Settings::CoreMode::Server);
+
+  if (coreMode != Settings::CoreMode::None)
+    updateModeControls(coreMode == Settings::CoreMode::Server);
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
@@ -565,10 +566,10 @@ void MainWindow::coreModeToggled()
   const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
   qDebug() << mode;
 
-  m_appConfig.setServerGroupChecked(serverMode);
-  m_appConfig.setClientGroupChecked(!serverMode);
-  m_configScopes.save();
+  const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
+  Settings::setValue(Settings::Core::CoreMode, coreMode);
 
+  m_configScopes.save();
   updateModeControls(serverMode);
 }
 
@@ -579,7 +580,7 @@ void MainWindow::updateModeControls(bool serverMode)
   ui->lblNoMode->setVisible(false);
   ui->btnToggleCore->setEnabled(true);
   m_actionStartCore->setEnabled(true);
-  auto expectedCoreMode = serverMode ? CoreProcess::Mode::Server : CoreProcess::Mode::Client;
+  auto expectedCoreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
   if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
     m_coreProcess.stop();
   m_coreProcess.setMode(expectedCoreMode);
@@ -652,7 +653,7 @@ void MainWindow::open()
 void MainWindow::coreProcessStarting()
 {
   if (deskflow::platform::isWayland()) {
-    m_waylandWarnings.showOnce(this, m_coreProcess.mode());
+    m_waylandWarnings.showOnce(this);
   }
   saveSettings();
 }
@@ -715,17 +716,21 @@ void MainWindow::applyConfig()
   updateLocalFingerprint();
   setIcon();
 
-  if (!m_appConfig.serverGroupChecked() && !m_appConfig.clientGroupChecked())
+  const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
+
+  if (coreMode == Settings::CoreMode::None)
     return;
-  updateModeControls(m_appConfig.serverGroupChecked());
+  updateModeControls(coreMode == Settings::CoreMode::Server);
 }
 
 void MainWindow::saveSettings()
 {
-  m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
-  m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
+  if (ui->rbModeClient->isChecked()) {
+    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Client);
+  } else if (ui->rbModeServer->isChecked()) {
+    Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
+  }
   Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
-
   m_configScopes.save();
 }
 

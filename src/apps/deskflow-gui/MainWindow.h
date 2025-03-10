@@ -59,7 +59,7 @@ class DaemonIpcClient;
 
 class MainWindow : public QMainWindow
 {
-  using CoreMode = deskflow::gui::CoreProcess::Mode;
+  using CoreMode = Settings::CoreMode;
   using CoreProcess = deskflow::gui::CoreProcess;
 
   Q_OBJECT

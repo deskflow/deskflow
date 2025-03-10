@@ -26,7 +26,6 @@ public:
   virtual IConfigScopes &scopes() const = 0;
   virtual bool isActiveScopeSystem() const = 0;
   virtual bool isActiveScopeWritable() const = 0;
-  virtual bool clientGroupChecked() const = 0;
 
   //
   // Setters
