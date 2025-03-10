@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
+set(CMAKE_AUTOMOC ON)
+
 configure_file(constants.h.in constants.h @ONLY)
 
 add_library(common STATIC
@@ -16,10 +18,12 @@ add_library(common STATIC
   stdpre.h
   stdset.h
   stdvector.h
+  settings.h
+  DeskflowSettings.cpp
+  DeskflowSettings.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 
-set_target_properties(common PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(common PUBLIC Qt6::Core)
 
 if(APPLE)

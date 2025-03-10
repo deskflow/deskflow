@@ -6,8 +6,8 @@
 
 #include "CoreProcess.h"
 
+#include "common/DeskflowSettings.h"
 #include "common/constants.h"
-#include "gui/config/IAppConfig.h"
 #include "gui/core/CoreTool.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/paths.h"
@@ -36,14 +36,12 @@ const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 // free functions
 //
 
-QString processModeToString(ProcessMode mode)
+QString processModeToString(Settings::ProcessMode mode)
 {
-  using enum ProcessMode;
-
   switch (mode) {
-  case kDesktop:
+  case Settings::ProcessMode::Desktop:
     return "desktop";
-  case kService:
+  case Settings::ProcessMode::Service:
     return "service";
   default:
     qFatal("invalid process mode");
@@ -152,9 +150,8 @@ QString CoreProcess::Deps::getProfileRoot() const
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(const IAppConfig &appConfig, const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
-    : m_appConfig(appConfig),
-      m_serverConfig(serverConfig),
+CoreProcess::CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
+    : m_serverConfig(serverConfig),
       m_pDeps(deps),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
@@ -239,9 +236,11 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 
 void CoreProcess::applyLogLevel()
 {
-  if (m_appConfig.processMode() == ProcessMode::kService) {
-    qDebug() << "setting daemon log level:" << m_appConfig.logLevelText();
-    if (!m_daemonIpcClient->sendLogLevel(m_appConfig.logLevelText())) {
+  using ProcessMode = Settings::ProcessMode;
+  const auto processMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  if (processMode == ProcessMode::Service) {
+    qDebug() << "setting daemon log level:" << DeskflowSettings::logLevelText();
+    if (!m_daemonIpcClient->sendLogLevel(DeskflowSettings::logLevelText())) {
       qCritical() << "failed to set daemon ipc log level";
     }
   }
@@ -282,7 +281,8 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
-  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, m_appConfig.elevateMode())) {
+  auto elevateMode = DeskflowSettings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
+  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, elevateMode)) {
     qCritical("cannot start process, ipc command failed");
     return;
   }
@@ -349,9 +349,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
+  const auto currentMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  const auto processMode = processModeOption.value_or(currentMode);
 
-  qInfo("starting core %s process (%s mode)", qPrintable(modeString()), qPrintable(processModeToString(processMode)));
+  qInfo().noquote(
+  ) << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
 
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
@@ -372,7 +374,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   setConnectionState(ConnectionState::Connecting);
 
-  if (processMode == ProcessMode::kDesktop) {
+  if (processMode == ProcessMode::Desktop) {
     m_pDeps->process().create();
   }
 
@@ -380,22 +382,22 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QStringList args;
   addGenericArgs(args, processMode);
 
-  if (mode() == Mode::Server && !addServerArgs(args, app)) {
+  if (mode() == Settings::CoreMode::Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
     return;
-  } else if (mode() == Mode::Client && !addClientArgs(args, app)) {
+  } else if (mode() == Settings::CoreMode::Client && !addClientArgs(args, app)) {
     qWarning("failed to add client args for core process, aborting start");
     return;
   }
 
-  qDebug("log level: %s", qPrintable(m_appConfig.logLevelText()));
+  qDebug().noquote() << "log level:" << DeskflowSettings::logLevelText();
 
-  if (m_appConfig.logToFile())
-    qInfo("log file: %s", qPrintable(m_appConfig.logFilename()));
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool())
+    qInfo().noquote() << "log file:" << DeskflowSettings::value(Settings::Log::File).toString();
 
-  if (processMode == ProcessMode::kDesktop) {
+  if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(app, args);
-  } else if (processMode == ProcessMode::kService) {
+  } else if (processMode == ProcessMode::Service) {
     startProcessFromDaemon(app, args);
   }
 
@@ -406,7 +408,8 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 {
   QMutexLocker locker(&m_processMutex);
 
-  const auto processMode = processModeOption.value_or(m_appConfig.processMode());
+  const auto currentMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  const auto processMode = processModeOption.value_or(currentMode);
 
   qInfo("stopping core process (%s mode)", qPrintable(processModeToString(processMode)));
 
@@ -416,9 +419,9 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   } else if (m_processState != ProcessState::Stopped) {
     setProcessState(ProcessState::Stopping);
 
-    if (processMode == ProcessMode::kService) {
+    if (processMode == ProcessMode::Service) {
       stopProcessFromDaemon();
-    } else if (processMode == ProcessMode::kDesktop) {
+    } else if (processMode == ProcessMode::Desktop) {
       stopForegroundProcess();
     }
 
@@ -431,19 +434,17 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
 
 void CoreProcess::restart()
 {
-  using enum ProcessMode;
-
   qDebug("restarting core process");
 
-  const auto processMode = m_appConfig.processMode();
+  const auto processMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>();
 
   if (m_lastProcessMode != processMode) {
-    if (processMode == kDesktop) {
+    if (processMode == ProcessMode::Desktop) {
       qDebug("process mode changed to desktop, stopping service process");
-      stop(kService);
-    } else if (processMode == kService) {
+      stop(ProcessMode::Service);
+    } else if (processMode == ProcessMode::Service) {
       qDebug("process mode changed to service, stopping desktop process");
-      stop(kDesktop);
+      stop(ProcessMode::Desktop);
     } else {
       qFatal("invalid process mode");
     }
@@ -461,7 +462,8 @@ void CoreProcess::cleanup()
 {
   qInfo("cleaning up core process");
 
-  const auto isDesktop = m_appConfig.processMode() == ProcessMode::kDesktop;
+  const auto isDesktop =
+      DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Desktop;
   const auto isRunning = m_processState == ProcessState::Started;
   if (isDesktop && isRunning) {
     stop();
@@ -471,11 +473,11 @@ void CoreProcess::cleanup()
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
 {
   args << "-f"
-       << "--debug" << m_appConfig.logLevelText();
+       << "--debug" << DeskflowSettings::logLevelText();
 
-  args << "--name" << m_appConfig.screenName();
+  args << "--name" << DeskflowSettings::value(Settings::Core::ScreenName).toString();
 
-  if (processMode != ProcessMode::kDesktop) {
+  if (processMode != ProcessMode::Desktop) {
 #if defined(Q_OS_WIN)
     // tell the client/server to shut down when a ms windows desk
     // is switched; this is because we may need to elevate or not
@@ -486,7 +488,8 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
     // unnecessary restarts when deskflow was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
-    if (m_appConfig.elevateMode() == ElevateMode::kAutomatic) {
+    auto elevateMode = DeskflowSettings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
+    if (elevateMode == Settings::ElevateMode::Automatic) {
       args << "--stop-on-desk-switch";
     }
 #endif
@@ -500,7 +503,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 #endif
 
-  if (m_appConfig.tlsEnabled()) {
+  if (DeskflowSettings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
   }
 
@@ -512,7 +515,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   args << "--profile-dir" << m_pDeps->getProfileRoot();
 #endif
 
-  if (m_appConfig.preventSleep()) {
+  if (DeskflowSettings::value(Settings::Core::PreventSleep).toBool()) {
     args << "--prevent-sleep";
   }
 
@@ -521,20 +524,19 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreServerName());
+  app = m_pDeps->appPath(DeskflowSettings::value(Settings::Server::Binary).toString());
 
   if (!m_pDeps->fileExists(app)) {
     qFatal("core server binary does not exist");
     return false;
   }
 
-  if (m_appConfig.logToFile()) {
-    m_appConfig.persistLogDir();
-
-    args << "--log" << m_appConfig.logFilename();
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
+    persistLogDir();
+    args << "--log" << DeskflowSettings::value(Settings::Log::File).toString();
   }
 
-  if (!m_appConfig.requireClientCerts()) {
+  if (!DeskflowSettings::value(Settings::Security::CheckPeers).toBool()) {
     args << "--disable-client-cert-check";
   }
 
@@ -555,13 +557,13 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  if (m_appConfig.tlsEnabled()) {
-    TlsUtility tlsUtility(m_appConfig);
+  if (DeskflowSettings::value(Settings::Security::TlsEnabled).toBool()) {
+    TlsUtility tlsUtility(this);
     if (!tlsUtility.persistCertificate()) {
       qCritical("failed to persist tls certificate");
       return false;
     }
-    args << "--tls-cert" << m_appConfig.tlsCertPath();
+    args << "--tls-cert" << DeskflowSettings::value(Settings::Security::Certificate).toString();
   }
 
   return true;
@@ -569,23 +571,23 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 
 bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(m_appConfig.coreClientName());
+  app = m_pDeps->appPath(DeskflowSettings::value(Settings::Client::Binary).toString());
 
   if (!m_pDeps->fileExists(app)) {
     qFatal("core client binary does not exist");
     return false;
   }
 
-  if (m_appConfig.logToFile()) {
-    m_appConfig.persistLogDir();
-    args << "--log" << m_appConfig.logFilename();
+  if (DeskflowSettings::value(Settings::Log::ToFile).toBool()) {
+    persistLogDir();
+    args << "--log" << DeskflowSettings::value(Settings::Log::File).toString();
   }
 
-  if (m_appConfig.languageSync()) {
+  if (DeskflowSettings::value(Settings::Client::LanguageSync).toBool()) {
     args << "--sync-language";
   }
 
-  if (m_appConfig.invertScrollDirection()) {
+  if (DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool()) {
     args << "--invert-scroll";
   }
 
@@ -595,15 +597,15 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     return false;
   }
 
-  args << correctedAddress() + ":" + QString::number(m_appConfig.port());
+  args << correctedAddress() + ":" + DeskflowSettings::value(Settings::Core::Port).toString();
 
   return true;
 }
 
 QString CoreProcess::persistServerConfig() const
 {
-  if (m_appConfig.useExternalConfig()) {
-    return m_appConfig.configFile();
+  if (DeskflowSettings::value(Settings::Server::ExternalConfig).toBool()) {
+    return DeskflowSettings::value(Settings::Server::ExternalConfigFile).toString();
   }
 
   const auto configDir = paths::configDir(true);
@@ -621,12 +623,10 @@ QString CoreProcess::persistServerConfig() const
 
 QString CoreProcess::modeString() const
 {
-  using enum Mode;
-
   switch (m_mode) {
-  case Server:
+  case Settings::CoreMode::Server:
     return "server";
-  case Client:
+  case Settings::CoreMode::Client:
     return "client";
   default:
     qFatal("invalid core mode");
@@ -720,8 +720,9 @@ void CoreProcess::checkOSXNotification(const QString &line)
 
 QString CoreProcess::correctedInterface() const
 {
-  QString interface = wrapIpv6(m_appConfig.networkInterface());
-  return interface + ":" + QString::number(m_appConfig.port());
+  const QString interface = wrapIpv6(DeskflowSettings::value(Settings::Core::Interface).toString());
+  const auto port = DeskflowSettings::value(Settings::Core::Port).toString();
+  return QStringLiteral("%1:%2").arg(interface, port);
 }
 
 QString CoreProcess::correctedAddress() const
@@ -746,14 +747,20 @@ QString CoreProcess::requestDaemonLogPath()
   return logPath;
 }
 
+void CoreProcess::persistLogDir()
+{
+  QDir(QFileInfo(DeskflowSettings::value(Settings::Log::File).toString()).absolutePath()).mkpath(".");
+}
+
 void CoreProcess::clearSettings()
 {
-  if (m_appConfig.processMode() == ProcessMode::kDesktop) {
+  const auto processMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>();
+  if (processMode == ProcessMode::Desktop) {
     qDebug("no core settings to clear in desktop mode");
     return;
   }
 
-  if (m_appConfig.processMode() != ProcessMode::kService) {
+  if (processMode != ProcessMode::Service) {
     qFatal("invalid process mode");
   }
 

@@ -7,6 +7,7 @@
 #include "ServerConnection.h"
 
 #include "ServerMessage.h"
+#include "common/DeskflowSettings.h"
 #include "gui/config/ServerConfigDialogState.h"
 #include "messages.h"
 
@@ -31,11 +32,10 @@ messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
 //
 
 ServerConnection::ServerConnection(
-    QWidget *parent, IAppConfig &appConfig, IServerConfig &serverConfig,
-    const config::ServerConfigDialogState &serverConfigDialogState, std::shared_ptr<Deps> deps
+    QWidget *parent, IServerConfig &serverConfig, const config::ServerConfigDialogState &serverConfigDialogState,
+    std::shared_ptr<Deps> deps
 )
     : m_pParent(parent),
-      m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_serverConfigDialogState(serverConfigDialogState),
       m_pDeps(deps)
@@ -60,7 +60,7 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (m_appConfig.useExternalConfig()) {
+  if (DeskflowSettings::value(Settings::Server::ExternalConfig).toBool()) {
     qDebug("external config enabled, skipping new client prompt");
     return;
   }
@@ -94,8 +94,9 @@ void ServerConnection::handleNewClient(const QString &clientName)
   Q_EMIT messageShowing();
 
   m_messageShowing = true;
-  const auto result =
-      m_pDeps->showNewClientPrompt(m_pParent, clientName, m_appConfig.tlsEnabled() && m_appConfig.requireClientCerts());
+  const bool tlsEnabled = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
+  const bool requireCerts = DeskflowSettings::value(Settings::Security::CheckPeers).toBool();
+  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && requireCerts);
   m_messageShowing = false;
 
   if (result == Add) {

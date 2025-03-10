@@ -10,6 +10,7 @@
 
 #include "Hotkey.h"
 #include "MainWindow.h"
+#include "common/DeskflowSettings.h"
 #include "dialogs/AddClientDialog.h"
 
 #include <QAbstractButton>
@@ -138,8 +139,9 @@ void ServerConfig::commit()
     settings().setArrayIndex(i);
     auto &screen = screens()[i];
     screen.saveSettings(settings());
-    if (screen.isServer() && m_pAppConfig->screenName() != screen.name()) {
-      m_pAppConfig->setScreenName(screen.name());
+    auto screenName = DeskflowSettings::value(Settings::Core::ScreenName).toString();
+    if (screen.isServer() && screenName != screen.name()) {
+      DeskflowSettings::setValue(Settings::Core::ScreenName, screen.name());
     }
   }
   settings().endArray();
@@ -331,8 +333,8 @@ int ServerConfig::autoAddScreen(const QString name)
 {
   int serverIndex = -1;
   int targetIndex = -1;
-  if (!findScreenName(m_pAppConfig->screenName(), serverIndex) &&
-      !fixNoServer(m_pAppConfig->screenName(), serverIndex)) {
+  const auto screenName = DeskflowSettings::value(Settings::Core::ScreenName).toString();
+  if (!findScreenName(screenName, serverIndex) && !fixNoServer(screenName, serverIndex)) {
     return kAutoAddScreenManualServer;
   }
 
@@ -388,29 +390,29 @@ int ServerConfig::autoAddScreen(const QString name)
   return kAutoAddScreenOk;
 }
 
-const QString &ServerConfig::getServerName() const
+const QString ServerConfig::getServerName() const
 {
-  return m_pAppConfig->screenName();
+  return DeskflowSettings::value(Settings::Core::ScreenName).toString();
 }
 
 void ServerConfig::updateServerName()
 {
   for (auto &screen : screens()) {
     if (screen.isServer()) {
-      screen.setName(m_pAppConfig->screenName());
+      screen.setName(DeskflowSettings::value(Settings::Core::ScreenName).toString());
       break;
     }
   }
 }
 
-const QString &ServerConfig::configFile() const
+const QString ServerConfig::configFile() const
 {
-  return m_pAppConfig->configFile();
+  return DeskflowSettings::value(Settings::Server::ExternalConfigFile).toString();
 }
 
 bool ServerConfig::useExternalConfig() const
 {
-  return m_pAppConfig->useExternalConfig();
+  return DeskflowSettings::value(Settings::Server::ExternalConfig).toBool();
 }
 
 bool ServerConfig::isFull() const
@@ -444,11 +446,12 @@ bool ServerConfig::screenExists(const QString &screenName) const
 void ServerConfig::addClient(const QString &clientName)
 {
   int serverIndex = -1;
+  const auto screenName = DeskflowSettings::value(Settings::Core::ScreenName).toString();
 
-  if (findScreenName(m_pAppConfig->screenName(), serverIndex)) {
+  if (findScreenName(screenName, serverIndex)) {
     m_Screens[serverIndex].markAsServer();
   } else {
-    fixNoServer(m_pAppConfig->screenName(), serverIndex);
+    fixNoServer(screenName, serverIndex);
   }
 
   m_Screens.addScreenByPriority(Screen(clientName));
@@ -456,12 +459,12 @@ void ServerConfig::addClient(const QString &clientName)
 
 void ServerConfig::setConfigFile(const QString &configFile)
 {
-  m_pAppConfig->setConfigFile(configFile);
+  DeskflowSettings::setValue(Settings::Server::ExternalConfigFile, configFile);
 }
 
 void ServerConfig::setUseExternalConfig(bool useExternalConfig)
 {
-  m_pAppConfig->setUseExternalConfig(useExternalConfig);
+  DeskflowSettings::setValue(Settings::Server::ExternalConfig, useExternalConfig);
 }
 
 bool ServerConfig::findScreenName(const QString &name, int &index)

@@ -6,8 +6,8 @@
 
 #pragma once
 
+#include "common/DeskflowSettings.h"
 #include "gui/FileTail.h"
-#include "gui/config/IAppConfig.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/proxy/QProcessProxy.h"
 
@@ -28,6 +28,7 @@ class DaemonIpcClient;
 
 class CoreProcess : public QObject
 {
+  using ProcessMode = Settings::ProcessMode;
   using IServerConfig = deskflow::gui::IServerConfig;
   using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
 
@@ -49,12 +50,6 @@ public:
     QProcessProxy m_process;
   };
 
-  enum class Mode
-  {
-    None,
-    Client,
-    Server
-  };
   enum class Error
   {
     AddressMissing,
@@ -76,10 +71,7 @@ public:
     Listening
   };
 
-  explicit CoreProcess(
-      const IAppConfig &appConfig, const IServerConfig &serverConfig,
-      std::shared_ptr<Deps> deps = std::make_shared<Deps>()
-  );
+  explicit CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
 
   void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
@@ -90,7 +82,7 @@ public:
   void clearSettings();
 
   // getters
-  Mode mode() const
+  Settings::CoreMode mode() const
   {
     return m_mode;
   }
@@ -116,7 +108,7 @@ public:
   {
     m_address = address.trimmed();
   }
-  void setMode(Mode mode)
+  void setMode(Settings::CoreMode mode)
   {
     m_mode = mode;
   }
@@ -154,18 +146,18 @@ private:
   QString correctedInterface() const;
   QString correctedAddress() const;
   QString requestDaemonLogPath();
+  void persistLogDir();
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
 #endif
 
-  const IAppConfig &m_appConfig;
   const IServerConfig &m_serverConfig;
   std::shared_ptr<Deps> m_pDeps;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
-  Mode m_mode = Mode::None;
+  Settings::CoreMode m_mode = Settings::CoreMode::None;
   QMutex m_processMutex;
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;

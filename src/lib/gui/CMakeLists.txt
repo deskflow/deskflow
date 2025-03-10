@@ -36,7 +36,6 @@ add_library(${target} STATIC
   config/AppConfig.h
   config/ConfigScopes.cpp
   config/ConfigScopes.h
-  config/ElevateMode.h
   config/IAppConfig.h
   config/IConfigScopes.h
   config/IServerConfig.h
@@ -95,6 +94,7 @@ add_library(${target} STATIC
 
 target_link_libraries(
   ${target}
+  common
   platform
   Qt6::Core
   Qt6::Widgets

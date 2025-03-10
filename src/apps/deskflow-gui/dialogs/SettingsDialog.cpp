@@ -9,6 +9,7 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 
+#include "common/DeskflowSettings.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
@@ -20,15 +21,12 @@
 
 using namespace deskflow::gui;
 
-SettingsDialog::SettingsDialog(
-    QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
-)
+SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
-      m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_coreProcess(coreProcess),
-      m_tlsUtility(appConfig)
+      m_tlsUtility(this)
 {
 
   ui->setupUi(this);
@@ -45,7 +43,7 @@ SettingsDialog::SettingsDialog(
   ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
-  m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
+  m_wasOriginallySystemScope = DeskflowSettings::isSystemScope();
   updateControls();
 
   adjustSize();
@@ -116,11 +114,11 @@ void SettingsDialog::setLogToFile(bool logToFile)
 
 void SettingsDialog::setSystemScope(bool systemScope)
 {
-  m_appConfig.setLoadFromSystemScope(systemScope);
+  DeskflowSettings::setScope(systemScope);
   loadFromConfig();
   updateControls();
 
-  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
+  if (isVisible() && DeskflowSettings::isWritable()) {
     showReadOnlyMessage();
   }
 }
@@ -133,33 +131,38 @@ void SettingsDialog::showEvent(QShowEvent *event)
 
 void SettingsDialog::showReadOnlyMessage()
 {
-  if (m_appConfig.isActiveScopeWritable())
+  if (DeskflowSettings::isWritable())
     return;
-  const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
-  messages::showReadOnlySettings(this, activeScopeFilename);
+  messages::showReadOnlySettings(this, DeskflowSettings::settingsFile());
 }
 
 void SettingsDialog::accept()
 {
-  m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
-  m_appConfig.setPort(ui->sbPort->value());
-  m_appConfig.setNetworkInterface(ui->lineInterface->text());
-  m_appConfig.setLogLevel(ui->comboLogLevel->currentIndex());
-  m_appConfig.setLogToFile(ui->cbLogToFile->isChecked());
-  m_appConfig.setLogFilename(ui->lineLogFilename->text());
-  m_appConfig.setElevateMode(static_cast<ElevateMode>(ui->comboElevate->currentIndex()));
-  m_appConfig.setAutoHide(ui->cbAutoHide->isChecked());
-  m_appConfig.setEnableUpdateCheck(ui->cbAutoUpdate->isChecked());
-  m_appConfig.setPreventSleep(ui->cbPreventSleep->isChecked());
-  m_appConfig.setTlsCertPath(ui->lineTlsCertPath->text());
-  m_appConfig.setTlsKeyLength(ui->comboTlsKeyLength->currentText().toInt());
-  m_appConfig.setTlsEnabled(ui->groupSecurity->isChecked());
-  m_appConfig.setLanguageSync(ui->cbLanguageSync->isChecked());
-  m_appConfig.setInvertScrollDirection(ui->cbScrollDirection->isChecked());
-  m_appConfig.setEnableService(ui->cbServiceEnabled->isChecked());
-  m_appConfig.setCloseToTray(ui->cbCloseToTray->isChecked());
-  m_appConfig.setColorfulTrayIcon(ui->rbIconColorful->isChecked());
-  m_appConfig.setRequireClientCerts(ui->cbRequireClientCert->isChecked());
+  DeskflowSettings::setScope(ui->rbScopeSystem->isChecked());
+  DeskflowSettings::setValue(Settings::Core::Port, ui->sbPort->value());
+  DeskflowSettings::setValue(Settings::Core::Interface, ui->lineInterface->text());
+  DeskflowSettings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
+  DeskflowSettings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
+  DeskflowSettings::setValue(Settings::Log::File, ui->lineLogFilename->text());
+  DeskflowSettings::setValue(Settings::Core::ElevateMode, ui->comboElevate->currentIndex());
+  DeskflowSettings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
+  DeskflowSettings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
+  DeskflowSettings::setValue(Settings::Security::Certificate, ui->lineTlsCertPath->text());
+  DeskflowSettings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText().toInt());
+  DeskflowSettings::setValue(Settings::Security::TlsEnabled, ui->groupSecurity->isChecked());
+  DeskflowSettings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
+  DeskflowSettings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
+  DeskflowSettings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
+  DeskflowSettings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
+
+  Settings::ProcessMode mode;
+  if (ui->cbServiceEnabled->isChecked())
+    mode = Settings::ProcessMode::Service;
+  else
+    mode = Settings::ProcessMode::Desktop;
+  DeskflowSettings::setValue(Settings::Core::ProcessMode, mode);
 
   QDialog::accept();
 }
@@ -167,8 +170,8 @@ void SettingsDialog::accept()
 void SettingsDialog::reject()
 {
   // restore original system scope value on reject.
-  if (m_appConfig.isActiveScopeSystem() != m_wasOriginallySystemScope) {
-    m_appConfig.setLoadFromSystemScope(m_wasOriginallySystemScope);
+  if (DeskflowSettings::isSystemScope() != m_wasOriginallySystemScope) {
+    DeskflowSettings::setScope(m_wasOriginallySystemScope);
   }
 
   QDialog::reject();
@@ -177,35 +180,35 @@ void SettingsDialog::reject()
 void SettingsDialog::loadFromConfig()
 {
 
-  ui->sbPort->setValue(m_appConfig.port());
-  ui->lineInterface->setText(m_appConfig.networkInterface());
-  ui->comboLogLevel->setCurrentIndex(m_appConfig.logLevel());
-  ui->cbLogToFile->setChecked(m_appConfig.logToFile());
-  ui->lineLogFilename->setText(m_appConfig.logFilename());
-  ui->cbAutoHide->setChecked(m_appConfig.autoHide());
-  ui->cbPreventSleep->setChecked(m_appConfig.preventSleep());
-  ui->cbLanguageSync->setChecked(m_appConfig.languageSync());
-  ui->cbScrollDirection->setChecked(m_appConfig.invertScrollDirection());
-  ui->cbServiceEnabled->setChecked(m_appConfig.enableService());
-  ui->cbCloseToTray->setChecked(m_appConfig.closeToTray());
-  ui->comboElevate->setCurrentIndex(static_cast<int>(m_appConfig.elevateMode()));
+  ui->sbPort->setValue(DeskflowSettings::value(Settings::Core::Port).toInt());
+  ui->lineInterface->setText(DeskflowSettings::value(Settings::Core::Interface).toString());
+  ui->comboLogLevel->setCurrentIndex(DeskflowSettings::value(Settings::Log::Level).toInt());
+  ui->cbLogToFile->setChecked(DeskflowSettings::value(Settings::Log::ToFile).toBool());
+  ui->lineLogFilename->setText(DeskflowSettings::value(Settings::Log::File).toString());
+  ui->cbAutoHide->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
+  ui->cbPreventSleep->setChecked(DeskflowSettings::value(Settings::Core::PreventSleep).toBool());
+  ui->cbLanguageSync->setChecked(DeskflowSettings::value(Settings::Client::LanguageSync).toBool());
+  ui->cbScrollDirection->setChecked(DeskflowSettings::value(Settings::Client::InvertScrollDirection).toBool());
+  ui->cbCloseToTray->setChecked(DeskflowSettings::value(Settings::Gui::CloseToTray).toBool());
+  ui->comboElevate->setCurrentIndex(DeskflowSettings::value(Settings::Core::ElevateMode).toInt());
 
-  if (m_appConfig.enableUpdateCheck().has_value()) {
-    ui->cbAutoUpdate->setChecked(m_appConfig.enableUpdateCheck().value());
-  } else {
-    ui->cbAutoUpdate->setChecked(false);
-  }
+  ui->cbAutoUpdate->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
 
-  if (m_appConfig.isActiveScopeSystem()) {
+  if (DeskflowSettings::isSystemScope()) {
     ui->rbScopeSystem->setChecked(true);
   } else {
     ui->rbScopeUser->setChecked(true);
   }
 
-  if (m_appConfig.colorfulTrayIcon())
-    ui->rbIconColorful->setChecked(true);
-  else
+  const auto processMode = DeskflowSettings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
+  if (processMode == Settings::ProcessMode::Service) {
+    ui->cbServiceEnabled->setChecked(true);
+  }
+
+  if (DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
+  else
+    ui->rbIconColorful->setChecked(true);
 
   qDebug() << "load from config done";
   updateTlsControls();
@@ -213,20 +216,20 @@ void SettingsDialog::loadFromConfig()
 
 void SettingsDialog::updateTlsControls()
 {
-
-  if (QFile(m_appConfig.tlsCertPath()).exists()) {
-    updateKeyLengthOnFile(m_appConfig.tlsCertPath());
+  const auto certificate = DeskflowSettings::value(Settings::Security::Certificate).toString();
+  if (QFile(certificate).exists()) {
+    updateKeyLengthOnFile(certificate);
   } else {
-    const auto keyLengthText = QString::number(m_appConfig.tlsKeyLength());
-    ui->comboTlsKeyLength->setCurrentIndex(ui->comboTlsKeyLength->findText(keyLengthText));
+    const auto keyLengthText = DeskflowSettings::value(Settings::Security::KeySize).toString();
+    ui->comboTlsKeyLength->setCurrentText(keyLengthText);
   }
 
-  const auto tlsEnabled = m_tlsUtility.isEnabled();
-  const auto writable = m_appConfig.isActiveScopeWritable();
+  const auto tlsEnabled = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
+  const auto writable = DeskflowSettings::isWritable();
   const auto enabled = writable && tlsEnabled;
 
-  ui->lineTlsCertPath->setText(m_appConfig.tlsCertPath());
-  ui->cbRequireClientCert->setChecked(m_appConfig.requireClientCerts());
+  ui->lineTlsCertPath->setText(certificate);
+  ui->cbRequireClientCert->setChecked(DeskflowSettings::value(Settings::Security::CheckPeers).toBool());
   ui->groupSecurity->setChecked(tlsEnabled);
 
   ui->groupSecurity->setEnabled(writable);
@@ -239,8 +242,9 @@ void SettingsDialog::updateTlsControls()
 
 void SettingsDialog::updateTlsControlsEnabled()
 {
-  const auto writable = m_appConfig.isActiveScopeWritable();
-  const auto clientMode = m_appConfig.clientGroupChecked();
+  const auto writable = DeskflowSettings::isWritable();
+  const auto clientMode =
+      DeskflowSettings::value(Settings::Core::CoreMode).value<Settings::CoreMode>() == Settings::CoreMode::Client;
   const auto tlsChecked = ui->groupSecurity->isChecked();
 
   auto enabled = writable && tlsChecked && !clientMode;
@@ -254,7 +258,7 @@ void SettingsDialog::updateTlsControlsEnabled()
 
 bool SettingsDialog::isClientMode() const
 {
-  return m_coreProcess.mode() == deskflow::gui::CoreProcess::Mode::Client;
+  return m_coreProcess.mode() == Settings::CoreMode::Client;
 }
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path)
@@ -265,9 +269,8 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   }
 
   auto length = ssl.getCertKeyLength(path);
-  auto index = ui->comboTlsKeyLength->findText(QString::number(length));
-  ui->comboTlsKeyLength->setCurrentIndex(index);
-  m_appConfig.setTlsKeyLength(length);
+  ui->comboTlsKeyLength->setCurrentText(QString::number(length));
+  DeskflowSettings::setValue(Settings::Security::KeySize, length);
 }
 
 void SettingsDialog::updateControls()
@@ -281,7 +284,7 @@ void SettingsDialog::updateControls()
   ui->groupService->setTitle("Service (Windows only)");
 #endif
 
-  const bool writable = m_appConfig.isActiveScopeWritable();
+  const bool writable = DeskflowSettings::isWritable();
   const bool serviceChecked = ui->cbServiceEnabled->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 

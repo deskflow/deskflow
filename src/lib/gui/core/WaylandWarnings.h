@@ -9,7 +9,6 @@
 #include <QWidget>
 #include <memory>
 
-#include "CoreProcess.h"
 #include "platform/wayland.h"
 
 namespace deskflow::gui::core {
@@ -28,7 +27,7 @@ public:
   }
 
   void showOnce(
-      QWidget *parent, CoreProcess::Mode mode, bool hasEi = platform::kHasEi, bool hasPortal = platform::kHasPortal,
+      QWidget *parent, bool hasEi = platform::kHasEi, bool hasPortal = platform::kHasPortal,
       bool hasPortalInputCapture = platform::kHasPortalInputCapture
   );
 

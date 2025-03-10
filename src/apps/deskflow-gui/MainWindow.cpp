@@ -15,6 +15,7 @@
 #include "dialogs/SettingsDialog.h"
 
 #include "base/String.h"
+#include "common/DeskflowSettings.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
 #include "gui/config/ConfigScopes.h"
@@ -56,7 +57,6 @@
 
 using namespace deskflow::gui;
 
-using CoreMode = CoreProcess::Mode;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
@@ -65,10 +65,10 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_configScopes(configScopes),
       m_appConfig(appConfig),
       m_serverConfig(appConfig, *this),
-      m_coreProcess(appConfig, m_serverConfig),
-      m_serverConnection(this, appConfig, m_serverConfig, m_serverConfigDialogState),
-      m_clientConnection(this, appConfig),
-      m_tlsUtility(appConfig),
+      m_coreProcess(m_serverConfig),
+      m_serverConnection(this, m_serverConfig, m_serverConfigDialogState),
+      m_clientConnection(this),
+      m_tlsUtility(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
@@ -157,7 +157,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
   updateSize();
 
   // Force generation of SHA256 for the localhost
-  if (m_appConfig.tlsEnabled()) {
+  if (DeskflowSettings::value(Settings::Security::TlsEnabled).toBool()) {
     if (!QFile::exists(localFingerprintDb())) {
       regenerateLocalFingerprints();
       return;
@@ -179,36 +179,33 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-  const auto &windowSize = m_appConfig.mainWindowSize();
-  if (windowSize.has_value()) {
-    qDebug() << "restoring main window size";
-    m_expandedSize = windowSize.value();
-  }
-
-  const auto &windowPosition = m_appConfig.mainWindowPosition();
-  if (windowPosition.has_value()) {
-    int x = 0;
-    int y = 0;
-    int w = 0;
-    int h = 0;
-    for (auto screen : QGuiApplication::screens()) {
-      auto geo = screen->geometry();
-      x = std::min(geo.x(), x);
-      y = std::min(geo.y(), y);
-      w = std::max(geo.x() + geo.width(), w);
-      h = std::max(geo.y() + geo.height(), h);
-    }
-    const QSize totalScreenSize(w, h);
-    const QPoint point = windowPosition.value();
-    if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
-      qDebug() << "restoring main window position";
-      move(point);
-    }
-  } else {
+  const auto windowGeometry = DeskflowSettings::value(Settings::Gui::WindowGeometry).toRect();
+  if (!windowGeometry.isValid()) {
     // center main window in middle of screen
     const auto screen = QGuiApplication::primaryScreen();
     QRect screenGeometry = screen->geometry();
     move(screenGeometry.center() - rect().center());
+    return;
+  }
+
+  m_expandedSize = windowGeometry.size();
+
+  int x = 0;
+  int y = 0;
+  int w = 0;
+  int h = 0;
+  for (auto screen : QGuiApplication::screens()) {
+    auto geo = screen->geometry();
+    x = std::min(geo.x(), x);
+    y = std::min(geo.y(), y);
+    w = std::max(geo.x() + geo.width(), w);
+    h = std::max(geo.y() + geo.height(), h);
+  }
+  const QSize totalScreenSize(w, h);
+  const QPoint point = windowGeometry.bottomRight();
+  if (point.x() < totalScreenSize.width() && point.y() < totalScreenSize.height()) {
+    qDebug() << "restoring main window position";
+    move(point);
   }
 }
 
@@ -220,13 +217,13 @@ void MainWindow::setupControls()
 
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
-  if (m_appConfig.lastVersion() != kVersion) {
-    m_appConfig.setLastVersion(kVersion);
+  if (DeskflowSettings::value(Settings::Core::LastVersion).toString() != kVersion) {
+    DeskflowSettings::setValue(Settings::Core::LastVersion, kVersion);
   }
 
   // Setup the log toggle, set its initial state to closed
   ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
     ui->textLog->setVisible(true);
     ui->btnToggleLog->click();
@@ -236,11 +233,14 @@ void MainWindow::setupControls()
 
   ui->serverOptions->setVisible(false);
   ui->clientOptions->setVisible(false);
-  ui->rbModeClient->setChecked(m_appConfig.clientGroupChecked());
-  ui->rbModeServer->setChecked(m_appConfig.serverGroupChecked());
 
-  if (m_appConfig.clientGroupChecked() || m_appConfig.serverGroupChecked())
-    updateModeControls(m_appConfig.serverGroupChecked());
+  const auto coreMode = DeskflowSettings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
+  qInfo() << "coreMode" << coreMode;
+  ui->rbModeClient->setChecked(coreMode == Settings::CoreMode::Client);
+  ui->rbModeServer->setChecked(coreMode == Settings::CoreMode::Server);
+
+  if (coreMode != Settings::CoreMode::None)
+    updateModeControls(coreMode == Settings::CoreMode::Server);
 
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
@@ -294,9 +294,7 @@ void MainWindow::connectSlots()
 
   connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
 
-  connect(&m_appConfig, &AppConfig::tlsChanged, this, &MainWindow::appConfigTlsChanged);
-  connect(&m_appConfig, &AppConfig::screenNameChanged, this, &MainWindow::updateScreenName);
-  connect(&m_appConfig, &AppConfig::logLevelChanged, &m_coreProcess, &CoreProcess::applyLogLevel);
+  connect(DeskflowSettings::instance(), &DeskflowSettings::settingsChanged, this, &MainWindow::settingsChanged);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
@@ -361,14 +359,12 @@ void MainWindow::toggleLogVisible(bool visible)
 {
   if (visible) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    ui->textLog->setVisible(true);
-    m_appConfig.setLogExpanded(true);
   } else {
     ui->btnToggleLog->setArrowType(Qt::RightArrow);
     m_expandedSize = size();
-    ui->textLog->setVisible(false);
-    m_appConfig.setLogExpanded(false);
   }
+  ui->textLog->setVisible(visible);
+  DeskflowSettings::setValue(Settings::Gui::LogExpanded, visible);
   // 1 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(1, this, &MainWindow::updateSize);
 }
@@ -386,17 +382,30 @@ void MainWindow::firstShown()
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 }
 
+void MainWindow::settingsChanged(const QString &key)
+{
+  if (key == Settings::Log::Level) {
+    m_coreProcess.applyLogLevel();
+    return;
+  }
+
+  if (key == Settings::Core::ScreenName)
+    updateScreenName();
+
+  if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
+      (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
+    const auto certificate = DeskflowSettings::value(Settings::Security::Certificate).toString();
+    if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
+      m_tlsUtility.generateCertificate();
+    }
+    updateSecurityIcon(m_lblSecurityStatus->isVisible());
+    return;
+  }
+}
+
 void MainWindow::configScopesSaving()
 {
   m_serverConfig.commit();
-}
-
-void MainWindow::appConfigTlsChanged()
-{
-  if (m_tlsUtility.isEnabled() && !QFile::exists(m_appConfig.tlsCertPath())) {
-    m_tlsUtility.generateCertificate();
-  }
-  updateSecurityIcon(m_lblSecurityStatus->isVisible());
 }
 
 void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
@@ -495,7 +504,7 @@ void MainWindow::openGetNewVersionUrl() const
 
 void MainWindow::openSettings()
 {
-  auto dialog = SettingsDialog(this, m_appConfig, m_serverConfig, m_coreProcess);
+  auto dialog = SettingsDialog(this, m_serverConfig, m_coreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
     m_configScopes.save();
@@ -516,7 +525,7 @@ void MainWindow::resetCore()
 
 void MainWindow::updateSize()
 {
-  if (m_appConfig.logExpanded()) {
+  if (DeskflowSettings::value(Settings::Gui::LogExpanded).toBool()) {
     setMaximumHeight(16777215);
     setMaximumWidth(16777215);
     resize(m_expandedSize);
@@ -559,9 +568,8 @@ void MainWindow::coreModeToggled()
   const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
   qDebug() << mode;
 
-  m_appConfig.setServerGroupChecked(serverMode);
-  m_appConfig.setClientGroupChecked(!serverMode);
-  m_configScopes.save();
+  const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
+  DeskflowSettings::setValue(Settings::Core::CoreMode, coreMode);
 
   updateModeControls(serverMode);
 }
@@ -573,7 +581,7 @@ void MainWindow::updateModeControls(bool serverMode)
   ui->lblNoMode->setVisible(false);
   ui->btnToggleCore->setEnabled(true);
   m_actionStartCore->setEnabled(true);
-  auto expectedCoreMode = serverMode ? CoreProcess::Mode::Server : CoreProcess::Mode::Client;
+  auto expectedCoreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
   if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
     m_coreProcess.stop();
   m_coreProcess.setMode(expectedCoreMode);
@@ -581,7 +589,8 @@ void MainWindow::updateModeControls(bool serverMode)
     // The server can run without any clients configured, and this is actually
     // what you'll want to do the first time since you'll be prompted when an
     // unrecognized client tries to connect.
-    if (!m_appConfig.startedBefore() && !m_coreProcess.isStarted()) {
+    const auto startedBefore = DeskflowSettings::value(Settings::Core::StartedBefore).toBool();
+    if (!startedBefore && !m_coreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
       m_coreProcess.start();
       messages::showFirstServerStartMessage(this);
@@ -595,7 +604,7 @@ void MainWindow::updateSecurityIcon(bool visible)
   if (!visible)
     return;
 
-  bool secureSocket = m_appConfig.tlsEnabled();
+  bool secureSocket = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
 
   const auto txt =
       secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
@@ -608,7 +617,7 @@ void MainWindow::updateSecurityIcon(bool visible)
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
   m_serverConfigDialogState.setVisible(true);
-  ServerConfigDialog dialog(this, m_serverConfig, m_appConfig);
+  ServerConfigDialog dialog(this, m_serverConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_coreProcess.restart();
   }
@@ -621,13 +630,13 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-  if (!m_appConfig.enableUpdateCheck().has_value()) {
+
+  if (!DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
     showAndActivate();
-    m_appConfig.setEnableUpdateCheck(messages::showUpdateCheckOption(this));
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
   }
 
-  if (m_appConfig.enableUpdateCheck().value()) {
+  if (DeskflowSettings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
     m_versionChecker.checkLatest();
   } else {
     qDebug() << "update check disabled";
@@ -635,21 +644,17 @@ void MainWindow::open()
 
   m_coreProcess.applyLogLevel();
 
-  if (m_appConfig.startedBefore()) {
+  if (DeskflowSettings::value(Settings::Core::StartedBefore).toBool()) {
     m_coreProcess.start();
   }
 
-  if (m_appConfig.autoHide()) {
-    hide();
-  } else {
-    showAndActivate();
-  }
+  DeskflowSettings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
 }
 
 void MainWindow::coreProcessStarting()
 {
   if (deskflow::platform::isWayland()) {
-    m_waylandWarnings.showOnce(this, m_coreProcess.mode());
+    m_waylandWarnings.showOnce(this);
   }
   saveSettings();
 }
@@ -708,22 +713,25 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  ui->lineHostname->setText(m_appConfig.serverHostname());
+  ui->lineHostname->setText(DeskflowSettings::value(Settings::Client::RemoteHost).toString());
   updateLocalFingerprint();
   setIcon();
 
-  if (!m_appConfig.serverGroupChecked() && !m_appConfig.clientGroupChecked())
+  const auto coreMode = DeskflowSettings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
+
+  if (coreMode == Settings::CoreMode::None)
     return;
-  updateModeControls(m_appConfig.serverGroupChecked());
+  updateModeControls(coreMode == Settings::CoreMode::Server);
 }
 
 void MainWindow::saveSettings()
 {
-  m_appConfig.setServerGroupChecked(ui->rbModeServer->isChecked());
-  m_appConfig.setClientGroupChecked(ui->rbModeClient->isChecked());
-  m_appConfig.setServerHostname(ui->lineHostname->text());
-
-  m_configScopes.save();
+  if (ui->rbModeClient->isChecked()) {
+    DeskflowSettings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Client);
+  } else if (ui->rbModeServer->isChecked()) {
+    DeskflowSettings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
+  }
+  DeskflowSettings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
 }
 
 void MainWindow::setIcon()
@@ -731,19 +739,19 @@ void MainWindow::setIcon()
   // Using a theme icon that is packed in exe renders an invisible icon
   // Instead use the resource path of the packed icon
   // TODO Report to Qt ref the bug here
+  const bool symbolicIcon = DeskflowSettings::value(Settings::Gui::SymbolicTrayIcon).toBool();
 #ifndef Q_OS_MAC
   QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
-  if (!appConfig().colorfulTrayIcon()) {
+  if (symbolicIcon)
     iconString.append(QStringLiteral("-symbolic"));
-  }
   m_trayIcon->setIcon(QIcon(iconString));
 #else
-  if (m_appConfig.colorfulTrayIcon()) {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
-  } else {
+  if (symbolicIcon) {
     auto icon = QIcon::fromTheme(QStringLiteral("deskflow-symbolic"));
     icon.setIsMask(true);
     m_trayIcon->setIcon(icon);
+  } else {
+    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
   }
 #endif
 }
@@ -856,10 +864,10 @@ void MainWindow::showEvent(QShowEvent *event)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
-  if (m_appConfig.closeToTray() && event->spontaneous()) {
-    if (m_appConfig.showCloseReminder()) {
+  if (DeskflowSettings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
+    if (DeskflowSettings::value(Settings::Gui::CloseReminder).toBool()) {
       messages::showCloseReminder(this);
-      m_appConfig.setShowCloseReminder(false);
+      DeskflowSettings::setValue(Settings::Gui::CloseReminder, false);
     }
     qDebug() << "hiding to tray";
     hide();
@@ -868,9 +876,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   }
 
   if (m_saveOnExit) {
-    m_appConfig.setMainWindowPosition(pos());
-    m_appConfig.setMainWindowSize(size());
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Gui::WindowGeometry, geometry());
   }
   qDebug() << "quitting application";
   event->accept();
@@ -879,15 +885,17 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showFirstConnectedMessage()
 {
-  if (m_appConfig.startedBefore()) {
+  if (DeskflowSettings::value(Settings::Core::StartedBefore).toBool())
     return;
-  }
-
-  m_appConfig.setStartedBefore(true);
-  m_configScopes.save();
+  DeskflowSettings::setValue(Settings::Core::StartedBefore, true);
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
-  messages::showFirstConnectedMessage(this, m_appConfig.closeToTray(), m_appConfig.enableService(), isServer);
+  const auto closeToTray = DeskflowSettings::value(Settings::Gui::CloseToTray).toBool();
+
+  using ProcessMode = Settings::ProcessMode;
+  const auto enableService =
+      DeskflowSettings::value(Settings::Core::ProcessMode).value<ProcessMode>() == ProcessMode::Service;
+  messages::showFirstConnectedMessage(this, closeToTray, enableService, isServer);
 }
 
 void MainWindow::updateStatus()
@@ -952,8 +960,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
-    m_appConfig.setStartedBefore(true);
-    m_configScopes.save();
+    DeskflowSettings::setValue(Settings::Core::StartedBefore, true);
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
@@ -1031,7 +1038,8 @@ QString MainWindow::getIPAddresses() const
 
 void MainWindow::updateLocalFingerprint()
 {
-  m_btnFingerprint->setVisible(m_appConfig.tlsEnabled() && QFile::exists(localFingerprintDb()));
+  const bool tlsEnabled = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
+  m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(localFingerprintDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1041,7 +1049,8 @@ void MainWindow::autoAddScreen(const QString name)
   if (r != kAutoAddScreenOk) {
     switch (r) {
     case kAutoAddScreenManualServer:
-      showConfigureServer(tr("Please add the server (%1) to the grid.").arg(m_appConfig.screenName()));
+      showConfigureServer(tr("Please add the server (%1) to the grid.")
+                              .arg(DeskflowSettings::value(Settings::Core::ScreenName).toString()));
       break;
 
     case kAutoAddScreenManualClient:
@@ -1066,7 +1075,7 @@ void MainWindow::hide()
 
 void MainWindow::showConfigureServer(const QString &message)
 {
-  ServerConfigDialog dialog(this, serverConfig(), m_appConfig);
+  ServerConfigDialog dialog(this, serverConfig());
   dialog.message(message);
   if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
     m_coreProcess.restart();
@@ -1081,8 +1090,9 @@ void MainWindow::secureSocket(bool secureSocket)
 
 void MainWindow::updateScreenName()
 {
-  ui->lblComputerName->setText(m_appConfig.screenName());
-  ui->lineEditName->setText(m_appConfig.screenName());
+  const auto screenName = DeskflowSettings::value(Settings::Core::ScreenName).toString();
+  ui->lblComputerName->setText(screenName);
+  ui->lineEditName->setText(screenName);
   m_serverConfig.updateServerName();
 }
 
@@ -1113,11 +1123,12 @@ void MainWindow::setHostName()
   ui->btnEditName->show();
 
   QString text = ui->lineEditName->text();
-  bool existingScreen = serverConfig().screenExists(text) && text != m_appConfig.screenName();
+  const auto screenName = DeskflowSettings::value(Settings::Core::ScreenName).toString();
+  bool existingScreen = serverConfig().screenExists(text) && (text != screenName);
 
   if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
     blockSignals(true);
-    ui->lineEditName->setText(m_appConfig.screenName());
+    ui->lineEditName->setText(screenName);
     blockSignals(false);
 
     const auto title = tr("Invalid Screen Name");
@@ -1136,7 +1147,7 @@ void MainWindow::setHostName()
   }
 
   ui->lblComputerName->setText(ui->lineEditName->text());
-  m_appConfig.setScreenName(ui->lineEditName->text());
+  DeskflowSettings::setValue(Settings::Core::ScreenName, ui->lineEditName->text());
   applyConfig();
 }
 
@@ -1160,12 +1171,13 @@ QString MainWindow::trustedFingerprintDb()
 
 bool MainWindow::regenerateLocalFingerprints()
 {
-  if (!QFile::exists(m_appConfig.tlsCertPath()) && !m_tlsUtility.generateCertificate()) {
+  const auto certificate = DeskflowSettings::value(Settings::Security::Certificate).toString();
+  if (!QFile::exists(certificate) && !m_tlsUtility.generateCertificate()) {
     return false;
   }
 
   TlsCertificate tls;
-  if (!tls.generateFingerprint(m_appConfig.tlsCertPath())) {
+  if (!tls.generateFingerprint(certificate)) {
     return false;
   }
 

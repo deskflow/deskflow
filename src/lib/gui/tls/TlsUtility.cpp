@@ -7,20 +7,19 @@
 #include "TlsUtility.h"
 
 #include "TlsCertificate.h"
-
+#include "common/DeskflowSettings.h"
 #include <QFile>
 #include <QString>
 
 namespace deskflow::gui {
 
-TlsUtility::TlsUtility(const IAppConfig &appConfig) : m_appConfig(appConfig)
+TlsUtility::TlsUtility(QObject *parent) : QObject(parent)
 {
 }
 
 bool TlsUtility::isEnabled() const
 {
-  const auto &config = m_appConfig;
-  return config.tlsEnabled();
+  return DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
 }
 
 bool TlsUtility::generateCertificate()
@@ -34,16 +33,17 @@ bool TlsUtility::generateCertificate()
     return false;
   }
 
-  auto length = m_appConfig.tlsKeyLength();
+  auto length = DeskflowSettings::value(Settings::Security::KeySize).toInt();
+  const auto certificate = DeskflowSettings::value(Settings::Security::Certificate).toString();
 
-  return m_certificate.generateCertificate(m_appConfig.tlsCertPath(), length);
+  return m_certificate.generateCertificate(certificate, length);
 }
 
 bool TlsUtility::persistCertificate()
 {
   qDebug("persisting tls certificate");
 
-  if (QFile::exists(m_appConfig.tlsCertPath())) {
+  if (QFile::exists(DeskflowSettings::value(Settings::Security::Certificate).toString())) {
     qDebug("tls certificate already exists");
     return true;
   }

@@ -59,7 +59,7 @@ class DaemonIpcClient;
 
 class MainWindow : public QMainWindow
 {
-  using CoreMode = deskflow::gui::CoreProcess::Mode;
+  using CoreMode = Settings::CoreMode;
   using CoreProcess = deskflow::gui::CoreProcess;
 
   Q_OBJECT
@@ -100,8 +100,8 @@ private:
 
   void firstShown();
 
+  void settingsChanged(const QString &key = QString());
   void configScopesSaving();
-  void appConfigTlsChanged();
   void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);

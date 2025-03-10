@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "common/DeskflowSettings.h"
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/proxy/QProcessProxy.h"
@@ -66,14 +67,13 @@ public:
 class CoreProcessTests : public Test
 {
 public:
-  CoreProcessTests() : m_coreProcess(m_appConfig, m_serverConfig, m_pDeps)
+  CoreProcessTests() : m_coreProcess(m_serverConfig, m_pDeps)
   {
-    ON_CALL(m_appConfig, useExternalConfig()).WillByDefault(testing::Return(true));
-    ON_CALL(m_appConfig, configFile()).WillByDefault(testing::ReturnRef(m_configFile));
-    ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
+    DeskflowSettings::setValue(Settings::Server::ExternalConfig, true);
+    DeskflowSettings::setValue(Settings::Server::ExternalConfigFile, m_configFile);
+    DeskflowSettings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
   }
 
-  NiceMock<AppConfigMock> m_appConfig;
   NiceMock<ServerConfigMock> m_serverConfig;
   std::shared_ptr<NiceMock<DepsMock>> m_pDeps = std::make_shared<NiceMock<DepsMock>>();
   CoreProcess m_coreProcess;
@@ -86,48 +86,48 @@ private:
 
 TEST_F(CoreProcessTests, start_serverDesktop_callsProcessStart)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
 
-  m_coreProcess.start(ProcessMode::kDesktop);
+  m_coreProcess.start(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, start_clientDesktop_callsProcessStart)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Client);
+  m_coreProcess.setMode(Settings::CoreMode::Client);
   m_coreProcess.setAddress("stub address");
 
   EXPECT_CALL(m_pDeps->m_process, start(_, _)).Times(1);
 
-  m_coreProcess.start(ProcessMode::kDesktop);
+  m_coreProcess.start(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, stop_serverDesktop_callsProcessClose)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
   m_coreProcess.start();
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
 
-  m_coreProcess.stop(ProcessMode::kDesktop);
+  m_coreProcess.stop(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, stop_clientDesktop_callsProcessClose)
 {
-  m_coreProcess.setMode(CoreProcess::Mode::Client);
+  m_coreProcess.setMode(Settings::CoreMode::Client);
   m_coreProcess.setAddress("stub address");
   m_coreProcess.start();
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
 
-  m_coreProcess.stop(ProcessMode::kDesktop);
+  m_coreProcess.stop(Settings::ProcessMode::Desktop);
 }
 
 TEST_F(CoreProcessTests, restart_serverDesktop_callsProcessStart)
 {
-  ON_CALL(m_appConfig, processMode()).WillByDefault(Return(ProcessMode::kDesktop));
-  m_coreProcess.setMode(CoreProcess::Mode::Server);
+  DeskflowSettings::setValue(Settings::Core::ProcessMode, Settings::ProcessMode::Desktop);
+  m_coreProcess.setMode(Settings::CoreMode::Server);
   m_coreProcess.start();
 
   EXPECT_CALL(m_pDeps->m_process, close()).Times(1);
