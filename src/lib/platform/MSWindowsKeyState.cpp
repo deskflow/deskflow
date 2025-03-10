@@ -760,7 +760,7 @@ bool MSWindowsKeyState::fakeCtrlAltDel()
   // History: It used to be possible to use `PostMessage` to send `MOD_CONTROL | MOD_ALT, VK_DELETE`
   // as a backup but this ability was removed by Microsoft for security in favor of requiring the
   // `SendSAS` event to be used, which makes DoS and social engineering attacks more difficult.
-  HANDLE hSendSasEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, deskflow::common::kSendSasEventName);
+  HANDLE hSendSasEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName);
   if (hSendSasEvent) {
     LOG_DEBUG("found SendSAS event, simulating ctrl+alt+del");
     SetEvent(hSendSasEvent);

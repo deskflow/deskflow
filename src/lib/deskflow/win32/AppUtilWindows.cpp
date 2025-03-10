@@ -13,7 +13,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/log_outputters.h"
-#include "common/common.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Screen.h"
@@ -261,7 +261,7 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
 
 void AppUtilWindows::eventLoop()
 {
-  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, deskflow::common::kCloseEventName);
+  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, kCloseEventName);
   if (!hCloseEvent) {
     LOG_CRIT("failed to create event for windows event loop");
     throw XArch(new XArchEvalWindows());
