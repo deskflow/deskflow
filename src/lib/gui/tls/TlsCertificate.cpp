@@ -60,7 +60,7 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
     deskflow::FingerprintDatabase db;
     db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA1));
     db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA256));
-    db.write(QStringLiteral("%1/%2").arg(getTlsDir(), kFingerprintLocalFilename).toStdString());
+    db.write(QStringLiteral("%1/%2").arg(getTlsDir(), kTlsFingerprintLocalFilename).toStdString());
 
     qDebug("tls fingerprint generated");
     return true;
@@ -77,12 +77,12 @@ int TlsCertificate::getCertKeyLength(const QString &path)
 
 QString TlsCertificate::getCertificatePath() const
 {
-  return QStringLiteral("%1/%2/%3").arg(m_profileDir, kSslDir, kCertificateFilename);
+  return QStringLiteral("%1/%2/%3").arg(m_profileDir, kTlsDirName, kTlsCertificateFilename);
 }
 
 QString TlsCertificate::getTlsDir() const
 {
-  return QStringLiteral("%1/%2").arg(m_profileDir, kSslDir);
+  return QStringLiteral("%1/%2").arg(m_profileDir, kTlsDirName);
 }
 
 bool TlsCertificate::isCertificateValid(const QString &path)
