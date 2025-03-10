@@ -51,11 +51,11 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // 17 = minimizeToTray, obsolete
     "", // 18 = ActivateEmail, obsolete
     "loadFromSystemScope",
-    "groupServerChecked", // kServerGroupChecked
-    "",                   // 21 = use external config moved to deskflow settings
-    "",                   // 22 config file moved to dekflow settings
+    "", // kServerGroupChecked
+    "", // 21 = use external config moved to deskflow settings
+    "", // 22 config file moved to dekflow settings
     "useInternalConfig",
-    "groupClientChecked",
+    "", // Client groupchecked
     "", // 25 server host name moved to deskflow settings
     "", // 26 cert path moved to deskflow settings
     "", // 27 key length Moved to Deskflow settings
@@ -106,9 +106,7 @@ void AppConfig::recallFromCurrentScope()
 {
   using enum Setting;
 
-  m_ServerGroupChecked = getFromCurrentScope(kServerGroupChecked, m_ServerGroupChecked).toBool();
   m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
-  m_ClientGroupChecked = getFromCurrentScope(kClientGroupChecked, m_ClientGroupChecked).toBool();
 }
 
 void AppConfig::commit()
@@ -118,8 +116,6 @@ void AppConfig::commit()
   qDebug("committing app config");
 
   saveToAllScopes(kLoadSystemSettings, m_LoadFromSystemScope);
-  saveToAllScopes(kClientGroupChecked, m_ClientGroupChecked);
-  saveToAllScopes(kServerGroupChecked, m_ServerGroupChecked);
 
   if (isActiveScopeWritable()) {
     setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
@@ -282,19 +278,9 @@ IConfigScopes &AppConfig::scopes() const
   return m_Scopes;
 }
 
-bool AppConfig::serverGroupChecked() const
-{
-  return m_ServerGroupChecked;
-}
-
 bool AppConfig::useInternalConfig() const
 {
   return m_UseInternalConfig;
-}
-
-bool AppConfig::clientGroupChecked() const
-{
-  return m_ClientGroupChecked;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -305,19 +291,9 @@ bool AppConfig::clientGroupChecked() const
 // Begin setters
 ///////////////////////////////////////////////////////////////////////////////
 
-void AppConfig::setServerGroupChecked(bool newValue)
-{
-  m_ServerGroupChecked = newValue;
-}
-
 void AppConfig::setUseInternalConfig(bool newValue)
 {
   m_UseInternalConfig = newValue;
-}
-
-void AppConfig::setClientGroupChecked(bool newValue)
-{
-  m_ClientGroupChecked = newValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////

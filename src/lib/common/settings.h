@@ -44,6 +44,7 @@ public:
   };
   struct Core
   {
+    inline static const auto CoreMode = QStringLiteral("core/coreMode");
     inline static const auto ElevateMode = QStringLiteral("core/elevateMode");
     inline static const auto Interface = QStringLiteral("core/interface");
     inline static const auto LastVersion = QStringLiteral("core/lastVersion");
@@ -113,6 +114,14 @@ public:
   };
   Q_ENUM(ElevateMode)
 
+  enum CoreMode
+  {
+    None,
+    Client,
+    Server
+  };
+  Q_ENUM(CoreMode)
+
   // clang-format off
   inline static const QStringList logLevels = {
      QStringLiteral("INFO")
@@ -126,6 +135,7 @@ public:
     , Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
+    , Settings::Core::CoreMode
     , Settings::Core::ElevateMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion

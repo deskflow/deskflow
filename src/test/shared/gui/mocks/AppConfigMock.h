@@ -25,7 +25,6 @@ public:
   MOCK_METHOD(deskflow::gui::IConfigScopes &, scopes, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeSystem, (), (const, override));
   MOCK_METHOD(bool, isActiveScopeWritable, (), (const, override));
-  MOCK_METHOD(bool, clientGroupChecked, (), (const, override));
 
   //
   // Setters

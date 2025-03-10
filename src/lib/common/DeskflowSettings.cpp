@@ -124,6 +124,9 @@ QVariant DeskflowSettings::defaultValue(const QString &key)
   if (key == Settings::Core::ProcessMode)
     return QVariant::fromValue(Settings::defaultProcessMode);
 
+  if (key == Settings::Core::CoreMode)
+    return QVariant::fromValue(Settings::CoreMode::None);
+
   return QVariant();
 }
 

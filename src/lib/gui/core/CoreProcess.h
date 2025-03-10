@@ -50,12 +50,6 @@ public:
     QProcessProxy m_process;
   };
 
-  enum class Mode
-  {
-    None,
-    Client,
-    Server
-  };
   enum class Error
   {
     AddressMissing,
@@ -88,7 +82,7 @@ public:
   void clearSettings();
 
   // getters
-  Mode mode() const
+  Settings::CoreMode mode() const
   {
     return m_mode;
   }
@@ -114,7 +108,7 @@ public:
   {
     m_address = address.trimmed();
   }
-  void setMode(Mode mode)
+  void setMode(Settings::CoreMode mode)
   {
     m_mode = mode;
   }
@@ -163,7 +157,7 @@ private:
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
-  Mode m_mode = Mode::None;
+  Settings::CoreMode m_mode = Settings::CoreMode::None;
   QMutex m_processMutex;
   QString m_secureSocketVersion = "";
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;

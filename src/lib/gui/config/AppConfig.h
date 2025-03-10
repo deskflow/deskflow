@@ -58,33 +58,33 @@ private:
     // 17 = minimize to tray, obsolete
     // 18 = activate email, obsolete
     kLoadSystemSettings = 19,
-    kServerGroupChecked = 20,
-    // 21 = use external config moved to deskflow settings
-    // 22 = k config file moved to deskflow settings
+    // kServerGroupChecked = 20,
+    //  21 = use external config moved to deskflow settings
+    //  22 = k config file moved to deskflow settings
     kUseInternalConfig = 23,
-    kClientGroupChecked = 24,
-    // 25 = serverHostName moved to deskflow settings
-    // 26 = kTlsCertPath moved to deskflow settings
-    // 27 = tlsKeyLength Moved to deskflow settings
-    // 28 = Prevent Sleep moved to deskflow settings
-    // 29 = language Sync moved to deskflow settings
-    // 30 = InvertScrollDirection moved to deskflow settings
-    // 31 = guid, obsolete
-    // 32 = license registry url, obsolete
-    // 33 = license next check, obsolete
-    // 34 = InvertConnection, obsolete
-    // 35 = client-host-mode, obsolete
-    // 36 = server-client-mode, obsolete
-    // kEnableService = 37, moved to deskflow settings
-    // 38, close to tray moved to deskflow settings
-    // 39 window size moved to deskflow settings
-    // 40 window position moved to deskflow settings
-    // 41 = show dev thanks, obsolete
-    // 42, close reminder moved to deskflow settings
-    // 43 = Enable Update Check,
-    // 44 = LogExpanded, Moved to deskflow settings
-    // 45 = Colorful Icon, Moved to deskflow settings
-    // kRequireClientCert = 46 Moved to deskflow settings
+    // kClientGroupChecked = 24,
+    //  25 = serverHostName moved to deskflow settings
+    //  26 = kTlsCertPath moved to deskflow settings
+    //  27 = tlsKeyLength Moved to deskflow settings
+    //  28 = Prevent Sleep moved to deskflow settings
+    //  29 = language Sync moved to deskflow settings
+    //  30 = InvertScrollDirection moved to deskflow settings
+    //  31 = guid, obsolete
+    //  32 = license registry url, obsolete
+    //  33 = license next check, obsolete
+    //  34 = InvertConnection, obsolete
+    //  35 = client-host-mode, obsolete
+    //  36 = server-client-mode, obsolete
+    //  kEnableService = 37, moved to deskflow settings
+    //  38, close to tray moved to deskflow settings
+    //  39 window size moved to deskflow settings
+    //  40 window position moved to deskflow settings
+    //  41 = show dev thanks, obsolete
+    //  42, close reminder moved to deskflow settings
+    //  43 = Enable Update Check,
+    //  44 = LogExpanded, Moved to deskflow settings
+    //  45 = Colorful Icon, Moved to deskflow settings
+    //  kRequireClientCert = 46 Moved to deskflow settings
   };
 
 public:
@@ -110,22 +110,18 @@ public:
   IConfigScopes &scopes() const override;
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
-  bool clientGroupChecked() const override;
 
   //
   // Getters (new methods)
   //
 
-  bool serverGroupChecked() const;
   bool useInternalConfig() const;
 
   //
   // Setters (new methods)
   //
 
-  void setServerGroupChecked(bool);
   void setUseInternalConfig(bool);
-  void setClientGroupChecked(bool);
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
@@ -183,9 +179,7 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  bool m_ServerGroupChecked = false;
   bool m_UseInternalConfig = false;
-  bool m_ClientGroupChecked = false;
   bool m_LoadFromSystemScope = false;
 
   deskflow::gui::IConfigScopes &m_Scopes;
