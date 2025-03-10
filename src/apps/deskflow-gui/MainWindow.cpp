@@ -502,7 +502,7 @@ void MainWindow::openGetNewVersionUrl() const
 
 void MainWindow::openSettings()
 {
-  auto dialog = SettingsDialog(this, m_appConfig, m_serverConfig, m_coreProcess);
+  auto dialog = SettingsDialog(this, m_serverConfig, m_coreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
     m_configScopes.save();
