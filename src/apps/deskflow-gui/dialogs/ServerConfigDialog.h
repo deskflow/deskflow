@@ -25,7 +25,7 @@ class ServerConfigDialog : public QDialog
   Q_OBJECT
 
 public:
-  ServerConfigDialog(QWidget *parent, ServerConfig &config, AppConfig &appConfig);
+  ServerConfigDialog(QWidget *parent, ServerConfig &config);
   ~ServerConfigDialog();
   bool addClient(const QString &clientName);
 
@@ -93,10 +93,6 @@ protected:
   {
     return m_ScreenSetupModel;
   }
-  AppConfig &appConfig()
-  {
-    return m_appConfig;
-  }
 
 private:
   std::unique_ptr<Ui::ServerConfigDialog> ui;
@@ -106,7 +102,6 @@ private:
   QString m_OriginalServerConfigUsesExternalFile;
   ScreenSetupModel m_ScreenSetupModel;
   QString m_Message;
-  AppConfig &m_appConfig;
 
 private slots:
   void onChange();
