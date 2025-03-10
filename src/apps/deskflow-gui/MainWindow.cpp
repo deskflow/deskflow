@@ -616,7 +616,7 @@ void MainWindow::updateSecurityIcon(bool visible)
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
   m_serverConfigDialogState.setVisible(true);
-  ServerConfigDialog dialog(this, m_serverConfig, m_appConfig);
+  ServerConfigDialog dialog(this, m_serverConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_coreProcess.restart();
   }
@@ -1075,7 +1075,7 @@ void MainWindow::hide()
 
 void MainWindow::showConfigureServer(const QString &message)
 {
-  ServerConfigDialog dialog(this, serverConfig(), m_appConfig);
+  ServerConfigDialog dialog(this, serverConfig());
   dialog.message(message);
   if ((dialog.exec() == QDialog::Accepted) && m_coreProcess.isStarted()) {
     m_coreProcess.restart();

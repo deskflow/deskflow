@@ -22,7 +22,7 @@
 using enum ScreenConfig::SwitchCorner;
 using ServerProtocol = synergy::gui::ServerProtocol;
 
-ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, AppConfig &appConfig)
+ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ServerConfigDialog>()},
       m_OriginalServerConfig(config),
@@ -30,8 +30,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config, Ap
       m_OriginalServerConfigUsesExternalFile(config.configFile()),
       m_ServerConfig(config),
       m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
-      m_Message(""),
-      m_appConfig(appConfig)
+      m_Message("")
 {
   ui->setupUi(this);
 
