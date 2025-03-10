@@ -46,6 +46,7 @@ enum
 namespace deskflow::common {
 
 const auto kCloseEventName = "Global\\DeskflowClose";
+const auto kSendSasEventName = "Global\\DeskflowSendSAS";
 
-}
+} // namespace deskflow::common
 #endif
