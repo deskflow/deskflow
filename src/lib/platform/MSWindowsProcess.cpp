@@ -122,7 +122,7 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   LOG_DEBUG("shutting down process %d", pid);
 
   LOG_DEBUG("sending close event to close process gracefully");
-  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, deskflow::common::kCloseEventName);
+  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, kCloseEventName);
   if (hCloseEvent != nullptr) { // NOSONAR -- Readability
     SetEvent(hCloseEvent);
     CloseHandle(hCloseEvent);
