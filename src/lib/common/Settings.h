@@ -76,6 +76,7 @@ public:
   struct Server
   {
     inline static const auto Binary = QStringLiteral("server/binary");
+    inline static const auto ConfigVisible = QStringLiteral("server/configVisible");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
   };
@@ -163,37 +164,38 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Client::Binary
-    , Client::InvertScrollDirection
-    , Client::LanguageSync
-    , Client::RemoteHost
-    , Core::CoreMode
-    , Core::ElevateMode
-    , Core::Interface
-    , Core::LastVersion
-    , Core::Port
-    , Core::PreventSleep
-    , Core::ProcessMode
-    , Core::Scope
-    , Core::ScreenName
-    , Core::StartedBefore
-    , Log::File
-    , Log::Level
-    , Log::ToFile
-    , Gui::Autohide
-    , Gui::AutoUpdateCheck
-    , Gui::CloseReminder
-    , Gui::CloseToTray
-    , Gui::LogExpanded
-    , Gui::SymbolicTrayIcon
-    , Gui::WindowGeometry
-    , Security::Certificate
-    , Security::CheckPeers
-    , Security::KeySize
-    , Security::TlsEnabled
-    , Server::Binary
-    , Server::ExternalConfig
-    , Server::ExternalConfigFile
+      Settings::Client::Binary
+    , Settings::Client::InvertScrollDirection
+    , Settings::Client::LanguageSync
+    , Settings::Client::RemoteHost
+    , Settings::Core::CoreMode
+    , Settings::Core::ElevateMode
+    , Settings::Core::Interface
+    , Settings::Core::LastVersion
+    , Settings::Core::Port
+    , Settings::Core::PreventSleep
+    , Settings::Core::ProcessMode
+    , Settings::Core::Scope
+    , Settings::Core::ScreenName
+    , Settings::Core::StartedBefore
+    , Settings::Log::File
+    , Settings::Log::Level
+    , Settings::Log::ToFile
+    , Settings::Gui::Autohide
+    , Settings::Gui::AutoUpdateCheck
+    , Settings::Gui::CloseReminder
+    , Settings::Gui::CloseToTray
+    , Settings::Gui::LogExpanded
+    , Settings::Gui::SymbolicTrayIcon
+    , Settings::Gui::WindowGeometry
+    , Settings::Security::Certificate
+    , Settings::Security::CheckPeers
+    , Settings::Security::KeySize
+    , Settings::Security::TlsEnabled
+    , Settings::Server::Binary
+    , Settings::Server::ConfigVisible
+    , Settings::Server::ExternalConfig
+    , Settings::Server::ExternalConfigFile
   };
   // clang-format on
 

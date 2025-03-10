@@ -65,7 +65,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_appConfig(appConfig),
       m_serverConfig(appConfig, *this),
       m_coreProcess(m_serverConfig),
-      m_serverConnection(this, m_serverConfig, m_serverConfigDialogState),
+      m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
       m_tlsUtility(this),
       m_trayIcon{new QSystemTrayIcon(this)},
@@ -615,12 +615,12 @@ void MainWindow::updateSecurityIcon(bool visible)
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
-  m_serverConfigDialogState.setVisible(true);
+  Settings::setValue(Settings::Server::ConfigVisible, true);
   ServerConfigDialog dialog(this, m_serverConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_coreProcess.restart();
   }
-  m_serverConfigDialogState.setVisible(false);
+  Settings::setValue(Settings::Server::ConfigVisible, false);
 }
 
 //////////////////////////////////////////////////////////////////////////////

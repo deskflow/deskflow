@@ -7,8 +7,9 @@
 #include "ServerConnection.h"
 
 #include "ServerMessage.h"
+
 #include "common/Settings.h"
-#include "gui/config/ServerConfigDialogState.h"
+
 #include "messages.h"
 
 #include <QMessageBox>
@@ -31,13 +32,9 @@ messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
 // ServerConnection
 //
 
-ServerConnection::ServerConnection(
-    QWidget *parent, IServerConfig &serverConfig, const config::ServerConfigDialogState &serverConfigDialogState,
-    std::shared_ptr<Deps> deps
-)
+ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
     : m_pParent(parent),
       m_serverConfig(serverConfig),
-      m_serverConfigDialogState(serverConfigDialogState),
       m_pDeps(deps)
 {
 }
@@ -55,7 +52,7 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (m_serverConfigDialogState.isVisible()) {
+  if (Settings::value(Settings::Server::ConfigVisible).toBool()) {
     qDebug("server config dialog visible, skipping new client prompt");
     return;
   }
