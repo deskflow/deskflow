@@ -752,38 +752,23 @@ bool MSWindowsKeyState::fakeKeyRepeat(
 
 bool MSWindowsKeyState::fakeCtrlAltDel()
 {
-  // to fake ctrl+alt+del on the NT family we broadcast a suitable
-  // hotkey to all windows on the winlogon desktop.  however, the
-  // current thread must be on that desktop to do the broadcast
-  // and we can't switch just any thread because some own windows
-  // or hooks.  so start a new thread to do the real work.
+  // We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del as of Windows Vista.
+  // The SoftwareSASGeneration registry key must be set for this to work:
+  //   Set-ItemProperty -Path HKLM:Software\Microsoft\Windows\CurrentVersion\Policies\System
+  //     -Name SoftwareSASGeneration -Value 1
+  //
+  // History: It used to be possible to use `PostMessage` to send `MOD_CONTROL | MOD_ALT, VK_DELETE`
+  // as a backup but this ability was removed by Microsoft for security in favor of requiring the
+  // `SendSAS` event to be used, which makes DoS and social engineering attacks more difficult.
   HANDLE hEvtSendSas = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS");
   if (hEvtSendSas) {
-    LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to "
-                    "simulate ctrl+alt+del"));
+    LOG_DEBUG("found SendSAS event, simulating ctrl+alt+del");
     SetEvent(hEvtSendSas);
     CloseHandle(hEvtSendSas);
+    return true;
   } else {
-    Thread cad(new FunctionJob(&MSWindowsKeyState::ctrlAltDelThread));
-    cad.wait();
-  }
-
-  return true;
-}
-
-void MSWindowsKeyState::ctrlAltDelThread(void *)
-{
-  // get the Winlogon desktop at whatever privilege we can
-  HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
-  if (desk != NULL) {
-    if (SetThreadDesktop(desk)) {
-      PostMessage(HWND_BROADCAST, WM_HOTKEY, 0, MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
-    } else {
-      LOG((CLOG_DEBUG "can't switch to Winlogon desk: %d", GetLastError()));
-    }
-    CloseDesktop(desk);
-  } else {
-    LOG((CLOG_DEBUG "can't open Winlogon desk: %d", GetLastError()));
+    LOG_ERR("couldn't find SendSAS event, unable to simulate ctrl+alt+del");
+    return false;
   }
 }
 

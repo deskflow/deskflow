@@ -171,9 +171,6 @@ protected:
 private:
   using GroupList = std::vector<HKL>;
 
-  // send ctrl+alt+del hotkey event on NT family
-  static void ctrlAltDelThread(void *);
-
   bool getGroups(GroupList &) const;
   void setWindowGroup(int32_t group);
 
