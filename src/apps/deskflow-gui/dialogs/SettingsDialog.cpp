@@ -21,12 +21,9 @@
 
 using namespace deskflow::gui;
 
-SettingsDialog::SettingsDialog(
-    QWidget *parent, AppConfig &appConfig, const IServerConfig &serverConfig, const CoreProcess &coreProcess
-)
+SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess)
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
-      m_appConfig(appConfig),
       m_serverConfig(serverConfig),
       m_coreProcess(coreProcess),
       m_tlsUtility(this)
@@ -46,7 +43,7 @@ SettingsDialog::SettingsDialog(
   ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
-  m_wasOriginallySystemScope = m_appConfig.isActiveScopeSystem();
+  m_wasOriginallySystemScope = DeskflowSettings::isSystemScope();
   updateControls();
 
   adjustSize();
@@ -117,11 +114,11 @@ void SettingsDialog::setLogToFile(bool logToFile)
 
 void SettingsDialog::setSystemScope(bool systemScope)
 {
-  m_appConfig.setLoadFromSystemScope(systemScope);
+  DeskflowSettings::setScope(systemScope);
   loadFromConfig();
   updateControls();
 
-  if (isVisible() && !m_appConfig.isActiveScopeWritable()) {
+  if (isVisible() && DeskflowSettings::isWritable()) {
     showReadOnlyMessage();
   }
 }
@@ -134,15 +131,14 @@ void SettingsDialog::showEvent(QShowEvent *event)
 
 void SettingsDialog::showReadOnlyMessage()
 {
-  if (m_appConfig.isActiveScopeWritable())
+  if (DeskflowSettings::isWritable())
     return;
-  const auto activeScopeFilename = m_appConfig.scopes().activeFilePath();
-  messages::showReadOnlySettings(this, activeScopeFilename);
+  messages::showReadOnlySettings(this, DeskflowSettings::settingsFile());
 }
 
 void SettingsDialog::accept()
 {
-  m_appConfig.setLoadFromSystemScope(ui->rbScopeSystem->isChecked());
+  DeskflowSettings::setScope(ui->rbScopeSystem->isChecked());
   DeskflowSettings::setValue(Settings::Core::Port, ui->sbPort->value());
   DeskflowSettings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   DeskflowSettings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
@@ -174,8 +170,8 @@ void SettingsDialog::accept()
 void SettingsDialog::reject()
 {
   // restore original system scope value on reject.
-  if (m_appConfig.isActiveScopeSystem() != m_wasOriginallySystemScope) {
-    m_appConfig.setLoadFromSystemScope(m_wasOriginallySystemScope);
+  if (DeskflowSettings::isSystemScope() != m_wasOriginallySystemScope) {
+    DeskflowSettings::setScope(m_wasOriginallySystemScope);
   }
 
   QDialog::reject();
@@ -198,7 +194,7 @@ void SettingsDialog::loadFromConfig()
 
   ui->cbAutoUpdate->setChecked(DeskflowSettings::value(Settings::Gui::Autohide).toBool());
 
-  if (m_appConfig.isActiveScopeSystem()) {
+  if (DeskflowSettings::isSystemScope()) {
     ui->rbScopeSystem->setChecked(true);
   } else {
     ui->rbScopeUser->setChecked(true);
@@ -229,7 +225,7 @@ void SettingsDialog::updateTlsControls()
   }
 
   const auto tlsEnabled = DeskflowSettings::value(Settings::Security::TlsEnabled).toBool();
-  const auto writable = m_appConfig.isActiveScopeWritable();
+  const auto writable = DeskflowSettings::isWritable();
   const auto enabled = writable && tlsEnabled;
 
   ui->lineTlsCertPath->setText(certificate);
@@ -246,7 +242,7 @@ void SettingsDialog::updateTlsControls()
 
 void SettingsDialog::updateTlsControlsEnabled()
 {
-  const auto writable = m_appConfig.isActiveScopeWritable();
+  const auto writable = DeskflowSettings::isWritable();
   const auto clientMode =
       DeskflowSettings::value(Settings::Core::CoreMode).value<Settings::CoreMode>() == Settings::CoreMode::Client;
   const auto tlsChecked = ui->groupSecurity->isChecked();
@@ -288,7 +284,7 @@ void SettingsDialog::updateControls()
   ui->groupService->setTitle("Service (Windows only)");
 #endif
 
-  const bool writable = m_appConfig.isActiveScopeWritable();
+  const bool writable = DeskflowSettings::isWritable();
   const bool serviceChecked = ui->cbServiceEnabled->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 
