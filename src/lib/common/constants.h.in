@@ -47,7 +47,7 @@ const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
 // clang-format on
 
 const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
-const auto kCloseEventName = "Global\\DeskflowClose";
-const auto kSendSasEventName = "Global\\DeskflowSendSAS";
+const auto kCloseEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
+const auto kSendSasEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
 
 #endif
