@@ -81,11 +81,6 @@ private:
   void outputLoop(void *);
 
   /**
-   * @brief Stops any core processes which were not started by the watchdog.
-   */
-  void shutdownExistingProcesses();
-
-  /**
    * @brief Duplicates the process token for the given process.
    *
    * Required for starting a process in the user session; when we start an elevated process
@@ -126,11 +121,6 @@ private:
   void initSasFunc();
 
   /**
-   * @brief Send a SAS (Secure Attention Sequence) for Ctrl+Alt+Del emulation.
-   */
-  void sendSas() const;
-
-  /**
    * @brief Re-run the process to get the active desktop name.
    *
    * It is necessary to run a utility process because the daemon runs in session 0, which does not
@@ -141,16 +131,29 @@ private:
   std::string runActiveDesktopUtility();
 
   /**
+   * @brief Allows the SendSAS function to be called from other processes.
+   *
+   * SendSAS sends a SAS (Secure Attention Sequence) for Ctrl+Alt+Del emulation.
+   */
+  void sasLoop(void *);
+
+  /**
    * @brief Convert the process state enum to a string (useful for logging).
    */
   static std::string processStateToString(ProcessState state);
 
+  /**
+   * @brief Stops any core processes which were not started by the watchdog.
+   */
+  static void shutdownExistingProcesses();
+
 private:
-  Thread *m_thread = nullptr;
   bool m_running = true;
+  std::unique_ptr<Thread> m_mainThread;
+  std::unique_ptr<Thread> m_outputThread;
+  std::unique_ptr<Thread> m_sasThread;
   HANDLE m_outputWritePipe = nullptr;
   HANDLE m_outputReadPipe = nullptr;
-  Thread *m_outputThread = nullptr;
   bool m_elevateProcess = false;
   MSWindowsSession m_session;
   int m_startFailures = 0;

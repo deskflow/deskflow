@@ -41,7 +41,7 @@ void OSXEventQueueBuffer::init()
 
 void OSXEventQueueBuffer::waitForEvent(double timeout)
 {
-  std::unique_lock<std::mutex> lock(m_mutex);
+  std::unique_lock lock(m_mutex);
   if (m_dataQueue.empty()) {
     auto duration = std::chrono::duration<double>(timeout);
     LOG_DEBUG2("waiting for event, timeout: %f seconds", timeout);
@@ -53,7 +53,7 @@ void OSXEventQueueBuffer::waitForEvent(double timeout)
 
 IEventQueueBuffer::Type OSXEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
-  std::unique_lock<std::mutex> lock(m_mutex);
+  std::unique_lock lock(m_mutex);
   if (m_dataQueue.empty()) {
     LOG_DEBUG2("no events in queue");
     return kNone;
@@ -71,7 +71,7 @@ bool OSXEventQueueBuffer::addEvent(uint32_t dataID)
 {
   // Use GCD to dispatch event addition on the main queue
   dispatch_async(dispatch_get_main_queue(), ^{
-    std::lock_guard<std::mutex> lock(this->m_mutex);
+    std::lock_guard lock(this->m_mutex);
     LOG_DEBUG2("adding user event with dataID: %u", dataID);
     this->m_dataQueue.push(dataID);
     this->m_cond.notify_one();
@@ -84,7 +84,7 @@ bool OSXEventQueueBuffer::addEvent(uint32_t dataID)
 
 bool OSXEventQueueBuffer::isEmpty() const
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::lock_guard lock(m_mutex);
   bool empty = m_dataQueue.empty();
   LOG_DEBUG2("queue is %s", empty ? "empty" : "not empty");
   return empty;

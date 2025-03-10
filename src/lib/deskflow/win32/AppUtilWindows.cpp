@@ -13,7 +13,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/log_outputters.h"
-#include "common/common.h"
+#include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Screen.h"
@@ -40,7 +40,7 @@ AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMo
   // Waiting for the event loop start prevents race condition in fast fail scenario,
   // where the dtor is called just before the event loop starts.
   LOG_DEBUG("waiting for event thread to start");
-  std::unique_lock<std::mutex> lock(m_eventThreadStartedMutex);
+  std::unique_lock lock(m_eventThreadStartedMutex);
   m_eventThreadStartedCond.wait(lock, [this] { return m_eventThreadRunning; });
   LOG_DEBUG("event thread started");
 }
@@ -259,7 +259,7 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
 
 void AppUtilWindows::eventLoop()
 {
-  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, deskflow::common::kCloseEventName);
+  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, kCloseEventName);
   if (!hCloseEvent) {
     LOG_CRIT("failed to create event for windows event loop");
     throw XArch(new XArchEvalWindows());
@@ -267,7 +267,7 @@ void AppUtilWindows::eventLoop()
 
   LOG_DEBUG("windows event loop running");
   {
-    std::lock_guard<std::mutex> lock(m_eventThreadStartedMutex);
+    std::lock_guard lock(m_eventThreadStartedMutex);
     m_eventThreadRunning = true;
   }
   m_eventThreadStartedCond.notify_one();

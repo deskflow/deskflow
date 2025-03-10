@@ -1,19 +1,17 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2022, 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "platform/MSWindowsKeyState.h"
 
-#include "arch/win32/ArchMiscWindows.h"
-#include "base/FunctionJob.h"
+#include "arch/win32/XArchWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
-#include "mt/Thread.h"
 #include "platform/MSWindowsDesks.h"
+#include "platform/MSWindowsHandle.h"
 
 // extended mouse buttons
 #if !defined(VK_XBUTTON1)
@@ -750,41 +748,39 @@ bool MSWindowsKeyState::fakeKeyRepeat(
   return KeyState::fakeKeyRepeat(id, mask, count, button, lang);
 }
 
+// We must use SendSAS (Secure Attention Sequence) to simulate Ctrl+Alt+Del (since Windows Vista).
+//
+// According to the MS docs:
+// > To successfully call the SendSAS function, an application must either be running as a
+// > service or have the uiAccess attribute of the requestedExecutionLevel element set to "true"
+// > in its application manifest.
+//
+// Since the daemon is running as a service, we can use it to send the event.
+// We do this by calling `SetEvent` on the `SendSAS` event (created by the daemon).
+//
+// History: It used to be possible to use `PostMessage` to send `MOD_CONTROL | MOD_ALT, VK_DELETE`
+// as a backup but this ability was removed by Microsoft for security in favor of requiring the
+// `SendSAS` event to be used, which makes DoS and social engineering attacks more difficult.
 bool MSWindowsKeyState::fakeCtrlAltDel()
 {
-  // to fake ctrl+alt+del on the NT family we broadcast a suitable
-  // hotkey to all windows on the winlogon desktop.  however, the
-  // current thread must be on that desktop to do the broadcast
-  // and we can't switch just any thread because some own windows
-  // or hooks.  so start a new thread to do the real work.
-  HANDLE hEvtSendSas = OpenEvent(EVENT_MODIFY_STATE, FALSE, "Global\\SendSAS");
-  if (hEvtSendSas) {
-    LOG((CLOG_DEBUG "found the SendSAS event - signaling my launcher to "
-                    "simulate ctrl+alt+del"));
-    SetEvent(hEvtSendSas);
-    CloseHandle(hEvtSendSas);
-  } else {
-    Thread cad(new FunctionJob(&MSWindowsKeyState::ctrlAltDelThread));
-    cad.wait();
+  // The daemon creates this event with default permissions, which means this process must be
+  // elevated to be able to open it. If not elevated, an access denied error will be returned.
+  MSWindowsHandle sendSasEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName));
+  if (!sendSasEvent.get()) {
+    XArchEvalWindows error;
+    LOG_ERR("couldn't open SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
+    return false;
+  }
+
+  // Note: We don't directly call SendSAS, but rather we tell the daemon to do it by setting the event.
+  LOG_DEBUG("setting SAS event to simulate ctrl+alt+del");
+  if (!SetEvent(sendSasEvent.get())) {
+    XArchEvalWindows error;
+    LOG_ERR("failed to set SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
+    return false;
   }
 
   return true;
-}
-
-void MSWindowsKeyState::ctrlAltDelThread(void *)
-{
-  // get the Winlogon desktop at whatever privilege we can
-  HDESK desk = OpenDesktop("Winlogon", 0, FALSE, MAXIMUM_ALLOWED);
-  if (desk != NULL) {
-    if (SetThreadDesktop(desk)) {
-      PostMessage(HWND_BROADCAST, WM_HOTKEY, 0, MAKELPARAM(MOD_CONTROL | MOD_ALT, VK_DELETE));
-    } else {
-      LOG((CLOG_DEBUG "can't switch to Winlogon desk: %d", GetLastError()));
-    }
-    CloseDesktop(desk);
-  } else {
-    LOG((CLOG_DEBUG "can't open Winlogon desk: %d", GetLastError()));
-  }
 }
 
 KeyModifierMask MSWindowsKeyState::pollActiveModifiers() const
