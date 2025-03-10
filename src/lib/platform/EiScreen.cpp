@@ -719,7 +719,7 @@ void EiScreen::handle_portal_session_closed(const Event &event, void *)
 
 void EiScreen::handleSystemEvent(const Event &sysevent, void *)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
+  std::lock_guard lock(mutex_);
   bool disconnected = false;
 
   // Only one ei_dispatch per system event, see the comment in

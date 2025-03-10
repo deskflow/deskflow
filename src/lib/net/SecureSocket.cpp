@@ -234,7 +234,7 @@ TCPSocket::EJobResult SecureSocket::doWrite()
 
 int SecureSocket::secureRead(void *buffer, int size, int &read)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   if (m_ssl->m_ssl != NULL) {
     LOG((CLOG_DEBUG2 "reading secure socket"));
@@ -261,7 +261,7 @@ int SecureSocket::secureRead(void *buffer, int size, int &read)
 
 int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   if (m_ssl->m_ssl != NULL) {
     LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
@@ -294,7 +294,7 @@ bool SecureSocket::isSecureReady()
 
 void SecureSocket::initSsl(bool server)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   m_ssl = new Ssl();
   m_ssl->m_context = NULL;
@@ -305,7 +305,7 @@ void SecureSocket::initSsl(bool server)
 
 bool SecureSocket::loadCertificates(std::string &filename)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   if (filename.empty()) {
     SslLogger::logError("tls certificate is not specified");
@@ -396,7 +396,7 @@ void SecureSocket::createSSL()
 
 void SecureSocket::freeSSL()
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   isFatal(true);
   // take socket from multiplexer ASAP otherwise the race condition
@@ -421,7 +421,7 @@ void SecureSocket::freeSSL()
 
 int SecureSocket::secureAccept(int socket)
 {
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   createSSL();
 
@@ -489,7 +489,7 @@ int SecureSocket::secureConnect(int socket)
     return -1;
   }
 
-  std::lock_guard<std::mutex> ssl_lock{ssl_mutex_};
+  std::lock_guard ssl_lock{ssl_mutex_};
 
   createSSL();
 
