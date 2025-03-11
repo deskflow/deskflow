@@ -61,7 +61,7 @@ private:
     // kServerGroupChecked = 20,
     //  21 = use external config moved to deskflow settings
     //  22 = k config file moved to deskflow settings
-    kUseInternalConfig = 23,
+    //  23 kUseInternalConfig removed
     // kClientGroupChecked = 24,
     //  25 = serverHostName moved to deskflow settings
     //  26 = kTlsCertPath moved to deskflow settings
@@ -111,18 +111,6 @@ public:
   bool isActiveScopeWritable() const override;
   bool isActiveScopeSystem() const override;
 
-  //
-  // Getters (new methods)
-  //
-
-  bool useInternalConfig() const;
-
-  //
-  // Setters (new methods)
-  //
-
-  void setUseInternalConfig(bool);
-
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
   ///             True - This will set the variable and load the global scope
@@ -136,7 +124,6 @@ private:
   void recall();
   void recallScreenName();
   void recallFromAllScopes();
-  void recallFromCurrentScope();
 
   /**
    * @brief Loads a setting if it exists, otherwise returns `std::nullopt`
@@ -179,7 +166,6 @@ private:
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
-  bool m_UseInternalConfig = false;
   bool m_LoadFromSystemScope = false;
 
   deskflow::gui::IConfigScopes &m_Scopes;

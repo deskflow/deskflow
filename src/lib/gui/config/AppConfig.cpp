@@ -54,7 +54,7 @@ const char *const AppConfig::m_SettingsName[] = {
     "", // kServerGroupChecked
     "", // 21 = use external config moved to deskflow settings
     "", // 22 config file moved to dekflow settings
-    "useInternalConfig",
+    "", // 23 use internal config unsed, removed
     "", // Client groupchecked
     "", // 25 server host name moved to deskflow settings
     "", // 26 cert path moved to deskflow settings
@@ -93,20 +93,12 @@ void AppConfig::recall()
   qDebug("recalling app config");
 
   recallFromAllScopes();
-  recallFromCurrentScope();
 }
 
 void AppConfig::recallFromAllScopes()
 {
   using enum Setting;
   m_LoadFromSystemScope = findInAllScopes(kLoadSystemSettings, m_LoadFromSystemScope).toBool();
-}
-
-void AppConfig::recallFromCurrentScope()
-{
-  using enum Setting;
-
-  m_UseInternalConfig = getFromCurrentScope(kUseInternalConfig, m_UseInternalConfig).toBool();
 }
 
 void AppConfig::commit()
@@ -116,10 +108,6 @@ void AppConfig::commit()
   qDebug("committing app config");
 
   saveToAllScopes(kLoadSystemSettings, m_LoadFromSystemScope);
-
-  if (isActiveScopeWritable()) {
-    setInCurrentScope(kUseInternalConfig, m_UseInternalConfig);
-  }
 }
 
 void AppConfig::determineScope()
@@ -145,7 +133,7 @@ void AppConfig::determineScope()
   // ...failing that, check the system scope instead to see if an arbitrary
   // required setting is present. if it is, then we can assume that the system
   // scope should be used.
-  else if (m_Scopes.scopeContains(settingName(Setting::kUseInternalConfig), ConfigScopes::Scope::System)) {
+  else if (m_Scopes.scopeContains(settingName(Setting::kLoadSystemSettings), ConfigScopes::Scope::System)) {
     qDebug("system settings scope contains screen name, using system scope");
     setLoadFromSystemScope(true);
   }
@@ -238,7 +226,7 @@ void AppConfig::loadScope(ConfigScopes::Scope scope)
 
   // only signal ready if there is at least one setting in the required scope.
   // this prevents the current settings from being set back to default.
-  if (m_Scopes.scopeContains(settingName(Setting::kUseInternalConfig), m_Scopes.activeScope())) {
+  if (m_Scopes.scopeContains(settingName(Setting::kLoadSystemSettings), m_Scopes.activeScope())) {
     m_Scopes.signalReady();
   } else {
     qDebug("no screen name in scope, skipping");
@@ -278,24 +266,6 @@ IConfigScopes &AppConfig::scopes() const
   return m_Scopes;
 }
 
-bool AppConfig::useInternalConfig() const
-{
-  return m_UseInternalConfig;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // End getters
-///////////////////////////////////////////////////////////////////////////////
-
-///////////////////////////////////////////////////////////////////////////////
-// Begin setters
-///////////////////////////////////////////////////////////////////////////////
-
-void AppConfig::setUseInternalConfig(bool newValue)
-{
-  m_UseInternalConfig = newValue;
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// End setters
 ///////////////////////////////////////////////////////////////////////////////
