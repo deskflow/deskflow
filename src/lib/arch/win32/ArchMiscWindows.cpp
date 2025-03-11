@@ -17,6 +17,7 @@
 #include <Wtsapi32.h>
 
 #include <array>
+#include <filesystem>
 
 // See table of the compiler versions and the matching runtime DLL versions:
 // https://dev.to/yumetodo/list-of-mscver-and-mscfullver-8nd
@@ -30,6 +31,11 @@ const auto kRequiredMinor = 27;
 #pragma message("MSC version: " STRINGIFY(_MSC_VER))
 #error "Unsupported MSC version"
 #endif
+
+// Useful for debugging Windows specific bootstrapping code before the logging system is initialized.
+// This output can be viewed by attaching a Microsoft debugger or by using the DebugView program.
+#define MS_LOG_DEBUG(message, ...)                                                                                     \
+  OutputDebugStringA((deskflow::string::sprintf((s_binaryName + ": " + message + "\n").c_str(), __VA_ARGS__)).c_str())
 
 // parent process name for services in Vista
 #define SERVICE_LAUNCHER "services.exe"
@@ -45,10 +51,30 @@ const auto kRequiredMinor = 27;
 #endif
 using EXECUTION_STATE = DWORD;
 
-void errorMessageBox(const char *message, const char *title = "Fatal Error")
+//
+// Free functions
+//
+
+void errorMessageBox(const char *message, const char *title = "Fatal Error");
+
+std::string getBinaryName()
+{
+  std::array<char, MAX_PATH> buffer;
+  if (!GetModuleFileNameA(NULL, buffer.data(), MAX_PATH)) {
+    errorMessageBox("Failed to get binary name.");
+    abort();
+  }
+
+  return std::filesystem::path(buffer.data()).filename().string();
+}
+
+void errorMessageBox(const char *message, const char *title)
 {
   MessageBoxA(nullptr, message, title, MB_ICONERROR | MB_OK);
 }
+
+// Used by bootstrap logging to differentiate between daemon and client/server messages.
+const std::string s_binaryName = getBinaryName();
 
 //
 // ArchMiscWindows
@@ -550,42 +576,51 @@ HMODULE ArchMiscWindows::findLoadedModule(std::array<const char *, 2> moduleName
 void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not available
 {
   auto hModule = findLoadedModule({"vcruntime140.dll", "vcruntime140d.dll"});
-
-  if (!hModule) {
-    errorMessageBox("Could not find Microsoft Visual C++ Runtime.");
+  if (hModule == nullptr) {
+    errorMessageBox("Failed to find MSVC runtime DLL.");
     abort();
   }
+
+  MS_LOG_DEBUG("found msvc runtime dll, handle: %p", hModule);
 
   std::array<char, MAX_PATH> pathBuffer;
   const auto path = pathBuffer.data();
   if (!GetModuleFileNameA(hModule, path, MAX_PATH)) {
-    errorMessageBox("Failed to get the path of Microsoft Visual C++ Runtime.");
+    errorMessageBox("Failed to get path of MSVC runtime.");
     abort();
   }
+
+  MS_LOG_DEBUG("msvc runtime dll path: %s", path);
 
   DWORD handle;
   DWORD size = GetFileVersionInfoSizeA(path, &handle);
   if (size <= 0) {
-    errorMessageBox("Failed to get the version info size for Microsoft Visual C++ Runtime.");
+    errorMessageBox("Failed to get version info size for MSVC runtime.");
     abort();
   }
 
+  MS_LOG_DEBUG("msvc runtime dll version info size: %d", size);
+
   std::vector<BYTE> versionInfo(size);
   if (!GetFileVersionInfoA(path, handle, size, versionInfo.data())) {
-    errorMessageBox("Failed to get the file version info for Microsoft Visual C++ Runtime.");
+    errorMessageBox("Failed to get file version info for MSVC runtime.");
     abort();
   }
+
+  MS_LOG_DEBUG("msvc runtime dll version info ok, querying values");
 
   VS_FIXEDFILEINFO *fileInfo = nullptr;
   const auto lplpFileInfo = reinterpret_cast<void **>(&fileInfo); // NOSONAR - Idiomatic Win32
   if (UINT len = 0; !VerQueryValueA(versionInfo.data(), "\\", lplpFileInfo, &len)) {
-    errorMessageBox("Failed to get the version information for Microsoft Visual C++ Runtime.");
+    errorMessageBox("Failed to query file version info for MSVC runtime.");
     abort();
   }
 
   const auto currentMajor = HIWORD(fileInfo->dwFileVersionMS);
   const auto currentMinor = LOWORD(fileInfo->dwFileVersionMS);
   const auto currentBuild = HIWORD(fileInfo->dwFileVersionLS);
+
+  MS_LOG_DEBUG("msvc runtime dll version: %d.%d.%d", currentMajor, currentMinor, currentBuild);
 
   if (currentMajor < kRequiredMajor || currentMinor < kRequiredMinor) {
     const auto message = deskflow::string::sprintf(
