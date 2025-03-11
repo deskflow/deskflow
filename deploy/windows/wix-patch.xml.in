@@ -32,20 +32,42 @@
       <RegistrySearch
         Id="FindVCRedist"
         Root="HKLM"
-        Key="SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"
+        Key="SOFTWARE\Microsoft\VisualStudio\@REQUIRED_MSVC_RUNTIME_MAJOR@.0\VC\Runtimes\x64"
         Name="Installed"
         Type="raw" />
     </Property>
 
-    <CustomAction Id="Run_Deskflow" ExeCommand="Deskflow" FileRef="CM_FP_deskflow.exe" Return="asyncNoWait"/>
-    
+    <Binary Id="CustomDLL" SourceFile="@CMAKE_CURRENT_BINARY_DIR@/wix-custom.dll" />
+
+    <CustomAction
+      Id="CheckVCRedist"
+      BinaryRef="CustomDLL"
+      DllEntry="CheckVCRedist"
+      Execute="immediate" />
+
     <CustomAction
       Id="ShowVCRedistError"
-      Error="Latest Microsoft Visual C++ Redistributable is required. Please install it before proceeding."/>
+      Error="Microsoft Visual C++ Redistributable v@REQUIRED_MSVC_RUNTIME_MAJOR@.@REQUIRED_MSVC_RUNTIME_MINOR@ or later is required. Please download and install the latest version and then restart the installation. See our documentation for instructions." />
+
+    <CustomAction
+      Id="RunDeskflow"
+      ExeCommand="Deskflow"
+      FileRef="CM_FP_deskflow.exe"
+      Return="asyncNoWait" />
 
     <InstallExecuteSequence>
-      <Custom Action="ShowVCRedistError" Before="InstallServices" Condition="NOT Installed AND NOT VC_REDIST_INSTALLED"/>
-      <Custom Action="Run_Deskflow" OnExit="success" Condition="NOT Installed"/>
+      <Custom
+        Action="CheckVCRedist"
+        Before="InstallInitialize"
+        Condition="NOT Installed AND VC_REDIST_INSTALLED" />
+      <Custom
+        Action="ShowVCRedistError"
+        Before="InstallInitialize"
+        Condition="NOT Installed AND (NOT VC_REDIST_INSTALLED OR NOT VC_REDIST_VERSION_OK)" />
+      <Custom
+        Action="RunDeskflow"
+        OnExit="success"
+        Condition="NOT Installed" />
     </InstallExecuteSequence>
   </CPackWiXFragment>
 </CPackWiXPatch>

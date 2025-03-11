@@ -20,8 +20,8 @@
 // See table of the compiler versions and the matching runtime DLL versions:
 // https://dev.to/yumetodo/list-of-mscver-and-mscfullver-8nd
 #if _MSC_VER >= 1942 // Visual Studio 2022 Update 12 (v17.12.4)
-const auto kRequiredMajor = 14;
-const auto kRequiredMinor = 42;
+const auto kRequiredMajor = kWindowsRuntimeMajor;
+const auto kRequiredMinor = kWindowsRuntimeMinor;
 #elif _MSC_VER >= 1920 // Visual Studio 2019 Update 7 (v16.7)
 const auto kRequiredMajor = 14;
 const auto kRequiredMinor = 27;

@@ -94,6 +94,8 @@ set(REQUIRED_OPENSSL_VERSION 3.0)
 set(REQUIRED_LIBEI_VERSION 1.3)
 set(REQUIRED_LIBPORTAL_VERSION 0.8)
 set(REQUIRED_QT_VERSION 6.7.0)
+set(REQUIRED_MSVC_RUNTIME_MAJOR 14)
+set(REQUIRED_MSVC_RUNTIME_MINOR 42)
 
 # Control debug item visibility
 # When not set logging is forced to DEBUG and show code locations
