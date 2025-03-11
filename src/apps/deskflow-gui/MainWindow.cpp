@@ -20,6 +20,7 @@
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
+#include "gui/core/CoreTool.h"
 #include "gui/diagnostic.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/messages.h"

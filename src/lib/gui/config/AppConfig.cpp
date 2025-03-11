@@ -12,13 +12,6 @@
 
 #include "ConfigScopes.h"
 
-#include <QApplication>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QVariant>
-
-#include <functional>
-
 using namespace deskflow::gui;
 
 AppConfig::AppConfig(deskflow::gui::IConfigScopes &scopes, std::shared_ptr<Deps> deps) : m_Scopes(scopes), m_pDeps(deps)

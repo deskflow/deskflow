@@ -8,18 +8,9 @@
 
 #pragma once
 
-#include "IAppConfig.h"
 #include "IConfigScopes.h"
 #include "common/constants.h"
-#include "gui/paths.h"
-
-#include <QDir>
 #include <QObject>
-#include <QPoint>
-#include <QSize>
-#include <QString>
-#include <QVariant>
-#include <optional>
 
 /**
  * @brief Simply reads and writes app settings.
@@ -29,7 +20,7 @@
  * instance is widely accessible, but that has previously led to this class
  * becoming a god object.
  */
-class AppConfig : public QObject, public deskflow::gui::IAppConfig
+class AppConfig : public QObject
 {
   Q_OBJECT
   using IConfigScopes = deskflow::gui::IConfigScopes;
@@ -44,16 +35,16 @@ public:
 
   void determineScope();
 
-  IConfigScopes &scopes() const override;
-  bool isActiveScopeWritable() const override;
-  bool isActiveScopeSystem() const override;
+  IConfigScopes &scopes() const;
+  bool isActiveScopeWritable() const;
+  bool isActiveScopeSystem() const;
 
   /// @brief Sets the user preference to load from SystemScope.
   /// @param [in] value
   ///             True - This will set the variable and load the global scope
   ///             settings. False - This will set the variable and load the user
   ///             scope settings.
-  void setLoadFromSystemScope(bool value) override;
+  void setLoadFromSystemScope(bool value);
 
 private:
   /// @brief This method loads config from specified scope

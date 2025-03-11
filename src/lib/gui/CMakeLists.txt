@@ -36,7 +36,6 @@ add_library(${target} STATIC
   config/AppConfig.h
   config/ConfigScopes.cpp
   config/ConfigScopes.h
-  config/IAppConfig.h
   config/IConfigScopes.h
   config/IServerConfig.h
   config/Screen.cpp
