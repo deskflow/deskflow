@@ -145,10 +145,6 @@ int main(int argc, char *argv[])
 
   AppConfig appConfig(configScopes);
 
-  QObject::connect(
-      &configScopes, &ConfigScopes::saving, &appConfig, [&appConfig]() { appConfig.commit(); }, Qt::DirectConnection
-  );
-
   MainWindow mainWindow(configScopes, appConfig);
   mainWindow.open();
 
