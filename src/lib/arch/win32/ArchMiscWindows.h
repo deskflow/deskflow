@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/stdset.h"
+#include <set>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
