@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2016, 2024 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -13,8 +13,6 @@
 #include "base/String.h"
 
 #include <Psapi.h>
-#include <Userenv.h>
-#include <Wtsapi32.h>
 
 #include <array>
 #include <filesystem>
@@ -36,20 +34,6 @@ const auto kRequiredMinor = 27;
 // This output can be viewed by attaching a Microsoft debugger or by using the DebugView program.
 #define MS_LOG_DEBUG(message, ...)                                                                                     \
   OutputDebugStringA((deskflow::string::sprintf((s_binaryName + ": " + message + "\n").c_str(), __VA_ARGS__)).c_str())
-
-// parent process name for services in Vista
-#define SERVICE_LAUNCHER "services.exe"
-
-#ifndef ES_SYSTEM_REQUIRED
-#define ES_SYSTEM_REQUIRED ((DWORD)0x00000001)
-#endif
-#ifndef ES_DISPLAY_REQUIRED
-#define ES_DISPLAY_REQUIRED ((DWORD)0x00000002)
-#endif
-#ifndef ES_CONTINUOUS
-#define ES_CONTINUOUS ((DWORD)0x80000000)
-#endif
-using EXECUTION_STATE = DWORD;
 
 //
 // Free functions
@@ -384,7 +368,7 @@ void ArchMiscWindows::setThreadExecutionState(DWORD busyModes)
   }
 
   // convert to STES form
-  EXECUTION_STATE state = 0;
+  DWORD state = 0;
   if ((busyModes & kSYSTEM) != 0) {
     state |= ES_SYSTEM_REQUIRED;
   }
@@ -435,7 +419,7 @@ bool ArchMiscWindows::wasLaunchedAsService()
     return false;
   }
 
-  return (name == SERVICE_LAUNCHER);
+  return (name == "services.exe");
 }
 
 bool ArchMiscWindows::getParentProcessName(std::string &name)
