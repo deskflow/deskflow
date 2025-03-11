@@ -94,8 +94,22 @@ set(REQUIRED_OPENSSL_VERSION 3.0)
 set(REQUIRED_LIBEI_VERSION 1.3)
 set(REQUIRED_LIBPORTAL_VERSION 0.8)
 set(REQUIRED_QT_VERSION 6.7.0)
-set(REQUIRED_MSVC_RUNTIME_MAJOR 14)
-set(REQUIRED_MSVC_RUNTIME_MINOR 42)
+
+if (MSVC)
+  # On Windows, require that the same MSVC runtime is used as on the host.
+  # Mitigates things like access violations caused by accidental ABI-compatibility breakage.
+  set(REQUIRED_MSVC_RUNTIME_MAJOR 14)
+  cmake_host_system_information(
+    RESULT REQUIRED_MSVC_RUNTIME_MINOR
+    QUERY WINDOWS_REGISTRY
+    "HKLM/SOFTWARE/Microsoft/VisualStudio/${REQUIRED_MSVC_RUNTIME_MAJOR}.0/VC/Runtimes/x64"
+    VALUE "Minor")
+  if (REQUIRED_MSVC_RUNTIME_MINOR)
+    message(STATUS "MSVC runtime: ${REQUIRED_MSVC_RUNTIME_MAJOR}.${REQUIRED_MSVC_RUNTIME_MINOR}")
+  else()
+    message(FATAL_ERROR "MSVC runtime registry entry not found")
+  endif()
+endif()
 
 # Control debug item visibility
 # When not set logging is forced to DEBUG and show code locations
