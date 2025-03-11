@@ -19,16 +19,6 @@
 
 using namespace deskflow::gui;
 
-// this should be incremented each time the wizard is changed,
-// which will force it to re-run for existing installations.
-const int kWizardVersion = 8;
-
-#if defined(Q_OS_WIN)
-const char AppConfig::m_LogDir[] = "log/";
-#else
-const char AppConfig::m_LogDir[] = "/var/log/";
-#endif
-
 // TODO: instead, use key value pair table, which would be less fragile.
 const char *const AppConfig::m_SettingsName[] = {
     "", // screenName moved to deskflow settings
