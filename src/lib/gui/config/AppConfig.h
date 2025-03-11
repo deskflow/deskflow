@@ -161,8 +161,6 @@ private:
   /// @param [in] scope which should be loaded.
   void loadScope(IConfigScopes::Scope scope);
 
-  static const char m_LogDir[];
-
   /// @brief Contains the string values of the settings names that will be saved
   static const char *const m_SettingsName[];
 
