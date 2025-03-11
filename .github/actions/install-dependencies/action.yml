@@ -51,7 +51,7 @@ runs:
                 cli11-devel
             elif [ ${{inputs.like}} == "suse" ]; then
               zypper refresh
-              zypper install -y --force-resolution \
+              zypper --non-interactive install -y --force-resolution \
                 cmake make ninja gcc-c++ rpm-build libopenssl-devel \
                 glib2-devel gdk-pixbuf-devel libXtst-devel libnotify-devel \
                 libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
