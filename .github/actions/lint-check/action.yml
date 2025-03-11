@@ -5,7 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Install Dependencies
-      run: pipx install --global clang_format
+      run: pipx install --global clang-format==20.1.0
       shell: bash
 
     - name: Run format command
