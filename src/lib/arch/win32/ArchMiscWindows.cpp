@@ -17,19 +17,6 @@
 #include <array>
 #include <filesystem>
 
-// See table of the compiler versions and the matching runtime DLL versions:
-// https://dev.to/yumetodo/list-of-mscver-and-mscfullver-8nd
-#if _MSC_VER >= 1942 // Visual Studio 2022 Update 12 (v17.12.4)
-const auto kRequiredMajor = kWindowsRuntimeMajor;
-const auto kRequiredMinor = kWindowsRuntimeMinor;
-#elif _MSC_VER >= 1920 // Visual Studio 2019 Update 7 (v16.7)
-const auto kRequiredMajor = 14;
-const auto kRequiredMinor = 27;
-#else
-#pragma message("MSC version: " STRINGIFY(_MSC_VER))
-#error "Unsupported MSC version"
-#endif
-
 // Useful for debugging Windows specific bootstrapping code before the logging system is initialized.
 // This output can be viewed by attaching a Microsoft debugger or by using the DebugView program.
 #define MS_LOG_DEBUG(message, ...)                                                                                     \
@@ -606,12 +593,12 @@ void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not avail
 
   MS_LOG_DEBUG("msvc runtime dll version: %d.%d.%d", currentMajor, currentMinor, currentBuild);
 
-  if (currentMajor < kRequiredMajor || currentMinor < kRequiredMinor) {
+  if (currentMajor < kWindowsRuntimeMajor || currentMinor < kWindowsRuntimeMinor) {
     const auto message = deskflow::string::sprintf(
         "Installed Microsoft Visual C++ Runtime v%d.%d.%d is outdated.\n\n"
         "Minimum required version: v%d.%d\n\n"
         "Please update to the latest Microsoft Visual C++ Redistributable.",
-        currentMajor, currentMinor, currentBuild, kRequiredMajor, kRequiredMinor
+        currentMajor, currentMinor, currentBuild, kWindowsRuntimeMajor, kWindowsRuntimeMinor
     );
     MessageBoxA(nullptr, message.c_str(), "Dependency Error", MB_ICONERROR | MB_OK);
     exit(1);
