@@ -196,6 +196,12 @@ private:
   //! Calls `getProcessEntry` with the parent process ID
   static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32 &entry);
 
+  //! Searches the loaded modules and returns the matching module handle
+  /**
+   * @param moduleNames Provide two module names to search for both release and debug versions.
+   */
+  static HMODULE findLoadedModule(std::array<const char *, 2> moduleNames);
+
 private:
   using Dialogs = std::set<HWND>;
   typedef DWORD(WINAPI *STES_t)(DWORD);
