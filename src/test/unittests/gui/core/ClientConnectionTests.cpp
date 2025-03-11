@@ -52,8 +52,10 @@ TEST_F(ClientConnectionTests, handleLogLine_alreadyConnected_showError)
 
   EXPECT_CALL(*m_pDeps, showError(_, AlreadyConnected, serverName));
 
-  clientConnection.handleLogLine("failed to connect to server\n"
-                                 "server already has a connected client with our name");
+  clientConnection.handleLogLine(
+      "failed to connect to server\n"
+      "server already has a connected client with our name"
+  );
 }
 
 TEST_F(ClientConnectionTests, handleLogLine_withHostname_showError)
@@ -95,8 +97,10 @@ TEST_F(ClientConnectionTests, handleLogLine_serverRefusedClient_shouldNotShowErr
 
   EXPECT_CALL(*m_pDeps, showError(_, _, _)).Times(0);
 
-  clientConnection.handleLogLine("failed to connect to server\n"
-                                 "server refused client with our name");
+  clientConnection.handleLogLine(
+      "failed to connect to server\n"
+      "server refused client with our name"
+  );
 }
 
 TEST_F(ClientConnectionTests, handleLogLine_connected_shouldPreventFutureError)

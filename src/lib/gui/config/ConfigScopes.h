@@ -40,8 +40,9 @@ public:
   bool scopeContains(const QString &name, Scope scope = Scope::Current) const override;
   bool isActiveScopeWritable() const override;
   void setInScope(const QString &name, const QVariant &value, Scope scope = Scope::Current) override;
-  QVariant getFromScope(const QString &name, const QVariant &defaultValue = QVariant(), Scope scope = Scope::Current)
-      const override;
+  QVariant getFromScope(
+      const QString &name, const QVariant &defaultValue = QVariant(), Scope scope = Scope::Current
+  ) const override;
   void setActiveScope(Scope scope = Scope::User) override;
   Scope activeScope() const override;
   QSettingsProxy &activeSettings() override;

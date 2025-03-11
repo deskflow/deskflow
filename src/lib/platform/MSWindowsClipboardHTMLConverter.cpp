@@ -36,10 +36,12 @@ UINT MSWindowsClipboardHTMLConverter::getWin32Format() const
 std::string MSWindowsClipboardHTMLConverter::doFromIClipboard(const std::string &data) const
 {
   // prepare to CF_HTML format prefix and suffix
-  std::string prefix("Version:0.9\r\nStartHTML:0000000105\r\n"
-                     "EndHTML:ZZZZZZZZZZ\r\n"
-                     "StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
-                     "<!DOCTYPE><HTML><BODY><!--StartFragment-->");
+  std::string prefix(
+      "Version:0.9\r\nStartHTML:0000000105\r\n"
+      "EndHTML:ZZZZZZZZZZ\r\n"
+      "StartFragment:XXXXXXXXXX\r\nEndFragment:YYYYYYYYYY\r\n"
+      "<!DOCTYPE><HTML><BODY><!--StartFragment-->"
+  );
   std::string suffix("<!--EndFragment--></BODY></HTML>\r\n");
 
   // Get byte offsets for header

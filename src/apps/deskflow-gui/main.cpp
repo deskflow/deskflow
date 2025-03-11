@@ -120,8 +120,10 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_MAC)
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
-    QString msgBody = QStringLiteral("Please drag %1 to the Applications folder, "
-                                     "and open it from there.");
+    QString msgBody = QStringLiteral(
+        "Please drag %1 to the Applications folder, "
+        "and open it from there."
+    );
     QMessageBox::information(NULL, kAppName, msgBody.arg(kAppName));
     return 1;
   }
@@ -181,9 +183,11 @@ bool checkMacAssistiveDevices()
   // now deprecated in mavericks.
   bool result = AXAPIEnabled();
   if (!result) {
-    QString msgBody = QString("Please enable access to assistive devices "
-                              "System Preferences -> Security & Privacy -> "
-                              "Privacy -> Accessibility, then re-open %1.");
+    QString msgBody = QString(
+        "Please enable access to assistive devices "
+        "System Preferences -> Security & Privacy -> "
+        "Privacy -> Accessibility, then re-open %1."
+    );
     QMessageBox::information(NULL, kAppName, msgBody.arg(kAppName));
   }
   return result;

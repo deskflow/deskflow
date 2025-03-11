@@ -49,8 +49,10 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
     text = "<p>Sorry, a critical error has occurred.</p>";
   }
 
-  text += QString(R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
-                  " and copy/paste the following error:</p>")
+  text += QString(
+              R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
+              " and copy/paste the following error:</p>"
+  )
               .arg(kUrlHelp, kColorSecondary);
 
   text += QString("<pre>v%1\n%2\n%3</pre>").arg(kVersion, message, fileLine);
@@ -117,18 +119,22 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 void showCloseReminder(QWidget *parent)
 {
-  QString message = QString("<p>%1 will continue to run in the background and can be accessed "
-                            "via the %1 icon in your system notifications area. This "
-                            "setting "
-                            "can be disabled.</p>")
+  QString message = QString(
+                        "<p>%1 will continue to run in the background and can be accessed "
+                        "via the %1 icon in your system notifications area. This "
+                        "setting "
+                        "can be disabled.</p>"
+  )
                         .arg(kAppName);
 
 #if defined(Q_OS_LINUX)
-  message += QString("<p>On some Linux systems such as GNOME 3, the "
-                     "notification area might be disabled. "
-                     "You may need to "
-                     R"(<a href="%1" %2>enable an extension</a>)"
-                     " to see the %3 tray icon.</p>")
+  message += QString(
+                 "<p>On some Linux systems such as GNOME 3, the "
+                 "notification area might be disabled. "
+                 "You may need to "
+                 R"(<a href="%1" %2>enable an extension</a>)"
+                 " to see the %3 tray icon.</p>"
+  )
                  .arg(kUrlGnomeTrayFix, kStyleLink, kAppName);
 #endif
 
@@ -139,10 +145,12 @@ void showFirstServerStartMessage(QWidget *parent)
 {
   QMessageBox::information(
       parent, "Server is running",
-      QString("<p>Great, the %1 server is now running.</p>"
-              "<p>Now you can connect your client computers to this server. "
-              "You should see a prompt here on the server when a new client "
-              "tries to connect.</p>")
+      QString(
+          "<p>Great, the %1 server is now running.</p>"
+          "<p>Now you can connect your client computers to this server. "
+          "You should see a prompt here on the server when a new client "
+          "tries to connect.</p>"
+      )
           .arg(kAppName)
   );
 }
@@ -161,13 +169,17 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   }
 
   if (!closeToTray && !enableService) {
-    message += QString("<p>As you do not have the setting enabled to keep %1 running in "
-                       "the background, you'll need to keep this window open or minimized "
-                       "to keep %1 running.</p>")
+    message += QString(
+                   "<p>As you do not have the setting enabled to keep %1 running in "
+                   "the background, you'll need to keep this window open or minimized "
+                   "to keep %1 running.</p>"
+    )
                    .arg(kAppName);
   } else {
-    message += QString("<p>You can now close this window and %1 will continue to run in "
-                       "the background. This setting can be disabled.</p>")
+    message += QString(
+                   "<p>You can now close this window and %1 will continue to run in "
+                   "the background. This setting can be disabled.</p>"
+    )
                    .arg(kAppName);
   }
 
@@ -240,8 +252,10 @@ bool showClearSettings(QWidget *parent)
   QMessageBox message(parent);
   message.addButton(QObject::tr("Cancel"), QMessageBox::RejectRole);
   const auto clear = message.addButton(QObject::tr("Clear settings"), QMessageBox::AcceptRole);
-  message.setText(QString("<p>Are you sure you want to clear all settings and restart %1?</p>"
-                          "<p>This action cannot be undone.</p>")
+  message.setText(QString(
+                      "<p>Are you sure you want to clear all settings and restart %1?</p>"
+                      "<p>This action cannot be undone.</p>"
+  )
                       .arg(kAppName));
   message.exec();
 
@@ -253,8 +267,10 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
   QString nativePath = QDir::toNativeSeparators(systemSettingsPath);
   QMessageBox::information(
       parent, "Read-only settings",
-      QString("<p>Settings are read-only because you only have read access "
-              "to the file:</p><p>%1</p>")
+      QString(
+          "<p>Settings are read-only because you only have read access "
+          "to the file:</p><p>%1</p>"
+      )
           .arg(nativePath)
   );
 }
@@ -263,14 +279,16 @@ void showWaylandLibraryError(QWidget *parent)
 {
   QMessageBox::critical(
       parent, "Library problem",
-      QString("<p>Sorry, while this version of %1 does support Wayland, "
-              "this build was not linked with one or more of the required "
-              "libraries.</p>"
-              "<p>Please either switch to X from your login screen or use a build "
-              "that uses the correct libraries.</p>"
-              "<p>If you think this is incorrect, please "
-              R"(<a href="%2" style="color: %3">report a bug</a>.</p>)"
-              "<p>Please check the logs for more information.</p>")
+      QString(
+          "<p>Sorry, while this version of %1 does support Wayland, "
+          "this build was not linked with one or more of the required "
+          "libraries.</p>"
+          "<p>Please either switch to X from your login screen or use a build "
+          "that uses the correct libraries.</p>"
+          "<p>If you think this is incorrect, please "
+          R"(<a href="%2" style="color: %3">report a bug</a>.</p>)"
+          "<p>Please check the logs for more information.</p>"
+      )
           .arg(kAppName, kUrlHelp, kColorSecondary)
   );
 }
@@ -280,9 +298,11 @@ bool showUpdateCheckOption(QWidget *parent)
   QMessageBox message(parent);
   message.addButton(QObject::tr("No thanks"), QMessageBox::RejectRole);
   const auto checkButton = message.addButton(QObject::tr("Check for updates"), QMessageBox::AcceptRole);
-  message.setText(QString("<p>Would you like to check for updates when %1 starts?</p>"
-                          "<p>Checking for updates requires an Internet connection.</p>"
-                          "<p>URL: <pre>%2</pre></p>")
+  message.setText(QString(
+                      "<p>Would you like to check for updates when %1 starts?</p>"
+                      "<p>Checking for updates requires an Internet connection.</p>"
+                      "<p>URL: <pre>%2</pre></p>"
+  )
                       .arg(kAppName, env_vars::versionUrl()));
 
   message.exec();

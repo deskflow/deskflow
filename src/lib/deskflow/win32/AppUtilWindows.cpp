@@ -222,8 +222,10 @@ void AppUtilWindows::showNotification(const std::string &title, const std::strin
     return;
   }
   if (!WinToastLib::WinToast::instance()->isInitialized()) {
-    WinToastLib::WinToast::instance()->setAppName(L""
-                                                  "Deskflow");
+    WinToastLib::WinToast::instance()->setAppName(
+        L""
+        "Deskflow"
+    );
     const auto aumi = WinToastLib::WinToast::configureAUMI(
         L""
         "Deskflow Developers",
