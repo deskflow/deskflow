@@ -8,7 +8,6 @@
 #include "gui/config/IAppConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/proxy/QProcessProxy.h"
-#include "shared/gui/mocks/AppConfigMock.h"
 #include "shared/gui/mocks/ServerConfigMock.h"
 
 #include "gmock/gmock.h"
