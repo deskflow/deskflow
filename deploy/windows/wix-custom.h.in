@@ -1,0 +1,14 @@
+/*
+ * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Symless Ltd.
+ * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+ */
+
+#pragma once
+
+const auto kAppId = "@CMAKE_PROJECT_NAME@";
+
+// clang-format off
+const auto kWindowsRuntimeMajor = @REQUIRED_MSVC_RUNTIME_MAJOR@;
+const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
+// clang-format on

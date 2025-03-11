@@ -53,3 +53,18 @@ configure_file(
 
 # This patch set ups filewall rules, the service and msm module
 set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_BINARY_DIR}/wix-patch.xml")
+
+# Creates a DLL that can be used by our MSI for custom actions.
+configure_file(
+  ${MY_DIR}/wix-custom.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/wix-custom.h @ONLY
+)
+add_library(
+  wix-custom SHARED
+  ${MY_DIR}/wix-custom.cpp
+)
+target_include_directories(wix-custom PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+set_target_properties(wix-custom PROPERTIES
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+)
+target_link_libraries(wix-custom PRIVATE Msi)

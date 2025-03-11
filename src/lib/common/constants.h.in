@@ -39,3 +39,12 @@ const auto kTlsCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
 const auto kTlsFingerprintLocalFilename = "local-fingerprint";
 const auto kTlsFingerprintTrustedServersFilename = "trusted-servers";
 const auto kTlsFingerprintTrustedClientsFilename = "trusted-clients";
+
+#ifdef _WIN32
+
+// clang-format off
+const auto kWindowsRuntimeMajor = @REQUIRED_MSVC_RUNTIME_MAJOR@;
+const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
+// clang-format on
+
+#endif
