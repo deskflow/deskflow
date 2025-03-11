@@ -45,8 +45,9 @@ FingerprintDialog::FingerprintDialog(
     connect(m_buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &QDialog::accept);
   } else {
     setWindowTitle(tr("Security Question"));
-    auto body = tr("Compare the fingerprints in this dialog to those on the %1.\n"
-                   "Only connect if they match!");
+    auto body =
+        tr("Compare the fingerprints in this dialog to those on the %1.\n"
+           "Only connect if they match!");
 
     if (mode == FingerprintDialogMode::Server) {
       m_lblHeader->setText(tr("A new client is connecting.\n%1").arg(body.arg(tr("client"))));

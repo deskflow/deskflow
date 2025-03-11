@@ -23,19 +23,25 @@ const auto kStyleLineEditErrorBorder =
     QStringLiteral("border: 1px solid %1; border-radius: 2px; padding: 2px;").arg(kColorError);
 
 const auto kStyleErrorActiveLabel = //
-    QStringLiteral("padding: 3px 5px; border-radius: 3px; "
-                   "background-color: %1; color: %2")
+    QStringLiteral(
+        "padding: 3px 5px; border-radius: 3px; "
+        "background-color: %1; color: %2"
+    )
         .arg(kColorError, kColorWhite);
 
 const auto kStyleErrorInactiveLabel = //
-    QStringLiteral("padding: 3px 5px; border-radius: 3px;"
-                   "background-color: none");
+    QStringLiteral(
+        "padding: 3px 5px; border-radius: 3px;"
+        "background-color: none"
+    );
 
 const auto kStyleFlatButton = QStringLiteral("QAbstractButton{background-color: none; border: none;}");
 
-const auto kStyleFlatButtonHoverable = QStringLiteral("%1\n"
-                                                      "QAbstractButton:hover{border: 1px solid palette(highlight);"
-                                                      " border-radius: 6px}")
+const auto kStyleFlatButtonHoverable = QStringLiteral(
+                                           "%1\n"
+                                           "QAbstractButton:hover{border: 1px solid palette(highlight);"
+                                           " border-radius: 6px}"
+)
                                            .arg(kStyleFlatButton);
 
 } // namespace deskflow::gui
