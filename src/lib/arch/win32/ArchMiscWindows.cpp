@@ -12,10 +12,9 @@
 #include "base/Log.h"
 #include "base/String.h"
 
-#include <Wtsapi32.h>
-#pragma warning(disable : 4099)
+#include <Psapi.h>
 #include <Userenv.h>
-#pragma warning(default : 4099)
+#include <Wtsapi32.h>
 
 #include <array>
 
@@ -505,12 +504,43 @@ std::string ArchMiscWindows::getActiveDesktopName()
   return name;
 }
 
+HMODULE ArchMiscWindows::findLoadedModule(std::array<const char *, 2> moduleNames)
+{
+  std::array<HMODULE, 1024> hModules;
+  DWORD cbNeeded;
+
+  HANDLE hProcess = GetCurrentProcess();
+  if (!EnumProcessModules(hProcess, hModules.data(), sizeof(hModules), &cbNeeded)) {
+    errorMessageBox("Failed to enumerate process modules.");
+    abort();
+  }
+
+  std::string loadedModuleName;
+  for (size_t i = 0; i < (cbNeeded / sizeof(HMODULE)); ++i) {
+    if (!GetModuleBaseNameA(hProcess, hModules[i], loadedModuleName.data(), sizeof(loadedModuleName))) {
+      LOG_WARN("could not get base name of loaded module %d", i);
+      continue;
+    }
+
+    for (const auto &moduleName : moduleNames) {
+      if (_stricmp(loadedModuleName.data(), moduleName) == 0) {
+        return hModules[i];
+      }
+    }
+  }
+
+  return nullptr;
+}
+
 // Enforcing minimum MSVC runtime version is quite strict, but we have a good reason.
 //
 // Microsoft lets you run a program with an older version of the runtime DLL than the one it was
 // compiled with. This is because the runtime DLLs are supposedly ABI-compatible when the major
 // version is the same, so hypothetically MSVC runtime 14.0 is compatible with 14.42.
-// However, we have found that subtle edge cases (such as mutex lock causes access violation).
+// However, we have found subtle edge cases such as mutex lock causes access violation.
+//
+// Example of how Microsoft breaks ABI compatibility between minor runtime versions:
+// https://stackoverflow.com/questions/69990339/why-is-stdmutex-so-much-worse-than-stdshared-mutex-in-visual-c
 //
 // Our CI is set up to build with the latest compiler, so in this case we should insist on at least
 // the runtime DLL that was released at the same time as the compiler.
@@ -519,10 +549,9 @@ std::string ArchMiscWindows::getActiveDesktopName()
 // requirements for the current Qt version we support.
 void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not available
 {
-  const auto kRuntimeDll = "vcruntime140.dll";
+  auto hModule = findLoadedModule({"vcruntime140.dll", "vcruntime140d.dll"});
 
-  HMODULE hModule = nullptr;
-  if (!GetModuleHandleEx(0, kRuntimeDll, &hModule)) {
+  if (!hModule) {
     errorMessageBox("Could not find Microsoft Visual C++ Runtime.");
     abort();
   }
