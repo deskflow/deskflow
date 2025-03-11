@@ -160,11 +160,15 @@ public:
   //! Prevent hard to troubleshoot errors, e.g. access violations.
   static void guardRuntimeVersion();
 
+  //! Gets the window instance saved at program start.
+  /*!
+  e.g. Used by `GetModuleFileName` which is used when installing the daemon.
+  */
   static HINSTANCE instanceWin32();
+
+  //! Saves the window instance for later use.
   static void setInstanceWin32(HINSTANCE instance);
-  static BOOL WINAPI getProcessEntry(PROCESSENTRY32 &entry, DWORD processID);
-  static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32 &entry);
-  static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32 &entry);
+
   static std::string getActiveDesktopName();
 
 private:
@@ -180,7 +184,17 @@ private:
   //! Set thread busy state
   static void setThreadExecutionState(DWORD);
 
+  //! Dummy function for thread execution state
   static DWORD WINAPI dummySetThreadExecutionState(DWORD);
+
+  //! Iterates over the process snapshot to find a process entry
+  static BOOL WINAPI getProcessEntry(PROCESSENTRY32 &entry, DWORD processID);
+
+  //! Calls `getProcessEntry` with the current process ID
+  static BOOL WINAPI getSelfProcessEntry(PROCESSENTRY32 &entry);
+
+  //! Calls `getProcessEntry` with the parent process ID
+  static BOOL WINAPI getParentProcessEntry(PROCESSENTRY32 &entry);
 
 private:
   using Dialogs = std::set<HWND>;
@@ -188,7 +202,7 @@ private:
 
   static Dialogs *s_dialogs;
   static DWORD s_busyState;
-  static STES_t s_stes;
+  static STES_t s_stes; // STES: Set thread execution state
   static HICON s_largeIcon;
   static HICON s_smallIcon;
   static HINSTANCE s_instanceWin32;
