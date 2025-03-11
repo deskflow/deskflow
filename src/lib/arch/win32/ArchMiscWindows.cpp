@@ -19,22 +19,6 @@
 
 #include <array>
 
-// Welcome to DLL hell! :)
-//
-// Microsoft lets you run a program with an old runtime DLL, as long as the name matches.
-// Unfortunately if you compile on VS2022 and then use the VS2019 runtime, which both have the
-// same runtime DLL name, the app will randomly crash (e.g. access violation) or break in strange
-// and unpredictable ways due to ABI differences.
-//
-// In Windows, there is no concept of requiring a minimum version of the runtime DLL, so we have
-// to check the version ourselves.
-//
-// Our CI is set up to build with the latest compiler, so in this case we should insist on the
-// latest runtime DLL.
-//
-// As a developer convenience, we also allow builds on older compilers such as the minimum
-// requirements for the current Qt version we support.
-//
 // See table of the compiler versions and the matching runtime DLL versions:
 // https://dev.to/yumetodo/list-of-mscver-and-mscfullver-8nd
 #if _MSC_VER >= 1942 // Visual Studio 2022 Update 12 (v17.12.4)
@@ -521,13 +505,25 @@ std::string ArchMiscWindows::getActiveDesktopName()
   return name;
 }
 
+// Enforcing minimum MSVC runtime version is quite strict, but we have a good reason.
+//
+// Microsoft lets you run a program with an older version of the runtime DLL than the one it was
+// compiled with. This is because the runtime DLLs are supposedly ABI-compatible when the major
+// version is the same, so hypothetically MSVC runtime 14.0 is compatible with 14.42.
+// However, we have found that subtle edge cases (such as mutex lock causes access violation).
+//
+// Our CI is set up to build with the latest compiler, so in this case we should insist on at least
+// the runtime DLL that was released at the same time as the compiler.
+//
+// As a developer convenience, we also allow builds on older compilers such as the minimum
+// requirements for the current Qt version we support.
 void ArchMiscWindows::guardRuntimeVersion() // NOSONAR - `noreturn` is not available
 {
   const auto kRuntimeDll = "vcruntime140.dll";
 
   HMODULE hModule = nullptr;
-  if (!GetModuleHandleEx(0, kRuntimeDll, &hModule) && hModule) {
-    errorMessageBox("Microsoft Visual C++ Runtime is not installed.");
+  if (!GetModuleHandleEx(0, kRuntimeDll, &hModule)) {
+    errorMessageBox("Could not find Microsoft Visual C++ Runtime.");
     abort();
   }
 
