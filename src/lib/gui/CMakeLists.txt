@@ -64,8 +64,6 @@ add_library(${target} STATIC
   proxy/QNetworkAccessManagerProxy.h
   proxy/QProcessProxy.cpp
   proxy/QProcessProxy.h
-  proxy/QSettingsProxy.cpp
-  proxy/QSettingsProxy.h
   tls/TlsCertificate.cpp
   tls/TlsCertificate.h
   tls/TlsUtility.cpp

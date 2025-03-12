@@ -6,13 +6,12 @@
 
 #include "gui/config/Screen.h"
 
-#include "gui/proxy/QSettingsProxy.h"
+#include "common/QSettingsProxy.h"
 #include "shared/gui/TestQtCoreApp.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using namespace deskflow::gui::proxy;
 using namespace testing;
 
 class QSettingsProxyMock : public QSettingsProxy

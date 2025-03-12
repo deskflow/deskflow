@@ -7,6 +7,7 @@
 #pragma once
 
 #include "IConfigScopes.h"
+#include "common/QSettingsProxy.h"
 
 #include <QObject>
 #include <QSettings>
@@ -18,8 +19,6 @@ namespace deskflow::gui {
 /// @brief Encapsulates Qt config for both user and global scopes.
 class ConfigScopes : public QObject, public IConfigScopes
 {
-  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
-
   Q_OBJECT
 
 public:

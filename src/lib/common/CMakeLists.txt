@@ -18,6 +18,8 @@ add_library(common STATIC
   stdvector.h
   Settings.h
   Settings.cpp
+  QSettingsProxy.cpp
+  QSettingsProxy.h
   ${CMAKE_CURRENT_BINARY_DIR}/constants.h
 )
 

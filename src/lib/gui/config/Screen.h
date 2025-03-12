@@ -10,7 +10,7 @@
 
 #include "ScreenConfig.h"
 
-#include "gui/proxy/QSettingsProxy.h"
+#include "common/QSettingsProxy.h"
 
 #include <QIcon>
 #include <QList>
@@ -24,8 +24,6 @@ class ScreenSettingsDialog;
 
 class Screen : public ScreenConfig
 {
-  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
-
   friend class ScreenSettingsDialog;
   friend class ScreenSetupModel;
   friend class ScreenSetupView;

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "gui/proxy/QSettingsProxy.h"
+#include "common/QSettingsProxy.h"
 
 #include <QSettings>
 #include <QString>
@@ -16,7 +16,6 @@ namespace deskflow::gui {
 
 class IConfigScopes
 {
-  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
   enum class Scope
