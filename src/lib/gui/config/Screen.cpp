@@ -9,7 +9,6 @@
 #include "Screen.h"
 #include "config/ScreenConfig.h"
 
-using namespace deskflow::gui::proxy;
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;

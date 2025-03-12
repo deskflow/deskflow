@@ -7,15 +7,12 @@
 #include "QSettingsProxy.h"
 
 #include "common/constants.h"
-#include "gui/Logger.h"
 
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QSettings>
 #include <memory>
-
-namespace deskflow::gui::proxy {
 
 const auto kLegacyOrgDomain = "http-symless-com";
 const auto kLegacySystemConfigFilename = "SystemConfig.ini";
@@ -105,7 +102,7 @@ void migrateLegacyUserSettings(QSettings &newSettings)
   for (const QString &key : std::as_const(keys)) {
     QVariant oldValue = oldSettings.value(key);
     newSettings.setValue(key, oldValue);
-    logVerbose(QString("migrating setting '%1' = '%2'").arg(key, oldValue.toString()));
+    qInfo().noquote() << QStringLiteral("migrating setting '%1' = '%2'").arg(key, oldValue.toString());
   }
 
   newSettings.sync();
@@ -214,5 +211,3 @@ bool QSettingsProxy::contains(const QString &key) const
 {
   return m_pSettings->contains(key);
 }
-
-} // namespace deskflow::gui::proxy

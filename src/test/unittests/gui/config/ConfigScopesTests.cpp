@@ -13,7 +13,6 @@
 
 using namespace testing;
 using namespace deskflow::gui;
-using namespace deskflow::gui::proxy;
 
 namespace {
 

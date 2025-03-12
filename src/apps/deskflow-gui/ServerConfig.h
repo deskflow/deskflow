@@ -40,7 +40,6 @@ const auto kDefaultProtocol = ServerProtocol::kBarrier;
 
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
-  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
   using ServerProtocol = synergy::gui::ServerProtocol;
 
   friend class ServerConfigDialog;

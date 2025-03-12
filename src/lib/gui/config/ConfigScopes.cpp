@@ -6,7 +6,7 @@
 
 #include "ConfigScopes.h"
 
-#include "proxy/QSettingsProxy.h"
+#include "common/QSettingsProxy.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -16,8 +16,6 @@
 #include <memory>
 
 namespace deskflow::gui {
-
-using namespace proxy;
 
 //
 // ConfigScopes::Deps

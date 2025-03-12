@@ -10,12 +10,11 @@
 #include <QString>
 #include <QVariant>
 
-#include "gui/proxy/QSettingsProxy.h"
+#include "common/QSettingsProxy.h"
 
 /// @brief Screen configuration base class
 class ScreenConfig
 {
-  using QSettingsProxy = deskflow::gui::proxy::QSettingsProxy;
 
 public:
   enum class Modifier

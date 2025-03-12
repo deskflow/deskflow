@@ -8,8 +8,6 @@
 
 #include <QSettings>
 
-namespace deskflow::gui::proxy {
-
 QString getSystemSettingBaseDir();
 
 class QSettingsProxy
@@ -52,5 +50,3 @@ public:
 private:
   std::unique_ptr<QSettings> m_pSettings;
 };
-
-} // namespace deskflow::gui::proxy

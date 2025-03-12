@@ -17,7 +17,6 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-using namespace deskflow::gui::proxy;
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
