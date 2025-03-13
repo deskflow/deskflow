@@ -8,6 +8,8 @@
 #pragma once
 
 #include "common/IInterface.h"
+
+#include <functional>
 #include <string>
 
 //! Interface for architecture dependent daemonizing
@@ -19,7 +21,7 @@ implement this interface.
 class IArchDaemon : public IInterface
 {
 public:
-  typedef int (*DaemonFunc)(int argc, const char **argv);
+  using DaemonFunc = std::function<int(int, const char **)>;
 
   //! @name manipulators
   //@{
