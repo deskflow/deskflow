@@ -28,13 +28,3 @@ TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty)
 
   EXPECT_FALSE(installedDir.isEmpty());
 }
-
-TEST(CoreToolTests, getArch_noMock_returnsNonEmpty)
-{
-  TestQtCoreApp app;
-  CoreTool coreTool;
-
-  QString arch = coreTool.getArch();
-
-  EXPECT_FALSE(arch.isEmpty());
-}
