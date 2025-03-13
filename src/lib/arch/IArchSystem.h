@@ -20,13 +20,6 @@ public:
   //! @name accessors
   //@{
 
-  //! Identify the platform
-  /*!
-  Returns a string identifying the platform this OS is running on.
-  */
-  virtual std::string getPlatformName() const = 0;
-  //@}
-
   //! Get a Deskflow setting
   /*!
   Reads a Deskflow setting from the system.
