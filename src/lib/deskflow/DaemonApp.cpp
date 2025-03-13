@@ -47,24 +47,6 @@ DaemonApp::DaemonApp()
 
 DaemonApp::~DaemonApp() = default;
 
-int daemonLoop()
-{
-  DaemonApp::instance().mainLoop();
-  return kExitSuccess;
-}
-
-#if SYSAPI_WIN32
-int daemonLoop(int, const char **)
-{
-  return ArchMiscWindows::runDaemon(daemonLoop);
-}
-#elif SYSAPI_UNIX
-int daemonLoop(int, const char **)
-{
-  return daemonLoop();
-}
-#endif
-
 void DaemonApp::run()
 {
   if (m_foreground) {
@@ -72,8 +54,21 @@ void DaemonApp::run()
     mainLoop();
   } else {
     LOG_DEBUG("running daemon in background (daemonizing)");
-    ARCH->daemonize(kAppName, daemonLoop);
+    ARCH->daemonize(kAppName, [this](int, const char **) { return daemonLoop(); });
   }
+}
+
+int DaemonApp::daemonLoop()
+{
+#if SYSAPI_WIN32
+  return ArchMiscWindows::runDaemon([this]() {
+    mainLoop();
+    return kExitSuccess;
+  });
+#elif SYSAPI_UNIX
+  mainLoop();
+  return kExitSuccess;
+#endif
 }
 
 void DaemonApp::saveLogLevel(const QString &logLevel) const

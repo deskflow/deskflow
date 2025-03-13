@@ -10,11 +10,13 @@
 #include "arch/IArchDaemon.h"
 #include "arch/IArchMultithread.h"
 #include "common/constants.h"
-#include <string>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <tchar.h>
+
+#include <functional>
+#include <string>
 
 #define ARCH_DAEMON ArchDaemonWindows
 
@@ -22,7 +24,7 @@
 class ArchDaemonWindows : public IArchDaemon
 {
 public:
-  typedef int (*RunFunc)(void);
+  using RunFunc = std::function<int()>;
 
   ArchDaemonWindows();
   virtual ~ArchDaemonWindows();

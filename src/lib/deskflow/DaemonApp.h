@@ -54,6 +54,7 @@ public:
   void clearWatchdogCommand();
   void clearSettings() const;
   std::string logFilename();
+  int daemonLoop();
 
   static DaemonApp &instance()
   {
