@@ -34,22 +34,6 @@ ArchSystemWindows::~ArchSystemWindows()
   // do nothing
 }
 
-std::string ArchSystemWindows::getPlatformName() const
-{
-#ifdef _X86_
-  if (isWOW64())
-    return "x86 (WOW64)";
-  else
-    return "x86";
-#else
-#ifdef _AMD64_
-  return "x64";
-#else
-  return "Unknown";
-#endif
-#endif
-}
-
 std::string ArchSystemWindows::setting(const std::string &valueName) const
 {
   HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, s_settingsKeyNames);

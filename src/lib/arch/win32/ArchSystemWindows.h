@@ -19,7 +19,6 @@ public:
   virtual ~ArchSystemWindows();
 
   // IArchSystem overrides
-  virtual std::string getPlatformName() const;
   virtual std::string setting(const std::string &valueName) const;
   virtual void setting(const std::string &valueName, const std::string &valueString) const;
   virtual void clearSettings() const;

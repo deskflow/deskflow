@@ -13,5 +13,4 @@ class CoreTool
 public:
   QString getProfileDir() const;
   QString getInstalledDir() const;
-  QString getArch() const;
 };
