@@ -57,6 +57,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 void SettingsDialog::initConnections()
 {
   connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
+  connect(Settings::instance(), &Settings::writableChanged, this, &SettingsDialog::showReadOnlyMessage);
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
