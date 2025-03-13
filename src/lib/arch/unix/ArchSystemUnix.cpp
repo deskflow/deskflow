@@ -32,21 +32,6 @@ ArchSystemUnix::~ArchSystemUnix()
   // do nothing
 }
 
-std::string ArchSystemUnix::getOSName() const
-{
-#if defined(HAVE_SYS_UTSNAME_H)
-  struct utsname info;
-  if (uname(&info) == 0) {
-    std::string msg;
-    msg += info.sysname;
-    msg += " ";
-    msg += info.release;
-    return msg;
-  }
-#endif
-  return "Unix";
-}
-
 std::string ArchSystemUnix::getPlatformName() const
 {
 #if defined(HAVE_SYS_UTSNAME_H)
