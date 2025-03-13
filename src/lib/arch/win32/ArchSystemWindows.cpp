@@ -34,26 +34,6 @@ ArchSystemWindows::~ArchSystemWindows()
   // do nothing
 }
 
-std::string ArchSystemWindows::getOSName() const
-{
-  std::string osName("Microsoft Windows <unknown>");
-  static const TCHAR *const windowsVersionKeyNames[] = {
-      _T("SOFTWARE"), _T("Microsoft"), _T("Windows NT"), _T("CurrentVersion"), NULL
-  };
-
-  HKEY key = ArchMiscWindows::openKey(HKEY_LOCAL_MACHINE, windowsVersionKeyNames);
-  if (key == NULL) {
-    return osName;
-  }
-
-  std::string productName = ArchMiscWindows::readValueString(key, "ProductName");
-  if (osName.empty()) {
-    return osName;
-  }
-
-  return "Microsoft " + productName;
-}
-
 std::string ArchSystemWindows::getPlatformName() const
 {
 #ifdef _X86_
