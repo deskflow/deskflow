@@ -71,21 +71,3 @@ void ArchSystemWindows::clearSettings() const
 {
   ArchMiscWindows::deleteKeyTree(HKEY_LOCAL_MACHINE, kWindowsRegistryKey);
 }
-
-bool ArchSystemWindows::isWOW64() const
-{
-#if WINVER >= _WIN32_WINNT_WINXP
-  typedef BOOL(WINAPI * LPFN_ISWOW64PROCESS)(HANDLE, PBOOL);
-  HMODULE hModule = GetModuleHandle(TEXT("kernel32"));
-  if (!hModule)
-    return FALSE;
-
-  LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)GetProcAddress(hModule, "IsWow64Process");
-
-  BOOL bIsWow64 = FALSE;
-  if (NULL != fnIsWow64Process && fnIsWow64Process(GetCurrentProcess(), &bIsWow64) && bIsWow64) {
-    return true;
-  }
-#endif
-  return false;
-}
