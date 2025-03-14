@@ -23,13 +23,4 @@ public:
   virtual void setting(const std::string &, const std::string &) const;
   virtual std::string getLibsUsed(void) const;
   virtual void clearSettings() const;
-
-#ifndef __APPLE__
-  enum class InhibitScreenServices
-  {
-    kScreenSaver,
-    kSessionManager
-  };
-  static bool DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error);
-#endif
 };

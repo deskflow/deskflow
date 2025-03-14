@@ -7,6 +7,10 @@
 
 #pragma once
 
+#ifndef __APPLE__
+#include <string>
+#endif
+
 class XWindowsPowerManager
 {
 public:
@@ -25,4 +29,13 @@ public:
 
   XWindowsPowerManager(const XWindowsPowerManager &) = delete;
   XWindowsPowerManager &operator=(const XWindowsPowerManager &) = delete;
+
+#ifndef __APPLE__
+  enum class InhibitScreenServices
+  {
+    kScreenSaver,
+    kSessionManager
+  };
+  static bool DBusInhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error);
+#endif
 };
