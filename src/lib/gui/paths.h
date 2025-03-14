@@ -6,12 +6,9 @@
 
 #pragma once
 
-#include "common/constants.h"
-#include "core/CoreTool.h"
+#include "common/Settings.h"
 
 #include <QDir>
-#include <QStandardPaths>
-#include <QString>
 
 namespace deskflow::gui::paths {
 
@@ -20,7 +17,7 @@ namespace deskflow::gui::paths {
  */
 inline QDir configDir(const bool persist = false)
 {
-  const QDir configDir(QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation));
+  const QDir configDir(Settings::settingsPath());
 
   // HACK: since we have the org name set to the app name, the config dir is
   // confusing. make this simple by using the org dir instead.
@@ -42,8 +39,7 @@ inline QDir configDir(const bool persist = false)
  */
 inline QDir coreProfileDir()
 {
-  CoreTool coreTool;
-  return QDir(coreTool.getProfileDir());
+  return QDir(Settings::settingsPath());
 }
 
 } // namespace deskflow::gui::paths
