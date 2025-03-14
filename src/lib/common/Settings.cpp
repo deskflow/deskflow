@@ -119,6 +119,13 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Core::ProcessMode)
     return defaultProcessMode;
 
+  if (key == Daemon::LogFile) {
+    return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kDaemonLogFilename);
+  }
+
+  if (key == Daemon::Elevate)
+    return true;
+
   return QVariant();
 }
 

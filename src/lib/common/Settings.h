@@ -50,6 +50,13 @@ public:
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
+  struct Daemon
+  {
+    inline static const auto Command = QStringLiteral("daemon/command");
+    inline static const auto Elevate = QStringLiteral("daemon/elevate");
+    inline static const auto LogFile = QStringLiteral("daemon/logFile");
+    inline static const auto LogLevel = QStringLiteral("daemon/logLevel");
+  };
   struct Gui
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
@@ -178,6 +185,9 @@ private:
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
+    , Settings::Daemon::Command
+    , Settings::Daemon::Elevate
+    , Settings::Daemon::LogFile
     , Settings::Log::File
     , Settings::Log::Level
     , Settings::Log::ToFile
