@@ -8,7 +8,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "common/constants.h"
+#include "common/Settings.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
 
@@ -80,7 +80,8 @@ int main(int argc, char **argv)
   LOG_PRINT("%s v%s", QCoreApplication::applicationName().toStdString().c_str(), kDisplayVersion);
 
   // Default log level to system setting (found in Registry).
-  if (std::string logLevel = ARCH->setting("LogLevel"); logLevel != "") {
+  auto logLevel = Settings::value(Settings::Daemon::LogLevel).toString().toStdString();
+  if (logLevel != "") {
     CLOG->setFilter(logLevel.c_str());
     LOG_DEBUG("log level: %s", logLevel.c_str());
   }
@@ -102,7 +103,8 @@ int main(int argc, char **argv)
       return kExitSuccess;
     }
 
-    const auto ipcServer = new ipc::DaemonIpcServer(&app, DaemonApp::logFilename().c_str()); // NOSONAR - Qt managed
+    const auto ipcServer =
+        new ipc::DaemonIpcServer(&app, DaemonApp::logFilename().toStdString().c_str()); // NOSONAR - Qt managed
     ipcServer->listen();
     daemon.connectIpcServer(ipcServer);
 
