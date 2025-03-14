@@ -153,7 +153,7 @@ private:
   void initSettings();
 
   QSettings *m_settings = nullptr;
-  QString m_portableSettingsFile = QStringLiteral("%1.conf").arg(kAppName);
+  QString m_portableSettingsFile = QStringLiteral("settings/%1.conf").arg(kAppName);
 
   // clang-format off
   inline static const QStringList m_logLevels = {
