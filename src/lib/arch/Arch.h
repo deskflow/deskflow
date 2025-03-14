@@ -36,7 +36,6 @@
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "arch/win32/ArchSleepWindows.h"
 #include "arch/win32/ArchStringWindows.h"
-#include "arch/win32/ArchSystemWindows.h"
 #include "arch/win32/ArchTimeWindows.h"
 
 #elif SYSAPI_UNIX
@@ -48,7 +47,6 @@
 #include "arch/unix/ArchNetworkBSD.h"
 #include "arch/unix/ArchSleepUnix.h"
 #include "arch/unix/ArchStringUnix.h"
-#include "arch/unix/ArchSystemUnix.h"
 #include "arch/unix/ArchTimeUnix.h"
 
 #if HAVE_PTHREAD
@@ -81,7 +79,6 @@ class Arch : public ARCH_CONSOLE,
              public ARCH_NETWORK,
              public ARCH_SLEEP,
              public ARCH_STRING,
-             public ARCH_SYSTEM,
              public ARCH_TIME
 {
 public:
