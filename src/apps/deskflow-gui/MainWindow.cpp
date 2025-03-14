@@ -210,6 +210,7 @@ void MainWindow::setupControls()
 
   secureSocket(false);
 
+  ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
   ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
 
   if (Settings::value(Settings::Core::LastVersion).toString() != kVersion) {
