@@ -116,7 +116,7 @@ private:
   void openSettings();
   void startCore();
   void stopCore();
-  bool saveConfig();
+  bool saveServerConfig();
   void testFatalError() const;
   void testCriticalError() const;
   void resetCore();

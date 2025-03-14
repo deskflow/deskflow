@@ -82,7 +82,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
       m_actionQuit{new QAction(tr("&Quit"), this)},
       m_actionTrayQuit{new QAction(tr("&Quit"), this)},
       m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
-      m_actionSave{new QAction(tr("Save configuration &as..."), this)},
       m_actionSettings{new QAction(tr("Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
       m_actionStopCore{new QAction(tr("S&top"), this)},
@@ -118,9 +117,6 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-
-  m_actionSave->setShortcut(QKeySequence(tr("Ctrl+Alt+S")));
-  m_actionSave->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSaveAs));
 
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
@@ -309,7 +305,6 @@ void MainWindow::connectSlots()
   connect(m_actionQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionTrayQuit, &QAction::triggered, this, &MainWindow::close);
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
-  connect(m_actionSave, &QAction::triggered, this, &MainWindow::saveConfig);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
   connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
@@ -335,6 +330,7 @@ void MainWindow::connectSlots()
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
 
+  connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(m_btnFingerprint, &QToolButton::clicked, this, &MainWindow::showMyFingerprint);
@@ -472,12 +468,12 @@ void MainWindow::clearSettings()
   diagnostic::clearSettings(m_configScopes, true);
 }
 
-bool MainWindow::saveConfig()
+bool MainWindow::saveServerConfig()
 {
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Save configuration as..."));
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save server configuration as..."));
 
   if (!fileName.isEmpty() && !m_serverConfig.save(fileName)) {
-    QMessageBox::warning(this, tr("Save failed"), tr("Could not save configuration to file."));
+    QMessageBox::warning(this, tr("Save failed"), tr("Could not save server configuration to file."));
     return true;
   }
 
