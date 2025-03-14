@@ -22,7 +22,4 @@ public:
   int getCertKeyLength(const QString &path);
   QString getCertificatePath() const;
   QString getTlsDir() const;
-
-private:
-  QString m_profileDir;
 };

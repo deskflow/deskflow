@@ -8,8 +8,7 @@
 #include "TlsCertificate.h"
 
 #include "base/finally.h"
-#include "common/constants.h"
-#include "gui/core/CoreTool.h"
+#include "common/Settings.h"
 #include "net/FingerprintData.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
@@ -25,10 +24,6 @@
 
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
 {
-  CoreTool coreTool;
-  m_profileDir = coreTool.getProfileDir();
-  if (m_profileDir.isEmpty())
-    qCritical() << "unable to get profile dir";
 }
 
 bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
@@ -77,12 +72,12 @@ int TlsCertificate::getCertKeyLength(const QString &path)
 
 QString TlsCertificate::getCertificatePath() const
 {
-  return QStringLiteral("%1/%2/%3").arg(m_profileDir, kTlsDirName, kTlsCertificateFilename);
+  return QStringLiteral("%1/%2/%3").arg(Settings::settingsPath(), kTlsDirName, kTlsCertificateFilename);
 }
 
 QString TlsCertificate::getTlsDir() const
 {
-  return QStringLiteral("%1/%2").arg(m_profileDir, kTlsDirName);
+  return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kTlsDirName);
 }
 
 bool TlsCertificate::isCertificateValid(const QString &path)
