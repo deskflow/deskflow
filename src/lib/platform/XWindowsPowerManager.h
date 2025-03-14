@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <string>
+
 class XWindowsPowerManager
 {
 public:
@@ -25,4 +27,11 @@ public:
 
   XWindowsPowerManager(const XWindowsPowerManager &) = delete;
   XWindowsPowerManager &operator=(const XWindowsPowerManager &) = delete;
+
+  enum class InhibitScreenServices
+  {
+    kScreenSaver,
+    kSessionManager
+  };
+  static bool inhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error);
 };
