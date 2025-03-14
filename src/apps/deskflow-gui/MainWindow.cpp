@@ -363,8 +363,8 @@ void MainWindow::toggleLogVisible(bool visible)
   }
   ui->textLog->setVisible(visible);
   Settings::setValue(Settings::Gui::LogExpanded, visible);
-  // 1 ms delay is to make sure we have left the function before calling updateSize
-  QTimer::singleShot(1, this, &MainWindow::updateSize);
+  // 15 ms delay is to make sure we have left the function before calling updateSize
+  QTimer::singleShot(15, this, &MainWindow::updateSize);
 }
 
 void MainWindow::firstShown()
