@@ -55,7 +55,7 @@ public:
   void initLogging();
   void connectIpcServer(const deskflow::core::ipc::DaemonIpcServer *ipcServer) const;
 
-  static std::string logFilename();
+  static QString logFilename();
 
 private:
   void daemonize();
