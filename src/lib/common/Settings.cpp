@@ -31,7 +31,6 @@ void Settings::setSettingFile(const QString &settingsFile)
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
-  m_portableSettingsFile = QStringLiteral("settings.ini");
   if (QFile(m_portableSettingsFile).exists()) {
     m_settings = new QSettings(m_portableSettingsFile, QSettings::IniFormat);
     qInfo().noquote() << "settings file:" << m_settings->fileName();
