@@ -34,12 +34,4 @@ inline QDir configDir(const bool persist = false)
   return orgDir.absolutePath();
 }
 
-/**
- * @brief Uses the Core tool to get the profile dir.
- */
-inline QDir coreProfileDir()
-{
-  return QDir(Settings::settingsPath());
-}
-
 } // namespace deskflow::gui::paths

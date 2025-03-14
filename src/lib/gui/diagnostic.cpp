@@ -39,11 +39,7 @@ void clearSettings(ConfigScopes &scopes, bool enableRestart)
   // the app config and server configs from being applied.
   scopes.save(false);
 
-  auto configDir = paths::configDir();
-  qDebug("removing config dir: %s", qPrintable(configDir.absolutePath()));
-  configDir.removeRecursively();
-
-  auto profileDir = paths::coreProfileDir();
+  auto profileDir = QDir(Settings::settingsPath());
   qDebug("removing profile dir: %s", qPrintable(profileDir.absolutePath()));
   profileDir.removeRecursively();
 
