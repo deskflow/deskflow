@@ -7,7 +7,6 @@
 #include "CoreProcess.h"
 
 #include "common/Settings.h"
-#include "gui/core/CoreTool.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/paths.h"
 #include "tls/TlsUtility.h"
@@ -134,15 +133,7 @@ bool CoreProcess::Deps::fileExists(const QString &path) const
 
 QString CoreProcess::Deps::getProfileRoot() const
 {
-  CoreTool coreTool;
-  QDir appDir = coreTool.getProfileDir();
-
-  // the core expects the profile root dir, not the app-specific profile dir.
-  if (!appDir.cdUp()) {
-    qFatal("failed to cd up to profile root dir");
-  }
-
-  return appDir.absolutePath();
+  return deskflow::gui::paths::configDir().absolutePath();
 }
 
 //
