@@ -9,16 +9,6 @@
 
 #include <gtest/gtest.h>
 
-TEST(CoreToolTests, getProfileDir_noMock_returnsNonEmpty)
-{
-  TestQtCoreApp app;
-  CoreTool coreTool;
-
-  QString profileDir = coreTool.getProfileDir();
-
-  EXPECT_FALSE(profileDir.isEmpty());
-}
-
 TEST(CoreToolTests, getInstalledDir_noMock_returnsNonEmpty)
 {
   TestQtCoreApp app;

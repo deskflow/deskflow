@@ -15,16 +15,6 @@
 
 #include <QDir>
 
-QString CoreTool::getProfileDir() const
-{
-#if defined Q_OS_UNIX
-  ArchFileUnix sysInfo;
-#elif defined Q_OS_WIN
-  ArchFileWindows sysInfo;
-#endif
-  return QDir::cleanPath(QString::fromUtf8(sysInfo.getProfileDirectory()));
-}
-
 QString CoreTool::getInstalledDir() const
 {
 #if defined Q_OS_UNIX
