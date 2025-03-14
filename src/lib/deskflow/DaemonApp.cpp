@@ -55,20 +55,20 @@ void DaemonApp::saveLogLevel(const QString &logLevel) const
     // saves setting for next time the daemon starts.
     ARCH->setting("LogLevel", logLevel.toStdString());
   } catch (XArch &e) {
-    LOG((CLOG_ERR "failed to save log level setting: %s", e.what()));
+    LOG_ERR("failed to save log level setting: %s", e.what());
   }
 }
 
 void DaemonApp::setElevate(bool elevate)
 {
-  LOG((CLOG_DEBUG "elevate value changed: %s", elevate ? "yes" : "no"));
+  LOG_DEBUG("elevate value changed: %s", elevate ? "yes" : "no");
   m_elevate = elevate;
 
   try {
     // saves setting for next time the daemon starts.
     ARCH->setting("Elevate", std::string(elevate ? "1" : "0"));
   } catch (XArch &e) {
-    LOG((CLOG_ERR "failed to save elevate setting: %s", e.what()));
+    LOG_ERR("failed to save elevate setting: %s", e.what());
   }
 }
 
@@ -81,7 +81,7 @@ void DaemonApp::setCommand(const QString &command)
     // saves setting for next time the daemon starts.
     ARCH->setting("Command", command.toStdString());
   } catch (XArch &e) {
-    LOG((CLOG_ERR "failed to save command setting: %s", e.what()));
+    LOG_ERR("failed to save command setting: %s", e.what());
   }
 }
 
@@ -230,21 +230,22 @@ int DaemonApp::mainLoop()
 
     LOG_INFO("daemon is running");
     m_events.loop();
-    LOG_INFO("daemon is stopping");
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
     LOG((CLOG_CRIT "daemon error: %s", e.what()));
   } catch (...) { // NOSONAR - Catching remaining exceptions
     LOG((CLOG_CRIT "daemon unknown error"));
   }
 
+  LOG_INFO("daemon is stopping");
+
 #if SYSAPI_WIN32
   try {
     LOG_DEBUG("stopping process watchdog");
     m_pWatchdog->stop();
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
-    LOG((CLOG_CRIT "stop watchdog error: %s", e.what()));
+    LOG((CLOG_CRIT "daemon stop watchdog error: %s", e.what()));
   } catch (...) { // NOSONAR - Catching remaining exceptions
-    LOG((CLOG_CRIT "stop watchdog unknown error"));
+    LOG((CLOG_CRIT "daemon stop watchdog unknown error"));
   }
 #endif
 
