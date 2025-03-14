@@ -90,7 +90,7 @@ DWORD MSWindowsProcess::waitForExit()
 {
   const auto kMaxWaitMilliseconds = 10000;
 
-  LOG_INFO("waiting for process to exit, pid: %lu", m_info.dwProcessId);
+  LOG_DEBUG("waiting for process to exit, pid: %lu", m_info.dwProcessId);
   if (WaitForSingleObject(m_info.hProcess, kMaxWaitMilliseconds) != WAIT_OBJECT_0) {
     LOG_ERR("process did not exit within the expected time");
     TerminateProcess(m_info.hProcess, 1);

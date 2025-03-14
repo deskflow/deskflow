@@ -62,7 +62,7 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 
   HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
   if (handle == nullptr) {
-    LOG((CLOG_ERR "could not open process handle for kill"));
+    LOG_ERR("could not open process handle for kill");
     throw XArch(new XArchEvalWindows);
   }
 
@@ -101,15 +101,15 @@ void MSWindowsWatchdog::stop()
   m_running = false;
 
   if (!m_mainThread->wait(kThreadWaitSeconds)) {
-    LOG((CLOG_WARN "could not stop main thread"));
+    LOG_WARN("could not stop main thread");
   }
 
   if (!m_outputThread->wait(kThreadWaitSeconds)) {
-    LOG((CLOG_WARN "could not stop output thread"));
+    LOG_WARN("could not stop output thread");
   }
 
   if (!m_sasThread->wait(kThreadWaitSeconds)) {
-    LOG((CLOG_WARN "could not stop sas thread"));
+    LOG_WARN("could not stop sas thread");
   }
 }
 
@@ -121,11 +121,11 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
   BOOL tokenRet = OpenProcessToken(process, TOKEN_ASSIGN_PRIMARY | TOKEN_ALL_ACCESS, &sourceToken);
 
   if (!tokenRet) {
-    LOG((CLOG_ERR "could not open token, process handle: %d", process));
+    LOG_ERR("could not open token, process handle: %d", process);
     throw XArch(new XArchEvalWindows());
   }
 
-  LOG((CLOG_DEBUG "got token %i, duplicating", sourceToken));
+  LOG_DEBUG("got token %i, duplicating", sourceToken);
 
   HANDLE newToken;
   BOOL duplicateRet = DuplicateTokenEx(
@@ -133,11 +133,11 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
   );
 
   if (!duplicateRet) {
-    LOG((CLOG_ERR "could not duplicate token %i", sourceToken));
+    LOG_ERR("could not duplicate token %i", sourceToken);
     throw XArch(new XArchEvalWindows());
   }
 
-  LOG((CLOG_DEBUG "duplicated, new token: %i", newToken));
+  LOG_DEBUG("duplicated, new token: %i", newToken);
   return newToken;
 }
 
@@ -152,7 +152,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
   // and so would be unusable with the new elevated process taking focus.
   if (elevatedToken || m_session.isProcessInSession("logonui.exe", nullptr)) {
 
-    LOG((CLOG_DEBUG "getting elevated token, %s", (elevatedToken ? "elevation required" : "at login screen")));
+    LOG_DEBUG("getting elevated token, %s", (elevatedToken ? "elevation required" : "at login screen"));
 
     HANDLE process;
     if (!m_session.isProcessInSession("winlogon.exe", &process)) {
@@ -167,7 +167,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
       throw e;
     }
   } else {
-    LOG((CLOG_DEBUG "getting non-elevated token"));
+    LOG_DEBUG("getting non-elevated token");
     return m_session.getUserToken(security);
   }
 }
@@ -178,6 +178,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
   LOG_DEBUG("starting watchdog main loop");
   while (m_running) {
+    LOG_DEBUG3("locking process state mutex in watchdog main loop");
     std::unique_lock lock(m_processStateMutex);
 
     if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
@@ -190,11 +191,11 @@ void MSWindowsWatchdog::mainLoop(void *)
       using enum ProcessState;
 
     case Idle:
-      LOG_DEBUG3("watchdog: process idle");
+      LOG_DEBUG3("watchdog process state idle");
       break;
 
     case StartScheduled: {
-      LOG_DEBUG3("watchdog: process start scheduled");
+      LOG_DEBUG3("watchdog process start scheduled");
       if (m_nextStartTime.has_value() && m_nextStartTime.value() <= ARCH->time()) {
         LOG_DEBUG("start time reached, queueing process start");
         m_processState = StartPending;
@@ -202,7 +203,7 @@ void MSWindowsWatchdog::mainLoop(void *)
     } break;
 
     case StartPending: {
-      LOG_INFO("daemon starting new process");
+      LOG_DEBUG("watchdog starting new process");
       try {
         startProcess();
         m_startFailures = 0;
@@ -217,15 +218,15 @@ void MSWindowsWatchdog::mainLoop(void *)
     } break;
 
     case Running: {
-      LOG_DEBUG3("watchdog: process running");
+      LOG_DEBUG3("watchdog process in running state");
       if (!isProcessRunning()) {
-        LOG((CLOG_WARN "detected application not running, pid=%d", m_process->info().dwProcessId));
+        LOG_WARN("detected application not running, pid=%d", m_process->info().dwProcessId);
         m_processState = StartPending;
       }
     } break;
 
     case StopPending: {
-      LOG_INFO("stopping running process");
+      LOG_DEBUG("watchdog stopping current process");
       if (m_process != nullptr) {
         m_process->shutdown();
         m_process.reset();
@@ -237,16 +238,18 @@ void MSWindowsWatchdog::mainLoop(void *)
     } break;
     }
 
+    LOG_DEBUG3("unlocking process state mutex in watchdog main loop");
     lock.unlock();
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
+    LOG_DEBUG3("watchdog main loop sleeping");
     ARCH->sleep(0.1);
   }
 
   LOG_DEBUG("watchdog main loop finished");
 
   if (m_process != nullptr) {
-    LOG((CLOG_DEBUG "terminated running process on exit"));
+    LOG_DEBUG("terminated running process on exit");
     m_process->shutdown();
     m_process.reset();
   }
@@ -272,7 +275,7 @@ void MSWindowsWatchdog::startProcess()
   }
 
   if (m_process != nullptr) {
-    LOG((CLOG_DEBUG "closing existing process to make way for new one"));
+    LOG_DEBUG("closing existing process to make way for new one");
     m_process->shutdown();
     m_process.reset();
   }
@@ -305,14 +308,13 @@ void MSWindowsWatchdog::startProcess()
   }
 
   if (!createRet) {
-    LOG((CLOG_CRIT "could not launch command"));
     DWORD exitCode = 0;
     GetExitCodeProcess(m_process->info().hProcess, &exitCode);
-    LOG((CLOG_ERR "exit code: %d", exitCode));
+    LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
     throw XArch(new XArchEvalWindows);
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
-    LOG_DEBUG("waiting for process start result");
+    LOG_DEBUG("watchdog waiting for process start result");
     ARCH->sleep(1);
 
     if (!isProcessRunning()) {
@@ -320,19 +322,20 @@ void MSWindowsWatchdog::startProcess()
       throw XArch("process immediately stopped");
     }
 
-    LOG((CLOG_DEBUG "started core process from daemon"));
-    LOG(
-        (CLOG_DEBUG2 "process info, session=%i, elevated: %s, command=%s", m_session.getActiveSessionId(),
-         m_elevateProcess ? "yes" : "no", m_command.c_str())
+    LOG_DEBUG("started core process from watchdog");
+    LOG_DEBUG2(
+        "process info, session=%i, elevated=%s, command: %s", //
+        m_session.getActiveSessionId(), m_elevateProcess ? "yes" : "no", m_command.c_str()
     );
   }
 }
 
 void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool elevate)
 {
-  LOG_DEBUG("updating watchdog process config");
+  LOG_DEBUG1("locking process state mutex for watchdog config change");
   std::lock_guard lock(m_processStateMutex);
 
+  LOG_DEBUG("setting watchdog process config");
   m_command = command;
   m_elevateProcess = elevate;
 
@@ -390,7 +393,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, kAllProcesses);
   if (snapshot == INVALID_HANDLE_VALUE) {
-    LOG((CLOG_ERR "could not get process snapshot"));
+    LOG_ERR("could not get process snapshot");
     throw XArch(new XArchEvalWindows);
   }
 
@@ -401,7 +404,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   // unlikely we can go any further
   BOOL gotEntry = Process32First(snapshot, &entry);
   if (!gotEntry) {
-    LOG((CLOG_ERR "could not get first process entry"));
+    LOG_ERR("could not get first process entry");
     throw XArch(new XArchEvalWindows);
   }
 
@@ -409,7 +412,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   while (gotEntry) {
 
     if (HANDLE handle = openProcessForKill(entry); handle != nullptr) {
-      LOG((CLOG_INFO "shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID));
+      LOG_DEBUG("shutting down process, name=%s, pid=%d", entry.szExeFile, entry.th32ProcessID);
       deskflow::platform::MSWindowsProcess::shutdown(handle, entry.th32ProcessID);
       CloseHandle(handle);
     }
@@ -422,7 +425,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
       if (err != ERROR_NO_MORE_FILES) {
 
         // only worry about error if it's not the end of the snapshot
-        LOG((CLOG_ERR "could not get next process entry"));
+        LOG_ERR("could not get next process entry");
         throw XArch(new XArchEvalWindows);
       }
     }
@@ -558,13 +561,15 @@ void MSWindowsWatchdog::initSasFunc()
 
 void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signature
 {
+  LOG_DEBUG3("watchdog creating sas event");
+
   if (m_sendSasFunc == nullptr) {
     throw XArch("SendSAS function not initialized");
   }
 
   while (m_running) {
     if (m_processState != ProcessState::Running) {
-      LOG_DEBUG2("watchdog: not running, skipping SendSAS");
+      LOG_DEBUG2("watchdog not running, skipping SendSAS");
       ARCH->sleep(1);
       continue;
     }

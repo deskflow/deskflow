@@ -191,7 +191,7 @@ void CoreProcess::daemonIpcClientConnected()
       m_daemonFileTail->deleteLater();
     }
 
-    qInfo() << "daemon log path:" << logPath;
+    qDebug() << "daemon log path:" << logPath;
     m_daemonFileTail = new FileTail(logPath, this);
     connect(m_daemonFileTail, &FileTail::newLine, this, &CoreProcess::handleLogLines);
   }
