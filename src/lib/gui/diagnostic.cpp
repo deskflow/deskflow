@@ -7,7 +7,6 @@
 #include "diagnostic.h"
 
 #include "common/Settings.h"
-#include "config/ConfigScopes.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -30,14 +29,14 @@ void restart()
   QCoreApplication::exit();
 }
 
-void clearSettings(ConfigScopes &scopes, bool enableRestart)
+void clearSettings(bool enableRestart)
 {
   qDebug("clearing settings");
-  scopes.clear();
+  Settings::proxy().clear();
 
   // save but do not emit saving signal which will prevent the current state of
   // the app config and server configs from being applied.
-  scopes.save(false);
+  Settings::save(false);
 
   auto profileDir = QDir(Settings::settingsPath());
   qDebug("removing profile dir: %s", qPrintable(profileDir.absolutePath()));

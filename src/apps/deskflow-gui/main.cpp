@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
   const auto noReset = hasArg("--no-reset", arguments);
   const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
   if (resetEnvVar && !noReset) {
-    diagnostic::clearSettings(configScopes, false);
+    diagnostic::clearSettings(false);
   }
 
   MainWindow mainWindow(configScopes);
