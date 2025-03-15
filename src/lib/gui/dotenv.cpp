@@ -6,7 +6,7 @@
 
 #include "dotenv.h"
 
-#include "paths.h"
+#include "common/Settings.h"
 
 #include <QCoreApplication>
 #include <QDebug>
@@ -49,7 +49,7 @@ void dotenv(const QString &filename)
     // if nothing in current dir, then try the config dir.
     // this makes it a bit easier for engineers in the field to have an easily
     // predictable location for the .env file.
-    const auto orgDir = paths::configDir();
+    const auto orgDir = QDir(Settings::settingsPath());
 
     filePath = orgDir.filePath(filename);
     if (!open(file, filePath)) {

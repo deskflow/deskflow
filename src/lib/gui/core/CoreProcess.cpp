@@ -8,7 +8,6 @@
 
 #include "common/Settings.h"
 #include "gui/ipc/DaemonIpcClient.h"
-#include "gui/paths.h"
 #include "tls/TlsUtility.h"
 
 #if defined(Q_OS_MAC)
@@ -133,7 +132,7 @@ bool CoreProcess::Deps::fileExists(const QString &path) const
 
 QString CoreProcess::Deps::getProfileRoot() const
 {
-  return deskflow::gui::paths::configDir().absolutePath();
+  return Settings::settingsPath();
 }
 
 //
@@ -596,10 +595,8 @@ QString CoreProcess::persistServerConfig() const
     return Settings::value(Settings::Server::ExternalConfigFile).toString();
   }
 
-  const auto configDir = paths::configDir(true);
-  const auto configDirPath = configDir.absolutePath();
-
-  QFile configFile(configDirPath + "/" + kServerConfigFilename);
+  const auto configFilePath = QStringLiteral("%1/%2").arg(Settings::settingsPath(), kServerConfigFilename);
+  QFile configFile(configFilePath);
   if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     qFatal("failed to open core config file for write: %s", qPrintable(configFile.fileName()));
   }
