@@ -28,7 +28,6 @@ add_library(${target} STATIC
   Logger.h
   messages.cpp
   messages.h
-  paths.h
   string_utils.h
   style_utils.h
   styles.h
