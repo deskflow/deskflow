@@ -39,9 +39,7 @@ private:
   void browseCertificatePath();
   void browseLogPath();
   void setLogToFile(bool logToFile);
-  void setSystemScope(bool systemScope);
   void accept() override;
-  void reject() override;
   void showEvent(QShowEvent *event) override;
   bool isClientMode() const;
   void updateTlsControls();
@@ -59,11 +57,6 @@ private:
 
   /// @brief Enables controls when they should be.
   void updateControls();
-
-  /// @brief Stores settings scope at start of settings dialog
-  /// This is necessary to restore state if user changes
-  /// the scope and doesn't save changes
-  bool m_wasOriginallySystemScope = false;
 
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;

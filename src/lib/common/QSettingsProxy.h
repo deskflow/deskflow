@@ -15,8 +15,6 @@ class QSettingsProxy
 public:
   virtual ~QSettingsProxy() = default;
 
-  virtual void loadUser();
-  virtual void loadSystem();
   virtual void load(const QString &fileName);
   virtual void clear()
   {
