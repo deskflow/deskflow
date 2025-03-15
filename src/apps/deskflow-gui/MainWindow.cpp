@@ -63,7 +63,7 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
     : ui{std::make_unique<Ui::MainWindow>()},
       m_configScopes(configScopes),
       m_appConfig(appConfig),
-      m_serverConfig(appConfig, *this),
+      m_serverConfig(*this),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
