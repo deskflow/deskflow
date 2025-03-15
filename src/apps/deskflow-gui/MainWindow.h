@@ -18,7 +18,6 @@
 
 #include "ServerConfig.h"
 #include "VersionChecker.h"
-#include "gui/config/ConfigScopes.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
@@ -73,7 +72,7 @@ public:
   };
 
 public:
-  explicit MainWindow(deskflow::gui::ConfigScopes &configScopes);
+  explicit MainWindow();
   ~MainWindow() override;
 
   CoreMode coreMode() const
@@ -187,7 +186,6 @@ private:
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-  deskflow::gui::ConfigScopes &m_configScopes;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   deskflow::gui::ServerConnection m_serverConnection;

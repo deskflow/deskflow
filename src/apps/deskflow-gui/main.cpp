@@ -9,7 +9,6 @@
 #include "MainWindow.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
-#include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/diagnostic.h"
 #include "gui/dotenv.h"
@@ -132,8 +131,6 @@ int main(int argc, char *argv[])
   }
 #endif
 
-  ConfigScopes configScopes;
-
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
@@ -142,7 +139,7 @@ int main(int argc, char *argv[])
     diagnostic::clearSettings(false);
   }
 
-  MainWindow mainWindow(configScopes);
+  MainWindow mainWindow;
   mainWindow.open();
 
   return QApplication::exec();
