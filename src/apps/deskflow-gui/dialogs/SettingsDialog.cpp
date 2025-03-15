@@ -43,7 +43,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
-  m_wasOriginallySystemScope = Settings::isSystemScope();
   updateControls();
 
   adjustSize();
@@ -60,7 +59,7 @@ void SettingsDialog::initConnections()
   connect(Settings::instance(), &Settings::writableChanged, this, &SettingsDialog::showReadOnlyMessage);
 
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &SettingsDialog::accept);
-  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &SettingsDialog::reject);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
@@ -68,9 +67,6 @@ void SettingsDialog::initConnections()
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
   connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
-
-  // We only need to test the System scoped Radio as they are connected
-  connect(ui->rbScopeSystem, &QRadioButton::toggled, this, &SettingsDialog::setSystemScope);
 }
 
 void SettingsDialog::regenCertificates()
@@ -113,17 +109,6 @@ void SettingsDialog::setLogToFile(bool logToFile)
   ui->widgetLogFilename->setEnabled(logToFile);
 }
 
-void SettingsDialog::setSystemScope(bool systemScope)
-{
-  Settings::setScope(systemScope);
-  loadFromConfig();
-  updateControls();
-
-  if (isVisible() && Settings::isWritable()) {
-    showReadOnlyMessage();
-  }
-}
-
 void SettingsDialog::showEvent(QShowEvent *event)
 {
   QDialog::showEvent(event);
@@ -139,7 +124,6 @@ void SettingsDialog::showReadOnlyMessage()
 
 void SettingsDialog::accept()
 {
-  Settings::setScope(ui->rbScopeSystem->isChecked());
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
   Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
@@ -168,19 +152,8 @@ void SettingsDialog::accept()
   QDialog::accept();
 }
 
-void SettingsDialog::reject()
-{
-  // restore original system scope value on reject.
-  if (Settings::isSystemScope() != m_wasOriginallySystemScope) {
-    Settings::setScope(m_wasOriginallySystemScope);
-  }
-
-  QDialog::reject();
-}
-
 void SettingsDialog::loadFromConfig()
 {
-
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
   ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
@@ -193,12 +166,6 @@ void SettingsDialog::loadFromConfig()
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(Settings::value(Settings::Core::ElevateMode).toInt());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
-
-  if (Settings::isSystemScope()) {
-    ui->rbScopeSystem->setChecked(true);
-  } else {
-    ui->rbScopeUser->setChecked(true);
-  }
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->cbServiceEnabled->setChecked(processMode == Settings::ProcessMode::Service);
