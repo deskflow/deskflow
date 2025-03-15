@@ -31,9 +31,6 @@ add_library(${target} STATIC
   string_utils.h
   style_utils.h
   styles.h
-  config/ConfigScopes.cpp
-  config/ConfigScopes.h
-  config/IConfigScopes.h
   config/IServerConfig.h
   config/Screen.cpp
   config/Screen.h
