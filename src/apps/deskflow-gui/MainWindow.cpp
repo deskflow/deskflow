@@ -290,8 +290,7 @@ void MainWindow::connectSlots()
 
   connect(this, &MainWindow::shown, this, &MainWindow::firstShown, Qt::QueuedConnection);
 
-  connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
-
+  connect(Settings::instance(), &Settings::serverSettingsChanged, this, &MainWindow::serverConfigSaving);
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
@@ -401,7 +400,7 @@ void MainWindow::settingsChanged(const QString &key)
   }
 }
 
-void MainWindow::configScopesSaving()
+void MainWindow::serverConfigSaving()
 {
   m_serverConfig.commit();
 }
@@ -505,7 +504,7 @@ void MainWindow::openSettings()
   auto dialog = SettingsDialog(this, m_serverConfig, m_coreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
-    m_configScopes.save();
+    Settings::save();
 
     applyConfig();
 
@@ -569,7 +568,7 @@ void MainWindow::coreModeToggled()
   const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
   Settings::setValue(Settings::Core::CoreMode, coreMode);
 
-  m_configScopes.save();
+  Settings::save();
   updateModeControls(serverMode);
 }
 
@@ -731,7 +730,7 @@ void MainWindow::saveSettings()
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
   Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
-  m_configScopes.save();
+  Settings::save();
 }
 
 void MainWindow::setIcon()

@@ -100,7 +100,7 @@ private:
   void firstShown();
 
   void settingsChanged(const QString &key = QString());
-  void configScopesSaving();
+  void serverConfigSaving();
   void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);

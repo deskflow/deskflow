@@ -26,17 +26,21 @@ void Settings::setSettingFile(const QString &settingsFile)
   if (instance()->m_settings)
     instance()->m_settings->deleteLater();
   instance()->m_settings = new QSettings(instance()->m_portableSettingsFile, QSettings::IniFormat);
+  instance()->m_settingsProxy->load(instance()->m_portableSettingsFile);
   qInfo().noquote() << "settings file:" << instance()->m_settings->fileName();
 }
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
+  m_settingsProxy = std::make_shared<QSettingsProxy>();
   if (QFile(m_portableSettingsFile).exists()) {
     m_settings = new QSettings(m_portableSettingsFile, QSettings::IniFormat);
+    m_settingsProxy->load(m_portableSettingsFile);
     qInfo().noquote() << "settings file:" << m_settings->fileName();
     return;
   }
   initSettings();
+  m_settingsProxy->load(m_settings->fileName());
 }
 
 bool Settings::isPortableSettings()
@@ -123,6 +127,18 @@ QVariant Settings::defaultValue(const QString &key)
 const QString Settings::logLevelText()
 {
   return instance()->m_logLevels.at(instance()->value(Log::Level).toInt());
+}
+
+QSettingsProxy &Settings::proxy()
+{
+  return *instance()->m_settingsProxy;
+}
+
+void Settings::save(bool emitSaving)
+{
+  if (emitSaving)
+    Q_EMIT instance()->serverSettingsChanged();
+  instance()->m_settings->sync();
 }
 
 bool Settings::isWritable()

@@ -17,6 +17,7 @@ public:
 
   virtual void loadUser();
   virtual void loadSystem();
+  virtual void load(const QString &fileName);
   virtual void clear()
   {
     m_pSettings->clear();

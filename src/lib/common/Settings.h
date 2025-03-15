@@ -11,6 +11,7 @@
 
 #include <QDir>
 
+#include "common/QSettingsProxy.h"
 #include "common/constants.h"
 
 class Settings : public QObject
@@ -137,11 +138,14 @@ public:
   static const QString settingsFile();
   static const QString settingsPath();
   static const QString logLevelText();
+  static QSettingsProxy &proxy();
+  static void save(bool emitSaving = true);
 
 signals:
   void scopeChanged(bool isSystemScope);
   void writableChanged(bool canWrite);
   void settingsChanged(const QString key);
+  void serverSettingsChanged();
 
 private:
   explicit Settings(QObject *parent = nullptr);
@@ -154,6 +158,7 @@ private:
 
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("settings/%1.conf").arg(kAppName);
+  std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
   inline static const QStringList m_logLevels = {
