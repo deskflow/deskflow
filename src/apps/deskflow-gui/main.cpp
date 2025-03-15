@@ -9,7 +9,6 @@
 #include "MainWindow.h"
 #include "common/constants.h"
 #include "gui/Logger.h"
-#include "gui/config/AppConfig.h"
 #include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/diagnostic.h"
