@@ -59,10 +59,9 @@ using namespace deskflow::gui;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
+MainWindow::MainWindow(ConfigScopes &configScopes)
     : ui{std::make_unique<Ui::MainWindow>()},
       m_configScopes(configScopes),
-      m_appConfig(appConfig),
       m_serverConfig(*this),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
