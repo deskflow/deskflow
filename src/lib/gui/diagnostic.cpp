@@ -6,8 +6,8 @@
 
 #include "diagnostic.h"
 
+#include "common/Settings.h"
 #include "config/ConfigScopes.h"
-#include "paths.h"
 
 #include <QCoreApplication>
 #include <QDir>
