@@ -143,9 +143,7 @@ int main(int argc, char *argv[])
     diagnostic::clearSettings(configScopes, false);
   }
 
-  AppConfig appConfig(configScopes);
-
-  MainWindow mainWindow(configScopes, appConfig);
+  MainWindow mainWindow(configScopes);
   mainWindow.open();
 
   return QApplication::exec();
