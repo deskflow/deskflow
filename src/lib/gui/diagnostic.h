@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include "gui/config/ConfigScopes.h"
-
 namespace deskflow::gui::diagnostic {
 
-void clearSettings(ConfigScopes &scopes, bool enableRestart);
+void clearSettings(bool enableRestart);
 
 }

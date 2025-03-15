@@ -464,7 +464,7 @@ void MainWindow::clearSettings()
   m_coreProcess.clearSettings();
 
   m_saveOnExit = false;
-  diagnostic::clearSettings(m_configScopes, true);
+  diagnostic::clearSettings(true);
 }
 
 bool MainWindow::saveServerConfig()
