@@ -36,9 +36,8 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(AppConfig &appConfig, MainWindow &mainWindow, int columns, int rows)
-    : m_pAppConfig(&appConfig),
-      m_pMainWindow(&mainWindow),
+ServerConfig::ServerConfig(MainWindow &mainWindow, int columns, int rows)
+    : m_pMainWindow(&mainWindow),
       m_Screens(columns),
       m_Columns(columns),
       m_Rows(rows),
@@ -76,7 +75,6 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&         //
          m_SwitchCorners == sc.m_SwitchCorners &&               //
          m_Hotkeys == sc.m_Hotkeys &&                           //
-         m_pAppConfig == sc.m_pAppConfig &&                     //
          m_EnableDragAndDrop == sc.m_EnableDragAndDrop &&       //
          m_DisableLockToScreen == sc.m_DisableLockToScreen &&   //
          m_ClipboardSharing == sc.m_ClipboardSharing &&         //
@@ -540,5 +538,5 @@ size_t ServerConfig::setClipboardSharingSize(size_t size)
 
 QSettingsProxy &ServerConfig::settings()
 {
-  return m_pAppConfig->scopes().activeSettings();
+  return Settings::proxy();
 }
