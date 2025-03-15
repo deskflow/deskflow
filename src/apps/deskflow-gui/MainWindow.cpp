@@ -17,7 +17,6 @@
 #include "base/String.h"
 #include "common/Settings.h"
 #include "gui/Logger.h"
-#include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
@@ -59,9 +58,8 @@ using namespace deskflow::gui;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-MainWindow::MainWindow(ConfigScopes &configScopes)
+MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
-      m_configScopes(configScopes),
       m_serverConfig(*this),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
@@ -140,13 +138,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes)
 
   setupTrayIcon();
 
-  m_configScopes.signalReady();
-
   updateScreenName();
   applyConfig();
   restoreWindow();
 
-  qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
+  qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
   updateSize();
 
