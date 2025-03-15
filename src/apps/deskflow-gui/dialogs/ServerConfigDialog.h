@@ -10,7 +10,6 @@
 
 #include "ScreenSetupModel.h"
 #include "ServerConfig.h"
-#include "gui/config/AppConfig.h"
 
 #include <QDialog>
 

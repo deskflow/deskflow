@@ -28,15 +28,9 @@ add_library(${target} STATIC
   Logger.h
   messages.cpp
   messages.h
-  paths.h
   string_utils.h
   style_utils.h
   styles.h
-  config/AppConfig.cpp
-  config/AppConfig.h
-  config/ConfigScopes.cpp
-  config/ConfigScopes.h
-  config/IConfigScopes.h
   config/IServerConfig.h
   config/Screen.cpp
   config/Screen.h

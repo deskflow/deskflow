@@ -11,6 +11,7 @@
 
 #include <QDir>
 
+#include "common/QSettingsProxy.h"
 #include "common/constants.h"
 
 class Settings : public QObject
@@ -46,7 +47,6 @@ public:
     inline static const auto Port = QStringLiteral("core/port");
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
-    inline static const auto Scope = QStringLiteral("core/loadFromSystemScope");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
   };
@@ -132,16 +132,17 @@ public:
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
-  static bool isSystemScope();
-  static void setScope(bool systemScope);
   static const QString settingsFile();
   static const QString settingsPath();
   static const QString logLevelText();
+  static QSettingsProxy &proxy();
+  static void save(bool emitSaving = true);
 
 signals:
   void scopeChanged(bool isSystemScope);
   void writableChanged(bool canWrite);
   void settingsChanged(const QString key);
+  void serverSettingsChanged();
 
 private:
   explicit Settings(QObject *parent = nullptr);
@@ -150,10 +151,10 @@ private:
   ~Settings() = default;
   static bool isPortableSettings();
   void cleanSettings();
-  void initSettings();
 
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("settings/%1.conf").arg(kAppName);
+  std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
   inline static const QStringList m_logLevels = {
@@ -175,7 +176,6 @@ private:
     , Settings::Core::Port
     , Settings::Core::PreventSleep
     , Settings::Core::ProcessMode
-    , Settings::Core::Scope
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
     , Settings::Log::File

@@ -26,35 +26,37 @@ void Settings::setSettingFile(const QString &settingsFile)
   if (instance()->m_settings)
     instance()->m_settings->deleteLater();
   instance()->m_settings = new QSettings(instance()->m_portableSettingsFile, QSettings::IniFormat);
+  instance()->m_settingsProxy->load(instance()->m_portableSettingsFile);
   qInfo().noquote() << "settings file:" << instance()->m_settings->fileName();
 }
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
+  QString fileToLoad;
   if (QFile(m_portableSettingsFile).exists()) {
-    m_settings = new QSettings(m_portableSettingsFile, QSettings::IniFormat);
-    qInfo().noquote() << "settings file:" << m_settings->fileName();
-    return;
+    fileToLoad = m_portableSettingsFile;
+  } else {
+#ifdef Q_OS_WIN
+    fileToLoad = SystemSettingFile;
+#else
+    if (QFile(UserSettingFile).exists())
+      fileToLoad = UserSettingFile;
+    else if (QFile(SystemSettingFile).exists())
+      fileToLoad = SystemSettingFile;
+    else
+      fileToLoad = UserSettingFile;
+#endif
   }
-  initSettings();
+
+  m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
+  m_settingsProxy = std::make_shared<QSettingsProxy>();
+  m_settingsProxy->load(fileToLoad);
+  qInfo().noquote() << "settings file:" << m_settings->fileName();
 }
 
 bool Settings::isPortableSettings()
 {
   return (QFile(instance()->m_portableSettingsFile).exists());
-}
-
-void Settings::initSettings()
-{
-
-  if (m_settings)
-    m_settings->deleteLater();
-
-  const auto userScopeCheck = QSettings(UserSettingFile, QSettings::IniFormat).value(Core::Scope).toBool();
-  const auto systemScopeCheck = QSettings(SystemSettingFile, QSettings::IniFormat).value(Core::Scope).toBool();
-  const auto systemScope = (userScopeCheck && systemScopeCheck);
-  m_settings = new QSettings(systemScope ? SystemSettingFile : UserSettingFile, QSettings::IniFormat);
-  qInfo().noquote() << "settings file:" << m_settings->fileName();
 }
 
 void Settings::cleanSettings()
@@ -70,7 +72,7 @@ void Settings::cleanSettings()
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if ((key == Core::Scope) || (key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
+  if ((key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
       (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile)) {
     return false;
   }
@@ -125,46 +127,21 @@ const QString Settings::logLevelText()
   return instance()->m_logLevels.at(instance()->value(Log::Level).toInt());
 }
 
+QSettingsProxy &Settings::proxy()
+{
+  return *instance()->m_settingsProxy;
+}
+
+void Settings::save(bool emitSaving)
+{
+  if (emitSaving)
+    Q_EMIT instance()->serverSettingsChanged();
+  instance()->m_settings->sync();
+}
+
 bool Settings::isWritable()
 {
   return instance()->m_settings->isWritable();
-}
-
-bool Settings::isSystemScope()
-{
-  if (isPortableSettings()) {
-    return false;
-  }
-  return instance()->settingsFile() == SystemSettingFile;
-}
-
-void Settings::setScope(bool systemScope)
-{
-  if (isPortableSettings()) {
-    return;
-  }
-
-  if (systemScope == isSystemScope())
-    return;
-
-  const bool wasWritable = instance()->m_settings->isWritable();
-
-  QSettings userSettings(Settings::UserSettingFile, QSettings::IniFormat);
-  userSettings.setValue(Core::Scope, systemScope);
-  userSettings.sync();
-
-  QSettings systemSettings(Settings::SystemSettingFile, QSettings::IniFormat);
-  systemSettings.setValue(Core::Scope, systemScope);
-  systemSettings.sync();
-
-  instance()->initSettings();
-
-  const bool isWritable = instance()->m_settings->isWritable();
-
-  if (isWritable != wasWritable)
-    Q_EMIT instance()->writableChanged(isWritable);
-
-  Q_EMIT instance()->scopeChanged(systemScope);
 }
 
 const QString Settings::settingsFile()
@@ -184,11 +161,8 @@ void Settings::setValue(const QString &key, const QVariant &value)
 
   if (!value.isValid())
     instance()->m_settings->remove(key);
-  else if (key == Core::Scope) {
-    instance()->setScope(value.value<QSettings::Scope>());
-  } else {
+  else
     instance()->m_settings->setValue(key, value);
-  }
 
   instance()->m_settings->sync();
   Q_EMIT instance()->settingsChanged(key);

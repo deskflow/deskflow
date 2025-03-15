@@ -18,8 +18,6 @@
 
 #include "ServerConfig.h"
 #include "VersionChecker.h"
-#include "gui/config/AppConfig.h"
-#include "gui/config/ConfigScopes.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
@@ -74,7 +72,7 @@ public:
   };
 
 public:
-  explicit MainWindow(deskflow::gui::ConfigScopes &configScopes, AppConfig &appConfig);
+  explicit MainWindow();
   ~MainWindow() override;
 
   CoreMode coreMode() const
@@ -100,7 +98,7 @@ private:
   void firstShown();
 
   void settingsChanged(const QString &key = QString());
-  void configScopesSaving();
+  void serverConfigSaving();
   void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);
@@ -130,14 +128,6 @@ private:
   std::unique_ptr<Ui::MainWindow> ui;
 
   void updateSize();
-  AppConfig &appConfig()
-  {
-    return m_appConfig;
-  }
-  AppConfig const &appConfig() const
-  {
-    return m_appConfig;
-  }
   void createMenuBar();
   void setupTrayIcon();
   void applyConfig();
@@ -196,8 +186,6 @@ private:
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
-  deskflow::gui::ConfigScopes &m_configScopes;
-  AppConfig &m_appConfig;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
   deskflow::gui::ServerConnection m_serverConnection;

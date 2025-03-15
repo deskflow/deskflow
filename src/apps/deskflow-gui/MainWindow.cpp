@@ -17,7 +17,6 @@
 #include "base/String.h"
 #include "common/Settings.h"
 #include "gui/Logger.h"
-#include "gui/config/ConfigScopes.h"
 #include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
@@ -59,11 +58,9 @@ using namespace deskflow::gui;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
+MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
-      m_configScopes(configScopes),
-      m_appConfig(appConfig),
-      m_serverConfig(appConfig, *this),
+      m_serverConfig(*this),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
@@ -145,13 +142,11 @@ MainWindow::MainWindow(ConfigScopes &configScopes, AppConfig &appConfig)
 
   setupTrayIcon();
 
-  m_configScopes.signalReady();
-
   updateScreenName();
   applyConfig();
   restoreWindow();
 
-  qDebug().noquote() << "active settings path:" << m_configScopes.activeFilePath();
+  qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
   updateSize();
 
@@ -290,8 +285,7 @@ void MainWindow::connectSlots()
 
   connect(this, &MainWindow::shown, this, &MainWindow::firstShown, Qt::QueuedConnection);
 
-  connect(&m_configScopes, &ConfigScopes::saving, this, &MainWindow::configScopesSaving, Qt::DirectConnection);
-
+  connect(Settings::instance(), &Settings::serverSettingsChanged, this, &MainWindow::serverConfigSaving);
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
@@ -401,7 +395,7 @@ void MainWindow::settingsChanged(const QString &key)
   }
 }
 
-void MainWindow::configScopesSaving()
+void MainWindow::serverConfigSaving()
 {
   m_serverConfig.commit();
 }
@@ -469,7 +463,7 @@ void MainWindow::clearSettings()
   m_coreProcess.clearSettings();
 
   m_saveOnExit = false;
-  diagnostic::clearSettings(m_configScopes, true);
+  diagnostic::clearSettings(true);
 }
 
 bool MainWindow::saveConfig()
@@ -505,7 +499,7 @@ void MainWindow::openSettings()
   auto dialog = SettingsDialog(this, m_serverConfig, m_coreProcess);
 
   if (dialog.exec() == QDialog::Accepted) {
-    m_configScopes.save();
+    Settings::save();
 
     applyConfig();
 
@@ -569,7 +563,7 @@ void MainWindow::coreModeToggled()
   const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
   Settings::setValue(Settings::Core::CoreMode, coreMode);
 
-  m_configScopes.save();
+  Settings::save();
   updateModeControls(serverMode);
 }
 
@@ -731,7 +725,7 @@ void MainWindow::saveSettings()
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
   Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
-  m_configScopes.save();
+  Settings::save();
 }
 
 void MainWindow::setIcon()

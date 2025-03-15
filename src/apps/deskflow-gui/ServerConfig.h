@@ -23,7 +23,6 @@ class QString;
 class QFile;
 class ServerConfigDialog;
 class MainWindow;
-class AppConfig;
 
 namespace synergy::gui {
 
@@ -46,7 +45,7 @@ class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
-  ServerConfig(AppConfig &appConfig, MainWindow &mainWindow, int columns = kDefaultColumns, int rows = kDefaultRows);
+  ServerConfig(MainWindow &mainWindow, int columns = kDefaultColumns, int rows = kDefaultRows);
   ~ServerConfig() override = default;
 
   bool operator==(const ServerConfig &sc) const;
@@ -277,7 +276,6 @@ private:
   QList<bool> m_SwitchCorners;
   HotkeyList m_Hotkeys;
 
-  AppConfig *m_pAppConfig;
   MainWindow *m_pMainWindow;
   ScreenList m_Screens;
   int m_Columns;
