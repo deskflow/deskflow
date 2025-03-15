@@ -24,8 +24,6 @@ if(WIN32)
     win32/ArchSleepWindows.h
     win32/ArchStringWindows.cpp
     win32/ArchStringWindows.h
-    win32/ArchSystemWindows.cpp
-    win32/ArchSystemWindows.h
     win32/ArchTimeWindows.cpp
     win32/ArchTimeWindows.h
     win32/XArchWindows.cpp
@@ -50,8 +48,6 @@ elseif(UNIX)
     unix/ArchSleepUnix.h
     unix/ArchStringUnix.cpp
     unix/ArchStringUnix.h
-    unix/ArchSystemUnix.cpp
-    unix/ArchSystemUnix.h
     unix/ArchTimeUnix.cpp
     unix/ArchTimeUnix.h
     unix/XArchUnix.cpp
@@ -75,7 +71,6 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchSleep.h
   IArchString.cpp
   IArchString.h
-  IArchSystem.h
   IArchTime.h
   multibyte.h
   XArch.h
@@ -83,7 +78,4 @@ add_library(arch STATIC ${PLATFORM_CODE}
 
 if(UNIX)
   target_link_libraries(arch ${libs})
-  if(NOT APPLE)
-    target_link_libraries(arch Qt6::DBus)
-  endif()
 endif()

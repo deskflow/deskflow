@@ -6,11 +6,10 @@
 
 #include "deskflow/DaemonApp.h"
 
-#include "arch/XArch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/log_outputters.h"
-#include "common/constants.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
 
@@ -50,39 +49,21 @@ void DaemonApp::saveLogLevel(const QString &logLevel) const
 {
   LOG_DEBUG("log level changed: %s", logLevel.toUtf8().constData());
   CLOG->setFilter(logLevel.toUtf8().constData());
-
-  try {
-    // saves setting for next time the daemon starts.
-    ARCH->setting("LogLevel", logLevel.toStdString());
-  } catch (XArch &e) {
-    LOG_ERR("failed to save log level setting: %s", e.what());
-  }
+  Settings::setValue(Settings::Daemon::LogLevel, logLevel);
 }
 
 void DaemonApp::setElevate(bool elevate)
 {
   LOG_DEBUG("elevate value changed: %s", elevate ? "yes" : "no");
   m_elevate = elevate;
-
-  try {
-    // saves setting for next time the daemon starts.
-    ARCH->setting("Elevate", std::string(elevate ? "1" : "0"));
-  } catch (XArch &e) {
-    LOG_ERR("failed to save elevate setting: %s", e.what());
-  }
+  Settings::setValue(Settings::Daemon::Elevate, m_elevate);
 }
 
 void DaemonApp::setCommand(const QString &command)
 {
   LOG_DEBUG("service command updated");
+  Settings::setValue(Settings::Daemon::Command, command);
   m_command = command.toStdString();
-
-  try {
-    // saves setting for next time the daemon starts.
-    ARCH->setting("Command", command.toStdString());
-  } catch (XArch &e) {
-    LOG_ERR("failed to save command setting: %s", e.what());
-  }
 }
 
 void DaemonApp::applyWatchdogCommand() const
@@ -113,7 +94,10 @@ void DaemonApp::clearWatchdogCommand()
 void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
-  ARCH->clearSettings();
+  Settings::setValue(Settings::Daemon::Command, QVariant());
+  Settings::setValue(Settings::Daemon::Elevate, QVariant());
+  Settings::setValue(Settings::Daemon::LogFile, QVariant());
+  Settings::setValue(Settings::Daemon::LogLevel, QVariant());
 }
 
 void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
@@ -184,8 +168,8 @@ void DaemonApp::run(QThread &daemonThread)
 #if SYSAPI_WIN32
   m_pWatchdog = std::make_unique<MSWindowsWatchdog>(m_foreground, *m_pFileLogOutputter);
 
-  std::string command = ARCH->setting("Command");
-  bool elevate = ARCH->setting("Elevate") == "1";
+  auto command = Settings::value(Settings::Daemon::Command).toString().toStdString();
+  bool elevate = Settings::value(Settings::Daemon::Elevate).toBool();
   if (!command.empty()) {
     LOG_DEBUG("using last known command: %s", command.c_str());
     m_pWatchdog->setProcessConfig(command, elevate);
@@ -253,17 +237,9 @@ int DaemonApp::mainLoop()
   return kExitSuccess;
 }
 
-std::string DaemonApp::logFilename()
+QString DaemonApp::logFilename()
 {
-  string logFilename;
-  logFilename = ARCH->setting("LogFilename");
-  if (logFilename.empty()) {
-    logFilename = ARCH->getLogDirectory();
-    logFilename.append("/");
-    logFilename.append(kDaemonLogFilename);
-  }
-
-  return logFilename;
+  return Settings::value(Settings::Daemon::LogFile).toString();
 }
 
 void DaemonApp::setForeground()
@@ -282,7 +258,7 @@ void DaemonApp::initLogging()
   }
 #endif
 
-  m_pFileLogOutputter = new FileLogOutputter(logFilename().c_str()); // NOSONAR - Adopted by `Log`
+  m_pFileLogOutputter = new FileLogOutputter(logFilename().toStdString().c_str()); // NOSONAR - Adopted by `Log`
   CLOG->insert(m_pFileLogOutputter);
 }
 
