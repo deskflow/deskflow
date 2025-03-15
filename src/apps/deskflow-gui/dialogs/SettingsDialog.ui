@@ -656,38 +656,6 @@
          </layout>
         </widget>
        </item>
-       <item>
-        <widget class="QGroupBox" name="groupScope">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="title">
-          <string>Use settings profile from</string>
-         </property>
-         <layout class="QHBoxLayout" name="_5">
-          <item>
-           <widget class="QRadioButton" name="rbScopeUser">
-            <property name="text">
-             <string>Current user</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QRadioButton" name="rbScopeSystem">
-            <property name="text">
-             <string>All users</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
     </widget>
@@ -728,8 +696,6 @@
   <tabstop>btnBrowseLog</tabstop>
   <tabstop>cbServiceEnabled</tabstop>
   <tabstop>comboElevate</tabstop>
-  <tabstop>rbScopeUser</tabstop>
-  <tabstop>rbScopeSystem</tabstop>
  </tabstops>
  <resources/>
  <connections/>
