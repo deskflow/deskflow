@@ -36,7 +36,7 @@ public:
     inline static const auto Binary = QStringLiteral("client/binary");
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertscolldirection");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
-    inline static const auto RemoteHost = QStringLiteral("client/remotehost");
+    inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
   };
   struct Core
   {
