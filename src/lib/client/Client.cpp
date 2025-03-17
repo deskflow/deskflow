@@ -86,8 +86,8 @@ Client::Client(
         m_events->forFile().fileChunkSending(), this, new TMethodEventJob<Client>(this, &Client::handleFileChunkSending)
     );
     m_events->adoptHandler(
-        m_events->forFile().fileRecieveCompleted(), this,
-        new TMethodEventJob<Client>(this, &Client::handleFileRecieveCompleted)
+        m_events->forFile().fileReceiveCompleted(), this,
+        new TMethodEventJob<Client>(this, &Client::handleFileReceiveCompleted)
     );
   }
 
@@ -702,12 +702,12 @@ void Client::handleFileChunkSending(const Event &event, void *)
   sendFileChunk(event.getDataObject());
 }
 
-void Client::handleFileRecieveCompleted(const Event &event, void *)
+void Client::handleFileReceiveCompleted(const Event &event, void *)
 {
-  onFileRecieveCompleted();
+  onFileReceiveCompleted();
 }
 
-void Client::onFileRecieveCompleted()
+void Client::onFileReceiveCompleted()
 {
   if (isReceivedFileSizeValid()) {
     auto method = new TMethodJob<Client>(this, &Client::writeToDropDirThread);

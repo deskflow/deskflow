@@ -67,7 +67,7 @@ void ClientProxy1_5::fileChunkReceived()
   int result = FileChunk::assemble(getStream(), server->getReceivedFileData(), server->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), server));
+    m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), server));
   } else if (result == kStart) {
     if (server->getFakeDragFileList().size() > 0) {
       std::string filename = server->getFakeDragFileList().at(0).getFilename();

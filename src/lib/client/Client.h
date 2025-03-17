@@ -212,9 +212,9 @@ private:
   void handleSuspend(const Event &event, void *);
   void handleResume(const Event &event, void *);
   void handleFileChunkSending(const Event &, void *);
-  void handleFileRecieveCompleted(const Event &, void *);
+  void handleFileReceiveCompleted(const Event &, void *);
   void handleStopRetry(const Event &, void *);
-  void onFileRecieveCompleted();
+  void onFileReceiveCompleted();
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
 

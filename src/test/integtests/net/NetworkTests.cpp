@@ -70,19 +70,19 @@ public:
 
   void
   sendToClient_mockData_handleClientConnected(const Event &, void *vlistener);
-  void sendToClient_mockData_fileRecieveCompleted(const Event &, void *);
+  void sendToClient_mockData_fileReceiveCompleted(const Event &, void *);
 
   void
   sendToClient_mockFile_handleClientConnected(const Event &, void *vlistener);
-  void sendToClient_mockFile_fileRecieveCompleted(const Event &event, void *);
+  void sendToClient_mockFile_fileReceiveCompleted(const Event &event, void *);
 
   void
   sendToServer_mockData_handleClientConnected(const Event &, void *vlistener);
-  void sendToServer_mockData_fileRecieveCompleted(const Event &event, void *);
+  void sendToServer_mockData_fileReceiveCompleted(const Event &event, void *);
 
   void
   sendToServer_mockFile_handleClientConnected(const Event &, void *vlistener);
-  void sendToServer_mockFile_fileRecieveCompleted(const Event &event, void *);
+  void sendToServer_mockFile_fileReceiveCompleted(const Event &event, void *);
 
 public:
   TestEventQueue m_events;
@@ -143,16 +143,16 @@ TEST_F(NetworkTests, sendToClient_mockData) {
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(), &client,
+      m_events.forFile().fileReceiveCompleted(), &client,
       new TMethodEventJob<NetworkTests>(
-          this, &NetworkTests::sendToClient_mockData_fileRecieveCompleted));
+          this, &NetworkTests::sendToClient_mockData_fileReceiveCompleted));
 
   client.connect();
 
   m_events.initQuitTimeout(10);
   m_events.loop();
   m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-  m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &client);
+  m_events.removeHandler(m_events.forFile().fileReceiveCompleted(), &client);
   m_events.cleanupQuitTimeout();
 }
 
@@ -207,16 +207,16 @@ TEST_F(NetworkTests, sendToClient_mockFile) {
       clientArgs);
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(), &client,
+      m_events.forFile().fileReceiveCompleted(), &client,
       new TMethodEventJob<NetworkTests>(
-          this, &NetworkTests::sendToClient_mockFile_fileRecieveCompleted));
+          this, &NetworkTests::sendToClient_mockFile_fileReceiveCompleted));
 
   client.connect();
 
   m_events.initQuitTimeout(10);
   m_events.loop();
   m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-  m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &client);
+  m_events.removeHandler(m_events.forFile().fileReceiveCompleted(), &client);
   m_events.cleanupQuitTimeout();
 }
 
@@ -270,16 +270,16 @@ TEST_F(NetworkTests, sendToServer_mockData) {
           &client));
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(), &server,
+      m_events.forFile().fileReceiveCompleted(), &server,
       new TMethodEventJob<NetworkTests>(
-          this, &NetworkTests::sendToServer_mockData_fileRecieveCompleted));
+          this, &NetworkTests::sendToServer_mockData_fileReceiveCompleted));
 
   client.connect();
 
   m_events.initQuitTimeout(10);
   m_events.loop();
   m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-  m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &server);
+  m_events.removeHandler(m_events.forFile().fileReceiveCompleted(), &server);
   m_events.cleanupQuitTimeout();
 }
 
@@ -334,16 +334,16 @@ TEST_F(NetworkTests, sendToServer_mockFile) {
           &client));
 
   m_events.adoptHandler(
-      m_events.forFile().fileRecieveCompleted(), &server,
+      m_events.forFile().fileReceiveCompleted(), &server,
       new TMethodEventJob<NetworkTests>(
-          this, &NetworkTests::sendToServer_mockFile_fileRecieveCompleted));
+          this, &NetworkTests::sendToServer_mockFile_fileReceiveCompleted));
 
   client.connect();
 
   m_events.initQuitTimeout(10);
   m_events.loop();
   m_events.removeHandler(m_events.forClientListener().connected(), &listener);
-  m_events.removeHandler(m_events.forFile().fileRecieveCompleted(), &server);
+  m_events.removeHandler(m_events.forFile().fileReceiveCompleted(), &server);
   m_events.cleanupQuitTimeout();
 }
 
@@ -364,7 +364,7 @@ void NetworkTests::sendToClient_mockData_handleClientConnected(
   sendMockData(server);
 }
 
-void NetworkTests::sendToClient_mockData_fileRecieveCompleted(
+void NetworkTests::sendToClient_mockData_fileReceiveCompleted(
     const Event &event, void *) {
   Client *client = static_cast<Client *>(event.getTarget());
   EXPECT_TRUE(client->isReceivedFileSizeValid());
@@ -389,7 +389,7 @@ void NetworkTests::sendToClient_mockFile_handleClientConnected(
   server->sendFileToClient(kMockFilename);
 }
 
-void NetworkTests::sendToClient_mockFile_fileRecieveCompleted(
+void NetworkTests::sendToClient_mockFile_fileReceiveCompleted(
     const Event &event, void *) {
   Client *client = static_cast<Client *>(event.getTarget());
   EXPECT_TRUE(client->isReceivedFileSizeValid());
@@ -403,7 +403,7 @@ void NetworkTests::sendToServer_mockData_handleClientConnected(
   sendMockData(client);
 }
 
-void NetworkTests::sendToServer_mockData_fileRecieveCompleted(
+void NetworkTests::sendToServer_mockData_fileReceiveCompleted(
     const Event &event, void *) {
   Server *server = static_cast<Server *>(event.getTarget());
   EXPECT_TRUE(server->isReceivedFileSizeValid());
@@ -417,7 +417,7 @@ void NetworkTests::sendToServer_mockFile_handleClientConnected(
   client->sendFileToServer(kMockFilename);
 }
 
-void NetworkTests::sendToServer_mockFile_fileRecieveCompleted(
+void NetworkTests::sendToServer_mockFile_fileReceiveCompleted(
     const Event &event, void *) {
   Server *server = static_cast<Server *>(event.getTarget());
   EXPECT_TRUE(server->isReceivedFileSizeValid());

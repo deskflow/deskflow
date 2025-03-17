@@ -173,8 +173,8 @@ Server::Server(
         new TMethodEventJob<Server>(this, &Server::handleFileChunkSendingEvent)
     );
     m_events->adoptHandler(
-        m_events->forFile().fileRecieveCompleted(), this,
-        new TMethodEventJob<Server>(this, &Server::handleFileRecieveCompletedEvent)
+        m_events->forFile().fileReceiveCompleted(), this,
+        new TMethodEventJob<Server>(this, &Server::handleFileReceiveCompletedEvent)
     );
   }
 
@@ -1453,9 +1453,9 @@ void Server::handleFileChunkSendingEvent(const Event &event, void *)
   onFileChunkSending(event.getDataObject());
 }
 
-void Server::handleFileRecieveCompletedEvent(const Event &event, void *)
+void Server::handleFileReceiveCompletedEvent(const Event &event, void *)
 {
-  onFileRecieveCompleted();
+  onFileReceiveCompleted();
 }
 
 void Server::onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)
@@ -1986,7 +1986,7 @@ void Server::onFileChunkSending(const void *data)
   m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
-void Server::onFileRecieveCompleted()
+void Server::onFileReceiveCompleted()
 {
   if (isReceivedFileSizeValid()) {
     auto method = new TMethodJob<Server>(this, &Server::writeToDropDirThread);
