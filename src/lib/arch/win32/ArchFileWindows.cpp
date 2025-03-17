@@ -143,10 +143,6 @@ std::string ArchFileWindows::getProfileDirectory()
       dir = getUserDirectory();
     }
   }
-
-  // HACK: append program name, this seems wrong.
-  dir.append("\\Deskflow");
-
   return dir;
 }
 
