@@ -413,7 +413,7 @@ void MainWindow::trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 void MainWindow::versionCheckerUpdateFound(const QString &version)
 {
   m_btnUpdate->setVisible(true);
-  m_btnUpdate->setToolTip(tr("A new version v%1 is avilable").arg(version));
+  m_btnUpdate->setToolTip(tr("A new version v%1 is available").arg(version));
 }
 
 void MainWindow::coreProcessError(CoreProcess::Error error)

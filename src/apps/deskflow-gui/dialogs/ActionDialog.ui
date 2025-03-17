@@ -149,7 +149,7 @@
       </sizepolicy>
      </property>
      <property name="title">
-      <string>Computers to recieve this event</string>
+      <string>Computers to receive this event</string>
      </property>
      <layout class="QHBoxLayout" name="_3">
       <item>
