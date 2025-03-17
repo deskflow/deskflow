@@ -75,7 +75,7 @@ public:
   };
   struct Security
   {
-    inline static const auto CheckPeers = QStringLiteral("security/checkpeerfingerprints");
+    inline static const auto CheckPeers = QStringLiteral("security/checkPeerFingerprints");
     inline static const auto Certificate = QStringLiteral("security/certificate");
     inline static const auto KeySize = QStringLiteral("security/keySize");
     inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
