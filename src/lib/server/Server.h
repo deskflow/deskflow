@@ -200,7 +200,7 @@ public:
   */
   void getClients(std::vector<std::string> &list) const;
 
-  //! Return true if recieved file size is valid
+  //! Return true if received file size is valid
   bool isReceivedFileSizeValid();
 
   //! Return expected file data size
@@ -351,7 +351,7 @@ private:
   void handleFakeInputBeginEvent(const Event &, void *);
   void handleFakeInputEndEvent(const Event &, void *);
   void handleFileChunkSendingEvent(const Event &, void *);
-  void handleFileRecieveCompletedEvent(const Event &, void *);
+  void handleFileReceiveCompletedEvent(const Event &, void *);
 
   // event processing
   void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
@@ -365,7 +365,7 @@ private:
   void onMouseMoveSecondary(int32_t dx, int32_t dy);
   void onMouseWheel(int32_t xDelta, int32_t yDelta);
   void onFileChunkSending(const void *data);
-  void onFileRecieveCompleted();
+  void onFileReceiveCompleted();
 
   // add client to list and attach event handlers for client
   bool addClient(BaseClientProxy *);

@@ -822,7 +822,7 @@ void ServerProxy::fileChunkReceived()
   int result = FileChunk::assemble(m_stream, m_client->getReceivedFileData(), m_client->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(Event(m_events->forFile().fileRecieveCompleted(), m_client));
+    m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), m_client));
   } else if (result == kStart) {
     if (m_client->getDragFileList().size() > 0) {
       std::string filename = m_client->getDragFileList().at(0).getFilename();
