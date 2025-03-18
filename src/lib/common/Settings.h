@@ -143,6 +143,7 @@ public:
   static const QString settingsPath();
   static const QString tlsDir();
   static const QString tlsLocalDb();
+  static const QString tlsTrustedServersDb();
   static const QString logLevelText();
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
