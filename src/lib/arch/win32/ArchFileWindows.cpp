@@ -60,15 +60,3 @@ std::string ArchFileWindows::getInstalledDirectory()
 
   return fileName;
 }
-
-std::string ArchFileWindows::concatPath(const std::string &prefix, const std::string &suffix)
-{
-  std::string path;
-  path.reserve(prefix.size() + 1 + suffix.size());
-  path += prefix;
-  if (path.size() == 0 || (path[path.size() - 1] != '\\' && path[path.size() - 1] != '/')) {
-    path += '\\';
-  }
-  path += suffix;
-  return path;
-}
