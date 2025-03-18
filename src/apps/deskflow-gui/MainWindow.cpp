@@ -1143,21 +1143,16 @@ void MainWindow::setHostName()
   applyConfig();
 }
 
-QString MainWindow::getTlsPath()
-{
-  return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kTlsDirName);
-}
-
 QString MainWindow::localFingerprintDb()
 {
-  return QStringLiteral("%1/%2").arg(getTlsPath(), kTlsFingerprintLocalFilename);
+  return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsFingerprintLocalFilename);
 }
 
 QString MainWindow::trustedFingerprintDb()
 {
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   const auto trustFile = isClient ? kTlsFingerprintTrustedServersFilename : kTlsFingerprintTrustedClientsFilename;
-  return QStringLiteral("%1/%2").arg(getTlsPath(), trustFile);
+  return QStringLiteral("%1/%2").arg(Settings::tlsDir(), trustFile);
 }
 
 bool MainWindow::regenerateLocalFingerprints()
