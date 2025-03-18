@@ -1146,8 +1146,7 @@ void MainWindow::setHostName()
 QString MainWindow::trustedFingerprintDb()
 {
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-  const auto trustFile = isClient ? Settings::tlsTrustedServersDb() : kTlsFingerprintTrustedClientsFilename;
-  return QStringLiteral("%1/%2").arg(Settings::tlsDir(), trustFile);
+  return isClient ? Settings::tlsTrustedServersDb() : Settings::tlsTrustedClientsDb();
 }
 
 bool MainWindow::regenerateLocalFingerprints()
