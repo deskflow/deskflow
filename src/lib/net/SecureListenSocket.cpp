@@ -10,16 +10,12 @@
 #include "SecureSocket.h"
 #include "arch/XArch.h"
 #include "base/String.h"
-#include "common/constants.h"
+#include "common/Settings.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ArgsBase.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
-
-// TODO: Reduce duplication of these strings between here and SecureSocket.cpp
-static const char s_certificateDir[] = {"tls"};
-static const char s_certificateFileExt[] = {"pem"};
 
 //
 // SecureListenSocket
@@ -47,9 +43,7 @@ IDataSocket *SecureListenSocket::accept()
     }
 
     // default location of the TLS cert file in users dir
-    std::string certificateFilename = deskflow::string::sprintf(
-        "%s/%s/%s.%s", ARCH->getProfileDirectory().c_str(), s_certificateDir, kAppId, s_certificateFileExt
-    );
+    std::string certificateFilename = Settings::value(Settings::Security::Certificate).toString().toStdString();
 
     // if the tls cert option is set use that for the certificate file
     if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
