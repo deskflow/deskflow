@@ -148,13 +148,13 @@ MainWindow::MainWindow()
 
   // Force generation of SHA256 for the localhost
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    if (!QFile::exists(localFingerprintDb())) {
+    if (!QFile::exists(Settings::tlsLocalDb())) {
       regenerateLocalFingerprints();
       return;
     }
 
     deskflow::FingerprintDatabase db;
-    db.read(localFingerprintDb().toStdString());
+    db.read(Settings::tlsLocalDb().toStdString());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -528,14 +528,14 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  if (!QFile::exists(localFingerprintDb())) {
+  if (!QFile::exists(Settings::tlsLocalDb())) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
   deskflow::FingerprintDatabase db;
-  db.read(localFingerprintDb().toStdString());
+  db.read(Settings::tlsLocalDb().toStdString());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
@@ -1029,7 +1029,7 @@ QString MainWindow::getIPAddresses() const
 void MainWindow::updateLocalFingerprint()
 {
   const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
-  m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(localFingerprintDb()));
+  m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(Settings::tlsLocalDb()));
 }
 
 void MainWindow::autoAddScreen(const QString name)
@@ -1141,11 +1141,6 @@ void MainWindow::setHostName()
   ui->lblComputerName->setText(ui->lineEditName->text());
   Settings::setValue(Settings::Core::ScreenName, ui->lineEditName->text());
   applyConfig();
-}
-
-QString MainWindow::localFingerprintDb()
-{
-  return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsFingerprintLocalFilename);
 }
 
 QString MainWindow::trustedFingerprintDb()
