@@ -20,7 +20,6 @@ public:
 
   // IArchFile overrides
   virtual const char *getBasename(const char *pathname);
-  virtual std::string getUserDirectory();
   virtual std::string getInstalledDirectory();
   virtual std::string concatPath(const std::string &prefix, const std::string &suffix);
 };

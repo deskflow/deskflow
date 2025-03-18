@@ -43,33 +43,6 @@ const char *ArchFileUnix::getBasename(const char *pathname)
   }
 }
 
-std::string ArchFileUnix::getUserDirectory()
-{
-  char *buffer = NULL;
-  std::string dir;
-#if HAVE_GETPWUID_R
-  struct passwd pwent;
-  struct passwd *pwentp{};
-#if defined(_SC_GETPW_R_SIZE_MAX)
-  long size = sysconf(_SC_GETPW_R_SIZE_MAX);
-  if (size == -1) {
-    size = BUFSIZ;
-  }
-#else
-  long size = BUFSIZ;
-#endif
-  buffer = new char[size];
-  getpwuid_r(getuid(), &pwent, buffer, size, &pwentp);
-#else
-  struct passwd *pwentp = getpwuid(getuid());
-#endif
-  if (pwentp != NULL && pwentp->pw_dir != NULL) {
-    dir = pwentp->pw_dir;
-  }
-  delete[] buffer;
-  return dir;
-}
-
 std::string ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS

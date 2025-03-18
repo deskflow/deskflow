@@ -27,13 +27,6 @@ public:
   */
   virtual const char *getBasename(const char *pathname) = 0;
 
-  //! Get user's home directory
-  /*!
-  Returns the user's home directory.  Returns the empty string if
-  this cannot be determined.
-  */
-  virtual std::string getUserDirectory() = 0;
-
   //! Get installed directory
   /*!
   Returns the directory in which Deskflow is installed.
