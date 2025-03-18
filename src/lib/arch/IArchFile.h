@@ -34,12 +34,6 @@ public:
   */
   virtual std::string getUserDirectory() = 0;
 
-  //! Get system directory
-  /*!
-  Returns the ussystem configuration file directory.
-  */
-  virtual std::string getSystemDirectory() = 0;
-
   //! Get installed directory
   /*!
   Returns the directory in which Deskflow is installed.

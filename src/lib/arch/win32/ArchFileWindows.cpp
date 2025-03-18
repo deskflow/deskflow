@@ -91,18 +91,6 @@ std::string ArchFileWindows::getUserDirectory()
   return "C:";
 }
 
-std::string ArchFileWindows::getSystemDirectory()
-{
-  // get windows directory
-  char dir[MAX_PATH];
-  if (GetWindowsDirectory(dir, sizeof(dir)) != 0) {
-    return dir;
-  } else {
-    // can't get it.  use C:\ as a default.
-    return "C:";
-  }
-}
-
 std::string ArchFileWindows::getInstalledDirectory()
 {
   char fileNameBuffer[MAX_PATH];
