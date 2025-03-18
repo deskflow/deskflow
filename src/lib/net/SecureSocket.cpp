@@ -524,9 +524,7 @@ int SecureSocket::secureConnect(int socket)
   retry = 0;
   // No error, set ready, process and return ok
   m_secureReady = true;
-  std::string dbDir = deskflow::string::sprintf(
-      "%s/%s", Settings::tlsDir().toStdString().c_str(), kTlsFingerprintTrustedServersFilename
-  );
+  std::string dbDir = Settings::tlsTrustedServersDb().toStdString().c_str();
   if (verifyCertFingerprint(dbDir)) {
     LOG((CLOG_INFO "connected to secure socket"));
     if (!showCertificate()) {
