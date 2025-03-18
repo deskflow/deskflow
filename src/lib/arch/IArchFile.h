@@ -32,13 +32,4 @@ public:
   Returns the directory in which Deskflow is installed.
   */
   virtual std::string getInstalledDirectory() = 0;
-
-  //! Concatenate path components
-  /*!
-  Concatenate pathname components with a directory separator
-  between them.  This should not check if the resulting path
-  is longer than allowed by the system;  we'll rely on the
-  system calls to tell us that.
-  */
-  virtual std::string concatPath(const std::string &prefix, const std::string &suffix) = 0;
 };
