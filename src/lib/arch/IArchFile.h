@@ -46,12 +46,6 @@ public:
   */
   virtual std::string getInstalledDirectory() = 0;
 
-  //! Get log directory
-  /*!
-  Returns the log file directory.
-  */
-  virtual std::string getLogDirectory() = 0;
-
   //! Get user's profile directory
   /*!
   Returns the user's profile directory. If no profile directory is set,
