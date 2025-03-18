@@ -49,7 +49,7 @@ add_library(net STATIC
 
 target_link_libraries(
   net
-  PUBLIC OpenSSL::SSL OpenSSL::Crypto
+  PUBLIC OpenSSL::SSL OpenSSL::Crypto common
   PRIVATE mt io)
 
 if(WIN32)
