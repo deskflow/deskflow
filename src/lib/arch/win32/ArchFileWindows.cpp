@@ -114,11 +114,6 @@ std::string ArchFileWindows::getInstalledDirectory()
   return fileName;
 }
 
-std::string ArchFileWindows::getLogDirectory()
-{
-  return getInstalledDirectory();
-}
-
 std::string ArchFileWindows::getProfileDirectory()
 {
   std::string dir;

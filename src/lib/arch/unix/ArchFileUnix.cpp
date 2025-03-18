@@ -86,11 +86,6 @@ std::string ArchFileUnix::getInstalledDirectory()
 #endif
 }
 
-std::string ArchFileUnix::getLogDirectory()
-{
-  return "/var/log";
-}
-
 std::string ArchFileUnix::getProfileDirectory()
 {
   if (!m_profileDirectory.empty()) {
