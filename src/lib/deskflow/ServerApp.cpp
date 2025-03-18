@@ -13,7 +13,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
-#include "common/constants.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -112,8 +112,9 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
 
 void ServerApp::help()
 {
-  const auto userConfig = ARCH->concatPath(ARCH->getUserDirectory(), CONFIG_NAME);
-  const auto sysConfig = ARCH->concatPath(ARCH->getSystemDirectory(), CONFIG_NAME);
+  const auto userConfig = QString(Settings::UserSettingFile).toStdString();
+  const auto sysConfig = QString(Settings::SystemSettingFile).toStdString();
+  const auto orConfig = QStringLiteral("settings/%2").arg(kAppName).toStdString();
 
   std::stringstream help;
   help << "Usage: " << args().m_pname
@@ -160,7 +161,10 @@ void ServerApp::help()
        << "\n"
        << "If no configuration file pathname is provided then the first of the\n"
        << "following to load successfully sets the configuration:\n"
+       << "  " << orConfig << "\n"
+#ifndef Q_OS_WIN
        << "  " << userConfig << "\n"
+#endif
        << "  " << sysConfig << "\n";
 
   LOG((CLOG_PRINT "%s", help.str().c_str()));
@@ -196,27 +200,27 @@ void ServerApp::loadConfig()
 
   // load the default configuration if no explicit file given
   else {
-    // get the user's home directory
-    path = ARCH->getUserDirectory();
-    if (!path.empty()) {
-      // complete path
-      path = ARCH->concatPath(path, CONFIG_NAME);
+    path = QString("settings/%2").arg(kAppName).toStdString();
+    if (loadConfig(path)) {
+      loaded = true;
+      args().m_configFile = path;
+    }
 
-      // now try loading the user's configuration
+#ifndef Q_OS_WIN
+    if (!loaded) {
+      path = QString(Settings::UserSettingFile).toStdString();
       if (loadConfig(path)) {
         loaded = true;
         args().m_configFile = path;
       }
     }
+#endif
+
     if (!loaded) {
-      // try the system-wide config file
-      path = ARCH->getSystemDirectory();
-      if (!path.empty()) {
-        path = ARCH->concatPath(path, CONFIG_NAME);
-        if (loadConfig(path)) {
-          loaded = true;
-          args().m_configFile = path;
-        }
+      path = QString(Settings::SystemSettingFile).toStdString();
+      if (loadConfig(path)) {
+        loaded = true;
+        args().m_configFile = path;
       }
     }
   }
