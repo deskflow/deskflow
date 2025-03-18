@@ -215,10 +215,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
     }
   } else if (isArg(i, argc, argv, nullptr, "--enable-crypto")) {
     argsBase().m_enableCrypto = true;
-  } else if (isArg(i, argc, argv, nullptr, "--profile-dir", 1)) {
-    argsBase().m_profileDirectory = argv[++i];
-  } else if (isArg(i, argc, argv, nullptr, "--plugin-dir", 1)) {
-    argsBase().m_pluginDirectory = argv[++i];
   } else if (isArg(i, argc, argv, nullptr, "--tls-cert", 1)) {
     argsBase().m_tlsCertFile = argv[++i];
   } else if (isArg(i, argc, argv, nullptr, "--prevent-sleep")) {

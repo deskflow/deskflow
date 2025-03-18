@@ -114,22 +114,6 @@ std::string ArchFileWindows::getInstalledDirectory()
   return fileName;
 }
 
-std::string ArchFileWindows::getProfileDirectory()
-{
-  std::string dir;
-  if (!m_profileDirectory.empty()) {
-    dir = m_profileDirectory;
-  } else {
-    TCHAR result[MAX_PATH];
-    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, 0, result))) {
-      dir = result;
-    } else {
-      dir = getUserDirectory();
-    }
-  }
-  return dir;
-}
-
 std::string ArchFileWindows::concatPath(const std::string &prefix, const std::string &suffix)
 {
   std::string path;
@@ -140,9 +124,4 @@ std::string ArchFileWindows::concatPath(const std::string &prefix, const std::st
   }
   path += suffix;
   return path;
-}
-
-void ArchFileWindows::setProfileDirectory(const std::string &s)
-{
-  m_profileDirectory = s;
 }

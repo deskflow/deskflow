@@ -86,25 +86,6 @@ std::string ArchFileUnix::getInstalledDirectory()
 #endif
 }
 
-std::string ArchFileUnix::getProfileDirectory()
-{
-  if (!m_profileDirectory.empty()) {
-    return m_profileDirectory;
-  } else {
-    const std::filesystem::path homeDir = getUserDirectory();
-#if WINAPI_XWINDOWS
-    const auto xdgDir = std::getenv("XDG_CONFIG_HOME");
-    if (xdgDir != nullptr) {
-      return std::filesystem::path(xdgDir) / kAppName;
-    } else {
-      return homeDir / ".config" / kAppName;
-    }
-#else
-    return homeDir / "Library" / kAppName;
-#endif
-  }
-}
-
 std::string ArchFileUnix::concatPath(const std::string &prefix, const std::string &suffix)
 {
   std::string path;
@@ -115,9 +96,4 @@ std::string ArchFileUnix::concatPath(const std::string &prefix, const std::strin
   }
   path += suffix;
   return path;
-}
-
-void ArchFileUnix::setProfileDirectory(const std::string &s)
-{
-  m_profileDirectory = s;
 }

@@ -74,12 +74,6 @@ public:
   /// @brief Should the connections be TLS encrypted
   bool m_enableCrypto = false;
 
-  /// @brief The dir to load settings from
-  std::string m_profileDirectory;
-
-  /// @brief The dir to load plugins from
-  std::string m_pluginDirectory;
-
   /// @brief Contains the location of the TLS certificate file
   std::string m_tlsCertFile;
 

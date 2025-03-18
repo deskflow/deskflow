@@ -51,13 +51,11 @@ public:
     ON_CALL(*this, process()).WillByDefault(ReturnRef(m_process));
     ON_CALL(*this, appPath(_)).WillByDefault(Return("stub app path"));
     ON_CALL(*this, fileExists(_)).WillByDefault(Return(true));
-    ON_CALL(*this, getProfileRoot()).WillByDefault(Return("stub profile"));
   }
 
   MOCK_METHOD(proxy::QProcessProxy &, process, (), (override));
   MOCK_METHOD(QString, appPath, (const QString &name), (const, override));
   MOCK_METHOD(bool, fileExists, (const QString &path), (const, override));
-  MOCK_METHOD(QString, getProfileRoot, (), (const, override));
 
   NiceMock<QProcessProxyMock> m_process;
 };
