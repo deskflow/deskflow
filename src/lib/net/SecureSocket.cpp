@@ -448,9 +448,7 @@ int SecureSocket::secureAccept(int socket)
   // If not fatal and no retry, state is good
   if (retry == 0) {
     if (m_securityLevel == SecurityLevel::PeerAuth) {
-      std::string dbDir = deskflow::string::sprintf(
-          "%s/%s", Settings::tlsDir().toStdString().c_str(), kTlsFingerprintTrustedClientsFilename
-      );
+      std::string dbDir = Settings::tlsTrustedClientsDb().toStdString().c_str();
       if (!verifyCertFingerprint(dbDir)) {
         retry = 0;
         disconnect();

@@ -176,6 +176,11 @@ const QString Settings::tlsTrustedServersDb()
   return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);
 }
 
+const QString Settings::tlsTrustedClientsDb()
+{
+  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedClientsFilename);
+}
+
 void Settings::setValue(const QString &key, const QVariant &value)
 {
   if (instance()->m_settings->value(key) == value)
