@@ -21,5 +21,4 @@ public:
   bool generateFingerprint(const QString &certificateFilename);
   int getCertKeyLength(const QString &path);
   QString getCertificatePath() const;
-  QString getTlsDir() const;
 };

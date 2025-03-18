@@ -90,7 +90,7 @@ QVariant Settings::defaultValue(const QString &key)
     return QRect();
 
   if (key == Security::Certificate)
-    return QStringLiteral("%1/%2/%3").arg(instance()->settingsPath(), kTlsDirName, kTlsCertificateFilename);
+    return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsCertificateFilename);
 
   if (key == Security::KeySize)
     return 2048;
@@ -159,6 +159,11 @@ const QString Settings::settingsFile()
 const QString Settings::settingsPath()
 {
   return QFileInfo(instance()->m_settings->fileName()).absolutePath();
+}
+
+const QString Settings::tlsDir()
+{
+  return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kTlsDirName);
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)

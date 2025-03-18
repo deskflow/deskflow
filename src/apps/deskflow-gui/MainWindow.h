@@ -161,8 +161,6 @@ private:
   void showHostNameEditor();
   void setHostName();
 
-  QString getTlsPath();
-
   /**
    * @brief localFingerprintDb
    * @return The path to the local fingerprint file

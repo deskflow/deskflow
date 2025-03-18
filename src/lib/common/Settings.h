@@ -141,6 +141,7 @@ public:
   static bool isWritable();
   static const QString settingsFile();
   static const QString settingsPath();
+  static const QString tlsDir();
   static const QString logLevelText();
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
