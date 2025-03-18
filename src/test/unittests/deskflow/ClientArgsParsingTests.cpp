@@ -73,16 +73,14 @@ TEST(ClientArgsParsingTests, parseClientArgs_setCommonArgs)
   ON_CALL(argParser, checkUnexpectedArgs()).WillByDefault(Invoke(client_stubCheckUnexpectedArgs));
   deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
-  const int argc = 9;
-  std::array<const char *, argc> kLangCmd = {"stub",       "--enable-crypto", "--profile-dir",
-                                             "profileDir", "--plugin-dir",    "pluginDir",
+  const int argc = 7;
+  std::array<const char *, argc> kLangCmd = {"stub",       "--enable-crypto", "--profile-dir",  "profileDir",
                                              "--tls-cert", "tlsCertPath",     "--prevent-sleep"};
 
   argParser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
   EXPECT_TRUE(clientArgs.m_enableCrypto);
   EXPECT_EQ(clientArgs.m_profileDirectory, "profileDir");
-  EXPECT_EQ(clientArgs.m_pluginDirectory, "pluginDir");
   EXPECT_EQ(clientArgs.m_tlsCertFile, "tlsCertPath");
   EXPECT_TRUE(clientArgs.m_preventSleep);
 }

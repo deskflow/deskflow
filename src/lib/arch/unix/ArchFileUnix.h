@@ -24,13 +24,10 @@ public:
   virtual std::string getSystemDirectory();
   virtual std::string getInstalledDirectory();
   virtual std::string getLogDirectory();
-  virtual std::string getPluginDirectory();
   virtual std::string getProfileDirectory();
   virtual std::string concatPath(const std::string &prefix, const std::string &suffix);
   virtual void setProfileDirectory(const std::string &s);
-  virtual void setPluginDirectory(const std::string &s);
 
 private:
   std::string m_profileDirectory;
-  std::string m_pluginDirectory;
 };
