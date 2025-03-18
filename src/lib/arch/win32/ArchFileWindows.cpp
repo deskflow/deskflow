@@ -119,17 +119,6 @@ std::string ArchFileWindows::getLogDirectory()
   return getInstalledDirectory();
 }
 
-std::string ArchFileWindows::getPluginDirectory()
-{
-  if (!m_pluginDirectory.empty()) {
-    return m_pluginDirectory;
-  }
-
-  std::string dir = getProfileDirectory();
-  dir.append("\\Plugins");
-  return dir;
-}
-
 std::string ArchFileWindows::getProfileDirectory()
 {
   std::string dir;
@@ -161,9 +150,4 @@ std::string ArchFileWindows::concatPath(const std::string &prefix, const std::st
 void ArchFileWindows::setProfileDirectory(const std::string &s)
 {
   m_profileDirectory = s;
-}
-
-void ArchFileWindows::setPluginDirectory(const std::string &s)
-{
-  m_pluginDirectory = s;
 }

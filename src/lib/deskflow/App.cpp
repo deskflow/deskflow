@@ -176,7 +176,6 @@ void App::initApp(int argc, const char **argv)
   }
 
   ARCH->setProfileDirectory(argsBase().m_profileDirectory);
-  ARCH->setPluginDirectory(argsBase().m_pluginDirectory);
 
   // set log filter
   if (!CLOG->setFilter(argsBase().m_logFilter)) {

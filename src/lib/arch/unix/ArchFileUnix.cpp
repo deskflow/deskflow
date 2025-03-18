@@ -91,19 +91,6 @@ std::string ArchFileUnix::getLogDirectory()
   return "/var/log";
 }
 
-std::string ArchFileUnix::getPluginDirectory()
-{
-  if (!m_pluginDirectory.empty()) {
-    return m_pluginDirectory;
-  }
-
-#if WINAPI_XWINDOWS
-  return getProfileDirectory().append("/plugins");
-#else
-  return getProfileDirectory().append("/Plugins");
-#endif
-}
-
 std::string ArchFileUnix::getProfileDirectory()
 {
   if (!m_profileDirectory.empty()) {
@@ -138,9 +125,4 @@ std::string ArchFileUnix::concatPath(const std::string &prefix, const std::strin
 void ArchFileUnix::setProfileDirectory(const std::string &s)
 {
   m_profileDirectory = s;
-}
-
-void ArchFileUnix::setPluginDirectory(const std::string &s)
-{
-  m_pluginDirectory = s;
 }
