@@ -46,14 +46,6 @@ public:
   */
   virtual std::string getInstalledDirectory() = 0;
 
-  //! Get user's profile directory
-  /*!
-  Returns the user's profile directory. If no profile directory is set,
-  this will return the user's profile according to the operating system,
-  which will depend on which user launched the program.
-  */
-  virtual std::string getProfileDirectory() = 0;
-
   //! Concatenate path components
   /*!
   Concatenate pathname components with a directory separator
@@ -62,11 +54,4 @@ public:
   system calls to tell us that.
   */
   virtual std::string concatPath(const std::string &prefix, const std::string &suffix) = 0;
-
-  //@}
-  //! Set the user's profile directory
-  /*
-  Returns the user's profile directory.
-  */
-  virtual void setProfileDirectory(const std::string &s) = 0;
 };

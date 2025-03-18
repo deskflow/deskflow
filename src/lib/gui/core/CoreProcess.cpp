@@ -130,11 +130,6 @@ bool CoreProcess::Deps::fileExists(const QString &path) const
   return QFile::exists(path);
 }
 
-QString CoreProcess::Deps::getProfileRoot() const
-{
-  return Settings::settingsPath();
-}
-
 //
 // CoreProcess
 //
@@ -493,14 +488,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
   }
-
-#if defined(Q_OS_WIN)
-  // on windows, the profile directory changes depending on the user that
-  // launched the process (e.g. when launched with elevation). setting the
-  // profile dir on launch ensures it uses the same profile dir is used
-  // no matter how its relaunched.
-  args << "--profile-dir" << m_pDeps->getProfileRoot();
-#endif
 
   if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     args << "--prevent-sleep";

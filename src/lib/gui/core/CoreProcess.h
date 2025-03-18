@@ -44,7 +44,6 @@ public:
     }
     virtual QString appPath(const QString &name) const;
     virtual bool fileExists(const QString &path) const;
-    virtual QString getProfileRoot() const;
 
   private:
     QProcessProxy m_process;
