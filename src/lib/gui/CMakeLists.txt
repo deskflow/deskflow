@@ -25,8 +25,8 @@ add_library(${target} STATIC
   FileTail.h
   Logger.cpp
   Logger.h
-  messages.cpp
-  messages.h
+  Messages.cpp
+  Messages.h
   string_utils.h
   style_utils.h
   styles.h

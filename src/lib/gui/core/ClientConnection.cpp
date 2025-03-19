@@ -6,8 +6,8 @@
 
 #include "ClientConnection.h"
 
+#include "Messages.h"
 #include "common/Settings.h"
-#include "messages.h"
 
 #include <QHostAddress>
 #include <QMessageBox>

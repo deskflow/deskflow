@@ -10,7 +10,7 @@
 
 #include "common/Settings.h"
 
-#include "messages.h"
+#include "Messages.h"
 
 #include <QMessageBox>
 #include <QPushButton>

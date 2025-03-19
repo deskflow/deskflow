@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "messages.h"
+#include "Messages.h"
 
 #include "Constants.h"
 #include "EnvVars.h"

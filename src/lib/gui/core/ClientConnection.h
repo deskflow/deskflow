@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "gui/messages.h"
+#include "gui/Messages.h"
 
 #include <QObject>
 #include <QString>
