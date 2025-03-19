@@ -6,7 +6,7 @@
 
 #include "LineEditValidator.h"
 
-#include "gui/styles.h"
+#include "gui/Styles.h"
 
 #include <QValidator>
 

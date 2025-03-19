@@ -8,8 +8,8 @@
 #include "ScreenSettingsDialog.h"
 #include "ui_ScreenSettingsDialog.h"
 
+#include "gui/Styles.h"
 #include "gui/config/Screen.h"
-#include "gui/styles.h"
 #include "gui/validators/AliasValidator.h"
 #include "gui/validators/ScreenNameValidator.h"
 #include "gui/validators/ValidationError.h"

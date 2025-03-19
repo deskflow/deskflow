@@ -22,9 +22,9 @@
 #include "gui/Messages.h"
 #include "gui/StringUtils.h"
 #include "gui/StyleUtils.h"
+#include "gui/Styles.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
-#include "gui/styles.h"
 #include "net/FingerprintDatabase.h"
 #include "platform/wayland.h"
 

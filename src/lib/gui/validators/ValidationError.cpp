@@ -6,7 +6,7 @@
 
 #include "ValidationError.h"
 
-#include "gui/styles.h"
+#include "gui/Styles.h"
 
 using namespace deskflow::gui;
 
