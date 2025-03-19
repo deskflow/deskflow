@@ -660,8 +660,6 @@ void MainWindow::createMenuBar()
   menuFile->addAction(m_actionStartCore);
   menuFile->addAction(m_actionStopCore);
   menuFile->addSeparator();
-  menuFile->addAction(m_actionSave);
-  menuFile->addSeparator();
   menuFile->addAction(m_actionQuit);
 
   auto menuEdit = new QMenu(tr("Edit"));
