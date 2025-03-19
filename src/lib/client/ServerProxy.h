@@ -9,8 +9,8 @@
 
 #include "base/Event.h"
 #include "base/Stopwatch.h"
+#include "deskflow/KeyTypes.h"
 #include "deskflow/clipboard_types.h"
-#include "deskflow/key_types.h"
 #include "deskflow/languages/LanguageManager.h"
 
 class Client;

@@ -12,7 +12,7 @@
 #include "base/IEventQueue.h"
 #include "common/IInterface.h"
 #include "common/stdset.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 
 //! Key state interface
 /*!

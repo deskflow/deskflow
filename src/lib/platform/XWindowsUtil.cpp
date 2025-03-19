@@ -9,7 +9,7 @@
 
 #include "base/Log.h"
 #include "base/String.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 #include "mt/Thread.h"
 
 #include <X11/Xatom.h>

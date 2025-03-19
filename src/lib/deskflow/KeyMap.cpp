@@ -9,7 +9,7 @@
 #include "base/Log.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 
 #include <assert.h>
 #include <cctype>

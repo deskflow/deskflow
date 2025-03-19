@@ -8,7 +8,7 @@
 #pragma once
 
 #include "common/stdmap.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 #include "deskflow/mouse_types.h"
 #include "deskflow/option_types.h"
 #include "mt/CondVar.h"
