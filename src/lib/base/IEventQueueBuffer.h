@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "common/Common.h"
 #include "common/IInterface.h"
-#include "common/common.h"
 
 class Event;
 class EventQueueTimer;

@@ -7,7 +7,7 @@
 
 #include "arch/IArchString.h"
 #include "arch/Arch.h"
-#include "common/common.h"
+#include "common/Common.h"
 
 #include <climits>
 #include <cstdlib>

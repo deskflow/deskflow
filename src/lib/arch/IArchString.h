@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include "common/Common.h"
 #include "common/IInterface.h"
-#include "common/common.h"
 
 #include <stdarg.h>
 

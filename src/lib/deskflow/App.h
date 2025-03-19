@@ -9,7 +9,7 @@
 
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "common/common.h"
+#include "common/Common.h"
 #include "deskflow/IApp.h"
 
 #if SYSAPI_WIN32

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/XBase.h"
-#include "common/common.h"
+#include "common/Common.h"
 #include "io/XIO.h"
 
 //! Generic socket exception
