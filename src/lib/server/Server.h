@@ -11,7 +11,7 @@
 #include "base/EventTypes.h"
 #include "base/Stopwatch.h"
 #include "common/StdMap.h"
-#include "common/stdset.h"
+#include "common/StdSet.h"
 #include "common/stdvector.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"

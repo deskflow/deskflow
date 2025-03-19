@@ -11,7 +11,7 @@
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "common/IInterface.h"
-#include "common/stdset.h"
+#include "common/StdSet.h"
 #include "deskflow/KeyTypes.h"
 
 //! Key state interface

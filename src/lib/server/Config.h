@@ -10,7 +10,7 @@
 #include "base/String.h"
 #include "base/XBase.h"
 #include "common/StdMap.h"
-#include "common/stdset.h"
+#include "common/StdSet.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
