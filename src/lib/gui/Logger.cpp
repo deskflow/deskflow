@@ -6,7 +6,7 @@
 
 #include "Logger.h"
 
-#include "string_utils.h"
+#include "StringUtils.h"
 
 #include <QDateTime>
 #include <QDir>
