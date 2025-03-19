@@ -478,8 +478,7 @@ int SecureSocket::secureAccept(int socket)
 int SecureSocket::secureConnect(int socket)
 {
 
-  std::string certDir =
-      deskflow::string::sprintf("%s/%s", Settings::tlsDir().toStdString().c_str(), kTlsCertificateFilename);
+  std::string certDir = Settings::value(Settings::Security::Certificate).toString().toStdString();
 
   if (!loadCertificates(certDir)) {
     LOG((CLOG_ERR "could not load client certificates"));
