@@ -27,7 +27,7 @@ add_library(${target} STATIC
   Logger.h
   Messages.cpp
   Messages.h
-  string_utils.h
+  StringUtils.h
   style_utils.h
   styles.h
   config/IServerConfig.h

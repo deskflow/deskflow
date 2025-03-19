@@ -13,7 +13,7 @@
 #include "gui/DotEnv.h"
 #include "gui/Logger.h"
 #include "gui/Messages.h"
-#include "gui/string_utils.h"
+#include "gui/StringUtils.h"
 #include "gui/style_utils.h"
 
 #include <QApplication>
