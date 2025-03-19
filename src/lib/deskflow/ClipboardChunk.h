@@ -8,7 +8,7 @@
 
 #include "common/common.h"
 #include "deskflow/Chunk.h"
-#include "deskflow/clipboard_types.h"
+#include "deskflow/ClipboardTypes.h"
 
 #include <string>
 

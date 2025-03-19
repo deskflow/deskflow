@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "deskflow/clipboard_types.h"
+#include "deskflow/ClipboardTypes.h"
 
 #include <string>
 

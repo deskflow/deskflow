@@ -10,8 +10,8 @@
 #include "common/stdlist.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
+#include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
-#include "deskflow/clipboard_types.h"
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow

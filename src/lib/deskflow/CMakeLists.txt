@@ -82,7 +82,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ClientApp.h
   ClientArgs.cpp
   ClientArgs.h
-  clipboard_types.h
+  ClipboardTypes.h
   Clipboard.cpp
   Clipboard.h
   ClipboardChunk.cpp
