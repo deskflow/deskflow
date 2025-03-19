@@ -8,7 +8,7 @@
 #include "server/Config.h"
 
 #include "base/IEventQueue.h"
-#include "common/stdistream.h"
+#include "common/StdIStream.h"
 #include "common/stdostream.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"

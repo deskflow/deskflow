@@ -8,7 +8,7 @@ add_library(common STATIC
   IInterface.h
   StdDeque.h
   StdExcept.h
-  stdistream.h
+  StdIStream.h
   stdlist.h
   stdmap.h
   stdostream.h
