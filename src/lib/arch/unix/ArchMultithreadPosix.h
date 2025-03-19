@@ -8,7 +8,7 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-#include "common/stdlist.h"
+#include "common/StdList.h"
 
 #include <pthread.h>
 

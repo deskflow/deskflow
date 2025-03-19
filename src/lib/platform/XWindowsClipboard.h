@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/stdlist.h"
+#include "common/StdList.h"
 #include "common/stdmap.h"
 #include "common/stdvector.h"
 #include "deskflow/ClipboardTypes.h"
