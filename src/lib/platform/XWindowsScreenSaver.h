@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/IEventQueue.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "deskflow/IScreenSaver.h"
 
 #if X_DISPLAY_MISSING

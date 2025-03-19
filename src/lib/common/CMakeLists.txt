@@ -10,7 +10,7 @@ add_library(common STATIC
   StdExcept.h
   StdIStream.h
   StdList.h
-  stdmap.h
+  StdMap.h
   stdostream.h
   stdpost.h
   stdpre.h

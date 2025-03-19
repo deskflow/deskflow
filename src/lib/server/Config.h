@@ -9,7 +9,7 @@
 
 #include "base/String.h"
 #include "base/XBase.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "common/stdset.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"

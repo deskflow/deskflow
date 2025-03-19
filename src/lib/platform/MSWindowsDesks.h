@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"

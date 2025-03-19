@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "common/stdvector.h"
 
 #include <string>
