@@ -12,7 +12,7 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/log_outputters.h"
+#include "base/LogOutputters.h"
 #include "common/constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"

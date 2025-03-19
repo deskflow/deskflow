@@ -21,8 +21,8 @@ add_library(base STATIC
   IEventQueueBuffer.h
   IJob.h
   ILogOutputter.h
-  log_outputters.cpp
-  log_outputters.h
+  LogOutputters.cpp
+  LogOutputters.h
   Log.cpp
   Log.h
   Path.cpp

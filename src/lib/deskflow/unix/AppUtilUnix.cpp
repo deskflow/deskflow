@@ -20,7 +20,7 @@
 #error Platform not supported.
 #endif
 #include "base/Log.h"
-#include "base/log_outputters.h"
+#include "base/LogOutputters.h"
 #include "common/constants.h"
 
 #if HAVE_LIBNOTIFY

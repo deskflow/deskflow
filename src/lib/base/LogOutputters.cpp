@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "base/log_outputters.h"
+#include "base/LogOutputters.h"
 #include "arch/Arch.h"
 #include "base/Path.h"
 #include "base/String.h"
