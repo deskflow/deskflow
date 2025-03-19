@@ -8,7 +8,7 @@
 #include "XWindowsPowerManager.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include <common/constants.h>
+#include "common/Constants.h"
 
 #include <QDBusConnection>
 #include <QDBusError>

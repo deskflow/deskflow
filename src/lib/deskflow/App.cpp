@@ -11,7 +11,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/ProtocolTypes.h"

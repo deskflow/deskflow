@@ -11,8 +11,8 @@
 
 #include <QDir>
 
+#include "common/Constants.h"
 #include "common/QSettingsProxy.h"
-#include "common/constants.h"
 
 class Settings : public QObject
 {

@@ -7,7 +7,7 @@
 #include "DaemonIpcServer.h"
 
 #include "base/Log.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #include <QLocalServer>
 #include <QLocalSocket>

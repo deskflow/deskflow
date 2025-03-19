@@ -21,7 +21,7 @@
 #endif
 #include "base/Log.h"
 #include "base/LogOutputters.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #if HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
