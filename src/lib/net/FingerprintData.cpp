@@ -7,7 +7,7 @@
 
 #include "FingerprintDatabase.h"
 
-#include "io/filesystem.h"
+#include "io/Filesystem.h"
 
 #include <algorithm>
 #include <fstream>
