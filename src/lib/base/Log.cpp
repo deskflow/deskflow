@@ -8,7 +8,7 @@
 #include "base/Log.h"
 #include "arch/Arch.h"
 #include "base/LogOutputters.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #include <cstdarg>
 #include <cstdint>

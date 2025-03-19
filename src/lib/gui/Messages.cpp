@@ -10,7 +10,7 @@
 #include "EnvVars.h"
 #include "Logger.h"
 #include "Styles.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #include <QAction>
 #include <QDateTime>

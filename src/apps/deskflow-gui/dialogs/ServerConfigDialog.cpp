@@ -9,7 +9,7 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
-#include "common/constants.h"
+#include "common/Constants.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"

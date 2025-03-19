@@ -7,7 +7,7 @@
  */
 
 #include "MainWindow.h"
-#include "common/constants.h"
+#include "common/Constants.h"
 #include "gui/Constants.h"
 #include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"

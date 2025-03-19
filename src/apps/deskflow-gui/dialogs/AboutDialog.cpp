@@ -9,7 +9,7 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #include <QClipboard>
 #include <QDateTime>

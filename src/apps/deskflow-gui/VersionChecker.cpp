@@ -6,7 +6,7 @@
 
 #include "VersionChecker.h"
 
-#include "common/constants.h"
+#include "common/Constants.h"
 #include "gui/EnvVars.h"
 
 #include <QLocale>

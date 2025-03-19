@@ -6,7 +6,7 @@
 
 #include "DaemonIpcClient.h"
 
-#include "common/constants.h"
+#include "common/Constants.h"
 
 #include <QDebug>
 #include <QLocalSocket>
