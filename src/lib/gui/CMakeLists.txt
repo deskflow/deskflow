@@ -16,8 +16,8 @@ endif()
 add_library(${target} STATIC
   ${platform_sources}
   Constants.h
-  diagnostic.cpp
-  diagnostic.h
+  Diagnostic.cpp
+  Diagnostic.h
   dotenv.cpp
   dotenv.h
   env_vars.h
