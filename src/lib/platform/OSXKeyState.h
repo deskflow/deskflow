@@ -8,7 +8,7 @@
 #pragma once
 
 #include "OSXAutoTypes.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "deskflow/KeyState.h"

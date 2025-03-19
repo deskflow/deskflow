@@ -9,7 +9,7 @@
 
 #include "arch/IArchNetwork.h"
 #include "common/StdList.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 
 template <class T> class CondVar;
 class Mutex;

@@ -10,7 +10,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/Stopwatch.h"
-#include "common/stdmap.h"
+#include "common/StdMap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
 #include "deskflow/Clipboard.h"
