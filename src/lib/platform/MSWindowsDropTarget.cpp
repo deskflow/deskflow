@@ -7,7 +7,7 @@
 #include "platform/MSWindowsDropTarget.h"
 
 #include "base/Log.h"
-#include "common/common.h"
+#include "common/Common.h"
 
 #include <Shlobj.h>
 #include <stdio.h>

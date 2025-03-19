@@ -9,7 +9,7 @@
 #pragma once
 
 #include "base/ILogOutputter.h"
-#include "common/common.h"
+#include "common/Common.h"
 #include "common/stddeque.h"
 #include "mt/Thread.h"
 

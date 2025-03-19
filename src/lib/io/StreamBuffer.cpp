@@ -6,7 +6,7 @@
  */
 
 #include "io/StreamBuffer.h"
-#include "common/common.h"
+#include "common/Common.h"
 
 //
 // StreamBuffer

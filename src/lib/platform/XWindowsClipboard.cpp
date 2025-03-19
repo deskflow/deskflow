@@ -10,7 +10,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "common/common.h"
+#include "common/Common.h"
 #include "common/stdvector.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
