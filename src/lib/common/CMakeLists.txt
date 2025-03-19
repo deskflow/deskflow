@@ -13,7 +13,7 @@ add_library(common STATIC
   StdMap.h
   StdOStream.h
   StdPost.h
-  stdpre.h
+  StdPre.h
   stdset.h
   stdvector.h
   Settings.h
