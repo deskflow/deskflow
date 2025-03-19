@@ -7,7 +7,7 @@
 #include "VersionChecker.h"
 
 #include "common/constants.h"
-#include "gui/env_vars.h"
+#include "gui/EnvVars.h"
 
 #include <QLocale>
 #include <QNetworkAccessManager>
