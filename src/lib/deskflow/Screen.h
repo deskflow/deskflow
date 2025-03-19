@@ -11,7 +11,7 @@
 #include "deskflow/DragInformation.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/KeyTypes.h"
-#include "deskflow/mouse_types.h"
+#include "deskflow/MouseTypes.h"
 #include "deskflow/option_types.h"
 
 class IClipboard;

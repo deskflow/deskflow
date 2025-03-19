@@ -9,7 +9,7 @@
 
 #include "common/stdmap.h"
 #include "deskflow/KeyTypes.h"
-#include "deskflow/mouse_types.h"
+#include "deskflow/MouseTypes.h"
 #include "deskflow/option_types.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
