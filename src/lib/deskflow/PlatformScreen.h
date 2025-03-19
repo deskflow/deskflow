@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/stdexcept.h"
+#include "common/StdExcept.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/IPlatformScreen.h"

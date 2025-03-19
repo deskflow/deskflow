@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/stdexcept.h"
+#include "common/StdExcept.h"
 #include <string>
 
 //! Exception base class

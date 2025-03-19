@@ -7,7 +7,7 @@ add_library(common STATIC
   Common.h
   IInterface.h
   StdDeque.h
-  stdexcept.h
+  StdExcept.h
   stdistream.h
   stdlist.h
   stdmap.h
