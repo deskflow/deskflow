@@ -28,7 +28,7 @@ add_library(${target} STATIC
   Messages.cpp
   Messages.h
   StringUtils.h
-  style_utils.h
+  StyleUtils.h
   styles.h
   config/IServerConfig.h
   config/Screen.cpp
