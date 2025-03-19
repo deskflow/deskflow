@@ -7,12 +7,12 @@
 
 #pragma once
 
+#include "deskflow/ClipboardTypes.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryScreen.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/ISecondaryScreen.h"
-#include "deskflow/clipboard_types.h"
 #include "deskflow/option_types.h"
 
 class IClipboard;

@@ -7,9 +7,9 @@
 
 #pragma once
 
+#include "deskflow/ClipboardTypes.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/KeyTypes.h"
-#include "deskflow/clipboard_types.h"
 #include "deskflow/mouse_types.h"
 #include "deskflow/option_types.h"
 

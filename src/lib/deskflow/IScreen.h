@@ -10,7 +10,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/IInterface.h"
-#include "deskflow/clipboard_types.h"
+#include "deskflow/ClipboardTypes.h"
 
 class IClipboard;
 
