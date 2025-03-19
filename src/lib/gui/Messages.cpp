@@ -9,8 +9,8 @@
 #include "Constants.h"
 #include "EnvVars.h"
 #include "Logger.h"
+#include "Styles.h"
 #include "common/constants.h"
-#include "styles.h"
 
 #include <QAction>
 #include <QDateTime>
