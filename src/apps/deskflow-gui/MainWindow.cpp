@@ -26,7 +26,7 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "net/FingerprintDatabase.h"
-#include "platform/wayland.h"
+#include "platform/Wayland.h"
 
 #if defined(Q_OS_LINUX)
 #include "config.h"

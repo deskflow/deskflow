@@ -50,7 +50,7 @@
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-#include "platform/wayland.h"
+#include "platform/Wayland.h"
 #endif
 
 #if defined(MAC_OS_X_VERSION_10_7)

@@ -23,7 +23,7 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 #include "net/XSocket.h"
-#include "platform/wayland.h"
+#include "platform/Wayland.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -47,7 +47,7 @@
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-#include "platform/wayland.h"
+#include "platform/Wayland.h"
 #endif
 
 #if defined(MAC_OS_X_VERSION_10_7)
