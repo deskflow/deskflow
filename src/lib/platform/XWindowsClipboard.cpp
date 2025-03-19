@@ -11,7 +11,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "common/Common.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 #include "platform/XWindowsClipboardBMPConverter.h"
 #include "platform/XWindowsClipboardHTMLConverter.h"
 #include "platform/XWindowsClipboardTextConverter.h"

@@ -15,7 +15,7 @@ add_library(common STATIC
   StdPost.h
   StdPre.h
   StdSet.h
-  stdvector.h
+  StdVector.h
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp
