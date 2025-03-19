@@ -10,7 +10,7 @@
 #include "OSXAutoTypes.h"
 #include "common/StdMap.h"
 #include "common/StdSet.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 #include "deskflow/KeyState.h"
 
 #include <Carbon/Carbon.h>

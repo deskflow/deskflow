@@ -11,7 +11,7 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"

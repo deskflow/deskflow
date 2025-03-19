@@ -8,7 +8,7 @@
 #pragma once
 
 #include "common/StdMap.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 #include "deskflow/KeyState.h"
 
 #if X_DISPLAY_MISSING

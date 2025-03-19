@@ -6,7 +6,7 @@
  */
 
 #include "deskflow/IClipboard.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 
 //
 // IClipboard

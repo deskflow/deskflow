@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
-#include "common/stdvector.h"
+#include "common/StdVector.h"
 #include "mt/Mutex.h"
 
 #if X_DISPLAY_MISSING
