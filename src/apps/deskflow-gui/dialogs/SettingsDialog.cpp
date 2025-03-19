@@ -34,6 +34,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow));
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->comboTlsKeyLength->setItemIcon(2, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
+  ui->lblTlsCertInfo->setFixedSize(28, 28);
 
   ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("deskflow-symbolic")));
   ui->rbIconColorful->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
@@ -64,6 +65,7 @@ void SettingsDialog::initConnections()
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
   connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
   connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
+  connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
   connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
@@ -73,6 +75,8 @@ void SettingsDialog::regenCertificates()
 {
   if (m_tlsUtility.generateCertificate()) {
     QMessageBox::information(this, tr("TLS Certificate Regenerated"), tr("TLS certificate regenerated successfully."));
+    const auto certificate = Settings::value(Settings::Security::Certificate).toString();
+    updateKeyLengthOnFile(certificate);
   }
 }
 
@@ -184,10 +188,9 @@ void SettingsDialog::updateTlsControls()
   const auto certificate = Settings::value(Settings::Security::Certificate).toString();
   if (QFile(certificate).exists()) {
     updateKeyLengthOnFile(certificate);
-  } else {
-    const auto keyLengthText = Settings::value(Settings::Security::KeySize).toString();
-    ui->comboTlsKeyLength->setCurrentText(keyLengthText);
   }
+
+  ui->comboTlsKeyLength->setCurrentText(Settings::value(Settings::Security::KeySize).toString());
 
   const auto tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
   const auto writable = Settings::isWritable();
@@ -234,8 +237,14 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   }
 
   auto length = ssl.getCertKeyLength(path);
-  ui->comboTlsKeyLength->setCurrentText(QString::number(length));
-  Settings::setValue(Settings::Security::KeySize, length);
+  QPixmap labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow).pixmap(24, 24));
+  if (length == 2048)
+    labelIcon = QPixmap(QIcon::fromTheme(QStringLiteral("security-medium")).pixmap(24, 24));
+  if (length == 4096)
+    labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh).pixmap(24, 24));
+
+  ui->lblTlsCertInfo->setPixmap(labelIcon);
+  ui->lblTlsCertInfo->setToolTip(QStringLiteral("Key length: %1 bits").arg(QString::number(length)));
 }
 
 void SettingsDialog::updateControls()
@@ -273,6 +282,13 @@ void SettingsDialog::updateControls()
   ui->widgetLogFilename->setEnabled(writable && logToFile);
 
   updateTlsControls();
+}
+
+void SettingsDialog::updateRequestedKeySize()
+{
+  if (ui->comboTlsKeyLength->currentText() == Settings::value(Settings::Security::KeySize).toString())
+    return;
+  Settings::setValue(Settings::Security::KeySize, ui->comboTlsKeyLength->currentText());
 }
 
 SettingsDialog::~SettingsDialog() = default;

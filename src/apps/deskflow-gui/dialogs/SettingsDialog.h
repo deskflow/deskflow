@@ -58,6 +58,9 @@ private:
   /// @brief Enables controls when they should be.
   void updateControls();
 
+  /// @brief updates the setting vaule for key size.
+  void updateRequestedKeySize();
+
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
   const CoreProcess &m_coreProcess;
