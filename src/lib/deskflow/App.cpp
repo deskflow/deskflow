@@ -10,7 +10,7 @@
 #include "DisplayInvalidException.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include "base/log_outputters.h"
+#include "base/LogOutputters.h"
 #include "common/constants.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"

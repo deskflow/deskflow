@@ -8,7 +8,7 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/log_outputters.h"
+#include "base/LogOutputters.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
