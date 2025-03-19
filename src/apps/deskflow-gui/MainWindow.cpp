@@ -29,7 +29,7 @@
 #include "platform/Wayland.h"
 
 #if defined(Q_OS_LINUX)
-#include "config.h"
+#include "Config.h"
 #endif
 
 #include <QApplication>

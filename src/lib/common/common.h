@@ -11,7 +11,7 @@
 #define SYSAPI_WIN32 1
 #define WINAPI_MSWINDOWS 1
 #elif HAVE_CONFIG_H
-#include "config.h"
+#include "Config.h"
 #else
 #error "config.h missing"
 #endif
