@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "diagnostic.h"
+#include "Diagnostic.h"
 
 #include "common/Settings.h"
 
