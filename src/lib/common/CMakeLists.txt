@@ -12,7 +12,7 @@ add_library(common STATIC
   StdList.h
   StdMap.h
   StdOStream.h
-  stdpost.h
+  StdPost.h
   stdpre.h
   stdset.h
   stdvector.h
