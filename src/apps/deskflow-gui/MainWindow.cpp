@@ -16,8 +16,8 @@
 
 #include "base/String.h"
 #include "common/Settings.h"
+#include "gui/Constants.h"
 #include "gui/Logger.h"
-#include "gui/constants.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/diagnostic.h"
 #include "gui/ipc/DaemonIpcClient.h"
