@@ -14,7 +14,7 @@
 #include "gui/Logger.h"
 #include "gui/Messages.h"
 #include "gui/StringUtils.h"
-#include "gui/style_utils.h"
+#include "gui/StyleUtils.h"
 
 #include <QApplication>
 #include <QDebug>
