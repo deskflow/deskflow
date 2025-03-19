@@ -12,7 +12,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "deskflow/IPlatformScreen.h"
-#include "deskflow/option_types.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/protocol_types.h"
 #include "net/NetworkAddress.h"
 #include "server/InputFilter.h"

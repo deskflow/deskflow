@@ -11,7 +11,7 @@
 #include "deskflow/IScreen.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
-#include "deskflow/option_types.h"
+#include "deskflow/OptionTypes.h"
 
 #include <string>
 

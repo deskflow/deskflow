@@ -13,7 +13,7 @@
 #include "deskflow/IPrimaryScreen.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/ISecondaryScreen.h"
-#include "deskflow/option_types.h"
+#include "deskflow/OptionTypes.h"
 
 class IClipboard;
 
