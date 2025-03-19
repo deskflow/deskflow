@@ -113,8 +113,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IScreen.h
   IScreenSaver.h
   ISecondaryScreen.h
-  key_types.cpp
-  key_types.h
+  KeyTypes.cpp
+  KeyTypes.h
   KeyMap.cpp
   KeyMap.h
   KeyState.cpp

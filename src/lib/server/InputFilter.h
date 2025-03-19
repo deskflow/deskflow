@@ -10,7 +10,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "deskflow/IPlatformScreen.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 #include "deskflow/mouse_types.h"
 #include "deskflow/protocol_types.h"
 

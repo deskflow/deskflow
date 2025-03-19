@@ -11,7 +11,7 @@
 #include "common/stdmap.h"
 #include "common/stdset.h"
 #include "common/stdvector.h"
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 
 #ifdef TEST_ENV
 #include "gtest/gtest_prod.h"

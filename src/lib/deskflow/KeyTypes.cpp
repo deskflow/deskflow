@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 
 const KeyNameMapEntry kKeyNameMap[] = {
     {"AltGr", kKeyAltGr},

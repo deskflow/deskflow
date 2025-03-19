@@ -9,7 +9,7 @@
 #import <Carbon/Carbon.h>
 #import <CoreFoundation/CoreFoundation.h>
 
-#include "deskflow/key_types.h"
+#include "deskflow/KeyTypes.h"
 
 #if defined(__cplusplus)
 extern "C"
