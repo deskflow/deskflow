@@ -19,8 +19,8 @@
 #include "deskflow/INode.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/option_types.h"
 #include "server/Config.h"
 #include <memory>
 

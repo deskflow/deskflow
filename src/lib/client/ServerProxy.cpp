@@ -16,10 +16,10 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/FileChunk.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
 #include "deskflow/XDeskflow.h"
-#include "deskflow/option_types.h"
 #include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 

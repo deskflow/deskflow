@@ -120,7 +120,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   KeyState.cpp
   KeyState.h
   MouseTypes.h
-  option_types.h
+  OptionTypes.h
   PacketStreamFilter.cpp
   PacketStreamFilter.h
   PlatformScreen.cpp

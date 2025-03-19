@@ -12,8 +12,8 @@
 #include "common/stdostream.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
+#include "deskflow/OptionTypes.h"
 #include "deskflow/XDeskflow.h"
-#include "deskflow/option_types.h"
 #include "net/XSocket.h"
 #include "server/Server.h"
 

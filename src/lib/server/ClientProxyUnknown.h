@@ -9,7 +9,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "deskflow/option_types.h"
+#include "deskflow/OptionTypes.h"
 
 #include <string>
 
