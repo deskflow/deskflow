@@ -11,7 +11,7 @@ add_library(common STATIC
   StdIStream.h
   StdList.h
   StdMap.h
-  stdostream.h
+  StdOStream.h
   stdpost.h
   stdpre.h
   stdset.h

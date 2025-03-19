@@ -9,7 +9,7 @@
 
 #include "base/IEventQueue.h"
 #include "common/StdIStream.h"
-#include "common/stdostream.h"
+#include "common/StdOStream.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
