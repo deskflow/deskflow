@@ -7,9 +7,9 @@
 #include "messages.h"
 
 #include "Constants.h"
+#include "EnvVars.h"
 #include "Logger.h"
 #include "common/constants.h"
-#include "env_vars.h"
 #include "styles.h"
 
 #include <QAction>
