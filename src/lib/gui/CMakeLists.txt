@@ -15,7 +15,6 @@ endif()
 
 add_library(${target} STATIC
   ${platform_sources}
-  byte_utils.h
   constants.h
   diagnostic.cpp
   diagnostic.h
