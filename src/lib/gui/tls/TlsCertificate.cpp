@@ -7,7 +7,7 @@
 
 #include "TlsCertificate.h"
 
-#include "base/finally.h"
+#include "base/FinalAction.h"
 #include "common/Settings.h"
 #include "net/FingerprintData.h"
 #include "net/FingerprintDatabase.h"
