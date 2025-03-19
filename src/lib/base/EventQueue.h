@@ -14,7 +14,7 @@
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
 #include "common/StdMap.h"
-#include "common/stdset.h"
+#include "common/StdSet.h"
 #include "mt/CondVar.h"
 
 #include <queue>

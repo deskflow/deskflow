@@ -14,7 +14,7 @@ add_library(common STATIC
   StdOStream.h
   StdPost.h
   StdPre.h
-  stdset.h
+  StdSet.h
   stdvector.h
   Settings.h
   Settings.cpp

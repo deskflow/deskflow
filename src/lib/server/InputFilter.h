@@ -8,7 +8,7 @@
 #pragma once
 
 #include "common/StdMap.h"
-#include "common/stdset.h"
+#include "common/StdSet.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
