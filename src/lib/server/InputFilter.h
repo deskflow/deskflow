@@ -11,7 +11,7 @@
 #include "common/stdset.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/KeyTypes.h"
-#include "deskflow/mouse_types.h"
+#include "deskflow/MouseTypes.h"
 #include "deskflow/protocol_types.h"
 
 class PrimaryClient;

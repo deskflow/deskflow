@@ -18,8 +18,8 @@
 #include "deskflow/DragInformation.h"
 #include "deskflow/INode.h"
 #include "deskflow/KeyTypes.h"
+#include "deskflow/MouseTypes.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/mouse_types.h"
 #include "deskflow/option_types.h"
 #include "server/Config.h"
 #include <memory>

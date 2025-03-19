@@ -11,7 +11,7 @@
 #include "base/EventTypes.h"
 #include "common/IInterface.h"
 #include "deskflow/KeyTypes.h"
-#include "deskflow/mouse_types.h"
+#include "deskflow/MouseTypes.h"
 
 //! Primary screen interface
 /*!

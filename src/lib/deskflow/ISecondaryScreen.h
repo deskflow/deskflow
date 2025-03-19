@@ -10,7 +10,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/IInterface.h"
-#include "deskflow/mouse_types.h"
+#include "deskflow/MouseTypes.h"
 
 //! Secondary screen interface
 /*!
