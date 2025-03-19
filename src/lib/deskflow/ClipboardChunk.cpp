@@ -8,8 +8,8 @@
 
 #include "base/Log.h"
 #include "base/String.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 #include <cstring>
 

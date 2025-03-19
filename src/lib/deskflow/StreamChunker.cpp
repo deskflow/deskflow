@@ -15,7 +15,7 @@
 #include "common/stdexcept.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/FileChunk.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 

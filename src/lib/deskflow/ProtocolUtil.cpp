@@ -8,8 +8,8 @@
 #include "deskflow/ProtocolUtil.h"
 #include "base/Log.h"
 #include "common/stdvector.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/XDeskflow.h"
-#include "deskflow/protocol_types.h"
 #include "io/IStream.h"
 #include <array>
 #include <iterator>

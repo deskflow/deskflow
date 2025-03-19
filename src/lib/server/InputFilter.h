@@ -12,7 +12,7 @@
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 
 class PrimaryClient;
 class Event;

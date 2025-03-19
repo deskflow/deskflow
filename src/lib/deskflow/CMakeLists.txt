@@ -125,8 +125,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   PacketStreamFilter.h
   PlatformScreen.cpp
   PlatformScreen.h
-  protocol_types.cpp
-  protocol_types.h
+  ProtocolTypes.cpp
+  ProtocolTypes.h
   ProtocolUtil.cpp
   ProtocolUtil.h
   Screen.cpp

@@ -10,7 +10,7 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "deskflow/IPlatformScreen.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 #include "server/ClientProxy.h"
 
 namespace deskflow {

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "deskflow/Clipboard.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 #include "server/ClientProxy.h"
 
 class Event;

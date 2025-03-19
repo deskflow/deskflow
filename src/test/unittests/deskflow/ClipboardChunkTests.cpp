@@ -5,7 +5,7 @@
  */
 
 #include "deskflow/ClipboardChunk.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 
 #include <gtest/gtest.h>
 
