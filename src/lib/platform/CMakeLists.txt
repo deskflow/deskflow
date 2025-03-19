@@ -158,7 +158,7 @@ endif()
 include_directories(${inc})
 
 # wayland.h is included to check for wayland support
-add_library(platform STATIC ${PLATFORM_SOURCES} wayland.h)
+add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 
 target_link_libraries(platform client ${libs})
 

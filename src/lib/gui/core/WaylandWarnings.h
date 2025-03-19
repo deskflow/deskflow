@@ -9,7 +9,7 @@
 #include <QWidget>
 #include <memory>
 
-#include "platform/wayland.h"
+#include "platform/Wayland.h"
 
 namespace deskflow::gui::core {
 
