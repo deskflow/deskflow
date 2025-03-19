@@ -12,7 +12,7 @@
 #include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"
 #include "gui/Logger.h"
-#include "gui/messages.h"
+#include "gui/Messages.h"
 #include "gui/string_utils.h"
 #include "gui/style_utils.h"
 

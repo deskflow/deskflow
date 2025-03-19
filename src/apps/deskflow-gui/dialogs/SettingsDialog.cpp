@@ -10,8 +10,8 @@
 #include "ui_SettingsDialog.h"
 
 #include "common/Settings.h"
+#include "gui/Messages.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/messages.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 

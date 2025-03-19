@@ -6,8 +6,8 @@
 
 #include "WaylandWarnings.h"
 
+#include "Messages.h"
 #include "common/Settings.h"
-#include "messages.h"
 
 using namespace deskflow::platform;
 

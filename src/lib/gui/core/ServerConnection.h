@@ -9,8 +9,8 @@
 #include <QString>
 #include <QStringList>
 
+#include "gui/Messages.h"
 #include "gui/config/IServerConfig.h"
-#include "gui/messages.h"
 
 namespace deskflow::gui {
 
