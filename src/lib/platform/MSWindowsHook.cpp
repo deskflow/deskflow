@@ -7,8 +7,8 @@
 
 #include "platform/MSWindowsHook.h"
 #include "base/Log.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/XScreen.h"
-#include "deskflow/protocol_types.h"
 
 static const char *g_name = "dfwhook";
 

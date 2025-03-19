@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 
 const char *const kSynergyProtocolName = "Synergy";
 const char *const kBarrierProtocolName = "Barrier";

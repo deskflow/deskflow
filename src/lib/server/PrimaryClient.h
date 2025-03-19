@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 #include "server/BaseClientProxy.h"
 
 namespace deskflow {

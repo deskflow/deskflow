@@ -14,8 +14,8 @@
 #include "common/constants.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/XDeskflow.h"
-#include "deskflow/protocol_types.h"
 
 #if SYSAPI_WIN32
 #include "base/IEventQueue.h"

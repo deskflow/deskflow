@@ -7,7 +7,7 @@
 #pragma once
 
 #include "common/common.h"
-#include "deskflow/protocol_types.h"
+#include "deskflow/ProtocolTypes.h"
 #include "io/IStream.h"
 
 #include <functional>
