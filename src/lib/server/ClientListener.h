@@ -10,7 +10,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/stddeque.h"
+#include "common/StdDeque.h"
 #include "common/stdset.h"
 #include "net/SecurityLevel.h"
 #include "server/Config.h"

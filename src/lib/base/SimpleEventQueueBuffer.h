@@ -9,7 +9,7 @@
 
 #include "arch/IArchMultithread.h"
 #include "base/IEventQueueBuffer.h"
-#include "common/stddeque.h"
+#include "common/StdDeque.h"
 
 //! In-memory event queue buffer
 /*!
