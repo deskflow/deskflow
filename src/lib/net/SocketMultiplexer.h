@@ -8,7 +8,7 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/stdlist.h"
+#include "common/StdList.h"
 #include "common/stdmap.h"
 
 template <class T> class CondVar;

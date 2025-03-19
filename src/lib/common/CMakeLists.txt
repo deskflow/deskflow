@@ -9,7 +9,7 @@ add_library(common STATIC
   StdDeque.h
   StdExcept.h
   StdIStream.h
-  stdlist.h
+  StdList.h
   stdmap.h
   stdostream.h
   stdpost.h

@@ -10,7 +10,7 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "common/Common.h"
-#include "common/stdlist.h"
+#include "common/StdList.h"
 
 #include <stdarg.h>
 
