@@ -7,7 +7,7 @@
 #include "test/shared/TestEventQueue.h"
 
 #include "base/TMethodEventJob.h"
-#include "common/stdexcept.h"
+#include "common/StdExcept.h"
 
 void TestEventQueue::raiseQuitEvent()
 {

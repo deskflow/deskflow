@@ -14,7 +14,7 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/ServerProxy.h"
-#include "common/stdexcept.h"
+#include "common/StdExcept.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DropHelper.h"
 #include "deskflow/FileChunk.h"
