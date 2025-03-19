@@ -8,8 +8,8 @@
 
 #include "MainWindow.h"
 #include "common/constants.h"
+#include "gui/Constants.h"
 #include "gui/Logger.h"
-#include "gui/constants.h"
 #include "gui/diagnostic.h"
 #include "gui/dotenv.h"
 #include "gui/messages.h"
