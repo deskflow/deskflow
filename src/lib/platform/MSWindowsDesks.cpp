@@ -19,7 +19,7 @@
 #include "mt/Lock.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsScreen.h"
-#include "platform/dfwhook.h"
+#include "platform/Win32Hook.h"
 
 #include <malloc.h>
 

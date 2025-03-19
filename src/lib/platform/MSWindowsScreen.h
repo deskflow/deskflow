@@ -14,7 +14,7 @@
 #include "mt/Mutex.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
-#include "platform/dfwhook.h"
+#include "platform/Win32Hook.h"
 
 #include <string>
 

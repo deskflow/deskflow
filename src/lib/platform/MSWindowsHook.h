@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "platform/dfwhook.h"
+#include "platform/Win32Hook.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
