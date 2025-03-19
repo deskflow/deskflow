@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "dotenv.h"
+#include "DotEnv.h"
 
 #include "common/Settings.h"
 

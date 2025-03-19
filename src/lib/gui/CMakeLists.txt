@@ -18,8 +18,8 @@ add_library(${target} STATIC
   Constants.h
   Diagnostic.cpp
   Diagnostic.h
-  dotenv.cpp
-  dotenv.h
+  DotEnv.cpp
+  DotEnv.h
   env_vars.h
   FileTail.cpp
   FileTail.h
