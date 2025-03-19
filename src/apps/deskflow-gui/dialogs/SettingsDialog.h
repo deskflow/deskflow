@@ -49,9 +49,6 @@ private:
   /// @brief Load all settings.
   void loadFromConfig();
 
-  /// @brief Enables or disables the TLS regenerate button.
-  void updateTlsRegenerateButton();
-
   /// @brief Updates the key length value based on the loaded file.
   void updateKeyLengthOnFile(const QString &path);
 
