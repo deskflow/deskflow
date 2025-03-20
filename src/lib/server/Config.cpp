@@ -8,8 +8,6 @@
 #include "server/Config.h"
 
 #include "base/IEventQueue.h"
-#include "common/StdIStream.h"
-#include "common/StdOStream.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -18,6 +16,8 @@
 #include "server/Server.h"
 
 #include <cstdlib>
+#include <istream>
+#include <ostream>
 
 using namespace deskflow::string;
 

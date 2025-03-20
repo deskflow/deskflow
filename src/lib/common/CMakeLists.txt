@@ -7,7 +7,6 @@ add_library(common STATIC
   Common.h
   IInterface.h
   StdExcept.h
-  StdOStream.h
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp
