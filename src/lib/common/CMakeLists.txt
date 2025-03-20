@@ -14,7 +14,3 @@ add_library(common STATIC
 )
 
 target_link_libraries(common PUBLIC Qt6::Core)
-
-if(APPLE)
-  target_sources(common PUBLIC MacOSXPrecomp.h)
-endif()
