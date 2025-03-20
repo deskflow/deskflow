@@ -8,8 +8,9 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
-#include "common/StdVector.h"
 #include "mt/Mutex.h"
+
+#include <vector>
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "common/StdVector.h"
 #include "deskflow/KeyState.h"
 
 #include <string>
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

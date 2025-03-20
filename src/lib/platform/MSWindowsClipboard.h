@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include "common/StdVector.h"
 #include "deskflow/IClipboard.h"
 #include "platform/MSWindowsClipboardFacade.h"
+
+#include <vector>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

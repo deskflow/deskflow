@@ -9,7 +9,8 @@
 
 #include "base/EventTypes.h"
 #include "common/StdList.h"
-#include "common/StdVector.h"
+
+#include <vector>
 
 //! FIFO of bytes
 /*!

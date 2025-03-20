@@ -10,8 +10,9 @@
 #include "base/String.h"
 #include "common/StdMap.h"
 #include "common/StdSet.h"
-#include "common/StdVector.h"
 #include "deskflow/KeyTypes.h"
+
+#include <vector>
 
 #ifdef TEST_ENV
 #include "gtest/gtest_prod.h"
