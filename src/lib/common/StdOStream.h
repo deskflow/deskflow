@@ -7,12 +7,8 @@
 
 #pragma once
 
-#include "StdPre.h"
-
 #if HAVE_OSTREAM
 #include <ostream>
 #else
 #include <iostream>
 #endif
-
-#include "StdPost.h"

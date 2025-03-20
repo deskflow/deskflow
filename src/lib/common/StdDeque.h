@@ -6,8 +6,4 @@
  */
 #pragma once
 
-#include "StdPre.h"
-
 #include <deque>
-
-#include "StdPost.h"

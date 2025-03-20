@@ -12,8 +12,6 @@ add_library(common STATIC
   StdList.h
   StdMap.h
   StdOStream.h
-  StdPost.h
-  StdPre.h
   StdSet.h
   StdVector.h
   Settings.h

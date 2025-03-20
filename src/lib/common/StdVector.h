@@ -7,8 +7,4 @@
 
 #pragma once
 
-#include "StdPre.h"
-
 #include <vector>
-
-#include "StdPost.h"
