@@ -18,8 +18,8 @@
 #include "deskflow/win32/AppUtilWindows.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
+#include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsScreen.h"
-#include "platform/Win32Hook.h"
 
 #include <malloc.h>
 

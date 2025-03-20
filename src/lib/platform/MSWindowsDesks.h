@@ -13,7 +13,6 @@
 #include "deskflow/OptionTypes.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
-#include "platform/Win32Hook.h"
 
 #include <string>
 

@@ -13,7 +13,6 @@ endif()
 
 if(WIN32)
   set(PLATFORM_SOURCES
-    Win32Hook.h
     IMSWindowsClipboardFacade.h
     MSWindowsClipboard.cpp
     MSWindowsClipboard.h
