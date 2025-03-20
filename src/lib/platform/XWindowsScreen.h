@@ -8,12 +8,12 @@
 #pragma once
 
 #include "arch/Arch.h"
-#include "common/StdSet.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XWindowsPowerManager.h"
 
+#include <set>
 #include <vector>
 
 #if X_DISPLAY_MISSING

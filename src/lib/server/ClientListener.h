@@ -10,11 +10,11 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/StdSet.h"
 #include "net/SecurityLevel.h"
 #include "server/Config.h"
 
 #include <deque>
+#include <set>
 
 class ClientProxy;
 class ClientProxyUnknown;

@@ -8,10 +8,10 @@
 #pragma once
 
 #include "base/String.h"
-#include "common/StdSet.h"
 #include "deskflow/KeyTypes.h"
 
 #include <map>
+#include <set>
 #include <vector>
 
 #ifdef TEST_ENV
