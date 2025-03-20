@@ -9,9 +9,9 @@
 
 #include "base/EventTypes.h"
 #include "common/StdMap.h"
-#include "common/StdVector.h"
 
 #include <string>
+#include <vector>
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow

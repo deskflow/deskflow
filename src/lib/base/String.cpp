@@ -7,7 +7,6 @@
  */
 
 #include "base/String.h"
-#include "common/StdVector.h"
 
 #include <algorithm>
 #include <cctype>
@@ -21,6 +20,7 @@
 #include <sstream>
 #include <stdio.h>
 #include <string>
+#include <vector>
 
 namespace deskflow {
 namespace string {

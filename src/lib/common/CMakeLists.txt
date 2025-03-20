@@ -12,7 +12,6 @@ add_library(common STATIC
   StdMap.h
   StdOStream.h
   StdSet.h
-  StdVector.h
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp

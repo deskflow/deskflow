@@ -7,9 +7,9 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/StdVector.h"
 
 #include <string>
+#include <vector>
 
 class DragInformation;
 using DragFileList = std::vector<DragInformation>;

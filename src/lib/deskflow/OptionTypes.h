@@ -8,7 +8,8 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/StdVector.h"
+
+#include <vector>
 
 //! Option ID
 /*!

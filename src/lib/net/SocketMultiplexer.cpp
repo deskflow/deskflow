@@ -11,12 +11,13 @@
 #include "arch/XArch.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
-#include "common/StdVector.h"
 #include "mt/CondVar.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 #include "mt/Thread.h"
 #include "net/ISocketMultiplexerJob.h"
+
+#include <vector>
 
 //
 // SocketMultiplexer

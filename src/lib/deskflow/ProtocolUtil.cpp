@@ -7,7 +7,6 @@
 
 #include "deskflow/ProtocolUtil.h"
 #include "base/Log.h"
-#include "common/StdVector.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
@@ -16,6 +15,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <vector>
 
 //
 // ProtocolUtil

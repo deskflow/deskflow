@@ -9,7 +9,6 @@
 
 #include "base/EventTypes.h"
 #include "common/StdMap.h"
-#include "common/StdVector.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
@@ -22,6 +21,7 @@
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
 #include <memory>
+#include <vector>
 
 extern "C"
 {

@@ -9,11 +9,12 @@
 
 #include "arch/Arch.h"
 #include "common/StdSet.h"
-#include "common/StdVector.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XWindowsPowerManager.h"
+
+#include <vector>
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow

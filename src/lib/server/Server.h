@@ -12,7 +12,6 @@
 #include "base/Stopwatch.h"
 #include "common/StdMap.h"
 #include "common/StdSet.h"
-#include "common/StdVector.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/DragInformation.h"
@@ -22,7 +21,9 @@
 #include "deskflow/OptionTypes.h"
 #include "deskflow/ServerArgs.h"
 #include "server/Config.h"
+
 #include <memory>
+#include <vector>
 
 class BaseClientProxy;
 class EventQueueTimer;

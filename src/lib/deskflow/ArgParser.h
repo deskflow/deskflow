@@ -6,9 +6,8 @@
 
 #pragma once
 
-#include "common/StdVector.h"
-
 #include <string>
+#include <vector>
 
 namespace deskflow {
 class ArgsBase;

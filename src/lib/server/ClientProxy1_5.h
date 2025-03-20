@@ -7,8 +7,9 @@
 #pragma once
 
 #include "base/Stopwatch.h"
-#include "common/StdVector.h"
 #include "server/ClientProxy1_4.h"
+
+#include <vector>
 
 class Server;
 class IEventQueue;

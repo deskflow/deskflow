@@ -7,10 +7,9 @@
 
 #pragma once
 
-#include "common/StdVector.h"
-
 #include <algorithm>
 #include <functional>
+#include <vector>
 
 //! A priority queue with an iterator
 /*!
