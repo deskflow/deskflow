@@ -8,7 +8,6 @@ add_library(common STATIC
   IInterface.h
   StdExcept.h
   StdIStream.h
-  StdMap.h
   StdOStream.h
   StdSet.h
   Settings.h

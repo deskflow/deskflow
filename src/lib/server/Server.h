@@ -10,7 +10,6 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/Stopwatch.h"
-#include "common/StdMap.h"
 #include "common/StdSet.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
@@ -22,6 +21,7 @@
 #include "deskflow/ServerArgs.h"
 #include "server/Config.h"
 
+#include <map>
 #include <memory>
 #include <vector>
 

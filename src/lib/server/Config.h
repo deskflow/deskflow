@@ -9,7 +9,6 @@
 
 #include "base/String.h"
 #include "base/XBase.h"
-#include "common/StdMap.h"
 #include "common/StdSet.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
@@ -18,6 +17,7 @@
 #include "server/InputFilter.h"
 
 #include <iosfwd>
+#include <map>
 
 namespace deskflow::server {
 class Config;

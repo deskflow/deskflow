@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "common/StdMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 
+#include <map>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN

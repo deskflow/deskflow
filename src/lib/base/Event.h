@@ -8,7 +8,8 @@
 #pragma once
 
 #include "common/Common.h"
-#include "common/StdMap.h"
+
+#include <map>
 
 class EventData
 {
