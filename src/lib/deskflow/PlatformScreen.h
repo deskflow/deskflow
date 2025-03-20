@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include "common/StdExcept.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/IPlatformScreen.h"
+
+#include <stdexcept>
 
 //! Base screen implementation
 /*!

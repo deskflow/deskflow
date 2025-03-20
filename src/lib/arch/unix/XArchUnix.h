@@ -16,7 +16,7 @@ public:
   XArchEvalUnix(int error) : m_error(error)
   {
   }
-  virtual ~XArchEvalUnix() _NOEXCEPT
+  virtual ~XArchEvalUnix() throw()
   {
   }
 

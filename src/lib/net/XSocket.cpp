@@ -12,9 +12,10 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int port) _NOEXCEPT : m_error(error),
-                                                                                                m_hostname(hostname),
-                                                                                                m_port(port)
+XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int port) throw()
+    : m_error(error),
+      m_hostname(hostname),
+      m_port(port)
 {
   // do nothing
 }

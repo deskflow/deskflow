@@ -66,7 +66,7 @@ class XDuplicateClient : public XDeskflow
 {
 public:
   XDuplicateClient(const std::string &name);
-  virtual ~XDuplicateClient() _NOEXCEPT
+  virtual ~XDuplicateClient() throw()
   {
   }
 
@@ -94,7 +94,7 @@ class XUnknownClient : public XDeskflow
 {
 public:
   XUnknownClient(const std::string &name);
-  virtual ~XUnknownClient() _NOEXCEPT
+  virtual ~XUnknownClient() throw()
   {
   }
 
@@ -123,7 +123,7 @@ class XExitApp : public XDeskflow
 {
 public:
   XExitApp(int code);
-  virtual ~XExitApp() _NOEXCEPT
+  virtual ~XExitApp() throw()
   {
   }
 

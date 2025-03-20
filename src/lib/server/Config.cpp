@@ -2114,7 +2114,7 @@ XConfigRead::XConfigRead(const ConfigReadContext &context, const char *errorFmt,
   // do nothing
 }
 
-XConfigRead::~XConfigRead() _NOEXCEPT
+XConfigRead::~XConfigRead() throw()
 {
   // do nothing
 }

@@ -12,7 +12,6 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "base/String.h"
-#include "common/StdExcept.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/FileChunk.h"
 #include "deskflow/ProtocolTypes.h"
@@ -20,6 +19,7 @@
 #include "mt/Mutex.h"
 
 #include <fstream>
+#include <stdexcept>
 
 using namespace std;
 

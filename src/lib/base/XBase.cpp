@@ -26,12 +26,12 @@ XBase::XBase(const std::string &msg) : std::runtime_error(msg)
   // do nothing
 }
 
-XBase::~XBase() _NOEXCEPT
+XBase::~XBase() throw()
 {
   // do nothing
 }
 
-const char *XBase::what() const _NOEXCEPT
+const char *XBase::what() const throw()
 {
   if (const char *what = std::runtime_error::what(); what != nullptr && what[0] != '\0') {
     return what;

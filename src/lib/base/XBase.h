@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/StdExcept.h"
+#include <stdexcept>
 #include <string>
 
 //! Exception base class
@@ -21,10 +21,10 @@ public:
   XBase();
   //! Use \c msg as the result of what()
   XBase(const std::string &msg);
-  virtual ~XBase() _NOEXCEPT;
+  virtual ~XBase() throw();
 
   //! Reason for exception
-  virtual const char *what() const _NOEXCEPT;
+  virtual const char *what() const throw();
 
 protected:
   //! Get a human readable string describing the exception
@@ -61,7 +61,7 @@ declared.
     name_(const std::string &msg) : super_(msg)                                                                        \
     {                                                                                                                  \
     }                                                                                                                  \
-    virtual ~name_() _NOEXCEPT                                                                                         \
+    virtual ~name_() throw()                                                                                           \
     {                                                                                                                  \
     }                                                                                                                  \
   }
@@ -82,7 +82,7 @@ implemented.
     name_(const std::string &msg) : super_(msg)                                                                        \
     {                                                                                                                  \
     }                                                                                                                  \
-    virtual ~name_() _NOEXCEPT                                                                                         \
+    virtual ~name_() throw()                                                                                           \
     {                                                                                                                  \
     }                                                                                                                  \
                                                                                                                        \
@@ -116,11 +116,11 @@ c'tor.
     name_(const std::string &msg) : super_(msg), m_state(kFirst)                                                       \
     {                                                                                                                  \
     }                                                                                                                  \
-    virtual ~name_() _NOEXCEPT                                                                                         \
+    virtual ~name_() throw()                                                                                           \
     {                                                                                                                  \
     }                                                                                                                  \
                                                                                                                        \
-    virtual const char *what() const _NOEXCEPT                                                                         \
+    virtual const char *what() const throw()                                                                           \
     {                                                                                                                  \
       if (m_state == kFirst) {                                                                                         \
         m_state = kFormat;                                                                                             \
