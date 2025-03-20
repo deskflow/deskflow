@@ -37,7 +37,7 @@ public:
   trying to open the screen again.
   */
   XScreenUnavailable(double timeUntilRetry);
-  virtual ~XScreenUnavailable() _NOEXCEPT;
+  virtual ~XScreenUnavailable() throw();
 
   //! @name manipulators
   //@{

@@ -6,7 +6,6 @@ configure_file(Constants.h.in Constants.h @ONLY)
 add_library(common STATIC
   Common.h
   IInterface.h
-  StdExcept.h
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp

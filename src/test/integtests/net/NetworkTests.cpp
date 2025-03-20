@@ -14,7 +14,6 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
-#include "common/StdExcept.h"
 #include "deskflow/FileChunk.h"
 #include "deskflow/StreamChunker.h"
 #include "mt/Thread.h"
@@ -33,6 +32,7 @@
 #include <fstream>
 #include <gtest/gtest.h>
 #include <iostream>
+#include <stdexcept>
 #include <stdio.h>
 
 using namespace std;

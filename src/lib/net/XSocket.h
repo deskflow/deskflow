@@ -31,8 +31,8 @@ public:
     kBadPort      //!< The port is invalid
   };
 
-  XSocketAddress(EError, const std::string &hostname, int port) _NOEXCEPT;
-  virtual ~XSocketAddress() _NOEXCEPT
+  XSocketAddress(EError, const std::string &hostname, int port) throw();
+  virtual ~XSocketAddress() throw()
   {
   }
 

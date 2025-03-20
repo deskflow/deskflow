@@ -563,7 +563,7 @@ class XConfigRead : public XBase
 public:
   XConfigRead(const ConfigReadContext &context, const std::string &);
   XConfigRead(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
-  virtual ~XConfigRead() _NOEXCEPT;
+  virtual ~XConfigRead() throw();
 
 protected:
   // XBase overrides

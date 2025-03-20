@@ -8,7 +8,8 @@
 #pragma once
 
 #include "common/Common.h"
-#include "common/StdExcept.h"
+
+#include <stdexcept>
 #include <string>
 
 //! Generic thread exception
@@ -57,7 +58,7 @@ public:
   XArchEval()
   {
   }
-  virtual ~XArchEval() _NOEXCEPT
+  virtual ~XArchEval() throw()
   {
   }
 
@@ -75,7 +76,7 @@ public:
   XArch(const std::string &msg) : std::runtime_error(msg)
   {
   }
-  virtual ~XArch() _NOEXCEPT
+  virtual ~XArch() throw()
   {
   }
 };

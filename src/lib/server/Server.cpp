@@ -12,7 +12,6 @@
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
-#include "common/StdExcept.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DropHelper.h"
 #include "deskflow/FileChunk.h"
@@ -35,6 +34,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
+#include <stdexcept>
 
 using namespace deskflow::server;
 
