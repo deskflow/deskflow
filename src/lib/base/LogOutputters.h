@@ -10,9 +10,9 @@
 
 #include "base/ILogOutputter.h"
 #include "common/Common.h"
-#include "common/StdDeque.h"
 #include "mt/Thread.h"
 
+#include <deque>
 #include <fstream>
 #include <list>
 #include <string>

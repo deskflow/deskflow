@@ -9,8 +9,8 @@
 
 #include "arch/IArchMultithread.h"
 #include "base/IEventQueueBuffer.h"
-#include "common/StdDeque.h"
 
+#include <deque>
 //! In-memory event queue buffer
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
