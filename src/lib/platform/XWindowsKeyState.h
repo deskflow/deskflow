@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "common/StdMap.h"
 #include "deskflow/KeyState.h"
 
+#include <map>
 #include <vector>
 
 #if X_DISPLAY_MISSING

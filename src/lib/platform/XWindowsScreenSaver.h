@@ -8,8 +8,9 @@
 #pragma once
 
 #include "base/IEventQueue.h"
-#include "common/StdMap.h"
 #include "deskflow/IScreenSaver.h"
+
+#include <map>
 
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow

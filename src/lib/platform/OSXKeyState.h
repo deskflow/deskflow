@@ -8,12 +8,12 @@
 #pragma once
 
 #include "OSXAutoTypes.h"
-#include "common/StdMap.h"
 #include "common/StdSet.h"
 #include "deskflow/KeyState.h"
 
 #include <Carbon/Carbon.h>
 
+#include <map>
 #include <vector>
 
 class IOSXKeyResource;

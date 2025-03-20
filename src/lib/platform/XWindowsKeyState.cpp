@@ -15,7 +15,6 @@
 #include "platform/XWindowsKeyState.h"
 
 #include "base/Log.h"
-#include "common/StdMap.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ClientArgs.h"
@@ -23,6 +22,7 @@
 
 #include <algorithm>
 #include <cstddef>
+#include <map>
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow
 #else

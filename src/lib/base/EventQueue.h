@@ -13,10 +13,10 @@
 #include "base/IEventQueue.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
-#include "common/StdMap.h"
 #include "common/StdSet.h"
 #include "mt/CondVar.h"
 
+#include <map>
 #include <queue>
 
 class Mutex;

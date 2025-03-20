@@ -8,7 +8,6 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/StdMap.h"
 #include "deskflow/DragInformation.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
@@ -16,10 +15,12 @@
 
 #include <Carbon/Carbon.h>
 #include <IOKit/IOMessage.h>
-#include <bitset>
 #include <mach/mach_init.h>
 #include <mach/mach_interface.h>
 #include <mach/mach_port.h>
+
+#include <bitset>
+#include <map>
 #include <memory>
 #include <vector>
 
