@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "common/StdSet.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/ProtocolTypes.h"
 
 #include <map>
+#include <set>
 
 class PrimaryClient;
 class Event;

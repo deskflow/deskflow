@@ -10,7 +10,6 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/Stopwatch.h"
-#include "common/StdSet.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/DragInformation.h"
@@ -23,6 +22,7 @@
 
 #include <map>
 #include <memory>
+#include <set>
 #include <vector>
 
 class BaseClientProxy;

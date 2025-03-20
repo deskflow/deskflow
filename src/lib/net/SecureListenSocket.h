@@ -7,9 +7,10 @@
 
 #pragma once
 
-#include "common/StdSet.h"
 #include "net/SecurityLevel.h"
 #include "net/TCPListenSocket.h"
+
+#include <set>
 
 class IEventQueue;
 class SocketMultiplexer;
