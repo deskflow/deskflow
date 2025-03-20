@@ -8,8 +8,9 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/StdList.h"
 #include "common/StdMap.h"
+
+#include <list>
 
 template <class T> class CondVar;
 class Mutex;

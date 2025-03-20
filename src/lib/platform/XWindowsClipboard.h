@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "common/StdList.h"
 #include "common/StdMap.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
 
+#include <list>
 #include <vector>
 
 #if X_DISPLAY_MISSING
