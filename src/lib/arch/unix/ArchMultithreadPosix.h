@@ -8,8 +8,8 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-#include "common/StdList.h"
 
+#include <list>
 #include <pthread.h>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix

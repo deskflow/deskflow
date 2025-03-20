@@ -8,8 +8,8 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/StdList.h"
 
+#include <list>
 #include <vector>
 
 //! FIFO of bytes

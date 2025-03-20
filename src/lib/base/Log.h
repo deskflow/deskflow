@@ -10,8 +10,8 @@
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 #include "common/Common.h"
-#include "common/StdList.h"
 
+#include <list>
 #include <stdarg.h>
 
 #define CLOG (Log::getInstance())

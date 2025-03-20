@@ -8,7 +8,8 @@
 #pragma once
 
 #include "arch/IArchMultithread.h"
-#include "common/StdList.h"
+
+#include <list>
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
