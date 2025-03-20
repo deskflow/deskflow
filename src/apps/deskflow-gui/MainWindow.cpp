@@ -501,14 +501,12 @@ void MainWindow::resetCore()
 void MainWindow::updateSize()
 {
   if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
-    setMaximumHeight(16777215);
-    setMaximumWidth(16777215);
+    setMaximumSize(16777215, 16777215);
     resize(m_expandedSize);
   } else {
     adjustSize();
     // Prevent Resize with log collapsed
-    setMaximumHeight(height());
-    setMaximumWidth(width());
+    setMaximumSize(width(), height());
   }
 }
 
