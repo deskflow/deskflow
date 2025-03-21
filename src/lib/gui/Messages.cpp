@@ -6,18 +6,11 @@
 
 #include "Messages.h"
 
-<<<<<<< HEAD
-#include "Constants.h"
-#include "EnvVars.h"
 #include "Logger.h"
 #include "Styles.h"
-#include "common/Constants.h"
-=======
-#include "Logger.h"
-#include "Styles.h"
+
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
->>>>>>> 25c5bfa2b (refactor: move lib/gui/Constants.h => lib/common/UrlConstants.h)
 
 #include <QAction>
 #include <QDateTime>
@@ -310,7 +303,7 @@ bool showUpdateCheckOption(QWidget *parent)
                       "<p>Checking for updates requires an Internet connection.</p>"
                       "<p>URL: <pre>%2</pre></p>"
   )
-                      .arg(kAppName, env_vars::versionUrl()));
+                      .arg(kAppName, Settings::value(Settings::Core::UpdateUrl).toString()));
 
   message.exec();
   return message.clickedButton() == checkButton;

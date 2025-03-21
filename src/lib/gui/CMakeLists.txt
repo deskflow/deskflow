@@ -19,7 +19,6 @@ add_library(${target} STATIC
   Diagnostic.h
   DotEnv.cpp
   DotEnv.h
-  EnvVars.h
   FileTail.cpp
   FileTail.h
   Logger.cpp

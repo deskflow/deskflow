@@ -49,6 +49,7 @@ public:
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
+    inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
   };
   struct Daemon
   {
@@ -189,6 +190,7 @@ private:
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
+    , Settings::Core::UpdateUrl
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile
