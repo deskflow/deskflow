@@ -9,6 +9,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "Diagnostic.h"
 #include "StyleUtils.h"
 
 #include "dialogs/AboutDialog.h"
@@ -19,7 +20,6 @@
 #include "base/String.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
-#include "gui/Diagnostic.h"
 #include "gui/Logger.h"
 #include "gui/Messages.h"
 #include "gui/StringUtils.h"

@@ -48,6 +48,8 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   Action.h
   DataDownloader.cpp
   DataDownloader.h
+  Diagnostic.cpp
+  Diagnostic.h
   Hotkey.cpp
   Hotkey.h
   KeySequence.cpp
