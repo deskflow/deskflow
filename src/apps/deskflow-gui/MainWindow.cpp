@@ -9,6 +9,8 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 
+#include "StyleUtils.h"
+
 #include "dialogs/AboutDialog.h"
 #include "dialogs/FingerprintDialog.h"
 #include "dialogs/ServerConfigDialog.h"
@@ -21,7 +23,6 @@
 #include "gui/Logger.h"
 #include "gui/Messages.h"
 #include "gui/StringUtils.h"
-#include "gui/StyleUtils.h"
 #include "gui/Styles.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"

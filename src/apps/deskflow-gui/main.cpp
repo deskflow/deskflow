@@ -7,6 +7,7 @@
  */
 
 #include "MainWindow.h"
+#include "StyleUtils.h"
 #include "common/Constants.h"
 #include "gui/Constants.h"
 #include "gui/Diagnostic.h"
@@ -14,7 +15,6 @@
 #include "gui/Logger.h"
 #include "gui/Messages.h"
 #include "gui/StringUtils.h"
-#include "gui/StyleUtils.h"
 
 #include <QApplication>
 #include <QDebug>
