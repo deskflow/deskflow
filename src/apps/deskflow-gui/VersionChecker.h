@@ -6,26 +6,18 @@
 
 #pragma once
 
-#include "gui/proxy/QNetworkAccessManagerProxy.h"
-
 #include <QObject>
 #include <QString>
 #include <memory>
 
 class QNetworkAccessManager;
 class QNetworkReply;
-class VersionCheckerTests;
 
 class VersionChecker : public QObject
 {
-  using QNetworkAccessManagerProxy = deskflow::gui::proxy::QNetworkAccessManagerProxy;
-
   Q_OBJECT
-
-  friend class VersionCheckerTests;
-
 public:
-  explicit VersionChecker(std::shared_ptr<QNetworkAccessManagerProxy> network = nullptr);
+  explicit VersionChecker(QObject *parent = nullptr);
   void checkLatest() const;
 public slots:
   void replyFinished(QNetworkReply *reply);
@@ -42,6 +34,5 @@ private:
    * more recent the version
    */
   static int getStageVersion(QString stage);
-
-  std::shared_ptr<QNetworkAccessManagerProxy> m_network;
+  QNetworkAccessManager *m_network = nullptr;
 };

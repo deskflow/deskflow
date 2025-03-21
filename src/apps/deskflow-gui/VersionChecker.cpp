@@ -19,11 +19,9 @@
 
 using namespace deskflow::gui;
 
-VersionChecker::VersionChecker(std::shared_ptr<QNetworkAccessManagerProxy> network)
-    : m_network(network ? network : std::make_shared<QNetworkAccessManagerProxy>())
+VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new QNetworkAccessManager(this)}
 {
-  m_network->init();
-  connect(m_network.get(), &QNetworkAccessManagerProxy::finished, this, &VersionChecker::replyFinished);
+  connect(m_network, &QNetworkAccessManager::finished, this, &VersionChecker::replyFinished, Qt::UniqueConnection);
 }
 
 void VersionChecker::checkLatest() const
@@ -50,6 +48,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
   qDebug("version check server success, http status: %d", httpStatus);
 
   const auto newestVersion = QString(reply->readAll());
+  reply->deleteLater();
   qDebug("version check response: %s", qPrintable(newestVersion));
 
   if (!newestVersion.isEmpty() && compareVersions(kVersion, newestVersion) > 0) {
