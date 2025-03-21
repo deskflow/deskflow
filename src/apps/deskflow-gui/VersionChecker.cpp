@@ -6,8 +6,7 @@
 
 #include "VersionChecker.h"
 
-#include "common/Constants.h"
-#include "gui/EnvVars.h"
+#include "common/Settings.h"
 
 #include <QLocale>
 #include <QNetworkAccessManager>
@@ -17,8 +16,6 @@
 #include <QRegularExpression>
 #include <memory>
 
-using namespace deskflow::gui;
-
 VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new QNetworkAccessManager(this)}
 {
   connect(m_network, &QNetworkAccessManager::finished, this, &VersionChecker::replyFinished, Qt::UniqueConnection);
@@ -26,7 +23,7 @@ VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new
 
 void VersionChecker::checkLatest() const
 {
-  const QString url = env_vars::versionUrl();
+  const QString url = Settings::value(Settings::Core::UpdateUrl).toString();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
   auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());

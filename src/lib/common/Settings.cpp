@@ -6,6 +6,8 @@
 
 #include "Settings.h"
 
+#include "UrlConstants.h"
+
 #include <QFile>
 #include <QRect>
 
@@ -109,6 +111,9 @@ QVariant Settings::defaultValue(const QString &key)
 
   if (key == Core::ElevateMode)
     return Settings::ElevateMode::Always;
+
+  if (key == Core::UpdateUrl)
+    return kUrlUpdateCheck;
 
   if (key == Server::ExternalConfigFile)
     return QStringLiteral("%1/%2.conf").arg(instance()->settingsPath(), kAppId);
