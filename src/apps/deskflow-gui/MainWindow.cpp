@@ -757,7 +757,7 @@ void MainWindow::handleLogLine(const QString &line)
 
   // only trim end instead of the whole line to prevent tab-indented debug
   // filenames from losing their indentation.
-  ui->textLog->appendPlainText(trimEnd(line));
+  ui->textLog->appendPlainText(line.trimmed());
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
