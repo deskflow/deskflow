@@ -22,7 +22,6 @@
 #include "common/UrlConstants.h"
 #include "gui/Logger.h"
 #include "gui/Messages.h"
-#include "gui/StringUtils.h"
 #include "gui/Styles.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
@@ -677,7 +676,7 @@ void MainWindow::createMenuBar()
   menuBar->addMenu(menuEdit);
   menuBar->addMenu(menuHelp);
 
-  const auto enableTestMenu = strToTrue(qEnvironmentVariable("DESKFLOW_TEST_MENU"));
+  const auto enableTestMenu = QVariant(qEnvironmentVariable("DESKFLOW_TEST_MENU")).toBool();
   if (enableTestMenu || kDebugBuild) {
     auto testMenu = new QMenu(tr("Test"));
     menuBar->addMenu(testMenu);
