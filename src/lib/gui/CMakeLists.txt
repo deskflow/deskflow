@@ -57,24 +57,6 @@ add_library(${target} STATIC
   tls/TlsCertificate.h
   tls/TlsUtility.cpp
   tls/TlsUtility.h
-  validators/AliasValidator.cpp
-  validators/AliasValidator.h
-  validators/ComputerNameValidator.cpp
-  validators/ComputerNameValidator.h
-  validators/EmptyStringValidator.cpp
-  validators/EmptyStringValidator.h
-  validators/IStringValidator.cpp
-  validators/IStringValidator.h
-  validators/LineEditValidator.cpp
-  validators/LineEditValidator.h
-  validators/ScreenDuplicationsValidator.cpp
-  validators/ScreenDuplicationsValidator.h
-  validators/ScreenNameValidator.cpp
-  validators/ScreenNameValidator.h
-  validators/SpacesValidator.cpp
-  validators/SpacesValidator.h
-  validators/ValidationError.cpp
-  validators/ValidationError.h
 )
 
 target_link_libraries(

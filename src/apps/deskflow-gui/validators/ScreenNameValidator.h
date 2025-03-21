@@ -7,14 +7,18 @@
 #pragma once
 
 #include "LineEditValidator.h"
-#include "gui/validators/ValidationError.h"
+#include "ValidationError.h"
+
+#include "gui/config/ScreenList.h"
 
 namespace validators {
 
-class AliasValidator : public LineEditValidator
+class ScreenNameValidator : public LineEditValidator
 {
 public:
-  explicit AliasValidator(QLineEdit *parent = nullptr, ValidationError *error = nullptr);
+  explicit ScreenNameValidator(
+      QLineEdit *lineEdit = nullptr, ValidationError *error = nullptr, const ScreenList *pScreens = nullptr
+  );
 };
 
 } // namespace validators
