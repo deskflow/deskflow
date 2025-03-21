@@ -23,7 +23,6 @@ add_library(${target} STATIC
   Logger.h
   Messages.cpp
   Messages.h
-  StringUtils.h
   Styles.h
   config/IServerConfig.h
   config/Screen.cpp

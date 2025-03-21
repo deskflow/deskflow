@@ -15,7 +15,6 @@
 #include "gui/DotEnv.h"
 #include "gui/Logger.h"
 #include "gui/Messages.h"
-#include "gui/StringUtils.h"
 
 #include <QApplication>
 #include <QDebug>
@@ -135,7 +134,7 @@ int main(int argc, char *argv[])
   // --no-reset
   QStringList arguments = QCoreApplication::arguments();
   const auto noReset = hasArg("--no-reset", arguments);
-  const auto resetEnvVar = strToTrue(qEnvironmentVariable("DESKFLOW_RESET_ALL"));
+  const auto resetEnvVar = QVariant(qEnvironmentVariable("DESKFLOW_RESET_ALL")).toBool();
   if (resetEnvVar && !noReset) {
     diagnostic::clearSettings(false);
   }

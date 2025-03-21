@@ -6,8 +6,6 @@
 
 #include "Logger.h"
 
-#include "StringUtils.h"
-
 #include <QDateTime>
 #include <QDir>
 #include <QMessageBox>
@@ -59,15 +57,8 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
 
 void Logger::loadEnvVars()
 {
-  const auto debugEnvVar = qEnvironmentVariable("DESKFLOW_GUI_DEBUG");
-  if (!debugEnvVar.isEmpty()) {
-    m_debug = strToTrue(debugEnvVar);
-  }
-
-  const auto verboseEnvVar = qEnvironmentVariable("DESKFLOW_GUI_VERBOSE");
-  if (!verboseEnvVar.isEmpty()) {
-    m_verbose = strToTrue(verboseEnvVar);
-  }
+  m_debug = QVariant(qEnvironmentVariable("DESKFLOW_GUI_DEBUG")).toBool();
+  m_verbose = QVariant(qEnvironmentVariable("DESKFLOW_GUI_VERBOSE")).toBool();
 }
 
 void Logger::logVerbose(const QString &message) const
