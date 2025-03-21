@@ -56,7 +56,6 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   MainWindow.cpp
   MainWindow.h
   MainWindow.ui
-  ProcessorArch.h
   ScreenSetupModel.cpp
   ScreenSetupModel.h
   ServerConfig.cpp
