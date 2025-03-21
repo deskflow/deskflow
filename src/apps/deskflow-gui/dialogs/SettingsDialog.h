@@ -12,7 +12,7 @@
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsUtility.h"
-#include "gui/validators/ValidationError.h"
+#include "validators/ValidationError.h"
 
 namespace Ui {
 class SettingsDialog;

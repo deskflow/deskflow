@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "gui/validators/ComputerNameValidator.h"
-#include "gui/validators/SpacesValidator.h"
-
 #include "AliasValidator.h"
+
+#include "ComputerNameValidator.h"
+#include "SpacesValidator.h"
 
 #include <QRegularExpression>
 

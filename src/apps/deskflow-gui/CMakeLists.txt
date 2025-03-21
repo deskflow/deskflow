@@ -85,6 +85,24 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   dialogs/SettingsDialog.cpp
   dialogs/SettingsDialog.h
   dialogs/SettingsDialog.ui
+  validators/AliasValidator.cpp
+  validators/AliasValidator.h
+  validators/ComputerNameValidator.cpp
+  validators/ComputerNameValidator.h
+  validators/EmptyStringValidator.cpp
+  validators/EmptyStringValidator.h
+  validators/IStringValidator.cpp
+  validators/IStringValidator.h
+  validators/LineEditValidator.cpp
+  validators/LineEditValidator.h
+  validators/ScreenDuplicationsValidator.cpp
+  validators/ScreenDuplicationsValidator.h
+  validators/ScreenNameValidator.cpp
+  validators/ScreenNameValidator.h
+  validators/SpacesValidator.cpp
+  validators/SpacesValidator.h
+  validators/ValidationError.cpp
+  validators/ValidationError.h
   widgets/FingerprintPreview.h
   widgets/FingerprintPreview.cpp
   widgets/KeySequenceWidget.cpp

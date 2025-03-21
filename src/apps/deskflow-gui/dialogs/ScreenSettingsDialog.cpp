@@ -10,9 +10,9 @@
 
 #include "gui/Styles.h"
 #include "gui/config/Screen.h"
-#include "gui/validators/AliasValidator.h"
-#include "gui/validators/ScreenNameValidator.h"
-#include "gui/validators/ValidationError.h"
+#include "validators/AliasValidator.h"
+#include "validators/ScreenNameValidator.h"
+#include "validators/ValidationError.h"
 
 #include <QMessageBox>
 

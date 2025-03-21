@@ -6,11 +6,11 @@
 
 #include "ScreenNameValidator.h"
 
-#include "gui/validators/ComputerNameValidator.h"
-#include "gui/validators/EmptyStringValidator.h"
-#include "gui/validators/ScreenDuplicationsValidator.h"
-#include "gui/validators/SpacesValidator.h"
-#include "gui/validators/ValidationError.h"
+#include "ComputerNameValidator.h"
+#include "EmptyStringValidator.h"
+#include "ScreenDuplicationsValidator.h"
+#include "SpacesValidator.h"
+#include "ValidationError.h"
 
 #include <QRegularExpression>
 #include <memory>
