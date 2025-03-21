@@ -60,6 +60,7 @@ add_executable(${target} WIN32 MACOSX_BUNDLE
   ScreenSetupModel.h
   ServerConfig.cpp
   ServerConfig.h
+  StyleUtils.h
   VersionChecker.cpp
   VersionChecker.h
   dialogs/AboutDialog.cpp
