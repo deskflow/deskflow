@@ -9,7 +9,7 @@
 #include "MainWindow.h"
 #include "StyleUtils.h"
 #include "common/Constants.h"
-#include "gui/Constants.h"
+#include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"
 #include "gui/Logger.h"

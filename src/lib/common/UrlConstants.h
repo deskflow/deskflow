@@ -16,7 +16,7 @@ namespace deskflow::gui {
 const auto kOrgDomain = QStringLiteral("deskflow.org");
 
 const auto kUrlSourceQuery = QStringLiteral("source=gui");
-const auto kUrlApp = QStringLiteral("https://deskflow.org");
+const auto kUrlApp = QStringLiteral("https://%1").arg(kOrgDomain);
 const auto kUrlHelp = QStringLiteral("%1/help?%2").arg(kUrlApp, kUrlSourceQuery);
 const auto kUrlDownload = QStringLiteral("%1/download?%2").arg(kUrlApp, kUrlSourceQuery);
 

@@ -18,7 +18,7 @@
 
 #include "base/String.h"
 #include "common/Settings.h"
-#include "gui/Constants.h"
+#include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
 #include "gui/Logger.h"
 #include "gui/Messages.h"
