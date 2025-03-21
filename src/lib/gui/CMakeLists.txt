@@ -51,8 +51,6 @@ add_library(${target} STATIC
   core/WaylandWarnings.h
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
-  proxy/QNetworkAccessManagerProxy.cpp
-  proxy/QNetworkAccessManagerProxy.h
   proxy/QProcessProxy.cpp
   proxy/QProcessProxy.h
   tls/TlsCertificate.cpp
