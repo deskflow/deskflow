@@ -115,8 +115,6 @@ private:
   void startCore();
   void stopCore();
   bool saveServerConfig();
-  void testFatalError() const;
-  void testCriticalError() const;
   void resetCore();
 
   void showMyFingerprint();
@@ -206,6 +204,4 @@ private:
   QAction *m_actionSettings = nullptr;
   QAction *m_actionStartCore = nullptr;
   QAction *m_actionStopCore = nullptr;
-  QAction *m_actionTestCriticalError = nullptr;
-  QAction *m_actionTestFatalError = nullptr;
 };
