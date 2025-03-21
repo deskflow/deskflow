@@ -81,9 +81,7 @@ MainWindow::MainWindow()
       m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
       m_actionSettings{new QAction(tr("Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
-      m_actionStopCore{new QAction(tr("S&top"), this)},
-      m_actionTestCriticalError{new QAction(tr("Test Critical Error"), this)},
-      m_actionTestFatalError{new QAction(tr("Test Fatal Error"), this)}
+      m_actionStopCore{new QAction(tr("S&top"), this)}
 {
   const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
   if (QIcon::themeName().isEmpty())
@@ -303,8 +301,6 @@ void MainWindow::connectSlots()
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
   connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
-  connect(m_actionTestFatalError, &QAction::triggered, this, &MainWindow::testFatalError);
-  connect(m_actionTestCriticalError, &QAction::triggered, this, &MainWindow::testCriticalError);
 
   connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::versionCheckerUpdateFound);
 
@@ -437,16 +433,6 @@ void MainWindow::stopCore()
 {
   qDebug() << "stopping core process";
   m_coreProcess.stop();
-}
-
-void MainWindow::testFatalError() const
-{
-  qFatal() << "test fatal error";
-}
-
-void MainWindow::testCriticalError() const
-{
-  qCritical() << "test critical error";
 }
 
 void MainWindow::clearSettings()
@@ -675,14 +661,6 @@ void MainWindow::createMenuBar()
   menuBar->addMenu(menuFile);
   menuBar->addMenu(menuEdit);
   menuBar->addMenu(menuHelp);
-
-  const auto enableTestMenu = QVariant(qEnvironmentVariable("DESKFLOW_TEST_MENU")).toBool();
-  if (enableTestMenu || kDebugBuild) {
-    auto testMenu = new QMenu(tr("Test"));
-    menuBar->addMenu(testMenu);
-    testMenu->addAction(m_actionTestFatalError);
-    testMenu->addAction(m_actionTestCriticalError);
-  }
 
   setMenuBar(menuBar);
 }
