@@ -15,7 +15,6 @@ endif()
 
 add_library(${target} STATIC
   ${platform_sources}
-  Constants.h
   Diagnostic.cpp
   Diagnostic.h
   DotEnv.cpp
