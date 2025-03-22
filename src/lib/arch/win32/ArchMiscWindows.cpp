@@ -71,12 +71,6 @@ void ArchMiscWindows::init()
   s_dialogs = new Dialogs;
 }
 
-void ArchMiscWindows::setIcons(HICON largeIcon, HICON smallIcon)
-{
-  s_largeIcon = largeIcon;
-  s_smallIcon = smallIcon;
-}
-
 void ArchMiscWindows::getIcons(HICON &largeIcon, HICON &smallIcon)
 {
   largeIcon = s_largeIcon;
