@@ -191,13 +191,6 @@ void ArchMiscWindows::deleteKeyTree(HKEY key, const TCHAR *name)
   RegDeleteTree(key, name);
 }
 
-bool ArchMiscWindows::hasValue(HKEY key, const TCHAR *name)
-{
-  DWORD type;
-  LONG result = RegQueryValueEx(key, name, 0, &type, NULL, NULL);
-  return (result == ERROR_SUCCESS && (type == REG_DWORD || type == REG_SZ));
-}
-
 ArchMiscWindows::EValueType ArchMiscWindows::typeOfValue(HKEY key, const TCHAR *name)
 {
   DWORD type;
