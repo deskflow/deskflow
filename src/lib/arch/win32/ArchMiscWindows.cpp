@@ -203,17 +203,6 @@ void ArchMiscWindows::setValue(HKEY key, const TCHAR *name, DWORD value)
   RegSetValueEx(key, name, 0, REG_DWORD, reinterpret_cast<CONST BYTE *>(&value), sizeof(DWORD));
 }
 
-void ArchMiscWindows::setValueBinary(HKEY key, const TCHAR *name, const std::string &value)
-{
-  assert(key != NULL);
-  assert(name != NULL);
-  if (key == NULL || name == NULL) {
-    // TODO: throw exception
-    return;
-  }
-  RegSetValueEx(key, name, 0, REG_BINARY, reinterpret_cast<const BYTE *>(value.data()), (DWORD)value.size());
-}
-
 std::string ArchMiscWindows::readBinaryOrString(HKEY key, const TCHAR *name, DWORD type)
 {
   // get the size of the string
