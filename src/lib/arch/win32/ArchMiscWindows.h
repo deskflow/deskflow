@@ -44,12 +44,6 @@ public:
   //! Delete memory
   static void cleanup();
 
-  //! Get the application icons
-  /*!
-  Get the application icons.
-  */
-  static void getIcons(HICON &largeIcon, HICON &smallIcon);
-
   //! Run the daemon
   /*!
   Delegates to ArchDaemonWindows.

@@ -71,12 +71,6 @@ void ArchMiscWindows::init()
   s_dialogs = new Dialogs;
 }
 
-void ArchMiscWindows::getIcons(HICON &largeIcon, HICON &smallIcon)
-{
-  largeIcon = s_largeIcon;
-  smallIcon = s_smallIcon;
-}
-
 int ArchMiscWindows::runDaemon(RunFunc runFunc)
 {
   return ArchDaemonWindows::runDaemon(runFunc);
