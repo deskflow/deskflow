@@ -243,11 +243,6 @@ std::string ArchMiscWindows::readValueString(HKEY key, const TCHAR *name)
   return readBinaryOrString(key, name, REG_SZ);
 }
 
-std::string ArchMiscWindows::readValueBinary(HKEY key, const TCHAR *name)
-{
-  return readBinaryOrString(key, name, REG_BINARY);
-}
-
 DWORD
 ArchMiscWindows::readValueInt(HKEY key, const TCHAR *name)
 {
