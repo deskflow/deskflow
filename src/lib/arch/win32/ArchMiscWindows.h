@@ -44,12 +44,6 @@ public:
   //! Delete memory
   static void cleanup();
 
-  //! Set the application icons
-  /*!
-  Set the application icons.
-  */
-  static void setIcons(HICON largeIcon, HICON smallIcon);
-
   //! Get the application icons
   /*!
   Get the application icons.
