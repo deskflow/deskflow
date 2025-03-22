@@ -10,8 +10,6 @@ if(WIN32)
     win32/ArchConsoleWindows.h
     win32/ArchDaemonWindows.cpp
     win32/ArchDaemonWindows.h
-    win32/ArchFileWindows.cpp
-    win32/ArchFileWindows.h
     win32/ArchLogWindows.cpp
     win32/ArchLogWindows.h
     win32/ArchMiscWindows.cpp
@@ -36,8 +34,6 @@ elseif(UNIX)
     unix/ArchConsoleUnix.h
     unix/ArchDaemonUnix.cpp
     unix/ArchDaemonUnix.h
-    unix/ArchFileUnix.cpp
-    unix/ArchFileUnix.h
     unix/ArchLogUnix.cpp
     unix/ArchLogUnix.h
     unix/ArchMultithreadPosix.cpp
@@ -64,7 +60,6 @@ add_library(arch STATIC ${PLATFORM_CODE}
   ArchDaemonNone.h
   IArchConsole.h
   IArchDaemon.h
-  IArchFile.h
   IArchLog.h
   IArchMultithread.h
   IArchNetwork.h

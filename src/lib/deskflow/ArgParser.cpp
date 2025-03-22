@@ -16,6 +16,8 @@
 #include <VersionHelpers.h>
 #endif
 
+#include <QFileInfo>
+
 deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App *app) : m_app(app)
@@ -388,7 +390,7 @@ ArgParser::assembleCommand(std::vector<std::string> &argsArray, std::string igno
 void ArgParser::updateCommonArgs(const char *const *argv)
 {
   argsBase().m_name = ARCH->getHostName();
-  argsBase().m_pname = ARCH->getBasename(argv[0]);
+  argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
 bool ArgParser::checkUnexpectedArgs()
