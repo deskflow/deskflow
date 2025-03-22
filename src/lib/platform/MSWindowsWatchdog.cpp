@@ -21,6 +21,9 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
+#include <shlobj.h>
+#include <string.h>
+#include <tchar.h>
 
 //
 // Free functions
@@ -436,7 +439,12 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
 std::string MSWindowsWatchdog::runActiveDesktopUtility()
 {
-  const auto installDir = ARCH->getInstalledDirectory();
+  char fileNameBuffer[MAX_PATH];
+  GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
+  std::string fileName(fileNameBuffer);
+  size_t lastSlash = fileName.find_last_of("\\");
+  const auto installDir = fileName.substr(0, lastSlash);
+
   const auto coreBinPath = installDir + "\\deskflow-server.exe";
   std::string utilityCommand = "\"" + coreBinPath + "\" --active-desktop";
 
