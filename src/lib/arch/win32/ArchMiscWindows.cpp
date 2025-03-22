@@ -161,15 +161,6 @@ void ArchMiscWindows::deleteKey(HKEY key, const TCHAR *name)
   RegDeleteKey(key, name);
 }
 
-void ArchMiscWindows::deleteKeyTree(HKEY key, const TCHAR *name)
-{
-  assert(key != NULL);
-  assert(name != NULL);
-  if (key == NULL || name == NULL)
-    return;
-  RegDeleteTree(key, name);
-}
-
 ArchMiscWindows::EValueType ArchMiscWindows::typeOfValue(HKEY key, const TCHAR *name)
 {
   DWORD type;
