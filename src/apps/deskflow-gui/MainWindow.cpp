@@ -640,16 +640,16 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createMenuBar()
 {
-  auto menuFile = new QMenu(tr("File"));
+  auto menuFile = new QMenu(tr("File"), this);
   menuFile->addAction(m_actionStartCore);
   menuFile->addAction(m_actionStopCore);
   menuFile->addSeparator();
   menuFile->addAction(m_actionQuit);
 
-  auto menuEdit = new QMenu(tr("Edit"));
+  auto menuEdit = new QMenu(tr("Edit"), this);
   menuEdit->addAction(m_actionSettings);
 
-  auto menuHelp = new QMenu(tr("Help"));
+  auto menuHelp = new QMenu(tr("Help"), this);
   menuHelp->addAction(m_actionAbout);
   menuHelp->addAction(m_actionReportBug);
   menuHelp->addSeparator();
