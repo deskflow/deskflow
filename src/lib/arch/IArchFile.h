@@ -21,12 +21,6 @@ public:
   //! @name manipulators
   //@{
 
-  //! Extract base name
-  /*!
-  Find the base name in the given \c pathname.
-  */
-  virtual const char *getBasename(const char *pathname) = 0;
-
   //! Get installed directory
   /*!
   Returns the directory in which Deskflow is installed.
