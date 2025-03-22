@@ -97,13 +97,6 @@ public:
   //! Read a DWORD value from the registry
   static DWORD readValueInt(HKEY, const TCHAR *name);
 
-  //! Process dialog message
-  /*!
-  Checks if the message is destined for a dialog.  If so the message
-  is passed to the dialog and returns true, otherwise returns false.
-  */
-  static bool processDialog(MSG *);
-
   //! Disable power saving
   static void addBusyState(DWORD busyModes);
 

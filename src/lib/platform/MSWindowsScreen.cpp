@@ -931,9 +931,6 @@ void MSWindowsScreen::handleSystemEvent(const Event &event, void *)
   MSG *msg = static_cast<MSG *>(event.getData());
   assert(msg != NULL);
 
-  if (ArchMiscWindows::processDialog(msg)) {
-    return;
-  }
   if (onPreDispatch(msg->hwnd, msg->message, msg->wParam, msg->lParam)) {
     return;
   }
