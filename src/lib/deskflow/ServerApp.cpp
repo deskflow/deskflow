@@ -58,6 +58,8 @@
 #include "mt/Thread.h"
 #endif
 
+#include <QFileInfo>
+
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -775,7 +777,7 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
   // general initialization
   m_deskflowAddress = new NetworkAddress;
   args().m_config = std::make_shared<Config>(m_events);
-  args().m_pname = ARCH->getBasename(argv[0]);
+  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   // run
   int result = startup(argc, argv);
