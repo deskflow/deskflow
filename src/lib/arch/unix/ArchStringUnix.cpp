@@ -13,8 +13,6 @@
 // ArchStringUnix
 //
 
-#include "arch/multibyte.h"
-
 ArchStringUnix::ArchStringUnix()
 {
 }
