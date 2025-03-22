@@ -51,24 +51,16 @@ const std::string s_binaryName = getBinaryName();
 // ArchMiscWindows
 //
 
-ArchMiscWindows::Dialogs *ArchMiscWindows::s_dialogs = NULL;
 DWORD ArchMiscWindows::s_busyState = 0;
 ArchMiscWindows::STES_t ArchMiscWindows::s_stes = NULL;
 HICON ArchMiscWindows::s_largeIcon = NULL;
 HICON ArchMiscWindows::s_smallIcon = NULL;
 HINSTANCE ArchMiscWindows::s_instanceWin32 = NULL;
 
-void ArchMiscWindows::cleanup()
-{
-  delete s_dialogs;
-}
-
 void ArchMiscWindows::init()
 {
   // stop windows system error dialogs from showing.
   SetErrorMode(SEM_FAILCRITICALERRORS);
-
-  s_dialogs = new Dialogs;
 }
 
 int ArchMiscWindows::runDaemon(RunFunc runFunc)
@@ -258,11 +250,6 @@ ArchMiscWindows::readValueInt(HKEY key, const TCHAR *name)
 
 bool ArchMiscWindows::processDialog(MSG *msg)
 {
-  for (Dialogs::const_iterator index = s_dialogs->begin(); index != s_dialogs->end(); ++index) {
-    if (IsDialogMessage(*index, msg)) {
-      return true;
-    }
-  }
   return false;
 }
 
