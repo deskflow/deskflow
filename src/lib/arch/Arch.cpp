@@ -30,9 +30,6 @@ Arch::Arch(Arch *arch)
 
 Arch::~Arch()
 {
-#if SYSAPI_WIN32
-  ArchMiscWindows::cleanup();
-#endif
 }
 
 void Arch::init()

@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <set>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
@@ -40,9 +39,6 @@ public:
 
   //! Initialize
   static void init();
-
-  //! Delete memory
-  static void cleanup();
 
   //! Run the daemon
   /*!
@@ -173,10 +169,8 @@ private:
   static HMODULE findLoadedModule(std::array<const char *, 2> moduleNames);
 
 private:
-  using Dialogs = std::set<HWND>;
   typedef DWORD(WINAPI *STES_t)(DWORD);
 
-  static Dialogs *s_dialogs;
   static DWORD s_busyState;
   static STES_t s_stes; // STES: Set thread execution state
   static HICON s_largeIcon;
