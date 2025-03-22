@@ -101,9 +101,6 @@ public:
   //! Read a DWORD value from the registry
   static DWORD readValueInt(HKEY, const TCHAR *name);
 
-  //! Add a dialog
-  static void addDialog(HWND);
-
   //! Remove a dialog
   static void removeDialog(HWND);
 

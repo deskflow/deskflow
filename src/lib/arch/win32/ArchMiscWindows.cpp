@@ -256,11 +256,6 @@ ArchMiscWindows::readValueInt(HKEY key, const TCHAR *name)
   return value;
 }
 
-void ArchMiscWindows::addDialog(HWND hwnd)
-{
-  s_dialogs->insert(hwnd);
-}
-
 void ArchMiscWindows::removeDialog(HWND hwnd)
 {
   s_dialogs->erase(hwnd);
