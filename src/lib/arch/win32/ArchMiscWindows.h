@@ -101,9 +101,6 @@ public:
   //! Read a DWORD value from the registry
   static DWORD readValueInt(HKEY, const TCHAR *name);
 
-  //! Remove a dialog
-  static void removeDialog(HWND);
-
   //! Process dialog message
   /*!
   Checks if the message is destined for a dialog.  If so the message

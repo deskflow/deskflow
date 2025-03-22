@@ -256,11 +256,6 @@ ArchMiscWindows::readValueInt(HKEY key, const TCHAR *name)
   return value;
 }
 
-void ArchMiscWindows::removeDialog(HWND hwnd)
-{
-  s_dialogs->erase(hwnd);
-}
-
 bool ArchMiscWindows::processDialog(MSG *msg)
 {
   for (Dialogs::const_iterator index = s_dialogs->begin(); index != s_dialogs->end(); ++index) {
