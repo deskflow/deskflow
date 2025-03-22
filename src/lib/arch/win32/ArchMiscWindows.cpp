@@ -248,11 +248,6 @@ ArchMiscWindows::readValueInt(HKEY key, const TCHAR *name)
   return value;
 }
 
-bool ArchMiscWindows::processDialog(MSG *msg)
-{
-  return false;
-}
-
 void ArchMiscWindows::addBusyState(DWORD busyModes)
 {
   s_busyState |= busyModes;
