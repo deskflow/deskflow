@@ -67,7 +67,6 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchString.cpp
   IArchString.h
   IArchTime.h
-  multibyte.h
   XArch.h
 )
 
