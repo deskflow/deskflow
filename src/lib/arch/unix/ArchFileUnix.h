@@ -19,6 +19,5 @@ public:
   virtual ~ArchFileUnix();
 
   // IArchFile overrides
-  virtual const char *getBasename(const char *pathname);
   virtual std::string getInstalledDirectory();
 };

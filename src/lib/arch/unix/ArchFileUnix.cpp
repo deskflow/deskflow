@@ -29,20 +29,6 @@ ArchFileUnix::~ArchFileUnix()
   // do nothing
 }
 
-const char *ArchFileUnix::getBasename(const char *pathname)
-{
-  if (pathname == NULL) {
-    return NULL;
-  }
-
-  const char *basename = strrchr(pathname, '/');
-  if (basename != NULL) {
-    return basename + 1;
-  } else {
-    return pathname;
-  }
-}
-
 std::string ArchFileUnix::getInstalledDirectory()
 {
 #if WINAPI_XWINDOWS

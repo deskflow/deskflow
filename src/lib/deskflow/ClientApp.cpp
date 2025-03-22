@@ -33,6 +33,8 @@
 #include "platform/MSWindowsScreen.h"
 #endif
 
+#include <QFileInfo> // Must include before XWindowsScreen to avoid conflicts with xlib.h
+
 #if WINAPI_XWINDOWS
 #include "platform/XWindowsScreen.h"
 #endif
@@ -504,7 +506,7 @@ int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
-  args().m_pname = ARCH->getBasename(argv[0]);
+  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   int result;
   try {
