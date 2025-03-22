@@ -86,9 +86,6 @@ public:
   //! Delete a key (which should have no subkeys)
   static void deleteKey(HKEY parent, const TCHAR *name);
 
-  //! Delete a value
-  static void deleteValue(HKEY parent, const TCHAR *name);
-
   //! Delete a tree of keys from the registry
   static void deleteKeyTree(HKEY parent, const TCHAR *name);
 
