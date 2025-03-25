@@ -253,11 +253,6 @@ void uppercase(std::string &subject)
   std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
-void removeChar(std::string &subject, const char c)
-{
-  subject.erase(std::remove(subject.begin(), subject.end(), c), subject.end());
-}
-
 std::string sizeTypeToString(size_t n)
 {
   std::stringstream ss;

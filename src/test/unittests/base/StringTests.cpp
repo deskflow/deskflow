@@ -100,16 +100,6 @@ TEST(StringTests, uppercase_lowercaseInput_uppercaseOutput)
   EXPECT_EQ("12FOO3BAR", subject);
 }
 
-TEST(StringTests, removeChar_inputString_removeAllSpecifiedCharactors)
-{
-  std::string subject = "foobar";
-  const char c = 'o';
-
-  string::removeChar(subject, c);
-
-  EXPECT_EQ("fbar", subject);
-}
-
 TEST(StringTests, intToString_inputInt_outputString)
 {
   size_t value = 123;

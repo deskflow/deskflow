@@ -94,12 +94,6 @@ Convert each character in \c subject to uppercase
 */
 void uppercase(std::string &subject);
 
-//! Remove all specific char in suject
-/*!
-Remove all specific \c c in \c suject
-*/
-void removeChar(std::string &subject, const char c);
-
 //! Convert a size type to a string
 /*!
 Convert an size type to a string
