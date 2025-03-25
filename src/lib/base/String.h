@@ -46,12 +46,6 @@ Equivalent to sprintf() except the result is returned as a String.
 */
 std::string sprintf(const char *fmt, ...);
 
-//! Find and replace all
-/*!
-Finds \c find inside \c subject and replaces it with \c replace
-*/
-void findReplaceAll(std::string &subject, const std::string &find, const std::string &replace);
-
 //! Convert into hexdecimal
 /*!
 Convert each character in \c subject into hexdecimal form with \c width
