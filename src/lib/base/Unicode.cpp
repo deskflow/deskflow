@@ -8,8 +8,6 @@
 #include "base/Unicode.h"
 #include "arch/Arch.h"
 
-#include <cstring>
-
 //
 // local utility functions
 //
