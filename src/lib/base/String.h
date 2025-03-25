@@ -9,9 +9,8 @@
 #pragma once
 
 #include "common/Common.h"
-#include <string>
 
-#include <stdarg.h>
+#include <string>
 #include <vector>
 
 namespace deskflow {

@@ -9,18 +9,9 @@
 #include "base/String.h"
 
 #include <algorithm>
-#include <cctype>
-#include <cerrno>
 #include <cstdarg>
-#include <cstdint>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
 #include <iomanip>
 #include <sstream>
-#include <stdio.h>
-#include <string>
-#include <vector>
 
 namespace deskflow {
 namespace string {
