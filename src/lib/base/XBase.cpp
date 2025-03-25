@@ -8,9 +8,7 @@
 #include "base/XBase.h"
 #include "base/String.h"
 
-#include <cerrno>
 #include <cstdarg>
-#include <cstring>
 
 //
 // XBase
