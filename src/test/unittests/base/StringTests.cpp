@@ -22,17 +22,6 @@ TEST(StringTests, format_formatWithArguments_formatedString)
   EXPECT_EQ("%answer=42", result);
 }
 
-TEST(StringTests, findReplaceAll_inputString_replacedString)
-{
-  std::string subject = "foobar";
-  std::string find = "bar";
-  std::string replace = "baz";
-
-  string::findReplaceAll(subject, find, replace);
-
-  EXPECT_EQ("foobaz", subject);
-}
-
 TEST(StringTests, sprintf_formatWithArgument_formatedString)
 {
   const char *format = "%s=%d";

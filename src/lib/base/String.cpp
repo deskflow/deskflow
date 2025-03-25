@@ -147,15 +147,6 @@ std::string sprintf(const char *fmt, ...)
   return result;
 }
 
-void findReplaceAll(std::string &subject, const std::string &find, const std::string &replace)
-{
-  size_t pos = 0;
-  while ((pos = subject.find(find, pos)) != std::string::npos) {
-    subject.replace(pos, find.length(), replace);
-    pos += replace.length();
-  }
-}
-
 std::string toHex(const std::string &subject, int width, const char fill)
 {
   std::stringstream ss;
