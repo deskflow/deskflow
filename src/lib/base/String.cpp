@@ -248,27 +248,6 @@ size_t stringToSizeType(std::string string)
   return value;
 }
 
-std::vector<std::string> splitString(std::string string, const char c)
-{
-  std::vector<std::string> results;
-
-  size_t head = 0;
-  size_t separator = string.find(c);
-  while (separator != std::string::npos) {
-    if (head != separator) {
-      results.push_back(string.substr(head, separator - head));
-    }
-    head = separator + 1;
-    separator = string.find(c, head);
-  }
-
-  if (head < string.size()) {
-    results.push_back(string.substr(head, string.size() - head));
-  }
-
-  return results;
-}
-
 //
 // CaselessCmp
 //

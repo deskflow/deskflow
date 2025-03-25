@@ -94,12 +94,6 @@ Convert an a \c string to an size type
 */
 size_t stringToSizeType(std::string string);
 
-//! Split a string into substrings
-/*!
-Split a \c string that separated by a \c c into substrings
-*/
-std::vector<std::string> splitString(std::string string, const char c);
-
 //! Case-insensitive comparisons
 /*!
 This class provides case-insensitve comparison functions.
