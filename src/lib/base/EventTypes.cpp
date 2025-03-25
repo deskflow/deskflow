@@ -8,7 +8,6 @@
 #include "base/IEventQueue.h"
 
 #include <assert.h>
-#include <stddef.h>
 
 EventTypes::EventTypes() : m_events(NULL)
 {
