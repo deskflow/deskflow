@@ -11,7 +11,6 @@
 #include "base/IEventJob.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
-#include "base/Stopwatch.h"
 #include "mt/Lock.h"
 #include "mt/Mutex.h"
 
