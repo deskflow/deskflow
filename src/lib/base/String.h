@@ -52,12 +52,6 @@ Finds \c find inside \c subject and replaces it with \c replace
 */
 void findReplaceAll(std::string &subject, const std::string &find, const std::string &replace);
 
-//! Remove file extension
-/*!
-Finds the last dot and remove all characters from the dot to the end
-*/
-std::string removeFileExt(std::string filename);
-
 //! Convert into hexdecimal
 /*!
 Convert each character in \c subject into hexdecimal form with \c width

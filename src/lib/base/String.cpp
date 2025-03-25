@@ -156,17 +156,6 @@ void findReplaceAll(std::string &subject, const std::string &find, const std::st
   }
 }
 
-std::string removeFileExt(std::string filename)
-{
-  size_t dot = filename.find_last_of('.');
-
-  if (dot == std::string::npos) {
-    return filename;
-  }
-
-  return filename.substr(0, dot);
-}
-
 std::string toHex(const std::string &subject, int width, const char fill)
 {
   std::stringstream ss;
