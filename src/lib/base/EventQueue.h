@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "arch/IArchMultithread.h"
-#include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/PriorityQueue.h"
