@@ -11,9 +11,6 @@
 #include "arch/IArchMultithread.h"
 #include "common/Common.h"
 
-#include <list>
-#include <stdarg.h>
-
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
 
