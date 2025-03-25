@@ -319,11 +319,5 @@ bool CaselessCmp::cmpLess(const std::string::value_type &a, const std::string::v
   return tolower(a) < tolower(b);
 }
 
-bool CaselessCmp::cmpEqual(const std::string::value_type &a, const std::string::value_type &b)
-{
-  // should use std::tolower but not in all versions of libstdc++ have it
-  return tolower(a) == tolower(b);
-}
-
 } // namespace string
 } // namespace deskflow

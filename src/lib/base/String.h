@@ -136,9 +136,6 @@ public:
 
   //! Returns true iff \c a is lexicographically less than \c b
   static bool cmpLess(const std::string::value_type &a, const std::string::value_type &b);
-
-  //! Returns true iff \c a is lexicographically equal to \c b
-  static bool cmpEqual(const std::string::value_type &a, const std::string::value_type &b);
 };
 
 } // namespace string
