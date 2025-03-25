@@ -15,6 +15,7 @@
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 
+#include <map>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
