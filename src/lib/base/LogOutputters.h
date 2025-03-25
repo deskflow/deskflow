@@ -12,11 +12,6 @@
 #include "common/Common.h"
 #include "mt/Thread.h"
 
-#include <deque>
-#include <fstream>
-#include <list>
-#include <string>
-
 //! Stop traversing log chain outputter
 /*!
 This outputter performs no output and returns false from \c write(),
