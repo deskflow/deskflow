@@ -9,8 +9,6 @@
 
 #include "common/Common.h"
 
-#include <map>
-
 class EventData
 {
 public:
