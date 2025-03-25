@@ -8,7 +8,6 @@
 #pragma once
 
 #include <algorithm>
-#include <functional>
 #include <vector>
 
 //! A priority queue with an iterator
