@@ -175,16 +175,10 @@ macro(configure_unix_libs)
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
       pkg_check_modules(lib_glib REQUIRED IMPORTED_TARGET glib-2.0)
-      pkg_search_module(PC_GDKPIXBUF gdk-pixbuf-2.0)
-
-      include_directories(${PC_GDKPIXBUF_INCLUDE_DIRS})
-
-      pkg_check_modules(lib_gdkpixbuf REQUIRED IMPORTED_TARGET gdk-pixbuf-2.0)
       pkg_check_modules(lib_notify REQUIRED IMPORTED_TARGET libnotify)
-
-      add_definitions(-DHAVE_GDK_PIXBUF=1 -DHAVE_LIBNOTIFY=1)
+      add_definitions(-DHAVE_LIBNOTIFY=1)
     else()
-      message(WARNING "pkg-config not found, skipping libnotify and gdk-pixbuf")
+      message(WARNING "pkg-config not found, skipping libnotify")
     endif()
   endif()
 

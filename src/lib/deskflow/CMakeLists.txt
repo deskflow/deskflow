@@ -183,7 +183,7 @@ if(UNIX)
     if(PKG_CONFIG_FOUND)
       target_link_libraries(${lib_name} 
       PRIVATE
-      PkgConfig::lib_glib PkgConfig::lib_gdkpixbuf PkgConfig::lib_notify)
+      PkgConfig::lib_glib PkgConfig::lib_notify)
     endif()
   endif()
 endif()
