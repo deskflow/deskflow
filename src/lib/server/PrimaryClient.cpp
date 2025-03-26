@@ -224,19 +224,7 @@ std::string PrimaryClient::getSecureInputApp() const
 
 void PrimaryClient::secureInputNotification(const std::string &app) const
 {
-  if (app != "unknown") {
-    AppUtil::instance().showNotification(
-        "The client keyboards may stop working.", "'Secure input' enabled by " + app +
-                                                      ". "
-                                                      "Close " +
-                                                      app + " to continue using keyboards on the clients."
-    );
-  } else {
-    AppUtil::instance().showNotification(
-        "The client keyboards may stop working.", "'Secure input' enabled by an application. "
-                                                  "Close the application to continue using keyboards on the clients."
-    );
-  }
+  LOG((CLOG_INFO "application \"%s\" is blocking the keyboard", app.c_str()));
 }
 
 void PrimaryClient::resetOptions()

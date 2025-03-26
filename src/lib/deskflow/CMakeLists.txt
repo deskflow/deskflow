@@ -41,11 +41,6 @@ else()
   message(STATUS "tomlplusplus INC DIR: ${tomlPP_inc_dir}")
 endif()
 
-if (WIN32)
-  find_package(unofficial-wintoast CONFIG REQUIRED)
-  set(wintoast-lib unofficial::wintoast::wintoast)
-endif()
-
 ####################Start Making Library#########################
 set(lib_name app)
 
@@ -150,8 +145,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
 target_link_libraries(${lib_name} PUBLIC Qt6::Core Qt6::Network)
 
 if(WIN32)
-    target_compile_definitions(${lib_name} PUBLIC HAVE_WINTOAST)
-    target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib} ${wintoast-lib})
+    target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib})
 endif()
 
 target_include_directories(
@@ -178,12 +172,5 @@ if(UNIX)
 
   if(NOT APPLE)
     target_link_libraries(${lib_name} PRIVATE Qt6::Xml)
-
-    find_package(PkgConfig)
-    if(PKG_CONFIG_FOUND)
-      target_link_libraries(${lib_name} 
-      PRIVATE
-      PkgConfig::lib_glib PkgConfig::lib_notify)
-    endif()
   endif()
 endif()
