@@ -89,7 +89,6 @@ macro(configure_unix_libs)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
 
-  check_include_file_cxx(istream HAVE_ISTREAM)
   check_include_file_cxx(ostream HAVE_OSTREAM)
   check_include_file_cxx(sstream HAVE_SSTREAM)
 
