@@ -89,8 +89,6 @@ macro(configure_unix_libs)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
 
-  check_include_file_cxx(sstream HAVE_SSTREAM)
-
   check_include_files(locale.h HAVE_LOCALE_H)
   check_include_files(sys/select.h HAVE_SYS_SELECT_H)
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
