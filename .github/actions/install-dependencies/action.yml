@@ -87,7 +87,7 @@ runs:
       id: vcpkg
       uses: johnwason/vcpkg-action@v6
       with:
-        pkgs: gtest pkgconf openssl
+        pkgs: gtest openssl
         extra-args: --classic
         triplet: x64-windows-release
         token: ${{ github.token }}
