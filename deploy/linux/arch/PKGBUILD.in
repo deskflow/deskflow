@@ -22,7 +22,6 @@ depends=(
   'libxtst'
   'libxinerama'
   'libxkbcommon-x11'
-  'libnotify'
   'hicolor-icon-theme'
   'qt6-base'
   'qt6-tools'

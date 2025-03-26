@@ -861,21 +861,7 @@ void ServerProxy::secureInputNotification()
 {
   std::string app;
   ProtocolUtil::readf(m_stream, kMsgDSecureInputNotification + 4, &app);
-
-  // display this notification on the client
-  if (app != "unknown") {
-    AppUtil::instance().showNotification(
-        "The keyboard may stop working.", "'Secure input' enabled by " + app +
-                                              " on the server. "
-                                              "To fix the keyboard, " +
-                                              app + " must be closed."
-    );
-  } else {
-    AppUtil::instance().showNotification(
-        "The keyboard may stop working.", "'Secure input' enabled by an application on the server. "
-                                          "To fix the keyboard, the application must be closed."
-    );
-  }
+  LOG((CLOG_INFO "application \"%s\" is blocking the keyboard", app.c_str()));
 }
 
 void ServerProxy::setServerLanguages()

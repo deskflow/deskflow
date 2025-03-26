@@ -42,7 +42,6 @@ public:
   std::vector<std::string> getKeyboardLayoutList() override;
   std::string getCurrentLanguageCode() override;
   HKL getCurrentKeyboardLayout() const;
-  void showNotification(const std::string &title, const std::string &text) const override;
 
 private:
   AppExitMode m_exitMode;

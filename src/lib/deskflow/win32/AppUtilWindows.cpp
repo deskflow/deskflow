@@ -25,10 +25,6 @@
 #include <conio.h>
 #include <memory>
 
-#if HAVE_WINTOAST
-#include "wintoastlib.h"
-#endif
-
 AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
 {
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
@@ -188,75 +184,6 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const
   }
 
   return layout;
-}
-
-#if HAVE_WINTOAST
-class WinToastHandler : public WinToastLib::IWinToastHandler
-{
-public:
-  WinToastHandler()
-  {
-  }
-  // Public interfaces
-  void toastActivated() const override
-  {
-  }
-  void toastActivated(int actionIndex) const override
-  {
-  }
-  void toastDismissed(WinToastDismissalReason state) const override
-  {
-  }
-  void toastFailed() const override
-  {
-  }
-};
-#endif
-
-void AppUtilWindows::showNotification(const std::string &title, const std::string &text) const
-{
-#if HAVE_WINTOAST
-  LOG((CLOG_INFO "showing notification, title=\"%s\", text=\"%s\"", title.c_str(), text.c_str()));
-  if (!WinToastLib::WinToast::isCompatible()) {
-    LOG((CLOG_INFO "this system does not support toast notifications"));
-    return;
-  }
-  if (!WinToastLib::WinToast::instance()->isInitialized()) {
-    WinToastLib::WinToast::instance()->setAppName(
-        L""
-        "Deskflow"
-    );
-    const auto aumi = WinToastLib::WinToast::configureAUMI(
-        L""
-        "Deskflow Developers",
-        L""
-        "Deskflow",
-        L""
-        "Deskflow",
-        L"1.14.1+"
-    );
-    WinToastLib::WinToast::instance()->setAppUserModelId(aumi);
-
-    if (!WinToastLib::WinToast::instance()->initialize()) {
-      LOG((CLOG_WARN "failed to initialize toast notifications"));
-      return;
-    }
-  }
-
-  WinToastLib::WinToast::WinToastError error;
-  auto handler = std::make_unique<WinToastHandler>();
-  WinToastLib::WinToastTemplate templ = WinToastLib::WinToastTemplate(WinToastLib::WinToastTemplate::Text02);
-  templ.setTextField(std::wstring(title.begin(), title.end()), WinToastLib::WinToastTemplate::FirstLine);
-  templ.setTextField(std::wstring(text.begin(), text.end()), WinToastLib::WinToastTemplate::SecondLine);
-
-  const bool launched = WinToastLib::WinToast::instance()->showToast(templ, handler.get(), &error);
-  if (!launched) {
-    LOG((CLOG_WARN "failed to show toast notification, error code: %d", error));
-    return;
-  }
-#else
-  LOG((CLOG_INFO "toast notifications are not supported"));
-#endif
 }
 
 void AppUtilWindows::eventLoop()
