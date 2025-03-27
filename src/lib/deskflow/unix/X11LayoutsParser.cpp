@@ -10,11 +10,13 @@
 #include <fstream>
 #include <sstream>
 
+#include <QDomDocument>
+#include <QFile>
+
 #include "DeskflowXkbKeyboard.h"
 #include "ISO639Table.h"
 #include "X11LayoutsParser.h"
 #include "base/Log.h"
-#include "pugixml.hpp"
 
 namespace {
 
@@ -30,24 +32,24 @@ void splitLine(std::vector<std::string> &parts, const std::string &line, char de
 
 } // namespace
 
-bool X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node *root, std::vector<Lang> &langList)
+bool X11LayoutsParser::readXMLConfigItemElem(const QDomNode &node, std::vector<Lang> &langList)
 {
-  auto configItemElem = root->child("configItem");
-  if (!configItemElem) {
+  auto configItemElem = node.firstChildElement("configItem");
+  if (configItemElem.isNull()) {
     LOG((CLOG_WARN "failed to read \"configItem\" in xml file"));
     return false;
   }
 
   langList.emplace_back();
-  auto nameElem = configItemElem.child("name");
-  if (nameElem) {
-    langList.back().name = nameElem.text().as_string();
-  }
+  auto nameElem = configItemElem.firstChildElement("name");
+  if (!nameElem.isNull())
+    langList.back().name = nameElem.toElement().text().toStdString();
 
-  auto languageListElem = configItemElem.child("languageList");
-  if (languageListElem) {
-    for (pugi::xml_node isoElem : languageListElem.children("iso639Id")) {
-      langList.back().layoutBaseISO639_2.emplace_back(isoElem.text().as_string());
+  auto languageListElem = configItemElem.elementsByTagName("languageList");
+  if (!languageListElem.isEmpty()) {
+    for (int i = 0; i < languageListElem.count(); i++) {
+      const auto isoElem = languageListElem.at(i).namedItem("iso639Id").toElement();
+      langList.back().layoutBaseISO639_2.emplace_back(isoElem.text().toStdString());
     }
   }
 
@@ -57,37 +59,38 @@ bool X11LayoutsParser::readXMLConfigItemElem(const pugi::xml_node *root, std::ve
 std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const std::string &pathToEvdevFile)
 {
   std::vector<Lang> allCodes;
-  pugi::xml_document doc;
-  if (!doc.load_file(pathToEvdevFile.c_str())) {
-    LOG((CLOG_WARN "failed to open %s", pathToEvdevFile.c_str()));
+
+  QFile inFile(QString::fromStdString(pathToEvdevFile));
+  if (!inFile.open(QIODevice::ReadOnly)) {
+    LOG((CLOG_WARN "unable to open %s", pathToEvdevFile.c_str()));
     return allCodes;
   }
 
-  auto xkbConfigElem = doc.child("xkbConfigRegistry");
-  if (!xkbConfigElem) {
+  QDomDocument xmlDoc;
+  xmlDoc.setContent(inFile.readAll());
+
+  const auto xkbConfigElem = xmlDoc.firstChildElement("xkbConfigRegistry");
+  if (xkbConfigElem.isNull()) {
     LOG((CLOG_WARN "failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
     return allCodes;
   }
 
-  auto layoutListElem = xkbConfigElem.child("layoutList");
-  if (!layoutListElem) {
+  auto layoutListElem = xkbConfigElem.firstChildElement("layoutList");
+  if (layoutListElem.isNull()) {
     LOG((CLOG_WARN "failed to read layoutList in %s", pathToEvdevFile.c_str()));
     return allCodes;
   }
 
-  for (pugi::xml_node layoutElem : layoutListElem.children("layout")) {
-    if (!readXMLConfigItemElem(&layoutElem, allCodes)) {
+  const auto layouts = layoutListElem.elementsByTagName("layout");
+  for (int i = 0; i < layouts.count(); i++) {
+    auto item = layouts.at(i);
+    if (!readXMLConfigItemElem(item, allCodes))
       continue;
-    }
 
-    auto variantListElem = layoutElem.child("variantList");
-    if (variantListElem) {
-      for (pugi::xml_node variantElem : variantListElem.children("variant")) {
-        readXMLConfigItemElem(&variantElem, allCodes.back().variants);
-      }
-    }
+    auto variantListElem = item.namedItem("variantList").childNodes();
+    for (int i = 0; i < variantListElem.count(); i++)
+      readXMLConfigItemElem(variantListElem.at(i), allCodes.back().variants);
   }
-
   return allCodes;
 }
 

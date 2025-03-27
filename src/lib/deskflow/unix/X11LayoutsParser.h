@@ -11,9 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace pugi {
-class xml_node;
-}
+class QDomNode;
 
 class X11LayoutsParser
 {
@@ -31,7 +29,7 @@ private:
     std::vector<Lang> variants;
   };
 
-  static bool readXMLConfigItemElem(const pugi::xml_node *root, std::vector<Lang> &langList);
+  static bool readXMLConfigItemElem(const QDomNode &node, std::vector<Lang> &langList);
 
   static std::vector<Lang> getAllLanguageData(const std::string &pathToEvdevFile);
 
