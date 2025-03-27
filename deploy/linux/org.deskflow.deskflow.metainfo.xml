@@ -42,6 +42,21 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.21.0" date="2025-03-27" urgency="high">
+			<description>
+				<p>This stable release removes some dependencies, additionally fixes several bugs. For the full changelog see the release page.</p>
+				<ul>
+					<li>Cleanup unused classes</li>
+					<li>New Settings class</li>
+					<li>Remove need for pugixml</li>
+					<li>Remove need for libNotify</li>
+					<li>Remove need for gio</li>
+					<li>Remove need for gitkpixbuf</li>
+					<li>Fix issues with windows installer when msvc is missing</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.0</url>
+		</release>
 		<release version="1.20.1" date="2025-03-07" urgency="low">
 			<description>
 				<p>This stable release introduces a Windows dependency requirement and fixes a macOS bug.</p>
