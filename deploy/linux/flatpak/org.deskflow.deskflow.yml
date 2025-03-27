@@ -72,13 +72,6 @@ modules:
         url: https://github.com/flatpak/libportal.git
         tag: 0.9.1
         commit: 8f5dc8d192f6e31dafe69e35219e3b707bde71ce
-  - name: puixml
-    buildsystem: cmake-ninja
-    sources:
-      - type: git
-        url: https://github.com/zeux/pugixml
-        tag: v1.14
-        commit: db78afc2b7d8f043b4bc6b185635d949ea2ed2a8
   - name: cli11
     buildsystem: cmake-ninja
     config-opts:

@@ -21,7 +21,7 @@ macro(configure_libs)
 
   find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Core Widgets Network)
   if(UNIX AND NOT APPLE)
-      find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus)
+      find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS DBus Xml)
   endif()
 
   # Define the location of Qt deployment tool
@@ -159,9 +159,6 @@ macro(configure_unix_libs)
     else()
       message(WARNING "pkg-config not found, skipping wayland libraries")
     endif()
-
-
-    find_package(pugixml REQUIRED)
 
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
