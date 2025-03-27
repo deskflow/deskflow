@@ -23,17 +23,6 @@ cleanup:
   - /share/gir-1.0
   - /lib/girepository-1.0
 modules:
-  - name: python3-attrs
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-          --prefix=${FLATPAK_DEST} --no-build-isolation attrs
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/e0/44/827b2a91a5816512fcaf3cc4ebc465ccd5d598c45cefa6703fcf4a79018f/attrs-23.2.0-py3-none-any.whl
-        sha256: 99b87a485a5820b23b879f04c2305b44b951b502fd64be915879d77a7e8fc6f1
-    cleanup:
-      - '*'
   - name: python3-Jinja2
     buildsystem: simple
     build-commands:
