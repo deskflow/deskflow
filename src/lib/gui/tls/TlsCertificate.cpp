@@ -55,7 +55,7 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
     deskflow::FingerprintDatabase db;
     db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA1));
     db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA256));
-    db.write(QStringLiteral("%1/%2").arg(Settings::tlsLocalDb()).toStdString());
+    db.write(Settings::tlsLocalDb().toStdString());
 
     qDebug("tls fingerprint generated");
     return true;
