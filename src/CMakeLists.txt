@@ -13,3 +13,5 @@ option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
   add_subdirectory(test)
 endif()
+
+add_subdirectory(unittests)
