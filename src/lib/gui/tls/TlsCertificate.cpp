@@ -9,7 +9,8 @@
 
 #include "base/FinalAction.h"
 #include "common/Settings.h"
-#include "net/FingerprintData.h"
+#include "io/Filesystem.h"
+#include "net/Fingerprint.h"
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
@@ -52,10 +53,10 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
   qDebug("generating tls fingerprint");
   const std::string certPath = certificateFilename.toStdString();
   try {
-    deskflow::FingerprintDatabase db;
-    db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA1));
-    db.addTrusted(deskflow::pemFileCertFingerprint(certPath, deskflow::FingerprintType::SHA256));
-    db.write(Settings::tlsLocalDb().toStdString());
+    FingerprintDatabase db;
+    db.addTrusted(deskflow::pemFileCertFingerprint(certPath, Fingerprint::Type::SHA1));
+    db.addTrusted(deskflow::pemFileCertFingerprint(certPath, Fingerprint::Type::SHA256));
+    db.write(Settings::tlsLocalDb());
 
     qDebug("tls fingerprint generated");
     return true;

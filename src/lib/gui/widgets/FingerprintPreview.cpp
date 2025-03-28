@@ -12,8 +12,7 @@
 
 #include <net/SecureUtils.h>
 
-FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<deskflow::FingerprintData> &fingerprints)
-    : QFrame(parent)
+FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<Fingerprint> &fingerprints) : QFrame(parent)
 {
   setFrameShape(QFrame::StyledPanel);
   setFrameStyle(QFrame::Sunken);
@@ -24,13 +23,18 @@ FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<deskflow::Fi
   QString sha256Art;
 
   for (const auto &fingerprint : fingerprints) {
-    if (fingerprint.algorithm == "sha1") {
-      sha1String = QString::fromStdString(deskflow::formatSSLFingerprint(fingerprint.data));
-    }
+    switch (fingerprint.type) {
+    case Fingerprint::Type::SHA1:
+      sha1String = deskflow::formatSSLFingerprint(fingerprint.data);
+      break;
 
-    if (fingerprint.algorithm == "sha256") {
-      sha256String = QString::fromStdString(deskflow::formatSSLFingerprintColumns(fingerprint.data));
-      sha256Art = QString::fromStdString(deskflow::generateFingerprintArt(fingerprint.data));
+    case Fingerprint::Type::SHA256:
+      sha256String = deskflow::formatSSLFingerprintColumns(fingerprint.data);
+      sha256Art = deskflow::generateFingerprintArt(fingerprint.data);
+      break;
+    default:
+      qWarning() << "FingerprintPreview: Unknown fingerprint type: " << fingerprint.type;
+      break;
     }
   }
 

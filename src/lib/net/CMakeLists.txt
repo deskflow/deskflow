@@ -13,8 +13,8 @@ endif()
 find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
 
 add_library(net STATIC
-  FingerprintData.cpp
-  FingerprintData.h
+  Fingerprint.cpp
+  Fingerprint.h
   FingerprintDatabase.cpp
   FingerprintDatabase.h
   IDataSocket.cpp
