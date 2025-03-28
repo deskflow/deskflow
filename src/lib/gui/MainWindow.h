@@ -156,10 +156,10 @@ private:
   void remoteHostChanged(const QString &newRemoteHost);
 
   /**
-   * @brief trustedFingerprintDb get the fingerprintDb for the trusted clients or trusted servers.
+   * @brief trustedFingerprintDatabase get the FingerprintDatabase for the trusted clients or trusted servers.
    * @return The path to the trusted fingerprint file
    */
-  QString trustedFingerprintDb();
+  QString trustedFingerprintDatabase();
 
   // Generate prints if they are missing
   // Returns true if successful

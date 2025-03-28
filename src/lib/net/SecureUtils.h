@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "FingerprintData.h"
+#include "Fingerprint.h"
 
 #include <cstdint>
 #include <openssl/ossl_typ.h>
@@ -22,17 +22,17 @@ namespace deskflow {
  * @param enableSeparators insert : seperator every byte when true
  * @return a Formated Fingerprint String
  */
-std::string formatSSLFingerprint(const std::vector<uint8_t> &fingerprint, bool enableSeparators = true);
+QString formatSSLFingerprint(const QByteArray &fingerprint, bool enableSeparators = true);
 
-std::string formatSSLFingerprintColumns(const std::vector<uint8_t> &fingerprint);
+QString formatSSLFingerprintColumns(const QByteArray &fingerprint);
 
-FingerprintData sslCertFingerprint(X509 *cert, FingerprintType type);
+Fingerprint sslCertFingerprint(X509 *cert, Fingerprint::Type type);
 
-FingerprintData pemFileCertFingerprint(const std::string &path, FingerprintType type);
+Fingerprint pemFileCertFingerprint(const std::string &path, Fingerprint::Type type);
 
 void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
 
 int getCertLength(const std::string &path);
 
-std::string generateFingerprintArt(const std::vector<std::uint8_t> &rawDigest);
+QString generateFingerprintArt(const QByteArray &rawDigest);
 } // namespace deskflow

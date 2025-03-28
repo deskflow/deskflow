@@ -7,12 +7,12 @@
 #pragma once
 
 #include <QFrame>
-#include <net/FingerprintData.h>
+#include <net/Fingerprint.h>
 
 class FingerprintPreview : public QFrame
 {
   Q_OBJECT
 public:
-  explicit FingerprintPreview(QWidget *parent, const QList<deskflow::FingerprintData> &fingerprints = {});
+  explicit FingerprintPreview(QWidget *parent, const QList<Fingerprint> &fingerprints = {});
   ~FingerprintPreview() override = default;
 };

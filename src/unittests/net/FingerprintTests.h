@@ -6,12 +6,13 @@
 
 #include <QTest>
 
-class FingerprintDatabaseTests : public QObject
+class FingerprintTests : public QObject
 {
   Q_OBJECT
 private slots:
-  void readFile();
-  void writeFile();
-  void clear();
-  void trusted();
+  void test_isValid();
+  void test_toDbLine();
+  void test_fromDbLine();
+  void test_typeToString();
+  void test_typeFromString();
 };
