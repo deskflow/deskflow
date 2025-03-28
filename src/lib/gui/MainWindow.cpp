@@ -151,8 +151,8 @@ MainWindow::MainWindow()
       return;
     }
 
-    deskflow::FingerprintDatabase db;
-    db.read(Settings::tlsLocalDb().toStdString());
+    FingerprintDatabase db;
+    db.read(Settings::tlsLocalDb());
     if (db.fingerprints().size() != kTlsDbSize) {
       regenerateLocalFingerprints();
     }
@@ -541,19 +541,15 @@ void MainWindow::showMyFingerprint()
     return;
   }
 
-  deskflow::FingerprintDatabase db;
-  db.read(Settings::tlsLocalDb().toStdString());
+  FingerprintDatabase db;
+  db.read(Settings::tlsLocalDb());
   if (db.fingerprints().size() != kTlsDbSize) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
-  QList<deskflow::FingerprintData> fingerprints;
-  fingerprints.reserve(db.fingerprints().size());
-  std::copy(db.fingerprints().begin(), db.fingerprints().end(), std::back_inserter(fingerprints));
-
-  FingerprintDialog fingerprintDialog(this, fingerprints);
+  FingerprintDialog fingerprintDialog(this, db.fingerprints());
   fingerprintDialog.exec();
 }
 
@@ -772,17 +768,11 @@ void MainWindow::checkFingerprint(const QString &line)
     return;
   }
 
-  const deskflow::FingerprintData sha1 = {
-      deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA1),
-      deskflow::string::fromHex(match.captured(1).toStdString())
-  };
+  const Fingerprint sha1 = {Fingerprint::Type::SHA1, QByteArray::fromHex(match.captured(1).remove(":").toLatin1())};
 
   const auto sha256Text = match.captured(2);
 
-  const deskflow::FingerprintData sha256 = {
-      deskflow::fingerprintTypeToString(deskflow::FingerprintType::SHA256),
-      deskflow::string::fromHex(sha256Text.toStdString())
-  };
+  const Fingerprint sha256 = {Fingerprint::Type::SHA256, QByteArray::fromHex(match.captured(2).remove(":").toLatin1())};
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
 
@@ -791,8 +781,8 @@ void MainWindow::checkFingerprint(const QString &line)
     return;
   }
 
-  deskflow::FingerprintDatabase db;
-  db.read(trustedFingerprintDb().toStdString());
+  FingerprintDatabase db;
+  db.read(trustedFingerprintDatabase());
 
   if (db.isTrusted(sha256)) {
     qDebug("fingerprint is trusted");
@@ -813,7 +803,7 @@ void MainWindow::checkFingerprint(const QString &line)
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(trustedFingerprintDb().toStdString());
+    db.write(trustedFingerprintDatabase());
     if (isClient) {
       m_checkedServers.removeAll(sha256Text);
       m_coreProcess.start();
@@ -1116,7 +1106,7 @@ void MainWindow::setHostName()
   applyConfig();
 }
 
-QString MainWindow::trustedFingerprintDb()
+QString MainWindow::trustedFingerprintDatabase()
 {
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   return isClient ? Settings::tlsTrustedServersDb() : Settings::tlsTrustedClientsDb();

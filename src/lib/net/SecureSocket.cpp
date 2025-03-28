@@ -448,8 +448,7 @@ int SecureSocket::secureAccept(int socket)
   // If not fatal and no retry, state is good
   if (retry == 0) {
     if (m_securityLevel == SecurityLevel::PeerAuth) {
-      std::string dbDir = Settings::tlsTrustedClientsDb().toStdString().c_str();
-      if (!verifyCertFingerprint(dbDir)) {
+      if (!verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
         retry = 0;
         disconnect();
         return -1; // Fail
@@ -521,8 +520,7 @@ int SecureSocket::secureConnect(int socket)
   retry = 0;
   // No error, set ready, process and return ok
   m_secureReady = true;
-  std::string dbDir = Settings::tlsTrustedServersDb().toStdString().c_str();
-  if (verifyCertFingerprint(dbDir)) {
+  if (verifyCertFingerprint(Settings::tlsTrustedServersDb())) {
     LOG((CLOG_INFO "connected to secure socket"));
     if (!showCertificate()) {
       disconnect();
@@ -645,14 +643,14 @@ void SecureSocket::disconnect()
   sendEvent(EventTypes::StreamInputShutdown);
 }
 
-bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDbPath)
+bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
 {
-  deskflow::FingerprintData sha1;
-  deskflow::FingerprintData sha256;
+  Fingerprint sha1;
+  Fingerprint sha256;
   try {
     auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    sha1 = deskflow::sslCertFingerprint(cert, deskflow::FingerprintType::SHA1);
-    sha256 = deskflow::sslCertFingerprint(cert, deskflow::FingerprintType::SHA256);
+    sha1 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA1);
+    sha256 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA256);
   } catch (const std::exception &e) {
     LOG((CLOG_ERR "%s", e.what()));
     return false;
@@ -660,26 +658,25 @@ bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDb
 
   // Gui Must Parse these two lines, DO NOT CHANGE
   LOG(
-      (CLOG_NOTE "peer fingerprint: (SHA1) %s (SHA256) %s", deskflow::formatSSLFingerprint(sha1.data).c_str(),
-       deskflow::formatSSLFingerprint(sha256.data).c_str())
+      (CLOG_NOTE "peer fingerprint: (SHA1) %s (SHA256) %s",
+       deskflow::formatSSLFingerprint(sha1.data).toStdString().c_str(),
+       deskflow::formatSSLFingerprint(sha256.data).toStdString().c_str())
   );
 
-  // check if this fingerprint exist
-  std::ifstream file;
+  QFile file(FingerprintDatabasePath);
 
-  deskflow::openUtf8Path(file, fingerprintDbPath);
-  deskflow::FingerprintDatabase db;
-  db.read(fingerprintDbPath);
+  FingerprintDatabase db;
+  db.read(FingerprintDatabasePath);
   const bool emptyDB = db.fingerprints().empty();
 
-  const auto &path = fingerprintDbPath.string();
-  if (file.good() && emptyDB) {
-    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", path.c_str()));
+  const auto &path = FingerprintDatabasePath;
+  if (file.exists() && emptyDB) {
+    LOG((CLOG_ERR "failed to open trusted fingerprints file: %s", path.toStdString().c_str()));
     return false;
   }
 
   if (!emptyDB) {
-    LOG((CLOG_DEBUG "read %d fingerprint(s) from file: %s", db.fingerprints().size(), path.c_str()));
+    LOG((CLOG_DEBUG "read %d fingerprint(s) from file: %s", db.fingerprints().size(), path.toStdString().c_str()));
   }
 
   if (!db.isTrusted(sha256)) {

@@ -16,6 +16,7 @@
 class IEventQueue;
 class SocketMultiplexer;
 class ISocketMultiplexerJob;
+class QString;
 
 struct Ssl;
 
@@ -76,7 +77,7 @@ private:
   bool showCertificate() const;
   void checkResult(int n, int &retry);
   void disconnect();
-  bool verifyCertFingerprint(const deskflow::fs::path &fingerprintDbPath);
+  bool verifyCertFingerprint(const QString &FingerprintDatabasePath);
 
   ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
 

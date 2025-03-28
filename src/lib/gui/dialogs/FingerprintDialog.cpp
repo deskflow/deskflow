@@ -14,7 +14,7 @@
 #include <QVBoxLayout>
 
 FingerprintDialog::FingerprintDialog(
-    QWidget *parent, const QList<deskflow::FingerprintData> &fingerprints, FingerprintDialogMode mode
+    QWidget *parent, const QList<Fingerprint> &fingerprints, FingerprintDialogMode mode
 )
     : QDialog(parent),
       m_lblHeader{new QLabel(this)},
