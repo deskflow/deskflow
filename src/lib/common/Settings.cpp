@@ -156,6 +156,12 @@ bool Settings::isWritable()
   return instance()->m_settings->isWritable();
 }
 
+const bool Settings::settingsExists()
+{
+  QFile file(Settings::settingsFile());
+  return file.exists();
+}
+
 const QString Settings::settingsFile()
 {
   return instance()->m_settings->fileName();

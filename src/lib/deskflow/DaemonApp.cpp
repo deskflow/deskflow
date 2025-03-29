@@ -49,21 +49,24 @@ void DaemonApp::saveLogLevel(const QString &logLevel) const
 {
   LOG_DEBUG("log level changed: %s", logLevel.toUtf8().constData());
   CLOG->setFilter(logLevel.toUtf8().constData());
-  Settings::setValue(Settings::Daemon::LogLevel, logLevel);
+  if (Settings::settingsExists())
+    Settings::setValue(Settings::Daemon::LogLevel, logLevel);
 }
 
 void DaemonApp::setElevate(bool elevate)
 {
   LOG_DEBUG("elevate value changed: %s", elevate ? "yes" : "no");
   m_elevate = elevate;
-  Settings::setValue(Settings::Daemon::Elevate, m_elevate);
+  if (Settings::settingsExists())
+    Settings::setValue(Settings::Daemon::Elevate, m_elevate);
 }
 
 void DaemonApp::setCommand(const QString &command)
 {
   LOG_DEBUG("service command updated");
-  Settings::setValue(Settings::Daemon::Command, command);
   m_command = command.toStdString();
+  if (Settings::settingsExists())
+    Settings::setValue(Settings::Daemon::Command, command);
 }
 
 void DaemonApp::applyWatchdogCommand() const
@@ -94,6 +97,8 @@ void DaemonApp::clearWatchdogCommand()
 void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
+  if (!Settings::settingsExists())
+    return;
   Settings::setValue(Settings::Daemon::Command, QVariant());
   Settings::setValue(Settings::Daemon::Elevate, QVariant());
   Settings::setValue(Settings::Daemon::LogFile, QVariant());
@@ -167,7 +172,6 @@ void DaemonApp::run(QThread &daemonThread)
 
 #if SYSAPI_WIN32
   m_pWatchdog = std::make_unique<MSWindowsWatchdog>(m_foreground, *m_pFileLogOutputter);
-
   auto command = Settings::value(Settings::Daemon::Command).toString().toStdString();
   bool elevate = Settings::value(Settings::Daemon::Elevate).toBool();
   if (!command.empty()) {
