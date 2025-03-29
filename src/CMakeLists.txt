@@ -8,6 +8,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/lib)
 
 add_subdirectory(lib)
 add_subdirectory(apps)
+add_subdirectory(unittests)
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)

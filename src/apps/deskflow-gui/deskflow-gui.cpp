@@ -6,15 +6,14 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "Diagnostic.h"
-#include "MainWindow.h"
-#include "StyleUtils.h"
-
 #include "common/Constants.h"
 #include "common/UrlConstants.h"
+#include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"
 #include "gui/Logger.h"
+#include "gui/MainWindow.h"
 #include "gui/Messages.h"
+#include "gui/StyleUtils.h"
 
 #include <QApplication>
 #include <QDebug>
