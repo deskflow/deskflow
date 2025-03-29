@@ -40,16 +40,12 @@ Settings::Settings(QObject *parent) : QObject(parent)
   if (QFile(m_portableSettingsFile).exists()) {
     fileToLoad = m_portableSettingsFile;
   } else {
-#ifdef Q_OS_WIN
-    fileToLoad = SystemSettingFile;
-#else
     if (QFile(UserSettingFile).exists())
       fileToLoad = UserSettingFile;
     else if (QFile(SystemSettingFile).exists())
       fileToLoad = SystemSettingFile;
     else
       fileToLoad = UserSettingFile;
-#endif
   }
 
   m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
@@ -122,7 +118,11 @@ QVariant Settings::defaultValue(const QString &key)
     return defaultProcessMode;
 
   if (key == Daemon::LogFile) {
+#ifdef Q_OS_WIN
+    return QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kDaemonLogFilename);
+#else
     return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kDaemonLogFilename);
+#endif
   }
 
   if (key == Daemon::Elevate)

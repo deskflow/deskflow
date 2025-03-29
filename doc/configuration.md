@@ -1,13 +1,12 @@
-# Gui Config
+# GUI Config
 
-The search path for settings ar as follows:
+ The search order for a setting file is:
+ 1. `<install-path>/settings/Deskflow.conf`
+ 1. A user settings file
+ 1. A system settings file
  
- - Check Install_path/settings/Deskflow.conf
- - Check if User Settings Path
- - Check if System Settings File
- - Make a User Setting file
- 
- The path of the settings file will be used as the base for all other config files
+ A new settings file will be created in the user path if no settings file is found.
+ The path of the settings file will be used as the base for all other config files.
  
 ### Windows
  - System: `C:\ProgramData\Deskflow\Deskflow.conf`
