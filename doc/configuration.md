@@ -2,6 +2,7 @@
 
  The search order for a setting file is:
  1. `<install-path>/settings/Deskflow.conf`
+ 1. `<XDG_CONFIG_HOME>/Deskflow/Deskflow.conf`
  1. A user settings file
  1. A system settings file
  
