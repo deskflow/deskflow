@@ -146,6 +146,11 @@ void Settings::save(bool emitSaving)
   instance()->m_settings->sync();
 }
 
+const QStringList Settings::validKeys()
+{
+  return instance()->m_validKeys;
+}
+
 bool Settings::isWritable()
 {
   return instance()->m_settings->isWritable();
