@@ -169,7 +169,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
   ui->comboElevate->setCurrentIndex(Settings::value(Settings::Core::ElevateMode).toInt());
-  ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::Autohide).toBool());
+  ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->cbServiceEnabled->setChecked(processMode == Settings::ProcessMode::Service);
