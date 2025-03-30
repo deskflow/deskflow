@@ -151,7 +151,6 @@ public:
   static void save(bool emitSaving = true);
 
 signals:
-  void writableChanged(bool canWrite);
   void settingsChanged(const QString key);
   void serverSettingsChanged();
 
