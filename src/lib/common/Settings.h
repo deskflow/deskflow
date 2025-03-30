@@ -163,7 +163,7 @@ private:
   void cleanSettings();
 
   QSettings *m_settings = nullptr;
-  QString m_portableSettingsFile = QStringLiteral("settings/%1.conf").arg(kAppName);
+  QString m_portableSettingsFile = QStringLiteral("%1/settings/%2.conf");
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
