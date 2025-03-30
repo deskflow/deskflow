@@ -1,3 +1,26 @@
+# Gui Config
+
+The search path for settings ar as follows:
+ 
+ - Check Install_path/settings/Deskflow.conf
+ - Check if User Settings Path
+ - Check if System Settings File
+ - Make a User Setting file
+ 
+ The path of the settings file will be used as the base for all other config files
+ 
+### Windows
+ - System: `C:\ProgramData\Deskflow\Deskflow.conf`
+ - User: `C:\Users\userName\AppData\Local\Deskflow\Deskflow.conf`
+ 
+### Linux
+ - System: `/etc/Deskflow/Deskflow.conf`
+ - User: `~/.config/Deskflow/Deskflow.conf`
+ 
+### macOS
+ - System: `/Library/Deskflow/Deskflow.conf`
+ - User: `~/Library/Deskflow/Deskflow.conf`
+
 # Server Config Examples
 
 The `deskflow-server` command accepts the `-c` or `--config` option, which takes one argument,

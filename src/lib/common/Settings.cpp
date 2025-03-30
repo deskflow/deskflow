@@ -8,6 +8,7 @@
 
 #include "UrlConstants.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QRect>
 
@@ -34,6 +35,7 @@ void Settings::setSettingFile(const QString &settingsFile)
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
+  m_portableSettingsFile = m_portableSettingsFile.arg(QCoreApplication::applicationDirPath(), kAppName);
   QString fileToLoad;
   if (QFile(m_portableSettingsFile).exists()) {
     fileToLoad = m_portableSettingsFile;
