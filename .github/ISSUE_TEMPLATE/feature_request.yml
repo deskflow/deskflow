@@ -1,6 +1,6 @@
 name: Feature request
 description: Had an idea how to improve Deskflow? Share it with us.
-labels: ["enhancement", "triage", "unanswered"]
+type: "Triage [feature]"
 body:
   - type: markdown
     attributes:
