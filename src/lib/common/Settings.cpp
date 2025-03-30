@@ -56,11 +56,6 @@ Settings::Settings(QObject *parent) : QObject(parent)
   qInfo().noquote() << "settings file:" << m_settings->fileName();
 }
 
-bool Settings::isPortableSettings()
-{
-  return (QFile(instance()->m_portableSettingsFile).exists());
-}
-
 void Settings::cleanSettings()
 {
   const QStringList keys = m_settings->allKeys();

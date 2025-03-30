@@ -161,7 +161,6 @@ private:
   Settings *operator=(Settings &other) = delete;
   Settings(const Settings &other) = delete;
   ~Settings() = default;
-  static bool isPortableSettings();
   void cleanSettings();
 
   QSettings *m_settings = nullptr;
