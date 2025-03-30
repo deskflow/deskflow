@@ -1,11 +1,9 @@
 # SPDX-FileCopyrightText: 2025 Deskflow Developers
 # SPDX-License-Identifier: MIT
 
-add_subdirectory(core)
-
 create_test(
-  NAME DotEnvTests
+  NAME CommandProcessTests
   DEPENDS gui
-  SOURCE DotEnvTests.cpp
+  SOURCE CommandProcessTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
