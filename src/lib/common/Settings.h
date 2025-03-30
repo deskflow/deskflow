@@ -149,6 +149,7 @@ public:
   static const QString logLevelText();
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
+  static const QStringList validKeys();
 
 signals:
   void settingsChanged(const QString key);
