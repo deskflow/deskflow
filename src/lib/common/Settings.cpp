@@ -40,7 +40,9 @@ Settings::Settings(QObject *parent) : QObject(parent)
   if (QFile(m_portableSettingsFile).exists()) {
     fileToLoad = m_portableSettingsFile;
   } else {
-    if (QFile(UserSettingFile).exists())
+    if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
+      fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(qEnvironmentVariable("XDG_CONFIG_HOME"), kAppName);
+    else if (QFile(UserSettingFile).exists())
       fileToLoad = UserSettingFile;
     else if (QFile(SystemSettingFile).exists())
       fileToLoad = SystemSettingFile;
