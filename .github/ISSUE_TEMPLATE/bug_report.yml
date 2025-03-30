@@ -1,6 +1,6 @@
 name: Bug report
 description: If you find a bug in Deskflow, please let us know so we can fix it.
-labels: ["bug", "triage", "unanswered"]
+type: "Triage [bug]"
 body:
   - type: markdown
     attributes:
