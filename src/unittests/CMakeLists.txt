@@ -44,6 +44,7 @@ find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Test)
 add_subdirectory(common)
 add_subdirectory(deskflow)
 add_subdirectory(gui)
+add_subdirectory(platform)
 
 #make sure to use CI only plugin on Unix
 if (UNIX AND NOT APPLE)
