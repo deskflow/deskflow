@@ -110,7 +110,10 @@ QVariant Settings::defaultValue(const QString &key)
     return kServerBinName;
 
   if (key == Core::ElevateMode) {
-    return Settings::ElevateMode::Always;
+    if (instance()->isNativeMode())
+      return Settings::ElevateMode::Always;
+    else
+      return Settings::ElevateMode::Never;
   }
 
   if (key == Core::UpdateUrl)
