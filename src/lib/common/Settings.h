@@ -140,6 +140,7 @@ public:
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
+  static bool isNativeMode();
   static const QString settingsFile();
   static const QString settingsPath();
   static const QString tlsDir();

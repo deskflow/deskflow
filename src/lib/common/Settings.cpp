@@ -35,22 +35,27 @@ void Settings::setSettingFile(const QString &settingsFile)
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
-  m_portableSettingsFile = m_portableSettingsFile.arg(QCoreApplication::applicationDirPath(), kAppName);
   QString fileToLoad;
+#ifdef Q_OS_WIN
+  m_portableSettingsFile = m_portableSettingsFile.arg(QCoreApplication::applicationDirPath(), kAppName);
   if (QFile(m_portableSettingsFile).exists()) {
     fileToLoad = m_portableSettingsFile;
+    m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
   } else {
-    if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
-      fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(qEnvironmentVariable("XDG_CONFIG_HOME"), kAppName);
-    else if (QFile(UserSettingFile).exists())
-      fileToLoad = UserSettingFile;
-    else if (QFile(SystemSettingFile).exists())
-      fileToLoad = SystemSettingFile;
-    else
-      fileToLoad = UserSettingFile;
+    m_settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
   }
-
+#else
+  if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
+    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(qEnvironmentVariable("XDG_CONFIG_HOME"), kAppName);
+  else if (QFile(UserSettingFile).exists())
+    fileToLoad = UserSettingFile;
+  else if (QFile(SystemSettingFile).exists())
+    fileToLoad = SystemSettingFile;
+  else
+    fileToLoad = UserSettingFile;
   m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
+#endif
+
   m_settingsProxy = std::make_shared<QSettingsProxy>();
   m_settingsProxy->load(fileToLoad);
   qInfo().noquote() << "settings file:" << m_settings->fileName();
@@ -157,7 +162,14 @@ const QStringList Settings::validKeys()
 
 bool Settings::isWritable()
 {
+  if (instance()->isNativeMode())
+    return true;
   return instance()->m_settings->isWritable();
+}
+
+bool Settings::isNativeMode()
+{
+  return instance()->m_settings->format() == QSettings::NativeFormat;
 }
 
 const QString Settings::settingsFile()
@@ -167,6 +179,8 @@ const QString Settings::settingsFile()
 
 const QString Settings::settingsPath()
 {
+  if (instance()->isNativeMode())
+    return SystemDir;
   return QFileInfo(instance()->m_settings->fileName()).absolutePath();
 }
 
