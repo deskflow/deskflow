@@ -213,10 +213,4 @@ private:
     , Settings::Server::ExternalConfigFile
   };
   // clang-format on
-
-#ifdef Q_OS_WIN
-  inline static const auto defaultProcessMode = Settings::ProcessMode::Service;
-#else
-  inline static const auto defaultProcessMode = Settings::ProcessMode::Desktop;
-#endif
 };
