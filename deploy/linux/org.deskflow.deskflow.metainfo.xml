@@ -42,6 +42,18 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.21.1" date="2025-03-31" urgency="high">
+			<description>
+				<p>This stable release fixes a few critical bugs in 1.21.0. For the full changelog see the release page.</p>
+				<ul>
+					<li>Fix: Flatpak can't save settings'</li>
+					<li>Fix: Crash on localfingerprint dialog</li>
+					<li>Fix: Check for updates settings reading from wrong value</li>
+					<li>Fix: Windows settings saving blocked for non admin users </li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.1</url>
+		</release>
 		<release version="1.21.0" date="2025-03-27" urgency="high">
 			<description>
 				<p>This stable release removes some dependencies, additionally fixes several bugs. For the full changelog see the release page.</p>
