@@ -25,7 +25,13 @@ QString getSystemSettingsBaseDir()
 
 void QSettingsProxy::load(const QString &fileName)
 {
-  m_pSettings = std::make_unique<QSettings>(fileName, QSettings::IniFormat);
+  if (m_pSettings)
+    m_pSettings.get()->deleteLater();
+
+  if (fileName.isEmpty())
+    m_pSettings = std::make_unique<QSettings>(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
+  else
+    m_pSettings = std::make_unique<QSettings>(fileName, QSettings::IniFormat);
 }
 
 int QSettingsProxy::beginReadArray(const QString &prefix)
