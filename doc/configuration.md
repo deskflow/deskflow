@@ -1,18 +1,17 @@
 # GUI Config
 
+ Deskflow will automaticlly figure out where to save settings and other files.
+
+
+## Unix Systems
  The search order for a setting file is:
- 1. `<install-path>/settings/Deskflow.conf`
  1. `<XDG_CONFIG_HOME>/Deskflow/Deskflow.conf`
  1. A user settings file
  1. A system settings file
  
  A new settings file will be created in the user path if no settings file is found.
  The path of the settings file will be used as the base for all other config files.
- 
-### Windows
- - System: `C:\ProgramData\Deskflow\Deskflow.conf`
- - User: `C:\Users\userName\AppData\Local\Deskflow\Deskflow.conf`
- 
+
 ### Linux
  - System: `/etc/Deskflow/Deskflow.conf`
  - User: `~/.config/Deskflow/Deskflow.conf`
@@ -20,6 +19,17 @@
 ### macOS
  - System: `/Library/Deskflow/Deskflow.conf`
  - User: `~/Library/Deskflow/Deskflow.conf`
+ 
+
+## Windows
+
+ The search order for a setting file is:
+ 1. `<install-path>/settings/Deskflow.conf`
+ 1. Windows Registry `HKCU\Software\Deskflow\Deskflow`
+
+Windows will save to the install dir if settings are loaded from there. If not, it saves any other config files in: `C:\ProgramData\Deskflow\`
+
+When using settings from the install dir its not recommend to have elevation enabled.
 
 # Server Config Examples
 
