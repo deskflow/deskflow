@@ -42,6 +42,18 @@ void clearSettings(bool enableRestart)
   qDebug("removing profile dir: %s", qPrintable(profileDir.absolutePath()));
   profileDir.removeRecursively();
 
+#ifdef Q_OS_WIN
+  if (Settings::isNativeMode()) {
+    // make a new empty portable settings file
+    if (profileDir.mkpath(Settings::settingsPath())) {
+      QFile file(Settings::settingsFile());
+      file.open(QIODevice::WriteOnly);
+      file.write(" ", 1);
+      file.close();
+    }
+  }
+#endif
+
   if (enableRestart) {
     qDebug("restarting");
     restart();
