@@ -109,8 +109,9 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
-  if (key == Core::ElevateMode)
+  if (key == Core::ElevateMode) {
     return Settings::ElevateMode::Always;
+  }
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
@@ -121,8 +122,12 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Core::Port)
     return 24800;
 
-  if (key == Core::ProcessMode)
-    return defaultProcessMode;
+  if (key == Core::ProcessMode) {
+    if (instance()->isNativeMode())
+      return Settings::ProcessMode::Service;
+    else
+      return Settings::ProcessMode::Desktop;
+  }
 
   if (key == Daemon::LogFile) {
 #ifdef Q_OS_WIN
