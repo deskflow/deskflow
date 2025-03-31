@@ -248,15 +248,6 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 
 void SettingsDialog::updateControls()
 {
-
-#if defined(Q_OS_WIN)
-  const auto serviceAvailable = true;
-#else
-  // service not supported on unix yet, so always disable.
-  const auto serviceAvailable = false;
-  ui->groupService->setTitle("Service (Windows only)");
-#endif
-
   const bool writable = Settings::isWritable();
   const bool serviceChecked = ui->cbServiceEnabled->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
@@ -272,8 +263,16 @@ void SettingsDialog::updateControls()
   ui->comboTlsKeyLength->setEnabled(writable);
   ui->cbCloseToTray->setEnabled(writable);
 
-  ui->cbServiceEnabled->setEnabled(writable && serviceAvailable);
-  ui->widgetElevate->setEnabled(writable && serviceChecked && serviceAvailable);
+  // Handle enable and disable of service items
+  if (Settings::isNativeMode()) {
+    ui->cbServiceEnabled->setEnabled(writable);
+    ui->widgetElevate->setEnabled(writable && serviceChecked);
+  } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
+    ui->groupService->setVisible(false);
+    const int bottomMargin = ui->tabAdvanced->layout()->contentsMargins().bottom() +
+                             (ui->tabAdvanced->layout()->spacing() * 2) + ui->groupService->height();
+    ui->tabAdvanced->layout()->setContentsMargins(9, 9, 9, bottomMargin);
+  }
 
   ui->cbLanguageSync->setEnabled(writable && isClientMode());
   ui->cbScrollDirection->setEnabled(writable && isClientMode());

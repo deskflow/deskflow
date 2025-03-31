@@ -29,7 +29,7 @@
 
 Windows will save to the install dir if settings are loaded from there. If not, it saves any other config files in: `C:\ProgramData\Deskflow\`
 
-When using settings from the install dir its not recommend to have elevation enabled.
+When using settings from the install dir, the service mode will not be available.
 
 # Server Config Examples
 
