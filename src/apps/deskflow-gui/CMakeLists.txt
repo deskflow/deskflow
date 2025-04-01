@@ -72,6 +72,9 @@ if(WIN32)
     RUNTIME DESTINATION .
   )
 
+  set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
+  include(InstallRequiredSystemLibraries)
+
   add_custom_command(
     TARGET ${target} POST_BUILD
       COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network $<TARGET_FILE:${target}>
