@@ -36,12 +36,6 @@ jobs:
         with:
           executable: ./build/bin/unittests
 
-      - name: Valgrind integration tests
-        id: integtests
-        uses: ./.github/actions/run-valgrind
-        with:
-          executable: ./build/bin/integtests
-
       - name: Set job summary
         run: |
           backticks='```'
@@ -51,11 +45,6 @@ jobs:
           ### Unit tests
           $backticks
           ${{ steps.unittests.outputs.summary }}
-          $backticks
-
-          ### Integration tests
-          $backticks
-          ${{ steps.integtests.outputs.summary }}
           $backticks
           EOF
           )

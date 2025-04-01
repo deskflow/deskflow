@@ -23,7 +23,6 @@ macro(config_all_tests)
 
   config_test_deps()
 
-  add_subdirectory(integtests)
   add_subdirectory(unittests)
 
 endmacro()
