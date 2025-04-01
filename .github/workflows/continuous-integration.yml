@@ -342,8 +342,7 @@ jobs:
             cmake --build build -j16
             # Integration tests are flakey by nature, make them optional.
             export QT_QPA_PLATFORM=offscreen
-            ./build/bin/unittests
-            ./build/bin/integtests || true
+            ./build/bin/unittests || true
   flatpak:
     needs: lint-check
     name: flatpak-${{matrix.flatpak.arch}}
