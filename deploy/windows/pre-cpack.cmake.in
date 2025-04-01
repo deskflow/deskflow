@@ -1,0 +1,19 @@
+# SPDX-FileCopyrightText: 2025 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-License-Identifier: MIT
+
+if(CPACK_GENERATOR MATCHES 7Z|ZIP)
+  string(REPLACE " " "*" _TEMP_LIST "@CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS@")
+  set(${PORTABLE_LIBS} "")
+  foreach(ITEM ${_TEMP_LIST})
+    string(REPLACE "*" " " _ITEM ${ITEM})
+    file(COPY ${_ITEM} DESTINATION ${CPACK_TEMPORARY_INSTALL_DIRECTORY})
+  endforeach()
+  file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/settings/Deskflow.conf " ")
+  file(REMOVE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/deskflow-daemon.exe)
+  file(WRITE ${CPACK_TEMPORARY_INSTALL_DIRECTORY}/README.txt
+" Portable Deskflow: @CMAKE_PROJECT_VERSION@
+
+  The portable version must have the settings/Deskflow.conf file to save settings, or it will try to use the system settings location.
+  The portable version does not include the daemon, so the client will not work at UAC prompts or the login screen.
+")
+endif()
