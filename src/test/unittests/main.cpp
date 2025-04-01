@@ -27,6 +27,7 @@ int main(int argc, char **argv)
   std::filesystem::create_directories(testDir);
 
   Settings::setSettingFile("tmp/test/settings.ini");
+  Settings::setValue(Settings::Server::ExternalConfig, true);
 
   ExitTimeout exitTimeout(1, "Unit tests");
 
