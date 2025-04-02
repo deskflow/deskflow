@@ -470,8 +470,7 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
     // unnecessary restarts when deskflow was started elevated or
     // when it is not allowed to elevate. In these cases restarting
     // the server is fruitless.
-    auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
-    if (elevateMode == Settings::ElevateMode::Automatic) {
+    if (Settings::value(Settings::Core::StopOnDeskSwitch).toBool()) {
       args << "--stop-on-desk-switch";
     }
 #endif
