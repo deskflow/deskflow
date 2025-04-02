@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tabRegular">
       <property name="sizePolicy">
@@ -548,31 +548,16 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Service</string>
+          <string>Use background service (daemon)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="_6">
           <item row="0" column="0">
-           <widget class="QCheckBox" name="cbServiceEnabled">
-            <property name="toolTip">
-             <string>Whether to launch the server or client process through the Windows background
-                service or direct from the GUI.</string>
-            </property>
-            <property name="whatsThis">
-             <string>
-              &lt;p&gt;The background service is only available on Windows.&lt;/p&gt;
-              &lt;p&gt;The Windows background service is used to:&lt;/p&gt;
-              &lt;ul&gt;
-              &lt;li&gt;Start the server or client automatically when the computer starts.&lt;/li&gt;
-              &lt;li&gt;Run the server or client in an elevated mode (e.g. on login screen, UAC dialogs, etc).&lt;/li&gt;
-              &lt;/ul&gt;
-              </string>
-            </property>
-            <property name="text">
-             <string>Use background service (daemon)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
            <widget class="QWidget" name="widgetElevate" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -688,7 +673,6 @@
   <tabstop>comboLogLevel</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>
-  <tabstop>cbServiceEnabled</tabstop>
   <tabstop>comboElevate</tabstop>
  </tabstops>
  <resources/>
