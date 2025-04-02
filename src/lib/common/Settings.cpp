@@ -75,7 +75,8 @@ void Settings::cleanSettings()
 QVariant Settings::defaultValue(const QString &key)
 {
   if ((key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
-      (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile)) {
+      (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile) ||
+      (key == Core::StopOnDeskSwitch)) {
     return false;
   }
 

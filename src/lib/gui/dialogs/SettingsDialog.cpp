@@ -132,6 +132,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
+  Settings::setValue(Settings::Core::StopOnDeskSwitch, ui->cbStopOnDeskSwitch->isChecked());
   Settings::setValue(Settings::Core::ElevateMode, ui->comboElevate->currentIndex());
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
@@ -167,6 +168,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
+  ui->cbStopOnDeskSwitch->setChecked(Settings::value(Settings::Core::StopOnDeskSwitch).toBool());
   ui->comboElevate->setCurrentIndex(Settings::value(Settings::Core::ElevateMode).toInt());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
 
@@ -267,6 +269,7 @@ void SettingsDialog::updateControls()
   if (Settings::isNativeMode()) {
     ui->groupService->setEnabled(writable);
     ui->widgetElevate->setEnabled(writable && serviceChecked);
+    ui->cbStopOnDeskSwitch->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
     const int bottomMargin = ui->tabAdvanced->layout()->contentsMargins().bottom() +
