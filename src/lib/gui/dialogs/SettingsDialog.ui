@@ -22,9 +22,6 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>0</number>
-     </property>
      <widget class="QWidget" name="tabRegular">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -557,7 +554,7 @@
           <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="_6">
-          <item row="0" column="0">
+          <item row="1" column="0">
            <widget class="QWidget" name="widgetElevate" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -630,6 +627,16 @@
               </widget>
              </item>
             </layout>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="cbStopOnDeskSwitch">
+            <property name="toolTip">
+             <string/>
+            </property>
+            <property name="text">
+             <string>Run as system only when at the login screen and UAC prompt</string>
+            </property>
            </widget>
           </item>
          </layout>
