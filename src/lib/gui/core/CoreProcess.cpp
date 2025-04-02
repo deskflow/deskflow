@@ -254,9 +254,7 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
 
 void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &args)
 {
-  using enum ProcessState;
-
-  if (m_processState != Starting) {
+  if (m_processState != ProcessState::Starting) {
     qFatal("core process must be in starting state");
   }
 
@@ -269,7 +267,7 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
     return;
   }
 
-  setProcessState(Started);
+  setProcessState(ProcessState::Started);
 }
 
 void CoreProcess::stopForegroundProcess() const
