@@ -62,7 +62,7 @@ void SettingsDialog::initConnections()
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
-  connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
+  connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::updateControls);
   connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
@@ -146,7 +146,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
 
   Settings::ProcessMode mode;
-  if (ui->cbServiceEnabled->isChecked())
+  if (ui->groupService->isChecked())
     mode = Settings::ProcessMode::Service;
   else
     mode = Settings::ProcessMode::Desktop;
@@ -171,7 +171,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
-  ui->cbServiceEnabled->setChecked(processMode == Settings::ProcessMode::Service);
+  ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
 
   if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
@@ -249,7 +249,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 void SettingsDialog::updateControls()
 {
   const bool writable = Settings::isWritable();
-  const bool serviceChecked = ui->cbServiceEnabled->isChecked();
+  const bool serviceChecked = ui->groupService->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 
   ui->sbPort->setEnabled(writable);
@@ -265,7 +265,7 @@ void SettingsDialog::updateControls()
 
   // Handle enable and disable of service items
   if (Settings::isNativeMode()) {
-    ui->cbServiceEnabled->setEnabled(writable);
+    ui->groupService->setEnabled(writable);
     ui->widgetElevate->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
