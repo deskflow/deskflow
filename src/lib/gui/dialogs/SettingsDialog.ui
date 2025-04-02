@@ -147,6 +147,9 @@
          <property name="checkable">
           <bool>true</bool>
          </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
          <layout class="QVBoxLayout" name="_11">
           <item>
            <widget class="QWidget" name="widgetTlsCert" native="true">
@@ -538,6 +541,9 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupService">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -554,81 +560,6 @@
           <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="_6">
-          <item row="1" column="0">
-           <widget class="QWidget" name="widgetElevate" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <layout class="QHBoxLayout" name="_7">
-             <item>
-              <widget class="QLabel" name="lblElevate">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Launch with elevated privileges</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboElevate">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Specify when the Windows background service should run the server or client
-                  process at an elevated privilege level.</string>
-               </property>
-               <property name="whatsThis">
-                <string>
-                &lt;p&gt;You may want to alter whether or not the privilege level of the server or client 
-                  process is automatically changed depending on your use case. In some cases it can help
-                  to diagnose or solve some problems related to elevated processes in Windows.&lt;/p&gt;
-                &lt;ul&gt;
-                  &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
-                  &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
-                  &lt;li&gt;Never elevate: Turn off compatibility with login screen and UAC&lt;/li&gt;
-                &lt;/ul&gt;
-                </string>
-               </property>
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <item>
-                <property name="text">
-                 <string>Automatic (as needed)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Always elevate</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Never elevate</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
-           </widget>
-          </item>
           <item row="2" column="0">
            <widget class="QCheckBox" name="cbStopOnDeskSwitch">
             <property name="toolTip">
@@ -636,6 +567,19 @@
             </property>
             <property name="text">
              <string>Run as system only when at the login screen and UAC prompt</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QCheckBox" name="cbElevateDaemon">
+            <property name="text">
+             <string>Always run as system (work at login screen and UAC)</string>
+            </property>
+            <property name="autoExclusive">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -680,7 +624,6 @@
   <tabstop>comboLogLevel</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>
-  <tabstop>comboElevate</tabstop>
  </tabstops>
  <resources/>
  <connections/>
