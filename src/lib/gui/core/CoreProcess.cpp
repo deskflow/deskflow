@@ -264,8 +264,7 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
-  auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
-  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, elevateMode)) {
+  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, Settings::value(Settings::Daemon::Elevate).toBool())) {
     qCritical("cannot start process, ipc command failed");
     return;
   }
