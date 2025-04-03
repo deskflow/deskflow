@@ -28,3 +28,12 @@ create_test(
   SOURCE UnicodeTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
 )
+
+create_test(
+  NAME XBaseTests
+  DEPENDS base
+  LIBS arch
+  SOURCE XBaseTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
+)
+
