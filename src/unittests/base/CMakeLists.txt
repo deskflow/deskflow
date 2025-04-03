@@ -8,3 +8,11 @@ create_test(
   SOURCE test_Path.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
 )
+
+create_test(
+  NAME test_String
+  DEPENDS base
+  LIBS arch
+  SOURCE test_String.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
+)
