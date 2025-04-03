@@ -75,7 +75,8 @@ void Settings::cleanSettings()
 QVariant Settings::defaultValue(const QString &key)
 {
   if ((key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
-      (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile)) {
+      (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile) ||
+      (key == Core::StopOnDeskSwitch)) {
     return false;
   }
 
@@ -109,12 +110,8 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
-  if (key == Core::ElevateMode) {
-    if (instance()->isNativeMode())
-      return Settings::ElevateMode::Always;
-    else
-      return Settings::ElevateMode::Never;
-  }
+  if (key == Daemon::Elevate)
+    return instance()->isNativeMode();
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
@@ -139,9 +136,6 @@ QVariant Settings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kDaemonLogFilename);
 #endif
   }
-
-  if (key == Daemon::Elevate)
-    return true;
 
   return QVariant();
 }

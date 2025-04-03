@@ -22,9 +22,6 @@
    </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
-     <property name="currentIndex">
-      <number>1</number>
-     </property>
      <widget class="QWidget" name="tabRegular">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
@@ -149,6 +146,9 @@
          </property>
          <property name="checkable">
           <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QVBoxLayout" name="_11">
           <item>
@@ -541,6 +541,9 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupService">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -548,103 +551,30 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Service</string>
+          <string>Use background service (daemon)</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="_6">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="cbServiceEnabled">
+          <item row="2" column="0">
+           <widget class="QCheckBox" name="cbStopOnDeskSwitch">
             <property name="toolTip">
-             <string>Whether to launch the server or client process through the Windows background
-                service or direct from the GUI.</string>
-            </property>
-            <property name="whatsThis">
-             <string>
-              &lt;p&gt;The background service is only available on Windows.&lt;/p&gt;
-              &lt;p&gt;The Windows background service is used to:&lt;/p&gt;
-              &lt;ul&gt;
-              &lt;li&gt;Start the server or client automatically when the computer starts.&lt;/li&gt;
-              &lt;li&gt;Run the server or client in an elevated mode (e.g. on login screen, UAC dialogs, etc).&lt;/li&gt;
-              &lt;/ul&gt;
-              </string>
+             <string/>
             </property>
             <property name="text">
-             <string>Use background service (daemon)</string>
+             <string>Stop on desk switch</string>
             </property>
            </widget>
           </item>
           <item row="1" column="0">
-           <widget class="QWidget" name="widgetElevate" native="true">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+           <widget class="QCheckBox" name="cbElevateDaemon">
+            <property name="text">
+             <string>Run the service as a system process</string>
             </property>
-            <layout class="QHBoxLayout" name="_7">
-             <item>
-              <widget class="QLabel" name="lblElevate">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="text">
-                <string>Launch with elevated privileges</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QComboBox" name="comboElevate">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>0</height>
-                </size>
-               </property>
-               <property name="toolTip">
-                <string>Specify when the Windows background service should run the server or client
-                  process at an elevated privilege level.</string>
-               </property>
-               <property name="whatsThis">
-                <string>
-                &lt;p&gt;You may want to alter whether or not the privilege level of the server or client 
-                  process is automatically changed depending on your use case. In some cases it can help
-                  to diagnose or solve some problems related to elevated processes in Windows.&lt;/p&gt;
-                &lt;ul&gt;
-                  &lt;li&gt;Automatic: Elevate when the window session changes to secure mode&lt;/li&gt;
-                  &lt;li&gt;Always elevate: Always run in elevated mode (could be unsafe)&lt;/li&gt;
-                  &lt;li&gt;Never elevate: Turn off compatibility with login screen and UAC&lt;/li&gt;
-                &lt;/ul&gt;
-                </string>
-               </property>
-               <property name="currentIndex">
-                <number>0</number>
-               </property>
-               <item>
-                <property name="text">
-                 <string>Automatic (as needed)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Always elevate</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Never elevate</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
            </widget>
           </item>
          </layout>
@@ -688,8 +618,6 @@
   <tabstop>comboLogLevel</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>
-  <tabstop>cbServiceEnabled</tabstop>
-  <tabstop>comboElevate</tabstop>
  </tabstops>
  <resources/>
  <connections/>
