@@ -1,56 +1,62 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2014 - 2024 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "deskflow/languages/LanguageManager.h"
+#include <QTest>
 
-#include <gtest/gtest.h>
+#include "test_LanguageManager.h"
 
-TEST(LanguageManager, RemoteLanguagesTest)
+void LanguageManager_Test::initTestCase()
+{
+  m_arch.init();
+  m_log.setFilter(kDEBUG2);
+}
+
+void LanguageManager_Test::remoteLanguages()
 {
   std::string remoteLanguages = "ruenuk";
   deskflow::languages::LanguageManager manager({"ru", "en", "uk"});
 
   manager.setRemoteLanguages(remoteLanguages);
-  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}), manager.getRemoteLanguages());
+  QCOMPARE(manager.getRemoteLanguages(), (std::vector<std::string>{"ru", "en", "uk"}));
 
   manager.setRemoteLanguages(std::string());
-  EXPECT_TRUE(manager.getRemoteLanguages().empty());
+  QVERIFY(manager.getRemoteLanguages().empty());
 }
 
-TEST(LanguageManager, LocalLanguagesTest)
+void LanguageManager_Test::localLanguage()
 {
   std::vector<std::string> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
-
-  EXPECT_EQ((std::vector<std::string>{"ru", "en", "uk"}), manager.getLocalLanguages());
+  QCOMPARE(manager.getLocalLanguages(), (std::vector<std::string>{"ru", "en", "uk"}));
 }
 
-TEST(LanguageManager, MissedLanguagesTest)
+void LanguageManager_Test::missedLanguage()
 {
   std::string remoteLanguages = "ruenuk";
   std::vector<std::string> localLanguages = {"en"};
   deskflow::languages::LanguageManager manager(localLanguages);
 
   manager.setRemoteLanguages(remoteLanguages);
-  EXPECT_EQ("ru, uk", manager.getMissedLanguages());
+  QCOMPARE(manager.getMissedLanguages(), "ru, uk");
 }
 
-TEST(LanguageManager, SerializeLocalLanguagesTest)
+void LanguageManager_Test::languageInstall()
 {
   std::vector<std::string> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
-
-  EXPECT_EQ("ruenuk", manager.getSerializedLocalLanguages());
+  QVERIFY(!manager.isLanguageInstalled("us"));
+  QVERIFY(manager.isLanguageInstalled("en"));
 }
 
-TEST(LanguageManager, LanguageInstalledTest)
+void LanguageManager_Test::serializeLocalLanguages()
 {
   std::vector<std::string> localLanguages = {"ru", "en", "uk"};
   deskflow::languages::LanguageManager manager(localLanguages);
-
-  EXPECT_FALSE(manager.isLanguageInstalled("us"));
-  EXPECT_TRUE(manager.isLanguageInstalled("en"));
+  QCOMPARE(manager.getSerializedLocalLanguages(), "ruenuk");
 }
+
+QTEST_MAIN(LanguageManager_Test)
