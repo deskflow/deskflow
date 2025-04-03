@@ -84,19 +84,5 @@ elseif(APPLE)
   install(TARGETS ${target} BUNDLE DESTINATION .)
 else()
   install(TARGETS ${target} DESTINATION bin)
-  if(HELP2MAN)
-    configure_file(deskflow.man.template.in ${CMAKE_CURRENT_BINARY_DIR}/${target})
-    add_custom_command(
-    TARGET ${target} POST_BUILD
-      COMMAND ${HELP2MAN}
-        --version-string "${CMAKE_PROJECT_VERSION}"
-        --include ${CMAKE_SOURCE_DIR}/src/apps/res/manpage.txt
-        --no-info ${CMAKE_CURRENT_BINARY_DIR}/${target}
-        -o ${CMAKE_CURRENT_BINARY_DIR}/${target}.1
-  )
-  install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/${target}.1
-    DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
-  )
-  endif()
+  generate_app_man(${target})
 endif()

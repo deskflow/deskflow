@@ -1,9 +1,0 @@
-# SPDX-FileCopyrightText: Deskflow Developers
-# SPDX-License-Identifier: MIT
-#!/bin/sh -eu
-
-if [ "$1" = '--help' ]; then
-cat << EOM
-@CMAKE_PROJECT_DESCRIPTION@. This is the GUI. It takes no arguments or options.
-EOM
-fi
