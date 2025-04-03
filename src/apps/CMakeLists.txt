@@ -14,7 +14,7 @@ function(generate_app_man TARGET)
   if(HELP2MAN)
     add_custom_command(
       TARGET ${target} POST_BUILD
-        COMMAND ${HELP2MAN}
+        COMMAND QT_QPA_PLATFORM=minimal ${HELP2MAN}
           --include ${CMAKE_SOURCE_DIR}/src/apps/res/manpage.txt
           --no-info
           $<TARGET_FILE:${target}>
