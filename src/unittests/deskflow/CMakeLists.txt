@@ -12,3 +12,13 @@ create_test(
   SOURCE ConfigTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
+
+create_test(
+  NAME LanguageManagerTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE LanguageManagerTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+
