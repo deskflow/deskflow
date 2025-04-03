@@ -3,6 +3,30 @@
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
+if(UNIX AND NOT APPLE)
+  find_program(HELP2MAN help2man)
+  if(NOT HELP2MAN)
+    message(STATUS "Man page tool (help2man) not found, man pages will not be generated")
+  endif()
+endif()
+
+function(generate_app_man TARGET)
+  if(HELP2MAN)
+    add_custom_command(
+      TARGET ${target} POST_BUILD
+        COMMAND ${HELP2MAN}
+          --include ${CMAKE_SOURCE_DIR}/src/apps/res/manpage.txt
+          --no-info
+          $<TARGET_FILE:${target}>
+          -o $<TARGET_FILE_DIR:${target}>/${target}.1
+    )
+    install(
+      FILES $<TARGET_FILE_DIR:${target}>/${target}.1
+      DESTINATION ${CMAKE_INSTALL_MANDIR}/man1
+    )
+  endif()
+endfunction()
+
 option(BUILD_UNIFIED "Build unified binary" OFF)
 if(BUILD_UNIFIED)
   add_subdirectory(deskflow-core)
