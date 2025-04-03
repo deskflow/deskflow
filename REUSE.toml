@@ -146,6 +146,12 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
+path = "src/apps/res/manpage.txt"
+precedence = "override"
+SPDX-FileCopyrightText = "Deskflow Developers"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
 path = "src/apps/res/icons/deskflow-**/**/**/**.svg"
 precedence = "override"
 SPDX-FileCopyrightText = "Kde Breeze Icons"
