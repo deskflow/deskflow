@@ -128,10 +128,6 @@ void ServerApp::help()
        << " [--display <display>] [--no-xinitthreads]"
 #endif
 
-#ifdef WINAPI_LIBEI
-       << " [--no-wayland-ei]"
-#endif
-
        << HELP_SYS_ARGS HELP_COMMON_ARGS "\n"
 #ifndef WINAPI_XWINDOWS
        << DRAG_AND_DROP "\n"
