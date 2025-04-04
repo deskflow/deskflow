@@ -113,7 +113,6 @@ void ClientApp::help()
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
-       << " [--host]"
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
        << " [--no-xinitthreads]"
@@ -131,8 +130,6 @@ void ClientApp::help()
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
        << "                             computer.\n"
-       << "      --host               act as a host; invert server/client mode\n"
-       << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
        << "                             at <display>.\n"
