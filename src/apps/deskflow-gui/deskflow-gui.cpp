@@ -48,12 +48,6 @@ int main(int argc, char *argv[])
   QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
 #endif
 
-#if defined(Q_OS_MAC)
-  /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
-   * instantiated" */
-  ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
-#endif
-
   QCoreApplication::setApplicationName(kAppName);
   QCoreApplication::setOrganizationName(kAppName);
   QGuiApplication::setDesktopFileName(QStringLiteral("org.deskflow.deskflow"));
