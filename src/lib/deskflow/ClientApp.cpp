@@ -118,9 +118,6 @@ void ClientApp::help()
        << " [--display <display>]"
        << " [--no-xinitthreads]"
 #endif
-#ifdef WINAPI_LIBEI
-       << " [--use-x-window]"
-#endif
        << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
