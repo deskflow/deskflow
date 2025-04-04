@@ -72,7 +72,7 @@ endif()
 project(
   deskflow
   VERSION "${DESKFLOW_VERSION_MAJOR}.${DESKFLOW_VERSION_MINOR}.${DESKFLOW_VERSION_PATCH}.${DESKFLOW_VERSION_TWEAK}"
-  DESCRIPTION "Mouse and keyboard sharing utility"
+  DESCRIPTION "Keyboard and mouse sharing utility"
   LANGUAGES C CXX)
 
 # Define Additional "PROJECT" vars for packaging and metadata
