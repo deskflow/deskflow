@@ -128,11 +128,11 @@ void ServerApp::help()
        << " [--display <display>] [--no-xinitthreads]"
 #endif
 
-#ifdef WINAPI_LIBEI
-       << " [--no-wayland-ei]"
+       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n"
+#ifndef WINAPI_XWINDOWS
+       << DRAG_AND_DROP "\n"
 #endif
-
-       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
+       << "\n"
        << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
@@ -148,7 +148,6 @@ void ServerApp::help()
        << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
-       << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
        << "* marks defaults.\n"
 
        << kHelpNoWayland

@@ -113,13 +113,9 @@ void ClientApp::help()
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
-       << " [--host]"
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
        << " [--no-xinitthreads]"
-#endif
-#ifdef WINAPI_LIBEI
-       << " [--use-x-window]"
 #endif
        << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
        << "\n\n"
@@ -128,11 +124,12 @@ void ClientApp::help()
        << "  -a, --address <address>  local network interface address.\n"
        << HELP_COMMON_INFO_1 << HELP_SYS_INFO << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
+#ifndef WINAPI_XWINDOWS
+       << DRAG_AND_DROP "\n"
+#endif
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
        << "                             computer.\n"
-       << "      --host               act as a host; invert server/client mode\n"
-       << "                             and listen instead of connecting.\n"
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
        << "                             at <display>.\n"

@@ -173,9 +173,10 @@ private:
   "  -1, --no-restart         do not try to restart on failure.\n"                                                     \
   "*     --restart            restart the server automatically if it fails.\n"                                         \
   "  -l  --log <file>         write log messages to file.\n"                                                           \
-  "      --enable-drag-drop   enable file drag & drop.\n"                                                              \
   "      --enable-crypto      enable TLS encryption.\n"                                                                \
   "      --tls-cert           specify the path to the TLS certificate file.\n"
+
+#define DRAG_AND_DROP "      --enable-drag-drop   enable file drag & drop.\n"
 
 #define HELP_COMMON_INFO_2                                                                                             \
   "  -h, --help               display this help and exit.\n"                                                           \

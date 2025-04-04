@@ -134,24 +134,20 @@ void Client::connect(size_t addressIndex)
   auto securityLevel = m_useSecureNetwork ? SecurityLevel::PeerAuth : SecurityLevel::PlainText;
 
   try {
-    if (m_args.m_hostMode) {
-      LOG((CLOG_NOTE "waiting for server connection on %i port", m_serverAddress.getPort()));
-    } else {
-      // resolve the server hostname.  do this every time we connect
-      // in case we couldn't resolve the address earlier or the address
-      // has changed (which can happen frequently if this is a laptop
-      // being shuttled between various networks).  patch by Brent
-      // Priddy.
-      m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
+    // resolve the server hostname.  do this every time we connect
+    // in case we couldn't resolve the address earlier or the address
+    // has changed (which can happen frequently if this is a laptop
+    // being shuttled between various networks).  patch by Brent
+    // Priddy.
+    m_resolvedAddressesCount = m_serverAddress.resolve(addressIndex);
 
-      // m_serverAddress will be null if the hostname address is not reolved
-      if (m_serverAddress.getAddress() != nullptr) {
-        // to help users troubleshoot, show server host name (issue: 60)
-        LOG(
-            (CLOG_NOTE "connecting to '%s': %s:%i", m_serverAddress.getHostname().c_str(),
-             ARCH->addrToString(m_serverAddress.getAddress()).c_str(), m_serverAddress.getPort())
-        );
-      }
+    // m_serverAddress will be null if the hostname address is not reolved
+    if (m_serverAddress.getAddress() != nullptr) {
+      // to help users troubleshoot, show server host name (issue: 60)
+      LOG(
+          (CLOG_NOTE "connecting to '%s': %s:%i", m_serverAddress.getHostname().c_str(),
+           ARCH->addrToString(m_serverAddress.getAddress()).c_str(), m_serverAddress.getPort())
+      );
     }
 
     // create the socket
@@ -509,11 +505,8 @@ void Client::setupScreen()
 void Client::setupTimer()
 {
   assert(m_timer == NULL);
-
-  if (!m_args.m_hostMode) {
-    m_timer = m_events->newOneShotTimer(2.0, NULL);
-    m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<Client>(this, &Client::handleConnectTimeout));
-  }
+  m_timer = m_events->newOneShotTimer(2.0, NULL);
+  m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<Client>(this, &Client::handleConnectTimeout));
 }
 
 void Client::cleanup()
