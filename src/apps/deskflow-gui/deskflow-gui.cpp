@@ -129,8 +129,6 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices()
 {
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
-
   // new in mavericks, applications are trusted individually
   // with use of the accessibility api. this call will show a
   // prompt which can show the security/privacy/accessibility
@@ -148,21 +146,5 @@ bool checkMacAssistiveDevices()
   bool result = AXIsProcessTrustedWithOptions(options);
   CFRelease(options);
   return result;
-
-#else
-
-  // now deprecated in mavericks.
-  bool result = AXAPIEnabled();
-  if (!result) {
-    QString msgBody = QString(
-        "Please enable access to assistive devices "
-        "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open %1."
-    );
-    QMessageBox::information(NULL, kAppName, msgBody.arg(kAppName));
-  }
-  return result;
-
-#endif
 }
 #endif
