@@ -148,7 +148,6 @@ void ServerApp::help()
        << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
-       << HELP_SYS_INFO HELP_COMMON_INFO_2 "\n"
        << "* marks defaults.\n"
 
        << kHelpNoWayland
