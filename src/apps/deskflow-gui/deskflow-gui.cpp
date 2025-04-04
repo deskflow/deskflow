@@ -16,13 +16,10 @@
 #include "gui/StyleUtils.h"
 
 #include <QApplication>
-#include <QDebug>
 #include <QGuiApplication>
 #include <QLocalSocket>
 #include <QMessageBox>
-#include <QObject>
 #include <QSharedMemory>
-#include <QtGlobal>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
