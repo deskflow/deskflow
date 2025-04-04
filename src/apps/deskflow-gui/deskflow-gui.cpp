@@ -16,13 +16,11 @@
 #include "gui/StyleUtils.h"
 
 #include <QApplication>
-#include <QDebug>
+#include <QCommandLineParser>
 #include <QGuiApplication>
 #include <QLocalSocket>
 #include <QMessageBox>
-#include <QObject>
 #include <QSharedMemory>
-#include <QtGlobal>
 
 #if defined(Q_OS_MAC)
 #include <Carbon/Carbon.h>
@@ -35,23 +33,9 @@
 
 using namespace deskflow::gui;
 
-class QThreadImpl : public QThread
-{
-public:
-  static void msleep(unsigned long msecs)
-  {
-    QThread::msleep(msecs);
-  }
-};
-
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
-
-bool hasArg(const QString &arg, const QStringList &args)
-{
-  return std::ranges::any_of(args, [&arg](const QString &a) { return a == arg; });
-}
 
 int main(int argc, char *argv[])
 {
@@ -60,20 +44,38 @@ int main(int argc, char *argv[])
   QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
 #endif
 
-#if defined(Q_OS_MAC)
-  /* Workaround for QTBUG-40332 - "High ping when QNetworkAccessManager is
-   * instantiated" */
-  ::setenv("QT_BEARER_POLL_TIMEOUT", "-1", 1);
-#endif
-
   QCoreApplication::setApplicationName(kAppName);
   QCoreApplication::setOrganizationName(kAppName);
+  QCoreApplication::setApplicationVersion(kVersion);
+  QCoreApplication::setOrganizationDomain(kOrgDomain); // used in prefix, can't be a url
   QGuiApplication::setDesktopFileName(QStringLiteral("org.deskflow.deskflow"));
 
-  // used as a prefix for settings paths, and must not be a url.
-  QCoreApplication::setOrganizationDomain(kOrgDomain);
-
   QApplication app(argc, argv);
+
+  // Add Command Line Options
+  QCommandLineOption helpOption = QCommandLineOption("help", "Display Help on the command line");
+  QCommandLineOption versionOption = QCommandLineOption("version", "Display version information");
+  QCommandLineOption noResetOption =
+      QCommandLineOption("no-reset", "Prevent settings reset if DESKFLOW_RESET_ALL is set");
+
+  QCommandLineParser parser;
+  parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+  parser.addOption(helpOption);
+  parser.addOption(versionOption);
+  parser.addOption(noResetOption);
+  parser.process(app);
+
+  const auto header = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVersion);
+  if (parser.isSet(helpOption) || !parser.unknownOptionNames().isEmpty()) {
+    QTextStream(stdout) << header << QStringLiteral("  %1\n\n").arg(kAppDescription)
+                        << parser.helpText().replace(QApplication::applicationFilePath(), kAppId);
+    return 0;
+  }
+
+  if (parser.isSet(versionOption)) {
+    QTextStream(stdout) << header << kCopyright << Qt::endl;
+    return 0;
+  }
 
   // Create a shared memory segment with a unique key
   // This is to prevent a new instance from running if one is already running
@@ -131,10 +133,8 @@ int main(int argc, char *argv[])
 #endif
 
   // --no-reset
-  QStringList arguments = QCoreApplication::arguments();
-  const auto noReset = hasArg("--no-reset", arguments);
   const auto resetEnvVar = QVariant(qEnvironmentVariable("DESKFLOW_RESET_ALL")).toBool();
-  if (resetEnvVar && !noReset) {
+  if (resetEnvVar && !parser.isSet(noResetOption)) {
     diagnostic::clearSettings(false);
   }
 
@@ -147,8 +147,6 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices()
 {
-#if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1090 // mavericks
-
   // new in mavericks, applications are trusted individually
   // with use of the accessibility api. this call will show a
   // prompt which can show the security/privacy/accessibility
@@ -166,21 +164,5 @@ bool checkMacAssistiveDevices()
   bool result = AXIsProcessTrustedWithOptions(options);
   CFRelease(options);
   return result;
-
-#else
-
-  // now deprecated in mavericks.
-  bool result = AXAPIEnabled();
-  if (!result) {
-    QString msgBody = QString(
-        "Please enable access to assistive devices "
-        "System Preferences -> Security & Privacy -> "
-        "Privacy -> Accessibility, then re-open %1."
-    );
-    QMessageBox::information(NULL, kAppName, msgBody.arg(kAppName));
-  }
-  return result;
-
-#endif
 }
 #endif

@@ -45,6 +45,7 @@ if(APPLE)
   )
 elseif(UNIX)
   install(TARGETS ${target} DESTINATION bin)
+  generate_app_man(${target})
 elseif(WIN32)
   install(
     TARGETS ${target}
