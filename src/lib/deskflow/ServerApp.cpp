@@ -132,7 +132,11 @@ void ServerApp::help()
        << " [--no-wayland-ei]"
 #endif
 
-       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n\n"
+       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n"
+#ifndef WINAPI_XWINDOWS
+       << DRAG_AND_DROP "\n"
+#endif
+       << "\n"
        << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
