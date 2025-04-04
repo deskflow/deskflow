@@ -32,15 +32,6 @@
 
 using namespace deskflow::gui;
 
-class QThreadImpl : public QThread
-{
-public:
-  static void msleep(unsigned long msecs)
-  {
-    QThread::msleep(msecs);
-  }
-};
-
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
