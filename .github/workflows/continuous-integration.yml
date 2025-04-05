@@ -316,17 +316,17 @@ jobs:
       # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
         uses: sithlord48/fancy-checkout@v1
-
       - name: Build on FreeBSD
         if: ${{ matrix.distro.name == 'freebsd' }}
         uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
           run: |
-            ./scripts/install_deps.sh
+            pkg install -y cmake ninja gmake gcc12 openssl glib \
+            libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 googletest \
+            tomlplusplus cli11 pkgconf libei libportal
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
-            
             # Integration tests are flakey by nature, make them optional.
             export QT_QPA_PLATFORM=offscreen
             ./build/bin/unittests
