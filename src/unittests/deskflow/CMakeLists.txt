@@ -21,4 +21,13 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
+if(UNIX AND NOT APPLE)
+  create_test(
+    NAME test_X11LayoutParser
+    DEPENDS app
+    LIBS arch base ${extra_libs}
+    SOURCE test_X11LayoutParser.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+  )
+endif()
 
