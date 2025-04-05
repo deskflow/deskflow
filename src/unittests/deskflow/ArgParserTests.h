@@ -24,6 +24,8 @@ private slots:
   void assembleCommand();
   void serverArgs();
   void clientArgs();
+  void deprecatedArg_crypoPass_true();
+  void deprecatedArg_crypoPass_false();
 
 private:
   Arch m_arch;
