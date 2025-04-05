@@ -199,6 +199,76 @@ void ArgParserTests::clientArgs()
   QVERIFY(args.m_shouldExitOk);
 }
 
+void ArgParserTests::client_yScroll()
+{
+  deskflow::ClientArgs clientArgs;
+  const int argc = 3;
+  const char *kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
+
+  m_parser.parseClientArgs(clientArgs, argc, kYScrollCmd);
+
+  QCOMPARE(clientArgs.m_yscroll, 1);
+}
+
+void ArgParserTests::client_setLangSync()
+{
+  deskflow::ClientArgs clientArgs;
+  clientArgs.m_enableLangSync = false;
+  const int argc = 2;
+  std::array<const char *, argc> kLangCmd = {"stub", "--sync-language"};
+
+  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+
+  QVERIFY(clientArgs.m_enableLangSync);
+}
+
+void ArgParserTests::client_setInvertScroll()
+{
+  deskflow::ClientArgs clientArgs;
+  const int argc = 2;
+  std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
+
+  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+
+  QCOMPARE(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::INVERT_SERVER);
+}
+
+void ArgParserTests::client_commonArgs()
+{
+  deskflow::ClientArgs clientArgs;
+  clientArgs.m_enableLangSync = false;
+  const int argc = 5;
+  std::array<const char *, argc> kLangCmd = {"stub", "--enable-crypto", "--tls-cert", "tlsCertPath", "--prevent-sleep"};
+
+  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
+
+  QVERIFY(clientArgs.m_enableCrypto);
+  QVERIFY(clientArgs.m_preventSleep);
+  QCOMPARE(clientArgs.m_tlsCertFile, "tlsCertPath");
+}
+
+void ArgParserTests::client_setAddress()
+{
+  deskflow::ClientArgs clientArgs;
+  const int argc = 2;
+  const char *kAddressCmd[argc] = {"stub", "mock_address"};
+
+  QVERIFY(m_parser.parseClientArgs(clientArgs, argc, kAddressCmd));
+  QCOMPARE(clientArgs.m_serverAddress, "mock_address");
+}
+
+void ArgParserTests::client_badArgs()
+{
+  deskflow::ClientArgs clientArgs;
+  const int argc = 1;
+  const char *kNoAddressCmd[argc] = {"stub"};
+  QVERIFY(!m_parser.parseClientArgs(clientArgs, argc, kNoAddressCmd));
+
+  const int argc2 = 3;
+  const char *kUnrecognizedCmd[argc2] = {"stub", "mock_arg", "mock_address"};
+  QVERIFY(!m_parser.parseClientArgs(clientArgs, argc2, kUnrecognizedCmd));
+}
+
 void ArgParserTests::deprecatedArg_crypoPass_true()
 {
   int i = 1;
