@@ -58,5 +58,9 @@ private:
   int m_Modifiers;
   bool m_IsValid;
 
+  inline static const int kStrSize = 4;
+  inline static const int kBase = 16;
+  inline static const QChar kFillChar = QChar('0');
+
   static QString keyToString(int key);
 };
