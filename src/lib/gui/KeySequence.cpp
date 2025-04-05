@@ -207,8 +207,14 @@ QString KeySequence::keyToString(int key)
   }
 
   // representable in ucs2?
-  if (key < 0x10000)
+  if (key < 0x10000) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
+    uint16_t a = QChar(key).toLower().unicode();
+    return QString("\\u%1").arg(a, 4, 16, QChar('0'));
+#else
     return QString("\\u%1").arg(QChar(key).toLower().unicode(), 4, 16, QChar('0'));
+#endif
+  }
 
   // give up, deskflow probably won't handle this
   return "";
