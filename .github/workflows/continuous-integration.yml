@@ -258,7 +258,7 @@ jobs:
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
-          qt-version: 6.8.2
+          qt-version: 6.9.0
           qt-install-dir: ${{matrix.target.qt-install-dir}}
           like: ${{ matrix.target.like }}
 
