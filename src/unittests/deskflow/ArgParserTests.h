@@ -23,6 +23,9 @@ private slots:
   void getArgv();
   void assembleCommand();
   void serverArgs();
+  void server_setAddress();
+  void server_setConfigFile();
+  void server_unexpectedParam();
   void clientArgs();
   void client_yScroll();
   void client_setLangSync();

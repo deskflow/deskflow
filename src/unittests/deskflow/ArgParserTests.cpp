@@ -160,6 +160,37 @@ void ArgParserTests::assembleCommand()
   QCOMPARE(command, "\"stub1 space\" stub2 \"stub3 space\"");
 }
 
+void ArgParserTests::server_setAddress()
+{
+  deskflow::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
+
+  m_parser.parseServerArgs(serverArgs, argc, kAddressCmd);
+
+  QCOMPARE(serverArgs.m_deskflowAddress, "mock_address");
+}
+
+void ArgParserTests::server_setConfigFile()
+{
+  deskflow::ServerArgs serverArgs;
+  const int argc = 3;
+  const char *kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
+
+  m_parser.parseServerArgs(serverArgs, argc, kConfigCmd);
+
+  QCOMPARE(serverArgs.m_configFile, "mock_configFile");
+}
+
+void ArgParserTests::server_unexpectedParam()
+{
+  deskflow::ServerArgs serverArgs;
+  const int argc = 2;
+  std::array<const char *, argc> kUnknownCmd = {"stub", "--unknown"};
+
+  QVERIFY(!m_parser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
+}
+
 void ArgParserTests::serverArgs()
 {
   deskflow::ServerArgs args;
