@@ -34,6 +34,16 @@ private slots:
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();
+  void generic_logLevel();
+  void generic_logFile();
+  void generic_logFileWithSpace();
+  void generic_foreground();
+  void generic_daemon();
+  void generic_name();
+  void generic_noRestart();
+  void generic_unknown();
+  void generic_noHook();
+  void generic_DND();
 
 private:
   Arch m_arch;

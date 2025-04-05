@@ -7,17 +7,20 @@
 
 #include <QTest>
 
+#include "test_ArgParser.h"
+
 #include "../../lib/deskflow/ArgsBase.h"
 #include "../../lib/deskflow/ClientArgs.h"
 #include "../../lib/deskflow/ServerArgs.h"
-#include <common/Constants.h>
 
-#include "test_ArgParser.h"
+#include <common/Constants.h>
 
 void ArgParser_Test::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(kDEBUG2);
+  static deskflow::ArgsBase base;
+  m_parser.setArgsBase(base);
 }
 
 void ArgParser_Test::isArg()
@@ -286,6 +289,118 @@ void ArgParser_Test::deprecatedArg_crypoPass_false()
   const int argc = 3;
   const char *kCryptoPassCmd[argc] = {"stub", "--mock-arg", "mock_value"};
   QVERIFY(!m_parser.parseDeprecatedArgs(argc, kCryptoPassCmd, i));
+  QCOMPARE(i, 1);
+}
+
+void ArgParser_Test::generic_logLevel()
+{
+  int i = 1;
+  const int argc = 3;
+  const char *kLogLevelCmd[argc] = {"stub", "--debug", "DEBUG"};
+  m_parser.parseGenericArgs(argc, kLogLevelCmd, i);
+  QCOMPARE(m_parser.argsBase().m_logFilter, "DEBUG");
+  QCOMPARE(i, 2);
+}
+
+void ArgParser_Test::generic_logFile()
+{
+  int i = 1;
+  const int argc = 3;
+  const char *kLogFileCmd[argc] = {"stub", "--log", "mock_filename"};
+  m_parser.parseGenericArgs(argc, kLogFileCmd, i);
+  QCOMPARE(m_parser.argsBase().m_logFile, "mock_filename");
+  QCOMPARE(i, 2);
+}
+
+void ArgParser_Test::generic_logFileWithSpace()
+{
+  int i = 1;
+  const int argc = 3;
+  const char *kLogFileCmdWithSpace[argc] = {"stub", "--log", "mo ck_filename"};
+  m_parser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
+  QCOMPARE(m_parser.argsBase().m_logFile, "mo ck_filename");
+  QCOMPARE(i, 2);
+}
+
+void ArgParser_Test::generic_foreground()
+{
+  int i = 1;
+  const int argc = 2;
+  const char *kNoDeamonCmd[argc] = {"stub", "-f"};
+  m_parser.parseGenericArgs(argc, kNoDeamonCmd, i);
+  QVERIFY(!m_parser.argsBase().m_daemon);
+  QCOMPARE(i, 1);
+}
+
+void ArgParser_Test::generic_daemon()
+{
+  int i = 1;
+  const int argc = 2;
+  const char *kDeamonCmd[argc] = {"stub", "--daemon"};
+  m_parser.parseGenericArgs(argc, kDeamonCmd, i);
+  QVERIFY(m_parser.argsBase().m_daemon);
+  QCOMPARE(i, 1);
+}
+
+void ArgParser_Test::generic_name()
+{
+  int i = 1;
+  const int argc = 3;
+  const char *kNameCmd[argc] = {"stub", "--name", "mock"};
+  // Somehow cause a dump if not made here.
+  ArgParser parser(nullptr);
+  deskflow::ArgsBase base;
+  parser.setArgsBase(base);
+  parser.parseGenericArgs(argc, kNameCmd, i);
+  QCOMPARE(base.m_name, "mock");
+  QCOMPARE(i, 2);
+}
+
+void ArgParser_Test::generic_noRestart()
+{
+  int i = 1;
+  const int argc = 2;
+  const char *kNoRestartCmd[argc] = {"stub", "--no-restart"};
+  m_parser.parseGenericArgs(argc, kNoRestartCmd, i);
+  QVERIFY(!m_parser.argsBase().m_restartable);
+  QCOMPARE(i, 1);
+
+  const char *kRestartCmd[argc] = {"stub", "--restart"};
+  m_parser.parseGenericArgs(argc, kRestartCmd, i);
+  QVERIFY(m_parser.argsBase().m_restartable);
+  QCOMPARE(i, 1);
+}
+
+void ArgParser_Test::generic_unknown()
+{
+  int i = 1;
+  const int argc = 2;
+  const char *kBackendCmd[argc] = {"stub", "-z"};
+  QVERIFY(!m_parser.parseGenericArgs(argc, kBackendCmd, i));
+}
+
+void ArgParser_Test::generic_noHook()
+{
+  int i = 1;
+  const int argc = 2;
+  const char *kNoHookCmd[argc] = {"stub", "--no-hooks"};
+  m_parser.parseGenericArgs(argc, kNoHookCmd, i);
+  QVERIFY(m_parser.argsBase().m_noHooks);
+  QCOMPARE(i, 1);
+}
+
+void ArgParser_Test::generic_DND()
+{
+  if ((QSysInfo::kernelType() != "winnt") && !(QSysInfo::kernelType() == "darwin"))
+    return;
+  int i = 1;
+  const int argc = 2;
+  const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
+  ArgParser parser(nullptr);
+  deskflow::ArgsBase base;
+  parser.setArgsBase(base);
+  parser.parseGenericArgs(argc, kDragDropCmd, i);
+  QVERIFY(parser.argsBase().m_enableDragDrop);
   QCOMPARE(i, 1);
 }
 
