@@ -33,7 +33,7 @@ class MSWindowsScreen : public PlatformScreen
 {
 public:
   MSWindowsScreen(
-      bool isPrimary, bool noHooks, bool stopOnDeskSwitch, IEventQueue *events, bool enableLangSync = false,
+      bool isPrimary, bool noHooks, IEventQueue *events, bool enableLangSync = false,
       deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::SERVER
   );
   virtual ~MSWindowsScreen();

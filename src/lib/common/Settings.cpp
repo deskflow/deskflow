@@ -109,12 +109,8 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Server::Binary)
     return kServerBinName;
 
-  if (key == Core::ElevateMode) {
-    if (instance()->isNativeMode())
-      return Settings::ElevateMode::Always;
-    else
-      return Settings::ElevateMode::Never;
-  }
+  if (key == Daemon::Elevate)
+    return instance()->isNativeMode();
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
@@ -139,9 +135,6 @@ QVariant Settings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kDaemonLogFilename);
 #endif
   }
-
-  if (key == Daemon::Elevate)
-    return true;
 
   return QVariant();
 }

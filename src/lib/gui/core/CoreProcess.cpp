@@ -254,9 +254,7 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
 
 void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &args)
 {
-  using enum ProcessState;
-
-  if (m_processState != Starting) {
+  if (m_processState != ProcessState::Starting) {
     qFatal("core process must be in starting state");
   }
 
@@ -264,13 +262,12 @@ void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
-  auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
-  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, elevateMode)) {
+  if (!m_daemonIpcClient->sendStartProcess(commandQuoted, Settings::value(Settings::Daemon::Elevate).toBool())) {
     qCritical("cannot start process, ipc command failed");
     return;
   }
 
-  setProcessState(Started);
+  setProcessState(ProcessState::Started);
 }
 
 void CoreProcess::stopForegroundProcess() const
@@ -458,24 +455,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
        << "--debug" << Settings::logLevelText();
 
   args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
-
-  if (processMode != ProcessMode::Desktop) {
-#if defined(Q_OS_WIN)
-    // tell the client/server to shut down when a ms windows desk
-    // is switched; this is because we may need to elevate or not
-    // based on which desk the user is in (login always needs
-    // elevation, where as default desk does not).
-    // Note that this is only enabled when deskflow is set to elevate
-    // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-    // unnecessary restarts when deskflow was started elevated or
-    // when it is not allowed to elevate. In these cases restarting
-    // the server is fruitless.
-    auto elevateMode = Settings::value(Settings::Core::ElevateMode).value<Settings::ElevateMode>();
-    if (elevateMode == Settings::ElevateMode::Automatic) {
-      args << "--stop-on-desk-switch";
-    }
-#endif
-  }
 
 #ifndef Q_OS_LINUX
 

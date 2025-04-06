@@ -62,7 +62,7 @@ void SettingsDialog::initConnections()
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
   connect(ui->groupSecurity, &QGroupBox::toggled, this, &SettingsDialog::updateTlsControlsEnabled);
-  connect(ui->cbServiceEnabled, &QCheckBox::toggled, this, &SettingsDialog::updateControls);
+  connect(ui->groupService, &QGroupBox::toggled, this, &SettingsDialog::updateControls);
   connect(ui->btnTlsRegenCert, &QPushButton::clicked, this, &SettingsDialog::regenCertificates);
   connect(ui->comboTlsKeyLength, &QComboBox::currentIndexChanged, this, &SettingsDialog::updateRequestedKeySize);
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
@@ -132,7 +132,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
-  Settings::setValue(Settings::Core::ElevateMode, ui->comboElevate->currentIndex());
+  Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
   Settings::setValue(Settings::Core::PreventSleep, ui->cbPreventSleep->isChecked());
@@ -146,7 +146,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
 
   Settings::ProcessMode mode;
-  if (ui->cbServiceEnabled->isChecked())
+  if (ui->groupService->isChecked())
     mode = Settings::ProcessMode::Service;
   else
     mode = Settings::ProcessMode::Desktop;
@@ -167,11 +167,11 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
-  ui->comboElevate->setCurrentIndex(Settings::value(Settings::Core::ElevateMode).toInt());
+  ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
-  ui->cbServiceEnabled->setChecked(processMode == Settings::ProcessMode::Service);
+  ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
 
   if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
@@ -249,7 +249,7 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 void SettingsDialog::updateControls()
 {
   const bool writable = Settings::isWritable();
-  const bool serviceChecked = ui->cbServiceEnabled->isChecked();
+  const bool serviceChecked = ui->groupService->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 
   ui->sbPort->setEnabled(writable);
@@ -265,8 +265,8 @@ void SettingsDialog::updateControls()
 
   // Handle enable and disable of service items
   if (Settings::isNativeMode()) {
-    ui->cbServiceEnabled->setEnabled(writable);
-    ui->widgetElevate->setEnabled(writable && serviceChecked);
+    ui->groupService->setEnabled(writable);
+    ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
     const int bottomMargin = ui->tabAdvanced->layout()->contentsMargins().bottom() +
