@@ -149,13 +149,9 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 {
   m_session.updateActiveSession();
 
-  // always elevate if we are at the vista/7 login screen. we could also
-  // elevate for the uac dialog (consent.exe) but this would be pointless,
-  // since deskflow would re-launch as non-elevated after the desk switch,
-  // and so would be unusable with the new elevated process taking focus.
-  if (elevatedToken || m_session.isProcessInSession("logonui.exe", nullptr)) {
+  if (elevatedToken) {
 
-    LOG_DEBUG("getting elevated token, %s", (elevatedToken ? "elevation required" : "at login screen"));
+    LOG_DEBUG("getting elevated token");
 
     HANDLE process;
     if (!m_session.isProcessInSession("winlogon.exe", &process)) {
@@ -290,16 +286,9 @@ void MSWindowsWatchdog::startProcess()
   } else {
     LOG_DEBUG("starting new process in user session");
 
-    LOG_DEBUG("getting active desktop name");
-    const auto activeDesktopName = runActiveDesktopUtility();
-
-    LOG_DEBUG("active desktop name: %s", activeDesktopName.c_str());
-    // When we're at a UAC prompt, lock screen, or the login screen, Windows switches to the Winlogon desktop.
-    const auto isOnSecureDesktop = activeDesktopName == "Winlogon";
-
     SECURITY_ATTRIBUTES sa;
     ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-    HANDLE userToken = getUserToken(&sa, isOnSecureDesktop || m_elevateProcess);
+    HANDLE userToken = getUserToken(&sa, m_elevateProcess);
 
     // set UIAccess to fix Windows 8 GUI interaction
     DWORD uiAccess = 1;
@@ -436,53 +425,6 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   }
 
   CloseHandle(snapshot);
-}
-
-std::string MSWindowsWatchdog::runActiveDesktopUtility()
-{
-  char fileNameBuffer[MAX_PATH];
-  GetModuleFileName(NULL, fileNameBuffer, MAX_PATH);
-  std::string fileName(fileNameBuffer);
-  size_t lastSlash = fileName.find_last_of("\\");
-  const auto installDir = fileName.substr(0, lastSlash);
-
-  const auto coreBinPath = installDir + "\\deskflow-server.exe";
-  std::string utilityCommand = "\"" + coreBinPath + "\" --active-desktop";
-
-  LOG_DEBUG("starting active desktop utility: %s", utilityCommand.c_str());
-
-  SECURITY_ATTRIBUTES sa;
-  ZeroMemory(&sa, sizeof(SECURITY_ATTRIBUTES));
-  HANDLE userToken = getUserToken(&sa, true);
-
-  deskflow::platform::MSWindowsProcess process(utilityCommand);
-  process.createPipes();
-
-  if (!process.startAsUser(userToken, &sa)) {
-    LOG_ERR("could not start active desktop process");
-    throw XArch(new XArchEvalWindows());
-  }
-
-  LOG_DEBUG("started active desktop process, pid=%d", process.info().dwProcessId);
-  if (const auto exitCode = process.waitForExit(); exitCode != kExitSuccess) {
-    LOG_ERR("active desktop process, exit code: %d", exitCode);
-    throw XArch("could not get active desktop");
-  }
-
-  LOG_DEBUG("reading active desktop std error");
-  if (const auto error = process.readStdError(); !error.empty()) {
-    LOG_WARN("active desktop process, error: %s", error.c_str());
-  }
-
-  LOG_DEBUG("reading active desktop std output");
-  auto output = process.readStdOutput();
-  if (output.empty()) {
-    LOG_ERR("could not get active desktop, no output");
-    throw XArch("could not get active desktop");
-  }
-
-  output.erase(output.find_last_not_of("\r\n") + 1);
-  return output;
 }
 
 MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::string_view &message)
