@@ -54,10 +54,7 @@ public:
   updated in a thread attached to the current desk.
   \p hookLibrary must be a handle to the hook library.
   */
-  MSWindowsDesks(
-      bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys,
-      bool stopOnDeskSwitch
-  );
+  MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys);
   ~MSWindowsDesks();
 
   //! @name manipulators
@@ -278,7 +275,4 @@ private:
   bool m_leaveForegroundOption;
 
   IEventQueue *m_events;
-
-  // true if program should stop on desk switch.
-  bool m_stopOnDeskSwitch;
 };

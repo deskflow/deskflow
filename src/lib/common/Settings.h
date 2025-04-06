@@ -47,7 +47,6 @@ public:
     inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
-    inline static const auto StopOnDeskSwitch = QStringLiteral("core/stopOnDeskSwitch");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
     inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
   };
@@ -166,7 +165,6 @@ private:
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
-    , Settings::Core::StopOnDeskSwitch
     , Settings::Core::UpdateUrl
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate

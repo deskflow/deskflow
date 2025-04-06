@@ -80,10 +80,6 @@ public:
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
 
-#if SYSAPI_WIN32
-  bool m_stopOnDeskSwitch = false;
-#endif
-
 #if WINAPI_XWINDOWS
   bool m_disableXInitThreads = false;
 #endif

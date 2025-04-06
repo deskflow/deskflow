@@ -107,8 +107,7 @@ static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
 //
 
 MSWindowsDesks::MSWindowsDesks(
-    bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys,
-    bool stopOnDeskSwitch
+    bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys
 )
     : m_isPrimary(isPrimary),
       m_noHooks(noHooks),
@@ -128,8 +127,7 @@ MSWindowsDesks::MSWindowsDesks(
       m_mutex(),
       m_deskReady(&m_mutex, false),
       m_updateKeys(updateKeys),
-      m_events(events),
-      m_stopOnDeskSwitch(stopOnDeskSwitch)
+      m_events(events)
 {
 
   m_cursor = createBlankCursor();
@@ -755,18 +753,6 @@ void MSWindowsDesks::checkDesk()
   } else {
     closeDesktop(hdesk);
     desk = index->second;
-  }
-
-  // if we are told to shut down on desk switch, and this is not the
-  // first switch, then shut down.
-  if (m_stopOnDeskSwitch && m_activeDesk != NULL && name != m_activeDeskName) {
-    if (name.empty()) {
-      LOG_DEBUG("shutting down because of desk switch, desktop name unknown");
-    } else {
-      LOG_DEBUG("shutting down because of desk switch to: %s", name.c_str());
-    }
-    m_events->addEvent(Event(Event::kQuit));
-    return;
   }
 
   // if active desktop changed then tell the old and new desk threads
