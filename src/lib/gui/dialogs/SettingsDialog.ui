@@ -560,19 +560,6 @@
           <bool>false</bool>
          </property>
          <layout class="QGridLayout" name="_6">
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="cbStopOnDeskSwitch">
-            <property name="toolTip">
-             <string/>
-            </property>
-            <property name="text">
-             <string>Run as system only when at the login screen and UAC prompt</string>
-            </property>
-            <property name="autoExclusive">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="0">
            <widget class="QCheckBox" name="cbElevateDaemon">
             <property name="text">

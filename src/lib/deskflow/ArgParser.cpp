@@ -120,16 +120,10 @@ bool ArgParser::parsePlatformArgs(
     deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer
 )
 {
-#if WINAPI_MSWINDOWS
-  if (isArg(i, argc, argv, nullptr, "--stop-on-desk-switch")) {
-    argsBase.m_stopOnDeskSwitch = true;
-  } else {
-    // option not supported here
-    return false;
-  }
-
-  return true;
-#elif WINAPI_XWINDOWS
+#if !WINAPI_XWINDOWS
+  // no options for carbon or windows
+  return false;
+#else
 
   if (isArg(i, argc, argv, "-display", "--display", 1)) {
     // use alternative display
@@ -146,9 +140,6 @@ bool ArgParser::parsePlatformArgs(
   }
 
   return true;
-#elif WINAPI_CARBON
-  // no options for carbon
-  return false;
 #endif
 }
 
