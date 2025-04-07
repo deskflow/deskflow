@@ -44,8 +44,7 @@ Server::Server(
     ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events,
     deskflow::ServerArgs const &args
 )
-    : m_mock(false),
-      m_primaryClient(primaryClient),
+    : m_primaryClient(primaryClient),
       m_active(primaryClient),
       m_seqNum(0),
       m_xDelta(0),
@@ -178,10 +177,6 @@ Server::Server(
 
 Server::~Server()
 {
-  if (m_mock) {
-    return;
-  }
-
   // remove event handlers and timers
   m_events->removeHandler(EventTypes::KeyStateKeyDown, m_inputFilter);
   m_events->removeHandler(EventTypes::KeyStateKeyUp, m_inputFilter);
