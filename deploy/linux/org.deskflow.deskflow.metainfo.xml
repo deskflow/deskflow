@@ -42,6 +42,16 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+			<release version="1.21.2" date="2025-04-07" urgency="high">
+			<description>
+				<p>This stable release fixes a few critical bugs in 1.21.1. For the full changelog see the release page.</p>
+				<ul>
+					<li>Fix: Crash with Qt 6.9</li>
+					<li>Fix: Windows settings in wrong locations</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.21.2</url>
+		</release>
 		<release version="1.21.1" date="2025-03-31" urgency="high">
 			<description>
 				<p>This stable release fixes a few critical bugs in 1.21.0. For the full changelog see the release page.</p>
