@@ -820,6 +820,8 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *)
     case EI_EVENT_SCROLL_STOP:
     case EI_EVENT_SCROLL_CANCEL:
       break;
+    default:
+      break;
     }
     ei_event_unref(event);
   }
