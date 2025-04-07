@@ -129,16 +129,6 @@ public:
   Server &operator=(Server const &) = delete;
   Server &operator=(Server &&) = delete;
 
-#ifdef TEST_ENV
-  Server() : m_mock(true), m_config(nullptr)
-  {
-  }
-  void setActive(BaseClientProxy *active)
-  {
-    m_active = active;
-  }
-#endif
-
   //! @name manipulators
   //@{
 
@@ -355,9 +345,6 @@ private:
 
   // force the cursor off of \p client
   void forceLeaveClient(BaseClientProxy *client);
-
-public:
-  bool m_mock;
 
 private:
   class ClipboardInfo
