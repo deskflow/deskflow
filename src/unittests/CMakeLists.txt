@@ -47,6 +47,7 @@ add_subdirectory(common)
 add_subdirectory(deskflow)
 add_subdirectory(gui)
 add_subdirectory(platform)
+add_subdirectory(server)
 
 #make sure to use CI only plugin on Unix
 if (UNIX AND NOT APPLE)
