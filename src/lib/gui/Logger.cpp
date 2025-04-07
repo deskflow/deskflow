@@ -32,10 +32,8 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
   auto logLine = QString("[%1] %2: %3").arg(datetime, type, message);
 
   QTextStream stream(&logLine);
-  stream << Qt::endl;
-
   if (!fileLine.isEmpty()) {
-    stream << "\t" + fileLine << Qt::endl;
+    stream << "\n\t" + fileLine;
   }
 
   auto logLineBytes = logLine.toUtf8();
