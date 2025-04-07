@@ -729,9 +729,8 @@ void MainWindow::handleLogLine(const QString &line)
   int maxScroll = verticalScroll->maximum();
   const auto scrollAtBottom = qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
 
-  // only trim end instead of the whole line to prevent tab-indented debug
-  // filenames from losing their indentation.
-  ui->textLog->appendPlainText(line.trimmed());
+  // Never trim the log line; doing so would hide underlying bugs where newlines and space is added unintentionally.
+  ui->textLog->appendPlainText(line);
 
   if (scrollAtBottom) {
     verticalScroll->setValue(verticalScroll->maximum());
