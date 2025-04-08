@@ -46,6 +46,7 @@ add_subdirectory(base)
 add_subdirectory(common)
 add_subdirectory(deskflow)
 add_subdirectory(gui)
+add_subdirectory(net)
 add_subdirectory(platform)
 add_subdirectory(server)
 
