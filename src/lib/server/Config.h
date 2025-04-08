@@ -202,12 +202,6 @@ public:
   Config(IEventQueue *events);
   virtual ~Config() = default;
 
-#ifdef TEST_ENV
-  Config() : m_inputFilter(nullptr)
-  {
-  }
-#endif
-
   //! @name manipulators
   //@{
 
