@@ -6,6 +6,14 @@ if(WIN32)
 endif()
 
 create_test(
+  NAME test_SecureUtils
+  DEPENDS net
+  LIBS base arch mt io ${extra_libs}
+  SOURCE test_SecureUtils.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/net"
+)
+
+create_test(
   NAME test_FingerprintDatabase
   DEPENDS net
   LIBS base arch mt io ${extra_libs}
