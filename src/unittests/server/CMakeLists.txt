@@ -6,6 +6,14 @@ if(WIN32)
 endif()
 
 create_test(
+  NAME ServerConfigTests
+  DEPENDS server
+  LIBS base arch ${extra_libs}
+  SOURCE ServerConfigTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/server"
+)
+
+create_test(
   NAME ServerTests
   DEPENDS server
   LIBS base arch ${extra_libs}
