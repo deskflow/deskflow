@@ -20,7 +20,7 @@ class Settings : public QObject
 public:
 #if defined(Q_OS_WIN)
   inline const static auto UserDir = QStringLiteral("%1/AppData/Local/%2").arg(QDir::homePath(), kAppName);
-  inline const static auto SystemDir = QStringLiteral("C:/ProgramData/%1").arg(kAppName);
+  inline const static auto SystemDir = QStringLiteral("%1ProgramData/%2").arg(QDir::rootPath(), kAppName);
 #elif defined(Q_OS_MAC)
   inline const static auto UserDir = QStringLiteral("%1/Library/%2").arg(QDir::homePath(), kAppName);
   inline const static auto SystemDir = QStringLiteral("/Library/%1").arg(kAppName);
