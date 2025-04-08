@@ -9,4 +9,12 @@ if (WIN32)
     SOURCE test_MSWindowsClipboard.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
+elseif(UNIX AND NOT APPLE)
+  create_test(
+    NAME test_XWindowsClipboard
+    DEPENDS platform
+    LIBS base arch
+    SOURCE test_XWindowsClipboard.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
 endif()
