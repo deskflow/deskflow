@@ -10,6 +10,13 @@ if (WIN32)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(APPLE)
+  create_test(
+    NAME OSXClipboardTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXClipboardTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
 elseif(UNIX)
   create_test(
     NAME XWindowsClipboardTests
