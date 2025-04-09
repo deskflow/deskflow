@@ -567,7 +567,6 @@ void MainWindow::updateModeControls(bool serverMode)
     if (!startedBefore && !m_coreProcess.isStarted()) {
       qDebug() << "auto-starting core server for first time";
       m_coreProcess.start();
-      messages::showFirstServerStartMessage(this);
     }
   }
 }
@@ -922,9 +921,10 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 {
   updateStatus();
 
-  if (state == CoreProcessState::Started) {
+  if (state == CoreProcessState::Started && !Settings::value(Settings::Core::StartedBefore).toBool()) {
     qDebug() << "recording that core has started";
     Settings::setValue(Settings::Core::StartedBefore, true);
+    messages::showFirstServerStartMessage(this);
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
