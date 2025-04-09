@@ -145,7 +145,7 @@ jobs:
           - name: "macos-13-x64"
             runs-on: macos-13
             timeout: 20
-            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\""
+            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
             qt-install-dir: "/Users/runner"
 
           - name: "debian-13-x86_64"
