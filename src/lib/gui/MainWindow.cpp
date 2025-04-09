@@ -79,7 +79,7 @@ MainWindow::MainWindow()
       m_actionQuit{new QAction(tr("&Quit"), this)},
       m_actionTrayQuit{new QAction(tr("&Quit"), this)},
       m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
-      m_actionSettings{new QAction(tr("Preferences"), this)},
+      m_actionSettings{new QAction(tr("&Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
       m_actionStopCore{new QAction(tr("S&top"), this)}
 {
@@ -639,16 +639,16 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createMenuBar()
 {
-  auto menuFile = new QMenu(tr("File"), this);
+  auto menuFile = new QMenu(tr("&File"), this);
   menuFile->addAction(m_actionStartCore);
   menuFile->addAction(m_actionStopCore);
   menuFile->addSeparator();
   menuFile->addAction(m_actionQuit);
 
-  auto menuEdit = new QMenu(tr("Edit"), this);
+  auto menuEdit = new QMenu(tr("&Edit"), this);
   menuEdit->addAction(m_actionSettings);
 
-  auto menuHelp = new QMenu(tr("Help"), this);
+  auto menuHelp = new QMenu(tr("&Help"), this);
   menuHelp->addAction(m_actionAbout);
   menuHelp->addAction(m_actionReportBug);
   menuHelp->addSeparator();
