@@ -6,6 +6,7 @@
  */
 
 #include "deskflow/Clipboard.h"
+#include "base/Log.h"
 
 //
 // Clipboard
@@ -25,8 +26,10 @@ Clipboard::~Clipboard()
 
 bool Clipboard::empty()
 {
-  if (!m_open)
+  if (!m_open) {
+    LOG_WARN("cannot empty clipboard, not open");
     return false;
+  }
 
   // clear all data
   for (int32_t index = 0; index < kNumFormats; ++index) {
@@ -45,8 +48,15 @@ bool Clipboard::empty()
 
 void Clipboard::add(EFormat format, const std::string &data)
 {
-  if (!m_open || !m_owner)
+  if (!m_open) {
+    LOG_WARN("cannot add to clipboard, not open");
     return;
+  }
+
+  if (!m_owner) {
+    LOG_WARN("cannot add to clipboard, no owner");
+    return;
+  }
 
   m_data[format] = data;
   m_added[format] = true;
@@ -54,8 +64,11 @@ void Clipboard::add(EFormat format, const std::string &data)
 
 bool Clipboard::open(Time time) const
 {
-  if (m_open)
+  if (m_open) {
+    LOG_DEBUG("skipping clipboard open, already open");
     return true;
+  }
+
   m_open = true;
   m_time = time;
 
@@ -64,6 +77,9 @@ bool Clipboard::open(Time time) const
 
 void Clipboard::close() const
 {
+  if (!m_open) {
+    LOG_WARN("clipboard is not open");
+  }
   m_open = false;
 }
 
@@ -74,15 +90,19 @@ Clipboard::Time Clipboard::getTime() const
 
 bool Clipboard::has(EFormat format) const
 {
-  if (!m_open)
+  if (!m_open) {
+    LOG_WARN("cannot check for clipboard format, not open");
     return false;
+  }
   return m_added[format];
 }
 
 std::string Clipboard::get(EFormat format) const
 {
-  if (!m_open)
+  if (!m_open) {
+    LOG_WARN("cannot get clipboard format, not open");
     return "";
+  }
   return m_data[format];
 }
 
