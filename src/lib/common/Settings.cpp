@@ -117,7 +117,7 @@ QVariant Settings::defaultValue(const QString &key)
     return kUrlUpdateCheck;
 
   if (key == Server::ExternalConfigFile)
-    return QStringLiteral("%1/%2.conf").arg(instance()->settingsPath(), kAppId);
+    return QStringLiteral("%1/%2-server.conf").arg(instance()->settingsPath(), kAppId);
 
   if (key == Core::Port)
     return 24800;
