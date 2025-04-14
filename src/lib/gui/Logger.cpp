@@ -36,18 +36,21 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
     stream << "\n\t" + fileLine;
   }
 
-  auto logLineBytes = logLine.toUtf8();
-  auto logLine_c = logLineBytes.constData();
+  // We must return a non-terminated log line, but before returning,
+  // stdout/stderr and Windows debug output all expect a terminated line.
+  QString terminatedLogLine = logLine;
+  QTextStream terminatedStream(&terminatedLogLine);
+  terminatedStream << Qt::endl;
 
 #if defined(Q_OS_WIN)
   // Debug output is viewable using either VS Code, Visual Studio, DebugView, or
   // DbgView++ (only one can be used at once). It's important to send output to
   // the debug output API, because it's difficult to view stdout and stderr from
   // a Windows GUI app.
-  OutputDebugStringA(logLine_c);
+  OutputDebugStringA(terminatedLogLine.toLocal8Bit().constData());
 #else
-  fprintf(out, "%s", logLine_c);
-  fflush(out);
+  QTextStream outStream(out);
+  outStream << terminatedLogLine;
 #endif
 
   return logLine;
