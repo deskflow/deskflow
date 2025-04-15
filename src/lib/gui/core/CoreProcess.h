@@ -79,6 +79,7 @@ public:
   void cleanup();
   void applyLogLevel();
   void clearSettings();
+  void retryDaemon();
 
   // getters
   Settings::CoreMode mode() const
@@ -119,6 +120,7 @@ signals:
   void connectionStateChanged(ConnectionState state);
   void processStateChanged(ProcessState state);
   void secureSocket(bool enabled);
+  void daemonIpcClientConnectFailed();
 
 private slots:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);

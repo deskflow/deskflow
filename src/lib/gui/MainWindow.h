@@ -158,6 +158,7 @@ private:
   void showAndActivate();
   void showHostNameEditor();
   void setHostName();
+  void daemonIpcClientConnectFailed();
 
   /**
    * @brief trustedFingerprintDb get the fingerprintDb for the trusted clients or trusted servers.

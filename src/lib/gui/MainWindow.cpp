@@ -289,6 +289,7 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
   connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
   connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::secureSocket);
+  connect(&m_coreProcess, &CoreProcess::daemonIpcClientConnectFailed, this, &MainWindow::daemonIpcClientConnectFailed);
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -365,6 +366,21 @@ void MainWindow::firstShown()
   // hacky and fragile, so maybe there's a better approach.
   const auto kCriticalDialogDelay = 100;
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
+
+  if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
+    showAndActivate();
+    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
+  }
+
+  if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
+    m_versionChecker.checkLatest();
+  } else {
+    qDebug() << "update check disabled";
+  }
+
+  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
+    m_coreProcess.start();
+  }
 }
 
 void MainWindow::settingsChanged(const QString &key)
@@ -603,24 +619,6 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 
 void MainWindow::open()
 {
-
-  if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
-    showAndActivate();
-    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
-  }
-
-  if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
-    m_versionChecker.checkLatest();
-  } else {
-    qDebug() << "update check disabled";
-  }
-
-  m_coreProcess.applyLogLevel();
-
-  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
-    m_coreProcess.start();
-  }
-
   Settings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
 }
 
@@ -1136,4 +1134,11 @@ bool MainWindow::regenerateLocalFingerprints()
 
   updateLocalFingerprint();
   return true;
+}
+
+void MainWindow::daemonIpcClientConnectFailed()
+{
+  if (deskflow::gui::messages::showDaemonOffline(this)) {
+    m_coreProcess.retryDaemon();
+  }
 }
