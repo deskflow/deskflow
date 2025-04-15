@@ -312,9 +312,12 @@ void MSWindowsWatchdog::startProcess()
 
   if (!createRet) {
     DWORD exitCode = 0;
-    GetExitCodeProcess(m_process->info().hProcess, &exitCode);
+    if (GetExitCodeProcess(m_process->info().hProcess, &exitCode)) {
     LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
+    } else {
+      LOG_ERR("daemon failed to run command, unknown exit code");
     throw XArch(new XArchEvalWindows);
+    }
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
     LOG_DEBUG("watchdog waiting for process start result");
