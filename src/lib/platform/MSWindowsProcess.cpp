@@ -121,6 +121,16 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
 {
   LOG_DEBUG("shutting down process %d", pid);
 
+  if (handle == nullptr) {
+    LOG_ERR("invalid process handle, cannot shutdown process %d", pid);
+    return;
+  }
+
+  if (pid == 0) {
+    LOG_ERR("invalid process id, cannot shutdown process %d", pid);
+    return;
+  }
+
   LOG_DEBUG("sending close event to close process gracefully");
   HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, kCloseEventName);
   if (hCloseEvent != nullptr) { // NOSONAR -- Readability
