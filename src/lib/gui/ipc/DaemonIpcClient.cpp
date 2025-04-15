@@ -27,20 +27,32 @@ DaemonIpcClient::DaemonIpcClient(QObject *parent)
 
 bool DaemonIpcClient::connectToServer()
 {
-  qDebug() << "daemon ipc client connecting to server:" << kDaemonIpcName;
+  if (m_connecting) {
+    qDebug() << "daemon ipc client already connecting to server";
+    return false;
+  }
 
+  qDebug() << "daemon ipc client connecting to server:" << kDaemonIpcName;
+  m_connecting = true;
   m_socket->connectToServer(kDaemonIpcName);
+
   if (!m_socket->waitForConnected(kTimeout)) {
     qWarning() << "daemon ipc client failed to connect";
+    m_connecting = false;
+    Q_EMIT connectFailed();
     return false;
   }
 
   if (!sendMessage("hello", "hello", false)) {
     qWarning() << "daemon ipc client failed to send hello";
+    m_connecting = false;
+    Q_EMIT connectFailed();
     return false;
   }
 
+  m_connecting = false;
   m_connected = true;
+
   qDebug() << "daemon ipc client connected";
   Q_EMIT connected();
 
@@ -51,10 +63,7 @@ void DaemonIpcClient::handleDisconnected()
 {
   qWarning() << "daemon ipc client disconnected from server";
   m_connected = false;
-
-  if (!connectToServer()) {
-    qWarning() << "daemon ipc client failed to reconnect to server";
-  }
+  Q_EMIT connectFailed();
 }
 
 void DaemonIpcClient::handleErrorOccurred()
