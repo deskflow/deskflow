@@ -8,8 +8,6 @@
 
 #include <QObject>
 
-#include "common/Settings.h"
-
 class QLocalSocket;
 
 namespace deskflow::gui::ipc {
@@ -34,6 +32,7 @@ public:
 
 signals:
   void connected();
+  void connectFailed();
 
 private slots:
   void handleDisconnected();
@@ -46,6 +45,7 @@ private:
 private:
   QLocalSocket *m_socket;
   bool m_connected{false};
+  bool m_connecting{false};
 };
 
 } // namespace deskflow::gui::ipc

@@ -49,4 +49,6 @@ void showWaylandLibraryError(QWidget *parent);
 
 bool showUpdateCheckOption(QWidget *parent);
 
+bool showDaemonOffline(QWidget *parent);
+
 } // namespace deskflow::gui::messages
