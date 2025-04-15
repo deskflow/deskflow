@@ -177,6 +177,8 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
 void MSWindowsWatchdog::mainLoop(void *)
 {
+  using enum ProcessState;
+
   shutdownExistingProcesses();
 
   LOG_DEBUG("starting watchdog main loop");
@@ -184,15 +186,13 @@ void MSWindowsWatchdog::mainLoop(void *)
     LOG_DEBUG3("locking process state mutex in watchdog main loop");
     std::unique_lock lock(m_processStateMutex);
 
-    if (!m_command.empty() && !m_foreground && m_session.hasChanged()) {
+    if (m_processState == Running && !m_command.empty() && !m_foreground && m_session.hasChanged()) {
       LOG_DEBUG("session changed, queueing process start");
-      m_processState = ProcessState::StartPending;
+      m_processState = StartPending;
       m_nextStartTime.reset();
     }
 
     switch (m_processState) {
-      using enum ProcessState;
-
     case Idle:
       LOG_DEBUG3("watchdog process state idle");
       break;
@@ -212,11 +212,9 @@ void MSWindowsWatchdog::mainLoop(void *)
         m_startFailures = 0;
         m_processState = Running;
       } catch (std::exception &e) { // NOSONAR - Catching all exceptions
-        handleStartError(e.what());
-        m_processState = StartPending;
+        m_processState = handleStartError(e.what());
       } catch (...) { // NOSONAR - Catching remaining exceptions
-        handleStartError();
-        m_processState = StartPending;
+        m_processState = handleStartError();
       }
     } break;
 
@@ -313,10 +311,10 @@ void MSWindowsWatchdog::startProcess()
   if (!createRet) {
     DWORD exitCode = 0;
     if (GetExitCodeProcess(m_process->info().hProcess, &exitCode)) {
-    LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
+      LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
     } else {
       LOG_ERR("daemon failed to run command, unknown exit code");
-    throw XArch(new XArchEvalWindows);
+      throw XArch(new XArchEvalWindows);
     }
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
@@ -487,16 +485,16 @@ std::string MSWindowsWatchdog::runActiveDesktopUtility()
   return output;
 }
 
-void MSWindowsWatchdog::handleStartError(const std::string_view &message)
+MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::string_view &message)
 {
   const auto kStartDelaySeconds = 1;
 
   m_startFailures++;
 
   if (!message.empty()) {
-    LOG_CRIT("failed to launch, error: %s", message.data());
+    LOG_CRIT("daemon failed to start process, error: %s", message.data());
   } else {
-    LOG_CRIT("failed to launch, unknown error");
+    LOG_CRIT("daemon failed to start process, unknown error");
   }
 
   // When there has been more than one consecutive failure, slow down the retry rate.
@@ -504,9 +502,11 @@ void MSWindowsWatchdog::handleStartError(const std::string_view &message)
     m_nextStartTime = ARCH->time() + kStartDelaySeconds;
     LOG_WARN("start failed %d times, delaying start", m_startFailures);
     LOG_DEBUG("start delay, seconds=%d, time=%f", kStartDelaySeconds, m_nextStartTime.value());
+    return ProcessState::StartScheduled;
   } else {
     LOG_INFO("retrying process start immediately");
     m_nextStartTime.reset();
+    return ProcessState::StartPending;
   }
 }
 

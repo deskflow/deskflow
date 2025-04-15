@@ -99,7 +99,7 @@ private:
   /**
    * @brief Controls whether the process should restart immediately or delay start.
    */
-  void handleStartError(const std::string_view &message = "");
+  ProcessState handleStartError(const std::string_view &message = "");
 
   /**
    * @brief Init the output read pipe for standard out/error.
