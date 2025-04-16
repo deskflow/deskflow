@@ -674,7 +674,8 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
-  ui->lineHostname->setText(Settings::value(Settings::Client::RemoteHost).toString());
+  if (!Settings::value(Settings::Client::RemoteHost).isNull())
+    ui->lineHostname->setText(Settings::value(Settings::Client::RemoteHost).toString());
   updateLocalFingerprint();
   setIcon();
 
@@ -692,7 +693,8 @@ void MainWindow::saveSettings()
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
+  if (!Settings::value(Settings::Client::RemoteHost).isNull())
+    Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
   Settings::save();
 }
 
