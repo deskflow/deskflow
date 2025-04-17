@@ -329,10 +329,8 @@ private:
   std::unique_ptr<Thread> m_getDropTargetThread;
   std::string m_dropTarget;
 
-#if defined(MAC_OS_X_VERSION_10_7)
   Mutex *m_carbonLoopMutex;
   CondVar<bool> *m_carbonLoopReady;
-#endif
 
   OSXPowerManager m_powerManager;
 

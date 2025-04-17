@@ -194,11 +194,8 @@ void App::initApp(int argc, const char **argv)
 void App::runEventsLoop(void *)
 {
   m_events->loop();
-
-#if defined(MAC_OS_X_VERSION_10_7)
-
+#ifdef Q_OS_MAC
   stopCocoaLoop();
-
 #endif
 }
 
