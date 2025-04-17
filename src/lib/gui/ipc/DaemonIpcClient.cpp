@@ -70,6 +70,7 @@ void DaemonIpcClient::handleErrorOccurred()
 {
   qWarning() << "daemon ipc client error:" << m_socket->errorString();
   m_connected = false;
+  Q_EMIT connectFailed();
 }
 
 bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
