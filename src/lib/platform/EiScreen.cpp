@@ -711,8 +711,9 @@ void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
 
 void EiScreen::handle_portal_session_closed(const Event &event, void *)
 {
-  // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed
-  // signal Let's clean up either way.
+  // Portal may or may not EI_EVENT_DISCONNECT us before sending the DBus Closed
+  // signal. Let's clean up either way.
+  LOG_DEBUG("eis screen handling portal session closed");
   cleanup_ei();
   init_ei();
 }
