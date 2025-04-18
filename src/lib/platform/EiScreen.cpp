@@ -145,7 +145,9 @@ void EiScreen::cleanup_ei()
     ei_device_set_user_data(ei_abs_, nullptr);
     ei_abs_ = ei_device_unref(ei_abs_);
   }
-  ei_seat_unref(ei_seat_);
+  if (ei_seat_) {
+    ei_seat_unref(ei_seat_);
+  }
   for (auto it = ei_devices_.begin(); it != ei_devices_.end(); it++) {
     free(ei_device_get_user_data(*it));
     ei_device_set_user_data(*it, nullptr);
@@ -711,8 +713,9 @@ void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
 
 void EiScreen::handle_portal_session_closed(const Event &event, void *)
 {
-  // Portal may or may EI_EVENT_DISCONNECT us before sending the DBus Closed
-  // signal Let's clean up either way.
+  // Portal may or may not EI_EVENT_DISCONNECT us before sending the DBus Closed
+  // signal. Let's clean up either way.
+  LOG_DEBUG("eis screen handling portal session closed");
   cleanup_ei();
   init_ei();
 }
@@ -720,7 +723,6 @@ void EiScreen::handle_portal_session_closed(const Event &event, void *)
 void EiScreen::handleSystemEvent(const Event &sysevent, void *)
 {
   std::lock_guard lock(mutex_);
-  bool disconnected = false;
 
   // Only one ei_dispatch per system event, see the comment in
   // EiEventQueueBuffer::addEvent
@@ -768,8 +770,21 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *)
       //
       // We don't do anything here, we let the portal's Session.Closed signal
       // handle the rest.
-      LOG_WARN("disconnected from eis");
-      disconnected = true;
+      LOG_WARN("disconnected from eis, will afterwards commence attempt to reconnect");
+      if (is_primary_) 
+      {
+        LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
+        if (portal_input_capture_)
+        {
+          if (portal_input_capture_->is_active())
+          {
+            portal_input_capture_->release();
+          }
+          delete portal_input_capture_;
+          portal_input_capture_ = new PortalInputCapture(this, this->events_);
+        }
+      }
+      this->handle_portal_session_closed(sysevent,nullptr);
       break;
     case EI_EVENT_DEVICE_PAUSED:
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));
@@ -825,9 +840,6 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *)
     }
     ei_event_unref(event);
   }
-
-  if (disconnected)
-    ei_ = ei_unref(ei_);
 }
 
 void EiScreen::updateButtons()
