@@ -140,7 +140,9 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
-  connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connectFailed, this, &CoreProcess::daemonIpcClientConnectFailed);
+  connect(
+      m_daemonIpcClient, &ipc::DaemonIpcClient::connectionFailed, this, &CoreProcess::daemonIpcClientConnectionFailed
+  );
 
   connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
 

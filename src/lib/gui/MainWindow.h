@@ -158,7 +158,7 @@ private:
   void showAndActivate();
   void showHostNameEditor();
   void setHostName();
-  void daemonIpcClientConnectFailed();
+  void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString newRemoteHost);
 

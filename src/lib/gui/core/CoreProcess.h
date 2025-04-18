@@ -120,7 +120,7 @@ signals:
   void connectionStateChanged(ConnectionState state);
   void processStateChanged(ProcessState state);
   void secureSocket(bool enabled);
-  void daemonIpcClientConnectFailed();
+  void daemonIpcClientConnectionFailed();
 
 private slots:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
