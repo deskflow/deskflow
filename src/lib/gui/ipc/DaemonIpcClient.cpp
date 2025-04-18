@@ -15,7 +15,9 @@
 
 namespace deskflow::gui::ipc {
 
-const auto kTimeout = 1000;
+// At 1 second, we seem to be timing out on the first connection attempt, even though the server is
+// listening and responding. Let's try 2 seconds and see if that makes a difference.
+const auto kTimeout = 2000;
 
 DaemonIpcClient::DaemonIpcClient(QObject *parent)
     : QObject(parent),
@@ -90,7 +92,7 @@ bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectA
     qDebug() << "daemon ipc client waiting for ack: " << expectAck;
 
     if (!m_socket->waitForReadyRead(kTimeout)) {
-      qWarning() << "daemon ipc client failed to read response";
+      qWarning() << "daemon ipc client socket ready read timed out";
       return false;
     }
 
