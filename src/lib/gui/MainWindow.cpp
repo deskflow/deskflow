@@ -289,7 +289,9 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
   connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
   connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::secureSocket);
-  connect(&m_coreProcess, &CoreProcess::daemonIpcClientConnectFailed, this, &MainWindow::daemonIpcClientConnectFailed);
+  connect(
+      &m_coreProcess, &CoreProcess::daemonIpcClientConnectionFailed, this, &MainWindow::daemonIpcClientConnectionFailed
+  );
 
   connect(m_actionAbout, &QAction::triggered, this, &MainWindow::openAboutDialog);
   connect(m_actionClearSettings, &QAction::triggered, this, &MainWindow::clearSettings);
@@ -1145,7 +1147,7 @@ bool MainWindow::regenerateLocalFingerprints()
   return true;
 }
 
-void MainWindow::daemonIpcClientConnectFailed()
+void MainWindow::daemonIpcClientConnectionFailed()
 {
   if (deskflow::gui::messages::showDaemonOffline(this)) {
     m_coreProcess.retryDaemon();
