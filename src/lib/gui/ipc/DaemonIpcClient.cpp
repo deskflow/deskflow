@@ -29,54 +29,81 @@ DaemonIpcClient::DaemonIpcClient(QObject *parent)
 
 bool DaemonIpcClient::connectToServer()
 {
-  if (m_connecting) {
-    qDebug() << "daemon ipc client already connecting to server";
-    return false;
+  if (m_state == State::Connected) {
+    qDebug() << "daemon ipc client already connected to server";
+    return true;
+  }
+
+  if (m_state == State::Connecting) {
+    qWarning() << "daemon ipc client already connecting to server";
+    return true;
+  }
+
+  if (m_socket->state() == QLocalSocket::ConnectedState) {
+    qWarning() << "daemon ipc client underlying socket is already connected, reconnecting";
+    disconnectFromServer();
   }
 
   qDebug() << "daemon ipc client connecting to server:" << kDaemonIpcName;
-  m_connecting = true;
+  m_state = State::Connecting;
   m_socket->connectToServer(kDaemonIpcName);
 
   if (!m_socket->waitForConnected(kTimeout)) {
     qWarning() << "daemon ipc client failed to connect";
-    m_connecting = false;
+    disconnectFromServer();
     Q_EMIT connectFailed();
     return false;
   }
 
   if (!sendMessage("hello", "hello", false)) {
     qWarning() << "daemon ipc client failed to send hello";
-    m_connecting = false;
+    disconnectFromServer();
     Q_EMIT connectFailed();
     return false;
   }
 
-  m_connecting = false;
-  m_connected = true;
-
+  m_state = State::Connected;
   qDebug() << "daemon ipc client connected";
   Q_EMIT connected();
 
   return true;
 }
 
+void DaemonIpcClient::disconnectFromServer()
+{
+  if (m_socket->state() == QLocalSocket::ConnectedState) {
+    qDebug() << "daemon ipc client disconnecting from server";
+    m_socket->disconnectFromServer();
+    m_socket->waitForDisconnected(kTimeout);
+  } else {
+    qDebug() << "daemon ipc client already disconnected from server";
+  }
+
+  m_state = State::Unconnected;
+  qDebug() << "daemon ipc client disconnected from server";
+}
+
 void DaemonIpcClient::handleDisconnected()
 {
   qWarning() << "daemon ipc client disconnected from server";
-  m_connected = false;
-  Q_EMIT connectFailed();
+  if (m_state == State::Connected) {
+    disconnectFromServer();
+    Q_EMIT connectFailed();
+  }
 }
 
 void DaemonIpcClient::handleErrorOccurred()
 {
   qWarning() << "daemon ipc client error:" << m_socket->errorString();
-  m_connected = false;
+  if (m_state == State::Connected) {
+    disconnectFromServer();
+    Q_EMIT connectFailed();
+  }
 }
 
 bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectAck, const bool expectConnected)
 {
-  if (expectConnected && !m_connected) {
+  if (expectConnected && !isConnected()) {
     qWarning() << "cannot send command, ipc client not connected";
     return false;
   }
@@ -108,7 +135,7 @@ bool DaemonIpcClient::sendMessage(const QString &message, const QString &expectA
       return false;
     }
 
-    if (responseData != expectAck + "\n") {
+    if (responseData != expectAck + "x\n") {
       qWarning() << "daemon ipc client got unexpected response: " << responseData;
       return false;
     }
@@ -126,8 +153,8 @@ bool DaemonIpcClient::keepAlive()
   }
 
   if (!sendMessage("noop")) {
-    qWarning() << "daemon ipc client keep alive ping failed";
-    m_connected = false;
+    qWarning() << "daemon ipc client keep alive ping failed, reconnecting";
+    connectToServer();
     return false;
   }
 

@@ -250,7 +250,7 @@ void MSWindowsWatchdog::mainLoop(void *)
   LOG_DEBUG("watchdog main loop finished");
 
   if (m_process != nullptr) {
-    LOG_DEBUG("terminated running process on exit");
+    LOG_DEBUG("terminating running process on exit");
     m_process->shutdown();
     m_process.reset();
   }
