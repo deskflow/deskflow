@@ -114,8 +114,10 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
 
   const auto &command = parts[0];
   if (command == "hello") { // NOSONAR - if-init is confusing here
+    LOG_DEBUG("ipc server got hello message, sending hello back");
     clientSocket->write("hello\n");
   } else if (command == "noop") {
+    LOG_DEBUG("ipc server got noop message");
     clientSocket->write(kAckMessage);
   } else if (command == "logLevel") {
     processLogLevel(clientSocket, parts);
