@@ -68,25 +68,6 @@ void SettingsDialog::initConnections()
   connect(ui->btnTlsCertPath, &QPushButton::clicked, this, &SettingsDialog::browseCertificatePath);
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
   connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
-  connect(ui->cbElevateDaemon, &QCheckBox::toggled, this, [&](bool checked) {
-    if (!checked)
-      return;
-    if (ui->cbStopOnDeskSwitch->isChecked()) {
-      blockSignals(true);
-      ui->cbStopOnDeskSwitch->setChecked(false);
-      blockSignals(false);
-    }
-  });
-
-  connect(ui->cbStopOnDeskSwitch, &QCheckBox::toggled, this, [&](bool checked) {
-    if (!checked)
-      return;
-    if (ui->cbElevateDaemon->isChecked()) {
-      blockSignals(true);
-      ui->cbElevateDaemon->setChecked(false);
-      blockSignals(false);
-    }
-  });
 }
 
 void SettingsDialog::regenCertificates()
@@ -151,7 +132,6 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
-  Settings::setValue(Settings::Core::StopOnDeskSwitch, ui->cbStopOnDeskSwitch->isChecked());
   Settings::setValue(Settings::Daemon::Elevate, ui->cbElevateDaemon->isChecked());
   Settings::setValue(Settings::Gui::Autohide, ui->cbAutoHide->isChecked());
   Settings::setValue(Settings::Gui::AutoUpdateCheck, ui->cbAutoUpdate->isChecked());
@@ -187,7 +167,6 @@ void SettingsDialog::loadFromConfig()
   ui->cbLanguageSync->setChecked(Settings::value(Settings::Client::LanguageSync).toBool());
   ui->cbScrollDirection->setChecked(Settings::value(Settings::Client::InvertScrollDirection).toBool());
   ui->cbCloseToTray->setChecked(Settings::value(Settings::Gui::CloseToTray).toBool());
-  ui->cbStopOnDeskSwitch->setChecked(Settings::value(Settings::Core::StopOnDeskSwitch).toBool());
   ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
 
@@ -288,7 +267,6 @@ void SettingsDialog::updateControls()
   if (Settings::isNativeMode()) {
     ui->groupService->setEnabled(writable);
     ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
-    ui->cbStopOnDeskSwitch->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
     const int bottomMargin = ui->tabAdvanced->layout()->contentsMargins().bottom() +

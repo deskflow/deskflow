@@ -457,23 +457,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
   args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
 
-  if (processMode != ProcessMode::Desktop) {
-#if defined(Q_OS_WIN)
-    // tell the client/server to shut down when a ms windows desk
-    // is switched; this is because we may need to elevate or not
-    // based on which desk the user is in (login always needs
-    // elevation, where as default desk does not).
-    // Note that this is only enabled when deskflow is set to elevate
-    // 'as needed' (e.g. on a UAC dialog popup) in order to prevent
-    // unnecessary restarts when deskflow was started elevated or
-    // when it is not allowed to elevate. In these cases restarting
-    // the server is fruitless.
-    if (Settings::value(Settings::Core::StopOnDeskSwitch).toBool()) {
-      args << "--stop-on-desk-switch";
-    }
-#endif
-  }
-
 #ifndef Q_OS_LINUX
 
   if (m_serverConfig.enableDragAndDrop()) {

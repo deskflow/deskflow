@@ -561,9 +561,7 @@ bool ServerApp::startServer()
 deskflow::Screen *ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-  return new deskflow::Screen(
-      new MSWindowsScreen(true, args().m_noHooks, args().m_stopOnDeskSwitch, m_events), m_events
-  );
+  return new deskflow::Screen(new MSWindowsScreen(true, args().m_noHooks, m_events), m_events);
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)

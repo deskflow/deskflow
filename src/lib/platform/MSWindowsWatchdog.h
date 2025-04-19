@@ -112,16 +112,6 @@ private:
   void initSasFunc();
 
   /**
-   * @brief Re-run the process to get the active desktop name.
-   *
-   * It is necessary to run a utility process because the daemon runs in session 0, which does not
-   * have access to the active desktop, and so cannot query it's name.
-   *
-   * @return std::string The name of the active desktop.
-   */
-  std::string runActiveDesktopUtility();
-
-  /**
    * @brief Allows the SendSAS function to be called from other processes.
    *
    * SendSAS sends a SAS (Secure Attention Sequence) for Ctrl+Alt+Del emulation.
