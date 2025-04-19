@@ -159,6 +159,8 @@ private:
   void showHostNameEditor();
   void setHostName();
   void daemonIpcClientConnectFailed();
+  void toggleCanRunCore(bool enableButtons);
+  void remoteHostChanged(const QString newRemoteHost);
 
   /**
    * @brief trustedFingerprintDb get the fingerprintDb for the trusted clients or trusted servers.

@@ -320,7 +320,7 @@ void MainWindow::connectSlots()
   connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
-  connect(ui->lineHostname, &QLineEdit::textChanged, &m_coreProcess, &deskflow::gui::CoreProcess::setAddress);
+  connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
@@ -379,6 +379,8 @@ void MainWindow::firstShown()
   }
 
   if (Settings::value(Settings::Core::StartedBefore).toBool()) {
+    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+      return;
     m_coreProcess.start();
   }
 }
@@ -585,6 +587,8 @@ void MainWindow::updateModeControls(bool serverMode)
       m_coreProcess.start();
     }
   }
+
+  toggleCanRunCore((!serverMode && !ui->lineHostname->text().isEmpty()) || serverMode);
 }
 
 void MainWindow::updateSecurityIcon(bool visible)
@@ -1142,5 +1146,23 @@ void MainWindow::daemonIpcClientConnectFailed()
 {
   if (deskflow::gui::messages::showDaemonOffline(this)) {
     m_coreProcess.retryDaemon();
+  }
+}
+
+void MainWindow::toggleCanRunCore(bool enableButtons)
+{
+  ui->btnToggleCore->setEnabled(enableButtons);
+  ui->btnConnect->setEnabled(enableButtons);
+  ui->btnApplySettings->setEnabled(enableButtons);
+  m_actionStartCore->setEnabled(enableButtons);
+  m_actionStopCore->setEnabled(enableButtons);
+}
+
+void MainWindow::remoteHostChanged(const QString newRemoteHost)
+{
+  m_coreProcess.setAddress(newRemoteHost);
+  toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
+  if (newRemoteHost.isEmpty()) {
+    Settings::setValue(Settings::Client::RemoteHost, QVariant());
   }
 }
