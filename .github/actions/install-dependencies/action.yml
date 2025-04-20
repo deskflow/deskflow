@@ -69,7 +69,7 @@ runs:
 
     - name: Install Qt
       if: ${{runner.os != 'Linux' }}
-      uses: jurplel/install-qt-action@v4
+      uses: jdpurcell/install-qt-action@8377c563085d13f9b55d791fa1a3de20dc1f7ab7
       env:
         AQT_CONFIG: ${{ github.workspace }}/.github/actions/install-dependencies/aqt.ini
       with:
