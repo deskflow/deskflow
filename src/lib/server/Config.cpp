@@ -586,16 +586,6 @@ std::string Config::formatInterval(const Interval &x)
   return deskflow::string::sprintf("(%d,%d)", (int)(x.first * 100.0f + 0.5f), (int)(x.second * 100.0f + 0.5f));
 }
 
-std::string Config::getClientAddress() const
-{
-  return m_ClientAddress;
-}
-
-bool Config::isClientMode() const
-{
-  return (!m_ClientAddress.empty());
-}
-
 void Config::readSection(ConfigReadContext &s)
 {
   static const char s_section[] = "section:";
@@ -696,8 +686,6 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionClipboardSharing, s.parseBoolean(value));
     } else if (name == "clipboardSharingSize") {
       addOption("", kOptionClipboardSharingSize, s.parseInt(value));
-    } else if (name == "clientAddress") {
-      m_ClientAddress = value;
     } else {
       handled = false;
     }

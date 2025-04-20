@@ -60,10 +60,6 @@ public:
   {
     return m_server;
   }
-
-  //! This method restarts the listener
-  void restart();
-
   //@}
 
 private:

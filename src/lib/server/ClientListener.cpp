@@ -122,14 +122,6 @@ void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient)
   }
 }
 
-void ClientListener::restart()
-{
-  if (m_server && m_server->isClientMode()) {
-    stop();
-    start();
-  }
-}
-
 void ClientListener::handleClientConnecting(const Event &, void *)
 {
   // accept client connection
@@ -213,7 +205,6 @@ void ClientListener::handleUnknownClientFailure(const Event &, void *vclient)
 {
   auto unknownClient = static_cast<ClientProxyUnknown *>(vclient);
   removeUnknownClient(unknownClient);
-  restart();
 }
 
 void ClientListener::handleClientDisconnected(const Event &, void *vclient)
