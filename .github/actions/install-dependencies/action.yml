@@ -13,6 +13,10 @@ inputs:
     description: "The version of Qt to install (Windows & macOS)"
     required: false
 
+  vcpkg-triplet:
+    description: "vcpkg triplet to use (Windows)"
+    required: false
+
 outputs:
   vcpkg-cmake-config:
     description: "windows vcpkg output for cmaket"
@@ -78,8 +82,8 @@ runs:
       uses: johnwason/vcpkg-action@v7
       with:
         pkgs: gtest openssl
-        extra-args: --classic
-        triplet: x64-windows-release
+        extra-args: --classic --host-triplet=${{inputs.vcpkg-triplet}}
+        triplet: ${{inputs.vcpkg-triplet}}
         token: ${{ github.token }}
 
     - name: Install Wix
