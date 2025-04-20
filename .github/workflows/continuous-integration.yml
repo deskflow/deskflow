@@ -134,6 +134,16 @@ jobs:
             timeout: 30
             config-args: "-G Ninja"
             qt-version: 6.8.3
+            vcpkg-triplet: x64-windows-release
+            arch: "amd64"
+
+          - name: "windows-2022-arm64"
+            runs-on: "windows-11-arm"
+            timeout: 30
+            config-args: "-G Ninja"
+            qt-version: 6.8.3
+            vcpkg-triplet: arm64-windows
+            arch: "arm64"
 
           - name: "macos-14-arm64"
             runs-on: "macos-14"
@@ -266,12 +276,16 @@ jobs:
       - name: Setup VC++ environment
         if: ${{ runner.os == 'Windows' }}
         uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: ${{matrix.target.arch}}
+
 
       - name: Install dependencies
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
           qt-version: ${{ matrix.target.qt-version }}
+          vcpkg-triplet: ${{matrix.target.vcpkg-triplet}}
           like: ${{ matrix.target.like }}
 
       - name: Get version
