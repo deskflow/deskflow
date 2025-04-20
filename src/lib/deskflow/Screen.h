@@ -37,12 +37,6 @@ public:
   Screen &operator&(Screen const &) = delete;
   Screen &operator&(Screen &&) = delete;
 
-#ifdef TEST_ENV
-  Screen() : m_mock(true)
-  {
-  }
-#endif
-
   //! @name manipulators
   //@{
 
