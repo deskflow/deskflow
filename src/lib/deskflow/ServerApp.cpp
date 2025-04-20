@@ -669,14 +669,7 @@ ISocketFactory *ServerApp::getSocketFactory() const
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress &address) const
 {
-  if (args().m_config->isClientMode()) {
-    const auto clientAddress = args().m_config->getClientAddress();
-    NetworkAddress addr(clientAddress.c_str(), kDefaultPort);
-    addr.resolve();
-    return addr;
-  } else {
-    return address;
-  }
+  return address;
 }
 
 int ServerApp::mainLoop()

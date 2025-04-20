@@ -222,9 +222,6 @@ public:
     return m_fakeDragFileList;
   }
 
-  //! Returns true if it's client mode and server initiates connection
-  bool isClientMode() const;
-
   //@}
 
 private:

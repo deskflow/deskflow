@@ -462,19 +462,6 @@ public:
   Returns an interval as a parseable string.
   */
   static std::string formatInterval(const Interval &);
-
-  //! Get client address as a string
-  /*!
-   * Return client address a string.
-   */
-  std::string getClientAddress() const;
-
-  //! Return true if server started in client mode
-  /*!
-   * In client mode the server initiates connection to client
-   */
-  bool isClientMode() const;
-
   //@}
 
 private:
@@ -503,7 +490,6 @@ private:
   InputFilter m_inputFilter;
   bool m_hasLockToScreenAction;
   IEventQueue *m_events;
-  std::string m_ClientAddress;
 };
 
 //! Configuration read context
