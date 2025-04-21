@@ -11,7 +11,7 @@ install(CODE "execute_process(COMMAND
   -timestamp -codesign=-
 )")
 
-set(OS_STRING "macos-${CMAKE_SYSTEM_PROCESSOR}")
+set(OS_STRING "macos-${BUILD_ARCHITECTURE}")
 set(CPACK_PACKAGE_ICON "${MY_DIR}/dmg-volume.icns")
 set(CPACK_DMG_BACKGROUND_IMAGE "${MY_DIR}/dmg-background.tiff")
 set(CPACK_DMG_DS_STORE_SETUP_SCRIPT "${MY_DIR}/generate_ds_store.applescript")

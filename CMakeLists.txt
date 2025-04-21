@@ -95,6 +95,16 @@ set(REQUIRED_LIBEI_VERSION 1.3)
 set(REQUIRED_LIBPORTAL_VERSION 0.8)
 set(REQUIRED_QT_VERSION 6.7.0)
 
+if (WIN32)
+  if ("$ENV{VSCMD_ARG_TGT_ARCH}" STREQUAL "")
+    set (BUILD_ARCHITECTURE x64)
+  else()
+    set (BUILD_ARCHITECTURE $ENV{VSCMD_ARG_TGT_ARCH})
+  endif()
+else()
+  set (BUILD_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+endif()
+
 if (MSVC)
   # On Windows, require that the same MSVC runtime is used as on the host.
   # Mitigates things like access violations caused by accidental ABI-compatibility breakage.
@@ -102,7 +112,7 @@ if (MSVC)
   cmake_host_system_information(
     RESULT REQUIRED_MSVC_RUNTIME_MINOR
     QUERY WINDOWS_REGISTRY
-    "HKLM/SOFTWARE/Microsoft/VisualStudio/${REQUIRED_MSVC_RUNTIME_MAJOR}.0/VC/Runtimes/x64"
+    "HKLM/SOFTWARE/Microsoft/VisualStudio/${REQUIRED_MSVC_RUNTIME_MAJOR}.0/VC/Runtimes/${BUILD_ARCHITECTURE}"
     VALUE "Minor")
   if (REQUIRED_MSVC_RUNTIME_MINOR)
     message(STATUS "MSVC runtime: ${REQUIRED_MSVC_RUNTIME_MAJOR}.${REQUIRED_MSVC_RUNTIME_MINOR}")

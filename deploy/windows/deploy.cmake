@@ -19,14 +19,7 @@ set(CPACK_PRE_BUILD_SCRIPTS ${CMAKE_CURRENT_BINARY_DIR}/pre-cpack.cmake)
 configure_file(${MY_DIR}/cpack-options.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/cpack-options.cmake @ONLY)
 set(CPACK_PROJECT_CONFIG_FILE ${CMAKE_CURRENT_BINARY_DIR}/cpack-options.cmake)
 
-# Setup OS_STRING
-if(CMAKE_SYSTEM_PROCESSOR MATCHES AMD64)
-  set(OS_STRING "win-x64")
-elseif(CMAKE_SYSTEM_PROCESSOR MATCHES ARM64)
-  set(OS_STRING "win-arm64")
-else()
-  set(OS_STRING "win-${CMAKE_SYSTEM_PROCESSOR}")
-endif()
+set(OS_STRING "win-${BUILD_ARCHITECTURE}")
 
 list(APPEND CPACK_GENERATOR "7Z")
 
