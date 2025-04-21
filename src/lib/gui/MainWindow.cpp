@@ -697,7 +697,7 @@ void MainWindow::saveSettings()
   } else if (ui->rbModeServer->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Server);
   }
-  if (!Settings::value(Settings::Client::RemoteHost).isNull())
+  if (!ui->lineHostname->text().isEmpty())
     Settings::setValue(Settings::Client::RemoteHost, ui->lineHostname->text());
   Settings::save();
 }
