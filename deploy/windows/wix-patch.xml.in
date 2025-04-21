@@ -32,7 +32,7 @@
       <RegistrySearch
         Id="FindVCRedist"
         Root="HKLM"
-        Key="SOFTWARE\Microsoft\VisualStudio\@REQUIRED_MSVC_RUNTIME_MAJOR@.0\VC\Runtimes\x64"
+        Key="SOFTWARE\Microsoft\VisualStudio\@REQUIRED_MSVC_RUNTIME_MAJOR@.0\VC\Runtimes\@BUILD_ARCHITECTURE@"
         Name="Installed"
         Type="raw" />
     </Property>
