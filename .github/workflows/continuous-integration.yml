@@ -138,7 +138,6 @@ jobs:
           - name: "macos-14-arm64"
             runs-on: "macos-14"
             timeout: 10
-            arch: arm64
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
             qt-install-dir: "/Users/runner"
 
