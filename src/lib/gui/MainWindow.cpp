@@ -383,6 +383,9 @@ void MainWindow::firstShown()
       return;
     m_coreProcess.start();
   }
+
+  // Do not call firstshow for any more show events
+  disconnect(this, &MainWindow::shown, this, &MainWindow::firstShown);
 }
 
 void MainWindow::settingsChanged(const QString &key)
