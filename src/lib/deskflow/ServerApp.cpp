@@ -114,15 +114,11 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
 
 void ServerApp::help()
 {
-  const auto userConfig = QString(Settings::UserSettingFile).toStdString();
-  const auto sysConfig = QString(Settings::SystemSettingFile).toStdString();
-  const auto orConfig = QStringLiteral("settings/%2").arg(kAppName).toStdString();
-
   std::stringstream help;
   help << "Usage: " << args().m_pname
 
+       << " --config <pathname>"
        << " [--address <address>]"
-       << " [--config <pathname>]"
 
 #if WINAPI_XWINDOWS
        << " [--display <display>] [--no-xinitthreads]"
@@ -136,8 +132,8 @@ void ServerApp::help()
        << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
-       << "  -c, --config <pathname>  use the named configuration file "
-       << "instead.\n" HELP_COMMON_INFO_1
+       << "  -c, --config <pathname>  path of the configuration file\n"
+       << HELP_COMMON_INFO_1
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
        << HELP_SYS_INFO HELP_COMMON_INFO_2 << "\n"
@@ -158,15 +154,7 @@ void ServerApp::help()
        << "hostname must be the address or hostname of an interface on the "
        << "system.\n"
        << "The default is to listen on all interfaces.  The port overrides the\n"
-       << "default port, " << kDefaultPort << ".\n"
-       << "\n"
-       << "If no configuration file pathname is provided then the first of the\n"
-       << "following to load successfully sets the configuration:\n"
-       << "  " << orConfig << "\n"
-#ifndef Q_OS_WIN
-       << "  " << userConfig << "\n"
-#endif
-       << "  " << sysConfig << "\n";
+       << "default port, " << kDefaultPort << ".\n";
 
   LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
@@ -190,43 +178,13 @@ void ServerApp::reloadConfig(const Event &, void *)
 
 void ServerApp::loadConfig()
 {
-  bool loaded = false;
-  std::string path;
-
-  // load the config file, if specified
-  if (!args().m_configFile.empty()) {
-    path = args().m_configFile;
-    loaded = loadConfig(path);
+  const auto path = args().m_configFile;
+  if (path.empty()) {
+    LOG((CLOG_CRIT "no configuration path provided"));
+    m_bye(kExitConfig);
   }
 
-  // load the default configuration if no explicit file given
-  else {
-    path = QString("settings/%2").arg(kAppName).toStdString();
-    if (loadConfig(path)) {
-      loaded = true;
-      args().m_configFile = path;
-    }
-
-#ifndef Q_OS_WIN
-    if (!loaded) {
-      path = QString(Settings::UserSettingFile).toStdString();
-      if (loadConfig(path)) {
-        loaded = true;
-        args().m_configFile = path;
-      }
-    }
-#endif
-
-    if (!loaded) {
-      path = QString(Settings::SystemSettingFile).toStdString();
-      if (loadConfig(path)) {
-        loaded = true;
-        args().m_configFile = path;
-      }
-    }
-  }
-
-  if (!loaded) {
+  if (!loadConfig(path)) {
     LOG((CLOG_CRIT "%s: failed to load config: %s", args().m_pname, path.c_str()));
     m_bye(kExitConfig);
   }
@@ -239,10 +197,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
     LOG((CLOG_DEBUG "opening configuration \"%s\"", pathname.c_str()));
     std::ifstream configStream(deskflow::filesystem::path(pathname));
     if (!configStream.is_open()) {
-      // report failure to open configuration as a debug message
-      // since we try several paths and we expect some to be
-      // missing.
-      LOG((CLOG_DEBUG "cannot open configuration \"%s\"", pathname.c_str()));
+      LOG((CLOG_ERR "cannot open configuration \"%s\"", pathname.c_str()));
       return false;
     }
     configStream >> *args().m_config;
