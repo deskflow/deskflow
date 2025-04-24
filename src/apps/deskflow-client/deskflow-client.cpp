@@ -13,11 +13,16 @@
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
+#include <QCoreApplication>
 #endif
 
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
+  // HACK to make sure settings gets the correct qApp path
+  QCoreApplication m(argc, argv);
+  m.deleteLater();
+
   ArchMiscWindows::guardRuntimeVersion();
 
   // record window instance for tray icon, etc
