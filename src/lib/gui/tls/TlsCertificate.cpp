@@ -70,11 +70,6 @@ int TlsCertificate::getCertKeyLength(const QString &path)
   return deskflow::getCertLength(path.toStdString());
 }
 
-QString TlsCertificate::getCertificatePath() const
-{
-  return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsCertificateFilename);
-}
-
 bool TlsCertificate::isCertificateValid(const QString &path)
 {
   OpenSSL_add_all_algorithms();
