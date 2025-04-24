@@ -14,6 +14,7 @@
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
+#include <QCoreApplication>
 #endif
 
 #include <iostream>
@@ -39,6 +40,10 @@ bool isClient(int argc, char **argv)
 int main(int argc, char **argv)
 {
 #if SYSAPI_WIN32
+  // HACK to make sure settings gets the correct qApp path
+  QCoreApplication m(argc, argv);
+  m.deleteLater();
+
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
 #endif
 
