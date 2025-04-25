@@ -36,6 +36,18 @@ To use Deskflow you can use one of our [packages](https://github.com/deskflow/de
 [![CI](https://github.com/deskflow/deskflow/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/continuous-integration.yml)
 [![CodeQL Analysis](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/codeql-analysis.yml)
 [![SonarCloud Analysis](https://github.com/deskflow/deskflow/actions/workflows/sonarcloud-analysis.yml/badge.svg)](https://github.com/deskflow/deskflow/actions/workflows/sonarcloud-analysis.yml)
+
+## Contribute
+
+There are many ways to contribute to the Deskflow project.
+
+We're a friendly, active, and welcoming community focused on building a great app.
+
+Read our [Contributing](https://github.com/deskflow/deskflow/wiki/Contributing) page to get started.
+
+[![Good first issues](https://img.shields.io/github/issues/deskflow/deskflow/good%20first%20issue?label=good%20first%20issues&color=%2344cc11
+)](https://github.com/deskflow/deskflow/labels/good%20first%20issue) [![Open bounty issues](https://img.shields.io/github/issues/deskflow/deskflow/%F0%9F%92%8E%20bounty?label=💎%20bounty%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22)
+
 ## Project Values
 
 - Motivated by the community interests (not business-driven)
@@ -43,18 +55,6 @@ To use Deskflow you can use one of our [packages](https://github.com/deskflow/de
 - Leading edge releases (we don't focus on supporting older systems)
 - Decisions are discussed and documented publicly with majority rule
 - Have fun; we don't need to worry about impressing anyone
-
-## Ways to get involved
-
-> [!TIP]
-> Join us! Real-time discussion on Matrix: [`#deskflow:matrix.org`](https://matrix.to/#/#deskflow:matrix.org)
->
-> Alternatively, we have [other ways](https://github.com/deskflow/deskflow/wiki/Chat-with-us) to communicate.
-> 
-Here are a few ways to join in with the project and get involved:
-* Build the latest `master` version (see below) and [report a bug](https://github.com/deskflow/deskflow/issues)
-* [Submit a PR](https://github.com/deskflow/deskflow/wiki/Contributing) (pull request) with a bug fix or improvement
-* [Let us know](https://github.com/deskflow/deskflow/issues) if you have an idea for an improvement
 
 ## Build Quick Start
 
