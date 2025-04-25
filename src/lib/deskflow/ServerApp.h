@@ -135,9 +135,4 @@ private:
   ClientListener *m_listener;
   EventQueueTimer *m_timer;
   NetworkAddress *m_deskflowAddress;
-#if SYSAPI_WIN32
-  inline static const std::string CONFIG_NAME = std::string(kAppName) + ".sgc";
-#elif SYSAPI_UNIX
-  inline static const std::string CONFIG_NAME = std::string(kAppName) + ".conf";
-#endif
 };
