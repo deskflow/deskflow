@@ -43,13 +43,7 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = "README.md"
-precedence = "override"
-SPDX-FileCopyrightText = "Deskflow Developers"
-SPDX-License-Identifier = "MIT"
-
-[[annotations]]
-path = "SECURITY.md"
+path = "**/*.md"
 precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
