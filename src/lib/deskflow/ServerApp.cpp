@@ -13,7 +13,6 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/TMethodEventJob.h"
-#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -27,6 +26,9 @@
 #include "server/Config.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
+
+// must be before screen header includes
+#include <QFileInfo>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -57,8 +59,6 @@
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
 #endif
-
-#include <QFileInfo>
 
 #include <fstream>
 #include <iostream>
