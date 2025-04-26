@@ -127,18 +127,10 @@ OSXScreen::OSXScreen(
 
     // only needed when running as a server.
     if (m_isPrimary) {
-
-#if defined(MAC_OS_X_VERSION_10_9)
       // we can't pass options to show the dialog, this must be done by the gui.
       if (!AXIsProcessTrusted()) {
         throw XArch("assistive devices does not trust this process, allow it in system settings.");
       }
-#else
-      // now deprecated in mavericks.
-      if (!AXAPIEnabled()) {
-        throw XArch("assistive devices is not enabled, enable it in system settings.");
-      }
-#endif
     }
 
     // install display manager notification handler
@@ -164,10 +156,8 @@ OSXScreen::OSXScreen(
 
     // create thread for monitoring system power state.
     *m_pmThreadReady = false;
-#if defined(MAC_OS_X_VERSION_10_7)
     m_carbonLoopMutex = new Mutex();
     m_carbonLoopReady = new CondVar<bool>(m_carbonLoopMutex, false);
-#endif
     LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
     m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>(this, &OSXScreen::watchSystemPowerThread));
   } catch (...) {
@@ -227,10 +217,8 @@ OSXScreen::~OSXScreen()
   delete m_keyState;
   delete m_screensaver;
 
-#if defined(MAC_OS_X_VERSION_10_7)
   delete m_carbonLoopMutex;
   delete m_carbonLoopReady;
-#endif
 }
 
 void *OSXScreen::getEventTarget() const
@@ -572,7 +560,6 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
 
 void OSXScreen::getDropTargetThread(void *)
 {
-#if defined(MAC_OS_X_VERSION_10_7)
   // wait for 5 secs for the drop destinaiton string to be filled.
   uint32_t timeout = ARCH->time() + 5;
   m_dropTarget.clear();
@@ -595,9 +582,6 @@ void OSXScreen::getDropTargetThread(void *)
     LOG((CLOG_ERR "failed to get drop target"));
   }
 
-#else
-  LOG((CLOG_WARN "drag drop not supported"));
-#endif
   m_fakeDraggingStarted = false;
 }
 
@@ -1542,7 +1526,6 @@ void OSXScreen::watchSystemPowerThread(void *)
   LOG((CLOG_DEBUG "waiting for event loop"));
   m_events->waitForReady();
 
-#if defined(MAC_OS_X_VERSION_10_7)
   {
     Lock lockCarbon(m_carbonLoopMutex);
     if (*m_carbonLoopReady == false) {
@@ -1555,7 +1538,6 @@ void OSXScreen::watchSystemPowerThread(void *)
       m_carbonLoopReady->signal();
     }
   }
-#endif
 
   // start the run loop
   LOG((CLOG_DEBUG "starting carbon loop"));
@@ -1909,11 +1891,7 @@ void OSXScreen::fakeDraggingFiles(DragFileList fileList)
     fileExt = DragInformation::getDragFileExtension(fileList.at(0).getFilename());
   }
 
-#if defined(MAC_OS_X_VERSION_10_7)
   fakeDragging(fileExt.c_str(), m_xCursor, m_yCursor);
-#else
-  LOG((CLOG_WARN "drag drop not supported"));
-#endif
 }
 
 std::string &OSXScreen::getDraggingFilename()
@@ -1941,7 +1919,6 @@ std::string &OSXScreen::getDraggingFilename()
 
 void OSXScreen::waitForCarbonLoop() const
 {
-#if defined(MAC_OS_X_VERSION_10_7)
   if (*m_carbonLoopReady) {
     LOG((CLOG_DEBUG "carbon loop already ready"));
     return;
@@ -1960,7 +1937,6 @@ void OSXScreen::waitForCarbonLoop() const
   }
 
   LOG((CLOG_DEBUG "carbon loop ready"));
-#endif
 }
 
 std::string OSXScreen::getSecureInputApp() const
