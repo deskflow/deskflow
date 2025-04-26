@@ -195,7 +195,7 @@ void App::runEventsLoop(void *)
 {
   m_events->loop();
 
-#if defined(MAC_OS_X_VERSION_10_7)
+#if WINAPI_CARBON
 
   stopCocoaLoop();
 

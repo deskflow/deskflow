@@ -44,17 +44,14 @@
 #endif
 
 #if WINAPI_CARBON
+#include "base/TMethodJob.h"
+#include "mt/Thread.h"
 #include "platform/OSXDragSimulator.h"
 #include "platform/OSXScreen.h"
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
 #include "platform/Wayland.h"
-#endif
-
-#if defined(MAC_OS_X_VERSION_10_7)
-#include "base/TMethodJob.h"
-#include "mt/Thread.h"
 #endif
 
 #include <memory>
@@ -455,7 +452,7 @@ int ClientApp::mainLoop()
   // that.
   DAEMON_RUNNING(true);
 
-#if defined(MAC_OS_X_VERSION_10_7)
+#if WINAPI_CARBON
 
   Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, NULL));
 
