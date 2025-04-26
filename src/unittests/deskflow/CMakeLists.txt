@@ -45,6 +45,13 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
+create_test(
+  NAME KeyMapTests
+  DEPENDS app
+  LIBS arch base ${extra_libs}
+  SOURCE KeyMapTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
 
 create_test(
   NAME test_LanguageManagerTests

@@ -14,10 +14,6 @@
 #include <set>
 #include <vector>
 
-#ifdef TEST_ENV
-#include "gtest/gtest_prod.h"
-#endif
-
 namespace deskflow {
 
 //! Key map
@@ -27,6 +23,9 @@ This class provides a keyboard mapping.
 class KeyMap
 {
 public:
+  // Class used for testing
+  friend class KeyMapTests;
+
   KeyMap();
   virtual ~KeyMap() = default;
 
@@ -320,16 +319,6 @@ public:
 
   //@}
 
-#ifdef TEST_ENV
-private:
-  FRIEND_TEST(KeyMapTests, findBestKey_requiredDown_matchExactFirstItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_extraSensitiveDown_matchExactSecondItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_matchOneRequiredChangeItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_onlyOneRequiredDown_matchTwoRequiredChangesItem);
-  FRIEND_TEST(KeyMapTests, findBestKey_noRequiredDown_cannotMatch);
-#endif
 private:
   //! Ways to synthesize a key
   enum EKeystroke
