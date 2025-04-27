@@ -165,7 +165,7 @@ ArchMultithreadPosix *ArchMultithreadPosix::getInstance()
 
 ArchCond ArchMultithreadPosix::newCondVar()
 {
-  ArchCondImpl *cond = new ArchCondImpl;
+  auto *cond = new ArchCondImpl;
   int status = pthread_cond_init(&cond->m_cond, nullptr);
   (void)status;
   assert(status == 0);
@@ -218,8 +218,8 @@ bool ArchMultithreadPosix::waitCondVar(ArchCond cond, ArchMutex mutex, double ti
   struct timespec finalTime;
   finalTime.tv_sec = now.tv_sec;
   finalTime.tv_nsec = now.tv_usec * 1000;
-  long timeout_sec = (long)timeout;
-  long timeout_nsec = (long)(1.0e+9 * (timeout - timeout_sec));
+  auto timeout_sec = (long)timeout;
+  auto timeout_nsec = (long)(1.0e+9 * (timeout - timeout_sec));
   finalTime.tv_sec += timeout_sec;
   finalTime.tv_nsec += timeout_nsec;
   if (finalTime.tv_nsec >= 1000000000) {
@@ -252,7 +252,7 @@ ArchMutex ArchMultithreadPosix::newMutex()
   pthread_mutexattr_t attr;
   int status = pthread_mutexattr_init(&attr);
   assert(status == 0);
-  ArchMutexImpl *mutex = new ArchMutexImpl;
+  auto *mutex = new ArchMutexImpl;
   status = pthread_mutex_init(&mutex->m_mutex, &attr);
   assert(status == 0);
   return mutex;
@@ -331,7 +331,7 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data)
   lockMutex(m_threadMutex);
 
   // create thread impl for new thread
-  ArchThreadImpl *thread = new ArchThreadImpl;
+  auto *thread = new ArchThreadImpl;
   thread->m_func = func;
   thread->m_userData = data;
 
@@ -601,7 +601,7 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread)
 
 void ArchMultithreadPosix::erase(ArchThreadImpl *thread)
 {
-  for (ThreadList::iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
+  for (auto index = m_threadList.begin(); index != m_threadList.end(); ++index) {
     if (*index == thread) {
       m_threadList.erase(index);
       break;
@@ -639,7 +639,7 @@ void ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl *thread)
 void *ArchMultithreadPosix::threadFunc(void *vrep)
 {
   // get the thread
-  ArchThreadImpl *thread = static_cast<ArchThreadImpl *>(vrep);
+  auto *thread = static_cast<ArchThreadImpl *>(vrep);
 
   // setup pthreads
   pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, nullptr);
