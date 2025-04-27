@@ -78,7 +78,7 @@ void Screen::saveSettings(QSettingsProxy &settings) const
 
 QString Screen::screensSection() const
 {
-  const QString lineTemplate = QStringLiteral("\t\t%1 = %2\n");
+  const auto lineTemplate = QStringLiteral("\t\t%1 = %2\n");
 
   QString out = QStringLiteral("\t%1:\n").arg(name());
   for (int i = 0; i < modifiers().size(); i++) {
