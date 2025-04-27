@@ -216,7 +216,7 @@ void ServerApp::forceReconnect(const Event &, void *)
 
 void ServerApp::handleClientConnected(const Event &, void *vlistener)
 {
-  ClientListener *listener = static_cast<ClientListener *>(vlistener);
+  auto *listener = static_cast<ClientListener *>(vlistener);
   ClientProxy *client = listener->getNextClient();
   if (client != nullptr) {
     m_server->adoptClient(client);
@@ -572,7 +572,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
   auto securityLevel = args().m_enableCrypto ? args().m_chkPeerCert ? SecurityLevel::PeerAuth : SecurityLevel::Encrypted
                                              : SecurityLevel::PlainText;
 
-  ClientListener *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
+  auto *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
       m_events->forClientListener().connected(), listen,
@@ -584,7 +584,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 
 Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient)
 {
-  Server *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+  auto *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {
     m_events->adoptHandler(
         m_events->forServer().disconnected(), server, new TMethodEventJob<ServerApp>(this, &ServerApp::handleNoClients)
