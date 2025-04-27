@@ -267,7 +267,7 @@ void ClientApp::closeClientScreen(deskflow::Screen *screen)
 void ClientApp::handleClientRestart(const Event &, void *vtimer)
 {
   // discard old timer
-  EventQueueTimer *timer = static_cast<EventQueueTimer *>(vtimer);
+  auto *timer = static_cast<EventQueueTimer *>(vtimer);
   m_events->deleteTimer(timer);
   m_events->removeHandler(Event::kTimer, timer);
 
@@ -337,7 +337,7 @@ void ClientApp::handleClientDisconnected(const Event &, void *)
 
 Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
 {
-  Client *client = new Client(m_events, name, address, getSocketFactory(), screen, args());
+  auto *client = new Client(m_events, name, address, getSocketFactory(), screen, args());
 
   try {
     m_events->adoptHandler(
