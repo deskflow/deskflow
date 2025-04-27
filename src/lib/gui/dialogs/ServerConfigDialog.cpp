@@ -135,7 +135,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToScreen);
 
   ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
-  int clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
+  auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
   ui->sbClipboardSizeLimit->setValue(clipboardSharingSizeM);
   ui->sbClipboardSizeLimit->setEnabled(serverConfig().clipboardSharing());
 
@@ -319,7 +319,7 @@ void ServerConfigDialog::toggleClipboard(bool enabled)
 {
   ui->sbClipboardSizeLimit->setEnabled(enabled);
   if (enabled && !ui->sbClipboardSizeLimit->value()) {
-    int size = static_cast<int>((serverConfig().defaultClipboardSharingSize() + 512) / 1024);
+    auto size = static_cast<int>((serverConfig().defaultClipboardSharingSize() + 512) / 1024);
     ui->sbClipboardSizeLimit->setValue(size ? size : 1);
   }
   serverConfig().setClipboardSharing(enabled);
