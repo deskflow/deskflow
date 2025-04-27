@@ -418,7 +418,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count
   assert(stream != nullptr);
   assert(vbuffer != nullptr);
 
-  uint8_t *buffer = static_cast<uint8_t *>(vbuffer);
+  auto *buffer = static_cast<uint8_t *>(vbuffer);
   while (count > 0) {
     // read more
     uint32_t n = stream->read(buffer, count);
@@ -453,7 +453,7 @@ uint16_t ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
   std::array<uint8_t, BufferSize> buffer = {};
   read(stream, buffer.data(), BufferSize);
 
-  uint16_t Result = static_cast<uint16_t>((static_cast<uint16_t>(buffer[0]) << 8) | static_cast<uint16_t>(buffer[1]));
+  auto Result = static_cast<uint16_t>((static_cast<uint16_t>(buffer[0]) << 8) | static_cast<uint16_t>(buffer[1]));
   LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
 
   return Result;
