@@ -25,7 +25,7 @@ IKeyState::IKeyState(IEventQueue *events)
 
 IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, KeyButton button, int32_t count)
 {
-  KeyInfo *info = (KeyInfo *)malloc(sizeof(KeyInfo));
+  auto *info = (KeyInfo *)malloc(sizeof(KeyInfo));
   info->m_key = id;
   info->m_mask = mask;
   info->m_button = button;
@@ -43,7 +43,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(
   const char *buffer = screens.c_str();
 
   // build structure
-  KeyInfo *info = (KeyInfo *)malloc(sizeof(KeyInfo) + screens.size());
+  auto *info = (KeyInfo *)malloc(sizeof(KeyInfo) + screens.size());
   info->m_key = id;
   info->m_mask = mask;
   info->m_button = button;
