@@ -79,7 +79,7 @@ std::string DragInformation::getDragFileExtension(std::string filename)
 
 int DragInformation::setupDragInfo(DragFileList &fileList, std::string &output)
 {
-  int size = static_cast<int>(fileList.size());
+  auto size = static_cast<int>(fileList.size());
   for (int i = 0; i < size; ++i) {
     output.append(fileList.at(i).getFilename());
     output.append(",");
@@ -122,7 +122,7 @@ std::string DragInformation::getFileSize(std::string &filename)
 
   // check file size
   file.seekg(0, std::ios::end);
-  size_t size = (size_t)file.tellg();
+  auto size = (size_t)file.tellg();
 
   stringstream ss;
   ss << size;
