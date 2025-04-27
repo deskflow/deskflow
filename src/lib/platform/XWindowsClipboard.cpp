@@ -194,7 +194,7 @@ bool XWindowsClipboard::processRequest(Window requestor, ::Time /*time*/, Atom p
   // find the property in the known requests.  it should be the
   // first property but we'll check 'em all if we have to.
   ReplyList &replies = index->second;
-  for (ReplyList::iterator index2 = replies.begin(); index2 != replies.end(); ++index2) {
+  for (auto index2 = replies.begin(); index2 != replies.end(); ++index2) {
     Reply *reply = *index2;
     if (reply->m_replied && reply->m_property == property) {
       // if reply is complete then remove it and start the
@@ -356,7 +356,7 @@ std::string XWindowsClipboard::get(EFormat format) const
 
 void XWindowsClipboard::clearConverters()
 {
-  for (ConverterList::iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
+  for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
     delete *index;
   }
   m_converters.clear();
@@ -365,7 +365,7 @@ void XWindowsClipboard::clearConverters()
 IXWindowsClipboardConverter *XWindowsClipboard::getConverter(Atom target, bool onlyIfNotAdded) const
 {
   IXWindowsClipboardConverter *converter = nullptr;
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
+  for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
     converter = *index;
     if (converter->getAtom() == target) {
       break;
@@ -853,9 +853,9 @@ void XWindowsClipboard::pushReplies()
 {
   // send the first reply for each window if that reply hasn't
   // been sent yet.
-  for (ReplyMap::iterator index = m_replies.begin(); index != m_replies.end();) {
+  for (auto index = m_replies.begin(); index != m_replies.end();) {
     assert(!index->second.empty());
-    ReplyList::iterator listit = index->second.begin();
+    auto listit = index->second.begin();
     while (listit != index->second.end()) {
       if (!(*listit)->m_replied)
         break;
@@ -1055,7 +1055,7 @@ bool XWindowsClipboard::sendReply(Reply *reply)
 
 void XWindowsClipboard::clearReplies()
 {
-  for (ReplyMap::iterator index = m_replies.begin(); index != m_replies.end(); ++index) {
+  for (auto index = m_replies.begin(); index != m_replies.end(); ++index) {
     clearReplies(index->second);
   }
   m_replies.clear();
@@ -1064,7 +1064,7 @@ void XWindowsClipboard::clearReplies()
 
 void XWindowsClipboard::clearReplies(ReplyList &replies)
 {
-  for (ReplyList::iterator index = replies.begin(); index != replies.end(); ++index) {
+  for (auto index = replies.begin(); index != replies.end(); ++index) {
     delete *index;
   }
   replies.clear();
@@ -1125,7 +1125,7 @@ Atom XWindowsClipboard::getTargetsData(std::string &data, int *format) const
   XWindowsUtil::appendAtomData(data, m_atomTimestamp);
 
   // add targets we can convert to
-  for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
+  for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
     IXWindowsClipboardConverter *converter = *index;
 
     // skip formats we don't have
