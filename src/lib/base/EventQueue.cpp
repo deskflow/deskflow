@@ -37,7 +37,7 @@ EVENT_TYPE_ACCESSOR(Ei)
 // interrupt handler.  this just adds a quit event to the queue.
 static void interrupt(Arch::ESignal, void *data)
 {
-  EventQueue *events = static_cast<EventQueue *>(data);
+  auto *events = static_cast<EventQueue *>(data);
   events->addEvent(Event(Event::kQuit));
 }
 
@@ -320,7 +320,7 @@ EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target)
 void EventQueue::deleteTimer(EventQueueTimer *timer)
 {
   ArchMutexLock lock(m_mutex);
-  for (TimerQueue::iterator index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
+  for (auto index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
     if (index->getTimer() == timer) {
       m_timerQueue.erase(index);
       break;
@@ -368,7 +368,7 @@ void EventQueue::removeHandlers(void *target)
     if (index != m_handlers.end()) {
       // copy to handlers array and clear table for target
       TypeHandlerTable &typeHandlers = index->second;
-      for (TypeHandlerTable::iterator index2 = typeHandlers.begin(); index2 != typeHandlers.end(); ++index2) {
+      for (auto index2 = typeHandlers.begin(); index2 != typeHandlers.end(); ++index2) {
         handlers.push_back(index2->second);
       }
       typeHandlers.clear();
@@ -376,7 +376,7 @@ void EventQueue::removeHandlers(void *target)
   }
 
   // delete handlers
-  for (std::vector<IEventJob *>::iterator index = handlers.begin(); index != handlers.end(); ++index) {
+  for (auto index = handlers.begin(); index != handlers.end(); ++index) {
     delete *index;
   }
 }
@@ -450,7 +450,7 @@ bool EventQueue::hasTimerExpired(Event &event)
   m_time.reset();
 
   // countdown elapsed time
-  for (TimerQueue::iterator index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
+  for (auto index = m_timerQueue.begin(); index != m_timerQueue.end(); ++index) {
     (*index) -= time;
   }
 
