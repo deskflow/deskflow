@@ -57,7 +57,7 @@ SocketMultiplexer::~SocketMultiplexer()
   delete m_mutex;
 
   // clean up jobs
-  for (SocketJobMap::iterator i = m_socketJobMap.begin(); i != m_socketJobMap.end(); ++i) {
+  for (auto i = m_socketJobMap.begin(); i != m_socketJobMap.end(); ++i) {
     delete *(i->second);
   }
 }
@@ -222,7 +222,7 @@ void SocketMultiplexer::serviceThread(void *)
     }
 
     // delete any removed socket jobs
-    for (SocketJobMap::iterator i = m_socketJobMap.begin(); i != m_socketJobMap.end();) {
+    for (auto i = m_socketJobMap.begin(); i != m_socketJobMap.end();) {
       if (*(i->second) == nullptr) {
         m_socketJobs.erase(i->second);
         m_socketJobMap.erase(i++);
@@ -246,7 +246,7 @@ SocketMultiplexer::JobCursor SocketMultiplexer::newCursor()
 SocketMultiplexer::JobCursor SocketMultiplexer::nextCursor(JobCursor cursor)
 {
   Lock lock(m_mutex);
-  JobCursor j = m_socketJobs.end();
+  auto j = m_socketJobs.end();
   JobCursor i = cursor;
   while (++i != m_socketJobs.end()) {
     if (*i != m_cursorMark) {
