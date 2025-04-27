@@ -171,7 +171,7 @@ private:
 type_##Events&                                                                \
 EventQueue::for##type_()                                                                                               \
   {                                                                                                                    \
-    if (m_typesFor##type_ == NULL) {                                                                                   \
+    if (m_typesFor##type_ == nullptr) {                                                                                \
       m_typesFor##type_ = new type_##Events();                                                                         \
       m_typesFor##type_->setEvents(dynamic_cast<IEventQueue *>(this));                                                 \
     }                                                                                                                  \

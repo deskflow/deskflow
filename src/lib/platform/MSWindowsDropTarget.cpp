@@ -14,7 +14,7 @@
 
 void getDropData(IDataObject *pDataObject);
 
-MSWindowsDropTarget *MSWindowsDropTarget::s_instance = NULL;
+MSWindowsDropTarget *MSWindowsDropTarget::s_instance = nullptr;
 
 MSWindowsDropTarget::MSWindowsDropTarget() : m_refCount(1), m_allowDrop(false)
 {
@@ -27,7 +27,7 @@ MSWindowsDropTarget::~MSWindowsDropTarget()
 
 MSWindowsDropTarget &MSWindowsDropTarget::instance()
 {
-  assert(s_instance != NULL);
+  assert(s_instance != nullptr);
   return *s_instance;
 }
 

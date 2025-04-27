@@ -855,7 +855,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
   ModifierToKeys oldActiveModifiers = m_activeModifiers;
   const deskflow::KeyMap::KeyItem *keyItem =
       m_keyMap.mapKey(keys, id, pollActiveGroup(), m_activeModifiers, getActiveModifiersRValue(), mask, true, lang);
-  if (keyItem == NULL) {
+  if (keyItem == nullptr) {
     return false;
   }
   KeyButton localID = (KeyButton)(keyItem->m_button & kButtonMask);
@@ -996,7 +996,7 @@ bool KeyState::isIgnoredKey(KeyID key, KeyModifierMask) const
 KeyButton KeyState::getButton(KeyID id, int32_t group) const
 {
   const deskflow::KeyMap::KeyItemList *items = m_keyMap.findCompatibleKey(id, group, 0, 0);
-  if (items == NULL) {
+  if (items == nullptr) {
     return 0;
   } else {
     return items->back().m_button;

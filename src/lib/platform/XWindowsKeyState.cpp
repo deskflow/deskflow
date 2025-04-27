@@ -59,7 +59,7 @@ XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *e
 XWindowsKeyState::~XWindowsKeyState()
 {
 #if HAVE_XKB_EXTENSION
-  if (m_xkb != NULL) {
+  if (m_xkb != nullptr) {
     XkbFreeKeyboard(m_xkb, 0, True);
   }
 #endif
@@ -72,7 +72,7 @@ void XWindowsKeyState::init(Display *display, bool useXKB)
   if (useXKB) {
     m_xkb = XkbGetMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask, XkbUseCoreKbd);
   } else {
-    m_xkb = NULL;
+    m_xkb = nullptr;
   }
 #endif
   setActiveGroup(kGroupPoll);
@@ -173,7 +173,7 @@ int32_t XWindowsKeyState::pollActiveGroup() const
   }
 
 #if HAVE_XKB_EXTENSION
-  if (m_xkb != NULL) {
+  if (m_xkb != nullptr) {
     XkbStateRec state;
     XSync(m_display, False);
     if (XkbGetState(m_display, XkbUseCoreKbd, &state) == Success) {
@@ -208,7 +208,7 @@ void XWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
   m_keyboardState.global_auto_repeat = oldGlobalAutoRepeat;
 
 #if HAVE_XKB_EXTENSION
-  if (m_xkb != NULL) {
+  if (m_xkb != nullptr) {
     if (XkbGetUpdatedMap(m_display, XkbKeyActionsMask | XkbKeyBehaviorsMask | XkbAllClientInfoMask, m_xkb) == Success) {
       updateKeysymMapXKB(keyMap);
       return;
@@ -294,7 +294,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
       }
 #endif
 #if HAVE_XKB_EXTENSION
-      if (m_xkb != NULL) {
+      if (m_xkb != nullptr) {
         if (XkbLockGroup(m_display, XkbUseCoreKbd, keystroke.m_data.m_group.m_group) == False) {
           LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
         }
@@ -311,7 +311,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
       }
 #endif
 #if HAVE_XKB_EXTENSION
-      if (m_xkb != NULL) {
+      if (m_xkb != nullptr) {
         if (XkbLockGroup(
                 m_display, XkbUseCoreKbd, getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group)
             ) == False) {
@@ -637,7 +637,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 
         // set required modifiers for this item
         item.m_required = mapEntry->mods.mask;
-        if ((item.m_required & LockMask) != 0 && j != -1 && type->preserve != NULL &&
+        if ((item.m_required & LockMask) != 0 && j != -1 && type->preserve != nullptr &&
             (type->preserve[j].mask & LockMask) != 0) {
           // sensitive caps lock and we preserve caps-lock.
           // preserving caps-lock means we Xlib functions would
@@ -847,7 +847,7 @@ int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
 uint32_t XWindowsKeyState::getGroupFromState(unsigned int state) const
 {
 #if HAVE_XKB_EXTENSION
-  if (m_xkb != NULL) {
+  if (m_xkb != nullptr) {
     return XkbGroupForCoreState(state);
   }
 #endif

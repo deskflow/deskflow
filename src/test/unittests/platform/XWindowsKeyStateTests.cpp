@@ -30,10 +30,10 @@
 
 class XWindowsKeyStateTests : public ::testing::Test {
 protected:
-  XWindowsKeyStateTests() : m_display(NULL) {}
+  XWindowsKeyStateTests() : m_display(nullptr) {}
 
   ~XWindowsKeyStateTests() {
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
       LOG((CLOG_DEBUG "closing display"));
       XCloseDisplay(m_display);
     }
@@ -41,11 +41,11 @@ protected:
 
   virtual void SetUp() {
     // open the display only once for the entire test suite
-    if (this->m_display == NULL) {
+    if (this->m_display == nullptr) {
       LOG((CLOG_DEBUG "opening display"));
-      this->m_display = XOpenDisplay(NULL);
+      this->m_display = XOpenDisplay(nullptr);
 
-      ASSERT_TRUE(this->m_display != NULL)
+      ASSERT_TRUE(this->m_display != nullptr)
           << "unable to open display: " << errno;
     }
   }

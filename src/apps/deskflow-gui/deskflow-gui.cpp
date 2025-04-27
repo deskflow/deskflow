@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         "Please drag %1 to the Applications folder, "
         "and open it from there."
     );
-    QMessageBox::information(NULL, kAppName, msgBody.arg(kAppName));
+    QMessageBox::information(nullptr, kAppName, msgBody.arg(kAppName));
     return 1;
   }
 
@@ -159,7 +159,7 @@ bool checkMacAssistiveDevices()
 
   const void *keys[] = {kAXTrustedCheckOptionPrompt};
   const void *trueValue[] = {kCFBooleanTrue};
-  CFDictionaryRef options = CFDictionaryCreate(NULL, keys, trueValue, 1, NULL, NULL);
+  CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, trueValue, 1, nullptr, nullptr);
 
   bool result = AXIsProcessTrustedWithOptions(options);
   CFRelease(options);

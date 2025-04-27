@@ -310,13 +310,13 @@ struct KeyModifierNameMapEntry
 /*!
 A table of key names to the corresponding KeyID.  Only the keys listed
 above plus non-alphanumeric ASCII characters are in the table.  The end
-of the table is the first pair with a NULL m_name.
+of the table is the first pair with a nullptr m_name.
 */
 extern const struct KeyNameMapEntry kKeyNameMap[];
 
 //! Modifier key name to KeyModifierMask table
 /*!
 A table of modifier key names to the corresponding KeyModifierMask.
-The end of the table is the first pair with a NULL m_name.
+The end of the table is the first pair with a nullptr m_name.
 */
 extern const struct KeyModifierNameMapEntry kModifierNameMap[];

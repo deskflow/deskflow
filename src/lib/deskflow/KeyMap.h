@@ -211,7 +211,7 @@ public:
   modifiers as given in \p currentState and the desired modifiers in
   \p desiredMask into the keystrokes necessary to synthesize that key
   event in \p keys.  It returns the \c KeyItem of the key being
-  pressed/repeated, or NULL if the key cannot be mapped.
+  pressed/repeated, or nullptr if the key cannot be mapped.
   */
   virtual const KeyItem *mapKey(
       Keystrokes &keys, KeyID id, int32_t group, ModifierToKeys &activeModifiers, KeyModifierMask &currentState,
@@ -235,7 +235,7 @@ public:
   //! Find key entry compatible with modifiers
   /*!
   Returns the \c KeyItemList for the first entry for \p id in group
-  \p group that is compatible with the given modifiers, or NULL
+  \p group that is compatible with the given modifiers, or nullptr
   if there isn't one.  A button list is compatible with a modifiers
   if it is either insensitive to all modifiers in \p sensitive or
   it requires the modifiers to be in the state indicated by \p required

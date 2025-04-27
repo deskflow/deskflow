@@ -115,12 +115,12 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
 // Log
 //
 
-Log *Log::s_log = NULL;
+Log *Log::s_log = nullptr;
 
 Log::Log(bool singleton)
 {
   if (singleton) {
-    assert(s_log == NULL);
+    assert(s_log == nullptr);
   }
 
   // create mutex for multithread safe operation
@@ -154,7 +154,7 @@ Log::~Log()
 
 Log *Log::getInstance()
 {
-  assert(s_log != NULL);
+  assert(s_log != nullptr);
   return s_log;
 }
 
@@ -210,7 +210,7 @@ void Log::print(const char *file, int line, const char *fmt, ...)
 
 void Log::insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead)
 {
-  assert(adoptedOutputter != NULL);
+  assert(adoptedOutputter != nullptr);
 
   ArchMutexLock lock(m_mutex);
   if (alwaysAtHead) {
@@ -241,7 +241,7 @@ void Log::pop_front(bool alwaysAtHead)
 
 bool Log::setFilter(const char *maxPriority)
 {
-  if (maxPriority != NULL) {
+  if (maxPriority != nullptr) {
     for (int i = 0; i < g_numPriority; ++i) {
       if (strcmp(maxPriority, g_priority[i]) == 0) {
         setFilter(i);
@@ -268,7 +268,7 @@ int Log::getFilter() const
 void Log::output(ELevel priority, char *msg)
 {
   assert(priority >= -1 && priority < g_numPriority);
-  assert(msg != NULL);
+  assert(msg != nullptr);
   if (!msg)
     return;
 

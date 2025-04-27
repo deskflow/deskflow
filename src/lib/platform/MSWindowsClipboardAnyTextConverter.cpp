@@ -35,15 +35,15 @@ MSWindowsClipboardAnyTextConverter::fromIClipboard(const std::string &data) cons
 
   // copy to memory handle
   HGLOBAL gData = GlobalAlloc(GMEM_MOVEABLE | GMEM_DDESHARE, size);
-  if (gData != NULL) {
+  if (gData != nullptr) {
     // get a pointer to the allocated memory
     char *dst = (char *)GlobalLock(gData);
-    if (dst != NULL) {
+    if (dst != nullptr) {
       memcpy(dst, text.data(), size);
       GlobalUnlock(gData);
     } else {
       GlobalFree(gData);
-      gData = NULL;
+      gData = nullptr;
     }
   }
 
@@ -55,7 +55,7 @@ std::string MSWindowsClipboardAnyTextConverter::toIClipboard(HANDLE data) const
   // get datator
   const char *src = (const char *)GlobalLock(data);
   uint32_t srcSize = (uint32_t)GlobalSize(data);
-  if (src == NULL || srcSize <= 1) {
+  if (src == nullptr || srcSize <= 1) {
     return std::string();
   }
 

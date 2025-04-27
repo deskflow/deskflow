@@ -70,13 +70,13 @@ using namespace deskflow::server;
 
 ServerApp::ServerApp(IEventQueue *events)
     : App(events, new deskflow::ServerArgs()),
-      m_server(NULL),
+      m_server(nullptr),
       m_serverState(kUninitialized),
-      m_serverScreen(NULL),
-      m_primaryClient(NULL),
-      m_listener(NULL),
-      m_timer(NULL),
-      m_deskflowAddress(NULL)
+      m_serverScreen(nullptr),
+      m_primaryClient(nullptr),
+      m_listener(nullptr),
+      m_timer(nullptr),
+      m_deskflowAddress(nullptr)
 {
 }
 
@@ -166,7 +166,7 @@ void ServerApp::reloadConfig(const Event &, void *)
 {
   LOG((CLOG_DEBUG "reload configuration"));
   if (loadConfig(args().m_configFile)) {
-    if (m_server != NULL) {
+    if (m_server != nullptr) {
       m_server->setConfig(*args().m_config);
     }
     LOG((CLOG_NOTE "reloaded configuration"));
@@ -209,7 +209,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
 
 void ServerApp::forceReconnect(const Event &, void *)
 {
-  if (m_server != NULL) {
+  if (m_server != nullptr) {
     m_server->disconnect();
   }
 }
@@ -218,7 +218,7 @@ void ServerApp::handleClientConnected(const Event &, void *vlistener)
 {
   ClientListener *listener = static_cast<ClientListener *>(vlistener);
   ClientProxy *client = listener->getNextClient();
-  if (client != NULL) {
+  if (client != nullptr) {
     m_server->adoptClient(client);
     updateStatus();
   }
@@ -231,7 +231,7 @@ void ServerApp::handleClientsDisconnected(const Event &, void *)
 
 void ServerApp::closeServer(Server *server)
 {
-  if (server == NULL) {
+  if (server == nullptr) {
     return;
   }
 
@@ -240,7 +240,7 @@ void ServerApp::closeServer(Server *server)
 
   // wait for clients to disconnect for up to timeout seconds
   double timeout = 3.0;
-  EventQueueTimer *timer = m_events->newOneShotTimer(timeout, NULL);
+  EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
   m_events->adoptHandler(
       Event::kTimer, timer, new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected)
   );
@@ -261,10 +261,10 @@ void ServerApp::closeServer(Server *server)
 
 void ServerApp::stopRetryTimer()
 {
-  if (m_timer != NULL) {
+  if (m_timer != nullptr) {
     m_events->removeHandler(Event::kTimer, m_timer);
     m_events->deleteTimer(m_timer);
-    m_timer = NULL;
+    m_timer = nullptr;
   }
 }
 
@@ -279,7 +279,7 @@ void ServerApp::updateStatus(const std::string &msg)
 
 void ServerApp::closeClientListener(ClientListener *listen)
 {
-  if (listen != NULL) {
+  if (listen != nullptr) {
     m_events->removeHandler(m_events->forClientListener().connected(), listen);
     delete listen;
   }
@@ -290,15 +290,15 @@ void ServerApp::stopServer()
   if (m_serverState == kStarted) {
     closeServer(m_server);
     closeClientListener(m_listener);
-    m_server = NULL;
-    m_listener = NULL;
+    m_server = nullptr;
+    m_listener = nullptr;
     m_serverState = kInitialized;
   } else if (m_serverState == kStarting) {
     stopRetryTimer();
     m_serverState = kInitialized;
   }
-  assert(m_server == NULL);
-  assert(m_listener == NULL);
+  assert(m_server == nullptr);
+  assert(m_listener == nullptr);
 }
 
 void ServerApp::closePrimaryClient(PrimaryClient *primaryClient)
@@ -308,7 +308,7 @@ void ServerApp::closePrimaryClient(PrimaryClient *primaryClient)
 
 void ServerApp::closeServerScreen(deskflow::Screen *screen)
 {
-  if (screen != NULL) {
+  if (screen != nullptr) {
     m_events->removeHandler(m_events->forIScreen().error(), screen->getEventTarget());
     m_events->removeHandler(m_events->forIScreen().suspend(), screen->getEventTarget());
     m_events->removeHandler(m_events->forIScreen().resume(), screen->getEventTarget());
@@ -322,22 +322,22 @@ void ServerApp::cleanupServer()
   if (m_serverState == kInitialized) {
     closePrimaryClient(m_primaryClient);
     closeServerScreen(m_serverScreen);
-    m_primaryClient = NULL;
-    m_serverScreen = NULL;
+    m_primaryClient = nullptr;
+    m_serverScreen = nullptr;
     m_serverState = kUninitialized;
   } else if (m_serverState == kInitializing || m_serverState == kInitializingToStart) {
     stopRetryTimer();
     m_serverState = kUninitialized;
   }
-  assert(m_primaryClient == NULL);
-  assert(m_serverScreen == NULL);
+  assert(m_primaryClient == nullptr);
+  assert(m_serverScreen == nullptr);
   assert(m_serverState == kUninitialized);
 }
 
 void ServerApp::retryHandler(const Event &, void *)
 {
   // discard old timer
-  assert(m_timer != NULL);
+  assert(m_timer != nullptr);
   stopRetryTimer();
 
   // try initializing/starting the server again
@@ -387,8 +387,8 @@ bool ServerApp::initServer()
   }
 
   double retryTime;
-  deskflow::Screen *serverScreen = NULL;
-  PrimaryClient *primaryClient = NULL;
+  deskflow::Screen *serverScreen = nullptr;
+  PrimaryClient *primaryClient = nullptr;
   try {
     std::string name = args().m_config->getCanonicalName(args().m_name);
     serverScreen = openServerScreen();
@@ -418,9 +418,9 @@ bool ServerApp::initServer()
 
   if (args().m_restartable) {
     // install a timer and handler to retry later
-    assert(m_timer == NULL);
+    assert(m_timer == nullptr);
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-    m_timer = m_events->newOneShotTimer(retryTime, NULL);
+    m_timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
     m_serverState = kInitializing;
     return true;
@@ -470,7 +470,7 @@ bool ServerApp::startServer()
     assert(m_serverState == kInitialized);
   }
 
-  ClientListener *listener = NULL;
+  ClientListener *listener = nullptr;
   try {
     listener = openClientListener(args().m_config->getDeskflowAddress());
     m_server = openServer(*args().m_config, m_primaryClient);
@@ -497,10 +497,10 @@ bool ServerApp::startServer()
 
   if (args().m_restartable) {
     // install a timer and handler to retry later
-    assert(m_timer == NULL);
+    assert(m_timer == nullptr);
     const auto retryTime = 10.0;
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-    m_timer = m_events->newOneShotTimer(retryTime, NULL);
+    m_timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
     m_serverState = kStarting;
     return true;
@@ -655,7 +655,7 @@ int ServerApp::mainLoop()
   appUtil().startNode();
 
   // handle hangup signal by reloading the server's configuration
-  ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, NULL);
+  ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, nullptr);
   m_events->adoptHandler(
       m_events->forServerApp().reloadConfig(), m_events->getSystemTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::reloadConfig)
@@ -682,7 +682,7 @@ int ServerApp::mainLoop()
 
 #if WINAPI_CARBON
 
-  Thread thread(new TMethodJob<ServerApp>(this, &ServerApp::runEventsLoop, NULL));
+  Thread thread(new TMethodJob<ServerApp>(this, &ServerApp::runEventsLoop, nullptr));
 
   // wait until carbon loop is ready
   OSXScreen *screen = dynamic_cast<OSXScreen *>(m_serverScreen->getPlatformScreen());

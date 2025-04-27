@@ -50,16 +50,16 @@ public:
 
 ArchThreadImpl::ArchThreadImpl()
     : m_refCount(1),
-      m_thread(NULL),
+      m_thread(nullptr),
       m_id(0),
-      m_func(NULL),
-      m_userData(NULL),
+      m_func(nullptr),
+      m_userData(nullptr),
       m_cancelling(false),
-      m_result(NULL),
-      m_networkData(NULL)
+      m_result(nullptr),
+      m_networkData(nullptr)
 {
-  m_exit = CreateEvent(NULL, TRUE, FALSE, NULL);
-  m_cancel = CreateEvent(NULL, TRUE, FALSE, NULL);
+  m_exit = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+  m_cancel = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 }
 
 ArchThreadImpl::~ArchThreadImpl()
@@ -72,17 +72,17 @@ ArchThreadImpl::~ArchThreadImpl()
 // ArchMultithreadWindows
 //
 
-ArchMultithreadWindows *ArchMultithreadWindows::s_instance = NULL;
+ArchMultithreadWindows *ArchMultithreadWindows::s_instance = nullptr;
 
 ArchMultithreadWindows::ArchMultithreadWindows()
 {
-  assert(s_instance == NULL);
+  assert(s_instance == nullptr);
   s_instance = this;
 
   // no signal handlers
   for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
-    m_signalFunc[i] = NULL;
-    m_signalUserData[i] = NULL;
+    m_signalFunc[i] = nullptr;
+    m_signalUserData[i] = nullptr;
   }
 
   // create mutex for thread list
@@ -91,14 +91,14 @@ ArchMultithreadWindows::ArchMultithreadWindows()
   // create thread for calling (main) thread and add it to our
   // list.  no need to lock the mutex since we're the only thread.
   m_mainThread = new ArchThreadImpl;
-  m_mainThread->m_thread = NULL;
+  m_mainThread->m_thread = nullptr;
   m_mainThread->m_id = GetCurrentThreadId();
   insert(m_mainThread);
 }
 
 ArchMultithreadWindows::~ArchMultithreadWindows()
 {
-  s_instance = NULL;
+  s_instance = nullptr;
 
   // clean up thread list
   for (ThreadList::iterator index = m_threadList.begin(); index != m_threadList.end(); ++index) {
@@ -142,8 +142,8 @@ ArchMultithreadWindows *ArchMultithreadWindows::getInstance()
 ArchCond ArchMultithreadWindows::newCondVar()
 {
   ArchCondImpl *cond = new ArchCondImpl;
-  cond->m_events[ArchCondImpl::kSignal] = CreateEvent(NULL, FALSE, FALSE, NULL);
-  cond->m_events[ArchCondImpl::kBroadcast] = CreateEvent(NULL, TRUE, FALSE, NULL);
+  cond->m_events[ArchCondImpl::kSignal] = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+  cond->m_events[ArchCondImpl::kBroadcast] = CreateEvent(nullptr, TRUE, FALSE, nullptr);
   cond->m_waitCountMutex = newMutex();
   cond->m_waitCount = 0;
   return cond;
@@ -272,14 +272,14 @@ ArchThread ArchMultithreadWindows::newThread(ThreadFunc func, void *data)
 
   // create thread
   unsigned int id = 0;
-  thread->m_thread = reinterpret_cast<HANDLE>(_beginthreadex(NULL, 0, threadFunc, (void *)thread, 0, &id));
+  thread->m_thread = reinterpret_cast<HANDLE>(_beginthreadex(nullptr, 0, threadFunc, (void *)thread, 0, &id));
   thread->m_id = static_cast<DWORD>(id);
 
   // check if thread was started
   if (thread->m_thread == 0) {
     // failed to start thread so clean up
     delete thread;
-    thread = NULL;
+    thread = nullptr;
   } else {
     // add thread to list
     insert(thread);
@@ -299,18 +299,18 @@ ArchThread ArchMultithreadWindows::newCurrentThread()
   lockMutex(m_threadMutex);
   ArchThreadImpl *thread = find(GetCurrentThreadId());
   unlockMutex(m_threadMutex);
-  assert(thread != NULL);
+  assert(thread != nullptr);
   return thread;
 }
 
 void ArchMultithreadWindows::closeThread(ArchThread thread)
 {
-  assert(thread != NULL);
+  assert(thread != nullptr);
 
   // decrement ref count and clean up thread if no more references
   if (--thread->m_refCount == 0) {
-    // close the handle (main thread has a NULL handle)
-    if (thread->m_thread != NULL) {
+    // close the handle (main thread has a nullptr handle)
+    if (thread->m_thread != nullptr) {
       CloseHandle(thread->m_thread);
     }
 
@@ -333,7 +333,7 @@ ArchThread ArchMultithreadWindows::copyThread(ArchThread thread)
 
 void ArchMultithreadWindows::cancelThread(ArchThread thread)
 {
-  assert(thread != NULL);
+  assert(thread != nullptr);
 
   // set cancel flag
   SetEvent(thread->m_cancel);
@@ -380,7 +380,7 @@ void ArchMultithreadWindows::setPriorityOfThread(ArchThread thread, int n)
 #endif
   static const size_t s_pBase = 8; // index of normal priority
 
-  assert(thread != NULL);
+  assert(thread != nullptr);
 
   size_t index;
   if (n > 0 && s_pBase < (size_t)n) {
@@ -410,7 +410,7 @@ void ArchMultithreadWindows::testCancelThread()
 
 bool ArchMultithreadWindows::wait(ArchThread target, double timeout)
 {
-  assert(target != NULL);
+  assert(target != nullptr);
 
   lockMutex(m_threadMutex);
 
@@ -502,7 +502,7 @@ void ArchMultithreadWindows::setSignalHandler(ESignal signal, SignalFunc func, v
 void ArchMultithreadWindows::raiseSignal(ESignal signal)
 {
   lockMutex(m_threadMutex);
-  if (m_signalFunc[signal] != NULL) {
+  if (m_signalFunc[signal] != nullptr) {
     m_signalFunc[signal](signal, m_signalUserData[signal]);
     ARCH->unblockPollSocket(m_mainThread);
   } else if (signal == kINTERRUPT || signal == kTERMINATE) {
@@ -514,7 +514,7 @@ void ArchMultithreadWindows::raiseSignal(ESignal signal)
 ArchThreadImpl *ArchMultithreadWindows::find(DWORD id)
 {
   ArchThreadImpl *impl = findNoRef(id);
-  if (impl != NULL) {
+  if (impl != nullptr) {
     refThread(impl);
   }
   return impl;
@@ -523,13 +523,13 @@ ArchThreadImpl *ArchMultithreadWindows::find(DWORD id)
 ArchThreadImpl *ArchMultithreadWindows::findNoRef(DWORD id)
 {
   ArchThreadImpl *impl = findNoRefOrCreate(id);
-  if (impl == NULL) {
+  if (impl == nullptr) {
     // create thread for calling thread which isn't in our list and
     // add it to the list.  this won't normally happen but it can if
     // the system calls us under a new thread, like it does when we
     // run as a service.
     impl = new ArchThreadImpl;
-    impl->m_thread = NULL;
+    impl->m_thread = nullptr;
     impl->m_id = GetCurrentThreadId();
     insert(impl);
   }
@@ -544,15 +544,15 @@ ArchThreadImpl *ArchMultithreadWindows::findNoRefOrCreate(DWORD id)
       return *index;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 void ArchMultithreadWindows::insert(ArchThreadImpl *thread)
 {
-  assert(thread != NULL);
+  assert(thread != nullptr);
 
   // thread shouldn't already be on the list
-  assert(findNoRefOrCreate(thread->m_id) == NULL);
+  assert(findNoRefOrCreate(thread->m_id) == nullptr);
 
   // append to list
   m_threadList.push_back(thread);
@@ -570,14 +570,14 @@ void ArchMultithreadWindows::erase(ArchThreadImpl *thread)
 
 void ArchMultithreadWindows::refThread(ArchThreadImpl *thread)
 {
-  assert(thread != NULL);
-  assert(findNoRefOrCreate(thread->m_id) != NULL);
+  assert(thread != nullptr);
+  assert(findNoRefOrCreate(thread->m_id) != nullptr);
   ++thread->m_refCount;
 }
 
 void ArchMultithreadWindows::testCancelThreadImpl(ArchThreadImpl *thread)
 {
-  assert(thread != NULL);
+  assert(thread != nullptr);
 
   // poll cancel event.  return if not set.
   const DWORD result = WaitForSingleObject(thread->m_cancel, 0);
@@ -616,7 +616,7 @@ void ArchMultithreadWindows::doThreadFunc(ArchThread thread)
   lockMutex(m_threadMutex);
   unlockMutex(m_threadMutex);
 
-  void *result = NULL;
+  void *result = nullptr;
   try {
     // go
     result = (*thread->m_func)(thread->m_userData);

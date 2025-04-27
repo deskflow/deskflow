@@ -56,7 +56,7 @@ void createFile(fstream &file, const char *filename, size_t size);
 
 class NetworkTests : public ::testing::Test {
 public:
-  NetworkTests() : m_mockData(NULL), m_mockDataSize(0), m_mockFileSize(0) {
+  NetworkTests() : m_mockData(nullptr), m_mockDataSize(0), m_mockFileSize(0) {
     m_mockData = newMockData(kMockDataSize);
     createFile(m_mockFile, kMockFilename, kMockFileSize);
   }
@@ -353,7 +353,7 @@ void NetworkTests::sendToClient_mockData_handleClientConnected(
   Server *server = listener->getServer();
 
   ClientProxy *client = listener->getNextClient();
-  if (client == NULL) {
+  if (client == nullptr) {
     throw runtime_error("client is null");
   }
 
@@ -378,7 +378,7 @@ void NetworkTests::sendToClient_mockFile_handleClientConnected(
   Server *server = listener->getServer();
 
   ClientProxy *client = listener->getNextClient();
-  if (client == NULL) {
+  if (client == nullptr) {
     throw runtime_error("client is null");
   }
 

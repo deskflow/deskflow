@@ -13,19 +13,19 @@
 //
 
 OSXUchrKeyResource::OSXUchrKeyResource(const void *resource, uint32_t keyboardType)
-    : m_m(NULL),
-      m_cti(NULL),
-      m_sdi(NULL),
-      m_sri(NULL),
-      m_st(NULL)
+    : m_m(nullptr),
+      m_cti(nullptr),
+      m_sdi(nullptr),
+      m_sri(nullptr),
+      m_st(nullptr)
 {
   m_resource = static_cast<const UCKeyboardLayout *>(resource);
-  if (m_resource == NULL) {
+  if (m_resource == nullptr) {
     return;
   }
 
   // find the keyboard info for the current keyboard type
-  const UCKeyboardTypeHeader *th = NULL;
+  const UCKeyboardTypeHeader *th = nullptr;
   const UCKeyboardLayout *r = m_resource;
   for (ItemCount i = 0; i < r->keyboardTypeCount; ++i) {
     if (keyboardType >= r->keyboardTypeList[i].keyboardTypeFirst &&
@@ -38,7 +38,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void *resource, uint32_t keyboardTy
       th = r->keyboardTypeList + i;
     }
   }
-  if (th == NULL) {
+  if (th == nullptr) {
     // cannot find a suitable keyboard type
     return;
   }
@@ -74,7 +74,7 @@ OSXUchrKeyResource::OSXUchrKeyResource(const void *resource, uint32_t keyboardTy
 
 bool OSXUchrKeyResource::isValid() const
 {
-  return (m_m != NULL);
+  return (m_m != nullptr);
 }
 
 uint32_t OSXUchrKeyResource::getNumModifierCombinations() const
@@ -138,7 +138,7 @@ KeyID OSXUchrKeyResource::getKey(uint32_t table, uint32_t button) const
 
 bool OSXUchrKeyResource::getDeadKey(KeySequence &keys, uint16_t index) const
 {
-  if (m_sri == NULL || index >= m_sri->keyStateRecordCount) {
+  if (m_sri == nullptr || index >= m_sri->keyStateRecordCount) {
     // XXX -- should we be using some other fallback?
     return false;
   }
@@ -218,7 +218,7 @@ bool OSXUchrKeyResource::getKeyRecord(KeySequence &keys, uint16_t index, uint16_
   }
   if (!found) {
     // use a terminator
-    if (m_st != NULL && state < m_st->keyStateTerminatorCount) {
+    if (m_st != nullptr && state < m_st->keyStateTerminatorCount) {
       if (!addSequence(keys, m_st->keyStateTerminators[state - 1])) {
         return false;
       }

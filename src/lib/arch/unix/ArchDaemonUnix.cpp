@@ -49,7 +49,7 @@ int execSelfNonDaemonized()
 
 bool alreadyDaemonized()
 {
-  return getenv("_DESKFLOW_DAEMONIZED") != NULL;
+  return getenv("_DESKFLOW_DAEMONIZED") != nullptr;
 }
 
 #endif

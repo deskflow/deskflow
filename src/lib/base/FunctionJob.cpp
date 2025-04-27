@@ -23,7 +23,7 @@ FunctionJob::~FunctionJob()
 
 void FunctionJob::run()
 {
-  if (m_func != NULL) {
+  if (m_func != nullptr) {
     m_func(m_arg);
   }
 }

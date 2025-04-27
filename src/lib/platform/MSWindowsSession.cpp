@@ -20,7 +20,7 @@ MSWindowsSession::~MSWindowsSession()
 {
 }
 
-bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = NULL)
+bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nullptr)
 {
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -91,7 +91,7 @@ bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = NU
   CloseHandle(snapshot);
 
   if (pid) {
-    if (process != NULL) {
+    if (process != nullptr) {
       // now get the process, which we'll use to get the process token.
       LOG((CLOG_DEBUG "found %s in session %i", name, m_activeSessionId));
       *process = OpenProcess(MAXIMUM_ALLOWED, FALSE, pid);

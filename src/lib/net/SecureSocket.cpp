@@ -104,7 +104,7 @@ ISocketMultiplexerJob *SecureSocket::newJob()
   // after TCP connection is established, SecureSocket will pick up
   // connected event and do secureConnect
   if (m_connected && !m_secureReady) {
-    return NULL;
+    return nullptr;
   }
 
   return TCPSocket::newJob();
@@ -184,7 +184,7 @@ TCPSocket::EJobResult SecureSocket::doWrite()
   static bool s_retry = false;
   static int s_retrySize = 0;
   static int s_staticBufferSize = 0;
-  static void *s_staticBuffer = NULL;
+  static void *s_staticBuffer = nullptr;
 
   // write data
   int bufferSize = 0;
@@ -236,7 +236,7 @@ int SecureSocket::secureRead(void *buffer, int size, int &read)
 {
   std::lock_guard ssl_lock{ssl_mutex_};
 
-  if (m_ssl->m_ssl != NULL) {
+  if (m_ssl->m_ssl != nullptr) {
     LOG((CLOG_DEBUG2 "reading secure socket"));
     read = SSL_read(m_ssl->m_ssl, buffer, size);
 
@@ -263,7 +263,7 @@ int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)
 {
   std::lock_guard ssl_lock{ssl_mutex_};
 
-  if (m_ssl->m_ssl != NULL) {
+  if (m_ssl->m_ssl != nullptr) {
     LOG((CLOG_DEBUG2 "writing secure socket: %p", this));
 
     wrote = SSL_write(m_ssl->m_ssl, buffer, size);
@@ -297,8 +297,8 @@ void SecureSocket::initSsl(bool server)
   std::lock_guard ssl_lock{ssl_mutex_};
 
   m_ssl = new Ssl();
-  m_ssl->m_context = NULL;
-  m_ssl->m_ssl = NULL;
+  m_ssl->m_context = nullptr;
+  m_ssl->m_ssl = nullptr;
 
   initContext(server);
 }
@@ -372,7 +372,7 @@ void SecureSocket::initContext(bool server)
   // be vulnerable
   SSL_CTX_set_options(m_ssl->m_context, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1 | SSL_OP_NO_TLSv1_1);
 
-  if (m_ssl->m_context == NULL) {
+  if (m_ssl->m_context == nullptr) {
     SslLogger::logError();
   }
 
@@ -388,8 +388,8 @@ void SecureSocket::createSSL()
 {
   // I assume just one instance is needed
   // get new SSL state with context
-  if (m_ssl->m_ssl == NULL) {
-    assert(m_ssl->m_context != NULL);
+  if (m_ssl->m_ssl == nullptr) {
+    assert(m_ssl->m_context != nullptr);
     m_ssl->m_ssl = SSL_new(m_ssl->m_context);
   }
 }
@@ -402,17 +402,17 @@ void SecureSocket::freeSSL()
   // take socket from multiplexer ASAP otherwise the race condition
   // could cause events to get called on a dead object. TCPSocket
   // will do this, too, but the double-call is harmless
-  setJob(NULL);
+  setJob(nullptr);
   if (m_ssl) {
-    if (m_ssl->m_ssl != NULL) {
+    if (m_ssl->m_ssl != nullptr) {
       SSL_shutdown(m_ssl->m_ssl);
 
       SSL_free(m_ssl->m_ssl);
-      m_ssl->m_ssl = NULL;
+      m_ssl->m_ssl = nullptr;
     }
-    if (m_ssl->m_context != NULL) {
+    if (m_ssl->m_context != nullptr) {
       SSL_CTX_free(m_ssl->m_context);
-      m_ssl->m_context = NULL;
+      m_ssl->m_context = nullptr;
     }
     delete m_ssl;
     m_ssl = nullptr;
@@ -546,7 +546,7 @@ bool SecureSocket::showCertificate() const
 
   // get the server's certificate
   cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-  if (cert != NULL) {
+  if (cert != nullptr) {
     line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
     LOG((CLOG_INFO "server tls certificate info: %s", line));
     OPENSSL_free(line);
@@ -704,7 +704,7 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, 
 
   // If status < 0, error happened
   if (status < 0) {
-    return NULL;
+    return nullptr;
   }
 
   // If status > 0, success
@@ -731,7 +731,7 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, b
 #endif
   // If status < 0, error happened
   if (status < 0) {
-    return NULL;
+    return nullptr;
   }
 
   // If status > 0, success

@@ -27,7 +27,7 @@ protected:
 private:
   void emptyClipboard()
   {
-    MSWindowsClipboard clipboard(NULL);
+    MSWindowsClipboard clipboard(nullptr);
     clipboard.open(0);
     clipboard.empty();
   }
@@ -41,7 +41,7 @@ public:
 
 TEST_F(MSWindowsClipboardTests, emptyUnowned_openCalled_returnsTrue)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   bool actual = clipboard.emptyUnowned();
@@ -51,7 +51,7 @@ TEST_F(MSWindowsClipboardTests, emptyUnowned_openCalled_returnsTrue)
 
 TEST_F(MSWindowsClipboardTests, empty_openCalled_returnsTrue)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   bool actual = clipboard.empty();
@@ -61,7 +61,7 @@ TEST_F(MSWindowsClipboardTests, empty_openCalled_returnsTrue)
 
 TEST_F(MSWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
   clipboard.add(MSWindowsClipboard::kText, "synergy rocks!");
 
@@ -73,7 +73,7 @@ TEST_F(MSWindowsClipboardTests, empty_singleFormat_hasReturnsFalse)
 
 TEST_F(MSWindowsClipboardTests, add_newValue_valueWasStored)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -87,7 +87,7 @@ TEST_F(MSWindowsClipboardTests, add_newValue_writeWasCalled)
   MockFacade facade;
   EXPECT_CALL(facade, write(testing::_, testing::_));
 
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.setFacade(facade);
   clipboard.open(0);
 
@@ -96,7 +96,7 @@ TEST_F(MSWindowsClipboardTests, add_newValue_writeWasCalled)
 
 TEST_F(MSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -108,7 +108,7 @@ TEST_F(MSWindowsClipboardTests, add_replaceValue_valueWasReplaced)
 
 TEST_F(MSWindowsClipboardTests, open_timeIsZero_returnsTrue)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
 
   bool actual = clipboard.open(0);
 
@@ -117,7 +117,7 @@ TEST_F(MSWindowsClipboardTests, open_timeIsZero_returnsTrue)
 
 TEST_F(MSWindowsClipboardTests, open_timeIsOne_returnsTrue)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
 
   bool actual = clipboard.open(1);
 
@@ -126,7 +126,7 @@ TEST_F(MSWindowsClipboardTests, open_timeIsOne_returnsTrue)
 
 TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   clipboard.close();
@@ -138,7 +138,7 @@ TEST_F(MSWindowsClipboardTests, close_isOpen_noErrors)
 #if 0
 TEST_F(MSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 {
-    MSWindowsClipboard clipboard(NULL);
+    MSWindowsClipboard clipboard(nullptr);
     clipboard.open(1);
 
     MSWindowsClipboard::Time actual = clipboard.getTime();
@@ -150,7 +150,7 @@ TEST_F(MSWindowsClipboardTests, getTime_openWithNoEmpty_returnsOne)
 
 TEST_F(MSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
 {
-    MSWindowsClipboard clipboard(NULL);
+    MSWindowsClipboard clipboard(nullptr);
     clipboard.open(1);
     clipboard.empty();
 
@@ -162,7 +162,7 @@ TEST_F(MSWindowsClipboardTests, getTime_openAndEmpty_returnsOne)
 
 TEST_F(MSWindowsClipboardTests, has_withFormatAdded_returnsTrue)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
   clipboard.empty();
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -174,7 +174,7 @@ TEST_F(MSWindowsClipboardTests, has_withFormatAdded_returnsTrue)
 
 TEST_F(MSWindowsClipboardTests, has_withNoFormats_returnsFalse)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
   clipboard.empty();
 
@@ -185,7 +185,7 @@ TEST_F(MSWindowsClipboardTests, has_withNoFormats_returnsFalse)
 
 TEST_F(MSWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
   clipboard.empty();
 
@@ -196,7 +196,7 @@ TEST_F(MSWindowsClipboardTests, get_withNoFormats_returnsEmpty)
 
 TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
   clipboard.empty();
   clipboard.add(IClipboard::kText, "synergy rocks!");
@@ -208,7 +208,7 @@ TEST_F(MSWindowsClipboardTests, get_withFormatAdded_returnsExpected)
 
 TEST_F(MSWindowsClipboardTests, isOwnedByDeskflow_defaultState_noError)
 {
-  MSWindowsClipboard clipboard(NULL);
+  MSWindowsClipboard clipboard(nullptr);
   clipboard.open(0);
 
   bool actual = clipboard.isOwnedByDeskflow();

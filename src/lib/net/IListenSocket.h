@@ -26,7 +26,7 @@ public:
   //! Accept connection
   /*!
   Accept a connection, returning a socket representing the full-duplex
-  data stream.  Returns NULL if no socket is waiting to be accepted.
+  data stream.  Returns nullptr if no socket is waiting to be accepted.
   This is only valid after a call to \c bind().
   */
   virtual IDataSocket *accept() = 0;

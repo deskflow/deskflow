@@ -43,7 +43,7 @@ IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, Secur
 
 IListenSocket *TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
-  IListenSocket *socket = NULL;
+  IListenSocket *socket = nullptr;
   if (securityLevel != SecurityLevel::PlainText) {
     socket = new SecureListenSocket(m_events, m_socketMultiplexer, family, securityLevel);
   } else {

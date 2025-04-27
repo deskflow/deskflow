@@ -79,7 +79,7 @@ public:
   Set the filter.  Messages below this priority are discarded.
   The default priority is 4 (INFO) (unless built without NDEBUG
   in which case it's 5 (DEBUG)).   setFilter(const char*) returns
-  true if the priority \c name was recognized;  if \c name is NULL
+  true if the priority \c name was recognized;  if \c name is nullptr
   then it simply returns true.
   */
   bool setFilter(const char *name);
@@ -94,7 +94,7 @@ public:
   //! Print a log message
   /*!
   Print a log message using the printf-like \c format and arguments
-  preceded by the filename and line number.  If \c file is NULL then
+  preceded by the filename and line number.  If \c file is nullptr then
   neither the file nor the line are printed.
   */
   void print(const char *file, int line, const char *format, ...);
@@ -182,7 +182,7 @@ otherwise it expands to a call that doesn't.
 #define LOGC(_a1, _a2)                                                                                                 \
   if (_a1)                                                                                                             \
   CLOG->print _a2
-#define CLOG_TRACE NULL, 0,
+#define CLOG_TRACE nullptr, 0,
 #else
 #define LOG(_a1) CLOG->print _a1
 #define LOGC(_a1, _a2)                                                                                                 \

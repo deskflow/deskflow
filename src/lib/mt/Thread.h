@@ -160,7 +160,7 @@ public:
   //! Get the exit result
   /*!
   Returns the exit result.  This does an implicit wait().  It returns
-  NULL immediately if called by a thread on itself or on a thread that
+  nullptr immediately if called by a thread on itself or on a thread that
   was cancelled.
 
   (cancellation point)

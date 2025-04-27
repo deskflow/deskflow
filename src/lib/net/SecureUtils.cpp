@@ -136,7 +136,7 @@ int getCertLength(const std::string &path)
     return -1;
   }
 
-  EVP_PKEY *privateKey = PEM_read_PrivateKey(fp, NULL, NULL, NULL);
+  EVP_PKEY *privateKey = PEM_read_PrivateKey(fp, nullptr, nullptr, nullptr);
 
   fclose(fp);
 

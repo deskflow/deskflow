@@ -20,7 +20,7 @@ TEST(ArgParserTests, isArg_abbreviationsArg_returnTrue)
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
-  bool result = ArgParser::isArg(i, argc, argv, "-t", NULL);
+  bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr);
 
   EXPECT_EQ(true, result);
 }
@@ -30,7 +30,7 @@ TEST(ArgParserTests, isArg_fullArg_returnTrue)
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "--test"};
-  bool result = ArgParser::isArg(i, argc, argv, NULL, "--test");
+  bool result = ArgParser::isArg(i, argc, argv, nullptr, "--test");
 
   EXPECT_EQ(true, result);
 }
@@ -41,10 +41,10 @@ TEST(ArgParserTests, isArg_missingArgs_returnFalse)
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
   static deskflow::ArgsBase argsBase;
-  ArgParser argParser(NULL);
+  ArgParser argParser(nullptr);
   argParser.setArgsBase(argsBase);
 
-  bool result = ArgParser::isArg(i, argc, argv, "-t", NULL, 1);
+  bool result = ArgParser::isArg(i, argc, argv, "-t", nullptr, 1);
 
   EXPECT_FALSE(result);
   EXPECT_EQ(true, argsBase.m_shouldExitFail);

@@ -24,7 +24,7 @@ TEST(CXWindowsScreenSaverTests, activate_defaultScreen_todo)
     MockEventQueue eventQueue;
     EXPECT_CALL(eventQueue, removeHandler(_, _)).Times(1);
     CXWindowsScreenSaver screenSaver(
-        display, window, NULL, &eventQueue);
+        display, window, nullptr, &eventQueue);
 
     screenSaver.activate();
 

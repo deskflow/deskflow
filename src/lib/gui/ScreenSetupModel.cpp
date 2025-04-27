@@ -17,7 +17,7 @@
 const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
 
 ScreenSetupModel::ScreenSetupModel(ScreenList &screens, int numColumns, int numRows)
-    : QAbstractTableModel(NULL),
+    : QAbstractTableModel(nullptr),
       m_Screens(screens),
       m_NumColumns(numColumns),
       m_NumRows(numRows)

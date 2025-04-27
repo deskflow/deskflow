@@ -77,7 +77,7 @@ public:
   /*!
   Create and return a timer object.  The object is opaque and is
   used only by the buffer but it must be a valid object (i.e.
-  not NULL).
+  not nullptr).
   */
   virtual EventQueueTimer *newTimer(double duration, bool oneShot) const = 0;
 

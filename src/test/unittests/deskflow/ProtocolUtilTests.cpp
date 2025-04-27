@@ -171,8 +171,8 @@ TEST_F(ProtocolUtilTests, readf_asserts) {
 }
 
 TEST_F(ProtocolUtilTests, readf_params_validation) {
-  EXPECT_FALSE(ProtocolUtil::readf(NULL, "%x", NULL));
-  EXPECT_FALSE(ProtocolUtil::readf(&stream, NULL, NULL));
+  EXPECT_FALSE(ProtocolUtil::readf(nullptr, "%x", nullptr));
+  EXPECT_FALSE(ProtocolUtil::readf(&stream, nullptr, nullptr));
 }
 
 TEST_F(ProtocolUtilTests, readf_string) {

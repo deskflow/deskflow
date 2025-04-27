@@ -59,7 +59,7 @@ uint32_t PacketStreamFilter::read(void *buffer, uint32_t n)
   }
 
   // read it
-  if (buffer != NULL) {
+  if (buffer != nullptr) {
     memcpy(buffer, m_buffer.peek(n), n);
   }
   m_buffer.pop(n);

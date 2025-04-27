@@ -107,10 +107,10 @@ KeyID IOSXKeyResource::getKeyID(uint8_t c)
     // convert to unicode
     CFStringRef cfString = CFStringCreateWithCStringNoCopy(kCFAllocatorDefault, str, encoding, kCFAllocatorNull);
 
-    // sometimes CFStringCreate...() returns NULL (e.g. Apple Korean
+    // sometimes CFStringCreate...() returns nullptr (e.g. Apple Korean
     // encoding with char value 214).  if it did then make no key,
     // otherwise CFStringCreateMutableCopy() will crash.
-    if (cfString == NULL) {
+    if (cfString == nullptr) {
       return kKeyNone;
     }
 

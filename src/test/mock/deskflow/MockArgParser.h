@@ -15,7 +15,7 @@
 class MockArgParser : public ArgParser
 {
 public:
-  MockArgParser() : ArgParser(NULL)
+  MockArgParser() : ArgParser(nullptr)
   {
   }
 

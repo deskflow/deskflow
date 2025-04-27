@@ -128,7 +128,7 @@ bool SystemLogOutputter::write(ELevel level, const char *msg)
 // SystemLogger
 //
 
-SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(NULL)
+SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(nullptr)
 {
   // redirect log messages
   if (blockConsole) {
@@ -144,7 +144,7 @@ SystemLogger::~SystemLogger()
 {
   CLOG->remove(m_syslog);
   delete m_syslog;
-  if (m_stop != NULL) {
+  if (m_stop != nullptr) {
     CLOG->remove(m_stop);
     delete m_stop;
   }
@@ -165,7 +165,7 @@ FileLogOutputter::~FileLogOutputter()
 
 void FileLogOutputter::setLogFilename(const char *logFile)
 {
-  assert(logFile != NULL);
+  assert(logFile != nullptr);
   m_fileName = logFile;
 }
 

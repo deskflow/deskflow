@@ -152,7 +152,7 @@ private:
 
   // convenience function to send events
 public: // HACK
-  void sendEvent(Event::Type type, void * = NULL);
+  void sendEvent(Event::Type type, void * = nullptr);
 
 private: // HACK
   void sendClipboardEvent(Event::Type type, ClipboardID id);

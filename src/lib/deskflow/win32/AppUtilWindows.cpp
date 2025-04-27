@@ -109,7 +109,7 @@ int AppUtilWindows::run(int argc, char **argv)
   }
 
   // record window instance for tray icon, etc
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+  ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 
   MSWindowsScreen::init(ArchMiscWindows::instanceWin32());
   Thread::getCurrentThread().setPriority(-14);
@@ -139,7 +139,7 @@ std::vector<std::string> AppUtilWindows::getKeyboardLayoutList()
 {
   std::vector<std::string> layoutLangCodes;
   {
-    auto uLayouts = GetKeyboardLayoutList(0, NULL);
+    auto uLayouts = GetKeyboardLayoutList(0, nullptr);
     auto lpList = (HKL *)LocalAlloc(LPTR, (uLayouts * sizeof(HKL)));
     uLayouts = GetKeyboardLayoutList(uLayouts, lpList);
 
@@ -178,7 +178,7 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const
 
   GUITHREADINFO gti = {sizeof(GUITHREADINFO)};
   if (GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
-    layout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, NULL));
+    layout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, nullptr));
   } else {
     LOG((CLOG_WARN "failed to determine current keyboard layout"));
   }

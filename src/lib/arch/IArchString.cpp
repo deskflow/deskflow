@@ -13,7 +13,7 @@
 #include <cstdlib>
 #include <cstring>
 
-static ArchMutex s_mutex = NULL;
+static ArchMutex s_mutex = nullptr;
 
 //
 // use C library non-reentrant multibyte conversion with mutex
@@ -21,9 +21,9 @@ static ArchMutex s_mutex = NULL;
 
 IArchString::~IArchString()
 {
-  if (s_mutex != NULL) {
+  if (s_mutex != nullptr) {
     ARCH->closeMutex(s_mutex);
-    s_mutex = NULL;
+    s_mutex = nullptr;
   }
 }
 
@@ -32,18 +32,18 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, boo
   ptrdiff_t len = 0;
 
   bool dummyErrors;
-  if (errors == NULL) {
+  if (errors == nullptr) {
     errors = &dummyErrors;
   }
   *errors = false;
 
-  if (s_mutex == NULL) {
+  if (s_mutex == nullptr) {
     s_mutex = ARCH->newMutex();
   }
 
   ARCH->lockMutex(s_mutex);
 
-  if (dst == NULL) {
+  if (dst == nullptr) {
     char dummy[MB_LEN_MAX];
     const wchar_t *scan = src;
     for (; n > 0; --n) {
@@ -90,18 +90,18 @@ int IArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, boo
   wchar_t dummy;
 
   bool dummyErrors;
-  if (errors == NULL) {
+  if (errors == nullptr) {
     errors = &dummyErrors;
   }
   *errors = false;
 
-  if (s_mutex == NULL) {
+  if (s_mutex == nullptr) {
     s_mutex = ARCH->newMutex();
   }
 
   ARCH->lockMutex(s_mutex);
 
-  if (dst == NULL) {
+  if (dst == nullptr) {
     const char *scan = src;
     while (n > 0) {
       ptrdiff_t mblen = mbtowc(&dummy, scan, n);

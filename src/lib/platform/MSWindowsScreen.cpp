@@ -78,8 +78,8 @@
 // MSWindowsScreen
 //
 
-HINSTANCE MSWindowsScreen::s_windowInstance = NULL;
-MSWindowsScreen *MSWindowsScreen::s_screen = NULL;
+HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
+MSWindowsScreen *MSWindowsScreen::s_screen = nullptr;
 
 MSWindowsScreen::MSWindowsScreen(
     bool isPrimary, bool noHooks, IEventQueue *events, bool enableLangSync,
@@ -102,24 +102,24 @@ MSWindowsScreen::MSWindowsScreen(
       m_sequenceNumber(0),
       m_mark(0),
       m_markReceived(0),
-      m_fixTimer(NULL),
-      m_keyLayout(NULL),
-      m_screensaver(NULL),
+      m_fixTimer(nullptr),
+      m_keyLayout(nullptr),
+      m_screensaver(nullptr),
       m_screensaverNotify(false),
       m_screensaverActive(false),
-      m_window(NULL),
+      m_window(nullptr),
       m_clipboardSequenceNumber(0),
       m_ownClipboard(false),
-      m_desks(NULL),
-      m_keyState(NULL),
+      m_desks(nullptr),
+      m_keyState(nullptr),
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_showingMouse(false),
       m_events(events),
-      m_dropWindow(NULL),
+      m_dropWindow(nullptr),
       m_dropWindowSize(20)
 {
-  assert(s_windowInstance != NULL);
-  assert(s_screen == NULL);
+  assert(s_windowInstance != nullptr);
+  assert(s_screen == nullptr);
 
   s_screen = this;
   try {
@@ -145,7 +145,7 @@ MSWindowsScreen::MSWindowsScreen(
 
     // SHGetFolderPath is deprecated in vista, but use it for xp support.
     char desktopPath[MAX_PATH];
-    if (SUCCEEDED(SHGetFolderPath(NULL, CSIDL_DESKTOP, NULL, 0, desktopPath))) {
+    if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_DESKTOP, nullptr, 0, desktopPath))) {
       m_desktopPath = std::string(desktopPath);
       LOG((CLOG_DEBUG "using desktop for file drag-drop target: %s", m_desktopPath.c_str()));
     } else {
@@ -166,7 +166,7 @@ MSWindowsScreen::MSWindowsScreen(
     delete m_screensaver;
     destroyWindow(m_window);
     destroyClass(m_class);
-    s_screen = NULL;
+    s_screen = nullptr;
     throw;
   }
 
@@ -182,10 +182,10 @@ MSWindowsScreen::MSWindowsScreen(
 
 MSWindowsScreen::~MSWindowsScreen()
 {
-  assert(s_screen != NULL);
+  assert(s_screen != nullptr);
 
   disable();
-  m_events->adoptBuffer(NULL);
+  m_events->adoptBuffer(nullptr);
   m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
   delete m_keyState;
   delete m_desks;
@@ -198,13 +198,13 @@ MSWindowsScreen::~MSWindowsScreen()
   OleUninitialize();
   destroyWindow(m_dropWindow);
 
-  s_screen = NULL;
+  s_screen = nullptr;
 }
 
 void MSWindowsScreen::init(HINSTANCE windowInstance)
 {
-  assert(s_windowInstance == NULL);
-  assert(windowInstance != NULL);
+  assert(s_windowInstance == nullptr);
+  assert(windowInstance != nullptr);
 
   s_windowInstance = windowInstance;
 }
@@ -220,7 +220,7 @@ void MSWindowsScreen::enable()
   assert(m_isOnScreen == m_isPrimary);
 
   // we need to poll some things to fix them
-  m_fixTimer = m_events->newTimer(1.0, NULL);
+  m_fixTimer = m_events->newTimer(1.0, nullptr);
   m_events->adoptHandler(
       Event::kTimer, m_fixTimer, new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleFixes)
   );
@@ -264,10 +264,10 @@ void MSWindowsScreen::disable()
   }
 
   // uninstall fix timer
-  if (m_fixTimer != NULL) {
+  if (m_fixTimer != nullptr) {
     m_events->removeHandler(Event::kTimer, m_fixTimer);
     m_events->deleteTimer(m_fixTimer);
-    m_fixTimer = NULL;
+    m_fixTimer = nullptr;
   }
 
   m_isOnScreen = m_isPrimary;
@@ -293,7 +293,7 @@ void MSWindowsScreen::enter()
     // and that the screen is not in powersave mode.
     ArchMiscWindows::wakeupDisplay();
 
-    if (m_screensaver != NULL && m_screensaverActive) {
+    if (m_screensaver != nullptr && m_screensaverActive) {
       m_screensaver->deactivate();
       m_screensaverActive = 0;
     }
@@ -386,7 +386,7 @@ void MSWindowsScreen::sendDragThread(void *)
 bool MSWindowsScreen::setClipboard(ClipboardID, const IClipboard *src)
 {
   MSWindowsClipboard dst(m_window);
-  if (src != NULL) {
+  if (src != nullptr) {
     // save clipboard data
     return Clipboard::copy(&dst, src);
   } else {
@@ -423,7 +423,7 @@ void MSWindowsScreen::checkClipboards()
 
 void MSWindowsScreen::openScreensaver(bool notify)
 {
-  assert(m_screensaver != NULL);
+  assert(m_screensaver != nullptr);
 
   m_screensaverNotify = notify;
   if (m_screensaverNotify) {
@@ -435,7 +435,7 @@ void MSWindowsScreen::openScreensaver(bool notify)
 
 void MSWindowsScreen::closeScreensaver()
 {
-  if (m_screensaver != NULL) {
+  if (m_screensaver != nullptr) {
     if (m_screensaverNotify) {
       m_desks->installScreensaverHooks(false);
     } else {
@@ -447,8 +447,8 @@ void MSWindowsScreen::closeScreensaver()
 
 void MSWindowsScreen::screensaver(bool activate)
 {
-  assert(m_screensaver != NULL);
-  if (m_screensaver == NULL)
+  assert(m_screensaver != nullptr);
+  if (m_screensaver == nullptr)
     return;
 
   if (activate) {
@@ -557,7 +557,7 @@ void MSWindowsScreen::updateDesktopThread()
   LOG_DEBUG("updating desktop thread");
 
   HDESK hDesk = OpenInputDesktop(0, true, GENERIC_ALL);
-  if (hDesk == NULL) {
+  if (hDesk == nullptr) {
     XArchEvalWindows error1;
     LOG_DEBUG("could not open input desktop, error: %s", error1.eval().c_str());
     return;
@@ -589,7 +589,7 @@ void MSWindowsScreen::warpCursor(int32_t x, int32_t y)
 
   // remove all input events before and including warp
   MSG msg;
-  while (PeekMessage(&msg, NULL, DESKFLOW_MSG_INPUT_FIRST, DESKFLOW_MSG_INPUT_LAST, PM_REMOVE)) {
+  while (PeekMessage(&msg, nullptr, DESKFLOW_MSG_INPUT_FIRST, DESKFLOW_MSG_INPUT_LAST, PM_REMOVE)) {
     // do nothing
   }
 
@@ -660,7 +660,7 @@ uint32_t MSWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
     err = (m_hotKeyToIDMap.count(HotKeyItem(vk, modifiers)) > 0);
   } else {
     // register with OS
-    err = (RegisterHotKey(NULL, id, modifiers, vk) == 0);
+    err = (RegisterHotKey(nullptr, id, modifiers, vk) == 0);
   }
 
   if (!err) {
@@ -694,7 +694,7 @@ void MSWindowsScreen::unregisterHotKey(uint32_t id)
   // unregister with OS
   bool err;
   if (i->second.getVirtualKey() != 0) {
-    err = !UnregisterHotKey(NULL, id);
+    err = !UnregisterHotKey(nullptr, id);
   } else {
     err = false;
   }
@@ -844,7 +844,7 @@ MSWindowsScreen::createBlankCursor() const
 
 void MSWindowsScreen::destroyCursor(HCURSOR cursor) const
 {
-  if (cursor != NULL) {
+  if (cursor != nullptr) {
     DestroyCursor(cursor);
   }
 }
@@ -858,12 +858,12 @@ ATOM MSWindowsScreen::createWindowClass() const
   classInfo.cbClsExtra = 0;
   classInfo.cbWndExtra = 0;
   classInfo.hInstance = s_windowInstance;
-  classInfo.hIcon = NULL;
-  classInfo.hCursor = NULL;
-  classInfo.hbrBackground = NULL;
-  classInfo.lpszMenuName = NULL;
+  classInfo.hIcon = nullptr;
+  classInfo.hCursor = nullptr;
+  classInfo.hbrBackground = nullptr;
+  classInfo.lpszMenuName = nullptr;
   classInfo.lpszClassName = kAppName;
-  classInfo.hIconSm = NULL;
+  classInfo.hIconSm = nullptr;
   return RegisterClassEx(&classInfo);
 }
 
@@ -877,10 +877,10 @@ void MSWindowsScreen::destroyClass(ATOM windowClass) const
 HWND MSWindowsScreen::createWindow(ATOM windowClass, const char *name) const
 {
   HWND window = CreateWindowEx(
-      WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, NULL,
-      NULL, s_windowInstance, NULL
+      WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1,
+      nullptr, nullptr, s_windowInstance, nullptr
   );
-  if (window == NULL) {
+  if (window == nullptr) {
     LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
     throw XScreenOpenFailure();
   }
@@ -891,10 +891,10 @@ HWND MSWindowsScreen::createDropWindow(ATOM windowClass, const char *name) const
 {
   HWND window = CreateWindowEx(
       WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_ACCEPTFILES, MAKEINTATOM(m_class), name, WS_POPUP, 0, 0,
-      m_dropWindowSize, m_dropWindowSize, NULL, NULL, s_windowInstance, NULL
+      m_dropWindowSize, m_dropWindowSize, nullptr, nullptr, s_windowInstance, nullptr
   );
 
-  if (window == NULL) {
+  if (window == nullptr) {
     LOG((CLOG_ERR "failed to create drop window: %d", GetLastError()));
     throw XScreenOpenFailure();
   }
@@ -904,7 +904,7 @@ HWND MSWindowsScreen::createDropWindow(ATOM windowClass, const char *name) const
 
 void MSWindowsScreen::destroyWindow(HWND hwnd) const
 {
-  if (hwnd != NULL) {
+  if (hwnd != nullptr) {
     DestroyWindow(hwnd);
   }
 }
@@ -917,7 +917,7 @@ void MSWindowsScreen::sendEvent(Event::Type type, void *data)
 void MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
   ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
-  if (info == NULL) {
+  if (info == nullptr) {
     LOG((CLOG_ERR "malloc failed on %s:%s", __FILE__, __LINE__));
     return;
   }
@@ -929,7 +929,7 @@ void MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 void MSWindowsScreen::handleSystemEvent(const Event &event, void *)
 {
   MSG *msg = static_cast<MSG *>(event.getData());
-  assert(msg != NULL);
+  assert(msg != nullptr);
 
   if (onPreDispatch(msg->hwnd, msg->message, msg->wParam, msg->lParam)) {
     return;
@@ -1006,7 +1006,7 @@ bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LP
     // event.
     MSG msg;
     do {
-      GetMessage(&msg, NULL, DESKFLOW_MSG_MOUSE_MOVE, DESKFLOW_MSG_POST_WARP);
+      GetMessage(&msg, nullptr, DESKFLOW_MSG_MOUSE_MOVE, DESKFLOW_MSG_POST_WARP);
     } while (msg.message != DESKFLOW_MSG_POST_WARP);
   }
     return true;
@@ -1050,7 +1050,7 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
   /* On windows 10 we don't receive WM_POWERBROADCAST after sleep.
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
-    m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), NULL, Event::kDeliverImmediately));
+    m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), nullptr, Event::kDeliverImmediately));
     break;
 
   case WM_POWERBROADCAST:
@@ -1058,11 +1058,12 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     case PBT_APMRESUMEAUTOMATIC:
     case PBT_APMRESUMECRITICAL:
     case PBT_APMRESUMESUSPEND:
-      m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), NULL, Event::kDeliverImmediately));
+      m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), nullptr, Event::kDeliverImmediately));
       break;
 
     case PBT_APMSUSPEND:
-      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), NULL, Event::kDeliverImmediately));
+      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), nullptr, Event::kDeliverImmediately)
+      );
       break;
     }
     *result = TRUE;
@@ -1383,7 +1384,7 @@ bool MSWindowsScreen::onScreensaver(bool activated)
   // send SC_SCREENSAVE until the screen saver starts, even if
   // the screen saver is disabled!
   MSG msg;
-  if (PeekMessage(&msg, NULL, DESKFLOW_MSG_SCREEN_SAVER, DESKFLOW_MSG_SCREEN_SAVER, PM_NOREMOVE)) {
+  if (PeekMessage(&msg, nullptr, DESKFLOW_MSG_SCREEN_SAVER, DESKFLOW_MSG_SCREEN_SAVER, PM_NOREMOVE)) {
     return true;
   }
 
@@ -1553,12 +1554,12 @@ void MSWindowsScreen::fixClipboardViewer()
   // recursion in the WM_DRAWCLIPBOARD handler.  either we're sending
   // the message to our own window or some window farther down the chain
   // forwards the message to our window or a window farther up the chain.
-  // i'm not sure how that could happen.  the m_nextClipboardWindow = NULL
+  // i'm not sure how that could happen.  the m_nextClipboardWindow = nullptr
   // was not in the code that infinite loops and may fix the bug but i
   // doubt it.
   /*
       ChangeClipboardChain(m_window, m_nextClipboardWindow);
-      m_nextClipboardWindow = NULL;
+      m_nextClipboardWindow = nullptr;
       m_nextClipboardWindow = SetClipboardViewer(m_window);
   */
 }
@@ -1735,7 +1736,7 @@ void MSWindowsScreen::updateForceShowCursor()
 
 LRESULT CALLBACK MSWindowsScreen::wndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-  assert(s_screen != NULL);
+  assert(s_screen != nullptr);
 
   LRESULT result = 0;
   if (!s_screen->onEvent(hwnd, msg, wParam, lParam, &result)) {

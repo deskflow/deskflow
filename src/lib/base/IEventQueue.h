@@ -98,7 +98,7 @@ public:
   is returned the data points to a \c TimerEvent.  The client must pass
   the returned timer to \c deleteTimer() (whether or not the timer has
   expired) to release the timer.  The returned timer event uses the
-  given \p target.  If \p target is NULL it uses the returned timer as
+  given \p target.  If \p target is nullptr it uses the returned timer as
   the target.
 
   Events for a single timer don't accumulate in the queue, even if the
@@ -117,7 +117,7 @@ public:
   The c_count member of the \c TimerEvent is always 1.  The client
   must pass the returned timer to \c deleteTimer() (whether or not the
   timer has expired) to release the timer.  The returned timer event
-  uses the given \p target.  If \p target is NULL it uses the returned
+  uses the given \p target.  If \p target is nullptr it uses the returned
   timer as the target.
   */
   virtual EventQueueTimer *newOneShotTimer(double duration, void *target) = 0;
@@ -181,7 +181,7 @@ public:
   //! Get an event handler
   /*!
   Finds and returns the event handler for the \p type, \p target pair
-  if it exists, otherwise it returns NULL.
+  if it exists, otherwise it returns nullptr.
   */
   virtual IEventJob *getHandler(Event::Type type, void *target) const = 0;
 

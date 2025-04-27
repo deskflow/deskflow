@@ -30,7 +30,7 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(KeyID id, KeyModifierMask mask, Ke
   info->m_mask = mask;
   info->m_button = button;
   info->m_count = count;
-  info->m_screens = NULL;
+  info->m_screens = nullptr;
   info->m_screensBuffer[0] = '\0';
   return info;
 }
@@ -61,14 +61,14 @@ IKeyState::KeyInfo *IKeyState::KeyInfo::alloc(const KeyInfo &x)
   info->m_mask = x.m_mask;
   info->m_button = x.m_button;
   info->m_count = x.m_count;
-  info->m_screens = x.m_screens ? info->m_screensBuffer : NULL;
+  info->m_screens = x.m_screens ? info->m_screensBuffer : nullptr;
   memcpy(info->m_screensBuffer, x.m_screensBuffer, bufferLen + 1);
   return info;
 }
 
 bool IKeyState::KeyInfo::isDefault(const char *screens)
 {
-  return (screens == NULL || screens[0] == '\0');
+  return (screens == nullptr || screens[0] == '\0');
 }
 
 bool IKeyState::KeyInfo::contains(const char *screens, const std::string &name)
@@ -87,7 +87,7 @@ bool IKeyState::KeyInfo::contains(const char *screens, const std::string &name)
   match += ":";
   match += name;
   match += ":";
-  return (strstr(screens, match.c_str()) != NULL);
+  return (strstr(screens, match.c_str()) != nullptr);
 }
 
 bool IKeyState::KeyInfo::equal(const KeyInfo *a, const KeyInfo *b)

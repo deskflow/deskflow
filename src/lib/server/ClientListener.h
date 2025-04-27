@@ -51,7 +51,7 @@ public:
   /*!
   Returns the next connected client and removes it from the internal
   list.  The client is responsible for deleting the returned client.
-  Returns NULL if no clients are available.
+  Returns nullptr if no clients are available.
   */
   ClientProxy *getNextClient();
 

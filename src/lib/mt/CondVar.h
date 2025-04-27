@@ -23,7 +23,7 @@ class CondVarBase
 {
 public:
   /*!
-  \c mutex must not be NULL.  All condition variables have an
+  \c mutex must not be nullptr.  All condition variables have an
   associated mutex.  The mutex needn't be unique to one condition
   variable.
   */

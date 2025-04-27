@@ -60,7 +60,9 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
 #elif WINAPI_CARBON
   CFStringRef keys[] = {kTISPropertyInputSourceCategory};
   CFStringRef values[] = {kTISCategoryKeyboardInputSource};
-  AutoCFDictionary dict(CFDictionaryCreate(NULL, (const void **)keys, (const void **)values, 1, NULL, NULL), CFRelease);
+  AutoCFDictionary dict(
+      CFDictionaryCreate(nullptr, (const void **)keys, (const void **)values, 1, nullptr, nullptr), CFRelease
+  );
   AutoCFArray kbds(TISCreateInputSourceList(dict.get(), false), CFRelease);
 
   for (CFIndex i = 0; i < CFArrayGetCount(kbds.get()); ++i) {

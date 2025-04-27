@@ -22,5 +22,5 @@ void *IDataSocket::getEventTarget() const
 {
   // this is here to work around a VC++6 bug.  see the header file.
   assert(0 && "bad call");
-  return NULL;
+  return nullptr;
 }

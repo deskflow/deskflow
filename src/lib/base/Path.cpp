@@ -20,7 +20,7 @@ std::wstring path(const std::string &filePath)
 {
   std::wstring result;
 
-  auto length = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), NULL, 0);
+  auto length = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), nullptr, 0);
   if (length > 0) {
     result.resize(length);
     MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), &result[0], length);

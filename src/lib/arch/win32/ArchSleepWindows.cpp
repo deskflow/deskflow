@@ -35,7 +35,7 @@ void ArchSleepWindows::sleep(double timeout)
   // this is windows so that's pretty certain;  we'll get a
   // link error if we're not, though.
   ArchMultithreadWindows *mt = ArchMultithreadWindows::getInstance();
-  if (mt != NULL) {
+  if (mt != nullptr) {
     HANDLE cancelEvent = mt->getCancelEventForCurrentThread();
     WaitForSingleObject(cancelEvent, (DWORD)(1000.0 * timeout));
     if (timeout == 0.0) {

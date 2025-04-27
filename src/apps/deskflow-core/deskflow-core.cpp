@@ -44,7 +44,7 @@ int main(int argc, char **argv)
   QCoreApplication m(argc, argv);
   m.deleteLater();
 
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+  ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
   Arch arch;
