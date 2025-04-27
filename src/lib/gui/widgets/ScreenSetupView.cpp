@@ -126,7 +126,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
     return;
 
   const QPixmap &pixmap = model()->screen(indexes[0]).pixmap();
-  QDrag *pDrag = new QDrag(this);
+  auto *pDrag = new QDrag(this);
   pDrag->setPixmap(pixmap);
   pDrag->setMimeData(pData);
   pDrag->setHotSpot(QPoint(pixmap.width() / 2, pixmap.height() / 2));
