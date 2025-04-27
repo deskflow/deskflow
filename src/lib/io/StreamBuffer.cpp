@@ -35,7 +35,7 @@ const void *StreamBuffer::peek(uint32_t n)
   }
 
   // reserve space in first chunk
-  ChunkList::iterator head = m_chunks.begin();
+  auto head = m_chunks.begin();
   head->reserve(n + m_headUsed);
 
   // consolidate chunks into the first chunk until it has n bytes
@@ -63,7 +63,7 @@ void StreamBuffer::pop(uint32_t n)
   m_size -= n;
 
   // discard chunks until more than n bytes would've been discarded
-  ChunkList::iterator scan = m_chunks.begin();
+  auto scan = m_chunks.begin();
   assert(scan != m_chunks.end());
   while (scan->size() - m_headUsed <= n) {
     n -= (uint32_t)scan->size() - m_headUsed;
@@ -89,10 +89,10 @@ void StreamBuffer::write(const void *vdata, uint32_t n)
   m_size += n;
 
   // cast data to bytes
-  const uint8_t *data = static_cast<const uint8_t *>(vdata);
+  const auto *data = static_cast<const uint8_t *>(vdata);
 
   // point to last chunk if it has space, otherwise append an empty chunk
-  ChunkList::iterator scan = m_chunks.end();
+  auto scan = m_chunks.end();
   if (scan != m_chunks.begin()) {
     --scan;
     if (scan->size() >= kChunkSize) {
