@@ -30,7 +30,7 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string &data, Time
     // read each format
     for (uint32_t i = 0; i < numFormats; ++i) {
       // get the format id
-      IClipboard::EFormat format = static_cast<IClipboard::EFormat>(readUInt32(index));
+      auto format = static_cast<IClipboard::EFormat>(readUInt32(index));
       index += 4;
 
       // get the size of the format data
@@ -116,7 +116,7 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
     if (dst->open(time)) {
       if (dst->empty()) {
         for (int32_t format = 0; format != IClipboard::kNumFormats; ++format) {
-          IClipboard::EFormat eFormat = (IClipboard::EFormat)format;
+          auto eFormat = (IClipboard::EFormat)format;
           if (src->has(eFormat)) {
             dst->add(eFormat, src->get(eFormat));
           }
@@ -133,7 +133,7 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
 
 uint32_t IClipboard::readUInt32(const char *buf)
 {
-  const unsigned char *ubuf = reinterpret_cast<const unsigned char *>(buf);
+  const auto *ubuf = reinterpret_cast<const unsigned char *>(buf);
   return (static_cast<uint32_t>(ubuf[0]) << 24) | (static_cast<uint32_t>(ubuf[1]) << 16) |
          (static_cast<uint32_t>(ubuf[2]) << 8) | static_cast<uint32_t>(ubuf[3]);
 }
