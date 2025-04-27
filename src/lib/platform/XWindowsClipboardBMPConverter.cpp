@@ -99,7 +99,7 @@ std::string XWindowsClipboardBMPConverter::toIClipboard(const std::string &bmp) 
   }
 
   // check BMP file header
-  const uint8_t *rawBMPHeader = reinterpret_cast<const uint8_t *>(bmp.data());
+  const auto *rawBMPHeader = reinterpret_cast<const uint8_t *>(bmp.data());
   if (rawBMPHeader[0] != 'B' || rawBMPHeader[1] != 'M') {
     return std::string();
   }
