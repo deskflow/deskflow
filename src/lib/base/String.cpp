@@ -83,7 +83,7 @@ std::string vformat(const char *fmt, va_list args)
 
   // compute final length
   size_t resultLength = fmtLength;
-  const int n = static_cast<int>(pos.size());
+  const auto n = static_cast<int>(pos.size());
   for (int i = 0; i < n; ++i) {
     resultLength -= width[i];
     resultLength += length[index[i]];
@@ -107,7 +107,7 @@ std::string sprintf(const char *fmt, ...)
 {
   char tmp[1024];
   char *buffer = tmp;
-  int len = (int)(sizeof(tmp) / sizeof(tmp[0]));
+  auto len = (int)(sizeof(tmp) / sizeof(tmp[0]));
   std::string result;
   while (buffer != nullptr) {
     // try printing into the buffer
