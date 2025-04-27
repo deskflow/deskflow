@@ -98,7 +98,7 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 {
   // fill BMP info header with native-endian data
   CBMPInfoHeader infoHeader;
-  const uint8_t *rawBMPInfoHeader = reinterpret_cast<const uint8_t *>(bmp.data());
+  const auto *rawBMPInfoHeader = reinterpret_cast<const uint8_t *>(bmp.data());
   infoHeader.biSize = fromLEU32(rawBMPInfoHeader + 0);
   infoHeader.biWidth = fromLES32(rawBMPInfoHeader + 4);
   infoHeader.biHeight = fromLES32(rawBMPInfoHeader + 8);
