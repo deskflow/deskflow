@@ -365,7 +365,7 @@ void SecureSocket::initContext(bool server)
   }
 
   // create new context from method
-  SSL_METHOD *m = const_cast<SSL_METHOD *>(method);
+  auto *m = const_cast<SSL_METHOD *>(method);
   m_ssl->m_context = SSL_CTX_new(m);
 
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
