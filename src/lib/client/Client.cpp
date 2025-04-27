@@ -338,7 +338,7 @@ void Client::resetOptions()
 
 void Client::setOptions(const OptionsList &options)
 {
-  for (OptionsList::const_iterator index = options.begin(); index != options.end(); ++index) {
+  for (auto index = options.begin(); index != options.end(); ++index) {
     const OptionID id = *index;
     if (id == kOptionClipboardSharing) {
       index++;
@@ -417,7 +417,7 @@ void Client::sendEvent(Event::Type type, void *data)
 
 void Client::sendConnectionFailedEvent(const char *msg)
 {
-  FailInfo *info = new FailInfo(msg);
+  auto *info = new FailInfo(msg);
   info->m_retry = true;
   Event event(m_events->forClient().connectionFailed(), getEventTarget(), info, Event::kDontFreeData);
   m_events->addEvent(event);
@@ -425,7 +425,7 @@ void Client::sendConnectionFailedEvent(const char *msg)
 
 void Client::sendFileChunk(const void *data)
 {
-  FileChunk *chunk = static_cast<FileChunk *>(const_cast<void *>(data));
+  auto *chunk = static_cast<FileChunk *>(const_cast<void *>(data));
   LOG((CLOG_DEBUG1 "send file chunk"));
   assert(m_server != nullptr);
 
@@ -584,7 +584,7 @@ void Client::handleConnected(const Event &, void *)
 
 void Client::handleConnectionFailed(const Event &event, void *)
 {
-  IDataSocket::ConnectionFailedInfo *info = static_cast<IDataSocket::ConnectionFailedInfo *>(event.getData());
+  auto *info = static_cast<IDataSocket::ConnectionFailedInfo *>(event.getData());
 
   cleanupTimer();
   cleanupConnecting();
@@ -634,7 +634,7 @@ void Client::handleClipboardGrabbed(const Event &event, void *)
     return;
   }
 
-  const IScreen::ClipboardInfo *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
+  const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
 
   // grab ownership
   m_server->onGrabClipboard(info->m_id);
@@ -773,7 +773,7 @@ void Client::sendFileToServer(const char *filename)
 void Client::sendFileThread(void *filename)
 {
   try {
-    char *name = static_cast<char *>(filename);
+    auto *name = static_cast<char *>(filename);
     StreamChunker::sendFile(name, m_events, this);
   } catch (std::runtime_error &error) {
     LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
