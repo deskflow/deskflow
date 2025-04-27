@@ -1596,8 +1596,8 @@ bool XWindowsUtil::setWindowProperty(
 )
 {
   const uint32_t length = 4 * XMaxRequestSize(display);
-  const unsigned char *data = static_cast<const unsigned char *>(vdata);
-  uint32_t datumSize = static_cast<uint32_t>(format / 8);
+  const auto *data = static_cast<const unsigned char *>(vdata);
+  auto datumSize = static_cast<uint32_t>(format / 8);
   // format 32 on 64bit systems is 8 bytes not 4.
   if (format == 32) {
     datumSize = sizeof(Atom);
@@ -1827,7 +1827,7 @@ std::string XWindowsUtil::atomToString(Display *display, Atom atom)
 
 std::string XWindowsUtil::atomsToString(Display *display, const Atom *atom, uint32_t num)
 {
-  char **names = new char *[num];
+  auto **names = new char *[num];
   bool error = false;
   XWindowsUtil::ErrorLock lock(display, &error);
   XGetAtomNames(display, const_cast<Atom *>(atom), (int)num, names);
@@ -1880,7 +1880,7 @@ void XWindowsUtil::appendTimeData(std::string &data, Time time)
 
 Bool XWindowsUtil::propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg)
 {
-  PropertyNotifyPredicateInfo *filter = reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
+  auto *filter = reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
   return (xevent->type == PropertyNotify && xevent->xproperty.window == filter->m_window &&
           xevent->xproperty.atom == filter->m_property && xevent->xproperty.state == PropertyNewValue)
              ? True
