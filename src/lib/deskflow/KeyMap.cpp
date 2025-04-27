@@ -206,7 +206,7 @@ void KeyMap::finish()
   m_numGroups = findNumGroups();
 
   // make sure every key has the same number of groups
-  for (KeyIDMap::iterator i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
+  for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
     i->second.resize(m_numGroups);
   }
 
@@ -216,7 +216,7 @@ void KeyMap::finish()
 
 void KeyMap::foreachKey(ForeachKeyCallback cb, void *userData)
 {
-  for (KeyIDMap::iterator i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
+  for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
     KeyGroupTable &groupTable = i->second;
     for (size_t group = 0; group < groupTable.size(); ++group) {
       KeyEntryList &entryList = groupTable[group];
@@ -371,7 +371,7 @@ KeyModifierMask KeyMap::getCommandModifiers() const
 void KeyMap::collectButtons(const ModifierToKeys &mods, ButtonToKeyMap &keys)
 {
   keys.clear();
-  for (ModifierToKeys::const_iterator i = mods.begin(); i != mods.end(); ++i) {
+  for (auto i = mods.begin(); i != mods.end(); ++i) {
     keys.insert(std::make_pair(i->second.m_button, &i->second));
   }
 }
@@ -434,7 +434,7 @@ void KeyMap::initModifierKey(KeyItem &item)
 int32_t KeyMap::findNumGroups() const
 {
   size_t max = 0;
-  for (KeyIDMap::const_iterator i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
+  for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
     if (i->second.size() > max) {
       max = i->second.size();
     }
@@ -686,7 +686,7 @@ const KeyMap::KeyItem *KeyMap::keyForModifier(KeyButton button, int32_t group, i
   // this is important when a shift button is modified by shift;  we
   // must use the other shift button to do the shifting.
   const ModifierKeyItemList &items = m_modifierKeys[group * kKeyModifierNumBits + modifierBit];
-  for (ModifierKeyItemList::const_iterator i = items.begin(); i != items.end(); ++i) {
+  for (auto i = items.begin(); i != items.end(); ++i) {
     if ((*i)->m_button != button) {
       return (*i);
     }
@@ -797,7 +797,7 @@ bool KeyMap::keysToRestoreModifiers(
   }
 
   // press wanted keys
-  for (ModifierToKeys::const_iterator i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
+  for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
     KeyButton button = i->second.m_button;
     if (button != keyItem.m_button && oldKeys.count(button) == 0) {
       EKeystroke type = kKeystrokePress;
