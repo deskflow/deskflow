@@ -12,7 +12,7 @@
 
 QString Action::text() const
 {
-  QString text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
+  auto text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
 
   switch (type()) {
   case keyDown:
