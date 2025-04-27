@@ -396,7 +396,7 @@ ISocketMultiplexerJob *TCPSocket::newJob()
 
 void TCPSocket::sendConnectionFailedEvent(const char *msg)
 {
-  ConnectionFailedInfo *info = new ConnectionFailedInfo(msg);
+  auto *info = new ConnectionFailedInfo(msg);
   m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(), getEventTarget(), info, Event::kDontFreeData)
   );
 }
