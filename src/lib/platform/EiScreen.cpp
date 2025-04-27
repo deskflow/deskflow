@@ -563,7 +563,7 @@ void EiScreen::on_key_event(ei_event *event)
   uint32_t keyval = keycode + 8;
   bool pressed = ei_event_keyboard_get_key_is_press(event);
   KeyID keyid = key_state_->map_key_from_keyval(keyval);
-  KeyButton keybutton = static_cast<KeyButton>(keyval);
+  auto keybutton = static_cast<KeyButton>(keyval);
 
   key_state_->update_xkb_state(keyval, pressed);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
@@ -618,7 +618,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event)
 
   LOG_DEBUG1("event: scroll (%.2f, %.2f)", dx, dy);
 
-  struct ScrollRemainder *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
+  auto *remainder = static_cast<struct ScrollRemainder *>(ei_device_get_user_data(device));
   if (!remainder) {
     remainder = new ScrollRemainder();
     ei_device_set_user_data(device, remainder);
