@@ -337,7 +337,7 @@ const char **ArgParser::getArgv(std::vector<std::string> &argsArray)
   // we use the c string pointers from argsArray and assign
   // them to the inner array. So caller only need to use
   // delete[] to delete the outer array
-  const char **argv = new const char *[argc];
+  const auto **argv = new const char *[argc];
 
   for (size_t i = 0; i < argc; i++) {
     argv[i] = argsArray[i].c_str();
@@ -351,7 +351,7 @@ ArgParser::assembleCommand(std::vector<std::string> &argsArray, std::string igno
 {
   std::string result;
 
-  for (std::vector<std::string>::iterator it = argsArray.begin(); it != argsArray.end(); ++it) {
+  for (auto it = argsArray.begin(); it != argsArray.end(); ++it) {
     if (it->compare(ignoreArg) == 0) {
       it = it + parametersRequired;
       continue;
