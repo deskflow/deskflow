@@ -249,7 +249,7 @@ KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
 {
   // FIXME: That might be a bit crude...?
   xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(xkb_state_, keyval);
-  KeySym keysym = static_cast<KeySym>(xkb_keysym);
+  auto keysym = static_cast<KeySym>(xkb_keysym);
 
   KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
   LOG_DEBUG1("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
