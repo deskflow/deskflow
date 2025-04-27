@@ -88,7 +88,7 @@ bool Config::renameScreen(const std::string &oldName, const std::string &newName
 
   // update alias targets
   if (CaselessCmp::equal(oldName, oldCanonical)) {
-    for (NameMap::iterator iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end(); ++iter) {
+    for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end(); ++iter) {
       if (CaselessCmp::equal(iter->second, oldCanonical)) {
         iter->second = newName;
       }
@@ -117,7 +117,7 @@ void Config::removeScreen(const std::string &name)
   }
 
   // remove aliases (and canonical name)
-  for (NameMap::iterator iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end();) {
+  for (auto iter = m_nameToCanonicalName.begin(); iter != m_nameToCanonicalName.end();) {
     if (iter->second == canonical) {
       m_nameToCanonicalName.erase(iter++);
     } else {
@@ -177,7 +177,7 @@ bool Config::removeAliases(const std::string &canonical)
   }
 
   // find and removing matching aliases
-  for (NameMap::iterator index = m_nameToCanonicalName.begin(); index != m_nameToCanonicalName.end();) {
+  for (auto index = m_nameToCanonicalName.begin(); index != m_nameToCanonicalName.end();) {
     if (index->second == canonical && index->first != canonical) {
       m_nameToCanonicalName.erase(index++);
     } else {
@@ -194,7 +194,7 @@ void Config::removeAllAliases()
   m_nameToCanonicalName.clear();
 
   // put the canonical names back in
-  for (CellMap::iterator index = m_map.begin(); index != m_map.end(); ++index) {
+  for (auto index = m_map.begin(); index != m_map.end(); ++index) {
     m_nameToCanonicalName.insert(std::make_pair(index->first, index->first));
   }
 }
@@ -1468,7 +1468,7 @@ bool Config::Cell::add(const CellEdge &src, const CellEdge &dst)
 
 void Config::Cell::remove(EDirection side)
 {
-  for (EdgeLinks::iterator j = m_neighbors.begin(); j != m_neighbors.end();) {
+  for (auto j = m_neighbors.begin(); j != m_neighbors.end();) {
     if (j->first.getSide() == side) {
       m_neighbors.erase(j++);
     } else {
@@ -1479,7 +1479,7 @@ void Config::Cell::remove(EDirection side)
 
 void Config::Cell::remove(EDirection side, float position)
 {
-  for (EdgeLinks::iterator j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
+  for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
     if (j->first.getSide() == side && j->first.isInside(position)) {
       m_neighbors.erase(j);
       break;
@@ -1488,7 +1488,7 @@ void Config::Cell::remove(EDirection side, float position)
 }
 void Config::Cell::remove(const Name &name)
 {
-  for (EdgeLinks::iterator j = m_neighbors.begin(); j != m_neighbors.end();) {
+  for (auto j = m_neighbors.begin(); j != m_neighbors.end();) {
     if (name == j->second.getName()) {
       m_neighbors.erase(j++);
     } else {
@@ -1499,7 +1499,7 @@ void Config::Cell::remove(const Name &name)
 
 void Config::Cell::rename(const Name &oldName, const std::string &newName)
 {
-  for (EdgeLinks::iterator j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
+  for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
     if (oldName == j->second.getName()) {
       j->second.setName(newName);
     }
@@ -1602,11 +1602,11 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 {
   // screens section
   s << "section: screens" << std::endl;
-  for (Config::const_iterator screen = config.begin(); screen != config.end(); ++screen) {
+  for (auto screen = config.begin(); screen != config.end(); ++screen) {
     s << "\t" << screen->c_str() << ":" << std::endl;
     const Config::ScreenOptions *options = config.getOptions(*screen);
     if (options != nullptr && options->size() > 0) {
-      for (Config::ScreenOptions::const_iterator option = options->begin(); option != options->end(); ++option) {
+      for (auto option = options->begin(); option != options->end(); ++option) {
         const char *name = Config::getOptionName(option->first);
         std::string value = Config::getOptionValue(option->first, option->second);
         if (name != nullptr && !value.empty()) {
@@ -1620,7 +1620,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
   // links section
   std::string neighbor;
   s << "section: links" << std::endl;
-  for (Config::const_iterator screen = config.begin(); screen != config.end(); ++screen) {
+  for (auto screen = config.begin(); screen != config.end(); ++screen) {
     s << "\t" << screen->c_str() << ":" << std::endl;
 
     for (Config::link_const_iterator link = config.beginNeighbor(*screen), nend = config.endNeighbor(*screen);
@@ -1636,8 +1636,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
     // map canonical to alias
     using CMNameMap = std::multimap<std::string, std::string, CaselessCmp>;
     CMNameMap aliases;
-    for (Config::NameMap::const_iterator index = config.m_nameToCanonicalName.begin();
-         index != config.m_nameToCanonicalName.end(); ++index) {
+    for (auto index = config.m_nameToCanonicalName.begin(); index != config.m_nameToCanonicalName.end(); ++index) {
       if (index->first != index->second) {
         aliases.insert(std::make_pair(index->second, index->first));
       }
@@ -1660,7 +1659,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
   s << "section: options" << std::endl;
   const Config::ScreenOptions *options = config.getOptions("");
   if (options != nullptr && options->size() > 0) {
-    for (Config::ScreenOptions::const_iterator option = options->begin(); option != options->end(); ++option) {
+    for (auto option = options->begin(); option != options->end(); ++option) {
       const char *name = Config::getOptionName(option->first);
       std::string value = Config::getOptionValue(option->first, option->second);
       if (name != nullptr && !value.empty()) {
@@ -1759,7 +1758,7 @@ OptionValue ConfigReadContext::parseInt(const std::string &arg) const
     // invalid characters
     throw XConfigRead(*this, "invalid integer argument \"%{1}\"", arg);
   }
-  OptionValue value = static_cast<OptionValue>(tmp);
+  auto value = static_cast<OptionValue>(tmp);
   if (value != tmp) {
     // out of range
     throw XConfigRead(*this, "integer argument \"%{1}\" out of range", arg);
@@ -1896,8 +1895,8 @@ Config::Interval ConfigReadContext::parseInterval(const ArgList &args) const
     throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
   }
 
-  float startInterval = static_cast<float>(startValue / 100.0f);
-  float endInterval = static_cast<float>(endValue / 100.0f);
+  auto startInterval = static_cast<float>(startValue / 100.0f);
+  auto endInterval = static_cast<float>(endValue / 100.0f);
   return Config::Interval(startInterval, endInterval);
 }
 
@@ -2043,7 +2042,7 @@ IPlatformScreen::ButtonInfo *ConfigReadContext::parseMouse(const std::string &mo
   }
 
   char *end;
-  ButtonID button = (ButtonID)strtol(s.c_str(), &end, 10);
+  auto button = (ButtonID)strtol(s.c_str(), &end, 10);
   if (*end != '\0') {
     throw XConfigRead(*this, "unable to parse button");
   }
