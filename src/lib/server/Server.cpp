@@ -1379,13 +1379,13 @@ void Server::handleKeyboardBroadcastEvent(const Event &event, void *)
   // choose new state
   bool newState;
   switch (info->m_state) {
-  case KeyboardBroadcastInfo::kOff:
-    newState = false;
-    break;
-
   default:
   case KeyboardBroadcastInfo::kOn:
     newState = true;
+    break;
+
+  case KeyboardBroadcastInfo::kOff:
+    newState = false;
     break;
 
   case KeyboardBroadcastInfo::kToggle:
@@ -1411,13 +1411,13 @@ void Server::handleLockCursorToScreenEvent(const Event &event, void *)
   // choose new state
   bool newState;
   switch (info->m_state) {
-  case LockCursorToScreenInfo::kOff:
-    newState = false;
-    break;
-
   default:
   case LockCursorToScreenInfo::kOn:
     newState = true;
+    break;
+
+  case LockCursorToScreenInfo::kOff:
+    newState = false;
     break;
 
   case LockCursorToScreenInfo::kToggle:
