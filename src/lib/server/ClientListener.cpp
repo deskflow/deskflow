@@ -92,7 +92,7 @@ void ClientListener::stop()
   LOG((CLOG_DEBUG1 "stop listening for clients"));
 
   // discard already connected clients
-  for (NewClients::iterator index = m_newClients.begin(); index != m_newClients.end(); ++index) {
+  for (auto index = m_newClients.begin(); index != m_newClients.end(); ++index) {
     ClientProxyUnknown *client = *index;
     m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
     m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
@@ -149,14 +149,14 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket)
 {
   LOG((CLOG_NOTE "accepted client connection"));
 
-  IDataSocket *socket = static_cast<IDataSocket *>(vsocket);
+  auto *socket = static_cast<IDataSocket *>(vsocket);
 
   // filter socket messages, including a packetizing filter
   deskflow::IStream *stream = new PacketStreamFilter(m_events, socket, false);
   assert(m_server != nullptr);
 
   // create proxy for unknown client
-  ClientProxyUnknown *client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
+  auto *client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);
 
   m_newClients.insert(client);
 
@@ -209,7 +209,7 @@ void ClientListener::handleUnknownClientFailure(const Event &, void *vclient)
 
 void ClientListener::handleClientDisconnected(const Event &, void *vclient)
 {
-  ClientProxy *client = static_cast<ClientProxy *>(vclient);
+  auto *client = static_cast<ClientProxy *>(vclient);
 
   // find client in waiting clients queue
   for (WaitingClients::iterator i = m_waitingClients.begin(), n = m_waitingClients.end(); i != n; ++i) {
@@ -219,7 +219,7 @@ void ClientListener::handleClientDisconnected(const Event &, void *vclient)
 
       // pull out the socket before deleting the client so
       // we know which socket we no longer need
-      IDataSocket *socket = static_cast<IDataSocket *>(client->getStream());
+      auto *socket = static_cast<IDataSocket *>(client->getStream());
       delete client;
       m_clientSockets.erase(socket);
       delete socket;
