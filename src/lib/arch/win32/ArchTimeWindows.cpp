@@ -25,8 +25,8 @@
 typedef WINMMAPI DWORD(WINAPI *PTimeGetTime)(void);
 
 static double s_freq = 0.0;
-static HINSTANCE s_mmInstance = NULL;
-static PTimeGetTime s_tgt = NULL;
+static HINSTANCE s_mmInstance = nullptr;
+static PTimeGetTime s_tgt = nullptr;
 
 //
 // ArchTimeWindows
@@ -34,7 +34,7 @@ static PTimeGetTime s_tgt = NULL;
 
 ArchTimeWindows::ArchTimeWindows()
 {
-  assert(s_freq == 0.0 || s_mmInstance == NULL);
+  assert(s_freq == 0.0 || s_mmInstance == nullptr);
 
   LARGE_INTEGER freq;
   if (QueryPerformanceFrequency(&freq) && freq.QuadPart != 0) {
@@ -42,7 +42,7 @@ ArchTimeWindows::ArchTimeWindows()
   } else {
     // load winmm.dll and get timeGetTime
     s_mmInstance = LoadLibrary("winmm");
-    if (s_mmInstance != NULL) {
+    if (s_mmInstance != nullptr) {
       s_tgt = (PTimeGetTime)GetProcAddress(s_mmInstance, "timeGetTime");
     }
   }
@@ -51,10 +51,10 @@ ArchTimeWindows::ArchTimeWindows()
 ArchTimeWindows::~ArchTimeWindows()
 {
   s_freq = 0.0;
-  if (s_mmInstance == NULL) {
+  if (s_mmInstance == nullptr) {
     FreeLibrary(static_cast<HMODULE>(s_mmInstance));
-    s_tgt = NULL;
-    s_mmInstance = NULL;
+    s_tgt = nullptr;
+    s_mmInstance = nullptr;
   }
 }
 
@@ -65,7 +65,7 @@ double ArchTimeWindows::time()
     LARGE_INTEGER c;
     QueryPerformanceCounter(&c);
     return s_freq * static_cast<double>(c.QuadPart);
-  } else if (s_tgt != NULL) {
+  } else if (s_tgt != nullptr) {
     return 0.001 * static_cast<double>(s_tgt());
   } else {
     return 0.001 * static_cast<double>(GetTickCount());

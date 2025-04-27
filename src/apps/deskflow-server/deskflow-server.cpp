@@ -26,7 +26,7 @@ int main(int argc, char **argv)
   ArchMiscWindows::guardRuntimeVersion();
 
   // record window instance for tray icon, etc
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+  ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
   Arch arch;

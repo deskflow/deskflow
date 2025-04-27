@@ -153,7 +153,7 @@ private:
   // to activate the screen saver even if disabled.
   bool m_suppressDisable;
 
-  // the disable timer (NULL if not installed)
+  // the disable timer (nullptr if not installed)
   EventQueueTimer *m_disableTimer;
 
   // fake mouse motion position for suppressing the screen saver.

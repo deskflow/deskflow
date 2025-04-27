@@ -17,7 +17,7 @@ template <class T> class TMethodJob : public IJob
 {
 public:
   //! run() invokes \c object->method(arg)
-  TMethodJob(T *object, void (T::*method)(void *), void *arg = NULL);
+  TMethodJob(T *object, void (T::*method)(void *), void *arg = nullptr);
   ~TMethodJob() override;
 
   // IJob overrides
@@ -45,7 +45,7 @@ template <class T> inline TMethodJob<T>::~TMethodJob()
 
 template <class T> inline void TMethodJob<T>::run()
 {
-  if (m_object != NULL) {
+  if (m_object != nullptr) {
     (m_object->*m_method)(m_arg);
   }
 }

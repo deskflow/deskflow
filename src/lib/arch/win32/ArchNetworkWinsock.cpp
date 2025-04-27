@@ -58,7 +58,7 @@ static int(PASCAL FAR *WSAEnumNetworkEvents_winsock)(SOCKET, WSAEVENT, LPWSANETW
 
 #define setfunc(var, name, type) var = (type)netGetProcAddress(module, #name)
 
-static HMODULE s_networkModule = NULL;
+static HMODULE s_networkModule = nullptr;
 
 static FARPROC netGetProcAddress(HMODULE module, LPCSTR name)
 {
@@ -81,20 +81,20 @@ ArchNetAddressImpl *ArchNetAddressImpl::alloc(size_t size)
 // ArchNetworkWinsock
 //
 
-ArchNetworkWinsock::ArchNetworkWinsock() : m_mutex(NULL)
+ArchNetworkWinsock::ArchNetworkWinsock() : m_mutex(nullptr)
 {
 }
 
 ArchNetworkWinsock::~ArchNetworkWinsock()
 {
-  if (s_networkModule != NULL) {
+  if (s_networkModule != nullptr) {
     WSACleanup_winsock();
     ::FreeLibrary(s_networkModule);
 
-    WSACleanup_winsock = NULL;
-    s_networkModule = NULL;
+    WSACleanup_winsock = nullptr;
+    s_networkModule = nullptr;
   }
-  if (m_mutex != NULL) {
+  if (m_mutex != nullptr) {
     ARCH->closeMutex(m_mutex);
   }
 
@@ -108,8 +108,8 @@ void ArchNetworkWinsock::init()
 {
   static const char *s_library[] = {"ws2_32.dll"};
 
-  assert(WSACleanup_winsock == NULL);
-  assert(s_networkModule == NULL);
+  assert(WSACleanup_winsock == nullptr);
+  assert(s_networkModule == nullptr);
 
   // try each winsock library
   for (size_t i = 0; i < sizeof(s_library) / sizeof(s_library[0]); ++i) {
@@ -128,7 +128,7 @@ void ArchNetworkWinsock::init()
 
 void ArchNetworkWinsock::initModule(HMODULE module)
 {
-  if (module == NULL) {
+  if (module == nullptr) {
     throw XArchNetworkSupport("");
   }
 
@@ -229,7 +229,7 @@ ArchSocket ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type
 
 ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // ref the socket and return it
   ARCH->lockMutex(m_mutex);
@@ -240,7 +240,7 @@ ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s)
 
 void ArchNetworkWinsock::closeSocket(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // unref the socket and note if it should be released
   ARCH->lockMutex(m_mutex);
@@ -264,7 +264,7 @@ void ArchNetworkWinsock::closeSocket(ArchSocket s)
 
 void ArchNetworkWinsock::closeSocketForRead(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   if (shutdown_winsock(s->m_socket, SD_RECEIVE) == SOCKET_ERROR) {
     if (getsockerror_winsock() != WSAENOTCONN) {
@@ -275,7 +275,7 @@ void ArchNetworkWinsock::closeSocketForRead(ArchSocket s)
 
 void ArchNetworkWinsock::closeSocketForWrite(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   if (shutdown_winsock(s->m_socket, SD_SEND) == SOCKET_ERROR) {
     if (getsockerror_winsock() != WSAENOTCONN) {
@@ -286,8 +286,8 @@ void ArchNetworkWinsock::closeSocketForWrite(ArchSocket s)
 
 void ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
 {
-  assert(s != NULL);
-  assert(addr != NULL);
+  assert(s != nullptr);
+  assert(addr != nullptr);
 
   if (bind_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
     throwError(getsockerror_winsock());
@@ -296,7 +296,7 @@ void ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
 
 void ArchNetworkWinsock::listenOnSocket(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // hardcoding backlog
   if (listen_winsock(s->m_socket, 3) == SOCKET_ERROR) {
@@ -306,7 +306,7 @@ void ArchNetworkWinsock::listenOnSocket(ArchSocket s)
 
 ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const addr)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // create new socket and temporary address
   ArchSocketImpl *socket = new ArchSocketImpl;
@@ -319,10 +319,10 @@ ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const 
     delete socket;
     free(tmp);
     if (addr) {
-      *addr = NULL;
+      *addr = nullptr;
     }
     if (err == WSAEWOULDBLOCK) {
-      return NULL;
+      return nullptr;
     }
     throwError(err);
   }
@@ -334,7 +334,7 @@ ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const 
     delete socket;
     free(tmp);
     if (addr) {
-      *addr = NULL;
+      *addr = nullptr;
     }
     throw;
   }
@@ -346,7 +346,7 @@ ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const 
   socket->m_pollWrite = true;
 
   // copy address if requested
-  if (addr != NULL) {
+  if (addr != nullptr) {
     *addr = ARCH->copyAddr(tmp);
   }
 
@@ -356,8 +356,8 @@ ArchSocket ArchNetworkWinsock::acceptSocket(ArchSocket s, ArchNetAddress *const 
 
 bool ArchNetworkWinsock::connectSocket(ArchSocket s, ArchNetAddress addr)
 {
-  assert(s != NULL);
-  assert(addr != NULL);
+  assert(s != nullptr);
+  assert(addr != nullptr);
 
   if (connect_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
     if (getsockerror_winsock() == WSAEISCONN) {
@@ -384,7 +384,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
     pe[i].m_revents = 0;
 
     // set invalid flag if socket is bogus then go to next socket
-    if (pe[i].m_socket == NULL) {
+    if (pe[i].m_socket == nullptr) {
       pe[i].m_revents |= kPOLLNVAL;
       continue;
     }
@@ -428,7 +428,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
   ArchThread thread = mt->newCurrentThread();
   WSAEVENT *unblockEvent = (WSAEVENT *)mt->getNetworkDataForThread(thread);
   ARCH->closeThread(thread);
-  if (unblockEvent == NULL) {
+  if (unblockEvent == nullptr) {
     unblockEvent = new WSAEVENT;
     m_unblockEvents.push_back(unblockEvent);
     *unblockEvent = WSACreateEvent_winsock();
@@ -467,7 +467,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
   }
   for (i = 0, n = 0; i < num; ++i) {
     // skip events we didn't check
-    if (pe[i].m_socket == NULL || (pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
+    if (pe[i].m_socket == nullptr || (pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
       continue;
     }
 
@@ -522,14 +522,14 @@ void ArchNetworkWinsock::unblockPollSocket(ArchThread thread)
   // set the unblock event
   ArchMultithreadWindows *mt = ArchMultithreadWindows::getInstance();
   WSAEVENT *unblockEvent = (WSAEVENT *)mt->getNetworkDataForThread(thread);
-  if (unblockEvent != NULL) {
+  if (unblockEvent != nullptr) {
     WSASetEvent_winsock(*unblockEvent);
   }
 }
 
 size_t ArchNetworkWinsock::readSocket(ArchSocket s, void *buf, size_t len)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   int n = recv_winsock(s->m_socket, buf, (int)len, 0);
   if (n == SOCKET_ERROR) {
@@ -544,7 +544,7 @@ size_t ArchNetworkWinsock::readSocket(ArchSocket s, void *buf, size_t len)
 
 size_t ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   int n = send_winsock(s->m_socket, buf, (int)len, 0);
   if (n == SOCKET_ERROR) {
@@ -563,7 +563,7 @@ size_t ArchNetworkWinsock::writeSocket(ArchSocket s, const void *buf, size_t len
 
 void ArchNetworkWinsock::throwErrorOnSocket(ArchSocket s)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // get the error from the socket layer
   int err = 0;
@@ -590,7 +590,7 @@ void ArchNetworkWinsock::setBlockingOnSocket(SOCKET s, bool blocking)
 
 bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // get old state
   BOOL oflag;
@@ -611,7 +611,7 @@ bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 
 bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
-  assert(s != NULL);
+  assert(s != nullptr);
 
   // get old state
   BOOL oflag;
@@ -643,7 +643,7 @@ std::string ArchNetworkWinsock::getHostName()
 
 ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
 {
-  ArchNetAddressImpl *addr = NULL;
+  ArchNetAddressImpl *addr = nullptr;
   switch (family) {
   case kINET: {
     addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
@@ -671,7 +671,7 @@ ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
 
 ArchNetAddress ArchNetworkWinsock::copyAddr(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   ArchNetAddressImpl *copy = ArchNetAddressImpl::alloc(addr->m_len);
   memcpy(TYPED_ADDR(void, copy), TYPED_ADDR(void, addr), addr->m_len);
@@ -690,7 +690,7 @@ std::vector<ArchNetAddress> ArchNetworkWinsock::nameToAddr(const std::string &na
   int ret = -1;
 
   ARCH->lockMutex(m_mutex);
-  if ((ret = getaddrinfo(name.c_str(), NULL, &hints, &pResult)) != 0) {
+  if ((ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult)) != 0) {
     ARCH->unlockMutex(m_mutex);
     throwNameError(ret);
   }
@@ -713,21 +713,21 @@ std::vector<ArchNetAddress> ArchNetworkWinsock::nameToAddr(const std::string &na
 
 void ArchNetworkWinsock::closeAddr(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   free(addr);
 }
 
 std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   char host[1024];
   char service[20];
   int ret =
       getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host), service, sizeof(service), 0);
 
-  if (ret != NULL) {
+  if (ret != 0) {
     throwNameError(ret);
   }
 
@@ -738,7 +738,7 @@ std::string ArchNetworkWinsock::addrToName(ArchNetAddress addr)
 
 std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
   case kINET: {
@@ -761,7 +761,7 @@ std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr)
 
 IArchNetwork::EAddressFamily ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   switch (addr->m_addr.ss_family) {
   case AF_INET:
@@ -777,7 +777,7 @@ IArchNetwork::EAddressFamily ArchNetworkWinsock::getAddrFamily(ArchNetAddress ad
 
 void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
   case kINET: {
@@ -800,7 +800,7 @@ void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
 
 int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
   case kINET: {
@@ -821,7 +821,7 @@ int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
 
 bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
 {
-  assert(addr != NULL);
+  assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
   case kINET: {

@@ -63,10 +63,10 @@ template <class T> inline TSocketMultiplexerMethodJob<T>::~TSocketMultiplexerMet
 
 template <class T> inline ISocketMultiplexerJob *TSocketMultiplexerMethodJob<T>::run(bool read, bool write, bool error)
 {
-  if (m_object != NULL) {
+  if (m_object != nullptr) {
     return (m_object->*m_method)(this, read, write, error);
   }
-  return NULL;
+  return nullptr;
 }
 
 template <class T> inline ArchSocket TSocketMultiplexerMethodJob<T>::getSocket() const

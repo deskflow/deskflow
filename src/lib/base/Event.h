@@ -56,7 +56,7 @@ public:
   \p target is the intended recipient of the event.
   \p flags is any combination of \c Flags.
   */
-  Event(Type type, void *target = NULL, void *data = NULL, Flags flags = kNone);
+  Event(Type type, void *target = nullptr, void *data = nullptr, Flags flags = kNone);
 
   //! Create \c Event with non-POD data
   /*!

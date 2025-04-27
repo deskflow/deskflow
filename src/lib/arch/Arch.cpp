@@ -15,11 +15,11 @@
 // Arch
 //
 
-Arch *Arch::s_instance = NULL;
+Arch *Arch::s_instance = nullptr;
 
 Arch::Arch()
 {
-  assert(s_instance == NULL);
+  assert(s_instance == nullptr);
   s_instance = this;
 }
 
@@ -42,6 +42,6 @@ void Arch::init()
 
 Arch *Arch::getInstance()
 {
-  assert(s_instance != NULL);
+  assert(s_instance != nullptr);
   return s_instance;
 }

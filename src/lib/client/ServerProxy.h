@@ -60,7 +60,7 @@ public:
 #ifdef TEST_ENV
   void handleDataForTest()
   {
-    handleData(Event(), NULL);
+    handleData(Event(), nullptr);
   }
 #endif
 

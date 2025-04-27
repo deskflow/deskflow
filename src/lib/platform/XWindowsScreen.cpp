@@ -83,7 +83,7 @@ static int xi_opcode;
 // display and the X11 event queue buffer, ignore any calls that try
 // to use the display, and wait to be destroyed.
 
-XWindowsScreen *XWindowsScreen::s_screen = NULL;
+XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
 XWindowsScreen::XWindowsScreen(
     const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
@@ -92,7 +92,7 @@ XWindowsScreen::XWindowsScreen(
     : PlatformScreen(events, scrollDirection),
       m_isPrimary(isPrimary),
       m_mouseScrollDelta(mouseScrollDelta),
-      m_display(NULL),
+      m_display(nullptr),
       m_root(None),
       m_window(None),
       m_isOnScreen(m_isPrimary),
@@ -104,14 +104,14 @@ XWindowsScreen::XWindowsScreen(
       m_yCenter(0),
       m_xCursor(0),
       m_yCursor(0),
-      m_keyState(NULL),
+      m_keyState(nullptr),
       m_lastFocus(None),
       m_lastFocusRevert(RevertToNone),
-      m_im(NULL),
-      m_ic(NULL),
+      m_im(nullptr),
+      m_ic(nullptr),
       m_lastKeycode(0),
       m_sequenceNumber(0),
-      m_screensaver(NULL),
+      m_screensaver(nullptr),
       m_screensaverNotify(false),
       m_xtestIsXineramaUnaware(true),
       m_preserveFocus(false),
@@ -120,7 +120,7 @@ XWindowsScreen::XWindowsScreen(
       m_xrandr(false),
       m_events(events)
 {
-  assert(s_screen == NULL);
+  assert(s_screen == nullptr);
 
   if (mouseScrollDelta == 0)
     m_mouseScrollDelta = 120;
@@ -147,7 +147,7 @@ XWindowsScreen::XWindowsScreen(
     LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_xinerama ? "(xinerama)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
   } catch (...) {
-    if (m_display != NULL) {
+    if (m_display != nullptr) {
       XCloseDisplay(m_display);
     }
     throw;
@@ -195,32 +195,32 @@ XWindowsScreen::XWindowsScreen(
 
 XWindowsScreen::~XWindowsScreen()
 {
-  assert(s_screen != NULL);
-  assert(m_display != NULL);
+  assert(s_screen != nullptr);
+  assert(m_display != nullptr);
 
-  m_events->adoptBuffer(NULL);
+  m_events->adoptBuffer(nullptr);
   m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
     delete m_clipboard[id];
   }
   delete m_keyState;
   delete m_screensaver;
-  m_keyState = NULL;
-  m_screensaver = NULL;
-  if (m_display != NULL) {
+  m_keyState = nullptr;
+  m_screensaver = nullptr;
+  if (m_display != nullptr) {
     // FIXME -- is it safe to clean up the IC and IM without a display?
-    if (m_ic != NULL) {
+    if (m_ic != nullptr) {
       XDestroyIC(m_ic);
     }
-    if (m_im != NULL) {
+    if (m_im != nullptr) {
       XCloseIM(m_im);
     }
     XDestroyWindow(m_display, m_window);
     XCloseDisplay(m_display);
   }
-  XSetIOErrorHandler(NULL);
+  XSetIOErrorHandler(nullptr);
 
-  s_screen = NULL;
+  s_screen = nullptr;
 }
 
 void XWindowsScreen::enable()
@@ -247,7 +247,7 @@ void XWindowsScreen::enable()
 void XWindowsScreen::disable()
 {
   // release input context focus
-  if (m_ic != NULL) {
+  if (m_ic != nullptr) {
     XUnsetICFocus(m_ic);
   }
 
@@ -266,7 +266,7 @@ void XWindowsScreen::enter()
   screensaver(false);
 
   // release input context focus
-  if (m_ic != NULL) {
+  if (m_ic != nullptr) {
     XUnsetICFocus(m_ic);
   }
 
@@ -368,7 +368,7 @@ void XWindowsScreen::leave()
   }
 
   // set input context focus to our window
-  if (m_ic != NULL) {
+  if (m_ic != nullptr) {
     XmbResetIC(m_ic);
     XSetICFocus(m_ic);
     m_filtered.clear();
@@ -381,14 +381,14 @@ void XWindowsScreen::leave()
 bool XWindowsScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
   // fail if we don't have the requested clipboard
-  if (m_clipboard[id] == NULL) {
+  if (m_clipboard[id] == nullptr) {
     return false;
   }
 
   // get the actual time.  ICCCM does not allow CurrentTime.
   Time timestamp = XWindowsUtil::getCurrentTime(m_display, m_clipboard[id]->getWindow());
 
-  if (clipboard != NULL) {
+  if (clipboard != nullptr) {
     // save clipboard data
     return Clipboard::copy(m_clipboard[id], clipboard, timestamp);
   } else {
@@ -473,10 +473,10 @@ void *XWindowsScreen::getEventTarget() const
 
 bool XWindowsScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  assert(clipboard != NULL);
+  assert(clipboard != nullptr);
 
   // fail if we don't have the requested clipboard
-  if (m_clipboard[id] == NULL) {
+  if (m_clipboard[id] == nullptr) {
     return false;
   }
 
@@ -857,9 +857,9 @@ void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
 Display *XWindowsScreen::openDisplay(const char *displayName)
 {
   // get the DISPLAY
-  if (displayName == NULL) {
+  if (displayName == nullptr) {
     displayName = getenv("DISPLAY");
-    if (displayName == NULL) {
+    if (displayName == nullptr) {
       displayName = ":0.0";
     }
   }
@@ -867,7 +867,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
   // open the display
   LOG((CLOG_DEBUG3 "calling XOpenDisplay(\"%s\")", displayName));
   Display *display = XOpenDisplay(displayName);
-  if (display == NULL) {
+  if (display == nullptr) {
     throw XScreenUnavailable(60.0);
   }
 
@@ -942,7 +942,7 @@ void XWindowsScreen::saveShape()
     int numScreens;
     XineramaScreenInfo *screens;
     screens = XineramaQueryScreens(m_display, &numScreens);
-    if (screens != NULL) {
+    if (screens != nullptr) {
       if (numScreens > 1) {
         m_xinerama = true;
         m_xCenter = screens[0].x_org + (screens[0].width >> 1);
@@ -1049,8 +1049,8 @@ Window XWindowsScreen::openWindow() const
 void XWindowsScreen::openIM()
 {
   // open the input methods
-  XIM im = XOpenIM(m_display, NULL, NULL, NULL);
-  if (im == NULL) {
+  XIM im = XOpenIM(m_display, nullptr, nullptr, nullptr);
+  if (im == nullptr) {
     LOG((CLOG_INFO "no support for IM"));
     return;
   }
@@ -1058,7 +1058,7 @@ void XWindowsScreen::openIM()
   // find the appropriate style.  deskflow supports XIMPreeditNothing
   // only at the moment.
   XIMStyles *styles;
-  if (XGetIMValues(im, XNQueryInputStyle, &styles, NULL) != NULL || styles == NULL) {
+  if (XGetIMValues(im, XNQueryInputStyle, &styles, nullptr) != nullptr || styles == nullptr) {
     LOG((CLOG_WARN "cannot get IM styles"));
     XCloseIM(im);
     return;
@@ -1080,8 +1080,8 @@ void XWindowsScreen::openIM()
   }
 
   // create an input context for the style and tell it about our window
-  XIC ic = XCreateIC(im, XNInputStyle, style, XNClientWindow, m_window, NULL);
-  if (ic == NULL) {
+  XIC ic = XCreateIC(im, XNInputStyle, style, XNClientWindow, m_window, nullptr);
+  if (ic == nullptr) {
     LOG((CLOG_WARN "cannot create IC"));
     XCloseIM(im);
     return;
@@ -1089,7 +1089,7 @@ void XWindowsScreen::openIM()
 
   // find out the events we must select for and do so
   unsigned long mask;
-  if (XGetICValues(ic, XNFilterEvents, &mask, NULL) != NULL) {
+  if (XGetICValues(ic, XNFilterEvents, &mask, nullptr) != nullptr) {
     LOG((CLOG_WARN "cannot get IC filter events"));
     XDestroyIC(ic);
     XCloseIM(im);
@@ -1140,7 +1140,7 @@ Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
 void XWindowsScreen::handleSystemEvent(const Event &event, void *)
 {
   XEvent *xevent = static_cast<XEvent *>(event.getData());
-  assert(xevent != NULL);
+  assert(xevent != nullptr);
 
   // update key state
   bool isRepeat = false;
@@ -1178,7 +1178,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
   }
 
   // let input methods try to handle event first
-  if (m_ic != NULL) {
+  if (m_ic != nullptr) {
     // XFilterEvent() may eat the event and generate a new KeyPress
     // event with a keycode of 0 because there isn't an actual key
     // associated with the keysym.  but the KeyRelease may pass
@@ -1623,7 +1623,7 @@ Cursor XWindowsScreen::createBlankCursor() const
 ClipboardID XWindowsScreen::getClipboardID(Atom selection) const
 {
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != NULL && m_clipboard[id]->getSelection() == selection) {
+    if (m_clipboard[id] != nullptr && m_clipboard[id]->getSelection() == selection) {
       return id;
     }
   }
@@ -1634,7 +1634,7 @@ void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom p
 {
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != NULL && m_clipboard[id]->processRequest(requestor, time, property)) {
+    if (m_clipboard[id] != nullptr && m_clipboard[id]->processRequest(requestor, time, property)) {
       break;
     }
   }
@@ -1644,7 +1644,7 @@ void XWindowsScreen::destroyClipboardRequest(Window requestor)
 {
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != NULL && m_clipboard[id]->destroyRequest(requestor)) {
+    if (m_clipboard[id] != nullptr && m_clipboard[id]->destroyRequest(requestor)) {
       break;
     }
   }
@@ -1653,13 +1653,13 @@ void XWindowsScreen::destroyClipboardRequest(Window requestor)
 void XWindowsScreen::onError()
 {
   // prevent further access to the X display
-  m_events->adoptBuffer(NULL);
+  m_events->adoptBuffer(nullptr);
   m_screensaver->destroy();
-  m_screensaver = NULL;
-  m_display = NULL;
+  m_screensaver = nullptr;
+  m_display = nullptr;
 
   // notify of failure
-  sendEvent(m_events->forIScreen().error(), NULL);
+  sendEvent(m_events->forIScreen().error(), nullptr);
 
   // FIXME -- should ensure that we ignore operations that involve
   // m_display from now on.  however, Xlib will simply exit the
@@ -1741,7 +1741,7 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
 {
   // convert to a keysym
   KeySym keysym;
-  if (event->type == KeyPress && m_ic != NULL) {
+  if (event->type == KeyPress && m_ic != nullptr) {
     // do multibyte lookup.  can only call XmbLookupString with a
     // key press event and a valid XIC so we checked those above.
     char scratch[32];
@@ -1772,7 +1772,7 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
   } else {
     // plain old lookup
     char dummy[1];
-    XLookupString(event, dummy, 0, &keysym, NULL);
+    XLookupString(event, dummy, 0, &keysym, nullptr);
   }
 
   LOG((CLOG_DEBUG2 "mapped code=%d to keysym=0x%04x", event->keycode, keysym));
@@ -1867,7 +1867,7 @@ void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
 void XWindowsScreen::updateButtons()
 {
   // query the button mapping
-  uint32_t numButtons = XGetPointerMapping(m_display, NULL, 0);
+  uint32_t numButtons = XGetPointerMapping(m_display, nullptr, 0);
   unsigned char *tmpButtons = new unsigned char[numButtons];
   XGetPointerMapping(m_display, tmpButtons, numButtons);
 

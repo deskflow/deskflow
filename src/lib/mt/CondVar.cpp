@@ -15,7 +15,7 @@
 
 CondVarBase::CondVarBase(Mutex *mutex) : m_mutex(mutex)
 {
-  assert(m_mutex != NULL);
+  assert(m_mutex != nullptr);
   m_cond = ARCH->newCondVar();
 }
 

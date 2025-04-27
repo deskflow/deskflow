@@ -16,7 +16,7 @@ TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnTrue)
   const int argc = 3;
   const char *kCryptoPassCmd[argc] = {"stub", "--crypto-pass", "mock_pass"};
 
-  ArgParser argParser(NULL);
+  ArgParser argParser(nullptr);
 
   bool result = argParser.parseDeprecatedArgs(argc, kCryptoPassCmd, i);
 
@@ -30,7 +30,7 @@ TEST(DeprecatedArgsParsingTests, parseDeprecatedArgs_cryptoPass_returnFalse)
   const int argc = 3;
   const char *kCryptoPassCmd[argc] = {"stub", "--mock-arg", "mock_value"};
 
-  ArgParser argParser(NULL);
+  ArgParser argParser(nullptr);
 
   bool result = argParser.parseDeprecatedArgs(argc, kCryptoPassCmd, i);
 

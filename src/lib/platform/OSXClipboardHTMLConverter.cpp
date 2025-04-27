@@ -35,23 +35,23 @@ std::string OSXClipboardHTMLConverter::convertString(
 {
   CFStringRef stringRef = CFStringCreateWithCString(kCFAllocatorDefault, data.c_str(), fromEncoding);
 
-  if (stringRef == NULL) {
+  if (stringRef == nullptr) {
     return std::string();
   }
 
   CFIndex buffSize;
   CFRange entireString = CFRangeMake(0, CFStringGetLength(stringRef));
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, NULL, 0, &buffSize);
+  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, nullptr, 0, &buffSize);
 
   char *buffer = new char[buffSize];
 
-  if (buffer == NULL) {
+  if (buffer == nullptr) {
     CFRelease(stringRef);
     return std::string();
   }
 
-  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (uint8_t *)buffer, buffSize, NULL);
+  CFStringGetBytes(stringRef, entireString, toEncoding, 0, false, (uint8_t *)buffer, buffSize, nullptr);
 
   std::string result(buffer, buffSize);
 

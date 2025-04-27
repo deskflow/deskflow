@@ -116,7 +116,7 @@ private:
   void postMouseEvent(CGPoint &) const;
 
   // convenience function to send events
-  void sendEvent(Event::Type type, void * = NULL) const;
+  void sendEvent(Event::Type type, void * = nullptr) const;
   void sendClipboardEvent(Event::Type type, ClipboardID id) const;
 
   // message handlers

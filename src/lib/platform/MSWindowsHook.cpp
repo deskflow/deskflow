@@ -14,9 +14,9 @@ static const char *g_name = "dfwhook";
 
 static DWORD g_processID = 0;
 static DWORD g_threadID = 0;
-static HHOOK g_getMessage = NULL;
-static HHOOK g_keyboardLL = NULL;
-static HHOOK g_mouseLL = NULL;
+static HHOOK g_getMessage = nullptr;
+static HHOOK g_keyboardLL = nullptr;
+static HHOOK g_mouseLL = nullptr;
 static bool g_screenSaver = false;
 static EHookMode g_mode = kHOOK_DISABLE;
 static uint32_t g_zoneSides = 0;
@@ -69,7 +69,7 @@ int MSWindowsHook::init(DWORD threadID)
   // still running or if it died without cleaning up.
   if (g_processID != 0 && g_processID != GetCurrentProcessId()) {
     HANDLE process = OpenProcess(STANDARD_RIGHTS_REQUIRED, FALSE, g_processID);
-    if (process != NULL) {
+    if (process != nullptr) {
       // old process (probably) still exists so refuse to
       // reinitialize this DLL (and thus steal it from the
       // old process).
@@ -83,9 +83,9 @@ int MSWindowsHook::init(DWORD threadID)
     // removed the hooks so we just need to reset our state.
     g_processID = GetCurrentProcessId();
     g_threadID = 0;
-    g_getMessage = NULL;
-    g_keyboardLL = NULL;
-    g_mouseLL = NULL;
+    g_getMessage = nullptr;
+    g_keyboardLL = nullptr;
+    g_mouseLL = nullptr;
     g_screenSaver = false;
   }
 
@@ -589,7 +589,7 @@ static LRESULT CALLBACK mouseLLHook(int code, WPARAM wParam, LPARAM lParam)
 
 EHookResult MSWindowsHook::install()
 {
-  assert(g_getMessage == NULL || g_screenSaver);
+  assert(g_getMessage == nullptr || g_screenSaver);
 
   // must be initialized
   if (g_threadID == 0) {
@@ -604,32 +604,32 @@ EHookResult MSWindowsHook::install()
   g_fakeServerInput = false;
 
   // install low-level hooks.  we require that they both get installed.
-  g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL, &mouseLLHook, NULL, 0);
+  g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL, &mouseLLHook, nullptr, 0);
 #if !NO_GRAB_KEYBOARD
-  g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL, &keyboardLLHook, NULL, 0);
-  if (g_mouseLL == NULL || g_keyboardLL == NULL) {
-    if (g_keyboardLL != NULL) {
+  g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL, &keyboardLLHook, nullptr, 0);
+  if (g_mouseLL == nullptr || g_keyboardLL == nullptr) {
+    if (g_keyboardLL != nullptr) {
       UnhookWindowsHookEx(g_keyboardLL);
-      g_keyboardLL = NULL;
+      g_keyboardLL = nullptr;
     }
-    if (g_mouseLL != NULL) {
+    if (g_mouseLL != nullptr) {
       UnhookWindowsHookEx(g_mouseLL);
-      g_mouseLL = NULL;
+      g_mouseLL = nullptr;
     }
   }
 #endif
 
   // check that we got all the hooks we wanted
-  if ((g_mouseLL == NULL) ||
+  if ((g_mouseLL == nullptr) ||
 #if !NO_GRAB_KEYBOARD
-      (g_keyboardLL == NULL)
+      (g_keyboardLL == nullptr)
 #endif
   ) {
     uninstall();
     return kHOOK_FAILED;
   }
 
-  if (g_keyboardLL != NULL || g_mouseLL != NULL) {
+  if (g_keyboardLL != nullptr || g_mouseLL != nullptr) {
     g_hookThread = GetCurrentThreadId();
     return kHOOK_OKAY_LL;
   }
@@ -644,17 +644,17 @@ int MSWindowsHook::uninstall()
   g_deadLParam = 0;
 
   // uninstall hooks
-  if (g_keyboardLL != NULL) {
+  if (g_keyboardLL != nullptr) {
     UnhookWindowsHookEx(g_keyboardLL);
-    g_keyboardLL = NULL;
+    g_keyboardLL = nullptr;
   }
-  if (g_mouseLL != NULL) {
+  if (g_mouseLL != nullptr) {
     UnhookWindowsHookEx(g_mouseLL);
-    g_mouseLL = NULL;
+    g_mouseLL = nullptr;
   }
-  if (g_getMessage != NULL && !g_screenSaver) {
+  if (g_getMessage != nullptr && !g_screenSaver) {
     UnhookWindowsHookEx(g_getMessage);
-    g_getMessage = NULL;
+    g_getMessage = nullptr;
   }
 
   return 1;
@@ -686,19 +686,19 @@ int MSWindowsHook::installScreenSaver()
   g_screenSaver = true;
 
   // install hook unless it's already installed
-  if (g_getMessage == NULL) {
-    g_getMessage = SetWindowsHookEx(WH_GETMESSAGE, &getMessageHook, NULL, 0);
+  if (g_getMessage == nullptr) {
+    g_getMessage = SetWindowsHookEx(WH_GETMESSAGE, &getMessageHook, nullptr, 0);
   }
 
-  return (g_getMessage != NULL) ? 1 : 0;
+  return (g_getMessage != nullptr) ? 1 : 0;
 }
 
 int MSWindowsHook::uninstallScreenSaver()
 {
   // uninstall hook unless the mouse wheel hook is installed
-  if (g_getMessage != NULL) {
+  if (g_getMessage != nullptr) {
     UnhookWindowsHookEx(g_getMessage);
-    g_getMessage = NULL;
+    g_getMessage = nullptr;
   }
 
   // screen saver hook is no longer installed

@@ -62,9 +62,9 @@
 
 ClientApp::ClientApp(IEventQueue *events)
     : App(events, new deskflow::ClientArgs()),
-      m_client(NULL),
-      m_clientScreen(NULL),
-      m_serverAddress(NULL)
+      m_client(nullptr),
+      m_clientScreen(nullptr),
+      m_serverAddress(nullptr)
 {
 }
 
@@ -258,7 +258,7 @@ deskflow::Screen *ClientApp::openClientScreen()
 
 void ClientApp::closeClientScreen(deskflow::Screen *screen)
 {
-  if (screen != NULL) {
+  if (screen != nullptr) {
     m_events->removeHandler(m_events->forIScreen().error(), screen->getEventTarget());
     delete screen;
   }
@@ -279,7 +279,7 @@ void ClientApp::scheduleClientRestart(double retryTime)
 {
   // install a timer and handler to retry later
   LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-  EventQueueTimer *timer = m_events->newOneShotTimer(retryTime, NULL);
+  EventQueueTimer *timer = m_events->newOneShotTimer(retryTime, nullptr);
   m_events->adoptHandler(
       Event::kTimer, timer, new TMethodEventJob<ClientApp>(this, &ClientApp::handleClientRestart, timer)
   );
@@ -370,7 +370,7 @@ Client *ClientApp::openClient(const std::string &name, const NetworkAddress &add
 
 void ClientApp::closeClient(Client *client)
 {
-  if (client == NULL) {
+  if (client == nullptr) {
     return;
   }
 
@@ -392,9 +392,9 @@ int ClientApp::foregroundStartup(int argc, char **argv)
 bool ClientApp::startClient()
 {
   double retryTime;
-  deskflow::Screen *clientScreen = NULL;
+  deskflow::Screen *clientScreen = nullptr;
   try {
-    if (m_clientScreen == NULL) {
+    if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
       m_client = openClient(args().m_name, *m_serverAddress, clientScreen);
       m_clientScreen = clientScreen;
@@ -433,8 +433,8 @@ void ClientApp::stopClient()
 {
   closeClient(m_client);
   closeClientScreen(m_clientScreen);
-  m_client = NULL;
-  m_clientScreen = NULL;
+  m_client = nullptr;
+  m_clientScreen = nullptr;
 }
 
 int ClientApp::mainLoop()
@@ -454,7 +454,7 @@ int ClientApp::mainLoop()
 
 #if WINAPI_CARBON
 
-  Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, NULL));
+  Thread thread(new TMethodJob<ClientApp>(this, &ClientApp::runEventsLoop, nullptr));
 
   // wait until carbon loop is ready
   OSXScreen *screen = dynamic_cast<OSXScreen *>(m_clientScreen->getPlatformScreen());

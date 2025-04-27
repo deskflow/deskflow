@@ -11,7 +11,7 @@
 // Event
 //
 
-Event::Event() : m_type(kUnknown), m_target(NULL), m_data(NULL), m_flags(0), m_dataObject(nullptr)
+Event::Event() : m_type(kUnknown), m_target(nullptr), m_data(nullptr), m_flags(0), m_dataObject(nullptr)
 {
   // do nothing
 }

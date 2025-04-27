@@ -28,12 +28,12 @@ ClientListener::ClientListener(
     const NetworkAddress &address, ISocketFactory *socketFactory, IEventQueue *events, SecurityLevel securityLevel
 )
     : m_socketFactory(socketFactory),
-      m_server(NULL),
+      m_server(nullptr),
       m_events(events),
       m_securityLevel(securityLevel),
       m_address(address)
 {
-  assert(m_socketFactory != NULL);
+  assert(m_socketFactory != nullptr);
 
   try {
     start();
@@ -57,13 +57,13 @@ ClientListener::~ClientListener()
 
 void ClientListener::setServer(Server *server)
 {
-  assert(server != NULL);
+  assert(server != nullptr);
   m_server = server;
 }
 
 ClientProxy *ClientListener::getNextClient()
 {
-  ClientProxy *client = NULL;
+  ClientProxy *client = nullptr;
   if (!m_waitingClients.empty()) {
     client = m_waitingClients.front();
     m_waitingClients.pop_front();
@@ -127,7 +127,7 @@ void ClientListener::handleClientConnecting(const Event &, void *)
   // accept client connection
   IDataSocket *socket = m_listen->accept();
 
-  if (socket == NULL) {
+  if (socket == nullptr) {
     return;
   }
 
@@ -153,7 +153,7 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket)
 
   // filter socket messages, including a packetizing filter
   deskflow::IStream *stream = new PacketStreamFilter(m_events, socket, false);
-  assert(m_server != NULL);
+  assert(m_server != nullptr);
 
   // create proxy for unknown client
   ClientProxyUnknown *client = new ClientProxyUnknown(stream, 30.0, m_server, m_events);

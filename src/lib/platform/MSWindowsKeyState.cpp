@@ -562,7 +562,7 @@ MSWindowsKeyState::MSWindowsKeyState(
       m_eventTarget(eventTarget),
       m_desks(desks),
       m_keyLayout(GetKeyboardLayout(0)),
-      m_fixTimer(NULL),
+      m_fixTimer(nullptr),
       m_lastDown(0),
       m_useSavedModifiers(false),
       m_savedModifiers(0),
@@ -580,7 +580,7 @@ MSWindowsKeyState::MSWindowsKeyState(
       m_eventTarget(eventTarget),
       m_desks(desks),
       m_keyLayout(GetKeyboardLayout(0)),
-      m_fixTimer(NULL),
+      m_fixTimer(nullptr),
       m_lastDown(0),
       m_useSavedModifiers(false),
       m_savedModifiers(0),
@@ -604,10 +604,10 @@ void MSWindowsKeyState::init()
 
 void MSWindowsKeyState::disable()
 {
-  if (m_fixTimer != NULL) {
+  if (m_fixTimer != nullptr) {
     m_events->removeHandler(Event::kTimer, m_fixTimer);
     m_events->deleteTimer(m_fixTimer);
-    m_fixTimer = NULL;
+    m_fixTimer = nullptr;
   }
   m_lastDown = 0;
 }
@@ -672,7 +672,7 @@ KeyID MSWindowsKeyState::mapKeyFromEvent(WPARAM charAndVirtKey, LPARAM info, Key
   }
 
   // set modifier mask
-  if (maskOut != NULL) {
+  if (maskOut != nullptr) {
     KeyModifierMask active = getActiveModifiers();
     if (!noAltGr && (active & s_controlAlt) == s_controlAlt) {
       // if !noAltGr then we're only interested in matching the
@@ -813,7 +813,7 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
 {
   // determine the thread that'll receive this event
   HWND targetWindow = GetForegroundWindow();
-  DWORD targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+  DWORD targetThread = GetWindowThreadProcessId(targetWindow, nullptr);
 
   // get keyboard layout for the thread
   HKL hkl = GetKeyboardLayout(targetThread);
@@ -822,7 +822,7 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
     // GetKeyboardLayout failed. Maybe targetWindow is a console window.
     // We're getting the keyboard layout of the desktop instead.
     targetWindow = GetDesktopWindow();
-    targetThread = GetWindowThreadProcessId(targetWindow, NULL);
+    targetThread = GetWindowThreadProcessId(targetWindow, nullptr);
     hkl = GetKeyboardLayout(targetThread);
   }
 
@@ -1225,7 +1225,7 @@ KeyModifierMask &MSWindowsKeyState::getActiveModifiersRValue()
 bool MSWindowsKeyState::getGroups(GroupList &groups) const
 {
   // get keyboard layouts
-  uint32_t newNumLayouts = GetKeyboardLayoutList(0, NULL);
+  uint32_t newNumLayouts = GetKeyboardLayoutList(0, nullptr);
   if (newNumLayouts == 0) {
     LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
     return false;

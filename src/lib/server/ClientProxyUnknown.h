@@ -38,7 +38,7 @@ public:
   //! Get the client proxy
   /*!
   Returns the client proxy created after a successful handshake
-  (i.e. when this object sends a success event).  Returns NULL
+  (i.e. when this object sends a success event).  Returns nullptr
   if the handshake is unsuccessful or incomplete.
   */
   ClientProxy *orphanClientProxy();

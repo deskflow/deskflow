@@ -86,18 +86,18 @@ OSXScreen::OSXScreen(
       MouseButtonEventMap(NumButtonIDs),
       m_cursorHidden(false),
       m_dragNumButtonsDown(0),
-      m_dragTimer(NULL),
-      m_keyState(NULL),
+      m_dragTimer(nullptr),
+      m_keyState(nullptr),
       m_sequenceNumber(0),
-      m_screensaver(NULL),
+      m_screensaver(nullptr),
       m_screensaverNotify(false),
       m_ownClipboard(false),
-      m_clipboardTimer(NULL),
-      m_hiddenWindow(NULL),
-      m_userInputWindow(NULL),
+      m_clipboardTimer(nullptr),
+      m_hiddenWindow(nullptr),
+      m_userInputWindow(nullptr),
       m_switchEventHandlerRef(0),
       m_pmMutex(new Mutex),
-      m_pmWatchThread(NULL),
+      m_pmWatchThread(nullptr),
       m_pmThreadReady(new CondVar<bool>(m_pmMutex, false)),
       m_pmRootPort(0),
       m_activeModifierHotKey(0),
@@ -110,7 +110,7 @@ OSXScreen::OSXScreen(
       m_lastSingleClickYCursor(0),
       m_events(events),
       m_getDropTargetThread(nullptr),
-      m_impl(NULL)
+      m_impl(nullptr)
 {
   m_displayID = CGMainDisplayID();
   if (!updateScreenShape(m_displayID, 0)) {
@@ -186,7 +186,7 @@ OSXScreen::~OSXScreen()
 {
   disable();
 
-  m_events->adoptBuffer(NULL);
+  m_events->adoptBuffer(nullptr);
   m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
 
   if (m_pmWatchThread) {
@@ -203,7 +203,7 @@ OSXScreen::~OSXScreen()
     CFRunLoopStop(m_pmRunloop);
     m_pmWatchThread->wait();
     delete m_pmWatchThread;
-    m_pmWatchThread = NULL;
+    m_pmWatchThread = nullptr;
   }
   delete m_pmThreadReady;
   delete m_pmMutex;
@@ -242,7 +242,7 @@ void OSXScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
 
 void OSXScreen::getCursorPos(int32_t &x, int32_t &y) const
 {
-  CGEventRef event = CGEventCreate(NULL);
+  CGEventRef event = CGEventCreate(nullptr);
   CGPoint mouse = CGEventGetLocation(event);
   x = mouse.x;
   y = mouse.y;
@@ -321,7 +321,7 @@ uint32_t OSXScreen::registerHotKey(KeyID key, KeyModifierMask mask)
   }
 
   // if this hot key has modifiers only then we'll handle it specially
-  EventHotKeyRef ref = NULL;
+  EventHotKeyRef ref = nullptr;
   bool okay;
   if (key == kKeyNone) {
     if (m_modifierHotKeys.count(mask) > 0) {
@@ -367,7 +367,7 @@ void OSXScreen::unregisterHotKey(uint32_t id)
 
   // unregister with OS
   bool okay;
-  if (i->second.getRef() != NULL) {
+  if (i->second.getRef() != nullptr) {
     okay = (UnregisterEventHotKey(i->second.getRef()) == noErr);
   } else {
     okay = false;
@@ -421,7 +421,7 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
   // check if cursor position is valid on the client display configuration
   // stkamp@users.sourceforge.net
   CGDisplayCount displayCount = 0;
-  CGGetDisplaysWithPoint(pos, 0, NULL, &displayCount);
+  CGGetDisplaysWithPoint(pos, 0, nullptr, &displayCount);
   if (displayCount == 0) {
     // cursor position invalid - clamp to bounds of last valid display.
     // find the last valid display using the last cursor position.
@@ -451,7 +451,7 @@ void OSXScreen::postMouseEvent(CGPoint &pos) const
     type = thisButtonType[kMouseButtonDragged];
   }
 
-  CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(button));
+  CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(button));
 
   // Dragging events also need the click state
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
@@ -535,7 +535,7 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
   MouseButtonEventMapType thisButtonMap = MouseButtonEventMap[index];
   CGEventType type = thisButtonMap[state];
 
-  CGEventRef event = CGEventCreateMouseEvent(NULL, type, pos, static_cast<CGMouseButton>(index));
+  CGEventRef event = CGEventCreateMouseEvent(nullptr, type, pos, static_cast<CGMouseButton>(index));
 
   CGEventSetIntegerValueField(event, kCGMouseEventClickState, m_clickState);
 
@@ -569,7 +569,7 @@ void OSXScreen::getDropTargetThread(void *)
     char *cstr = CFStringRefToUTF8String(cfstr);
     CFRelease(cfstr);
 
-    if (cstr != NULL) {
+    if (cstr != nullptr) {
       LOG((CLOG_DEBUG "drop target: %s", cstr));
       m_dropTarget = cstr;
       free(cstr);
@@ -616,7 +616,7 @@ void OSXScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
   // we can do.
 
   // get current position
-  CGEventRef event = CGEventCreate(NULL);
+  CGEventRef event = CGEventCreate(nullptr);
   CGPoint oldPos = CGEventGetLocation(event);
   CFRelease(event);
 
@@ -638,7 +638,7 @@ void OSXScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
     // create a scroll event, post it and release it.  not sure if kCGScrollEventUnitLine
     // is the right choice here over kCGScrollEventUnitPixel
     CGEventRef scrollEvent = CGEventCreateScrollWheelEvent(
-        NULL, kCGScrollEventUnitLine, 2, mapScrollWheelFromDeskflow(yDelta), mapScrollWheelFromDeskflow(xDelta)
+        nullptr, kCGScrollEventUnitLine, 2, mapScrollWheelFromDeskflow(yDelta), mapScrollWheelFromDeskflow(xDelta)
     );
 
     // Fix for sticky keys
@@ -654,7 +654,7 @@ void OSXScreen::showCursor()
 {
   LOG((CLOG_DEBUG "showing cursor"));
 
-  CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+  CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 
   CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
 
@@ -677,7 +677,7 @@ void OSXScreen::hideCursor()
 {
   LOG((CLOG_DEBUG "hiding cursor"));
 
-  CFStringRef propertyString = CFStringCreateWithCString(NULL, "SetsCursorInBackground", kCFStringEncodingMacRoman);
+  CFStringRef propertyString = CFStringCreateWithCString(nullptr, "SetsCursorInBackground", kCFStringEncodingMacRoman);
 
   CGSSetConnectionProperty(_CGSDefaultConnection(), _CGSDefaultConnection(), propertyString, kCFBooleanTrue);
 
@@ -699,7 +699,7 @@ void OSXScreen::hideCursor()
 void OSXScreen::enable()
 {
   // watch the clipboard
-  m_clipboardTimer = m_events->newTimer(1.0, NULL);
+  m_clipboardTimer = m_events->newTimer(1.0, nullptr);
   m_events->adoptHandler(
       Event::kTimer, m_clipboardTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleClipboardCheck)
   );
@@ -765,10 +765,10 @@ void OSXScreen::disable()
   enableDragTimer(false);
 
   // uninstall clipboard timer
-  if (m_clipboardTimer != NULL) {
+  if (m_clipboardTimer != nullptr) {
     m_events->removeHandler(Event::kTimer, m_clipboardTimer);
     m_events->deleteTimer(m_clipboardTimer);
-    m_clipboardTimer = NULL;
+    m_clipboardTimer = nullptr;
   }
 
   m_isOnScreen = m_isPrimary;
@@ -842,7 +842,7 @@ void OSXScreen::leave()
 
 bool OSXScreen::setClipboard(ClipboardID, const IClipboard *src)
 {
-  if (src != NULL) {
+  if (src != nullptr) {
     LOG((CLOG_DEBUG "setting clipboard"));
     Clipboard::copy(&m_pasteboard, src);
   }
@@ -919,7 +919,7 @@ void OSXScreen::sendClipboardEvent(Event::Type type, ClipboardID id) const
 void OSXScreen::handleSystemEvent(const Event &event, void *)
 {
   EventRef *carbonEvent = static_cast<EventRef *>(event.getData());
-  assert(carbonEvent != NULL);
+  assert(carbonEvent != nullptr);
 
   uint32_t eventClass = GetEventClass(*carbonEvent);
 
@@ -932,11 +932,15 @@ void OSXScreen::handleSystemEvent(const Event &event, void *)
       long yScroll;
 
       // get scroll amount
-      r = GetEventParameter(*carbonEvent, kDeskflowMouseScrollAxisX, typeSInt32, NULL, sizeof(xScroll), NULL, &xScroll);
+      r = GetEventParameter(
+          *carbonEvent, kDeskflowMouseScrollAxisX, typeSInt32, nullptr, sizeof(xScroll), nullptr, &xScroll
+      );
       if (r != noErr) {
         xScroll = 0;
       }
-      r = GetEventParameter(*carbonEvent, kDeskflowMouseScrollAxisY, typeSInt32, NULL, sizeof(yScroll), NULL, &yScroll);
+      r = GetEventParameter(
+          *carbonEvent, kDeskflowMouseScrollAxisY, typeSInt32, nullptr, sizeof(yScroll), nullptr, &yScroll
+      );
       if (r != noErr) {
         yScroll = 0;
       }
@@ -961,8 +965,8 @@ void OSXScreen::handleSystemEvent(const Event &event, void *)
   case kEventClassWindow:
     // 2nd param was formerly GetWindowEventTarget(m_userInputWindow) which is 32-bit only,
     // however as m_userInputWindow is never initialized to anything we can take advantage of
-    // the fact that GetWindowEventTarget(NULL) == NULL
-    SendEventToEventTarget(*carbonEvent, NULL);
+    // the fact that GetWindowEventTarget(nullptr) == nullptr
+    SendEventToEventTarget(*carbonEvent, nullptr);
     switch (GetEventKind(*carbonEvent)) {
     case kEventWindowActivated:
       LOG((CLOG_DEBUG1 "window activated"));
@@ -1265,7 +1269,7 @@ bool OSXScreen::onHotKey(EventRef event) const
 {
   // get the hotkey id
   EventHotKeyID hkid;
-  GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, NULL, sizeof(EventHotKeyID), NULL, &hkid);
+  GetEventParameter(event, kEventParamDirectObject, typeEventHotKeyID, nullptr, sizeof(EventHotKeyID), nullptr, &hkid);
   uint32_t id = hkid.id;
 
   // determine event type
@@ -1337,7 +1341,7 @@ double OSXScreen::getScrollSpeed() const
       CFSTR("com.apple.scrollwheel.scaling"), kCFPreferencesAnyApplication, kCFPreferencesCurrentUser,
       kCFPreferencesAnyHost
   );
-  if (pref != NULL) {
+  if (pref != nullptr) {
     CFTypeID id = CFGetTypeID(pref);
     if (id == CFNumberGetTypeID()) {
       CFNumberRef value = static_cast<CFNumberRef>(pref);
@@ -1355,24 +1359,24 @@ double OSXScreen::getScrollSpeed() const
 
 void OSXScreen::enableDragTimer(bool enable)
 {
-  if (enable && m_dragTimer == NULL) {
-    m_dragTimer = m_events->newTimer(0.01, NULL);
+  if (enable && m_dragTimer == nullptr) {
+    m_dragTimer = m_events->newTimer(0.01, nullptr);
     m_events->adoptHandler(Event::kTimer, m_dragTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleDrag));
-    CGEventRef event = CGEventCreate(NULL);
+    CGEventRef event = CGEventCreate(nullptr);
     CGPoint mouse = CGEventGetLocation(event);
     m_dragLastPoint.h = (short)mouse.x;
     m_dragLastPoint.v = (short)mouse.y;
     CFRelease(event);
-  } else if (!enable && m_dragTimer != NULL) {
+  } else if (!enable && m_dragTimer != nullptr) {
     m_events->removeHandler(Event::kTimer, m_dragTimer);
     m_events->deleteTimer(m_dragTimer);
-    m_dragTimer = NULL;
+    m_dragTimer = nullptr;
   }
 }
 
 void OSXScreen::handleDrag(const Event &, void *)
 {
-  CGEventRef event = CGEventCreate(NULL);
+  CGEventRef event = CGEventCreate(nullptr);
   CGPoint p = CGEventGetLocation(event);
   CFRelease(event);
 
@@ -1405,7 +1409,7 @@ bool OSXScreen::updateScreenShape()
   // get info for each display
   CGDisplayCount displayCount = 0;
 
-  if (CGGetActiveDisplayList(0, NULL, &displayCount) != CGDisplayNoErr) {
+  if (CGGetActiveDisplayList(0, nullptr, &displayCount) != CGDisplayNoErr) {
     return false;
   }
 
@@ -1414,7 +1418,7 @@ bool OSXScreen::updateScreenShape()
   }
 
   CGDirectDisplayID *displays = new CGDirectDisplayID[displayCount];
-  if (displays == NULL) {
+  if (displays == nullptr) {
     return false;
   }
 
@@ -1597,7 +1601,8 @@ void OSXScreen::handleConfirmSleep(const Event &event, void *)
     Lock lock(m_pmMutex);
     if (m_pmRootPort != 0) {
       // deliver suspend event immediately.
-      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), NULL, Event::kDeliverImmediately));
+      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), nullptr, Event::kDeliverImmediately)
+      );
 
       LOG((CLOG_DEBUG "system will sleep"));
       IOAllowPowerChange(m_pmRootPort, messageArg);
@@ -1650,7 +1655,7 @@ static CGSSetGlobalHotKeyOperatingMode_t	s_CGSSetGlobalHotKeyOperatingMode;
 #endif
 
 #define LOOKUP(name_)                                                                                                  \
-  s_##name_ = NULL;                                                                                                    \
+  s_##name_ = nullptr;                                                                                                 \
   if (NSIsSymbolNameDefinedWithHint("_" #name_, "CoreGraphics")) {                                                     \
     s_##name_ = (name_##_t)NSAddressOfSymbol(NSLookupAndBindSymbolWithHint("_" #name_, "CoreGraphics"));               \
   }
@@ -1663,9 +1668,9 @@ OSXScreen::isGlobalHotKeyOperatingModeAvailable()
 		LOOKUP(_CGSDefaultConnection);
 		LOOKUP(CGSGetGlobalHotKeyOperatingMode);
 		LOOKUP(CGSSetGlobalHotKeyOperatingMode);
-		s_hasGHOM = (s__CGSDefaultConnection != NULL &&
-					s_CGSGetGlobalHotKeyOperatingMode != NULL &&
-					s_CGSSetGlobalHotKeyOperatingMode != NULL);
+		s_hasGHOM = (s__CGSDefaultConnection != nullptr &&
+					s_CGSGetGlobalHotKeyOperatingMode != nullptr &&
+					s_CGSSetGlobalHotKeyOperatingMode != nullptr);
 	}
 	return s_hasGHOM;
 }
@@ -1708,7 +1713,7 @@ OSXScreen::getGlobalHotKeysEnabled()
 // OSXScreen::HotKeyItem
 //
 
-OSXScreen::HotKeyItem::HotKeyItem(uint32_t keycode, uint32_t mask) : m_ref(NULL), m_keycode(keycode), m_mask(mask)
+OSXScreen::HotKeyItem::HotKeyItem(uint32_t keycode, uint32_t mask) : m_ref(nullptr), m_keycode(keycode), m_mask(mask)
 {
   // do nothing
 }
@@ -1823,7 +1828,7 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   if (screen->m_isOnScreen) {
     return event;
   } else {
-    return NULL;
+    return nullptr;
   }
 }
 
@@ -1867,8 +1872,8 @@ int8_t OSXScreen::MouseButtonState::getFirstButtonDown() const
 
 char *OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 {
-  if (aString == NULL) {
-    return NULL;
+  if (aString == nullptr) {
+    return nullptr;
   }
 
   CFIndex length = CFStringGetLength(aString);
@@ -1877,7 +1882,7 @@ char *OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
 
   if (!CFStringGetCString(aString, buffer, maxSize, kCFStringEncodingUTF8)) {
     free(buffer);
-    buffer = NULL;
+    buffer = nullptr;
   }
 
   return buffer;
@@ -1903,7 +1908,7 @@ std::string &OSXScreen::getDraggingFilename()
     char *info = CFStringRefToUTF8String(dragInfo);
     CFRelease(dragInfo);
 
-    if (info != NULL) {
+    if (info != nullptr) {
       LOG((CLOG_DEBUG "drag info: %s", info));
       m_draggingFilename = info;
       free(info);
@@ -1966,7 +1971,7 @@ int getSecureInputEventPID()
 
   std::unique_ptr<std::remove_pointer<CFTypeRef>::type, decltype(&CFRelease)> consoleUsers(
       IORegistryEntrySearchCFProperty(
-          service_root, kIOServicePlane, CFSTR("IOConsoleUsers"), NULL,
+          service_root, kIOServicePlane, CFSTR("IOConsoleUsers"), nullptr,
           kIORegistryIterateParents | kIORegistryIterateRecursively
       ),
       CFRelease

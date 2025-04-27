@@ -70,7 +70,7 @@ void ArchSleepUnix::sleep(double timeout)
     timeout2.tv_sec = static_cast<int>(timeLeft);
     timeout2.tv_usec = static_cast<int>(1.0e+6 * (timeLeft - timeout2.tv_sec));
     select(
-        (SELECT_TYPE_ARG1)0, SELECT_TYPE_ARG234 NULL, SELECT_TYPE_ARG234 NULL, SELECT_TYPE_ARG234 NULL,
+        (SELECT_TYPE_ARG1)0, SELECT_TYPE_ARG234 nullptr, SELECT_TYPE_ARG234 nullptr, SELECT_TYPE_ARG234 nullptr,
         SELECT_TYPE_ARG5 & timeout2
     );
     ARCH->testCancelThread();

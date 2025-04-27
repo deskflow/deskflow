@@ -28,9 +28,9 @@ public:
   //! Get property
   /*!
   Gets property \c property on \c window.  \b Appends the data to
-  \c *data if \c data is not NULL, saves the property type in \c *type
-  if \c type is not NULL, and saves the property format in \c *format
-  if \c format is not NULL.  If \c deleteProperty is true then the
+  \c *data if \c data is not nullptr, saves the property type in \c *type
+  if \c type is not nullptr, and saves the property format in \c *format
+  if \c format is not nullptr.  If \c deleteProperty is true then the
   property is deleted after being read.
   */
   static bool getWindowProperty(

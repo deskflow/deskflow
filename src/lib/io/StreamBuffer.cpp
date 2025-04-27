@@ -28,10 +28,10 @@ const void *StreamBuffer::peek(uint32_t n)
 {
   assert(n <= m_size);
 
-  // if requesting no data then return NULL so we don't try to access
+  // if requesting no data then return nullptr so we don't try to access
   // an empty list.
   if (n == 0) {
-    return NULL;
+    return nullptr;
   }
 
   // reserve space in first chunk
@@ -80,7 +80,7 @@ void StreamBuffer::pop(uint32_t n)
 
 void StreamBuffer::write(const void *vdata, uint32_t n)
 {
-  assert(vdata != NULL);
+  assert(vdata != nullptr);
 
   // ignore if no data, otherwise update size
   if (n == 0) {

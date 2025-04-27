@@ -58,7 +58,7 @@ template <typename T> void writeVectorInt(const std::vector<T> *VectorData, std:
 
 void writeString(const std::string *StringData, std::vector<uint8_t> &Buffer)
 {
-  const uint32_t len = (StringData != NULL) ? (uint32_t)StringData->size() : 0;
+  const uint32_t len = (StringData != nullptr) ? (uint32_t)StringData->size() : 0;
   writeInt(len, sizeof(len), Buffer);
   if (len != 0) {
     std::copy(StringData->begin(), StringData->end(), std::back_inserter(Buffer));
@@ -69,8 +69,8 @@ void writeString(const std::string *StringData, std::vector<uint8_t> &Buffer)
 
 void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...)
 {
-  assert(stream != NULL);
-  assert(fmt != NULL);
+  assert(stream != nullptr);
+  assert(fmt != nullptr);
   LOG((CLOG_DEBUG2 "writef(%s)", fmt));
 
   va_list args;
@@ -106,8 +106,8 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
 
 void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t size, va_list args)
 {
-  assert(stream != NULL);
-  assert(fmt != NULL);
+  assert(stream != nullptr);
+  assert(fmt != nullptr);
 
   // done if nothing to write
   if (size == 0) {
@@ -130,8 +130,8 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t 
 
 void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list args)
 {
-  assert(stream != NULL);
-  assert(fmt != NULL);
+  assert(stream != nullptr);
+  assert(fmt != nullptr);
 
   // begin scanning
   while (*fmt) {
@@ -415,8 +415,8 @@ uint32_t ProtocolUtil::eatLength(const char **pfmt)
 
 void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count)
 {
-  assert(stream != NULL);
-  assert(vbuffer != NULL);
+  assert(stream != nullptr);
+  assert(vbuffer != nullptr);
 
   uint8_t *buffer = static_cast<uint8_t *>(vbuffer);
   while (count > 0) {

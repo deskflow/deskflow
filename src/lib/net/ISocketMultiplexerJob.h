@@ -25,7 +25,7 @@ public:
   Called by a socket multiplexer when the socket becomes readable,
   writable, or has an error.  It should return itself if the same
   job can continue to service events, a new job if the socket must
-  be serviced differently, or NULL if the socket should no longer
+  be serviced differently, or nullptr if the socket should no longer
   be serviced.  The socket is readable if \p readable is true,
   writable if \p writable is true, and in error if \p error is
   true.

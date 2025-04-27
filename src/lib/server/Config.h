@@ -203,7 +203,7 @@ public:
   virtual ~Config();
 
 #ifdef TEST_ENV
-  Config() : m_inputFilter(NULL)
+  Config() : m_inputFilter(nullptr)
   {
   }
 #endif
@@ -386,7 +386,7 @@ public:
   direction (set through connect()) at position \c position.  Returns
   the empty string if there is no neighbor in that direction, otherwise
   saves the position on the neighbor in \c positionOut if it's not
-  \c NULL.
+  \c nullptr.
   */
   std::string getNeighbor(const std::string &, EDirection, float position, float *positionOut) const;
 
@@ -414,7 +414,7 @@ public:
 
   //! Get the screen options
   /*!
-  Returns all the added options for the named screen.  Returns NULL
+  Returns all the added options for the named screen.  Returns nullptr
   if the screen is unknown and an empty collection if there are no
   options.
   */

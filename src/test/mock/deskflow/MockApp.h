@@ -15,7 +15,7 @@
 class MockApp : public App
 {
 public:
-  MockApp() : App(NULL, NULL)
+  MockApp() : App(nullptr, nullptr)
   {
   }
 

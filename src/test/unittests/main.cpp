@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
 #if SYSAPI_WIN32
   // HACK: shouldn't be needed, but logging fails without this.
-  ArchMiscWindows::setInstanceWin32(GetModuleHandle(NULL));
+  ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
   Arch arch;

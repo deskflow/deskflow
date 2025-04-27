@@ -37,7 +37,7 @@ XWindowsEventQueueBuffer::XWindowsEventQueueBuffer(Display *display, Window wind
       m_window(window),
       m_waiting(false)
 {
-  assert(m_display != NULL);
+  assert(m_display != nullptr);
   assert(m_window != None);
 
   m_userEvent = XInternAtom(m_display, "DESKFLOW_USER_EVENT", False);

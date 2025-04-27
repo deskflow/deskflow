@@ -149,10 +149,10 @@ public:
   /*!
   Accepts a connection on socket \c s, returning a new socket for the
   connection and filling in \c addr with the address of the remote
-  end.  \c addr may be NULL if the remote address isn't required.
+  end.  \c addr may be nullptr if the remote address isn't required.
   The original socket \c s is unaffected and remains in the listening
   state.  The new socket shares most of the properties of \c s except
-  it's not in the listening state and it's connected.  Returns NULL
+  it's not in the listening state and it's connected.  Returns nullptr
   if there are no pending connection requests.
   */
   virtual ArchSocket acceptSocket(ArchSocket s, ArchNetAddress *addr) = 0;

@@ -34,7 +34,7 @@ public:
   \c commandLine should \b not include the name of program as the
   first argument.  If \c allUsers is true then the daemon will be
   installed to start at boot time, otherwise it will be installed to
-  start when the current user logs in.  If \p dependencies is not NULL
+  start when the current user logs in.  If \p dependencies is not nullptr
   then it's a concatenation of NUL terminated other daemon names
   followed by a NUL;  the daemon will be configured to startup after
   the listed daemons.  Throws an \c XArchDaemon exception on failure.

@@ -17,7 +17,7 @@ class FunctionEventJob : public IEventJob
 {
 public:
   //! run() invokes \c func(arg)
-  FunctionEventJob(void (*func)(const Event &, void *), void *arg = NULL);
+  FunctionEventJob(void (*func)(const Event &, void *), void *arg = nullptr);
   ~FunctionEventJob() override;
 
   // IEventJob overrides

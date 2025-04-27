@@ -68,7 +68,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
       std::lock_guard lock(mutex_);
 
       // libei doesn't allow ei_event_ref() because events are
-      // supposed to be short-lived only. So instead, we create an NULL-data
+      // supposed to be short-lived only. So instead, we create an nullptr-data
       // kSystemEvent whenever there's data on the fd, shove that event
       // into our event queue and once we process the event (see
       // getEvent()), the EiScreen will call ei_dispatch() and process

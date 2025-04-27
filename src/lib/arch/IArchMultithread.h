@@ -247,7 +247,7 @@ public:
   //! Set the interrupt handler
   /*!
   Sets the function to call on receipt of an external interrupt.
-  By default and when \p func is NULL, the main thread is cancelled.
+  By default and when \p func is nullptr, the main thread is cancelled.
   */
   virtual void setSignalHandler(ESignal, SignalFunc func, void *userData) = 0;
 

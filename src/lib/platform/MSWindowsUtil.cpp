@@ -17,7 +17,7 @@
 
 std::string MSWindowsUtil::getString(HINSTANCE instance, DWORD id)
 {
-  char *msg = NULL;
+  char *msg = nullptr;
   int n = LoadString(instance, id, reinterpret_cast<LPSTR>(&msg), 0);
 
   if (n <= 0) {
@@ -32,7 +32,7 @@ std::string MSWindowsUtil::getErrorString(HINSTANCE hinstance, DWORD error, DWOR
   char *buffer;
   if (FormatMessage(
           FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM, 0, error,
-          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, 0, NULL
+          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&buffer, 0, nullptr
       ) == 0) {
     std::string errorString = deskflow::string::sprintf("%d", error);
     return deskflow::string::format(getString(hinstance, id).c_str(), errorString.c_str());

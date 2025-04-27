@@ -492,11 +492,11 @@ void InputFilter::KeystrokeAction::perform(const Event &event)
   Event::Type type = m_press ? m_events->forIKeyState().keyDown() : m_events->forIKeyState().keyUp();
 
   m_events->addEvent(
-      Event(m_events->forIPrimaryScreen().fakeInputBegin(), event.getTarget(), NULL, Event::kDeliverImmediately)
+      Event(m_events->forIPrimaryScreen().fakeInputBegin(), event.getTarget(), nullptr, Event::kDeliverImmediately)
   );
   m_events->addEvent(Event(type, event.getTarget(), m_keyInfo, Event::kDeliverImmediately | Event::kDontFreeData));
   m_events->addEvent(
-      Event(m_events->forIPrimaryScreen().fakeInputEnd(), event.getTarget(), NULL, Event::kDeliverImmediately)
+      Event(m_events->forIPrimaryScreen().fakeInputEnd(), event.getTarget(), nullptr, Event::kDeliverImmediately)
   );
 }
 
@@ -546,7 +546,7 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
 
 {
   // send modifiers
-  IPlatformScreen::KeyInfo *modifierInfo = NULL;
+  IPlatformScreen::KeyInfo *modifierInfo = nullptr;
   if (m_buttonInfo->m_mask != 0) {
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
     modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
@@ -569,7 +569,7 @@ const char *InputFilter::MouseButtonAction::formatName() const
 // InputFilter::Rule
 //
 
-InputFilter::Rule::Rule() : m_condition(NULL)
+InputFilter::Rule::Rule() : m_condition(nullptr)
 {
   // do nothing
 }
@@ -579,7 +579,7 @@ InputFilter::Rule::Rule(Condition *adoptedCondition) : m_condition(adoptedCondit
   // do nothing
 }
 
-InputFilter::Rule::Rule(const Rule &rule) : m_condition(NULL)
+InputFilter::Rule::Rule(const Rule &rule) : m_condition(nullptr)
 {
   copy(rule);
 }
@@ -607,7 +607,7 @@ void InputFilter::Rule::clear()
     delete *i;
   }
 
-  m_condition = NULL;
+  m_condition = nullptr;
   m_activateActions.clear();
   m_deactivateActions.clear();
 }
@@ -615,7 +615,7 @@ void InputFilter::Rule::clear()
 void InputFilter::Rule::copy(const Rule &rule)
 {
   clear();
-  if (rule.m_condition != NULL) {
+  if (rule.m_condition != nullptr) {
     m_condition = rule.m_condition->clone();
   }
   for (ActionList::const_iterator i = rule.m_activateActions.begin(); i != rule.m_activateActions.end(); ++i) {
@@ -634,7 +634,7 @@ void InputFilter::Rule::setCondition(Condition *adopted)
 
 void InputFilter::Rule::adoptAction(Action *action, bool onActivation)
 {
-  if (action != NULL) {
+  if (action != nullptr) {
     if (onActivation) {
       m_activateActions.push_back(action);
     } else {
@@ -656,7 +656,7 @@ void InputFilter::Rule::removeAction(bool onActivation, uint32_t index)
 
 void InputFilter::Rule::replaceAction(Action *adopted, bool onActivation, uint32_t index)
 {
-  if (adopted == NULL) {
+  if (adopted == nullptr) {
     removeAction(onActivation, index);
   } else if (onActivation) {
     delete m_activateActions[index];
@@ -669,22 +669,22 @@ void InputFilter::Rule::replaceAction(Action *adopted, bool onActivation, uint32
 
 void InputFilter::Rule::enable(PrimaryClient *primaryClient)
 {
-  if (m_condition != NULL) {
+  if (m_condition != nullptr) {
     m_condition->enablePrimary(primaryClient);
   }
 }
 
 void InputFilter::Rule::disable(PrimaryClient *primaryClient)
 {
-  if (m_condition != NULL) {
+  if (m_condition != nullptr) {
     m_condition->disablePrimary(primaryClient);
   }
 }
 
 bool InputFilter::Rule::handleEvent(const Event &event)
 {
-  // NULL condition never matches
-  if (m_condition == NULL) {
+  // nullptr condition never matches
+  if (m_condition == nullptr) {
     return false;
   }
 
@@ -718,7 +718,7 @@ bool InputFilter::Rule::handleEvent(const Event &event)
 std::string InputFilter::Rule::format() const
 {
   std::string s;
-  if (m_condition != NULL) {
+  if (m_condition != nullptr) {
     // condition
     s += m_condition->format();
     s += " = ";
@@ -775,26 +775,29 @@ const InputFilter::Action &InputFilter::Rule::getAction(bool onActivation, uint3
 // -----------------------------------------------------------------------------
 // Input Filter Class
 // -----------------------------------------------------------------------------
-InputFilter::InputFilter(IEventQueue *events) : m_primaryClient(NULL), m_events(events)
+InputFilter::InputFilter(IEventQueue *events) : m_primaryClient(nullptr), m_events(events)
 {
   // do nothing
 }
 
-InputFilter::InputFilter(const InputFilter &x) : m_ruleList(x.m_ruleList), m_primaryClient(NULL), m_events(x.m_events)
+InputFilter::InputFilter(const InputFilter &x)
+    : m_ruleList(x.m_ruleList),
+      m_primaryClient(nullptr),
+      m_events(x.m_events)
 {
   setPrimaryClient(x.m_primaryClient);
 }
 
 InputFilter::~InputFilter()
 {
-  setPrimaryClient(NULL);
+  setPrimaryClient(nullptr);
 }
 
 InputFilter &InputFilter::operator=(const InputFilter &x)
 {
   if (&x != this) {
     PrimaryClient *oldClient = m_primaryClient;
-    setPrimaryClient(NULL);
+    setPrimaryClient(nullptr);
 
     m_ruleList = x.m_ruleList;
 
@@ -806,14 +809,14 @@ InputFilter &InputFilter::operator=(const InputFilter &x)
 void InputFilter::addFilterRule(const Rule &rule)
 {
   m_ruleList.push_back(rule);
-  if (m_primaryClient != NULL) {
+  if (m_primaryClient != nullptr) {
     m_ruleList.back().enable(m_primaryClient);
   }
 }
 
 void InputFilter::removeFilterRule(uint32_t index)
 {
-  if (m_primaryClient != NULL) {
+  if (m_primaryClient != nullptr) {
     m_ruleList[index].disable(m_primaryClient);
   }
   m_ruleList.erase(m_ruleList.begin() + index);
@@ -830,7 +833,7 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
     return;
   }
 
-  if (m_primaryClient != NULL) {
+  if (m_primaryClient != nullptr) {
     for (RuleList::iterator rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
       rule->disable(m_primaryClient);
     }
@@ -847,7 +850,7 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
 
   m_primaryClient = client;
 
-  if (m_primaryClient != NULL) {
+  if (m_primaryClient != nullptr) {
     m_events->adoptHandler(
         m_events->forIKeyState().keyDown(), m_primaryClient->getEventTarget(),
         new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)

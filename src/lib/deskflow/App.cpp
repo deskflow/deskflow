@@ -131,7 +131,7 @@ int App::daemonMainLoop(int, const char **)
 
 void App::setupFileLogging()
 {
-  if (argsBase().m_logFile != NULL) {
+  if (argsBase().m_logFile != nullptr) {
     m_fileLog = new FileLogOutputter(argsBase().m_logFile); // NOSONAR - Adopted by `Log`
     CLOG->insert(m_fileLog);
     LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
@@ -141,7 +141,7 @@ void App::setupFileLogging()
 void App::loggingFilterWarning()
 {
   if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-    if (argsBase().m_logFile == NULL) {
+    if (argsBase().m_logFile == nullptr) {
       LOG(
           (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
            CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
@@ -206,7 +206,7 @@ void App::runEventsLoop(void *)
 // MinimalApp
 //
 
-MinimalApp::MinimalApp() : App(NULL, new deskflow::ArgsBase())
+MinimalApp::MinimalApp() : App(nullptr, new deskflow::ArgsBase())
 {
   m_arch.init();
   setEvents(m_events);
@@ -242,7 +242,7 @@ int MinimalApp::foregroundStartup(int argc, char **argv)
 
 deskflow::Screen *MinimalApp::createScreen()
 {
-  return NULL;
+  return nullptr;
 }
 
 void MinimalApp::loadConfig()

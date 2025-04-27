@@ -92,9 +92,9 @@ private:
   // remove all converters from our list
   void clearConverters();
 
-  // get the converter for a clipboard format.  returns NULL if no
+  // get the converter for a clipboard format.  returns nullptr if no
   // suitable converter.  iff onlyIfNotAdded is true then also
-  // return NULL if a suitable converter was found but we already
+  // return nullptr if a suitable converter was found but we already
   // have data of the converter's clipboard format.
   IXWindowsClipboardConverter *getConverter(Atom target, bool onlyIfNotAdded = false) const;
 

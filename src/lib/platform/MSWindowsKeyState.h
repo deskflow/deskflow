@@ -216,7 +216,7 @@ private:
   KeyModifierMask m_savedModifiers;
   KeyModifierMask m_originalSavedModifiers;
 
-  // pointer to ToUnicodeEx.  on win95 family this will be NULL.
+  // pointer to ToUnicodeEx.  on win95 family this will be nullptr.
   typedef int(WINAPI *ToUnicodeEx_t)(
       UINT wVirtKey, UINT wScanCode, PBYTE lpKeyState, LPWSTR pwszBuff, int cchBuff, UINT wFlags, HKL dwhkl
   );

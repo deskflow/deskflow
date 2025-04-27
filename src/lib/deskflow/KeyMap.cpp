@@ -17,10 +17,10 @@
 
 namespace deskflow {
 
-KeyMap::NameToKeyMap *KeyMap::s_nameToKeyMap = NULL;
-KeyMap::NameToModifierMap *KeyMap::s_nameToModifierMap = NULL;
-KeyMap::KeyToNameMap *KeyMap::s_keyToNameMap = NULL;
-KeyMap::ModifierToNameMap *KeyMap::s_modifierToNameMap = NULL;
+KeyMap::NameToKeyMap *KeyMap::s_nameToKeyMap = nullptr;
+KeyMap::NameToModifierMap *KeyMap::s_nameToModifierMap = nullptr;
+KeyMap::KeyToNameMap *KeyMap::s_keyToNameMap = nullptr;
+KeyMap::ModifierToNameMap *KeyMap::s_modifierToNameMap = nullptr;
 
 KeyMap::KeyMap() : m_numGroups(0), m_composeAcrossGroups(false)
 {
@@ -104,7 +104,7 @@ void KeyMap::addKeyAliasEntry(
 )
 {
   // if we can already generate the target as desired then we're done.
-  if (findCompatibleKey(targetID, group, targetRequired, targetSensitive) != NULL) {
+  if (findCompatibleKey(targetID, group, targetRequired, targetSensitive) != nullptr) {
     return;
   }
 
@@ -112,7 +112,7 @@ void KeyMap::addKeyAliasEntry(
   for (int32_t gd = 0, n = getNumGroups(); gd < n; ++gd) {
     int32_t eg = getEffectiveGroup(group, gd);
     const KeyItemList *sourceEntry = findCompatibleKey(sourceID, eg, sourceRequired, sourceSensitive);
-    if (sourceEntry != NULL && sourceEntry->size() == 1) {
+    if (sourceEntry != nullptr && sourceEntry->size() == 1) {
       KeyMap::KeyItem targetItem = sourceEntry->back();
       targetItem.m_id = targetID;
       targetItem.m_group = eg;
@@ -243,10 +243,10 @@ const KeyMap::KeyItem *KeyMap::mapKey(
   // handle group change
   if (id == kKeyNextGroup) {
     keys.push_back(Keystroke(1, false, false));
-    return NULL;
+    return nullptr;
   } else if (id == kKeyPrevGroup) {
     keys.push_back(Keystroke(-1, false, false));
-    return NULL;
+    return nullptr;
   }
 
   const KeyItem *item;
@@ -271,7 +271,7 @@ const KeyMap::KeyItem *KeyMap::mapKey(
   case kKeySetModifiers:
     if (!keysForModifierState(0, group, activeModifiers, currentState, desiredMask, desiredMask, 0, keys)) {
       LOG((CLOG_DEBUG1 "unable to set modifiers %04x", desiredMask));
-      return NULL;
+      return nullptr;
     }
     return &m_modifierKeyItem;
 
@@ -280,7 +280,7 @@ const KeyMap::KeyItem *KeyMap::mapKey(
             0, group, activeModifiers, currentState, currentState & ~desiredMask, desiredMask, 0, keys
         )) {
       LOG((CLOG_DEBUG1 "unable to clear modifiers %04x", desiredMask));
-      return NULL;
+      return nullptr;
     }
     return &m_modifierKeyItem;
 
@@ -293,7 +293,7 @@ const KeyMap::KeyItem *KeyMap::mapKey(
     break;
   }
 
-  if (item != NULL) {
+  if (item != nullptr) {
     LOG((CLOG_DEBUG1 "mapped to %03x, new state %04x", item->m_button, currentState));
   }
   return item;
@@ -336,7 +336,7 @@ KeyMap::findCompatibleKey(KeyID id, int32_t group, KeyModifierMask required, Key
 
   KeyIDMap::const_iterator i = m_keyIDMap.find(id);
   if (i == m_keyIDMap.end()) {
-    return NULL;
+    return nullptr;
   }
 
   const KeyEntryList &entries = i->second[group];
@@ -347,7 +347,7 @@ KeyMap::findCompatibleKey(KeyID id, int32_t group, KeyModifierMask required, Key
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 bool KeyMap::isHalfDuplex(KeyID key, KeyButton button) const
@@ -487,12 +487,12 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
   if (i == m_keyIDMap.end()) {
     // unknown key
     LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
-    return NULL;
+    return nullptr;
   }
   const KeyGroupTable &keyGroupTable = i->second;
 
   // find the first key that generates this KeyID
-  const KeyItem *keyItem = NULL;
+  const KeyItem *keyItem = nullptr;
   int32_t numGroups = getNumGroups();
   for (int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
     int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
@@ -518,14 +518,14 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
         break;
       }
     }
-    if (keyItem != NULL) {
+    if (keyItem != nullptr) {
       break;
     }
   }
-  if (keyItem == NULL) {
+  if (keyItem == nullptr) {
     // no mapping for this keysym
     LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
-    return NULL;
+    return nullptr;
   }
 
   // make working copy of modifiers
@@ -542,14 +542,14 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
       )) {
     LOG((CLOG_DEBUG1 "can't map key"));
     keys.clear();
-    return NULL;
+    return nullptr;
   }
 
   // add keystrokes to restore modifier keys
   if (!keysToRestoreModifiers(*keyItem, group, newModifiers, newState, activeModifiers, keys)) {
     LOG((CLOG_DEBUG1 "modifiers were not restored"));
     keys.clear();
-    return NULL;
+    return nullptr;
   }
 
   // save new modifiers
@@ -589,7 +589,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
     // unknown key
     LOG((CLOG_DEBUG1 "key %04x is not on keyboard", id));
 
-    return NULL;
+    return nullptr;
   }
 
   // get keys to press for key
@@ -597,7 +597,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
   if (!itemList || itemList->empty()) {
     // no mapping for this keysym
     LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
-    return NULL;
+    return nullptr;
   }
 
   const KeyItem &keyItem = itemList->back();
@@ -612,7 +612,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
     if (!keysForKeyItem(itemList->at(j), newGroup, newModifiers, newState, desiredMask, 0, isAutoRepeat, keys, lang)) {
       LOG((CLOG_DEBUG1 "can't map key"));
       keys.clear();
-      return NULL;
+      return nullptr;
     }
   }
 
@@ -620,7 +620,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
   if (!keysToRestoreModifiers(keyItem, group, newModifiers, newState, activeModifiers, keys)) {
     LOG((CLOG_DEBUG1 "modifiers were not restored"));
     keys.clear();
-    return NULL;
+    return nullptr;
   }
 
   // save new modifiers
@@ -691,7 +691,7 @@ const KeyMap::KeyItem *KeyMap::keyForModifier(KeyButton button, int32_t group, i
       return (*i);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 bool KeyMap::keysForKeyItem(
@@ -852,7 +852,7 @@ bool KeyMap::keysForModifierState(
 
     // get the KeyItem for the modifier in the group
     const KeyItem *keyItem = keyForModifier(button, group, bit);
-    if (keyItem == NULL) {
+    if (keyItem == nullptr) {
       if ((mask & notRequiredMask) == 0) {
         LOG((CLOG_DEBUG1 "no key for modifier %04x", mask));
         return false;
@@ -1199,18 +1199,18 @@ bool KeyMap::parseModifiers(std::string &x, KeyModifierMask &mask)
 void KeyMap::initKeyNameMaps()
 {
   // initialize tables
-  if (s_nameToKeyMap == NULL) {
+  if (s_nameToKeyMap == nullptr) {
     s_nameToKeyMap = new NameToKeyMap;
     s_keyToNameMap = new KeyToNameMap;
-    for (const KeyNameMapEntry *i = kKeyNameMap; i->m_name != NULL; ++i) {
+    for (const KeyNameMapEntry *i = kKeyNameMap; i->m_name != nullptr; ++i) {
       (*s_nameToKeyMap)[i->m_name] = i->m_id;
       (*s_keyToNameMap)[i->m_id] = i->m_name;
     }
   }
-  if (s_nameToModifierMap == NULL) {
+  if (s_nameToModifierMap == nullptr) {
     s_nameToModifierMap = new NameToModifierMap;
     s_modifierToNameMap = new ModifierToNameMap;
-    for (const KeyModifierNameMapEntry *i = kModifierNameMap; i->m_name != NULL; ++i) {
+    for (const KeyModifierNameMapEntry *i = kModifierNameMap; i->m_name != nullptr; ++i) {
       (*s_nameToModifierMap)[i->m_name] = i->m_mask;
       (*s_modifierToNameMap)[i->m_mask] = i->m_name;
     }

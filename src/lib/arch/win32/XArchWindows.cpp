@@ -18,9 +18,9 @@ std::string XArchEvalWindows::eval() const throw()
   char *cmsg;
   if (FormatMessage(
           FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM, 0, m_error,
-          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg, 0, NULL
+          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg, 0, nullptr
       ) == 0) {
-    cmsg = NULL;
+    cmsg = nullptr;
     return deskflow::string::sprintf("Unknown error, code %d", m_error);
   }
   std::string smsg(cmsg);
@@ -200,7 +200,7 @@ std::string XArchEvalWinsock::eval() const throw()
       {WSANO_DATA, "The requested name is valid but does not have an IP address"},
 
       // end
-      {0, NULL}
+      {0, nullptr}
   };
 
   for (unsigned int i = 0; s_netErrorCodes[i].m_code != 0; ++i) {
