@@ -1537,8 +1537,8 @@ bool XWindowsUtil::getWindowProperty(
     // compute bytes read and advance offset
     unsigned long numBytes;
     switch (actualDatumSize) {
-    case 8:
     default:
+    case 8:
       numBytes = numItems;
       offset += numItems / 4;
       break;
