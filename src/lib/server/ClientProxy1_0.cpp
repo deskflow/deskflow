@@ -430,7 +430,7 @@ bool ClientProxy1_0::recvGrabClipboard()
   }
 
   // notify
-  ClipboardInfo *info = new ClipboardInfo;
+  auto *info = new ClipboardInfo;
   info->m_id = id;
   info->m_sequenceNumber = seqNum;
   m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(), getEventTarget(), info));
