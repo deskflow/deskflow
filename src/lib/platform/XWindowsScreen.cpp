@@ -672,7 +672,7 @@ uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
         toggleModifiers[numToggleModifiers++] = modifier;
       }
 
-      for (XWindowsKeyState::KeycodeList::iterator j = keycodes.begin(); j != keycodes.end() && !err; ++j) {
+      for (auto j = keycodes.begin(); j != keycodes.end() && !err; ++j) {
         for (size_t i = 0; i < (1u << numToggleModifiers); ++i) {
           // add toggle modifiers for index i
           unsigned int tmpModifiers = modifiers;
@@ -699,7 +699,7 @@ uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
   if (err) {
     // if any failed then unregister any we did get
-    for (HotKeyList::iterator j = hotKeys.begin(); j != hotKeys.end(); ++j) {
+    for (auto j = hotKeys.begin(); j != hotKeys.end(); ++j) {
       XUngrabKey(m_display, j->first, j->second, m_root);
       m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
     }
@@ -733,7 +733,7 @@ void XWindowsScreen::unregisterHotKey(uint32_t id)
   {
     XWindowsUtil::ErrorLock lock(m_display, &err);
     HotKeyList &hotKeys = i->second;
-    for (HotKeyList::iterator j = hotKeys.begin(); j != hotKeys.end(); ++j) {
+    for (auto j = hotKeys.begin(); j != hotKeys.end(); ++j) {
       XUngrabKey(m_display, j->first, j->second, m_root);
       m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
     }
@@ -1117,7 +1117,7 @@ void XWindowsScreen::sendEvent(Event::Type type, void *data)
 
 void XWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
 {
-  ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
+  auto *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
   info->m_id = id;
   info->m_sequenceNumber = m_sequenceNumber;
   sendEvent(type, info);
@@ -1130,7 +1130,7 @@ IKeyState *XWindowsScreen::getKeyState() const
 
 Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
 {
-  KeyEventFilter *filter = reinterpret_cast<KeyEventFilter *>(arg);
+  auto *filter = reinterpret_cast<KeyEventFilter *>(arg);
   return (xevent->type == filter->m_event && xevent->xkey.window == filter->m_window &&
           xevent->xkey.time == filter->m_time && xevent->xkey.keycode == filter->m_keycode)
              ? True
@@ -1139,7 +1139,7 @@ Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
 
 void XWindowsScreen::handleSystemEvent(const Event &event, void *)
 {
-  XEvent *xevent = static_cast<XEvent *>(event.getData());
+  auto *xevent = static_cast<XEvent *>(event.getData());
   assert(xevent != nullptr);
 
   // update key state
@@ -1220,7 +1220,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
 #ifdef HAVE_XI2
   if (m_xi2detected) {
     // Process RawMotion
-    XGenericEventCookie *cookie = (XGenericEventCookie *)&xevent->xcookie;
+    auto *cookie = (XGenericEventCookie *)&xevent->xcookie;
     if (XGetEventData(m_display, cookie) && cookie->type == GenericEvent && cookie->extension == xi_opcode) {
       if (cookie->evtype == XI_RawMotion) {
         // Get current pointer's position
@@ -1352,7 +1352,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
   default:
 #if HAVE_XKB_EXTENSION
     if (m_xkb && xevent->type == m_xkbEventBase) {
-      XkbEvent *xkbEvent = reinterpret_cast<XkbEvent *>(xevent);
+      auto *xkbEvent = reinterpret_cast<XkbEvent *>(xevent);
       switch (xkbEvent->any.xkb_type) {
       case XkbMapNotify:
         refreshKeyboard(xevent);
@@ -1416,7 +1416,7 @@ void XWindowsScreen::onKeyPress(XKeyEvent &xkey)
     // get which button.  see call to XFilterEvent() in onEvent()
     // for more info.
     bool isFake = false;
-    KeyButton keycode = static_cast<KeyButton>(xkey.keycode);
+    auto keycode = static_cast<KeyButton>(xkey.keycode);
     if (keycode == 0) {
       isFake = true;
       keycode = static_cast<KeyButton>(m_lastKeycode);
@@ -1453,7 +1453,7 @@ void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat)
       isRepeat = false;
     }
 
-    KeyButton keycode = static_cast<KeyButton>(xkey.keycode);
+    auto keycode = static_cast<KeyButton>(xkey.keycode);
     if (!isRepeat) {
       // no press event follows so it's a plain release
       LOG((CLOG_DEBUG1 "event: KeyRelease code=%d, state=0x%04x", keycode, xkey.state));
@@ -1598,7 +1598,7 @@ Cursor XWindowsScreen::createBlankCursor() const
   // is blank we can use the same bitmap for shape and mask:  all
   // zeros.
   const int size = ((w + 7) >> 3) * h;
-  char *data = new char[size];
+  auto *data = new char[size];
   memset(data, 0, size);
 
   // make bitmap
@@ -1868,7 +1868,7 @@ void XWindowsScreen::updateButtons()
 {
   // query the button mapping
   uint32_t numButtons = XGetPointerMapping(m_display, nullptr, 0);
-  unsigned char *tmpButtons = new unsigned char[numButtons];
+  auto *tmpButtons = new unsigned char[numButtons];
   XGetPointerMapping(m_display, tmpButtons, numButtons);
 
   // find the largest logical button id
