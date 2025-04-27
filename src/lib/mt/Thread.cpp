@@ -124,7 +124,7 @@ void *Thread::threadFunc(void *vjob)
   }
 
   // get job
-  IJob *job = static_cast<IJob *>(vjob);
+  auto *job = static_cast<IJob *>(vjob);
 
   // run job
   void *result = nullptr;
