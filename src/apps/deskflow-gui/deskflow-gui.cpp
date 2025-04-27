@@ -53,10 +53,9 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   // Add Command Line Options
-  QCommandLineOption helpOption = QCommandLineOption("help", "Display Help on the command line");
-  QCommandLineOption versionOption = QCommandLineOption("version", "Display version information");
-  QCommandLineOption noResetOption =
-      QCommandLineOption("no-reset", "Prevent settings reset if DESKFLOW_RESET_ALL is set");
+  auto helpOption = QCommandLineOption("help", "Display Help on the command line");
+  auto versionOption = QCommandLineOption("version", "Display version information");
+  auto noResetOption = QCommandLineOption("no-reset", "Prevent settings reset if DESKFLOW_RESET_ALL is set");
 
   QCommandLineParser parser;
   parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
