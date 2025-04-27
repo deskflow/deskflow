@@ -41,7 +41,7 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTar
 
   // check file size
   file.seekg(0, std::ios::end);
-  size_t size = (size_t)file.tellg();
+  auto size = (size_t)file.tellg();
 
   // send first message (file size)
   std::string fileSize = deskflow::string::sizeTypeToString(size);
@@ -68,9 +68,9 @@ void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTar
       chunkSize = size - sentLength;
     }
 
-    char *chunkData = new char[chunkSize];
+    auto *chunkData = new char[chunkSize];
     file.read(chunkData, chunkSize);
-    uint8_t *data = reinterpret_cast<uint8_t *>(chunkData);
+    auto *data = reinterpret_cast<uint8_t *>(chunkData);
     FileChunk *fileChunk = FileChunk::data(data, chunkSize);
     delete[] chunkData;
 
