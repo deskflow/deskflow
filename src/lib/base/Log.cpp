@@ -143,10 +143,10 @@ Log::Log(Log *src)
 Log::~Log()
 {
   // clean up
-  for (OutputterList::iterator index = m_outputters.begin(); index != m_outputters.end(); ++index) {
+  for (auto index = m_outputters.begin(); index != m_outputters.end(); ++index) {
     delete *index;
   }
-  for (OutputterList::iterator index = m_alwaysOutputters.begin(); index != m_alwaysOutputters.end(); ++index) {
+  for (auto index = m_alwaysOutputters.begin(); index != m_alwaysOutputters.end(); ++index) {
     delete *index;
   }
   ARCH->closeMutex(m_mutex);
