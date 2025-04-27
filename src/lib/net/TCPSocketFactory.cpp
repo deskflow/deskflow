@@ -33,7 +33,7 @@ TCPSocketFactory::~TCPSocketFactory()
 IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
   if (securityLevel != SecurityLevel::PlainText) {
-    SecureSocket *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family, securityLevel);
+    auto *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family, securityLevel);
     secureSocket->initSsl(false);
     return secureSocket;
   } else {
