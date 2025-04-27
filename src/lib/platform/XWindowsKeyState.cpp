@@ -361,7 +361,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
 
   // it's more convenient to always have maxKeysyms KeySyms per key
   {
-    KeySym *tmpKeysyms = new KeySym[maxKeysyms * numKeycodes];
+    auto *tmpKeysyms = new KeySym[maxKeysyms * numKeycodes];
     for (int i = 0; i < numKeycodes; ++i) {
       for (int j = 0; j < maxKeysyms; ++j) {
         if (j < keysymsPerKeycode) {
@@ -420,7 +420,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
   deskflow::KeyMap::KeyItem item;
   for (int i = 0; i < numKeycodes; ++i) {
     KeySym *keysyms = allKeysyms + maxKeysyms * i;
-    KeyCode keycode = static_cast<KeyCode>(i + minKeycode);
+    auto keycode = static_cast<KeyCode>(i + minKeycode);
     item.m_button = static_cast<KeyButton>(keycode);
     item.m_client = 0;
 
@@ -601,7 +601,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
   // X modifier masks.
   deskflow::KeyMap::KeyItem item;
   for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
-    KeyCode keycode = static_cast<KeyCode>(i);
+    auto keycode = static_cast<KeyCode>(i);
     item.m_button = static_cast<KeyButton>(keycode);
     item.m_client = 0;
 
@@ -780,7 +780,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 
 void XWindowsKeyState::remapKeyModifiers(KeyID id, int32_t group, deskflow::KeyMap::KeyItem &item, void *vself)
 {
-  XWindowsKeyState *self = static_cast<XWindowsKeyState *>(vself);
+  auto *self = static_cast<XWindowsKeyState *>(vself);
   item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
   item.m_sensitive = self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
 }
@@ -790,7 +790,7 @@ bool XWindowsKeyState::hasModifiersXKB() const
 #if HAVE_XKB_EXTENSION
   // iterate over all keycodes
   for (int i = m_xkb->min_key_code; i <= m_xkb->max_key_code; ++i) {
-    KeyCode keycode = static_cast<KeyCode>(i);
+    auto keycode = static_cast<KeyCode>(i);
     if (XkbKeyHasActions(m_xkb, keycode) == True) {
       // iterate over all groups
       int numGroups = XkbKeyNumGroups(m_xkb, keycode);
