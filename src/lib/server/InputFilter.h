@@ -359,12 +359,6 @@ public:
   InputFilter(const InputFilter &);
   virtual ~InputFilter();
 
-#ifdef TEST_ENV
-  InputFilter() : m_primaryClient(nullptr)
-  {
-  }
-#endif
-
   InputFilter &operator=(const InputFilter &);
 
   // add rule, adopting the condition and the actions

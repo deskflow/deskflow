@@ -51,13 +51,6 @@ public:
 
   //@}
 
-#ifdef TEST_ENV
-  void handleDataForTest()
-  {
-    handleData(Event(), nullptr);
-  }
-#endif
-
 protected:
   enum EResult
   {

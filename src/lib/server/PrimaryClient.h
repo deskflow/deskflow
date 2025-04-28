@@ -29,12 +29,6 @@ public:
   PrimaryClient(const std::string &name, deskflow::Screen *screen);
   ~PrimaryClient() override = default;
 
-#ifdef TEST_ENV
-  PrimaryClient() : BaseClientProxy("")
-  {
-  }
-#endif
-
   //! @name manipulators
   //@{
 
