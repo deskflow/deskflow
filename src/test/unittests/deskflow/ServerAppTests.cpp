@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#define TEST_ENV
-
 #include "deskflow/ArgParser.h"
 #include "deskflow/ServerApp.h"
 #include "deskflow/ServerArgs.h"
