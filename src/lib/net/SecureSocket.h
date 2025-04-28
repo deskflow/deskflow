@@ -36,7 +36,7 @@ public:
   );
   SecureSocket(SecureSocket const &) = delete;
   SecureSocket(SecureSocket &&) = delete;
-  ~SecureSocket();
+  ~SecureSocket() override;
 
   SecureSocket &operator=(SecureSocket const &) = delete;
   SecureSocket &operator=(SecureSocket &&) = delete;
@@ -45,7 +45,7 @@ public:
   void close() override;
 
   // IDataSocket overrides
-  virtual void connect(const NetworkAddress &) override;
+  void connect(const NetworkAddress &) override;
 
   ISocketMultiplexerJob *newJob() override;
   bool isFatal() const override

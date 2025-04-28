@@ -24,7 +24,7 @@ class EiEventQueueBuffer : public IEventQueueBuffer
 {
 public:
   EiEventQueueBuffer(EiScreen *screen, ei *ei, IEventQueue *events);
-  ~EiEventQueueBuffer();
+  ~EiEventQueueBuffer() override;
 
   // IEventQueueBuffer overrides
   void init() override

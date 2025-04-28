@@ -25,7 +25,7 @@ public:
   ClientProxy(const std::string &name, deskflow::IStream *adoptedStream);
   ClientProxy(ClientProxy const &) = delete;
   ClientProxy(ClientProxy &&) = delete;
-  ~ClientProxy();
+  ~ClientProxy() override;
 
   ClientProxy &operator=(ClientProxy const &) = delete;
   ClientProxy &operator=(ClientProxy &&) = delete;

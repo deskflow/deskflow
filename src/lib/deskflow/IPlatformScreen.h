@@ -150,44 +150,44 @@ public:
   //@}
 
   // IScreen overrides
-  virtual void *getEventTarget() const = 0;
-  virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const = 0;
-  virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
+  void *getEventTarget() const override = 0;
+  bool getClipboard(ClipboardID id, IClipboard *) const override = 0;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override = 0;
+  void getCursorPos(int32_t &x, int32_t &y) const override = 0;
 
   // IPrimaryScreen overrides
-  virtual void reconfigure(uint32_t activeSides) = 0;
-  virtual void warpCursor(int32_t x, int32_t y) = 0;
-  virtual uint32_t registerHotKey(KeyID key, KeyModifierMask mask) = 0;
-  virtual void unregisterHotKey(uint32_t id) = 0;
-  virtual void fakeInputBegin() = 0;
-  virtual void fakeInputEnd() = 0;
-  virtual int32_t getJumpZoneSize() const = 0;
-  virtual bool isAnyMouseButtonDown(uint32_t &buttonID) const = 0;
-  virtual void getCursorCenter(int32_t &x, int32_t &y) const = 0;
+  void reconfigure(uint32_t activeSides) override = 0;
+  void warpCursor(int32_t x, int32_t y) override = 0;
+  uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override = 0;
+  void unregisterHotKey(uint32_t id) override = 0;
+  void fakeInputBegin() override = 0;
+  void fakeInputEnd() override = 0;
+  int32_t getJumpZoneSize() const override = 0;
+  bool isAnyMouseButtonDown(uint32_t &buttonID) const override = 0;
+  void getCursorCenter(int32_t &x, int32_t &y) const override = 0;
 
   // ISecondaryScreen overrides
-  virtual void fakeMouseButton(ButtonID id, bool press) = 0;
-  virtual void fakeMouseMove(int32_t x, int32_t y) = 0;
-  virtual void fakeMouseRelativeMove(int32_t dx, int32_t dy) const = 0;
-  virtual void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const = 0;
+  void fakeMouseButton(ButtonID id, bool press) override = 0;
+  void fakeMouseMove(int32_t x, int32_t y) override = 0;
+  void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override = 0;
+  void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const override = 0;
 
   // IKeyState overrides
-  virtual void updateKeyMap() = 0;
-  virtual void updateKeyState() = 0;
-  virtual void setHalfDuplexMask(KeyModifierMask) = 0;
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) = 0;
-  virtual bool
-  fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) = 0;
-  virtual bool fakeKeyUp(KeyButton button) = 0;
-  virtual void fakeAllKeysUp() = 0;
-  virtual bool fakeCtrlAltDel() = 0;
-  virtual bool fakeMediaKey(KeyID id);
-  virtual bool isKeyDown(KeyButton) const = 0;
-  virtual KeyModifierMask getActiveModifiers() const = 0;
-  virtual KeyModifierMask pollActiveModifiers() const = 0;
-  virtual int32_t pollActiveGroup() const = 0;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const = 0;
+  void updateKeyMap() override = 0;
+  void updateKeyState() override = 0;
+  void setHalfDuplexMask(KeyModifierMask) override = 0;
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override = 0;
+  bool
+  fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override = 0;
+  bool fakeKeyUp(KeyButton button) override = 0;
+  void fakeAllKeysUp() override = 0;
+  bool fakeCtrlAltDel() override = 0;
+  bool fakeMediaKey(KeyID id) override;
+  bool isKeyDown(KeyButton) const override = 0;
+  KeyModifierMask getActiveModifiers() const override = 0;
+  KeyModifierMask pollActiveModifiers() const override = 0;
+  int32_t pollActiveGroup() const override = 0;
+  void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
   virtual std::string &getDraggingFilename() = 0;
   virtual void clearDraggingFilename() = 0;

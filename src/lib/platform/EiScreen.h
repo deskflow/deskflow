@@ -32,7 +32,7 @@ class EiScreen : public PlatformScreen
 {
 public:
   EiScreen(bool is_primary, IEventQueue *events, bool use_portal);
-  ~EiScreen();
+  ~EiScreen() override;
 
   // IScreen overrides
   void *getEventTarget() const override;

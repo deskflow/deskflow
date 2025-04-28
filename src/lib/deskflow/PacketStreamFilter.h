@@ -21,19 +21,19 @@ class PacketStreamFilter : public StreamFilter
 {
 public:
   PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
-  ~PacketStreamFilter();
+  ~PacketStreamFilter() override;
 
   // IStream overrides
-  virtual void close();
-  virtual uint32_t read(void *buffer, uint32_t n);
-  virtual void write(const void *buffer, uint32_t n);
-  virtual void shutdownInput();
-  virtual bool isReady() const;
-  virtual uint32_t getSize() const;
+  void close() override;
+  uint32_t read(void *buffer, uint32_t n) override;
+  void write(const void *buffer, uint32_t n) override;
+  void shutdownInput() override;
+  bool isReady() const override;
+  uint32_t getSize() const override;
 
 protected:
   // StreamFilter overrides
-  virtual void filterEvent(const Event &);
+  void filterEvent(const Event &) override;
 
 private:
   bool isReadyNoLock() const;

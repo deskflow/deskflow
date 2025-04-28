@@ -18,10 +18,10 @@ template <class T> class TMethodJob : public IJob
 public:
   //! run() invokes \c object->method(arg)
   TMethodJob(T *object, void (T::*method)(void *), void *arg = NULL);
-  virtual ~TMethodJob();
+  ~TMethodJob() override;
 
   // IJob overrides
-  virtual void run();
+  void run() override;
 
 private:
   T *m_object;

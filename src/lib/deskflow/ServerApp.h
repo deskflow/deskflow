@@ -46,7 +46,7 @@ class ServerApp : public App
 
 public:
   ServerApp(IEventQueue *events);
-  virtual ~ServerApp();
+  ~ServerApp() override;
 
   //
   // IApp overrides

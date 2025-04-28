@@ -21,7 +21,7 @@ class EiKeyState : public KeyState
 {
 public:
   EiKeyState(EiScreen *screen, IEventQueue *events);
-  ~EiKeyState();
+  ~EiKeyState() override;
 
   void init(int fd, std::size_t len);
   void init_default_keymap();

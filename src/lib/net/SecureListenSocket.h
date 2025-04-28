@@ -25,7 +25,7 @@ public:
   );
 
   // IListenSocket overrides
-  virtual IDataSocket *accept();
+  IDataSocket *accept() override;
 
 private:
   const SecurityLevel m_securityLevel;

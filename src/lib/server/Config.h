@@ -549,11 +549,11 @@ class XConfigRead : public XBase
 public:
   XConfigRead(const ConfigReadContext &context, const std::string &);
   XConfigRead(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
-  virtual ~XConfigRead() throw();
+  ~XConfigRead() throw() override;
 
 protected:
   // XBase overrides
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   std::string m_error;

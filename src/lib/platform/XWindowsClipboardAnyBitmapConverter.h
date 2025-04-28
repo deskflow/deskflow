@@ -14,14 +14,14 @@ class XWindowsClipboardAnyBitmapConverter : public IXWindowsClipboardConverter
 {
 public:
   XWindowsClipboardAnyBitmapConverter();
-  virtual ~XWindowsClipboardAnyBitmapConverter();
+  ~XWindowsClipboardAnyBitmapConverter() override;
 
   // IXWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual Atom getAtom() const = 0;
-  virtual int getDataSize() const;
-  virtual std::string fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(const std::string &) const;
+  IClipboard::EFormat getFormat() const override;
+  Atom getAtom() const override = 0;
+  int getDataSize() const override;
+  std::string fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(const std::string &) const override;
 
 protected:
   //! Convert from IClipboard format

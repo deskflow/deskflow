@@ -21,21 +21,21 @@ public:
   SimpleEventQueueBuffer();
   SimpleEventQueueBuffer(SimpleEventQueueBuffer const &) = delete;
   SimpleEventQueueBuffer(SimpleEventQueueBuffer &&) = delete;
-  ~SimpleEventQueueBuffer();
+  ~SimpleEventQueueBuffer() override;
 
   SimpleEventQueueBuffer &operator=(SimpleEventQueueBuffer const &) = delete;
   SimpleEventQueueBuffer &operator=(SimpleEventQueueBuffer &&) = delete;
 
   // IEventQueueBuffer overrides
-  void init()
+  void init() override
   {
   }
-  virtual void waitForEvent(double timeout);
-  virtual Type getEvent(Event &event, uint32_t &dataID);
-  virtual bool addEvent(uint32_t dataID);
-  virtual bool isEmpty() const;
-  virtual EventQueueTimer *newTimer(double duration, bool oneShot) const;
-  virtual void deleteTimer(EventQueueTimer *) const;
+  void waitForEvent(double timeout) override;
+  Type getEvent(Event &event, uint32_t &dataID) override;
+  bool addEvent(uint32_t dataID) override;
+  bool isEmpty() const override;
+  EventQueueTimer *newTimer(double duration, bool oneShot) const override;
+  void deleteTimer(EventQueueTimer *) const override;
 
 private:
   using EventDeque = std::deque<uint32_t>;

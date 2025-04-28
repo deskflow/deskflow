@@ -16,8 +16,8 @@ class ArchStringUnix : public IArchString
 {
 public:
   ArchStringUnix();
-  virtual ~ArchStringUnix();
+  ~ArchStringUnix() override;
 
   // IArchString overrides
-  virtual EWideCharEncoding getWideCharEncoding();
+  EWideCharEncoding getWideCharEncoding() override;
 };

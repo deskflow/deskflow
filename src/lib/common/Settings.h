@@ -137,7 +137,7 @@ private:
   explicit Settings(QObject *parent = nullptr);
   Settings *operator=(Settings &other) = delete;
   Settings(const Settings &other) = delete;
-  ~Settings() = default;
+  ~Settings() override = default;
   void cleanSettings();
 
   QSettings *m_settings = nullptr;

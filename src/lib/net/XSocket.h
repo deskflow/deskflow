@@ -32,7 +32,7 @@ public:
   };
 
   XSocketAddress(EError, const std::string &hostname, int port) throw();
-  virtual ~XSocketAddress() throw()
+  ~XSocketAddress() throw() override
   {
   }
 
@@ -50,7 +50,7 @@ public:
 
 protected:
   // XBase overrides
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   EError m_error;

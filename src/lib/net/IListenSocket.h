@@ -34,7 +34,7 @@ public:
   //@}
 
   // ISocket overrides
-  virtual void bind(const NetworkAddress &) = 0;
-  virtual void close() = 0;
-  virtual void *getEventTarget() const = 0;
+  void bind(const NetworkAddress &) override = 0;
+  void close() override = 0;
+  void *getEventTarget() const override = 0;
 };

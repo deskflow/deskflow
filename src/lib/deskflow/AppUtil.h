@@ -14,10 +14,10 @@ class AppUtil : public IAppUtil
 {
 public:
   AppUtil();
-  virtual ~AppUtil();
+  ~AppUtil() override;
 
-  virtual void adoptApp(IApp *app);
-  IApp &app() const;
+  void adoptApp(IApp *app) override;
+  IApp &app() const override;
   virtual void exitApp(int code)
   {
     throw XExitApp(code);

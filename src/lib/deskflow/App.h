@@ -43,7 +43,7 @@ public:
   App(IEventQueue *events, deskflow::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;
-  virtual ~App();
+  ~App() override;
 
   App &operator=(App const &) = delete;
   App &operator=(App &&) = delete;
@@ -56,15 +56,15 @@ public:
   virtual std::string configSection() const = 0;
 
   virtual void version();
-  virtual void setByeFunc(void (*bye)(int))
+  void setByeFunc(void (*bye)(int)) override
   {
     m_bye = bye;
   }
-  virtual void bye(int error)
+  void bye(int error) override
   {
     m_bye(error);
   }
-  virtual IEventQueue *getEvents() const
+  IEventQueue *getEvents() const override
   {
     return m_events;
   }
@@ -73,7 +73,7 @@ public:
   {
     return m_appUtil;
   }
-  deskflow::ArgsBase &argsBase() const
+  deskflow::ArgsBase &argsBase() const override
   {
     return *m_args;
   }
@@ -81,7 +81,7 @@ public:
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
   void loggingFilterWarning();
-  void initApp(int argc, const char **argv);
+  void initApp(int argc, const char **argv) override;
   void initApp(int argc, char **argv)
   {
     initApp(argc, (const char **)argv);
@@ -126,20 +126,20 @@ class MinimalApp : public App
 {
 public:
   MinimalApp();
-  virtual ~MinimalApp();
+  ~MinimalApp() override;
 
   // IApp overrides
-  virtual int standardStartup(int argc, char **argv) override;
-  virtual int runInner(int argc, char **argv, StartupFunc startup) override;
-  virtual void startNode() override;
-  virtual int mainLoop() override;
-  virtual int foregroundStartup(int argc, char **argv) override;
-  virtual deskflow::Screen *createScreen() override;
-  virtual void loadConfig() override;
-  virtual bool loadConfig(const std::string &pathname) override;
-  virtual const char *daemonInfo() const override;
-  virtual const char *daemonName() const override;
-  virtual void parseArgs(int argc, const char *const *argv) override;
+  int standardStartup(int argc, char **argv) override;
+  int runInner(int argc, char **argv, StartupFunc startup) override;
+  void startNode() override;
+  int mainLoop() override;
+  int foregroundStartup(int argc, char **argv) override;
+  deskflow::Screen *createScreen() override;
+  void loadConfig() override;
+  bool loadConfig(const std::string &pathname) override;
+  const char *daemonInfo() const override;
+  const char *daemonName() const override;
+  void parseArgs(int argc, const char *const *argv) override;
 
   //
   // App overrides

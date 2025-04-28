@@ -14,5 +14,5 @@ class FingerprintPreview : public QFrame
   Q_OBJECT
 public:
   explicit FingerprintPreview(QWidget *parent, const QList<deskflow::FingerprintData> &fingerprints = {});
-  ~FingerprintPreview() = default;
+  ~FingerprintPreview() override = default;
 };
