@@ -16,19 +16,19 @@ public:
   ArchConsoleStd()
   {
   }
-  virtual ~ArchConsoleStd()
+  ~ArchConsoleStd() override
   {
   }
 
   // IArchConsole overrides
-  virtual void openConsole(const char *title)
+  void openConsole(const char *title) override
   {
   }
-  virtual void closeConsole()
+  void closeConsole() override
   {
   }
-  virtual void showConsole(bool)
+  void showConsole(bool) override
   {
   }
-  virtual void writeConsole(ELevel level, const char *);
+  void writeConsole(ELevel level, const char *) override;
 };

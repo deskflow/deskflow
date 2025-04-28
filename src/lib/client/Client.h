@@ -63,7 +63,7 @@ public:
   );
   Client(Client const &) = delete;
   Client(Client &&) = delete;
-  ~Client();
+  ~Client() override;
 
   Client &operator=(Client const &) = delete;
   Client &operator=(Client &&) = delete;
@@ -160,29 +160,29 @@ public:
   //@}
 
   // IScreen overrides
-  virtual void *getEventTarget() const;
-  virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const;
-  virtual void getCursorPos(int32_t &x, int32_t &y) const;
+  void *getEventTarget() const override;
+  bool getClipboard(ClipboardID id, IClipboard *) const override;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
+  void getCursorPos(int32_t &x, int32_t &y) const override;
 
   // IClient overrides
-  virtual void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver);
-  virtual bool leave();
-  virtual void setClipboard(ClipboardID, const IClipboard *);
-  virtual void grabClipboard(ClipboardID);
-  virtual void setClipboardDirty(ClipboardID, bool);
-  virtual void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &);
-  virtual void keyRepeat(KeyID, KeyModifierMask, int32_t count, KeyButton, const std::string &lang);
-  virtual void keyUp(KeyID, KeyModifierMask, KeyButton);
-  virtual void mouseDown(ButtonID);
-  virtual void mouseUp(ButtonID);
-  virtual void mouseMove(int32_t xAbs, int32_t yAbs);
-  virtual void mouseRelativeMove(int32_t xRel, int32_t yRel);
-  virtual void mouseWheel(int32_t xDelta, int32_t yDelta);
-  virtual void screensaver(bool activate);
-  virtual void resetOptions();
-  virtual void setOptions(const OptionsList &options);
-  virtual std::string getName() const;
+  void enter(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver) override;
+  bool leave() override;
+  void setClipboard(ClipboardID, const IClipboard *) override;
+  void grabClipboard(ClipboardID) override;
+  void setClipboardDirty(ClipboardID, bool) override;
+  void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override;
+  void keyRepeat(KeyID, KeyModifierMask, int32_t count, KeyButton, const std::string &lang) override;
+  void keyUp(KeyID, KeyModifierMask, KeyButton) override;
+  void mouseDown(ButtonID) override;
+  void mouseUp(ButtonID) override;
+  void mouseMove(int32_t xAbs, int32_t yAbs) override;
+  void mouseRelativeMove(int32_t xRel, int32_t yRel) override;
+  void mouseWheel(int32_t xDelta, int32_t yDelta) override;
+  void screensaver(bool activate) override;
+  void resetOptions() override;
+  void setOptions(const OptionsList &options) override;
+  std::string getName() const override;
 
 private:
   void sendClipboard(ClipboardID);

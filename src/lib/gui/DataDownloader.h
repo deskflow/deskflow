@@ -18,7 +18,7 @@ class DataDownloader : public QObject
 
 public:
   explicit DataDownloader(QObject *parent = 0);
-  virtual ~DataDownloader();
+  ~DataDownloader() override;
 
   QByteArray data() const;
   void cancel();

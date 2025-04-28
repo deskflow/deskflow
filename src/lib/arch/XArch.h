@@ -76,7 +76,7 @@ public:
   XArch(const std::string &msg) : std::runtime_error(msg)
   {
   }
-  virtual ~XArch() throw()
+  ~XArch() throw() override
   {
   }
 };

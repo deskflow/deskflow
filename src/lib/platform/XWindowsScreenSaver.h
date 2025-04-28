@@ -28,7 +28,7 @@ public:
   XWindowsScreenSaver(Display *, Window, void *eventTarget, IEventQueue *events);
   XWindowsScreenSaver(XWindowsScreenSaver const &) = delete;
   XWindowsScreenSaver(XWindowsScreenSaver &&) = delete;
-  virtual ~XWindowsScreenSaver();
+  ~XWindowsScreenSaver() override;
 
   XWindowsScreenSaver &operator=(XWindowsScreenSaver const &) = delete;
   XWindowsScreenSaver &operator=(XWindowsScreenSaver &&) = delete;
@@ -53,11 +53,11 @@ public:
   //@}
 
   // IScreenSaver overrides
-  virtual void enable();
-  virtual void disable();
-  virtual void activate();
-  virtual void deactivate();
-  virtual bool isActive() const;
+  void enable() override;
+  void disable() override;
+  void activate() override;
+  void deactivate() override;
+  bool isActive() const override;
 
 private:
   // find and set the running xscreensaver's window.  returns true iff

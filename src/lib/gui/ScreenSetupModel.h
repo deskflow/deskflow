@@ -32,7 +32,7 @@ public:
   {
     return m_MimeType;
   }
-  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+  QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
   int rowCount() const
   {
     return m_NumRows;
@@ -41,25 +41,26 @@ public:
   {
     return m_NumColumns;
   }
-  int rowCount(const QModelIndex &) const
+  int rowCount(const QModelIndex &) const override
   {
     return rowCount();
   }
-  int columnCount(const QModelIndex &) const
+  int columnCount(const QModelIndex &) const override
   {
     return columnCount();
   }
-  Qt::DropActions supportedDropActions() const;
-  Qt::ItemFlags flags(const QModelIndex &index) const;
-  QStringList mimeTypes() const;
-  QMimeData *mimeData(const QModelIndexList &indexes) const;
+  Qt::DropActions supportedDropActions() const override;
+  Qt::ItemFlags flags(const QModelIndex &index) const override;
+  QStringList mimeTypes() const override;
+  QMimeData *mimeData(const QModelIndexList &indexes) const override;
   bool isFull() const;
 
 signals:
   void screensChanged();
 
 protected:
-  bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
+  bool
+  dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
   const Screen &screen(const QModelIndex &index) const
   {
     return screen(index.column(), index.row());

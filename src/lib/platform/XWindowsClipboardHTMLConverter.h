@@ -17,14 +17,14 @@ public:
   \c name is converted to an atom and that is reported by getAtom().
   */
   XWindowsClipboardHTMLConverter(Display *display, const char *name);
-  virtual ~XWindowsClipboardHTMLConverter();
+  ~XWindowsClipboardHTMLConverter() override;
 
   // IXWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual Atom getAtom() const;
-  virtual int getDataSize() const;
-  virtual std::string fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(const std::string &) const;
+  IClipboard::EFormat getFormat() const override;
+  Atom getAtom() const override;
+  int getDataSize() const override;
+  std::string fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(const std::string &) const override;
 
 private:
   Atom m_atom;

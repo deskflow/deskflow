@@ -31,7 +31,7 @@ public:
   Screen(IPlatformScreen *platformScreen, IEventQueue *events);
   Screen(Screen const &) = delete;
   Screen(Screen &&) = delete;
-  virtual ~Screen();
+  ~Screen() override;
 
   Screen &operator&(Screen const &) = delete;
   Screen &operator&(Screen &&) = delete;
@@ -297,10 +297,10 @@ public:
   //@}
 
   // IScreen overrides
-  virtual void *getEventTarget() const;
-  virtual bool getClipboard(ClipboardID id, IClipboard *) const;
-  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const;
-  virtual void getCursorPos(int32_t &x, int32_t &y) const;
+  void *getEventTarget() const override;
+  bool getClipboard(ClipboardID id, IClipboard *) const override;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
+  void getCursorPos(int32_t &x, int32_t &y) const override;
 
   IPlatformScreen *getPlatformScreen()
   {

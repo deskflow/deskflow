@@ -19,15 +19,15 @@ class TCPSocketFactory : public ISocketFactory
 {
 public:
   TCPSocketFactory(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  virtual ~TCPSocketFactory();
+  ~TCPSocketFactory() override;
 
   // ISocketFactory overrides
-  virtual IDataSocket *create(
+  IDataSocket *create(
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
-  ) const;
-  virtual IListenSocket *createListen(
+  ) const override;
+  IListenSocket *createListen(
       IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
-  ) const;
+  ) const override;
 
 private:
   IEventQueue *m_events;

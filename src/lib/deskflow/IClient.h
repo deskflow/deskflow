@@ -156,8 +156,8 @@ public:
   //@}
 
   // IScreen overrides
-  virtual void *getEventTarget() const = 0;
-  virtual bool getClipboard(ClipboardID id, IClipboard *) const = 0;
-  virtual void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const = 0;
-  virtual void getCursorPos(int32_t &x, int32_t &y) const = 0;
+  void *getEventTarget() const override = 0;
+  bool getClipboard(ClipboardID id, IClipboard *) const override = 0;
+  void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override = 0;
+  void getCursorPos(int32_t &x, int32_t &y) const override = 0;
 };

@@ -23,16 +23,16 @@ public:
   TSocketMultiplexerMethodJob(T *object, Method method, ArchSocket socket, bool readable, bool writeable);
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob const &) = delete;
   TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob &&) = delete;
-  virtual ~TSocketMultiplexerMethodJob();
+  ~TSocketMultiplexerMethodJob() override;
 
   TSocketMultiplexerMethodJob &operator=(TSocketMultiplexerMethodJob const &) = delete;
   TSocketMultiplexerMethodJob &operator=(TSocketMultiplexerMethodJob &&) = delete;
 
   // IJob overrides
-  virtual ISocketMultiplexerJob *run(bool readable, bool writable, bool error);
-  virtual ArchSocket getSocket() const;
-  virtual bool isReadable() const;
-  virtual bool isWritable() const;
+  ISocketMultiplexerJob *run(bool readable, bool writable, bool error) override;
+  ArchSocket getSocket() const override;
+  bool isReadable() const override;
+  bool isWritable() const override;
 
 private:
   T *m_object;

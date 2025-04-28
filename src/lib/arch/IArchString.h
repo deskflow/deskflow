@@ -24,7 +24,7 @@ public:
   IArchString() = default;
   IArchString(const IArchString &) = delete;
   IArchString(IArchString &&) = delete;
-  virtual ~IArchString();
+  ~IArchString() override;
 
   IArchString &operator=(const IArchString &) = delete;
   IArchString &operator=(IArchString &&) = delete;

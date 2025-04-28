@@ -30,7 +30,7 @@ public:
       QWidget *parent = nullptr, const QList<deskflow::FingerprintData> &fingerprints = {},
       FingerprintDialogMode mode = FingerprintDialogMode::Local
   );
-  ~FingerprintDialog() = default;
+  ~FingerprintDialog() override = default;
 
 signals:
   void requestLocalPrintsDialog();

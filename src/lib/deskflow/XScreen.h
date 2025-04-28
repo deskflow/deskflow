@@ -37,7 +37,7 @@ public:
   trying to open the screen again.
   */
   XScreenUnavailable(double timeUntilRetry);
-  virtual ~XScreenUnavailable() throw();
+  ~XScreenUnavailable() throw() override;
 
   //! @name manipulators
   //@{
@@ -51,7 +51,7 @@ public:
   //@}
 
 protected:
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   double m_timeUntilRetry;

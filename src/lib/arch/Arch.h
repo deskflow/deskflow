@@ -81,14 +81,14 @@ class Arch : public ARCH_CONSOLE,
 public:
   Arch();
   Arch(Arch *arch);
-  virtual ~Arch();
+  ~Arch() override;
 
   //! Call init on other arch classes.
   /*!
   Some arch classes depend on others to exist first. When init is called
   these classes will have ARCH available for use.
   */
-  virtual void init();
+  void init() override;
 
   //
   // accessors

@@ -16,11 +16,11 @@ public:
   XArchEvalUnix(int error) : m_error(error)
   {
   }
-  virtual ~XArchEvalUnix() throw()
+  ~XArchEvalUnix() throw() override
   {
   }
 
-  virtual std::string eval() const;
+  std::string eval() const override;
 
 private:
   int m_error;

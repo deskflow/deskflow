@@ -102,5 +102,5 @@ class XIOReadMismatch : public XIO
 {
 public:
   // XBase overrides
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 };

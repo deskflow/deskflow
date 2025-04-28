@@ -23,8 +23,8 @@ public:
   }
 
 public:
-  void dragEnterEvent(QDragEnterEvent *event);
-  void dropEvent(QDropEvent *event);
+  void dragEnterEvent(QDragEnterEvent *event) override;
+  void dropEvent(QDropEvent *event) override;
 
 signals:
   void screenRemoved();

@@ -22,13 +22,13 @@ class StopLogOutputter : public ILogOutputter
 {
 public:
   StopLogOutputter();
-  virtual ~StopLogOutputter();
+  ~StopLogOutputter() override;
 
   // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
+  void open(const char *title) override;
+  void close() override;
+  void show(bool showIfEmpty) override;
+  bool write(ELevel level, const char *message) override;
 };
 
 //! Write log to console
@@ -40,14 +40,14 @@ class ConsoleLogOutputter : public ILogOutputter
 {
 public:
   ConsoleLogOutputter();
-  virtual ~ConsoleLogOutputter();
+  ~ConsoleLogOutputter() override;
 
   // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
-  virtual void flush();
+  void open(const char *title) override;
+  void close() override;
+  void show(bool showIfEmpty) override;
+  bool write(ELevel level, const char *message) override;
+  void flush();
 };
 
 //! Write log to file
@@ -60,13 +60,13 @@ class FileLogOutputter : public ILogOutputter
 {
 public:
   FileLogOutputter(const char *logFile);
-  virtual ~FileLogOutputter();
+  ~FileLogOutputter() override;
 
   // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
+  void open(const char *title) override;
+  void close() override;
+  void show(bool showIfEmpty) override;
+  bool write(ELevel level, const char *message) override;
 
   void setLogFilename(const char *title);
 
@@ -82,13 +82,13 @@ class SystemLogOutputter : public ILogOutputter
 {
 public:
   SystemLogOutputter();
-  virtual ~SystemLogOutputter();
+  ~SystemLogOutputter() override;
 
   // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
+  void open(const char *title) override;
+  void close() override;
+  void show(bool showIfEmpty) override;
+  bool write(ELevel level, const char *message) override;
 };
 
 //! Write log to system log only

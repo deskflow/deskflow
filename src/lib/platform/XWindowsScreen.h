@@ -34,7 +34,7 @@ public:
       const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
       deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::SERVER
   );
-  virtual ~XWindowsScreen() override;
+  ~XWindowsScreen() override;
 
   //! @name manipulators
   //@{

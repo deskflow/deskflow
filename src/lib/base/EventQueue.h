@@ -30,29 +30,29 @@ public:
   EventQueue();
   EventQueue(EventQueue const &) = delete;
   EventQueue(EventQueue &&) = delete;
-  virtual ~EventQueue();
+  ~EventQueue() override;
   EventQueue &operator=(EventQueue const &) = delete;
   EventQueue &operator=(EventQueue &&) = delete;
 
   // IEventQueue overrides
-  virtual void loop();
-  virtual void adoptBuffer(IEventQueueBuffer *);
-  virtual bool getEvent(Event &event, double timeout = -1.0);
-  virtual bool dispatchEvent(const Event &event);
-  virtual void addEvent(const Event &event);
-  virtual EventQueueTimer *newTimer(double duration, void *target);
-  virtual EventQueueTimer *newOneShotTimer(double duration, void *target);
-  virtual void deleteTimer(EventQueueTimer *);
-  virtual void adoptHandler(Event::Type type, void *target, IEventJob *handler);
-  virtual void removeHandler(Event::Type type, void *target);
-  virtual void removeHandlers(void *target);
-  virtual Event::Type registerTypeOnce(Event::Type &type, const char *name);
-  virtual bool isEmpty() const;
-  virtual IEventJob *getHandler(Event::Type type, void *target) const;
-  virtual const char *getTypeName(Event::Type type);
-  virtual Event::Type getRegisteredType(const std::string &name) const;
-  void *getSystemTarget();
-  virtual void waitForReady() const;
+  void loop() override;
+  void adoptBuffer(IEventQueueBuffer *) override;
+  bool getEvent(Event &event, double timeout = -1.0) override;
+  bool dispatchEvent(const Event &event) override;
+  void addEvent(const Event &event) override;
+  EventQueueTimer *newTimer(double duration, void *target) override;
+  EventQueueTimer *newOneShotTimer(double duration, void *target) override;
+  void deleteTimer(EventQueueTimer *) override;
+  void adoptHandler(Event::Type type, void *target, IEventJob *handler) override;
+  void removeHandler(Event::Type type, void *target) override;
+  void removeHandlers(void *target) override;
+  Event::Type registerTypeOnce(Event::Type &type, const char *name) override;
+  bool isEmpty() const override;
+  IEventJob *getHandler(Event::Type type, void *target) const override;
+  const char *getTypeName(Event::Type type) override;
+  Event::Type getRegisteredType(const std::string &name) const override;
+  void *getSystemTarget() override;
+  void waitForReady() const override;
 
 private:
   uint32_t saveEvent(const Event &event);
@@ -126,23 +126,23 @@ public:
   //
   // Event type providers.
   //
-  ClientEvents &forClient();
-  IStreamEvents &forIStream();
-  IDataSocketEvents &forIDataSocket();
-  IListenSocketEvents &forIListenSocket();
-  ISocketEvents &forISocket();
-  OSXScreenEvents &forOSXScreen();
-  ClientListenerEvents &forClientListener();
-  ClientProxyEvents &forClientProxy();
-  ClientProxyUnknownEvents &forClientProxyUnknown();
-  ServerEvents &forServer();
-  ServerAppEvents &forServerApp();
-  IKeyStateEvents &forIKeyState();
-  IPrimaryScreenEvents &forIPrimaryScreen();
-  IScreenEvents &forIScreen();
-  ClipboardEvents &forClipboard();
-  FileEvents &forFile();
-  EiEvents &forEi();
+  ClientEvents &forClient() override;
+  IStreamEvents &forIStream() override;
+  IDataSocketEvents &forIDataSocket() override;
+  IListenSocketEvents &forIListenSocket() override;
+  ISocketEvents &forISocket() override;
+  OSXScreenEvents &forOSXScreen() override;
+  ClientListenerEvents &forClientListener() override;
+  ClientProxyEvents &forClientProxy() override;
+  ClientProxyUnknownEvents &forClientProxyUnknown() override;
+  ServerEvents &forServer() override;
+  ServerAppEvents &forServerApp() override;
+  IKeyStateEvents &forIKeyState() override;
+  IPrimaryScreenEvents &forIPrimaryScreen() override;
+  IScreenEvents &forIScreen() override;
+  ClipboardEvents &forClipboard() override;
+  FileEvents &forFile() override;
+  EiEvents &forEi() override;
 
 private:
   ClientEvents *m_typesForClient;

@@ -22,7 +22,7 @@ public:
   ClientProxy1_0(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_0(ClientProxy1_0 const &) = delete;
   ClientProxy1_0(ClientProxy1_0 &&) = delete;
-  ~ClientProxy1_0();
+  ~ClientProxy1_0() override;
 
   ClientProxy1_0 &operator=(ClientProxy1_0 const &) = delete;
   ClientProxy1_0 &operator=(ClientProxy1_0 &&) = delete;

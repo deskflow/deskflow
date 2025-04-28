@@ -53,17 +53,17 @@ public:
   public:
     KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *);
     KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask);
-    virtual ~KeystrokeCondition();
+    ~KeystrokeCondition() override;
 
     KeyID getKey() const;
     KeyModifierMask getMask() const;
 
     // Condition overrides
-    virtual Condition *clone() const;
-    virtual std::string format() const;
-    virtual EFilterStatus match(const Event &);
-    virtual void enablePrimary(PrimaryClient *);
-    virtual void disablePrimary(PrimaryClient *);
+    Condition *clone() const override;
+    std::string format() const override;
+    EFilterStatus match(const Event &) override;
+    void enablePrimary(PrimaryClient *) override;
+    void disablePrimary(PrimaryClient *) override;
 
   private:
     uint32_t m_id;
@@ -78,15 +78,15 @@ public:
   public:
     MouseButtonCondition(IEventQueue *events, IPlatformScreen::ButtonInfo *);
     MouseButtonCondition(IEventQueue *events, ButtonID, KeyModifierMask mask);
-    virtual ~MouseButtonCondition();
+    ~MouseButtonCondition() override;
 
     ButtonID getButton() const;
     KeyModifierMask getMask() const;
 
     // Condition overrides
-    virtual Condition *clone() const;
-    virtual std::string format() const;
-    virtual EFilterStatus match(const Event &);
+    Condition *clone() const override;
+    std::string format() const override;
+    EFilterStatus match(const Event &) override;
 
   private:
     ButtonID m_button;
@@ -99,12 +99,12 @@ public:
   {
   public:
     ScreenConnectedCondition(IEventQueue *events, const std::string &screen);
-    virtual ~ScreenConnectedCondition();
+    ~ScreenConnectedCondition() override;
 
     // Condition overrides
-    virtual Condition *clone() const;
-    virtual std::string format() const;
-    virtual EFilterStatus match(const Event &);
+    Condition *clone() const override;
+    std::string format() const override;
+    EFilterStatus match(const Event &) override;
 
   private:
     std::string m_screen;
@@ -143,9 +143,9 @@ public:
     Mode getMode() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   private:
     Mode m_mode;
@@ -165,9 +165,9 @@ public:
     Mode getMode() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   private:
     Mode m_mode;
@@ -183,9 +183,9 @@ public:
     std::string getScreen() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   private:
     std::string m_screen;
@@ -201,9 +201,9 @@ public:
     EDirection getDirection() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   private:
     EDirection m_direction;
@@ -228,9 +228,9 @@ public:
     std::set<std::string> getScreens() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   private:
     Mode m_mode;
@@ -245,7 +245,7 @@ public:
     KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *adoptedInfo, bool press);
     KeystrokeAction(KeystrokeAction const &) = delete;
     KeystrokeAction(KeystrokeAction &&) = delete;
-    ~KeystrokeAction();
+    ~KeystrokeAction() override;
 
     KeystrokeAction &operator=(KeystrokeAction const &) = delete;
     KeystrokeAction &operator=(KeystrokeAction &&) = delete;
@@ -255,9 +255,9 @@ public:
     bool isOnPress() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   protected:
     virtual const char *formatName() const;
@@ -275,7 +275,7 @@ public:
     MouseButtonAction(IEventQueue *events, IPlatformScreen::ButtonInfo *adoptedInfo, bool press);
     MouseButtonAction(MouseButtonAction const &) = delete;
     MouseButtonAction(MouseButtonAction &&) = delete;
-    ~MouseButtonAction();
+    ~MouseButtonAction() override;
 
     MouseButtonAction &operator=(MouseButtonAction const &) = delete;
     MouseButtonAction &operator=(MouseButtonAction &&) = delete;
@@ -284,9 +284,9 @@ public:
     bool isOnPress() const;
 
     // Action overrides
-    virtual Action *clone() const;
-    virtual std::string format() const;
-    virtual void perform(const Event &);
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
 
   protected:
     virtual const char *formatName() const;

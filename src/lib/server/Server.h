@@ -125,7 +125,7 @@ public:
   );
   Server(Server const &) = delete;
   Server(Server &&) = delete;
-  ~Server();
+  ~Server() override;
 
   Server &operator=(Server const &) = delete;
   Server &operator=(Server &&) = delete;

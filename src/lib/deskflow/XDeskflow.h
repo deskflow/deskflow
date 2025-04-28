@@ -50,7 +50,7 @@ public:
   //@}
 
 protected:
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   int m_major;
@@ -66,7 +66,7 @@ class XDuplicateClient : public XDeskflow
 {
 public:
   XDuplicateClient(const std::string &name);
-  virtual ~XDuplicateClient() throw()
+  ~XDuplicateClient() throw() override
   {
   }
 
@@ -79,7 +79,7 @@ public:
   //@}
 
 protected:
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   std::string m_name;
@@ -94,7 +94,7 @@ class XUnknownClient : public XDeskflow
 {
 public:
   XUnknownClient(const std::string &name);
-  virtual ~XUnknownClient() throw()
+  ~XUnknownClient() throw() override
   {
   }
 
@@ -107,7 +107,7 @@ public:
   //@}
 
 protected:
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   std::string m_name;
@@ -123,7 +123,7 @@ class XExitApp : public XDeskflow
 {
 public:
   XExitApp(int code);
-  virtual ~XExitApp() throw()
+  ~XExitApp() throw() override
   {
   }
 
@@ -131,7 +131,7 @@ public:
   int getCode() const throw();
 
 protected:
-  virtual std::string getWhat() const throw();
+  std::string getWhat() const throw() override;
 
 private:
   int m_code;

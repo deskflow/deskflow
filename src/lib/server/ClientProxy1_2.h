@@ -16,8 +16,8 @@ class ClientProxy1_2 : public ClientProxy1_1
 {
 public:
   ClientProxy1_2(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
-  ~ClientProxy1_2();
+  ~ClientProxy1_2() override;
 
   // IClient overrides
-  virtual void mouseRelativeMove(int32_t xRel, int32_t yRel);
+  void mouseRelativeMove(int32_t xRel, int32_t yRel) override;
 };

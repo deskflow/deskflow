@@ -26,7 +26,7 @@ public:
   StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
   StreamFilter(StreamFilter const &) = delete;
   StreamFilter(StreamFilter &&) = delete;
-  virtual ~StreamFilter();
+  ~StreamFilter() override;
 
   StreamFilter &operator=(StreamFilter const &) = delete;
   StreamFilter &operator=(StreamFilter &&) = delete;
@@ -34,15 +34,15 @@ public:
   // IStream overrides
   // These all just forward to the underlying stream except getEventTarget.
   // Override as necessary.  getEventTarget returns a pointer to this.
-  virtual void close();
-  virtual uint32_t read(void *buffer, uint32_t n);
-  virtual void write(const void *buffer, uint32_t n);
-  virtual void flush();
-  virtual void shutdownInput();
-  virtual void shutdownOutput();
-  virtual void *getEventTarget() const;
-  virtual bool isReady() const;
-  virtual uint32_t getSize() const;
+  void close() override;
+  uint32_t read(void *buffer, uint32_t n) override;
+  void write(const void *buffer, uint32_t n) override;
+  void flush() override;
+  void shutdownInput() override;
+  void shutdownOutput() override;
+  void *getEventTarget() const override;
+  bool isReady() const override;
+  uint32_t getSize() const override;
 
   //! Get the stream
   /*!

@@ -20,7 +20,7 @@ class KeyState : public IKeyState
 public:
   KeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);
   KeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
-  virtual ~KeyState();
+  ~KeyState() override;
 
   //! @name manipulators
   //@{
@@ -67,10 +67,10 @@ public:
   bool isKeyDown(KeyButton) const override;
   KeyModifierMask getActiveModifiers() const override;
   // Left abstract
-  virtual bool fakeCtrlAltDel() override = 0;
-  virtual KeyModifierMask pollActiveModifiers() const override = 0;
-  virtual int32_t pollActiveGroup() const override = 0;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
+  bool fakeCtrlAltDel() override = 0;
+  KeyModifierMask pollActiveModifiers() const override = 0;
+  int32_t pollActiveGroup() const override = 0;
+  void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
   int32_t getKeyState(KeyButton keyButton)
   {

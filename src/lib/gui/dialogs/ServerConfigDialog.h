@@ -25,7 +25,7 @@ class ServerConfigDialog : public QDialog
 
 public:
   ServerConfigDialog(QWidget *parent, ServerConfig &config);
-  ~ServerConfigDialog();
+  ~ServerConfigDialog() override;
   bool addClient(const QString &clientName);
 
 public slots:

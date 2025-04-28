@@ -16,8 +16,8 @@ class ArchSleepUnix : public IArchSleep
 {
 public:
   ArchSleepUnix();
-  virtual ~ArchSleepUnix();
+  ~ArchSleepUnix() override;
 
   // IArchSleep overrides
-  virtual void sleep(double timeout);
+  void sleep(double timeout) override;
 };

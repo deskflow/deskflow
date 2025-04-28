@@ -44,7 +44,7 @@ public:
 
   XWindowsKeyState(Display *, bool useXKB, IEventQueue *events);
   XWindowsKeyState(Display *, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap);
-  ~XWindowsKeyState();
+  ~XWindowsKeyState() override;
 
   //! @name modifiers
   //@{
@@ -94,15 +94,15 @@ public:
   //@}
 
   // IKeyState overrides
-  virtual bool fakeCtrlAltDel();
-  virtual KeyModifierMask pollActiveModifiers() const;
-  virtual int32_t pollActiveGroup() const;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
+  bool fakeCtrlAltDel() override;
+  KeyModifierMask pollActiveModifiers() const override;
+  int32_t pollActiveGroup() const override;
+  void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(deskflow::KeyMap &keyMap);
-  virtual void fakeKey(const Keystroke &keystroke);
+  void getKeyMap(deskflow::KeyMap &keyMap) override;
+  void fakeKey(const Keystroke &keystroke) override;
 
 private:
   void init(Display *display, bool useXKB);
