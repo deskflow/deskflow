@@ -17,6 +17,13 @@ elseif(APPLE)
     SOURCE OSXClipboardTests.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
+  create_test(
+    NAME OSXKeyStateTests
+    DEPENDS platform
+    LIBS base arch
+    SOURCE OSXKeyStateTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+  )
 elseif(UNIX)
   create_test(
     NAME XWindowsClipboardTests

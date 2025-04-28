@@ -1,17 +1,14 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2011 Nick Bolton
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "base/Log.h"
-#include "platform/OSXKeyState.h"
-#include "test/mock/deskflow/MockEventQueue.h"
-#include "test/mock/deskflow/MockKeyMap.h"
+#include "OSXKeyStateTests.h"
 
-#include <gmock/gmock.h>
-#include <gtest/gtest.h>
+#include "base/EventQueue.h"
 
 #define SHIFT_ID_L kKeyShift_L
 #define SHIFT_ID_R kKeyShift_R
@@ -19,77 +16,77 @@
 #define A_CHAR_ID 0x00000061
 #define A_CHAR_BUTTON 001
 
-class OSXKeyStateTests : public ::testing::Test
+void OSXKeyStateTests::initTestCase()
 {
-public:
-  static bool isKeyPressed(const OSXKeyState &keyState, KeyButton button);
-};
+  m_arch.init();
+  m_log.setFilter(kDEBUG2);
+}
 
-TEST_F(OSXKeyStateTests, mapModifiersFromOSX_OSXMask_returnDeskflowMask)
+void OSXKeyStateTests::mapModifiersFromOSX_OSXMask()
 {
   deskflow::KeyMap keyMap;
-  MockEventQueue eventQueue;
+  EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
 
   KeyModifierMask outMask = 0;
 
   uint32_t shiftMask = 0 | kCGEventFlagMaskShift;
   outMask = keyState.mapModifiersFromOSX(shiftMask);
-  EXPECT_EQ(KeyModifierShift, outMask);
+  QCOMPARE(outMask, KeyModifierShift);
 
   uint32_t ctrlMask = 0 | kCGEventFlagMaskControl;
   outMask = keyState.mapModifiersFromOSX(ctrlMask);
-  EXPECT_EQ(KeyModifierControl, outMask);
+  QCOMPARE(outMask, KeyModifierControl);
 
   uint32_t altMask = 0 | kCGEventFlagMaskAlternate;
   outMask = keyState.mapModifiersFromOSX(altMask);
-  EXPECT_EQ(KeyModifierAlt, outMask);
+  QCOMPARE(outMask, KeyModifierAlt);
 
   uint32_t cmdMask = 0 | kCGEventFlagMaskCommand;
   outMask = keyState.mapModifiersFromOSX(cmdMask);
-  EXPECT_EQ(KeyModifierSuper, outMask);
+  QCOMPARE(outMask, KeyModifierSuper);
 
   uint32_t capsMask = 0 | kCGEventFlagMaskAlphaShift;
   outMask = keyState.mapModifiersFromOSX(capsMask);
-  EXPECT_EQ(KeyModifierCapsLock, outMask);
+  QCOMPARE(outMask, KeyModifierCapsLock);
 
   uint32_t numMask = 0 | kCGEventFlagMaskNumericPad;
   outMask = keyState.mapModifiersFromOSX(numMask);
-  EXPECT_EQ(KeyModifierNumLock, outMask);
+  QCOMPARE(outMask, KeyModifierNumLock);
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_shift)
+void OSXKeyStateTests::fakePollShift()
 {
   deskflow::KeyMap keyMap;
-  MockEventQueue eventQueue;
+  EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();
 
   keyState.fakeKeyDown(SHIFT_ID_L, 0, 1, "en");
-  EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+  QVERIFY(isKeyPressed(keyState, SHIFT_BUTTON));
 
   keyState.fakeKeyUp(1);
-  EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+  QVERIFY(!isKeyPressed(keyState, SHIFT_BUTTON));
 
   keyState.fakeKeyDown(SHIFT_ID_R, 0, 2, "en");
-  EXPECT_TRUE(isKeyPressed(keyState, SHIFT_BUTTON));
+  QVERIFY(isKeyPressed(keyState, SHIFT_BUTTON));
 
   keyState.fakeKeyUp(2);
-  EXPECT_TRUE(!isKeyPressed(keyState, SHIFT_BUTTON));
+  QVERIFY(!isKeyPressed(keyState, SHIFT_BUTTON));
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
+void OSXKeyStateTests::fakePollChar()
 {
   deskflow::KeyMap keyMap;
-  MockEventQueue eventQueue;
+  EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();
 
   keyState.fakeKeyDown(A_CHAR_ID, 0, 1, "en");
-  EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+  QVERIFY(isKeyPressed(keyState, A_CHAR_BUTTON));
 
   keyState.fakeKeyUp(1);
-  EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+  QVERIFY(!isKeyPressed(keyState, A_CHAR_BUTTON));
 
   // HACK: delete the key in case it was typed into a text editor.
   // we should really set focus to an invisible window.
@@ -97,18 +94,18 @@ TEST_F(OSXKeyStateTests, fakeAndPoll_charKey)
   keyState.fakeKeyUp(2);
 }
 
-TEST_F(OSXKeyStateTests, fakeAndPoll_charKeyAndModifier)
+void OSXKeyStateTests::fakePollCharWithModifier()
 {
   deskflow::KeyMap keyMap;
-  MockEventQueue eventQueue;
+  EventQueue eventQueue;
   OSXKeyState keyState(&eventQueue, keyMap, {"en"}, true);
   keyState.updateKeyMap();
 
   keyState.fakeKeyDown(A_CHAR_ID, KeyModifierShift, 1, "en");
-  EXPECT_TRUE(isKeyPressed(keyState, A_CHAR_BUTTON));
+  QVERIFY(isKeyPressed(keyState, A_CHAR_BUTTON));
 
   keyState.fakeKeyUp(1);
-  EXPECT_TRUE(!isKeyPressed(keyState, A_CHAR_BUTTON));
+  QVERIFY(!isKeyPressed(keyState, A_CHAR_BUTTON));
 
   // HACK: delete the key in case it was typed into a text editor.
   // we should really set focus to an invisible window.
@@ -133,3 +130,5 @@ bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton butto
   }
   return false;
 }
+
+QTEST_MAIN(OSXKeyStateTests)
