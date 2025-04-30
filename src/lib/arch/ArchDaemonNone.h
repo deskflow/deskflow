@@ -21,8 +21,8 @@ function and returns its result.
 class ArchDaemonNone : public IArchDaemon
 {
 public:
-  ArchDaemonNone();
-  ~ArchDaemonNone() override;
+  ArchDaemonNone() = default;
+  ~ArchDaemonNone() override = default;
 
   // IArchDaemon overrides
   void installDaemon(

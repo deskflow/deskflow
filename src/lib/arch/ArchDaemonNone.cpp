@@ -11,16 +11,6 @@
 // ArchDaemonNone
 //
 
-ArchDaemonNone::ArchDaemonNone()
-{
-  // do nothing
-}
-
-ArchDaemonNone::~ArchDaemonNone()
-{
-  // do nothing
-}
-
 void ArchDaemonNone::installDaemon(const char *, const char *, const char *, const char *, const char *)
 {
   // do nothing
@@ -50,10 +40,12 @@ bool ArchDaemonNone::isDaemonInstalled(const char *)
 
 void ArchDaemonNone::installDaemon()
 {
+  // do nothing
 }
 
 void ArchDaemonNone::uninstallDaemon()
 {
+  // do nothing
 }
 
 std::string ArchDaemonNone::commandLine() const
