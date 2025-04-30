@@ -56,7 +56,7 @@ std::string vformat(const char *fmt, va_list args)
           index.push_back(i);
           pos.push_back(static_cast<size_t>((scan - 1) - fmt));
           width.push_back(static_cast<size_t>((end - scan) + 2));
-          if (i > maxIndex) {
+          if (static_cast<size_t>(i) > maxIndex) {
             maxIndex = i;
           }
           scan = end;
@@ -74,7 +74,7 @@ std::string vformat(const char *fmt, va_list args)
   std::vector<size_t> length;
   value.push_back("%");
   length.push_back(1);
-  for (int i = 0; i < maxIndex; ++i) {
+  for (size_t i = 0; i < maxIndex; ++i) {
     const char *arg = va_arg(args, const char *);
     size_t len = strnlen(arg, SIZE_MAX);
     value.push_back(arg);
