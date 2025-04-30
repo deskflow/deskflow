@@ -13,22 +13,21 @@
 class ArchConsoleStd : public IArchConsole
 {
 public:
-  ArchConsoleStd()
-  {
-  }
-  ~ArchConsoleStd() override
-  {
-  }
+  ArchConsoleStd() = default;
+  ~ArchConsoleStd() override = default;
 
   // IArchConsole overrides
   void openConsole(const char *title) override
   {
+    // do nothing
   }
   void closeConsole() override
   {
+    // do nothing
   }
   void showConsole(bool) override
   {
+    // do nothing
   }
   void writeConsole(ELevel level, const char *) override;
 };
