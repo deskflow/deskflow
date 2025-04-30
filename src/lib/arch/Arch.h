@@ -80,8 +80,8 @@ class Arch : public ARCH_CONSOLE,
 {
 public:
   Arch();
-  Arch(Arch *arch);
-  ~Arch() override;
+  explicit Arch(Arch *arch);
+  ~Arch() override = default;
 
   //! Call init on other arch classes.
   /*!
@@ -114,7 +114,7 @@ private:
 class ArchMutexLock
 {
 public:
-  ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
+  explicit ArchMutexLock(ArchMutex mutex) : m_mutex(mutex)
   {
     ARCH->lockMutex(m_mutex);
   }

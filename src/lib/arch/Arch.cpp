@@ -28,10 +28,6 @@ Arch::Arch(Arch *arch)
   s_instance = arch;
 }
 
-Arch::~Arch()
-{
-}
-
 void Arch::init()
 {
   ARCH_NETWORK::init();
