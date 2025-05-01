@@ -18,7 +18,7 @@ template <class T> class TMethodEventJob : public IEventJob
 public:
   //! run(event) invokes \c object->method(event, arg)
   TMethodEventJob(T *object, void (T::*method)(const Event &, void *), void *arg = nullptr);
-  ~TMethodEventJob() override;
+  ~TMethodEventJob() override = default;
 
   // IJob overrides
   void run(const Event &) override;
@@ -34,11 +34,6 @@ inline TMethodEventJob<T>::TMethodEventJob(T *object, void (T::*method)(const Ev
     : m_object(object),
       m_method(method),
       m_arg(arg)
-{
-  // do nothing
-}
-
-template <class T> inline TMethodEventJob<T>::~TMethodEventJob()
 {
   // do nothing
 }
