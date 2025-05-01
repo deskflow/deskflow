@@ -34,11 +34,6 @@ XScreenUnavailable::XScreenUnavailable(double timeUntilRetry) : m_timeUntilRetry
   // do nothing
 }
 
-XScreenUnavailable::~XScreenUnavailable() throw()
-{
-  // do nothing
-}
-
 double XScreenUnavailable::getRetryTime() const
 {
   return m_timeUntilRetry;

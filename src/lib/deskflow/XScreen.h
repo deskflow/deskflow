@@ -37,7 +37,7 @@ public:
   trying to open the screen again.
   */
   XScreenUnavailable(double timeUntilRetry);
-  ~XScreenUnavailable() throw() override;
+  ~XScreenUnavailable() throw() override = default;
 
   //! @name manipulators
   //@{
