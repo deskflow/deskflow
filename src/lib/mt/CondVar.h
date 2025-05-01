@@ -171,10 +171,7 @@ template <class T> inline CondVar<T>::CondVar(const CondVar &cv) : CondVarBase(c
   // do nothing
 }
 
-template <class T> inline CondVar<T>::~CondVar()
-{
-  // do nothing
-}
+template <class T> inline CondVar<T>::~CondVar() = default;
 
 template <class T> inline CondVar<T> &CondVar<T>::operator=(const CondVar<T> &cv)
 {
