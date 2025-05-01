@@ -19,15 +19,6 @@
 // -----------------------------------------------------------------------------
 // Input Filter Condition Classes
 // -----------------------------------------------------------------------------
-InputFilter::Condition::Condition()
-{
-  // do nothing
-}
-
-InputFilter::Condition::~Condition()
-{
-  // do nothing
-}
 
 void InputFilter::Condition::enablePrimary(PrimaryClient *)
 {
@@ -53,11 +44,6 @@ InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, KeyID k
       m_key(key),
       m_mask(mask),
       m_events(events)
-{
-  // do nothing
-}
-
-InputFilter::KeystrokeCondition::~KeystrokeCondition()
 {
   // do nothing
 }
@@ -132,11 +118,6 @@ InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, But
   // do nothing
 }
 
-InputFilter::MouseButtonCondition::~MouseButtonCondition()
-{
-  // do nothing
-}
-
 ButtonID InputFilter::MouseButtonCondition::getButton() const
 {
   return m_button;
@@ -195,11 +176,6 @@ InputFilter::ScreenConnectedCondition::ScreenConnectedCondition(IEventQueue *eve
   // do nothing
 }
 
-InputFilter::ScreenConnectedCondition::~ScreenConnectedCondition()
-{
-  // do nothing
-}
-
 InputFilter::Condition *InputFilter::ScreenConnectedCondition::clone() const
 {
   return new ScreenConnectedCondition(m_events, m_screen);
@@ -225,15 +201,6 @@ InputFilter::EFilterStatus InputFilter::ScreenConnectedCondition::match(const Ev
 // -----------------------------------------------------------------------------
 // Input Filter Action Classes
 // -----------------------------------------------------------------------------
-InputFilter::Action::Action()
-{
-  // do nothing
-}
-
-InputFilter::Action::~Action()
-{
-  // do nothing
-}
 
 InputFilter::LockCursorToScreenAction::LockCursorToScreenAction(IEventQueue *events, Mode mode)
     : m_mode(mode),
