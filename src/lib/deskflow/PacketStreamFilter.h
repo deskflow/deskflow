@@ -21,7 +21,7 @@ class PacketStreamFilter : public StreamFilter
 {
 public:
   PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream = true);
-  ~PacketStreamFilter() override;
+  ~PacketStreamFilter() override = default;
 
   // IStream overrides
   void close() override;

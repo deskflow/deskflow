@@ -27,11 +27,6 @@ PacketStreamFilter::PacketStreamFilter(IEventQueue *events, deskflow::IStream *s
   // do nothing
 }
 
-PacketStreamFilter::~PacketStreamFilter()
-{
-  // do nothing
-}
-
 void PacketStreamFilter::close()
 {
   Lock lock(&m_mutex);
