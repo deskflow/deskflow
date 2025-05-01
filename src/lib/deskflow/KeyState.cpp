@@ -658,7 +658,7 @@ KeyState::KeyState(
     IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled
 )
     : IKeyState(events),
-      m_keyMapPtr(0),
+      m_keyMapPtr(nullptr),
       m_keyMap(keyMap),
       m_mask(0),
       m_events(events),
