@@ -126,7 +126,7 @@ class MinimalApp : public App
 {
 public:
   MinimalApp();
-  ~MinimalApp() override;
+  ~MinimalApp() override = default;
 
   // IApp overrides
   int standardStartup(int argc, char **argv) override;
