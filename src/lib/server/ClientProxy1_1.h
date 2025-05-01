@@ -14,7 +14,7 @@ class ClientProxy1_1 : public ClientProxy1_0
 {
 public:
   ClientProxy1_1(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
-  ~ClientProxy1_1() override;
+  ~ClientProxy1_1() override = default;
 
   // IClient overrides
   void keyDown(KeyID, KeyModifierMask, KeyButton, const std::string &) override;
