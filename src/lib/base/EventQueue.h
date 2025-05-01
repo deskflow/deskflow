@@ -66,7 +66,7 @@ private:
   {
   public:
     Timer(EventQueueTimer *, double timeout, double initialTime, void *target, bool oneShot);
-    ~Timer();
+    ~Timer() = default;
 
     void reset();
 

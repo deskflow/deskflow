@@ -531,11 +531,6 @@ EventQueue::Timer::Timer(EventQueueTimer *timer, double timeout, double initialT
   assert(m_timeout > 0.0);
 }
 
-EventQueue::Timer::~Timer()
-{
-  // do nothing
-}
-
 void EventQueue::Timer::reset()
 {
   m_time = m_timeout;
