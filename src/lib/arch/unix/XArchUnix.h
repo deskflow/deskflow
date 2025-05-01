@@ -13,12 +13,10 @@
 class XArchEvalUnix : public XArchEval
 {
 public:
-  XArchEvalUnix(int error) : m_error(error)
+  explicit XArchEvalUnix(int error) : m_error(error)
   {
   }
-  ~XArchEvalUnix() throw() override
-  {
-  }
+  ~XArchEvalUnix() noexcept override = default;
 
   std::string eval() const override;
 
