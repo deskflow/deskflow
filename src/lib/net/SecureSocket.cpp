@@ -547,7 +547,7 @@ bool SecureSocket::showCertificate() const
   // get the server's certificate
   cert = SSL_get_peer_certificate(m_ssl->m_ssl);
   if (cert != nullptr) {
-    line = X509_NAME_oneline(X509_get_subject_name(cert), 0, 0);
+    line = X509_NAME_oneline(X509_get_subject_name(cert), nullptr, 0);
     LOG((CLOG_INFO "server tls certificate info: %s", line));
     OPENSSL_free(line);
     X509_free(cert);
