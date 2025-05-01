@@ -22,9 +22,7 @@ public:
   XThreadExit(void *result) : m_result(result)
   {
   }
-  ~XThreadExit()
-  {
-  }
+  ~XThreadExit() = default;
 
 public:
   void *m_result;
