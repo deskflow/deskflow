@@ -32,9 +32,7 @@ public:
   };
 
   XSocketAddress(EError, const std::string &hostname, int port) throw();
-  ~XSocketAddress() throw() override
-  {
-  }
+  ~XSocketAddress() throw() override = default;
 
   //! @name accessors
   //@{
