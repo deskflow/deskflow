@@ -18,7 +18,5 @@ class IInterface
 {
 public:
   //! Interface destructor does nothing
-  virtual ~IInterface()
-  {
-  }
+  virtual ~IInterface() = default;
 };
