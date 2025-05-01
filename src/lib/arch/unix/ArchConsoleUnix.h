@@ -14,6 +14,6 @@
 class ArchConsoleUnix : public ArchConsoleStd
 {
 public:
-  ArchConsoleUnix();
-  ~ArchConsoleUnix() override;
+  ArchConsoleUnix() = default;
+  ~ArchConsoleUnix() override = default;
 };

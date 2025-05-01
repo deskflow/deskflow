@@ -30,7 +30,6 @@ if(WIN32)
 
 elseif(UNIX)
   set(PLATFORM_CODE
-    unix/ArchConsoleUnix.cpp
     unix/ArchConsoleUnix.h
     unix/ArchDaemonUnix.cpp
     unix/ArchDaemonUnix.h
