@@ -16,10 +16,6 @@ AppUtil::AppUtil() : m_app(nullptr)
   s_instance = this;
 }
 
-AppUtil::~AppUtil()
-{
-}
-
 void AppUtil::adoptApp(IApp *app)
 {
   app->setByeFunc(&exitAppStatic);

@@ -14,7 +14,7 @@ class AppUtil : public IAppUtil
 {
 public:
   AppUtil();
-  ~AppUtil() override;
+  ~AppUtil() override = default;
 
   void adoptApp(IApp *app) override;
   IApp &app() const override;
