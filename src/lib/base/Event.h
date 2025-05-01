@@ -12,12 +12,8 @@
 class EventData
 {
 public:
-  EventData()
-  {
-  }
-  virtual ~EventData()
-  {
-  }
+  EventData() = default;
+  virtual ~EventData() = default;
 };
 
 //! Event
