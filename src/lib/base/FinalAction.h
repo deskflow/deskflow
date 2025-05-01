@@ -15,11 +15,9 @@ namespace deskflow {
 template <class Callable> class FinalAction
 {
 public:
-  FinalAction() noexcept
-  {
-  }
+  FinalAction() noexcept = default;
 
-  FinalAction(Callable callable) noexcept : m_callable{callable}
+  explicit FinalAction(Callable callable) noexcept : m_callable{callable}
   {
   }
 
