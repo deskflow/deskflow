@@ -22,7 +22,7 @@ class ClientArgs : public ArgsBase
 public:
   ClientArgs();
 
-  ~ClientArgs() override;
+  ~ClientArgs() override = default;
 
 public:
   int m_yscroll = 0;
