@@ -66,9 +66,7 @@ class XDuplicateClient : public XDeskflow
 {
 public:
   XDuplicateClient(const std::string &name);
-  ~XDuplicateClient() throw() override
-  {
-  }
+  ~XDuplicateClient() throw() override = default;
 
   //! @name accessors
   //@{
@@ -94,9 +92,7 @@ class XUnknownClient : public XDeskflow
 {
 public:
   XUnknownClient(const std::string &name);
-  ~XUnknownClient() throw() override
-  {
-  }
+  ~XUnknownClient() throw() override = default;
 
   //! @name accessors
   //@{
@@ -123,9 +119,7 @@ class XExitApp : public XDeskflow
 {
 public:
   XExitApp(int code);
-  ~XExitApp() throw() override
-  {
-  }
+  ~XExitApp() throw() override = default;
 
   //! Get the exit code
   int getCode() const throw();
