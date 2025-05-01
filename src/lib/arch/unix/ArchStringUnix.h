@@ -15,8 +15,8 @@
 class ArchStringUnix : public IArchString
 {
 public:
-  ArchStringUnix();
-  ~ArchStringUnix() override;
+  ArchStringUnix() = default;
+  ~ArchStringUnix() override = default;
 
   // IArchString overrides
   EWideCharEncoding getWideCharEncoding() override;
