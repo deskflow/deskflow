@@ -13,8 +13,8 @@
 class XWindowsClipboardAnyBitmapConverter : public IXWindowsClipboardConverter
 {
 public:
-  XWindowsClipboardAnyBitmapConverter();
-  ~XWindowsClipboardAnyBitmapConverter() override;
+  XWindowsClipboardAnyBitmapConverter() = default;
+  ~XWindowsClipboardAnyBitmapConverter() override = default;
 
   // IXWindowsClipboardConverter overrides
   IClipboard::EFormat getFormat() const override;
