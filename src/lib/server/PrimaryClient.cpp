@@ -26,11 +26,6 @@ PrimaryClient::PrimaryClient(const std::string &name, deskflow::Screen *screen)
   }
 }
 
-PrimaryClient::~PrimaryClient()
-{
-  // do nothing
-}
-
 void PrimaryClient::reconfigure(uint32_t activeSides)
 {
   m_screen->reconfigure(activeSides);
