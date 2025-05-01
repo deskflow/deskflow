@@ -18,7 +18,7 @@ class FunctionJob : public IJob
 public:
   //! run() invokes \c func(arg)
   FunctionJob(void (*func)(void *), void *arg = nullptr);
-  ~FunctionJob() override;
+  ~FunctionJob() override = default;
 
   // IJob overrides
   void run() override;
