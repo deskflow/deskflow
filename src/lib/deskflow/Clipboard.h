@@ -17,7 +17,7 @@ class Clipboard : public IClipboard
 {
 public:
   Clipboard();
-  ~Clipboard() override;
+  ~Clipboard() override = default;
 
   //! @name manipulators
   //@{
