@@ -28,7 +28,7 @@ class KeyMap
 {
 public:
   KeyMap();
-  virtual ~KeyMap();
+  virtual ~KeyMap() = default;
 
   //! KeyID synthesis info
   /*!
