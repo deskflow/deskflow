@@ -19,11 +19,6 @@ XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(Display *display,
   // do nothing
 }
 
-XWindowsClipboardTextConverter::~XWindowsClipboardTextConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat XWindowsClipboardTextConverter::getFormat() const
 {
   return IClipboard::kText;
