@@ -19,7 +19,7 @@ class ArgsBase
 {
 public:
   ArgsBase() = default;
-  virtual ~ArgsBase();
+  virtual ~ArgsBase() = default;
 
   /// @brief This sets the type of the derived class
   enum Type
