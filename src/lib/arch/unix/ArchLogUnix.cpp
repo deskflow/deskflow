@@ -13,16 +13,6 @@
 // ArchLogUnix
 //
 
-ArchLogUnix::ArchLogUnix()
-{
-  // do nothing
-}
-
-ArchLogUnix::~ArchLogUnix()
-{
-  // do nothing
-}
-
 void ArchLogUnix::openLog(const char *name)
 {
   openlog(name, 0, LOG_DAEMON);
