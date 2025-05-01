@@ -21,7 +21,7 @@ public:
   \c name is the name of the client.
   */
   BaseClientProxy(const std::string &name);
-  ~BaseClientProxy() override;
+  ~BaseClientProxy() override = default;
 
   //! @name manipulators
   //@{
