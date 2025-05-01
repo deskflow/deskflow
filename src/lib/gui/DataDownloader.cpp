@@ -11,10 +11,6 @@ DataDownloader::DataDownloader(QObject *parent) : QObject(parent), m_pReply(null
   connect(&m_NetworkManager, &QNetworkAccessManager::finished, this, &DataDownloader::complete);
 }
 
-DataDownloader::~DataDownloader()
-{
-}
-
 void DataDownloader::complete(QNetworkReply *reply)
 {
   m_Data = reply->readAll();
