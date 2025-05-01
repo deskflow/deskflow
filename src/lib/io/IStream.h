@@ -23,9 +23,7 @@ Defines the interface for all streams.
 class IStream : public IInterface
 {
 public:
-  IStream()
-  {
-  }
+  IStream() = default;
 
   //! @name manipulators
   //@{
