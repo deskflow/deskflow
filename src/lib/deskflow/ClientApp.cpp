@@ -68,10 +68,6 @@ ClientApp::ClientApp(IEventQueue *events)
 {
 }
 
-ClientApp::~ClientApp()
-{
-}
-
 void ClientApp::parseArgs(int argc, const char *const *argv)
 {
   ArgParser argParser(this);
