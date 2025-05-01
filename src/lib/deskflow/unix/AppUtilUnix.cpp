@@ -27,10 +27,6 @@ AppUtilUnix::AppUtilUnix(IEventQueue *events)
 {
 }
 
-AppUtilUnix::~AppUtilUnix()
-{
-}
-
 int standardStartupStatic(int argc, char **argv)
 {
   return AppUtil::instance().app().standardStartup(argc, argv);

@@ -17,7 +17,7 @@ class AppUtilUnix : public AppUtil
 {
 public:
   AppUtilUnix(IEventQueue *events);
-  ~AppUtilUnix() override;
+  ~AppUtilUnix() override = default;
 
   int run(int argc, char **argv) override;
   void startNode() override;
