@@ -21,8 +21,8 @@ this to prevent already inserted outputters from writing.
 class StopLogOutputter : public ILogOutputter
 {
 public:
-  StopLogOutputter();
-  ~StopLogOutputter() override;
+  StopLogOutputter() = default;
+  ~StopLogOutputter() override = default;
 
   // ILogOutputter overrides
   void open(const char *title) override;
@@ -39,8 +39,8 @@ message is ignored.
 class ConsoleLogOutputter : public ILogOutputter
 {
 public:
-  ConsoleLogOutputter();
-  ~ConsoleLogOutputter() override;
+  ConsoleLogOutputter() = default;
+  ~ConsoleLogOutputter() override = default;
 
   // ILogOutputter overrides
   void open(const char *title) override;
@@ -59,8 +59,8 @@ message is ignored.
 class FileLogOutputter : public ILogOutputter
 {
 public:
-  FileLogOutputter(const char *logFile);
-  ~FileLogOutputter() override;
+  explicit FileLogOutputter(const char *logFile);
+  ~FileLogOutputter() override = default;
 
   // ILogOutputter overrides
   void open(const char *title) override;
@@ -81,8 +81,8 @@ This outputter writes output to the system log.
 class SystemLogOutputter : public ILogOutputter
 {
 public:
-  SystemLogOutputter();
-  ~SystemLogOutputter() override;
+  SystemLogOutputter() = default;
+  ~SystemLogOutputter() override = default;
 
   // ILogOutputter overrides
   void open(const char *title) override;
