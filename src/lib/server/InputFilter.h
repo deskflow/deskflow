@@ -35,8 +35,8 @@ public:
   class Condition
   {
   public:
-    Condition();
-    virtual ~Condition();
+    Condition() = default;
+    virtual ~Condition() = default;
 
     virtual Condition *clone() const = 0;
     virtual std::string format() const = 0;
@@ -53,7 +53,7 @@ public:
   public:
     KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *);
     KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask);
-    ~KeystrokeCondition() override;
+    ~KeystrokeCondition() override = default;
 
     KeyID getKey() const;
     KeyModifierMask getMask() const;
@@ -78,7 +78,7 @@ public:
   public:
     MouseButtonCondition(IEventQueue *events, IPlatformScreen::ButtonInfo *);
     MouseButtonCondition(IEventQueue *events, ButtonID, KeyModifierMask mask);
-    ~MouseButtonCondition() override;
+    ~MouseButtonCondition() override = default;
 
     ButtonID getButton() const;
     KeyModifierMask getMask() const;
@@ -99,7 +99,7 @@ public:
   {
   public:
     ScreenConnectedCondition(IEventQueue *events, const std::string &screen);
-    ~ScreenConnectedCondition() override;
+    ~ScreenConnectedCondition() override = default;
 
     // Condition overrides
     Condition *clone() const override;
@@ -118,8 +118,8 @@ public:
   class Action
   {
   public:
-    Action();
-    virtual ~Action();
+    Action() = default;
+    virtual ~Action() = default;
 
     virtual Action *clone() const = 0;
     virtual std::string format() const = 0;
