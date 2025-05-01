@@ -25,7 +25,7 @@ public:
   PlatformScreen(
       IEventQueue *events, deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::SERVER
   );
-  ~PlatformScreen() override;
+  ~PlatformScreen() override = default;
 
   // IScreen overrides
   void *getEventTarget() const override = 0;
