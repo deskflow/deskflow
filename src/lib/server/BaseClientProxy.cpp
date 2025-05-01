@@ -16,11 +16,6 @@ BaseClientProxy::BaseClientProxy(const std::string &name) : m_name(name), m_x(0)
   // do nothing
 }
 
-BaseClientProxy::~BaseClientProxy()
-{
-  // do nothing
-}
-
 void BaseClientProxy::setJumpCursorPos(int32_t x, int32_t y)
 {
   m_x = x;
