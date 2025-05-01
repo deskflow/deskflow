@@ -22,16 +22,6 @@
 // ArchTimeUnix
 //
 
-ArchTimeUnix::ArchTimeUnix()
-{
-  // do nothing
-}
-
-ArchTimeUnix::~ArchTimeUnix()
-{
-  // do nothing
-}
-
 double ArchTimeUnix::time()
 {
   struct timeval t;

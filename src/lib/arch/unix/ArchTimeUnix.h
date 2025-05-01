@@ -15,8 +15,8 @@
 class ArchTimeUnix : public IArchTime
 {
 public:
-  ArchTimeUnix();
-  ~ArchTimeUnix() override;
+  ArchTimeUnix() = default;
+  ~ArchTimeUnix() override = default;
 
   // IArchTime overrides
   double time() override;
