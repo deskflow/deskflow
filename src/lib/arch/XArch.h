@@ -55,13 +55,8 @@ string for that error code.
 class XArchEval
 {
 public:
-  XArchEval()
-  {
-  }
-  virtual ~XArchEval() throw()
-  {
-  }
-
+  XArchEval() = default;
+  virtual ~XArchEval() noexcept = default;
   virtual std::string eval() const = 0;
 };
 
@@ -69,16 +64,14 @@ public:
 class XArch : public std::runtime_error
 {
 public:
-  XArch(XArchEval *adopted) : std::runtime_error(adopted->eval())
+  explicit XArch(XArchEval *adopted) : std::runtime_error(adopted->eval())
   {
     delete adopted;
   }
-  XArch(const std::string &msg) : std::runtime_error(msg)
+  explicit XArch(const std::string &msg) : std::runtime_error(msg)
   {
   }
-  ~XArch() throw() override
-  {
-  }
+  ~XArch() throw() override = default;
 };
 
 // Macro to declare XArch derived types
