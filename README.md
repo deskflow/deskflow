@@ -1,27 +1,21 @@
 ![Deskflow](https://github.com/user-attachments/assets/f005b958-24df-4f4a-9bfd-4f834dae59d6)
 
-> [!TIP]
-> [Synergy](https://symless.com/synergy) sponsors the Deskflow project by contributing code and providing financial support.
-> 
-> - [**Bounties**](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22) - Earn while contributing to open source
-> - [**Rewarded**](https://github.com/deskflow/deskflow/issues?q=label%3A%22%F0%9F%92%B0%20rewarded%22%20) - Issues with a rewarded bounty
-> 
-> **Deskflow** is the official upstream project for Synergy.
-> Purchasing a Synergy license is one way to support Deskflow’s growth and sustainability.
-> Learn more: [Relationship with Synergy](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
-
 **Deskflow** is a free and open source keyboard and mouse sharing app.
 Use the keyboard, mouse, or trackpad of one computer to control nearby computers,
 and work seamlessly between them.
 It's like a software KVM (but without the video).
 TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is supported.
 
-[![Downloads: Stable Release](https://img.shields.io/github/downloads/deskflow/deskflow/latest/total?style=for-the-badge&logo=github&label=Download%20Stable)](https://github.com/deskflow/deskflow/releases/latest)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Downloads: Continuous Build](https://img.shields.io/github/downloads/deskflow/deskflow/continuous/total?style=for-the-badge&logo=github&label=Download%20Continuous)](https://github.com/deskflow/deskflow/releases/continuous)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Download From Flathub](https://img.shields.io/flathub/downloads/org.deskflow.deskflow?style=for-the-badge&logo=flathub&label=Download%20from%20flathub)](https://flathub.org/apps/org.deskflow.deskflow)
+## Download
 
-To use Deskflow you can use one of our [packages](https://github.com/deskflow/deskflow/releases), install `deskflow` (if available in your package repository), or [build it](#build-quick-start) yourself from source.
+[![Downloads: Stable Release](https://img.shields.io/github/downloads/deskflow/deskflow/latest/total?style=for-the-badge&logo=github&label=Download%20Stable)](https://github.com/deskflow/deskflow/releases/latest)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Downloads: Continuous Build](https://img.shields.io/github/downloads/deskflow/deskflow/continuous/total?style=for-the-badge&logo=github&label=Download%20Continuous)](https://github.com/deskflow/deskflow/releases/continuous)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Download From Flathub](https://img.shields.io/flathub/downloads/org.deskflow.deskflow?style=for-the-badge&logo=flathub&label=Download%20from%20flathub)](https://flathub.org/apps/org.deskflow.deskflow)
 
 > [!TIP]
 > For macOS users, the easiest way to install and stay up to date is to use [Homebrew](https://brew.sh) with our [homebrew-tap](https://github.com/deskflow/homebrew-tap).
+
+To use Deskflow, download one of our [packages](https://github.com/deskflow/deskflow/releases), install `deskflow` (from your package repository), or [build it](#build-quick-start) from source.
+
+## Stats
 
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
 [![GitHub top language](https://img.shields.io/github/languages/top/deskflow/deskflow?logo=github)](https://github.com/deskflow/deskflow/commits/master/)
@@ -39,24 +33,13 @@ To use Deskflow you can use one of our [packages](https://github.com/deskflow/de
 
 ## Contribute
 
+[![Good first issues](https://img.shields.io/github/issues/deskflow/deskflow/good%20first%20issue?label=good%20first%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/labels/good%20first%20issue) [![Open bounty issues](https://img.shields.io/github/issues/deskflow/deskflow/%F0%9F%92%8E%20bounty?label=💎%20open%20bounty%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22) [![Rewarded bounties](https://img.shields.io/github/issues-search/deskflow/deskflow?query=label%3A%22%F0%9F%92%B0%20rewarded%22&label=%F0%9F%92%B0%20rewarded%20bounties&color=yellow)](https://github.com/deskflow/deskflow/issues?q=label%3A%22%F0%9F%92%B0%20rewarded%22%20sort%3Aupdated-desc)
+
 There are many ways to contribute to the Deskflow project.
 
 We're a friendly, active, and welcoming community focused on building a great app.
 
 Read our [Contributing](https://github.com/deskflow/deskflow/wiki/Contributing) page to get started.
-
-[![Good first issues](https://img.shields.io/github/issues/deskflow/deskflow/good%20first%20issue?label=good%20first%20issues&color=%2344cc11
-)](https://github.com/deskflow/deskflow/labels/good%20first%20issue) [![Open bounty issues](https://img.shields.io/github/issues/deskflow/deskflow/%F0%9F%92%8E%20bounty?label=💎%20bounty%20issues&color=%2344cc11)](https://github.com/deskflow/deskflow/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22%F0%9F%92%8E%20bounty%22)
-
-## Project Values
-
-- Motivated by the community interests (not business-driven)
-- Privacy by default (e.g. update check is off by default)
-- Leading edge releases (we don't focus on supporting older systems)
-- Decisions are discussed and documented publicly with majority rule
-- Have fun; we don't need to worry about impressing anyone
-
-## Build Quick Start
 
 For instructions on building Deskflow, use the wiki page: [Building](https://github.com/deskflow/deskflow/wiki/Building)
 
@@ -65,11 +48,11 @@ For instructions on building Deskflow, use the wiki page: [Building](https://git
 We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
 
 > [!NOTE]
-> On Windows, you will need to install the 
+> On Windows, you will need to install the
 > [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).  
 > Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe)
 
-Windows 10 or higher is required. 
+Windows 10 or higher is required.
 
 macOS 12 or higher is required.
 
@@ -102,46 +85,39 @@ macOS users who download directly from releases may need to run `xattr -c /Appli
 It is recommend to install Deskflow using [Homebrew](https://brew.sh) from our [homebrew-tap](https://github.com/deskflow/homebrew-tap)
 
 To add our tap, run:
+
 ```
 brew tap deskflow/homebrew-tap
 ```
+
 Then install either:
+
 - Stable: `brew install deskflow`
 - Continuous: `brew install deskflow-dev`
 
-
-
-## Collaborative Projects
+## Similar Projects
 
 In the open source developer community, similar projects collaborate for the improvement of all
 mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
 
-* [**Lan Mouse**](https://github.com/feschber/lan-mouse) -
+- [**Lan Mouse**](https://github.com/feschber/lan-mouse) -
   Rust implementation with the goal of having native front-ends and interoperability with
   Deskflow/Synergy.
-* [**Input Leap**](https://github.com/input-leap/input-leap) -
+- [**Input Leap**](https://github.com/input-leap/input-leap) -
   Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
   became a dead fork.
-* [**Synergy**](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy) -
-  Downstream commercial fork and Deskflow sponsor, geared toward adapting to customer
-  needs, offering business and enterprise licensing.
+- [**Synergy**](https://symless.com/synergy) -
+  Downstream commercial fork. Synergy sponsors Deskflow with financial support and contributes code ([learn more](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)).
 
 ## FAQ
-
-### What is the relationship with Synergy?
-
-[![Sponsored by: Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/b2c72a3e60a42dee793bd47efc275b5ee0bdaa5f/misc/synergy-sponsor.svg)](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
-
-Synergy sponsors the Deskflow project by contributing code and providing financial support while maintaining its customer-oriented code downstream.
-
-Learn more: [Relationship with Synergy](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)
 
 ### Is Deskflow compatible with Synergy, Input Leap, or Barrier?
 
 Yes, Deskflow has network compatibility with all forks:
+
 - Requires Deskflow >= v1.17.0.96
-- Deskflow will *just work* with Input Leap and Barrier (server or client).
-- Connecting a Deskflow client to a Synergy 1 server will also *just work*.
+- Deskflow will _just work_ with Input Leap and Barrier (server or client).
+- Connecting a Deskflow client to a Synergy 1 server will also _just work_.
 - To connect a Synergy 1 client, you need to select the Synergy protocol in the Deskflow server settings.
 
 _Note:_ Only Synergy 1 is compatible with Deskflow (Synergy 3 is not yet compatible).
@@ -153,20 +129,20 @@ We would love to see compatibility with Lan Mouse. This may be quite an effort a
 ### If I want to solve issues in Deskflow do I need to contribute to a fork?
 
 We welcome PRs (pull requests) from the community. If you'd like to make a change, please feel
-free to [start a discussion](https://github.com/deskflow/deskflow/discussions) or 
+free to [start a discussion](https://github.com/deskflow/deskflow/discussions) or
 [open a PR](https://github.com/deskflow/deskflow/wiki/Contributing).
 
 ### Is clipboard sharing supported?
 
-Absolutely. The clipboard-sharing feature is a cornerstone feature of the product and we are 
+Absolutely. The clipboard-sharing feature is a cornerstone feature of the product and we are
 committed to maintaining and improving that feature.
 
 ### Is Wayland for Linux supported?
 
-Yes! Wayland (the Linux display server protocol aimed to become the successor of the X Window 
+Yes! Wayland (the Linux display server protocol aimed to become the successor of the X Window
 System) is an important platform for us.
-The [`libei`](https://gitlab.freedesktop.org/libinput/libei) and 
-[`libportal`](https://github.com/flatpak/libportal) libraries enable 
+The [`libei`](https://gitlab.freedesktop.org/libinput/libei) and
+[`libportal`](https://github.com/flatpak/libportal) libraries enable
 Wayland support for Deskflow. We would like to give special thanks to Peter Hutterer,
 who is the author of `libei`, a major contributor to `libportal`, and the author of the Wayland
 implementation in Deskflow. Others such as Olivier Fourdan and Povilas Kanapickas helped with the
@@ -184,8 +160,11 @@ wiki.
 
 ![Meow'Dib](https://github.com/user-attachments/assets/726f695c-3dfb-4abd-875d-ed658f6c610f)
 
-
 ## Deskflow Contributors
+
+[![Sponsored by Synergy](https://raw.githubusercontent.com/deskflow/deskflow-artwork/b2c72a3e60a42dee793bd47efc275b5ee0bdaa5f/misc/synergy-sponsor.svg)](https://symless.com/synergy)
+
+[Synergy](https://symless.com/synergy) sponsors the Deskflow project by contributing code and providing financial support ([learn more](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)).
 
 Deskflow is made by possible by these contributors.
 
