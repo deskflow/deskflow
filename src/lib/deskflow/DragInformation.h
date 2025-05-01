@@ -18,9 +18,7 @@ class DragInformation
 {
 public:
   DragInformation();
-  ~DragInformation()
-  {
-  }
+  ~DragInformation() = default;
 
   std::string &getFilename()
   {
