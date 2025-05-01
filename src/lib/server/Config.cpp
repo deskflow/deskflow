@@ -35,11 +35,6 @@ Config::Config(IEventQueue *events) : m_inputFilter(events), m_hasLockToScreenAc
   // do nothing
 }
 
-Config::~Config()
-{
-  // do nothing
-}
-
 bool Config::addScreen(const std::string &name)
 {
   // alias name must not exist
@@ -1368,11 +1363,6 @@ Config::CellEdge::CellEdge(const std::string &name, EDirection side, const Inter
   init(name, side, interval);
 }
 
-Config::CellEdge::~CellEdge()
-{
-  // do nothing
-}
-
 void Config::CellEdge::init(const std::string &name, EDirection side, const Interval &interval)
 {
   assert(side != kNoDirection);
@@ -1681,11 +1671,6 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 //
 
 ConfigReadContext::ConfigReadContext(std::istream &s, int32_t firstLine) : m_stream(s), m_line(firstLine - 1)
-{
-  // do nothing
-}
-
-ConfigReadContext::~ConfigReadContext()
 {
   // do nothing
 }
@@ -2097,11 +2082,6 @@ XConfigRead::XConfigRead(const ConfigReadContext &context, const char *errorFmt,
           deskflow::string::sprintf("line %d: ", context.getLineNumber()) +
           deskflow::string::format(errorFmt, arg.c_str())
       )
-{
-  // do nothing
-}
-
-XConfigRead::~XConfigRead() throw()
 {
   // do nothing
 }
