@@ -8,10 +8,6 @@
 
 namespace deskflow {
 
-ServerArgs::~ServerArgs()
-{
-}
-
 ServerArgs::ServerArgs()
 {
   m_classType = kServer;
