@@ -21,7 +21,7 @@ public:
   XBase();
   //! Use \c msg as the result of what()
   XBase(const std::string &msg);
-  ~XBase() throw() override;
+  ~XBase() throw() override = default;
 
   //! Reason for exception
   const char *what() const throw() override;
