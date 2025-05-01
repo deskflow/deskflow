@@ -25,11 +25,6 @@ TCPSocketFactory::TCPSocketFactory(IEventQueue *events, SocketMultiplexer *socke
   // do nothing
 }
 
-TCPSocketFactory::~TCPSocketFactory()
-{
-  // do nothing
-}
-
 IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
 {
   if (securityLevel != SecurityLevel::PlainText) {

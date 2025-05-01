@@ -19,7 +19,7 @@ class TCPSocketFactory : public ISocketFactory
 {
 public:
   TCPSocketFactory(IEventQueue *events, SocketMultiplexer *socketMultiplexer);
-  ~TCPSocketFactory() override;
+  ~TCPSocketFactory() override = default;
 
   // ISocketFactory overrides
   IDataSocket *create(
