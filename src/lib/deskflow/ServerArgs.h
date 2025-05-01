@@ -21,7 +21,7 @@ public:
   ServerArgs();
   ServerArgs(ServerArgs const &src) = default;
   ServerArgs(ServerArgs &&) = default;
-  ~ServerArgs() override;
+  ~ServerArgs() override = default;
 
   ServerArgs &operator=(ServerArgs const &) = default;
   ServerArgs &operator=(ServerArgs &&) = default;
