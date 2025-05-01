@@ -14,7 +14,7 @@ class XWindowsClipboardBMPConverter : public IXWindowsClipboardConverter
 {
 public:
   XWindowsClipboardBMPConverter(Display *display);
-  ~XWindowsClipboardBMPConverter() override;
+  ~XWindowsClipboardBMPConverter() override = default;
 
   // IXWindowsClipboardConverter overrides
   IClipboard::EFormat getFormat() const override;
