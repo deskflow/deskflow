@@ -74,16 +74,6 @@ static inline uint32_t fromLEU32(const uint8_t *data)
 // XWindowsClipboardAnyBitmapConverter
 //
 
-XWindowsClipboardAnyBitmapConverter::XWindowsClipboardAnyBitmapConverter()
-{
-  // do nothing
-}
-
-XWindowsClipboardAnyBitmapConverter::~XWindowsClipboardAnyBitmapConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat XWindowsClipboardAnyBitmapConverter::getFormat() const
 {
   return IClipboard::kBitmap;
