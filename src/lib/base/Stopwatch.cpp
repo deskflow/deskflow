@@ -19,11 +19,6 @@ Stopwatch::Stopwatch(bool triggered) : m_mark(0.0), m_triggered(triggered), m_st
   }
 }
 
-Stopwatch::~Stopwatch()
-{
-  // do nothing
-}
-
 double Stopwatch::reset()
 {
   if (m_stopped) {

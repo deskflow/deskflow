@@ -21,8 +21,8 @@ public:
   The default constructor does an implicit reset() or setTrigger().
   If triggered == false then the clock starts ticking.
   */
-  Stopwatch(bool triggered = false);
-  ~Stopwatch();
+  explicit Stopwatch(bool triggered = false);
+  ~Stopwatch() = default;
 
   //! @name manipulators
   //@{
