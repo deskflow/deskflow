@@ -24,7 +24,7 @@ class ClientApp : public App
 {
 public:
   ClientApp(IEventQueue *events);
-  ~ClientApp() override;
+  ~ClientApp() override = default;
 
   //
   // IApp overrides
