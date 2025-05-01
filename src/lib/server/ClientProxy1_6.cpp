@@ -28,10 +28,6 @@ ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *strea
   );
 }
 
-ClientProxy1_6::~ClientProxy1_6()
-{
-}
-
 void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
   // ignore if this clipboard is already clean
