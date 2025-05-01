@@ -80,10 +80,6 @@ ServerApp::ServerApp(IEventQueue *events)
 {
 }
 
-ServerApp::~ServerApp()
-{
-}
-
 void ServerApp::parseArgs(int argc, const char *const *argv)
 {
 
