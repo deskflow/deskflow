@@ -20,7 +20,7 @@ class StreamBuffer
 {
 public:
   StreamBuffer();
-  ~StreamBuffer();
+  ~StreamBuffer() = default;
 
   //! @name manipulators
   //@{
