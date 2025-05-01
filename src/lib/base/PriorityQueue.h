@@ -32,16 +32,12 @@ public:
   using const_iterator = Container::const_iterator;
   using container_type = Container;
 
-  PriorityQueue()
-  {
-  }
-  PriorityQueue(Container &swappedIn)
+  PriorityQueue() = default;
+  explicit PriorityQueue(Container &swappedIn)
   {
     swap(swappedIn);
   }
-  ~PriorityQueue()
-  {
-  }
+  ~PriorityQueue() = default;
 
   //! @name manipulators
   //@{
