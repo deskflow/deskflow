@@ -13,14 +13,6 @@
 // ArchStringUnix
 //
 
-ArchStringUnix::ArchStringUnix()
-{
-}
-
-ArchStringUnix::~ArchStringUnix()
-{
-}
-
 IArchString::EWideCharEncoding ArchStringUnix::getWideCharEncoding()
 {
   return kUCS4;
