@@ -20,11 +20,6 @@ XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(Display *display,
   // do nothing
 }
 
-XWindowsClipboardUTF8Converter::~XWindowsClipboardUTF8Converter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat XWindowsClipboardUTF8Converter::getFormat() const
 {
   return IClipboard::kText;

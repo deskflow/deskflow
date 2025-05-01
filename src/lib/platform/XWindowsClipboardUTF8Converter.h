@@ -17,7 +17,7 @@ public:
   \c name is converted to an atom and that is reported by getAtom().
   */
   XWindowsClipboardUTF8Converter(Display *display, const char *name, bool normalize = false);
-  ~XWindowsClipboardUTF8Converter() override;
+  ~XWindowsClipboardUTF8Converter() override = default;
 
   // IXWindowsClipboardConverter overrides
   IClipboard::EFormat getFormat() const override;
