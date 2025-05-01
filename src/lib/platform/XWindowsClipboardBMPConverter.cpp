@@ -57,11 +57,6 @@ XWindowsClipboardBMPConverter::XWindowsClipboardBMPConverter(Display *display)
   // do nothing
 }
 
-XWindowsClipboardBMPConverter::~XWindowsClipboardBMPConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat XWindowsClipboardBMPConverter::getFormat() const
 {
   return IClipboard::kBitmap;
