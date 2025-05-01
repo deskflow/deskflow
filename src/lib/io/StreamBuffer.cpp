@@ -19,11 +19,6 @@ StreamBuffer::StreamBuffer() : m_size(0), m_headUsed(0)
   // do nothing
 }
 
-StreamBuffer::~StreamBuffer()
-{
-  // do nothing
-}
-
 const void *StreamBuffer::peek(uint32_t n)
 {
   assert(n <= m_size);
