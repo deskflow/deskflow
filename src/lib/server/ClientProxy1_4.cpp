@@ -27,10 +27,6 @@ ClientProxy1_4::ClientProxy1_4(const std::string &name, deskflow::IStream *strea
   assert(m_server != nullptr);
 }
 
-ClientProxy1_4::~ClientProxy1_4()
-{
-}
-
 void ClientProxy1_4::keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   ClientProxy1_3::keyDown(key, mask, button, lang);
