@@ -15,8 +15,8 @@
 class ArchLogUnix : public IArchLog
 {
 public:
-  ArchLogUnix();
-  ~ArchLogUnix() override;
+  ArchLogUnix() = default;
+  ~ArchLogUnix() override = default;
 
   // IArchLog overrides
   void openLog(const char *name) override;
