@@ -21,16 +21,6 @@
 // ArchDaemonUnix
 //
 
-ArchDaemonUnix::ArchDaemonUnix()
-{
-  // do nothing
-}
-
-ArchDaemonUnix::~ArchDaemonUnix()
-{
-  // do nothing
-}
-
 #ifdef __APPLE__
 
 // In Mac OS X, fork()'d child processes can't use most APIs (the frameworks
