@@ -16,11 +16,6 @@ FunctionJob::FunctionJob(void (*func)(void *), void *arg) : m_func(func), m_arg(
   // do nothing
 }
 
-FunctionJob::~FunctionJob()
-{
-  // do nothing
-}
-
 void FunctionJob::run()
 {
   if (m_func != nullptr) {
