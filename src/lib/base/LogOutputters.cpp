@@ -22,16 +22,6 @@ enum EFileLogOutputter
 // StopLogOutputter
 //
 
-StopLogOutputter::StopLogOutputter()
-{
-  // do nothing
-}
-
-StopLogOutputter::~StopLogOutputter()
-{
-  // do nothing
-}
-
 void StopLogOutputter::open(const char *)
 {
   // do nothing
@@ -55,14 +45,6 @@ bool StopLogOutputter::write(ELevel, const char *)
 //
 // ConsoleLogOutputter
 //
-
-ConsoleLogOutputter::ConsoleLogOutputter()
-{
-}
-
-ConsoleLogOutputter::~ConsoleLogOutputter()
-{
-}
 
 void ConsoleLogOutputter::open(const char *title)
 {
@@ -92,16 +74,6 @@ void ConsoleLogOutputter::flush()
 //
 // SystemLogOutputter
 //
-
-SystemLogOutputter::SystemLogOutputter()
-{
-  // do nothing
-}
-
-SystemLogOutputter::~SystemLogOutputter()
-{
-  // do nothing
-}
 
 void SystemLogOutputter::open(const char *title)
 {
@@ -157,10 +129,6 @@ SystemLogger::~SystemLogger()
 FileLogOutputter::FileLogOutputter(const char *logFile)
 {
   setLogFilename(logFile);
-}
-
-FileLogOutputter::~FileLogOutputter()
-{
 }
 
 void FileLogOutputter::setLogFilename(const char *logFile)
