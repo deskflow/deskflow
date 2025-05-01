@@ -61,7 +61,7 @@ public:
     CellEdge(EDirection side, float position);
     CellEdge(EDirection side, const Interval &);
     CellEdge(const std::string &name, EDirection side, const Interval &);
-    ~CellEdge();
+    ~CellEdge() = default;
 
     Interval getInterval() const;
     void setName(const std::string &newName);
@@ -200,7 +200,7 @@ public:
   };
 
   Config(IEventQueue *events);
-  virtual ~Config();
+  virtual ~Config() = default;
 
 #ifdef TEST_ENV
   Config() : m_inputFilter(nullptr)
@@ -502,7 +502,7 @@ public:
   using ArgList = std::vector<std::string>;
 
   ConfigReadContext(std::istream &, int32_t firstLine = 1);
-  ~ConfigReadContext();
+  ~ConfigReadContext() = default;
 
   bool readLine(std::string &);
   uint32_t getLineNumber() const;
@@ -549,7 +549,7 @@ class XConfigRead : public XBase
 public:
   XConfigRead(const ConfigReadContext &context, const std::string &);
   XConfigRead(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
-  ~XConfigRead() throw() override;
+  ~XConfigRead() throw() override = default;
 
 protected:
   // XBase overrides
