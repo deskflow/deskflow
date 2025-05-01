@@ -212,10 +212,6 @@ MinimalApp::MinimalApp() : App(nullptr, new deskflow::ArgsBase())
   setEvents(m_events);
 }
 
-MinimalApp::~MinimalApp()
-{
-}
-
 int MinimalApp::standardStartup(int argc, char **argv)
 {
   return 0;
