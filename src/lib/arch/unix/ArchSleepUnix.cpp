@@ -35,16 +35,6 @@
 // ArchSleepUnix
 //
 
-ArchSleepUnix::ArchSleepUnix()
-{
-  // do nothing
-}
-
-ArchSleepUnix::~ArchSleepUnix()
-{
-  // do nothing
-}
-
 void ArchSleepUnix::sleep(double timeout)
 {
   ARCH->testCancelThread();
