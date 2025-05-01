@@ -17,11 +17,6 @@ PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirect
 {
 }
 
-PlatformScreen::~PlatformScreen()
-{
-  // do nothing
-}
-
 void PlatformScreen::updateKeyMap()
 {
   getKeyState()->updateKeyMap();
