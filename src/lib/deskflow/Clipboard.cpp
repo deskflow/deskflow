@@ -19,11 +19,6 @@ Clipboard::Clipboard() : m_open(false), m_owner(false)
   close();
 }
 
-Clipboard::~Clipboard()
-{
-  // do nothing
-}
-
 bool Clipboard::empty()
 {
   if (!m_open) {
