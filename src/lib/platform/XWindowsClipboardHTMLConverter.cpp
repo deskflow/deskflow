@@ -19,11 +19,6 @@ XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(Display *display,
   // do nothing
 }
 
-XWindowsClipboardHTMLConverter::~XWindowsClipboardHTMLConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat XWindowsClipboardHTMLConverter::getFormat() const
 {
   return IClipboard::kHTML;

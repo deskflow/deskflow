@@ -17,7 +17,7 @@ public:
   \c name is converted to an atom and that is reported by getAtom().
   */
   XWindowsClipboardHTMLConverter(Display *display, const char *name);
-  ~XWindowsClipboardHTMLConverter() override;
+  ~XWindowsClipboardHTMLConverter() override = default;
 
   // IXWindowsClipboardConverter overrides
   IClipboard::EFormat getFormat() const override;
