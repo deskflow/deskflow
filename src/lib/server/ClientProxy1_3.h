@@ -16,24 +16,24 @@ public:
   ClientProxy1_3(const std::string &name, deskflow::IStream *adoptedStream, IEventQueue *events);
   ClientProxy1_3(ClientProxy1_3 const &) = delete;
   ClientProxy1_3(ClientProxy1_3 &&) = delete;
-  ~ClientProxy1_3();
+  ~ClientProxy1_3() override;
 
   ClientProxy1_3 &operator=(ClientProxy1_3 const &) = delete;
   ClientProxy1_3 &operator=(ClientProxy1_3 &&) = delete;
 
   // IClient overrides
-  virtual void mouseWheel(int32_t xDelta, int32_t yDelta);
+  void mouseWheel(int32_t xDelta, int32_t yDelta) override;
 
   void handleKeepAlive(const Event &, void *);
 
 protected:
   // ClientProxy overrides
-  virtual bool parseMessage(const uint8_t *code);
-  virtual void resetHeartbeatRate();
-  virtual void setHeartbeatRate(double rate, double alarm);
-  virtual void resetHeartbeatTimer();
-  virtual void addHeartbeatTimer();
-  virtual void removeHeartbeatTimer();
+  bool parseMessage(const uint8_t *code) override;
+  void resetHeartbeatRate() override;
+  void setHeartbeatRate(double rate, double alarm) override;
+  void resetHeartbeatTimer() override;
+  void addHeartbeatTimer() override;
+  void removeHeartbeatTimer() override;
   virtual void keepAlive();
 
 private:
