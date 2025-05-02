@@ -19,8 +19,9 @@ void restart()
   QString program = QCoreApplication::applicationFilePath();
   QStringList arguments = QCoreApplication::arguments();
 
-  // prevent infinite reset loop when env var set.
-  arguments << "--no-reset";
+  // look for and remove --reset option if found
+  if (int resetIndex = arguments.indexOf("--reset"); resetIndex != -1)
+    arguments.remove(resetIndex);
 
   qInfo("launching new process: %s", qPrintable(program));
   QProcess::startDetached(program, arguments);
