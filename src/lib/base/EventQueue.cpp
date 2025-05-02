@@ -115,7 +115,6 @@ Event::Type EventQueue::registerTypeOnce(Event::Type &type, const char *name)
   ArchMutexLock lock(m_mutex);
   if (type == Event::kUnknown) {
     m_typeMap.insert(std::make_pair(m_nextType, name));
-    m_nameMap.insert(std::make_pair(name, m_nextType));
     LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
     type = m_nextType++;
   }
@@ -488,15 +487,6 @@ double EventQueue::getNextTimerTimeout() const
     return 0.0;
   }
   return m_timerQueue.top();
-}
-
-Event::Type EventQueue::getRegisteredType(const std::string &name) const
-{
-  NameMap::const_iterator found = m_nameMap.find(name);
-  if (found != m_nameMap.end())
-    return found->second;
-
-  return Event::kUnknown;
 }
 
 void *EventQueue::getSystemTarget()
