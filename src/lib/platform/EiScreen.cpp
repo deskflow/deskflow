@@ -49,19 +49,19 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
   key_state_ = new EiKeyState(this, events);
   // install event handlers
   events_->adoptHandler(
-      Event::kSystem, events_->getSystemTarget(), new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent)
+      EventTypes::System, events_->getSystemTarget(), new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent)
   );
 
   if (use_portal) {
     events_->adoptHandler(
-        events_->forEi().connected(), getEventTarget(),
+        EventTypes::EIConnected, getEventTarget(),
         new TMethodEventJob<EiScreen>(this, &EiScreen::handle_connected_to_eis_event)
     );
     if (is_primary) {
       portal_input_capture_ = new PortalInputCapture(this, events_);
     } else {
       events_->adoptHandler(
-          events_->forEi().sessionClosed(), getEventTarget(),
+          EventTypes::EISessionClosed, getEventTarget(),
           new TMethodEventJob<EiScreen>(this, &EiScreen::handle_portal_session_closed)
       );
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
@@ -79,7 +79,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 EiScreen::~EiScreen()
 {
   events_->adoptBuffer(nullptr);
-  events_->removeHandler(Event::kSystem, events_->getSystemTarget());
+  events_->removeHandler(EventTypes::System, events_->getSystemTarget());
 
   cleanup_ei();
 
@@ -437,7 +437,7 @@ void EiScreen::update_shape()
   cursor_x_ = x_ + w_ / 2;
   cursor_y_ = y_ + h_ / 2;
 
-  sendEvent(events_->forIScreen().shapeChanged(), nullptr);
+  sendEvent(EventTypes::ScreenShapeChanged, nullptr);
 }
 
 void EiScreen::add_device(struct ei_device *device)
@@ -509,7 +509,7 @@ void EiScreen::remove_device(struct ei_device *device)
   update_shape();
 }
 
-void EiScreen::sendEvent(Event::Type type, void *data)
+void EiScreen::sendEvent(EventTypes type, void *data)
 {
   events_->addEvent(Event(type, getEventTarget(), data));
 }
@@ -549,7 +549,7 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
   // key combinations may not work correctly, more effort is needed here.
   auto id = it->second.find_by_mask(mask);
   if (id != 0) {
-    Event::Type type = is_pressed ? events_->forIPrimaryScreen().hotKeyDown() : events_->forIPrimaryScreen().hotKeyUp();
+    EventTypes type = is_pressed ? EventTypes::PrimaryScreenHotkeyDown : EventTypes::PrimaryScreenHotkeyUp;
     sendEvent(type, HotKeyInfo::alloc(id));
     return true;
   }
@@ -594,7 +594,7 @@ void EiScreen::on_button_event(ei_event *event)
     return;
   }
 
-  auto eventType = pressed ? events_->forIPrimaryScreen().buttonDown() : events_->forIPrimaryScreen().buttonUp();
+  auto eventType = pressed ? EventTypes::PrimaryScreenButtonDown : EventTypes::PrimaryScreenButtonUp;
 
   sendEvent(eventType, ButtonInfo::alloc(button, mask));
 }
@@ -639,7 +639,7 @@ void EiScreen::on_pointer_scroll_event(ei_event *event)
   // remain compatible with other platforms (including X11).
   if (x != 0 || y != 0)
     sendEvent(
-        events_->forIPrimaryScreen().wheel(),
+        EventTypes::PrimaryScreenWheel,
         WheelInfo::alloc((int32_t)-x * PIXEL_TO_WHEEL_RATIO, (int32_t)-y * PIXEL_TO_WHEEL_RATIO)
     );
 
@@ -663,7 +663,7 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event)
   // libei and deskflow seem to use opposite directions, so we have
   // to send the opposite of the value reported by EI if we want to
   // remain compatible with other platforms (including X11).
-  sendEvent(events_->forIPrimaryScreen().wheel(), WheelInfo::alloc(-dx, -dy));
+  sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(-dx, -dy));
 }
 
 void EiScreen::on_motion_event(ei_event *event)
@@ -675,7 +675,7 @@ void EiScreen::on_motion_event(ei_event *event)
 
   if (is_on_screen_) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", cursor_x_, cursor_y_);
-    sendEvent(events_->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(cursor_x_, cursor_y_));
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(cursor_x_, cursor_y_));
     if (portal_input_capture_->is_active()) {
       portal_input_capture_->release();
     }
@@ -686,7 +686,7 @@ void EiScreen::on_motion_event(ei_event *event)
     auto pixel_dy = static_cast<std::int32_t>(buffer_dy);
     if (pixel_dx || pixel_dy) {
       LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
-      sendEvent(events_->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(pixel_dx, pixel_dy));
+      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(pixel_dx, pixel_dy));
       buffer_dx -= pixel_dx;
       buffer_dy -= pixel_dy;
     }

@@ -75,19 +75,18 @@ Client::Client(
 
   // register suspend/resume event handlers
   m_events->adoptHandler(
-      m_events->forIScreen().suspend(), getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleSuspend)
+      EventTypes::ScreenSuspend, getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleSuspend)
   );
   m_events->adoptHandler(
-      m_events->forIScreen().resume(), getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleResume)
+      EventTypes::ScreenResume, getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleResume)
   );
 
   if (m_args.m_enableDragDrop) {
     m_events->adoptHandler(
-        m_events->forFile().fileChunkSending(), this, new TMethodEventJob<Client>(this, &Client::handleFileChunkSending)
+        EventTypes::FileChunkSending, this, new TMethodEventJob<Client>(this, &Client::handleFileChunkSending)
     );
     m_events->adoptHandler(
-        m_events->forFile().fileReceiveCompleted(), this,
-        new TMethodEventJob<Client>(this, &Client::handleFileReceiveCompleted)
+        EventTypes::FileReceiveCompleted, this, new TMethodEventJob<Client>(this, &Client::handleFileReceiveCompleted)
     );
   }
 
@@ -111,8 +110,8 @@ Client::~Client()
     return;
   }
 
-  m_events->removeHandler(m_events->forIScreen().suspend(), getEventTarget());
-  m_events->removeHandler(m_events->forIScreen().resume(), getEventTarget());
+  m_events->removeHandler(EventTypes::ScreenSuspend, getEventTarget());
+  m_events->removeHandler(EventTypes::ScreenResume, getEventTarget());
 
   cleanupTimer();
   cleanupScreen();
@@ -179,7 +178,7 @@ void Client::disconnect(const char *msg)
   if (msg) {
     sendConnectionFailedEvent(msg);
   } else {
-    sendEvent(m_events->forClient().disconnected(), nullptr);
+    sendEvent(EventTypes::ClientDisconnected, nullptr);
   }
 }
 
@@ -190,7 +189,7 @@ void Client::refuseConnection(const char *msg)
   if (msg) {
     auto info = new FailInfo(msg);
     info->m_retry = true;
-    Event event(m_events->forClient().connectionRefused(), getEventTarget(), info, Event::kDontFreeData);
+    Event event(EventTypes::ClientConnectionRefused, getEventTarget(), info, Event::kDontFreeData);
     m_events->addEvent(event);
   }
 }
@@ -199,7 +198,7 @@ void Client::handshakeComplete()
 {
   m_ready = true;
   m_screen->enable();
-  sendEvent(m_events->forClient().connected(), nullptr);
+  sendEvent(EventTypes::ClientConnected, nullptr);
 }
 
 bool Client::isConnected() const
@@ -410,7 +409,7 @@ void Client::sendClipboard(ClipboardID id)
   }
 }
 
-void Client::sendEvent(Event::Type type, void *data)
+void Client::sendEvent(EventTypes type, void *data)
 {
   m_events->addEvent(Event(type, getEventTarget(), data));
 }
@@ -419,7 +418,7 @@ void Client::sendConnectionFailedEvent(const char *msg)
 {
   auto *info = new FailInfo(msg);
   info->m_retry = true;
-  Event event(m_events->forClient().connectionFailed(), getEventTarget(), info, Event::kDontFreeData);
+  Event event(EventTypes::ClientConnectionFailed, getEventTarget(), info, Event::kDontFreeData);
   m_events->addEvent(event);
 }
 
@@ -439,18 +438,18 @@ void Client::setupConnecting()
 
   if (m_args.m_enableCrypto) {
     m_events->adoptHandler(
-        m_events->forIDataSocket().secureConnected(), m_stream->getEventTarget(),
+        EventTypes::DataSocketSecureConnected, m_stream->getEventTarget(),
         new TMethodEventJob<Client>(this, &Client::handleConnected)
     );
   } else {
     m_events->adoptHandler(
-        m_events->forIDataSocket().connected(), m_stream->getEventTarget(),
+        EventTypes::DataSocketConnected, m_stream->getEventTarget(),
         new TMethodEventJob<Client>(this, &Client::handleConnected)
     );
   }
 
   m_events->adoptHandler(
-      m_events->forIDataSocket().connectionFailed(), m_stream->getEventTarget(),
+      EventTypes::DataSocketConnectionFailed, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleConnectionFailed)
   );
 }
@@ -460,28 +459,27 @@ void Client::setupConnection()
   assert(m_stream != nullptr);
 
   m_events->adoptHandler(
-      m_events->forISocket().disconnected(), m_stream->getEventTarget(),
+      EventTypes::SocketDisconnected, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected)
   );
   m_events->adoptHandler(
-      m_events->forIStream().inputReady(), m_stream->getEventTarget(),
-      new TMethodEventJob<Client>(this, &Client::handleHello)
+      EventTypes::StreamInputReady, m_stream->getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleHello)
   );
   m_events->adoptHandler(
-      m_events->forIStream().outputError(), m_stream->getEventTarget(),
+      EventTypes::StreamOutputError, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleOutputError)
   );
   m_events->adoptHandler(
-      m_events->forIStream().inputShutdown(), m_stream->getEventTarget(),
+      EventTypes::StreamInputShutdown, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected)
   );
   m_events->adoptHandler(
-      m_events->forIStream().outputShutdown(), m_stream->getEventTarget(),
+      EventTypes::StreamOutputShutdown, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleDisconnected)
   );
 
   m_events->adoptHandler(
-      m_events->forISocket().stopRetry(), m_stream->getEventTarget(),
+      EventTypes::SocketStopRetry, m_stream->getEventTarget(),
       new TMethodEventJob<Client>(this, &Client::handleStopRetry)
   );
 }
@@ -493,12 +491,10 @@ void Client::setupScreen()
   m_ready = false;
   m_server = new ServerProxy(this, m_stream, m_events);
   m_events->adoptHandler(
-      m_events->forIScreen().shapeChanged(), getEventTarget(),
-      new TMethodEventJob<Client>(this, &Client::handleShapeChanged)
+      EventTypes::ScreenShapeChanged, getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleShapeChanged)
   );
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardGrabbed(), getEventTarget(),
-      new TMethodEventJob<Client>(this, &Client::handleClipboardGrabbed)
+      EventTypes::ClipboardGrabbed, getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleClipboardGrabbed)
   );
 }
 
@@ -506,7 +502,7 @@ void Client::setupTimer()
 {
   assert(m_timer == nullptr);
   m_timer = m_events->newOneShotTimer(2.0, nullptr);
-  m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<Client>(this, &Client::handleConnectTimeout));
+  m_events->adoptHandler(EventTypes::Timer, m_timer, new TMethodEventJob<Client>(this, &Client::handleConnectTimeout));
 }
 
 void Client::cleanup()
@@ -521,20 +517,20 @@ void Client::cleanup()
 void Client::cleanupConnecting()
 {
   if (m_stream != nullptr) {
-    m_events->removeHandler(m_events->forIDataSocket().connected(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIDataSocket().connectionFailed(), m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::DataSocketConnected, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::DataSocketConnectionFailed, m_stream->getEventTarget());
   }
 }
 
 void Client::cleanupConnection()
 {
   if (m_stream != nullptr) {
-    m_events->removeHandler(m_events->forIStream().inputReady(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputError(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().inputShutdown(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forIStream().outputShutdown(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forISocket().disconnected(), m_stream->getEventTarget());
-    m_events->removeHandler(m_events->forISocket().stopRetry(), m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::StreamOutputError, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::StreamInputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::StreamOutputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::SocketDisconnected, m_stream->getEventTarget());
+    m_events->removeHandler(EventTypes::SocketStopRetry, m_stream->getEventTarget());
     cleanupStream();
   }
 }
@@ -546,8 +542,8 @@ void Client::cleanupScreen()
       m_screen->disable();
       m_ready = false;
     }
-    m_events->removeHandler(m_events->forIScreen().shapeChanged(), getEventTarget());
-    m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(), getEventTarget());
+    m_events->removeHandler(EventTypes::ScreenShapeChanged, getEventTarget());
+    m_events->removeHandler(EventTypes::ClipboardGrabbed, getEventTarget());
     delete m_server;
     m_server = nullptr;
   }
@@ -556,7 +552,7 @@ void Client::cleanupScreen()
 void Client::cleanupTimer()
 {
   if (m_timer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_timer);
+    m_events->removeHandler(EventTypes::Timer, m_timer);
     m_events->deleteTimer(m_timer);
     m_timer = nullptr;
   }
@@ -610,7 +606,7 @@ void Client::handleOutputError(const Event &, void *)
   cleanupScreen();
   cleanupConnection();
   LOG((CLOG_WARN "error sending to server"));
-  sendEvent(m_events->forClient().disconnected(), nullptr);
+  sendEvent(EventTypes::ClientDisconnected, nullptr);
 }
 
 void Client::handleDisconnected(const Event &, void *)
@@ -619,7 +615,7 @@ void Client::handleDisconnected(const Event &, void *)
   cleanupScreen();
   cleanupConnection();
   LOG((CLOG_DEBUG1 "disconnected"));
-  sendEvent(m_events->forClient().disconnected(), nullptr);
+  sendEvent(EventTypes::ClientDisconnected, nullptr);
 }
 
 void Client::handleShapeChanged(const Event &, void *)
@@ -663,7 +659,7 @@ void Client::handleHello(const Event &, void *)
   // receive another event for already pending messages so we fake
   // one.
   if (m_stream->isReady()) {
-    m_events->addEvent(Event(m_events->forIStream().inputReady(), m_stream->getEventTarget()));
+    m_events->addEvent(Event(EventTypes::StreamInputReady, m_stream->getEventTarget()));
   }
 }
 

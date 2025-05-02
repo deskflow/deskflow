@@ -26,14 +26,14 @@ ClientProxy1_5::ClientProxy1_5(const std::string &name, deskflow::IStream *strea
 {
 
   m_events->adoptHandler(
-      m_events->forFile().keepAlive(), this,
+      EventTypes::FileKeepAlive, this,
       new TMethodEventJob<ClientProxy1_3>(this, &ClientProxy1_3::handleKeepAlive, nullptr)
   );
 }
 
 ClientProxy1_5::~ClientProxy1_5()
 {
-  m_events->removeHandler(m_events->forFile().keepAlive(), this);
+  m_events->removeHandler(EventTypes::FileKeepAlive, this);
 }
 
 void ClientProxy1_5::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
@@ -67,7 +67,7 @@ void ClientProxy1_5::fileChunkReceived()
   int result = FileChunk::assemble(getStream(), server->getReceivedFileData(), server->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), server));
+    m_events->addEvent(Event(EventTypes::FileReceiveCompleted, server));
   } else if (result == kStart) {
     if (server->getFakeDragFileList().size() > 0) {
       std::string filename = server->getFakeDragFileList().at(0).getFilename();

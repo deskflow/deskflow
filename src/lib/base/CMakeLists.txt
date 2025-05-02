@@ -9,7 +9,6 @@ add_library(base STATIC
   Event.h
   EventQueue.cpp
   EventQueue.h
-  EventTypes.cpp
   EventTypes.h
   FinalAction.h
   FunctionEventJob.cpp

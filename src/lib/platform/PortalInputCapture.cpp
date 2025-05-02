@@ -110,7 +110,7 @@ void PortalInputCapture::cb_session_closed(XdpSession *session)
 {
   LOG_ERR("portal input capture session was closed, exiting");
   g_main_loop_quit(glib_main_loop_);
-  events_->addEvent(Event::kQuit);
+  events_->addEvent(EventTypes::Quit);
 
   g_signal_handler_disconnect(session, signals_[SESSION_CLOSED]);
   signals_[SESSION_CLOSED] = 0;
@@ -125,7 +125,7 @@ void PortalInputCapture::cb_init_input_capture_session(GObject *object, GAsyncRe
   if (!session) {
     LOG_ERR("failed to initialize input capture session, quitting: %s", error->message);
     g_main_loop_quit(glib_main_loop_);
-    events_->addEvent(Event::kQuit);
+    events_->addEvent(EventTypes::Quit);
     return;
   }
 
@@ -141,12 +141,12 @@ void PortalInputCapture::cb_init_input_capture_session(GObject *object, GAsyncRe
 
     if (fd < 0) {
       g_main_loop_quit(glib_main_loop_);
-      events_->addEvent(Event::kQuit);
+      events_->addEvent(EventTypes::Quit);
       return;
     }
   }
   // Socket ownership is transferred to the EiScreen
-  events_->addEvent(Event(events_->forEi().connected(), screen_->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  events_->addEvent(Event(EventTypes::EIConnected, screen_->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
   // FIXME: the lambda trick doesn't work here for unknown reasons, we need
   // the static function

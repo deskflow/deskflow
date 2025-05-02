@@ -28,27 +28,27 @@ ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *strea
 {
   // install event handlers
   m_events->adoptHandler(
-      m_events->forIStream().inputReady(), stream->getEventTarget(),
+      EventTypes::StreamInputReady, stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleData, nullptr)
   );
   m_events->adoptHandler(
-      m_events->forIStream().outputError(), stream->getEventTarget(),
+      EventTypes::StreamOutputError, stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleWriteError, nullptr)
   );
   m_events->adoptHandler(
-      m_events->forIStream().inputShutdown(), stream->getEventTarget(),
+      EventTypes::StreamInputShutdown, stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, nullptr)
   );
   m_events->adoptHandler(
-      m_events->forIStream().inputFormatError(), stream->getEventTarget(),
+      EventTypes::StreamInputFormatError, stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, nullptr)
   );
   m_events->adoptHandler(
-      m_events->forIStream().outputShutdown(), stream->getEventTarget(),
+      EventTypes::StreamOutputShutdown, stream->getEventTarget(),
       new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleWriteError, nullptr)
   );
   m_events->adoptHandler(
-      Event::kTimer, this, new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleFlatline, nullptr)
+      EventTypes::Timer, this, new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleFlatline, nullptr)
   );
 
   setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
@@ -66,18 +66,18 @@ void ClientProxy1_0::disconnect()
 {
   removeHandlers();
   getStream()->close();
-  m_events->addEvent(Event(m_events->forClientProxy().disconnected(), getEventTarget()));
+  m_events->addEvent(Event(EventTypes::ClientProxyDisconnected, getEventTarget()));
 }
 
 void ClientProxy1_0::removeHandlers()
 {
   // uninstall event handlers
-  m_events->removeHandler(m_events->forIStream().inputReady(), getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputError(), getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().inputShutdown(), getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().outputShutdown(), getStream()->getEventTarget());
-  m_events->removeHandler(m_events->forIStream().inputFormatError(), getStream()->getEventTarget());
-  m_events->removeHandler(Event::kTimer, this);
+  m_events->removeHandler(EventTypes::StreamInputReady, getStream()->getEventTarget());
+  m_events->removeHandler(EventTypes::StreamOutputError, getStream()->getEventTarget());
+  m_events->removeHandler(EventTypes::StreamInputShutdown, getStream()->getEventTarget());
+  m_events->removeHandler(EventTypes::StreamOutputShutdown, getStream()->getEventTarget());
+  m_events->removeHandler(EventTypes::StreamInputFormatError, getStream()->getEventTarget());
+  m_events->removeHandler(EventTypes::Timer, this);
 
   // remove timer
   removeHeartbeatTimer();
@@ -165,7 +165,7 @@ bool ClientProxy1_0::parseHandshakeMessage(const uint8_t *code)
     // future messages get parsed by parseMessage
     m_parser = &ClientProxy1_0::parseMessage;
     if (recvInfo()) {
-      m_events->addEvent(Event(m_events->forClientProxy().ready(), getEventTarget()));
+      m_events->addEvent(Event(EventTypes::ClientProxyReady, getEventTarget()));
       addHeartbeatTimer();
       return true;
     }
@@ -177,7 +177,7 @@ bool ClientProxy1_0::parseMessage(const uint8_t *code)
 {
   if (memcmp(code, kMsgDInfo, 4) == 0) {
     if (recvInfo()) {
-      m_events->addEvent(Event(m_events->forIScreen().shapeChanged(), getEventTarget()));
+      m_events->addEvent(Event(EventTypes::ScreenShapeChanged, getEventTarget()));
       return true;
     }
     return false;
@@ -433,7 +433,7 @@ bool ClientProxy1_0::recvGrabClipboard()
   auto *info = new ClipboardInfo;
   info->m_id = id;
   info->m_sequenceNumber = seqNum;
-  m_events->addEvent(Event(m_events->forClipboard().clipboardGrabbed(), getEventTarget(), info));
+  m_events->addEvent(Event(EventTypes::ClipboardGrabbed, getEventTarget(), info));
 
   return true;
 }

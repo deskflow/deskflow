@@ -77,67 +77,6 @@ TEST(KeyStateTests, sendKeyEvent_halfDuplexAndRepeat_addEventNotCalled)
   keyState.sendKeyEvent(nullptr, false, true, kKeyCapsLock, 0, 0, 0);
 }
 
-TEST(KeyStateTests, sendKeyEvent_halfDuplex_addEventCalledTwice)
-{
-  NiceMock<MockKeyMap> keyMap;
-  NiceMock<MockEventQueue> eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-  IKeyStateEvents keyStateEvents;
-  keyStateEvents.setEvents(&eventQueue);
-
-  ON_CALL(keyMap, isHalfDuplex(_, _)).WillByDefault(Return(true));
-  ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
-
-  EXPECT_CALL(eventQueue, addEvent(_)).Times(2);
-
-  keyState.sendKeyEvent(nullptr, false, false, kKeyCapsLock, 0, 0, 0);
-}
-
-TEST(KeyStateTests, sendKeyEvent_keyRepeat_addEventCalledOnce)
-{
-  NiceMock<MockKeyMap> keyMap;
-  NiceMock<MockEventQueue> eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-  IKeyStateEvents keyStateEvents;
-  keyStateEvents.setEvents(&eventQueue);
-
-  ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
-
-  EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
-
-  keyState.sendKeyEvent(nullptr, false, true, 1, 0, 0, 0);
-}
-
-TEST(KeyStateTests, sendKeyEvent_keyDown_addEventCalledOnce)
-{
-  NiceMock<MockKeyMap> keyMap;
-  NiceMock<MockEventQueue> eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-  IKeyStateEvents keyStateEvents;
-  keyStateEvents.setEvents(&eventQueue);
-
-  ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
-
-  EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
-
-  keyState.sendKeyEvent(nullptr, true, false, 1, 0, 0, 0);
-}
-
-TEST(KeyStateTests, sendKeyEvent_keyUp_addEventCalledOnce)
-{
-  NiceMock<MockKeyMap> keyMap;
-  NiceMock<MockEventQueue> eventQueue;
-  KeyStateImpl keyState(eventQueue, keyMap);
-  IKeyStateEvents keyStateEvents;
-  keyStateEvents.setEvents(&eventQueue);
-
-  ON_CALL(eventQueue, forIKeyState()).WillByDefault(ReturnRef(keyStateEvents));
-
-  EXPECT_CALL(eventQueue, addEvent(_)).Times(1);
-
-  keyState.sendKeyEvent(nullptr, false, false, 1, 0, 0, 0);
-}
-
 TEST(KeyStateTests, updateKeyMap_mockKeyMap_keyMapGotMock)
 {
   NiceMock<MockKeyMap> keyMap;

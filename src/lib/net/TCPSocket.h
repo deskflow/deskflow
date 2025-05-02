@@ -93,7 +93,7 @@ protected:
     return m_mutex;
   }
 
-  void sendEvent(Event::Type);
+  void sendEvent(EventTypes);
   void discardWrittenData(int bytesWrote);
 
 private:

@@ -7,7 +7,10 @@
 
 #pragma once
 
+#include "EventTypes.h"
 #include "common/Common.h"
+
+using deskflow::EventTypes;
 
 class EventData
 {
@@ -23,16 +26,6 @@ A \c Event holds an event type and a pointer to event data.
 class Event
 {
 public:
-  using Type = uint32_t;
-  enum
-  {
-    kUnknown, //!< The event type is unknown
-    kQuit,    //!< The quit event
-    kSystem,  //!< The data points to a system event type
-    kTimer,   //!< The data points to timer info
-    kLast     //!< Must be last
-  };
-
   using Flags = uint32_t;
   enum
   {
@@ -52,7 +45,7 @@ public:
   \p target is the intended recipient of the event.
   \p flags is any combination of \c Flags.
   */
-  Event(Type type, void *target = nullptr, void *data = nullptr, Flags flags = kNone);
+  Event(EventTypes type, void *target = nullptr, void *data = nullptr, Flags flags = kNone);
 
   //! Create \c Event with non-POD data
   /*!
@@ -60,7 +53,7 @@ public:
   \p target is the intended recipient of the event.
   \p dataObject with event data
   */
-  Event(Type type, void *target, EventData *dataObject);
+  Event(EventTypes type, void *target, EventData *dataObject);
 
   //! @name manipulators
   //@{
@@ -86,7 +79,7 @@ public:
   /*!
   Returns the event type.
   */
-  Type getType() const;
+  EventTypes getType() const;
 
   //! Get the event target
   /*!
@@ -117,7 +110,7 @@ public:
   //@}
 
 private:
-  Type m_type;
+  EventTypes m_type;
   void *m_target;
   void *m_data;
   Flags m_flags;

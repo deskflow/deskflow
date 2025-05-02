@@ -103,77 +103,74 @@ Server::Server(
   }
 
   // install event handlers
-  m_events->adoptHandler(Event::kTimer, this, new TMethodEventJob<Server>(this, &Server::handleSwitchWaitTimeout));
+  m_events->adoptHandler(EventTypes::Timer, this, new TMethodEventJob<Server>(this, &Server::handleSwitchWaitTimeout));
   m_events->adoptHandler(
-      m_events->forIKeyState().keyDown(), m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyDownEvent)
+      EventTypes::KeyStateKeyDown, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyDownEvent)
   );
   m_events->adoptHandler(
-      m_events->forIKeyState().keyUp(), m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyUpEvent)
+      EventTypes::KeyStateKeyUp, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyUpEvent)
   );
   m_events->adoptHandler(
-      m_events->forIKeyState().keyRepeat(), m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleKeyRepeatEvent)
+      EventTypes::KeyStateKeyRepeat, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyRepeatEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().buttonDown(), m_inputFilter,
+      EventTypes::PrimaryScreenButtonDown, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleButtonDownEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().buttonUp(), m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleButtonUpEvent)
+      EventTypes::PrimaryScreenButtonUp, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleButtonUpEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().motionOnPrimary(), m_primaryClient->getEventTarget(),
+      EventTypes::PrimaryScreenMotionOnPrimary, m_primaryClient->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleMotionPrimaryEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().motionOnSecondary(), m_primaryClient->getEventTarget(),
+      EventTypes::PrimaryScreenMotionOnSecondary, m_primaryClient->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleMotionSecondaryEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().wheel(), m_primaryClient->getEventTarget(),
+      EventTypes::PrimaryScreenWheel, m_primaryClient->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleWheelEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().screensaverActivated(), m_primaryClient->getEventTarget(),
+      EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleScreensaverActivatedEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().screensaverDeactivated(), m_primaryClient->getEventTarget(),
+      EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleScreensaverDeactivatedEvent)
   );
   m_events->adoptHandler(
-      m_events->forServer().switchToScreen(), m_inputFilter,
+      EventTypes::ServerSwitchToScreen, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleSwitchToScreenEvent)
   );
   m_events->adoptHandler(
-      m_events->forServer().switchInDirection(), m_inputFilter,
+      EventTypes::ServerSwitchInDirection, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleSwitchInDirectionEvent)
   );
   m_events->adoptHandler(
-      m_events->forServer().keyboardBroadcast(), m_inputFilter,
+      EventTypes::ServerKeyboardBroadcast, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleKeyboardBroadcastEvent)
   );
   m_events->adoptHandler(
-      m_events->forServer().lockCursorToScreen(), m_inputFilter,
+      EventTypes::ServerLockCursorToScreen, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleLockCursorToScreenEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().fakeInputBegin(), m_inputFilter,
+      EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleFakeInputBeginEvent)
   );
   m_events->adoptHandler(
-      m_events->forIPrimaryScreen().fakeInputEnd(), m_inputFilter,
+      EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleFakeInputEndEvent)
   );
 
   if (m_args.m_enableDragDrop) {
     m_events->adoptHandler(
-        m_events->forFile().fileChunkSending(), this,
-        new TMethodEventJob<Server>(this, &Server::handleFileChunkSendingEvent)
+        EventTypes::FileChunkSending, this, new TMethodEventJob<Server>(this, &Server::handleFileChunkSendingEvent)
     );
     m_events->adoptHandler(
-        m_events->forFile().fileReceiveCompleted(), this,
+        EventTypes::FileReceiveCompleted, this,
         new TMethodEventJob<Server>(this, &Server::handleFileReceiveCompletedEvent)
     );
   }
@@ -203,19 +200,19 @@ Server::~Server()
   }
 
   // remove event handlers and timers
-  m_events->removeHandler(m_events->forIKeyState().keyDown(), m_inputFilter);
-  m_events->removeHandler(m_events->forIKeyState().keyUp(), m_inputFilter);
-  m_events->removeHandler(m_events->forIKeyState().keyRepeat(), m_inputFilter);
-  m_events->removeHandler(m_events->forIPrimaryScreen().buttonDown(), m_inputFilter);
-  m_events->removeHandler(m_events->forIPrimaryScreen().buttonUp(), m_inputFilter);
-  m_events->removeHandler(m_events->forIPrimaryScreen().motionOnPrimary(), m_primaryClient->getEventTarget());
-  m_events->removeHandler(m_events->forIPrimaryScreen().motionOnSecondary(), m_primaryClient->getEventTarget());
-  m_events->removeHandler(m_events->forIPrimaryScreen().wheel(), m_primaryClient->getEventTarget());
-  m_events->removeHandler(m_events->forIPrimaryScreen().screensaverActivated(), m_primaryClient->getEventTarget());
-  m_events->removeHandler(m_events->forIPrimaryScreen().screensaverDeactivated(), m_primaryClient->getEventTarget());
-  m_events->removeHandler(m_events->forIPrimaryScreen().fakeInputBegin(), m_inputFilter);
-  m_events->removeHandler(m_events->forIPrimaryScreen().fakeInputEnd(), m_inputFilter);
-  m_events->removeHandler(Event::kTimer, this);
+  m_events->removeHandler(EventTypes::KeyStateKeyDown, m_inputFilter);
+  m_events->removeHandler(EventTypes::KeyStateKeyUp, m_inputFilter);
+  m_events->removeHandler(EventTypes::KeyStateKeyRepeat, m_inputFilter);
+  m_events->removeHandler(EventTypes::PrimaryScreenButtonDown, m_inputFilter);
+  m_events->removeHandler(EventTypes::PrimaryScreenButtonUp, m_inputFilter);
+  m_events->removeHandler(EventTypes::PrimaryScreenMotionOnPrimary, m_primaryClient->getEventTarget());
+  m_events->removeHandler(EventTypes::PrimaryScreenMotionOnSecondary, m_primaryClient->getEventTarget());
+  m_events->removeHandler(EventTypes::PrimaryScreenWheel, m_primaryClient->getEventTarget());
+  m_events->removeHandler(EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget());
+  m_events->removeHandler(EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget());
+  m_events->removeHandler(EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter);
+  m_events->removeHandler(EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter);
+  m_events->removeHandler(EventTypes::Timer, this);
   stopSwitch();
 
   try {
@@ -228,8 +225,8 @@ Server::~Server()
   for (auto index = m_oldClients.begin(); index != m_oldClients.end(); ++index) {
     BaseClientProxy *client = index->first;
     m_events->deleteTimer(index->second);
-    m_events->removeHandler(Event::kTimer, client);
-    m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
+    m_events->removeHandler(EventTypes::Timer, client);
+    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
     delete client;
   }
 
@@ -287,7 +284,7 @@ void Server::adoptClient(BaseClientProxy *client)
 
   // watch for client disconnection
   m_events->adoptHandler(
-      m_events->forClientProxy().disconnected(), client,
+      EventTypes::ClientProxyDisconnected, client,
       new TMethodEventJob<Server>(this, &Server::handleClientDisconnected, client)
   );
 
@@ -317,7 +314,7 @@ void Server::adoptClient(BaseClientProxy *client)
 
   // send notification
   auto *info = new Server::ScreenConnectedInfo(getName(client));
-  m_events->addEvent(Event(m_events->forServer().connected(), m_primaryClient->getEventTarget(), info));
+  m_events->addEvent(Event(EventTypes::ServerConnected, m_primaryClient->getEventTarget(), info));
 }
 
 void Server::disconnect()
@@ -327,7 +324,7 @@ void Server::disconnect()
     Config emptyConfig(m_events);
     closeClients(emptyConfig);
   } else {
-    m_events->addEvent(Event(m_events->forServer().disconnected(), this));
+    m_events->addEvent(Event(EventTypes::ServerDisconnected, this));
   }
 }
 
@@ -526,7 +523,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     }
 
     Server::SwitchToScreenInfo *info = Server::SwitchToScreenInfo::alloc(m_active->getName());
-    m_events->addEvent(Event(m_events->forServer().screenSwitched(), this, info));
+    m_events->addEvent(Event(EventTypes::ServerScreenSwitched, this, info));
   } else {
     m_active->mouseMove(x, y);
   }
@@ -2013,15 +2010,15 @@ bool Server::addClient(BaseClientProxy *client)
 
   // add event handlers
   m_events->adoptHandler(
-      m_events->forIScreen().shapeChanged(), client->getEventTarget(),
+      EventTypes::ScreenShapeChanged, client->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleShapeChanged, client)
   );
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardGrabbed(), client->getEventTarget(),
+      EventTypes::ClipboardGrabbed, client->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleClipboardGrabbed, client)
   );
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardChanged(), client->getEventTarget(),
+      EventTypes::ClipboardChanged, client->getEventTarget(),
       new TMethodEventJob<Server>(this, &Server::handleClipboardChanged, client)
   );
 
@@ -2049,9 +2046,9 @@ bool Server::removeClient(BaseClientProxy *client)
   }
 
   // remove event handlers
-  m_events->removeHandler(m_events->forIScreen().shapeChanged(), client->getEventTarget());
-  m_events->removeHandler(m_events->forClipboard().clipboardGrabbed(), client->getEventTarget());
-  m_events->removeHandler(m_events->forClipboard().clipboardChanged(), client->getEventTarget());
+  m_events->removeHandler(EventTypes::ScreenShapeChanged, client->getEventTarget());
+  m_events->removeHandler(EventTypes::ClipboardGrabbed, client->getEventTarget());
+  m_events->removeHandler(EventTypes::ClipboardChanged, client->getEventTarget());
 
   // remove from list
   m_clients.erase(getName(client));
@@ -2083,7 +2080,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg)
   double timeout = 5.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
   m_events->adoptHandler(
-      Event::kTimer, timer, new TMethodEventJob<Server>(this, &Server::handleClientCloseTimeout, client)
+      EventTypes::Timer, timer, new TMethodEventJob<Server>(this, &Server::handleClientCloseTimeout, client)
   );
 
   // move client to closing list
@@ -2122,9 +2119,9 @@ void Server::removeActiveClient(BaseClientProxy *client)
 {
   if (removeClient(client)) {
     forceLeaveClient(client);
-    m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
+    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
     if (m_clients.size() == 1 && m_oldClients.empty()) {
-      m_events->addEvent(Event(m_events->forServer().disconnected(), this));
+      m_events->addEvent(Event(EventTypes::ServerDisconnected, this));
     }
   }
 }
@@ -2133,12 +2130,12 @@ void Server::removeOldClient(BaseClientProxy *client)
 {
   OldClients::iterator i = m_oldClients.find(client);
   if (i != m_oldClients.end()) {
-    m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
-    m_events->removeHandler(Event::kTimer, i->second);
+    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
+    m_events->removeHandler(EventTypes::Timer, i->second);
     m_events->deleteTimer(i->second);
     m_oldClients.erase(i);
     if (m_clients.size() == 1 && m_oldClients.empty()) {
-      m_events->addEvent(Event(m_events->forServer().disconnected(), this));
+      m_events->addEvent(Event(EventTypes::ServerDisconnected, this));
     }
   }
 }

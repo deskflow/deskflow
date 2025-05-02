@@ -150,7 +150,7 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, uint32_
     dataID = static_cast<uint32_t>(m_event.xclient.data.l[0]);
     return kUser;
   } else {
-    event = Event(Event::kSystem, m_events->getSystemTarget(), &m_event);
+    event = Event(EventTypes::System, m_events->getSystemTarget(), &m_event);
     return kSystem;
   }
 }

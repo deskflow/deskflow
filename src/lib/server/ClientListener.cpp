@@ -67,7 +67,7 @@ ClientProxy *ClientListener::getNextClient()
   if (!m_waitingClients.empty()) {
     client = m_waitingClients.front();
     m_waitingClients.pop_front();
-    m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
+    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
   }
   return client;
 }
@@ -78,7 +78,7 @@ void ClientListener::start()
 
   // setup event handler
   m_events->adoptHandler(
-      m_events->forIListenSocket().connecting(), m_listen,
+      EventTypes::ListenSocketConnecting, m_listen,
       new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientConnecting)
   );
 
@@ -94,9 +94,9 @@ void ClientListener::stop()
   // discard already connected clients
   for (auto index = m_newClients.begin(); index != m_newClients.end(); ++index) {
     ClientProxyUnknown *client = *index;
-    m_events->removeHandler(m_events->forClientProxyUnknown().success(), client);
-    m_events->removeHandler(m_events->forClientProxyUnknown().failure(), client);
-    m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
+    m_events->removeHandler(EventTypes::ClientProxyUnknownSuccess, client);
+    m_events->removeHandler(EventTypes::ClientProxyUnknownFailure, client);
+    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
     delete client;
   }
 
@@ -107,7 +107,7 @@ void ClientListener::stop()
     client = getNextClient();
   }
 
-  m_events->removeHandler(m_events->forIListenSocket().connecting(), m_listen);
+  m_events->removeHandler(EventTypes::ListenSocketConnecting, m_listen);
   cleanupListenSocket();
   cleanupClientSockets();
 }
@@ -115,8 +115,8 @@ void ClientListener::stop()
 void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient)
 {
   if (unknownClient) {
-    m_events->removeHandler(m_events->forClientProxyUnknown().success(), unknownClient);
-    m_events->removeHandler(m_events->forClientProxyUnknown().failure(), unknownClient);
+    m_events->removeHandler(EventTypes::ClientProxyUnknownSuccess, unknownClient);
+    m_events->removeHandler(EventTypes::ClientProxyUnknownFailure, unknownClient);
     m_newClients.erase(unknownClient);
     delete unknownClient;
   }
@@ -134,14 +134,15 @@ void ClientListener::handleClientConnecting(const Event &, void *)
   m_clientSockets.insert(socket);
 
   m_events->adoptHandler(
-      m_events->forClientListener().accepted(), socket->getEventTarget(),
+      EventTypes::ClientListenerAccepted, socket->getEventTarget(),
       new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientAccepted, socket)
   );
 
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (m_securityLevel == SecurityLevel::PlainText) {
-    m_events->addEvent(Event(m_events->forClientListener().accepted(), socket->getEventTarget()));
+
+    m_events->addEvent(Event(EventTypes::ClientListenerAccepted, socket->getEventTarget()));
   }
 }
 
@@ -162,11 +163,11 @@ void ClientListener::handleClientAccepted(const Event &, void *vsocket)
 
   // watch for events from unknown client
   m_events->adoptHandler(
-      m_events->forClientProxyUnknown().success(), client,
+      EventTypes::ClientProxyUnknownSuccess, client,
       new TMethodEventJob<ClientListener>(this, &ClientListener::handleUnknownClient, client)
   );
   m_events->adoptHandler(
-      m_events->forClientProxyUnknown().failure(), client,
+      EventTypes::ClientProxyUnknownFailure, client,
       new TMethodEventJob<ClientListener>(this, &ClientListener::handleUnknownClientFailure, client)
   );
 }
@@ -183,11 +184,11 @@ void ClientListener::handleUnknownClient(const Event &, void *vclient)
   if (client) {
     // handshake was successful
     m_waitingClients.push_back(client);
-    m_events->addEvent(Event(m_events->forClientListener().connected(), this));
+    m_events->addEvent(Event(EventTypes::ClientListenerAccepted, this));
 
     // watch for client to disconnect while it's in our queue
     m_events->adoptHandler(
-        m_events->forClientProxy().disconnected(), client,
+        EventTypes::ClientProxyDisconnected, client,
         new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientDisconnected, client)
     );
   } else {
@@ -215,7 +216,7 @@ void ClientListener::handleClientDisconnected(const Event &, void *vclient)
   for (WaitingClients::iterator i = m_waitingClients.begin(), n = m_waitingClients.end(); i != n; ++i) {
     if (*i == client) {
       m_waitingClients.erase(i);
-      m_events->removeHandler(m_events->forClientProxy().disconnected(), client);
+      m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
 
       // pull out the socket before deleting the client so
       // we know which socket we no longer need

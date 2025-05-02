@@ -172,7 +172,7 @@ MSWindowsScreen::MSWindowsScreen(
 
   // install event handlers
   m_events->adoptHandler(
-      Event::kSystem, m_events->getSystemTarget(),
+      EventTypes::System, m_events->getSystemTarget(),
       new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleSystemEvent)
   );
 
@@ -186,7 +186,7 @@ MSWindowsScreen::~MSWindowsScreen()
 
   disable();
   m_events->adoptBuffer(nullptr);
-  m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
+  m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
   delete m_keyState;
   delete m_desks;
   delete m_screensaver;
@@ -222,7 +222,7 @@ void MSWindowsScreen::enable()
   // we need to poll some things to fix them
   m_fixTimer = m_events->newTimer(1.0, nullptr);
   m_events->adoptHandler(
-      Event::kTimer, m_fixTimer, new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleFixes)
+      EventTypes::Timer, m_fixTimer, new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleFixes)
   );
 
   // install our clipboard snooper
@@ -265,7 +265,7 @@ void MSWindowsScreen::disable()
 
   // uninstall fix timer
   if (m_fixTimer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_fixTimer);
+    m_events->removeHandler(EventTypes::Timer, m_fixTimer);
     m_events->deleteTimer(m_fixTimer);
     m_fixTimer = nullptr;
   }
@@ -416,8 +416,8 @@ void MSWindowsScreen::checkClipboards()
   if (m_ownClipboard && !MSWindowsClipboard::isOwnedByDeskflow()) {
     LOG((CLOG_DEBUG "clipboard changed: lost ownership and no notification received"));
     m_ownClipboard = false;
-    sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
-    sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
   }
 }
 
@@ -909,12 +909,12 @@ void MSWindowsScreen::destroyWindow(HWND hwnd) const
   }
 }
 
-void MSWindowsScreen::sendEvent(Event::Type type, void *data)
+void MSWindowsScreen::sendEvent(EventTypes type, void *data)
 {
   m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
-void MSWindowsScreen::sendClipboardEvent(Event::Type type, ClipboardID id)
+void MSWindowsScreen::sendClipboardEvent(EventTypes type, ClipboardID id)
 {
   ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
   if (info == nullptr) {
@@ -1050,7 +1050,7 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
   /* On windows 10 we don't receive WM_POWERBROADCAST after sleep.
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
-    m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), nullptr, Event::kDeliverImmediately));
+    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::kDeliverImmediately));
     break;
 
   case WM_POWERBROADCAST:
@@ -1058,12 +1058,11 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     case PBT_APMRESUMEAUTOMATIC:
     case PBT_APMRESUMECRITICAL:
     case PBT_APMRESUMESUSPEND:
-      m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget(), nullptr, Event::kDeliverImmediately));
+      m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::kDeliverImmediately));
       break;
 
     case PBT_APMSUSPEND:
-      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), nullptr, Event::kDeliverImmediately)
-      );
+      m_events->addEvent(Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::kDeliverImmediately));
       break;
     }
     *result = TRUE;
@@ -1242,15 +1241,15 @@ bool MSWindowsScreen::onHotKey(WPARAM wParam, LPARAM lParam)
   }
 
   // find what kind of event
-  Event::Type type;
+  EventTypes type;
   if ((lParam & 0x80000000u) == 0u) {
     if ((lParam & 0x40000000u) != 0u) {
       // ignore key repeats but it counts as a hot key
       return true;
     }
-    type = m_events->forIPrimaryScreen().hotKeyDown();
+    type = EventTypes::PrimaryScreenHotkeyDown;
   } else {
-    type = m_events->forIPrimaryScreen().hotKeyUp();
+    type = EventTypes::PrimaryScreenHotkeyUp;
   }
 
   // generate event
@@ -1287,12 +1286,12 @@ bool MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
     if (pressed) {
       LOG((CLOG_DEBUG1 "event: button press button=%d", button));
       if (button != kButtonNone) {
-        sendEvent(m_events->forIPrimaryScreen().buttonDown(), ButtonInfo::alloc(button, mask));
+        sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
       }
     } else {
       LOG((CLOG_DEBUG1 "event: button release button=%d", button));
       if (button != kButtonNone) {
-        sendEvent(m_events->forIPrimaryScreen().buttonUp(), ButtonInfo::alloc(button, mask));
+        sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
       }
     }
   }
@@ -1331,7 +1330,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
   if (m_isOnScreen) {
 
     // motion on primary screen
-    sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
 
     if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
       m_draggingStarted = true;
@@ -1356,7 +1355,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
       LOG((CLOG_DEBUG "dropped bogus delta motion: %+d,%+d", x, y));
     } else {
       // send motion
-      sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(x, y));
+      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(x, y));
     }
   }
 
@@ -1368,7 +1367,7 @@ bool MSWindowsScreen::onMouseWheel(int32_t xDelta, int32_t yDelta)
   // ignore message if posted prior to last mark change
   if (!ignore()) {
     LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-    sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
+    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
   }
   return true;
 }
@@ -1391,12 +1390,12 @@ bool MSWindowsScreen::onScreensaver(bool activated)
   if (activated) {
     if (!m_screensaverActive && m_screensaver->checkStarted(DESKFLOW_MSG_SCREEN_SAVER, FALSE, 0)) {
       m_screensaverActive = true;
-      sendEvent(m_events->forIPrimaryScreen().screensaverActivated());
+      sendEvent(EventTypes::PrimaryScreenSaverActivated);
     }
   } else {
     if (m_screensaverActive) {
       m_screensaverActive = false;
-      sendEvent(m_events->forIPrimaryScreen().screensaverDeactivated());
+      sendEvent(EventTypes::PrimaryScreenSaverDeactivated);
     }
   }
 
@@ -1428,7 +1427,7 @@ bool MSWindowsScreen::onDisplayChange()
     }
 
     // send new screen info
-    sendEvent(m_events->forIScreen().shapeChanged());
+    sendEvent(EventTypes::ScreenShapeChanged);
 
     LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
   }
@@ -1444,8 +1443,8 @@ void MSWindowsScreen::onClipboardChange()
     if (m_ownClipboard) {
       LOG((CLOG_DEBUG "clipboard changed: lost ownership"));
       m_ownClipboard = false;
-      sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
-      sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
+      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+      sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
     }
   } else if (!m_ownClipboard) {
     LOG((CLOG_DEBUG "clipboard changed: %s owned", kAppId));

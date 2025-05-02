@@ -117,7 +117,7 @@ IEventQueueBuffer::Type EiEventQueueBuffer::getEvent(Event &event, uint32_t &dat
     return kUser;
   }
 
-  event = Event(Event::kSystem, events_->getSystemTarget());
+  event = Event(EventTypes::System, events_->getSystemTarget());
 
   return kSystem;
 }
