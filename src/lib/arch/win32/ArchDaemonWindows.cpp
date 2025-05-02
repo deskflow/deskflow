@@ -187,7 +187,7 @@ void ArchDaemonWindows::uninstallDaemon(const char *name)
   }
 }
 
-int ArchDaemonWindows::daemonize(const char *name, DaemonFunc func)
+int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
 {
   assert(name != nullptr);
   assert(func != nullptr);

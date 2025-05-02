@@ -29,7 +29,7 @@ public:
       const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
   ) override;
   void uninstallDaemon(const char *name) override;
-  int daemonize(const char *name, DaemonFunc func) override;
+  int daemonize(const char *name, DaemonFunc const &func) override;
   bool canInstallDaemon(const char *name) override;
   bool isDaemonInstalled(const char *name) override;
   void installDaemon() override;
