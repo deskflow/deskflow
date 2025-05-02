@@ -155,7 +155,7 @@ void ServerApp::help()
 void ServerApp::reloadSignalHandler(Arch::ESignal, void *)
 {
   IEventQueue *events = App::instance().getEvents();
-  events->addEvent(Event(events->forServerApp().reloadConfig(), events->getSystemTarget()));
+  events->addEvent(Event(EventTypes::ServerAppReloadConfig, events->getSystemTarget()));
 }
 
 void ServerApp::reloadConfig(const Event &, void *)
@@ -222,7 +222,7 @@ void ServerApp::handleClientConnected(const Event &, void *vlistener)
 
 void ServerApp::handleClientsDisconnected(const Event &, void *)
 {
-  m_events->addEvent(Event(Event::kQuit));
+  m_events->addEvent(Event(EventTypes::Quit));
 }
 
 void ServerApp::closeServer(Server *server)
@@ -238,18 +238,18 @@ void ServerApp::closeServer(Server *server)
   double timeout = 3.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
   m_events->adoptHandler(
-      Event::kTimer, timer, new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected)
+      EventTypes::Timer, timer, new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected)
   );
   m_events->adoptHandler(
-      m_events->forServer().disconnected(), server,
+      EventTypes::ServerDisconnected, server,
       new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientsDisconnected)
   );
 
   m_events->loop();
 
-  m_events->removeHandler(Event::kTimer, timer);
+  m_events->removeHandler(EventTypes::Timer, timer);
   m_events->deleteTimer(timer);
-  m_events->removeHandler(m_events->forServer().disconnected(), server);
+  m_events->removeHandler(EventTypes::ServerDisconnected, server);
 
   // done with server
   delete server;
@@ -258,7 +258,7 @@ void ServerApp::closeServer(Server *server)
 void ServerApp::stopRetryTimer()
 {
   if (m_timer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_timer);
+    m_events->removeHandler(EventTypes::Timer, m_timer);
     m_events->deleteTimer(m_timer);
     m_timer = nullptr;
   }
@@ -276,7 +276,7 @@ void ServerApp::updateStatus(const std::string &msg)
 void ServerApp::closeClientListener(ClientListener *listen)
 {
   if (listen != nullptr) {
-    m_events->removeHandler(m_events->forClientListener().connected(), listen);
+    m_events->removeHandler(EventTypes::ClientListenerAccepted, listen);
     delete listen;
   }
 }
@@ -305,9 +305,9 @@ void ServerApp::closePrimaryClient(PrimaryClient *primaryClient)
 void ServerApp::closeServerScreen(deskflow::Screen *screen)
 {
   if (screen != nullptr) {
-    m_events->removeHandler(m_events->forIScreen().error(), screen->getEventTarget());
-    m_events->removeHandler(m_events->forIScreen().suspend(), screen->getEventTarget());
-    m_events->removeHandler(m_events->forIScreen().resume(), screen->getEventTarget());
+    m_events->removeHandler(EventTypes::ScreenError, screen->getEventTarget());
+    m_events->removeHandler(EventTypes::ScreenSuspend, screen->getEventTarget());
+    m_events->removeHandler(EventTypes::ScreenResume, screen->getEventTarget());
     delete screen;
   }
 }
@@ -348,7 +348,7 @@ void ServerApp::retryHandler(const Event &, void *)
     LOG((CLOG_DEBUG1 "retry server initialization"));
     m_serverState = kUninitialized;
     if (!initServer()) {
-      m_events->addEvent(Event(Event::kQuit));
+      m_events->addEvent(Event(EventTypes::Quit));
     }
     break;
 
@@ -356,11 +356,11 @@ void ServerApp::retryHandler(const Event &, void *)
     LOG((CLOG_DEBUG1 "retry server initialization"));
     m_serverState = kUninitialized;
     if (!initServer()) {
-      m_events->addEvent(Event(Event::kQuit));
+      m_events->addEvent(Event(EventTypes::Quit));
     } else if (m_serverState == kInitialized) {
       LOG((CLOG_DEBUG1 "starting server"));
       if (!startServer()) {
-        m_events->addEvent(Event(Event::kQuit));
+        m_events->addEvent(Event(EventTypes::Quit));
       }
     }
     break;
@@ -369,7 +369,7 @@ void ServerApp::retryHandler(const Event &, void *)
     LOG((CLOG_DEBUG1 "retry starting server"));
     m_serverState = kInitialized;
     if (!startServer()) {
-      m_events->addEvent(Event(Event::kQuit));
+      m_events->addEvent(Event(EventTypes::Quit));
     }
     break;
   }
@@ -417,7 +417,7 @@ bool ServerApp::initServer()
     assert(m_timer == nullptr);
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     m_timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
+    m_events->adoptHandler(EventTypes::Timer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
     m_serverState = kInitializing;
     return true;
   } else {
@@ -431,16 +431,15 @@ deskflow::Screen *ServerApp::openServerScreen()
   deskflow::Screen *screen = createScreen();
   screen->setEnableDragDrop(argsBase().m_enableDragDrop);
   m_events->adoptHandler(
-      m_events->forIScreen().error(), screen->getEventTarget(),
+      EventTypes::ScreenError, screen->getEventTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::handleScreenError)
   );
   m_events->adoptHandler(
-      m_events->forIScreen().suspend(), screen->getEventTarget(),
+      EventTypes::ScreenSuspend, screen->getEventTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::handleSuspend)
   );
   m_events->adoptHandler(
-      m_events->forIScreen().resume(), screen->getEventTarget(),
-      new TMethodEventJob<ServerApp>(this, &ServerApp::handleResume)
+      EventTypes::ScreenResume, screen->getEventTarget(), new TMethodEventJob<ServerApp>(this, &ServerApp::handleResume)
   );
   return screen;
 }
@@ -497,7 +496,7 @@ bool ServerApp::startServer()
     const auto retryTime = 10.0;
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     m_timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->adoptHandler(Event::kTimer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
+    m_events->adoptHandler(EventTypes::Timer, m_timer, new TMethodEventJob<ServerApp>(this, &ServerApp::retryHandler));
     m_serverState = kStarting;
     return true;
   } else {
@@ -542,7 +541,7 @@ PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::S
 void ServerApp::handleScreenError(const Event &, void *)
 {
   LOG((CLOG_CRIT "error on screen"));
-  m_events->addEvent(Event(Event::kQuit));
+  m_events->addEvent(Event(EventTypes::Quit));
 }
 
 void ServerApp::handleSuspend(const Event &, void *)
@@ -571,7 +570,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
   auto *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
   m_events->adoptHandler(
-      m_events->forClientListener().connected(), listen,
+      EventTypes::ClientListenerAccepted, listen,
       new TMethodEventJob<ServerApp>(this, &ServerApp::handleClientConnected, listen)
   );
 
@@ -583,12 +582,11 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   auto *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {
     m_events->adoptHandler(
-        m_events->forServer().disconnected(), server, new TMethodEventJob<ServerApp>(this, &ServerApp::handleNoClients)
+        EventTypes::ServerDisconnected, server, new TMethodEventJob<ServerApp>(this, &ServerApp::handleNoClients)
     );
 
     m_events->adoptHandler(
-        m_events->forServer().screenSwitched(), server,
-        new TMethodEventJob<ServerApp>(this, &ServerApp::handleScreenSwitched)
+        EventTypes::ServerScreenSwitched, server, new TMethodEventJob<ServerApp>(this, &ServerApp::handleScreenSwitched)
     );
 
   } catch (std::bad_alloc &ba) {
@@ -653,21 +651,21 @@ int ServerApp::mainLoop()
   // handle hangup signal by reloading the server's configuration
   ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, nullptr);
   m_events->adoptHandler(
-      m_events->forServerApp().reloadConfig(), m_events->getSystemTarget(),
+      EventTypes::ServerAppReloadConfig, m_events->getSystemTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::reloadConfig)
   );
 
   // handle force reconnect event by disconnecting clients.  they'll
   // reconnect automatically.
   m_events->adoptHandler(
-      m_events->forServerApp().forceReconnect(), m_events->getSystemTarget(),
+      EventTypes::ServerAppForceReconnect, m_events->getSystemTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::forceReconnect)
   );
 
   // to work around the sticky meta keys problem, we'll give users
   // the option to reset the state of the server.
   m_events->adoptHandler(
-      m_events->forServerApp().resetServer(), m_events->getSystemTarget(),
+      EventTypes::ServerAppResetServer, m_events->getSystemTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::resetServer)
   );
 
@@ -693,8 +691,8 @@ int ServerApp::mainLoop()
 
   // close down
   LOG((CLOG_DEBUG1 "stopping server"));
-  m_events->removeHandler(m_events->forServerApp().forceReconnect(), m_events->getSystemTarget());
-  m_events->removeHandler(m_events->forServerApp().reloadConfig(), m_events->getSystemTarget());
+  m_events->removeHandler(EventTypes::ServerAppForceReconnect, m_events->getSystemTarget());
+  m_events->removeHandler(EventTypes::ServerAppReloadConfig, m_events->getSystemTarget());
   cleanupServer();
   updateStatus();
   LOG((CLOG_NOTE "stopped server"));

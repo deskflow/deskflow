@@ -150,7 +150,7 @@ OSXScreen::OSXScreen(
 
     // watch for requests to sleep
     m_events->adoptHandler(
-        m_events->forOSXScreen().confirmSleep(), getEventTarget(),
+        EventTypes::OsxScreenConfirmSleep, getEventTarget(),
         new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleConfirmSleep)
     );
 
@@ -161,7 +161,7 @@ OSXScreen::OSXScreen(
     LOG((CLOG_DEBUG "starting watchSystemPowerThread"));
     m_pmWatchThread = new Thread(new TMethodJob<OSXScreen>(this, &OSXScreen::watchSystemPowerThread));
   } catch (...) {
-    m_events->removeHandler(m_events->forOSXScreen().confirmSleep(), getEventTarget());
+    m_events->removeHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget());
     if (m_switchEventHandlerRef != 0) {
       RemoveEventHandler(m_switchEventHandlerRef);
     }
@@ -175,7 +175,8 @@ OSXScreen::OSXScreen(
 
   // install event handlers
   m_events->adoptHandler(
-      Event::kSystem, m_events->getSystemTarget(), new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleSystemEvent)
+      EventTypes::System, m_events->getSystemTarget(),
+      new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleSystemEvent)
   );
 
   // install the platform event queue
@@ -187,7 +188,7 @@ OSXScreen::~OSXScreen()
   disable();
 
   m_events->adoptBuffer(nullptr);
-  m_events->removeHandler(Event::kSystem, m_events->getSystemTarget());
+  m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
 
   if (m_pmWatchThread) {
     // make sure the thread has setup the runloop.
@@ -208,7 +209,7 @@ OSXScreen::~OSXScreen()
   delete m_pmThreadReady;
   delete m_pmMutex;
 
-  m_events->removeHandler(m_events->forOSXScreen().confirmSleep(), getEventTarget());
+  m_events->removeHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget());
 
   RemoveEventHandler(m_switchEventHandlerRef);
 
@@ -701,7 +702,7 @@ void OSXScreen::enable()
   // watch the clipboard
   m_clipboardTimer = m_events->newTimer(1.0, nullptr);
   m_events->adoptHandler(
-      Event::kTimer, m_clipboardTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleClipboardCheck)
+      EventTypes::Timer, m_clipboardTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleClipboardCheck)
   );
 
   if (m_isPrimary) {
@@ -766,7 +767,7 @@ void OSXScreen::disable()
 
   // uninstall clipboard timer
   if (m_clipboardTimer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_clipboardTimer);
+    m_events->removeHandler(EventTypes::Timer, m_clipboardTimer);
     m_events->deleteTimer(m_clipboardTimer);
     m_clipboardTimer = nullptr;
   }
@@ -854,8 +855,8 @@ void OSXScreen::checkClipboards()
   LOG((CLOG_DEBUG2 "checking clipboard"));
   if (m_pasteboard.synchronize()) {
     LOG((CLOG_DEBUG "clipboard changed"));
-    sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardClipboard);
-    sendClipboardEvent(m_events->forClipboard().clipboardGrabbed(), kClipboardSelection);
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
+    sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardSelection);
   }
 }
 
@@ -903,12 +904,12 @@ bool OSXScreen::isPrimary() const
   return m_isPrimary;
 }
 
-void OSXScreen::sendEvent(Event::Type type, void *data) const
+void OSXScreen::sendEvent(EventTypes type, void *data) const
 {
   m_events->addEvent(Event(type, getEventTarget(), data));
 }
 
-void OSXScreen::sendClipboardEvent(Event::Type type, ClipboardID id) const
+void OSXScreen::sendClipboardEvent(EventTypes type, ClipboardID id) const
 {
   ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
   info->m_id = id;
@@ -1009,7 +1010,7 @@ bool OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
 
   if (m_isOnScreen) {
     // motion on primary screen
-    sendEvent(m_events->forIPrimaryScreen().motionOnPrimary(), MotionInfo::alloc(m_xCursor, m_yCursor));
+    sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
     if (m_buttonState.test(0)) {
       m_draggingStarted = true;
     }
@@ -1043,7 +1044,7 @@ bool OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
       // And keep only the fractional part
       m_xFractionalMove -= intX;
       m_yFractionalMove -= intY;
-      sendEvent(m_events->forIPrimaryScreen().motionOnSecondary(), MotionInfo::alloc(intX, intY));
+      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(intX, intY));
     }
   }
 
@@ -1059,13 +1060,13 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
     LOG((CLOG_DEBUG1 "event: button press button=%d", button));
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
-      sendEvent(m_events->forIPrimaryScreen().buttonDown(), ButtonInfo::alloc(button, mask));
+      sendEvent(EventTypes::PrimaryScreenButtonDown, ButtonInfo::alloc(button, mask));
     }
   } else {
     LOG((CLOG_DEBUG1 "event: button release button=%d", button));
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
-      sendEvent(m_events->forIPrimaryScreen().buttonUp(), ButtonInfo::alloc(button, mask));
+      sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
     }
   }
 
@@ -1106,7 +1107,7 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
 bool OSXScreen::onMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
   LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
-  sendEvent(m_events->forIPrimaryScreen().wheel(), WheelInfo::alloc(xDelta, yDelta));
+  sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
   return true;
 }
 
@@ -1160,9 +1161,9 @@ bool OSXScreen::onKey(CGEventRef event)
       if (m_modifierHotKeys.count(newMask) > 0) {
         m_activeModifierHotKey = m_modifierHotKeys[newMask];
         m_activeModifierHotKeyMask = newMask;
-        m_events->addEvent(Event(
-            m_events->forIPrimaryScreen().hotKeyDown(), getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey)
-        ));
+        m_events->addEvent(
+            Event(EventTypes::PrimaryScreenHotkeyDown, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
+        );
       }
     }
 
@@ -1172,7 +1173,7 @@ bool OSXScreen::onKey(CGEventRef event)
       KeyModifierMask mask = (newMask & m_activeModifierHotKeyMask);
       if (mask != m_activeModifierHotKeyMask) {
         m_events->addEvent(
-            Event(m_events->forIPrimaryScreen().hotKeyUp(), getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
+            Event(EventTypes::PrimaryScreenHotkeyUp, getEventTarget(), HotKeyInfo::alloc(m_activeModifierHotKey))
         );
         m_activeModifierHotKey = 0;
         m_activeModifierHotKeyMask = 0;
@@ -1189,11 +1190,11 @@ bool OSXScreen::onKey(CGEventRef event)
     uint32_t id = i->second;
 
     // determine event type
-    Event::Type type;
+    EventTypes type;
     if (eventKind == kCGEventKeyDown) {
-      type = m_events->forIPrimaryScreen().hotKeyDown();
+      type = EventTypes::PrimaryScreenHotkeyDown;
     } else if (eventKind == kCGEventKeyUp) {
-      type = m_events->forIPrimaryScreen().hotKeyUp();
+      type = EventTypes::PrimaryScreenHotkeyUp;
     } else {
       return false;
     }
@@ -1273,12 +1274,12 @@ bool OSXScreen::onHotKey(EventRef event) const
   uint32_t id = hkid.id;
 
   // determine event type
-  Event::Type type;
+  EventTypes type;
   uint32_t eventKind = GetEventKind(event);
   if (eventKind == kEventHotKeyPressed) {
-    type = m_events->forIPrimaryScreen().hotKeyDown();
+    type = EventTypes::PrimaryScreenHotkeyDown;
   } else if (eventKind == kEventHotKeyReleased) {
-    type = m_events->forIPrimaryScreen().hotKeyUp();
+    type = EventTypes::PrimaryScreenHotkeyUp;
   } else {
     return false;
   }
@@ -1361,14 +1362,16 @@ void OSXScreen::enableDragTimer(bool enable)
 {
   if (enable && m_dragTimer == nullptr) {
     m_dragTimer = m_events->newTimer(0.01, nullptr);
-    m_events->adoptHandler(Event::kTimer, m_dragTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleDrag));
+    m_events->adoptHandler(
+        EventTypes::Timer, m_dragTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleDrag)
+    );
     CGEventRef event = CGEventCreate(nullptr);
     CGPoint mouse = CGEventGetLocation(event);
     m_dragLastPoint.h = (short)mouse.x;
     m_dragLastPoint.v = (short)mouse.y;
     CFRelease(event);
   } else if (!enable && m_dragTimer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_dragTimer);
+    m_events->removeHandler(EventTypes::Timer, m_dragTimer);
     m_events->deleteTimer(m_dragTimer);
     m_dragTimer = nullptr;
   }
@@ -1448,7 +1451,7 @@ bool OSXScreen::updateScreenShape()
 
   delete[] displays;
   // We want to notify the peer screen whether we are primary screen or not
-  sendEvent(m_events->forIScreen().shapeChanged());
+  sendEvent(EventTypes::ScreenShapeChanged);
 
   LOG(
       (CLOG_DEBUG "screen shape: center=%d,%d size=%dx%d on %u %s", m_x, m_y, m_w, m_h, displayCount,
@@ -1476,10 +1479,10 @@ pascal OSStatus OSXScreen::userSwitchCallback(EventHandlerCallRef nextHandler, E
 
   if (kind == kEventSystemUserSessionDeactivated) {
     LOG((CLOG_DEBUG "user session deactivated"));
-    events->addEvent(Event(events->forIScreen().suspend(), screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ScreenSuspend, screen->getEventTarget()));
   } else if (kind == kEventSystemUserSessionActivated) {
     LOG((CLOG_DEBUG "user session activated"));
-    events->addEvent(Event(events->forIScreen().resume(), screen->getEventTarget()));
+    events->addEvent(Event(EventTypes::ScreenResume, screen->getEventTarget()));
   }
   return (CallNextEventHandler(nextHandler, theEvent));
 }
@@ -1574,14 +1577,12 @@ void OSXScreen::handlePowerChangeRequest(natural_t messageType, void *messageArg
     // OSXScreen has to handle this in the main thread so we have to
     // queue a confirm sleep event here.  we actually don't allow the
     // system to sleep until the event is handled.
-    m_events->addEvent(
-        Event(m_events->forOSXScreen().confirmSleep(), getEventTarget(), messageArg, Event::kDontFreeData)
-    );
+    m_events->addEvent(Event(EventTypes::OsxScreenConfirmSleep, getEventTarget(), messageArg, Event::kDontFreeData));
     return;
 
   case kIOMessageSystemHasPoweredOn:
     LOG((CLOG_DEBUG "system wakeup"));
-    m_events->addEvent(Event(m_events->forIScreen().resume(), getEventTarget()));
+    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget()));
     break;
 
   default:
@@ -1601,8 +1602,7 @@ void OSXScreen::handleConfirmSleep(const Event &event, void *)
     Lock lock(m_pmMutex);
     if (m_pmRootPort != 0) {
       // deliver suspend event immediately.
-      m_events->addEvent(Event(m_events->forIScreen().suspend(), getEventTarget(), nullptr, Event::kDeliverImmediately)
-      );
+      m_events->addEvent(Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::kDeliverImmediately));
 
       LOG((CLOG_DEBUG "system will sleep"));
       IOAllowPowerChange(m_pmRootPort, messageArg);

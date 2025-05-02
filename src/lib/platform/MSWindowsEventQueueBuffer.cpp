@@ -81,16 +81,16 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, uint32
   if (result == -1) {
     return kNone;
   } else if (result == 0) {
-    event = Event(Event::kQuit);
+    event = Event(EventTypes::Quit);
     return kSystem;
   } else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
-    event = Event(Event::kQuit);
+    event = Event(EventTypes::Quit);
     return kSystem;
   } else if (m_event.message == m_userEvent) {
     dataID = static_cast<uint32_t>(m_event.wParam);
     return kUser;
   } else {
-    event = Event(Event::kSystem, m_events->getSystemTarget(), &m_event);
+    event = Event(EventTypes::System, m_events->getSystemTarget(), &m_event);
     return kSystem;
   }
 }

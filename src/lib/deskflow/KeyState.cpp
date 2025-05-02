@@ -712,16 +712,16 @@ void KeyState::sendKeyEvent(
     if (isAutoRepeat) {
       // ignore auto-repeat on half-duplex keys
     } else {
-      m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target, KeyInfo::alloc(key, mask, button, 1)));
-      m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(EventTypes::KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(EventTypes::KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
     }
   } else {
     if (isAutoRepeat) {
-      m_events->addEvent(Event(m_events->forIKeyState().keyRepeat(), target, KeyInfo::alloc(key, mask, button, count)));
+      m_events->addEvent(Event(EventTypes::KeyStateKeyRepeat, target, KeyInfo::alloc(key, mask, button, count)));
     } else if (press) {
-      m_events->addEvent(Event(m_events->forIKeyState().keyDown(), target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(EventTypes::KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
     } else {
-      m_events->addEvent(Event(m_events->forIKeyState().keyUp(), target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(EventTypes::KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
     }
   }
 }

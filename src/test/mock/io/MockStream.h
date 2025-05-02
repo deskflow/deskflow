@@ -27,10 +27,10 @@ public:
   MOCK_METHOD(void, flush, (), (override));
   MOCK_METHOD(void, shutdownInput, (), (override));
   MOCK_METHOD(void, shutdownOutput, (), (override));
-  MOCK_METHOD(Event::Type, getInputReadyEvent, ());
-  MOCK_METHOD(Event::Type, getOutputErrorEvent, ());
-  MOCK_METHOD(Event::Type, getInputShutdownEvent, ());
-  MOCK_METHOD(Event::Type, getOutputShutdownEvent, ());
+  MOCK_METHOD(EventTypes, getInputReadyEvent, ());
+  MOCK_METHOD(EventTypes, getOutputErrorEvent, ());
+  MOCK_METHOD(EventTypes, getInputShutdownEvent, ());
+  MOCK_METHOD(EventTypes, getOutputShutdownEvent, ());
   MOCK_METHOD(void *, getEventTarget, (), (const, override));
   MOCK_METHOD(bool, isReady, (), (const, override));
   MOCK_METHOD(uint32_t, getSize, (), (const, override));

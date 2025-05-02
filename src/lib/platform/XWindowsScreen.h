@@ -89,8 +89,8 @@ protected:
 
 private:
   // event sending
-  void sendEvent(Event::Type, void * = nullptr);
-  void sendClipboardEvent(Event::Type, ClipboardID);
+  void sendEvent(EventTypes, void * = nullptr);
+  void sendClipboardEvent(EventTypes, ClipboardID);
 
   // create the transparent cursor
   Cursor createBlankCursor() const;

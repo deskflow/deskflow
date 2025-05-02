@@ -18,7 +18,7 @@ public:
   std::string format() const override { return ""; }
 
   InputFilter::EFilterStatus match(const Event &ev) override {
-    return ev.getType() == Event::kSystem ? InputFilter::kActivate
+    return ev.getType() == EventTypes::System ? InputFilter::kActivate
                                           : InputFilter::kNoMatch;
   }
 };

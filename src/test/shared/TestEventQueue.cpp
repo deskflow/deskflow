@@ -12,7 +12,7 @@
 
 void TestEventQueue::raiseQuitEvent()
 {
-  addEvent(Event(Event::kQuit));
+  addEvent(Event(EventTypes::Quit));
 }
 
 void TestEventQueue::initQuitTimeout(double timeout)
@@ -20,13 +20,14 @@ void TestEventQueue::initQuitTimeout(double timeout)
   assert(m_pQuitTimeoutTimer == nullptr);
   m_pQuitTimeoutTimer = newOneShotTimer(timeout, nullptr);
   adoptHandler(
-      Event::kTimer, m_pQuitTimeoutTimer, new TMethodEventJob<TestEventQueue>(this, &TestEventQueue::handleQuitTimeout)
+      EventTypes::Timer, m_pQuitTimeoutTimer,
+      new TMethodEventJob<TestEventQueue>(this, &TestEventQueue::handleQuitTimeout)
   );
 }
 
 void TestEventQueue::cleanupQuitTimeout()
 {
-  removeHandler(Event::kTimer, m_pQuitTimeoutTimer);
+  removeHandler(EventTypes::Timer, m_pQuitTimeoutTimer);
   deleteTimer(m_pQuitTimeoutTimer);
   m_pQuitTimeoutTimer = nullptr;
 }

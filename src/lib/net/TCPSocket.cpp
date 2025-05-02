@@ -96,7 +96,7 @@ void TCPSocket::close()
 
   // clear buffers and enter disconnected state
   if (m_connected) {
-    sendEvent(m_events->forISocket().disconnected());
+    sendEvent(EventTypes::SocketDisconnected);
   }
   onDisconnected();
 
@@ -133,7 +133,7 @@ uint32_t TCPSocket::read(void *buffer, uint32_t n)
 
   // if no more data and we cannot read or write then send disconnected
   if (n > 0 && m_inputBuffer.getSize() == 0 && !m_readable && !m_writable) {
-    sendEvent(m_events->forISocket().disconnected());
+    sendEvent(EventTypes::SocketDisconnected);
     m_connected = false;
   }
 
@@ -148,7 +148,7 @@ void TCPSocket::write(const void *buffer, uint32_t n)
 
     // must not have shutdown output
     if (!m_writable) {
-      sendEvent(m_events->forIStream().outputError());
+      sendEvent(EventTypes::StreamOutputError);
       return;
     }
 
@@ -195,7 +195,7 @@ void TCPSocket::shutdownInput()
 
     // shutdown buffer for reading
     if (m_readable) {
-      sendEvent(m_events->forIStream().inputShutdown());
+      sendEvent(EventTypes::StreamInputShutdown);
       onInputShutdown();
       useNewJob = true;
     }
@@ -221,7 +221,7 @@ void TCPSocket::shutdownOutput()
 
     // shutdown buffer for writing
     if (m_writable) {
-      sendEvent(m_events->forIStream().outputShutdown());
+      sendEvent(EventTypes::StreamOutputShutdown);
       onOutputShutdown();
       useNewJob = true;
     }
@@ -263,7 +263,7 @@ void TCPSocket::connect(const NetworkAddress &addr)
 
     try {
       if (ARCH->connectSocket(m_socket, addr.getAddress())) {
-        sendEvent(m_events->forIDataSocket().connected());
+        sendEvent(EventTypes::DataSocketConnected);
         onConnected();
       } else {
         // connection is in progress
@@ -324,15 +324,15 @@ TCPSocket::EJobResult TCPSocket::doRead()
 
     // send input ready if input buffer was empty
     if (wasEmpty) {
-      sendEvent(m_events->forIStream().inputReady());
+      sendEvent(EventTypes::StreamInputReady);
     }
   } else {
     // remote write end of stream hungup.  our input side
     // has therefore shutdown but don't flush our buffer
     // since there's still data to be read.
-    sendEvent(m_events->forIStream().inputShutdown());
+    sendEvent(EventTypes::StreamInputShutdown);
     if (!m_writable && m_inputBuffer.getSize() == 0) {
-      sendEvent(m_events->forISocket().disconnected());
+      sendEvent(EventTypes::SocketDisconnected);
       m_connected = false;
     }
     m_readable = false;
@@ -397,11 +397,10 @@ ISocketMultiplexerJob *TCPSocket::newJob()
 void TCPSocket::sendConnectionFailedEvent(const char *msg)
 {
   auto *info = new ConnectionFailedInfo(msg);
-  m_events->addEvent(Event(m_events->forIDataSocket().connectionFailed(), getEventTarget(), info, Event::kDontFreeData)
-  );
+  m_events->addEvent(Event(EventTypes::DataSocketConnectionFailed, getEventTarget(), info, Event::kDontFreeData));
 }
 
-void TCPSocket::sendEvent(Event::Type type)
+void TCPSocket::sendEvent(EventTypes type)
 {
   m_events->addEvent(Event(type, getEventTarget()));
 }
@@ -410,7 +409,7 @@ void TCPSocket::discardWrittenData(int bytesWrote)
 {
   m_outputBuffer.pop(bytesWrote);
   if (m_outputBuffer.getSize() == 0) {
-    sendEvent(m_events->forIStream().outputFlushed());
+    sendEvent(EventTypes::StreamOutputFlushed);
     m_flushed = true;
     m_flushed.broadcast();
   }
@@ -480,7 +479,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnecting(ISocketMultiplexerJob *job, 
   }
 
   if (write) {
-    sendEvent(m_events->forIDataSocket().connected());
+    sendEvent(EventTypes::DataSocketConnected);
     onConnected();
     return newJob();
   }
@@ -493,7 +492,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
   Lock lock(&m_mutex);
 
   if (error) {
-    sendEvent(m_events->forISocket().disconnected());
+    sendEvent(EventTypes::SocketDisconnected);
     onDisconnected();
     return newJob();
   }
@@ -506,23 +505,23 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       // remote read end of stream hungup.  our output side
       // has therefore shutdown.
       onOutputShutdown();
-      sendEvent(m_events->forIStream().outputShutdown());
+      sendEvent(EventTypes::StreamOutputShutdown);
       if (!m_readable && m_inputBuffer.getSize() == 0) {
-        sendEvent(m_events->forISocket().disconnected());
+        sendEvent(EventTypes::SocketDisconnected);
         m_connected = false;
       }
       result = kNew;
     } catch (XArchNetworkDisconnected &) {
       // stream hungup
       onDisconnected();
-      sendEvent(m_events->forISocket().disconnected());
+      sendEvent(EventTypes::SocketDisconnected);
       result = kNew;
     } catch (XArchNetwork &e) {
       // other write error
       LOG((CLOG_WARN "error writing socket: %s", e.what()));
       onDisconnected();
-      sendEvent(m_events->forIStream().outputError());
-      sendEvent(m_events->forISocket().disconnected());
+      sendEvent(EventTypes::StreamOutputError);
+      sendEvent(EventTypes::SocketDisconnected);
       result = kNew;
     }
   }
@@ -532,7 +531,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       result = doRead();
     } catch (XArchNetworkDisconnected &) {
       // stream hungup
-      sendEvent(m_events->forISocket().disconnected());
+      sendEvent(EventTypes::SocketDisconnected);
       onDisconnected();
       result = kNew;
     } catch (XArchNetwork &e) {

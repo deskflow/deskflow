@@ -92,7 +92,7 @@ void SecureSocket::close()
 void SecureSocket::connect(const NetworkAddress &addr)
 {
   m_events->adoptHandler(
-      m_events->forIDataSocket().connected(), getEventTarget(),
+      EventTypes::DataSocketConnected, getEventTarget(),
       new TMethodEventJob<SecureSocket>(this, &SecureSocket::handleTCPConnected)
   );
 
@@ -161,15 +161,15 @@ TCPSocket::EJobResult SecureSocket::doRead()
 
     // send input ready if input buffer was empty
     if (wasEmpty) {
-      sendEvent(m_events->forIStream().inputReady());
+      sendEvent(EventTypes::StreamInputReady);
     }
   } else {
     // remote write end of stream hungup.  our input side
     // has therefore shutdown but don't flush our buffer
     // since there's still data to be read.
-    sendEvent(m_events->forIStream().inputShutdown());
+    sendEvent(EventTypes::StreamInputShutdown);
     if (!m_writable && m_inputBuffer.getSize() == 0) {
-      sendEvent(m_events->forISocket().disconnected());
+      sendEvent(EventTypes::SocketDisconnected);
       m_connected = false;
     }
     m_readable = false;
@@ -640,9 +640,9 @@ void SecureSocket::checkResult(int status, int &retry)
 
 void SecureSocket::disconnect()
 {
-  sendEvent(getEvents()->forISocket().stopRetry());
-  sendEvent(getEvents()->forISocket().disconnected());
-  sendEvent(getEvents()->forIStream().inputShutdown());
+  sendEvent(EventTypes::SocketStopRetry);
+  sendEvent(EventTypes::SocketDisconnected);
+  sendEvent(EventTypes::StreamInputShutdown);
 }
 
 bool SecureSocket::verifyCertFingerprint(const deskflow::fs::path &fingerprintDbPath)
@@ -709,7 +709,7 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, 
 
   // If status > 0, success
   if (status > 0) {
-    sendEvent(m_events->forIDataSocket().secureConnected());
+    sendEvent(EventTypes::DataSocketSecureConnected);
     return newJob();
   }
 
@@ -736,7 +736,7 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, b
 
   // If status > 0, success
   if (status > 0) {
-    sendEvent(m_events->forClientListener().accepted());
+    sendEvent(EventTypes::ClientListenerAccepted);
     return newJob();
   }
 

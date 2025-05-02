@@ -8,6 +8,7 @@
 #pragma once
 
 #include "base/Event.h"
+#include "base/EventTypes.h"
 #include "common/IInterface.h"
 #include <string>
 
@@ -17,25 +18,6 @@ class IEventQueueBuffer;
 // Opaque type for timer info.  This is defined by subclasses of
 // IEventQueueBuffer.
 class EventQueueTimer;
-
-// Event type registration classes.
-class ClientEvents;
-class IStreamEvents;
-class IDataSocketEvents;
-class IListenSocketEvents;
-class ISocketEvents;
-class OSXScreenEvents;
-class ClientListenerEvents;
-class ClientProxyEvents;
-class ClientProxyUnknownEvents;
-class ServerEvents;
-class ServerAppEvents;
-class IKeyStateEvents;
-class IPrimaryScreenEvents;
-class IScreenEvents;
-class ClipboardEvents;
-class FileEvents;
-class EiEvents;
 
 //! Event queue interface
 /*!
@@ -137,28 +119,20 @@ public:
   of type \p type.  If no such handler exists it will use the handler
   for \p target and type \p kUnknown if it exists.
   */
-  virtual void adoptHandler(Event::Type type, void *target, IEventJob *handler) = 0;
+  virtual void adoptHandler(EventTypes type, void *target, IEventJob *handler) = 0;
 
   //! Unregister an event handler for an event type
   /*!
   Unregisters an event handler for the \p type, \p target pair and
   deletes it.
   */
-  virtual void removeHandler(Event::Type type, void *target) = 0;
+  virtual void removeHandler(EventTypes type, void *target) = 0;
 
   //! Unregister all event handlers for an event target
   /*!
   Unregisters all event handlers for the \p target and deletes them.
   */
   virtual void removeHandlers(void *target) = 0;
-
-  //! Creates a new event type
-  /*!
-  If \p type contains \c kUnknown then it is set to a unique event
-  type id otherwise it is left alone.  The final value of \p type
-  is returned.
-  */
-  virtual Event::Type registerTypeOnce(Event::Type &type, const char *name) = 0;
 
   //! Wait for event queue to become ready
   /*!
@@ -183,42 +157,13 @@ public:
   Finds and returns the event handler for the \p type, \p target pair
   if it exists, otherwise it returns nullptr.
   */
-  virtual IEventJob *getHandler(Event::Type type, void *target) const = 0;
-
-  //! Get name for event
-  /*!
-  Returns the name for the event \p type.  This is primarily for
-  debugging.
-  */
-  virtual const char *getTypeName(Event::Type type) = 0;
+  virtual IEventJob *getHandler(EventTypes type, void *target) const = 0;
 
   //! Get the system event type target
   /*!
-  Returns the target to use for dispatching \c Event::kSystem events.
+  Returns the target to use for dispatching \c EventTypes::System events.
   */
   virtual void *getSystemTarget() = 0;
 
   //@}
-
-  //
-  // Event type providers.
-  //
-
-  virtual ClientEvents &forClient() = 0;
-  virtual IStreamEvents &forIStream() = 0;
-  virtual IDataSocketEvents &forIDataSocket() = 0;
-  virtual IListenSocketEvents &forIListenSocket() = 0;
-  virtual ISocketEvents &forISocket() = 0;
-  virtual OSXScreenEvents &forOSXScreen() = 0;
-  virtual ClientListenerEvents &forClientListener() = 0;
-  virtual ClientProxyEvents &forClientProxy() = 0;
-  virtual ClientProxyUnknownEvents &forClientProxyUnknown() = 0;
-  virtual ServerEvents &forServer() = 0;
-  virtual ServerAppEvents &forServerApp() = 0;
-  virtual IKeyStateEvents &forIKeyState() = 0;
-  virtual IPrimaryScreenEvents &forIPrimaryScreen() = 0;
-  virtual IScreenEvents &forIScreen() = 0;
-  virtual ClipboardEvents &forClipboard() = 0;
-  virtual FileEvents &forFile() = 0;
-  virtual EiEvents &forEi() = 0;
 };

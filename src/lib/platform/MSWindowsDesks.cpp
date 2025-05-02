@@ -157,7 +157,7 @@ void MSWindowsDesks::enable()
   // change but as far as i can tell it doesn't.
   m_timer = m_events->newTimer(0.2, nullptr);
   m_events->adoptHandler(
-      Event::kTimer, m_timer, new TMethodEventJob<MSWindowsDesks>(this, &MSWindowsDesks::handleCheckDesk)
+      EventTypes::Timer, m_timer, new TMethodEventJob<MSWindowsDesks>(this, &MSWindowsDesks::handleCheckDesk)
   );
 
   updateKeys();
@@ -167,7 +167,7 @@ void MSWindowsDesks::disable()
 {
   // remove timer
   if (m_timer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_timer);
+    m_events->removeHandler(EventTypes::Timer, m_timer);
     m_events->deleteTimer(m_timer);
     m_timer = nullptr;
   }

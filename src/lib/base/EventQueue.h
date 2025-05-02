@@ -43,13 +43,11 @@ public:
   EventQueueTimer *newTimer(double duration, void *target) override;
   EventQueueTimer *newOneShotTimer(double duration, void *target) override;
   void deleteTimer(EventQueueTimer *) override;
-  void adoptHandler(Event::Type type, void *target, IEventJob *handler) override;
-  void removeHandler(Event::Type type, void *target) override;
+  void adoptHandler(EventTypes type, void *target, IEventJob *handler) override;
+  void removeHandler(EventTypes type, void *target) override;
   void removeHandlers(void *target) override;
-  Event::Type registerTypeOnce(Event::Type &type, const char *name) override;
   bool isEmpty() const override;
-  IEventJob *getHandler(Event::Type type, void *target) const override;
-  const char *getTypeName(Event::Type type) override;
+  IEventJob *getHandler(EventTypes type, void *target) const override;
   void *getSystemTarget() override;
   void waitForReady() const override;
 
@@ -92,17 +90,11 @@ private:
   using TimerQueue = PriorityQueue<Timer>;
   using EventTable = std::map<uint32_t, Event>;
   using EventIDList = std::vector<uint32_t>;
-  using TypeMap = std::map<Event::Type, const char *>;
-  using NameMap = std::map<std::string, Event::Type>;
-  using TypeHandlerTable = std::map<Event::Type, IEventJob *>;
+  using TypeHandlerTable = std::map<EventTypes, IEventJob *>;
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 
   int m_systemTarget;
   ArchMutex m_mutex;
-
-  // registered events
-  Event::Type m_nextType;
-  TypeMap m_typeMap;
 
   // buffer of events
   IEventQueueBuffer *m_buffer;
@@ -120,58 +112,8 @@ private:
   // event handlers
   HandlerTable m_handlers;
 
-public:
-  //
-  // Event type providers.
-  //
-  ClientEvents &forClient() override;
-  IStreamEvents &forIStream() override;
-  IDataSocketEvents &forIDataSocket() override;
-  IListenSocketEvents &forIListenSocket() override;
-  ISocketEvents &forISocket() override;
-  OSXScreenEvents &forOSXScreen() override;
-  ClientListenerEvents &forClientListener() override;
-  ClientProxyEvents &forClientProxy() override;
-  ClientProxyUnknownEvents &forClientProxyUnknown() override;
-  ServerEvents &forServer() override;
-  ServerAppEvents &forServerApp() override;
-  IKeyStateEvents &forIKeyState() override;
-  IPrimaryScreenEvents &forIPrimaryScreen() override;
-  IScreenEvents &forIScreen() override;
-  ClipboardEvents &forClipboard() override;
-  FileEvents &forFile() override;
-  EiEvents &forEi() override;
-
 private:
-  ClientEvents *m_typesForClient;
-  IStreamEvents *m_typesForIStream;
-  IDataSocketEvents *m_typesForIDataSocket;
-  IListenSocketEvents *m_typesForIListenSocket;
-  ISocketEvents *m_typesForISocket;
-  OSXScreenEvents *m_typesForOSXScreen;
-  ClientListenerEvents *m_typesForClientListener;
-  ClientProxyEvents *m_typesForClientProxy;
-  ClientProxyUnknownEvents *m_typesForClientProxyUnknown;
-  ServerEvents *m_typesForServer;
-  ServerAppEvents *m_typesForServerApp;
-  IKeyStateEvents *m_typesForIKeyState;
-  IPrimaryScreenEvents *m_typesForIPrimaryScreen;
-  IScreenEvents *m_typesForIScreen;
-  ClipboardEvents *m_typesForClipboard;
-  FileEvents *m_typesForFile;
-  EiEvents *m_typesForEi;
   Mutex *m_readyMutex;
   CondVar<bool> *m_readyCondVar;
   std::queue<Event> m_pending;
 };
-
-#define EVENT_TYPE_ACCESSOR(type_)                                                                                     \
-type_##Events&                                                                \
-EventQueue::for##type_()                                                                                               \
-  {                                                                                                                    \
-    if (m_typesFor##type_ == nullptr) {                                                                                \
-      m_typesFor##type_ = new type_##Events();                                                                         \
-      m_typesFor##type_->setEvents(dynamic_cast<IEventQueue *>(this));                                                 \
-    }                                                                                                                  \
-    return *m_typesFor##type_;                                                                                         \
-  }

@@ -56,12 +56,12 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
 
   // handle data on stream
   m_events->adoptHandler(
-      m_events->forIStream().inputReady(), m_stream->getEventTarget(),
+      EventTypes::StreamInputReady, m_stream->getEventTarget(),
       new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleData)
   );
 
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardSending(), this,
+      EventTypes::ClipboardSending, this,
       new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleClipboardSendingEvent)
   );
 
@@ -72,20 +72,21 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
 ServerProxy::~ServerProxy()
 {
   setKeepAliveRate(-1.0);
-  m_events->removeHandler(m_events->forIStream().inputReady(), m_stream->getEventTarget());
+  m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
 }
 
 void ServerProxy::resetKeepAliveAlarm()
 {
   if (m_keepAliveAlarmTimer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_keepAliveAlarmTimer);
+    m_events->removeHandler(EventTypes::Timer, m_keepAliveAlarmTimer);
     m_events->deleteTimer(m_keepAliveAlarmTimer);
     m_keepAliveAlarmTimer = nullptr;
   }
   if (m_keepAliveAlarm > 0.0) {
     m_keepAliveAlarmTimer = m_events->newOneShotTimer(m_keepAliveAlarm, nullptr);
     m_events->adoptHandler(
-        Event::kTimer, m_keepAliveAlarmTimer, new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleKeepAliveAlarm)
+        EventTypes::Timer, m_keepAliveAlarmTimer,
+        new TMethodEventJob<ServerProxy>(this, &ServerProxy::handleKeepAliveAlarm)
     );
   }
 }
@@ -822,7 +823,7 @@ void ServerProxy::fileChunkReceived()
   int result = FileChunk::assemble(m_stream, m_client->getReceivedFileData(), m_client->getExpectedFileSize());
 
   if (result == kFinish) {
-    m_events->addEvent(Event(m_events->forFile().fileReceiveCompleted(), m_client));
+    m_events->addEvent(Event(EventTypes::FileReceiveCompleted, m_client));
   } else if (result == kStart) {
     if (m_client->getDragFileList().size() > 0) {
       std::string filename = m_client->getDragFileList().at(0).getFilename();

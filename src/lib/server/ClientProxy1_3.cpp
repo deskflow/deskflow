@@ -76,7 +76,7 @@ void ClientProxy1_3::addHeartbeatTimer()
   if (m_keepAliveRate > 0.0) {
     m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
     m_events->adoptHandler(
-        Event::kTimer, m_keepAliveTimer,
+        EventTypes::Timer, m_keepAliveTimer,
         new TMethodEventJob<ClientProxy1_3>(this, &ClientProxy1_3::handleKeepAlive, nullptr)
     );
   }
@@ -89,7 +89,7 @@ void ClientProxy1_3::removeHeartbeatTimer()
 {
   // remove the timer that sends keep alives periodically
   if (m_keepAliveTimer != nullptr) {
-    m_events->removeHandler(Event::kTimer, m_keepAliveTimer);
+    m_events->removeHandler(EventTypes::Timer, m_keepAliveTimer);
     m_events->deleteTimer(m_keepAliveTimer);
     m_keepAliveTimer = nullptr;
   }

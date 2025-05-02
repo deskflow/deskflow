@@ -23,7 +23,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *strea
       m_events(events)
 {
   m_events->adoptHandler(
-      m_events->forClipboard().clipboardSending(), this,
+      EventTypes::ClipboardSending, this,
       new TMethodEventJob<ClientProxy1_6>(this, &ClientProxy1_6::handleClipboardSendingEvent)
   );
 }
@@ -75,7 +75,7 @@ bool ClientProxy1_6::recvClipboard()
     auto *info = new ClipboardInfo;
     info->m_id = id;
     info->m_sequenceNumber = seq;
-    m_events->addEvent(Event(m_events->forClipboard().clipboardChanged(), getEventTarget(), info));
+    m_events->addEvent(Event(EventTypes::ClipboardChanged, getEventTarget(), info));
   }
 
   return true;

@@ -16,29 +16,11 @@
 
 #include <stdexcept>
 
-EVENT_TYPE_ACCESSOR(Client)
-EVENT_TYPE_ACCESSOR(IStream)
-EVENT_TYPE_ACCESSOR(IDataSocket)
-EVENT_TYPE_ACCESSOR(IListenSocket)
-EVENT_TYPE_ACCESSOR(ISocket)
-EVENT_TYPE_ACCESSOR(OSXScreen)
-EVENT_TYPE_ACCESSOR(ClientListener)
-EVENT_TYPE_ACCESSOR(ClientProxy)
-EVENT_TYPE_ACCESSOR(ClientProxyUnknown)
-EVENT_TYPE_ACCESSOR(Server)
-EVENT_TYPE_ACCESSOR(ServerApp)
-EVENT_TYPE_ACCESSOR(IKeyState)
-EVENT_TYPE_ACCESSOR(IPrimaryScreen)
-EVENT_TYPE_ACCESSOR(IScreen)
-EVENT_TYPE_ACCESSOR(Clipboard)
-EVENT_TYPE_ACCESSOR(File)
-EVENT_TYPE_ACCESSOR(Ei)
-
 // interrupt handler.  this just adds a quit event to the queue.
 static void interrupt(Arch::ESignal, void *data)
 {
   auto *events = static_cast<EventQueue *>(data);
-  events->addEvent(Event(Event::kQuit));
+  events->addEvent(Event(EventTypes::Quit));
 }
 
 //
@@ -47,24 +29,6 @@ static void interrupt(Arch::ESignal, void *data)
 
 EventQueue::EventQueue()
     : m_systemTarget(0),
-      m_nextType(Event::kLast),
-      m_typesForClient(nullptr),
-      m_typesForIStream(nullptr),
-      m_typesForIDataSocket(nullptr),
-      m_typesForIListenSocket(nullptr),
-      m_typesForISocket(nullptr),
-      m_typesForOSXScreen(nullptr),
-      m_typesForClientListener(nullptr),
-      m_typesForClientProxy(nullptr),
-      m_typesForClientProxyUnknown(nullptr),
-      m_typesForServer(nullptr),
-      m_typesForServerApp(nullptr),
-      m_typesForIKeyState(nullptr),
-      m_typesForIPrimaryScreen(nullptr),
-      m_typesForIScreen(nullptr),
-      m_typesForClipboard(nullptr),
-      m_typesForFile(nullptr),
-      m_typesForEi(nullptr),
       m_readyMutex(new Mutex),
       m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
@@ -103,46 +67,10 @@ void EventQueue::loop()
 
   Event event;
   getEvent(event);
-  while (event.getType() != Event::kQuit) {
+  while (event.getType() != EventTypes::Quit) {
     dispatchEvent(event);
     Event::deleteData(event);
     getEvent(event);
-  }
-}
-
-Event::Type EventQueue::registerTypeOnce(Event::Type &type, const char *name)
-{
-  ArchMutexLock lock(m_mutex);
-  if (type == Event::kUnknown) {
-    m_typeMap.insert(std::make_pair(m_nextType, name));
-    LOG((CLOG_DEBUG1 "registered event type %s as %d", name, m_nextType));
-    type = m_nextType++;
-  }
-  return type;
-}
-
-const char *EventQueue::getTypeName(Event::Type type)
-{
-  switch (type) {
-  case Event::kUnknown:
-    return "nil";
-
-  case Event::kQuit:
-    return "quit";
-
-  case Event::kSystem:
-    return "system";
-
-  case Event::kTimer:
-    return "timer";
-
-  default:
-    TypeMap::const_iterator i = m_typeMap.find(type);
-    if (i == m_typeMap.end()) {
-      return "<unknown>";
-    } else {
-      return i->second;
-    }
   }
 }
 
@@ -235,7 +163,7 @@ bool EventQueue::dispatchEvent(const Event &event)
   void *target = event.getTarget();
   IEventJob *job = getHandler(event.getType(), target);
   if (job == nullptr) {
-    job = getHandler(Event::kUnknown, target);
+    job = getHandler(EventTypes::Unknown, target);
   }
   if (job != nullptr) {
     job->run(event);
@@ -248,9 +176,9 @@ void EventQueue::addEvent(const Event &event)
 {
   // discard bogus event types
   switch (event.getType()) {
-  case Event::kUnknown:
-  case Event::kSystem:
-  case Event::kTimer:
+  case EventTypes::Unknown:
+  case EventTypes::System:
+  case EventTypes::Timer:
     return;
 
   default:
@@ -332,7 +260,7 @@ void EventQueue::deleteTimer(EventQueueTimer *timer)
   m_buffer->deleteTimer(timer);
 }
 
-void EventQueue::adoptHandler(Event::Type type, void *target, IEventJob *handler)
+void EventQueue::adoptHandler(EventTypes type, void *target, IEventJob *handler)
 {
   ArchMutexLock lock(m_mutex);
   IEventJob *&job = m_handlers[target][type];
@@ -340,7 +268,7 @@ void EventQueue::adoptHandler(Event::Type type, void *target, IEventJob *handler
   job = handler;
 }
 
-void EventQueue::removeHandler(Event::Type type, void *target)
+void EventQueue::removeHandler(EventTypes type, void *target)
 {
   IEventJob *handler = nullptr;
   {
@@ -385,7 +313,7 @@ bool EventQueue::isEmpty() const
   return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
 }
 
-IEventJob *EventQueue::getHandler(Event::Type type, void *target) const
+IEventJob *EventQueue::getHandler(EventTypes type, void *target) const
 {
   ArchMutexLock lock(m_mutex);
   HandlerTable::const_iterator index = m_handlers.find(target);
@@ -464,7 +392,7 @@ bool EventQueue::hasTimerExpired(Event &event)
 
   // prepare event and reset the timer's clock
   timer.fillEvent(m_timerEvent);
-  event = Event(Event::kTimer, timer.getTarget(), &m_timerEvent);
+  event = Event(EventTypes::Timer, timer.getTarget(), &m_timerEvent);
   timer.reset();
 
   // reinsert timer into queue if it's not a one-shot

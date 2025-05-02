@@ -71,7 +71,7 @@ void PortalRemoteDesktop::cb_session_closed(XdpSession *session)
   LOG_ERR("portal remote desktop session was closed, reconnecting");
   g_signal_handler_disconnect(session, session_signal_id_);
   session_signal_id_ = 0;
-  events_->addEvent(Event(events_->forEi().sessionClosed(), screen_->getEventTarget()));
+  events_->addEvent(Event(EventTypes::EISessionClosed, screen_->getEventTarget()));
 
   // gcc warning "Suspicious usage of 'sizeof(A*)'" can be ignored
   g_clear_object(&session_);
@@ -87,7 +87,7 @@ void PortalRemoteDesktop::cb_session_started(GObject *object, GAsyncResult *res)
   if (!success) {
     LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
     g_main_loop_quit(glib_main_loop_);
-    events_->addEvent(Event::kQuit);
+    events_->addEvent(EventTypes::Quit);
     return;
   }
 
@@ -100,12 +100,12 @@ void PortalRemoteDesktop::cb_session_started(GObject *object, GAsyncResult *res)
   fd = xdp_session_connect_to_eis(session, &error);
   if (fd < 0) {
     g_main_loop_quit(glib_main_loop_);
-    events_->addEvent(Event::kQuit);
+    events_->addEvent(EventTypes::Quit);
     return;
   }
 
   // Socket ownership is transferred to the EiScreen
-  events_->addEvent(Event(events_->forEi().connected(), screen_->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+  events_->addEvent(Event(EventTypes::EIConnected, screen_->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 }
 
 void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject *object, GAsyncResult *res)
@@ -120,7 +120,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject *object, GAsync
     // fails.
     if (session_iteration_ == 0) {
       g_main_loop_quit(glib_main_loop_);
-      events_->addEvent(Event::kQuit);
+      events_->addEvent(EventTypes::Quit);
     } else {
       this->reconnect(1000);
     }

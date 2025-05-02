@@ -88,7 +88,7 @@ protected:
 private:
   void init_ei();
   void cleanup_ei();
-  void sendEvent(Event::Type type, void *data);
+  void sendEvent(EventTypes type, void *data);
   ButtonID map_button_from_evdev(ei_event *event) const;
   void on_key_event(ei_event *event);
   void on_button_event(ei_event *event);
