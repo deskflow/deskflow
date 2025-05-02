@@ -204,8 +204,7 @@ bool ArchMultithreadPosix::waitCondVar(ArchCond cond, ArchMutex mutex, double ti
   // so we have to return to the caller.  since the caller will
   // always check for spurious wakeups the only drawback here is
   // performance:  we're waking up a lot more than desired.
-  static const double maxCancellationLatency = 0.1;
-  if (timeout < 0.0 || timeout > maxCancellationLatency) {
+  if (static const double maxCancellationLatency = 0.1; timeout < 0.0 || timeout > maxCancellationLatency) {
     timeout = maxCancellationLatency;
   }
 

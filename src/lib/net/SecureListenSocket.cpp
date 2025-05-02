@@ -50,8 +50,7 @@ IDataSocket *SecureListenSocket::accept()
       certificateFilename = ArgParser::argsBase().m_tlsCertFile;
     }
 
-    bool loaded = socket->loadCertificates(certificateFilename);
-    if (!loaded) {
+    if (!socket->loadCertificates(certificateFilename)) {
       delete socket;
       return nullptr;
     }

@@ -581,8 +581,7 @@ void XWindowsClipboard::motifUnlockClipboard() const
   LOG((CLOG_DEBUG1 "unlocked motif clipboard"));
 
   // fail if we don't own the lock
-  Window lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock);
-  if (lockOwner != m_window) {
+  if (Window lockOwner = XGetSelectionOwner(m_display, m_atomMotifClipLock); lockOwner != m_window) {
     return;
   }
 
@@ -606,8 +605,8 @@ bool XWindowsClipboard::motifOwnsClipboard() const
   Atom target;
   int32_t format;
   std::string data;
-  Window root = RootWindow(m_display, DefaultScreen(m_display));
-  if (!XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target, &format, False)) {
+  if (Window root = RootWindow(m_display, DefaultScreen(m_display));
+      !XWindowsUtil::getWindowProperty(m_display, root, m_atomMotifClipHeader, &data, &target, &format, False)) {
     return false;
   }
 

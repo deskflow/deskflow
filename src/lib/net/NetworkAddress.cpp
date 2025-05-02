@@ -34,11 +34,10 @@ NetworkAddress::NetworkAddress(const NetworkAddress &addr) : m_hostname(addr.m_h
 
 NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostname(hostname), m_port(port)
 {
-  // detect internet protocol version with colom count
-  auto isColomPredicate = [](char c) { return c == ':'; };
-  auto colomCount = std::count_if(m_hostname.begin(), m_hostname.end(), isColomPredicate);
+  // detect internet protocol version with colon count
+  auto isColon = [](char c) { return c == ':'; };
 
-  if (colomCount == 1) {
+  if (auto colonCount = std::count_if(m_hostname.begin(), m_hostname.end(), isColon); colonCount == 1) {
     // ipv4 with port part
     auto hostIt = m_hostname.find(':');
     try {
@@ -49,7 +48,7 @@ NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostna
 
     auto endHostnameIt = static_cast<int>(hostIt);
     m_hostname = m_hostname.substr(0, endHostnameIt > 0 ? endHostnameIt : 0);
-  } else if (colomCount > 1) {
+  } else if (colonCount > 1) {
     // ipv6 part
     if (m_hostname[0] == '[') {
       // ipv6 with port part

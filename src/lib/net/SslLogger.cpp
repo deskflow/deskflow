@@ -22,8 +22,7 @@ void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack)
     SSL_CIPHER_description(cipher, msg, sizeof(msg));
 
     // SSL puts a newline in the description
-    auto pos = strnlen(msg, sizeof(msg)) - 1;
-    if (msg[pos] == '\n') {
+    if (auto pos = strnlen(msg, sizeof(msg)) - 1; msg[pos] == '\n') {
       msg[pos] = '\0';
     }
 

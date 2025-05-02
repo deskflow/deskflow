@@ -122,8 +122,7 @@ uint32_t TCPSocket::read(void *buffer, uint32_t n)
 {
   // copy data directly from our input buffer
   Lock lock(&m_mutex);
-  uint32_t size = m_inputBuffer.getSize();
-  if (n > size) {
+  if (uint32_t size = m_inputBuffer.getSize(); n > size) {
     n = size;
   }
   if (buffer != nullptr && n != 0) {

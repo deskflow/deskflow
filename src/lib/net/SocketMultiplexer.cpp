@@ -77,8 +77,7 @@ void SocketMultiplexer::addSocket(ISocket *socket, ISocketMultiplexerJob *job)
   lockJobList();
 
   // insert/replace job
-  SocketJobMap::iterator i = m_socketJobMap.find(socket);
-  if (i == m_socketJobMap.end()) {
+  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i == m_socketJobMap.end()) {
     // we *must* put the job at the end so the order of jobs in
     // the list continue to match the order of jobs in pfds in
     // serviceThread().
@@ -86,8 +85,7 @@ void SocketMultiplexer::addSocket(ISocket *socket, ISocketMultiplexerJob *job)
     m_update = true;
     m_socketJobMap.insert(std::make_pair(socket, j));
   } else {
-    JobCursor j = i->second;
-    if (*j != job) {
+    if (JobCursor j = i->second; *j != job) {
       delete *j;
       *j = job;
     }
@@ -114,8 +112,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
   // remove job.  rather than removing it from the map we put nullptr
   // in the list instead so the order of jobs in the list continues
   // to match the order of jobs in pfds in serviceThread().
-  SocketJobMap::iterator i = m_socketJobMap.find(socket);
-  if (i != m_socketJobMap.end()) {
+  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i != m_socketJobMap.end()) {
     if (*(i->second) != nullptr) {
       delete *(i->second);
       *(i->second) = nullptr;
@@ -157,8 +154,7 @@ void SocketMultiplexer::serviceThread(void *)
       JobCursor cursor = newCursor();
       JobCursor jobCursor = nextCursor(cursor);
       while (jobCursor != m_socketJobs.end()) {
-        ISocketMultiplexerJob *job = *jobCursor;
-        if (job != nullptr) {
+        if (ISocketMultiplexerJob *job = *jobCursor; job) {
           pfd.m_socket = job->getSocket();
           pfd.m_events = 0;
           if (job->isReadable()) {
@@ -203,10 +199,9 @@ void SocketMultiplexer::serviceThread(void *)
 
           // run job
           ISocketMultiplexerJob *job = *jobCursor;
-          ISocketMultiplexerJob *newJob = job->run(read, write, error);
 
           // save job, if different
-          if (newJob != job) {
+          if (ISocketMultiplexerJob *newJob = job->run(read, write, error); newJob != job) {
             Lock lock(m_mutex);
             delete job;
             *jobCursor = newJob;

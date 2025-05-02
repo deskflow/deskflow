@@ -54,9 +54,8 @@ Fingerprint sslCertFingerprint(X509 *cert, Fingerprint::Type type)
 
   unsigned char digest[EVP_MAX_MD_SIZE];
   unsigned int digestLength = 0;
-  int result = X509_digest(cert, digestForType(type), digest, &digestLength);
 
-  if (result <= 0) {
+  if (int result = X509_digest(cert, digestForType(type), digest, &digestLength); result <= 0) {
     throw std::runtime_error("failed to calculate fingerprint, digest result: " + std::to_string(result));
   }
 

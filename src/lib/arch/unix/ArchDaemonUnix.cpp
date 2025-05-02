@@ -74,8 +74,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
   // NB: don't run chdir on apple; causes strange behaviour.
   // chdir to root so we don't keep mounted filesystems points busy
   // TODO: this is a bit of a hack - can we find a better solution?
-  int chdirErr = chdir("/");
-  if (chdirErr)
+  if (int chdirErr = chdir("/"); chdirErr)
     // NB: file logging actually isn't working at this point!
     LOG((CLOG_ERR "chdir error: %i", chdirErr));
 #endif
@@ -93,9 +92,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
   open("/dev/null", O_RDONLY);
   open("/dev/null", O_RDWR);
 
-  int dupErr = dup(1);
-
-  if (dupErr < 0) {
+  if (int dupErr = dup(1); dupErr < 0) {
     // NB: file logging actually isn't working at this point!
     LOG((CLOG_ERR "dup error: %i", dupErr));
   }

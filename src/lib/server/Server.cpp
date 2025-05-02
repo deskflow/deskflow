@@ -599,8 +599,7 @@ BaseClientProxy *Server::getNeighbor(BaseClientProxy *src, EDirection dir, int32
 
     // look up neighbor cell.  if the screen is connected and
     // ready then we can stop.
-    ClientList::const_iterator index = m_clients.find(dstName);
-    if (index != m_clients.end()) {
+    if (ClientList::const_iterator index = m_clients.find(dstName); index != m_clients.end()) {
       LOG((CLOG_DEBUG2 "\"%s\" is on %s of \"%s\" at %f", dstName.c_str(), Config::dirName(dir), srcName.c_str(), t));
       mapToPixel(index->second, dir, tTmp, x, y);
       return index->second;
@@ -843,9 +842,8 @@ bool Server::isSwitchOkay(
   }
 
   // check for optional needed modifiers
-  KeyModifierMask mods = this->m_primaryClient->getToggleMask();
-
-  if (!preventSwitch && ((this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
+  if (KeyModifierMask mods = this->m_primaryClient->getToggleMask();
+      !preventSwitch && ((this->m_switchNeedsShift && ((mods & KeyModifierShift) != KeyModifierShift)) ||
                          (this->m_switchNeedsControl && ((mods & KeyModifierControl) != KeyModifierControl)) ||
                          (this->m_switchNeedsAlt && ((mods & KeyModifierAlt) != KeyModifierAlt)))) {
     LOG((CLOG_DEBUG1 "need modifiers to switch"));
@@ -1687,8 +1685,7 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
   LOG((CLOG_DEBUG2 "onMouseMoveSecondary initial %+d,%+d", dx, dy));
-  const char *envVal = std::getenv("DESKFLOW_MOUSE_ADJUSTMENT");
-  if (envVal != nullptr) {
+  if (const char *envVal = std::getenv("DESKFLOW_MOUSE_ADJUSTMENT"); envVal) {
     try {
       double multiplier = std::stod(envVal);                               // Convert to double
       auto adjustedDx = static_cast<int32_t>(std::round(dx * multiplier)); // Apply multiplier and round
@@ -2004,8 +2001,7 @@ void Server::removeOldClient(BaseClientProxy *client)
 
 void Server::forceLeaveClient(BaseClientProxy *client)
 {
-  BaseClientProxy *active = (m_activeSaver != nullptr) ? m_activeSaver : m_active;
-  if (active == client) {
+  if (BaseClientProxy *active = (m_activeSaver != nullptr) ? m_activeSaver : m_active; active == client) {
     // record new position (center of primary screen)
     m_primaryClient->getCursorCenter(m_x, m_y);
 

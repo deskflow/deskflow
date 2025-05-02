@@ -404,8 +404,8 @@ void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
 
   // get the error from the socket layer
   int err = 0;
-  auto size = static_cast<socklen_t>(sizeof(err));
-  if (getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR, reinterpret_cast<optval_t *>(&err), &size) == -1) {
+  if (auto size = static_cast<socklen_t>(sizeof(err));
+      getsockopt(s->m_fd, SOL_SOCKET, SO_ERROR, reinterpret_cast<optval_t *>(&err), &size) == -1) {
     err = errno;
   }
 
@@ -545,8 +545,8 @@ std::vector<ArchNetAddress> ArchNetworkBSD::nameToAddr(const std::string &name)
   // done with static buffer
   ARCH->lockMutex(m_mutex);
   struct addrinfo *pResult = nullptr;
-  int ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult);
-  if (ret != 0) {
+
+  if (int ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult); ret != 0) {
     ARCH->unlockMutex(m_mutex);
     throwNameError(ret);
   }
@@ -585,9 +585,10 @@ std::string ArchNetworkBSD::addrToName(ArchNetAddress addr)
   ARCH->lockMutex(m_mutex);
   char host[1024];
   char service[20];
-  int ret =
-      getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host), service, sizeof(service), 0);
-  if (ret != 0) {
+
+  if (int ret =
+          getnameinfo(TYPED_ADDR(struct sockaddr, addr), addr->m_len, host, sizeof(host), service, sizeof(service), 0);
+      ret != 0) {
     ARCH->unlockMutex(m_mutex);
     throwNameError(ret);
   }

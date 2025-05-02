@@ -439,8 +439,7 @@ std::string Unicode::doUTF16ToUTF8(const uint8_t *data, uint32_t n, bool *errors
 
   // convert each character
   while (n > 0) {
-    uint32_t c = decode16(data, byteSwapped);
-    if (c < 0x0000d800 || c > 0x0000dfff) {
+    if (uint32_t c = decode16(data, byteSwapped); c < 0x0000d800 || c > 0x0000dfff) {
       toUTF8(dst, c, errors);
     } else if (n == 1) {
       // error -- missing second word
@@ -449,8 +448,7 @@ std::string Unicode::doUTF16ToUTF8(const uint8_t *data, uint32_t n, bool *errors
     } else if (c >= 0x0000d800 && c <= 0x0000dbff) {
       data += 2;
       --n;
-      uint32_t c2 = decode16(data, byteSwapped);
-      if (c2 < 0x0000dc00 || c2 > 0x0000dfff) {
+      if (uint32_t c2 = decode16(data, byteSwapped); c2 < 0x0000dc00 || c2 > 0x0000dfff) {
         // error -- [d800,dbff] not followed by [dc00,dfff]
         setError(errors);
         toUTF8(dst, s_replacement, nullptr);
@@ -644,8 +642,8 @@ uint32_t Unicode::fromUTF8(const uint8_t *&data, uint32_t &n)
   }
 
   // check for characters that didn't use the smallest possible encoding
-  static uint32_t s_minChar[] = {0, 0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000};
-  if (c < s_minChar[size]) {
+  if (static uint32_t s_minChar[] = {0, 0x00000000, 0x00000080, 0x00000800, 0x00010000, 0x00200000, 0x04000000};
+      c < s_minChar[size]) {
     return s_invalid;
   }
 

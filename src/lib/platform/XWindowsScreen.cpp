@@ -282,9 +282,8 @@ void XWindowsScreen::enter()
   // actually cause physical hardware input to trigger it
   int dummy;
   CARD16 powerlevel;
-  BOOL enabled;
-  if (DPMSQueryExtension(m_display, &dummy, &dummy) && DPMSCapable(m_display) &&
-      DPMSInfo(m_display, &powerlevel, &enabled)) {
+  if (BOOL enabled; DPMSQueryExtension(m_display, &dummy, &dummy) && DPMSCapable(m_display) &&
+                    DPMSInfo(m_display, &powerlevel, &enabled)) {
     if (enabled && powerlevel != DPMSModeOn)
       DPMSForceLevel(m_display, DPMSModeOn);
   }
@@ -591,8 +590,7 @@ uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
         // skip with error if we can't map remaining modifiers
         unsigned int modifiers2;
-        KeyModifierMask mask2 = (mask & ~s_hotKeyModifiers[j]);
-        if (!m_keyState->mapModifiersToX(mask2, modifiers2)) {
+        if (KeyModifierMask mask2 = (mask & ~s_hotKeyModifiers[j]); !m_keyState->mapModifiersToX(mask2, modifiers2)) {
           err = true;
           continue;
         }
@@ -769,8 +767,8 @@ bool XWindowsScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
   // query the pointer to get the button state
   Window root, window;
   int xRoot, yRoot, xWindow, yWindow;
-  unsigned int state;
-  if (XQueryPointer(m_display, m_root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state)) {
+  if (unsigned int state;
+      XQueryPointer(m_display, m_root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state)) {
     return ((state & (Button1Mask | Button2Mask | Button3Mask | Button4Mask | Button5Mask)) != 0);
   }
 
@@ -1566,9 +1564,8 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     // pixel) but the latter is a PITA.  to work around
     // it we only warp when the mouse has moved more
     // than s_size pixels from the center.
-    static const int32_t s_size = 32;
-    if (xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
-        xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
+    if (static const int32_t s_size = 32; xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
+                                          xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
       warpCursorNoFlush(m_xCenter, m_yCenter);
     }
 

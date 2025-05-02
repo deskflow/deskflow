@@ -19,9 +19,7 @@ namespace {
 
 bool sleepInhibitCall(bool state, XWindowsPowerManager::InhibitScreenServices serviceID)
 {
-  std::string error;
-
-  if (!XWindowsPowerManager::inhibitScreenCall(serviceID, state, error)) {
+  if (std::string error; !XWindowsPowerManager::inhibitScreenCall(serviceID, state, error)) {
     LOG((CLOG_DEBUG "dbus inhibit error %s", error.c_str()));
     return false;
   }

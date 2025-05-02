@@ -459,8 +459,8 @@ void EiScreen::add_device(struct ei_device *device)
   if (!ei_keyboard_ && ei_device_has_capability(device, EI_DEVICE_CAP_KEYBOARD)) {
     ei_keyboard_ = ei_device_ref(device);
 
-    struct ei_keymap *keymap = ei_device_keyboard_get_keymap(device);
-    if (keymap && ei_keymap_get_type(keymap) == EI_KEYMAP_TYPE_XKB) {
+    if (auto keymap = ei_device_keyboard_get_keymap(device);
+        keymap && ei_keymap_get_type(keymap) == EI_KEYMAP_TYPE_XKB) {
       int fd = ei_keymap_get_fd(keymap);
       size_t len = ei_keymap_get_size(keymap);
       key_state_->init(fd, len);
@@ -516,9 +516,7 @@ void EiScreen::sendEvent(EventTypes type, void *data)
 
 ButtonID EiScreen::map_button_from_evdev(ei_event *event) const
 {
-  uint32_t button = ei_event_button_get_button(event);
-
-  switch (button) {
+  switch (ei_event_button_get_button(event)) {
   case 0x110:
     return kButtonLeft;
   case 0x111:
@@ -547,8 +545,7 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
   // Note: our mask (see on_key_event) only contains some modifiers
   // but we don't put a limitation on modifiers in the hotkeys. So some
   // key combinations may not work correctly, more effort is needed here.
-  auto id = it->second.find_by_mask(mask);
-  if (id != 0) {
+  if (auto id = it->second.find_by_mask(mask); id != 0) {
     EventTypes type = is_pressed ? EventTypes::PrimaryScreenHotkeyDown : EventTypes::PrimaryScreenHotkeyUp;
     sendEvent(type, HotKeyInfo::alloc(id));
     return true;

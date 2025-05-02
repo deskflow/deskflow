@@ -88,14 +88,12 @@ bool TlsCertificate::isCertificateValid(const QString &path)
   }
   auto pubkeyFree = deskflow::finally([pubkey]() { EVP_PKEY_free(pubkey); });
 
-  auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey));
-  if (type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
+  if (auto type = EVP_PKEY_type(EVP_PKEY_id(pubkey)); type != EVP_PKEY_RSA && type != EVP_PKEY_DSA) {
     qWarning() << tr("public key in default certificate key file is not RSA or DSA");
     return false;
   }
 
-  auto bits = EVP_PKEY_bits(pubkey);
-  if (bits < 2048) {
+  if (EVP_PKEY_bits(pubkey) < 2048) {
     // We could have small keys in old barrier installations
     qWarning() << tr("public key in default certificate key file is too small");
     return false;

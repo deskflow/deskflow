@@ -73,8 +73,7 @@ InputFilter::EFilterStatus InputFilter::KeystrokeCondition::match(const Event &e
   EFilterStatus status;
 
   // check for hotkey events
-  EventTypes type = event.getType();
-  if (type == EventTypes::PrimaryScreenHotkeyDown) {
+  if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenHotkeyDown) {
     status = kActivate;
   } else if (type == EventTypes::PrimaryScreenHotkeyUp) {
     status = kDeactivate;
@@ -83,8 +82,7 @@ InputFilter::EFilterStatus InputFilter::KeystrokeCondition::match(const Event &e
   }
 
   // check if it's our hotkey
-  auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData());
-  if (kinfo->m_id != m_id) {
+  if (auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
     return kNoMatch;
   }
 
@@ -150,8 +148,7 @@ InputFilter::EFilterStatus InputFilter::MouseButtonCondition::match(const Event 
   EFilterStatus status;
 
   // check for hotkey events
-  EventTypes type = event.getType();
-  if (type == EventTypes::PrimaryScreenButtonDown) {
+  if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenButtonDown) {
     status = kActivate;
   } else if (type == EventTypes::PrimaryScreenButtonUp) {
     status = kDeactivate;
@@ -161,8 +158,8 @@ InputFilter::EFilterStatus InputFilter::MouseButtonCondition::match(const Event 
 
   // check if it's the right button and modifiers.  ignore modifiers
   // that cannot be combined with a mouse button.
-  auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
-  if (minfo->m_button != m_button || (minfo->m_mask & ~s_ignoreMask) != m_mask) {
+  if (auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+      minfo->m_button != m_button || (minfo->m_mask & ~s_ignoreMask) != m_mask) {
     return kNoMatch;
   }
 

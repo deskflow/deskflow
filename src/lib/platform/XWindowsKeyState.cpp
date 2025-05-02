@@ -611,8 +611,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
     }
 
     // note half-duplex keys
-    const XkbBehavior &b = m_xkb->server->behaviors[keycode];
-    if ((b.type & XkbKB_OpMask) == XkbKB_Lock) {
+    if (const XkbBehavior &b = m_xkb->server->behaviors[keycode]; (b.type & XkbKB_OpMask) == XkbKB_Lock) {
       keyMap.addHalfDuplexButton(item.m_button);
     }
 
@@ -697,8 +696,8 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         // record the modifier mask for this key.  don't bother
         // for keys that change the group.
         item.m_generates = 0;
-        uint32_t modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
-        if (isModifier && modifierBit != kKeyModifierBitNone) {
+        if (uint32_t modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
+            isModifier && modifierBit != kKeyModifierBitNone) {
           item.m_generates = (1u << modifierBit);
           for (int32_t j = 0; j < 8; ++j) {
             // skip modifiers this key doesn't generate
@@ -819,8 +818,7 @@ int XWindowsKeyState::getEffectiveGroup(KeyCode keycode, int group) const
   (void)keycode;
 #if HAVE_XKB_EXTENSION
   // get effective group for key
-  int numGroups = XkbKeyNumGroups(m_xkb, keycode);
-  if (group >= numGroups) {
+  if (int numGroups = XkbKeyNumGroups(m_xkb, keycode); group >= numGroups) {
     unsigned char groupInfo = XkbKeyGroupInfo(m_xkb, keycode);
     switch (XkbOutOfRangeGroupAction(groupInfo)) {
     case XkbClampIntoRange:

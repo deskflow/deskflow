@@ -180,8 +180,7 @@ void ClientListener::handleUnknownClient(const Event &, void *vclient)
   assert(m_newClients.count(unknownClient) == 1);
 
   // get the real client proxy and install it
-  auto client = unknownClient->orphanClientProxy();
-  if (client) {
+  if (auto client = unknownClient->orphanClientProxy(); client) {
     // handshake was successful
     m_waitingClients.push_back(client);
     m_events->addEvent(Event(EventTypes::ClientListenerAccepted, this));

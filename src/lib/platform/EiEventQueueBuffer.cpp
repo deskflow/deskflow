@@ -62,8 +62,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
 
   int timeout = (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
 
-  int retval = poll(pfds, POLLFD_COUNT, timeout);
-  if (retval > 0) {
+  if (int retval = poll(pfds, POLLFD_COUNT, timeout); retval > 0) {
     if (pfds[EIFD].revents & POLLIN) {
       std::lock_guard lock(mutex_);
 

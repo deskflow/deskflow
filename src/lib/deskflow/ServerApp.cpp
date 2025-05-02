@@ -638,8 +638,7 @@ int ServerApp::mainLoop()
   }
 
   // canonicalize the primary screen name
-  std::string primaryName = args().m_config->getCanonicalName(args().m_name);
-  if (primaryName.empty()) {
+  if (std::string primaryName = args().m_config->getCanonicalName(args().m_name); primaryName.empty()) {
     LOG((CLOG_CRIT "unknown screen name `%s'", args().m_name.c_str()));
     return kExitFailed;
   }

@@ -1647,8 +1647,7 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 
   // options section
   s << "section: options" << std::endl;
-  const Config::ScreenOptions *options = config.getOptions("");
-  if (options != nullptr && options->size() > 0) {
+  if (const Config::ScreenOptions *options = config.getOptions(""); options && options->size() > 0) {
     for (auto option = options->begin(); option != options->end(); ++option) {
       const char *name = Config::getOptionName(option->first);
       std::string value = Config::getOptionValue(option->first, option->second);
