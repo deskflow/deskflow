@@ -19,11 +19,6 @@ ArchLogWindows::ArchLogWindows() : m_eventLog(nullptr)
   // do nothing
 }
 
-ArchLogWindows::~ArchLogWindows()
-{
-  // do nothing
-}
-
 void ArchLogWindows::openLog(const char *name)
 {
   if (m_eventLog == nullptr) {

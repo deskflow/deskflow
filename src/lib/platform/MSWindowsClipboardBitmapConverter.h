@@ -13,12 +13,12 @@
 class MSWindowsClipboardBitmapConverter : public IMSWindowsClipboardConverter
 {
 public:
-  MSWindowsClipboardBitmapConverter();
-  virtual ~MSWindowsClipboardBitmapConverter();
+  MSWindowsClipboardBitmapConverter() = default;
+  ~MSWindowsClipboardBitmapConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual UINT getWin32Format() const;
-  virtual HANDLE fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(HANDLE) const;
+  IClipboard::EFormat getFormat() const override;
+  UINT getWin32Format() const override;
+  HANDLE fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(HANDLE) const override;
 };

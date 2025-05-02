@@ -15,9 +15,9 @@
 class ArchSleepWindows : public IArchSleep
 {
 public:
-  ArchSleepWindows();
-  virtual ~ArchSleepWindows();
+  ArchSleepWindows() = default;
+  ~ArchSleepWindows() override = default;
 
   // IArchSleep overrides
-  virtual void sleep(double timeout);
+  void sleep(double timeout) override;
 };

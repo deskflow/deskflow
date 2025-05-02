@@ -17,7 +17,7 @@ class MSWindowsSession
 {
 public:
   MSWindowsSession();
-  ~MSWindowsSession();
+  ~MSWindowsSession() = default;
 
   /*!
   Returns true if the session ID has changed since updateActiveSession was

@@ -27,7 +27,7 @@ public:
   using RunFunc = std::function<int()>;
 
   ArchDaemonWindows();
-  virtual ~ArchDaemonWindows();
+  ~ArchDaemonWindows() override = default;
 
   //! Run the daemon
   /*!
@@ -68,15 +68,15 @@ public:
   static UINT getDaemonQuitMessage();
 
   // IArchDaemon overrides
-  virtual void installDaemon(
+  void installDaemon(
       const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
-  );
-  virtual void uninstallDaemon(const char *name);
-  virtual void installDaemon();
-  virtual void uninstallDaemon();
-  virtual int daemonize(const char *name, DaemonFunc func);
-  virtual bool canInstallDaemon(const char *name);
-  virtual bool isDaemonInstalled(const char *name);
+  ) override;
+  void uninstallDaemon(const char *name) override;
+  void installDaemon() override;
+  void uninstallDaemon() override;
+  int daemonize(const char *name, DaemonFunc func) override;
+  bool canInstallDaemon(const char *name) override;
+  bool isDaemonInstalled(const char *name) override;
   std::string commandLine() const
   {
     return m_commandLine;

@@ -18,7 +18,5 @@ class IMSWindowsClipboardFacade : public IInterface
 {
 public:
   virtual void write(HANDLE win32Data, UINT win32Format) = 0;
-  virtual ~IMSWindowsClipboardFacade()
-  {
-  }
+  virtual ~IMSWindowsClipboardFacade() = default;
 };

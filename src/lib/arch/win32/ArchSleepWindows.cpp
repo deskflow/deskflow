@@ -13,16 +13,6 @@
 // ArchSleepWindows
 //
 
-ArchSleepWindows::ArchSleepWindows()
-{
-  // do nothing
-}
-
-ArchSleepWindows::~ArchSleepWindows()
-{
-  // do nothing
-}
-
 void ArchSleepWindows::sleep(double timeout)
 {
   ARCH->testCancelThread();

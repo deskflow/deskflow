@@ -19,7 +19,7 @@ class MSWindowsScreenSaver : public IScreenSaver
 {
 public:
   MSWindowsScreenSaver();
-  virtual ~MSWindowsScreenSaver();
+  ~MSWindowsScreenSaver() override;
 
   //! @name manipulators
   //@{
@@ -36,11 +36,11 @@ public:
   //@}
 
   // IScreenSaver overrides
-  virtual void enable();
-  virtual void disable();
-  virtual void activate();
-  virtual void deactivate();
-  virtual bool isActive() const;
+  void enable() override;
+  void disable() override;
+  void activate() override;
+  void deactivate() override;
+  bool isActive() const override;
 
 private:
   class FindScreenSaverInfo

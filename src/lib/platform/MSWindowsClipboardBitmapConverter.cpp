@@ -13,16 +13,6 @@
 // MSWindowsClipboardBitmapConverter
 //
 
-MSWindowsClipboardBitmapConverter::MSWindowsClipboardBitmapConverter()
-{
-  // do nothing
-}
-
-MSWindowsClipboardBitmapConverter::~MSWindowsClipboardBitmapConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat MSWindowsClipboardBitmapConverter::getFormat() const
 {
   return IClipboard::kBitmap;

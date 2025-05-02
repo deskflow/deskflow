@@ -21,10 +21,6 @@ MSWindowsDropTarget::MSWindowsDropTarget() : m_refCount(1), m_allowDrop(false)
   s_instance = this;
 }
 
-MSWindowsDropTarget::~MSWindowsDropTarget()
-{
-}
-
 MSWindowsDropTarget &MSWindowsDropTarget::instance()
 {
   assert(s_instance != nullptr);

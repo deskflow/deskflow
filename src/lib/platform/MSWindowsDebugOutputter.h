@@ -17,13 +17,13 @@ can be seen in the Output window.
 class MSWindowsDebugOutputter : public ILogOutputter
 {
 public:
-  MSWindowsDebugOutputter();
-  virtual ~MSWindowsDebugOutputter();
+  MSWindowsDebugOutputter() = default;
+  ~MSWindowsDebugOutputter() override = default;
 
   // ILogOutputter overrides
-  virtual void open(const char *title);
-  virtual void close();
-  virtual void show(bool showIfEmpty);
-  virtual bool write(ELevel level, const char *message);
-  virtual void flush();
+  void open(const char *title) override;
+  void close() override;
+  void show(bool showIfEmpty) override;
+  bool write(ELevel level, const char *message) override;
+  void flush();
 };

@@ -17,7 +17,7 @@ class MSWindowsDropTarget : public IDropTarget
 {
 public:
   MSWindowsDropTarget();
-  ~MSWindowsDropTarget();
+  ~MSWindowsDropTarget() = default;
 
   // IUnknown implementation
   HRESULT __stdcall QueryInterface(REFIID iid, void **object);

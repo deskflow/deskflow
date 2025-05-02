@@ -16,14 +16,6 @@
 // ArchStringWindows
 //
 
-ArchStringWindows::ArchStringWindows()
-{
-}
-
-ArchStringWindows::~ArchStringWindows()
-{
-}
-
 IArchString::EWideCharEncoding ArchStringWindows::getWideCharEncoding()
 {
   return kUTF16;

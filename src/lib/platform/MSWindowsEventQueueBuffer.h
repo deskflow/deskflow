@@ -19,18 +19,18 @@ class MSWindowsEventQueueBuffer : public IEventQueueBuffer
 {
 public:
   MSWindowsEventQueueBuffer(IEventQueue *events);
-  virtual ~MSWindowsEventQueueBuffer();
+  ~MSWindowsEventQueueBuffer() override = default;
 
   // IEventQueueBuffer overrides
-  virtual void init()
+  void init() override
   {
   }
-  virtual void waitForEvent(double timeout);
-  virtual Type getEvent(Event &event, uint32_t &dataID);
-  virtual bool addEvent(uint32_t dataID);
-  virtual bool isEmpty() const;
-  virtual EventQueueTimer *newTimer(double duration, bool oneShot) const;
-  virtual void deleteTimer(EventQueueTimer *) const;
+  void waitForEvent(double timeout) override;
+  Type getEvent(Event &event, uint32_t &dataID) override;
+  bool addEvent(uint32_t dataID) override;
+  bool isEmpty() const override;
+  EventQueueTimer *newTimer(double duration, bool oneShot) const override;
+  void deleteTimer(EventQueueTimer *) const override;
 
 private:
   DWORD m_thread;

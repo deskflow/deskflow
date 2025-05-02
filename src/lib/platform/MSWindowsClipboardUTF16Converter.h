@@ -13,14 +13,14 @@
 class MSWindowsClipboardUTF16Converter : public MSWindowsClipboardAnyTextConverter
 {
 public:
-  MSWindowsClipboardUTF16Converter();
-  virtual ~MSWindowsClipboardUTF16Converter();
+  MSWindowsClipboardUTF16Converter() = default;
+  ~MSWindowsClipboardUTF16Converter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual UINT getWin32Format() const;
+  UINT getWin32Format() const override;
 
 protected:
   // MSWindowsClipboardAnyTextConverter overrides
-  virtual std::string doFromIClipboard(const std::string &) const;
-  virtual std::string doToIClipboard(const std::string &) const;
+  std::string doFromIClipboard(const std::string &) const override;
+  std::string doToIClipboard(const std::string &) const override;
 };

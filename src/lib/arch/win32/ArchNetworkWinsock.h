@@ -52,39 +52,39 @@ class ArchNetworkWinsock : public IArchNetwork
 {
 public:
   ArchNetworkWinsock();
-  virtual ~ArchNetworkWinsock();
+  ~ArchNetworkWinsock() override;
 
-  virtual void init();
+  void init() override;
 
   // IArchNetwork overrides
-  virtual ArchSocket newSocket(EAddressFamily, ESocketType);
-  virtual ArchSocket copySocket(ArchSocket s);
-  virtual void closeSocket(ArchSocket s);
-  virtual void closeSocketForRead(ArchSocket s);
-  virtual void closeSocketForWrite(ArchSocket s);
-  virtual void bindSocket(ArchSocket s, ArchNetAddress addr);
-  virtual void listenOnSocket(ArchSocket s);
-  virtual ArchSocket acceptSocket(ArchSocket s, ArchNetAddress *addr);
-  virtual bool connectSocket(ArchSocket s, ArchNetAddress name);
-  virtual int pollSocket(PollEntry[], int num, double timeout);
-  virtual void unblockPollSocket(ArchThread thread);
-  virtual size_t readSocket(ArchSocket s, void *buf, size_t len);
-  virtual size_t writeSocket(ArchSocket s, const void *buf, size_t len);
-  virtual void throwErrorOnSocket(ArchSocket);
-  virtual bool setNoDelayOnSocket(ArchSocket, bool noDelay);
-  virtual bool setReuseAddrOnSocket(ArchSocket, bool reuse);
-  virtual std::string getHostName();
-  virtual ArchNetAddress newAnyAddr(EAddressFamily);
-  virtual ArchNetAddress copyAddr(ArchNetAddress);
-  virtual std::vector<ArchNetAddress> nameToAddr(const std::string &);
-  virtual void closeAddr(ArchNetAddress);
-  virtual std::string addrToName(ArchNetAddress);
-  virtual std::string addrToString(ArchNetAddress);
-  virtual EAddressFamily getAddrFamily(ArchNetAddress);
-  virtual void setAddrPort(ArchNetAddress, int port);
-  virtual int getAddrPort(ArchNetAddress);
-  virtual bool isAnyAddr(ArchNetAddress);
-  virtual bool isEqualAddr(ArchNetAddress, ArchNetAddress);
+  ArchSocket newSocket(EAddressFamily, ESocketType) override;
+  ArchSocket copySocket(ArchSocket s) override;
+  void closeSocket(ArchSocket s) override;
+  void closeSocketForRead(ArchSocket s) override;
+  void closeSocketForWrite(ArchSocket s) override;
+  void bindSocket(ArchSocket s, ArchNetAddress addr) override;
+  void listenOnSocket(ArchSocket s) override;
+  ArchSocket acceptSocket(ArchSocket s, ArchNetAddress *addr) override;
+  bool connectSocket(ArchSocket s, ArchNetAddress name) override;
+  int pollSocket(PollEntry[], int num, double timeout) override;
+  void unblockPollSocket(ArchThread thread) override;
+  size_t readSocket(ArchSocket s, void *buf, size_t len) override;
+  size_t writeSocket(ArchSocket s, const void *buf, size_t len) override;
+  void throwErrorOnSocket(ArchSocket) override;
+  bool setNoDelayOnSocket(ArchSocket, bool noDelay) override;
+  bool setReuseAddrOnSocket(ArchSocket, bool reuse) override;
+  std::string getHostName() override;
+  ArchNetAddress newAnyAddr(EAddressFamily) override;
+  ArchNetAddress copyAddr(ArchNetAddress) override;
+  std::vector<ArchNetAddress> nameToAddr(const std::string &) override;
+  void closeAddr(ArchNetAddress) override;
+  std::string addrToName(ArchNetAddress) override;
+  std::string addrToString(ArchNetAddress) override;
+  EAddressFamily getAddrFamily(ArchNetAddress) override;
+  void setAddrPort(ArchNetAddress, int port) override;
+  int getAddrPort(ArchNetAddress) override;
+  bool isAnyAddr(ArchNetAddress) override;
+  bool isEqualAddr(ArchNetAddress, ArchNetAddress) override;
 
 private:
   void initModule(HMODULE);

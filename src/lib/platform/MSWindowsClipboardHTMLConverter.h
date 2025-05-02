@@ -14,16 +14,16 @@ class MSWindowsClipboardHTMLConverter : public MSWindowsClipboardAnyTextConverte
 {
 public:
   MSWindowsClipboardHTMLConverter();
-  virtual ~MSWindowsClipboardHTMLConverter();
+  ~MSWindowsClipboardHTMLConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual UINT getWin32Format() const;
+  IClipboard::EFormat getFormat() const override;
+  UINT getWin32Format() const override;
 
 protected:
   // MSWindowsClipboardAnyTextConverter overrides
-  virtual std::string doFromIClipboard(const std::string &) const;
-  virtual std::string doToIClipboard(const std::string &) const;
+  std::string doFromIClipboard(const std::string &) const override;
+  std::string doToIClipboard(const std::string &) const override;
 
 private:
   std::string findArg(const std::string &data, const std::string &name) const;
