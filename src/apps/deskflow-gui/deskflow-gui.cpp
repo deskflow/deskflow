@@ -55,13 +55,13 @@ int main(int argc, char *argv[])
   // Add Command Line Options
   auto helpOption = QCommandLineOption("help", "Display Help on the command line");
   auto versionOption = QCommandLineOption("version", "Display version information");
-  auto noResetOption = QCommandLineOption("no-reset", "Prevent settings reset if DESKFLOW_RESET_ALL is set");
+  auto resetOption = QCommandLineOption("reset", "Reset all settings");
 
   QCommandLineParser parser;
   parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
   parser.addOption(helpOption);
   parser.addOption(versionOption);
-  parser.addOption(noResetOption);
+  parser.addOption(resetOption);
   parser.parse(QCoreApplication::arguments());
 
   const auto header = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVersion);
@@ -132,8 +132,7 @@ int main(int argc, char *argv[])
 #endif
 
   // --no-reset
-  const auto resetEnvVar = QVariant(qEnvironmentVariable("DESKFLOW_RESET_ALL")).toBool();
-  if (resetEnvVar && !parser.isSet(noResetOption)) {
+  if (parser.isSet(resetOption)) {
     diagnostic::clearSettings(false);
   }
 
