@@ -12,9 +12,12 @@
 class OSXClipboardUTF8Converter : public OSXClipboardAnyTextConverter
 {
 public:
-  virtual CFStringRef getOSXFormat() const;
+  OSXClipboardUTF8Converter() = default;
+  ~OSXClipboardUTF8Converter() override = default;
+
+  CFStringRef getOSXFormat() const override;
 
 private:
-  virtual std::string doFromIClipboard(const std::string &) const;
-  virtual std::string doToIClipboard(const std::string &) const;
+  std::string doFromIClipboard(const std::string &) const override;
+  std::string doToIClipboard(const std::string &) const override;
 };

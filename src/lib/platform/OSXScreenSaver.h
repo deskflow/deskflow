@@ -18,14 +18,14 @@ class OSXScreenSaver : public IScreenSaver
 {
 public:
   OSXScreenSaver(IEventQueue *events, void *eventTarget);
-  virtual ~OSXScreenSaver();
+  ~OSXScreenSaver();
 
   // IScreenSaver overrides
-  virtual void enable();
-  virtual void disable();
-  virtual void activate();
-  virtual void deactivate();
-  virtual bool isActive() const;
+  void enable() override;
+  void disable() override;
+  void activate() override;
+  void deactivate() override;
+  bool isActive() const override;
 
 private:
   void processLaunched(ProcessSerialNumber psn);

@@ -193,10 +193,6 @@ OSXKeyState::OSXKeyState(
   init();
 }
 
-OSXKeyState::~OSXKeyState()
-{
-}
-
 void OSXKeyState::init()
 {
   m_deadKeyState = 0;

@@ -29,11 +29,6 @@ OSXEventQueueBuffer::OSXEventQueueBuffer(IEventQueue *events) : m_eventQueue(eve
   // Initialization is now managed using modern constructs
 }
 
-OSXEventQueueBuffer::~OSXEventQueueBuffer()
-{
-  // No explicit clean-up needed as GCD and STL handle resource management
-}
-
 void OSXEventQueueBuffer::init()
 {
   // No initialization needed for GCD-based implementation

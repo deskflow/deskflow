@@ -8,16 +8,6 @@
 #include "platform/OSXClipboardAnyBitmapConverter.h"
 #include <algorithm>
 
-OSXClipboardAnyBitmapConverter::OSXClipboardAnyBitmapConverter()
-{
-  // do nothing
-}
-
-OSXClipboardAnyBitmapConverter::~OSXClipboardAnyBitmapConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat OSXClipboardAnyBitmapConverter::getFormat() const
 {
   return IClipboard::kBitmap;

@@ -9,16 +9,6 @@
 
 #include "base/Unicode.h"
 
-OSXClipboardHTMLConverter::OSXClipboardHTMLConverter()
-{
-  // do nothing
-}
-
-OSXClipboardHTMLConverter::~OSXClipboardHTMLConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat OSXClipboardHTMLConverter::getFormat() const
 {
   return IClipboard::kHTML;

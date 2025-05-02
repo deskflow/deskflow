@@ -13,18 +13,17 @@
 class OSXClipboardHTMLConverter : public OSXClipboardAnyTextConverter
 {
 public:
-  OSXClipboardHTMLConverter();
-  virtual ~OSXClipboardHTMLConverter();
+  OSXClipboardHTMLConverter() = default;
+  ~OSXClipboardHTMLConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-
-  virtual CFStringRef getOSXFormat() const;
+  IClipboard::EFormat getFormat() const override;
+  CFStringRef getOSXFormat() const override;
 
 protected:
   // OSXClipboardAnyTextConverter overrides
-  virtual std::string doFromIClipboard(const std::string &) const;
-  virtual std::string doToIClipboard(const std::string &) const;
+  std::string doFromIClipboard(const std::string &) const override;
+  std::string doToIClipboard(const std::string &) const override;
 
   // generic encoding converter
   static std::string convertString(const std::string &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding);

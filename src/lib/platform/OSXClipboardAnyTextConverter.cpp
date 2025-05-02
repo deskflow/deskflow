@@ -13,16 +13,6 @@
 // OSXClipboardAnyTextConverter
 //
 
-OSXClipboardAnyTextConverter::OSXClipboardAnyTextConverter()
-{
-  // do nothing
-}
-
-OSXClipboardAnyTextConverter::~OSXClipboardAnyTextConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat OSXClipboardAnyTextConverter::getFormat() const
 {
   return IClipboard::kText;

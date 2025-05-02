@@ -13,16 +13,6 @@
 // OSXClipboardTextConverter
 //
 
-OSXClipboardTextConverter::OSXClipboardTextConverter()
-{
-  // do nothing
-}
-
-OSXClipboardTextConverter::~OSXClipboardTextConverter()
-{
-  // do nothing
-}
-
 CFStringRef OSXClipboardTextConverter::getOSXFormat() const
 {
   return CFSTR("public.plain-text");

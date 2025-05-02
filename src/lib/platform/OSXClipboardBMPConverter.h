@@ -13,17 +13,16 @@
 class OSXClipboardBMPConverter : public IOSXClipboardConverter
 {
 public:
-  OSXClipboardBMPConverter();
-  virtual ~OSXClipboardBMPConverter();
+  OSXClipboardBMPConverter() = default;
+  ~OSXClipboardBMPConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-
-  virtual CFStringRef getOSXFormat() const;
+  IClipboard::EFormat getFormat() const override;
+  CFStringRef getOSXFormat() const override;
 
   // OSXClipboardAnyBMPConverter overrides
-  virtual std::string fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(const std::string &) const;
+  std::string fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(const std::string &) const override;
 
   // generic encoding converter
   static std::string convertString(const std::string &data, CFStringEncoding fromEncoding, CFStringEncoding toEncoding);

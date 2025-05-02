@@ -12,7 +12,7 @@
 class OSXPowerManager
 {
 public:
-  OSXPowerManager();
+  OSXPowerManager() = default;
   ~OSXPowerManager();
 
   /**
