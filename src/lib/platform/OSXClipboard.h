@@ -25,13 +25,13 @@ public:
   static bool isOwnedByDeskflow();
 
   // IClipboard overrides
-  virtual bool empty();
-  virtual void add(EFormat, const std::string &data);
-  virtual bool open(Time) const;
-  virtual void close() const;
-  virtual Time getTime() const;
-  virtual bool has(EFormat) const;
-  virtual std::string get(EFormat) const;
+  bool empty() override;
+  void add(EFormat, const std::string &data) override;
+  bool open(Time) const override;
+  void close() const override;
+  Time getTime() const override;
+  bool has(EFormat) const override;
+  std::string get(EFormat) const override;
 
   bool synchronize();
 

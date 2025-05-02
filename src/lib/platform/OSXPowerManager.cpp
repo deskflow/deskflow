@@ -8,10 +8,6 @@
 #include "OSXPowerManager.h"
 #include "base/Log.h"
 
-OSXPowerManager::OSXPowerManager()
-{
-}
-
 OSXPowerManager::~OSXPowerManager()
 {
   enableSleep();

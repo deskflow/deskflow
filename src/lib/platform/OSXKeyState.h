@@ -29,7 +29,7 @@ public:
 
   OSXKeyState(IEventQueue *events, std::vector<std::string> layouts, bool isLangSyncEnabled);
   OSXKeyState(IEventQueue *events, deskflow::KeyMap &keyMap, std::vector<std::string> layouts, bool isLangSyncEnabled);
-  virtual ~OSXKeyState();
+  ~OSXKeyState() override = default;
 
   //! @name modifiers
   //@{
@@ -79,18 +79,18 @@ public:
   //@}
 
   // IKeyState overrides
-  virtual bool fakeCtrlAltDel();
-  virtual bool fakeMediaKey(KeyID id);
-  virtual KeyModifierMask pollActiveModifiers() const;
-  virtual int32_t pollActiveGroup() const;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
+  bool fakeCtrlAltDel() override;
+  bool fakeMediaKey(KeyID id) override;
+  KeyModifierMask pollActiveModifiers() const override;
+  int32_t pollActiveGroup() const override;
+  void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
 
   CGEventFlags getModifierStateAsOSXFlags() const;
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(deskflow::KeyMap &keyMap);
-  virtual void fakeKey(const Keystroke &keystroke);
+  void getKeyMap(deskflow::KeyMap &keyMap) override;
+  void fakeKey(const Keystroke &keystroke) override;
 
 private:
   class KeyResource;

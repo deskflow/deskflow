@@ -13,14 +13,14 @@
 class OSXClipboardAnyBitmapConverter : public IOSXClipboardConverter
 {
 public:
-  OSXClipboardAnyBitmapConverter();
-  virtual ~OSXClipboardAnyBitmapConverter();
+  OSXClipboardAnyBitmapConverter() = default;
+  ~OSXClipboardAnyBitmapConverter() override = default;
 
   // IOSXClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual CFStringRef getOSXFormat() const = 0;
-  virtual std::string fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(const std::string &) const;
+  IClipboard::EFormat getFormat() const override;
+  CFStringRef getOSXFormat() const override = 0;
+  std::string fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(const std::string &) const override;
 
 protected:
   //! Convert from IClipboard format

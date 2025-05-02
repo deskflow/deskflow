@@ -19,12 +19,12 @@ public:
   OSXUchrKeyResource(const void *, uint32_t keyboardType);
 
   // KeyResource overrides
-  virtual bool isValid() const;
-  virtual uint32_t getNumModifierCombinations() const;
-  virtual uint32_t getNumTables() const;
-  virtual uint32_t getNumButtons() const;
-  virtual uint32_t getTableForModifier(uint32_t mask) const;
-  virtual KeyID getKey(uint32_t table, uint32_t button) const;
+  bool isValid() const override;
+  uint32_t getNumModifierCombinations() const override;
+  uint32_t getNumTables() const override;
+  uint32_t getNumButtons() const override;
+  uint32_t getTableForModifier(uint32_t mask) const override;
+  KeyID getKey(uint32_t table, uint32_t button) const override;
 
 private:
   using KeySequence = std::vector<KeyID>;
