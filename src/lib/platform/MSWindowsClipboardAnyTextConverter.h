@@ -13,14 +13,14 @@
 class MSWindowsClipboardAnyTextConverter : public IMSWindowsClipboardConverter
 {
 public:
-  MSWindowsClipboardAnyTextConverter();
-  virtual ~MSWindowsClipboardAnyTextConverter();
+  MSWindowsClipboardAnyTextConverter() = default;
+  ~MSWindowsClipboardAnyTextConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  virtual IClipboard::EFormat getFormat() const;
-  virtual UINT getWin32Format() const = 0;
-  virtual HANDLE fromIClipboard(const std::string &) const;
-  virtual std::string toIClipboard(HANDLE) const;
+  IClipboard::EFormat getFormat() const override;
+  UINT getWin32Format() const override = 0;
+  HANDLE fromIClipboard(const std::string &) const override;
+  std::string toIClipboard(HANDLE) const override;
 
 protected:
   //! Convert from IClipboard format

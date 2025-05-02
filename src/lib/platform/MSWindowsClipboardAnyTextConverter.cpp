@@ -11,16 +11,6 @@
 // MSWindowsClipboardAnyTextConverter
 //
 
-MSWindowsClipboardAnyTextConverter::MSWindowsClipboardAnyTextConverter()
-{
-  // do nothing
-}
-
-MSWindowsClipboardAnyTextConverter::~MSWindowsClipboardAnyTextConverter()
-{
-  // do nothing
-}
-
 IClipboard::EFormat MSWindowsClipboardAnyTextConverter::getFormat() const
 {
   return IClipboard::kText;

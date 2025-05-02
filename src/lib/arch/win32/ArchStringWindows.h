@@ -15,9 +15,9 @@
 class ArchStringWindows : public IArchString
 {
 public:
-  ArchStringWindows();
-  virtual ~ArchStringWindows();
+  ArchStringWindows() = default;
+  ~ArchStringWindows() override = default;
 
   // IArchString overrides
-  virtual EWideCharEncoding getWideCharEncoding();
+  EWideCharEncoding getWideCharEncoding() override;
 };

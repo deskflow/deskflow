@@ -22,9 +22,7 @@ public:
   XArchEvalWindows(DWORD error) : m_error(error)
   {
   }
-  virtual ~XArchEvalWindows()
-  {
-  }
+  ~XArchEvalWindows() override = default;
 
   virtual std::string eval() const throw();
 
@@ -39,9 +37,7 @@ public:
   XArchEvalWinsock(int error) : m_error(error)
   {
   }
-  virtual ~XArchEvalWinsock()
-  {
-  }
+  ~XArchEvalWinsock() override = default;
 
   virtual std::string eval() const throw();
 

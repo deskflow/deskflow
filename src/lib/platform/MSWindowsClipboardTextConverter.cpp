@@ -13,16 +13,6 @@
 // MSWindowsClipboardTextConverter
 //
 
-MSWindowsClipboardTextConverter::MSWindowsClipboardTextConverter()
-{
-  // do nothing
-}
-
-MSWindowsClipboardTextConverter::~MSWindowsClipboardTextConverter()
-{
-  // do nothing
-}
-
 UINT MSWindowsClipboardTextConverter::getWin32Format() const
 {
   return CF_TEXT;

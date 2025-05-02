@@ -30,7 +30,7 @@ class AppUtilWindows : public AppUtil
 {
 public:
   AppUtilWindows(IEventQueue *events);
-  virtual ~AppUtilWindows();
+  ~AppUtilWindows() override;
 
   static AppUtilWindows &instance();
 

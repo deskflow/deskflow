@@ -46,8 +46,8 @@ enum EHookMode
 class MSWindowsHook
 {
 public:
-  MSWindowsHook();
-  virtual ~MSWindowsHook();
+  MSWindowsHook() = default;
+  ~MSWindowsHook();
 
   void loadLibrary();
 

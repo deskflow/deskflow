@@ -131,18 +131,18 @@ public:
   //@}
 
   // IKeyState overrides
-  virtual void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang);
-  virtual bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang);
-  virtual bool fakeCtrlAltDel();
-  virtual KeyModifierMask pollActiveModifiers() const;
-  virtual int32_t pollActiveGroup() const;
-  virtual void pollPressedKeys(KeyButtonSet &pressedKeys) const;
+  void fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang) override;
+  bool fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
+  bool fakeCtrlAltDel() override;
+  KeyModifierMask pollActiveModifiers() const override;
+  int32_t pollActiveGroup() const override;
+  void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
 
   // KeyState overrides
-  virtual void onKey(KeyButton button, bool down, KeyModifierMask newState);
-  virtual void sendKeyEvent(
+  void onKey(KeyButton button, bool down, KeyModifierMask newState) override;
+  void sendKeyEvent(
       void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
-  );
+  ) override;
 
   // Unit test accessors
   KeyButton getLastDown() const
@@ -164,9 +164,9 @@ public:
 
 protected:
   // KeyState overrides
-  virtual void getKeyMap(deskflow::KeyMap &keyMap);
-  virtual void fakeKey(const Keystroke &keystroke);
-  virtual KeyModifierMask &getActiveModifiersRValue();
+  void getKeyMap(deskflow::KeyMap &keyMap) override;
+  void fakeKey(const Keystroke &keystroke) override;
+  KeyModifierMask &getActiveModifiersRValue() override;
 
 private:
   using GroupList = std::vector<HKL>;

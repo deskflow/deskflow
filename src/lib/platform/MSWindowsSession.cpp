@@ -16,10 +16,6 @@ MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1)
 {
 }
 
-MSWindowsSession::~MSWindowsSession()
-{
-}
-
 bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nullptr)
 {
   // first we need to take a snapshot of the running processes

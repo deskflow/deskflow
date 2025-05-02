@@ -13,16 +13,6 @@
 // MSWindowsClipboardUTF16Converter
 //
 
-MSWindowsClipboardUTF16Converter::MSWindowsClipboardUTF16Converter()
-{
-  // do nothing
-}
-
-MSWindowsClipboardUTF16Converter::~MSWindowsClipboardUTF16Converter()
-{
-  // do nothing
-}
-
 UINT MSWindowsClipboardUTF16Converter::getWin32Format() const
 {
   return CF_UNICODETEXT;

@@ -19,13 +19,13 @@ class ArchLogWindows : public IArchLog
 {
 public:
   ArchLogWindows();
-  virtual ~ArchLogWindows();
+  ~ArchLogWindows() override = default;
 
   // IArchLog overrides
-  virtual void openLog(const char *name);
-  virtual void closeLog();
-  virtual void showLog(bool showIfEmpty);
-  virtual void writeLog(ELevel, const char *);
+  void openLog(const char *name) override;
+  void closeLog() override;
+  void showLog(bool showIfEmpty) override;
+  void writeLog(ELevel, const char *) override;
 
 private:
   HANDLE m_eventLog;

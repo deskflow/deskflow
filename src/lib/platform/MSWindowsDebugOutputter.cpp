@@ -11,24 +11,19 @@
 #include <Windows.h>
 #include <string>
 
-MSWindowsDebugOutputter::MSWindowsDebugOutputter()
-{
-}
-
-MSWindowsDebugOutputter::~MSWindowsDebugOutputter()
-{
-}
-
 void MSWindowsDebugOutputter::open(const char *title)
 {
+  // do nothing
 }
 
 void MSWindowsDebugOutputter::close()
 {
+  // do nothing
 }
 
 void MSWindowsDebugOutputter::show(bool showIfEmpty)
 {
+  // do nothing
 }
 
 bool MSWindowsDebugOutputter::write(ELevel level, const char *msg)
@@ -39,4 +34,5 @@ bool MSWindowsDebugOutputter::write(ELevel level, const char *msg)
 
 void MSWindowsDebugOutputter::flush()
 {
+  // do nothing
 }

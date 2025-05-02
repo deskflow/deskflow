@@ -34,10 +34,6 @@ static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
 
-MSWindowsHook::MSWindowsHook()
-{
-}
-
 MSWindowsHook::~MSWindowsHook()
 {
   cleanup();

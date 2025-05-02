@@ -14,6 +14,6 @@
 class ArchConsoleWindows : public ArchConsoleStd
 {
 public:
-  ArchConsoleWindows();
-  virtual ~ArchConsoleWindows();
+  ArchConsoleWindows() = default;
+  ~ArchConsoleWindows() override = default;
 };

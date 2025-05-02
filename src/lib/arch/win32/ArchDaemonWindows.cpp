@@ -23,11 +23,6 @@ ArchDaemonWindows::ArchDaemonWindows() : m_daemonThreadID(0)
   m_quitMessage = RegisterWindowMessage("DeskflowDaemonExit");
 }
 
-ArchDaemonWindows::~ArchDaemonWindows()
-{
-  // do nothing
-}
-
 int ArchDaemonWindows::runDaemon(RunFunc runFunc)
 {
   assert(s_daemon != nullptr);

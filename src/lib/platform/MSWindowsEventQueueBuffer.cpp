@@ -39,11 +39,6 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue *events) : m_ev
   PeekMessage(&dummy, nullptr, WM_USER, WM_USER, PM_NOREMOVE);
 }
 
-MSWindowsEventQueueBuffer::~MSWindowsEventQueueBuffer()
-{
-  // do nothing
-}
-
 void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
 {
   // check if messages are available first.  if we don't do this then

@@ -16,8 +16,8 @@ class ArchTimeWindows : public IArchTime
 {
 public:
   ArchTimeWindows();
-  virtual ~ArchTimeWindows();
+  ~ArchTimeWindows() override;
 
   // IArchTime overrides
-  virtual double time();
+  double time() override;
 };
