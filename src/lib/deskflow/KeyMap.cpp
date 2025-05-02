@@ -303,8 +303,7 @@ int32_t KeyMap::getLanguageGroupID(int32_t group, const std::string &lang) const
 {
   int32_t id = group;
 
-  auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang);
-  if (it != m_keyboardLayouts.end()) {
+  if (auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang); it != m_keyboardLayouts.end()) {
     id = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
     LOG((CLOG_DEBUG1 "language %s has group id %d", lang.c_str(), id));
   } else {

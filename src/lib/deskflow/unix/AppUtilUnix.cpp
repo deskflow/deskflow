@@ -118,8 +118,8 @@ std::string AppUtilUnix::getCurrentLanguageCode()
       continue;
     }
 
-    auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
-    if (group.find("group", 0, 5) == std::string::npos && group.find("inet", 0, 4) == std::string::npos &&
+    if (auto group = rawLayouts.substr(groupStartI, strI - groupStartI);
+        group.find("group", 0, 5) == std::string::npos && group.find("inet", 0, 4) == std::string::npos &&
         group.find("pc", 0, 2) == std::string::npos) {
       if (nedeedGroupIndex == groupIdx) {
         result = group.substr(0, std::min(group.find('(', 0), group.find(':', 0)));

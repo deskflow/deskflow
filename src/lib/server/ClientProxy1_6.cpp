@@ -57,9 +57,7 @@ bool ClientProxy1_6::recvClipboard()
   ClipboardID id;
   uint32_t seq;
 
-  int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq);
-
-  if (r == kStart) {
+  if (int r = ClipboardChunk::assemble(getStream(), dataCached, id, seq); r == kStart) {
     size_t size = ClipboardChunk::getExpectedSize();
     LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
   } else if (r == kFinish) {

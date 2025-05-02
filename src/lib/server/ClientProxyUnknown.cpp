@@ -213,16 +213,14 @@ void ClientProxyUnknown::handleData(const Event &, void *)
 
   try {
     // limit the maximum length of the hello
-    uint32_t n = m_stream->getSize();
-    if (n > kMaxHelloLength) {
+    if (uint32_t n = m_stream->getSize(); n > kMaxHelloLength) {
       LOG((CLOG_DEBUG1 "hello reply too long"));
       throw XBadClient();
     }
 
     // parse the reply to hello
     int16_t major, minor;
-    std::string protocolName;
-    if (!ProtocolUtil::readf(m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
+    if (std::string protocolName; !ProtocolUtil::readf(m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
       throw XBadClient();
     }
 

@@ -406,8 +406,8 @@ void XWindowsScreenSaver::watchForXScreenSaver()
   // add every child of the root to the list of windows to watch
   Window root = DefaultRootWindow(m_display);
   Window rw, pw, *cw;
-  unsigned int nc;
-  if (XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
+
+  if (unsigned int nc; XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
     for (unsigned int i = 0; i < nc; ++i) {
       addWatchXScreenSaver(cw[i]);
     }

@@ -41,12 +41,10 @@ bool X11LayoutsParser::readXMLConfigItemElem(const QDomNode &node, std::vector<L
   }
 
   langList.emplace_back();
-  auto nameElem = configItemElem.firstChildElement("name");
-  if (!nameElem.isNull())
+  if (auto nameElem = configItemElem.firstChildElement("name"); !nameElem.isNull())
     langList.back().name = nameElem.toElement().text().toStdString();
 
-  auto languageListElem = configItemElem.elementsByTagName("languageList");
-  if (!languageListElem.isEmpty()) {
+  if (auto languageListElem = configItemElem.elementsByTagName("languageList"); !languageListElem.isEmpty()) {
     for (int i = 0; i < languageListElem.count(); i++) {
       const auto isoElem = languageListElem.at(i).namedItem("iso639Id").toElement();
       langList.back().layoutBaseISO639_2.emplace_back(isoElem.text().toStdString());

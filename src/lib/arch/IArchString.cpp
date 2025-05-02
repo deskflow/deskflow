@@ -55,8 +55,7 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, boo
       len += mblen;
       ++scan;
     }
-    ptrdiff_t mblen = wctomb(dummy, L'\0');
-    if (mblen != -1) {
+    if (ptrdiff_t mblen = wctomb(dummy, L'\0'); mblen != -1) {
       len += mblen - 1;
     }
   } else {
@@ -72,8 +71,7 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, boo
       }
       ++scan;
     }
-    ptrdiff_t mblen = wctomb(dst, L'\0');
-    if (mblen != -1) {
+    if (ptrdiff_t mblen = wctomb(dst, L'\0'); mblen != -1) {
       // don't include nul terminator
       dst += mblen - 1;
     }
@@ -104,8 +102,7 @@ int IArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, boo
   if (dst == nullptr) {
     const char *scan = src;
     while (n > 0) {
-      ptrdiff_t mblen = mbtowc(&dummy, scan, n);
-      switch (mblen) {
+      switch (ptrdiff_t mblen = mbtowc(&dummy, scan, n); mblen) {
       case -2:
         // incomplete last character.  convert to unknown character.
         *errors = true;
@@ -140,8 +137,7 @@ int IArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, boo
     wchar_t *dst0 = dst;
     const char *scan = src;
     while (n > 0) {
-      ptrdiff_t mblen = mbtowc(dst, scan, n);
-      switch (mblen) {
+      switch (ptrdiff_t mblen = mbtowc(dst, scan, n); mblen) {
       case -2:
         // incomplete character.  convert to unknown character.
         *errors = true;

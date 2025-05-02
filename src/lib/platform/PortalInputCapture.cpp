@@ -98,8 +98,7 @@ int PortalInputCapture::fake_eis_fd()
   };
   std::snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", path);
 
-  auto result = connect(fd, (struct sockaddr *)&addr, sizeof(addr));
-  if (result != 0) {
+  if (auto result = connect(fd, (struct sockaddr *)&addr, sizeof(addr)); result != 0) {
     LOG_DEBUG("faked eis fd failed: %s", strerror(errno));
   }
 

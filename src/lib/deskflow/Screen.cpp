@@ -319,11 +319,7 @@ bool Screen::isOnScreen() const
 
 bool Screen::isLockedToScreen() const
 {
-  // check for pressed mouse buttons
-  // HACK: commented out as it breaks new drag drop feature
-  uint32_t buttonID = 0;
-
-  if (m_screen->isAnyMouseButtonDown(buttonID)) {
+  if (uint32_t buttonID = 0; m_screen->isAnyMouseButtonDown(buttonID)) {
     LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
     return true;
   }

@@ -121,8 +121,8 @@ retry:
     // get time until next timer expires.  if there is a timer
     // and it'll expire before the client's timeout then use
     // that duration for our timeout instead.
-    double timerTimeout = getNextTimerTimeout();
-    if (timeout < 0.0 || (timerTimeout >= 0.0 && timerTimeout < timeLeft)) {
+    if (double timerTimeout = getNextTimerTimeout();
+        timeout < 0.0 || (timerTimeout >= 0.0 && timerTimeout < timeLeft)) {
       timeLeft = timerTimeout;
     }
 
@@ -253,8 +253,7 @@ void EventQueue::deleteTimer(EventQueueTimer *timer)
       break;
     }
   }
-  Timers::iterator index = m_timers.find(timer);
-  if (index != m_timers.end()) {
+  if (Timers::iterator index = m_timers.find(timer); index != m_timers.end()) {
     m_timers.erase(index);
   }
   m_buffer->deleteTimer(timer);
@@ -316,8 +315,7 @@ bool EventQueue::isEmpty() const
 IEventJob *EventQueue::getHandler(EventTypes type, void *target) const
 {
   ArchMutexLock lock(m_mutex);
-  HandlerTable::const_iterator index = m_handlers.find(target);
-  if (index != m_handlers.end()) {
+  if (HandlerTable::const_iterator index = m_handlers.find(target); index != m_handlers.end()) {
     const TypeHandlerTable &typeHandlers = index->second;
     TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
     if (index2 != typeHandlers.end()) {

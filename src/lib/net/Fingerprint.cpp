@@ -52,10 +52,11 @@ Fingerprint Fingerprint::fromDbLine(const QString &line)
     result.data = QByteArray::fromHex(sLine.at(2).toLower().toLatin1());
   } else {
     // v1 fallback
-    const auto kSha1ColonCount = 19;
-    const auto kSha1HexCharCount = 40;
-    const auto kSha1ExpectedSize = kSha1HexCharCount + kSha1ColonCount;
-    if (line.size() != kSha1ExpectedSize || line.count(':') != kSha1ColonCount)
+    static const auto kSha1ColonCount = 19;
+    static const auto kSha1HexCharCount = 40;
+    static const auto kSha1ExpectedSize = kSha1HexCharCount + kSha1ColonCount;
+    const bool wrongSize = line.size() != kSha1ExpectedSize;
+    if (bool badColonCount = line.count(':') != kSha1ColonCount; wrongSize || badColonCount)
       return result;
     result.type = Fingerprint::Type::SHA1;
     auto l2 = line;

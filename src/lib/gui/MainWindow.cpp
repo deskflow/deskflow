@@ -405,8 +405,7 @@ void MainWindow::settingsChanged(const QString &key)
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
-    const auto certificate = Settings::value(Settings::Security::Certificate).toString();
-    if (m_tlsUtility.isEnabled() && !QFile::exists(certificate)) {
+    if (m_tlsUtility.isEnabled() && !QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
       m_tlsUtility.generateCertificate();
     }
     updateSecurityIcon(m_lblSecurityStatus->isVisible());
@@ -1130,8 +1129,7 @@ bool MainWindow::regenerateLocalFingerprints()
     return false;
   }
 
-  TlsCertificate tls;
-  if (!tls.generateFingerprint(certificate)) {
+  if (TlsCertificate tls; !tls.generateFingerprint(certificate)) {
     return false;
   }
 

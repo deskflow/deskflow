@@ -485,8 +485,7 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
   bool isAccepted = false;
   Screen newScreen(clientName);
 
-  ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens);
-  if (doSilent || dlg.exec() == QDialog::Accepted) {
+  if (ScreenSettingsDialog dlg(this, &newScreen, &model().m_Screens); doSilent || dlg.exec() == QDialog::Accepted) {
     model().addScreen(newScreen);
     isAccepted = true;
   }

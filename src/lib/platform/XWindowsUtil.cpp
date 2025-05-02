@@ -1748,8 +1748,7 @@ KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k)
 
   default: {
     // lookup character in table
-    KeySymMap::const_iterator index = s_keySymToUCS4.find(k);
-    if (index != s_keySymToUCS4.end()) {
+    if (KeySymMap::const_iterator index = s_keySymToUCS4.find(k); index != s_keySymToUCS4.end()) {
       return static_cast<KeyID>(index->second);
     }
 

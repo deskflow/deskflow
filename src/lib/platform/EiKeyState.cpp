@@ -50,9 +50,8 @@ void EiKeyState::init(int fd, size_t len)
 {
   auto buffer = std::make_unique<char[]>(len + 1);
   lseek(fd, 0, SEEK_SET);
-  auto sz = read(fd, buffer.get(), len);
 
-  if ((size_t)sz < len) {
+  if (auto sz = read(fd, buffer.get(), len); (size_t)sz < len) {
     LOG_WARN("failed to create xkb context: %s", strerror(errno));
     return;
   }
@@ -143,9 +142,8 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, deskflow::Key
 {
   std::uint32_t mods_generates = 0;
   auto state = xkb_state_new(xkb_keymap_);
-  enum xkb_state_component changed = xkb_state_update_key(state, keycode, XKB_KEY_DOWN);
 
-  if (changed) {
+  if (enum xkb_state_component changed = xkb_state_update_key(state, keycode, XKB_KEY_DOWN); changed) {
     for (xkb_mod_index_t m = 0; m < xkb_keymap_num_mods(xkb_keymap_); m++) {
       if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_LOCKED))
         item.m_lock = true;

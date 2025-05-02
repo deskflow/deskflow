@@ -66,10 +66,9 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
   // clear out the pipe in preparation for waiting.
 
   char buf[16];
-  ssize_t read_response = read(m_pipefd[0], buf, 15);
 
   // with linux automake, warnings are treated as errors by default
-  if (read_response < 0) {
+  if (ssize_t read_response = read(m_pipefd[0], buf, 15); read_response < 0) {
     // todo: handle read response
   }
 
