@@ -192,12 +192,6 @@ public:
   */
   virtual const char *getTypeName(Event::Type type) = 0;
 
-  //! Get an event type by name
-  /*!
-  Returns the registered type for an event for a given name.
-  */
-  virtual Event::Type getRegisteredType(const std::string &name) const = 0;
-
   //! Get the system event type target
   /*!
   Returns the target to use for dispatching \c Event::kSystem events.
