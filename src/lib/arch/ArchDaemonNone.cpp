@@ -21,7 +21,7 @@ void ArchDaemonNone::uninstallDaemon(const char *)
   // do nothing
 }
 
-int ArchDaemonNone::daemonize(const char *name, DaemonFunc func)
+int ArchDaemonNone::daemonize(const char *name, DaemonFunc const &func)
 {
   // simply forward the call to func.  obviously, this doesn't
   // do any daemonizing.

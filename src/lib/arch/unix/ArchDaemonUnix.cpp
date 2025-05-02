@@ -44,7 +44,7 @@ bool alreadyDaemonized()
 
 #endif
 
-int ArchDaemonUnix::daemonize(const char *name, DaemonFunc func)
+int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
 {
 #ifdef __APPLE__
   if (alreadyDaemonized())

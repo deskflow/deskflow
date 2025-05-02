@@ -88,7 +88,7 @@ public:
     \c ArchMiscWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
-  virtual int daemonize(const char *name, DaemonFunc func) = 0;
+  virtual int daemonize(const char *name, DaemonFunc const &func) = 0;
 
   //! Check if user has permission to install the daemon
   /*!

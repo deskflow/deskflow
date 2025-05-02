@@ -74,7 +74,7 @@ public:
   void uninstallDaemon(const char *name) override;
   void installDaemon() override;
   void uninstallDaemon() override;
-  int daemonize(const char *name, DaemonFunc func) override;
+  int daemonize(const char *name, DaemonFunc const &func) override;
   bool canInstallDaemon(const char *name) override;
   bool isDaemonInstalled(const char *name) override;
   std::string commandLine() const
