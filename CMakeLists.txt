@@ -96,8 +96,14 @@ set(REQUIRED_LIBPORTAL_VERSION 0.8)
 set(REQUIRED_QT_VERSION 6.7.0)
 
 if (WIN32)
+  # VSCMD_ARG_TGT_ARCH is set on CI
   if ("$ENV{VSCMD_ARG_TGT_ARCH}" STREQUAL "")
-    set (BUILD_ARCHITECTURE x64)
+    # NOT on CI
+    if (CMAKE_SYSTEM_PROCESSOR MATCHES "[Aa][Rr][Mm]64")
+      set(BUILD_ARCHITECTURE arm64)
+    else()
+      set(BUILD_ARCHITECTURE x64)
+    endif()
   else()
     set (BUILD_ARCHITECTURE $ENV{VSCMD_ARG_TGT_ARCH})
   endif()
