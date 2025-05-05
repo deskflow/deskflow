@@ -23,7 +23,6 @@
 #include "mt/Mutex.h"
 #include "mt/Thread.h"
 #include "platform/OSXClipboard.h"
-#include "platform/OSXDragSimulator.h"
 #include "platform/OSXEventQueueBuffer.h"
 #include "platform/OSXKeyState.h"
 #include "platform/OSXMediaKeySupport.h"
@@ -85,8 +84,6 @@ OSXScreen::OSXScreen(
       m_cursorPosValid(false),
       MouseButtonEventMap(NumButtonIDs),
       m_cursorHidden(false),
-      m_dragNumButtonsDown(0),
-      m_dragTimer(nullptr),
       m_keyState(nullptr),
       m_sequenceNumber(0),
       m_screensaver(nullptr),
@@ -109,7 +106,6 @@ OSXScreen::OSXScreen(
       m_lastSingleClickXCursor(0),
       m_lastSingleClickYCursor(0),
       m_events(events),
-      m_getDropTargetThread(nullptr),
       m_impl(nullptr)
 {
   m_displayID = CGMainDisplayID();
@@ -548,55 +544,10 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
   CGEventPost(kCGHIDEventTap, event);
 
   CFRelease(event);
-
-  if (!press && (id == kButtonLeft)) {
-    if (m_fakeDraggingStarted) {
-      auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
-      m_getDropTargetThread.reset(new Thread(method));
-    }
-
-    m_draggingStarted = false;
-  }
-}
-
-void OSXScreen::getDropTargetThread(void *)
-{
-  // wait for 5 secs for the drop destinaiton string to be filled.
-  uint32_t timeout = ARCH->time() + 5;
-  m_dropTarget.clear();
-
-  while (ARCH->time() < timeout) {
-    CFStringRef cfstr = getCocoaDropTarget();
-    char *cstr = CFStringRefToUTF8String(cfstr);
-    CFRelease(cfstr);
-
-    if (cstr != nullptr) {
-      LOG((CLOG_DEBUG "drop target: %s", cstr));
-      m_dropTarget = cstr;
-      free(cstr);
-      break;
-    }
-    ARCH->sleep(.1f);
-  }
-
-  if (m_dropTarget.empty()) {
-    LOG((CLOG_ERR "failed to get drop target"));
-  }
-
-  m_fakeDraggingStarted = false;
 }
 
 void OSXScreen::fakeMouseMove(int32_t x, int32_t y)
 {
-  if (m_fakeDraggingStarted) {
-    m_buttonState.set(0, kMouseButtonDown);
-  }
-
-  // index 0 means left mouse button
-  if (m_buttonState.test(0)) {
-    m_draggingStarted = true;
-  }
-
   // synthesize event
   CGPoint pos;
   pos.x = x;
@@ -761,10 +712,6 @@ void OSXScreen::disable()
   }
   // FIXME -- allow system to enter power saving mode
 
-  // disable drag handling
-  m_dragNumButtonsDown = 0;
-  enableDragTimer(false);
-
   // uninstall clipboard timer
   if (m_clipboardTimer != nullptr) {
     m_events->removeHandler(EventTypes::Timer, m_clipboardTimer);
@@ -807,31 +754,6 @@ bool OSXScreen::canLeave()
 void OSXScreen::leave()
 {
   hideCursor();
-
-  if (isDraggingStarted()) {
-    std::string &fileList = getDraggingFilename();
-
-    if (!m_isPrimary) {
-      if (fileList.empty() == false) {
-        ClientApp &app = ClientApp::instance();
-        Client *client = app.getClientPtr();
-
-        DragInformation di;
-        di.setFilename(fileList);
-        DragFileList dragFileList;
-        dragFileList.push_back(di);
-        std::string info;
-        uint32_t fileCount = DragInformation::setupDragInfo(dragFileList, info);
-        client->sendDragInfo(fileCount, info, info.size());
-        LOG((CLOG_DEBUG "send dragging file to server"));
-
-        // TODO: what to do with multiple file or even
-        // a folder
-        client->sendFileToServer(fileList.c_str());
-      }
-    }
-    m_draggingStarted = false;
-  }
 
   if (m_isPrimary) {
     avoidHesitatingCursor();
@@ -1011,9 +933,6 @@ bool OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
   if (m_isOnScreen) {
     // motion on primary screen
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
-    if (m_buttonState.test(0)) {
-      m_draggingStarted = true;
-    }
   } else {
     // motion on secondary screen.  warp mouse back to
     // center.
@@ -1067,37 +986,6 @@ bool OSXScreen::onMouseButton(bool pressed, uint16_t macButton)
     if (button != kButtonNone) {
       KeyModifierMask mask = m_keyState->getActiveModifiers();
       sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
-    }
-  }
-
-  // handle drags with any button other than button 1 or 2
-  if (macButton > 2) {
-    if (pressed) {
-      // one more button
-      if (m_dragNumButtonsDown++ == 0) {
-        enableDragTimer(true);
-      }
-    } else {
-      // one less button
-      if (--m_dragNumButtonsDown == 0) {
-        enableDragTimer(false);
-      }
-    }
-  }
-
-  if (macButton == kButtonLeft) {
-    EMouseButtonState state = pressed ? kMouseButtonDown : kMouseButtonUp;
-    m_buttonState.set(kButtonLeft - 1, state);
-    if (pressed) {
-      m_draggingFilename.clear();
-      LOG((CLOG_DEBUG2 "dragging file directory is cleared"));
-    } else {
-      if (m_fakeDraggingStarted) {
-        auto method = new TMethodJob<OSXScreen>(this, &OSXScreen::getDropTargetThread);
-        m_getDropTargetThread.reset(new Thread(method));
-      }
-
-      m_draggingStarted = false;
     }
   }
 
@@ -1356,38 +1244,6 @@ double OSXScreen::getScrollSpeed() const
   }
 
   return scaling;
-}
-
-void OSXScreen::enableDragTimer(bool enable)
-{
-  if (enable && m_dragTimer == nullptr) {
-    m_dragTimer = m_events->newTimer(0.01, nullptr);
-    m_events->adoptHandler(
-        EventTypes::Timer, m_dragTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleDrag)
-    );
-    CGEventRef event = CGEventCreate(nullptr);
-    CGPoint mouse = CGEventGetLocation(event);
-    m_dragLastPoint.h = (short)mouse.x;
-    m_dragLastPoint.v = (short)mouse.y;
-    CFRelease(event);
-  } else if (!enable && m_dragTimer != nullptr) {
-    m_events->removeHandler(EventTypes::Timer, m_dragTimer);
-    m_events->deleteTimer(m_dragTimer);
-    m_dragTimer = nullptr;
-  }
-}
-
-void OSXScreen::handleDrag(const Event &, void *)
-{
-  CGEventRef event = CGEventCreate(nullptr);
-  CGPoint p = CGEventGetLocation(event);
-  CFRelease(event);
-
-  if ((short)p.x != m_dragLastPoint.h || (short)p.y != m_dragLastPoint.v) {
-    m_dragLastPoint.h = (short)p.x;
-    m_dragLastPoint.v = (short)p.y;
-    onMouseMove((int32_t)p.x, (int32_t)p.y);
-  }
 }
 
 void OSXScreen::updateButtons()
@@ -1886,40 +1742,6 @@ char *OSXScreen::CFStringRefToUTF8String(CFStringRef aString)
   }
 
   return buffer;
-}
-
-void OSXScreen::fakeDraggingFiles(DragFileList fileList)
-{
-  m_fakeDraggingStarted = true;
-  std::string fileExt;
-  if (fileList.size() == 1) {
-    fileExt = DragInformation::getDragFileExtension(fileList.at(0).getFilename());
-  }
-
-  fakeDragging(fileExt.c_str(), m_xCursor, m_yCursor);
-}
-
-std::string &OSXScreen::getDraggingFilename()
-{
-  if (m_draggingStarted) {
-    m_draggingFilename.clear();
-
-    CFStringRef dragInfo = getDraggedFileURL();
-    char *info = CFStringRefToUTF8String(dragInfo);
-    CFRelease(dragInfo);
-
-    if (info != nullptr) {
-      LOG((CLOG_DEBUG "drag info: %s", info));
-      m_draggingFilename = info;
-      free(info);
-    }
-
-    // fake a escape key down and up then left mouse button up
-    fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
-    fakeKeyUp(1);
-    fakeMouseButton(kButtonLeft, false);
-  }
-  return m_draggingFilename;
 }
 
 void OSXScreen::waitForCarbonLoop() const

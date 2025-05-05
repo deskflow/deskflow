@@ -49,7 +49,7 @@
 #if WINAPI_CARBON
 #include "base/TMethodJob.h"
 #include "mt/Thread.h"
-#include "platform/OSXDragSimulator.h"
+#include "platform/OSXCocoaApp.h"
 #include "platform/OSXScreen.h"
 #endif
 
@@ -429,7 +429,6 @@ bool ServerApp::initServer()
 deskflow::Screen *ServerApp::openServerScreen()
 {
   deskflow::Screen *screen = createScreen();
-  screen->setEnableDragDrop(argsBase().m_enableDragDrop);
   m_events->adoptHandler(
       EventTypes::ScreenError, screen->getEventTarget(),
       new TMethodEventJob<ServerApp>(this, &ServerApp::handleScreenError)

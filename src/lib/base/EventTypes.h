@@ -227,15 +227,6 @@ enum class EventTypes : uint32_t
   /// This event is sent whenever a clipboard chunk is transferred.
   ClipboardSending,
 
-  /// This event is sent whenever a file chunk is transferred.
-  FileChunkSending,
-
-  /// This event is sent whenever file has been received.
-  FileReceiveCompleted,
-
-  /// This event is a keepalive event.
-  FileKeepAlive,
-
   /// Start libEI
   EIConnected,
   /// Stop libEi

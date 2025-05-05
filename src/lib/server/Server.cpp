@@ -13,8 +13,6 @@
 #include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "deskflow/AppUtil.h"
-#include "deskflow/DropHelper.h"
-#include "deskflow/FileChunk.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/PacketStreamFilter.h"
@@ -73,14 +71,9 @@ Server::Server(
       m_lockedToScreen(false),
       m_screen(screen),
       m_events(events),
-      m_sendFileThread(nullptr),
-      m_writeToDropDirThread(nullptr),
-      m_ignoreFileTransfer(false),
       m_disableLockToScreen(false),
       m_enableClipboard(true),
       m_maximumClipboardSize(INT_MAX),
-      m_sendDragInfoThread(nullptr),
-      m_waitDragInfoThread(true),
       m_args(args)
 {
   // must have a primary client and it must have a canonical name
@@ -164,16 +157,6 @@ Server::Server(
       EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter,
       new TMethodEventJob<Server>(this, &Server::handleFakeInputEndEvent)
   );
-
-  if (m_args.m_enableDragDrop) {
-    m_events->adoptHandler(
-        EventTypes::FileChunkSending, this, new TMethodEventJob<Server>(this, &Server::handleFileChunkSendingEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::FileReceiveCompleted, this,
-        new TMethodEventJob<Server>(this, &Server::handleFileReceiveCompletedEvent)
-    );
-  }
 
   // add connection
   addClient(m_primaryClient);
@@ -1444,16 +1427,6 @@ void Server::handleFakeInputEndEvent(const Event &, void *)
   m_primaryClient->fakeInputEnd();
 }
 
-void Server::handleFileChunkSendingEvent(const Event &event, void *)
-{
-  onFileChunkSending(event.getDataObject());
-}
-
-void Server::handleFileReceiveCompletedEvent(const Event &event, void *)
-{
-  onFileReceiveCompleted();
-}
-
 void Server::onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)
 {
   ClipboardInfo &clipboard = m_clipboards[id];
@@ -1616,9 +1589,6 @@ void Server::onMouseDown(ButtonID id)
 
   // relay
   m_active->mouseDown(id);
-
-  // reset this variable back to default value true
-  m_waitDragInfoThread = true;
 }
 
 void Server::onMouseUp(ButtonID id)
@@ -1628,23 +1598,6 @@ void Server::onMouseUp(ButtonID id)
 
   // relay
   m_active->mouseUp(id);
-
-  if (m_ignoreFileTransfer) {
-    m_ignoreFileTransfer = false;
-    return;
-  }
-
-  if (m_args.m_enableDragDrop) {
-    if (!m_screen->isOnScreen()) {
-      std::string &file = m_screen->getDraggingFilename();
-      if (!file.empty()) {
-        sendFileToClient(file.c_str());
-      }
-    }
-
-    // always clear dragging filename
-    m_screen->clearDraggingFilename();
-  }
 }
 
 bool Server::onMouseMovePrimary(int32_t x, int32_t y)
@@ -1727,64 +1680,13 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 
     // should we switch or not?
     if (isSwitchOkay(newScreen, dir, x, y, xc, yc)) {
-      if (m_args.m_enableDragDrop && m_screen->isDraggingStarted() && m_active != newScreen && m_waitDragInfoThread) {
-        if (!m_sendDragInfoThread) {
-          m_sendDragInfoThread.reset(new Thread(new TMethodJob<Server>(this, &Server::sendDragInfoThread, newScreen)));
-        }
-
-        return false;
-      }
-
       // switch screen
       switchScreen(newScreen, x, y, false);
-      m_waitDragInfoThread = true;
       return true;
     }
   }
 
   return false;
-}
-
-void Server::sendDragInfoThread(void *arg)
-{
-  auto *newScreen = static_cast<BaseClientProxy *>(arg);
-
-  m_dragFileList.clear();
-  std::string &dragFileList = m_screen->getDraggingFilename();
-  if (!dragFileList.empty()) {
-    DragInformation di;
-    di.setFilename(dragFileList);
-    m_dragFileList.push_back(di);
-  }
-
-#if defined(__APPLE__)
-  // on mac it seems that after faking a LMB up, system would signal back
-  // to deskflow a mouse up event, which doesn't happen on windows. as a
-  // result, deskflow would send dragging file to client twice. This variable
-  // is used to ignore the first file sending.
-  m_ignoreFileTransfer = true;
-#endif
-
-  // send drag file info to client if there is any
-  if (m_dragFileList.size() > 0) {
-    sendDragInfo(newScreen);
-    m_dragFileList.clear();
-  }
-  m_waitDragInfoThread = false;
-  m_sendDragInfoThread.reset(nullptr);
-}
-
-void Server::sendDragInfo(BaseClientProxy *newScreen)
-{
-  std::string infoString;
-  uint32_t fileCount = DragInformation::setupDragInfo(m_dragFileList, infoString);
-
-  if (fileCount > 0) {
-    LOG((CLOG_DEBUG2 "sending drag information to client"));
-    LOG((CLOG_DEBUG3 "dragging file list: %s", infoString.c_str()));
-    LOG((CLOG_DEBUG3 "dragging file list string size: %i", infoString.size()));
-    newScreen->sendDragInfo(fileCount, infoString.c_str(), infoString.size());
-  }
 }
 
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
@@ -1925,11 +1827,6 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
   } while (false);
 
   if (jump) {
-    if (m_sendFileThread) {
-      StreamChunker::interruptFile();
-      m_sendFileThread.reset(nullptr);
-    }
-
     int32_t newX = m_x;
     int32_t newY = m_y;
 
@@ -1969,36 +1866,6 @@ void Server::onMouseWheel(int32_t xDelta, int32_t yDelta)
 
   // relay
   m_active->mouseWheel(xDelta, yDelta);
-}
-
-void Server::onFileChunkSending(const void *data)
-{
-  auto *chunk = static_cast<FileChunk *>(const_cast<void *>(data));
-
-  LOG((CLOG_DEBUG1 "sending file chunk"));
-  assert(m_active != nullptr);
-
-  // relay
-  m_active->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
-}
-
-void Server::onFileReceiveCompleted()
-{
-  if (isReceivedFileSizeValid()) {
-    auto method = new TMethodJob<Server>(this, &Server::writeToDropDirThread);
-    m_writeToDropDirThread.reset(new Thread(method));
-  }
-}
-
-void Server::writeToDropDirThread(void *)
-{
-  LOG((CLOG_DEBUG "starting write to drop dir thread"));
-
-  while (m_screen->isFakeDraggingStarted()) {
-    ARCH->sleep(.1f);
-  }
-
-  DropHelper::writeToDir(m_screen->getDropTarget(), m_fakeDragFileList, m_receivedFileData);
 }
 
 bool Server::addClient(BaseClientProxy *client)
@@ -2240,45 +2107,4 @@ Server::KeyboardBroadcastInfo *Server::KeyboardBroadcastInfo::alloc(State state,
   info->m_state = state;
   std::copy(screens.c_str(), screens.c_str() + screens.size() + 1, info->m_screens);
   return info;
-}
-
-bool Server::isReceivedFileSizeValid()
-{
-  return m_expectedFileSize == m_receivedFileData.size();
-}
-
-void Server::sendFileToClient(const char *filename)
-{
-  if (m_sendFileThread != nullptr) {
-    StreamChunker::interruptFile();
-  }
-
-  auto data = static_cast<void *>(const_cast<char *>(filename));
-  auto method = new TMethodJob<Server>(this, &Server::sendFileThread, data);
-  m_sendFileThread.reset(new Thread(method));
-}
-
-void Server::sendFileThread(void *data)
-{
-  try {
-    auto *filename = static_cast<char *>(data);
-    LOG((CLOG_DEBUG "sending file to client, filename=%s", filename));
-    StreamChunker::sendFile(filename, m_events, this);
-  } catch (std::runtime_error &error) {
-    LOG((CLOG_ERR "failed sending file chunks, error: %s", error.what()));
-  }
-
-  m_sendFileThread.reset(nullptr);
-}
-
-void Server::dragInfoReceived(uint32_t fileNum, std::string content)
-{
-  if (!m_args.m_enableDragDrop) {
-    LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
-    return;
-  }
-
-  DragInformation::parseDragInfo(m_fakeDragFileList, fileNum, content);
-
-  m_screen->startDraggingFiles(m_fakeDragFileList);
 }

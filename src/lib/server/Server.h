@@ -12,7 +12,6 @@
 #include "base/Stopwatch.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/INode.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
@@ -167,12 +166,6 @@ public:
   */
   void disconnect();
 
-  //! Create a new thread and use it to send file to client
-  void sendFileToClient(const char *filename);
-
-  //! Received dragging information from client
-  void dragInfoReceived(uint32_t fileNum, std::string content);
-
   //! Store ClientListener pointer
   void setListener(ClientListener *p)
   {
@@ -200,27 +193,6 @@ public:
   Set the \c list to the names of the currently connected clients.
   */
   void getClients(std::vector<std::string> &list) const;
-
-  //! Return true if received file size is valid
-  bool isReceivedFileSizeValid();
-
-  //! Return expected file data size
-  size_t &getExpectedFileSize()
-  {
-    return m_expectedFileSize;
-  }
-
-  //! Return received file data
-  std::string &getReceivedFileData()
-  {
-    return m_receivedFileData;
-  }
-
-  //! Return fake drag file list
-  DragFileList getFakeDragFileList()
-  {
-    return m_fakeDragFileList;
-  }
 
   //@}
 
@@ -348,8 +320,6 @@ private:
   void handleLockCursorToScreenEvent(const Event &, void *);
   void handleFakeInputBeginEvent(const Event &, void *);
   void handleFakeInputEndEvent(const Event &, void *);
-  void handleFileChunkSendingEvent(const Event &, void *);
-  void handleFileReceiveCompletedEvent(const Event &, void *);
 
   // event processing
   void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
@@ -362,8 +332,6 @@ private:
   bool onMouseMovePrimary(int32_t x, int32_t y);
   void onMouseMoveSecondary(int32_t dx, int32_t dy);
   void onMouseWheel(int32_t xDelta, int32_t yDelta);
-  void onFileChunkSending(const void *data);
-  void onFileReceiveCompleted();
 
   // add client to list and attach event handlers for client
   bool addClient(BaseClientProxy *);
@@ -387,18 +355,6 @@ private:
 
   // force the cursor off of \p client
   void forceLeaveClient(BaseClientProxy *client);
-
-  // thread funciton for sending file
-  void sendFileThread(void *);
-
-  // thread function for writing file to drop directory
-  void writeToDropDirThread(void *);
-
-  // thread function for sending drag information
-  void sendDragInfoThread(void *);
-
-  // send drag info to new client screen
-  void sendDragInfo(BaseClientProxy *newScreen);
 
 public:
   bool m_mock;
@@ -500,22 +456,9 @@ private:
 
   IEventQueue *m_events;
 
-  // file transfer
-  using AutoThread = std::unique_ptr<Thread>;
-  size_t m_expectedFileSize;
-  std::string m_receivedFileData;
-  DragFileList m_dragFileList;
-  DragFileList m_fakeDragFileList;
-  AutoThread m_sendFileThread;
-  AutoThread m_writeToDropDirThread;
-  std::string m_dragFileExt;
-  bool m_ignoreFileTransfer;
   bool m_disableLockToScreen;
   bool m_enableClipboard;
   size_t m_maximumClipboardSize;
-
-  AutoThread m_sendDragInfoThread;
-  bool m_waitDragInfoThread;
 
   ClientListener *m_clientListener;
   deskflow::ServerArgs m_args;

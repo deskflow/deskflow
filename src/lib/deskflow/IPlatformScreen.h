@@ -8,7 +8,6 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/IKeyState.h"
 #include "deskflow/IPrimaryScreen.h"
 #include "deskflow/IScreen.h"
@@ -127,9 +126,6 @@ public:
   */
   virtual void setSequenceNumber(uint32_t) = 0;
 
-  //! Change dragging status
-  virtual void setDraggingStarted(bool started) = 0;
-
   //! Determine the name of the app causing a secure input state
   /*!
   On MacOS check which app causes a secure input state to be enabled. No
@@ -188,14 +184,6 @@ public:
   KeyModifierMask pollActiveModifiers() const override = 0;
   int32_t pollActiveGroup() const override = 0;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
-
-  virtual std::string &getDraggingFilename() = 0;
-  virtual void clearDraggingFilename() = 0;
-  virtual bool isDraggingStarted() = 0;
-  virtual bool isFakeDraggingStarted() = 0;
-
-  virtual void fakeDraggingFiles(DragFileList fileList) = 0;
-  virtual const std::string &getDropTarget() const = 0;
 
 protected:
   //! Handle system event

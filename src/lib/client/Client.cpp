@@ -15,8 +15,6 @@
 #include "base/TMethodJob.h"
 #include "client/ServerProxy.h"
 #include "deskflow/AppUtil.h"
-#include "deskflow/DropHelper.h"
-#include "deskflow/FileChunk.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
@@ -63,8 +61,6 @@ Client::Client(
       m_suspended(false),
       m_connectOnResume(false),
       m_events(events),
-      m_sendFileThread(nullptr),
-      m_writeToDropDirThread(nullptr),
       m_useSecureNetwork(args.m_enableCrypto),
       m_args(args),
       m_enableClipboard(true),
@@ -80,15 +76,6 @@ Client::Client(
   m_events->adoptHandler(
       EventTypes::ScreenResume, getEventTarget(), new TMethodEventJob<Client>(this, &Client::handleResume)
   );
-
-  if (m_args.m_enableDragDrop) {
-    m_events->adoptHandler(
-        EventTypes::FileChunkSending, this, new TMethodEventJob<Client>(this, &Client::handleFileChunkSending)
-    );
-    m_events->adoptHandler(
-        EventTypes::FileReceiveCompleted, this, new TMethodEventJob<Client>(this, &Client::handleFileReceiveCompleted)
-    );
-  }
 
   m_pHelloBack = std::make_unique<HelloBack>(std::make_shared<HelloBack::Deps>(
       [this]() {
@@ -241,11 +228,6 @@ void Client::enter(int32_t xAbs, int32_t yAbs, uint32_t, KeyModifierMask mask, b
   m_active = true;
   m_screen->mouseMove(xAbs, yAbs);
   m_screen->enter(mask);
-
-  if (m_sendFileThread) {
-    StreamChunker::interruptFile();
-    m_sendFileThread.reset(nullptr);
-  }
 }
 
 bool Client::leave()
@@ -420,16 +402,6 @@ void Client::sendConnectionFailedEvent(const char *msg)
   info->m_retry = true;
   Event event(EventTypes::ClientConnectionFailed, getEventTarget(), info, Event::kDontFreeData);
   m_events->addEvent(event);
-}
-
-void Client::sendFileChunk(const void *data)
-{
-  auto *chunk = static_cast<FileChunk *>(const_cast<void *>(data));
-  LOG((CLOG_DEBUG1 "send file chunk"));
-  assert(m_server != nullptr);
-
-  // relay
-  m_server->fileChunkSending(chunk->m_chunk[0], &chunk->m_chunk[1], chunk->m_dataSize);
 }
 
 void Client::setupConnecting()
@@ -686,24 +658,6 @@ void Client::handleResume(const Event &, void *)
   }
 }
 
-void Client::handleFileChunkSending(const Event &event, void *)
-{
-  sendFileChunk(event.getDataObject());
-}
-
-void Client::handleFileReceiveCompleted(const Event &event, void *)
-{
-  onFileReceiveCompleted();
-}
-
-void Client::onFileReceiveCompleted()
-{
-  if (isReceivedFileSizeValid()) {
-    auto method = new TMethodJob<Client>(this, &Client::writeToDropDirThread);
-    m_writeToDropDirThread.reset(new Thread(method));
-  }
-}
-
 void Client::bindNetworkInterface(IDataSocket *socket) const
 {
   try {
@@ -724,61 +678,4 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
 void Client::handleStopRetry(const Event &, void *)
 {
   m_args.m_restartable = false;
-}
-
-void Client::writeToDropDirThread(void *)
-{
-  LOG((CLOG_DEBUG "starting write to drop dir thread"));
-
-  while (m_screen->isFakeDraggingStarted()) {
-    ARCH->sleep(.1f);
-  }
-
-  DropHelper::writeToDir(m_screen->getDropTarget(), m_dragFileList, m_receivedFileData);
-}
-
-void Client::dragInfoReceived(uint32_t fileNum, std::string data)
-{
-  // TODO: fix duplicate function from CServer
-  if (!m_args.m_enableDragDrop) {
-    LOG((CLOG_DEBUG "drag drop not enabled, ignoring drag info."));
-    return;
-  }
-
-  DragInformation::parseDragInfo(m_dragFileList, fileNum, data);
-
-  m_screen->startDraggingFiles(m_dragFileList);
-}
-
-bool Client::isReceivedFileSizeValid()
-{
-  return m_expectedFileSize == m_receivedFileData.size();
-}
-
-void Client::sendFileToServer(const char *filename)
-{
-  if (m_sendFileThread) {
-    StreamChunker::interruptFile();
-  }
-
-  auto data = static_cast<void *>(const_cast<char *>(filename));
-  auto method = new TMethodJob<Client>(this, &Client::sendFileThread, data);
-  m_sendFileThread.reset(new Thread(method));
-}
-
-void Client::sendFileThread(void *filename)
-{
-  try {
-    auto *name = static_cast<char *>(filename);
-    StreamChunker::sendFile(name, m_events, this);
-  } catch (std::runtime_error &error) {
-    LOG((CLOG_ERR "failed sending file chunks: %s", error.what()));
-  }
-
-  m_sendFileThread.reset(nullptr);
-}
-
-void Client::sendDragInfo(uint32_t fileCount, std::string &info, size_t size)
-{
-  m_server->sendDragInfo(fileCount, info.c_str(), size);
 }

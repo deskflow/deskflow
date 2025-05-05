@@ -13,10 +13,7 @@
 #include "base/Stopwatch.h"
 #include "base/String.h"
 #include "deskflow/ClipboardChunk.h"
-#include "deskflow/FileChunk.h"
 #include "deskflow/ProtocolTypes.h"
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
 
 #include <fstream>
 #include <stdexcept>
@@ -24,74 +21,6 @@
 using namespace std;
 
 static const size_t g_chunkSize = 512 * 1024; // 512kb
-
-bool StreamChunker::s_isChunkingFile = false;
-bool StreamChunker::s_interruptFile = false;
-Mutex *StreamChunker::s_interruptMutex = nullptr;
-
-void StreamChunker::sendFile(char *filename, IEventQueue *events, void *eventTarget)
-{
-  s_isChunkingFile = true;
-
-  std::fstream file(static_cast<char *>(filename), std::ios::in | std::ios::binary);
-
-  if (!file.is_open()) {
-    throw runtime_error("failed to open file");
-  }
-
-  // check file size
-  file.seekg(0, std::ios::end);
-  auto size = (size_t)file.tellg();
-
-  // send first message (file size)
-  std::string fileSize = deskflow::string::sizeTypeToString(size);
-  FileChunk *sizeMessage = FileChunk::start(fileSize);
-  events->addEvent(Event(EventTypes::FileChunkSending, eventTarget, sizeMessage));
-
-  // send chunk messages with a fixed chunk size
-  size_t sentLength = 0;
-  size_t chunkSize = g_chunkSize;
-  file.seekg(0, std::ios::beg);
-
-  while (true) {
-    if (s_interruptFile) {
-      s_interruptFile = false;
-      LOG((CLOG_DEBUG "file transmission interrupted"));
-      break;
-    }
-
-    events->addEvent(Event(EventTypes::FileKeepAlive, eventTarget));
-
-    // make sure we don't read too much from the mock data.
-    if (sentLength + chunkSize > size) {
-      chunkSize = size - sentLength;
-    }
-
-    auto *chunkData = new char[chunkSize];
-    file.read(chunkData, chunkSize);
-    auto *data = reinterpret_cast<uint8_t *>(chunkData);
-    FileChunk *fileChunk = FileChunk::data(data, chunkSize);
-    delete[] chunkData;
-
-    events->addEvent(Event(EventTypes::FileChunkSending, eventTarget, fileChunk));
-
-    sentLength += chunkSize;
-    file.seekg(sentLength, std::ios::beg);
-
-    if (sentLength == size) {
-      break;
-    }
-  }
-
-  // send last message
-  FileChunk *end = FileChunk::end();
-
-  events->addEvent(Event(EventTypes::FileChunkSending, eventTarget, end));
-
-  file.close();
-
-  s_isChunkingFile = false;
-}
 
 void StreamChunker::sendClipboard(
     std::string &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events, void *eventTarget
@@ -108,8 +37,6 @@ void StreamChunker::sendClipboard(
   size_t chunkSize = g_chunkSize;
 
   while (true) {
-    events->addEvent(Event(EventTypes::FileKeepAlive, eventTarget));
-
     // make sure we don't read too much from the mock data.
     if (sentLength + chunkSize > size) {
       chunkSize = size - sentLength;
@@ -132,12 +59,4 @@ void StreamChunker::sendClipboard(
   events->addEvent(Event(EventTypes::ClipboardSending, eventTarget, end));
 
   LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
-}
-
-void StreamChunker::interruptFile()
-{
-  if (s_isChunkingFile) {
-    s_interruptFile = true;
-    LOG((CLOG_INFO "previous dragged file has become invalid"));
-  }
 }

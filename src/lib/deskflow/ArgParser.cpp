@@ -183,27 +183,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
     // HACK: stop error happening when using portable (deskflowp)
   } else if (isArg(i, argc, argv, nullptr, "--client")) {
     // HACK: stop error happening when using portable (deskflowp)
-  } else if (isArg(i, argc, argv, nullptr, "--enable-drag-drop")) {
-    bool useDragDrop = true;
-
-#ifdef WINAPI_XWINDOWS
-
-    useDragDrop = false;
-    LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported on linux."));
-
-#endif
-
-#ifdef WINAPI_MSWINDOWS
-
-    if (!IsWindowsVistaOrGreater()) {
-      useDragDrop = false;
-      LOG((CLOG_INFO "ignoring --enable-drag-drop, not supported below vista."));
-    }
-#endif
-
-    if (useDragDrop) {
-      argsBase().m_enableDragDrop = true;
-    }
   } else if (isArg(i, argc, argv, nullptr, "--enable-crypto")) {
     argsBase().m_enableCrypto = true;
   } else if (isArg(i, argc, argv, nullptr, "--tls-cert", 1)) {

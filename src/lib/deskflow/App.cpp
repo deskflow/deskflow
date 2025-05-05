@@ -21,16 +21,13 @@
 #include "base/IEventQueue.h"
 #endif
 
-#if WINAPI_CARBON
-#include "platform/OSXDragSimulator.h"
-#endif
-
 #include <iostream>
 #include <stdexcept>
 #include <stdio.h>
 #include <vector>
 
 #if WINAPI_CARBON
+#include "platform/OSXCocoaApp.h"
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 

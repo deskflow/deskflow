@@ -26,8 +26,7 @@ Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
       m_entered(m_isPrimary),
       m_fakeInput(false),
       m_events(events),
-      m_mock(false),
-      m_enableDragDrop(false)
+      m_mock(false)
 {
   assert(m_screen != nullptr);
 
@@ -325,17 +324,9 @@ bool Screen::isLockedToScreen() const
   uint32_t buttonID = 0;
 
   if (m_screen->isAnyMouseButtonDown(buttonID)) {
-    if (buttonID != kButtonLeft) {
-      LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
-    }
-
-    if (m_enableDragDrop) {
-      return (buttonID == kButtonLeft) ? false : true;
-    } else {
-      return true;
-    }
+    LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
+    return true;
   }
-
   // not locked
   return false;
 }
@@ -362,46 +353,6 @@ KeyModifierMask Screen::getActiveModifiers() const
 KeyModifierMask Screen::pollActiveModifiers() const
 {
   return m_screen->pollActiveModifiers();
-}
-
-bool Screen::isDraggingStarted() const
-{
-  return m_screen->isDraggingStarted();
-}
-
-bool Screen::isFakeDraggingStarted() const
-{
-  return m_screen->isFakeDraggingStarted();
-}
-
-void Screen::setDraggingStarted(bool started)
-{
-  m_screen->setDraggingStarted(started);
-}
-
-void Screen::startDraggingFiles(DragFileList &fileList)
-{
-  m_screen->fakeDraggingFiles(fileList);
-}
-
-void Screen::setEnableDragDrop(bool enabled)
-{
-  m_enableDragDrop = enabled;
-}
-
-std::string &Screen::getDraggingFilename() const
-{
-  return m_screen->getDraggingFilename();
-}
-
-void Screen::clearDraggingFilename()
-{
-  m_screen->clearDraggingFilename();
-}
-
-const std::string &Screen::getDropTarget() const
-{
-  return m_screen->getDropTarget();
 }
 
 void *Screen::getEventTarget() const
