@@ -25,7 +25,6 @@
 #include "mt/Thread.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
-#include "platform/MSWindowsDropTarget.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
 #include "platform/MSWindowsKeyState.h"
 #include "platform/MSWindowsScreenSaver.h"
@@ -114,9 +113,7 @@ MSWindowsScreen::MSWindowsScreen(
       m_keyState(nullptr),
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_showingMouse(false),
-      m_events(events),
-      m_dropWindow(nullptr),
-      m_dropWindowSize(20)
+      m_events(events)
 {
   assert(s_windowInstance != nullptr);
   assert(s_screen == nullptr);
@@ -143,23 +140,11 @@ MSWindowsScreen::MSWindowsScreen(
     LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
-    // SHGetFolderPath is deprecated in vista, but use it for xp support.
-    char desktopPath[MAX_PATH];
-    if (SUCCEEDED(SHGetFolderPath(nullptr, CSIDL_DESKTOP, nullptr, 0, desktopPath))) {
-      m_desktopPath = std::string(desktopPath);
-      LOG((CLOG_DEBUG "using desktop for file drag-drop target: %s", m_desktopPath.c_str()));
-    } else {
-      LOG((CLOG_DEBUG "unable to use desktop as file drag-drop target, code=%d", GetLastError()));
-    }
-
     if (App::instance().argsBase().m_preventSleep) {
       m_powerManager.disableSleep();
     }
 
     OleInitialize(0);
-    m_dropWindow = createDropWindow(m_class, "DropWindow");
-    m_dropTarget = new MSWindowsDropTarget();
-    RegisterDragDrop(m_dropWindow, m_dropTarget);
   } catch (...) {
     delete m_keyState;
     delete m_desks;
@@ -193,10 +178,7 @@ MSWindowsScreen::~MSWindowsScreen()
   destroyWindow(m_window);
   destroyClass(m_class);
 
-  RevokeDragDrop(m_dropWindow);
-  m_dropTarget->Release();
   OleUninitialize();
-  destroyWindow(m_dropWindow);
 
   s_screen = nullptr;
 }
@@ -359,28 +341,6 @@ void MSWindowsScreen::leave()
   // now off screen
   m_isOnScreen = false;
   forceShowCursor();
-
-  if (isDraggingStarted() && !m_isPrimary) {
-    m_sendDragThread = new Thread(new TMethodJob<MSWindowsScreen>(this, &MSWindowsScreen::sendDragThread));
-  }
-}
-
-void MSWindowsScreen::sendDragThread(void *)
-{
-  std::string &draggingFilename = getDraggingFilename();
-  size_t size = draggingFilename.size();
-
-  if (draggingFilename.empty() == false) {
-    ClientApp &app = ClientApp::instance();
-    Client *client = app.getClientPtr();
-    uint32_t fileCount = 1;
-    LOG((CLOG_DEBUG "send dragging info to server: %s", draggingFilename.c_str()));
-    client->sendDragInfo(fileCount, draggingFilename, size);
-    LOG((CLOG_DEBUG "send dragging file to server"));
-    client->sendFileToServer(draggingFilename.c_str());
-  }
-
-  m_draggingStarted = false;
 }
 
 bool MSWindowsScreen::setClipboard(ClipboardID, const IClipboard *src)
@@ -762,22 +722,13 @@ void MSWindowsScreen::fakeMouseButton(ButtonID id, bool press)
   m_desks->fakeMouseButton(id, press);
 
   if (id == kButtonLeft) {
-    if (press) {
-      m_buttons[kButtonLeft] = true;
-    } else {
-      m_buttons[kButtonLeft] = false;
-      m_fakeDraggingStarted = false;
-      m_draggingStarted = false;
-    }
+    m_buttons[kButtonLeft] = press;
   }
 }
 
 void MSWindowsScreen::fakeMouseMove(int32_t x, int32_t y)
 {
   m_desks->fakeMouseMove(x, y);
-  if (m_buttons[kButtonLeft]) {
-    m_draggingStarted = true;
-  }
 }
 
 void MSWindowsScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
@@ -884,21 +835,6 @@ HWND MSWindowsScreen::createWindow(ATOM windowClass, const char *name) const
     LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
     throw XScreenOpenFailure();
   }
-  return window;
-}
-
-HWND MSWindowsScreen::createDropWindow(ATOM windowClass, const char *name) const
-{
-  HWND window = CreateWindowEx(
-      WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_ACCEPTFILES, MAKEINTATOM(m_class), name, WS_POPUP, 0, 0,
-      m_dropWindowSize, m_dropWindowSize, nullptr, nullptr, s_windowInstance, nullptr
-  );
-
-  if (window == nullptr) {
-    LOG((CLOG_ERR "failed to create drop window: %d", GetLastError()));
-    throw XScreenOpenFailure();
-  }
-
   return window;
 }
 
@@ -1266,18 +1202,7 @@ bool MSWindowsScreen::onMouseButton(WPARAM wParam, LPARAM lParam)
 
   // keep our shadow key state up to date
   if (button >= kButtonLeft && button <= kButtonExtra0 + 1) {
-    if (pressed) {
-      m_buttons[button] = true;
-      if (button == kButtonLeft) {
-        m_draggingFilename.clear();
-        LOG((CLOG_DEBUG2 "dragging filename is cleared"));
-      }
-    } else {
-      m_buttons[button] = false;
-      if (m_draggingStarted && button == kButtonLeft) {
-        m_draggingStarted = false;
-      }
-    }
+    m_buttons[button] = pressed;
   }
 
   // ignore message if posted prior to last mark change
@@ -1328,13 +1253,8 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
   saveMousePosition(mx, my);
 
   if (m_isOnScreen) {
-
     // motion on primary screen
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_xCursor, m_yCursor));
-
-    if (m_buttons[kButtonLeft] == true && m_draggingStarted == false) {
-      m_draggingStarted = true;
-    }
   } else {
     // the motion is on the secondary screen, so we warp mouse back to
     // center on the server screen. if we don't do this, then the mouse
@@ -1774,63 +1694,6 @@ UINT MSWindowsScreen::HotKeyItem::getVirtualKey() const
 bool MSWindowsScreen::HotKeyItem::operator<(const HotKeyItem &x) const
 {
   return (m_keycode < x.m_keycode || (m_keycode == x.m_keycode && m_mask < x.m_mask));
-}
-
-void MSWindowsScreen::fakeDraggingFiles(DragFileList fileList)
-{
-  // possible design flaw: this function stops a "not implemented"
-  // exception from being thrown.
-}
-
-std::string &MSWindowsScreen::getDraggingFilename()
-{
-  if (m_draggingStarted) {
-    m_dropTarget->clearDraggingFilename();
-    m_draggingFilename.clear();
-
-    int halfSize = m_dropWindowSize / 2;
-
-    int32_t xPos = m_isPrimary ? m_xCursor : m_xCenter;
-    int32_t yPos = m_isPrimary ? m_yCursor : m_yCenter;
-    xPos = (xPos - halfSize) < 0 ? 0 : xPos - halfSize;
-    yPos = (yPos - halfSize) < 0 ? 0 : yPos - halfSize;
-    SetWindowPos(m_dropWindow, HWND_TOPMOST, xPos, yPos, m_dropWindowSize, m_dropWindowSize, SWP_SHOWWINDOW);
-
-    // TODO: fake these keys properly
-    fakeKeyDown(kKeyEscape, 8192, 1, AppUtil::instance().getCurrentLanguageCode());
-    fakeKeyUp(1);
-    fakeMouseButton(kButtonLeft, false);
-
-    std::string filename;
-    DOUBLE timeout = ARCH->time() + .5f;
-    while (ARCH->time() < timeout) {
-      ARCH->sleep(.05f);
-      filename = m_dropTarget->getDraggingFilename();
-      if (!filename.empty()) {
-        break;
-      }
-    }
-
-    ShowWindow(m_dropWindow, SW_HIDE);
-
-    if (!filename.empty()) {
-      if (DragInformation::isFileValid(filename)) {
-        m_draggingFilename = filename;
-      } else {
-        LOG((CLOG_DEBUG "drag file name is invalid: %s", filename.c_str()));
-      }
-    }
-
-    if (m_draggingFilename.empty()) {
-      LOG((CLOG_WARN "failed to get drag file name from OLE"));
-    }
-  }
-  return m_draggingFilename;
-}
-
-const std::string &MSWindowsScreen::getDropTarget() const
-{
-  return m_desktopPath;
 }
 
 std::string MSWindowsScreen::getSecureInputApp() const

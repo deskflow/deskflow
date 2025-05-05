@@ -204,31 +204,3 @@ TEST_F(GenericArgsParsingTests, parseGenericArgs_versionCmd_showVersion)
   EXPECT_EQ(true, g_versionShowed);
   EXPECT_EQ(1, i);
 }
-
-#ifndef WINAPI_XWINDOWS
-TEST_F(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnNonLinux_enableDragDropTrue)
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
-
-  m_argParser->parseGenericArgs(argc, kDragDropCmd, i);
-
-  EXPECT_EQ(true, argsBase.m_enableDragDrop);
-  EXPECT_EQ(1, i);
-}
-#endif
-
-#ifdef WINAPI_XWINDOWS
-TEST_F(GenericArgsParsingTests, parseGenericArgs_dragDropCmdOnLinux_enableDragDropFalse)
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kDragDropCmd[argc] = {"stub", "--enable-drag-drop"};
-
-  m_argParser->parseGenericArgs(argc, kDragDropCmd, i);
-
-  EXPECT_FALSE(argsBase.m_enableDragDrop);
-  EXPECT_EQ(1, i);
-}
-#endif

@@ -8,7 +8,6 @@
 
 #include "base/Log.h"
 #include "base/TMethodEventJob.h"
-#include "deskflow/FileChunk.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
@@ -24,28 +23,17 @@ ClientProxy1_5::ClientProxy1_5(const std::string &name, deskflow::IStream *strea
     : ClientProxy1_4(name, stream, server, events),
       m_events(events)
 {
-
-  m_events->adoptHandler(
-      EventTypes::FileKeepAlive, this,
-      new TMethodEventJob<ClientProxy1_3>(this, &ClientProxy1_3::handleKeepAlive, nullptr)
-  );
-}
-
-ClientProxy1_5::~ClientProxy1_5()
-{
-  m_events->removeHandler(EventTypes::FileKeepAlive, this);
+  // do nothing
 }
 
 void ClientProxy1_5::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
 {
-  std::string data(info, size);
-
-  ProtocolUtil::writef(getStream(), kMsgDDragInfo, fileCount, &data);
+  // do nothing
 }
 
 void ClientProxy1_5::fileChunkSending(uint8_t mark, char *data, size_t dataSize)
 {
-  FileChunk::send(getStream(), mark, data, dataSize);
+  // do nothing
 }
 
 bool ClientProxy1_5::parseMessage(const uint8_t *code)
@@ -63,25 +51,10 @@ bool ClientProxy1_5::parseMessage(const uint8_t *code)
 
 void ClientProxy1_5::fileChunkReceived()
 {
-  Server *server = getServer();
-  int result = FileChunk::assemble(getStream(), server->getReceivedFileData(), server->getExpectedFileSize());
-
-  if (result == kFinish) {
-    m_events->addEvent(Event(EventTypes::FileReceiveCompleted, server));
-  } else if (result == kStart) {
-    if (server->getFakeDragFileList().size() > 0) {
-      std::string filename = server->getFakeDragFileList().at(0).getFilename();
-      LOG((CLOG_DEBUG "start receiving %s", filename.c_str()));
-    }
-  }
+  // do nothing
 }
 
 void ClientProxy1_5::dragInfoReceived()
 {
-  // parse
-  uint32_t fileNum = 0;
-  std::string content;
-  ProtocolUtil::readf(getStream(), kMsgDDragInfo + 4, &fileNum, &content);
-
-  m_server->dragInfoReceived(fileNum, content);
+  // do nothing
 }

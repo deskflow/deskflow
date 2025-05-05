@@ -13,7 +13,6 @@
 #include "base/EventTypes.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/INode.h"
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
@@ -97,15 +96,6 @@ public:
   */
   virtual void handshakeComplete();
 
-  //! Received drag information
-  void dragInfoReceived(uint32_t fileNum, std::string data);
-
-  //! Create a new thread and use it to send file to Server
-  void sendFileToServer(const char *filename);
-
-  //! Send dragging file information back to server
-  void sendDragInfo(uint32_t fileCount, std::string &info, size_t size);
-
   //@}
   //! @name accessors
   //@{
@@ -129,27 +119,6 @@ public:
   to connect) to.
   */
   NetworkAddress getServerAddress() const;
-
-  //! Return true if received file size is valid
-  bool isReceivedFileSizeValid();
-
-  //! Return expected file size
-  size_t &getExpectedFileSize()
-  {
-    return m_expectedFileSize;
-  }
-
-  //! Return received file data
-  std::string &getReceivedFileData()
-  {
-    return m_receivedFileData;
-  }
-
-  //! Return drag file list
-  DragFileList getDragFileList()
-  {
-    return m_dragFileList;
-  }
 
   //! Return last resolved adresses count
   size_t getLastResolvedAddressesCount() const
@@ -188,9 +157,6 @@ private:
   void sendClipboard(ClipboardID);
   void sendEvent(EventTypes, void *);
   void sendConnectionFailedEvent(const char *msg);
-  void sendFileChunk(const void *data);
-  void sendFileThread(void *);
-  void writeToDropDirThread(void *);
   void setupConnecting();
   void setupConnection();
   void setupScreen();
@@ -211,10 +177,7 @@ private:
   void handleHello(const Event &, void *);
   void handleSuspend(const Event &event, void *);
   void handleResume(const Event &event, void *);
-  void handleFileChunkSending(const Event &, void *);
-  void handleFileReceiveCompleted(const Event &, void *);
   void handleStopRetry(const Event &, void *);
-  void onFileReceiveCompleted();
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
 
@@ -238,13 +201,6 @@ private:
   IClipboard::Time m_timeClipboard[kClipboardEnd];
   std::string m_dataClipboard[kClipboardEnd];
   IEventQueue *m_events;
-  std::size_t m_expectedFileSize;
-  std::string m_receivedFileData;
-  DragFileList m_dragFileList;
-  std::string m_dragFileExt;
-  using AutoThread = std::unique_ptr<Thread>;
-  AutoThread m_sendFileThread;
-  AutoThread m_writeToDropDirThread;
   bool m_useSecureNetwork;
   bool m_enableClipboard;
   size_t m_maximumClipboardSize;

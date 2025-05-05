@@ -8,7 +8,6 @@
 #pragma once
 
 #include "deskflow/ClientArgs.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/IPlatformScreen.h"
 
 #include <stdexcept>
@@ -65,23 +64,6 @@ public:
   int32_t pollActiveGroup() const override;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
 
-  void setDraggingStarted(bool started) override
-  {
-    m_draggingStarted = started;
-  }
-  bool isDraggingStarted() override;
-  bool isFakeDraggingStarted() override
-  {
-    return m_fakeDraggingStarted;
-  }
-  std::string &getDraggingFilename() override
-  {
-    return m_draggingFilename;
-  }
-  void clearDraggingFilename() override
-  {
-  }
-
   // IPlatformScreen overrides
   void enable() override = 0;
   void disable() override = 0;
@@ -97,15 +79,6 @@ public:
   void setOptions(const OptionsList &options) override = 0;
   void setSequenceNumber(uint32_t) override = 0;
   bool isPrimary() const override = 0;
-
-  void fakeDraggingFiles(DragFileList fileList) override
-  {
-    throw std::runtime_error("fakeDraggingFiles not implemented");
-  }
-  const std::string &getDropTarget() const override
-  {
-    throw std::runtime_error("getDropTarget not implemented");
-  }
 
 protected:
   //! Update mouse buttons
@@ -131,11 +104,6 @@ protected:
    * \return converted value according to the client scroll direction
    */
   virtual int32_t mapClientScrollDirection(int32_t) const;
-
-protected:
-  std::string m_draggingFilename;
-  bool m_draggingStarted;
-  bool m_fakeDraggingStarted;
 
 private:
   /*!

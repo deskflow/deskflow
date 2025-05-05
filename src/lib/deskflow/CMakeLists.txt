@@ -86,12 +86,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   DaemonApp.cpp
   DaemonApp.h
   DisplayInvalidException.h
-  DragInformation.cpp
-  DragInformation.h
-  DropHelper.cpp
-  DropHelper.h
-  FileChunk.cpp
-  FileChunk.h
   IApp.h
   IAppUtil.h
   IClient.h

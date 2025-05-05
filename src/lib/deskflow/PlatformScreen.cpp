@@ -11,8 +11,6 @@
 
 PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirection scrollDirection)
     : IPlatformScreen(events),
-      m_draggingStarted(false),
-      m_fakeDraggingStarted(false),
       m_clientScrollDirection(scrollDirection)
 {
 }
@@ -83,14 +81,6 @@ int32_t PlatformScreen::pollActiveGroup() const
 void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   getKeyState()->pollPressedKeys(pressedKeys);
-}
-
-bool PlatformScreen::isDraggingStarted()
-{
-  if (App::instance().argsBase().m_enableDragDrop) {
-    return m_draggingStarted;
-  }
-  return false;
 }
 
 int32_t PlatformScreen::mapClientScrollDirection(int32_t x) const

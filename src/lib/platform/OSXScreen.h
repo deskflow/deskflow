@@ -8,7 +8,6 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
@@ -94,14 +93,8 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
-  void fakeDraggingFiles(DragFileList fileList) override;
-  std::string &getDraggingFilename() override;
   std::string getSecureInputApp() const override;
 
-  const std::string &getDropTarget() const override
-  {
-    return m_dropTarget;
-  }
   void waitForCarbonLoop() const;
 
 protected:
@@ -154,12 +147,6 @@ private:
   // get the current scroll wheel speed
   double getScrollSpeed() const;
 
-  // enable/disable drag handling for buttons 3 and up
-  void enableDragTimer(bool enable);
-
-  // drag timer handler
-  void handleDrag(const Event &, void *);
-
   // clipboard check timer handler
   void handleClipboardCheck(const Event &, void *);
 
@@ -189,8 +176,6 @@ private:
 
   // convert CFString to char*
   static char *CFStringRefToUTF8String(CFStringRef aString);
-
-  void getDropTargetThread(void *);
 
 private:
   struct HotKeyItem
@@ -266,9 +251,6 @@ private:
   std::vector<MouseButtonEventMapType> MouseButtonEventMap;
 
   bool m_cursorHidden;
-  int32_t m_dragNumButtonsDown;
-  Point m_dragLastPoint;
-  EventQueueTimer *m_dragTimer;
 
   // keyboard stuff
   OSXKeyState *m_keyState;

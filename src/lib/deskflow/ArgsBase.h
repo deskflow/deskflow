@@ -59,9 +59,6 @@ public:
   /// @brief Should the app add a tray icon
   bool m_disableTray = false;
 
-  /// @brief Should drag drop support be enabled
-  bool m_enableDragDrop = false;
-
   /// @brief Will cause the application to exit with OK code when set to true
   bool m_shouldExitOk = false;
 

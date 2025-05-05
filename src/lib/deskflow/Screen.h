@@ -8,11 +8,12 @@
 #pragma once
 
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/IScreen.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
+
+#include <string>
 
 class IClipboard;
 class IPlatformScreen;
@@ -216,14 +217,6 @@ public:
   */
   void fakeInputEnd();
 
-  //! Change dragging status
-  void setDraggingStarted(bool started);
-
-  //! Fake a files dragging operation
-  void startDraggingFiles(DragFileList &fileList);
-
-  void setEnableDragDrop(bool enabled);
-
   //! Determine the name of the app causing a secure input state
   /*!
   On MacOS check which app causes a secure input state to be enabled. No
@@ -279,21 +272,6 @@ public:
   */
   KeyModifierMask pollActiveModifiers() const;
 
-  //! Test if file is dragged on primary screen
-  bool isDraggingStarted() const;
-
-  //! Test if file is dragged on secondary screen
-  bool isFakeDraggingStarted() const;
-
-  //! Get the filename of the file being dragged
-  std::string &getDraggingFilename() const;
-
-  //! Clear the filename of the file that was dragged
-  void clearDraggingFilename();
-
-  //! Get the drop target directory
-  const std::string &getDropTarget() const;
-
   //@}
 
   // IScreen overrides
@@ -341,7 +319,6 @@ private:
   IEventQueue *m_events;
 
   bool m_mock;
-  bool m_enableDragDrop;
 };
 
 } // namespace deskflow

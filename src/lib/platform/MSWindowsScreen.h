@@ -8,7 +8,6 @@
 #pragma once
 
 #include "deskflow/ClientArgs.h"
-#include "deskflow/DragInformation.h"
 #include "deskflow/PlatformScreen.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
@@ -125,9 +124,6 @@ public:
   void setOptions(const OptionsList &options) override;
   void setSequenceNumber(uint32_t) override;
   bool isPrimary() const override;
-  void fakeDraggingFiles(DragFileList fileList) override;
-  std::string &getDraggingFilename() override;
-  const std::string &getDropTarget() const override;
   std::string getSecureInputApp() const override;
 
 protected:
@@ -147,7 +143,6 @@ private:
   ATOM createDeskWindowClass(bool isPrimary) const;
   void destroyClass(ATOM windowClass) const;
   HWND createWindow(ATOM windowClass, const char *name) const;
-  HWND createDropWindow(ATOM windowClass, const char *name) const;
   void destroyWindow(HWND) const;
 
   // convenience function to send events
@@ -232,9 +227,6 @@ private: // HACK
 
   // check if it is a modifier key repeating message
   bool isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const;
-
-  // send drag info and data back to server
-  void sendDragThread(void *);
 
 private:
   struct HotKeyItem
@@ -345,12 +337,6 @@ private:
   IEventQueue *m_events;
 
   std::string m_desktopPath;
-
-  MSWindowsDropTarget *m_dropTarget;
-  HWND m_dropWindow;
-  const int m_dropWindowSize;
-
-  Thread *m_sendDragThread;
 
   PrimaryKeyDownList m_primaryKeyDownList;
   MSWindowsPowerManager m_powerManager;

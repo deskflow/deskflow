@@ -51,12 +51,6 @@ public:
 
   //@}
 
-  // sending file chunk to server
-  void fileChunkSending(uint8_t mark, char *data, size_t dataSize);
-
-  // sending dragging information to server
-  void sendDragInfo(uint32_t fileCount, const char *info, size_t size);
-
 #ifdef TEST_ENV
   void handleDataForTest()
   {
@@ -109,8 +103,6 @@ private:
   void setOptions();
   void queryInfo();
   void infoAcknowledgment();
-  void fileChunkReceived();
-  void dragInfoReceived();
   void handleClipboardSendingEvent(const Event &, void *);
   void secureInputNotification();
   void setServerLanguages();
