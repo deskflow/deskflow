@@ -1014,7 +1014,7 @@ void MainWindow::updateLocalFingerprint()
   m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(Settings::tlsLocalDb()));
 }
 
-void MainWindow::autoAddScreen(const QString name)
+void MainWindow::autoAddScreen(const QString &name)
 {
 
   int r = m_serverConfig.autoAddScreen(name);
@@ -1163,7 +1163,7 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
   m_actionStopCore->setEnabled(enableButtons);
 }
 
-void MainWindow::remoteHostChanged(const QString newRemoteHost)
+void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 {
   m_coreProcess.setAddress(newRemoteHost);
   toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());

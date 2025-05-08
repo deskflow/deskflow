@@ -84,7 +84,7 @@ public:
   {
     return m_serverConfig;
   }
-  void autoAddScreen(const QString name);
+  void autoAddScreen(const QString &name);
 
   void hide();
 
@@ -153,7 +153,7 @@ private:
   void setHostName();
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
-  void remoteHostChanged(const QString newRemoteHost);
+  void remoteHostChanged(const QString &newRemoteHost);
 
   /**
    * @brief trustedFingerprintDb get the fingerprintDb for the trusted clients or trusted servers.
