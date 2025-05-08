@@ -168,7 +168,7 @@ private:
   QStringList m_Aliases;
   QList<int> m_Modifiers;
   QList<bool> m_SwitchCorners;
-  int m_SwitchCornerSize;
+  int m_SwitchCornerSize = 0;
   QList<bool> m_Fixes;
   bool m_Swapped = false;
   bool m_isServer = false;
