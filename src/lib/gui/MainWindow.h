@@ -79,7 +79,6 @@ public:
   {
     return m_coreProcess.mode();
   }
-  QString address() const;
   void open();
   ServerConfig &serverConfig()
   {
@@ -130,26 +129,20 @@ private:
   void setupTrayIcon();
   void applyConfig();
   void setIcon();
-  bool checkForApp(int which, QString &app);
   void setStatus(const QString &status);
   void updateFromLogLine(const QString &line);
   QString getIPAddresses() const;
-  void enableServer(bool enable);
-  void enableClient(bool enable);
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   QString getTimeStamp() const;
   void showEvent(QShowEvent *) override;
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
-  void windowStateChanged();
   void connectSlots();
-  void updateWindowTitle();
   void handleLogLine(const QString &line);
   void updateLocalFingerprint();
   void updateScreenName();
   void saveSettings();
-  QString configFilename();
   void showConfigureServer(const QString &message);
   void restoreWindow();
   void setupControls();
