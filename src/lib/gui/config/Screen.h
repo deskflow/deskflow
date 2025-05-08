@@ -121,9 +121,9 @@ protected:
   {
     return m_Aliases;
   }
-  void setModifier(int m, int n)
+  void setModifier(Modifier m, int n)
   {
-    m_Modifiers[m] = n;
+    m_Modifiers[static_cast<int8_t>(m)] = n;
   }
   QList<int> &modifiers()
   {

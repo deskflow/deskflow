@@ -96,11 +96,11 @@ void ScreenSettingsDialog::accept()
     m_pScreen->addAlias(alias);
   }
 
-  m_pScreen->setModifier(static_cast<int>(Shift), ui_->m_pComboBoxShift->currentIndex());
-  m_pScreen->setModifier(static_cast<int>(Ctrl), ui_->m_pComboBoxCtrl->currentIndex());
-  m_pScreen->setModifier(static_cast<int>(Alt), ui_->m_pComboBoxAlt->currentIndex());
-  m_pScreen->setModifier(static_cast<int>(Meta), ui_->m_pComboBoxMeta->currentIndex());
-  m_pScreen->setModifier(static_cast<int>(Super), ui_->m_pComboBoxSuper->currentIndex());
+  m_pScreen->setModifier(Shift, ui_->m_pComboBoxShift->currentIndex());
+  m_pScreen->setModifier(Ctrl, ui_->m_pComboBoxCtrl->currentIndex());
+  m_pScreen->setModifier(Alt, ui_->m_pComboBoxAlt->currentIndex());
+  m_pScreen->setModifier(Meta, ui_->m_pComboBoxMeta->currentIndex());
+  m_pScreen->setModifier(Super, ui_->m_pComboBoxSuper->currentIndex());
 
   m_pScreen->setSwitchCorner(static_cast<int>(TopLeft), ui_->m_pCheckBoxCornerTopLeft->isChecked());
   m_pScreen->setSwitchCorner(static_cast<int>(TopRight), ui_->m_pCheckBoxCornerTopRight->isChecked());
