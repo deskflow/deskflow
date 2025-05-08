@@ -12,24 +12,29 @@ license=(LicenseRef-GPL-2.0-only-WITH-OpenSSL-Exception)
 conflicts=('synergy-git' 'synergy-1.6' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin' 'synergy3-beta-bin' 'synergy3-stable-bin' 'barrier' 'barrier-git' 'barrier-headless' 'barrier-headless-git' 'input-leap' 'input-leap-git' 'input-leap-headless-git' 'input-leap-headless' 'waynergy' 'waynergy-git' 'qsynergy' 'slim-synergy' 'quicksynergy' 'deskflow')
 provides=("deskflow-git${pkgver}")
 depends=(
-  'gcc-libs'
-  'glibc'
-  'openssl'
-  'libx11'
-  'libxi'
-  'libxkbfile'
-  'libxext'
-  'libxtst'
-  'libxinerama'
-  'libxkbcommon-x11'
-  'hicolor-icon-theme'
-  'qt6-base'
-  'qt6-tools'
-  'libei'
-  'libportal'
-  'tomlplusplus'
-  'cli11'
+  gcc-libs
+  glib2
+  glibc
+  hicolor-icon-theme
+  libei
+  libglvnd
+  libice
+  libportal
+  libsm
+  libx11
+  libxext
+  libxi
+  libxinerama
+  libxkbcommon
+  libxkbcommon-x11
+  libxkbfile
+  libxrandr
+  libxtst
+  openssl
+  qt6-base
+  tomlplusplus
 )
+
 options=('!debug')
 
 package() {
