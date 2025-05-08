@@ -21,24 +21,12 @@ Screen::Screen(const QString &name)
 
 void Screen::init()
 {
-  name().clear();
-  aliases().clear();
-  modifiers().clear();
-  switchCorners().clear();
-  fixes().clear();
-  setSwitchCornerSize(0);
-
-  // m_Modifiers, m_SwitchCorners and m_Fixes are QLists we use like fixed-size
-  // arrays, thus we need to make sure to fill them with the required number of
-  // elements.
-  for (int i = 0; i < static_cast<int>(NumModifiers); i++)
-    modifiers() << i;
-
-  for (int i = 0; i < static_cast<int>(NumSwitchCorners); i++)
-    switchCorners() << false;
-
-  for (int i = 0; i < static_cast<int>(NumFixes); i++)
-    fixes() << false;
+  m_Name.clear();
+  m_Aliases.clear();
+  m_SwitchCornerSize = 0;
+  m_Modifiers.fill(0, static_cast<int>(NumModifiers));
+  m_SwitchCorners.fill(false, static_cast<int>(NumSwitchCorners));
+  m_Fixes.fill(false, static_cast<int>(NumFixes));
 }
 
 void Screen::loadSettings(QSettingsProxy &settings)
