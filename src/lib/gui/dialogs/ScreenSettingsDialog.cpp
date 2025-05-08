@@ -108,10 +108,10 @@ void ScreenSettingsDialog::accept()
   m_pScreen->setSwitchCorner(BottomRight, ui_->m_pCheckBoxCornerBottomRight->isChecked());
   m_pScreen->setSwitchCornerSize(ui_->m_pSpinBoxSwitchCornerSize->value());
 
-  m_pScreen->setFix(static_cast<int>(CapsLock), ui_->m_pCheckBoxCapsLock->isChecked());
-  m_pScreen->setFix(static_cast<int>(NumLock), ui_->m_pCheckBoxNumLock->isChecked());
-  m_pScreen->setFix(static_cast<int>(ScrollLock), ui_->m_pCheckBoxScrollLock->isChecked());
-  m_pScreen->setFix(static_cast<int>(XTest), ui_->m_pCheckBoxXTest->isChecked());
+  m_pScreen->setFix(CapsLock, ui_->m_pCheckBoxCapsLock->isChecked());
+  m_pScreen->setFix(NumLock, ui_->m_pCheckBoxNumLock->isChecked());
+  m_pScreen->setFix(ScrollLock, ui_->m_pCheckBoxScrollLock->isChecked());
+  m_pScreen->setFix(XTest, ui_->m_pCheckBoxXTest->isChecked());
 
   QDialog::accept();
 }
