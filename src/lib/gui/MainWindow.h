@@ -75,7 +75,7 @@ public:
   explicit MainWindow();
   ~MainWindow() override;
 
-  CoreMode coreMode() const
+  [[nodiscard]] CoreMode coreMode() const
   {
     return m_coreProcess.mode();
   }
@@ -131,10 +131,10 @@ private:
   void setIcon();
   void setStatus(const QString &status);
   void updateFromLogLine(const QString &line);
-  QString getIPAddresses() const;
+  [[nodiscard]] QString getIPAddresses() const;
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  QString getTimeStamp() const;
+  [[nodiscard]] QString getTimeStamp() const;
   void showEvent(QShowEvent *) override;
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
