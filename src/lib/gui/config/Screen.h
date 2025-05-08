@@ -80,9 +80,9 @@ public:
   {
     return m_SwitchCornerSize;
   }
-  [[nodiscard]] bool fix(Fix f) const
+  [[nodiscard]] bool fix(const Fix f) const
   {
-    return m_Fixes[static_cast<int>(f)];
+    return m_Fixes[static_cast<int8_t>(f)];
   }
   [[nodiscard]] const QList<bool> &fixes() const
   {
@@ -121,7 +121,7 @@ protected:
   {
     return m_Aliases;
   }
-  void setModifier(Modifier m, int n)
+  void setModifier(const Modifier m, const int n)
   {
     m_Modifiers[static_cast<int8_t>(m)] = n;
   }
@@ -133,7 +133,7 @@ protected:
   {
     m_Aliases.append(alias);
   }
-  void setSwitchCorner(SwitchCorner c, bool on)
+  void setSwitchCorner(const SwitchCorner c, const bool on)
   {
     m_SwitchCorners[static_cast<int8_t>(c)] = on;
   }
@@ -141,11 +141,11 @@ protected:
   {
     return m_SwitchCorners;
   }
-  void setSwitchCornerSize(int val)
+  void setSwitchCornerSize(const int val)
   {
     m_SwitchCornerSize = val;
   }
-  void setFix(Fix f, bool on)
+  void setFix(const Fix f, const bool on)
   {
     m_Fixes[static_cast<int8_t>(f)] = on;
   }
@@ -153,7 +153,7 @@ protected:
   {
     return m_Fixes;
   }
-  void setSwapped(bool on)
+  void setSwapped(const bool on)
   {
     m_Swapped = on;
   }
