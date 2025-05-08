@@ -17,7 +17,7 @@ class ScreenConfig
 {
 
 public:
-  enum class Modifier
+  enum class Modifier : int8_t
   {
     DefaultMod = -1,
     Shift,
@@ -28,7 +28,7 @@ public:
     None,
     NumModifiers
   };
-  enum class SwitchCorner
+  enum class SwitchCorner : int8_t
   {
     TopLeft,
     TopRight,
@@ -36,7 +36,7 @@ public:
     BottomRight,
     NumSwitchCorners
   };
-  enum class Fix
+  enum class Fix : int8_t
   {
     CapsLock,
     NumLock,
