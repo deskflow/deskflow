@@ -13,11 +13,6 @@ using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
 
-Screen::Screen()
-{
-  init();
-}
-
 Screen::Screen(const QString &name)
 {
   init();
