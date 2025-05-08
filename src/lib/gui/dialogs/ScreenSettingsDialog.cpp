@@ -74,7 +74,8 @@ void ScreenSettingsDialog::accept()
            "Please either fill in a name or cancel the dialog.")
     );
     return;
-  } else if (!ui_->m_pLabelNameError->text().isEmpty()) {
+  }
+  if (!ui_->m_pLabelNameError->text().isEmpty()) {
     return;
   }
 
