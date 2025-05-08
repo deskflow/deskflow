@@ -133,9 +133,9 @@ protected:
   {
     m_Aliases.append(alias);
   }
-  void setSwitchCorner(int c, bool on)
+  void setSwitchCorner(SwitchCorner c, bool on)
   {
-    m_SwitchCorners[c] = on;
+    m_SwitchCorners[static_cast<int8_t>(c)] = on;
   }
   QList<bool> &switchCorners()
   {

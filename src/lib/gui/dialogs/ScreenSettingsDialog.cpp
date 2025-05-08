@@ -102,10 +102,10 @@ void ScreenSettingsDialog::accept()
   m_pScreen->setModifier(Meta, ui_->m_pComboBoxMeta->currentIndex());
   m_pScreen->setModifier(Super, ui_->m_pComboBoxSuper->currentIndex());
 
-  m_pScreen->setSwitchCorner(static_cast<int>(TopLeft), ui_->m_pCheckBoxCornerTopLeft->isChecked());
-  m_pScreen->setSwitchCorner(static_cast<int>(TopRight), ui_->m_pCheckBoxCornerTopRight->isChecked());
-  m_pScreen->setSwitchCorner(static_cast<int>(BottomLeft), ui_->m_pCheckBoxCornerBottomLeft->isChecked());
-  m_pScreen->setSwitchCorner(static_cast<int>(BottomRight), ui_->m_pCheckBoxCornerBottomRight->isChecked());
+  m_pScreen->setSwitchCorner(TopLeft, ui_->m_pCheckBoxCornerTopLeft->isChecked());
+  m_pScreen->setSwitchCorner(TopRight, ui_->m_pCheckBoxCornerTopRight->isChecked());
+  m_pScreen->setSwitchCorner(BottomLeft, ui_->m_pCheckBoxCornerBottomLeft->isChecked());
+  m_pScreen->setSwitchCorner(BottomRight, ui_->m_pCheckBoxCornerBottomRight->isChecked());
   m_pScreen->setSwitchCornerSize(ui_->m_pSpinBoxSwitchCornerSize->value());
 
   m_pScreen->setFix(static_cast<int>(CapsLock), ui_->m_pCheckBoxCapsLock->isChecked());
