@@ -145,9 +145,9 @@ protected:
   {
     m_SwitchCornerSize = val;
   }
-  void setFix(int f, bool on)
+  void setFix(Fix f, bool on)
   {
-    m_Fixes[f] = on;
+    m_Fixes[static_cast<int8_t>(f)] = on;
   }
   QList<bool> &fixes()
   {
