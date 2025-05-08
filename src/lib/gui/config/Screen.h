@@ -43,70 +43,67 @@ class Screen : public ScreenConfig
 public:
   explicit Screen(const QString &name = QString());
 
-  const QPixmap &pixmap() const
+  [[nodiscard]] const QPixmap &pixmap() const
   {
     return m_Pixmap;
   }
-  const QString &name() const
+  [[nodiscard]] const QString &name() const
   {
     return m_Name;
   }
-  const QStringList &aliases() const
+  [[nodiscard]] const QStringList &aliases() const
   {
     return m_Aliases;
   }
 
-  bool isNull() const
+  [[nodiscard]] bool isNull() const
   {
     return m_Name.isEmpty();
   }
-  int modifier(int m) const
+  [[nodiscard]] int modifier(int m) const
   {
     return m_Modifiers[m] == static_cast<int>(ScreenConfig::Modifier::DefaultMod) ? m : m_Modifiers[m];
   }
-  const QList<int> &modifiers() const
+  [[nodiscard]] const QList<int> &modifiers() const
   {
     return m_Modifiers;
   }
-  bool switchCorner(int c) const
+  [[nodiscard]] bool switchCorner(int c) const
   {
     return m_SwitchCorners[c];
   }
-  const QList<bool> &switchCorners() const
+  [[nodiscard]] const QList<bool> &switchCorners() const
   {
     return m_SwitchCorners;
   }
-  int switchCornerSize() const
+  [[nodiscard]] int switchCornerSize() const
   {
     return m_SwitchCornerSize;
   }
-  bool fix(Fix f) const
+  [[nodiscard]] bool fix(Fix f) const
   {
     return m_Fixes[static_cast<int>(f)];
   }
-  const QList<bool> &fixes() const
+  [[nodiscard]] const QList<bool> &fixes() const
   {
     return m_Fixes;
   }
 
   void loadSettings(QSettingsProxy &settings);
   void saveSettings(QSettingsProxy &settings) const;
-  QString screensSection() const;
-  QString aliasesSection() const;
+  [[nodiscard]] QString screensSection() const;
+  [[nodiscard]] QString aliasesSection() const;
 
-  bool swapped() const
+  [[nodiscard]] bool swapped() const
   {
     return m_Swapped;
   }
-  QString &name()
-  {
-    return m_Name;
-  }
+
   void setName(const QString &name)
   {
     m_Name = name;
   }
-  bool isServer() const
+  [[nodiscard]] bool isServer() const
   {
     return m_isServer;
   }
