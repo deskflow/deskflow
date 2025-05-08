@@ -41,8 +41,7 @@ class Screen : public ScreenConfig
   }
 
 public:
-  explicit Screen();
-  explicit Screen(const QString &name);
+  explicit Screen(const QString &name = QString());
 
   const QPixmap &pixmap() const
   {
