@@ -1016,22 +1016,13 @@ void MainWindow::updateLocalFingerprint()
 
 void MainWindow::autoAddScreen(const QString &name)
 {
+  if (name.isEmpty())
+    return;
 
-  int r = m_serverConfig.autoAddScreen(name);
-  if (r != kAutoAddScreenOk) {
-    switch (r) {
-    case kAutoAddScreenManualServer:
-      showConfigureServer(
-          tr("Please add the server (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
-      );
-      break;
-
-    case kAutoAddScreenManualClient:
-      showConfigureServer(
-          tr("Please add the server (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
-      );
-      break;
-    }
+  if (m_serverConfig.autoAddScreen(name) == kAutoAddScreenManualClient) {
+    showConfigureServer(
+        tr("Please add the client (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
+    );
   }
 }
 
