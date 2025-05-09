@@ -51,16 +51,20 @@ jobs:
         run: |
           build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
-      - name: Legacy tests coverage
+      - name: Test coverage
+        shell: bash
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target coverage-legacytests
+        run: |
+          tests=(`cmake --build build  --target help | grep -o "^coverage-[^:]*"`)
+          for i in "${tests[@]}"; do
+            cmake --build build --target "$i"
+          done
 
       - name: Get coverage report paths
         id: coverage-paths
         run: |
-          legacytests=$(find build -name coverage-legacytests.xml)
-          paths="${legacytests}"
+          paths=$(ls -w 0 -m build/coverage-*.xml | sed 's/ //g')
           if [ -z "$paths" ]; then
             echo "Error: No coverage files found"
             exit 1
