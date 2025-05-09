@@ -28,7 +28,7 @@ env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
   PACKAGE_PREFIX: "deskflow"
   PACKAGE_PATH: ./dist
-  CMAKE_CONFIGURE: "cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DCMAKE_COMPILE_WARNING_AS_ERROR=ON"
+  CMAKE_CONFIGURE: "cmake -Bbuild -DCMAKE_BUILD_TYPE=Release -DSKIP_BUILD_TESTS=ON -DCMAKE_COMPILE_WARNING_AS_ERROR=ON"
 
 jobs:
   # Always run this job, even if not on PR, since other jobs need it.

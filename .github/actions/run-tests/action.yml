@@ -15,8 +15,22 @@ runs:
   using: "composite"
 
   steps:
-    - name: Unit tests
+    - name: unittests
       id: unittests
+      env:
+        QT_QPA_PLATFORM: offscreen
+      run: |
+        ctest --test-dir  "build/src/unittests" --output-on-failure
+        result=$?
+
+        if [ $result -ne 0 ]; then
+          echo "Unit tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
+        fi
+      shell: bash
+      continue-on-error: true
+
+    - name: legacytests
+      id: legacytests
       env:
         QT_QPA_PLATFORM: offscreen
       run: |
@@ -35,8 +49,11 @@ runs:
         pass="✅ Pass"
         fail="❌ Fail"
         unittests_outcome="${{ steps.unittests.outcome }}"
+        legacytests_outcome="${{ steps.legacytests.outcome }}"
         unittests=$( [ "$unittests_outcome" = "success" ] && echo $pass || echo $fail )
+        legacytests=$( [ "$legacytests_outcome" = "success" ] && echo $pass || echo $fail )
         echo "unittests=$unittests" >> $GITHUB_OUTPUT
+        echo "legacytests=$legacytests" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Summary row
@@ -47,6 +64,7 @@ runs:
         row=""
         row+="| ${{ inputs.job }} "
         row+="| ${{ steps.results.outputs.unittests }} "
+        row+="| ${{ steps.results.outputs.legacytests }} "
         echo "$row" > $file
 
         echo "file=$file" > $GITHUB_OUTPUT
