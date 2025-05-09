@@ -54,7 +54,7 @@ create_test(
 )
 
 create_test(
-  NAME test_LanguageManagerTests
+  NAME LanguageManagerTests
   DEPENDS app
   LIBS arch base ${extra_libs}
   SOURCE LanguageManagerTests.cpp
