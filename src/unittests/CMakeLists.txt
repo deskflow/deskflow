@@ -39,6 +39,15 @@ function(create_test)
   set_tests_properties(${m_NAME} PROPERTIES DEPENDS ${m_DEPENDS})
   set_property(GLOBAL APPEND PROPERTY ${CMAKE_PROJECT_NAME}_tests ${m_NAME})
 
+  if(ENABLE_COVERAGE)
+    setup_target_for_coverage_gcovr_xml(
+      NAME coverage-${m_NAME}
+      EXECUTABLE ${m_NAME}
+      BASE_DIRECTORY ${CMAKE_SOURCE_DIR}/src
+      EXCLUDE subprojects/* ${CMAKE_BINARY_DIR}/* src/unittest/*
+    )
+  endif()
+
 endfunction()
 
 enable_testing()
