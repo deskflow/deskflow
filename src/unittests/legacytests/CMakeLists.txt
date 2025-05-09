@@ -17,7 +17,7 @@ macro(config_all_tests)
 
   set(base_dir ${PROJECT_SOURCE_DIR})
   set(src_dir ${base_dir}/src)
-  set(test_base_dir ${src_dir}/test)
+  set(test_base_dir ${src_dir}/unittests/legacytests)
   set(gui_dir ${src_dir}/gui/src)
 
   config_test_deps()

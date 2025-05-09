@@ -8,7 +8,7 @@
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "common/Settings.h"
-#include "shared/ExitTimeout.h"
+#include "unittests/legacytests/shared/ExitTimeout.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"

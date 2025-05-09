@@ -11,7 +11,6 @@ add_subdirectory(apps)
 
 option(BUILD_TESTS "Build tests" ON)
 if(BUILD_TESTS)
-  add_subdirectory(test)
   add_subdirectory(unittests)
 endif()
 

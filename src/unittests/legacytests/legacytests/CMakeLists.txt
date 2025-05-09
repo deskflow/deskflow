@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 config_test()
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(target legacytests)
 add_executable(${target} ${sources} ${headers})
 target_link_libraries(${target} ${test_libs} common)
