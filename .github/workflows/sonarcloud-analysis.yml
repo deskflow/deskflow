@@ -44,22 +44,23 @@ jobs:
             -G "Ninja" \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DSKIP_BUILD_TESTS=ON \
             -DENABLE_COVERAGE=ON
 
       - name: Build
         run: |
           build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
-      - name: Unit tests coverage
+      - name: Legacy tests coverage
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target coverage-unittests
+        run: cmake --build build --target coverage-legacytests
 
       - name: Get coverage report paths
         id: coverage-paths
         run: |
-          unittests=$(find build -name coverage-unittests.xml)
-          paths="${unittests}"
+          legacytests=$(find build -name coverage-legacytests.xml)
+          paths="${legacytests}"
           if [ -z "$paths" ]; then
             echo "Error: No coverage files found"
             exit 1

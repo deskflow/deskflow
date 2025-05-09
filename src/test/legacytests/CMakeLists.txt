@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: MIT
 
 config_test()
-set(target unittests)
+set(target legacytests)
 add_executable(${target} ${sources} ${headers})
 target_link_libraries(${target} ${test_libs} common)

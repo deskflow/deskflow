@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 include(FetchContent)
-set(INSTALL_GTEST OFF)
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git
@@ -23,7 +22,7 @@ macro(config_all_tests)
 
   config_test_deps()
 
-  add_subdirectory(unittests)
+  add_subdirectory(legacytests)
 
 endmacro()
 

@@ -46,7 +46,7 @@ macro(configure_libs)
     message(STATUS "Enabling code coverage")
     include(cmake/CodeCoverage.cmake)
     append_coverage_compiler_flags()
-    set(test_exclude subprojects/* build/* src/test/*)
+    set(test_exclude subprojects/* build/* src/tests/*)
     set(test_src ${PROJECT_SOURCE_DIR}/src)
 
     # Apparently solves the bug in gcov where it returns negative counts and confuses gcovr.
@@ -55,15 +55,8 @@ macro(configure_libs)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-update=atomic")
 
     setup_target_for_coverage_gcovr_xml(
-      NAME coverage-integtests
-      EXECUTABLE integtests
-      BASE_DIRECTORY ${test_src}
-      EXCLUDE ${test_exclude}
-    )
-
-    setup_target_for_coverage_gcovr_xml(
-      NAME coverage-unittests
-      EXECUTABLE unittests
+      NAME coverage-legacytests
+      EXECUTABLE legacytests
       BASE_DIRECTORY ${test_src}
       EXCLUDE ${test_exclude}
     )
