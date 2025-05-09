@@ -15,7 +15,7 @@ runs:
   using: "composite"
 
   steps:
-    - name: unittests
+    - name: Unit Tests
       id: unittests
       env:
         QT_QPA_PLATFORM: offscreen
@@ -29,16 +29,16 @@ runs:
       shell: bash
       continue-on-error: true
 
-    - name: legacytests
+    - name: Legacy Tests
       id: legacytests
       env:
         QT_QPA_PLATFORM: offscreen
       run: |
-        ./${{ inputs.bin-dir }}/unittests
+        ./${{ inputs.bin-dir }}/legacytests
         result=$?
 
         if [ $result -ne 0 ]; then
-          echo "Unit tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
+          echo "Legacy tests failed with code: $result" >> $GITHUB_STEP_SUMMARY
         fi
       shell: bash
       continue-on-error: true
