@@ -15,6 +15,8 @@ function(create_test)
   )
   cmake_parse_arguments(m "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
   if("${m_NAME}" STREQUAL "")
     message(FATAL_ERROR "create_test, tests require a NAME")
   endif()
