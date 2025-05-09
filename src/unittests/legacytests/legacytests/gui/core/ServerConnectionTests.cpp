@@ -6,7 +6,7 @@
 
 #include "gui/core/ServerConnection.h"
 
-#include "shared/gui/mocks/ServerConfigMock.h"
+#include "unittests/legacytests/shared/gui/mocks/ServerConfigMock.h"
 
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>

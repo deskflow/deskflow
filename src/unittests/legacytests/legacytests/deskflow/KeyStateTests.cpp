@@ -5,9 +5,9 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "test/mock/deskflow/MockEventQueue.h"
-#include "test/mock/deskflow/MockKeyMap.h"
-#include "test/mock/deskflow/MockKeyState.h"
+#include "unittests/legacytests/mock/deskflow/MockEventQueue.h"
+#include "unittests/legacytests/mock/deskflow/MockKeyMap.h"
+#include "unittests/legacytests/mock/deskflow/MockKeyState.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
