@@ -7,7 +7,7 @@
 #include "base/Log.h"
 
 #if !WINAPI_LIBEI && !WINAPI_PORTAL
-#include "../../lib/platform/XWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 #endif
 
 #include <QTest>

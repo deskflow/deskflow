@@ -13,19 +13,6 @@ using namespace deskflow::platform;
 
 namespace deskflow::gui::core {
 
-//
-// WaylandWarnings::Deps
-//
-
-void WaylandWarnings::Deps::showWaylandLibraryError(QWidget *parent)
-{
-  messages::showWaylandLibraryError(parent);
-}
-
-//
-// WaylandWarnings
-//
-
 void WaylandWarnings::showOnce(QWidget *parent, bool hasEi, bool hasPortal, bool hasPortalInputCapture)
 {
   const auto mode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
@@ -34,7 +21,7 @@ void WaylandWarnings::showOnce(QWidget *parent, bool hasEi, bool hasPortal, bool
   if (!hasEi || !hasPortal || portalIcProblem) {
     if (!m_errorShown) {
       m_errorShown = true;
-      m_pDeps->showWaylandLibraryError(parent);
+      messages::showWaylandLibraryError(parent);
     } else {
       qWarning("missing required wayland lib(s) or feature");
     }

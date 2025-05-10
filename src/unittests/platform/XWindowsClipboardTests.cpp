@@ -8,7 +8,7 @@
 
 #include "XWindowsClipboardTests.h"
 
-#include "../../lib/platform/XWindowsClipboard.h"
+#include "platform/XWindowsClipboard.h"
 
 class TestXWindowsClipboard : public XWindowsClipboard
 {

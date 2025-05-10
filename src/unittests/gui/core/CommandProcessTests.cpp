@@ -7,7 +7,7 @@
 
 #include "CommandProcessTests.h"
 
-#include "../../../lib/gui/core/CommandProcess.h"
+#include "gui/core/CommandProcess.h"
 
 void CommandProcessTests::runCommand()
 {

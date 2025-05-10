@@ -7,9 +7,8 @@
 
 #include "UnicodeTests.h"
 
-#include "../../lib/base/Unicode.h"
-
 #include "arch/IArchString.h"
+#include "base/Unicode.h"
 
 void UnicodeTests::initTestCase()
 {

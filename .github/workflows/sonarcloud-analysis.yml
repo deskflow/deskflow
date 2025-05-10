@@ -44,22 +44,27 @@ jobs:
             -G "Ninja" \
             -DCMAKE_BUILD_TYPE="Debug" \
             -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+            -DSKIP_BUILD_TESTS=ON \
             -DENABLE_COVERAGE=ON
 
       - name: Build
         run: |
           build-wrapper-linux-x86-64 --out-dir bw-output cmake --build build -j${CPU_CORE_COUNT}
 
-      - name: Unit tests coverage
+      - name: Test coverage
+        shell: bash
         env:
           QT_QPA_PLATFORM: offscreen
-        run: cmake --build build --target coverage-unittests
+        run: |
+          tests=(`cmake --build build  --target help | grep -o "^coverage-[^:]*"`)
+          for i in "${tests[@]}"; do
+            cmake --build build --target "$i"
+          done
 
       - name: Get coverage report paths
         id: coverage-paths
         run: |
-          unittests=$(find build -name coverage-unittests.xml)
-          paths="${unittests}"
+          paths=$(ls -w 0 -m build/coverage-*.xml | sed 's/ //g')
           if [ -z "$paths" ]; then
             echo "Error: No coverage files found"
             exit 1

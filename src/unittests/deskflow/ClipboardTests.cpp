@@ -8,7 +8,7 @@
 
 #include "ClipboardTests.h"
 
-#include "../../lib/deskflow/Clipboard.h"
+#include "deskflow/Clipboard.h"
 
 void ClipboardTests::initTestCase()
 {

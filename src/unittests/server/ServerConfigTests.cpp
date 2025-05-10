@@ -7,7 +7,7 @@
 
 #include "ServerConfigTests.h"
 
-#include "../../lib/server/Config.h"
+#include "server/Config.h"
 
 class OnlySystemFilter : public InputFilter::Condition
 {

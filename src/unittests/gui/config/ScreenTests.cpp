@@ -7,8 +7,8 @@
 
 #include "ScreenTests.h"
 
-#include "../../../lib/common/Settings.h"
-#include "../../../lib/gui/config/Screen.h"
+#include "common/Settings.h"
+#include "gui/config/Screen.h"
 
 void ScreenTests::initTestCase()
 {

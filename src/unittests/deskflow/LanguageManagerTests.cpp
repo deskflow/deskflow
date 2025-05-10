@@ -7,7 +7,7 @@
 
 #include "LanguageManagerTests.h"
 
-#include "../../lib/deskflow/languages/LanguageManager.h"
+#include "deskflow/languages/LanguageManager.h"
 
 void LanguageManagerTests::initTestCase()
 {

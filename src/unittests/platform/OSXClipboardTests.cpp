@@ -8,8 +8,7 @@
 
 #include "OSXClipboardTests.h"
 
-#include "../../lib/platform/OSXClipboard.h"
-
+#include "platform/OSXClipboard.h"
 #include "platform/OSXClipboardUTF8Converter.h"
 
 void OSXClipboardTests::open()

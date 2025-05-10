@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "../../lib/deskflow/ArgParser.h"
-
 #include "base/Log.h"
+#include "deskflow/ArgParser.h"
 
 #include <QTest>
 

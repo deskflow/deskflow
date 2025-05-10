@@ -15,6 +15,8 @@ function(create_test)
   )
   cmake_parse_arguments(m "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+
   if("${m_NAME}" STREQUAL "")
     message(FATAL_ERROR "create_test, tests require a NAME")
   endif()
@@ -36,6 +38,16 @@ function(create_test)
   add_test(NAME ${m_NAME} COMMAND $<TARGET_FILE:${m_NAME}> WORKING_DIRECTORY ${m_WORKING_DIRECTORY})
   set_tests_properties(${m_NAME} PROPERTIES DEPENDS ${m_DEPENDS})
   set_property(GLOBAL APPEND PROPERTY ${CMAKE_PROJECT_NAME}_tests ${m_NAME})
+
+  if(ENABLE_COVERAGE)
+    setup_target_for_coverage_gcovr_xml(
+      NAME coverage-${m_NAME}
+      EXECUTABLE ${m_NAME}
+      BASE_DIRECTORY ${CMAKE_SOURCE_DIR}/src
+      EXCLUDE subprojects/* ${CMAKE_BINARY_DIR}/* src/unittest/*
+    )
+  endif()
+
 endfunction()
 
 enable_testing()
@@ -46,6 +58,7 @@ add_subdirectory(base)
 add_subdirectory(common)
 add_subdirectory(deskflow)
 add_subdirectory(gui)
+add_subdirectory(legacytests)
 add_subdirectory(net)
 add_subdirectory(platform)
 add_subdirectory(server)
@@ -64,9 +77,13 @@ else()
   set(guiApp deskflow)
 endif()
 
-add_custom_target(run_tests ALL DEPENDS ${PROJECT_TESTS} ${guiApp})
-add_custom_command (
-  TARGET run_tests
-  POST_BUILD
-  COMMAND ${qPA_Platform} ${CMAKE_CTEST_COMMAND} --test-dir  "${CMAKE_BINARY_DIR}/src/unittests" --output-on-failure
-)
+option(SKIP_BUILD_TESTS "Skip build time test" OFF)
+
+if(NOT SKIP_BUILD_TESTS)
+  add_custom_target(run_tests ALL DEPENDS ${PROJECT_TESTS} ${guiApp})
+  add_custom_command (
+    TARGET run_tests
+    POST_BUILD
+    COMMAND ${qPA_Platform} ${CMAKE_CTEST_COMMAND} --test-dir  "${CMAKE_BINARY_DIR}/src/unittests" --output-on-failure
+  )
+endif()

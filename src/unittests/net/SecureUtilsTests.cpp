@@ -7,7 +7,7 @@
 
 #include "SecureUtilsTests.h"
 
-#include "../../lib/net/SecureUtils.h"
+#include "net/SecureUtils.h"
 
 using namespace deskflow;
 

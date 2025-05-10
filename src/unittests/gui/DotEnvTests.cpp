@@ -7,7 +7,7 @@
 
 #include "DotEnvTests.h"
 
-#include "../../lib/gui/DotEnv.h"
+#include "gui/DotEnv.h"
 
 void DotEnvTests::initTestCase()
 {

@@ -7,7 +7,6 @@
 #pragma once
 
 #include <QWidget>
-#include <memory>
 
 #include "platform/Wayland.h"
 
@@ -16,15 +15,7 @@ namespace deskflow::gui::core {
 class WaylandWarnings
 {
 public:
-  struct Deps
-  {
-    virtual ~Deps() = default;
-    virtual void showWaylandLibraryError(QWidget *parent);
-  };
-
-  explicit WaylandWarnings(std::shared_ptr<Deps> deps = std::make_shared<Deps>()) : m_pDeps(deps)
-  {
-  }
+  explicit WaylandWarnings() = default;
 
   void showOnce(
       QWidget *parent, bool hasEi = platform::kHasEi, bool hasPortal = platform::kHasPortal,
@@ -33,7 +24,6 @@ public:
 
 private:
   bool m_errorShown{false};
-  std::shared_ptr<Deps> m_pDeps;
 };
 
 } // namespace deskflow::gui::core

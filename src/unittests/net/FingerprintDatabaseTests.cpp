@@ -7,8 +7,8 @@
 
 #include "FingerprintDatabaseTests.h"
 
-#include "../../lib/net/FingerprintData.h"
-#include "../../lib/net/FingerprintDatabase.h"
+#include "net/FingerprintData.h"
+#include "net/FingerprintDatabase.h"
 
 #include <sstream>
 
