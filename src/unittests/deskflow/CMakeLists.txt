@@ -61,7 +61,17 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
+
 if(UNIX AND NOT APPLE)
+  #this test does not work properly on windows / mac os
+  create_test(
+    NAME ServerAppTests
+    DEPENDS app
+    LIBS arch base
+    SOURCE ServerAppTests.cpp
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+  )
+
   create_test(
     NAME X11LayoutParserTests
     DEPENDS app
