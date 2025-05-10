@@ -7,7 +7,7 @@
 
 #include "IArchStringTests.h"
 
-#include "../../lib/arch/IArchString.h"
+#include "arch/IArchString.h"
 
 void IArchStringTests::initTestCase()
 {

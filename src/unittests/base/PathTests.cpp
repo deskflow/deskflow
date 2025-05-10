@@ -7,7 +7,7 @@
 
 #include "PathTests.h"
 
-#include "../../lib/base/Path.h"
+#include "base/Path.h"
 
 #include <fstream>
 

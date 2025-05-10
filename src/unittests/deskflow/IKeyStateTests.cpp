@@ -7,7 +7,7 @@
 
 #include "IKeyStateTests.h"
 
-#include "../../lib/deskflow/IKeyState.h"
+#include "deskflow/IKeyState.h"
 
 void IKeyStateTests::allocDestination()
 {
