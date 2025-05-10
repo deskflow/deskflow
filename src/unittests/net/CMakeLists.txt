@@ -14,6 +14,14 @@ create_test(
 )
 
 create_test(
+  NAME FingerprintTests
+  DEPENDS net
+  LIBS base arch mt io ${extra_libs}
+  SOURCE FingerprintTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/net"
+)
+
+create_test(
   NAME FingerprintDatabaseTests
   DEPENDS net
   LIBS base arch mt io ${extra_libs}

@@ -7,39 +7,28 @@
 
 #pragma once
 
-#include "FingerprintData.h"
+#include "Fingerprint.h"
 
-#include "io/Filesystem.h"
-
-#include <iosfwd>
-#include <string>
-#include <vector>
-
-namespace deskflow {
+#include <QList>
 
 class FingerprintDatabase
 {
 public:
-  void read(const fs::path &path);
-  void write(const fs::path &path);
+  void read(const QString &path);
+  void write(const QString &path);
 
-  void readStream(std::istream &stream);
-  void writeStream(std::ostream &stream);
+  void readStream(QTextStream &in);
+  void writeStream(QTextStream &out);
 
   void clear();
-  void addTrusted(const FingerprintData &fingerprint);
-  bool isTrusted(const FingerprintData &fingerprint);
+  void addTrusted(const Fingerprint &fingerprint);
+  bool isTrusted(const Fingerprint &fingerprint);
 
-  const std::vector<FingerprintData> &fingerprints() const
+  const QList<Fingerprint> &fingerprints() const
   {
     return m_fingerprints;
   }
 
-  static FingerprintData parseDbLine(const std::string &line);
-  static std::string toDbLine(const FingerprintData &fingerprint);
-
 private:
-  std::vector<FingerprintData> m_fingerprints;
+  QList<Fingerprint> m_fingerprints;
 };
-
-} // namespace deskflow

@@ -13,9 +13,11 @@ using namespace deskflow;
 
 void SecureUtilsTests::checkHex()
 {
-  std::vector<uint8_t> fingerprint = {40,  253, 10,  152, 138, 14,  161, 108, 215, 232, 108, 167, 238, 88,  65, 113,
-                                      202, 178, 142, 73,  37,  148, 144, 37,  38,  5,   141, 175, 99,  237, 46, 48};
-
+  QByteArray fingerprint(
+      "\x28\xFD\x0A\x98\x8A\x0E\xA1\x6C\xD7\xE8\x6C\xA7\xEE\x58\x41\x71\xCA\xB2\x8E\x49\x25\x94\x90\x25\x26\x05\x8D\xAF"
+      "\x63\xED\x2E\x30",
+      32
+  );
   QCOMPARE(
       deskflow::formatSSLFingerprint(fingerprint, true),
       "28:FD:0A:98:8A:0E:A1:6C:D7:E8:6C:A7:EE:58:41:71:CA:B2:8E:49:25:94:90:25:26:05:8D:AF:63:ED:2E:30"
@@ -24,8 +26,11 @@ void SecureUtilsTests::checkHex()
 
 void SecureUtilsTests::checkArt()
 {
-  std::vector<uint8_t> fingerprint = {40,  253, 10,  152, 138, 14,  161, 108, 215, 232, 108, 167, 238, 88,  65, 113,
-                                      202, 178, 142, 73,  37,  148, 144, 37,  38,  5,   141, 175, 99,  237, 46, 48};
+  QByteArray fingerprint(
+      "\x28\xFD\x0A\x98\x8A\x0E\xA1\x6C\xD7\xE8\x6C\xA7\xEE\x58\x41\x71\xCA\xB2\x8E\x49\x25\x94\x90\x25\x26\x05\x8D\xAF"
+      "\x63\xED\x2E\x30",
+      32
+  );
   QCOMPARE(
       deskflow::generateFingerprintArt(fingerprint), "╔═════════════════╗\n"
                                                      "║*X+. .           ║\n"
