@@ -7,7 +7,7 @@
 
 #include "XBaseTests.h"
 
-#include "../../lib/base/XBase.h"
+#include "base/XBase.h"
 
 void XBaseTests::empty()
 {

@@ -7,7 +7,7 @@
 
 #include "ConfigTests.h"
 
-#include "../../lib/deskflow/Config.h"
+#include "deskflow/Config.h"
 
 using namespace deskflow;
 const auto kTestFilename = "tmp/test/test.toml";

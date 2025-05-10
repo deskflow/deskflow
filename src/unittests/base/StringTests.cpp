@@ -7,7 +7,7 @@
 
 #include "StringTests.h"
 
-#include "../../lib/base/String.h"
+#include "base/String.h"
 
 #include <string.h>
 

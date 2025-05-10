@@ -7,8 +7,7 @@
 
 #include "ClipboardChunksTests.h"
 
-#include "../../lib/deskflow/ClipboardChunk.h"
-
+#include "deskflow/ClipboardChunk.h"
 #include "deskflow/ProtocolTypes.h"
 
 void ClipboardChunksTests::startFormatData()

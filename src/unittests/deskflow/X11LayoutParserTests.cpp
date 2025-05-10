@@ -7,7 +7,7 @@
 
 #include "X11LayoutParserTests.h"
 
-#include "../../lib/deskflow/unix/X11LayoutsParser.h"
+#include "deskflow/unix/X11LayoutsParser.h"
 
 void X11LayoutParserTests::initTestCase()
 {

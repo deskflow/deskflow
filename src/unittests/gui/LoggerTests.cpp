@@ -7,7 +7,7 @@
 
 #include "LoggerTests.h"
 
-#include "../../lib/gui/Logger.h"
+#include "gui/Logger.h"
 
 #include <QSignalSpy>
 

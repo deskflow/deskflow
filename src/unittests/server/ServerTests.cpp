@@ -7,7 +7,7 @@
 
 #include "ServerTests.h"
 
-#include "../../lib/server/Server.h"
+#include "server/Server.h"
 
 void ServerTests::SwitchToScreenInfo_alloc_screen()
 {
