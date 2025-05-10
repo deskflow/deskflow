@@ -3,6 +3,7 @@
 
 if(WIN32)
   set(extra_libs version)
+  set(ex_serverApp_Libs platform net io server)
 endif()
 
 create_test(
@@ -58,6 +59,14 @@ create_test(
   DEPENDS app
   LIBS arch base ${extra_libs}
   SOURCE LanguageManagerTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
+  NAME ServerAppTests
+  DEPENDS app
+  LIBS arch base ${extra_libs} ${ex_serverApp_Libs}
+  SOURCE ServerAppTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
