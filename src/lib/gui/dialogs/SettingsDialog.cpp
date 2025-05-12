@@ -252,6 +252,8 @@ void SettingsDialog::updateControls()
   const bool serviceChecked = ui->groupService->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 
+  ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(writable);
+
   ui->sbPort->setEnabled(writable);
   ui->lineInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
