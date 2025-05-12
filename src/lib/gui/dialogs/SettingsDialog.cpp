@@ -252,6 +252,12 @@ void SettingsDialog::updateControls()
   const bool serviceChecked = ui->groupService->isChecked();
   const bool logToFile = ui->cbLogToFile->isChecked();
 
+  const auto saveButton = ui->buttonBox->button(QDialogButtonBox::Save);
+  if (!saveButton) {
+    qFatal("save button not found");
+  }
+  saveButton->setEnabled(writable);
+
   ui->sbPort->setEnabled(writable);
   ui->lineInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
