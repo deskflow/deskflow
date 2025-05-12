@@ -269,9 +269,6 @@ void SettingsDialog::updateControls()
     ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
-    const int bottomMargin = ui->tabAdvanced->layout()->contentsMargins().bottom() +
-                             (ui->tabAdvanced->layout()->spacing() * 2) + ui->groupService->height();
-    ui->tabAdvanced->layout()->setContentsMargins(9, 9, 9, bottomMargin);
   }
 
   ui->cbLanguageSync->setEnabled(writable && isClientMode());
