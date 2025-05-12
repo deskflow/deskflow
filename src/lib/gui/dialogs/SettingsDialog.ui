@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>550</width>
-    <height>612</height>
+    <width>549</width>
+    <height>611</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -284,6 +284,19 @@
             </property>
            </widget>
           </item>
+          <item>
+           <spacer name="verticalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Orientation::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>0</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
          </layout>
         </widget>
        </item>
@@ -302,6 +315,9 @@
       <layout class="QVBoxLayout" name="_2">
        <property name="spacing">
         <number>15</number>
+       </property>
+       <property name="topMargin">
+        <number>9</number>
        </property>
        <item>
         <widget class="QGroupBox" name="groupNetworking">
@@ -382,12 +398,6 @@
           <string>Logs</string>
          </property>
          <layout class="QGridLayout" name="_3">
-          <property name="topMargin">
-           <number>15</number>
-          </property>
-          <property name="bottomMargin">
-           <number>15</number>
-          </property>
           <property name="verticalSpacing">
            <number>7</number>
           </property>
@@ -572,6 +582,19 @@
           </item>
          </layout>
         </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>0</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
