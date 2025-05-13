@@ -11,7 +11,6 @@
 #include "common/Common.h"
 
 #include <string>
-#include <vector>
 
 namespace deskflow {
 
@@ -44,42 +43,6 @@ std::string vformat(const char *fmt, va_list);
 Equivalent to sprintf() except the result is returned as a String.
 */
 std::string sprintf(const char *fmt, ...);
-
-//! Convert into hexdecimal
-/*!
-Convert each character in \c subject into hexdecimal form with \c width
-Return a new hexString
-*/
-std::string toHex(const std::string &subject, int width, const char fill = '0');
-
-/**
- * @brief toHex Convert each value in input into a hex string
- * @param input vector of uint8_t
- * @param width
- * @param fill fill character 0 is default
- * @return a hex string
- */
-std::string toHex(const std::vector<uint8_t> &input, int width, const char fill = '0');
-
-/**
- * @brief fromHexChar Convert a single char to its hexidecmal value
- * @param c input char 0-F
- * @return The value of c in Hex or -1 for invalid hex chars
- */
-int fromHexChar(char c);
-
-/**
- * @brief fromHex Turn the string into a std::vector<uint8_t>
- * @param hexString a Hexidecimal string
- * @return std::vector<uint8_t> version of the hex chars
- */
-std::vector<uint8_t> fromHex(const std::string &hexString);
-
-//! Convert to all uppercase
-/*!
-Convert each character in \c subject to uppercase
-*/
-void uppercase(std::string &subject);
 
 //! Convert a size type to a string
 /*!

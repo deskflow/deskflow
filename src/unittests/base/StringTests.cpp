@@ -33,51 +33,6 @@ void StringTests::formatedString()
   QCOMPARE("answer=42", result);
 }
 
-void StringTests::toHex()
-{
-  QCOMPARE(deskflow::string::toHex("foobar", 2), "666f6f626172");
-
-  std::vector<std::uint8_t> subject{'f', 'o', 'o', 'b', 'a', 'r'};
-  QCOMPARE(deskflow::string::toHex(subject, 2), "666f6f626172");
-}
-
-void StringTests::fromHex()
-{
-  QCOMPARE(deskflow::string::fromHexChar('z'), -1);
-  QCOMPARE(deskflow::string::fromHexChar('0'), 0);
-  QCOMPARE(deskflow::string::fromHexChar('1'), 1);
-  QCOMPARE(deskflow::string::fromHexChar('2'), 2);
-  QCOMPARE(deskflow::string::fromHexChar('3'), 3);
-  QCOMPARE(deskflow::string::fromHexChar('4'), 4);
-  QCOMPARE(deskflow::string::fromHexChar('5'), 5);
-  QCOMPARE(deskflow::string::fromHexChar('6'), 6);
-  QCOMPARE(deskflow::string::fromHexChar('7'), 7);
-  QCOMPARE(deskflow::string::fromHexChar('8'), 8);
-  QCOMPARE(deskflow::string::fromHexChar('9'), 9);
-  QCOMPARE(deskflow::string::fromHexChar('a'), 10);
-  QCOMPARE(deskflow::string::fromHexChar('A'), 10);
-  QCOMPARE(deskflow::string::fromHexChar('b'), 11);
-  QCOMPARE(deskflow::string::fromHexChar('B'), 11);
-  QCOMPARE(deskflow::string::fromHexChar('c'), 12);
-  QCOMPARE(deskflow::string::fromHexChar('C'), 12);
-  QCOMPARE(deskflow::string::fromHexChar('d'), 13);
-  QCOMPARE(deskflow::string::fromHexChar('D'), 13);
-  QCOMPARE(deskflow::string::fromHexChar('e'), 14);
-  QCOMPARE(deskflow::string::fromHexChar('E'), 14);
-  QCOMPARE(deskflow::string::fromHexChar('f'), 15);
-  QCOMPARE(deskflow::string::fromHexChar('F'), 15);
-  QCOMPARE(deskflow::string::fromHex("FF")[0], 255);
-  QCOMPARE(deskflow::string::fromHex(":FF:EE")[0], 255);
-  QCOMPARE(deskflow::string::fromHex(":FF:EE")[1], 238);
-}
-
-void StringTests::toLower()
-{
-  std::string subject = "12foo3BaR";
-  deskflow::string::uppercase(subject);
-  QCOMPARE(subject, "12FOO3BAR");
-}
-
 void StringTests::stringToInt()
 {
   std::string number = "123";

@@ -12,9 +12,6 @@ class StringTests : public QObject
 private slots:
   void formatWithArgs();
   void formatedString();
-  void toHex();
-  void fromHex();
-  void toLower();
   void intToString();
   void stringToInt();
 };
