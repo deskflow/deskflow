@@ -94,6 +94,7 @@ runs:
         extra-args: --classic
         triplet: x64-windows-release
         token: ${{ github.token }}
+        github-binarycache: true
 
     - name: Install Wix
       if: ${{ runner.os == 'Windows' }}
