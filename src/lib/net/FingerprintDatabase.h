@@ -15,10 +15,10 @@ class FingerprintDatabase
 {
 public:
   void read(const QString &path);
-  void write(const QString &path);
+  bool write(const QString &path);
 
   void readStream(QTextStream &in);
-  void writeStream(QTextStream &out);
+  bool writeStream(QTextStream &out);
 
   void clear();
   void addTrusted(const Fingerprint &fingerprint);

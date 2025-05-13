@@ -12,57 +12,36 @@
 
 #include <net/SecureUtils.h>
 
-FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<Fingerprint> &fingerprints) : QFrame(parent)
+FingerprintPreview::FingerprintPreview(QWidget *parent, const Fingerprint &fingerprint) : QFrame(parent)
 {
   setFrameShape(QFrame::StyledPanel);
   setFrameStyle(QFrame::Sunken);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  QString sha1String;
-  QString sha256String;
-  QString sha256Art;
+  setLayout(fingerprint.type == Fingerprint::Type::SHA256 ? sha256Layout(fingerprint) : emptyLayout());
 
-  for (const auto &fingerprint : fingerprints) {
-    switch (fingerprint.type) {
-    case Fingerprint::Type::SHA1:
-      sha1String = deskflow::formatSSLFingerprint(fingerprint.data);
-      break;
+  adjustSize();
+  setFixedSize(size());
+}
 
-    case Fingerprint::Type::SHA256:
-      sha256String = deskflow::formatSSLFingerprintColumns(fingerprint.data);
-      sha256Art = deskflow::generateFingerprintArt(fingerprint.data);
-      break;
-    default:
-      qWarning() << "unknown fingerprint type:" << fingerprint.type;
-      break;
-    }
-  }
+QLayout *FingerprintPreview::emptyLayout()
+{
+  auto *label = new QLabel(tr("Invalid hash format"));
+  auto *layout = new QHBoxLayout();
+  layout->addWidget(label);
+  return layout;
+}
 
-  auto labelSha1 = new QLabel(QStringLiteral("SHA1:"), this);
-  labelSha1->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-
-  auto lblSha1 = new QLabel(sha1String, this);
-  lblSha1->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-  lblSha1->setTextInteractionFlags(Qt::TextSelectableByMouse);
-
-  auto sha1Layout = new QHBoxLayout();
-  sha1Layout->addWidget(labelSha1);
-  sha1Layout->addWidget(lblSha1);
-
-  auto frameSha1 = new QFrame(this);
-  frameSha1->setFrameShape(QFrame::StyledPanel);
-  frameSha1->setFrameStyle(QFrame::Sunken);
-  frameSha1->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-  frameSha1->setLayout(sha1Layout);
-
+QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint)
+{
   auto labelSha256 = new QLabel(QStringLiteral("SHA256:"), this);
   labelSha256->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  auto lblSha256String = new QLabel(sha256String, this);
+  auto lblSha256String = new QLabel(deskflow::formatSSLFingerprintColumns(fingerprint.data), this);
   lblSha256String->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
   lblSha256String->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
-  auto lblSha256Art = new QLabel(sha256Art, this);
+  auto lblSha256Art = new QLabel(deskflow::generateFingerprintArt(fingerprint.data), this);
   lblSha256Art->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
   lblSha256Art->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
@@ -87,19 +66,7 @@ FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<Fingerprint>
   frameSha256->setLayout(sha256Layout);
 
   auto layout = new QVBoxLayout();
-  layout->addWidget(frameSha1);
   layout->addWidget(frameSha256);
 
-  setLayout(layout);
-
-  if (sha1String.isEmpty()) {
-    frameSha1->setVisible(false);
-  }
-
-  if (sha256String.isEmpty()) {
-    frameSha256->setVisible(false);
-  }
-
-  adjustSize();
-  setFixedSize(size());
+  return layout;
 }

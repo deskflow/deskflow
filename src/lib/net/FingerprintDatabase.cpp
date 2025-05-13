@@ -48,29 +48,30 @@ void FingerprintDatabase::readStream(QTextStream &in)
   }
 }
 
-void FingerprintDatabase::write(const QString &path)
+bool FingerprintDatabase::write(const QString &path)
 {
   QFile file(path);
   if (!file.open(QIODevice::WriteOnly))
-    return;
+    return false;
   QTextStream out(&file);
-  writeStream(out);
+  return (writeStream(out));
 }
 
-void FingerprintDatabase::writeStream(QTextStream &out)
+bool FingerprintDatabase::writeStream(QTextStream &out)
 {
   // Make sure the stream has somewhere to write
   if (!out.device() && !out.string())
-    return;
+    return false;
 
   if (out.device()) {
     if (!out.device()->isWritable())
-      return;
+      return false;
   }
 
   for (const auto &fingerprint : std::as_const(m_fingerprints)) {
     out << fingerprint.toDbLine() << "\n";
   }
+  return true;
 }
 
 void FingerprintDatabase::clear()

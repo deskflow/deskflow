@@ -645,23 +645,14 @@ void SecureSocket::disconnect()
 
 bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
 {
-  Fingerprint sha1;
-  Fingerprint sha256;
-  try {
-    auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-    sha1 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA1);
-    sha256 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA256);
-  } catch (const std::exception &e) {
-    LOG((CLOG_ERR "%s", e.what()));
-    return false;
-  }
+  const auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
+  const auto sha256 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA256);
 
-  // Gui Must Parse these two lines, DO NOT CHANGE
-  LOG(
-      (CLOG_NOTE "peer fingerprint: (SHA1) %s (SHA256) %s",
-       deskflow::formatSSLFingerprint(sha1.data).toStdString().c_str(),
-       deskflow::formatSSLFingerprint(sha256.data).toStdString().c_str())
-  );
+  if (!sha256.isValid())
+    return false;
+
+  // Gui Must Parse this line, DO NOT CHANGE
+  LOG((CLOG_NOTE "peer fingerprint: %s", deskflow::formatSSLFingerprint(sha256.data, false).toStdString().c_str()));
 
   QFile file(FingerprintDatabasePath);
 
