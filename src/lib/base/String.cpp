@@ -10,8 +10,8 @@
 
 #include <algorithm>
 #include <cstdarg>
-#include <iomanip>
 #include <sstream>
+#include <vector>
 
 namespace deskflow {
 namespace string {
@@ -136,92 +136,6 @@ std::string sprintf(const char *fmt, ...)
   }
 
   return result;
-}
-
-std::string toHex(const std::string &subject, int width, const char fill)
-{
-  std::stringstream ss;
-  ss << std::hex;
-  for (unsigned int i = 0; i < subject.length(); i++) {
-    ss << std::setw(width) << std::setfill(fill) << (int)(unsigned char)subject[i];
-  }
-
-  return ss.str();
-}
-
-std::string toHex(const std::vector<uint8_t> &input, int width, const char fill)
-{
-  std::stringstream ss;
-  ss << std::hex;
-  for (unsigned int i = 0; i < input.size(); i++) {
-    ss << std::setw(width) << std::setfill(fill) << static_cast<int>(input[i]);
-  }
-
-  return ss.str();
-}
-
-// clang-format off
-int fromHexChar(char c)
-{
-  switch (c) {
-    case '0': return 0;
-    case '1': return 1;
-    case '2': return 2;
-    case '3': return 3;
-    case '4': return 4;
-    case '5': return 5;
-    case '6': return 6;
-    case '7': return 7;
-    case '8': return 8;
-    case '9': return 9;
-    case 'a':
-    case 'A': return 10;
-    case 'b':
-    case 'B': return 11;
-    case 'c':
-    case 'C': return 12;
-    case 'd':
-    case 'D': return 13;
-    case 'e':
-    case 'E': return 14;
-    case 'f':
-    case 'F': return 15;
-    default:  return -1;
-  }
-  return -1;
-}
-// clang-format on
-
-std::vector<uint8_t> fromHex(const std::string &hexString)
-{
-  std::vector<uint8_t> result;
-  result.reserve(hexString.size() / 2);
-
-  size_t i = 0;
-  while (i < hexString.size()) {
-    if (hexString[i] == ':') {
-      i++;
-      continue;
-    }
-
-    if (i + 2 > hexString.size()) {
-      return {}; // uneven character count follows, it's unclear how to interpret it
-    }
-
-    auto high = fromHexChar(hexString[i]);
-    auto low = fromHexChar(hexString[i + 1]);
-    if (high < 0 || low < 0) {
-      return {};
-    }
-    result.push_back(high * 16 + low);
-    i += 2;
-  }
-  return result;
-}
-
-void uppercase(std::string &subject)
-{
-  std::transform(subject.begin(), subject.end(), subject.begin(), ::toupper);
 }
 
 std::string sizeTypeToString(size_t n)

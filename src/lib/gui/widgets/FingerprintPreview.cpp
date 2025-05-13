@@ -33,7 +33,7 @@ FingerprintPreview::FingerprintPreview(QWidget *parent, const QList<Fingerprint>
       sha256Art = deskflow::generateFingerprintArt(fingerprint.data);
       break;
     default:
-      qWarning() << "FingerprintPreview: Unknown fingerprint type: " << fingerprint.type;
+      qWarning() << "unknown fingerprint type:" << fingerprint.type;
       break;
     }
   }
