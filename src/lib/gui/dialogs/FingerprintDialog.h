@@ -27,7 +27,7 @@ class FingerprintDialog : public QDialog
 
 public:
   explicit FingerprintDialog(
-      QWidget *parent = nullptr, const QList<Fingerprint> &fingerprints = {},
+      QWidget *parent = nullptr, const Fingerprint &fingerprint = {},
       FingerprintDialogMode mode = FingerprintDialogMode::Local
   );
   ~FingerprintDialog() override = default;

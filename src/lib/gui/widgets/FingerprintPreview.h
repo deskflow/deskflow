@@ -13,6 +13,10 @@ class FingerprintPreview : public QFrame
 {
   Q_OBJECT
 public:
-  explicit FingerprintPreview(QWidget *parent, const QList<Fingerprint> &fingerprints = {});
+  explicit FingerprintPreview(QWidget *parent, const Fingerprint &fingerprint = {});
   ~FingerprintPreview() override = default;
+
+private:
+  QLayout *emptyLayout();
+  QLayout *sha256Layout(const Fingerprint &fingerprint = {});
 };

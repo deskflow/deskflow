@@ -13,13 +13,11 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-FingerprintDialog::FingerprintDialog(
-    QWidget *parent, const QList<Fingerprint> &fingerprints, FingerprintDialogMode mode
-)
+FingerprintDialog::FingerprintDialog(QWidget *parent, const Fingerprint &fingerprint, FingerprintDialogMode mode)
     : QDialog(parent),
       m_lblHeader{new QLabel(this)},
       m_lblFooter{new QLabel(this)},
-      m_fingerprintPreview{new FingerprintPreview(this, fingerprints)},
+      m_fingerprintPreview{new FingerprintPreview(this, fingerprint)},
       m_buttonBox{new QDialogButtonBox(this)}
 {
   setWindowIcon(QIcon::fromTheme("fingerprint"));

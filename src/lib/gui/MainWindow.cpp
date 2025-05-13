@@ -153,7 +153,7 @@ MainWindow::MainWindow()
 
     FingerprintDatabase db;
     db.read(Settings::tlsLocalDb());
-    if (db.fingerprints().size() != kTlsDbSize) {
+    if (db.fingerprints().isEmpty()) {
       regenerateLocalFingerprints();
     }
   }
@@ -543,13 +543,21 @@ void MainWindow::showMyFingerprint()
 
   FingerprintDatabase db;
   db.read(Settings::tlsLocalDb());
-  if (db.fingerprints().size() != kTlsDbSize) {
+  if (db.fingerprints().isEmpty()) {
     if (regenerateLocalFingerprints())
       showMyFingerprint();
     return;
   }
 
-  FingerprintDialog fingerprintDialog(this, db.fingerprints());
+  Fingerprint sha256Print;
+  for (const auto &f : std::as_const(db.fingerprints())) {
+    if (f.type == Fingerprint::Type::SHA256) {
+      sha256Print = f;
+      break;
+    }
+  }
+
+  FingerprintDialog fingerprintDialog(this, sha256Print);
   fingerprintDialog.exec();
 }
 
@@ -762,20 +770,18 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const QRegularExpression re(R"(.*peer fingerprint: \(SHA1\) ([A-F0-9:]+) \(SHA256\) ([A-F0-9:]+))");
-  auto match = re.match(line);
-  if (!match.hasMatch()) {
+  static const auto tlsPeerMessage = QStringLiteral("peer fingerprint: ");
+  static const qsizetype msgLen = QString(tlsPeerMessage).length();
+
+  const qsizetype midStart = line.indexOf(tlsPeerMessage);
+  if (midStart == -1)
     return;
-  }
 
-  const Fingerprint sha1 = {Fingerprint::Type::SHA1, QByteArray::fromHex(match.captured(1).remove(":").toLatin1())};
+  const auto sha256Text = line.mid(midStart + msgLen).remove(':');
 
-  const auto sha256Text = match.captured(2);
-
-  const Fingerprint sha256 = {Fingerprint::Type::SHA256, QByteArray::fromHex(match.captured(2).remove(":").toLatin1())};
+  const Fingerprint sha256 = {Fingerprint::Type::SHA256, QByteArray::fromHex(sha256Text.toLatin1())};
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
-
   if ((isClient && m_checkedServers.contains(sha256Text)) || (!isClient && m_checkedClients.contains(sha256Text))) {
     qDebug("ignoring fingerprint, already handled");
     return;
@@ -798,7 +804,7 @@ void MainWindow::checkFingerprint(const QString &line)
 
   auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
 
-  FingerprintDialog fingerprintDialog(this, {sha1, sha256}, dialogMode);
+  FingerprintDialog fingerprintDialog(this, sha256, dialogMode);
   connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
