@@ -79,8 +79,6 @@ void ScreenSettingsDialog::accept()
     return;
   }
 
-  m_pScreen->init();
-
   m_pScreen->setName(ui_->m_pLineEditName->text());
 
   for (int i = 0; i < ui_->m_pListAliases->count(); i++) {
