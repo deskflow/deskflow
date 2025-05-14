@@ -15,18 +15,7 @@ using enum ScreenConfig::Fix;
 
 Screen::Screen(const QString &name)
 {
-  init();
   setName(name);
-}
-
-void Screen::init()
-{
-  m_Name.clear();
-  m_Aliases.clear();
-  m_SwitchCornerSize = 0;
-  m_Modifiers.fill(0, static_cast<int>(NumModifiers));
-  m_SwitchCorners.fill(false, static_cast<int>(NumSwitchCorners));
-  m_Fixes.fill(false, static_cast<int>(NumFixes));
 }
 
 void Screen::loadSettings(QSettingsProxy &settings)
