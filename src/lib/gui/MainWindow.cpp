@@ -928,7 +928,9 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
   if (state == CoreProcessState::Started && !Settings::value(Settings::Core::StartedBefore).toBool()) {
     qDebug() << "recording that core has started";
     Settings::setValue(Settings::Core::StartedBefore, true);
-    messages::showFirstServerStartMessage(this);
+    if (m_coreProcess.mode() == CoreMode::Server) {
+      messages::showFirstServerStartMessage(this);
+    }
   }
 
   if (state == CoreProcessState::Started || state == CoreProcessState::Starting ||
