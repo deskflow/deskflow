@@ -286,7 +286,10 @@ void MainWindow::connectSlots()
   connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
-  connect(&m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged);
+  connect(
+      &m_coreProcess, &CoreProcess::processStateChanged, this, &MainWindow::coreProcessStateChanged,
+      Qt::QueuedConnection
+  );
   connect(&m_coreProcess, &CoreProcess::connectionStateChanged, this, &MainWindow::coreConnectionStateChanged);
   connect(&m_coreProcess, &CoreProcess::secureSocket, this, &MainWindow::secureSocket);
   connect(
