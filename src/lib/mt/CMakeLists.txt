@@ -16,3 +16,5 @@ add_library(mt STATIC
   XMT.h
   XThread.h
 )
+
+target_link_libraries(mt PUBLIC base)
