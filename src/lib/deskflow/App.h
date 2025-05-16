@@ -122,39 +122,6 @@ private:
   SocketMultiplexer *m_socketMultiplexer;
 };
 
-class MinimalApp : public App
-{
-public:
-  MinimalApp();
-  ~MinimalApp() override = default;
-
-  // IApp overrides
-  int standardStartup(int argc, char **argv) override;
-  int runInner(int argc, char **argv, StartupFunc startup) override;
-  void startNode() override;
-  int mainLoop() override;
-  int foregroundStartup(int argc, char **argv) override;
-  deskflow::Screen *createScreen() override;
-  void loadConfig() override;
-  bool loadConfig(const std::string &pathname) override;
-  const char *daemonInfo() const override;
-  const char *daemonName() const override;
-  void parseArgs(int argc, const char *const *argv) override;
-
-  //
-  // App overrides
-  //
-  std::string configSection() const override
-  {
-    return "";
-  }
-
-private:
-  Arch m_arch;
-  Log m_log;
-  EventQueue m_events;
-};
-
 #if WINAPI_MSWINDOWS
 #define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)
 #else
