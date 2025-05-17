@@ -12,6 +12,7 @@
 #include "base/String.h"
 
 #include <fstream>
+#include <iostream>
 
 enum EFileLogOutputter
 {
@@ -48,22 +49,26 @@ bool StopLogOutputter::write(ELevel, const char *)
 
 void ConsoleLogOutputter::open(const char *title)
 {
-  ARCH->openConsole(title);
+  // do nothing
 }
 
 void ConsoleLogOutputter::close()
 {
-  ARCH->closeConsole();
+  // do nothing
 }
 
 void ConsoleLogOutputter::show(bool showIfEmpty)
 {
-  ARCH->showConsole(showIfEmpty);
+  // do nothing
 }
 
 bool ConsoleLogOutputter::write(ELevel level, const char *msg)
 {
-  ARCH->writeConsole(level, msg);
+  if ((level >= kFATAL) && (level <= kWARNING))
+    std::cerr << msg << std::endl;
+  else
+    std::cout << msg << std::endl;
+  std::cout.flush();
   return true;
 }
 
