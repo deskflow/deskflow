@@ -6,7 +6,6 @@
 # Platform Specific Code
 if(WIN32)
   set(PLATFORM_CODE
-    win32/ArchConsoleWindows.h
     win32/ArchDaemonWindows.cpp
     win32/ArchDaemonWindows.h
     win32/ArchLogWindows.cpp
@@ -29,7 +28,6 @@ if(WIN32)
 
 elseif(UNIX)
   set(PLATFORM_CODE
-    unix/ArchConsoleUnix.h
     unix/ArchDaemonUnix.cpp
     unix/ArchDaemonUnix.h
     unix/ArchLogUnix.cpp
@@ -52,11 +50,8 @@ endif()
 add_library(arch STATIC ${PLATFORM_CODE}
   Arch.cpp
   Arch.h
-  ArchConsoleStd.cpp
-  ArchConsoleStd.h
   ArchDaemonNone.cpp
   ArchDaemonNone.h
-  IArchConsole.h
   IArchDaemon.h
   IArchLog.h
   IArchMultithread.h
