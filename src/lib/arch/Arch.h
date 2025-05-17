@@ -28,7 +28,6 @@
 
 #if SYSAPI_WIN32
 
-#include "arch/win32/ArchConsoleWindows.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/ArchLogWindows.h"
 #include "arch/win32/ArchMultithreadWindows.h"
@@ -39,7 +38,6 @@
 
 #elif SYSAPI_UNIX
 
-#include "arch/unix/ArchConsoleUnix.h"
 #include "arch/unix/ArchDaemonUnix.h"
 #include "arch/unix/ArchLogUnix.h"
 #include "arch/unix/ArchNetworkBSD.h"
@@ -69,8 +67,7 @@ to each method to those implementations.  Clients should use the
 exactly one of these objects before attempting to call any method,
 typically at the beginning of \c main().
 */
-class Arch : public ARCH_CONSOLE,
-             public ARCH_DAEMON,
+class Arch : public ARCH_DAEMON,
              public ARCH_LOG,
              public ARCH_MULTITHREAD,
              public ARCH_NETWORK,
