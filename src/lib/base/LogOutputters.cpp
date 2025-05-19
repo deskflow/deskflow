@@ -170,12 +170,15 @@ bool FileLogOutputter::write(ELevel level, const char *message)
 
 void FileLogOutputter::open(const char *title)
 {
+  // do nothing
 }
 
 void FileLogOutputter::close()
 {
+  // do nothing
 }
 
 void FileLogOutputter::show(bool showIfEmpty)
 {
+  // do nothing
 }
