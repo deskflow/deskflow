@@ -78,13 +78,6 @@ runs:
         cache: true
         cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
 
-    # Install Ninja with an action instead of using Chocolatey, as it's more
-    # reliable and faster. The Ninja install action is pretty good as it
-    # downloads directly from the `ninja-build` GitHub project releases.
-    - name: Install Ninja
-      if: ${{ runner.os == 'Windows' }}
-      uses: seanmiddleditch/gha-setup-ninja@master
-
     - name: Build and cache vcpkg
       if: ${{ runner.os == 'Windows' }}
       id: vcpkg
