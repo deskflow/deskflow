@@ -49,12 +49,12 @@ bool ClientProxy1_5::parseMessage(const uint8_t *code)
   return true;
 }
 
-void ClientProxy1_5::fileChunkReceived()
+void ClientProxy1_5::fileChunkReceived() const
 {
   // do nothing
 }
 
-void ClientProxy1_5::dragInfoReceived()
+void ClientProxy1_5::dragInfoReceived() const
 {
   // do nothing
 }

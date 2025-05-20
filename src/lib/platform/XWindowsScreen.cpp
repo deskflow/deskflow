@@ -1642,7 +1642,7 @@ ClipboardID XWindowsScreen::getClipboardID(Atom selection) const
   return kClipboardEnd;
 }
 
-void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom property)
+void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom property) const
 {
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
@@ -1652,7 +1652,7 @@ void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom p
   }
 }
 
-void XWindowsScreen::destroyClipboardRequest(Window requestor)
+void XWindowsScreen::destroyClipboardRequest(Window requestor) const
 {
   // check every clipboard until one returns success
   for (ClipboardID id = 0; id < kClipboardEnd; ++id) {

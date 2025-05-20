@@ -23,7 +23,7 @@ public:
 
 private:
   void glib_thread(void *);
-  gboolean timeout_handler();
+  gboolean timeout_handler() const;
   gboolean init_remote_desktop_session();
   void cb_init_remote_desktop_session(GObject *object, GAsyncResult *res);
   void cb_session_started(GObject *object, GAsyncResult *res);

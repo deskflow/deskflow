@@ -204,17 +204,18 @@ void ClientApp::updateStatus()
   updateStatus("");
 }
 
-void ClientApp::updateStatus(const std::string &msg)
+void ClientApp::updateStatus(const std::string &msg) const
 {
+  // do nothing
 }
 
-void ClientApp::resetRestartTimeout()
+void ClientApp::resetRestartTimeout() const
 {
   // retry time can nolonger be changed
   // s_retryTime = 0.0;
 }
 
-double ClientApp::nextRestartTimeout()
+double ClientApp::nextRestartTimeout() const
 {
   // retry at a constant rate (Issue 52)
   return RETRY_TIME;

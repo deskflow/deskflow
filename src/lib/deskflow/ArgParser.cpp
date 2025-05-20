@@ -143,7 +143,7 @@ bool ArgParser::parsePlatformArgs(
 #endif
 }
 
-bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
+bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
   if (isArg(i, argc, argv, "-a", "--address", 1)) {
     argsBase().m_deskflowAddress = argv[++i];
@@ -197,7 +197,7 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i)
   return true;
 }
 
-bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i)
+bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) const
 {
   static const std::vector<const char *> deprecatedArgs = {
       "--crypto-pass", "--res-w", "--res-h", "--prm-wc", "--prm-hc"
@@ -353,13 +353,13 @@ ArgParser::assembleCommand(std::vector<std::string> &argsArray, std::string igno
   return result;
 }
 
-void ArgParser::updateCommonArgs(const char *const *argv)
+void ArgParser::updateCommonArgs(const char *const *argv) const
 {
   argsBase().m_name = ARCH->getHostName();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
-bool ArgParser::checkUnexpectedArgs()
+bool ArgParser::checkUnexpectedArgs() const
 {
 #if SYSAPI_WIN32
   // suggest that user installs as a windows service. when launched as

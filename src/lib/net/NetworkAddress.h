@@ -105,7 +105,7 @@ public:
   //@}
 
 private:
-  void checkPort();
+  void checkPort() const;
 
 private:
   ArchNetAddress m_address = nullptr;

@@ -49,7 +49,7 @@ PortalRemoteDesktop::~PortalRemoteDesktop()
   free(session_restore_token_);
 }
 
-gboolean PortalRemoteDesktop::timeout_handler()
+gboolean PortalRemoteDesktop::timeout_handler() const
 {
   return true; // keep re-triggering
 }

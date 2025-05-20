@@ -72,8 +72,9 @@ bool ConsoleLogOutputter::write(ELevel level, const char *msg)
   return true;
 }
 
-void ConsoleLogOutputter::flush()
+void ConsoleLogOutputter::flush() const
 {
+  // do nothing
 }
 
 //

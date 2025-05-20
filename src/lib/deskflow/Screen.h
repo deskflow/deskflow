@@ -153,7 +153,7 @@ public:
   Synthesize mouse events to generate mouse motion by the relative
   amount \c xRel,yRel.
   */
-  void mouseRelativeMove(int32_t xRel, int32_t yRel);
+  void mouseRelativeMove(int32_t xRel, int32_t yRel) const;
 
   //! Notify of mouse wheel motion
   /*!
@@ -285,8 +285,8 @@ protected:
   void disablePrimary();
   void disableSecondary();
 
-  void enterPrimary();
-  void enterSecondary(KeyModifierMask toggleMask);
+  void enterPrimary() const;
+  void enterSecondary(KeyModifierMask toggleMask) const;
   void leavePrimary();
   void leaveSecondary();
 

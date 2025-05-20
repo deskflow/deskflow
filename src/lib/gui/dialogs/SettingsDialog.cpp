@@ -54,7 +54,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   initConnections();
 }
 
-void SettingsDialog::initConnections()
+void SettingsDialog::initConnections() const
 {
   connect(this, &SettingsDialog::shown, this, &SettingsDialog::showReadOnlyMessage, Qt::QueuedConnection);
 
@@ -281,7 +281,7 @@ void SettingsDialog::updateControls()
   updateTlsControls();
 }
 
-void SettingsDialog::updateRequestedKeySize()
+void SettingsDialog::updateRequestedKeySize() const
 {
   if (ui->comboTlsKeyLength->currentText() == Settings::value(Settings::Security::KeySize).toString())
     return;

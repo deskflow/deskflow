@@ -123,8 +123,8 @@ private:
   const int *getUnblockPipe();
   const int *getUnblockPipeForThread(ArchThread);
   void setBlockingOnSocket(int fd, bool blocking);
-  void throwError(int);
-  void throwNameError(int);
+  void throwError(int) const;
+  void throwNameError(int) const;
 
 private:
   std::shared_ptr<Deps> m_pDeps;

@@ -79,11 +79,11 @@ protected:
 
   void setJob(ISocketMultiplexerJob *);
 
-  bool isReadable()
+  bool isReadable() const
   {
     return m_readable;
   }
-  bool isWritable()
+  bool isWritable() const
   {
     return m_writable;
   }

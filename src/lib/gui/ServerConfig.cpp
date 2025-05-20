@@ -454,12 +454,12 @@ void ServerConfig::addClient(const QString &clientName)
   m_Screens.addScreenByPriority(Screen(clientName));
 }
 
-void ServerConfig::setConfigFile(const QString &configFile)
+void ServerConfig::setConfigFile(const QString &configFile) const
 {
   Settings::setValue(Settings::Server::ExternalConfigFile, configFile);
 }
 
-void ServerConfig::setUseExternalConfig(bool useExternalConfig)
+void ServerConfig::setUseExternalConfig(bool useExternalConfig) const
 {
   Settings::setValue(Settings::Server::ExternalConfig, useExternalConfig);
 }

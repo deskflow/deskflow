@@ -34,7 +34,7 @@ signals:
   void shown();
 
 private:
-  void initConnections();
+  void initConnections() const;
   void regenCertificates();
   void browseCertificatePath();
   void browseLogPath();
@@ -56,7 +56,7 @@ private:
   void updateControls();
 
   /// @brief updates the setting vaule for key size.
-  void updateRequestedKeySize();
+  void updateRequestedKeySize() const;
 
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
