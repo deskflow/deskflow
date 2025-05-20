@@ -403,7 +403,7 @@ std::string Unicode::doUCS4ToUTF8(const uint8_t *data, uint32_t n, bool *errors)
 
   // convert each character
   for (; n > 0; --n) {
-    uint32_t c = decode32(data, byteSwapped);
+    auto c = decode32(data, byteSwapped);
     toUTF8(dst, c, errors);
     data += 4;
   }
@@ -496,7 +496,7 @@ std::string Unicode::doUTF32ToUTF8(const uint8_t *data, uint32_t n, bool *errors
 
   // convert each character
   for (; n > 0; --n) {
-    uint32_t c = decode32(data, byteSwapped);
+    auto c = decode32(data, byteSwapped);
     if (c >= 0x00110000) {
       setError(errors);
       c = s_replacement;

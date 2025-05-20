@@ -1062,7 +1062,7 @@ void Server::sendOptions(BaseClientProxy *client) const
   if (options != nullptr) {
     // convert options to a more convenient form for sending
     optionsList.reserve(2 * options->size());
-    for (Config::ScreenOptions::const_iterator index = options->begin(); index != options->end(); ++index) {
+    for (auto index = options->begin(); index != options->end(); ++index) {
       optionsList.push_back(index->first);
       optionsList.push_back(static_cast<uint32_t>(index->second));
     }

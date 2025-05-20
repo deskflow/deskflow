@@ -41,7 +41,7 @@ void KeyMap::swap(KeyMap &x)
   m_modifierKeys.swap(x.m_modifierKeys);
   m_halfDuplex.swap(x.m_halfDuplex);
   m_halfDuplexMods.swap(x.m_halfDuplexMods);
-  int32_t tmp1 = m_numGroups;
+  auto tmp1 = m_numGroups;
   m_numGroups = x.m_numGroups;
   x.m_numGroups = tmp1;
   bool tmp2 = m_composeAcrossGroups;
@@ -57,7 +57,7 @@ void KeyMap::addKeyEntry(const KeyItem &item)
   }
 
   // resize number of groups for key
-  int32_t numGroups = item.m_group + 1;
+  auto numGroups = item.m_group + 1;
   if (getNumGroups() > numGroups) {
     numGroups = getNumGroups();
   }
@@ -105,7 +105,7 @@ void KeyMap::addKeyAliasEntry(
 
   // find a compatible source, preferably in the same group
   for (int32_t gd = 0, n = getNumGroups(); gd < n; ++gd) {
-    int32_t eg = getEffectiveGroup(group, gd);
+    auto eg = getEffectiveGroup(group, gd);
     const KeyItemList *sourceEntry = findCompatibleKey(sourceID, eg, sourceRequired, sourceSensitive);
     if (sourceEntry != nullptr && sourceEntry->size() == 1) {
       KeyMap::KeyItem targetItem = sourceEntry->back();
@@ -155,7 +155,7 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, 
 
     bool found = false;
     for (int32_t gd = 0; gd < n && !found; ++gd) {
-      int32_t eg = (group + gd) % getNumGroups();
+      const auto eg = (group + gd) % getNumGroups();
       const KeyEntryList &entries = groupTable[eg];
       for (size_t j = 0; j < entries.size(); ++j) {
         if (entries[j].size() == 1) {
@@ -301,7 +301,7 @@ void KeyMap::setLanguageData(std::vector<std::string> layouts)
 
 int32_t KeyMap::getLanguageGroupID(int32_t group, const std::string &lang) const
 {
-  int32_t id = group;
+  auto id = group;
 
   if (auto it = std::find(m_keyboardLayouts.begin(), m_keyboardLayouts.end(), lang); it != m_keyboardLayouts.end()) {
     id = static_cast<int>(std::distance(m_keyboardLayouts.begin(), it));
@@ -487,9 +487,9 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
 
   // find the first key that generates this KeyID
   const KeyItem *keyItem = nullptr;
-  int32_t numGroups = getNumGroups();
+  const auto numGroups = getNumGroups();
   for (int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
-    int32_t effectiveGroup = getEffectiveGroup(group, groupOffset);
+    const auto effectiveGroup = getEffectiveGroup(group, groupOffset);
     const KeyEntryList &entryList = keyGroupTable[effectiveGroup];
     for (size_t i = 0; i < entryList.size(); ++i) {
       if (entryList[i].size() != 1) {
@@ -525,7 +525,7 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
   // make working copy of modifiers
   ModifierToKeys newModifiers = activeModifiers;
   KeyModifierMask newState = currentState;
-  int32_t newGroup = group;
+  auto newGroup = group;
 
   // don't try to change CapsLock
   desiredMask = (desiredMask & ~KeyModifierCapsLock) | (currentState & KeyModifierCapsLock);
@@ -560,7 +560,7 @@ KeyMap::getKeyItemList(const KeyMap::KeyGroupTable &keyGroupTable, int32_t group
 
   // find best key in any group, starting with the active group
   for (int32_t groupOffset = 0; groupOffset < getNumGroups(); ++groupOffset) {
-    auto effectiveGroup = getEffectiveGroup(group, groupOffset);
+    const auto effectiveGroup = getEffectiveGroup(group, groupOffset);
     auto keyIndex = findBestKey(keyGroupTable[effectiveGroup], desiredMask);
     if (keyIndex != -1) {
       LOG((CLOG_DEBUG1 "found key in group %d", effectiveGroup));
@@ -587,7 +587,7 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
   }
 
   // get keys to press for key
-  auto itemList = getKeyItemList(i->second, getLanguageGroupID(group, lang), desiredMask);
+  const auto itemList = getKeyItemList(i->second, getLanguageGroupID(group, lang), desiredMask);
   if (!itemList || itemList->empty()) {
     // no mapping for this keysym
     LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
@@ -793,7 +793,7 @@ bool KeyMap::keysToRestoreModifiers(
 
   // press wanted keys
   for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
-    KeyButton button = i->second.m_button;
+    const KeyButton button = i->second.m_button;
     if (button != keyItem.m_button && oldKeys.count(button) == 0) {
       EKeystroke type = kKeystrokePress;
       if (i->second.m_lock) {
@@ -909,8 +909,8 @@ void KeyMap::addKeystrokes(
     Keystrokes &keystrokes
 ) const
 {
-  KeyButton button = keyItem.m_button;
-  uint32_t data = keyItem.m_client;
+  const auto button = keyItem.m_button;
+  const auto data = keyItem.m_client;
   switch (type) {
   case kKeystrokePress:
     keystrokes.push_back(Keystroke(button, true, false, data));
