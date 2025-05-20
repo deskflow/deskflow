@@ -100,10 +100,10 @@ private:
   ClipboardID getClipboardID(Atom selection) const;
 
   // continue processing a selection request
-  void processClipboardRequest(Window window, Time time, Atom property);
+  void processClipboardRequest(Window window, Time time, Atom property) const;
 
   // terminate a selection request
-  void destroyClipboardRequest(Window window);
+  void destroyClipboardRequest(Window window) const;
 
   // X I/O error handler
   void onError();

@@ -241,8 +241,8 @@ private:
   {
     m_ClipboardSharing = on;
   }
-  void setConfigFile(const QString &configFile);
-  void setUseExternalConfig(bool useExternalConfig);
+  void setConfigFile(const QString &configFile) const;
+  void setUseExternalConfig(bool useExternalConfig) const;
   size_t setClipboardSharingSize(size_t size);
   QList<bool> &switchCorners()
   {

@@ -73,12 +73,12 @@ PortalInputCapture::~PortalInputCapture()
   g_object_unref(portal_);
 }
 
-gboolean PortalInputCapture::timeout_handler()
+gboolean PortalInputCapture::timeout_handler() const
 {
   return true; // keep re-triggering
 }
 
-int PortalInputCapture::fake_eis_fd()
+int PortalInputCapture::fake_eis_fd() const
 {
   auto path = std::getenv("LIBEI_SOCKET");
 

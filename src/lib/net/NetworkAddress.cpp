@@ -201,7 +201,7 @@ std::string NetworkAddress::getHostname() const
   return m_hostname;
 }
 
-void NetworkAddress::checkPort()
+void NetworkAddress::checkPort() const
 {
   // check port number
   if (m_port < 0 || m_port > 65535) {

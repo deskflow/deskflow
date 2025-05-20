@@ -700,7 +700,7 @@ QString CoreProcess::requestDaemonLogPath()
   return logPath;
 }
 
-void CoreProcess::persistLogDir()
+void CoreProcess::persistLogDir() const
 {
   QDir(QFileInfo(Settings::value(Settings::Log::File).toString()).absolutePath()).mkpath(".");
 }

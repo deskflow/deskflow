@@ -147,7 +147,7 @@ private:
   QString correctedInterface() const;
   QString correctedAddress() const;
   QString requestDaemonLogPath();
-  void persistLogDir();
+  void persistLogDir() const;
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

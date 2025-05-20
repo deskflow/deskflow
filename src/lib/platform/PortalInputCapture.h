@@ -34,7 +34,7 @@ public:
 
 private:
   void glib_thread(void *);
-  gboolean timeout_handler();
+  gboolean timeout_handler() const;
   gboolean init_input_capture_session();
   void cb_init_input_capture_session(GObject *object, GAsyncResult *res);
   void cb_set_pointer_barriers(GObject *object, GAsyncResult *res);
@@ -68,7 +68,7 @@ private:
     reinterpret_cast<PortalInputCapture *>(data)->cb_zones_changed(session, options);
   }
 
-  int fake_eis_fd();
+  int fake_eis_fd() const;
 
 private:
   EiScreen *screen_ = nullptr;

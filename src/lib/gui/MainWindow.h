@@ -142,7 +142,7 @@ private:
   void handleLogLine(const QString &line);
   void updateLocalFingerprint();
   void updateScreenName();
-  void saveSettings();
+  void saveSettings() const;
   void showConfigureServer(const QString &message);
   void restoreWindow();
   void setupControls();
@@ -159,7 +159,7 @@ private:
    * @brief trustedFingerprintDatabase get the FingerprintDatabase for the trusted clients or trusted servers.
    * @return The path to the trusted fingerprint file
    */
-  QString trustedFingerprintDatabase();
+  QString trustedFingerprintDatabase() const;
 
   // Generate prints if they are missing
   // Returns true if successful

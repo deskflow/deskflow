@@ -80,7 +80,7 @@ public:
   int run(int argc, char **argv);
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
-  void loggingFilterWarning();
+  void loggingFilterWarning() const;
   void initApp(int argc, const char **argv) override;
   void initApp(int argc, char **argv)
   {

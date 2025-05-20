@@ -701,7 +701,7 @@ void MainWindow::applyConfig()
   updateModeControls(coreMode == Settings::CoreMode::Server);
 }
 
-void MainWindow::saveSettings()
+void MainWindow::saveSettings() const
 {
   if (ui->rbModeClient->isChecked()) {
     Settings::setValue(Settings::Core::CoreMode, Settings::CoreMode::Client);
@@ -1116,7 +1116,7 @@ void MainWindow::setHostName()
   applyConfig();
 }
 
-QString MainWindow::trustedFingerprintDatabase()
+QString MainWindow::trustedFingerprintDatabase() const
 {
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   return isClient ? Settings::tlsTrustedServersDb() : Settings::tlsTrustedClientsDb();

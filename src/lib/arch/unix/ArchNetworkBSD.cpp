@@ -751,7 +751,7 @@ const int *ArchNetworkBSD::getUnblockPipeForThread(ArchThread thread)
   return unblockPipe;
 }
 
-void ArchNetworkBSD::throwError(int err)
+void ArchNetworkBSD::throwError(int err) const
 {
   switch (err) {
   case EINTR:
@@ -822,7 +822,7 @@ void ArchNetworkBSD::throwError(int err)
   }
 }
 
-void ArchNetworkBSD::throwNameError(int err)
+void ArchNetworkBSD::throwNameError(int err) const
 {
   static const char *s_msg[] = {
       "The specified host is unknown", "The requested name is valid but does not have an IP address",

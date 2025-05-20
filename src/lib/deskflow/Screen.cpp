@@ -225,7 +225,7 @@ void Screen::mouseMove(int32_t x, int32_t y)
   m_screen->fakeMouseMove(x, y);
 }
 
-void Screen::mouseRelativeMove(int32_t dx, int32_t dy)
+void Screen::mouseRelativeMove(int32_t dx, int32_t dy) const
 {
   assert(!m_isPrimary);
   m_screen->fakeMouseRelativeMove(dx, dy);
@@ -400,12 +400,12 @@ void Screen::disableSecondary()
   m_screen->closeScreensaver();
 }
 
-void Screen::enterPrimary()
+void Screen::enterPrimary() const
 {
   // do nothing
 }
 
-void Screen::enterSecondary(KeyModifierMask)
+void Screen::enterSecondary(KeyModifierMask) const
 {
   // do nothing
 }

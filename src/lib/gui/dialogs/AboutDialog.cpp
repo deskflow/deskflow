@@ -45,7 +45,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   setMinimumSize(size());
 }
 
-void AboutDialog::copyVersionText()
+void AboutDialog::copyVersionText() const
 {
   QString infoString = QStringLiteral("Deskflow: %1 (%2)\nQt: %3\nSystem: %4")
                            .arg(kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName());

@@ -86,7 +86,7 @@ public:
   void closeServer(Server *server);
   void stopRetryTimer();
   void updateStatus();
-  void updateStatus(const std::string &msg);
+  void updateStatus(const std::string &msg) const;
   void closeClientListener(ClientListener *listen);
   void stopServer();
   void closePrimaryClient(PrimaryClient *primaryClient);

@@ -72,7 +72,7 @@ public:
   int32_t pollActiveGroup() const override = 0;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
 
-  int32_t getKeyState(KeyButton keyButton)
+  int32_t getKeyState(KeyButton keyButton) const
   {
     return m_keys[keyButton];
   }

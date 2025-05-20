@@ -87,7 +87,7 @@ void FingerprintDatabase::addTrusted(const Fingerprint &fingerprint)
   m_fingerprints.append(fingerprint);
 }
 
-bool FingerprintDatabase::isTrusted(const Fingerprint &fingerprint)
+bool FingerprintDatabase::isTrusted(const Fingerprint &fingerprint) const
 {
   return m_fingerprints.contains(fingerprint);
 }

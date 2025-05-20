@@ -269,8 +269,9 @@ void ServerApp::updateStatus()
   updateStatus("");
 }
 
-void ServerApp::updateStatus(const std::string &msg)
+void ServerApp::updateStatus(const std::string &msg) const
 {
+  // do nothing
 }
 
 void ServerApp::closeClientListener(ClientListener *listen)
@@ -603,6 +604,7 @@ void ServerApp::handleNoClients(const Event &, void *)
 
 void ServerApp::handleScreenSwitched(const Event &e, void *)
 {
+  // do nothing
 }
 
 ISocketFactory *ServerApp::getSocketFactory() const

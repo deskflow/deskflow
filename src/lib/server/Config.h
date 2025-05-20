@@ -160,11 +160,11 @@ public:
       m_i = i.m_i;
       return *this;
     }
-    std::string operator*()
+    std::string operator*() const
     {
       return m_i->first;
     }
-    const std::string *operator->()
+    const std::string *operator->() const
     {
       return &(m_i->first);
     }

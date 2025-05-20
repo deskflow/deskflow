@@ -96,9 +96,9 @@ private:
   void on_pointer_scroll_event(ei_event *event);
   void on_pointer_scroll_discrete_event(ei_event *event);
   void on_motion_event(ei_event *event);
-  void on_abs_motion_event(ei_event *event);
+  void on_abs_motion_event(ei_event *event) const;
   bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
-  void handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context);
+  void handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context) const;
   void handle_connected_to_eis_event(const Event &event, void *);
   void handle_portal_session_closed(const Event &event, void *);
 

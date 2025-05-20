@@ -26,9 +26,9 @@ public:
   bool parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv);
   bool parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv);
   bool parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer);
-  bool parseGenericArgs(int argc, const char *const *argv, int &i);
-  bool parseDeprecatedArgs(int argc, const char *const *argv, int &i);
-  void setArgsBase(deskflow::ArgsBase &argsBase)
+  bool parseGenericArgs(int argc, const char *const *argv, int &i) const;
+  bool parseDeprecatedArgs(int argc, const char *const *argv, int &i) const;
+  void setArgsBase(deskflow::ArgsBase &argsBase) const
   {
     m_argsBase = &argsBase;
   }
@@ -49,8 +49,8 @@ public:
   }
 
 private:
-  void updateCommonArgs(const char *const *argv);
-  bool checkUnexpectedArgs();
+  void updateCommonArgs(const char *const *argv) const;
+  bool checkUnexpectedArgs() const;
 
 private:
   App *m_app;

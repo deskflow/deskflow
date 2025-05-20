@@ -57,7 +57,7 @@ public:
   {
     m_fatal = b;
   }
-  bool isSecureReady();
+  bool isSecureReady() const;
   void secureConnect();
   void secureAccept();
   int secureRead(void *buffer, int size, int &read);
@@ -77,7 +77,7 @@ private:
   bool showCertificate() const;
   void checkResult(int n, int &retry);
   void disconnect();
-  bool verifyCertFingerprint(const QString &FingerprintDatabasePath);
+  bool verifyCertFingerprint(const QString &FingerprintDatabasePath) const;
 
   ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
 

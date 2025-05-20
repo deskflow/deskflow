@@ -47,7 +47,7 @@ public:
   void close() override;
   void show(bool showIfEmpty) override;
   bool write(ELevel level, const char *message) override;
-  void flush();
+  void flush() const;
 };
 
 //! Write log to file

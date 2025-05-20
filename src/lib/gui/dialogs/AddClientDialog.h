@@ -32,7 +32,7 @@ public:
   AddClientDialog(const QString &clientName, QWidget *parent = nullptr);
   ~AddClientDialog() override;
 
-  int addResult()
+  int addResult() const
   {
     return m_AddResult;
   }

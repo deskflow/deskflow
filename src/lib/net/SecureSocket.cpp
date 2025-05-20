@@ -287,7 +287,7 @@ int SecureSocket::secureWrite(const void *buffer, int size, int &wrote)
   return wrote;
 }
 
-bool SecureSocket::isSecureReady()
+bool SecureSocket::isSecureReady() const
 {
   return m_secureReady;
 }
@@ -643,7 +643,7 @@ void SecureSocket::disconnect()
   sendEvent(EventTypes::StreamInputShutdown);
 }
 
-bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
+bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath) const
 {
   const auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
   const auto sha256 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA256);

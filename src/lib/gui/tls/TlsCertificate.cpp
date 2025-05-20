@@ -48,7 +48,7 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
   return generateFingerprint(path);
 }
 
-bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
+bool TlsCertificate::generateFingerprint(const QString &certificateFilename) const
 {
   qDebug("generating tls fingerprint");
   const std::string certPath = certificateFilename.toStdString();
@@ -57,12 +57,12 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename)
   return db.write(Settings::tlsLocalDb());
 }
 
-int TlsCertificate::getCertKeyLength(const QString &path)
+int TlsCertificate::getCertKeyLength(const QString &path) const
 {
   return deskflow::getCertLength(path.toStdString());
 }
 
-bool TlsCertificate::isCertificateValid(const QString &path)
+bool TlsCertificate::isCertificateValid(const QString &path) const
 {
   OpenSSL_add_all_algorithms();
   ERR_load_crypto_strings();
