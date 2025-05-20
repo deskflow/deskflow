@@ -61,7 +61,7 @@ class IArchMultithread : public IInterface
 {
 public:
   //! Type of thread entry point
-  typedef void *(*ThreadFunc)(void *);
+  using ThreadFunc = void *(*)(void *);
   //! Type of thread identifier
   using ThreadID = unsigned int;
   //! Types of signals
@@ -78,7 +78,7 @@ public:
     kNUM_SIGNALS
   };
   //! Type of signal handler function
-  typedef void (*SignalFunc)(ESignal, void *userData);
+  using SignalFunc = void (*)(ESignal, void *userData);
 
   //! @name manipulators
   //@{

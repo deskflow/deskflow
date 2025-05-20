@@ -17,7 +17,7 @@ A socket multiplexer job class that invokes a member function.
 template <class T> class TSocketMultiplexerMethodJob : public ISocketMultiplexerJob
 {
 public:
-  typedef ISocketMultiplexerJob *(T::*Method)(ISocketMultiplexerJob *, bool, bool, bool);
+  using Method = ISocketMultiplexerJob *(T::*)(ISocketMultiplexerJob *, bool, bool, bool);
 
   //! run() invokes \c object->method(arg)
   TSocketMultiplexerMethodJob(T *object, Method method, ArchSocket socket, bool readable, bool writeable);

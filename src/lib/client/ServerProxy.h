@@ -103,7 +103,7 @@ private:
   void checkMissedLanguages() const;
 
 private:
-  typedef EResult (ServerProxy::*MessageParser)(const uint8_t *);
+  using MessageParser = EResult (ServerProxy::*)(const uint8_t *);
 
   Client *m_client;
   deskflow::IStream *m_stream;
