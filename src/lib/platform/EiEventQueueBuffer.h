@@ -41,7 +41,8 @@ private:
   ei *ei_;
   IEventQueue *events_;
   std::queue<std::pair<bool, uint32_t>> queue_;
-  int pipe_w_, pipe_r_;
+  int pipe_w_;
+  int pipe_r_;
 
   mutable std::mutex mutex_;
 };

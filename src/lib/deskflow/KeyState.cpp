@@ -1097,7 +1097,8 @@ void KeyState::updateModifierKeyState(
 )
 {
   // get the pressed modifier buttons before and after
-  deskflow::KeyMap::ButtonToKeyMap oldKeys, newKeys;
+  deskflow::KeyMap::ButtonToKeyMap oldKeys;
+  deskflow::KeyMap::ButtonToKeyMap newKeys;
   for (auto i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
     oldKeys.insert(std::make_pair(i->second.m_button, &i->second));
   }
@@ -1106,7 +1107,8 @@ void KeyState::updateModifierKeyState(
   }
 
   // get the modifier buttons that were pressed or released
-  deskflow::KeyMap::ButtonToKeyMap pressed, released;
+  deskflow::KeyMap::ButtonToKeyMap pressed;
+  deskflow::KeyMap::ButtonToKeyMap released;
   std::set_difference(
       oldKeys.begin(), oldKeys.end(), newKeys.begin(), newKeys.end(), std::inserter(released, released.end()),
       ButtonToKeyLess()

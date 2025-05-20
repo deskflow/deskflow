@@ -182,7 +182,8 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
   }
 
   else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
-    int32_t major, minor;
+    int32_t major;
+    int32_t minor;
     ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
     LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
     m_client->refuseConnection("server has incompatible version");
@@ -498,7 +499,8 @@ KeyModifierMask ServerProxy::translateModifierMask(KeyModifierMask mask) const
 void ServerProxy::enter()
 {
   // parse
-  int16_t x, y;
+  int16_t x;
+  int16_t y;
   uint16_t mask;
   uint32_t seqNum;
   ProtocolUtil::readf(m_stream, kMsgCEnter + 4, &x, &y, &seqNum, &mask);
@@ -592,7 +594,10 @@ void ServerProxy::keyRepeat()
   flushCompressedMouse();
 
   // parse
-  uint16_t id, mask, count, button;
+  uint16_t id;
+  uint16_t mask;
+  uint16_t count;
+  uint16_t button;
   std::string lang;
   ProtocolUtil::readf(m_stream, kMsgDKeyRepeat + 4, &id, &mask, &count, &button, &lang);
   LOG(
@@ -617,7 +622,9 @@ void ServerProxy::keyUp()
   flushCompressedMouse();
 
   // parse
-  uint16_t id, mask, button;
+  uint16_t id;
+  uint16_t mask;
+  uint16_t button;
   ProtocolUtil::readf(m_stream, kMsgDKeyUp + 4, &id, &mask, &button);
   LOG((CLOG_DEBUG1 "recv key up id=0x%08x, mask=0x%04x, button=0x%04x", id, mask, button));
 
@@ -663,7 +670,8 @@ void ServerProxy::mouseMove()
 {
   // parse
   bool ignore;
-  int16_t x, y;
+  int16_t x;
+  int16_t y;
   ProtocolUtil::readf(m_stream, kMsgDMouseMove + 4, &x, &y);
 
   // note if we should ignore the move
@@ -695,7 +703,8 @@ void ServerProxy::mouseRelativeMove()
 {
   // parse
   bool ignore;
-  int16_t dx, dy;
+  int16_t dx;
+  int16_t dy;
   ProtocolUtil::readf(m_stream, kMsgDMouseRelMove + 4, &dx, &dy);
 
   // note if we should ignore the move
@@ -726,7 +735,8 @@ void ServerProxy::mouseWheel()
   flushCompressedMouse();
 
   // parse
-  int16_t xDelta, yDelta;
+  int16_t xDelta;
+  int16_t yDelta;
   ProtocolUtil::readf(m_stream, kMsgDMouseWheel + 4, &xDelta, &yDelta);
   LOG((CLOG_DEBUG2 "recv mouse wheel %+d,%+d", xDelta, yDelta));
 

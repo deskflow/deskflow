@@ -70,7 +70,8 @@ XWindowsScreenSaver::XWindowsScreenSaver(Display *display, Window window, void *
   // check for DPMS extension.  this is an alternative screen saver
   // that powers down the display.
 #if HAVE_X11_EXTENSIONS_DPMS_H
-  int eventBase, errorBase;
+  int eventBase;
+  int errorBase;
   if (DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
     if (DPMSCapable(m_display)) {
       // we have DPMS
@@ -295,7 +296,9 @@ bool XWindowsScreenSaver::findXScreenSaver()
   if (m_xscreensaver == None) {
     // find top-level window xscreensaver window
     Window root = DefaultRootWindow(m_display);
-    Window rw, pw, *cw;
+    Window rw;
+    Window pw;
+    Window *cw;
     unsigned int nc;
     if (XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
       for (unsigned int i = 0; i < nc; ++i) {
@@ -405,7 +408,9 @@ void XWindowsScreenSaver::watchForXScreenSaver()
 
   // add every child of the root to the list of windows to watch
   Window root = DefaultRootWindow(m_display);
-  Window rw, pw, *cw;
+  Window rw;
+  Window pw;
+  Window *cw;
 
   if (unsigned int nc; XQueryTree(m_display, root, &rw, &pw, &cw, &nc)) {
     for (unsigned int i = 0; i < nc; ++i) {

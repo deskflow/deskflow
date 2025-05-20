@@ -180,12 +180,16 @@ private:
   bool m_isOnScreen;
 
   // screen shape stuff
-  int32_t m_x, m_y;
-  int32_t m_w, m_h;
-  int32_t m_xCenter, m_yCenter;
+  int32_t m_x;
+  int32_t m_y;
+  int32_t m_w;
+  int32_t m_h;
+  int32_t m_xCenter;
+  int32_t m_yCenter;
 
   // last mouse position
-  int32_t m_xCursor, m_yCursor;
+  int32_t m_xCursor;
+  int32_t m_yCursor;
 
   // keyboard stuff
   XWindowsKeyState *m_keyState;

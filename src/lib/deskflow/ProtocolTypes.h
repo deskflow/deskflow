@@ -353,13 +353,15 @@ public:
   The position of the upper-left corner of the screen.  This is
   typically 0,0.
   */
-  int32_t m_x, m_y;
+  int32_t m_x;
+  int32_t m_y;
 
   //! Screen size
   /*!
   The size of the screen in pixels.
   */
-  int32_t m_w, m_h;
+  int32_t m_w;
+  int32_t m_h;
 
   //! Obsolete (jump zone size)
   int32_t obsolete1;
@@ -368,5 +370,6 @@ public:
   /*!
   The current location of the mouse cursor.
   */
-  int32_t m_mx, m_my;
+  int32_t m_mx;
+  int32_t m_my;
 };
