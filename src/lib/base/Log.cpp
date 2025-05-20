@@ -24,7 +24,7 @@ static const char *g_priority[] = {"FATAL",  "ERROR",  "WARNING", "NOTE",   "INF
                                    "DEBUG1", "DEBUG2", "DEBUG3",  "DEBUG4", "DEBUG5"};
 
 // number of priorities
-static const int g_numPriority = (int)(sizeof(g_priority) / sizeof(g_priority[0]));
+static const int g_numPriority = 11;
 
 // if NDEBUG (not debug) is not specified, i.e. you're building in debug,
 // then set default log level to DEBUG, otherwise the max level is INFO.
