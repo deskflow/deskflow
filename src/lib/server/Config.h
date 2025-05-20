@@ -148,9 +148,11 @@ public:
   public:
     explicit const_iterator() : m_i()
     {
+      // do nothing
     }
     explicit const_iterator(const internal_const_iterator &i) : m_i(i)
     {
+      // do nothing
     }
     const_iterator(const const_iterator &src) = default;
     ~const_iterator() = default;

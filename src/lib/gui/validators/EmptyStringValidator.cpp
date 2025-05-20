@@ -10,6 +10,7 @@ namespace validators {
 
 EmptyStringValidator::EmptyStringValidator(const QString &message) : IStringValidator(message)
 {
+  // do nothing
 }
 
 bool EmptyStringValidator::validate(const QString &input) const

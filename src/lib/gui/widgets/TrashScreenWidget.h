@@ -20,6 +20,7 @@ class TrashScreenWidget : public QLabel
 public:
   TrashScreenWidget(QWidget *parent) : QLabel(parent)
   {
+    // do nothing
   }
 
 public:

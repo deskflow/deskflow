@@ -19,6 +19,7 @@ public:
 
   explicit FinalAction(Callable callable) noexcept : m_callable{callable}
   {
+    // do nothing
   }
 
   ~FinalAction() noexcept

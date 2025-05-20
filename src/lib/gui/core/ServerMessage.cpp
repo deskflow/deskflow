@@ -10,6 +10,7 @@ namespace deskflow::gui {
 
 ServerMessage::ServerMessage(const QString &message) : m_message(message), m_clientName(parseClientName(message))
 {
+  // do nothing
 }
 
 bool ServerMessage::isNewClientMessage() const

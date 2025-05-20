@@ -29,6 +29,7 @@ SecureListenSocket::SecureListenSocket(
       m_securityLevel{securityLevel}
 
 {
+  // do nothing
 }
 
 IDataSocket *SecureListenSocket::accept()

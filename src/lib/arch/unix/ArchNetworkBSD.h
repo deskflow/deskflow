@@ -55,6 +55,7 @@ class ArchNetAddressImpl
 public:
   ArchNetAddressImpl() : m_len(sizeof(m_addr))
   {
+    // do nothing
   }
 
 public:

@@ -32,6 +32,7 @@ public:
       : m_pParent(parent),
         m_deps(deps)
   {
+    // do nothing
   }
 
   void handleLogLine(const QString &line);

@@ -19,6 +19,7 @@ ClientProxy1_7::ClientProxy1_7(const std::string &name, deskflow::IStream *strea
     : ClientProxy1_6(name, stream, server, events),
       m_events(events)
 {
+  // do nothing
 }
 
 void ClientProxy1_7::secureInputNotification(const std::string &app) const

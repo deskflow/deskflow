@@ -45,6 +45,7 @@ public:
   public:
     FailInfo(const char *what) : m_retry(false), m_what(what)
     {
+      // do nothing
     }
     bool m_retry;
     std::string m_what;

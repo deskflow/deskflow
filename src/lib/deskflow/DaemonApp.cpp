@@ -41,6 +41,7 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
 
 DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
 {
+  // do nothing
 }
 
 DaemonApp::~DaemonApp() = default;

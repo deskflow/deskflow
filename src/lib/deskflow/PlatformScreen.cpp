@@ -13,6 +13,7 @@ PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirect
     : IPlatformScreen(events),
       m_clientScrollDirection(scrollDirection)
 {
+  // do nothing
 }
 
 void PlatformScreen::updateKeyMap()

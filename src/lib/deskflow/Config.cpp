@@ -20,6 +20,7 @@ namespace deskflow {
 
 Config::Config(const std::string &filename, const std::string &section) : m_filename(filename), m_section(section)
 {
+  // do nothing
 }
 
 const char *const *Config::argv() const

@@ -14,9 +14,11 @@ class DisplayInvalidException : public std::runtime_error
 public:
   DisplayInvalidException(const char *msg) : std::runtime_error(msg)
   {
+    // do nothing
   }
 
   DisplayInvalidException(std::string msg) : std::runtime_error(msg)
   {
+    // do nothing
   }
 };

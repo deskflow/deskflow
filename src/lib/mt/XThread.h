@@ -21,6 +21,7 @@ public:
   //! \c result is the result of the thread
   XThreadExit(void *result) : m_result(result)
   {
+    // do nothing
   }
   ~XThreadExit() = default;
 

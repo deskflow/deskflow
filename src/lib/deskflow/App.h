@@ -37,6 +37,7 @@ public:
   public:
     XNoEiSupport() : std::runtime_error("libei is not supported")
     {
+      // do nothing
     }
   };
 

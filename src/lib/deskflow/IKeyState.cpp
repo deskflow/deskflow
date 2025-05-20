@@ -17,6 +17,7 @@
 
 IKeyState::IKeyState(IEventQueue *events)
 {
+  // do nothing
 }
 
 //

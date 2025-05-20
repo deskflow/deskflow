@@ -15,6 +15,7 @@ class XArchEvalUnix : public XArchEval
 public:
   explicit XArchEvalUnix(int error) : m_error(error)
   {
+    // do nothing
   }
   ~XArchEvalUnix() noexcept override = default;
 

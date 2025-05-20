@@ -16,6 +16,7 @@
 
 NewScreenWidget::NewScreenWidget(QWidget *parent) : QLabel(parent)
 {
+  // do nothing
 }
 
 void NewScreenWidget::mousePressEvent(QMouseEvent *event)

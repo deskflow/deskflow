@@ -25,6 +25,7 @@ public:
         : m_invalidHello(std::move(invalidHello)),
           m_incompatible(std::move(incompatible))
     {
+      // do nothing
     }
     virtual ~Deps() = default;
 
@@ -51,6 +52,7 @@ public:
         m_majorVersion(majorVersion),
         m_minorVersion(minorVersion)
   {
+    // do nothing
   }
 
   /**

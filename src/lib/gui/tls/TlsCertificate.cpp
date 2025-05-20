@@ -25,6 +25,7 @@
 
 TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
 {
+  // do nothing
 }
 
 bool TlsCertificate::generateCertificate(const QString &path, int keyLength)

@@ -13,6 +13,7 @@ CommandProcess::CommandProcess(QString command, QStringList arguments, QString i
       m_Arguments(arguments),
       m_Input(input)
 {
+  // do nothing
 }
 
 QString CommandProcess::run()

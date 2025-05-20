@@ -30,6 +30,7 @@ public:
 
   IPlatformScreen(IEventQueue *events) : IKeyState(events)
   {
+    // do nothing
   }
 
   //! Enable screen

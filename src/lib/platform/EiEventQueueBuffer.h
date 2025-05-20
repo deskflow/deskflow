@@ -29,6 +29,7 @@ public:
   // IEventQueueBuffer overrides
   void init() override
   {
+    // do nothing
   }
   void waitForEvent(double timeout_in_ms) override;
   Type getEvent(Event &event, uint32_t &dataID) override;

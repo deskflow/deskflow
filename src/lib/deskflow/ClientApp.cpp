@@ -66,6 +66,7 @@ ClientApp::ClientApp(IEventQueue *events)
       m_clientScreen(nullptr),
       m_serverAddress(nullptr)
 {
+  // do nothing
 }
 
 void ClientApp::parseArgs(int argc, const char *const *argv)
