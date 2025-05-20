@@ -88,7 +88,7 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
 
   // discard old buffer and old events
   delete m_buffer;
-  for (EventTable::iterator i = m_events.begin(); i != m_events.end(); ++i) {
+  for (auto i = m_events.begin(); i != m_events.end(); ++i) {
     Event::deleteData(i->second);
   }
   m_events.clear();
@@ -200,7 +200,7 @@ void EventQueue::addEventToBuffer(const Event &event)
   ArchMutexLock lock(m_mutex);
 
   // store the event's data locally
-  uint32_t eventID = saveEvent(event);
+  auto eventID = saveEvent(event);
 
   // add it
   if (!m_buffer->addEvent(eventID)) {

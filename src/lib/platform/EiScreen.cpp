@@ -558,7 +558,7 @@ bool EiScreen::on_hotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
 
 void EiScreen::on_key_event(ei_event *event)
 {
-  uint32_t keycode = ei_event_keyboard_get_key(event);
+  auto keycode = ei_event_keyboard_get_key(event);
   uint32_t keyval = keycode + 8;
   bool pressed = ei_event_keyboard_get_key_is_press(event);
   KeyID keyid = key_state_->map_key_from_keyval(keyval);
@@ -582,20 +582,20 @@ void EiScreen::on_button_event(ei_event *event)
 {
   assert(is_primary_);
 
-  ButtonID button = map_button_from_evdev(event);
+  auto buttonID = map_button_from_evdev(event);
   bool pressed = ei_event_button_get_is_press(event);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
-  LOG_DEBUG1("event: button %s button=%d mask=0x%x", pressed ? "press" : "release", button, mask);
+  LOG_DEBUG1("event: button %s button=%d mask=0x%x", pressed ? "press" : "release", buttonID, mask);
 
-  if (button == kButtonNone) {
+  if (buttonID == kButtonNone) {
     LOG_DEBUG("event: button not recognized");
     return;
   }
 
   auto eventType = pressed ? EventTypes::PrimaryScreenButtonDown : EventTypes::PrimaryScreenButtonUp;
 
-  sendEvent(eventType, ButtonInfo::alloc(button, mask));
+  sendEvent(eventType, ButtonInfo::alloc(buttonID, mask));
 }
 
 void EiScreen::on_pointer_scroll_event(ei_event *event)
@@ -611,8 +611,8 @@ void EiScreen::on_pointer_scroll_event(ei_event *event)
 
   assert(is_primary_);
 
-  double dx = ei_event_scroll_get_dx(event);
-  double dy = ei_event_scroll_get_dy(event);
+  auto dx = ei_event_scroll_get_dx(event);
+  auto dy = ei_event_scroll_get_dy(event);
   struct ei_device *device = ei_event_get_device(event);
 
   LOG_DEBUG1("event: scroll (%.2f, %.2f)", dx, dy);
@@ -655,8 +655,8 @@ void EiScreen::on_pointer_scroll_discrete_event(ei_event *event)
 
   assert(is_primary_);
 
-  std::int32_t dx = ei_event_scroll_get_discrete_dx(event);
-  std::int32_t dy = ei_event_scroll_get_discrete_dy(event);
+  auto dx = ei_event_scroll_get_discrete_dx(event);
+  auto dy = ei_event_scroll_get_discrete_dy(event);
 
   LOG_DEBUG1("event: scroll discrete (%d, %d)", dx, dy);
 
@@ -670,8 +670,8 @@ void EiScreen::on_motion_event(ei_event *event)
 {
   assert(is_primary_);
 
-  double dx = ei_event_pointer_get_dx(event);
-  double dy = ei_event_pointer_get_dy(event);
+  auto dx = ei_event_pointer_get_dx(event);
+  auto dy = ei_event_pointer_get_dy(event);
 
   if (is_on_screen_) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", cursor_x_, cursor_y_);
