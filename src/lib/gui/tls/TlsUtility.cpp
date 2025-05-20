@@ -15,6 +15,7 @@ namespace deskflow::gui {
 
 TlsUtility::TlsUtility(QObject *parent) : QObject(parent)
 {
+  // do nothing
 }
 
 bool TlsUtility::isEnabled() const

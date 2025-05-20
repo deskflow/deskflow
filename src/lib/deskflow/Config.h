@@ -28,6 +28,7 @@ public:
   public:
     explicit ParseError() : std::runtime_error("failed to parse config file")
     {
+      // do nothing
     }
   };
 
@@ -36,6 +37,7 @@ public:
   public:
     explicit NoConfigFilenameError() : std::runtime_error("no config file specified")
     {
+      // do nothing
     }
   };
 

@@ -18,6 +18,7 @@
 
 ClientProxy::ClientProxy(const std::string &name, deskflow::IStream *stream) : BaseClientProxy(name), m_stream(stream)
 {
+  // do nothing
 }
 
 ClientProxy::~ClientProxy()

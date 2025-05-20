@@ -10,6 +10,7 @@ namespace validators {
 
 SpacesValidator::SpacesValidator(const QString &message) : IStringValidator(message)
 {
+  // do nothing
 }
 
 bool SpacesValidator::validate(const QString &input) const

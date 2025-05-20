@@ -36,6 +36,7 @@ public:
   const char *daemonInfo() const override;
   void loadConfig() override
   {
+    // do nothing
   }
   bool loadConfig(const std::string &pathname) override
   {

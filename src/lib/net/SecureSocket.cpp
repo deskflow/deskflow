@@ -65,6 +65,7 @@ SecureSocket::SecureSocket(
       m_fatal(false),
       m_securityLevel{securityLevel}
 {
+  // do nothing
 }
 
 SecureSocket::SecureSocket(
@@ -76,6 +77,7 @@ SecureSocket::SecureSocket(
       m_fatal(false),
       m_securityLevel{securityLevel}
 {
+  // do nothing
 }
 
 SecureSocket::~SecureSocket()

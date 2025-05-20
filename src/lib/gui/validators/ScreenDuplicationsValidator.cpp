@@ -15,6 +15,7 @@ ScreenDuplicationsValidator::ScreenDuplicationsValidator(
       m_defaultName(defaultName),
       m_pScreenList(pScreens)
 {
+  // do nothing
 }
 
 bool ScreenDuplicationsValidator::validate(const QString &input) const

@@ -33,6 +33,7 @@ Event::Event(EventTypes type, void *target, EventData *dataObject)
       m_flags(kNone),
       m_dataObject(dataObject)
 {
+  // do nothing
 }
 
 EventTypes Event::getType() const

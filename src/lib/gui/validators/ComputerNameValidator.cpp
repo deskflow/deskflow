@@ -12,6 +12,7 @@ namespace validators {
 
 ComputerNameValidator::ComputerNameValidator(const QString &message) : IStringValidator(message)
 {
+  // do nothing
 }
 
 bool ComputerNameValidator::validate(const QString &input) const

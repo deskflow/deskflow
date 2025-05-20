@@ -22,6 +22,7 @@ DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
       m_logFilename(logFilename),
       m_server{new QLocalServer(this)} // NOSONAR - Qt memory
 {
+  // do nothing
 }
 
 DaemonIpcServer::~DaemonIpcServer()

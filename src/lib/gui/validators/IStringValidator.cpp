@@ -10,6 +10,7 @@ namespace validators {
 
 IStringValidator::IStringValidator(const QString &message) : m_Message(message)
 {
+  // do nothing
 }
 
 const QString &IStringValidator::getMessage() const

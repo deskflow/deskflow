@@ -65,7 +65,6 @@ static in_addr_t inet_aton(const char *cp, struct in_addr *inp)
 
 void ArchNetworkBSD::Deps::sleep(double seconds)
 {
-  //
   ARCH->sleep(seconds);
 }
 

@@ -25,6 +25,7 @@
 
 AppUtilUnix::AppUtilUnix(IEventQueue *events)
 {
+  // do nothing
 }
 
 int standardStartupStatic(int argc, char **argv)

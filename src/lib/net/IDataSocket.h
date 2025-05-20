@@ -24,6 +24,7 @@ public:
   public:
     ConnectionFailedInfo(const char *what) : m_what(what)
     {
+      // do nothing
     }
     std::string m_what;
   };

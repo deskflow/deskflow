@@ -855,10 +855,12 @@ std::string EiScreen::getSecureInputApp() const
 
 EiScreen::HotKeyItem::HotKeyItem(std::uint32_t mask, std::uint32_t id) : mask_(mask), id_(id)
 {
+  // Todo: Implement
 }
 
 EiScreen::HotKeySet::HotKeySet(KeyID key) : id_(key)
 {
+  // Todo: Implement
 }
 
 bool EiScreen::HotKeySet::remove_by_id(std::uint32_t id)
