@@ -117,7 +117,7 @@ public:
   using ButtonToKeyMap = std::map<KeyButton, const KeyItem *>;
 
   //! Callback type for \c foreachKey
-  typedef void (*ForeachKeyCallback)(KeyID, int32_t group, KeyItem &, void *userData);
+  using ForeachKeyCallback = void (*)(KeyID, int32_t group, KeyItem &, void *userData);
 
   //! @name manipulators
   //@{

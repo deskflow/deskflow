@@ -23,7 +23,7 @@
 class XWindowsUtil
 {
 public:
-  typedef std::vector<KeySym> KeySyms;
+  using KeySyms = std::vector<KeySym>;
 
   //! Get property
   /*!
@@ -120,7 +120,7 @@ public:
   {
   public:
     //! Error handler type
-    typedef void (*ErrorHandler)(Display *, XErrorEvent *, void *userData);
+    using ErrorHandler = void (*)(Display *, XErrorEvent *, void *userData);
 
     /*!
     Ignore X11 errors.
@@ -151,7 +151,7 @@ public:
     static void saveHandler(Display *, XErrorEvent *, void *);
 
   private:
-    typedef int (*XErrorHandler)(Display *, XErrorEvent *);
+    using XErrorHandler = int (*)(Display *, XErrorEvent *);
 
     Display *m_display;
     ErrorHandler m_handler;
@@ -174,7 +174,7 @@ private:
   static void initKeyMaps();
 
 private:
-  typedef std::map<KeySym, uint32_t> KeySymMap;
+  using KeySymMap = std::map<KeySym, uint32_t>;
 
   static KeySymMap s_keySymToUCS4;
 };

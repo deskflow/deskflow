@@ -92,7 +92,7 @@ protected:
   ClientClipboard m_clipboard[kClipboardEnd];
 
 private:
-  typedef bool (ClientProxy1_0::*MessageParser)(const uint8_t *);
+  using MessageParser = bool (ClientProxy1_0::*)(const uint8_t *);
 
   ClientInfo m_info;
   double m_heartbeatAlarm;

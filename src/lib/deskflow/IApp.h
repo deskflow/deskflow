@@ -9,7 +9,7 @@
 
 #include "common/IInterface.h"
 
-typedef int (*StartupFunc)(int, char **);
+using StartupFunc = int (*)(int, char **);
 
 namespace deskflow {
 class ArgsBase;
