@@ -58,6 +58,15 @@ private:
   double getNextTimerTimeout() const;
   void addEventToBuffer(const Event &event);
 
+  //!
+  //! \brief processEvent Internal event proccessing
+  //! \param event - event to process
+  //! \param timeout - Timeout to stop
+  //! \param timer - StopWatch to use
+  //! \return true if handled
+  //!
+  bool processEvent(Event &event, double timeout, Stopwatch &timer);
+
 private:
   class Timer
   {
