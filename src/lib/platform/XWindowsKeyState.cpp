@@ -156,8 +156,12 @@ bool XWindowsKeyState::fakeCtrlAltDel()
 
 KeyModifierMask XWindowsKeyState::pollActiveModifiers() const
 {
-  Window root = DefaultRootWindow(m_display), window;
-  int xRoot, yRoot, xWindow, yWindow;
+  Window root = DefaultRootWindow(m_display);
+  Window window;
+  int xRoot;
+  int yRoot;
+  int xWindow;
+  int yWindow;
   unsigned int state = 0;
   if (XQueryPointer(m_display, root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state) == False) {
     state = 0;
@@ -351,7 +355,8 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
   m_keyCodeFromKey.clear();
 
   // get the number of keycodes
-  int minKeycode, maxKeycode;
+  int minKeycode;
+  int maxKeycode;
   XDisplayKeycodes(m_display, &minKeycode, &maxKeycode);
   int numKeycodes = maxKeycode - minKeycode + 1;
 
@@ -437,7 +442,8 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
     // provide one keysym for keys sensitive to caps-lock.  if we
     // find that then fill in the missing keysym.
     if (keysyms[0] != NoSymbol && keysyms[1] == NoSymbol && keysyms[2] == NoSymbol && keysyms[3] == NoSymbol) {
-      KeySym lKeysym, uKeysym;
+      KeySym lKeysym;
+      KeySym uKeysym;
       XConvertCase(keysyms[0], &lKeysym, &uKeysym);
       if (lKeysym != uKeysym) {
         keysyms[0] = lKeysym;
@@ -445,7 +451,8 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
         item.m_sensitive |= KeyModifierCapsLock;
       }
     } else if (keysyms[0] != NoSymbol && keysyms[1] != NoSymbol) {
-      KeySym lKeysym, uKeysym;
+      KeySym lKeysym;
+      KeySym uKeysym;
       XConvertCase(keysyms[0], &lKeysym, &uKeysym);
       if (lKeysym != uKeysym && lKeysym == keysyms[0] && uKeysym == keysyms[1]) {
         item.m_sensitive |= KeyModifierCapsLock;
@@ -527,7 +534,8 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
       // add other ways to synthesize the key
       if ((j & 1) != 0) {
         // add capslock version of key is sensitive to capslock
-        KeySym lKeysym, uKeysym;
+        KeySym lKeysym;
+        KeySym uKeysym;
         XConvertCase(keysyms[j], &lKeysym, &uKeysym);
         if (lKeysym != uKeysym && lKeysym == keysyms[j - 1] && uKeysym == keysyms[j]) {
           item.m_required &= ~KeyModifierShift;
@@ -726,7 +734,8 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         if (type->num_levels == 1) {
           // if there are upper- and lowercase versions of the
           // keysym then add both.
-          KeySym lKeysym, uKeysym;
+          KeySym lKeysym;
+          KeySym uKeysym;
           XConvertCase(keysym, &lKeysym, &uKeysym);
           if (lKeysym != uKeysym) {
             if (j != -1) {

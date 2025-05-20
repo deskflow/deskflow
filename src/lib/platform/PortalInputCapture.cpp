@@ -174,7 +174,10 @@ void PortalInputCapture::cb_set_pointer_barriers(GObject *object, GAsyncResult *
 
       for (auto elem = barriers_.begin(); elem != barriers_.end(); elem++) {
         if (*elem == it->data) {
-          int x1, x2, y1, y2;
+          int x1;
+          int x2;
+          int y1;
+          int y2;
 
           g_object_get(G_OBJECT(*elem), "x1", &x1, "x2", &x2, "y1", &y1, "y2", &y2, nullptr);
 
@@ -271,7 +274,8 @@ void PortalInputCapture::cb_activated(XdpInputCaptureSession *session, std::uint
   LOG_DEBUG("portal cb activated, id=%d", activation_id);
 
   if (options) {
-    gdouble x, y;
+    gdouble x;
+    gdouble y;
     if (g_variant_lookup(options, "cursor_position", "(dd)", &x, &y)) {
       screen_->warpCursor((int)x, (int)y);
     } else {
@@ -298,13 +302,18 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession *session, GVari
 
   auto zones = xdp_input_capture_session_get_zones(session);
   while (zones != nullptr) {
-    guint w, h;
-    gint x, y;
+    guint w;
+    guint h;
+    gint x;
+    gint y;
     g_object_get(zones->data, "width", &w, "height", &h, "x", &x, "y", &y, nullptr);
 
     LOG_DEBUG("input capture zone, %dx%d@%d,%d", w, h, x, y);
 
-    int x1, x2, y1, y2;
+    int x1;
+    int x2;
+    int y1;
+    int y2;
 
     // Hardcoded behaviour: our pointer barriers are always at the edges of
     // all zones. Since the implementation is supposed to reject the ones in

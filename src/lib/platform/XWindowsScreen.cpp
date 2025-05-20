@@ -496,8 +496,12 @@ void XWindowsScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) co
 
 void XWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
 {
-  Window root, window;
-  int mx, my, xWindow, yWindow;
+  Window root;
+  Window window;
+  int mx;
+  int my;
+  int xWindow;
+  int yWindow;
   unsigned int mask;
   if (XQueryPointer(m_display, m_root, &root, &window, &mx, &my, &xWindow, &yWindow, &mask)) {
     x = mx;
@@ -765,8 +769,12 @@ int32_t XWindowsScreen::getJumpZoneSize() const
 bool XWindowsScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
 {
   // query the pointer to get the button state
-  Window root, window;
-  int xRoot, yRoot, xWindow, yWindow;
+  Window root;
+  Window window;
+  int xRoot;
+  int yRoot;
+  int xWindow;
+  int yWindow;
   if (unsigned int state;
       XQueryPointer(m_display, m_root, &root, &window, &xRoot, &yRoot, &xWindow, &yWindow, &state)) {
     return ((state & (Button1Mask | Button2Mask | Button3Mask | Button4Mask | Button5Mask)) != 0);
@@ -871,7 +879,9 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
 
   // verify the availability of the XTest extension
   if (!m_isPrimary) {
-    int majorOpcode, firstEvent, firstError;
+    int majorOpcode;
+    int firstEvent;
+    int firstError;
     if (!XQueryExtension(display, XTestExtensionName, &majorOpcode, &firstEvent, &firstError)) {
       LOG((CLOG_ERR "the XTest extension is not available"));
       XCloseDisplay(display);
@@ -882,9 +892,11 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
 #if HAVE_XKB_EXTENSION
   {
     m_xkb = false;
-    int major = XkbMajorVersion, minor = XkbMinorVersion;
+    int major = XkbMajorVersion;
+    int minor = XkbMinorVersion;
     if (XkbLibraryVersion(&major, &minor)) {
-      int opcode, firstError;
+      int opcode;
+      int firstError;
       if (XkbQueryExtension(display, &opcode, &m_xkbEventBase, &firstError, &major, &minor)) {
         m_xkb = true;
         XkbSelectEvents(display, XkbUseCoreKbd, XkbMapNotifyMask, XkbMapNotifyMask);
@@ -1222,7 +1234,8 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
     if (XGetEventData(m_display, cookie) && cookie->type == GenericEvent && cookie->extension == xi_opcode) {
       if (cookie->evtype == XI_RawMotion) {
         // Get current pointer's position
-        Window root, child;
+        Window root;
+        Window child;
         XMotionEvent xmotion;
         xmotion.type = MotionNotify;
         xmotion.send_event = False; // Raw motion
@@ -1564,8 +1577,9 @@ void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
     // pixel) but the latter is a PITA.  to work around
     // it we only warp when the mouse has moved more
     // than s_size pixels from the center.
-    if (static const int32_t s_size = 32; xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
-                                          xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
+    static const int32_t s_size = 32;
+    if (xmotion.x_root - m_xCenter < -s_size || xmotion.x_root - m_xCenter > s_size ||
+        xmotion.y_root - m_yCenter < -s_size || xmotion.y_root - m_yCenter > s_size) {
       warpCursorNoFlush(m_xCenter, m_yCenter);
     }
 
@@ -1586,7 +1600,8 @@ Cursor XWindowsScreen::createBlankCursor() const
   // this seems just a bit more complicated than really necessary
 
   // get the closet cursor size to 1x1
-  unsigned int w = 0, h = 0;
+  unsigned int w = 0;
+  unsigned int h = 0;
   XQueryBestCursor(m_display, m_root, 1, 1, &w, &h);
   w = std::max(1u, w);
   h = std::max(1u, h);
@@ -1724,7 +1739,9 @@ void XWindowsScreen::doSelectEvents(Window w) const
   XSelectInput(m_display, w, mask);
 
   // recurse on child windows
-  Window rw, pw, *cw;
+  Window rw;
+  Window pw;
+  Window *cw;
   unsigned int nc;
   if (XQueryTree(m_display, w, &rw, &pw, &cw, &nc)) {
     for (unsigned int i = 0; i < nc; ++i) {
@@ -1980,7 +1997,8 @@ bool XWindowsScreen::HotKeyItem::operator<(const HotKeyItem &x) const
 
 bool XWindowsScreen::detectXI2()
 {
-  int event, error;
+  int event;
+  int error;
   return XQueryExtension(m_display, "XInputExtension", &xi_opcode, &event, &error);
 }
 

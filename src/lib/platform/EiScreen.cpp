@@ -30,9 +30,11 @@
 #include <unistd.h>
 #include <vector>
 
+// Values are in pixels
 struct ScrollRemainder
 {
-  double x, y; // scroll remainder in pixels
+  double x;
+  double y;
 };
 
 namespace deskflow {
@@ -624,7 +626,8 @@ void EiScreen::on_pointer_scroll_event(ei_event *event)
   dx += remainder->x;
   dy += remainder->y;
 
-  double x, y;
+  double x;
+  double y;
   double rx = modf(dx, &x);
   double ry = modf(dy, &y);
 

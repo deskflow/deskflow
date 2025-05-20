@@ -112,8 +112,10 @@ private:
 
   bool m_compressMouse;
   bool m_compressMouseRelative;
-  int32_t m_xMouse, m_yMouse;
-  int32_t m_dxMouse, m_dyMouse;
+  int32_t m_xMouse;
+  int32_t m_yMouse;
+  int32_t m_dxMouse;
+  int32_t m_dyMouse;
 
   bool m_ignoreMouse;
 

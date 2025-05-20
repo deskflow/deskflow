@@ -421,7 +421,8 @@ Config::getNeighbor(const std::string &srcName, EDirection srcSide, float positi
   }
 
   // find edge
-  const CellEdge *srcEdge, *dstEdge;
+  const CellEdge *srcEdge;
+  const CellEdge *dstEdge;
   if (!index->second.getLink(srcSide, position, srcEdge, dstEdge)) {
     // no neighbor
     return "";
@@ -639,8 +640,10 @@ void Config::readSectionOptions(ConfigReadContext &s)
     //   values       := valueAndArgs[,valueAndArgs]...
     //   valueAndArgs := <value>[(arg[,...])]
     std::string::size_type i = 0;
-    std::string name, value;
-    ConfigReadContext::ArgList nameArgs, valueArgs;
+    std::string name;
+    std::string value;
+    ConfigReadContext::ArgList nameArgs;
+    ConfigReadContext::ArgList valueArgs;
     s.parseNameWithArgs("name", line, "=", i, name, nameArgs);
     ++i;
     s.parseNameWithArgs("value", line, ",;\n", i, value, valueArgs);
@@ -843,8 +846,12 @@ void Config::readSectionLinks(ConfigReadContext &s)
       // in the range [0,100] and start < end.  if not given the
       // interval is taken to be (0,100).
       std::string::size_type i = 0;
-      std::string side, dstScreen, srcArgString, dstArgString;
-      ConfigReadContext::ArgList srcArgs, dstArgs;
+      std::string side;
+      std::string dstScreen;
+      std::string srcArgString;
+      std::string dstArgString;
+      ConfigReadContext::ArgList srcArgs;
+      ConfigReadContext::ArgList dstArgs;
       s.parseNameWithArgs("link", line, "=", i, side, srcArgs);
       ++i;
       s.parseNameWithArgs("screen", line, "", i, dstScreen, dstArgs);

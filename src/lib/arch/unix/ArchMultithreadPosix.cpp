@@ -540,7 +540,8 @@ void ArchMultithreadPosix::startSignalHandler()
 {
   // set signal mask.  the main thread blocks these signals and
   // the signal handler thread will listen for them.
-  sigset_t sigset, oldsigset;
+  sigset_t sigset;
+  sigset_t oldsigset;
   setSignalSet(&sigset);
   pthread_sigmask(SIG_BLOCK, &sigset, &oldsigset);
 

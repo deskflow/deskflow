@@ -383,14 +383,17 @@ private:
 
   // current mouse position (in absolute screen coordinates) on
   // whichever screen is active
-  int32_t m_x, m_y;
+  int32_t m_x;
+  int32_t m_y;
 
   // last mouse deltas.  this is needed to smooth out double tap
   // on win32 which reports bogus mouse motion at the edge of
   // the screen when using low level hooks, synthesizing motion
   // in the opposite direction the mouse actually moved.
-  int32_t m_xDelta, m_yDelta;
-  int32_t m_xDelta2, m_yDelta2;
+  int32_t m_xDelta;
+  int32_t m_yDelta;
+  int32_t m_xDelta2;
+  int32_t m_yDelta2;
 
   // current configuration
   ServerConfig *m_config;
@@ -403,7 +406,8 @@ private:
 
   // state saved when screen saver activates
   BaseClientProxy *m_activeSaver;
-  int32_t m_xSaver, m_ySaver;
+  int32_t m_xSaver;
+  int32_t m_ySaver;
 
   // common state for screen switch tests.  all tests are always
   // trying to reach the same screen in the same direction.
@@ -413,7 +417,8 @@ private:
   // state for delayed screen switching
   double m_switchWaitDelay;
   EventQueueTimer *m_switchWaitTimer;
-  int32_t m_switchWaitX, m_switchWaitY;
+  int32_t m_switchWaitX;
+  int32_t m_switchWaitY;
 
   // state for double-tap screen switching
   double m_switchTwoTapDelay;

@@ -379,7 +379,13 @@ void ClientProxy1_0::setOptions(const OptionsList &options)
 bool ClientProxy1_0::recvInfo()
 {
   // parse the message
-  int16_t x, y, w, h, dummy1, mx, my;
+  int16_t x;
+  int16_t y;
+  int16_t w;
+  int16_t h;
+  int16_t dummy1;
+  int16_t mx;
+  int16_t my;
   if (!ProtocolUtil::readf(getStream(), kMsgDInfo + 4, &x, &y, &w, &h, &dummy1, &mx, &my)) {
     return false;
   }

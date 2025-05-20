@@ -774,7 +774,8 @@ bool KeyMap::keysToRestoreModifiers(
   ModifierToKeys oldModifiers = activeModifiers;
 
   // get the pressed modifier buttons before and after
-  ButtonToKeyMap oldKeys, newKeys;
+  ButtonToKeyMap oldKeys;
+  ButtonToKeyMap newKeys;
   collectButtons(oldModifiers, oldKeys);
   collectButtons(desiredModifiers, newKeys);
 

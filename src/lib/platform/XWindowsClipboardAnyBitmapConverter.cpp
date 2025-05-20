@@ -119,7 +119,9 @@ std::string XWindowsClipboardAnyBitmapConverter::fromIClipboard(const std::strin
 std::string XWindowsClipboardAnyBitmapConverter::toIClipboard(const std::string &image) const
 {
   // convert to raw BMP data
-  uint32_t w, h, depth;
+  uint32_t w;
+  uint32_t h;
+  uint32_t depth;
   std::string rawBMP = doToIClipboard(image, w, h, depth);
   if (rawBMP.empty() || w == 0 || h == 0 || (depth != 24 && depth != 32)) {
     return std::string();

@@ -399,7 +399,10 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
 {
   assert(dst != nullptr);
 
-  int32_t dx, dy, dw, dh;
+  int32_t dx;
+  int32_t dy;
+  int32_t dw;
+  int32_t dh;
   dst->getShape(dx, dy, dw, dh);
 
   // any of these conditions seem to trigger when the portal permission dialog
@@ -515,7 +518,8 @@ void Server::jumpToScreen(BaseClientProxy *newScreen)
   m_active->setJumpCursorPos(m_x, m_y);
 
   // get the last cursor position on the target screen
-  int32_t x, y;
+  int32_t x;
+  int32_t y;
   newScreen->getJumpCursorPos(x, y);
 
   switchScreen(newScreen, x, y, false);
@@ -523,7 +527,10 @@ void Server::jumpToScreen(BaseClientProxy *newScreen)
 
 float Server::mapToFraction(BaseClientProxy *client, EDirection dir, int32_t x, int32_t y) const
 {
-  int32_t sx, sy, sw, sh;
+  int32_t sx;
+  int32_t sy;
+  int32_t sw;
+  int32_t sh;
   client->getShape(sx, sy, sw, sh);
   switch (dir) {
   case kLeft:
@@ -543,7 +550,10 @@ float Server::mapToFraction(BaseClientProxy *client, EDirection dir, int32_t x, 
 
 void Server::mapToPixel(BaseClientProxy *client, EDirection dir, float f, int32_t &x, int32_t &y) const
 {
-  int32_t sx, sy, sw, sh;
+  int32_t sx;
+  int32_t sy;
+  int32_t sw;
+  int32_t sh;
   client->getShape(sx, sy, sw, sh);
   switch (dir) {
   case kLeft:
@@ -627,7 +637,10 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
   }
 
   // get the source screen's size
-  int32_t dx, dy, dw, dh;
+  int32_t dx;
+  int32_t dy;
+  int32_t dw;
+  int32_t dh;
   BaseClientProxy *lastGoodScreen = src;
   lastGoodScreen->getShape(dx, dy, dw, dh);
 
@@ -727,7 +740,10 @@ void Server::avoidJumpZone(BaseClientProxy *dst, EDirection dir, int32_t &x, int
   }
 
   const std::string dstName(getName(dst));
-  int32_t dx, dy, dw, dh;
+  int32_t dx;
+  int32_t dy;
+  int32_t dw;
+  int32_t dh;
   dst->getShape(dx, dy, dw, dh);
   float t = mapToFraction(dst, dir, x, y);
   int32_t z = getJumpZoneSize(dst);
@@ -887,7 +903,10 @@ void Server::armSwitchTwoTap(int32_t x, int32_t y)
     } else if (!m_switchTwoTapArmed) {
       // still time for a double tap.  see if we left the tap
       // zone and, if so, arm the two tap.
-      int32_t ax, ay, aw, ah;
+      int32_t ax;
+      int32_t ay;
+      int32_t aw;
+      int32_t ah;
       m_active->getShape(ax, ay, aw, ah);
       int32_t tapZone = m_primaryClient->getJumpZoneSize();
       if (tapZone < m_switchTwoTapZone) {
@@ -967,7 +986,10 @@ uint32_t Server::getCorner(BaseClientProxy *client, int32_t x, int32_t y, int32_
   assert(client != nullptr);
 
   // get client screen shape
-  int32_t ax, ay, aw, ah;
+  int32_t ax;
+  int32_t ay;
+  int32_t aw;
+  int32_t ah;
   client->getShape(ax, ay, aw, ah);
 
   // check for x,y on the left or right
@@ -1015,7 +1037,10 @@ void Server::stopRelativeMoves()
 {
   if (m_relativeMoves && m_active != m_primaryClient) {
     // warp to the center of the active client so we know where we are
-    int32_t ax, ay, aw, ah;
+    int32_t ax;
+    int32_t ay;
+    int32_t aw;
+    int32_t ah;
     m_active->getShape(ax, ay, aw, ah);
     m_x = ax + (aw >> 1);
     m_y = ay + (ah >> 1);
@@ -1138,7 +1163,8 @@ void Server::handleShapeChanged(const Event &, void *vclient)
   LOG((CLOG_DEBUG "screen \"%s\" shape changed", getName(client).c_str()));
 
   // update jump coordinate
-  int32_t x, y;
+  int32_t x;
+  int32_t y;
   client->getCursorPos(x, y);
   client->setJumpCursorPos(x, y);
 
@@ -1336,7 +1362,8 @@ void Server::handleSwitchInDirectionEvent(const Event &event, void *)
   auto *info = static_cast<SwitchInDirectionInfo *>(event.getData());
 
   // jump to screen in chosen direction from center of this screen
-  int32_t x = m_x, y = m_y;
+  int32_t x = m_x;
+  int32_t y = m_y;
   BaseClientProxy *newScreen = getNeighbor(m_active, info->m_direction, x, y);
   if (newScreen == nullptr) {
     LOG((CLOG_DEBUG1 "no neighbor %s", Config::dirName(info->m_direction)));
@@ -1488,7 +1515,10 @@ void Server::onScreensaver(bool activated)
     if (m_activeSaver != nullptr && m_activeSaver != m_primaryClient) {
       // check position
       BaseClientProxy *screen = m_activeSaver;
-      int32_t x, y, w, h;
+      int32_t x;
+      int32_t y;
+      int32_t w;
+      int32_t h;
       screen->getShape(x, y, w, h);
       int32_t zoneSize = getJumpZoneSize(screen);
       if (m_xSaver < x + zoneSize) {
@@ -1616,12 +1646,16 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   m_y = y;
 
   // get screen shape
-  int32_t ax, ay, aw, ah;
+  int32_t ax;
+  int32_t ay;
+  int32_t aw;
+  int32_t ah;
   m_active->getShape(ax, ay, aw, ah);
   int32_t zoneSize = getJumpZoneSize(m_active);
 
   // clamp position to screen
-  int32_t xc = x, yc = y;
+  int32_t xc = x;
+  int32_t yc = y;
   if (xc < ax + zoneSize) {
     xc = ax;
   } else if (xc >= ax + aw - zoneSize) {
@@ -1637,7 +1671,8 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   // when the cursor is in a corner, there may be a screen either
   // horizontally or vertically.  check both directions.
   EDirection dirh = kNoDirection, dirv = kNoDirection;
-  int32_t xh = x, yv = y;
+  int32_t xh = x;
+  int32_t yv = y;
   if (x < ax + zoneSize) {
     xh -= zoneSize;
     dirh = kLeft;
@@ -1660,7 +1695,8 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 
   // check both horizontally and vertically
   EDirection dirs[] = {dirh, dirv};
-  int32_t xs[] = {xh, x}, ys[] = {y, yv};
+  int32_t xs[] = {xh, x};
+  int32_t ys[] = {y, yv};
   for (int i = 0; i < 2; ++i) {
     EDirection dir = dirs[i];
     if (dir == kNoDirection) {
@@ -1737,7 +1773,10 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
   m_y += dy;
 
   // get screen shape
-  int32_t ax, ay, aw, ah;
+  int32_t ax;
+  int32_t ay;
+  int32_t aw;
+  int32_t ah;
   m_active->getShape(ax, ay, aw, ah);
 
   // find direction of neighbor and get the neighbor
@@ -1745,7 +1784,8 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
   BaseClientProxy *newScreen;
   do {
     // clamp position to screen
-    int32_t xc = m_x, yc = m_y;
+    int32_t xc = m_x;
+    int32_t yc = m_y;
     if (xc < ax) {
       xc = ax;
     } else if (xc >= ax + aw) {
@@ -1886,7 +1926,8 @@ bool Server::addClient(BaseClientProxy *client)
   m_clients.insert(std::make_pair(name, client));
 
   // initialize client data
-  int32_t x, y;
+  int32_t x;
+  int32_t y;
   client->getCursorPos(x, y);
   client->setJumpCursorPos(x, y);
 
