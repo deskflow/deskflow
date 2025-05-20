@@ -101,10 +101,8 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
   }
 }
 
-bool EventQueue::getEvent(Event &event, double timeout)
+bool EventQueue::processEvent(Event &event, double timeout, Stopwatch &timer)
 {
-  Stopwatch timer(true);
-retry:
   // if no events are waiting then handle timers and then wait
   while (m_buffer->isEmpty()) {
     // handle timers first
@@ -139,7 +137,7 @@ retry:
       // don't want to fail if client isn't expecting that
       // so if getEvent() fails with an infinite timeout
       // then just try getting another event.
-      goto retry;
+      processEvent(event, timeout, timer);
     }
     return false;
 
@@ -156,6 +154,12 @@ retry:
     assert(0 && "invalid event type");
     return false;
   }
+}
+
+bool EventQueue::getEvent(Event &event, double timeout)
+{
+  Stopwatch timer(true);
+  return processEvent(event, timeout, timer);
 }
 
 bool EventQueue::dispatchEvent(const Event &event)
