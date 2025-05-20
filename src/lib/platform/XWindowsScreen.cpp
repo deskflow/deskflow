@@ -1851,20 +1851,24 @@ void XWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
   assert(m_window != None);
 
   // send an event that we can recognize before the mouse warp
+  XMotionEvent eventMotion;
+  eventMotion.display = m_display;
+  eventMotion.window = m_window;
+  eventMotion.root = m_root;
+  eventMotion.subwindow = m_window;
+  eventMotion.time = CurrentTime;
+  eventMotion.x = x;
+  eventMotion.y = y;
+  eventMotion.x_root = x;
+  eventMotion.y_root = y;
+  eventMotion.state = 0;
+  eventMotion.is_hint = NotifyNormal;
+  eventMotion.same_screen = True;
+
   XEvent eventBefore;
   eventBefore.type = MotionNotify;
-  eventBefore.xmotion.display = m_display;
-  eventBefore.xmotion.window = m_window;
-  eventBefore.xmotion.root = m_root;
-  eventBefore.xmotion.subwindow = m_window;
-  eventBefore.xmotion.time = CurrentTime;
-  eventBefore.xmotion.x = x;
-  eventBefore.xmotion.y = y;
-  eventBefore.xmotion.x_root = x;
-  eventBefore.xmotion.y_root = y;
-  eventBefore.xmotion.state = 0;
-  eventBefore.xmotion.is_hint = NotifyNormal;
-  eventBefore.xmotion.same_screen = True;
+  eventBefore.xmotion = eventMotion;
+
   XEvent eventAfter = eventBefore;
   XSendEvent(m_display, m_window, False, 0, &eventBefore);
 
