@@ -37,7 +37,7 @@ public:
   Create and start a new thread executing the \c adoptedJob.  The
   new thread takes ownership of \c adoptedJob and will delete it.
   */
-  Thread(IJob *adoptedJob);
+  explicit Thread(IJob *adoptedJob);
 
   //! Duplicate a thread handle
   /*!
@@ -190,7 +190,7 @@ public:
   //@}
 
 private:
-  Thread(ArchThread);
+  explicit Thread(ArchThread);
 
   static void *threadFunc(void *);
 

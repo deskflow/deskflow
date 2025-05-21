@@ -23,9 +23,9 @@ class Lock
 {
 public:
   //! Lock the mutex \c mutex
-  Lock(const Mutex *mutex);
+  explicit Lock(const Mutex *mutex);
   //! Lock the condition variable \c cv
-  Lock(const CondVarBase *cv);
+  explicit Lock(const CondVarBase *cv);
   //! Unlock the mutex or condition variable
   ~Lock();
 

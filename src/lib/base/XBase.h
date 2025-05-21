@@ -20,7 +20,7 @@ public:
   //! Use getWhat() as the result of what()
   XBase();
   //! Use \c msg as the result of what()
-  XBase(const std::string &msg);
+  explicit XBase(const std::string &msg);
   ~XBase() throw() override = default;
 
   //! Reason for exception

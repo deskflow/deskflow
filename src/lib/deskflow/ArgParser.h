@@ -21,7 +21,7 @@ class ArgParser
 {
 
 public:
-  ArgParser(App *app);
+  explicit ArgParser(App *app);
 
   bool parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv);
   bool parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv);

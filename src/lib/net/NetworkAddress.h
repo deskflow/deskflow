@@ -26,7 +26,7 @@ public:
   Construct the wildcard address with the given port.  \c port must
   not be zero.
   */
-  NetworkAddress(int port);
+  explicit NetworkAddress(int port);
 
   /*!
   Construct the network address for the given \c hostname and \c port.

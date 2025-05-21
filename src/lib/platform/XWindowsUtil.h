@@ -125,7 +125,7 @@ public:
     /*!
     Ignore X11 errors.
     */
-    ErrorLock(Display *);
+    explicit ErrorLock(Display *);
     ErrorLock(ErrorLock const &) = delete;
     ErrorLock(ErrorLock &&) = delete;
 

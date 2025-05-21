@@ -43,7 +43,7 @@ public:
   class FailInfo
   {
   public:
-    FailInfo(const char *what) : m_retry(false), m_what(what)
+    explicit FailInfo(const char *what) : m_retry(false), m_what(what)
     {
       // do nothing
     }

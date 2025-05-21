@@ -201,7 +201,7 @@ public:
     internal_const_iterator m_i;
   };
 
-  Config(IEventQueue *events);
+  explicit Config(IEventQueue *events);
   virtual ~Config() = default;
 
   //! @name manipulators

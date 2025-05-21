@@ -17,7 +17,7 @@ class NewScreenWidget : public QLabel
   Q_OBJECT
 
 public:
-  NewScreenWidget(QWidget *parent);
+  explicit NewScreenWidget(QWidget *parent);
 
 protected:
   void mousePressEvent(QMouseEvent *event) override;

@@ -19,7 +19,7 @@ class XThreadExit : public XThread
 {
 public:
   //! \c result is the result of the thread
-  XThreadExit(void *result) : m_result(result)
+  explicit XThreadExit(void *result) : m_result(result)
   {
     // do nothing
   }

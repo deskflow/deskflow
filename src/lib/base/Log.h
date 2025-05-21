@@ -27,8 +27,8 @@ LOGC() provide convenient access.
 class Log
 {
 public:
-  Log(bool singleton = true);
-  Log(Log *src);
+  explicit Log(bool singleton = true);
+  explicit Log(Log *src);
   Log(Log const &) = delete;
   Log(Log &&) = delete;
   ~Log();
