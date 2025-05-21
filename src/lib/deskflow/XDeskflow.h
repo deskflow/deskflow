@@ -65,7 +65,7 @@ a client that is already connected.
 class XDuplicateClient : public XDeskflow
 {
 public:
-  XDuplicateClient(const std::string &name);
+  explicit XDuplicateClient(const std::string &name);
   ~XDuplicateClient() throw() override = default;
 
   //! @name accessors
@@ -91,7 +91,7 @@ unknown to the server.
 class XUnknownClient : public XDeskflow
 {
 public:
-  XUnknownClient(const std::string &name);
+  explicit XUnknownClient(const std::string &name);
   ~XUnknownClient() throw() override = default;
 
   //! @name accessors
@@ -118,7 +118,7 @@ exit(int).
 class XExitApp : public XDeskflow
 {
 public:
-  XExitApp(int code);
+  explicit XExitApp(int code);
   ~XExitApp() throw() override = default;
 
   //! Get the exit code

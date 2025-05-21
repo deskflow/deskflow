@@ -86,8 +86,9 @@ public:
   class ScreenConnectedInfo
   {
   public:
-    ScreenConnectedInfo(std::string screen) : m_screen(screen)
+    explicit ScreenConnectedInfo(std::string screen) : m_screen(screen)
     {
+      // do nothing
     }
 
   public:

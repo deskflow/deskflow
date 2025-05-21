@@ -23,7 +23,7 @@ class ISocketFactory;
 class ClientApp : public App
 {
 public:
-  ClientApp(IEventQueue *events);
+  explicit ClientApp(IEventQueue *events);
   ~ClientApp() override = default;
 
   //

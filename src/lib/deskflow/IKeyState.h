@@ -23,7 +23,7 @@ to synthesize key events.
 class IKeyState : public IInterface
 {
 public:
-  IKeyState(IEventQueue *events);
+  explicit IKeyState(IEventQueue *events);
 
   enum
   {

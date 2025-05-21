@@ -22,15 +22,16 @@ public:
   class ConnectionFailedInfo
   {
   public:
-    ConnectionFailedInfo(const char *what) : m_what(what)
+    explicit ConnectionFailedInfo(const char *what) : m_what(what)
     {
       // do nothing
     }
     std::string m_what;
   };
 
-  IDataSocket(IEventQueue *events)
+  explicit IDataSocket(IEventQueue *events)
   {
+    // do nothing
   }
 
   //! @name manipulators

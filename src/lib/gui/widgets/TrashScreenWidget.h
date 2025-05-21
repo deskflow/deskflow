@@ -18,7 +18,7 @@ class TrashScreenWidget : public QLabel
   Q_OBJECT
 
 public:
-  TrashScreenWidget(QWidget *parent) : QLabel(parent)
+  explicit TrashScreenWidget(QWidget *parent) : QLabel(parent)
   {
     // do nothing
   }

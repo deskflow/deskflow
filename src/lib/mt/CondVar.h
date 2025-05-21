@@ -27,7 +27,7 @@ public:
   associated mutex.  The mutex needn't be unique to one condition
   variable.
   */
-  CondVarBase(Mutex *mutex);
+  explicit CondVarBase(Mutex *mutex);
   ~CondVarBase();
 
   //! @name manipulators

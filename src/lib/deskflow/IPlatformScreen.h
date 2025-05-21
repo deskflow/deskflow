@@ -28,7 +28,7 @@ public:
   //! @name manipulators
   //@{
 
-  IPlatformScreen(IEventQueue *events) : IKeyState(events)
+  explicit IPlatformScreen(IEventQueue *events) : IKeyState(events)
   {
     // do nothing
   }

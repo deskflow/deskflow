@@ -21,7 +21,7 @@ class IStream;
 class ClipboardChunk : public Chunk
 {
 public:
-  ClipboardChunk(size_t size);
+  explicit ClipboardChunk(size_t size);
 
   static ClipboardChunk *start(ClipboardID id, uint32_t sequence, const std::string &size);
   static ClipboardChunk *data(ClipboardID id, uint32_t sequence, const std::string &data);

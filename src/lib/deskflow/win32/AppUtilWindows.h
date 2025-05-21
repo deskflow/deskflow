@@ -29,7 +29,7 @@ enum AppExitMode
 class AppUtilWindows : public AppUtil
 {
 public:
-  AppUtilWindows(IEventQueue *events);
+  explicit AppUtilWindows(IEventQueue *events);
   ~AppUtilWindows() override;
 
   static AppUtilWindows &instance();

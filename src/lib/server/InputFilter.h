@@ -301,7 +301,7 @@ public:
   {
   public:
     Rule();
-    Rule(Condition *adopted);
+    explicit Rule(Condition *adopted);
     Rule(const Rule &);
     ~Rule();
 
@@ -355,7 +355,7 @@ public:
   // -------------------------------------------------------------------------
   using RuleList = std::vector<Rule>;
 
-  InputFilter(IEventQueue *events);
+  explicit InputFilter(IEventQueue *events);
   InputFilter(const InputFilter &);
   virtual ~InputFilter();
 

@@ -45,7 +45,7 @@ class ServerApp : public App
   using ServerConfig = deskflow::server::Config;
 
 public:
-  ServerApp(IEventQueue *events);
+  explicit ServerApp(IEventQueue *events);
   ~ServerApp() override = default;
 
   //

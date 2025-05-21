@@ -164,7 +164,7 @@ private:
   class HotKeySet
   {
   public:
-    HotKeySet(KeyID keyid);
+    explicit HotKeySet(KeyID keyid);
     KeyID keyid() const
     {
       return id_;

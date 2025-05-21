@@ -12,7 +12,7 @@
 class Chunk : public EventData
 {
 public:
-  Chunk(size_t size);
+  explicit Chunk(size_t size);
   Chunk(Chunk const &) = delete;
   Chunk(Chunk &&) = delete;
   ~Chunk() override;

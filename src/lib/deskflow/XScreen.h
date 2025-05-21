@@ -36,7 +36,7 @@ public:
   \c timeUntilRetry is the suggested time the caller should wait until
   trying to open the screen again.
   */
-  XScreenUnavailable(double timeUntilRetry);
+  explicit XScreenUnavailable(double timeUntilRetry);
   ~XScreenUnavailable() throw() override = default;
 
   //! @name manipulators
