@@ -26,7 +26,7 @@ QString formatSSLFingerprint(const QByteArray &fingerprint, bool enableSeparator
 
 QString formatSSLFingerprintColumns(const QByteArray &fingerprint);
 
-Fingerprint sslCertFingerprint(X509 *cert, Fingerprint::Type type);
+Fingerprint sslCertFingerprint(const X509 *cert, Fingerprint::Type type);
 
 Fingerprint pemFileCertFingerprint(const std::string &path, Fingerprint::Type type);
 

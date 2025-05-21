@@ -128,7 +128,7 @@ private:
   bool grabMouseAndKeyboard();
   void onKeyPress(XKeyEvent &);
   void onKeyRelease(XKeyEvent &, bool isRepeat);
-  bool onHotKey(XKeyEvent &, bool isRepeat);
+  bool onHotKey(const XKeyEvent &, bool isRepeat);
   void onMousePress(const XButtonEvent &);
   void onMouseRelease(const XButtonEvent &);
   void onMouseMove(const XMotionEvent &);

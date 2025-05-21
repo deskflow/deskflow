@@ -105,7 +105,7 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
-  void init(Display *display, bool useXKB);
+  void init(const Display *display, bool useXKB);
   void updateKeysymMap(deskflow::KeyMap &);
   void updateKeysymMapXKB(deskflow::KeyMap &);
   bool hasModifiersXKB() const;

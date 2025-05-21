@@ -468,13 +468,13 @@ private:
   void readSectionAliases(ConfigReadContext &);
 
   InputFilter::Condition *
-  parseCondition(ConfigReadContext &, const std::string &condition, const std::vector<std::string> &args);
+  parseCondition(const ConfigReadContext &, const std::string &condition, const std::vector<std::string> &args);
   void parseAction(
       ConfigReadContext &, const std::string &action, const std::vector<std::string> &args, InputFilter::Rule &,
       bool activate
   );
 
-  void parseScreens(ConfigReadContext &, const std::string &, std::set<std::string> &screens) const;
+  void parseScreens(const ConfigReadContext &, const std::string &, std::set<std::string> &screens) const;
   static const char *getOptionName(OptionID);
   static std::string getOptionValue(OptionID, OptionValue);
 

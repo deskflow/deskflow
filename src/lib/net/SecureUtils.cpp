@@ -46,7 +46,7 @@ QString formatSSLFingerprint(const QByteArray &fingerprint, bool enableSeparator
     return fingerprint.toHex().toUpper();
 }
 
-Fingerprint sslCertFingerprint(X509 *cert, Fingerprint::Type type)
+Fingerprint sslCertFingerprint(const X509 *cert, Fingerprint::Type type)
 {
   if (!cert) {
     throw std::runtime_error("certificate is null");

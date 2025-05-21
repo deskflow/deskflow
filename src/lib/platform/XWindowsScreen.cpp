@@ -1480,7 +1480,7 @@ void XWindowsScreen::onKeyRelease(XKeyEvent &xkey, bool isRepeat)
   }
 }
 
-bool XWindowsScreen::onHotKey(XKeyEvent &xkey, bool isRepeat)
+bool XWindowsScreen::onHotKey(const XKeyEvent &xkey, bool isRepeat)
 {
   // find the hot key id
   HotKeyToIDMap::const_iterator i = m_hotKeyToIDMap.find(HotKeyItem(xkey.keycode, xkey.state));

@@ -29,7 +29,7 @@ public:
     std::string m_what;
   };
 
-  explicit IDataSocket(IEventQueue *events)
+  explicit IDataSocket(const IEventQueue *events)
   {
     // do nothing
   }

@@ -23,7 +23,7 @@ namespace deskflow {
 class EiEventQueueBuffer : public IEventQueueBuffer
 {
 public:
-  EiEventQueueBuffer(EiScreen *screen, ei *ei, IEventQueue *events);
+  EiEventQueueBuffer(const EiScreen *screen, ei *ei, IEventQueue *events);
   ~EiEventQueueBuffer() override;
 
   // IEventQueueBuffer overrides

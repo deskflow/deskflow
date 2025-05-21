@@ -599,7 +599,7 @@ void ArchMultithreadPosix::insert(ArchThreadImpl *thread)
   m_threadList.push_back(thread);
 }
 
-void ArchMultithreadPosix::erase(ArchThreadImpl *thread)
+void ArchMultithreadPosix::erase(const ArchThreadImpl *thread)
 {
   for (auto index = m_threadList.begin(); index != m_threadList.end(); ++index) {
     if (*index == thread) {

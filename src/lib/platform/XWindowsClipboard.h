@@ -138,7 +138,7 @@ protected:
     bool readClipboard(Display *display, Atom selection, Atom target, Atom *actualTarget, std::string *data);
 
   private:
-    bool processEvent(Display *display, XEvent *event);
+    bool processEvent(Display *display, const XEvent *event);
 
   private:
     Window m_requestor;

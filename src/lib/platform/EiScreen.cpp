@@ -91,7 +91,7 @@ EiScreen::~EiScreen()
   delete portal_input_capture_;
 }
 
-void EiScreen::handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context) const
+void EiScreen::handle_ei_log_event(ei_log_priority priority, const char *message) const
 {
   switch (priority) {
   case EI_LOG_PRIORITY_DEBUG:
@@ -693,7 +693,7 @@ void EiScreen::on_motion_event(ei_event *event)
   }
 }
 
-void EiScreen::on_abs_motion_event(ei_event *event) const
+void EiScreen::on_abs_motion_event(const ei_event *event) const
 {
   assert(is_primary_);
 }

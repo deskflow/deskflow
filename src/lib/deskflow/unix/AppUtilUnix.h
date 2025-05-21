@@ -16,7 +16,7 @@ class IEventQueue;
 class AppUtilUnix : public AppUtil
 {
 public:
-  explicit AppUtilUnix(IEventQueue *events);
+  explicit AppUtilUnix(const IEventQueue *events);
   ~AppUtilUnix() override = default;
 
   int run(int argc, char **argv) override;

@@ -96,16 +96,17 @@ private:
   void on_pointer_scroll_event(ei_event *event);
   void on_pointer_scroll_discrete_event(ei_event *event);
   void on_motion_event(ei_event *event);
-  void on_abs_motion_event(ei_event *event) const;
+  void on_abs_motion_event(const ei_event *event) const;
   bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
-  void handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context) const;
+  void handle_ei_log_event(ei_log_priority priority, const char *message) const;
+
   void handle_connected_to_eis_event(const Event &event, void *);
   void handle_portal_session_closed(const Event &event, void *);
 
   static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
   {
     auto screen = reinterpret_cast<EiScreen *>(ei_get_user_data(ei));
-    screen->handle_ei_log_event(ei, priority, message, context);
+    screen->handle_ei_log_event(priority, message);
   }
 
 private:

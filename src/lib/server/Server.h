@@ -204,7 +204,7 @@ private:
   bool isLockedToScreen() const;
 
   // returns the jump zone of the client
-  int32_t getJumpZoneSize(BaseClientProxy *) const;
+  int32_t getJumpZoneSize(const BaseClientProxy *) const;
 
   // change the active screen
   void switchScreen(BaseClientProxy *, int32_t x, int32_t y, bool forScreenSaver);
@@ -214,19 +214,19 @@ private:
 
   // convert pixel position to fraction, using x or y depending on the
   // direction.
-  float mapToFraction(BaseClientProxy *, EDirection, int32_t x, int32_t y) const;
+  float mapToFraction(const BaseClientProxy *, EDirection, int32_t x, int32_t y) const;
 
   // convert fraction to pixel position, writing only x or y depending
   // on the direction.
-  void mapToPixel(BaseClientProxy *, EDirection, float f, int32_t &x, int32_t &y) const;
+  void mapToPixel(const BaseClientProxy *, EDirection, float f, int32_t &x, int32_t &y) const;
 
   // returns true if the client has a neighbor anywhere along the edge
   // indicated by the direction.
-  bool hasAnyNeighbor(BaseClientProxy *, EDirection) const;
+  bool hasAnyNeighbor(const BaseClientProxy *, EDirection) const;
 
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
-  BaseClientProxy *getNeighbor(BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
+  BaseClientProxy *getNeighbor(const BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
 
   // lookup neighboring screen.  given a position relative to the
   // source screen, find the screen we should move onto and where.
@@ -237,7 +237,7 @@ private:
 
   // adjusts x and y or neither to avoid ending up in a jump zone
   // after entering the client in the given direction.
-  void avoidJumpZone(BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
+  void avoidJumpZone(const BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
 
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
@@ -277,7 +277,7 @@ private:
 
   // returns the corner (EScreenSwitchCornerMasks) where x,y is on the
   // given client.  corners have the given size.
-  uint32_t getCorner(BaseClientProxy *, int32_t x, int32_t y, int32_t size) const;
+  uint32_t getCorner(const BaseClientProxy *, int32_t x, int32_t y, int32_t size) const;
 
   // stop relative mouse moves
   void stopRelativeMoves();
@@ -313,7 +313,7 @@ private:
   void handleFakeInputEndEvent(const Event &, void *);
 
   // event processing
-  void onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
+  void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);
   void onScreensaver(bool activated);
   void onKeyDown(KeyID, KeyModifierMask, KeyButton, const std::string &, const char *screens);
   void onKeyUp(KeyID, KeyModifierMask, KeyButton, const char *screens);
@@ -345,7 +345,7 @@ private:
   void removeOldClient(BaseClientProxy *);
 
   // force the cursor off of \p client
-  void forceLeaveClient(BaseClientProxy *client);
+  void forceLeaveClient(const BaseClientProxy *client);
 
 private:
   class ClipboardInfo
