@@ -925,7 +925,7 @@ void Config::readSectionAliases(ConfigReadContext &s)
 }
 
 InputFilter::Condition *
-Config::parseCondition(ConfigReadContext &s, const std::string &name, const std::vector<std::string> &args)
+Config::parseCondition(const ConfigReadContext &s, const std::string &name, const std::vector<std::string> &args)
 {
   if (name == "keystroke") {
     if (args.size() != 1) {
@@ -1147,7 +1147,7 @@ void Config::parseAction(
   rule.adoptAction(action, activate);
 }
 
-void Config::parseScreens(ConfigReadContext &c, const std::string &s, std::set<std::string> &screens) const
+void Config::parseScreens(const ConfigReadContext &c, const std::string &s, std::set<std::string> &screens) const
 {
   screens.clear();
 

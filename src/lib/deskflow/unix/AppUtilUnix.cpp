@@ -23,7 +23,7 @@
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
 
-AppUtilUnix::AppUtilUnix(IEventQueue *events)
+AppUtilUnix::AppUtilUnix(const IEventQueue *events)
 {
   // do nothing
 }

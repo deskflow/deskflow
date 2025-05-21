@@ -1254,7 +1254,7 @@ bool XWindowsClipboard::CICCCMGetClipboard::readClipboard(
   return !m_failed;
 }
 
-bool XWindowsClipboard::CICCCMGetClipboard::processEvent(Display *display, XEvent *xevent)
+bool XWindowsClipboard::CICCCMGetClipboard::processEvent(Display *display, const XEvent *xevent)
 {
   // process event
   switch (xevent->type) {

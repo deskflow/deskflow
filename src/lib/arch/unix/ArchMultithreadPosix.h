@@ -84,7 +84,7 @@ private:
   ArchThreadImpl *find(pthread_t thread);
   ArchThreadImpl *findNoRef(pthread_t thread);
   void insert(ArchThreadImpl *thread);
-  void erase(ArchThreadImpl *thread);
+  void erase(const ArchThreadImpl *thread);
 
   void refThread(ArchThreadImpl *rep);
   void testCancelThreadImpl(ArchThreadImpl *rep);

@@ -25,7 +25,9 @@ class EventQueueTimer
 
 namespace deskflow {
 
-EiEventQueueBuffer::EiEventQueueBuffer(EiScreen *screen, ei *ei, IEventQueue *events) : ei_(ei_ref(ei)), events_(events)
+EiEventQueueBuffer::EiEventQueueBuffer(const EiScreen *screen, ei *ei, IEventQueue *events)
+    : ei_(ei_ref(ei)),
+      events_(events)
 {
   // We need a pipe to signal ourselves when addEvent() is called
   int pipefd[2];

@@ -37,11 +37,11 @@ private:
   gboolean timeout_handler() const;
   gboolean init_input_capture_session();
   void cb_init_input_capture_session(GObject *object, GAsyncResult *res);
-  void cb_set_pointer_barriers(GObject *object, GAsyncResult *res);
+  void cb_set_pointer_barriers(const GObject *object, GAsyncResult *res);
   void cb_session_closed(XdpSession *session);
-  void cb_disabled(XdpInputCaptureSession *session, GVariant *option);
-  void cb_activated(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
-  void cb_deactivated(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
+  void cb_disabled(const XdpInputCaptureSession *session, const GVariant *option);
+  void cb_activated(const XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
+  void cb_deactivated(const XdpInputCaptureSession *session, std::uint32_t activation_id, const GVariant *options);
   void cb_zones_changed(XdpInputCaptureSession *session, GVariant *options);
 
   /// g_signal_connect callback wrapper

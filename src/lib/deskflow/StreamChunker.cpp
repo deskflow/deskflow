@@ -23,7 +23,7 @@ using namespace std;
 static const size_t g_chunkSize = 512 * 1024; // 512kb
 
 void StreamChunker::sendClipboard(
-    std::string &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events, void *eventTarget
+    const std::string &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events, void *eventTarget
 )
 {
   // send first message (data size)

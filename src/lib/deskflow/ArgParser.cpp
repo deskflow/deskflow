@@ -232,7 +232,7 @@ bool ArgParser::isArg(
   return false;
 }
 
-void ArgParser::splitCommandString(std::string &command, std::vector<std::string> &argv)
+void ArgParser::splitCommandString(const std::string &command, std::vector<std::string> &argv)
 {
   if (command.empty()) {
     return;
@@ -276,7 +276,7 @@ void ArgParser::splitCommandString(std::string &command, std::vector<std::string
   argv.push_back(subString);
 }
 
-bool ArgParser::searchDoubleQuotes(std::string &command, size_t &left, size_t &right, size_t startPos)
+bool ArgParser::searchDoubleQuotes(const std::string &command, size_t &left, size_t &right, size_t startPos)
 {
   bool result = false;
   left = std::string::npos;

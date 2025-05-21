@@ -65,7 +65,7 @@ XWindowsKeyState::~XWindowsKeyState()
 #endif
 }
 
-void XWindowsKeyState::init(Display *display, bool useXKB)
+void XWindowsKeyState::init(const Display *display, bool useXKB)
 {
   XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION

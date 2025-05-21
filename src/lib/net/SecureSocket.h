@@ -65,7 +65,7 @@ public:
   EJobResult doRead() override;
   EJobResult doWrite() override;
   void initSsl(bool server);
-  bool loadCertificates(std::string &CertFile);
+  bool loadCertificates(const std::string &CertFile);
 
 private:
   // SSL

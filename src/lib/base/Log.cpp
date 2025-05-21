@@ -265,7 +265,7 @@ int Log::getFilter() const
   return m_maxPriority;
 }
 
-void Log::output(ELevel priority, char *msg)
+void Log::output(ELevel priority, const char *msg)
 {
   assert(priority >= -1 && priority < g_numPriority);
   assert(msg != nullptr);

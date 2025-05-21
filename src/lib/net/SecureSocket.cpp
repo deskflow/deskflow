@@ -305,7 +305,7 @@ void SecureSocket::initSsl(bool server)
   initContext(server);
 }
 
-bool SecureSocket::loadCertificates(std::string &filename)
+bool SecureSocket::loadCertificates(const std::string &filename)
 {
   std::lock_guard ssl_lock{ssl_mutex_};
 

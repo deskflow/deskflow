@@ -386,7 +386,7 @@ bool Server::isLockedToScreen() const
   return false;
 }
 
-int32_t Server::getJumpZoneSize(BaseClientProxy *client) const
+int32_t Server::getJumpZoneSize(const BaseClientProxy *client) const
 {
   if (client == m_primaryClient) {
     return m_primaryClient->getJumpZoneSize();
@@ -525,7 +525,7 @@ void Server::jumpToScreen(BaseClientProxy *newScreen)
   switchScreen(newScreen, x, y, false);
 }
 
-float Server::mapToFraction(BaseClientProxy *client, EDirection dir, int32_t x, int32_t y) const
+float Server::mapToFraction(const BaseClientProxy *client, EDirection dir, int32_t x, int32_t y) const
 {
   int32_t sx;
   int32_t sy;
@@ -548,7 +548,7 @@ float Server::mapToFraction(BaseClientProxy *client, EDirection dir, int32_t x, 
   return 0.0f;
 }
 
-void Server::mapToPixel(BaseClientProxy *client, EDirection dir, float f, int32_t &x, int32_t &y) const
+void Server::mapToPixel(const BaseClientProxy *client, EDirection dir, float f, int32_t &x, int32_t &y) const
 {
   int32_t sx;
   int32_t sy;
@@ -572,14 +572,14 @@ void Server::mapToPixel(BaseClientProxy *client, EDirection dir, float f, int32_
   }
 }
 
-bool Server::hasAnyNeighbor(BaseClientProxy *client, EDirection dir) const
+bool Server::hasAnyNeighbor(const BaseClientProxy *client, EDirection dir) const
 {
   assert(client != nullptr);
 
   return m_config->hasNeighbor(getName(client), dir);
 }
 
-BaseClientProxy *Server::getNeighbor(BaseClientProxy *src, EDirection dir, int32_t &x, int32_t &y) const
+BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, EDirection dir, int32_t &x, int32_t &y) const
 {
   // note -- must be locked on entry
 
@@ -732,7 +732,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
   return dst;
 }
 
-void Server::avoidJumpZone(BaseClientProxy *dst, EDirection dir, int32_t &x, int32_t &y) const
+void Server::avoidJumpZone(const BaseClientProxy *dst, EDirection dir, int32_t &x, int32_t &y) const
 {
   // we only need to avoid jump zones on the primary screen
   if (dst != m_primaryClient) {
@@ -981,7 +981,7 @@ bool Server::isSwitchWaitStarted() const
   return (m_switchWaitTimer != nullptr);
 }
 
-uint32_t Server::getCorner(BaseClientProxy *client, int32_t x, int32_t y, int32_t size) const
+uint32_t Server::getCorner(const BaseClientProxy *client, int32_t x, int32_t y, int32_t size) const
 {
   assert(client != nullptr);
 
@@ -1447,7 +1447,7 @@ void Server::handleFakeInputEndEvent(const Event &, void *)
   m_primaryClient->fakeInputEnd();
 }
 
-void Server::onClipboardChanged(BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)
+void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)
 {
   ClipboardInfo &clipboard = m_clipboards[id];
 
@@ -2040,7 +2040,7 @@ void Server::removeOldClient(BaseClientProxy *client)
   }
 }
 
-void Server::forceLeaveClient(BaseClientProxy *client)
+void Server::forceLeaveClient(const BaseClientProxy *client)
 {
   if (BaseClientProxy *active = (m_activeSaver != nullptr) ? m_activeSaver : m_active; active == client) {
     // record new position (center of primary screen)
