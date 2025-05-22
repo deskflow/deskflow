@@ -210,33 +210,6 @@ void ClientApp::updateStatus(const std::string &msg) const
   // do nothing
 }
 
-void ClientApp::resetRestartTimeout() const
-{
-  // retry time can nolonger be changed
-  // s_retryTime = 0.0;
-}
-
-double ClientApp::nextRestartTimeout() const
-{
-  // retry at a constant rate (Issue 52)
-  return RETRY_TIME;
-
-  /*
-  // choose next restart timeout.  we start with rapid retries
-  // then slow down.
-  if (s_retryTime < 1.0) {
-  s_retryTime = 1.0;
-  }
-  else if (s_retryTime < 3.0) {
-  s_retryTime = 3.0;
-  }
-  else {
-  s_retryTime = 5.0;
-  }
-  return s_retryTime;
-  */
-}
-
 void ClientApp::handleScreenError(const Event &, void *)
 {
   LOG((CLOG_CRIT "error on screen"));
@@ -285,7 +258,6 @@ void ClientApp::scheduleClientRestart(double retryTime)
 void ClientApp::handleClientConnected(const Event &, void *)
 {
   LOG((CLOG_NOTE "connected to server"));
-  resetRestartTimeout();
   updateStatus();
 }
 
@@ -297,7 +269,7 @@ void ClientApp::handleClientFailed(const Event &e, void *)
     updateStatus(std::string("Failed to connect to server: ") + info->m_what + " Trying next address...");
     LOG((CLOG_WARN "failed to connect to server=%s, trying next address", info->m_what.c_str()));
     if (!m_suspended) {
-      scheduleClientRestart(nextRestartTimeout());
+      scheduleClientRestart(RETRY_TIME);
     }
   } else {
     m_lastServerAddressIndex = 0;
@@ -316,7 +288,7 @@ void ClientApp::handleClientRefused(const Event &e, void *)
   } else {
     LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
     if (!m_suspended) {
-      scheduleClientRestart(nextRestartTimeout());
+      scheduleClientRestart(RETRY_TIME);
     }
   }
 }
@@ -327,7 +299,7 @@ void ClientApp::handleClientDisconnected(const Event &, void *)
   if (!args().m_restartable) {
     m_events->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
-    scheduleClientRestart(nextRestartTimeout());
+    scheduleClientRestart(RETRY_TIME);
   }
   updateStatus();
 }
