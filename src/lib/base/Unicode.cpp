@@ -8,10 +8,10 @@
 #include "base/Unicode.h"
 #include "arch/Arch.h"
 
+using enum IArchString::EWideCharEncoding;
 //
 // local utility functions
 //
-
 inline static uint16_t decode16(const uint8_t *n, bool byteSwapped)
 {
   union x16
@@ -281,22 +281,22 @@ wchar_t *Unicode::UTF8ToWideChar(const std::string &src, uint32_t &size, bool *e
   // convert to platform's wide character encoding
   std::string tmp;
   switch (ARCH->getWideCharEncoding()) {
-  case IArchString::kUCS2:
+  case kUCS2:
     tmp = UTF8ToUCS2(src, errors);
     size = (uint32_t)tmp.size() >> 1;
     break;
 
-  case IArchString::kUCS4:
+  case kUCS4:
     tmp = UTF8ToUCS4(src, errors);
     size = (uint32_t)tmp.size() >> 2;
     break;
 
-  case IArchString::kUTF16:
+  case kUTF16:
     tmp = UTF8ToUTF16(src, errors);
     size = (uint32_t)tmp.size() >> 1;
     break;
 
-  case IArchString::kUTF32:
+  case kUTF32:
     tmp = UTF8ToUTF32(src, errors);
     size = (uint32_t)tmp.size() >> 2;
     break;
@@ -314,23 +314,23 @@ wchar_t *Unicode::UTF8ToWideChar(const std::string &src, uint32_t &size, bool *e
 std::string
 Unicode::wideCharToUTF8(const wchar_t *src, uint32_t size, bool *errors, IArchString::EWideCharEncoding encoding)
 {
-  if (encoding == IArchString::kPlatformDetermined) {
+  if (encoding == kPlatformDetermined) {
     encoding = ARCH->getWideCharEncoding();
   }
   // convert from platform's wide character encoding.
   // note -- this must include a wide nul character (independent of
   // the String's nul character).
   switch (encoding) {
-  case IArchString::kUCS2:
+  case kUCS2:
     return doUCS2ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
 
-  case IArchString::kUCS4:
+  case kUCS4:
     return doUCS4ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
 
-  case IArchString::kUTF16:
+  case kUTF16:
     return doUTF16ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
 
-  case IArchString::kUTF32:
+  case kUTF32:
     return doUTF32ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
 
   default:

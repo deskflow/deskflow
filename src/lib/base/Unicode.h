@@ -104,7 +104,7 @@ public:
   */
   static std::string textToUTF8(
       const std::string &, bool *errors = nullptr,
-      IArchString::EWideCharEncoding encoding = IArchString::kPlatformDetermined
+      IArchString::EWideCharEncoding encoding = IArchString::EWideCharEncoding::kPlatformDetermined
   );
 
   //@}
@@ -120,7 +120,7 @@ private:
   // encoding) to UTF8.
   static std::string wideCharToUTF8(
       const wchar_t *, uint32_t size, bool *errors,
-      IArchString::EWideCharEncoding encoding = IArchString::kPlatformDetermined
+      IArchString::EWideCharEncoding encoding = IArchString::EWideCharEncoding::kPlatformDetermined
   );
 
   // internal conversion to UTF8

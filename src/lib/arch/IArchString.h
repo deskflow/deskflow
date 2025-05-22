@@ -33,7 +33,7 @@ public:
   /*!
   The known wide character encodings
   */
-  enum EWideCharEncoding
+  enum class EWideCharEncoding : uint8_t
   {
     kUCS2,  //!< The UCS-2 encoding
     kUCS4,  //!< The UCS-4 encoding
