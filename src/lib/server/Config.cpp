@@ -1147,7 +1147,7 @@ void Config::parseAction(
   rule.adoptAction(action, activate);
 }
 
-void Config::parseScreens(const ConfigReadContext &c, const std::string &s, std::set<std::string> &screens) const
+void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s, std::set<std::string> &screens) const
 {
   screens.clear();
 
@@ -1370,7 +1370,7 @@ Config::CellEdge::CellEdge(const std::string &name, EDirection side, const Inter
   init(name, side, interval);
 }
 
-void Config::CellEdge::init(const std::string &name, EDirection side, const Interval &interval)
+void Config::CellEdge::init(const std::string_view &name, EDirection side, const Interval &interval)
 {
   assert(side != kNoDirection);
 
@@ -1384,7 +1384,7 @@ Config::Interval Config::CellEdge::getInterval() const
   return m_interval;
 }
 
-void Config::CellEdge::setName(const std::string &newName)
+void Config::CellEdge::setName(const std::string_view &newName)
 {
   m_name = newName;
 }

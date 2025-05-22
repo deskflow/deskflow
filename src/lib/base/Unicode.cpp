@@ -226,7 +226,7 @@ std::string Unicode::UCS2ToUTF8(const std::string &src, bool *errors)
   return doUCS2ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::UCS4ToUTF8(const std::string &src, bool *errors)
+std::string Unicode::UCS4ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -236,7 +236,7 @@ std::string Unicode::UCS4ToUTF8(const std::string &src, bool *errors)
   return doUCS4ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::UTF16ToUTF8(const std::string &src, bool *errors)
+std::string Unicode::UTF16ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -246,7 +246,7 @@ std::string Unicode::UTF16ToUTF8(const std::string &src, bool *errors)
   return doUTF16ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::UTF32ToUTF8(const std::string &src, bool *errors)
+std::string Unicode::UTF32ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
   resetError(errors);

@@ -162,7 +162,7 @@ bool CaselessCmp::operator()(const std::string &a, const std::string &b) const
   return less(a, b);
 }
 
-bool CaselessCmp::less(const std::string &a, const std::string &b)
+bool CaselessCmp::less(const std::string_view &a, const std::string_view &b)
 {
   return std::lexicographical_compare(a.begin(), a.end(), b.begin(), b.end(), &deskflow::string::CaselessCmp::cmpLess);
 }

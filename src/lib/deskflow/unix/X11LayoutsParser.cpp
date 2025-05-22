@@ -95,7 +95,7 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const s
 void X11LayoutsParser::appendVectorUniq(const std::vector<std::string> &source, std::vector<std::string> &dst)
 {
   for (const auto &elem : source) {
-    if (std::find_if(dst.begin(), dst.end(), [elem](const std::string &s) { return s == elem; }) == dst.end()) {
+    if (std::find_if(dst.begin(), dst.end(), [elem](const std::string_view &s) { return s == elem; }) == dst.end()) {
       dst.push_back(elem);
     }
   }

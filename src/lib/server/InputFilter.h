@@ -375,7 +375,7 @@ public:
   virtual void setPrimaryClient(PrimaryClient *client);
 
   // convert rules to a string
-  std::string format(const std::string &linePrefix) const;
+  std::string format(const std::string_view &linePrefix) const;
 
   // get number of rules
   uint32_t getNumRules() const;

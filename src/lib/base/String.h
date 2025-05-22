@@ -67,7 +67,7 @@ public:
   bool operator()(const std::string &a, const std::string &b) const;
 
   //! Returns true iff \c a is lexicographically less than \c b
-  static bool less(const std::string &a, const std::string &b);
+  static bool less(const std::string_view &a, const std::string_view &b);
 
   //! Returns true iff \c a is lexicographically equal to \c b
   static bool equal(const std::string &a, const std::string &b);

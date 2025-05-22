@@ -232,7 +232,7 @@ bool ArgParser::isArg(
   return false;
 }
 
-void ArgParser::splitCommandString(const std::string &command, std::vector<std::string> &argv)
+void ArgParser::splitCommandString(const std::string_view &command, std::vector<std::string> &argv)
 {
   if (command.empty()) {
     return;
@@ -256,10 +256,10 @@ void ArgParser::splitCommandString(const std::string &command, std::vector<std::
     }
 
     if (!ignoreThisSpace) {
-      std::string subString = command.substr(startPos, space - startPos);
+      auto subString = command.substr(startPos, space - startPos);
 
       removeDoubleQuotes(subString);
-      argv.push_back(subString);
+      argv.push_back(std::string{subString.begin(), subString.end()});
     }
 
     // find next space
@@ -271,12 +271,12 @@ void ArgParser::splitCommandString(const std::string &command, std::vector<std::
     }
   }
 
-  std::string subString = command.substr(startPos, command.size());
+  auto subString = command.substr(startPos, command.size());
   removeDoubleQuotes(subString);
-  argv.push_back(subString);
+  argv.push_back(std::string{subString.begin(), subString.end()});
 }
 
-bool ArgParser::searchDoubleQuotes(const std::string &command, size_t &left, size_t &right, size_t startPos)
+bool ArgParser::searchDoubleQuotes(const std::string_view &command, size_t &left, size_t &right, size_t startPos)
 {
   bool result = false;
   left = std::string::npos;
@@ -298,7 +298,7 @@ bool ArgParser::searchDoubleQuotes(const std::string &command, size_t &left, siz
   return result;
 }
 
-void ArgParser::removeDoubleQuotes(std::string &arg)
+void ArgParser::removeDoubleQuotes(std::string_view &arg)
 {
   // if string is surrounded by double quotes, remove them
   if (arg[0] == '\"' && arg[arg.size() - 1] == '\"') {
