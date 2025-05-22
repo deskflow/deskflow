@@ -811,7 +811,11 @@ void MainWindow::checkFingerprint(const QString &line)
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
-    db.write(trustedFingerprintDatabase());
+    if (!db.write(trustedFingerprintDatabase())) {
+      qCritical().noquote() << "unable to write fingerprint to db:" << trustedFingerprintDatabase();
+      m_coreProcess.stop();
+      return;
+    }
     if (isClient) {
       m_checkedServers.removeAll(sha256Text);
       m_coreProcess.start();
