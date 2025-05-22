@@ -280,7 +280,7 @@ private:
   ScreenList m_Screens;
   int m_Columns;
   int m_Rows;
-  size_t m_ClipboardSharingSize;
+  size_t m_ClipboardSharingSize = defaultClipboardSharingSize();
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);

@@ -68,16 +68,9 @@ using namespace deskflow::server;
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events)
-    : App(events, new deskflow::ServerArgs()),
-      m_server(nullptr),
-      m_serverState(kUninitialized),
-      m_serverScreen(nullptr),
-      m_primaryClient(nullptr),
-      m_listener(nullptr),
-      m_timer(nullptr),
-      m_deskflowAddress(nullptr)
+ServerApp::ServerApp(IEventQueue *events) : App(events, new deskflow::ServerArgs())
 {
+  // do nothing
 }
 
 void ServerApp::parseArgs(int argc, const char *const *argv)

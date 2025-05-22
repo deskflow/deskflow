@@ -111,6 +111,6 @@ public:
   SystemLogger &operator=(SystemLogger &&) = delete;
 
 private:
-  ILogOutputter *m_syslog;
-  ILogOutputter *m_stop;
+  ILogOutputter *m_syslog = nullptr;
+  ILogOutputter *m_stop = nullptr;
 };

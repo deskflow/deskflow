@@ -99,8 +99,8 @@ public:
 private:
   ISocketFactory *getSocketFactory() const;
 
-  Client *m_client;
-  deskflow::Screen *m_clientScreen;
-  NetworkAddress *m_serverAddress;
+  Client *m_client = nullptr;
+  deskflow::Screen *m_clientScreen = nullptr;
+  NetworkAddress *m_serverAddress = nullptr;
   size_t m_lastServerAddressIndex = 0;
 };

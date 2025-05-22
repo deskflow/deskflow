@@ -10,11 +10,6 @@
 
 #include <QSettings>
 
-Hotkey::Hotkey() : m_keySequence{}, m_actions{}
-{
-  // do nothing
-}
-
 QString Hotkey::text() const
 {
   return m_keySequence.isMouseButton() ? kMousebutton.arg(m_keySequence.toString())

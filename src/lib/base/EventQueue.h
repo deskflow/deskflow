@@ -102,11 +102,11 @@ private:
   using TypeHandlerTable = std::map<EventTypes, IEventJob *>;
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 
-  int m_systemTarget;
+  int m_systemTarget = 0;
   ArchMutex m_mutex;
 
   // buffer of events
-  IEventQueueBuffer *m_buffer;
+  IEventQueueBuffer *m_buffer = nullptr;
 
   // saved events
   EventTable m_events;
@@ -122,7 +122,7 @@ private:
   HandlerTable m_handlers;
 
 private:
-  Mutex *m_readyMutex;
-  CondVar<bool> *m_readyCondVar;
+  Mutex *m_readyMutex = nullptr;
+  CondVar<bool> *m_readyCondVar = nullptr;
   std::queue<Event> m_pending;
 };

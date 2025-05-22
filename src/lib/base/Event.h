@@ -34,7 +34,7 @@ public:
     kDontFreeData = 0x02        //!< Don't free data in deleteData
   };
 
-  Event();
+  Event() = default;
 
   //! Create \c Event with data (POD)
   /*!
@@ -110,9 +110,9 @@ public:
   //@}
 
 private:
-  EventTypes m_type;
-  void *m_target;
-  void *m_data;
-  Flags m_flags;
-  EventData *m_dataObject;
+  EventTypes m_type = EventTypes::Unknown;
+  void *m_target = nullptr;
+  void *m_data = nullptr;
+  Flags m_flags = kNone;
+  EventData *m_dataObject = nullptr;
 };

@@ -46,33 +46,10 @@ Server::Server(
 )
     : m_primaryClient(primaryClient),
       m_active(primaryClient),
-      m_seqNum(0),
-      m_xDelta(0),
-      m_yDelta(0),
-      m_xDelta2(0),
-      m_yDelta2(0),
       m_config(&config),
       m_inputFilter(config.getInputFilter()),
-      m_activeSaver(nullptr),
-      m_switchDir(kNoDirection),
-      m_switchScreen(nullptr),
-      m_switchWaitDelay(0.0),
-      m_switchWaitTimer(nullptr),
-      m_switchTwoTapDelay(0.0),
-      m_switchTwoTapEngaged(false),
-      m_switchTwoTapArmed(false),
-      m_switchTwoTapZone(3),
-      m_switchNeedsShift(false),
-      m_switchNeedsControl(false),
-      m_switchNeedsAlt(false),
-      m_relativeMoves(false),
-      m_keyboardBroadcasting(false),
-      m_lockedToScreen(false),
       m_screen(screen),
       m_events(events),
-      m_disableLockToScreen(false),
-      m_enableClipboard(true),
-      m_maximumClipboardSize(INT_MAX),
       m_args(args)
 {
   // must have a primary client and it must have a canonical name
@@ -2076,15 +2053,6 @@ void Server::forceLeaveClient(const BaseClientProxy *client)
 
   // tell primary client about the active sides
   m_primaryClient->reconfigure(getActivePrimarySides());
-}
-
-//
-// Server::ClipboardInfo
-//
-
-Server::ClipboardInfo::ClipboardInfo() : m_clipboard(), m_clipboardData(), m_clipboardOwner(), m_clipboardSeqNum(0)
-{
-  // do nothing
 }
 
 //

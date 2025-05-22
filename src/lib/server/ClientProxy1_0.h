@@ -81,12 +81,12 @@ protected:
   struct ClientClipboard
   {
   public:
-    ClientClipboard();
+    ClientClipboard() = default;
 
   public:
     Clipboard m_clipboard;
-    uint32_t m_sequenceNumber;
-    bool m_dirty;
+    uint32_t m_sequenceNumber = 0;
+    bool m_dirty = true;
   };
 
   ClientClipboard m_clipboard[kClipboardEnd];
@@ -96,7 +96,7 @@ private:
 
   ClientInfo m_info;
   double m_heartbeatAlarm;
-  EventQueueTimer *m_heartbeatTimer;
+  EventQueueTimer *m_heartbeatTimer = nullptr;
   MessageParser m_parser;
   IEventQueue *m_events;
 };

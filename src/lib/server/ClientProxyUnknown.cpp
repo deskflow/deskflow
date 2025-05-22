@@ -36,8 +36,6 @@
 
 ClientProxyUnknown::ClientProxyUnknown(deskflow::IStream *stream, double timeout, Server *server, IEventQueue *events)
     : m_stream(stream),
-      m_proxy(nullptr),
-      m_ready(false),
       m_server(server),
       m_events(events)
 {

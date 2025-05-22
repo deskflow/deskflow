@@ -33,16 +33,6 @@
 ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
-      m_seqNum(0),
-      m_compressMouse(false),
-      m_compressMouseRelative(false),
-      m_xMouse(0),
-      m_yMouse(0),
-      m_dxMouse(0),
-      m_dyMouse(0),
-      m_ignoreMouse(false),
-      m_keepAliveAlarm(0.0),
-      m_keepAliveAlarmTimer(nullptr),
       m_parser(&ServerProxy::parseHandshakeMessage),
       m_events(events)
 {

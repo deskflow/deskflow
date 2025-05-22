@@ -13,12 +13,7 @@
 KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
     : QPushButton(parent),
       m_KeySequence(seq),
-      m_BackupSequence(seq),
-      m_Status(Stopped),
-      m_MousePrefix("mousebutton("),
-      m_MousePostfix(")"),
-      m_KeyPrefix("keystroke("),
-      m_KeyPostfix(")")
+      m_BackupSequence(seq)
 {
   setFocusPolicy(Qt::NoFocus);
   updateOutput();

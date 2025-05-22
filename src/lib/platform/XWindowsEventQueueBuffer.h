@@ -57,7 +57,7 @@ private:
   Atom m_userEvent;
   XEvent m_event;
   EventList m_postedEvents;
-  bool m_waiting;
+  bool m_waiting = false;
   int m_pipefd[2];
   IEventQueue *m_events;
 };

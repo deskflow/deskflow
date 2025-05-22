@@ -42,8 +42,8 @@ private:
 
 private:
   Mutex m_mutex;
-  uint32_t m_size;
+  uint32_t m_size = 0;
   StreamBuffer m_buffer;
-  bool m_inputShutdown;
-  IEventQueue *m_events;
+  bool m_inputShutdown = false;
+  IEventQueue *m_events = nullptr;
 };

@@ -128,11 +128,11 @@ private:
   ISocketFactory *getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
-  Server *m_server;
-  EServerState m_serverState;
-  deskflow::Screen *m_serverScreen;
-  PrimaryClient *m_primaryClient;
-  ClientListener *m_listener;
-  EventQueueTimer *m_timer;
-  NetworkAddress *m_deskflowAddress;
+  Server *m_server = nullptr;
+  EServerState m_serverState = EServerState::kUninitialized;
+  deskflow::Screen *m_serverScreen = nullptr;
+  PrimaryClient *m_primaryClient = nullptr;
+  ClientListener *m_listener = nullptr;
+  EventQueueTimer *m_timer = nullptr;
+  NetworkAddress *m_deskflowAddress = nullptr;
 };

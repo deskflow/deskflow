@@ -7,9 +7,8 @@
 #include "deskflow/Chunk.h"
 #include "base/String.h"
 
-Chunk::Chunk(size_t size) : m_dataSize(0)
+Chunk::Chunk(size_t size) : m_chunk{new char[size]}
 {
-  m_chunk = new char[size];
   memset(m_chunk, 0, size);
 }
 

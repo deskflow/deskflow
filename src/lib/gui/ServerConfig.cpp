@@ -40,8 +40,7 @@ ServerConfig::ServerConfig(MainWindow &mainWindow, int columns, int rows)
     : m_pMainWindow(&mainWindow),
       m_Screens(columns),
       m_Columns(columns),
-      m_Rows(rows),
-      m_ClipboardSharingSize(defaultClipboardSharingSize())
+      m_Rows(rows)
 {
   recall();
 }

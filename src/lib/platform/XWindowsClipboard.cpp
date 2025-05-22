@@ -31,12 +31,7 @@
 XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardID id)
     : m_display(display),
       m_window(window),
-      m_id(id),
-      m_open(false),
-      m_time(0),
-      m_owner(false),
-      m_timeOwned(0),
-      m_timeLost(0)
+      m_id(id)
 {
   // get some atoms
   m_atomTargets = XInternAtom(m_display, "TARGETS", False);
@@ -1373,12 +1368,8 @@ XWindowsClipboard::Reply::Reply(Window requestor, Atom target, ::Time time)
       m_target(target),
       m_time(time),
       m_property(None),
-      m_replied(false),
-      m_done(false),
-      m_data(),
       m_type(None),
-      m_format(32),
-      m_ptr(0)
+      m_format(32)
 {
   // do nothing
 }

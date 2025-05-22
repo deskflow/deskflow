@@ -292,27 +292,25 @@ protected:
 
 private:
   // our platform dependent screen
-  IPlatformScreen *m_screen;
+  IPlatformScreen *m_screen = nullptr;
 
   // true if screen is being used as a primary screen, false otherwise
-  bool m_isPrimary;
+  bool m_isPrimary = false;
 
   // true if screen is enabled
-  bool m_enabled;
+  bool m_enabled = false;
 
   // true if the cursor is on this screen
-  bool m_entered;
+  bool m_entered = false;
 
   // note toggle keys that toggles on up/down (false) or on
   // transition (true)
   KeyModifierMask m_halfDuplex;
 
   // true if we're faking input on a primary screen
-  bool m_fakeInput;
+  bool m_fakeInput = false;
 
-  IEventQueue *m_events;
-
-  bool m_mock;
+  IEventQueue *m_events = nullptr;
 };
 
 } // namespace deskflow

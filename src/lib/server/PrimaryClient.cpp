@@ -17,8 +17,7 @@
 
 PrimaryClient::PrimaryClient(const std::string &name, deskflow::Screen *screen)
     : BaseClientProxy(name),
-      m_screen(screen),
-      m_fakeInputCount(0)
+      m_screen(screen)
 {
   // do nothing
 }

@@ -42,6 +42,6 @@ private:
 
   ArchMutex m_queueMutex;
   ArchCond m_queueReadyCond;
-  bool m_queueReady;
+  bool m_queueReady = false;
   EventDeque m_queue;
 };

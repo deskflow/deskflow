@@ -43,11 +43,11 @@ public:
   class FailInfo
   {
   public:
-    explicit FailInfo(const char *what) : m_retry(false), m_what(what)
+    explicit FailInfo(const char *what) : m_what(what)
     {
       // do nothing
     }
-    bool m_retry;
+    bool m_retry = false;
     std::string m_what;
   };
 
@@ -182,29 +182,26 @@ private:
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
 
-public:
-  bool m_mock;
-
 private:
   std::string m_name;
   NetworkAddress m_serverAddress;
-  ISocketFactory *m_socketFactory;
-  deskflow::Screen *m_screen;
-  deskflow::IStream *m_stream;
-  EventQueueTimer *m_timer;
-  ServerProxy *m_server;
-  bool m_ready;
-  bool m_active;
-  bool m_suspended;
-  bool m_connectOnResume;
+  ISocketFactory *m_socketFactory = nullptr;
+  deskflow::Screen *m_screen = nullptr;
+  deskflow::IStream *m_stream = nullptr;
+  EventQueueTimer *m_timer = nullptr;
+  ServerProxy *m_server = nullptr;
+  bool m_ready = false;
+  bool m_active = false;
+  bool m_suspended = false;
+  bool m_connectOnResume = false;
   bool m_ownClipboard[kClipboardEnd];
   bool m_sentClipboard[kClipboardEnd];
   IClipboard::Time m_timeClipboard[kClipboardEnd];
   std::string m_dataClipboard[kClipboardEnd];
-  IEventQueue *m_events;
-  bool m_useSecureNetwork;
-  bool m_enableClipboard;
-  size_t m_maximumClipboardSize;
+  IEventQueue *m_events = nullptr;
+  bool m_useSecureNetwork = false;
+  bool m_enableClipboard = true;
+  size_t m_maximumClipboardSize = INT_MAX;
   deskflow::ClientArgs m_args;
   size_t m_resolvedAddressesCount = 0;
   std::unique_ptr<deskflow::client::HelloBack> m_pHelloBack;

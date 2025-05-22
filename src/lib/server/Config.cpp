@@ -30,7 +30,7 @@ const auto kBarrierProtocolOption = "barrier";
 // Config
 //
 
-Config::Config(IEventQueue *events) : m_inputFilter(events), m_hasLockToScreenAction(false), m_events(events)
+Config::Config(IEventQueue *events) : m_inputFilter(events), m_events(events)
 {
   // do nothing
 }

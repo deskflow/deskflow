@@ -29,8 +29,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
       m_OriginalServerConfigIsExternal(config.useExternalConfig()),
       m_OriginalServerConfigUsesExternalFile(config.configFile()),
       m_ServerConfig(config),
-      m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows()),
-      m_Message("")
+      m_ScreenSetupModel(serverConfig().screens(), serverConfig().numColumns(), serverConfig().numRows())
 {
   ui->setupUi(this);
 

@@ -51,5 +51,5 @@ private:
   QPushButton *m_pButtonRight;
   QPushButton *m_pButtonDown;
   QLabel *m_pLabelCenter;
-  int m_AddResult;
+  int m_AddResult = kAddClientIgnore;
 };

@@ -235,10 +235,10 @@ protected:
     Atom m_property;
 
     // true iff we've sent the notification for this reply
-    bool m_replied;
+    bool m_replied = false;
 
     // true iff the reply has sent its last message
-    bool m_done;
+    bool m_done = false;
 
     // the data to send and its type and format
     std::string m_data;
@@ -246,7 +246,7 @@ protected:
     int m_format;
 
     // index of next byte in m_data to send
-    uint32_t m_ptr;
+    uint32_t m_ptr = 0;
   };
   using ReplyList = std::list<Reply *>;
   using ReplyMap = std::map<Window, ReplyList>;
@@ -287,11 +287,11 @@ private:
   Window m_window;
   ClipboardID m_id;
   Atom m_selection;
-  mutable bool m_open;
-  mutable Time m_time;
-  bool m_owner;
-  mutable Time m_timeOwned;
-  Time m_timeLost;
+  mutable bool m_open = false;
+  mutable Time m_time = 0;
+  bool m_owner = false;
+  mutable Time m_timeOwned = 0;
+  Time m_timeLost = 0;
 
   // true iff open and clipboard owned by a motif app
   mutable bool m_motif;

@@ -27,10 +27,7 @@ static void interrupt(Arch::ESignal, void *data)
 // EventQueue
 //
 
-EventQueue::EventQueue()
-    : m_systemTarget(0),
-      m_readyMutex(new Mutex),
-      m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
+EventQueue::EventQueue() : m_readyMutex(new Mutex), m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
   m_mutex = ARCH->newMutex();
   ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);

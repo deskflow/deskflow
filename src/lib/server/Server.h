@@ -351,13 +351,13 @@ private:
   class ClipboardInfo
   {
   public:
-    ClipboardInfo();
+    ClipboardInfo() = default;
 
   public:
     Clipboard m_clipboard;
     std::string m_clipboardData;
     std::string m_clipboardOwner;
-    uint32_t m_clipboardSeqNum;
+    uint32_t m_clipboardSeqNum = 0;
   };
 
   // used in hello message sent to the client
@@ -380,7 +380,7 @@ private:
   BaseClientProxy *m_active;
 
   // the sequence number of enter messages
-  uint32_t m_seqNum;
+  uint32_t m_seqNum = 0;
 
   // current mouse position (in absolute screen coordinates) on
   // whichever screen is active
@@ -391,10 +391,10 @@ private:
   // on win32 which reports bogus mouse motion at the edge of
   // the screen when using low level hooks, synthesizing motion
   // in the opposite direction the mouse actually moved.
-  int32_t m_xDelta;
-  int32_t m_yDelta;
-  int32_t m_xDelta2;
-  int32_t m_yDelta2;
+  int32_t m_xDelta = 0;
+  int32_t m_yDelta = 0;
+  int32_t m_xDelta2 = 0;
+  int32_t m_yDelta2 = 0;
 
   // current configuration
   ServerConfig *m_config;
@@ -406,52 +406,52 @@ private:
   ClipboardInfo m_clipboards[kClipboardEnd];
 
   // state saved when screen saver activates
-  BaseClientProxy *m_activeSaver;
+  BaseClientProxy *m_activeSaver = nullptr;
   int32_t m_xSaver;
   int32_t m_ySaver;
 
   // common state for screen switch tests.  all tests are always
   // trying to reach the same screen in the same direction.
-  EDirection m_switchDir;
-  BaseClientProxy *m_switchScreen;
+  EDirection m_switchDir = EDirection::kNoDirection;
+  BaseClientProxy *m_switchScreen = nullptr;
 
   // state for delayed screen switching
-  double m_switchWaitDelay;
-  EventQueueTimer *m_switchWaitTimer;
+  double m_switchWaitDelay = 0.0;
+  EventQueueTimer *m_switchWaitTimer = nullptr;
   int32_t m_switchWaitX;
   int32_t m_switchWaitY;
 
   // state for double-tap screen switching
-  double m_switchTwoTapDelay;
+  double m_switchTwoTapDelay = 0.0;
   Stopwatch m_switchTwoTapTimer;
-  bool m_switchTwoTapEngaged;
-  bool m_switchTwoTapArmed;
-  int32_t m_switchTwoTapZone;
+  bool m_switchTwoTapEngaged = false;
+  bool m_switchTwoTapArmed = false;
+  int32_t m_switchTwoTapZone = 3;
 
   // modifiers needed before switching
-  bool m_switchNeedsShift;
-  bool m_switchNeedsControl;
-  bool m_switchNeedsAlt;
+  bool m_switchNeedsShift = false;
+  bool m_switchNeedsControl = false;
+  bool m_switchNeedsAlt = false;
 
   // relative mouse move option
-  bool m_relativeMoves;
+  bool m_relativeMoves = false;
 
   // flag whether or not we have broadcasting enabled and the screens to
   // which we should send broadcasted keys.
-  bool m_keyboardBroadcasting;
+  bool m_keyboardBroadcasting = false;
   std::string m_keyboardBroadcastingScreens;
 
   // screen locking (former scroll lock)
-  bool m_lockedToScreen;
+  bool m_lockedToScreen = false;
 
   // server screen
   deskflow::Screen *m_screen;
 
   IEventQueue *m_events;
 
-  bool m_disableLockToScreen;
-  bool m_enableClipboard;
-  size_t m_maximumClipboardSize;
+  bool m_disableLockToScreen = false;
+  bool m_enableClipboard = true;
+  size_t m_maximumClipboardSize = INT_MAX;
 
   ClientListener *m_clientListener;
   deskflow::ServerArgs m_args;

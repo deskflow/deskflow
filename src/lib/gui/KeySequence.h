@@ -15,7 +15,7 @@ class QSettings;
 class KeySequence
 {
 public:
-  KeySequence();
+  KeySequence() = default;
 
 public:
   QString toString() const;
@@ -54,9 +54,9 @@ private:
   }
 
 private:
-  QList<int> m_Sequence;
-  int m_Modifiers;
-  bool m_IsValid;
+  QList<int> m_Sequence = {};
+  int m_Modifiers = 0;
+  bool m_IsValid = false;
 
   inline static const int kStrSize = 4;
   inline static const int kBase = 16;

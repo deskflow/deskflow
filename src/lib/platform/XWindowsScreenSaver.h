@@ -118,10 +118,10 @@ private:
   void *m_eventTarget;
 
   // xscreensaver's window
-  Window m_xscreensaver;
+  Window m_xscreensaver = None;
 
   // xscreensaver activation state
-  bool m_xscreensaverActive;
+  bool m_xscreensaverActive = false;
 
   // old event mask on root window
   long m_rootEventMask;
@@ -142,24 +142,24 @@ private:
   int m_allowExposures;
 
   // DPMS screen saver settings
-  bool m_dpms;
+  bool m_dpms = false;
   bool m_dpmsEnabled;
 
   // true iff the client wants the screen saver suppressed
-  bool m_disabled;
+  bool m_disabled = false;
 
   // true iff we're ignoring m_disabled.  this is true, for example,
   // when the client has called activate() and so presumably wants
   // to activate the screen saver even if disabled.
-  bool m_suppressDisable;
+  bool m_suppressDisable = false;
 
   // the disable timer (nullptr if not installed)
-  EventQueueTimer *m_disableTimer;
+  EventQueueTimer *m_disableTimer = nullptr;
 
   // fake mouse motion position for suppressing the screen saver.
   // xscreensaver since 2.21 requires the mouse to move more than 10
   // pixels to be considered significant.
-  int32_t m_disablePos;
+  int32_t m_disablePos = 0;
 
-  IEventQueue *m_events;
+  IEventQueue *m_events = nullptr;
 };

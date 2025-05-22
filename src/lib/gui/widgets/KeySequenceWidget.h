@@ -98,9 +98,9 @@ private:
 private:
   KeySequence m_KeySequence;
   KeySequence m_BackupSequence;
-  Status m_Status;
-  QString m_MousePrefix;
-  QString m_MousePostfix;
-  QString m_KeyPrefix;
-  QString m_KeyPostfix;
+  Status m_Status = Status::Stopped;
+  QString m_MousePrefix = QStringLiteral("mousebutton(");
+  QString m_MousePostfix = QStringLiteral(")");
+  QString m_KeyPrefix = QStringLiteral("keystroke(");
+  QString m_KeyPostfix = QStringLiteral(")");
 };

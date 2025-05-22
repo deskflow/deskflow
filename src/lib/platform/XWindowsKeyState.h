@@ -146,7 +146,7 @@ private:
   NonXKBModifierMap m_lastGoodNonXKBModifiers;
 
   // X modifier (bit number) to deskflow modifier (mask) mapping
-  KeyModifierMaskList m_modifierFromX;
+  KeyModifierMaskList m_modifierFromX = {};
 
   // deskflow modifier (mask) to X modifier (mask)
   KeyModifierToXMask m_modifierToX;
