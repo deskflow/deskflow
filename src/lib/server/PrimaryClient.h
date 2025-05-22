@@ -142,6 +142,6 @@ public:
 
 private:
   deskflow::Screen *m_screen;
-  bool m_clipboardDirty[kClipboardEnd];
+  bool m_clipboardDirty[kClipboardEnd] = {false, false};
   int32_t m_fakeInputCount;
 };

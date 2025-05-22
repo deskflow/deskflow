@@ -105,15 +105,15 @@ std::string IKeyState::KeyInfo::join(const std::set<std::string> &destinations)
   // which makes searching easy.  the string is empty if there are no
   // destinations and "*" means all destinations.
   std::string screens;
-  for (auto i = destinations.begin(); i != destinations.end(); ++i) {
-    if (*i == "*") {
+  for (const auto &i : destinations) {
+    if (i == "*") {
       screens = "*";
       break;
     } else {
       if (screens.empty()) {
         screens = ":";
       }
-      screens += *i;
+      screens += i;
       screens += ":";
     }
   }

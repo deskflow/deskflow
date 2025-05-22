@@ -1063,8 +1063,8 @@ void XWindowsClipboard::clearReplies()
 
 void XWindowsClipboard::clearReplies(ReplyList &replies)
 {
-  for (auto index = replies.begin(); index != replies.end(); ++index) {
-    delete *index;
+  for (auto reply : replies) {
+    delete reply;
   }
   replies.clear();
 }

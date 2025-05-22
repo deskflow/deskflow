@@ -200,8 +200,8 @@ XWindowsScreen::~XWindowsScreen()
 
   m_events->adoptBuffer(nullptr);
   m_events->removeHandler(EventTypes::System, m_events->getSystemTarget());
-  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    delete m_clipboard[id];
+  for (auto clipboard : m_clipboard) {
+    delete clipboard;
   }
   delete m_keyState;
   delete m_screensaver;
@@ -700,9 +700,9 @@ uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
   if (err) {
     // if any failed then unregister any we did get
-    for (auto j = hotKeys.begin(); j != hotKeys.end(); ++j) {
-      XUngrabKey(m_display, j->first, j->second, m_root);
-      m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
+    for (const auto &[keyCode, keyMask] : hotKeys) {
+      XUngrabKey(m_display, keyCode, keyMask, m_root);
+      m_hotKeyToIDMap.erase(HotKeyItem(keyCode, keyMask));
     }
 
     m_oldHotKeyIDs.push_back(id);
@@ -733,10 +733,10 @@ void XWindowsScreen::unregisterHotKey(uint32_t id)
   bool err = false;
   {
     XWindowsUtil::ErrorLock lock(m_display, &err);
-    HotKeyList &hotKeys = i->second;
-    for (auto j = hotKeys.begin(); j != hotKeys.end(); ++j) {
-      XUngrabKey(m_display, j->first, j->second, m_root);
-      m_hotKeyToIDMap.erase(HotKeyItem(j->first, j->second));
+    const HotKeyList &hotKeys = i->second;
+    for (const auto &[keyCode, keyMask] : hotKeys) {
+      XUngrabKey(m_display, keyCode, keyMask, m_root);
+      m_hotKeyToIDMap.erase(HotKeyItem(keyCode, keyMask));
     }
   }
   if (err) {
@@ -1644,8 +1644,8 @@ ClipboardID XWindowsScreen::getClipboardID(Atom selection) const
 void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom property) const
 {
   // check every clipboard until one returns success
-  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != nullptr && m_clipboard[id]->processRequest(requestor, time, property)) {
+  for (const auto &clipboard : m_clipboard) {
+    if (clipboard != nullptr && clipboard->processRequest(requestor, time, property)) {
       break;
     }
   }
@@ -1654,8 +1654,8 @@ void XWindowsScreen::processClipboardRequest(Window requestor, Time time, Atom p
 void XWindowsScreen::destroyClipboardRequest(Window requestor) const
 {
   // check every clipboard until one returns success
-  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    if (m_clipboard[id] != nullptr && m_clipboard[id]->destroyRequest(requestor)) {
+  for (const auto &clipboard : m_clipboard) {
+    if (clipboard != nullptr && clipboard->destroyRequest(requestor)) {
       break;
     }
   }

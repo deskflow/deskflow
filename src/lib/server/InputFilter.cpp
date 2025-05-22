@@ -662,9 +662,9 @@ bool InputFilter::Rule::handleEvent(const Event &event)
   }
 
   // perform actions
-  for (auto i = actions->begin(); i != actions->end(); ++i) {
-    LOG((CLOG_DEBUG1 "hotkey: %s", (*i)->format().c_str()));
-    (*i)->perform(event);
+  for (auto action : *actions) {
+    LOG((CLOG_DEBUG1 "hotkey: %s", action->format().c_str()));
+    action->perform(event);
   }
 
   return true;

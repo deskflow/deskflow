@@ -209,13 +209,12 @@ QString generateFingerprintArt(const QByteArray &rawDigest)
   int y = rows / 2;
 
   /* process raw key */
-  for (size_t i = 0; i < rawDigest.size(); i++) {
+  for (int byte : rawDigest) {
     /* each byte conveys four 2-bit move commands */
-    int input = rawDigest[i];
     for (uint32_t b = 0; b < 4; b++) {
       /* evaluate 2 bit, rest is shifted later */
-      x += (input & 0x1) ? 1 : -1;
-      y += (input & 0x2) ? 1 : -1;
+      x += (byte & 0x1) ? 1 : -1;
+      y += (byte & 0x2) ? 1 : -1;
 
       /* assure we are still in bounds */
       x = std::clamp(x, 0, columns - 1);
@@ -224,7 +223,7 @@ QString generateFingerprintArt(const QByteArray &rawDigest)
       /* augment the field */
       if (field[x][y] < len - 2)
         field[x][y]++;
-      input = input >> 2;
+      byte = byte >> 2;
     }
   }
 

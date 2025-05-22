@@ -210,8 +210,8 @@ void XWindowsEventQueueBuffer::flush()
   // note -- m_mutex must be locked on entry
 
   // flush the posted event list to the X server
-  for (size_t i = 0; i < m_postedEvents.size(); ++i) {
-    XSendEvent(m_display, m_window, False, 0, &m_postedEvents[i]);
+  for (auto &event : m_postedEvents) {
+    XSendEvent(m_display, m_window, False, 0, &event);
   }
   XFlush(m_display);
   m_postedEvents.clear();

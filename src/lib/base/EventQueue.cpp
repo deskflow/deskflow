@@ -298,16 +298,16 @@ void EventQueue::removeHandlers(void *target)
     if (index != m_handlers.end()) {
       // copy to handlers array and clear table for target
       TypeHandlerTable &typeHandlers = index->second;
-      for (auto index2 = typeHandlers.begin(); index2 != typeHandlers.end(); ++index2) {
-        handlers.push_back(index2->second);
+      for (const auto &[key, value] : typeHandlers) {
+        handlers.push_back(value);
       }
       typeHandlers.clear();
     }
   }
 
   // delete handlers
-  for (auto index = handlers.begin(); index != handlers.end(); ++index) {
-    delete *index;
+  for (auto index : handlers) {
+    delete index;
   }
 }
 
