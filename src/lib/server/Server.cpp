@@ -83,8 +83,7 @@ Server::Server(
   std::string primaryName = getName(primaryClient);
 
   // clear clipboards
-  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-    ClipboardInfo &clipboard = m_clipboards[id];
+  for (auto &clipboard : m_clipboards) {
     clipboard.m_clipboardOwner = primaryName;
     clipboard.m_clipboardSeqNum = m_seqNum;
     if (clipboard.m_clipboard.open(0)) {
@@ -1062,9 +1061,9 @@ void Server::sendOptions(BaseClientProxy *client) const
   if (options != nullptr) {
     // convert options to a more convenient form for sending
     optionsList.reserve(2 * options->size());
-    for (auto index = options->begin(); index != options->end(); ++index) {
-      optionsList.push_back(index->first);
-      optionsList.push_back(static_cast<uint32_t>(index->second));
+    for (auto [optionId, optionValue] : *options) {
+      optionsList.push_back(optionId);
+      optionsList.push_back(static_cast<uint32_t>(optionValue));
     }
   }
 
@@ -1073,9 +1072,9 @@ void Server::sendOptions(BaseClientProxy *client) const
   if (options != nullptr) {
     // convert options to a more convenient form for sending
     optionsList.reserve(optionsList.size() + 2 * options->size());
-    for (auto index = options->begin(); index != options->end(); ++index) {
-      optionsList.push_back(index->first);
-      optionsList.push_back(static_cast<uint32_t>(index->second));
+    for (auto [optionId, optionValue] : *options) {
+      optionsList.push_back(optionId);
+      optionsList.push_back(static_cast<uint32_t>(optionValue));
     }
   }
 
@@ -1096,9 +1095,9 @@ void Server::processOptions()
   m_switchNeedsAlt = false;     // doesnt' work correct.
 
   bool newRelativeMoves = m_relativeMoves;
-  for (auto index = options->begin(); index != options->end(); ++index) {
-    const OptionID id = index->first;
-    const OptionValue value = index->second;
+  for (auto [optionId, optionValue] : *options) {
+    const OptionID id = optionId;
+    const OptionValue value = optionValue;
     if (id == kOptionProtocol) {
       using enum ENetworkProtocol;
       const auto enumValue = static_cast<ENetworkProtocol>(value);
@@ -2010,8 +2009,8 @@ void Server::closeClients(const ServerConfig &config)
 
   // now close them.  we collect the list then close in two steps
   // because closeClient() modifies the collection we iterate over.
-  for (auto index = removed.begin(); index != removed.end(); ++index) {
-    closeClient(*index, kMsgCClose);
+  for (auto &client : removed) {
+    closeClient(client, kMsgCClose);
   }
 }
 

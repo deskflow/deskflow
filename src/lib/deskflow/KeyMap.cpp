@@ -79,8 +79,8 @@ void KeyMap::addKeyEntry(const KeyItem &item)
 
   // see if we already have this item;  just return if so
   KeyEntryList &entries = groupTable[item.m_group];
-  for (size_t i = 0, n = entries.size(); i < n; ++i) {
-    if (entries[i].size() == 1 && newItem == entries[i][0]) {
+  for (const auto &entry : entries) {
+    if (entry.size() == 1 && newItem == entry.at(0)) {
       return;
     }
   }
@@ -157,10 +157,10 @@ bool KeyMap::addKeyCombinationEntry(KeyID id, int32_t group, const KeyID *keys, 
     for (int32_t gd = 0; gd < n && !found; ++gd) {
       const auto eg = (group + gd) % getNumGroups();
       const KeyEntryList &entries = groupTable[eg];
-      for (size_t j = 0; j < entries.size(); ++j) {
-        if (entries[j].size() == 1) {
+      for (const auto &entry : entries) {
+        if (entry.size() == 1) {
           found = true;
-          items.push_back(entries[j][0]);
+          items.push_back(entry.at(0));
           break;
         }
       }
@@ -211,14 +211,14 @@ void KeyMap::finish()
 
 void KeyMap::foreachKey(ForeachKeyCallback cb, void *userData)
 {
-  for (auto i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
-    KeyGroupTable &groupTable = i->second;
+  for (const auto &[keyId, keyGroup] : m_keyIDMap) {
+    const KeyGroupTable &groupTable = keyGroup;
     for (size_t group = 0; group < groupTable.size(); ++group) {
-      KeyEntryList &entryList = groupTable[group];
-      for (size_t j = 0; j < entryList.size(); ++j) {
-        KeyItemList &itemList = entryList[j];
-        for (size_t k = 0; k < itemList.size(); ++k) {
-          (*cb)(i->first, static_cast<int32_t>(group), itemList[k], userData);
+      const KeyEntryList &entryList = groupTable.at(group);
+      for (auto &entry : entryList) {
+        const KeyItemList &itemList = entry;
+        for (auto item : itemList) {
+          (*cb)(keyId, static_cast<int32_t>(group), item, userData);
         }
       }
     }
@@ -334,10 +334,10 @@ KeyMap::findCompatibleKey(KeyID id, int32_t group, KeyModifierMask required, Key
   }
 
   const KeyEntryList &entries = i->second[group];
-  for (size_t j = 0; j < entries.size(); ++j) {
-    if ((entries[j].back().m_sensitive & sensitive) == 0 ||
-        (entries[j].back().m_required & sensitive) == (required & sensitive)) {
-      return &entries[j];
+  for (const auto &entry : entries) {
+    if ((entry.back().m_sensitive & sensitive) == 0 ||
+        (entry.back().m_required & sensitive) == (required & sensitive)) {
+      return &entry;
     }
   }
 
@@ -365,8 +365,8 @@ KeyModifierMask KeyMap::getCommandModifiers() const
 void KeyMap::collectButtons(const ModifierToKeys &mods, ButtonToKeyMap &keys)
 {
   keys.clear();
-  for (auto i = mods.begin(); i != mods.end(); ++i) {
-    keys.insert(std::make_pair(i->second.m_button, &i->second));
+  for (const auto &[modifierMask, keyItem] : mods) {
+    keys.insert(std::make_pair(keyItem.m_button, &keyItem));
   }
 }
 
@@ -440,18 +440,20 @@ void KeyMap::setModifierKeys()
 {
   m_modifierKeys.clear();
   m_modifierKeys.resize(kKeyModifierNumBits * getNumGroups());
-  for (KeyIDMap::const_iterator i = m_keyIDMap.begin(); i != m_keyIDMap.end(); ++i) {
-    const KeyGroupTable &groupTable = i->second;
-    for (size_t g = 0; g < groupTable.size(); ++g) {
-      const KeyEntryList &entries = groupTable[g];
-      for (size_t j = 0; j < entries.size(); ++j) {
+  for (const auto &[keyId, keyGroup] : m_keyIDMap) {
+    const KeyGroupTable &groupTable = keyGroup;
+    int32_t g = -1;
+    for (const auto &group : groupTable) {
+      g++;
+      const KeyEntryList &entries = group;
+      for (const auto &entry : entries) {
         // skip multi-key sequences
-        if (entries[j].size() != 1) {
+        if (entry.size() != 1) {
           continue;
         }
 
         // skip keys that don't generate a modifier
-        const KeyItem &item = entries[j].back();
+        const KeyItem &item = entry.back();
         if (item.m_generates == 0) {
           continue;
         }
@@ -460,7 +462,7 @@ void KeyMap::setModifierKeys()
         for (int32_t b = 0; b < kKeyModifierNumBits; ++b) {
           // skip if item doesn't generate bit b
           if (((1u << b) & item.m_generates) != 0) {
-            int32_t mIndex = (int32_t)g * kKeyModifierNumBits + b;
+            int32_t mIndex = g * kKeyModifierNumBits + b;
             m_modifierKeys[mIndex].push_back(&item);
           }
         }
@@ -602,8 +604,8 @@ const KeyMap::KeyItem *KeyMap::mapCharacterKey(
   int32_t newGroup = group;
 
   // add each key
-  for (size_t j = 0; j < itemList->size(); ++j) {
-    if (!keysForKeyItem(itemList->at(j), newGroup, newModifiers, newState, desiredMask, 0, isAutoRepeat, keys, lang)) {
+  for (auto &item : *itemList) {
+    if (!keysForKeyItem(item, newGroup, newModifiers, newState, desiredMask, 0, isAutoRepeat, keys, lang)) {
       LOG((CLOG_DEBUG1 "can't map key"));
       keys.clear();
       return nullptr;
@@ -680,9 +682,9 @@ const KeyMap::KeyItem *KeyMap::keyForModifier(KeyButton button, int32_t group, i
   // this is important when a shift button is modified by shift;  we
   // must use the other shift button to do the shifting.
   const ModifierKeyItemList &items = m_modifierKeys[group * kKeyModifierNumBits + modifierBit];
-  for (auto i = items.begin(); i != items.end(); ++i) {
-    if ((*i)->m_button != button) {
-      return (*i);
+  for (const auto &item : items) {
+    if (item->m_button != button) {
+      return item;
     }
   }
   return nullptr;

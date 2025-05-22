@@ -756,8 +756,8 @@ void KeyState::updateKeyState()
   // get the current keyboard state
   KeyButtonSet keysDown;
   pollPressedKeys(keysDown);
-  for (auto i = keysDown.begin(); i != keysDown.end(); ++i) {
-    m_keys[*i] = 1;
+  for (const auto &key : keysDown) {
+    m_keys[key] = 1;
   }
 
   // get the current modifier state
@@ -872,9 +872,9 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
   if (localID != oldLocalID) {
     // replace key up with previous KeyButton but leave key down
     // alone so it uses the new KeyButton.
-    for (auto index = keys.begin(); index != keys.end(); ++index) {
-      if (index->m_type == Keystroke::kButton && index->m_data.m_button.m_button == localID) {
-        index->m_data.m_button.m_button = oldLocalID;
+    for (auto &key : keys) {
+      if (key.m_type == Keystroke::kButton && key.m_data.m_button.m_button == localID) {
+        key.m_data.m_button.m_button = oldLocalID;
         break;
       }
     }
@@ -1099,11 +1099,11 @@ void KeyState::updateModifierKeyState(
   // get the pressed modifier buttons before and after
   deskflow::KeyMap::ButtonToKeyMap oldKeys;
   deskflow::KeyMap::ButtonToKeyMap newKeys;
-  for (auto i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
-    oldKeys.insert(std::make_pair(i->second.m_button, &i->second));
+  for (const auto &[modifier, keyItem] : oldModifiers) {
+    oldKeys.insert(std::make_pair(keyItem.m_button, &keyItem));
   }
-  for (auto i = newModifiers.begin(); i != newModifiers.end(); ++i) {
-    newKeys.insert(std::make_pair(i->second.m_button, &i->second));
+  for (const auto &[modifier, keyItem] : newModifiers) {
+    newKeys.insert(std::make_pair(keyItem.m_button, &keyItem));
   }
 
   // get the modifier buttons that were pressed or released

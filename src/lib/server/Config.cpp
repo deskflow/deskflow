@@ -1599,13 +1599,13 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
 {
   // screens section
   s << "section: screens" << std::endl;
-  for (auto screen = config.begin(); screen != config.end(); ++screen) {
-    s << "\t" << screen->c_str() << ":" << std::endl;
-    const Config::ScreenOptions *options = config.getOptions(*screen);
+  for (const auto &screen : config) {
+    s << "\t" << screen.c_str() << ":" << std::endl;
+    const auto options = config.getOptions(screen);
     if (options != nullptr && options->size() > 0) {
-      for (auto option = options->begin(); option != options->end(); ++option) {
-        const char *name = Config::getOptionName(option->first);
-        std::string value = Config::getOptionValue(option->first, option->second);
+      for (auto [optionId, optionValue] : *options) {
+        const char *name = Config::getOptionName(optionId);
+        std::string value = Config::getOptionValue(optionId, optionValue);
         if (name != nullptr && !value.empty()) {
           s << "\t\t" << name << " = " << value << std::endl;
         }
@@ -1617,10 +1617,10 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
   // links section
   std::string neighbor;
   s << "section: links" << std::endl;
-  for (auto screen = config.begin(); screen != config.end(); ++screen) {
-    s << "\t" << screen->c_str() << ":" << std::endl;
+  for (const auto &screen : config) {
+    s << "\t" << screen.c_str() << ":" << std::endl;
 
-    for (Config::link_const_iterator link = config.beginNeighbor(*screen), nend = config.endNeighbor(*screen);
+    for (Config::link_const_iterator link = config.beginNeighbor(screen), nend = config.endNeighbor(screen);
          link != nend; ++link) {
       s << "\t\t" << Config::dirName(link->first.getSide()) << Config::formatInterval(link->first.getInterval())
         << " = " << link->second.getName().c_str() << Config::formatInterval(link->second.getInterval()) << std::endl;
@@ -1655,9 +1655,9 @@ std::ostream &operator<<(std::ostream &s, const Config &config)
   // options section
   s << "section: options" << std::endl;
   if (const Config::ScreenOptions *options = config.getOptions(""); options && options->size() > 0) {
-    for (auto option = options->begin(); option != options->end(); ++option) {
-      const char *name = Config::getOptionName(option->first);
-      std::string value = Config::getOptionValue(option->first, option->second);
+    for (auto [optionId, optionValue] : *options) {
+      const char *name = Config::getOptionName(optionId);
+      std::string value = Config::getOptionValue(optionId, optionValue);
       if (name != nullptr && !value.empty()) {
         s << "\t" << name << " = " << value << std::endl;
       }

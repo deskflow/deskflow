@@ -20,10 +20,7 @@ PrimaryClient::PrimaryClient(const std::string &name, deskflow::Screen *screen)
       m_screen(screen),
       m_fakeInputCount(0)
 {
-  // all clipboards are clean
-  for (uint32_t i = 0; i < kClipboardEnd; ++i) {
-    m_clipboardDirty[i] = false;
-  }
+  // do nothing
 }
 
 void PrimaryClient::reconfigure(uint32_t activeSides)
