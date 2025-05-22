@@ -95,7 +95,7 @@ public:
 
   //! Close screen saver
   /*!
-  // Close the screen saver.  Stop reporting screen saver activation
+  Close the screen saver.  Stop reporting screen saver activation
   and deactivation and, if the screen saver was disabled by
   openScreensaver(), enable the screen saver.
   */

@@ -293,11 +293,10 @@ void XWindowsScreen::enter()
   // keyboard if they're grabbed.
   XUnmapWindow(m_display, m_window);
 
-  /* maybe call this if entering for the screensaver
-          // set keyboard focus to root window.  the screensaver should then
-          // pick up key events for when the user enters a password to unlock.
-          XSetInputFocus(m_display, PointerRoot, PointerRoot, CurrentTime);
-  */
+  // maybe call this if entering for the screensaver
+  // set keyboard focus to root window.  the screensaver should then
+  // pick up key events for when the user enters a password to unlock.
+  // XSetInputFocus(m_display, PointerRoot, PointerRoot, CurrentTime);
 
   if (!m_isPrimary) {
     // get the keyboard control state
