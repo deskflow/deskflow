@@ -8,16 +8,7 @@
 
 #include <QTest>
 
-class SampleIArchString : public IArchString
-{
-public:
-  EWideCharEncoding getWideCharEncoding() override
-  {
-    return EWideCharEncoding::kUTF16;
-  }
-};
-
-class IArchStringTests : public QObject
+class ArchStringTests : public QObject
 {
   Q_OBJECT
 private slots:

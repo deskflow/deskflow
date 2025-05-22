@@ -6,9 +6,9 @@ if(WIN32)
 endif()
 
 create_test(
-  NAME IArchStringTests
+  NAME ArchStringTests
   DEPENDS arch
   LIBS base ${extra_libs}
-  SOURCE IArchStringTests.cpp
+  SOURCE ArchStringTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/arch"
 )

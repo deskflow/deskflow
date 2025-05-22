@@ -5,9 +5,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "arch/IArchString.h"
+#include "arch/ArchString.h"
 #include "arch/Arch.h"
-#include "common/Common.h"
 
 #include <climits>
 #include <cstdlib>
@@ -19,7 +18,7 @@ static ArchMutex s_mutex = nullptr;
 // use C library non-reentrant multibyte conversion with mutex
 //
 
-IArchString::~IArchString()
+ArchString::~ArchString()
 {
   if (s_mutex != nullptr) {
     ARCH->closeMutex(s_mutex);
@@ -27,7 +26,7 @@ IArchString::~IArchString()
   }
 }
 
-int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool *errors)
+int ArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool *errors) const
 {
   ptrdiff_t len = 0;
 
@@ -81,7 +80,16 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, boo
   return static_cast<int>(len);
 }
 
-int IArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool *errors)
+ArchString::EWideCharEncoding ArchString::getWideCharEncoding() const
+{
+#ifdef SYSAPI_WIN32
+  return EWideCharEncoding::kUTF16;
+#else
+  return EWideCharEncoding::kUCS4;
+#endif
+}
+
+int ArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool *errors) const
 {
   ptrdiff_t len = 0;
   wchar_t dummy;
