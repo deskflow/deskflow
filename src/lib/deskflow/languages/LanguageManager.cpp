@@ -11,7 +11,7 @@
 
 namespace {
 
-std::string vectorToString(const std::vector<std::string> &vector, const std::string &delimiter = "")
+std::string vectorToString(const std::vector<std::string> &vector, const std::string_view &delimiter = "")
 {
   std::string string;
   for (const auto &item : vector) {
@@ -34,12 +34,13 @@ LanguageManager::LanguageManager(const std::vector<std::string> &localLanguages)
   LOG((CLOG_INFO "local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
 }
 
-void LanguageManager::setRemoteLanguages(const std::string &remoteLanguages)
+void LanguageManager::setRemoteLanguages(const std::string_view &remoteLanguages)
 {
   m_remoteLanguages.clear();
   if (!remoteLanguages.empty()) {
     for (size_t i = 0; i <= remoteLanguages.size() - 2; i += 2) {
-      m_remoteLanguages.push_back(remoteLanguages.substr(i, 2));
+      auto rLangs = remoteLanguages.substr(i, 2);
+      m_remoteLanguages.push_back(std::string{rLangs.begin(), rLangs.end()});
     }
   }
   LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));

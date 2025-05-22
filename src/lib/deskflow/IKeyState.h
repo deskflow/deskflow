@@ -39,7 +39,7 @@ public:
     static KeyInfo *alloc(const KeyInfo &);
 
     static bool isDefault(const char *screens);
-    static bool contains(const char *screens, const std::string &name);
+    static bool contains(const char *screens, const std::string_view &name);
     static bool equal(const KeyInfo *, const KeyInfo *);
     static std::string join(const std::set<std::string> &destinations);
     static void split(const char *screens, std::set<std::string> &);

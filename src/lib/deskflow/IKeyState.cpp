@@ -72,7 +72,7 @@ bool IKeyState::KeyInfo::isDefault(const char *screens)
   return (screens == nullptr || screens[0] == '\0');
 }
 
-bool IKeyState::KeyInfo::contains(const char *screens, const std::string &name)
+bool IKeyState::KeyInfo::contains(const char *screens, const std::string_view &name)
 {
   // special cases
   if (isDefault(screens)) {

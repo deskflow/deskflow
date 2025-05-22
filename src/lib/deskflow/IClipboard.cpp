@@ -13,7 +13,7 @@
 // IClipboard
 //
 
-void IClipboard::unmarshall(IClipboard *clipboard, const std::string &data, Time time)
+void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data, Time time)
 {
   assert(clipboard != nullptr);
 

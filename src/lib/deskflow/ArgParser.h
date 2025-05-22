@@ -36,9 +36,9 @@ public:
   static bool isArg(
       int argi, int argc, const char *const *argv, const char *name1, const char *name2, int minRequiredParameters = 0
   );
-  static void splitCommandString(const std::string &command, std::vector<std::string> &argv);
-  static bool searchDoubleQuotes(const std::string &command, size_t &left, size_t &right, size_t startPos = 0);
-  static void removeDoubleQuotes(std::string &arg);
+  static void splitCommandString(const std::string_view &command, std::vector<std::string> &argv);
+  static bool searchDoubleQuotes(const std::string_view &command, size_t &left, size_t &right, size_t startPos = 0);
+  static void removeDoubleQuotes(std::string_view &arg);
   static const char **getArgv(std::vector<std::string> &argsArray);
   static std::string
   assembleCommand(std::vector<std::string> &argsArray, std::string ignoreArg = "", int parametersRequired = 0);

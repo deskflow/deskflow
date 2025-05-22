@@ -845,7 +845,7 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
   }
 }
 
-std::string InputFilter::format(const std::string &linePrefix) const
+std::string InputFilter::format(const std::string_view &linePrefix) const
 {
   std::string s;
   for (auto i = m_ruleList.begin(); i != m_ruleList.end(); ++i) {

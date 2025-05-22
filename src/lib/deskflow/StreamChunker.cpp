@@ -23,7 +23,7 @@ using namespace std;
 static const size_t g_chunkSize = 512 * 1024; // 512kb
 
 void StreamChunker::sendClipboard(
-    const std::string &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events, void *eventTarget
+    const std::string_view &data, size_t size, ClipboardID id, uint32_t sequence, IEventQueue *events, void *eventTarget
 )
 {
   // send first message (data size)
@@ -42,7 +42,7 @@ void StreamChunker::sendClipboard(
       chunkSize = size - sentLength;
     }
 
-    std::string chunk(data.substr(sentLength, chunkSize).c_str(), chunkSize);
+    std::string chunk(data.substr(sentLength, chunkSize).data(), chunkSize);
     ClipboardChunk *dataChunk = ClipboardChunk::data(id, sequence, chunk);
 
     events->addEvent(Event(EventTypes::ClipboardSending, eventTarget, dataChunk));

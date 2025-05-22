@@ -269,7 +269,7 @@ void ServerApp::updateStatus()
   updateStatus("");
 }
 
-void ServerApp::updateStatus(const std::string &msg) const
+void ServerApp::updateStatus(const std::string_view &msg) const
 {
   // do nothing
 }

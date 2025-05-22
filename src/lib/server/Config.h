@@ -64,7 +64,7 @@ public:
     ~CellEdge() = default;
 
     Interval getInterval() const;
-    void setName(const std::string &newName);
+    void setName(const std::string_view &newName);
     std::string getName() const;
     EDirection getSide() const;
     bool overlaps(const CellEdge &) const;
@@ -84,7 +84,7 @@ public:
     bool operator!=(const CellEdge &) const;
 
   private:
-    void init(const std::string &name, EDirection side, const Interval &);
+    void init(const std::string_view &name, EDirection side, const Interval &);
 
   private:
     std::string m_name;
@@ -474,7 +474,7 @@ private:
       bool activate
   );
 
-  void parseScreens(const ConfigReadContext &, const std::string &, std::set<std::string> &screens) const;
+  void parseScreens(const ConfigReadContext &, const std::string_view &, std::set<std::string> &screens) const;
   static const char *getOptionName(OptionID);
   static std::string getOptionValue(OptionID, OptionValue);
 

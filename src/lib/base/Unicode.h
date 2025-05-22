@@ -81,21 +81,21 @@ public:
   Convert from UCS-4 to UTF-8.  If errors is not nullptr then *errors is
   set to true iff any character could not be decoded.
   */
-  static std::string UCS4ToUTF8(const std::string &, bool *errors = nullptr);
+  static std::string UCS4ToUTF8(const std::string_view &, bool *errors = nullptr);
 
   //! Convert from UTF-16 to UTF-8
   /*!
   Convert from UTF-16 to UTF-8.  If errors is not nullptr then *errors is
   set to true iff any character could not be decoded.
   */
-  static std::string UTF16ToUTF8(const std::string &, bool *errors = nullptr);
+  static std::string UTF16ToUTF8(const std::string_view &, bool *errors = nullptr);
 
   //! Convert from UTF-32 to UTF-8
   /*!
   Convert from UTF-32 to UTF-8.  If errors is not nullptr then *errors is
   set to true iff any character could not be decoded.
   */
-  static std::string UTF32ToUTF8(const std::string &, bool *errors = nullptr);
+  static std::string UTF32ToUTF8(const std::string_view &, bool *errors = nullptr);
 
   //! Convert from the current locale encoding to UTF-8
   /*!
