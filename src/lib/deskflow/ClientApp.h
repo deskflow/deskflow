@@ -64,8 +64,6 @@ public:
 
   void updateStatus();
   void updateStatus(const std::string &msg) const;
-  void resetRestartTimeout() const;
-  double nextRestartTimeout() const;
   void handleScreenError(const Event &, void *);
   deskflow::Screen *openClientScreen();
   void closeClientScreen(deskflow::Screen *screen);
