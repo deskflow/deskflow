@@ -15,5 +15,5 @@
 
 IArchString::EWideCharEncoding ArchStringUnix::getWideCharEncoding()
 {
-  return kUCS4;
+  return EWideCharEncoding::kUCS4;
 }

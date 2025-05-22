@@ -18,5 +18,5 @@
 
 IArchString::EWideCharEncoding ArchStringWindows::getWideCharEncoding()
 {
-  return kUTF16;
+  return EWideCharEncoding::kUTF16;
 }

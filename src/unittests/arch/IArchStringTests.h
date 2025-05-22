@@ -13,7 +13,7 @@ class SampleIArchString : public IArchString
 public:
   EWideCharEncoding getWideCharEncoding() override
   {
-    return kUTF16;
+    return EWideCharEncoding::kUTF16;
   }
 };
 
