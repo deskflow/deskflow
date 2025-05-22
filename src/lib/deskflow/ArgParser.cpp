@@ -259,7 +259,7 @@ void ArgParser::splitCommandString(const std::string_view &command, std::vector<
       auto subString = command.substr(startPos, space - startPos);
 
       removeDoubleQuotes(subString);
-      argv.push_back(std::string{subString.begin(), subString.end()});
+      argv.emplace_back(subString);
     }
 
     // find next space
@@ -273,7 +273,7 @@ void ArgParser::splitCommandString(const std::string_view &command, std::vector<
 
   auto subString = command.substr(startPos, command.size());
   removeDoubleQuotes(subString);
-  argv.push_back(std::string{subString.begin(), subString.end()});
+  argv.emplace_back(subString);
 }
 
 bool ArgParser::searchDoubleQuotes(const std::string_view &command, size_t &left, size_t &right, size_t startPos)

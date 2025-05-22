@@ -40,7 +40,7 @@ void LanguageManager::setRemoteLanguages(const std::string_view &remoteLanguages
   if (!remoteLanguages.empty()) {
     for (size_t i = 0; i <= remoteLanguages.size() - 2; i += 2) {
       auto rLangs = remoteLanguages.substr(i, 2);
-      m_remoteLanguages.push_back(std::string{rLangs.begin(), rLangs.end()});
+      m_remoteLanguages.emplace_back(rLangs);
     }
   }
   LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
