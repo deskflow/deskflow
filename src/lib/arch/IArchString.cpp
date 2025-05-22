@@ -59,11 +59,10 @@ int IArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, boo
       len += mblen - 1;
     }
   } else {
-    char *dst0 = dst;
+    const char *dst0 = dst;
     const wchar_t *scan = src;
     for (; n > 0; --n) {
-      ptrdiff_t mblen = wctomb(dst, *scan);
-      if (mblen == -1) {
+      if (ptrdiff_t mblen = wctomb(dst, *scan); mblen == -1) {
         *errors = true;
         *dst++ = '?';
       } else {
@@ -134,7 +133,7 @@ int IArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, boo
       }
     }
   } else {
-    wchar_t *dst0 = dst;
+    const wchar_t *dst0 = dst;
     const char *scan = src;
     while (n > 0) {
       switch (ptrdiff_t mblen = mbtowc(dst, scan, n); mblen) {
