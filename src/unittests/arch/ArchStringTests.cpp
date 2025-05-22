@@ -5,19 +5,19 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "IArchStringTests.h"
+#include "ArchStringTests.h"
 
-#include "arch/IArchString.h"
+#include "arch/ArchString.h"
 
-void IArchStringTests::initTestCase()
+void ArchStringTests::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(kDEBUG2);
 }
 
-void IArchStringTests::convertStringWCToMB_buffer()
+void ArchStringTests::convertStringWCToMB_buffer()
 {
-  SampleIArchString as;
+  ArchString as;
   char buff[20];
   bool errors;
 
@@ -28,9 +28,9 @@ void IArchStringTests::convertStringWCToMB_buffer()
   QVERIFY(!errors);
 }
 
-void IArchStringTests::convertStringWCToMB_noBuffer()
+void ArchStringTests::convertStringWCToMB_noBuffer()
 {
-  SampleIArchString as;
+  ArchString as;
   bool errors;
 
   auto converted = as.convStringWCToMB(nullptr, L"Hello", 6, &errors);
@@ -39,9 +39,9 @@ void IArchStringTests::convertStringWCToMB_noBuffer()
   QVERIFY(!errors);
 }
 
-void IArchStringTests::convertStringMBToWC()
+void ArchStringTests::convertStringMBToWC()
 {
-  SampleIArchString as;
+  ArchString as;
   wchar_t buff[20];
   bool errors;
 
@@ -55,4 +55,4 @@ void IArchStringTests::convertStringMBToWC()
   QVERIFY(!errors);
 }
 
-QTEST_MAIN(IArchStringTests)
+QTEST_MAIN(ArchStringTests)

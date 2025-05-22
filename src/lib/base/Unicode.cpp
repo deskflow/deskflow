@@ -8,7 +8,7 @@
 #include "base/Unicode.h"
 #include "arch/Arch.h"
 
-using enum IArchString::EWideCharEncoding;
+using enum ArchString::EWideCharEncoding;
 //
 // local utility functions
 //
@@ -256,7 +256,7 @@ std::string Unicode::UTF32ToUTF8(const std::string_view &src, bool *errors)
   return doUTF32ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::textToUTF8(const std::string &src, bool *errors, IArchString::EWideCharEncoding encoding)
+std::string Unicode::textToUTF8(const std::string &src, bool *errors, ArchString::EWideCharEncoding encoding)
 {
   // default to success
   resetError(errors);
@@ -312,7 +312,7 @@ wchar_t *Unicode::UTF8ToWideChar(const std::string &src, uint32_t &size, bool *e
 }
 
 std::string
-Unicode::wideCharToUTF8(const wchar_t *src, uint32_t size, bool *errors, IArchString::EWideCharEncoding encoding)
+Unicode::wideCharToUTF8(const wchar_t *src, uint32_t size, bool *errors, ArchString::EWideCharEncoding encoding)
 {
   if (encoding == kPlatformDetermined) {
     encoding = ARCH->getWideCharEncoding();

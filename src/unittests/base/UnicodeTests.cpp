@@ -7,7 +7,7 @@
 
 #include "UnicodeTests.h"
 
-#include "arch/IArchString.h"
+#include "arch/ArchString.h"
 #include "base/Unicode.h"
 
 void UnicodeTests::initTestCase()
@@ -37,7 +37,7 @@ void UnicodeTests::UTF16ToUTF8()
 void UnicodeTests::UCS2ToUTF8_kUCS2()
 {
   bool errors;
-  auto result = Unicode::textToUTF8("hello", &errors, IArchString::EWideCharEncoding::kUCS2);
+  auto result = Unicode::textToUTF8("hello", &errors, ArchString::EWideCharEncoding::kUCS2);
 
   QVERIFY(!errors);
 #ifdef _WIN32

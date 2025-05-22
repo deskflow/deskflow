@@ -18,16 +18,16 @@
 This interface defines the string operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchString : public IInterface
+class ArchString : public IInterface
 {
 public:
-  IArchString() = default;
-  IArchString(const IArchString &) = delete;
-  IArchString(IArchString &&) = delete;
-  ~IArchString() override;
+  ArchString() = default;
+  ArchString(const ArchString &) = delete;
+  ArchString(ArchString &&) = delete;
+  ~ArchString() override;
 
-  IArchString &operator=(const IArchString &) = delete;
-  IArchString &operator=(IArchString &&) = delete;
+  ArchString &operator=(const ArchString &) = delete;
+  ArchString &operator=(ArchString &&) = delete;
 
   //! Wide character encodings
   /*!
@@ -46,13 +46,13 @@ public:
   //@{
 
   //! Convert multibyte string to wide character string
-  virtual int convStringMBToWC(wchar_t *, const char *, uint32_t n, bool *errors);
+  int convStringMBToWC(wchar_t *, const char *, uint32_t n, bool *errors) const;
 
   //! Convert wide character string to multibyte string
-  virtual int convStringWCToMB(char *, const wchar_t *, uint32_t n, bool *errors);
+  int convStringWCToMB(char *, const wchar_t *, uint32_t n, bool *errors) const;
 
   //! Return the architecture's native wide character encoding
-  virtual EWideCharEncoding getWideCharEncoding() = 0;
+  EWideCharEncoding getWideCharEncoding() const;
 
   //@}
 };
