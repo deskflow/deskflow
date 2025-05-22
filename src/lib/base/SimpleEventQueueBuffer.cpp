@@ -21,7 +21,6 @@ SimpleEventQueueBuffer::SimpleEventQueueBuffer()
 {
   m_queueMutex = ARCH->newMutex();
   m_queueReadyCond = ARCH->newCondVar();
-  m_queueReady = false;
 }
 
 SimpleEventQueueBuffer::~SimpleEventQueueBuffer()

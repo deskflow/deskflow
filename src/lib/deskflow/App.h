@@ -112,15 +112,15 @@ public:
 protected:
   void runEventsLoop(void *);
 
-  bool m_suspended;
-  IEventQueue *m_events;
+  bool m_suspended = false;
+  IEventQueue *m_events = nullptr;
 
 private:
   deskflow::ArgsBase *m_args;
   static App *s_instance;
-  FileLogOutputter *m_fileLog;
+  FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;
-  SocketMultiplexer *m_socketMultiplexer;
+  SocketMultiplexer *m_socketMultiplexer = nullptr;
 };
 
 #if WINAPI_MSWINDOWS

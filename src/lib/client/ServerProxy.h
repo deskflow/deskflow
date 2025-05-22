@@ -105,27 +105,27 @@ private:
 private:
   using MessageParser = EResult (ServerProxy::*)(const uint8_t *);
 
-  Client *m_client;
-  deskflow::IStream *m_stream;
+  Client *m_client = nullptr;
+  deskflow::IStream *m_stream = nullptr;
 
-  uint32_t m_seqNum;
+  uint32_t m_seqNum = 0;
 
-  bool m_compressMouse;
-  bool m_compressMouseRelative;
-  int32_t m_xMouse;
-  int32_t m_yMouse;
-  int32_t m_dxMouse;
-  int32_t m_dyMouse;
+  bool m_compressMouse = false;
+  bool m_compressMouseRelative = false;
+  int32_t m_xMouse = 0;
+  int32_t m_yMouse = 0;
+  int32_t m_dxMouse = 0;
+  int32_t m_dyMouse = 0;
 
-  bool m_ignoreMouse;
+  bool m_ignoreMouse = false;
 
   KeyModifierID m_modifierTranslationTable[kKeyModifierIDLast];
 
-  double m_keepAliveAlarm;
-  EventQueueTimer *m_keepAliveAlarmTimer;
+  double m_keepAliveAlarm = 0.0;
+  EventQueueTimer *m_keepAliveAlarmTimer = nullptr;
 
   MessageParser m_parser;
-  IEventQueue *m_events;
+  IEventQueue *m_events = nullptr;
   std::string m_serverLanguage = "";
   bool m_isUserNotifiedAboutLanguageSyncError = false;
   deskflow::languages::LanguageManager m_languageManager;

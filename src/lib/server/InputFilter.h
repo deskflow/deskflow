@@ -66,7 +66,7 @@ public:
     void disablePrimary(PrimaryClient *) override;
 
   private:
-    uint32_t m_id;
+    uint32_t m_id = 0;
     KeyID m_key;
     KeyModifierMask m_mask;
     IEventQueue *m_events;
@@ -300,7 +300,7 @@ public:
   class Rule
   {
   public:
-    Rule();
+    Rule() = default;
     explicit Rule(Condition *adopted);
     Rule(const Rule &);
     ~Rule();
@@ -345,7 +345,7 @@ public:
   private:
     using ActionList = std::vector<Action *>;
 
-    Condition *m_condition;
+    Condition *m_condition = nullptr;
     ActionList m_activateActions;
     ActionList m_deactivateActions;
   };
@@ -391,6 +391,6 @@ private:
 
 private:
   RuleList m_ruleList;
-  PrimaryClient *m_primaryClient;
+  PrimaryClient *m_primaryClient = nullptr;
   IEventQueue *m_events;
 };

@@ -66,10 +66,6 @@ static const struct
     {0, nullptr}
 };
 
-KeySequence::KeySequence() : m_Sequence(), m_Modifiers(0), m_IsValid(false)
-{
-}
-
 bool KeySequence::isMouseButton() const
 {
   return !m_Sequence.isEmpty() && m_Sequence.last() < Qt::Key_Space;

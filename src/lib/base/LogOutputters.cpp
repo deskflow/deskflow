@@ -106,7 +106,7 @@ bool SystemLogOutputter::write(ELevel level, const char *msg)
 // SystemLogger
 //
 
-SystemLogger::SystemLogger(const char *title, bool blockConsole) : m_stop(nullptr)
+SystemLogger::SystemLogger(const char *title, bool blockConsole)
 {
   // redirect log messages
   if (blockConsole) {

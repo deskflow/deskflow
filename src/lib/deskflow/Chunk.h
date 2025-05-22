@@ -21,6 +21,6 @@ public:
   Chunk &operator=(Chunk &&) = delete;
 
 public:
-  size_t m_dataSize;
-  char *m_chunk;
+  size_t m_dataSize = 0;
+  char *m_chunk = nullptr;
 };

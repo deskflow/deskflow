@@ -85,7 +85,7 @@ private:
   ISocketFactory *m_socketFactory;
   NewClients m_newClients;
   WaitingClients m_waitingClients;
-  Server *m_server;
+  Server *m_server = nullptr;
   IEventQueue *m_events;
   SecurityLevel m_securityLevel;
   ClientSockets m_clientSockets;

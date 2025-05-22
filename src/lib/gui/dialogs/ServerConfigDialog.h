@@ -100,7 +100,7 @@ private:
   bool m_OriginalServerConfigIsExternal;
   QString m_OriginalServerConfigUsesExternalFile;
   ScreenSetupModel m_ScreenSetupModel;
-  QString m_Message;
+  QString m_Message = "";
 
 private slots:
   void onChange();

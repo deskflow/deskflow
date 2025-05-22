@@ -12,7 +12,7 @@
 // Clipboard
 //
 
-Clipboard::Clipboard() : m_open(false), m_owner(false)
+Clipboard::Clipboard()
 {
   open(0);
   empty();

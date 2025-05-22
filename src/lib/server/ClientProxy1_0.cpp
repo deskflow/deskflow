@@ -22,7 +22,6 @@
 
 ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy(name, stream),
-      m_heartbeatTimer(nullptr),
       m_parser(&ClientProxy1_0::parseHandshakeMessage),
       m_events(events)
 {
@@ -442,13 +441,4 @@ bool ClientProxy1_0::recvGrabClipboard()
   m_events->addEvent(Event(EventTypes::ClipboardGrabbed, getEventTarget(), info));
 
   return true;
-}
-
-//
-// ClientProxy1_0::ClientClipboard
-//
-
-ClientProxy1_0::ClientClipboard::ClientClipboard() : m_clipboard(), m_sequenceNumber(0), m_dirty(true)
-{
-  // do nothing
 }

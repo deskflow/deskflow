@@ -66,10 +66,10 @@ private:
   void handleReady(const Event &, void *);
 
 private:
-  deskflow::IStream *m_stream;
-  EventQueueTimer *m_timer;
-  ClientProxy *m_proxy;
-  bool m_ready;
-  Server *m_server;
-  IEventQueue *m_events;
+  deskflow::IStream *m_stream = nullptr;
+  EventQueueTimer *m_timer = nullptr;
+  ClientProxy *m_proxy = nullptr;
+  bool m_ready = false;
+  Server *m_server = nullptr;
+  IEventQueue *m_events = nullptr;
 };

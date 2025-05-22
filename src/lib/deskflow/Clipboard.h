@@ -52,10 +52,10 @@ public:
   std::string get(EFormat) const override;
 
 private:
-  mutable bool m_open;
+  mutable bool m_open = false;
   mutable Time m_time;
-  bool m_owner;
+  bool m_owner = false;
   Time m_timeOwned;
-  bool m_added[kNumFormats];
-  std::string m_data[kNumFormats];
+  bool m_added[kNumFormats] = {false, false, false};
+  std::string m_data[kNumFormats] = {"", "", ""};
 };

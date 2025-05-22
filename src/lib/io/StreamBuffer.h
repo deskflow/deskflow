@@ -19,7 +19,7 @@ This class maintains a FIFO (first-in, last-out) buffer of bytes.
 class StreamBuffer
 {
 public:
-  StreamBuffer();
+  StreamBuffer() = default;
   ~StreamBuffer() = default;
 
   //! @name manipulators
@@ -65,6 +65,6 @@ private:
   using ChunkList = std::list<Chunk>;
 
   ChunkList m_chunks;
-  uint32_t m_size;
-  uint32_t m_headUsed;
+  uint32_t m_size = 0;
+  uint32_t m_headUsed = 0;
 };

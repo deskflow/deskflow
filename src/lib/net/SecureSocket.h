@@ -91,8 +91,8 @@ private:
   // by it.
   std::mutex ssl_mutex_;
 
-  Ssl *m_ssl;
-  bool m_secureReady;
-  bool m_fatal;
+  Ssl *m_ssl = nullptr;
+  bool m_secureReady = false;
+  bool m_fatal = false;
   SecurityLevel m_securityLevel = SecurityLevel::Encrypted;
 };

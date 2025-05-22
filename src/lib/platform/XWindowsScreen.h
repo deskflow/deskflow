@@ -172,27 +172,27 @@ private:
   bool m_isPrimary;
   int m_mouseScrollDelta;
 
-  Display *m_display;
-  Window m_root;
-  Window m_window;
+  Display *m_display = nullptr;
+  Window m_root = None;
+  Window m_window = None;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;
 
   // screen shape stuff
-  int32_t m_x;
-  int32_t m_y;
-  int32_t m_w;
-  int32_t m_h;
-  int32_t m_xCenter;
-  int32_t m_yCenter;
+  int32_t m_x = 0;
+  int32_t m_y = 0;
+  int32_t m_w = 0;
+  int32_t m_h = 0;
+  int32_t m_xCenter = 0;
+  int32_t m_yCenter = 0;
 
   // last mouse position
-  int32_t m_xCursor;
-  int32_t m_yCursor;
+  int32_t m_xCursor = 0;
+  int32_t m_yCursor = 0;
 
   // keyboard stuff
-  XWindowsKeyState *m_keyState;
+  XWindowsKeyState *m_keyState = nullptr;
 
   // hot key stuff
   HotKeyMap m_hotKeys;
@@ -200,22 +200,22 @@ private:
   HotKeyToIDMap m_hotKeyToIDMap;
 
   // input focus stuff
-  Window m_lastFocus;
-  int m_lastFocusRevert;
+  Window m_lastFocus = None;
+  int m_lastFocusRevert = RevertToNone;
 
   // input method stuff
-  XIM m_im;
-  XIC m_ic;
-  KeyCode m_lastKeycode;
+  XIM m_im = nullptr;
+  XIC m_ic = nullptr;
+  KeyCode m_lastKeycode = 0;
   FilteredKeycodes m_filtered;
 
   // clipboards
   XWindowsClipboard *m_clipboard[kClipboardEnd];
-  uint32_t m_sequenceNumber;
+  uint32_t m_sequenceNumber = 0;
 
   // screen saver stuff
-  XWindowsScreenSaver *m_screensaver;
-  bool m_screensaverNotify;
+  XWindowsScreenSaver *m_screensaver = nullptr;
+  bool m_screensaverNotify = false;
 
   // logical to physical button mapping.  m_buttons[i] gives the
   // physical button for logical button i+1.
@@ -228,24 +228,24 @@ private:
   // to fake a mouse motion under xinerama may behave strangely,
   // especially if screen 0 is not at 0,0 or if faking a motion on
   // a screen other than screen 0.
-  bool m_xtestIsXineramaUnaware;
+  bool m_xtestIsXineramaUnaware = true;
   bool m_xinerama;
 
   // stuff to work around lost focus issues on certain systems
   // (ie: a MythTV front-end).
-  bool m_preserveFocus;
+  bool m_preserveFocus = false;
 
   // XKB extension stuff
-  bool m_xkb;
+  bool m_xkb = false;
   int m_xkbEventBase;
 
-  bool m_xi2detected;
+  bool m_xi2detected = false;
 
   // XRandR extension stuff
-  bool m_xrandr;
+  bool m_xrandr = false;
   int m_xrandrEventBase;
 
-  IEventQueue *m_events;
+  IEventQueue *m_events = nullptr;
   deskflow::KeyMap m_keyMap;
 
   // pointer to (singleton) screen.  this is only needed by

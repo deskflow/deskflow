@@ -60,11 +60,7 @@
 
 #define RETRY_TIME 1.0
 
-ClientApp::ClientApp(IEventQueue *events)
-    : App(events, new deskflow::ClientArgs()),
-      m_client(nullptr),
-      m_clientScreen(nullptr),
-      m_serverAddress(nullptr)
+ClientApp::ClientApp(IEventQueue *events) : App(events, new deskflow::ClientArgs())
 {
   // do nothing
 }

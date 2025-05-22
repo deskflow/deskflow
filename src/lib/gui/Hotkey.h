@@ -26,7 +26,7 @@ class Hotkey
   friend QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey);
 
 public:
-  Hotkey();
+  Hotkey() = default;
 
 public:
   QString text() const;
@@ -59,8 +59,8 @@ protected:
   }
 
 private:
-  KeySequence m_keySequence;
-  ActionList m_actions;
+  KeySequence m_keySequence = {};
+  ActionList m_actions = {};
   inline static const QString kSectionActions = QStringLiteral("actions");
   inline static const QString kMousebutton = QStringLiteral("mousebutton(%1)");
   inline static const QString kKeystroke = QStringLiteral("keystroke(%1)");

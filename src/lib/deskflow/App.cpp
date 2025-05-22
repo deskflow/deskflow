@@ -43,12 +43,9 @@ App *App::s_instance = nullptr;
 
 App::App(IEventQueue *events, deskflow::ArgsBase *args)
     : m_bye(&exit),
-      m_suspended(false),
       m_events(events),
       m_args(args),
-      m_fileLog(nullptr),
-      m_appUtil(events),
-      m_socketMultiplexer(nullptr)
+      m_appUtil(events)
 {
   assert(s_instance == nullptr);
   s_instance = this;

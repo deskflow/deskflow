@@ -37,6 +37,6 @@ private slots:
 private:
   QNetworkAccessManager m_NetworkManager;
   QByteArray m_Data;
-  QNetworkReply *m_pReply;
-  bool m_IsFinished;
+  QNetworkReply *m_pReply = nullptr;
+  bool m_IsFinished = false;
 };

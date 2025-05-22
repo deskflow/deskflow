@@ -10,18 +10,11 @@
 //
 // Event
 //
-
-Event::Event() : m_type(EventTypes::Unknown), m_target(nullptr), m_data(nullptr), m_flags(0), m_dataObject(nullptr)
-{
-  // do nothing
-}
-
 Event::Event(EventTypes type, void *target, void *data, Flags flags)
     : m_type(type),
       m_target(target),
       m_data(data),
-      m_flags(flags),
-      m_dataObject(nullptr)
+      m_flags(flags)
 {
   // do nothing
 }
@@ -29,8 +22,6 @@ Event::Event(EventTypes type, void *target, void *data, Flags flags)
 Event::Event(EventTypes type, void *target, EventData *dataObject)
     : m_type(type),
       m_target(target),
-      m_data(nullptr),
-      m_flags(kNone),
       m_dataObject(dataObject)
 {
   // do nothing

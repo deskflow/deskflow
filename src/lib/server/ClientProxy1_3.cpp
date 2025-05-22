@@ -21,8 +21,6 @@
 
 ClientProxy1_3::ClientProxy1_3(const std::string &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy1_2(name, stream, events),
-      m_keepAliveRate(kKeepAliveRate),
-      m_keepAliveTimer(nullptr),
       m_events(events)
 {
   setHeartbeatRate(kKeepAliveRate, kKeepAliveRate * kKeepAlivesUntilDeath);

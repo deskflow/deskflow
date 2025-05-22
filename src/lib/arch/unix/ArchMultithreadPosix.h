@@ -99,12 +99,12 @@ private:
 
   static ArchMultithreadPosix *s_instance;
 
-  bool m_newThreadCalled;
+  bool m_newThreadCalled = false;
 
   ArchMutex m_threadMutex;
   ArchThread m_mainThread;
   ThreadList m_threadList;
-  ThreadID m_nextID;
+  ThreadID m_nextID = 0;
 
   pthread_t m_signalThread;
   SignalFunc m_signalFunc[kNUM_SIGNALS];

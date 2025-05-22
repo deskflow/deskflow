@@ -25,13 +25,9 @@
 
 SocketMultiplexer::SocketMultiplexer()
     : m_mutex(new Mutex),
-      m_thread(nullptr),
-      m_update(false),
       m_jobsReady(new CondVar<bool>(m_mutex, false)),
       m_jobListLock(new CondVar<bool>(m_mutex, false)),
-      m_jobListLockLocked(new CondVar<bool>(m_mutex, false)),
-      m_jobListLocker(nullptr),
-      m_jobListLockLocker(nullptr)
+      m_jobListLockLocked(new CondVar<bool>(m_mutex, false))
 {
   // this pointer just has to be unique and not nullptr.  it will
   // never be dereferenced.  it's used to identify cursor nodes

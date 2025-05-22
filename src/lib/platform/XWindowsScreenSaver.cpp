@@ -52,13 +52,6 @@ XWindowsScreenSaver::XWindowsScreenSaver(Display *display, Window window, void *
     : m_display(display),
       m_xscreensaverSink(window),
       m_eventTarget(eventTarget),
-      m_xscreensaver(None),
-      m_xscreensaverActive(false),
-      m_dpms(false),
-      m_disabled(false),
-      m_suppressDisable(false),
-      m_disableTimer(nullptr),
-      m_disablePos(0),
       m_events(events)
 {
   // get atoms

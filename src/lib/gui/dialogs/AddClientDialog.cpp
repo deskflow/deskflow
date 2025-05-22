@@ -12,8 +12,7 @@
 
 AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      ui{std::make_unique<Ui::AddClientDialog>()},
-      m_AddResult(kAddClientIgnore)
+      ui{std::make_unique<Ui::AddClientDialog>()}
 {
   ui->setupUi(this);
 

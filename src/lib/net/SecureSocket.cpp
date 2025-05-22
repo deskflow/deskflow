@@ -60,9 +60,6 @@ SecureSocket::SecureSocket(
     SecurityLevel securityLevel
 )
     : TCPSocket(events, socketMultiplexer, family),
-      m_ssl(nullptr),
-      m_secureReady(false),
-      m_fatal(false),
       m_securityLevel{securityLevel}
 {
   // do nothing
@@ -72,9 +69,6 @@ SecureSocket::SecureSocket(
     IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket, SecurityLevel securityLevel
 )
     : TCPSocket(events, socketMultiplexer, socket),
-      m_ssl(nullptr),
-      m_secureReady(false),
-      m_fatal(false),
       m_securityLevel{securityLevel}
 {
   // do nothing

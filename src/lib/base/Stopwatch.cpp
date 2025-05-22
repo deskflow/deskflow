@@ -12,7 +12,7 @@
 // Stopwatch
 //
 
-Stopwatch::Stopwatch(bool triggered) : m_mark(0.0), m_triggered(triggered), m_stopped(triggered)
+Stopwatch::Stopwatch(bool triggered) : m_triggered(triggered), m_stopped(triggered)
 {
   if (!triggered) {
     m_mark = ARCH->time();

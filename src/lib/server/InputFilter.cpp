@@ -31,8 +31,7 @@ void InputFilter::Condition::disablePrimary(PrimaryClient *)
 }
 
 InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatformScreen::KeyInfo *info)
-    : m_id(0),
-      m_key(info->m_key),
+    : m_key(info->m_key),
       m_mask(info->m_mask),
       m_events(events)
 {
@@ -40,8 +39,7 @@ InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, IPlatfo
 }
 
 InputFilter::KeystrokeCondition::KeystrokeCondition(IEventQueue *events, KeyID key, KeyModifierMask mask)
-    : m_id(0),
-      m_key(key),
+    : m_key(key),
       m_mask(mask),
       m_events(events)
 {
@@ -524,17 +522,12 @@ const char *InputFilter::MouseButtonAction::formatName() const
 // InputFilter::Rule
 //
 
-InputFilter::Rule::Rule() : m_condition(nullptr)
-{
-  // do nothing
-}
-
 InputFilter::Rule::Rule(Condition *adoptedCondition) : m_condition(adoptedCondition)
 {
   // do nothing
 }
 
-InputFilter::Rule::Rule(const Rule &rule) : m_condition(nullptr)
+InputFilter::Rule::Rule(const Rule &rule)
 {
   copy(rule);
 }
@@ -735,10 +728,7 @@ InputFilter::InputFilter(IEventQueue *events) : m_primaryClient(nullptr), m_even
   // do nothing
 }
 
-InputFilter::InputFilter(const InputFilter &x)
-    : m_ruleList(x.m_ruleList),
-      m_primaryClient(nullptr),
-      m_events(x.m_events)
+InputFilter::InputFilter(const InputFilter &x) : m_ruleList(x.m_ruleList), m_events(x.m_events)
 {
   setPrimaryClient(x.m_primaryClient);
 }

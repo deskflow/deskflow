@@ -30,6 +30,6 @@ public:
   }
 
 private:
-  IApp *m_app;
+  IApp *m_app = nullptr;
   static AppUtil *s_instance;
 };

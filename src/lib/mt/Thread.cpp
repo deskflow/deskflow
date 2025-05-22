@@ -28,14 +28,14 @@ Thread::Thread(IJob *job)
   }
 }
 
-Thread::Thread(const Thread &thread)
+Thread::Thread(const Thread &thread) : m_thread{ARCH->copyThread(thread.m_thread)}
 {
-  m_thread = ARCH->copyThread(thread.m_thread);
+  // do nothing
 }
 
-Thread::Thread(ArchThread adoptedThread)
+Thread::Thread(ArchThread adoptedThread) : m_thread{adoptedThread}
 {
-  m_thread = adoptedThread;
+  // do nothing
 }
 
 Thread::~Thread()

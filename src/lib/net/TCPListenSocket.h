@@ -46,7 +46,7 @@ public:
 
 protected:
   ArchSocket m_socket;
-  Mutex *m_mutex;
+  Mutex *m_mutex = nullptr;
   IEventQueue *m_events;
   SocketMultiplexer *m_socketMultiplexer;
 };

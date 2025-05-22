@@ -89,16 +89,16 @@ private:
   void unlockJobList();
 
 private:
-  Mutex *m_mutex;
-  Thread *m_thread;
-  bool m_update;
-  CondVar<bool> *m_jobsReady;
-  CondVar<bool> *m_jobListLock;
-  CondVar<bool> *m_jobListLockLocked;
-  Thread *m_jobListLocker;
-  Thread *m_jobListLockLocker;
+  Mutex *m_mutex = nullptr;
+  Thread *m_thread = nullptr;
+  bool m_update = false;
+  CondVar<bool> *m_jobsReady = nullptr;
+  CondVar<bool> *m_jobListLock = nullptr;
+  CondVar<bool> *m_jobListLockLocked = nullptr;
+  Thread *m_jobListLocker = nullptr;
+  Thread *m_jobListLockLocker = nullptr;
 
-  SocketJobs m_socketJobs;
-  SocketJobMap m_socketJobMap;
-  ISocketMultiplexerJob *m_cursorMark;
+  SocketJobs m_socketJobs = {};
+  SocketJobMap m_socketJobMap = {};
+  ISocketMultiplexerJob *m_cursorMark = nullptr;
 };

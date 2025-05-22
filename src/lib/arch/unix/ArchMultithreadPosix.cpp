@@ -52,34 +52,20 @@ static void setSignalSet(sigset_t *sigset)
 class ArchThreadImpl
 {
 public:
-  ArchThreadImpl();
+  ArchThreadImpl() = default;
 
 public:
-  int m_refCount;
-  IArchMultithread::ThreadID m_id;
+  int m_refCount = 1;
+  IArchMultithread::ThreadID m_id = 0;
   pthread_t m_thread;
-  IArchMultithread::ThreadFunc m_func;
-  void *m_userData;
-  bool m_cancel;
-  bool m_cancelling;
-  bool m_exited;
-  void *m_result;
-  void *m_networkData;
+  IArchMultithread::ThreadFunc m_func = nullptr;
+  void *m_userData = nullptr;
+  bool m_cancel = false;
+  bool m_cancelling = false;
+  bool m_exited = false;
+  void *m_result = nullptr;
+  void *m_networkData = nullptr;
 };
-
-ArchThreadImpl::ArchThreadImpl()
-    : m_refCount(1),
-      m_id(0),
-      m_func(nullptr),
-      m_userData(nullptr),
-      m_cancel(false),
-      m_cancelling(false),
-      m_exited(false),
-      m_result(nullptr),
-      m_networkData(nullptr)
-{
-  // do nothing
-}
 
 //
 // ArchMultithreadPosix
@@ -87,7 +73,7 @@ ArchThreadImpl::ArchThreadImpl()
 
 ArchMultithreadPosix *ArchMultithreadPosix::s_instance = nullptr;
 
-ArchMultithreadPosix::ArchMultithreadPosix() : m_newThreadCalled(false), m_nextID(0)
+ArchMultithreadPosix::ArchMultithreadPosix()
 {
   assert(s_instance == nullptr);
 

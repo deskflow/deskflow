@@ -146,10 +146,7 @@ public:
   class const_iterator : std::iterator_traits<Config>
   {
   public:
-    explicit const_iterator() : m_i()
-    {
-      // do nothing
-    }
+    explicit const_iterator() = default;
     explicit const_iterator(const internal_const_iterator &i) : m_i(i)
     {
       // do nothing
@@ -484,7 +481,7 @@ private:
   NetworkAddress m_deskflowAddress;
   ScreenOptions m_globalOptions;
   InputFilter m_inputFilter;
-  bool m_hasLockToScreenAction;
+  bool m_hasLockToScreenAction = false;
   IEventQueue *m_events;
 };
 

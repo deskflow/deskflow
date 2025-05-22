@@ -48,23 +48,13 @@ Client::Client(
     IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
     deskflow::Screen *screen, deskflow::ClientArgs const &args
 )
-    : m_mock(false),
-      m_name(name),
+    : m_name(name),
       m_serverAddress(address),
       m_socketFactory(socketFactory),
       m_screen(screen),
-      m_stream(nullptr),
-      m_timer(nullptr),
-      m_server(nullptr),
-      m_ready(false),
-      m_active(false),
-      m_suspended(false),
-      m_connectOnResume(false),
       m_events(events),
       m_useSecureNetwork(args.m_enableCrypto),
-      m_args(args),
-      m_enableClipboard(true),
-      m_maximumClipboardSize(INT_MAX)
+      m_args(args)
 {
   assert(m_socketFactory != nullptr);
   assert(m_screen != nullptr);
@@ -93,10 +83,6 @@ Client::Client(
 
 Client::~Client()
 {
-  if (m_mock) {
-    return;
-  }
-
   m_events->removeHandler(EventTypes::ScreenSuspend, getEventTarget());
   m_events->removeHandler(EventTypes::ScreenResume, getEventTarget());
 

@@ -20,8 +20,6 @@
 
 PacketStreamFilter::PacketStreamFilter(IEventQueue *events, deskflow::IStream *stream, bool adoptStream)
     : StreamFilter(events, stream, adoptStream),
-      m_size(0),
-      m_inputShutdown(false),
       m_events(events)
 {
   // do nothing

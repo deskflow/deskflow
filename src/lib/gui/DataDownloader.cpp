@@ -6,7 +6,7 @@
 
 #include "DataDownloader.h"
 
-DataDownloader::DataDownloader(QObject *parent) : QObject(parent), m_pReply(nullptr), m_IsFinished(false)
+DataDownloader::DataDownloader(QObject *parent) : QObject(parent)
 {
   connect(&m_NetworkManager, &QNetworkAccessManager::finished, this, &DataDownloader::complete);
 }

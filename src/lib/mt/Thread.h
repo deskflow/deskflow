@@ -195,5 +195,5 @@ private:
   static void *threadFunc(void *);
 
 private:
-  ArchThread m_thread;
+  ArchThread m_thread = nullptr;
 };

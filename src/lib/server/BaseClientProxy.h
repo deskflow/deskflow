@@ -85,6 +85,6 @@ public:
 
 private:
   std::string m_name;
-  int32_t m_x;
-  int32_t m_y;
+  int32_t m_x = 0;
+  int32_t m_y = 0;
 };

@@ -22,11 +22,8 @@ namespace deskflow {
 Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
     : m_screen(platformScreen),
       m_isPrimary(platformScreen->isPrimary()),
-      m_enabled(false),
       m_entered(m_isPrimary),
-      m_fakeInput(false),
-      m_events(events),
-      m_mock(false)
+      m_events(events)
 {
   assert(m_screen != nullptr);
 
@@ -38,9 +35,6 @@ Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
 
 Screen::~Screen()
 {
-  if (m_mock) {
-    return;
-  }
 
   if (m_enabled) {
     disable();
