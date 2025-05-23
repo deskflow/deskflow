@@ -28,7 +28,7 @@ TlsCertificate::TlsCertificate(QObject *parent) : QObject(parent)
   // do nothing
 }
 
-bool TlsCertificate::generateCertificate(const QString &path, int keyLength)
+bool TlsCertificate::generateCertificate(const QString &path, int keyLength) const
 {
   qDebug("generating tls certificate: %s", qUtf8Printable(path));
 
