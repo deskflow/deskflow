@@ -1558,7 +1558,7 @@ bool MSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
   }
 }
 
-void MSWindowsScreen::updateKeysCB(void *)
+void MSWindowsScreen::updateKeysCB(const void *)
 {
   // record which keys we think are down
   bool down[IKeyState::s_numButtons];

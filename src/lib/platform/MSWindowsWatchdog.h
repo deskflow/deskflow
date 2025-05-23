@@ -64,12 +64,12 @@ private:
   /**
    * @brief Monitor the process state and start/stop the process as necessary.
    */
-  void mainLoop(void *);
+  void mainLoop(const void *);
 
   /**
    * @brief Monitor the process standard out/error and write to the file log outputter.
    */
-  void outputLoop(void *);
+  void outputLoop(const void *);
 
   /**
    * @brief Duplicates the process token for the given process.
@@ -116,7 +116,7 @@ private:
    *
    * SendSAS sends a SAS (Secure Attention Sequence) for Ctrl+Alt+Del emulation.
    */
-  void sasLoop(void *);
+  void sasLoop(const void *);
 
   /**
    * @brief Convert the process state enum to a string (useful for logging).

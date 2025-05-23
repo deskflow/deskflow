@@ -203,7 +203,7 @@ private:
   void deskMouseRelativeMove(int32_t dx, int32_t dy) const;
   void deskEnter(Desk *desk);
   void deskLeave(Desk *desk, HKL keyLayout);
-  void deskThread(void *vdesk);
+  void deskThread(const void *vdesk);
 
   // desk switch checking and handling
   Desk *addDesk(const std::wstring &name, HDESK hdesk);

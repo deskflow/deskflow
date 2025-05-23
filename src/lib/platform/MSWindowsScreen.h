@@ -205,7 +205,7 @@ private: // HACK
   bool mapPressFromEvent(WPARAM msg, LPARAM button) const;
 
   // job to update the key state
-  void updateKeysCB(void *);
+  void updateKeysCB(const void *);
 
   // determine whether the mouse is hidden by the system.
   // if true and on secondary screen, enable mouse keys to show the cursor.

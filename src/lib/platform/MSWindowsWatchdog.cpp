@@ -151,7 +151,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
   }
 }
 
-void MSWindowsWatchdog::mainLoop(void *)
+void MSWindowsWatchdog::mainLoop(const void *)
 {
   using enum ProcessState;
 
@@ -322,7 +322,7 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   }
 }
 
-void MSWindowsWatchdog::outputLoop(void *)
+void MSWindowsWatchdog::outputLoop(const void *)
 {
   static constexpr DWORD kBufSize = 4096;
 
@@ -497,7 +497,7 @@ void MSWindowsWatchdog::initSasFunc()
   LOG_DEBUG("found SendSAS function in sas.dll");
 }
 
-void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signature
+void MSWindowsWatchdog::sasLoop(const void *) // NOSONAR - Thread entry point signature
 {
   LOG_DEBUG3("watchdog creating sas event");
 

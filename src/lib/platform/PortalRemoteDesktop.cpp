@@ -170,7 +170,7 @@ gboolean PortalRemoteDesktop::initSession()
   return false; // don't reschedule
 }
 
-void PortalRemoteDesktop::glibThread(void *)
+void PortalRemoteDesktop::glibThread(const void *)
 {
   auto context = g_main_loop_get_context(m_glibMainLoop);
 

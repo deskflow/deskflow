@@ -348,7 +348,7 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   }
 }
 
-void PortalInputCapture::glibThread(void *)
+void PortalInputCapture::glibThread(const void *)
 {
   auto context = g_main_loop_get_context(m_glibMainLoop);
 

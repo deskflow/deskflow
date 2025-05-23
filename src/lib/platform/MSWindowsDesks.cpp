@@ -596,12 +596,12 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
   }
 }
 
-void MSWindowsDesks::deskThread(void *vdesk)
+void MSWindowsDesks::deskThread(const void *vdesk)
 {
   MSG msg;
 
   // use given desktop for this thread
-  Desk *desk = static_cast<Desk *>(vdesk);
+  Desk *desk = const_cast<Desk *>(static_cast<const Desk *>(vdesk));
   desk->m_threadID = GetCurrentThreadId();
   desk->m_window = nullptr;
   desk->m_foregroundWindow = nullptr;

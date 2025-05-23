@@ -165,7 +165,7 @@ void App::handleScreenError() const
   getEvents()->addEvent(Event(EventTypes::Quit));
 }
 
-void App::runEventsLoop(void *)
+void App::runEventsLoop(const void *)
 {
   m_events->loop();
 

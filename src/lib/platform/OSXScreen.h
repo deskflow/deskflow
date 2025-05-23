@@ -153,7 +153,7 @@ private:
   static pascal OSStatus userSwitchCallback(EventHandlerCallRef nextHandler, EventRef theEvent, void *inUserData);
 
   // sleep / wakeup support
-  void watchSystemPowerThread(void *);
+  void watchSystemPowerThread(const void *);
   static void testCanceled(CFRunLoopTimerRef timer, void *info);
   static void powerChangeCallback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument);
   void handlePowerChangeRequest(natural_t messageType, void *messageArgument);

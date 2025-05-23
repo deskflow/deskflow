@@ -33,7 +33,7 @@ public:
   }
 
 private:
-  void glibThread(void *);
+  void glibThread(const void *);
   gboolean timeoutHandler() const;
   gboolean initSession();
   void handleInitSession(GObject *object, GAsyncResult *res);

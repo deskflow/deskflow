@@ -107,7 +107,7 @@ public:
   void handleScreenError() const;
 
 protected:
-  void runEventsLoop(void *);
+  void runEventsLoop(const void *);
 
 private:
   void (*m_bye)(int);
