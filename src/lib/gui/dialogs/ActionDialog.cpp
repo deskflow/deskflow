@@ -142,7 +142,7 @@ bool ActionDialog::canSave()
     for (const auto &item : items) {
       if (item->checkState() == Qt::Checked)
         totalChecked++;
-    };
+    }
     return (!ui->keySequenceWidget->keySequence().toString().isEmpty() && (totalChecked > 0));
   }
   return true;
