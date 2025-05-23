@@ -196,7 +196,7 @@ deskflow::Screen *ClientApp::createScreen()
 #endif
 }
 
-void ClientApp::updateStatus()
+void ClientApp::updateStatus() const
 {
   updateStatus("");
 }

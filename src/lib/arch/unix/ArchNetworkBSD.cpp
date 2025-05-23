@@ -410,7 +410,7 @@ void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
   }
 }
 
-void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
+void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking) const
 {
   assert(fd != -1);
 

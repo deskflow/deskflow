@@ -24,7 +24,7 @@ ArgParser::ArgParser(App *app) : m_app(app)
 {
 }
 
-bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv)
+bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv) const
 {
   setArgsBase(args);
   updateCommonArgs(argv);
@@ -61,7 +61,7 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
   return true;
 }
 
-bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv)
+bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv) const
 {
   setArgsBase(args);
   updateCommonArgs(argv);
@@ -118,7 +118,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
 bool ArgParser::parsePlatformArgs(
     deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer
-)
+) const
 {
 #if !WINAPI_XWINDOWS
   // no options for carbon or windows

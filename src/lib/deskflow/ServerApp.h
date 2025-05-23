@@ -85,7 +85,7 @@ public:
   void handleClientsDisconnected(const Event &, void *);
   void closeServer(Server *server);
   void stopRetryTimer();
-  void updateStatus();
+  void updateStatus() const;
   void updateStatus(const std::string_view &msg) const;
   void closeClientListener(ClientListener *listen);
   void stopServer();
