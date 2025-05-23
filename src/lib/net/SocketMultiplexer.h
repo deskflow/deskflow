@@ -60,7 +60,7 @@ private:
   // and m_update while m_pollable and m_polling are true.  all other
   // threads must only modify these when m_pollable and m_polling are
   // false.  only the service thread sets m_polling.
-  [[noreturn]] void serviceThread(void *);
+  [[noreturn]] void serviceThread(const void *);
 
   // create, iterate, and destroy a cursor.  a cursor is used to
   // safely iterate through the job list while other threads modify

@@ -17,7 +17,7 @@ template <class T> class TMethodJob : public IJob
 {
 public:
   //! run() invokes \c object->method(arg)
-  TMethodJob(T *object, void (T::*method)(void *), void *arg = nullptr);
+  TMethodJob(T *object, void (T::*method)(const void *), void *arg = nullptr);
   ~TMethodJob() override = default;
 
   // IJob overrides
@@ -25,12 +25,12 @@ public:
 
 private:
   T *m_object;
-  void (T::*m_method)(void *);
+  void (T::*m_method)(const void *);
   void *m_arg;
 };
 
 template <class T>
-inline TMethodJob<T>::TMethodJob(T *object, void (T::*method)(void *), void *arg)
+inline TMethodJob<T>::TMethodJob(T *object, void (T::*method)(const void *), void *arg)
     : m_object(object),
       m_method(method),
       m_arg(arg)

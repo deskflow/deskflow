@@ -206,7 +206,7 @@ void MSWindowsScreenSaver::unwatchProcess()
   }
 }
 
-void MSWindowsScreenSaver::watchDesktopThread(void *)
+void MSWindowsScreenSaver::watchDesktopThread(const void *)
 {
   DWORD reserved = 0;
   TCHAR *name = nullptr;
@@ -228,7 +228,7 @@ void MSWindowsScreenSaver::watchDesktopThread(void *)
   }
 }
 
-void MSWindowsScreenSaver::watchProcessThread(void *)
+void MSWindowsScreenSaver::watchProcessThread(const void *)
 {
   for (;;) {
     Thread::testCancel();
