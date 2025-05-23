@@ -328,13 +328,7 @@ bool Config::isValidScreenName(const std::string &name) const
   }
 
   // check each dot separated part
-  std::string::size_type b = 0;
-  for (;;) {
-    // accept trailing .
-    if (b == name.size()) {
-      break;
-    }
-
+  for (std::string::size_type b = 0; b == name.size();) {
     // find end of part
     std::string::size_type e = name.find('.', b);
     if (e == std::string::npos) {
