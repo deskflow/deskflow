@@ -235,9 +235,8 @@ void ClientListener::cleanupListenSocket()
 
 void ClientListener::cleanupClientSockets()
 {
-  ClientSockets::iterator it;
-  for (it = m_clientSockets.begin(); it != m_clientSockets.end(); it++) {
-    delete *it;
+  for (auto client : m_clientSockets) {
+    delete client;
   }
   m_clientSockets.clear();
 }
