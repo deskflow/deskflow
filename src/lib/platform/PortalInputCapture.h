@@ -47,25 +47,25 @@ private:
   /// g_signal_connect callback wrapper
   static void cb_session_closed_cb(XdpSession *session, gpointer data)
   {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_session_closed(session);
+    static_cast<PortalInputCapture *>(data)->cb_session_closed(session);
   }
   static void cb_disabled_cb(XdpInputCaptureSession *session, GVariant *options, gpointer data)
   {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_disabled(session, options);
+    static_cast<PortalInputCapture *>(data)->cb_disabled(session, options);
   }
   static void
   cb_activated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
   {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_activated(session, activation_id, options);
+    static_cast<PortalInputCapture *>(data)->cb_activated(session, activation_id, options);
   }
   static void
   cb_deactivated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
   {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_deactivated(session, activation_id, options);
+    static_cast<PortalInputCapture *>(data)->cb_deactivated(session, activation_id, options);
   }
   static void cb_zones_changed_cb(XdpInputCaptureSession *session, GVariant *options, gpointer data)
   {
-    reinterpret_cast<PortalInputCapture *>(data)->cb_zones_changed(session, options);
+    static_cast<PortalInputCapture *>(data)->cb_zones_changed(session, options);
   }
 
   int fake_eis_fd() const;

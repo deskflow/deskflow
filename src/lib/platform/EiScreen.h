@@ -105,7 +105,7 @@ private:
 
   static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
   {
-    auto screen = reinterpret_cast<EiScreen *>(ei_get_user_data(ei));
+    auto screen = static_cast<EiScreen *>(ei_get_user_data(ei));
     screen->handle_ei_log_event(priority, message);
   }
 
