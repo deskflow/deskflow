@@ -62,7 +62,7 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (const auto client = message.getClientName(); m_receivedClients.contains(client)) {
+  if (const auto &client = message.getClientName(); m_receivedClients.contains(client)) {
     qDebug("already got request, skipping new client prompt for: %s", qPrintable(client));
     return;
   }
