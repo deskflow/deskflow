@@ -357,7 +357,7 @@ public:
 
   explicit InputFilter(IEventQueue *events);
   InputFilter(const InputFilter &);
-  virtual ~InputFilter();
+  ~InputFilter();
 
   InputFilter &operator=(const InputFilter &);
 
@@ -372,7 +372,7 @@ public:
 
   // enable event filtering using the given primary client.  disable
   // if client is nullptr.
-  virtual void setPrimaryClient(PrimaryClient *client);
+  void setPrimaryClient(PrimaryClient *client);
 
   // convert rules to a string
   std::string format(const std::string_view &linePrefix) const;

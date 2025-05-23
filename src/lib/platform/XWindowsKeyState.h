@@ -96,7 +96,7 @@ public:
   // IKeyState overrides
   bool fakeCtrlAltDel() override;
   KeyModifierMask pollActiveModifiers() const override;
-  int32_t pollActiveGroup() const override;
+  int32_t pollActiveGroup() const final;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override;
 
 protected:
