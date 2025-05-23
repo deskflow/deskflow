@@ -228,7 +228,7 @@ int ServerConfig::adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) co
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
 {
-  using enum synergy::gui::ServerProtocol;
+  using enum deskflow::gui::ServerProtocol;
 
   outStream << "section: screens" << Qt::endl;
 

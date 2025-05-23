@@ -24,7 +24,7 @@ class QFile;
 class ServerConfigDialog;
 class MainWindow;
 
-namespace synergy::gui {
+namespace deskflow::gui {
 
 enum class ServerProtocol
 {
@@ -35,11 +35,11 @@ enum class ServerProtocol
 // The default protocol was decided by a community vote.
 const auto kDefaultProtocol = ServerProtocol::kBarrier;
 
-} // namespace synergy::gui
+} // namespace deskflow::gui
 
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
-  using ServerProtocol = synergy::gui::ServerProtocol;
+  using ServerProtocol = deskflow::gui::ServerProtocol;
 
   friend class ServerConfigDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
@@ -261,7 +261,7 @@ private:
 private:
   bool m_HasHeartbeat = false;
   int m_Heartbeat = 0;
-  ServerProtocol m_Protocol = synergy::gui::kDefaultProtocol;
+  ServerProtocol m_Protocol = deskflow::gui::kDefaultProtocol;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   bool m_HasSwitchDelay = false;
