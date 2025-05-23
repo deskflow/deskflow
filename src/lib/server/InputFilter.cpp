@@ -80,7 +80,7 @@ InputFilter::EFilterStatus InputFilter::KeystrokeCondition::match(const Event &e
   }
 
   // check if it's our hotkey
-  if (auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
+  if (const auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
     return kNoMatch;
   }
 
@@ -156,7 +156,7 @@ InputFilter::EFilterStatus InputFilter::MouseButtonCondition::match(const Event 
 
   // check if it's the right button and modifiers.  ignore modifiers
   // that cannot be combined with a mouse button.
-  if (auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  if (const auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
       minfo->m_button != m_button || (minfo->m_mask & ~s_ignoreMask) != m_mask) {
     return kNoMatch;
   }
@@ -184,7 +184,7 @@ std::string InputFilter::ScreenConnectedCondition::format() const
 InputFilter::EFilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
 {
   if (event.getType() == EventTypes::ServerConnected) {
-    auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
+    const auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
     if (m_screen == info->m_screen || m_screen.empty()) {
       return kActivate;
     }
@@ -288,7 +288,7 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event)
   // event if it has one.
   std::string screen = m_screen;
   if (screen.empty() && event.getType() == EventTypes::ServerConnected) {
-    auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
+    const auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
     screen = info->m_screen;
   }
 

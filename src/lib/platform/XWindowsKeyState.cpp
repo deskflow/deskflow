@@ -629,7 +629,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
       int eGroup = getEffectiveGroup(keycode, group);
 
       // get key info
-      XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, eGroup);
+      const XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, eGroup);
 
       // set modifiers the item is sensitive to
       item.m_sensitive = type->mods.mask;
@@ -664,7 +664,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         bool isModifier = false;
         uint32_t modifierMask = m_xkb->map->modmap[keycode];
         if (XkbKeyHasActions(m_xkb, keycode) == True) {
-          XkbAction *action = XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
+          const XkbAction *action = XkbKeyActionEntry(m_xkb, keycode, level, eGroup);
           if (action->type == XkbSA_SetMods || action->type == XkbSA_LockMods) {
             isModifier = true;
 
@@ -788,7 +788,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 
 void XWindowsKeyState::remapKeyModifiers(KeyID id, int32_t group, deskflow::KeyMap::KeyItem &item, void *vself)
 {
-  auto *self = static_cast<XWindowsKeyState *>(vself);
+  const auto *self = static_cast<XWindowsKeyState *>(vself);
   item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
   item.m_sensitive = self->mapModifiersFromX(XkbBuildCoreState(item.m_sensitive, group));
 }
@@ -804,13 +804,13 @@ bool XWindowsKeyState::hasModifiersXKB() const
       int numGroups = XkbKeyNumGroups(m_xkb, keycode);
       for (int group = 0; group < numGroups; ++group) {
         // iterate over all shift levels for the button (including none)
-        XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, group);
+        const XkbKeyTypePtr type = XkbKeyKeyType(m_xkb, keycode, group);
         for (int j = -1; j < type->map_count; ++j) {
           if (j != -1 && !type->map[j].active) {
             continue;
           }
           int level = ((j == -1) ? 0 : type->map[j].level);
-          XkbAction *action = XkbKeyActionEntry(m_xkb, keycode, level, group);
+          const XkbAction *action = XkbKeyActionEntry(m_xkb, keycode, level, group);
           if (action->type == XkbSA_SetMods || action->type == XkbSA_LockMods) {
             return true;
           }

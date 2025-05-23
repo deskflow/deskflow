@@ -148,7 +148,7 @@ void SocketMultiplexer::serviceThread(void *)
       JobCursor cursor = newCursor();
       JobCursor jobCursor = nextCursor(cursor);
       while (jobCursor != m_socketJobs.end()) {
-        if (ISocketMultiplexerJob *job = *jobCursor; job) {
+        if (const ISocketMultiplexerJob *job = *jobCursor; job) {
           pfd.m_socket = job->getSocket();
           pfd.m_events = 0;
           if (job->isReadable()) {

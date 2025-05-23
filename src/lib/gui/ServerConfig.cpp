@@ -133,7 +133,7 @@ void ServerConfig::commit()
   settings().beginWriteArray("screens");
   for (int i = 0; i < screens().size(); i++) {
     settings().setArrayIndex(i);
-    auto &screen = screens()[i];
+    const auto &screen = screens()[i];
     screen.saveSettings(settings());
     auto screenName = Settings::value(Settings::Core::ScreenName).toString();
     if (screen.isServer() && screenName != screen.name()) {

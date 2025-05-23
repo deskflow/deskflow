@@ -1112,7 +1112,7 @@ IKeyState *XWindowsScreen::getKeyState() const
 
 Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
 {
-  auto *filter = reinterpret_cast<KeyEventFilter *>(arg);
+  const auto *filter = reinterpret_cast<KeyEventFilter *>(arg);
   return (xevent->type == filter->m_event && xevent->xkey.window == filter->m_window &&
           xevent->xkey.time == filter->m_time && xevent->xkey.keycode == filter->m_keycode)
              ? True
@@ -1332,7 +1332,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
   default:
 #if HAVE_XKB_EXTENSION
     if (m_xkb && xevent->type == m_xkbEventBase) {
-      auto *xkbEvent = reinterpret_cast<XkbEvent *>(xevent);
+      const auto *xkbEvent = reinterpret_cast<XkbEvent *>(xevent);
       switch (xkbEvent->any.xkb_type) {
       case XkbMapNotify:
         refreshKeyboard(xevent);
