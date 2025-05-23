@@ -97,11 +97,11 @@ int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached,
 
 void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 {
-  auto *clipboardData = static_cast<ClipboardChunk *>(data);
+  const auto *clipboardData = static_cast<ClipboardChunk *>(data);
 
   LOG((CLOG_DEBUG1 "sending clipboard chunk"));
 
-  char *chunk = clipboardData->m_chunk;
+  const char *chunk = clipboardData->m_chunk;
   ClipboardID id = chunk[0];
   uint32_t sequence;
   std::memcpy(&sequence, &chunk[1], 4);
