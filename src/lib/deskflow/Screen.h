@@ -46,14 +46,14 @@ public:
   For a secondary screen it also means disabling the screen saver if
   synchronizing it and preparing to synthesize events.
   */
-  virtual void enable();
+  void enable();
 
   //! Deactivate screen
   /*!
   Undoes the operations in activate() and events are no longer
   reported.  It also releases keys that are logically pressed.
   */
-  virtual void disable();
+  void disable();
 
   //! Enter screen
   /*!
@@ -168,14 +168,14 @@ public:
   /*!
   Resets all options to their default values.
   */
-  virtual void resetOptions();
+  void resetOptions();
 
   //! Notify of options changes
   /*!
   Set options to given values.  Ignores unknown options and doesn't
   modify options that aren't given in \c options.
   */
-  virtual void setOptions(const OptionsList &options);
+  void setOptions(const OptionsList &options);
 
   //! Set clipboard sequence number
   /*!
