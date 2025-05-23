@@ -443,12 +443,10 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
-    if (m_securityLevel == SecurityLevel::PeerAuth) {
-      if (!verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
-        retry = 0;
-        disconnect();
-        return -1; // Fail
-      }
+    if (m_securityLevel == SecurityLevel::PeerAuth && !verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
+      retry = 0;
+      disconnect();
+      return -1; // Fail
     }
     m_secureReady = true;
     LOG((CLOG_INFO "accepted secure socket"));

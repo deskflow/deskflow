@@ -25,15 +25,11 @@ void FingerprintDatabase::readStream(QTextStream &in)
   if (!in.device() && !in.string())
     return;
 
-  if (in.device()) {
-    if (!in.device()->isReadable())
-      return;
-  }
+  if (in.device() && !in.device()->isReadable())
+    return;
 
-  if (in.string()) {
-    if (in.string()->isEmpty())
-      return;
-  }
+  if (in.string() && in.string()->isEmpty())
+    return;
 
   QString line;
   while (!in.atEnd()) {
@@ -63,10 +59,8 @@ bool FingerprintDatabase::writeStream(QTextStream &out)
   if (!out.device() && !out.string())
     return false;
 
-  if (out.device()) {
-    if (!out.device()->isWritable())
-      return false;
-  }
+  if (out.device() && !out.device()->isWritable())
+    return false;
 
   for (const auto &fingerprint : std::as_const(m_fingerprints)) {
     out << fingerprint.toDbLine() << "\n";
