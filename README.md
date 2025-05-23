@@ -50,7 +50,7 @@ We support all major operating systems, including Windows, macOS, Linux, and Uni
 > [!NOTE]
 > On Windows, you will need to install the
 > [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).  
-> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe) [`vc_redist.arm64.exe`](https://aka.ms/vs/17/release/vc_redist.arm64.exe)
 
 Windows 10 or higher is required.
 
