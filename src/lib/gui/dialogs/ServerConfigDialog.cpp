@@ -20,7 +20,7 @@
 #include <QMessageBox>
 
 using enum ScreenConfig::SwitchCorner;
-using ServerProtocol = synergy::gui::ServerProtocol;
+using ServerProtocol = deskflow::gui::ServerProtocol;
 
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
