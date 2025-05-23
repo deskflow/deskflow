@@ -65,11 +65,9 @@ XWindowsScreenSaver::XWindowsScreenSaver(Display *display, Window window, void *
 #if HAVE_X11_EXTENSIONS_DPMS_H
   int eventBase;
   int errorBase;
-  if (DPMSQueryExtension(m_display, &eventBase, &errorBase)) {
-    if (DPMSCapable(m_display)) {
-      // we have DPMS
-      m_dpms = true;
-    }
+  if (DPMSQueryExtension(m_display, &eventBase, &errorBase) && DPMSCapable(m_display)) {
+    // we have DPMS
+    m_dpms = true;
   }
 #endif
 
@@ -159,11 +157,9 @@ bool XWindowsScreenSaver::handleXEvent(const XEvent *xevent)
     break;
 
   case PropertyNotify:
-    if (xevent->xproperty.state == PropertyNewValue) {
-      if (isXScreenSaver(xevent->xproperty.window)) {
-        // found the xscreensaver
-        setXScreenSaver(xevent->xcreatewindow.window);
-      }
+    if (xevent->xproperty.state == PropertyNewValue && isXScreenSaver(xevent->xproperty.window)) {
+      // found the xscreensaver
+      setXScreenSaver(xevent->xcreatewindow.window);
     }
     break;
 

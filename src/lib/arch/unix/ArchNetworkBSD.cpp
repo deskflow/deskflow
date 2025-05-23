@@ -166,10 +166,8 @@ void ArchNetworkBSD::closeSocketForRead(ArchSocket s)
 {
   assert(s != nullptr);
 
-  if (shutdown(s->m_fd, 0) == -1) {
-    if (errno != ENOTCONN) {
-      throwError(errno);
-    }
+  if ((shutdown(s->m_fd, 0) == -1) && (errno != ENOTCONN)) {
+    throwError(errno);
   }
 }
 
@@ -177,10 +175,8 @@ void ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
 {
   assert(s != nullptr);
 
-  if (shutdown(s->m_fd, 1) == -1) {
-    if (errno != ENOTCONN) {
-      throwError(errno);
-    }
+  if ((shutdown(s->m_fd, 1) == -1) && (errno != ENOTCONN)) {
+    throwError(errno);
   }
 }
 

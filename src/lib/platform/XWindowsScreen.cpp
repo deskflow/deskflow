@@ -1050,10 +1050,8 @@ void XWindowsScreen::openIM()
   XIMStyle style = 0;
   for (unsigned short i = 0; i < styles->count_styles; ++i) {
     style = styles->supported_styles[i];
-    if ((style & XIMPreeditNothing) != 0) {
-      if ((style & (XIMStatusNothing | XIMStatusNone)) != 0) {
-        break;
-      }
+    if (((style & XIMPreeditNothing) != 0) && ((style & (XIMStatusNothing | XIMStatusNone)) != 0)) {
+      break;
     }
   }
   XFree(styles);
@@ -1148,11 +1146,8 @@ void XWindowsScreen::handleSystemEvent(const Event &event, void *)
         // this is a hot key
         onHotKey(xevent->xkey, isRepeat);
         return;
-      } else if (!m_isOnScreen) {
-        // this might be a hot key
-        if (onHotKey(xevent->xkey, isRepeat)) {
-          return;
-        }
+      } else if (!m_isOnScreen && onHotKey(xevent->xkey, isRepeat)) {
+        return;
       }
 
       bool down = (isRepeat || xevent->type == KeyPress);
