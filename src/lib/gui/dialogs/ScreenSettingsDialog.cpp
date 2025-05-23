@@ -25,49 +25,49 @@ ScreenSettingsDialog::~ScreenSettingsDialog() = default;
 
 ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, const ScreenList *pScreens)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
-      ui_{std::make_unique<Ui::ScreenSettingsDialog>()},
+      ui{std::make_unique<Ui::ScreenSettingsDialog>()},
       m_pScreen(pScreen)
 {
 
-  ui_->setupUi(this);
+  ui->setupUi(this);
 
-  ui_->m_pLabelAliasError->setStyleSheet(kStyleErrorActiveLabel);
-  ui_->m_pLabelNameError->setStyleSheet(kStyleErrorActiveLabel);
+  ui->m_pLabelAliasError->setStyleSheet(kStyleErrorActiveLabel);
+  ui->m_pLabelNameError->setStyleSheet(kStyleErrorActiveLabel);
 
-  ui_->m_pLineEditName->setText(m_pScreen->name());
-  ui_->m_pLineEditName->setValidator(new validators::ScreenNameValidator(
-      ui_->m_pLineEditName, new validators::ValidationError(this, ui_->m_pLabelNameError), pScreens
+  ui->m_pLineEditName->setText(m_pScreen->name());
+  ui->m_pLineEditName->setValidator(new validators::ScreenNameValidator(
+      ui->m_pLineEditName, new validators::ValidationError(this, ui->m_pLabelNameError), pScreens
   ));
-  ui_->m_pLineEditName->selectAll();
+  ui->m_pLineEditName->selectAll();
 
-  ui_->m_pLineEditAlias->setValidator(new validators::AliasValidator(
-      ui_->m_pLineEditAlias, new validators::ValidationError(this, ui_->m_pLabelAliasError)
+  ui->m_pLineEditAlias->setValidator(new validators::AliasValidator(
+      ui->m_pLineEditAlias, new validators::ValidationError(this, ui->m_pLabelAliasError)
   ));
 
   for (int i = 0; i < m_pScreen->aliases().count(); i++)
-    new QListWidgetItem(m_pScreen->aliases()[i], ui_->m_pListAliases);
+    new QListWidgetItem(m_pScreen->aliases()[i], ui->m_pListAliases);
 
-  ui_->m_pComboBoxShift->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Shift)));
-  ui_->m_pComboBoxCtrl->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Ctrl)));
-  ui_->m_pComboBoxAlt->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Alt)));
-  ui_->m_pComboBoxMeta->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Meta)));
-  ui_->m_pComboBoxSuper->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Super)));
+  ui->m_pComboBoxShift->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Shift)));
+  ui->m_pComboBoxCtrl->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Ctrl)));
+  ui->m_pComboBoxAlt->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Alt)));
+  ui->m_pComboBoxMeta->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Meta)));
+  ui->m_pComboBoxSuper->setCurrentIndex(m_pScreen->modifier(static_cast<int>(Super)));
 
-  ui_->m_pCheckBoxCornerTopLeft->setChecked(m_pScreen->switchCorner(static_cast<int>(TopLeft)));
-  ui_->m_pCheckBoxCornerTopRight->setChecked(m_pScreen->switchCorner(static_cast<int>(TopRight)));
-  ui_->m_pCheckBoxCornerBottomLeft->setChecked(m_pScreen->switchCorner(static_cast<int>(BottomLeft)));
-  ui_->m_pCheckBoxCornerBottomRight->setChecked(m_pScreen->switchCorner(static_cast<int>(BottomRight)));
-  ui_->m_pSpinBoxSwitchCornerSize->setValue(m_pScreen->switchCornerSize());
+  ui->m_pCheckBoxCornerTopLeft->setChecked(m_pScreen->switchCorner(static_cast<int>(TopLeft)));
+  ui->m_pCheckBoxCornerTopRight->setChecked(m_pScreen->switchCorner(static_cast<int>(TopRight)));
+  ui->m_pCheckBoxCornerBottomLeft->setChecked(m_pScreen->switchCorner(static_cast<int>(BottomLeft)));
+  ui->m_pCheckBoxCornerBottomRight->setChecked(m_pScreen->switchCorner(static_cast<int>(BottomRight)));
+  ui->m_pSpinBoxSwitchCornerSize->setValue(m_pScreen->switchCornerSize());
 
-  ui_->m_pCheckBoxCapsLock->setChecked(m_pScreen->fix(CapsLock));
-  ui_->m_pCheckBoxNumLock->setChecked(m_pScreen->fix(NumLock));
-  ui_->m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(ScrollLock));
-  ui_->m_pCheckBoxXTest->setChecked(m_pScreen->fix(XTest));
+  ui->m_pCheckBoxCapsLock->setChecked(m_pScreen->fix(CapsLock));
+  ui->m_pCheckBoxNumLock->setChecked(m_pScreen->fix(NumLock));
+  ui->m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(ScrollLock));
+  ui->m_pCheckBoxXTest->setChecked(m_pScreen->fix(XTest));
 }
 
 void ScreenSettingsDialog::accept()
 {
-  if (ui_->m_pLineEditName->text().isEmpty()) {
+  if (ui->m_pLineEditName->text().isEmpty()) {
     QMessageBox::warning(
         this, tr("Screen name is empty"),
         tr("The screen name cannot be empty. "
@@ -75,15 +75,15 @@ void ScreenSettingsDialog::accept()
     );
     return;
   }
-  if (!ui_->m_pLabelNameError->text().isEmpty()) {
+  if (!ui->m_pLabelNameError->text().isEmpty()) {
     return;
   }
 
-  m_pScreen->setName(ui_->m_pLineEditName->text());
+  m_pScreen->setName(ui->m_pLineEditName->text());
 
-  for (int i = 0; i < ui_->m_pListAliases->count(); i++) {
-    QString alias(ui_->m_pListAliases->item(i)->text());
-    if (alias == ui_->m_pLineEditName->text()) {
+  for (int i = 0; i < ui->m_pListAliases->count(); i++) {
+    QString alias(ui->m_pListAliases->item(i)->text());
+    if (alias == ui->m_pLineEditName->text()) {
       QMessageBox::warning(
           this, tr("Screen name matches alias"),
           tr("The screen name cannot be the same as an alias. "
@@ -94,43 +94,43 @@ void ScreenSettingsDialog::accept()
     m_pScreen->addAlias(alias);
   }
 
-  m_pScreen->setModifier(Shift, ui_->m_pComboBoxShift->currentIndex());
-  m_pScreen->setModifier(Ctrl, ui_->m_pComboBoxCtrl->currentIndex());
-  m_pScreen->setModifier(Alt, ui_->m_pComboBoxAlt->currentIndex());
-  m_pScreen->setModifier(Meta, ui_->m_pComboBoxMeta->currentIndex());
-  m_pScreen->setModifier(Super, ui_->m_pComboBoxSuper->currentIndex());
+  m_pScreen->setModifier(Shift, ui->m_pComboBoxShift->currentIndex());
+  m_pScreen->setModifier(Ctrl, ui->m_pComboBoxCtrl->currentIndex());
+  m_pScreen->setModifier(Alt, ui->m_pComboBoxAlt->currentIndex());
+  m_pScreen->setModifier(Meta, ui->m_pComboBoxMeta->currentIndex());
+  m_pScreen->setModifier(Super, ui->m_pComboBoxSuper->currentIndex());
 
-  m_pScreen->setSwitchCorner(TopLeft, ui_->m_pCheckBoxCornerTopLeft->isChecked());
-  m_pScreen->setSwitchCorner(TopRight, ui_->m_pCheckBoxCornerTopRight->isChecked());
-  m_pScreen->setSwitchCorner(BottomLeft, ui_->m_pCheckBoxCornerBottomLeft->isChecked());
-  m_pScreen->setSwitchCorner(BottomRight, ui_->m_pCheckBoxCornerBottomRight->isChecked());
-  m_pScreen->setSwitchCornerSize(ui_->m_pSpinBoxSwitchCornerSize->value());
+  m_pScreen->setSwitchCorner(TopLeft, ui->m_pCheckBoxCornerTopLeft->isChecked());
+  m_pScreen->setSwitchCorner(TopRight, ui->m_pCheckBoxCornerTopRight->isChecked());
+  m_pScreen->setSwitchCorner(BottomLeft, ui->m_pCheckBoxCornerBottomLeft->isChecked());
+  m_pScreen->setSwitchCorner(BottomRight, ui->m_pCheckBoxCornerBottomRight->isChecked());
+  m_pScreen->setSwitchCornerSize(ui->m_pSpinBoxSwitchCornerSize->value());
 
-  m_pScreen->setFix(CapsLock, ui_->m_pCheckBoxCapsLock->isChecked());
-  m_pScreen->setFix(NumLock, ui_->m_pCheckBoxNumLock->isChecked());
-  m_pScreen->setFix(ScrollLock, ui_->m_pCheckBoxScrollLock->isChecked());
-  m_pScreen->setFix(XTest, ui_->m_pCheckBoxXTest->isChecked());
+  m_pScreen->setFix(CapsLock, ui->m_pCheckBoxCapsLock->isChecked());
+  m_pScreen->setFix(NumLock, ui->m_pCheckBoxNumLock->isChecked());
+  m_pScreen->setFix(ScrollLock, ui->m_pCheckBoxScrollLock->isChecked());
+  m_pScreen->setFix(XTest, ui->m_pCheckBoxXTest->isChecked());
 
   QDialog::accept();
 }
 
 void ScreenSettingsDialog::on_m_pButtonAddAlias_clicked()
 {
-  if (!ui_->m_pLineEditAlias->text().isEmpty() &&
-      ui_->m_pListAliases->findItems(ui_->m_pLineEditAlias->text(), Qt::MatchFixedString).isEmpty()) {
-    new QListWidgetItem(ui_->m_pLineEditAlias->text(), ui_->m_pListAliases);
-    ui_->m_pLineEditAlias->clear();
+  if (!ui->m_pLineEditAlias->text().isEmpty() &&
+      ui->m_pListAliases->findItems(ui->m_pLineEditAlias->text(), Qt::MatchFixedString).isEmpty()) {
+    new QListWidgetItem(ui->m_pLineEditAlias->text(), ui->m_pListAliases);
+    ui->m_pLineEditAlias->clear();
   }
 }
 
 void ScreenSettingsDialog::on_m_pLineEditAlias_textChanged(const QString &text)
 {
-  ui_->m_pButtonAddAlias->setEnabled(!text.isEmpty() && ui_->m_pLabelAliasError->text().isEmpty());
+  ui->m_pButtonAddAlias->setEnabled(!text.isEmpty() && ui->m_pLabelAliasError->text().isEmpty());
 }
 
 void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()
 {
-  QList<QListWidgetItem *> items = ui_->m_pListAliases->selectedItems();
+  QList<QListWidgetItem *> items = ui->m_pListAliases->selectedItems();
 
   for (int i = 0; i < items.count(); i++)
     delete items[i];
@@ -138,5 +138,5 @@ void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()
 
 void ScreenSettingsDialog::on_m_pListAliases_itemSelectionChanged()
 {
-  ui_->m_pButtonRemoveAlias->setEnabled(!ui_->m_pListAliases->selectedItems().isEmpty());
+  ui->m_pButtonRemoveAlias->setEnabled(!ui->m_pListAliases->selectedItems().isEmpty());
 }

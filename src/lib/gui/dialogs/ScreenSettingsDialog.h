@@ -37,6 +37,6 @@ private slots:
   void on_m_pListAliases_itemSelectionChanged();
 
 private:
-  std::unique_ptr<Ui::ScreenSettingsDialog> ui_;
+  std::unique_ptr<Ui::ScreenSettingsDialog> ui;
   Screen *m_pScreen;
 };
