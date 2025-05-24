@@ -63,17 +63,17 @@ private:
 
 private:
   BOOL m_wasEnabled;
-  bool m_wasSecure;
-  bool m_wasSecureAnInt;
+  bool m_wasSecure = false;
+  bool m_wasSecureAnInt = false;
 
-  HANDLE m_process;
-  Thread *m_watch;
-  DWORD m_threadID;
-  UINT m_msg;
-  WPARAM m_wParam;
-  LPARAM m_lParam;
+  HANDLE m_process = nullptr;
+  Thread *m_watch = nullptr;
+  DWORD m_threadID = 0;
+  UINT m_msg = 0;
+  WPARAM m_wParam = 0;
+  LPARAM m_lParam = 0;
 
   // checkActive state.  true if the screen saver is being watched
   // for deactivation (and is therefore active).
-  bool m_active;
+  bool m_active = false;
 };

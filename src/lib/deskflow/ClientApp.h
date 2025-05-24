@@ -62,7 +62,7 @@ public:
   // Regular functions
   //
 
-  void updateStatus();
+  void updateStatus() const;
   void updateStatus(const std::string &msg) const;
   void handleScreenError(const Event &, void *);
   deskflow::Screen *openClientScreen();

@@ -129,12 +129,12 @@ void ActionDialog::actionTypeChanged(int index)
   QTimer::singleShot(1, this, &ActionDialog::updateSize);
 }
 
-bool ActionDialog::isKeyAction(int index)
+bool ActionDialog::isKeyAction(int index) const
 {
   return ((index == ActionTypes::PressKey) || (index == ActionTypes::ReleaseKey) || (index == ActionTypes::ToggleKey));
 }
 
-bool ActionDialog::canSave()
+bool ActionDialog::canSave() const
 {
   if (isKeyAction(ui->comboActionType->currentIndex())) {
     const QList<QListWidgetItem *> items = ui->listScreens->findItems("*", Qt::MatchWildcard);
@@ -142,7 +142,7 @@ bool ActionDialog::canSave()
     for (const auto &item : items) {
       if (item->checkState() == Qt::Checked)
         totalChecked++;
-    };
+    }
     return (!ui->keySequenceWidget->keySequence().toString().isEmpty() && (totalChecked > 0));
   }
   return true;

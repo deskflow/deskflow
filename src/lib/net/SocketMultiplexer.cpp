@@ -108,12 +108,10 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
   // remove job.  rather than removing it from the map we put nullptr
   // in the list instead so the order of jobs in the list continues
   // to match the order of jobs in pfds in serviceThread().
-  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i != m_socketJobMap.end()) {
-    if (*(i->second) != nullptr) {
-      delete *(i->second);
-      *(i->second) = nullptr;
-      m_update = true;
-    }
+  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i != m_socketJobMap.end() && (*(i->second) != nullptr)) {
+    delete *(i->second);
+    *(i->second) = nullptr;
+    m_update = true;
   }
 
   // unlock the job list
@@ -150,7 +148,7 @@ void SocketMultiplexer::serviceThread(void *)
       JobCursor cursor = newCursor();
       JobCursor jobCursor = nextCursor(cursor);
       while (jobCursor != m_socketJobs.end()) {
-        if (ISocketMultiplexerJob *job = *jobCursor; job) {
+        if (const ISocketMultiplexerJob *job = *jobCursor; job) {
           pfd.m_socket = job->getSocket();
           pfd.m_events = 0;
           if (job->isReadable()) {

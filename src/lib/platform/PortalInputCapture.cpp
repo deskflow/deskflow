@@ -36,7 +36,7 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
   glib_thread_ = new Thread(new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glib_thread));
 
   auto init_capture_cb = [](gpointer data) -> gboolean {
-    return reinterpret_cast<PortalInputCapture *>(data)->init_input_capture_session();
+    return static_cast<PortalInputCapture *>(data)->init_input_capture_session();
   };
 
   g_idle_add(init_capture_cb, this);
@@ -204,7 +204,7 @@ gboolean PortalInputCapture::init_input_capture_session()
       static_cast<XdpInputCapability>(XDP_INPUT_CAPABILITY_KEYBOARD | XDP_INPUT_CAPABILITY_POINTER),
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
-        reinterpret_cast<PortalInputCapture *>(data)->cb_init_input_capture_session(obj, res);
+        static_cast<PortalInputCapture *>(data)->cb_init_input_capture_session(obj, res);
       },
       this
   );
@@ -262,7 +262,7 @@ void PortalInputCapture::cb_disabled(const XdpInputCaptureSession *session, cons
   g_timeout_add(
       1000,
       [](gpointer data) -> gboolean {
-        reinterpret_cast<PortalInputCapture *>(data)->enable();
+        static_cast<PortalInputCapture *>(data)->enable();
         return false;
       },
       this
@@ -372,7 +372,7 @@ void PortalInputCapture::cb_zones_changed(XdpInputCaptureSession *session, GVari
       session_, list,
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
-        reinterpret_cast<PortalInputCapture *>(data)->cb_set_pointer_barriers(obj, res);
+        static_cast<PortalInputCapture *>(data)->cb_set_pointer_barriers(obj, res);
       },
       this
   );

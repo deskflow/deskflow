@@ -257,7 +257,7 @@ void ServerApp::stopRetryTimer()
   }
 }
 
-void ServerApp::updateStatus()
+void ServerApp::updateStatus() const
 {
   updateStatus("");
 }

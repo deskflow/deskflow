@@ -166,10 +166,8 @@ void ArchNetworkBSD::closeSocketForRead(ArchSocket s)
 {
   assert(s != nullptr);
 
-  if (shutdown(s->m_fd, 0) == -1) {
-    if (errno != ENOTCONN) {
-      throwError(errno);
-    }
+  if ((shutdown(s->m_fd, 0) == -1) && (errno != ENOTCONN)) {
+    throwError(errno);
   }
 }
 
@@ -177,10 +175,8 @@ void ArchNetworkBSD::closeSocketForWrite(ArchSocket s)
 {
   assert(s != nullptr);
 
-  if (shutdown(s->m_fd, 1) == -1) {
-    if (errno != ENOTCONN) {
-      throwError(errno);
-    }
+  if ((shutdown(s->m_fd, 1) == -1) && (errno != ENOTCONN)) {
+    throwError(errno);
   }
 }
 
@@ -414,7 +410,7 @@ void ArchNetworkBSD::throwErrorOnSocket(ArchSocket s)
   }
 }
 
-void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking)
+void ArchNetworkBSD::setBlockingOnSocket(int fd, bool blocking) const
 {
   assert(fd != -1);
 
@@ -607,7 +603,7 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
 
   switch (getAddrFamily(addr)) {
   case kINET: {
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     ARCH->lockMutex(m_mutex);
     std::string s = inet_ntoa(ipAddr->sin_addr);
     ARCH->unlockMutex(m_mutex);
@@ -616,7 +612,7 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
 
   case kINET6: {
     char strAddr[INET6_ADDRSTRLEN];
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     ARCH->lockMutex(m_mutex);
     inet_ntop(AF_INET6, &ipAddr->sin6_addr, strAddr, INET6_ADDRSTRLEN);
     ARCH->unlockMutex(m_mutex);
@@ -673,12 +669,12 @@ int ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 
   switch (getAddrFamily(addr)) {
   case kINET: {
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return ntohs(ipAddr->sin_port);
   }
 
   case kINET6: {
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return ntohs(ipAddr->sin6_port);
   }
 
@@ -694,12 +690,12 @@ bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 
   switch (getAddrFamily(addr)) {
   case kINET: {
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return (ipAddr->sin_addr.s_addr == INADDR_ANY && addr->m_len == static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   }
 
   case kINET6: {
-    auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
+    const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return (
         addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&
         memcmp(

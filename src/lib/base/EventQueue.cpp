@@ -57,7 +57,7 @@ void EventQueue::loop()
   LOG((CLOG_DEBUG "event queue is ready"));
   while (!m_pending.empty()) {
     LOG((CLOG_DEBUG "add pending events to buffer"));
-    Event &event = m_pending.front();
+    const Event &event = m_pending.front();
     addEventToBuffer(event);
     m_pending.pop();
   }

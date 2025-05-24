@@ -35,7 +35,7 @@ public:
   ~EiScreen() override;
 
   // IScreen overrides
-  void *getEventTarget() const override;
+  void *getEventTarget() const final;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(std::int32_t &x, std::int32_t &y, std::int32_t &width, std::int32_t &height) const override;
   void getCursorPos(std::int32_t &x, std::int32_t &y) const override;
@@ -105,7 +105,7 @@ private:
 
   static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
   {
-    auto screen = reinterpret_cast<EiScreen *>(ei_get_user_data(ei));
+    auto screen = static_cast<EiScreen *>(ei_get_user_data(ei));
     screen->handle_ei_log_event(priority, message);
   }
 

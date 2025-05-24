@@ -134,13 +134,11 @@ void App::setupFileLogging()
 
 void App::loggingFilterWarning() const
 {
-  if (CLOG->getFilter() > CLOG->getConsoleMaxLevel()) {
-    if (argsBase().m_logFile == nullptr) {
-      LOG(
-          (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
-           CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
-      );
-    }
+  if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (argsBase().m_logFile == nullptr)) {
+    LOG(
+        (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
+         CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
+    );
   }
 }
 

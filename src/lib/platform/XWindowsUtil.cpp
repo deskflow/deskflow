@@ -1875,7 +1875,7 @@ void XWindowsUtil::appendTimeData(std::string &data, Time time)
 
 Bool XWindowsUtil::propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg)
 {
-  auto *filter = reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
+  const auto *filter = reinterpret_cast<PropertyNotifyPredicateInfo *>(arg);
   return (xevent->type == PropertyNotify && xevent->xproperty.window == filter->m_window &&
           xevent->xproperty.atom == filter->m_property && xevent->xproperty.state == PropertyNewValue)
              ? True

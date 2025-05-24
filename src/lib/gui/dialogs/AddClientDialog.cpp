@@ -57,7 +57,7 @@ AddClientDialog::AddClientDialog(const QString &clientName, QWidget *parent)
   ui->m_pDialogButtonBox->setLayoutDirection(Qt::RightToLeft);
 #endif
 
-  QPushButton *advanced = ui->m_pDialogButtonBox->addButton("Advanced", QDialogButtonBox::HelpRole);
+  const auto *advanced = ui->m_pDialogButtonBox->addButton(QStringLiteral("Advanced"), QDialogButtonBox::HelpRole);
   connect(advanced, &QPushButton::clicked, this, &AddClientDialog::handleButtonAdvanced);
 }
 

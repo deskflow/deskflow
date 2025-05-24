@@ -43,9 +43,9 @@ public:
   //@}
 
   // IClipboard overrides
-  bool empty() override;
+  bool empty() final;
   void add(EFormat, const std::string &data) override;
-  bool open(Time) const override;
+  bool open(Time) const final;
   void close() const override;
   Time getTime() const override;
   bool has(EFormat) const override;

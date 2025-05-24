@@ -30,15 +30,6 @@ static const TCHAR *const g_pathScreenSaverIsSecure[] = {"Control Panel", "Deskt
 //
 
 MSWindowsScreenSaver::MSWindowsScreenSaver()
-    : m_wasSecure(false),
-      m_wasSecureAnInt(false),
-      m_process(nullptr),
-      m_watch(nullptr),
-      m_threadID(0),
-      m_msg(0),
-      m_wParam(0),
-      m_lParam(0),
-      m_active(false)
 {
   // check if screen saver is enabled
   SystemParametersInfo(SPI_GETSCREENSAVEACTIVE, 0, &m_wasEnabled, 0);

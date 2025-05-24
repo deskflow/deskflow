@@ -361,7 +361,7 @@ void SecureSocket::initContext(bool server)
   }
 
   // create new context from method
-  auto *m = const_cast<SSL_METHOD *>(method);
+  const auto *m = const_cast<SSL_METHOD *>(method);
   m_ssl->m_context = SSL_CTX_new(m);
 
   // Prevent the usage of of all version prior to TLSv1.2 as they are known to
@@ -443,12 +443,10 @@ int SecureSocket::secureAccept(int socket)
 
   // If not fatal and no retry, state is good
   if (retry == 0) {
-    if (m_securityLevel == SecurityLevel::PeerAuth) {
-      if (!verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
-        retry = 0;
-        disconnect();
-        return -1; // Fail
-      }
+    if (m_securityLevel == SecurityLevel::PeerAuth && !verifyCertFingerprint(Settings::tlsTrustedClientsDb())) {
+      retry = 0;
+      disconnect();
+      return -1; // Fail
     }
     m_secureReady = true;
     LOG((CLOG_INFO "accepted secure socket"));

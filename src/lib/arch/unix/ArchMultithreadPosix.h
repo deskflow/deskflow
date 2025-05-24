@@ -63,10 +63,10 @@ public:
   void closeMutex(ArchMutex) override;
   void lockMutex(ArchMutex) override;
   void unlockMutex(ArchMutex) override;
-  ArchThread newThread(ThreadFunc, void *) override;
+  ArchThread newThread(ThreadFunc, void *) final;
   ArchThread newCurrentThread() override;
   ArchThread copyThread(ArchThread) override;
-  void closeThread(ArchThread) override;
+  void closeThread(ArchThread) final;
   void cancelThread(ArchThread) override;
   void setPriorityOfThread(ArchThread, int n) override;
   void testCancelThread() override;

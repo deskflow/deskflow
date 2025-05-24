@@ -123,7 +123,7 @@ public:
 private:
   const int *getUnblockPipe();
   const int *getUnblockPipeForThread(ArchThread);
-  void setBlockingOnSocket(int fd, bool blocking);
+  void setBlockingOnSocket(int fd, bool blocking) const;
   void throwError(int) const;
   void throwNameError(int) const;
 

@@ -259,51 +259,55 @@ private:
   bool m_isOnScreen;
 
   // our resources
-  ATOM m_class;
+  ATOM m_class = 0;
 
   // screen shape stuff
-  int32_t m_x, m_y;
-  int32_t m_w, m_h;
-  int32_t m_xCenter, m_yCenter;
+  int32_t m_x = 0;
+  int32_t m_y = 0;
+  int32_t m_w = 0;
+  int32_t m_h = 0;
+  int32_t m_xCenter = 0;
+  int32_t m_yCenter = 0;
 
   // true if system appears to have multiple monitors
-  bool m_multimon;
+  bool m_multimon = false;
 
   // last mouse position
-  int32_t m_xCursor, m_yCursor;
+  int32_t m_xCursor = 0;
+  int32_t m_yCursor = 0;
 
   // last clipboard
-  uint32_t m_sequenceNumber;
+  uint32_t m_sequenceNumber = 0;
 
   // used to discard queued messages that are no longer needed
-  uint32_t m_mark;
-  uint32_t m_markReceived;
+  uint32_t m_mark = 0;
+  uint32_t m_markReceived = 0;
 
   // the main loop's thread id
   DWORD m_threadID;
 
   // timer for periodically checking stuff that requires polling
-  EventQueueTimer *m_fixTimer;
+  EventQueueTimer *m_fixTimer = nullptr;
 
   // the keyboard layout to use when off primary screen
-  HKL m_keyLayout;
+  HKL m_keyLayout = nullptr;
 
   // screen saver stuff
-  MSWindowsScreenSaver *m_screensaver;
-  bool m_screensaverNotify;
-  bool m_screensaverActive;
+  MSWindowsScreenSaver *m_screensaver = nullptr;
+  bool m_screensaverNotify = false;
+  bool m_screensaverActive = false;
 
   // clipboard stuff.  our window is used mainly as a clipboard
   // owner and as a link in the clipboard viewer chain.
-  HWND m_window;
-  DWORD m_clipboardSequenceNumber;
-  bool m_ownClipboard;
+  HWND m_window = nullptr;
+  DWORD m_clipboardSequenceNumber = 0;
+  bool m_ownClipboard = false;
 
   // one desk per desktop and a cond var to communicate with it
-  MSWindowsDesks *m_desks;
+  MSWindowsDesks *m_desks = nullptr;
 
   // keyboard stuff
-  MSWindowsKeyState *m_keyState;
+  MSWindowsKeyState *m_keyState = nullptr;
 
   // hot key stuff
   HotKeyMap m_hotKeys;
@@ -325,7 +329,7 @@ private:
   // cursor to be displayed when the user has entered this screen.
   // m_showingMouse is true when we're doing that.
   bool m_hasMouse;
-  bool m_showingMouse;
+  bool m_showingMouse = false;
   bool m_gotOldMouseKeys;
   MOUSEKEYS m_mouseKeys;
   MOUSEKEYS m_oldMouseKeys;

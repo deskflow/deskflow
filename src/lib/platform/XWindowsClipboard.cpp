@@ -145,7 +145,7 @@ bool XWindowsClipboard::addSimpleRequest(Window requestor, Atom target, ::Time t
   } else if (target == m_atomTimestamp) {
     type = getTimestampData(data, &format);
   } else {
-    IXWindowsClipboardConverter *converter = getConverter(target);
+    const IXWindowsClipboardConverter *converter = getConverter(target);
     if (converter != nullptr) {
       IClipboard::EFormat clipboardFormat = converter->getFormat();
       if (m_added[clipboardFormat]) {
@@ -190,7 +190,7 @@ bool XWindowsClipboard::processRequest(Window requestor, ::Time /*time*/, Atom p
   // first property but we'll check 'em all if we have to.
   ReplyList &replies = index->second;
   for (auto index2 = replies.begin(); index2 != replies.end(); ++index2) {
-    Reply *reply = *index2;
+    const Reply *reply = *index2;
     if (reply->m_replied && reply->m_property == property) {
       // if reply is complete then remove it and start the
       // next one.
@@ -467,7 +467,7 @@ void XWindowsClipboard::icccmFillCache()
   // try each converter in order (because they're in order of
   // preference).
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IXWindowsClipboardConverter *converter = *index;
+    const IXWindowsClipboardConverter *converter = *index;
 
     // skip already handled targets
     if (m_added[converter->getFormat()]) {
@@ -692,7 +692,7 @@ void XWindowsClipboard::motifFillCache()
   // try each converter in order (because they're in order of
   // preference).
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IXWindowsClipboardConverter *converter = *index;
+    const IXWindowsClipboardConverter *converter = *index;
 
     // skip already handled targets
     if (m_added[converter->getFormat()]) {
@@ -1120,7 +1120,7 @@ Atom XWindowsClipboard::getTargetsData(std::string &data, int *format) const
 
   // add targets we can convert to
   for (auto index = m_converters.begin(); index != m_converters.end(); ++index) {
-    IXWindowsClipboardConverter *converter = *index;
+    const IXWindowsClipboardConverter *converter = *index;
 
     // skip formats we don't have
     if (m_added[converter->getFormat()]) {

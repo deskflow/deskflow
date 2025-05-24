@@ -440,7 +440,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
     // primary screen.
     if (m_active == m_primaryClient && m_enableClipboard) {
       for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
-        ClipboardInfo &clipboard = m_clipboards[id];
+        const ClipboardInfo &clipboard = m_clipboards[id];
         if (clipboard.m_clipboardOwner == getName(m_primaryClient)) {
           onClipboardChanged(m_primaryClient, id, clipboard.m_clipboardSeqNum);
         }
@@ -1229,7 +1229,7 @@ void Server::handleClipboardChanged(const Event &event, void *vclient)
 
 void Server::handleKeyDownEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_screens);
 }
@@ -1242,38 +1242,38 @@ void Server::handleKeyUpEvent(const Event &event, void *)
 
 void Server::handleKeyRepeatEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button, lang);
 }
 
 void Server::handleButtonDownEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
   onMouseDown(info->m_button);
 }
 
 void Server::handleButtonUpEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
   onMouseUp(info->m_button);
 }
 
 void Server::handleMotionPrimaryEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
   onMouseMovePrimary(info->m_x, info->m_y);
 }
 
 void Server::handleMotionSecondaryEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
   onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
 void Server::handleWheelEvent(const Event &event, void *)
 {
-  auto *info = static_cast<IPlatformScreen::WheelInfo *>(event.getData());
+  const auto *info = static_cast<IPlatformScreen::WheelInfo *>(event.getData());
   onMouseWheel(info->m_xDelta, info->m_yDelta);
 }
 
@@ -1335,7 +1335,7 @@ void Server::handleSwitchToScreenEvent(const Event &event, void *)
 
 void Server::handleSwitchInDirectionEvent(const Event &event, void *)
 {
-  auto *info = static_cast<SwitchInDirectionInfo *>(event.getData());
+  const auto *info = static_cast<SwitchInDirectionInfo *>(event.getData());
 
   // jump to screen in chosen direction from center of this screen
   int32_t x = m_x;
@@ -1350,7 +1350,7 @@ void Server::handleSwitchInDirectionEvent(const Event &event, void *)
 
 void Server::handleKeyboardBroadcastEvent(const Event &event, void *)
 {
-  auto *info = (KeyboardBroadcastInfo *)event.getData();
+  const auto *info = (KeyboardBroadcastInfo *)event.getData();
 
   // choose new state
   bool newState;
@@ -1382,7 +1382,7 @@ void Server::handleKeyboardBroadcastEvent(const Event &event, void *)
 
 void Server::handleLockCursorToScreenEvent(const Event &event, void *)
 {
-  auto *info = (LockCursorToScreenInfo *)event.getData();
+  const auto *info = (LockCursorToScreenInfo *)event.getData();
 
   // choose new state
   bool newState;
@@ -2018,7 +2018,7 @@ void Server::removeOldClient(BaseClientProxy *client)
 
 void Server::forceLeaveClient(const BaseClientProxy *client)
 {
-  if (BaseClientProxy *active = (m_activeSaver != nullptr) ? m_activeSaver : m_active; active == client) {
+  if (const auto *active = (m_activeSaver != nullptr) ? m_activeSaver : m_active; active == client) {
     // record new position (center of primary screen)
     m_primaryClient->getCursorCenter(m_x, m_y);
 

@@ -243,23 +243,26 @@ private:
   HCURSOR m_cursor;
 
   // screen shape stuff
-  int32_t m_x, m_y;
-  int32_t m_w, m_h;
-  int32_t m_xCenter, m_yCenter;
+  int32_t m_x = 0;
+  int32_t m_y = 9;
+  int32_t m_w = 0;
+  int32_t m_h = 0;
+  int32_t m_xCenter = 0;
+  int32_t m_yCenter = 0;
 
   // true if system appears to have multiple monitors
-  bool m_multimon;
+  bool m_multimon = false;
 
   // the timer used to check for desktop switching
-  EventQueueTimer *m_timer;
+  EventQueueTimer *m_timer = nullptr;
 
   // screen saver stuff
   DWORD m_threadID;
   const IScreenSaver *m_screensaver;
-  bool m_screensaverNotify;
+  bool m_screensaverNotify = false;
 
   // the current desk and it's name
-  Desk *m_activeDesk;
+  Desk *m_activeDesk = nullptr;
   std::string m_activeDeskName;
 
   // one desk per desktop and a cond var to communicate with it

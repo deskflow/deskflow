@@ -33,7 +33,7 @@ private:
   /// g_signal_connect callback wrapper
   static void cb_session_closed_cb(XdpSession *session, gpointer data)
   {
-    reinterpret_cast<PortalRemoteDesktop *>(data)->cb_session_closed(session);
+    static_cast<PortalRemoteDesktop *>(data)->cb_session_closed(session);
   }
 
   int fake_eis_fd();

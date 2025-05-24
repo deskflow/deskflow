@@ -156,16 +156,16 @@ QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
     return hex;
   }
 
-  QString final;
+  QString formatedString;
   while (!hex.isEmpty()) {
-    final.append(hex.mid(0, kmaxColumns));
+    formatedString.append(hex.mid(0, kmaxColumns));
     hex.remove(0, kmaxColumns);
-    if (final.endsWith(':'))
-      final.removeLast();
-    final.append('\n');
+    if (formatedString.endsWith(':'))
+      formatedString.removeLast();
+    formatedString.append('\n');
   }
-  final.removeLast();
-  return final;
+  formatedString.removeLast();
+  return formatedString;
 }
 
 /*

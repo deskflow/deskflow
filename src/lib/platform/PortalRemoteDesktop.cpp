@@ -57,7 +57,7 @@ gboolean PortalRemoteDesktop::timeout_handler() const
 void PortalRemoteDesktop::reconnect(unsigned int timeout)
 {
   auto init_cb = [](gpointer data) -> gboolean {
-    return reinterpret_cast<PortalRemoteDesktop *>(data)->init_remote_desktop_session();
+    return static_cast<PortalRemoteDesktop *>(data)->init_remote_desktop_session();
   };
 
   if (timeout > 0)
@@ -139,7 +139,7 @@ void PortalRemoteDesktop::cb_init_remote_desktop_session(GObject *object, GAsync
       nullptr, // parent
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
-        reinterpret_cast<PortalRemoteDesktop *>(data)->cb_session_started(obj, res);
+        static_cast<PortalRemoteDesktop *>(data)->cb_session_started(obj, res);
       },
       this
   );
@@ -153,7 +153,7 @@ gboolean PortalRemoteDesktop::init_remote_desktop_session()
       XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_TRANSIENT, session_restore_token_,
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
-        reinterpret_cast<PortalRemoteDesktop *>(data)->cb_init_remote_desktop_session(obj, res);
+        static_cast<PortalRemoteDesktop *>(data)->cb_init_remote_desktop_session(obj, res);
       },
       this
   );
