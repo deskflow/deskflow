@@ -32,12 +32,11 @@ EventQueue::EventQueue() : m_readyMutex(new Mutex), m_readyCondVar(new CondVar<b
   m_mutex = ARCH->newMutex();
   ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
   ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
-  m_buffer = new SimpleEventQueueBuffer;
+  m_buffer = std::make_unique<SimpleEventQueueBuffer>();
 }
 
 EventQueue::~EventQueue()
 {
-  delete m_buffer;
   delete m_readyCondVar;
   delete m_readyMutex;
 
@@ -84,7 +83,7 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
   }
 
   // discard old buffer and old events
-  delete m_buffer;
+  m_buffer.reset();
   for (auto i = m_events.begin(); i != m_events.end(); ++i) {
     Event::deleteData(i->second);
   }
@@ -92,9 +91,9 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
   m_oldEventIDs.clear();
 
   // use new buffer
-  m_buffer = buffer;
-  if (m_buffer == nullptr) {
-    m_buffer = new SimpleEventQueueBuffer;
+  m_buffer.reset(buffer);
+  if (buffer == nullptr) {
+    m_buffer = std::make_unique<SimpleEventQueueBuffer>();
   }
 }
 
