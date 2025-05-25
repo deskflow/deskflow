@@ -104,7 +104,7 @@ XWindowsScreen::XWindowsScreen(
   if (!disableXInitThreads) {
     // initializes Xlib support for concurrent threads.
     if (XInitThreads() == 0)
-      throw XArch("XInitThreads() returned zero");
+      throw std::runtime_error("XInitThreads() returned zero");
   } else {
     LOG((CLOG_DEBUG "skipping XInitThreads()"));
   }

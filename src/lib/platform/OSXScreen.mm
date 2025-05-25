@@ -122,7 +122,7 @@ OSXScreen::OSXScreen(
     if (m_isPrimary) {
       // we can't pass options to show the dialog, this must be done by the gui.
       if (!AXIsProcessTrusted()) {
-        throw XArch("assistive devices does not trust this process, allow it in system settings.");
+        throw std::runtime_error("assistive devices does not trust this process, allow it in system settings.");
       }
     }
 

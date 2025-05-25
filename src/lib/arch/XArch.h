@@ -46,24 +46,14 @@ cleanup but before leaving or returning from the handler.
   } catch (...) {                                                                                                      \
   }
 
-//! Generic exception architecture dependent library
-class XArch : public std::runtime_error
-{
-public:
-  explicit XArch(const std::string &msg) : std::runtime_error(msg)
-  {
-  }
-  ~XArch() throw() override = default;
-};
-
 //! Generic network exception
 /*!
 Exceptions derived from this class are used by the networking
 library to indicate various errors.
 */
-class XArchNetwork : public XArch
+class XArchNetwork : public std::runtime_error
 {
-  using XArch::XArch;
+  using std::runtime_error::runtime_error;
 };
 
 //! Operation was interrupted
@@ -185,9 +175,9 @@ class XArchNetworkNameUnsupported : public XArchNetworkName
 Exceptions derived from this class are used by the daemon
 library to indicate various errors.
 */
-class XArchDaemon : public XArch
+class XArchDaemon : public std::runtime_error
 {
-  using XArch::XArch;
+  using std::runtime_error::runtime_error;
 };
 
 //! Could not daemonize
