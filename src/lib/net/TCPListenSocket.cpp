@@ -91,24 +91,20 @@ void *TCPListenSocket::getEventTarget() const
   return const_cast<void *>(static_cast<const void *>(this));
 }
 
-IDataSocket *TCPListenSocket::accept()
+std::unique_ptr<IDataSocket> TCPListenSocket::accept()
 {
-  IDataSocket *socket = nullptr;
+  std::unique_ptr<IDataSocket> socket;
   try {
-    socket = new TCPSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr));
-    if (socket != nullptr) {
-      setListeningJob();
-    }
+    socket = std::make_unique<TCPSocket>(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr));
+    setListeningJob();
     return socket;
   } catch (XArchNetwork &) {
-    if (socket != nullptr) {
-      delete socket;
+    if (socket) {
       setListeningJob();
     }
     return nullptr;
   } catch (std::exception &ex) {
-    if (socket != nullptr) {
-      delete socket;
+    if (socket) {
       setListeningJob();
     }
     throw ex;

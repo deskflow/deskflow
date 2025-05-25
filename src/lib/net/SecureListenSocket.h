@@ -25,7 +25,7 @@ public:
   );
 
   // IListenSocket overrides
-  IDataSocket *accept() override;
+  std::unique_ptr<IDataSocket> accept() override;
 
 private:
   const SecurityLevel m_securityLevel;
