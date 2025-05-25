@@ -12,10 +12,12 @@
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"
 #include "net/IDataSocket.h"
+#include "net/ISocketMultiplexerJob.h"
+
+#include <memory>
 
 class Mutex;
 class Thread;
-class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -56,7 +58,7 @@ public:
   // IDataSocket overrides
   void connect(const NetworkAddress &) override;
 
-  virtual ISocketMultiplexerJob *newJob();
+  virtual std::unique_ptr<ISocketMultiplexerJob> newJob();
 
 protected:
   enum class JobResult
@@ -77,7 +79,8 @@ protected:
   virtual JobResult doRead();
   virtual JobResult doWrite();
 
-  void setJob(ISocketMultiplexerJob *);
+  void removeJob();
+  void setJob(std::unique_ptr<ISocketMultiplexerJob> &&job);
 
   bool isConnected() const
   {
@@ -135,8 +138,8 @@ private:
   void onOutputShutdown();
   void onDisconnected();
 
-  ISocketMultiplexerJob *serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
-  ISocketMultiplexerJob *serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
   bool m_readable;
   bool m_writable;
