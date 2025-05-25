@@ -32,16 +32,16 @@ SecureListenSocket::SecureListenSocket(
   // do nothing
 }
 
-IDataSocket *SecureListenSocket::accept()
+std::unique_ptr<IDataSocket> SecureListenSocket::accept()
 {
-  SecureSocket *socket = nullptr;
+  std::unique_ptr<SecureSocket> socket;
   try {
-    socket = new SecureSocket(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr), m_securityLevel);
+    socket = std::make_unique<SecureSocket>(
+        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr), m_securityLevel
+    );
     socket->initSsl(true);
 
-    if (socket != nullptr) {
-      setListeningJob();
-    }
+    setListeningJob();
 
     // default location of the TLS cert file in users dir
     std::string certificateFilename = Settings::value(Settings::Security::Certificate).toString().toStdString();
@@ -52,22 +52,19 @@ IDataSocket *SecureListenSocket::accept()
     }
 
     if (!socket->loadCertificates(certificateFilename)) {
-      delete socket;
       return nullptr;
     }
 
     socket->secureAccept();
 
-    return dynamic_cast<IDataSocket *>(socket);
+    return socket;
   } catch (XArchNetwork &) {
-    if (socket != nullptr) {
-      delete socket;
+    if (socket) {
       setListeningJob();
     }
     return nullptr;
   } catch (std::exception &ex) {
-    if (socket != nullptr) {
-      delete socket;
+    if (socket) {
       setListeningJob();
     }
     throw ex;

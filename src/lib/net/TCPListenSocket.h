@@ -36,7 +36,7 @@ public:
   void *getEventTarget() const override;
 
   // IListenSocket overrides
-  IDataSocket *accept() override;
+  std::unique_ptr<IDataSocket> accept() override;
 
 protected:
   void setListeningJob();

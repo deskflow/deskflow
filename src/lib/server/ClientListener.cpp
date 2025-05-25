@@ -124,24 +124,23 @@ void ClientListener::removeUnknownClient(ClientProxyUnknown *unknownClient)
 void ClientListener::handleClientConnecting(const Event &, void *)
 {
   // accept client connection
-  IDataSocket *socket = m_listen->accept();
+  auto socket = m_listen->accept();
 
-  if (socket == nullptr) {
+  if (!socket)
     return;
-  }
 
-  m_clientSockets.insert(socket);
+  auto rawSocketPointer = socket.release();
+  m_clientSockets.insert(rawSocketPointer);
 
   m_events->adoptHandler(
-      EventTypes::ClientListenerAccepted, socket->getEventTarget(),
-      new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientAccepted, socket)
+      EventTypes::ClientListenerAccepted, rawSocketPointer->getEventTarget(),
+      new TMethodEventJob<ClientListener>(this, &ClientListener::handleClientAccepted, rawSocketPointer)
   );
 
   // When using non SSL, server accepts clients immediately, while SSL
   // has to call secure accept which may require retry
   if (m_securityLevel == SecurityLevel::PlainText) {
-
-    m_events->addEvent(Event(EventTypes::ClientListenerAccepted, socket->getEventTarget()));
+    m_events->addEvent(Event(EventTypes::ClientListenerAccepted, rawSocketPointer->getEventTarget()));
   }
 }
 
