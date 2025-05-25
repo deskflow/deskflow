@@ -48,7 +48,7 @@ public:
   // IDataSocket overrides
   void connect(const NetworkAddress &) override;
 
-  ISocketMultiplexerJob *newJob() override;
+  std::unique_ptr<ISocketMultiplexerJob> newJob() override;
   bool isFatal() const override
   {
     return m_fatal;
@@ -79,9 +79,8 @@ private:
   void disconnect();
   bool verifyCertFingerprint(const QString &FingerprintDatabasePath) const;
 
-  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
-
-  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
 
   void handleTCPConnected(const Event &event, void *);
 
