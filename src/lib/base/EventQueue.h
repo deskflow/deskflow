@@ -100,7 +100,7 @@ private:
   using TimerQueue = PriorityQueue<Timer>;
   using EventTable = std::map<uint32_t, Event>;
   using EventIDList = std::vector<uint32_t>;
-  using TypeHandlerTable = std::map<EventTypes, IEventJob *>;
+  using TypeHandlerTable = std::map<EventTypes, std::unique_ptr<IEventJob>>;
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 
   int m_systemTarget = 0;
