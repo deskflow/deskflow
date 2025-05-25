@@ -19,7 +19,7 @@ Exceptions derived from this class are used by the multithreading
 library to perform stack unwinding when a thread terminates.  These
 exceptions must always be rethrown by clients when caught.
 */
-class XThread
+class XThread : public std::exception
 {
 };
 
