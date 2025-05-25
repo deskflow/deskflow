@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,30 +10,22 @@
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "base/String.h"
 
-//
-// XArchEvalWindows
-//
-
-std::string XArchEvalWindows::eval() const throw()
+std::string windowsErrorToString(DWORD error)
 {
   char *cmsg;
   if (FormatMessage(
-          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM, 0, m_error,
+          FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM, 0, error,
           MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPTSTR)&cmsg, 0, nullptr
       ) == 0) {
     cmsg = nullptr;
-    return deskflow::string::sprintf("Unknown error, code %d", m_error);
+    return deskflow::string::sprintf("Unknown error, code %d", error);
   }
   std::string smsg(cmsg);
   LocalFree(cmsg);
   return smsg;
 }
 
-//
-// XArchEvalWinsock
-//
-
-std::string XArchEvalWinsock::eval() const throw()
+std::string winsockErrorToString(int error)
 {
   // built-in windows function for looking up error message strings
   // may not look up network error messages correctly.  we'll have
@@ -204,7 +197,7 @@ std::string XArchEvalWinsock::eval() const throw()
   };
 
   for (unsigned int i = 0; s_netErrorCodes[i].m_code != 0; ++i) {
-    if (s_netErrorCodes[i].m_code == m_error) {
+    if (s_netErrorCodes[i].m_code == error) {
       return s_netErrorCodes[i].m_msg;
     }
   }

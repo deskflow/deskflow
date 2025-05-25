@@ -8,6 +8,7 @@
 #include "arch/unix/ArchNetworkBSD.h"
 
 #include "arch/Arch.h"
+#include "arch/XArch.h"
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
 
@@ -751,11 +752,11 @@ void ArchNetworkBSD::throwError(int err) const
   switch (err) {
   case EINTR:
     ARCH->testCancelThread();
-    throw XArchNetworkInterrupted(new XArchEvalUnix(err));
+    throw XArchNetworkInterrupted(errorToString(err));
 
   case EACCES:
   case EPERM:
-    throw XArchNetworkAccess(new XArchEvalUnix(err));
+    throw XArchNetworkAccess(errorToString(err));
 
   case ENFILE:
   case EMFILE:
@@ -766,7 +767,7 @@ void ArchNetworkBSD::throwError(int err) const
 #if defined(ENOSR)
   case ENOSR:
 #endif
-    throw XArchNetworkResource(new XArchEvalUnix(err));
+    throw XArchNetworkResource(errorToString(err));
 
   case EPROTOTYPE:
   case EPROTONOSUPPORT:
@@ -780,40 +781,40 @@ void ArchNetworkBSD::throwError(int err) const
 #if defined(ENOPKG)
   case ENOPKG:
 #endif
-    throw XArchNetworkSupport(new XArchEvalUnix(err));
+    throw XArchNetworkSupport(errorToString(err));
 
   case EIO:
-    throw XArchNetworkIO(new XArchEvalUnix(err));
+    throw XArchNetworkIO(errorToString(err));
 
   case EADDRNOTAVAIL:
-    throw XArchNetworkNoAddress(new XArchEvalUnix(err));
+    throw XArchNetworkNoAddress(errorToString(err));
 
   case EADDRINUSE:
-    throw XArchNetworkAddressInUse(new XArchEvalUnix(err));
+    throw XArchNetworkAddressInUse(errorToString(err));
 
   case EHOSTUNREACH:
   case ENETUNREACH:
-    throw XArchNetworkNoRoute(new XArchEvalUnix(err));
+    throw XArchNetworkNoRoute(errorToString(err));
 
   case ENOTCONN:
-    throw XArchNetworkNotConnected(new XArchEvalUnix(err));
+    throw XArchNetworkNotConnected(errorToString(err));
 
   case EPIPE:
-    throw XArchNetworkShutdown(new XArchEvalUnix(err));
+    throw XArchNetworkShutdown(errorToString(err));
 
   case ECONNABORTED:
   case ECONNRESET:
-    throw XArchNetworkDisconnected(new XArchEvalUnix(err));
+    throw XArchNetworkDisconnected(errorToString(err));
 
   case ECONNREFUSED:
-    throw XArchNetworkConnectionRefused(new XArchEvalUnix(err));
+    throw XArchNetworkConnectionRefused(errorToString(err));
 
   case EHOSTDOWN:
   case ETIMEDOUT:
-    throw XArchNetworkTimedOut(new XArchEvalUnix(err));
+    throw XArchNetworkTimedOut(errorToString(err));
 
   default:
-    throw XArchNetwork(new XArchEvalUnix(err));
+    throw XArchNetwork(errorToString(err));
   }
 }
 

@@ -452,14 +452,12 @@ bool MSWindowsScreen::getThisCursorPos(LPPOINT pos)
 {
   auto result = GetCursorPos(pos);
   if (!result) {
-    XArchEvalWindows error1;
-    LOG_DEBUG("could not get cursor pos, error: %s", error1.eval().c_str());
+    LOG_DEBUG("could not get cursor pos, error: %s", windowsErrorToString(GetLastError()).c_str());
 
     LOG_DEBUG("retrying get cursor pos");
     result = GetCursorPos(pos);
     if (!result) {
-      XArchEvalWindows error2;
-      LOG((CLOG_DEBUG "could not get cursor pos, error: %s", error2.eval().c_str()));
+      LOG((CLOG_DEBUG "could not get cursor pos, error: %s", windowsErrorToString(GetLastError()).c_str()));
 
       updateDesktopThread();
     }
@@ -472,14 +470,12 @@ bool MSWindowsScreen::setThisCursorPos(int x, int y)
 {
   auto result = SetCursorPos(x, y);
   if (!result) {
-    XArchEvalWindows error1;
-    LOG_DEBUG("could not set cursor pos, error: %s", error1.eval().c_str());
+    LOG_DEBUG("could not set cursor pos, error: %s", windowsErrorToString(GetLastError()).c_str());
 
     LOG_DEBUG("retrying to set cursor pos");
     result = SetCursorPos(x, y);
     if (!result) {
-      XArchEvalWindows error2;
-      LOG((CLOG_DEBUG "could not set cursor pos, error: %s", error2.eval().c_str()));
+      LOG((CLOG_DEBUG "could not set cursor pos, error: %s", windowsErrorToString(GetLastError()).c_str()));
 
       updateDesktopThread();
     }
@@ -494,19 +490,16 @@ void MSWindowsScreen::updateDesktopThread()
 
   HDESK hDesk = OpenInputDesktop(0, true, GENERIC_ALL);
   if (hDesk == nullptr) {
-    XArchEvalWindows error1;
-    LOG_DEBUG("could not open input desktop, error: %s", error1.eval().c_str());
+    LOG_DEBUG("could not open input desktop, error: %s", windowsErrorToString(GetLastError()).c_str());
     return;
   }
 
   if (!SetThreadDesktop(hDesk)) {
-    XArchEvalWindows error1;
-    LOG_DEBUG("could not set thread desktop, error: %s", error1.eval().c_str());
+    LOG_DEBUG("could not set thread desktop, error: %s", windowsErrorToString(GetLastError()).c_str());
   }
 
   if (!CloseDesktop(hDesk)) {
-    XArchEvalWindows error1;
-    LOG_DEBUG("could not close desktop, error: %s", error1.eval().c_str());
+    LOG_DEBUG("could not close desktop, error: %s", windowsErrorToString(GetLastError()).c_str());
   }
 }
 
