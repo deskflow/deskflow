@@ -93,6 +93,7 @@ public:
   {
     m_events = &events;
   }
+
   void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer> &&sm)
   {
     m_socketMultiplexer = std::move(sm);
