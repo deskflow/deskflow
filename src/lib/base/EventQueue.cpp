@@ -262,14 +262,12 @@ void EventQueue::deleteTimer(EventQueueTimer *timer)
 void EventQueue::adoptHandler(EventTypes type, void *target, IEventJob *handler)
 {
   ArchMutexLock lock(m_mutex);
-  IEventJob *&job = m_handlers[target][type];
-  delete job;
-  job = handler;
+  m_handlers[target][type].reset(handler);
 }
 
 void EventQueue::removeHandler(EventTypes type, void *target)
 {
-  IEventJob *handler = nullptr;
+  std::unique_ptr<IEventJob> handler;
   {
     ArchMutexLock lock(m_mutex);
     HandlerTable::iterator index = m_handlers.find(target);
@@ -277,34 +275,30 @@ void EventQueue::removeHandler(EventTypes type, void *target)
       TypeHandlerTable &typeHandlers = index->second;
       TypeHandlerTable::iterator index2 = typeHandlers.find(type);
       if (index2 != typeHandlers.end()) {
-        handler = index2->second;
+        handler = std::move(index2->second);
         typeHandlers.erase(index2);
       }
     }
   }
-  delete handler;
+  // handler is erased here. It is done outside of lock in order to avoid potential deadlock.
 }
 
 void EventQueue::removeHandlers(void *target)
 {
-  std::vector<IEventJob *> handlers;
+  std::vector<std::unique_ptr<IEventJob>> handlers;
   {
     ArchMutexLock lock(m_mutex);
     HandlerTable::iterator index = m_handlers.find(target);
     if (index != m_handlers.end()) {
       // copy to handlers array and clear table for target
       TypeHandlerTable &typeHandlers = index->second;
-      for (const auto &[key, value] : typeHandlers) {
-        handlers.push_back(value);
+      for (auto &[key, value] : typeHandlers) {
+        handlers.push_back(std::move(value));
       }
       typeHandlers.clear();
     }
   }
-
-  // delete handlers
-  for (auto index : handlers) {
-    delete index;
-  }
+  // handler is erased here. It is done outside of lock in order to avoid potential deadlock.
 }
 
 bool EventQueue::isEmpty() const
@@ -319,7 +313,7 @@ IEventJob *EventQueue::getHandler(EventTypes type, void *target) const
     const TypeHandlerTable &typeHandlers = index->second;
     TypeHandlerTable::const_iterator index2 = typeHandlers.find(type);
     if (index2 != typeHandlers.end()) {
-      return index2->second;
+      return index2->second.get();
     }
   }
   return nullptr;
