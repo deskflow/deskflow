@@ -75,6 +75,11 @@ SecureSocket::SecureSocket(
 
 SecureSocket::~SecureSocket()
 {
+  isFatal(true);
+  // take socket from multiplexer ASAP otherwise the race condition
+  // could cause events to get called on a dead object. TCPSocket
+  // will do this, too, but the double-call is harmless
+  removeJob();
   freeSSL();
 }
 
@@ -92,12 +97,12 @@ void SecureSocket::connect(const NetworkAddress &addr)
   TCPSocket::connect(addr);
 }
 
-ISocketMultiplexerJob *SecureSocket::newJob()
+std::unique_ptr<ISocketMultiplexerJob> SecureSocket::newJob()
 {
   // after TCP connection is established, SecureSocket will pick up
   // connected event and do secureConnect
   if (m_connected && !m_secureReady) {
-    return nullptr;
+    return {};
   }
 
   return TCPSocket::newJob();
@@ -105,16 +110,20 @@ ISocketMultiplexerJob *SecureSocket::newJob()
 
 void SecureSocket::secureConnect()
 {
-  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
-  ));
+  setJob(
+      std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
+          this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+      )
+  );
 }
 
 void SecureSocket::secureAccept()
 {
-  setJob(new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
-  ));
+  setJob(
+      std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
+          this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+      )
+  );
 }
 
 TCPSocket::EJobResult SecureSocket::doRead()
@@ -393,7 +402,7 @@ void SecureSocket::freeSSL()
   // take socket from multiplexer ASAP otherwise the race condition
   // could cause events to get called on a dead object. TCPSocket
   // will do this, too, but the double-call is harmless
-  setJob(nullptr);
+  removeJob();
   if (m_ssl) {
     if (m_ssl->m_ssl != nullptr) {
       SSL_shutdown(m_ssl->m_ssl);
@@ -670,7 +679,7 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
   return true;
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, bool, bool write, bool error)
+MultiplexerJobStatus SecureSocket::serviceConnect(ISocketMultiplexerJob *job, bool, bool write, bool error)
 {
   Lock lock(&getMutex());
 
@@ -683,22 +692,24 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, 
 
   // If status < 0, error happened
   if (status < 0) {
-    return nullptr;
+    return {false, {}};
   }
 
   // If status > 0, success
   if (status > 0) {
     sendEvent(EventTypes::DataSocketSecureConnected);
-    return newJob();
+    return {true, newJob()};
   }
 
   // Retry case
-  return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
-  );
+  return {
+      true, std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
+                this, &SecureSocket::serviceConnect, getSocket(), isReadable(), isWritable()
+            )
+  };
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, bool, bool write, bool error)
+MultiplexerJobStatus SecureSocket::serviceAccept(ISocketMultiplexerJob *job, bool, bool write, bool error)
 {
   Lock lock(&getMutex());
 
@@ -710,19 +721,21 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, b
 #endif
   // If status < 0, error happened
   if (status < 0) {
-    return nullptr;
+    return {false, {}};
   }
 
   // If status > 0, success
   if (status > 0) {
     sendEvent(EventTypes::ClientListenerAccepted);
-    return newJob();
+    return {true, newJob()};
   }
 
   // Retry case
-  return new TSocketMultiplexerMethodJob<SecureSocket>(
-      this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
-  );
+  return {
+      true, std::make_unique<TSocketMultiplexerMethodJob<SecureSocket>>(
+                this, &SecureSocket::serviceAccept, getSocket(), isReadable(), isWritable()
+            )
+  };
 }
 
 void SecureSocket::handleTCPConnected(const Event &)
