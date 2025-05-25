@@ -14,6 +14,7 @@
 #include "mt/CondVar.h"
 
 #include <map>
+#include <memory>
 #include <queue>
 #include <set>
 
@@ -106,7 +107,7 @@ private:
   ArchMutex m_mutex;
 
   // buffer of events
-  IEventQueueBuffer *m_buffer = nullptr;
+  std::unique_ptr<IEventQueueBuffer> m_buffer;
 
   // saved events
   EventTable m_events;
