@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -55,95 +56,160 @@ public:
   ~XArch() throw() override = default;
 };
 
-// Macro to declare XArch derived types
-#define XARCH_SUBCLASS(name_, super_)                                                                                  \
-  class name_ : public super_                                                                                          \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    name_(const std::string &msg) : super_(msg)                                                                        \
-    {                                                                                                                  \
-    }                                                                                                                  \
-  }
-
 //! Generic network exception
 /*!
 Exceptions derived from this class are used by the networking
 library to indicate various errors.
 */
-XARCH_SUBCLASS(XArchNetwork, XArch);
+class XArchNetwork : public XArch
+{
+  using XArch::XArch;
+};
 
 //! Operation was interrupted
-XARCH_SUBCLASS(XArchNetworkInterrupted, XArchNetwork);
+class XArchNetworkInterrupted : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Network insufficient permission
-XARCH_SUBCLASS(XArchNetworkAccess, XArchNetwork);
+class XArchNetworkAccess : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Network insufficient resources
-XARCH_SUBCLASS(XArchNetworkResource, XArchNetwork);
+class XArchNetworkResource : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! No support for requested network resource/service
-XARCH_SUBCLASS(XArchNetworkSupport, XArchNetwork);
+class XArchNetworkSupport : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Network I/O error
-XARCH_SUBCLASS(XArchNetworkIO, XArchNetwork);
+class XArchNetworkIO : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Network address is unavailable or not local
-XARCH_SUBCLASS(XArchNetworkNoAddress, XArchNetwork);
+class XArchNetworkNoAddress : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Network address in use
-XARCH_SUBCLASS(XArchNetworkAddressInUse, XArchNetwork);
+class XArchNetworkAddressInUse : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! No route to address
-XARCH_SUBCLASS(XArchNetworkNoRoute, XArchNetwork);
+class XArchNetworkNoRoute : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Socket not connected
-XARCH_SUBCLASS(XArchNetworkNotConnected, XArchNetwork);
+class XArchNetworkNotConnected : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Remote read end of socket has closed
-XARCH_SUBCLASS(XArchNetworkShutdown, XArchNetwork);
+class XArchNetworkShutdown : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Remote end of socket has disconnected
-XARCH_SUBCLASS(XArchNetworkDisconnected, XArchNetwork);
+class XArchNetworkDisconnected : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Remote end of socket refused connection
-XARCH_SUBCLASS(XArchNetworkConnectionRefused, XArchNetwork);
+class XArchNetworkConnectionRefused : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Remote end of socket is not responding
-XARCH_SUBCLASS(XArchNetworkTimedOut, XArchNetwork);
+class XArchNetworkTimedOut : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! Generic network name lookup erros
-XARCH_SUBCLASS(XArchNetworkName, XArchNetwork);
+class XArchNetworkName : public XArchNetwork
+{
+  using XArchNetwork::XArchNetwork;
+};
 
 //! The named host is unknown
-XARCH_SUBCLASS(XArchNetworkNameUnknown, XArchNetworkName);
+class XArchNetworkNameUnknown : public XArchNetworkName
+{
+  using XArchNetworkName::XArchNetworkName;
+};
 
 //! The named host is known but has no address
-XARCH_SUBCLASS(XArchNetworkNameNoAddress, XArchNetworkName);
+class XArchNetworkNameNoAddress : public XArchNetworkName
+{
+  using XArchNetworkName::XArchNetworkName;
+};
 
 //! Non-recoverable name server error
-XARCH_SUBCLASS(XArchNetworkNameFailure, XArchNetworkName);
+class XArchNetworkNameFailure : public XArchNetworkName
+{
+  using XArchNetworkName::XArchNetworkName;
+};
 
 //! Temporary name server error
-XARCH_SUBCLASS(XArchNetworkNameUnavailable, XArchNetworkName);
+class XArchNetworkNameUnavailable : public XArchNetworkName
+{
+  using XArchNetworkName::XArchNetworkName;
+};
 
 //! The named host is known but no supported address
-XARCH_SUBCLASS(XArchNetworkNameUnsupported, XArchNetworkName);
+class XArchNetworkNameUnsupported : public XArchNetworkName
+{
+  using XArchNetworkName::XArchNetworkName;
+};
 
 //! Generic daemon exception
 /*!
 Exceptions derived from this class are used by the daemon
 library to indicate various errors.
 */
-XARCH_SUBCLASS(XArchDaemon, XArch);
+class XArchDaemon : public XArch
+{
+  using XArch::XArch;
+};
 
 //! Could not daemonize
-XARCH_SUBCLASS(XArchDaemonFailed, XArchDaemon);
+class XArchDaemonFailed : public XArchDaemon
+{
+  using XArchDaemon::XArchDaemon;
+};
 
 //! Could not install daemon
-XARCH_SUBCLASS(XArchDaemonInstallFailed, XArchDaemon);
+class XArchDaemonInstallFailed : public XArchDaemon
+{
+  using XArchDaemon::XArchDaemon;
+};
 
 //! Could not uninstall daemon
-XARCH_SUBCLASS(XArchDaemonUninstallFailed, XArchDaemon);
+class XArchDaemonUninstallFailed : public XArchDaemon
+{
+  using XArchDaemon::XArchDaemon;
+};
 
 //! Attempted to uninstall a daemon that was not installed
-XARCH_SUBCLASS(XArchDaemonUninstallNotInstalled, XArchDaemonUninstallFailed);
+class XArchDaemonUninstallNotInstalled : public XArchDaemonFailed
+{
+  using XArchDaemonFailed::XArchDaemonFailed;
+};
