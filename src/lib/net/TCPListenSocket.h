@@ -9,10 +9,11 @@
 
 #include "arch/IArchNetwork.h"
 #include "net/IListenSocket.h"
+#include "net/ISocketMultiplexerJob.h"
 
 #include <mutex>
 
-class ISocketMultiplexerJob;
+class Mutex;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -39,7 +40,7 @@ public:
   // IListenSocket overrides
   std::unique_ptr<IDataSocket> accept() override;
 
-  ISocketMultiplexerJob *serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   void setListeningJob();
