@@ -1,11 +1,13 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "MSWindowsProcess.h"
 
+#include "arch/XArch.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
 
@@ -59,7 +61,7 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
   LPVOID environment;
   if (!CreateEnvironmentBlock(&environment, userToken, FALSE)) {
     LOG((CLOG_ERR "could not create environment block"));
-    throw XArch(new XArchEvalWindows);
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   ZeroMemory(&m_info, sizeof(PROCESS_INFORMATION));
@@ -94,13 +96,13 @@ DWORD MSWindowsProcess::waitForExit()
   if (WaitForSingleObject(m_info.hProcess, kMaxWaitMilliseconds) != WAIT_OBJECT_0) {
     LOG_ERR("process did not exit within the expected time");
     TerminateProcess(m_info.hProcess, 1);
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   DWORD exitCode = 0;
   if (!GetExitCodeProcess(m_info.hProcess, &exitCode)) {
     LOG_ERR("failed to get exit code, error: %lu", GetLastError());
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   if (exitCode != 0) {
@@ -151,8 +153,9 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
       return;
     }
   } else {
-    XArchEvalWindows error;
-    LOG_ERR("failed to get process exit code for process %d, error: %s", pid, error.eval().c_str());
+    LOG_ERR(
+        "failed to get process exit code for process %d, error: %s", pid, windowsErrorToString(GetLastError()).c_str()
+    );
   }
 
   // Wait for process to exit gracefully.
@@ -160,8 +163,10 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   DWORD waitResult = WaitForSingleObject(handle, timeout * 1000);
   if (waitResult == WAIT_OBJECT_0) { // NOSONAR - Readability
     if (!GetExitCodeProcess(handle, &exitCode)) {
-      XArchEvalWindows error;
-      LOG_ERR("failed to get exit code after process exit for process %d, error: %s", pid, error.eval().c_str());
+      LOG_ERR(
+          "failed to get exit code after process exit for process %d, error: %s", pid,
+          windowsErrorToString(GetLastError()).c_str()
+      );
     }
 
     LOG_DEBUG("process %d was shutdown gracefully with exit code %d", pid, exitCode);
@@ -170,16 +175,14 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   } else if (waitResult == WAIT_TIMEOUT) {
     LOG_WARN("process %d did not exit within the expected time", pid);
   } else {
-    XArchEvalWindows error;
-    LOG_ERR("error waiting for process %d to exit, error: %s", pid, error.eval().c_str());
+    LOG_ERR("error waiting for process %d to exit, error: %s", pid, windowsErrorToString(GetLastError()).c_str());
   }
 
   // Last resort, terminate the process forcefully.
   if (TerminateProcess(handle, kExitSuccess)) {
     LOG_WARN("forcefully terminated process %d", pid);
   } else {
-    XArchEvalWindows error;
-    LOG_ERR("failed to terminate process %d, error: %s", pid, error.eval().c_str());
+    LOG_ERR("failed to terminate process %d, error: %s", pid, windowsErrorToString(GetLastError()).c_str());
   }
 }
 
@@ -192,22 +195,22 @@ void MSWindowsProcess::createPipes()
 
   if (!CreatePipe(&m_outputPipe, &m_stdOutput, &saAttr, 0)) {
     LOG_ERR("could not create output pipe");
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   if (!CreatePipe(&m_errorPipe, &m_stdError, &saAttr, 0)) {
     LOG_ERR("could not create error pipe");
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   // Set the pipes to non-blocking mode
   DWORD mode = PIPE_NOWAIT;
   if (!SetNamedPipeHandleState(m_outputPipe, &mode, nullptr, nullptr)) {
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   if (!SetNamedPipeHandleState(m_errorPipe, &mode, nullptr, nullptr)) {
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 }
 
@@ -233,7 +236,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
   // Check if there is data available in the pipe, which prevents `ReadFile` from freezing execution.
   if (!PeekNamedPipe(handle, nullptr, 0, nullptr, &totalBytesAvail, &bytesLeftThisMessage)) {
     LOG_ERR("could not peek into pipe");
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   if (totalBytesAvail == 0) {
@@ -242,7 +245,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
 
   if (!ReadFile(handle, buffer, kOutputBufferSize, &bytesRead, nullptr)) {
     LOG_ERR("could not read from pipe");
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   return std::string(buffer, bytesRead);

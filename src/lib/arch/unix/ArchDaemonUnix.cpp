@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,6 +8,7 @@
 
 #include "arch/unix/ArchDaemonUnix.h"
 
+#include "arch/XArch.h"
 #include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
@@ -56,7 +58,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
   switch (fork()) {
   case -1:
     // failed
-    throw XArchDaemonFailed(new XArchEvalUnix(errno));
+    throw XArchDaemonFailed(errorToString(errno));
 
   case 0:
     // child

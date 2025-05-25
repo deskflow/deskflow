@@ -7,6 +7,7 @@
 
 #include "deskflow/win32/AppUtilWindows.h"
 
+#include "arch/XArch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Event.h"
@@ -28,7 +29,7 @@
 AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
 {
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   m_eventThread = std::thread(&AppUtilWindows::eventLoop, this); // NOSONAR - No jthread on Windows
@@ -191,7 +192,7 @@ void AppUtilWindows::eventLoop()
   HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, kCloseEventName);
   if (!hCloseEvent) {
     LOG_CRIT("failed to create event for windows event loop");
-    throw XArch(new XArchEvalWindows());
+    throw XArch(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("windows event loop running");

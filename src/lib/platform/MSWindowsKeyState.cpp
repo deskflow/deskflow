@@ -767,16 +767,20 @@ bool MSWindowsKeyState::fakeCtrlAltDel()
   // elevated to be able to open it. If not elevated, an access denied error will be returned.
   MSWindowsHandle sendSasEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName));
   if (!sendSasEvent.get()) {
-    XArchEvalWindows error;
-    LOG_ERR("couldn't open SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
+    LOG_ERR(
+        "couldn't open SAS event, unable to simulate ctrl+alt+del, error: %s",
+        windowsErrorToString(GetLastError()).c_str()
+    );
     return false;
   }
 
   // Note: We don't directly call SendSAS, but rather we tell the daemon to do it by setting the event.
   LOG_DEBUG("setting SAS event to simulate ctrl+alt+del");
   if (!SetEvent(sendSasEvent.get())) {
-    XArchEvalWindows error;
-    LOG_ERR("failed to set SAS event, unable to simulate ctrl+alt+del, error: %s", error.eval().c_str());
+    LOG_ERR(
+        "failed to set SAS event, unable to simulate ctrl+alt+del, error: %s",
+        windowsErrorToString(GetLastError()).c_str()
+    );
     return false;
   }
 
