@@ -11,6 +11,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 
 template <class T> class CondVar;
 class Mutex;
@@ -36,7 +37,7 @@ public:
   //! @name manipulators
   //@{
 
-  void addSocket(ISocket *, ISocketMultiplexerJob *);
+  void addSocket(ISocket *, std::unique_ptr<ISocketMultiplexerJob> &&job);
 
   void removeSocket(ISocket *);
 
@@ -52,7 +53,7 @@ public:
 private:
   // list of jobs.  we use a list so we can safely iterate over it
   // while other threads modify it.
-  using SocketJobs = std::list<ISocketMultiplexerJob *>;
+  using SocketJobs = std::list<std::unique_ptr<ISocketMultiplexerJob>>;
   using JobCursor = SocketJobs::iterator;
   using SocketJobMap = std::map<ISocket *, JobCursor>;
 
@@ -100,5 +101,4 @@ private:
 
   SocketJobs m_socketJobs = {};
   SocketJobMap m_socketJobMap = {};
-  ISocketMultiplexerJob *m_cursorMark = nullptr;
 };
