@@ -61,7 +61,7 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
   LPVOID environment;
   if (!CreateEnvironmentBlock(&environment, userToken, FALSE)) {
     LOG((CLOG_ERR "could not create environment block"));
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   ZeroMemory(&m_info, sizeof(PROCESS_INFORMATION));
@@ -96,13 +96,13 @@ DWORD MSWindowsProcess::waitForExit()
   if (WaitForSingleObject(m_info.hProcess, kMaxWaitMilliseconds) != WAIT_OBJECT_0) {
     LOG_ERR("process did not exit within the expected time");
     TerminateProcess(m_info.hProcess, 1);
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   DWORD exitCode = 0;
   if (!GetExitCodeProcess(m_info.hProcess, &exitCode)) {
     LOG_ERR("failed to get exit code, error: %lu", GetLastError());
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   if (exitCode != 0) {
@@ -195,22 +195,22 @@ void MSWindowsProcess::createPipes()
 
   if (!CreatePipe(&m_outputPipe, &m_stdOutput, &saAttr, 0)) {
     LOG_ERR("could not create output pipe");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   if (!CreatePipe(&m_errorPipe, &m_stdError, &saAttr, 0)) {
     LOG_ERR("could not create error pipe");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   // Set the pipes to non-blocking mode
   DWORD mode = PIPE_NOWAIT;
   if (!SetNamedPipeHandleState(m_outputPipe, &mode, nullptr, nullptr)) {
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   if (!SetNamedPipeHandleState(m_errorPipe, &mode, nullptr, nullptr)) {
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 }
 
@@ -236,7 +236,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
   // Check if there is data available in the pipe, which prevents `ReadFile` from freezing execution.
   if (!PeekNamedPipe(handle, nullptr, 0, nullptr, &totalBytesAvail, &bytesLeftThisMessage)) {
     LOG_ERR("could not peek into pipe");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   if (totalBytesAvail == 0) {
@@ -245,7 +245,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
 
   if (!ReadFile(handle, buffer, kOutputBufferSize, &bytesRead, nullptr)) {
     LOG_ERR("could not read from pipe");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   return std::string(buffer, bytesRead);

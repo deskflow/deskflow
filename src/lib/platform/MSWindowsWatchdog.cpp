@@ -67,7 +67,7 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
   HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, entry.th32ProcessID);
   if (handle == nullptr) {
     LOG_ERR("could not open process handle for kill");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   // only shut down if not current process (daemon is now the same unified binary).
@@ -126,7 +126,7 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
 
   if (!tokenRet) {
     LOG_ERR("could not open token, process handle: %d", process);
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("got token %i, duplicating", sourceToken);
@@ -138,7 +138,7 @@ MSWindowsWatchdog::duplicateProcessToken(HANDLE process, LPSECURITY_ATTRIBUTES s
 
   if (!duplicateRet) {
     LOG_ERR("could not duplicate token %i", sourceToken);
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("duplicated, new token: %i", newToken);
@@ -156,12 +156,12 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
 
     HANDLE process;
     if (!m_session.isProcessInSession("winlogon.exe", &process)) {
-      throw XArch("cannot get user token without winlogon.exe");
+      throw std::runtime_error("cannot get user token without winlogon.exe");
     }
 
     try {
       return duplicateProcessToken(process, security);
-    } catch (XArch &e) {
+    } catch (std::runtime_error &e) {
       LOG_ERR("failed to duplicate user token from winlogon.exe");
       CloseHandle(process);
       throw e;
@@ -269,7 +269,7 @@ bool MSWindowsWatchdog::isProcessRunning()
 void MSWindowsWatchdog::startProcess()
 {
   if (m_command.empty()) {
-    throw XArch("cannot start process, command is empty");
+    throw std::runtime_error("cannot start process, command is empty");
   }
 
   if (m_process != nullptr) {
@@ -304,7 +304,7 @@ void MSWindowsWatchdog::startProcess()
       LOG_ERR("daemon failed to run command, exit code: %d", exitCode);
     } else {
       LOG_ERR("daemon failed to run command, unknown exit code");
-      throw XArch(windowsErrorToString(GetLastError()));
+      throw std::runtime_error(windowsErrorToString(GetLastError()));
     }
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
@@ -313,7 +313,7 @@ void MSWindowsWatchdog::startProcess()
 
     if (!isProcessRunning()) {
       m_process.reset();
-      throw XArch("process immediately stopped");
+      throw std::runtime_error("process immediately stopped");
     }
 
     LOG_DEBUG("started core process from watchdog");
@@ -388,7 +388,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, kAllProcesses);
   if (snapshot == INVALID_HANDLE_VALUE) {
     LOG_ERR("could not get process snapshot");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   PROCESSENTRY32 entry;
@@ -399,7 +399,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
   BOOL gotEntry = Process32First(snapshot, &entry);
   if (!gotEntry) {
     LOG_ERR("could not get first process entry");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   // now just iterate until we can find winlogon.exe pid
@@ -420,7 +420,7 @@ void MSWindowsWatchdog::shutdownExistingProcesses()
 
         // only worry about error if it's not the end of the snapshot
         LOG_ERR("could not get next process entry");
-        throw XArch(windowsErrorToString(GetLastError()));
+        throw std::runtime_error(windowsErrorToString(GetLastError()));
       }
     }
   }
@@ -482,14 +482,14 @@ void MSWindowsWatchdog::initOutputReadPipe()
 
   if (!CreatePipe(&m_outputReadPipe, &m_outputWritePipe, &saAttr, 0)) {
     LOG_ERR("could not create output pipe");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   // Set the pipe to non-blocking mode, which allows us to stop the output reader thread immediately
   // in order to speed up the shutdown process when the Windows service needs to stop.
   if (DWORD mode = PIPE_NOWAIT; !SetNamedPipeHandleState(m_outputReadPipe, &mode, nullptr, nullptr)) {
     LOG_ERR("could not set pipe to non-blocking mode");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 }
 
@@ -500,14 +500,14 @@ void MSWindowsWatchdog::initSasFunc()
   HINSTANCE sasLib = LoadLibrary("sas.dll");
   if (!sasLib) {
     LOG_ERR("could not load sas.dll");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("loaded sas.dll, used to simulate ctrl-alt-del");
   m_sendSasFunc = (SendSas)GetProcAddress(sasLib, "SendSAS");
   if (!m_sendSasFunc) {
     LOG_ERR("could not find SendSAS function in sas.dll");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("found SendSAS function in sas.dll");
@@ -518,7 +518,7 @@ void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signatur
   LOG_DEBUG3("watchdog creating sas event");
 
   if (m_sendSasFunc == nullptr) {
-    throw XArch("SendSAS function not initialized");
+    throw std::runtime_error("SendSAS function not initialized");
   }
 
   while (m_running) {

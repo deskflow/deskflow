@@ -410,7 +410,7 @@ std::string ArchMiscWindows::getActiveDesktopName()
   HDESK desk = OpenInputDesktop(0, TRUE, GENERIC_READ);
   if (desk == nullptr) {
     LOG((CLOG_ERR "could not open input desktop"));
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   DWORD size;
@@ -531,7 +531,7 @@ bool ArchMiscWindows::isProcessElevated()
 
   HANDLE hToken = nullptr;
   if (!OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   TOKEN_ELEVATION elevation;
@@ -539,7 +539,7 @@ bool ArchMiscWindows::isProcessElevated()
   try {
     DWORD dwSize = sizeof(TOKEN_ELEVATION);
     if (!GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &dwSize)) {
-      throw XArch(windowsErrorToString(GetLastError()));
+      throw std::runtime_error(windowsErrorToString(GetLastError()));
     }
   } catch (...) {
     CloseHandle(hToken);

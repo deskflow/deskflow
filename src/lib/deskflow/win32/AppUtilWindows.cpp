@@ -29,7 +29,7 @@
 AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
 {
   if (SetConsoleCtrlHandler((PHANDLER_ROUTINE)consoleHandler, TRUE) == FALSE) {
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   m_eventThread = std::thread(&AppUtilWindows::eventLoop, this); // NOSONAR - No jthread on Windows
@@ -192,7 +192,7 @@ void AppUtilWindows::eventLoop()
   HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, kCloseEventName);
   if (!hCloseEvent) {
     LOG_CRIT("failed to create event for windows event loop");
-    throw XArch(windowsErrorToString(GetLastError()));
+    throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
   LOG_DEBUG("windows event loop running");
