@@ -34,7 +34,7 @@ static std::string s_logMessageBuffer; // NOSONAR - Must be mutable.
 
 extern "C" __declspec(dllexport) UINT __stdcall CheckVCRedist(MSIHANDLE hInstall)
 {
-  const auto kKeyName = TEXT("SOFTWARE\\Microsoft\\VisualStudio\\14.0\\VC\\Runtimes\\x64");
+  const auto kKeyName = TEXT(kRegKey);
   const auto kValueName = TEXT("Minor");
   const auto kProperty = "VC_REDIST_VERSION_OK";
 
