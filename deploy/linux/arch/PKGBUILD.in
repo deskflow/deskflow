@@ -32,6 +32,7 @@ depends=(
   libxtst
   openssl
   qt6-base
+  qt6-svg
   tomlplusplus
 )
 
