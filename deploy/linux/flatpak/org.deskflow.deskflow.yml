@@ -68,8 +68,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/CLIUtils/CLI11
-        tag: v2.4.2
-        commit: 6c7b07a878ad834957b98d0f9ce1dbe0cb204fc9
+        tag: v2.5.0
+        commit: 4160d259d961cd393fd8d67590a8c7d210207348
   - name: tomlplusplus
     buildsystem: cmake-ninja
     sources:
