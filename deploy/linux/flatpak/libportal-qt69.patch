@@ -1,0 +1,41 @@
+From 796053d2eebe4532aad6bd3fd80cdf3b197806ec Mon Sep 17 00:00:00 2001
+From: Jan Grulich <jgrulich@redhat.com>
+Date: Thu, 27 Mar 2025 09:38:10 +0100
+Subject: [PATCH] qt6: fix build against Qt 6.9+
+
+QGenericUnixServices was renamed to QDesktopUnixServices in Qt 6.9.
+
+Upstream change: https://codereview.qt-project.org/c/qt/qtbase/+/609639
+---
+ libportal/portal-qt6.cpp | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/libportal/portal-qt6.cpp b/libportal/portal-qt6.cpp
+index d38a4e30..34f0d72a 100644
+--- a/libportal/portal-qt6.cpp
++++ b/libportal/portal-qt6.cpp
+@@ -31,8 +31,12 @@
+ #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
+ #include <qpa/qplatformintegration.h>
+ #include <private/qguiapplication_p.h>
++#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
++#include <private/qdesktopunixservices_p.h>
++#else
+ #include <private/qgenericunixservices_p.h>
+ #endif
++#endif
+ 
+ static gboolean
+ _xdp_parent_export_qt (XdpParent *parent,
+@@ -45,7 +49,11 @@ _xdp_parent_export_qt (XdpParent *parent,
+   }
+ 
+ #if QT_VERSION >= QT_VERSION_CHECK(6, 5, 0)
++#if QT_VERSION >= QT_VERSION_CHECK(6, 9, 0)
++  if (const auto services = dynamic_cast<QDesktopUnixServices*>(QGuiApplicationPrivate::platformIntegration()->services()))
++#else
+   if (const auto services = dynamic_cast<QGenericUnixServices*>(QGuiApplicationPrivate::platformIntegration()->services()))
++#endif
+     {
+       g_autofree char *handle = g_strdup(services->portalWindowIdentifier(w).toUtf8().constData());
+ 
