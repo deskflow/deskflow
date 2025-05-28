@@ -9,8 +9,8 @@ if(CLI11_FOUND)
   set(cli11_lib CLI11::CLI11)
 else()
   #Be sure to update the version and MD5 together
-  set(CLI11_VERSION 2.4.2)
-  set(CLI11_MD5 d7923d1ca06d03e2299e55cad532d126)
+  set(CLI11_VERSION 2.5.0)
+  set(CLI11_MD5 0d3d6898febe3b82fc47b3d608b1ae95)
   file(
     DOWNLOAD "https://github.com/CLIUtils/CLI11/releases/download/v${CLI11_VERSION}/CLI11.hpp"
     "${CMAKE_BINARY_DIR}/include/CLI/CLI.hpp"
