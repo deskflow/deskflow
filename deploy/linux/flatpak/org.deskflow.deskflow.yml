@@ -1,6 +1,6 @@
 app-id: org.deskflow.deskflow
 runtime: org.kde.Platform
-runtime-version: "6.8"
+runtime-version: "6.9"
 sdk: org.kde.Sdk
 command: deskflow
 finish-args:
@@ -61,6 +61,8 @@ modules:
         url: https://github.com/flatpak/libportal.git
         tag: 0.9.1
         commit: 8f5dc8d192f6e31dafe69e35219e3b707bde71ce
+      - type: patch
+        path: libportal-qt69.patch
   - name: cli11
     buildsystem: cmake-ninja
     config-opts:
