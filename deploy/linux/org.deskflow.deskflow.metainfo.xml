@@ -42,7 +42,31 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
-			<release version="1.21.2" date="2025-04-07" urgency="high">
+		<release version="1.22.0" date="2025-05-28" urgency="high">
+			<description>
+				<p>This stable release fixes a issues found in the previous version. For the full changelog see the release page.</p>
+				<ul>
+					<li>Remove: Broken drag and drop file transfer support</li>
+					<li>Remove: DESKFLOW_RESET_ALL and --no-reset. reset settings is now done by passing the --reset option instead</li>
+					<li>Continue migration to Qt by using more Qt classes in more places</li>
+					<li>Retire SHA1 generation and use SHA256 always to compare</li>
+					<li>Add missing accelerators for gui controls</li>
+					<li>unittests binary is now legacytests</li>
+					<li>integtests have been remove and replaced with Qt based tests run during build</li>
+					<li>Fix: Potential XDG-Portal release issue</li>
+					<li>Fix: Issue where the first start dialog could hang in the background</li>
+					<li>Fix: Edge cases that could cause incorrect settings causing client / server process to crash</li>
+					<li>Fix: Default server config file is Deskflow-server.conf</li>
+					<li>Backport: Event Types from downstream</li>
+					<li>Backport: Cleaner error handling from downstream</li>
+					<li>Improve Windows Daemon</li>
+					<li>Better detection of arm on windows, in build and installer</li>
+					<li>Chore: Clean up sonar scan code smells</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.22.0</url>
+		</release>/
+		<release version="1.21.2" date="2025-04-07" urgency="high">
 			<description>
 				<p>This stable release fixes a few critical bugs in 1.21.1. For the full changelog see the release page.</p>
 				<ul>
