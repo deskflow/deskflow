@@ -14,10 +14,10 @@ function(generate_app_man TARGET)
   if(HELP2MAN)
     add_custom_command(
       TARGET ${target} POST_BUILD
-        COMMAND QT_QPA_PLATFORM=minimal ${HELP2MAN}
+        COMMAND QT_QPA_PLATFORM=minimal PATH=$<TARGET_FILE_DIR:${target}>:${PATH} ${HELP2MAN}
           --include ${CMAKE_SOURCE_DIR}/src/apps/res/manpage.txt
           --no-info
-          $<TARGET_FILE:${target}>
+          ${target}
           -o $<TARGET_FILE_DIR:${target}>/${target}.1
     )
     install(
