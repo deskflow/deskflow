@@ -46,8 +46,8 @@ modules:
     sources:
         - type: git
           url: https://gitlab.freedesktop.org/libinput/libei
-          tag: 1.4.0
-          commit: 5d6d8e6590df210b75559a889baa9459c68d9366
+          tag: 1.4.1
+          commit: 9e0413cbc7d3ae6656266890425f152589ddf74d
   - name: libportal
     buildsystem: meson
     config-opts:
