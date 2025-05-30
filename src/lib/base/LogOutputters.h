@@ -12,6 +12,7 @@
 #include "common/Common.h"
 #include "mt/Thread.h"
 
+#include <QString>
 //! Stop traversing log chain outputter
 /*!
 This outputter performs no output and returns false from \c write(),
@@ -25,10 +26,10 @@ public:
   ~StopLogOutputter() override = default;
 
   // ILogOutputter overrides
-  void open(const char *title) override;
+  void open(const QString &title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(LogLevel level, const char *message) override;
+  bool write(LogLevel level, const QString &message) override;
 };
 
 //! Write log to console
@@ -43,10 +44,10 @@ public:
   ~ConsoleLogOutputter() override = default;
 
   // ILogOutputter overrides
-  void open(const char *title) override;
+  void open(const QString &title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(LogLevel level, const char *message) override;
+  bool write(LogLevel level, const QString &message) override;
   void flush() const;
 };
 
@@ -59,19 +60,19 @@ message is ignored.
 class FileLogOutputter : public ILogOutputter
 {
 public:
-  explicit FileLogOutputter(const char *logFile);
+  explicit FileLogOutputter(const QString &logFile);
   ~FileLogOutputter() override = default;
 
   // ILogOutputter overrides
-  void open(const char *title) override;
+  void open(const QString &title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(LogLevel level, const char *message) override;
+  bool write(LogLevel level, const QString &message) override;
 
-  void setLogFilename(const char *title);
+  void setLogFilename(const QString &title);
 
 private:
-  std::string m_fileName;
+  QString m_fileName;
 };
 
 //! Write log to system log
@@ -85,10 +86,10 @@ public:
   ~SystemLogOutputter() override = default;
 
   // ILogOutputter overrides
-  void open(const char *title) override;
+  void open(const QString &title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(LogLevel level, const char *message) override;
+  bool write(LogLevel level, const QString &message) override;
 };
 
 //! Write log to system log only
@@ -102,7 +103,7 @@ the scope.
 class SystemLogger
 {
 public:
-  SystemLogger(const char *title, bool blockConsole);
+  SystemLogger(const QString &title, bool blockConsole);
   SystemLogger(SystemLogger const &) = delete;
   SystemLogger(SystemLogger &&) = delete;
   ~SystemLogger();

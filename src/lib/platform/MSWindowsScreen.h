@@ -142,7 +142,7 @@ private:
   ATOM createWindowClass() const;
   ATOM createDeskWindowClass(bool isPrimary) const;
   void destroyClass(ATOM windowClass) const;
-  HWND createWindow(ATOM windowClass, const char *name) const;
+  HWND createWindow(ATOM windowClass, const wchar_t *name) const;
   void destroyWindow(HWND) const;
 
   // convenience function to send events
