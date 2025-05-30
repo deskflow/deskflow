@@ -6,6 +6,7 @@
  */
 
 #include "arch/Arch.h"
+#include <QDateTime>
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -40,4 +41,9 @@ Arch *Arch::getInstance()
 {
   assert(s_instance != nullptr);
   return s_instance;
+}
+
+double Arch::time()
+{
+  return static_cast<double>(QDateTime::currentSecsSinceEpoch());
 }
