@@ -21,7 +21,7 @@ ArchDaemonWindows *ArchDaemonWindows::s_daemon = nullptr;
 
 ArchDaemonWindows::ArchDaemonWindows() : m_daemonThreadID(0)
 {
-  m_quitMessage = RegisterWindowMessage("DeskflowDaemonExit");
+  m_quitMessage = RegisterWindowMessage(L"DeskflowDaemonExit");
 }
 
 int ArchDaemonWindows::runDaemon(RunFunc runFunc)
@@ -52,7 +52,7 @@ void ArchDaemonWindows::daemonFailed(int result)
   throw ArchDaemonRunException(result);
 }
 
-int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
+int ArchDaemonWindows::daemonize(const QString &name, DaemonFunc const &func)
 {
   assert(name != nullptr);
   assert(func != nullptr);
@@ -62,7 +62,7 @@ int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
 
   // construct the service entry
   SERVICE_TABLE_ENTRY entry[2];
-  entry[0].lpServiceName = const_cast<char *>(name);
+  entry[0].lpServiceName = const_cast<wchar_t *>(name.toStdWString().c_str());
   entry[0].lpServiceProc = &ArchDaemonWindows::serviceMainEntry;
   entry[1].lpServiceName = nullptr;
   entry[1].lpServiceProc = nullptr;
@@ -82,7 +82,7 @@ int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
 
 HKEY ArchDaemonWindows::openNTServicesKey()
 {
-  static const char *s_keyNames[] = {_T("SYSTEM"), _T("CurrentControlSet"), _T("Services"), nullptr};
+  static const wchar_t *s_keyNames[] = {_T("SYSTEM"), _T("CurrentControlSet"), _T("Services"), nullptr};
 
   return ArchMiscWindows::addKey(HKEY_LOCAL_MACHINE, s_keyNames);
 }
@@ -204,9 +204,9 @@ void ArchDaemonWindows::setStatusError(DWORD error)
 
 void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
 {
-  using ArgList = std::vector<LPCTSTR>;
-  using Arguments = std::vector<std::string>;
-  const char **argv = const_cast<const char **>(argvIn);
+  using ArgList = std::vector<LPWSTR>;
+  using Arguments = std::vector<std::wstring>;
+  const wchar_t **argv = const_cast<const wchar_t **>(argvIn);
 
   // create synchronization objects
   m_serviceMutex = ARCH->newMutex();
@@ -226,7 +226,7 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
   m_serviceState = SERVICE_START_PENDING;
   setStatus(m_serviceState, 0, 10000);
 
-  std::string commandLine;
+  std::wstring commandLine;
 
   // if no arguments supplied then try getting them from the registry.
   // the first argument doesn't count because it's the service name.
@@ -244,17 +244,17 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
     // if the command line isn't empty then parse and use it
     if (!commandLine.empty()) {
       // parse, honoring double quoted substrings
-      std::string::size_type i = commandLine.find_first_not_of(" \t");
+      std::wstring::size_type i = commandLine.find_first_not_of(_T(" \t"));
       while (i != std::string::npos && i != commandLine.size()) {
         // find end of string
-        std::string::size_type e;
+        std::wstring::size_type e;
         if (commandLine[i] == '\"') {
           // quoted.  find closing quote.
           ++i;
-          e = commandLine.find("\"", i);
+          e = commandLine.find(_T("\""), i);
 
           // whitespace must follow closing quote
-          if (e == std::string::npos ||
+          if (e == std::wstring::npos ||
               (e + 1 != commandLine.size() && commandLine[e + 1] != ' ' && commandLine[e + 1] != '\t')) {
             args.clear();
             break;
@@ -265,8 +265,8 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
           i = e + 1;
         } else {
           // unquoted.  find next whitespace.
-          e = commandLine.find_first_of(" \t", i);
-          if (e == std::string::npos) {
+          e = commandLine.find_first_of(_T(" \t"), i);
+          if (e == std::wstring::npos) {
             e = commandLine.size();
           }
 
@@ -276,28 +276,28 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
         }
 
         // next argument
-        i = commandLine.find_first_not_of(" \t", i);
+        i = commandLine.find_first_not_of(_T(" \t"), i);
       }
 
       // service name goes first
-      myArgv.push_back(argv[0]);
+      myArgv.push_back(LPWSTR(argv[0]));
 
       // get pointers
       for (size_t j = 0; j < args.size(); ++j) {
-        myArgv.push_back(args[j].c_str());
+        myArgv.push_back(LPWSTR(args[j].c_str()));
       }
 
       // adjust argc/argv
       argc = (DWORD)myArgv.size();
-      argv = &myArgv[0];
+      argv = const_cast<const wchar_t **>(&myArgv[0]);
     }
   }
 
-  m_commandLine = commandLine;
+  m_commandLine = QString::fromStdWString(commandLine);
 
   try {
     // invoke daemon function
-    m_daemonResult = m_daemonFunc(static_cast<int>(argc), argv);
+    m_daemonResult = m_daemonFunc(static_cast<int>(argc), reinterpret_cast<const char **>(argv));
   } catch (ArchDaemonRunException &e) {
     setStatusError(e.m_result);
     m_daemonResult = -1;
@@ -381,7 +381,7 @@ void WINAPI ArchDaemonWindows::serviceHandlerEntry(DWORD ctrl)
   s_daemon->serviceHandler(ctrl);
 }
 
-void ArchDaemonWindows::start(const char *name)
+void ArchDaemonWindows::start(const QString &name)
 {
   // open service manager
   SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
@@ -390,7 +390,7 @@ void ArchDaemonWindows::start(const char *name)
   }
 
   // open the service
-  SC_HANDLE service = OpenService(mgr, name, SERVICE_START);
+  SC_HANDLE service = OpenService(mgr, name.toStdWString().c_str(), SERVICE_START);
 
   if (service == nullptr) {
     CloseServiceHandle(mgr);
@@ -403,7 +403,7 @@ void ArchDaemonWindows::start(const char *name)
   }
 }
 
-void ArchDaemonWindows::stop(const char *name)
+void ArchDaemonWindows::stop(const QString &name)
 {
   // open service manager
   SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
@@ -412,7 +412,7 @@ void ArchDaemonWindows::stop(const char *name)
   }
 
   // open the service
-  SC_HANDLE service = OpenService(mgr, name, SERVICE_STOP | SERVICE_QUERY_STATUS);
+  SC_HANDLE service = OpenService(mgr, name.toStdWString().c_str(), SERVICE_STOP | SERVICE_QUERY_STATUS);
 
   if (service == nullptr) {
     CloseServiceHandle(mgr);

@@ -112,7 +112,7 @@ MSWindowsScreen::MSWindowsScreen(
 
     updateScreenShape();
     m_class = createWindowClass();
-    m_window = createWindow(m_class, kAppName);
+    m_window = createWindow(m_class, LPCWSTR(kAppName));
     setupMouseKeys();
     LOG_DEBUG("screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : "");
     LOG_DEBUG("window is 0x%08x", m_window);
@@ -786,7 +786,7 @@ ATOM MSWindowsScreen::createWindowClass() const
   classInfo.hCursor = nullptr;
   classInfo.hbrBackground = nullptr;
   classInfo.lpszMenuName = nullptr;
-  classInfo.lpszClassName = kAppName;
+  classInfo.lpszClassName = LPCWSTR(kAppName);
   classInfo.hIconSm = nullptr;
   return RegisterClassEx(&classInfo);
 }
@@ -798,7 +798,7 @@ void MSWindowsScreen::destroyClass(ATOM windowClass) const
   }
 }
 
-HWND MSWindowsScreen::createWindow(ATOM windowClass, const char *name) const
+HWND MSWindowsScreen::createWindow(ATOM windowClass, const wchar_t *name) const
 {
   HWND window = CreateWindowEx(
       WS_EX_TOPMOST | WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1,

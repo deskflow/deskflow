@@ -140,11 +140,11 @@ private:
   int m_startFailures = 0;
   FileLogOutputter &m_fileLogOutputter;
   bool m_foreground = false;
-  std::string m_activeDesktop = "";
+  std::wstring m_activeDesktop = {};
   std::unique_ptr<deskflow::platform::MSWindowsProcess> m_process;
   std::optional<double> m_nextStartTime = std::nullopt;
   ProcessState m_processState = ProcessState::Idle;
-  std::string m_command = "";
+  std::wstring m_command = {};
   SendSas m_sendSasFunc = nullptr;
   std::mutex m_processStateMutex;
 };

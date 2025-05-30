@@ -6,10 +6,10 @@
  */
 
 #if WINAPI_XWINDOWS
+#include "base/Log.h"
 #include <memory>
 
-#include "DeskflowXkbKeyboard.h"
-#include "base/Log.h"
+#include "DeskflowXkbKeyboard.h" // Include last due to X11 use
 
 namespace deskflow::linux {
 

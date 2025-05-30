@@ -27,7 +27,7 @@ QString CommandProcess::run()
   QString error;
   if (success) {
     if (!m_Input.isEmpty()) {
-      process.write(m_Input.toStdString().c_str());
+      process.write(qPrintable(m_Input));
     }
 
     if (process.waitForFinished()) {

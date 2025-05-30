@@ -189,7 +189,7 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const
 
 void AppUtilWindows::eventLoop()
 {
-  HANDLE hCloseEvent = CreateEventA(nullptr, TRUE, FALSE, kCloseEventName);
+  HANDLE hCloseEvent = CreateEvent(nullptr, TRUE, FALSE, kCloseEventName);
   if (!hCloseEvent) {
     LOG_CRIT("failed to create event for windows event loop");
     throw std::runtime_error(windowsErrorToString(GetLastError()));

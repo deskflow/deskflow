@@ -348,7 +348,7 @@ ATOM MSWindowsDesks::createDeskWindowClass(bool isPrimary) const
   classInfo.hCursor = m_cursor;
   classInfo.hbrBackground = nullptr;
   classInfo.lpszMenuName = nullptr;
-  classInfo.lpszClassName = "DeskflowDesk";
+  classInfo.lpszClassName = L"DeskflowDesk";
   classInfo.hIconSm = nullptr;
   return RegisterClassEx(&classInfo);
 }
@@ -360,7 +360,7 @@ void MSWindowsDesks::destroyClass(ATOM windowClass) const
   }
 }
 
-HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const
+HWND MSWindowsDesks::createWindow(ATOM windowClass, const wchar_t *name) const
 {
   HWND window = CreateWindowEx(
       WS_EX_TRANSPARENT | WS_EX_TOOLWINDOW, MAKEINTATOM(windowClass), name, WS_POPUP, 0, 0, 1, 1, nullptr, nullptr,
@@ -610,11 +610,11 @@ void MSWindowsDesks::deskThread(void *vdesk)
 
     // create a window.  we use this window to hide the cursor.
     try {
-      desk->m_window = createWindow(m_deskClass, "DeskflowDesk");
-      LOG_DEBUG("desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window);
+      desk->m_window = createWindow(m_deskClass, L"DeskflowDesk");
+      LOG_DEBUG("desk %ls window is 0x%08x", desk->m_name.c_str(), desk->m_window);
     } catch (...) {
       // ignore
-      LOG_DEBUG("can't create desk window for %s", desk->m_name.c_str());
+      LOG_DEBUG("can't create desk window for %ls", desk->m_name.c_str());
     }
   }
 
@@ -744,7 +744,7 @@ void MSWindowsDesks::deskThread(void *vdesk)
   }
 }
 
-MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const std::string &name, HDESK hdesk)
+MSWindowsDesks::Desk *MSWindowsDesks::addDesk(const std::wstring &name, HDESK hdesk)
 {
   Desk *desk = new Desk;
   desk->m_name = name;
@@ -767,7 +767,7 @@ void MSWindowsDesks::removeDesks()
   }
   m_desks.clear();
   m_activeDesk = nullptr;
-  m_activeDeskName = "";
+  m_activeDeskName = L"";
 }
 
 void MSWindowsDesks::checkDesk()
@@ -775,7 +775,7 @@ void MSWindowsDesks::checkDesk()
   // get current desktop.  if we already know about it then return.
   Desk *desk;
   HDESK hdesk = openInputDesktop();
-  std::string name = getDesktopName(hdesk);
+  std::wstring name = getDesktopName(hdesk);
   Desks::const_iterator index = m_desks.find(name);
   if (index == m_desks.end()) {
     desk = addDesk(name, hdesk);
@@ -802,7 +802,7 @@ void MSWindowsDesks::checkDesk()
     // from an inaccessible desktop so when we switch from an
     // inaccessible desktop to an accessible one we have to
     // update the keyboard state.
-    LOG_DEBUG("switched to desk \"%s\"", name.c_str());
+    LOG_DEBUG("switched to desk \"%ls\"", name.c_str());
     bool syncKeys = false;
     bool isAccessible = isDeskAccessible(desk);
     if (isDeskAccessible(m_activeDesk) != isAccessible) {
@@ -876,16 +876,16 @@ void MSWindowsDesks::closeDesktop(HDESK desk)
   }
 }
 
-std::string MSWindowsDesks::getDesktopName(HDESK desk)
+std::wstring MSWindowsDesks::getDesktopName(HDESK desk)
 {
   if (desk == nullptr) {
-    return std::string();
+    return std::wstring();
   } else {
     DWORD size;
     GetUserObjectInformation(desk, UOI_NAME, nullptr, 0, &size);
     TCHAR *name = (TCHAR *)alloca(size + sizeof(TCHAR));
     GetUserObjectInformation(desk, UOI_NAME, name, size, &size);
-    std::string result(name);
+    std::wstring result(name);
     return result;
   }
 }

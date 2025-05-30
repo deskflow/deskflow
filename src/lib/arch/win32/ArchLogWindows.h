@@ -22,10 +22,10 @@ public:
   ~ArchLogWindows() override = default;
 
   // IArchLog overrides
-  void openLog(const char *name) override;
+  void openLog(const QString &name) override;
   void closeLog() override;
   void showLog(bool showIfEmpty) override;
-  void writeLog(LogLevel, const char *) override;
+  void writeLog(LogLevel, const QString &) override;
 
 private:
   HANDLE m_eventLog;

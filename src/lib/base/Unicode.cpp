@@ -6,9 +6,7 @@
  */
 
 #include "base/Unicode.h"
-#include "arch/Arch.h"
 
-using enum ArchString::EWideCharEncoding;
 //
 // local utility functions
 //
@@ -197,28 +195,6 @@ std::string Unicode::UTF8ToUTF32(const std::string &src, bool *errors)
   return dst;
 }
 
-std::string Unicode::UTF8ToText(const std::string &src, bool *errors)
-{
-  // default to success
-  resetError(errors);
-
-  // convert to wide char
-  uint32_t size;
-  wchar_t *tmp = UTF8ToWideChar(src, size, errors);
-
-  // convert string to multibyte
-  int len = ARCH->convStringWCToMB(nullptr, tmp, size, errors);
-  auto *mbs = new char[len + 1];
-  ARCH->convStringWCToMB(mbs, tmp, size, errors);
-  std::string text(mbs, len);
-
-  // clean up
-  delete[] mbs;
-  delete[] tmp;
-
-  return text;
-}
-
 std::string Unicode::UCS2ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
@@ -257,89 +233,6 @@ std::string Unicode::UTF32ToUTF8(const std::string_view &src, bool *errors)
   // convert
   uint32_t n = (uint32_t)src.size() >> 2;
   return doUTF32ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
-}
-
-std::string Unicode::textToUTF8(const std::string &src, bool *errors, ArchString::EWideCharEncoding encoding)
-{
-  // default to success
-  resetError(errors);
-
-  // convert string to wide characters
-  auto n = (uint32_t)src.size();
-  int len = ARCH->convStringMBToWC(nullptr, src.c_str(), n, errors);
-  auto *wcs = new wchar_t[len + 1];
-  ARCH->convStringMBToWC(wcs, src.c_str(), n, errors);
-
-  // convert to UTF8
-  std::string utf8 = wideCharToUTF8(wcs, len, errors, encoding);
-
-  // clean up
-  delete[] wcs;
-
-  return utf8;
-}
-
-wchar_t *Unicode::UTF8ToWideChar(const std::string &src, uint32_t &size, bool *errors)
-{
-  // convert to platform's wide character encoding
-  std::string tmp;
-  switch (ARCH->getWideCharEncoding()) {
-  case kUCS2:
-    tmp = UTF8ToUCS2(src, errors);
-    size = (uint32_t)tmp.size() >> 1;
-    break;
-
-  case kUCS4:
-    tmp = UTF8ToUCS4(src, errors);
-    size = (uint32_t)tmp.size() >> 2;
-    break;
-
-  case kUTF16:
-    tmp = UTF8ToUTF16(src, errors);
-    size = (uint32_t)tmp.size() >> 1;
-    break;
-
-  case kUTF32:
-    tmp = UTF8ToUTF32(src, errors);
-    size = (uint32_t)tmp.size() >> 2;
-    break;
-
-  default:
-    assert(0 && "unknown wide character encoding");
-  }
-
-  // copy to a wchar_t array
-  auto *dst = new wchar_t[size];
-  ::memcpy(dst, tmp.data(), sizeof(wchar_t) * size);
-  return dst;
-}
-
-std::string
-Unicode::wideCharToUTF8(const wchar_t *src, uint32_t size, bool *errors, ArchString::EWideCharEncoding encoding)
-{
-  if (encoding == kPlatformDetermined) {
-    encoding = ARCH->getWideCharEncoding();
-  }
-  // convert from platform's wide character encoding.
-  // note -- this must include a wide nul character (independent of
-  // the String's nul character).
-  switch (encoding) {
-  case kUCS2:
-    return doUCS2ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
-
-  case kUCS4:
-    return doUCS4ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
-
-  case kUTF16:
-    return doUTF16ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
-
-  case kUTF32:
-    return doUTF32ToUTF8(reinterpret_cast<const uint8_t *>(src), size, errors);
-
-  default:
-    assert(0 && "unknown wide character encoding");
-    return std::string();
-  }
 }
 
 std::string Unicode::doUCS2ToUTF8(const uint8_t *data, uint32_t n, bool *errors)

@@ -14,3 +14,5 @@ add_library(io STATIC
     StreamFilter.cpp
     StreamFilter.h
 )
+
+target_link_libraries(io PUBLIC common)

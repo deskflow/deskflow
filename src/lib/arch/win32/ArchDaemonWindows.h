@@ -15,7 +15,8 @@
 #include <tchar.h>
 
 #include <functional>
-#include <string>
+
+#include <QString>
 
 #define ARCH_DAEMON ArchDaemonWindows
 
@@ -67,8 +68,8 @@ public:
   static UINT getDaemonQuitMessage();
 
   // IArchDaemon overrides
-  int daemonize(const char *name, DaemonFunc const &func) override;
-  std::string commandLine() const override
+  int daemonize(const QString &name, DaemonFunc const &func) override;
+  QString commandLine() const override
   {
     return m_commandLine;
   }
@@ -92,8 +93,8 @@ private:
   void serviceHandler(DWORD ctrl);
   static void WINAPI serviceHandlerEntry(DWORD ctrl);
 
-  void start(const char *name);
-  void stop(const char *name);
+  void start(const QString &name);
+  void stop(const QString &name);
 
 private:
   class ArchDaemonRunException
@@ -124,5 +125,5 @@ private:
 
   UINT m_quitMessage;
 
-  std::string m_commandLine;
+  QString m_commandLine;
 };

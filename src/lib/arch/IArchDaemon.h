@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include <QString>
 #include <functional>
-#include <string>
 
 //! Interface for architecture dependent daemonizing
 /*!
@@ -53,7 +53,7 @@ public:
     \c ArchMiscWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
-  virtual int daemonize(const char *name, DaemonFunc const &func) = 0;
+  virtual int daemonize(const QString &name, DaemonFunc const &func) = 0;
 
   //@}
 
@@ -61,7 +61,7 @@ public:
   /*!
   Gets the command line with which the application was started.
   */
-  virtual std::string commandLine() const = 0;
+  virtual QString commandLine() const = 0;
 
   //@}
 };

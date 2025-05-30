@@ -23,34 +23,13 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <shlobj.h>
-#include <string.h>
 #include <tchar.h>
+
+#include <QStringDecoder>
 
 //
 // Free functions
 //
-
-std::string trimOutputBuffer(const CHAR *buffer)
-{
-  // strip out windows \r chars to prevent extra lines in log file.
-  std::string output(buffer);
-  if (output.empty()) {
-    LOG_DEBUG1("output buffer is empty");
-    return output;
-  }
-
-  size_t pos = 0;
-  while ((pos = output.find("\r", pos)) != std::string::npos) {
-    output.replace(pos, 1, "");
-  }
-
-  // trip ending newline, as file writer will add it's own newline.
-  if (output[output.length() - 1] == '\n') {
-    output = output.substr(0, output.length() - 1);
-  }
-
-  return output;
-}
 
 HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
 {
@@ -58,9 +37,9 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
   if (entry.th32ProcessID == 0)
     return nullptr;
 
-  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+  if (_wcsicmp(entry.szExeFile, L"deskflow-client.exe") != 0 && //
+      _wcsicmp(entry.szExeFile, L"deskflow-server.exe") != 0 && //
+      _wcsicmp(entry.szExeFile, L"deskflow-core.exe") != 0) {
     return nullptr;
   }
 
@@ -155,7 +134,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
     LOG_DEBUG("getting elevated token");
 
     HANDLE process;
-    if (!m_session.isProcessInSession("winlogon.exe", &process)) {
+    if (!m_session.isProcessInSession(L"winlogon.exe", &process)) {
       throw std::runtime_error("cannot get user token without winlogon.exe");
     }
 
@@ -330,7 +309,7 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
-  m_command = command;
+  m_command = std::wstring(command.begin(), command.end());
   m_elevateProcess = elevate;
 
   if (m_command.empty()) {
@@ -345,35 +324,49 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
 
 void MSWindowsWatchdog::outputLoop(void *)
 {
-  const auto kOutputBufferSize = 4096;
+  static constexpr DWORD kBufSize = 4096;
 
-  // +1 char for \0
-  CHAR buffer[kOutputBufferSize + 1];
+  BYTE raw[kBufSize];
+  DWORD bytesRead = 0;
+
+  // Warning: Manual decoding while we still use Win32 APIs for process launching and output reading.
+  // Using a byte decoder should help to prevent mojibake when we get a partial UTF-8 sequence in a read chunk.
+  // In future when we move to Qt process APIs, this can all be simplified.
+  QStringDecoder decoder(QStringDecoder::Utf8);
 
   while (m_running) {
+    const BOOL ok = ::ReadFile(m_outputReadPipe, raw, kBufSize, &bytesRead, nullptr);
 
-    DWORD bytesRead;
-    BOOL success = ReadFile(m_outputReadPipe, buffer, kOutputBufferSize, &bytesRead, nullptr);
-
-    if (!success || bytesRead == 0) {
-      // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
-      Arch::sleep(0.1);
-    } else {
-      buffer[bytesRead] = '\0';
-
-      // strip out windows \r chars to prevent extra lines in log file.
-      std::string output = trimOutputBuffer(buffer);
-      m_fileLogOutputter.write(LogLevel::Print, output.c_str());
-
-#if SYSAPI_WIN32
-      if (m_foreground) {
-        // when in foreground mode (useful for debugging), send the core
-        // process output to the VS debug output window.
-        // we could use the MSWindowsDebugOutputter, but it's really fiddly to
-        // so, and there doesn't seem to be an advantage of doing that.
-        OutputDebugString(buffer);
+    if (!ok) {
+      const DWORD err = ::GetLastError();
+      if (err == ERROR_BROKEN_PIPE) {
+        // It doesn't make sense to keep reading the pipe if the process has exited and closed its end of the pipe.
+        LOG_DEBUG("output pipe closed, exiting output loop");
+        break;
       }
-#endif
+
+      // Retry immediately when we get a transient error like ERROR_NO_DATA (pipe is non-blocking).
+      continue;
+    }
+
+    if (bytesRead == 0) {
+      // Sleep for short moment so we're not busy looping while the Core is quiet (which is the case most of the time).
+      // Important: Keep the sleep short so the service can shut down fast.
+      Arch::sleep(0.1);
+      LOG_DEBUG("no more data to read from output pipe");
+      break;
+    }
+
+    const QString decoded =
+        decoder.decode(QByteArray::fromRawData(reinterpret_cast<const char *>(raw), int(bytesRead)));
+
+    // The file log outputter adds its own newlines, so trim the decoded string to avoid double newlines.
+    const auto trimmed = decoded.trimmed();
+    m_fileLogOutputter.write(LogLevel::Print, trimmed);
+
+    if (m_foreground) {
+      // Doesn't add it's own newlines, so use the original ones from the process output.
+      ::OutputDebugString(decoded.toStdWString().c_str());
     }
   }
 }
@@ -497,7 +490,7 @@ void MSWindowsWatchdog::initSasFunc()
 {
   // the SendSAS function is used to send a sas (secure attention sequence) to the
   // winlogon process. this is used to switch to the login screen.
-  HINSTANCE sasLib = LoadLibrary("sas.dll");
+  HINSTANCE sasLib = LoadLibrary(L"sas.dll");
   if (!sasLib) {
     LOG_ERR("could not load sas.dll");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
@@ -529,7 +522,7 @@ void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signatur
     }
 
     // Create a an event so that other processes can tell the daemon to call the `SendSAS` function.
-    MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName));
+    MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, LPCWSTR(kSendSasEventName)));
     if (sendSasEvent.get() == nullptr) {
       LOG_ERR("could not create SAS event, error: %s", windowsErrorToString(GetLastError()).c_str());
       Arch::sleep(1);
