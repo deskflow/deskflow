@@ -90,7 +90,7 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl)
     if (cipher) {
       char msg[128] = {0};
       SSL_CIPHER_description(cipher, msg, sizeof(msg));
-      LOG_DEBUG("openssl cipher: %s", msg);
+      LOG_DEBUG("openssl cipher: %s", QString(msg).trimmed().toStdString().c_str());
 
       // For some reason SSL_get_version is return mismatching information to
       // SSL_CIPHER_description

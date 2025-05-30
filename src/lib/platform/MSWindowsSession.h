@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <string>
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
@@ -25,7 +23,7 @@ public:
   */
   BOOL hasChanged();
 
-  bool isProcessInSession(const char *name, PHANDLE process);
+  bool isProcessInSession(const wchar_t *name, PHANDLE process);
   HANDLE getUserToken(LPSECURITY_ATTRIBUTES security);
   void updateActiveSession();
 

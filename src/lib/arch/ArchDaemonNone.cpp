@@ -6,19 +6,22 @@
  */
 
 #include "arch/ArchDaemonNone.h"
+#include <QString>
 
 //
 // ArchDaemonNone
 //
 
-int ArchDaemonNone::daemonize(const char *name, DaemonFunc const &func)
+int ArchDaemonNone::daemonize(const QString &name, DaemonFunc const &func)
 {
   // simply forward the call to func.  obviously, this doesn't
   // do any daemonizing.
-  return func(1, &name);
+  auto t = name.toStdString();
+  const char *n = t.c_str();
+  return func(1, &n);
 }
 
-std::string ArchDaemonNone::commandLine() const
+QString ArchDaemonNone::commandLine() const
 {
-  return "";
+  return {};
 }

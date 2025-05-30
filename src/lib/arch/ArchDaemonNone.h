@@ -24,6 +24,6 @@ public:
   ~ArchDaemonNone() override = default;
 
   // IArchDaemon overrides
-  int daemonize(const char *name, DaemonFunc const &func) override;
-  std::string commandLine() const override;
+  int daemonize(const QString &name, DaemonFunc const &func) override;
+  QString commandLine() const override;
 };
