@@ -21,9 +21,9 @@ public:
   ~MSWindowsDebugOutputter() override = default;
 
   // ILogOutputter overrides
-  void open(const char *title) override;
+  void open(const QString &title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(ELevel level, const char *message) override;
+  bool write(ELevel level, const QString &message) override;
   void flush();
 };

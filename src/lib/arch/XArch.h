@@ -11,8 +11,6 @@
 #include "common/Common.h"
 
 #include <stdexcept>
-#include <string>
-
 //! Generic thread exception
 /*!
 Exceptions derived from this class are used by the multithreading

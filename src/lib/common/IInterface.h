@@ -8,7 +8,7 @@
 #pragma once
 
 #include "Common.h"
-
+class QString;
 //! Base class of interfaces
 /*!
 This is the base class of all interface classes.  An interface class has
