@@ -24,7 +24,6 @@
 
 #pragma once
 
-#include "arch/ArchString.h"
 #include "common/Common.h"
 
 #if SYSAPI_WIN32
@@ -71,7 +70,6 @@ class Arch : public ARCH_DAEMON,
              public ARCH_MULTITHREAD,
              public ARCH_NETWORK,
              public ARCH_SLEEP,
-             public ArchString,
              public ARCH_TIME
 {
 public:
