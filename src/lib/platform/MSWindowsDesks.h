@@ -179,7 +179,7 @@ private:
   class Desk
   {
   public:
-    std::string m_name;
+    std::wstring m_name;
     Thread *m_thread;
     DWORD m_threadID;
     DWORD m_targetID;
@@ -188,14 +188,14 @@ private:
     HWND m_foregroundWindow;
     bool m_lowLevel;
   };
-  using Desks = std::map<std::string, Desk *>;
+  using Desks = std::map<std::wstring, Desk *>;
 
   // initialization and shutdown operations
   HCURSOR createBlankCursor() const;
   void destroyCursor(HCURSOR cursor) const;
   ATOM createDeskWindowClass(bool isPrimary) const;
   void destroyClass(ATOM windowClass) const;
-  HWND createWindow(ATOM windowClass, const char *name) const;
+  HWND createWindow(ATOM windowClass, const wchar_t *name) const;
   void destroyWindow(HWND) const;
 
   // message handlers
@@ -206,7 +206,7 @@ private:
   void deskThread(void *vdesk);
 
   // desk switch checking and handling
-  Desk *addDesk(const std::string &name, HDESK hdesk);
+  Desk *addDesk(const std::wstring &name, HDESK hdesk);
   void removeDesks();
   void checkDesk();
   bool isDeskAccessible(const Desk *desk) const;
@@ -222,7 +222,7 @@ private:
   // desk API wrappers
   HDESK openInputDesktop();
   void closeDesktop(HDESK);
-  std::string getDesktopName(HDESK);
+  std::wstring getDesktopName(HDESK);
 
   // our desk window procs
   static LRESULT CALLBACK primaryDeskProc(HWND, UINT, WPARAM, LPARAM);
@@ -263,7 +263,7 @@ private:
 
   // the current desk and it's name
   Desk *m_activeDesk = nullptr;
-  std::string m_activeDeskName;
+  std::wstring m_activeDeskName;
 
   // one desk per desktop and a cond var to communicate with it
   Mutex m_mutex;
