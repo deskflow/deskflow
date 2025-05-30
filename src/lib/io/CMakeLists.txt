@@ -14,3 +14,5 @@ add_library(io STATIC
     XIO.cpp
     XIO.h
 )
+
+target_link_libraries(io PUBLIC common)
