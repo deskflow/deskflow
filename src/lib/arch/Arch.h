@@ -34,7 +34,6 @@
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "arch/win32/ArchSleepWindows.h"
-#include "arch/win32/ArchTimeWindows.h"
 
 #elif SYSAPI_UNIX
 
@@ -42,7 +41,6 @@
 #include "arch/unix/ArchLogUnix.h"
 #include "arch/unix/ArchNetworkBSD.h"
 #include "arch/unix/ArchSleepUnix.h"
-#include "arch/unix/ArchTimeUnix.h"
 
 #if HAVE_PTHREAD
 #include "arch/unix/ArchMultithreadPosix.h"
@@ -71,8 +69,7 @@ class Arch : public ARCH_DAEMON,
              public ARCH_MULTITHREAD,
              public ARCH_NETWORK,
              public ARCH_SLEEP,
-             public ArchString,
-             public ARCH_TIME
+             public ArchString
 {
 public:
   Arch();
@@ -101,6 +98,13 @@ public:
   {
     s_instance = s;
   }
+
+  //! Get the current time
+  /*!
+  Returns the number of seconds since some arbitrary starting time.
+  This should return as high a precision as reasonable.
+  */
+  static double time();
 
 private:
   static Arch *s_instance;
