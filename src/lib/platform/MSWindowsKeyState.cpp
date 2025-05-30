@@ -599,7 +599,7 @@ MSWindowsKeyState::~MSWindowsKeyState()
 void MSWindowsKeyState::init()
 {
   // look up symbol that's available on winNT family but not win95
-  HMODULE userModule = GetModuleHandle("user32.dll");
+  HMODULE userModule = GetModuleHandle(L"user32.dll");
   m_ToUnicodeEx = (ToUnicodeEx_t)GetProcAddress(userModule, "ToUnicodeEx");
 }
 
@@ -766,7 +766,7 @@ bool MSWindowsKeyState::fakeCtrlAltDel()
 {
   // The daemon creates this event with default permissions, which means this process must be
   // elevated to be able to open it. If not elevated, an access denied error will be returned.
-  MSWindowsHandle sendSasEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, kSendSasEventName));
+  MSWindowsHandle sendSasEvent(OpenEvent(EVENT_MODIFY_STATE, FALSE, LPCWSTR(kSendSasEventName)));
   if (!sendSasEvent.get()) {
     LOG_ERR(
         "couldn't open SAS event, unable to simulate ctrl+alt+del, error: %s",
