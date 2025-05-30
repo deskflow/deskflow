@@ -7,7 +7,7 @@
 
 #include "arch/win32/ArchLogWindows.h"
 
-#include <string.h>
+#include <QString>
 
 //
 // ArchLogWindows
@@ -18,10 +18,10 @@ ArchLogWindows::ArchLogWindows() : m_eventLog(nullptr)
   // do nothing
 }
 
-void ArchLogWindows::openLog(const char *name)
+void ArchLogWindows::openLog(const QString &name)
 {
   if (m_eventLog == nullptr) {
-    m_eventLog = RegisterEventSource(nullptr, name);
+    m_eventLog = RegisterEventSource(nullptr, name.toStdWString().c_str());
   }
 }
 
@@ -38,7 +38,7 @@ void ArchLogWindows::showLog(bool)
   // do nothing
 }
 
-void ArchLogWindows::writeLog(LogLevel level, const char *msg)
+void ArchLogWindows::writeLog(LogLevel level, const QString &msg)
 {
   if (m_eventLog != nullptr) {
     // convert priority
@@ -67,9 +67,9 @@ void ArchLogWindows::writeLog(LogLevel level, const char *msg)
         m_eventLog, type, static_cast<WORD>(level),
         0, // event ID
         nullptr, 0,
-        (DWORD)strlen(msg) + 1, // raw data size
+        (DWORD)(msg.length()) + 1, // raw data size
         nullptr,
-        const_cast<char *>(msg)
+        const_cast<char *>(msg.toStdString().c_str())
     ); // raw data
   }
 }
