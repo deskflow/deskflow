@@ -16,6 +16,8 @@
 #include <set>
 #include <vector>
 
+#include <QString>
+
 #if X_DISPLAY_MISSING
 #error X11 is required to build deskflow
 #else
