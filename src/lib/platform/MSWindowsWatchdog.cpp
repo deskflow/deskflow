@@ -30,18 +30,18 @@
 // Free functions
 //
 
-std::string trimOutputBuffer(const CHAR *buffer)
+std::wstring trimOutputBuffer(const WCHAR *buffer)
 {
   // strip out windows \r chars to prevent extra lines in log file.
-  std::string output(buffer);
+  std::wstring output(buffer);
   if (output.empty()) {
     LOG_DEBUG1("output buffer is empty");
     return output;
   }
 
   size_t pos = 0;
-  while ((pos = output.find("\r", pos)) != std::string::npos) {
-    output.replace(pos, 1, "");
+  while ((pos = output.find(L"\r", pos)) != std::string::npos) {
+    output.replace(pos, 1, L"");
   }
 
   // trip ending newline, as file writer will add it's own newline.
@@ -58,9 +58,9 @@ HANDLE openProcessForKill(const PROCESSENTRY32 &entry)
   if (entry.th32ProcessID == 0)
     return nullptr;
 
-  if (_stricmp(entry.szExeFile, "deskflow-client.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-server.exe") != 0 && //
-      _stricmp(entry.szExeFile, "deskflow-core.exe") != 0) {
+  if (_wcsicmp(entry.szExeFile, L"deskflow-client.exe") != 0 && //
+      _wcsicmp(entry.szExeFile, L"deskflow-server.exe") != 0 && //
+      _wcsicmp(entry.szExeFile, L"deskflow-core.exe") != 0) {
     return nullptr;
   }
 
@@ -155,7 +155,7 @@ MSWindowsWatchdog::getUserToken(LPSECURITY_ATTRIBUTES security, bool elevatedTok
     LOG_DEBUG("getting elevated token");
 
     HANDLE process;
-    if (!m_session.isProcessInSession("winlogon.exe", &process)) {
+    if (!m_session.isProcessInSession(L"winlogon.exe", &process)) {
       throw std::runtime_error("cannot get user token without winlogon.exe");
     }
 
@@ -330,7 +330,7 @@ void MSWindowsWatchdog::setProcessConfig(const std::string_view &command, bool e
   std::scoped_lock lock{m_processStateMutex};
 
   LOG_DEBUG("setting watchdog process config");
-  m_command = command;
+  m_command = std::wstring(command.begin(), command.end());
   m_elevateProcess = elevate;
 
   if (m_command.empty()) {
@@ -348,7 +348,7 @@ void MSWindowsWatchdog::outputLoop(void *)
   const auto kOutputBufferSize = 4096;
 
   // +1 char for \0
-  CHAR buffer[kOutputBufferSize + 1];
+  WCHAR buffer[kOutputBufferSize + 1];
 
   while (m_running) {
 
@@ -362,8 +362,8 @@ void MSWindowsWatchdog::outputLoop(void *)
       buffer[bytesRead] = '\0';
 
       // strip out windows \r chars to prevent extra lines in log file.
-      std::string output = trimOutputBuffer(buffer);
-      m_fileLogOutputter.write(LogLevel::Print, output.c_str());
+      std::wstring output = trimOutputBuffer(buffer);
+      m_fileLogOutputter.write(LogLevel::Print, QString::fromStdWString(output.c_str()));
 
 #if SYSAPI_WIN32
       if (m_foreground) {
@@ -497,7 +497,7 @@ void MSWindowsWatchdog::initSasFunc()
 {
   // the SendSAS function is used to send a sas (secure attention sequence) to the
   // winlogon process. this is used to switch to the login screen.
-  HINSTANCE sasLib = LoadLibrary("sas.dll");
+  HINSTANCE sasLib = LoadLibrary(L"sas.dll");
   if (!sasLib) {
     LOG_ERR("could not load sas.dll");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
@@ -529,7 +529,7 @@ void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signatur
     }
 
     // Create a an event so that other processes can tell the daemon to call the `SendSAS` function.
-    MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName));
+    MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, LPCWSTR(kSendSasEventName)));
     if (sendSasEvent.get() == nullptr) {
       LOG_ERR("could not create SAS event, error: %s", windowsErrorToString(GetLastError()).c_str());
       Arch::sleep(1);

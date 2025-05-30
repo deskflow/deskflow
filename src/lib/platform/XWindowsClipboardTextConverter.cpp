@@ -7,7 +7,7 @@
 
 #include "platform/XWindowsClipboardTextConverter.h"
 
-#include "base/Unicode.h"
+#include <QString>
 
 //
 // XWindowsClipboardTextConverter
@@ -36,22 +36,10 @@ int XWindowsClipboardTextConverter::getDataSize() const
 
 std::string XWindowsClipboardTextConverter::fromIClipboard(const std::string &data) const
 {
-  return Unicode::UTF8ToText(data);
+  return QString::fromStdString(data).toLatin1().toStdString();
 }
 
 std::string XWindowsClipboardTextConverter::toIClipboard(const std::string &data) const
 {
-  // convert to UTF-8
-  bool errors;
-  std::string utf8 = Unicode::textToUTF8(data, &errors);
-
-  // if there were decoding errors then, to support old applications
-  // that don't understand UTF-8 but can report the exact binary
-  // UTF-8 representation, see if the data appears to be UTF-8.  if
-  // so then use it as is.
-  if (errors && Unicode::isUTF8(data)) {
-    return data;
-  }
-
-  return utf8;
+  return QString::fromLatin1(data).toUtf8().toStdString();
 }
