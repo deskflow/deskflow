@@ -38,7 +38,7 @@ public:
   ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action);
   ~ActionDialog() override;
 
-protected slots:
+protected Q_SLOTS:
   void accept() override;
 
 private:
