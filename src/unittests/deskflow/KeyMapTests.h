@@ -11,7 +11,7 @@ namespace deskflow {
 class KeyMapTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void findBestKey_requiredDown_matchExactFirstItem();
   void findBestKey_requiredAndExtraSensitiveDown_matchExactFirstItem();
   void findBestKey_requiredAndExtraSensitiveDown_matchExactSecondItem();

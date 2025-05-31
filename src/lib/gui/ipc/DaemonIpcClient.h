@@ -40,11 +40,11 @@ public:
     return m_state == State::Connected;
   }
 
-signals:
+Q_SIGNALS:
   void connected();
   void connectionFailed();
 
-private slots:
+private Q_SLOTS:
   void handleDisconnected();
   void handleErrorOccurred();
 

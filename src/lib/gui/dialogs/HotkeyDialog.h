@@ -31,7 +31,7 @@ public:
     return m_Hotkey;
   }
 
-protected slots:
+protected Q_SLOTS:
   void accept() override;
 
 protected:

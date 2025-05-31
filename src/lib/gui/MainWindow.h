@@ -88,7 +88,7 @@ public:
 
   void hide();
 
-signals:
+Q_SIGNALS:
   void shown();
 
 private:

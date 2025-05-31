@@ -28,7 +28,7 @@ public:
   ~ServerConfigDialog() override;
   bool addClient(const QString &clientName);
 
-public slots:
+public Q_SLOTS:
   void accept() override;
   void reject() override;
   void message(const QString &message)
@@ -36,7 +36,7 @@ public slots:
     m_Message = message;
   }
 
-protected slots:
+protected Q_SLOTS:
   void onScreenRemoved();
 
 protected:
@@ -102,6 +102,6 @@ private:
   ScreenSetupModel m_ScreenSetupModel;
   QString m_Message = "";
 
-private slots:
+private Q_SLOTS:
   void onChange();
 };

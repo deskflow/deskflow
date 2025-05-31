@@ -16,10 +16,10 @@ class CommandProcess : public QObject
 public:
   CommandProcess(QString cmd, QStringList arguments, QString input = "");
 
-signals:
+Q_SIGNALS:
   void finished();
 
-public slots:
+public Q_SLOTS:
   QString run();
 
 private:

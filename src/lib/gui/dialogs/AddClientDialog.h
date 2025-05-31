@@ -37,7 +37,7 @@ public:
     return m_AddResult;
   }
 
-private slots:
+private Q_SLOTS:
   void handleButtonLeft();
   void handleButtonUp();
   void handleButtonRight();

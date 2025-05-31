@@ -30,7 +30,7 @@ public:
   SettingsDialog(QWidget *parent, const IServerConfig &serverConfig, const CoreProcess &coreProcess);
   ~SettingsDialog() override;
 
-signals:
+Q_SIGNALS:
   void shown();
 
 private:

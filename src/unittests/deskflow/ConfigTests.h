@@ -11,7 +11,7 @@
 class ConfigTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   // Test are run in order top to bottom
   void initTestCase();
   void loadFile();

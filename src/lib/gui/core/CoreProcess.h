@@ -113,7 +113,7 @@ public:
     m_mode = mode;
   }
 
-signals:
+Q_SIGNALS:
   void starting();
   void error(Error error);
   void logLine(const QString &line);
@@ -122,7 +122,7 @@ signals:
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
 
-private slots:
+private Q_SLOTS:
   void onProcessFinished(int exitCode, QProcess::ExitStatus);
   void onProcessReadyReadStandardOutput();
   void onProcessReadyReadStandardError();

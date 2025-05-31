@@ -9,7 +9,7 @@
 class ServerConfigTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void equalityCheck();
   void equalityCheck_diff_options();
   void equalityCheck_diff_alias();

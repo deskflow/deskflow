@@ -129,7 +129,7 @@ public:
   static void save(bool emitSaving = true);
   static const QStringList validKeys();
 
-signals:
+Q_SIGNALS:
   void settingsChanged(const QString key);
   void serverSettingsChanged();
 
