@@ -7,15 +7,17 @@
 
 #include "MSWindowsProcess.h"
 
-#include "arch/XArch.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "common/Common.h"
+#include "common/Constants.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
 #include <UserEnv.h>
 
+#include <stdexcept>
 #include <string>
 
 namespace deskflow::platform {

@@ -10,6 +10,7 @@
 #include "arch/win32/XArchWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "common/Constants.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsHandle.h"
 

@@ -9,8 +9,6 @@
 
 #include "deskflow/ClientArgs.h"
 #include "deskflow/PlatformScreen.h"
-#include "mt/CondVar.h"
-#include "mt/Mutex.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"
 

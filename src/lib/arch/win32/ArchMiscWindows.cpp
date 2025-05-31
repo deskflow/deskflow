@@ -7,11 +7,11 @@
 
 #include "arch/win32/ArchMiscWindows.h"
 
-#include "arch/XArch.h"
 #include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
 #include "base/String.h"
+#include "common/Constants.h"
 
 #include <Psapi.h>
 

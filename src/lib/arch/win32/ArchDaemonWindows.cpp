@@ -12,7 +12,9 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "common/Constants.h"
 
+inline static const auto DEFAULT_DAEMON_NAME = _T(kAppName);
 //
 // ArchDaemonWindows
 //
