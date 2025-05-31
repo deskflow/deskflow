@@ -6,12 +6,11 @@
 
 #include "platform/MSWindowsSession.h"
 
-#include "arch/XArch.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
-#include "deskflow/XDeskflow.h"
 
 #include <Wtsapi32.h>
+#include <stdexcept>
 
 MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1)
 {

@@ -12,7 +12,9 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "common/Constants.h"
 
+inline static const auto kDefaultDaemonName = _T(kAppName);
 //
 // ArchDaemonWindows
 //
@@ -604,17 +606,17 @@ void ArchDaemonWindows::stop(const char *name)
 void ArchDaemonWindows::installDaemon()
 {
   // install default daemon if not already installed.
-  if (!isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
+  if (!isDaemonInstalled(kDefaultDaemonName)) {
     char binPath[MAX_PATH];
     GetModuleFileName(ArchMiscWindows::instanceWin32(), binPath, MAX_PATH);
 
     // wrap in quotes so a malicious user can't start \Program.exe as admin.
     const auto command = "\"" + std::string(binPath) + "\"";
 
-    installDaemon(DEFAULT_DAEMON_NAME, DEFAULT_DAEMON_INFO, command.c_str(), "", "");
+    installDaemon(kDefaultDaemonName, DEFAULT_DAEMON_INFO, command.c_str(), "", "");
   }
 
-  start(DEFAULT_DAEMON_NAME);
+  start(kDefaultDaemonName);
 }
 
 void ArchDaemonWindows::uninstallDaemon()
@@ -628,7 +630,7 @@ void ArchDaemonWindows::uninstallDaemon()
   }
 
   // remove new service if installed.
-  if (isDaemonInstalled(DEFAULT_DAEMON_NAME)) {
-    uninstallDaemon(DEFAULT_DAEMON_NAME);
+  if (isDaemonInstalled(kDefaultDaemonName)) {
+    uninstallDaemon(kDefaultDaemonName);
   }
 }

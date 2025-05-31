@@ -6,7 +6,6 @@
  */
 
 #include "arch/win32/ArchLogWindows.h"
-#include "arch/win32/ArchMiscWindows.h"
 
 #include <string.h>
 
