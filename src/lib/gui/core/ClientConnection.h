@@ -41,7 +41,7 @@ public:
     m_showMessage = true;
   }
 
-signals:
+Q_SIGNALS:
   void messageShowing();
 
 private:

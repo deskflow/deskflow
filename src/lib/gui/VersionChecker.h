@@ -19,9 +19,9 @@ class VersionChecker : public QObject
 public:
   explicit VersionChecker(QObject *parent = nullptr);
   void checkLatest() const;
-public slots:
+public Q_SLOTS:
   void replyFinished(QNetworkReply *reply);
-signals:
+Q_SIGNALS:
   void updateFound(const QString &version);
 
 private:

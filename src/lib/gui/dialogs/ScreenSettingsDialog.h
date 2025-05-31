@@ -27,10 +27,10 @@ public:
   ScreenSettingsDialog(QWidget *parent, Screen *pScreen = nullptr, const ScreenList *pScreens = nullptr);
   ~ScreenSettingsDialog() override;
 
-public slots:
+public Q_SLOTS:
   void accept() override;
 
-private slots:
+private Q_SLOTS:
   void on_m_pButtonAddAlias_clicked();
   void on_m_pButtonRemoveAlias_clicked();
   void on_m_pLineEditAlias_textChanged(const QString &text);

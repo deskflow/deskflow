@@ -9,7 +9,7 @@
 class ServerTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void SwitchToScreenInfo_alloc_screen();
   void KeyboardBroadcastInfo_alloc_stateAndSceens();
 };

@@ -12,7 +12,7 @@
 class OSXKeyStateTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void initTestCase();
   // Test are run in order top to bottom
   void mapModifiersFromOSX_OSXMask();

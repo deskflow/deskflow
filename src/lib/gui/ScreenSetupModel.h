@@ -55,7 +55,7 @@ public:
   QMimeData *mimeData(const QModelIndexList &indexes) const override;
   bool isFull() const;
 
-signals:
+Q_SIGNALS:
   void screensChanged();
 
 protected:
