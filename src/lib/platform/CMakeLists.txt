@@ -48,8 +48,6 @@ if(WIN32)
     MSWindowsScreenSaver.h
     MSWindowsSession.cpp
     MSWindowsSession.h
-    MSWindowsUtil.cpp
-    MSWindowsUtil.h
     MSWindowsWatchdog.cpp
     MSWindowsWatchdog.h
   )

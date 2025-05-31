@@ -32,7 +32,7 @@ public:
   );
   void handleLogLine(const QString &logLine);
 
-signals:
+Q_SIGNALS:
   void messageShowing();
   void configureClient(const QString &clientName);
 

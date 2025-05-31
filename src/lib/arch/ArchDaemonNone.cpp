@@ -6,6 +6,7 @@
  */
 
 #include "arch/ArchDaemonNone.h"
+#include <QString>
 
 //
 // ArchDaemonNone
@@ -48,7 +49,7 @@ void ArchDaemonNone::uninstallDaemon()
   // do nothing
 }
 
-std::string ArchDaemonNone::commandLine() const
+QString ArchDaemonNone::commandLine() const
 {
-  return "";
+  return {};
 }

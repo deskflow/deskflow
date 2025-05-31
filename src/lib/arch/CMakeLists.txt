@@ -59,6 +59,8 @@ add_library(arch STATIC ${PLATFORM_CODE}
   XArch.h
 )
 
+target_link_libraries (arch PUBLIC common)
+
 if(UNIX)
-  target_link_libraries(arch ${libs})
+  target_link_libraries(arch PUBLIC ${libs})
 endif()

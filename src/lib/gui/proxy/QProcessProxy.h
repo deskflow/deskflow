@@ -26,7 +26,7 @@ public:
   virtual QString readAllStandardOutput();
   virtual QString readAllStandardError();
 
-signals:
+Q_SIGNALS:
   void finished(int exitCode, QProcess::ExitStatus exitStatus);
   void readyReadStandardOutput();
   void readyReadStandardError();

@@ -24,7 +24,7 @@ public:
 
   void listen();
 
-signals:
+Q_SIGNALS:
   void logLevelChanged(const QString &logLevel);
   void elevateModeChanged(bool elevate);
   void commandChanged(const QString &command);
@@ -38,7 +38,7 @@ private:
   void processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts);
   void processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts);
 
-private slots:
+private Q_SLOTS:
   void handleNewConnection();
   void handleReadyRead();
   void handleDisconnected();

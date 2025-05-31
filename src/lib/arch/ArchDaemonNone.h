@@ -34,5 +34,5 @@ public:
   bool isDaemonInstalled(const char *name) override;
   void installDaemon() override;
   void uninstallDaemon() override;
-  std::string commandLine() const override;
+  QString commandLine() const override;
 };
