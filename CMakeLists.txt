@@ -144,6 +144,10 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 
+# disables the use of signals,slots and emit
+# Instead use Q_SIGNAL, Q_SLOT and Q_EMIT
+# prevents issues when used with glib for libportal
+add_definitions(-DQT_NO_KEYWORDS)
 include(cmake/Libraries.cmake)
 include(GNUInstallDirs)
 
