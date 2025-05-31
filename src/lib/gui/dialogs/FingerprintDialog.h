@@ -32,7 +32,7 @@ public:
   );
   ~FingerprintDialog() override = default;
 
-signals:
+Q_SIGNALS:
   void requestLocalPrintsDialog();
 
 private:

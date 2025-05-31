@@ -9,7 +9,7 @@
 class FingerprintDatabaseTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void readFile();
   void writeFile();
   void clear();
