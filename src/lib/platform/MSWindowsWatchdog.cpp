@@ -7,12 +7,12 @@
 #include "platform/MSWindowsWatchdog.h"
 
 #include "arch/Arch.h"
-#include "arch/XArch.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/ELevel.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"
 #include "base/TMethodJob.h"
+#include "common/Constants.h"
 #include "deskflow/App.h"
 #include "mt/Thread.h"
 #include "platform/MSWindowsHandle.h"
