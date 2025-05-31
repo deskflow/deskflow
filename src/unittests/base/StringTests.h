@@ -9,7 +9,7 @@
 class StringTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void formatWithArgs();
   void formatedString();
   void intToString();

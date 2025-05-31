@@ -9,7 +9,7 @@
 class FingerprintTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void test_isValid();
   void test_toDbLine();
   void test_fromDbLine();

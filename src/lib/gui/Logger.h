@@ -30,7 +30,7 @@ public:
   void handleMessage(const QtMsgType type, const QString &fileLine, const QString &message);
   void logVerbose(const QString &message) const;
 
-signals:
+Q_SIGNALS:
   void newLine(const QString &line);
 
 private:
