@@ -278,8 +278,6 @@ void MainWindow::connectSlots()
 {
   connect(&Logger::instance(), &Logger::newLine, this, &MainWindow::handleLogLine);
 
-  connect(this, &MainWindow::shown, this, &MainWindow::firstShown, Qt::QueuedConnection);
-
   connect(Settings::instance(), &Settings::serverSettingsChanged, this, &MainWindow::serverConfigSaving);
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
@@ -358,39 +356,6 @@ void MainWindow::toggleLogVisible(bool visible)
   Settings::setValue(Settings::Gui::LogExpanded, visible);
   // 15 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(15, this, &MainWindow::updateSize);
-}
-
-void MainWindow::firstShown()
-{
-  // if a critical error was shown just before the main window (i.e. on app
-  // load), it will be hidden behind the main window. therefore we need to raise
-  // it up in front of the main window.
-  // HACK: because the `onShown` event happens just as the window is shown, the
-  // message box has a chance of being raised under the main window. to solve
-  // this we delay the error dialog raise by a split second. this seems a bit
-  // hacky and fragile, so maybe there's a better approach.
-  const auto kCriticalDialogDelay = 100;
-  QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
-
-  if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
-    showAndActivate();
-    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
-  }
-
-  if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
-    m_versionChecker.checkLatest();
-  } else {
-    qDebug() << "update check disabled";
-  }
-
-  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
-    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
-      return;
-    m_coreProcess.start();
-  }
-
-  // Do not call firstshow for any more show events
-  disconnect(this, &MainWindow::shown, this, &MainWindow::firstShown);
 }
 
 void MainWindow::settingsChanged(const QString &key)
@@ -635,6 +600,32 @@ void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 void MainWindow::open()
 {
   Settings::value(Settings::Gui::Autohide).toBool() ? hide() : showAndActivate();
+
+  // if a critical error was shown just before the main window (i.e. on app
+  // load), it will be hidden behind the main window. therefore we need to raise
+  // it up in front of the main window.
+  // HACK: because the `onShown` event happens just as the window is shown, the
+  // message box has a chance of being raised under the main window. to solve
+  // this we delay the error dialog raise by a split second. this seems a bit
+  // hacky and fragile, so maybe there's a better approach.
+  const auto kCriticalDialogDelay = 100;
+  QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
+
+  if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
+    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
+  }
+
+  if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
+    m_versionChecker.checkLatest();
+  } else {
+    qDebug() << "update check disabled";
+  }
+
+  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
+    if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
+      return;
+    m_coreProcess.start();
+  }
 }
 
 void MainWindow::coreProcessStarting()
@@ -828,12 +819,6 @@ void MainWindow::checkFingerprint(const QString &line)
 QString MainWindow::getTimeStamp() const
 {
   return QStringLiteral("[%1]").arg(QDateTime::currentDateTime().toString(Qt::ISODate));
-}
-
-void MainWindow::showEvent(QShowEvent *event)
-{
-  QMainWindow::showEvent(event);
-  Q_EMIT shown();
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
