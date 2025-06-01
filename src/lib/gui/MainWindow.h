@@ -88,13 +88,8 @@ public:
 
   void hide();
 
-Q_SIGNALS:
-  void shown();
-
 private:
   void toggleLogVisible(bool visible);
-
-  void firstShown();
 
   void settingsChanged(const QString &key = QString());
   void serverConfigSaving();
@@ -135,7 +130,6 @@ private:
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   [[nodiscard]] QString getTimeStamp() const;
-  void showEvent(QShowEvent *) override;
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
   void connectSlots();
