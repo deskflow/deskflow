@@ -67,8 +67,6 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->lineConfigFile->setText(serverConfig().configFile());
 
-  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
-
   ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == ServerProtocol::kSynergy);
   ui->rbProtocolBarrier->setChecked(serverConfig().protocol() == ServerProtocol::kBarrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
@@ -76,6 +74,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
   connect(ui->cbHeartbeat, &QCheckBox::toggled, this, &ServerConfigDialog::toggleHeartbeat);
 
+  ui->sbHeartbeat->setEnabled(ui->cbHeartbeat->isChecked());
   ui->sbHeartbeat->setValue(serverConfig().heartbeat());
   connect(ui->sbHeartbeat, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setHeartbeat);
 
@@ -90,12 +89,14 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->cbSwitchDelay->setChecked(serverConfig().hasSwitchDelay());
   connect(ui->cbSwitchDelay, &QCheckBox::toggled, this, &ServerConfigDialog::toggleSwitchDelay);
 
+  ui->sbSwitchDelay->setEnabled(ui->cbSwitchDelay->isChecked());
   ui->sbSwitchDelay->setValue(serverConfig().switchDelay());
   connect(ui->sbSwitchDelay, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setSwitchDelay);
 
   ui->cbSwitchDoubleTap->setChecked(serverConfig().hasSwitchDoubleTap());
   connect(ui->cbSwitchDoubleTap, &QCheckBox::toggled, this, &ServerConfigDialog::toggleSwitchDoubleTap);
 
+  ui->sbSwitchDoubleTap->setEnabled(ui->cbSwitchDoubleTap->isChecked());
   ui->sbSwitchDoubleTap->setValue(serverConfig().switchDoubleTap());
   connect(
       ui->sbSwitchDoubleTap, QOverload<int>::of(&QSpinBox::valueChanged), this, &ServerConfigDialog::setSwitchDoubleTap
@@ -104,8 +105,14 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   connect(ui->cbRelativeMouseMoves, &QCheckBox::toggled, this, &ServerConfigDialog::toggleRelativeMouseMoves);
   connect(ui->cbEnableClipboard, &QCheckBox::toggled, this, &ServerConfigDialog::toggleClipboard);
 
-  connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
   connect(ui->btnBrowseConfigFile, &QPushButton::clicked, this, &ServerConfigDialog::browseConfigFile);
+
+  ui->groupExternalConfig->setChecked(serverConfig().useExternalConfig());
+  ui->widgetExternalConfigControls->setEnabled(ui->groupExternalConfig->isChecked());
+  ui->tabWidget->setTabEnabled(0, !ui->groupExternalConfig->isChecked());
+  ui->tabWidget->setTabEnabled(1, !ui->groupExternalConfig->isChecked());
+  ui->tabWidget->setTabEnabled(2, !ui->groupExternalConfig->isChecked());
+  connect(ui->groupExternalConfig, &QGroupBox::toggled, this, &ServerConfigDialog::toggleExternalConfig);
 
   connect(
       ui->sbSwitchCornerSize, QOverload<int>::of(&QSpinBox::valueChanged), this,
@@ -445,10 +452,7 @@ void ServerConfigDialog::onScreenRemoved()
 
 void ServerConfigDialog::toggleExternalConfig(bool checked)
 {
-  ui->labelConfigFile->setEnabled(checked);
-  ui->lineConfigFile->setEnabled(checked);
-  ui->btnBrowseConfigFile->setEnabled(checked);
-
+  ui->widgetExternalConfigControls->setEnabled(checked);
   ui->tabWidget->setTabEnabled(0, !checked);
   ui->tabWidget->setTabEnabled(1, !checked);
   ui->tabWidget->setTabEnabled(2, !checked);
