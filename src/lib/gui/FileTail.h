@@ -20,10 +20,10 @@ class FileTail : public QObject
 public:
   FileTail(const QString &filePath, QObject *parent = nullptr);
 
-signals:
+Q_SIGNALS:
   void newLine(const QString &line);
 
-private slots:
+private Q_SLOTS:
   void handleFileChanged(const QString &);
 
 private:

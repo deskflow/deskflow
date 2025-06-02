@@ -18,8 +18,6 @@ if(WIN32)
     win32/ArchNetworkWinsock.h
     win32/ArchSleepWindows.cpp
     win32/ArchSleepWindows.h
-    win32/ArchTimeWindows.cpp
-    win32/ArchTimeWindows.h
     win32/XArchWindows.cpp
     win32/XArchWindows.h
   )
@@ -36,8 +34,6 @@ elseif(UNIX)
     unix/ArchNetworkBSD.h
     unix/ArchSleepUnix.cpp
     unix/ArchSleepUnix.h
-    unix/ArchTimeUnix.cpp
-    unix/ArchTimeUnix.h
     unix/XArchUnix.cpp
     unix/XArchUnix.h
   )
@@ -53,12 +49,11 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchMultithread.h
   IArchNetwork.h
   IArchSleep.h
-  ArchString.cpp
-  ArchString.h
-  IArchTime.h
   XArch.h
 )
 
+target_link_libraries (arch PUBLIC common)
+
 if(UNIX)
-  target_link_libraries(arch ${libs})
+  target_link_libraries(arch PUBLIC ${libs})
 endif()

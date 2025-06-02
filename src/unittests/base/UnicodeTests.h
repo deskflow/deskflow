@@ -11,12 +11,10 @@
 class UnicodeTests : public QObject
 {
   Q_OBJECT
-private slots:
+private Q_SLOTS:
   void initTestCase();
   void UTF32ToUTF8();
   void UTF16ToUTF8();
-  void UCS2ToUTF8_kUCS2();
-  void UCS2ToUTF8();
 
 private:
   Arch m_arch;

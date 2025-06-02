@@ -28,10 +28,10 @@ public:
     return m_IsFinished;
   }
 
-signals:
+Q_SIGNALS:
   void isComplete();
 
-private slots:
+private Q_SLOTS:
   void complete(QNetworkReply *reply);
 
 private:
