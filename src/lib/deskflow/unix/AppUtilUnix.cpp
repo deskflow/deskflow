@@ -6,11 +6,8 @@
  */
 
 #include "deskflow/unix/AppUtilUnix.h"
-#include "deskflow/ArgsBase.h"
 
 #include "base/Log.h"
-#include "base/LogOutputters.h"
-#include "common/Constants.h"
 
 #if WINAPI_XWINDOWS
 #include "deskflow/unix/X11LayoutsParser.h"
@@ -23,7 +20,6 @@
 #endif
 
 #include <filesystem>
-#include <thread>
 
 AppUtilUnix::AppUtilUnix(const IEventQueue *events)
 {
