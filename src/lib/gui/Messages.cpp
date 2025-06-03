@@ -109,26 +109,23 @@ void messageHandler(QtMsgType type, const QMessageLogContext &context, const QSt
 
 void showCloseReminder(QWidget *parent)
 {
-  QString message = QString(
-                        "<p>%1 will continue to run in the background and can be accessed "
-                        "via the %1 icon in your system notifications area. This "
-                        "setting "
-                        "can be disabled.</p>"
+  auto message = QObject::tr(
+                     "<p>%1 will continue to run in the background and can be accessed via the %1 icon in your "
+                     "system notifications area. This setting can be disabled.</p>"
   )
-                        .arg(kAppName);
+                     .arg(kAppName);
 
 #if defined(Q_OS_LINUX)
-  message += QString(
-                 "<p>On some Linux systems such as GNOME 3, the "
-                 "notification area might be disabled. "
-                 "You may need to "
-                 R"(<a href="%1" %2>enable an extension</a>)"
-                 " to see the %3 tray icon.</p>"
-  )
-                 .arg(kUrlGnomeTrayFix, kStyleLink, kAppName);
+  message.append(
+      QObject::tr(
+          "<p>On Linux systems using GNOME 3, the notification area might be disabled. "
+          R"(You may need to <a href="%1" %2>enable an extension</a> to see the %3 tray icon.</p>)"
+      )
+          .arg(kUrlGnomeTrayFix, kStyleLink, kAppName)
+  );
 #endif
 
-  QMessageBox::information(parent, "Notification area icon", message);
+  QMessageBox::information(parent, kAppName, message);
 }
 
 void showFirstServerStartMessage(QWidget *parent)
