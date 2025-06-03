@@ -12,12 +12,8 @@
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 
-#include <QAction>
-#include <QDateTime>
-#include <QDir>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QTime>
 #include <memory>
 
 namespace deskflow::gui::messages {
@@ -74,9 +70,7 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
     Errors::s_criticalMessage =
         std::make_unique<QMessageBox>(QMessageBox::Critical, title, text, QMessageBox::Ok | QMessageBox::Ignore);
 
-    Errors::s_criticalMessage->open();
-
-    QAction::connect(
+    QObject::connect(
         Errors::s_criticalMessage.get(), &QMessageBox::finished, //
         [message](int result) {
           if (result == QMessageBox::Ignore) {
@@ -84,6 +78,7 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
           }
         }
     );
+    Errors::s_criticalMessage->open();
   }
 }
 
