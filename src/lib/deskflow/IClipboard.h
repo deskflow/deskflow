@@ -29,7 +29,7 @@ public:
 
   //! Clipboard formats
   /*!
-  The list of known clipboard formats.  kNumFormats must be last and
+  The list of known clipboard formats.  TotalFormats must be last and
   formats must be sequential starting from zero.  Clipboard data set
   via add() and retrieved via get() must be in one of these formats.
   Platform dependent clipboard subclasses can and should present any
