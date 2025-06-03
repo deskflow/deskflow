@@ -36,29 +36,24 @@ void raiseCriticalDialog()
 
 void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType type)
 {
-  auto title = type == QtFatalMsg ? "Fatal error" : "Critical error";
-  QString text;
-  if (type == QtFatalMsg) {
-    text = "<p>Sorry, a fatal error has occurred and the application must "
-           "now exit.</p>";
-  } else {
-    text = "<p>Sorry, a critical error has occurred.</p>";
-  }
-
-  text += QString(
-              R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
-              " and copy/paste the following error:</p>"
+  auto errorType = QtFatalMsg ? QObject::tr("fatal error") : QObject::tr("error");
+  auto title = QStringLiteral("%1 %2").arg(kAppName, errorType);
+  auto text = QObject::tr(
+                  R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
+                  " and copy/paste the following error:</p><pre>v%3\n%4\n%5</pre>"
   )
-              .arg(kUrlHelp, kColorSecondary);
-
-  text += QString("<pre>v%1\n%2\n%3</pre>").arg(kVersion, message, fileLine);
+                  .arg(kUrlHelp, kColorSecondary, kVersion, message, fileLine);
 
   if (type == QtFatalMsg) {
+    text.prepend(QObject::tr("<p>Sorry, a fatal error has occurred and the application must now exit.</p>\n"));
     // create a blocking message box for fatal errors, as we want to wait
     // until the dialog is dismissed before aborting the app.
-    QMessageBox critical(QMessageBox::Critical, title, text, QMessageBox::Abort);
-    critical.exec();
-  } else if (!Errors::s_ignoredErrors.contains(message)) {
+    QMessageBox::critical(nullptr, title, text, QMessageBox::Abort);
+    return;
+  }
+
+  text.prepend(QObject::tr("<p>Sorry, a critical error has occurred.</p>\n"));
+  if (!Errors::s_ignoredErrors.contains(message)) {
     // prevent message boxes piling up by deleting the last one if it exists.
     // if none exists yet, then nothing will happen.
     Errors::s_criticalMessage.reset();
