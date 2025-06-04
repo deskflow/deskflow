@@ -325,7 +325,7 @@ void MainWindow::connectSlots()
   connect(&m_clientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
-  connect(ui->btnApplySettings, &QPushButton::clicked, this, &MainWindow::resetCore);
+  connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
   connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
@@ -945,7 +945,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     ui->btnToggleCore->setText(tr("&Stop"));
     ui->btnToggleCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
 
-    ui->btnApplySettings->setEnabled(true);
+    ui->btnRestartCore->setEnabled(true);
     m_actionStartCore->setVisible(false);
     m_actionRestartCore->setVisible(true);
     m_actionStopCore->setEnabled(true);
@@ -957,7 +957,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     ui->btnToggleCore->setText(tr("&Start"));
     ui->btnToggleCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
 
-    ui->btnApplySettings->setEnabled(false);
+    ui->btnRestartCore->setEnabled(false);
     m_actionStartCore->setVisible(true);
     m_actionRestartCore->setVisible(false);
     m_actionStopCore->setEnabled(false);
@@ -1150,7 +1150,7 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
 {
   ui->btnToggleCore->setEnabled(enableButtons);
   ui->btnConnect->setEnabled(enableButtons);
-  ui->btnApplySettings->setEnabled(enableButtons && m_coreProcess.isStarted());
+  ui->btnRestartCore->setEnabled(enableButtons && m_coreProcess.isStarted());
   m_actionStartCore->setEnabled(enableButtons);
   m_actionStopCore->setEnabled(enableButtons);
 }
