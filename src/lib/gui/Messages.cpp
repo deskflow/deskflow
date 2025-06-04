@@ -80,9 +80,9 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
 QString fileLine(const QMessageLogContext &context)
 {
   if (!context.file) {
-    return "";
+    return {};
   }
-  return QString("%1:%2").arg(context.file).arg(context.line);
+  return QStringLiteral("%1:%2").arg(context.file, QString::number(context.line));
 }
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
