@@ -193,5 +193,6 @@ private:
   QAction *m_actionRestore = nullptr;
   QAction *m_actionSettings = nullptr;
   QAction *m_actionStartCore = nullptr;
+  QAction *m_actionRestartCore = nullptr;
   QAction *m_actionStopCore = nullptr;
 };

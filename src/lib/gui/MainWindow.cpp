@@ -81,6 +81,7 @@ MainWindow::MainWindow()
       m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
       m_actionSettings{new QAction(tr("&Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
+      m_actionRestartCore{new QAction(tr("Rest&art"), this)},
       m_actionStopCore{new QAction(tr("S&top"), this)}
 {
   const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
@@ -115,6 +116,10 @@ MainWindow::MainWindow()
 
   m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
+
+  m_actionRestartCore->setVisible(false);
+  m_actionRestartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+  m_actionRestartCore->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
 
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
@@ -304,6 +309,7 @@ void MainWindow::connectSlots()
   connect(m_actionRestore, &QAction::triggered, this, &MainWindow::showAndActivate);
   connect(m_actionSettings, &QAction::triggered, this, &MainWindow::openSettings);
   connect(m_actionStartCore, &QAction::triggered, this, &MainWindow::startCore);
+  connect(m_actionRestartCore, &QAction::triggered, this, &MainWindow::resetCore);
   connect(m_actionStopCore, &QAction::triggered, this, &MainWindow::stopCore);
 
   connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::versionCheckerUpdateFound);
@@ -417,12 +423,16 @@ void MainWindow::startCore()
 {
   m_clientConnection.setShowMessage();
   m_coreProcess.start();
+  m_actionStartCore->setVisible(false);
+  m_actionRestartCore->setVisible(true);
 }
 
 void MainWindow::stopCore()
 {
   qDebug() << "stopping core process";
   m_coreProcess.stop();
+  m_actionStartCore->setVisible(true);
+  m_actionRestartCore->setVisible(false);
 }
 
 void MainWindow::clearSettings()
@@ -624,7 +634,7 @@ void MainWindow::open()
   if (Settings::value(Settings::Core::StartedBefore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
       return;
-    m_coreProcess.start();
+    startCore();
   }
 }
 
@@ -645,6 +655,7 @@ void MainWindow::createMenuBar()
 {
   auto menuFile = new QMenu(tr("&File"), this);
   menuFile->addAction(m_actionStartCore);
+  menuFile->addAction(m_actionRestartCore);
   menuFile->addAction(m_actionStopCore);
   menuFile->addSeparator();
   menuFile->addAction(m_actionQuit);
@@ -669,7 +680,9 @@ void MainWindow::createMenuBar()
 void MainWindow::setupTrayIcon()
 {
   auto trayMenu = new QMenu(this);
-  trayMenu->addActions({m_actionStartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit});
+  trayMenu->addActions(
+      {m_actionStartCore, m_actionRestartCore, m_actionStopCore, m_actionMinimize, m_actionRestore, m_actionTrayQuit}
+  );
   trayMenu->insertSeparator(m_actionMinimize);
   trayMenu->insertSeparator(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
@@ -933,8 +946,8 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     ui->btnToggleCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
 
     ui->btnApplySettings->setEnabled(true);
-
-    m_actionStartCore->setEnabled(false);
+    m_actionStartCore->setVisible(false);
+    m_actionRestartCore->setVisible(true);
     m_actionStopCore->setEnabled(true);
 
   } else {
@@ -945,8 +958,8 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     ui->btnToggleCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
 
     ui->btnApplySettings->setEnabled(false);
-
-    m_actionStartCore->setEnabled(true);
+    m_actionStartCore->setVisible(true);
+    m_actionRestartCore->setVisible(false);
     m_actionStopCore->setEnabled(false);
   }
 }
@@ -1137,7 +1150,7 @@ void MainWindow::toggleCanRunCore(bool enableButtons)
 {
   ui->btnToggleCore->setEnabled(enableButtons);
   ui->btnConnect->setEnabled(enableButtons);
-  ui->btnApplySettings->setEnabled(enableButtons);
+  ui->btnApplySettings->setEnabled(enableButtons && m_coreProcess.isStarted());
   m_actionStartCore->setEnabled(enableButtons);
   m_actionStopCore->setEnabled(enableButtons);
 }
