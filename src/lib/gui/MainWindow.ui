@@ -401,12 +401,15 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="btnApplySettings">
+          <widget class="QPushButton" name="btnRestartCore">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="text">
-            <string>&amp;Apply</string>
+            <string>Rest&amp;art</string>
+           </property>
+           <property name="icon">
+            <iconset theme="view-refresh"/>
            </property>
           </widget>
          </item>
