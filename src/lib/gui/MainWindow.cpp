@@ -239,10 +239,11 @@ void MainWindow::setupControls()
   ui->lineEditName->setVisible(false);
 
 #if defined(Q_OS_MAC)
-
   ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
   ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
-
+  ui->btnSaveServerConfig->setFixedWidth(ui->btnSaveServerConfig->height());
+#else
+  ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
 #endif
 
   const auto trayItemSize = QSize(24, 24);

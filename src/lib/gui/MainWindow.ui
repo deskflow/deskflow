@@ -234,21 +234,12 @@
               </widget>
              </item>
              <item>
-              <widget class="QToolButton" name="btnSaveServerConfig">
+              <widget class="QPushButton" name="btnSaveServerConfig">
                <property name="toolTip">
                 <string>Export server configuration</string>
                </property>
-               <property name="text">
-                <string>...</string>
-               </property>
                <property name="icon">
                 <iconset theme="QIcon::ThemeIcon::DocumentSaveAs"/>
-               </property>
-               <property name="iconSize">
-                <size>
-                 <width>22</width>
-                 <height>22</height>
-                </size>
                </property>
               </widget>
              </item>
