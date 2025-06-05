@@ -41,7 +41,7 @@ ArchTimeWindows::ArchTimeWindows()
     s_freq = 1.0 / static_cast<double>(freq.QuadPart);
   } else {
     // load winmm.dll and get timeGetTime
-    s_mmInstance = LoadLibrary("winmm");
+    s_mmInstance = LoadLibrary(L"winmm");
     if (s_mmInstance != nullptr) {
       s_tgt = (PTimeGetTime)GetProcAddress(s_mmInstance, "timeGetTime");
     }
