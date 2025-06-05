@@ -17,6 +17,10 @@ inputs:
     description: "The path to install Qt into (Windows & macOS)"
     required: false
 
+  vcpkg-triplet:
+    description: "vcpkg triplet to use (Windows)"
+    required: false
+
 outputs:
   vcpkg-cmake-config:
     description: "windows vcpkg output for cmaket"
@@ -68,7 +72,7 @@ runs:
 
     - name: Install Qt
       if: ${{runner.os != 'Linux' }}
-      uses: jurplel/install-qt-action@v4
+      uses: Kidev/install-qt-action@v5
       env:
         AQT_CONFIG: ${{ github.workspace }}/.github/actions/install-dependencies/aqt.ini
       with:
@@ -83,8 +87,8 @@ runs:
       uses: sithlord48/vcpkg-action@v7
       with:
         pkgs: gtest openssl
-        extra-args: --classic
-        triplet: x64-windows-release
+        extra-args: --classic --host-triplet=${{inputs.vcpkg-triplet}}
+        triplet: ${{inputs.vcpkg-triplet}}
         token: ${{ github.token }}
 
     - name: Install Wix
