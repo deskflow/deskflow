@@ -9,6 +9,7 @@
 
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
+#include "deskflow/IScreen.h"
 
 #include <libei.h>
 #include <mutex>
@@ -26,6 +27,8 @@ class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+
+using ClipboardInfo = IScreen::ClipboardInfo;
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen
@@ -89,6 +92,7 @@ private:
   void init_ei();
   void cleanup_ei();
   void sendEvent(EventTypes type, void *data);
+  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
   ButtonID map_button_from_evdev(ei_event *event) const;
   void on_key_event(ei_event *event);
   void on_button_event(ei_event *event);
@@ -117,6 +121,9 @@ private:
   // keyboard stuff
   EiKeyState *key_state_ = nullptr;
 
+  // clipboard stuff
+  EiClipboard *clipboard_ = nullptr;
+
   std::vector<ei_device *> ei_devices_;
 
   ei *ei_ = nullptr;
@@ -126,6 +133,7 @@ private:
   ei_device *ei_abs_ = nullptr;
 
   std::uint32_t sequence_number_ = 0;
+  std::uint32_t m_sequenceNumber = 0;
 
   std::uint32_t x_ = 0;
   std::uint32_t y_ = 0;
