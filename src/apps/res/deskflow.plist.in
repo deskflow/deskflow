@@ -35,6 +35,10 @@
 	<key>NSSupportsSuddenTermination</key>
 	<false/>
 
+	<!-- Don't allow the app to be background throttled -->
+	<key>NSAppSleepDisabled</key>
+	<true/>
+
 	<!-- Local Lan Entitlements -->
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>This app uses local network permissions for communication between a Deskflow server and clients.</string>
