@@ -220,16 +220,16 @@ NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &client
     // When peer auth is enabled you will be prompted to allow the connection before seeing this dialog.
     // This is why we do not show a dialog with an option to ignore the new client
     QMessageBox::information(
-        parent, QString("New Client"),
-        QString("A new client called '%1' has been accepted. You'll need to add it to your server's screen layout.")
+        parent, QObject::tr("%1 - New Client").arg(kAppName),
+        QObject::tr("A new client called '%1' has been accepted. You'll need to add it to your server's screen layout.")
             .arg(clientName)
     );
     return Add;
   } else {
     QMessageBox message(parent);
-    const QPushButton *ignore = message.addButton("Ignore", QMessageBox::RejectRole);
-    const QPushButton *add = message.addButton("Add client", QMessageBox::AcceptRole);
-    message.setText(QString("A new client called '%1' wants to connect").arg(clientName));
+    const QPushButton *ignore = message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+    const QPushButton *add = message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
+    message.setText(QObject::tr("A new client called '%1' wants to connect").arg(clientName));
     message.exec();
     if (message.clickedButton() == add) {
       return Add;
