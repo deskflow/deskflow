@@ -144,32 +144,41 @@ void showFirstServerStartMessage(QWidget *parent)
 void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableService, bool isServer)
 {
 
-  auto message = QString("<p>%1 is now connected!</p>").arg(kAppName);
+  auto message = QObject::tr("<p>%1 is now connected!</p>").arg(kAppName);
 
   if (isServer) {
-    message += "<p>Try moving your mouse to your other computer. Once there, go ahead "
-               "and type something.</p>"
-               "<p>Don't forget, you can copy and paste between computers too.</p>";
+    message.append(
+        QObject::tr(
+            "<p>Try moving your mouse to your other computer. Once there, go ahead "
+            "and type something.</p>"
+            "<p>Don't forget, you can copy and paste between computers too.</p>"
+        )
+    );
   } else {
-    message += "<p>Try controlling this computer remotely.</p>";
+    message.append(QObject::tr("<p>Try controlling this computer remotely.</p>"));
   }
 
   if (!closeToTray && !enableService) {
-    message += QString(
-                   "<p>As you do not have the setting enabled to keep %1 running in "
-                   "the background, you'll need to keep this window open or minimized "
-                   "to keep %1 running.</p>"
-    )
-                   .arg(kAppName);
+    message.append(
+        QObject::tr(
+            "<p>As you do not have the setting enabled to keep %1 running in "
+            "the background, you'll need to keep this window open or minimized "
+            "to keep %1 running.</p>"
+        )
+            .arg(kAppName)
+    );
   } else {
-    message += QString(
-                   "<p>You can now close this window and %1 will continue to run in "
-                   "the background. This setting can be disabled.</p>"
-    )
-                   .arg(kAppName);
+    message.append(
+        QObject::tr(
+            "<p>You can now close this window and %1 will continue to run in "
+            "the background. This setting can be disabled.</p>"
+        )
+            .arg(kAppName)
+    );
   }
 
-  QMessageBox::information(parent, "Connected", message);
+  const auto title = QObject::tr("%1 Connected").arg(kAppName);
+  QMessageBox::information(parent, title, message);
 }
 
 void showClientConnectError(QWidget *parent, ClientError error, const QString &address)
