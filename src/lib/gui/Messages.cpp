@@ -131,12 +131,11 @@ void showCloseReminder(QWidget *parent)
 void showFirstServerStartMessage(QWidget *parent)
 {
   QMessageBox::information(
-      parent, "Server is running",
-      QString(
+      parent, QObject::tr("%1 Server").arg(kAppName),
+      QObject::tr(
           "<p>Great, the %1 server is now running.</p>"
           "<p>Now you can connect your client computers to this server. "
-          "You should see a prompt here on the server when a new client "
-          "tries to connect.</p>"
+          "You should see a prompt here on the server when a new client tries to connect.</p>"
       )
           .arg(kAppName)
   );
