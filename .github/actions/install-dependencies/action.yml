@@ -13,10 +13,6 @@ inputs:
     description: "The version of Qt to install (Windows & macOS)"
     required: false
 
-  qt-install-dir:
-    description: "The path to install Qt into (Windows & macOS)"
-    required: false
-
 outputs:
   vcpkg-cmake-config:
     description: "windows vcpkg output for cmaket"
@@ -72,7 +68,6 @@ runs:
       env:
         AQT_CONFIG: ${{ github.workspace }}/.github/actions/install-dependencies/aqt.ini
       with:
-        dir: ${{inputs.qt-install-dir}}
         version: ${{inputs.qt-version}}
         cache: true
         cache-key-prefix: ${{matrix.target.os}}-${{inputs.qt-version}}
