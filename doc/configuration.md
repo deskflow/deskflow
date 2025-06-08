@@ -195,7 +195,4 @@ _last = "moe:24800"
 
 # Enable verbose logging in the GUI (always off by default)
 # DESKFLOW_GUI_VERBOSE=true
-
-# Reset all settings and delete all data on startup
-# DESKFLOW_RESET_ALL=true
 ```
