@@ -270,8 +270,8 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
 void showWaylandLibraryError(QWidget *parent)
 {
   QMessageBox::critical(
-      parent, "Library problem",
-      QString(
+      parent, kAppName,
+      QObject::tr(
           "<p>Sorry, while this version of %1 does support Wayland, "
           "this build was not linked with one or more of the required "
           "libraries.</p>"
