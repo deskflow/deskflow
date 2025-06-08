@@ -313,15 +313,17 @@ bool showDaemonOffline(QWidget *parent)
   const auto ignore = message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
   const auto disable = message.addButton(QObject::tr("Disable"), QMessageBox::NoRole);
 
-  message.setText(QString(
-                      "<p>There was a problem finding the %1 background service (daemon).</p>"
-                      "<p>The background service makes %1 work with UAC prompts and the login screen.</p>"
-                      "<p>If don't want to use the background service and intentionally stopped it, "
-                      "you can prevent it's use by disabling this feature.</p>"
-                      "<p>If you did not stop the background service intentionally, there may be a problem with it. "
-                      "Please retry or try restarting the %1 service from the Windows services program.</p>"
-  )
-                      .arg(kAppName));
+  message.setText(
+      QObject::tr(
+          "<p>There was a problem finding the %1 background service (daemon).</p>"
+          "<p>The background service makes %1 work with UAC prompts and the login screen.</p>"
+          "<p>If don't want to use the background service and intentionally stopped it, "
+          "you can prevent it's use by disabling this feature.</p>"
+          "<p>If you did not stop the background service intentionally, there may be a problem with it. "
+          "Please retry or try restarting the %1 service from the Windows services program.</p>"
+      )
+          .arg(kAppName)
+  );
   message.exec();
 
   if (message.clickedButton() == ignore) {
