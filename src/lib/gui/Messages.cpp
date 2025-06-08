@@ -247,17 +247,13 @@ NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &client
 
 bool showClearSettings(QWidget *parent)
 {
-  QMessageBox message(parent);
-  message.addButton(QObject::tr("Cancel"), QMessageBox::RejectRole);
-  const auto clear = message.addButton(QObject::tr("Clear settings"), QMessageBox::AcceptRole);
-  message.setText(QString(
-                      "<p>Are you sure you want to clear all settings and restart %1?</p>"
-                      "<p>This action cannot be undone.</p>"
+  const auto title = QObject::tr("%1 Clear Settings").arg(kAppName);
+  const auto message = QObject::tr(
+                           "<p>Are you sure you want to clear all settings and restart %1?</p>"
+                           "<p>This action cannot be undone.</p>"
   )
-                      .arg(kAppName));
-  message.exec();
-
-  return message.clickedButton() == clear;
+                           .arg(kAppName);
+  return QMessageBox::question(parent, title, message) == QMessageBox::Yes;
 }
 
 void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath)
