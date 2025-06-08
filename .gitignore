@@ -5,6 +5,7 @@
 
 # temp dirs created during build
 /build
+/doc/build
 /dist
 /deps
 /tmp
@@ -39,3 +40,6 @@ CMakeFiles/*
 
 # scripts folder
 /scripts
+
+# myclient tutorial directory
+/myclient

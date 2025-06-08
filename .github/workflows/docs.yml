@@ -1,0 +1,55 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ master, i8410-* ]
+    paths:
+      - 'src/lib/**'
+      - 'doc/**'
+      - '.github/workflows/docs.yml'
+  workflow_call:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y doxygen graphviz cmake
+
+      - name: Build Doxygen documentation
+        run: |
+          cmake -B docs-build -S doc -DBUILD_DOCS=ON -DBUILD_DEV_DOCS=ON
+          cmake --build docs-build --target user-docs
+          cmake --build docs-build --target dev-docs
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs-build/html
+
+  deploy:
+    if: >-
+      startsWith(github.ref, 'refs/heads/master') ||
+      startsWith(github.ref, 'refs/heads/i8410-') ||
+      startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

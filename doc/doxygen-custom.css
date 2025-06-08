@@ -1,0 +1,10 @@
+/* Custom Doxygen CSS */
+
+#projectlogo {
+  vertical-align: middle;
+  padding-bottom: 5px;
+}
+
+#projectlogo img {
+  max-height: 50px;
+}
