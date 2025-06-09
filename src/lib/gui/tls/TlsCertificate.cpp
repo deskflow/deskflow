@@ -14,7 +14,6 @@
 #include "net/FingerprintDatabase.h"
 #include "net/SecureUtils.h"
 
-#include <QCoreApplication>
 #include <QDir>
 #include <QProcess>
 
