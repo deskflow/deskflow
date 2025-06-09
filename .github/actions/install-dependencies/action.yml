@@ -53,7 +53,7 @@ runs:
             elif [ ${{ inputs.like }} == "arch" ]; then
               pacman -Syu --noconfirm base-devel cmake ninja \
                 gcc openssl glib2 libxtst libxkbfile gtest libei libportal \
-                qt6-base qt6-tools qt6-svg gtk3 tomlplusplus cli11 help2man
+                qt6-base qt6-tools qt6-svg gtk3 tomlplusplus cli11 help2man doxygen graphviz rsync
             else
               echo "Unknown like"
             fi
