@@ -222,7 +222,7 @@ jobs:
             container: archlinux:latest
             like: "arch"
             timeout: 20
-            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_DEV_DOCS=ON"
 
           - name: "ubuntu-25.04-x86_64"
             runs-on: ubuntu-latest
@@ -302,6 +302,13 @@ jobs:
         timeout-minutes: 2
         with:
           job: ${{ matrix.target.name }}
+
+      - name: Update Development Documentation
+        if: matrix.target.like == 'arch' && github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@v4.7.3
+        with:
+          branch: gh-pages
+          folder: build/doc/dev/html
 
       - name: Upload
         uses: actions/upload-artifact@v4
