@@ -1,0 +1,11 @@
+<map id="src/lib/net/SecureSocket.h" name="src/lib/net/SecureSocket.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="274,5,447,30"/>
+<area shape="rect" id="Node000002" href="$Client_8cpp.html" title=" " alt="" coords="5,85,159,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,37,125,87,123,82,304,32"/>
+<area shape="rect" id="Node000003" href="$SecureListenSocket_8cpp.html" title=" " alt="" coords="183,78,341,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="336,42,287,80,284,75,332,38"/>
+<area shape="rect" id="Node000004" href="$SecureSocket_8cpp.html" title=" " alt="" coords="366,85,553,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="389,37,446,82,443,87,385,42"/>
+<area shape="rect" id="Node000005" href="$TCPSocketFactory_8cpp.html" title=" " alt="" coords="577,85,795,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="425,32,638,82,636,87,424,37"/>
+</map>

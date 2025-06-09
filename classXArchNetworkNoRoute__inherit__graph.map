@@ -1,0 +1,7 @@
+<map id="XArchNetworkNoRoute" name="XArchNetworkNoRoute">
+<area shape="rect" id="Node000001" title="No route to address." alt="" coords="5,151,164,175"/>
+<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="31,78,138,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,118,87,150,82,150,82,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="23,5,146,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,46,87,78,82,78,82,46"/>
+</map>

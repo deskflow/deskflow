@@ -1,0 +1,7 @@
+<map id="OSXScreenSaver" name="OSXScreenSaver">
+<area shape="rect" id="Node000001" title="OSX screen saver implementation." alt="" coords="5,151,129,175"/>
+<area shape="rect" id="Node000002" href="$classIScreenSaver.html" title="Screen saver interface." alt="" coords="17,78,117,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,118,70,150,64,150,64,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="28,5,106,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="70,46,70,78,64,78,64,46"/>
+</map>

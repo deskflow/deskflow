@@ -1,0 +1,36 @@
+<map id="src/lib/gui/Action.h" name="src/lib/gui/Action.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="476,5,605,30"/>
+<area shape="rect" id="Node000002" href="$Action_8cpp.html" title=" " alt="" coords="308,78,451,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="501,39,407,80,405,75,499,34"/>
+<area shape="rect" id="Node000003" href="$Hotkey_8h.html" title=" " alt="" coords="474,78,607,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="543,46,543,78,538,78,538,46"/>
+<area shape="rect" id="Node000010" href="$ActionDialog_8cpp.html" title=" " alt="" coords="617,237,741,276"/>
+<area shape="poly" id="edge20_Node000001_Node000010" title=" " alt="" coords="577,36,600,54,621,76,645,118,662,163,679,236,674,238,657,164,640,121,617,80,597,58,574,41"/>
+<area shape="rect" id="Node000004" href="$Hotkey_8cpp.html" title=" " alt="" coords="253,158,399,182"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="495,111,359,160,357,155,493,106"/>
+<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="5,331,188,356"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="460,108,327,132,241,153,209,171,186,188,144,239,117,289,102,332,97,330,112,287,140,236,183,184,206,166,240,148,326,127,459,103"/>
+<area shape="rect" id="Node000006" href="$ServerConfig_8h.html" title=" " alt="" coords="423,158,591,182"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="532,118,515,158,510,156,527,116"/>
+<area shape="poly" id="edge16_Node000003_Node000010" title=" " alt="" coords="567,111,605,149,641,195,669,235,665,238,637,198,601,152,564,115"/>
+<area shape="rect" id="Node000013" href="$HotkeyDialog_8h.html" title=" " alt="" coords="718,151,840,189"/>
+<area shape="poly" id="edge17_Node000003_Node000013" title=" " alt="" coords="591,105,722,147,721,153,590,110"/>
+<area shape="poly" id="edge10_Node000006_Node000005" title=" " alt="" coords="433,188,282,218,192,240,164,261,139,286,105,332,101,329,135,283,160,257,190,235,281,213,432,183"/>
+<area shape="rect" id="Node000007" href="$MainWindow_8h.html" title=" " alt="" coords="203,244,369,269"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="464,191,317,246,316,241,462,186"/>
+<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="545,187,643,234,640,239,543,192"/>
+<area shape="rect" id="Node000011" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="590,324,753,363"/>
+<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="529,192,606,274,654,322,650,326,603,278,525,195"/>
+<area shape="rect" id="Node000012" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="392,237,542,276"/>
+<area shape="poly" id="edge13_Node000006_Node000012" title=" " alt="" coords="498,198,478,238,473,236,493,195"/>
+<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="247,278,124,333,122,328,245,273"/>
+<area shape="rect" id="Node000008" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="211,324,360,363"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="288,284,288,324,283,324,283,284"/>
+<area shape="rect" id="Node000009" href="$MainWindow_8cpp.html" title=" " alt="" coords="385,331,565,356"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="327,273,450,328,448,333,324,278"/>
+<area shape="poly" id="edge14_Node000012_Node000009" title=" " alt="" coords="473,292,477,330,471,331,468,292"/>
+<area shape="poly" id="edge15_Node000012_Node000011" title=" " alt="" coords="528,280,627,321,625,326,525,285"/>
+<area shape="poly" id="edge19_Node000013_Node000011" title=" " alt="" coords="779,205,772,241,756,277,732,305,705,326,702,321,729,301,752,275,767,240,774,204"/>
+<area shape="rect" id="Node000014" href="$HotkeyDialog_8cpp.html" title=" " alt="" coords="816,237,945,276"/>
+<area shape="poly" id="edge18_Node000013_Node000014" title=" " alt="" coords="815,198,860,235,856,239,812,202"/>
+</map>

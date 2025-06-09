@@ -1,0 +1,13 @@
+<map id="src/lib/gui/DataDownloader.h" name="src/lib/gui/DataDownloader.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="280,5,468,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,95,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="321,33,111,79,110,73,320,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="119,78,293,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="347,33,249,74,247,69,345,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="317,78,431,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="377,31,377,62,371,62,371,31"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="455,78,584,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="399,28,483,68,480,73,397,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="607,78,677,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="419,28,593,73,591,79,418,33"/>
+</map>

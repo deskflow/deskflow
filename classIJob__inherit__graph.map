@@ -1,0 +1,9 @@
+<map id="IJob" name="IJob">
+<area shape="rect" id="Node000001" title="Job interface." alt="" coords="95,78,141,103"/>
+<area shape="rect" id="Node000003" href="$classFunctionJob.html" title="Use a function as a job." alt="" coords="5,151,98,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,116,64,152,60,148,95,112"/>
+<area shape="rect" id="Node000004" href="$classTMethodJob.html" title="Use a function as a job." alt="" coords="122,151,248,175"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="142,112,176,148,172,152,138,116"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="80,5,157,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,46,121,78,116,78,116,46"/>
+</map>

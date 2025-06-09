@@ -1,0 +1,22 @@
+<map id="ClientProxy1_1" name="ClientProxy1_1">
+<area shape="rect" id="Node000001" title="Proxy for client implementing protocol version 1.1." alt="" coords="62,485,172,510"/>
+<area shape="rect" id="Node000002" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="62,411,172,436"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,451,120,485,114,485,114,451"/>
+<area shape="rect" id="Node000003" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="22,337,111,362"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,373,111,409,107,413,81,376"/>
+<area shape="rect" id="Node000004" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,240,125,265"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,281,69,337,64,337,63,281"/>
+<area shape="rect" id="Node000005" href="$classIClient.html" title="Client interface." alt="" coords="42,153,101,178"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="72,194,69,240,63,240,67,193"/>
+<area shape="rect" id="Node000006" href="$classIScreen.html" title="Screen interface." alt="" coords="42,79,109,104"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="77,119,75,153,70,153,72,119"/>
+<area shape="rect" id="Node000007" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="85,5,162,30"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="110,44,85,81,81,78,106,41"/>
+<area shape="rect" id="Node000010" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="134,79,214,104"/>
+<area shape="poly" id="edge10_Node000010_Node000007" title=" " alt="" coords="142,41,168,77,164,81,138,44"/>
+<area shape="rect" id="Node000008" href="$structClientProxy1__0_1_1ClientClipboard.html" title=" " alt="" coords="72,289,279,313"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="166,329,125,412,120,410,161,326"/>
+<area shape="rect" id="Node000009" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="136,153,212,178"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="177,193,178,288,173,288,172,194"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="177,119,177,153,172,153,172,119"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="IListenSocket" name="IListenSocket">
+<area shape="rect" id="Node000001" title="Listen socket interface." alt="" coords="24,151,124,175"/>
+<area shape="rect" id="Node000004" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="12,223,136,248"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="77,191,77,223,71,223,71,191"/>
+<area shape="rect" id="Node000002" href="$classISocket.html" title="Generic socket interface." alt="" coords="41,78,107,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,118,77,150,71,150,71,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="35,5,113,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,46,77,78,71,78,71,46"/>
+<area shape="rect" id="Node000005" href="$classSecureListenSocket.html" title=" " alt="" coords="5,296,143,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="77,264,77,296,71,296,71,264"/>
+</map>

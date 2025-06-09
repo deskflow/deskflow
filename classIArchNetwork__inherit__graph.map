@@ -1,0 +1,9 @@
+<map id="IArchNetwork" name="IArchNetwork">
+<area shape="rect" id="Node000001" title="Interface for architecture dependent networking." alt="" coords="97,78,199,103"/>
+<area shape="rect" id="Node000003" href="$classArchNetworkBSD.html" title="Berkeley (BSD) sockets implementation of IArchNetwork." alt="" coords="5,151,131,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,115,83,152,79,148,122,111"/>
+<area shape="rect" id="Node000004" href="$classArchNetworkWinsock.html" title="Win32 implementation of IArchNetwork." alt="" coords="155,151,304,175"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="175,111,218,148,214,152,171,115"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="109,5,187,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,46,151,78,145,78,145,46"/>
+</map>

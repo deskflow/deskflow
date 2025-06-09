@@ -1,0 +1,21 @@
+<map id="src/lib/gui/tls/TlsUtility.h" name="src/lib/gui/tls/TlsUtility.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="578,5,739,30"/>
+<area shape="rect" id="Node000002" href="$MainWindow_8h.html" title=" " alt="" coords="172,85,338,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="583,36,316,87,315,82,582,31"/>
+<area shape="rect" id="Node000006" href="$CoreProcess_8cpp.html" title=" " alt="" coords="362,85,574,110"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="617,39,498,87,496,82,615,34"/>
+<area shape="rect" id="Node000007" href="$SettingsDialog_8cpp.html" title=" " alt="" coords="675,165,810,203"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="695,37,717,54,734,77,743,99,747,123,748,164,742,164,742,123,738,101,730,79,713,58,692,41"/>
+<area shape="rect" id="Node000008" href="$SettingsDialog_8h.html" title=" " alt="" coords="598,78,720,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="661,46,661,77,656,77,656,46"/>
+<area shape="rect" id="Node000009" href="$TlsUtility_8cpp.html" title=" " alt="" coords="795,85,970,110"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="707,33,850,82,848,87,706,38"/>
+<area shape="rect" id="Node000003" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="5,165,155,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,119,120,167,117,162,216,114"/>
+<area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="442,172,622,196"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="308,112,494,168,493,174,306,117"/>
+<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="178,172,360,196"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="262,124,270,171,265,172,257,125"/>
+<area shape="poly" id="edge8_Node000008_Node000004" title=" " alt="" coords="620,128,551,173,548,169,617,123"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="690,126,726,162,722,166,686,130"/>
+</map>

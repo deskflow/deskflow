@@ -1,0 +1,9 @@
+<map id="src/lib/deskflow/XDeskflow.h" name="src/lib/deskflow/XDeskflow.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,196,30"/>
+<area shape="rect" id="Node000002" href="$XBase_8h.html" title=" " alt="" coords="49,78,152,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,31,103,62,98,62,98,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="18,151,95,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,105,74,139,69,136,91,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="119,151,172,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="110,102,132,136,128,139,106,105"/>
+</map>

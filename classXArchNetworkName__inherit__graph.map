@@ -1,0 +1,17 @@
+<map id="XArchNetworkName" name="XArchNetworkName">
+<area shape="rect" id="Node000001" title="Generic network name lookup erros." alt="" coords="331,104,472,129"/>
+<area shape="rect" id="Node000004" href="$classXArchNetworkNameFailure.html" title="Non&#45;recoverable name server error." alt="" coords="538,5,719,30"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="430,92,471,65,519,41,557,28,559,33,521,45,474,70,433,97"/>
+<area shape="rect" id="Node000005" href="$classXArchNetworkNameNoAddress.html" title="The named host is known but has no address." alt="" coords="525,55,732,79"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="476,98,568,77,569,83,477,103"/>
+<area shape="rect" id="Node000006" href="$classXArchNetworkNameUnavailable.html" title="Temporary name server error." alt="" coords="524,104,733,129"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="488,114,524,114,524,119,488,119"/>
+<area shape="rect" id="Node000007" href="$classXArchNetworkNameUnknown.html" title="The named host is unknown." alt="" coords="530,153,727,178"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="477,130,569,150,568,155,476,135"/>
+<area shape="rect" id="Node000008" href="$classXArchNetworkNameUnsupported.html" title="The named host is known but no supported address." alt="" coords="520,203,737,227"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="433,136,474,163,521,187,559,199,557,205,519,192,471,167,430,140"/>
+<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="177,104,283,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="298,114,331,114,331,119,298,119"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,104,129,129"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,114,176,114,176,119,144,119"/>
+</map>

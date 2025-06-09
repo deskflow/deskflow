@@ -1,0 +1,7 @@
+<map id="XArchNetworkTimedOut" name="XArchNetworkTimedOut">
+<area shape="rect" id="Node000001" title="Remote end of socket is not responding." alt="" coords="5,151,169,175"/>
+<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="34,78,140,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,118,90,150,84,150,84,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="25,5,149,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,46,90,78,84,78,84,46"/>
+</map>

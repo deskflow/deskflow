@@ -1,0 +1,9 @@
+<map id="IArchSleep" name="IArchSleep">
+<area shape="rect" id="Node000001" title="Interface for architecture dependent sleeping." alt="" coords="89,78,174,103"/>
+<area shape="rect" id="Node000003" href="$classArchSleepUnix.html" title="Unix implementation of IArchSleep." alt="" coords="5,151,114,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,116,73,152,69,148,107,112"/>
+<area shape="rect" id="Node000004" href="$classArchSleepWindows.html" title="Win32 implementation of IArchSleep." alt="" coords="137,151,272,175"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="156,112,195,148,191,152,153,115"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="93,5,170,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,46,134,78,129,78,129,46"/>
+</map>

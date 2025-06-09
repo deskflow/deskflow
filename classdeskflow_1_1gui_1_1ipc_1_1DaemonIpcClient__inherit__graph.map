@@ -1,0 +1,5 @@
+<map id="deskflow::gui::ipc::DaemonIpcClient" name="deskflow::gui::ipc::DaemonIpcClient">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,78,135,117"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="35,5,105,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,46,73,77,67,77,67,46"/>
+</map>

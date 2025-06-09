@@ -1,0 +1,7 @@
+<map id="OSXClipboardAnyBitmapConverter" name="OSXClipboardAnyBitmapConverter">
+<area shape="rect" id="Node000001" title="Convert to/from some text encoding." alt="" coords="5,151,230,175"/>
+<area shape="rect" id="Node000002" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="35,78,200,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,118,120,150,115,150,115,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="79,5,156,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,46,120,78,115,78,115,46"/>
+</map>

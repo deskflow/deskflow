@@ -1,0 +1,278 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" title=" " alt="" coords="175,55,298,79"/>
+<area shape="rect" id="Node000001" href="$classArch.html" title="Delegating implementation of architecture dependent interfaces." alt="" coords="482,153,530,178"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="314,81,343,90,420,121,482,151,480,156,418,126,341,95,312,86"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="190,104,282,129"/>
+<area shape="poly" id="edge2_Node000002_Node000001" title=" " alt="" coords="298,125,482,159,481,164,297,130"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="157,153,316,178"/>
+<area shape="poly" id="edge3_Node000003_Node000001" title=" " alt="" coords="331,163,481,163,481,168,331,168"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="170,203,303,227"/>
+<area shape="poly" id="edge4_Node000004_Node000001" title=" " alt="" coords="318,197,481,167,482,173,319,203"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="182,252,290,277"/>
+<area shape="poly" id="edge5_Node000005_Node000001" title=" " alt="" coords="305,247,341,236,418,205,480,175,482,180,420,210,343,242,306,252"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="188,301,285,326"/>
+<area shape="poly" id="edge6_Node000006_Node000001" title=" " alt="" coords="299,302,341,286,355,275,365,264,388,238,437,203,481,176,483,181,440,208,392,242,369,268,359,279,343,291,301,307"/>
+<area shape="rect" id="Node000008" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="5,1660,83,1685"/>
+<area shape="rect" id="Node000007" href="$classArchString.html" title="Interface for architecture dependent string operations." alt="" coords="195,5,278,30"/>
+<area shape="poly" id="edge7_Node000008_Node000007" title=" " alt="" coords="43,1645,51,1316,67,790,79,523,93,291,109,121,118,69,128,41,143,29,159,21,194,14,195,19,161,26,145,34,133,45,124,70,115,122,98,291,84,523,72,790,56,1316,49,1645"/>
+<area shape="rect" id="Node000009" href="$classIApp.html" title=" " alt="" coords="212,981,260,1006"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="43,1645,45,1516,57,1333,67,1239,82,1153,102,1081,115,1053,129,1031,147,1014,169,1003,211,993,213,998,171,1008,150,1019,133,1034,119,1055,107,1083,87,1154,73,1240,62,1334,51,1516,48,1645"/>
+<area shape="rect" id="Node000013" href="$classIAppUtil.html" title=" " alt="" coords="202,1044,270,1069"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="43,1645,49,1530,63,1370,74,1287,88,1212,106,1149,128,1104,144,1088,163,1076,201,1061,203,1066,165,1081,147,1092,133,1107,111,1151,93,1213,79,1288,68,1370,54,1530,49,1645"/>
+<area shape="rect" id="Node000017" href="$classIArchDaemon.html" title="Interface for architecture dependent daemonizing." alt="" coords="186,1117,286,1142"/>
+<area shape="poly" id="edge17_Node000008_Node000017" title=" " alt="" coords="45,1644,55,1548,72,1418,96,1291,111,1240,128,1203,145,1182,165,1165,205,1140,208,1145,168,1169,149,1186,133,1206,116,1242,101,1293,77,1419,60,1549,50,1645"/>
+<area shape="rect" id="Node000021" href="$classIArchLog.html" title="Interface for architecture dependent logging." alt="" coords="200,1216,273,1241"/>
+<area shape="poly" id="edge21_Node000008_Node000021" title=" " alt="" coords="43,1645,46,1579,58,1490,69,1442,84,1393,103,1346,128,1301,145,1281,165,1264,206,1239,209,1243,169,1268,149,1285,133,1305,108,1348,89,1395,74,1443,63,1491,51,1580,48,1645"/>
+<area shape="rect" id="Node000024" href="$classIArchMultithread.html" title="Interface for architecture dependent multithreading." alt="" coords="178,1315,294,1339"/>
+<area shape="poly" id="edge24_Node000008_Node000024" title=" " alt="" coords="46,1644,53,1595,69,1532,93,1464,109,1431,129,1400,146,1380,167,1363,207,1338,210,1342,170,1367,150,1384,133,1403,114,1433,98,1466,74,1533,59,1596,51,1645"/>
+<area shape="rect" id="Node000027" href="$classIArchNetwork.html" title="Interface for architecture dependent networking." alt="" coords="186,1413,287,1438"/>
+<area shape="poly" id="edge27_Node000008_Node000027" title=" " alt="" coords="52,1644,81,1575,102,1535,129,1499,169,1462,209,1436,212,1441,172,1466,133,1502,107,1538,85,1577,57,1646"/>
+<area shape="rect" id="Node000030" href="$classIArchSleep.html" title="Interface for architecture dependent sleeping." alt="" coords="194,1512,279,1537"/>
+<area shape="poly" id="edge30_Node000008_Node000030" title=" " alt="" coords="69,1648,129,1597,214,1535,217,1539,132,1601,72,1652"/>
+<area shape="rect" id="Node000033" href="$classIArchTime.html" title="Interface for architecture dependent time operations." alt="" coords="196,1611,277,1635"/>
+<area shape="poly" id="edge33_Node000008_Node000033" title=" " alt="" coords="97,1656,195,1631,196,1636,98,1661"/>
+<area shape="rect" id="Node000036" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="196,1709,276,1734"/>
+<area shape="poly" id="edge36_Node000008_Node000036" title=" " alt="" coords="98,1683,197,1709,195,1714,97,1689"/>
+<area shape="rect" id="Node000041" href="$classIEventJob.html" title="Event handler interface." alt="" coords="197,1857,276,1882"/>
+<area shape="poly" id="edge41_Node000008_Node000041" title=" " alt="" coords="70,1694,225,1855,221,1859,66,1698"/>
+<area shape="rect" id="Node000044" href="$classIEventQueue.html" title="Event queue interface." alt="" coords="188,1931,284,1955"/>
+<area shape="poly" id="edge44_Node000008_Node000044" title=" " alt="" coords="52,1700,61,1741,76,1792,99,1845,133,1892,160,1913,191,1928,189,1933,157,1918,129,1896,95,1847,71,1794,55,1742,47,1701"/>
+<area shape="rect" id="Node000046" href="$classIEventQueueBuffer.html" title="Event queue buffer interface." alt="" coords="171,2080,302,2105"/>
+<area shape="poly" id="edge46_Node000008_Node000046" title=" " alt="" coords="52,1699,78,1819,101,1893,133,1966,154,2000,179,2031,223,2078,219,2081,175,2034,150,2003,128,1968,96,1895,73,1820,47,1700"/>
+<area shape="rect" id="Node000052" href="$classIJob.html" title="Job interface." alt="" coords="213,2215,260,2239"/>
+<area shape="poly" id="edge52_Node000008_Node000052" title=" " alt="" coords="48,1700,52,1775,64,1881,74,1940,89,2000,108,2059,133,2115,152,2145,175,2172,220,2212,216,2216,171,2176,148,2148,128,2118,103,2061,84,2002,69,1941,58,1882,46,1776,43,1700"/>
+<area shape="rect" id="Node000055" href="$classIKeyState.html" title="Key state interface." alt="" coords="197,2363,276,2387"/>
+<area shape="poly" id="edge55_Node000008_Node000055" title=" " alt="" coords="47,1700,48,1837,57,2031,67,2131,83,2223,104,2297,118,2326,133,2348,146,2359,162,2366,197,2373,196,2378,161,2372,143,2364,129,2351,113,2329,99,2299,78,2224,62,2132,52,2032,43,1837,42,1700"/>
+<area shape="rect" id="Node000087" href="$classILogOutputter.html" title="Outputter interface." alt="" coords="186,2720,286,2745"/>
+<area shape="poly" id="edge67_Node000008_Node000087" title=" " alt="" coords="49,1700,55,1871,69,2129,80,2266,94,2394,112,2503,133,2583,153,2625,178,2662,224,2718,220,2721,174,2666,148,2627,128,2585,107,2504,89,2394,75,2266,64,2130,49,1872,43,1700"/>
+<area shape="rect" id="Node000093" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="131,2900,342,2925"/>
+<area shape="poly" id="edge73_Node000008_Node000093" title=" " alt="" coords="48,1700,52,1899,65,2208,76,2372,90,2526,109,2658,133,2755,153,2799,178,2839,225,2898,221,2901,174,2842,148,2801,128,2757,104,2659,85,2527,71,2372,60,2208,47,1900,43,1700"/>
+<area shape="rect" id="Node000099" href="$classIMSWindowsClipboardFacade.html" title=" " alt="" coords="138,2984,335,3009"/>
+<area shape="poly" id="edge79_Node000008_Node000099" title=" " alt="" coords="48,1700,53,1952,66,2343,77,2544,92,2722,110,2859,121,2906,133,2935,145,2950,160,2963,195,2981,192,2986,157,2967,141,2954,128,2938,116,2907,105,2860,87,2722,72,2544,61,2344,48,1952,43,1700"/>
+<area shape="rect" id="Node000078" href="$classINode.html" title=" " alt="" coords="208,2548,264,2573"/>
+<area shape="poly" id="edge81_Node000008_Node000078" title=" " alt="" coords="48,1700,52,1854,64,2081,75,2200,89,2311,109,2404,120,2441,133,2471,149,2495,170,2515,212,2545,209,2550,167,2519,145,2498,128,2474,115,2443,103,2405,84,2311,69,2201,58,2082,46,1854,43,1700"/>
+<area shape="rect" id="Node000101" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="154,3092,318,3117"/>
+<area shape="poly" id="edge84_Node000008_Node000101" title=" " alt="" coords="48,1700,54,1966,68,2383,80,2597,94,2788,112,2936,122,2987,133,3019,149,3042,168,3061,210,3089,207,3094,165,3065,144,3045,128,3022,117,2988,106,2937,89,2789,74,2597,63,2383,49,1966,43,1700"/>
+<area shape="rect" id="Node000109" href="$classIOSXKeyResource.html" title=" " alt="" coords="171,3191,302,3215"/>
+<area shape="poly" id="edge92_Node000008_Node000109" title=" " alt="" coords="48,1700,52,1985,65,2437,75,2669,90,2877,109,3037,121,3092,133,3127,147,3147,166,3163,205,3188,203,3192,163,3168,143,3150,128,3130,115,3094,104,3038,85,2877,70,2670,59,2437,47,1985,43,1700"/>
+<area shape="rect" id="Node000062" href="$classIPrimaryScreen.html" title="Primary screen interface." alt="" coords="180,2264,292,2289"/>
+<area shape="poly" id="edge94_Node000008_Node000062" title=" " alt="" coords="48,1700,51,1819,63,1984,74,2068,89,2144,108,2207,120,2231,133,2249,154,2264,181,2272,179,2277,152,2269,129,2253,115,2234,103,2209,83,2146,68,2069,58,1984,46,1819,43,1700"/>
+<area shape="rect" id="Node000063" href="$classIScreen.html" title="Screen interface." alt="" coords="203,2436,270,2461"/>
+<area shape="poly" id="edge96_Node000008_Node000063" title=" " alt="" coords="48,1700,49,1843,59,2051,70,2158,85,2257,106,2340,118,2372,133,2397,147,2413,165,2424,204,2439,202,2444,163,2429,144,2417,129,2401,114,2375,101,2342,80,2259,65,2159,54,2051,44,1843,42,1700"/>
+<area shape="rect" id="Node000111" href="$classIScreenSaver.html" title="Screen saver interface." alt="" coords="187,351,286,375"/>
+<area shape="poly" id="edge113_Node000008_Node000111" title=" " alt="" coords="43,1644,49,1398,64,1016,75,821,90,647,107,513,117,466,128,436,144,416,163,398,203,374,206,378,166,402,148,419,133,439,122,468,112,514,95,648,81,822,69,1017,55,1398,49,1644"/>
+<area shape="rect" id="Node000081" href="$classISecondaryScreen.html" title="Secondary screen interface." alt="" coords="172,2313,301,2338"/>
+<area shape="poly" id="edge117_Node000008_Node000081" title=" " alt="" coords="48,1700,50,1827,60,2007,70,2099,86,2183,106,2252,119,2279,133,2298,150,2312,172,2320,170,2325,148,2317,129,2302,114,2281,101,2254,80,2185,65,2100,55,2008,44,1827,42,1700"/>
+<area shape="rect" id="Node000115" href="$classISocket.html" title="Generic socket interface." alt="" coords="204,499,269,523"/>
+<area shape="poly" id="edge119_Node000008_Node000115" title=" " alt="" coords="43,1645,47,1414,59,1063,69,884,84,725,104,604,115,563,129,537,145,524,164,515,203,508,204,513,165,520,147,528,133,541,120,565,109,606,90,726,75,884,64,1063,52,1415,48,1645"/>
+<area shape="rect" id="Node000125" href="$classISocketFactory.html" title="Socket factory." alt="" coords="181,551,292,575"/>
+<area shape="poly" id="edge126_Node000008_Node000125" title=" " alt="" coords="43,1645,45,1459,56,1175,66,1025,81,884,102,763,114,715,128,675,147,643,170,615,216,574,219,578,174,619,151,646,133,677,119,716,107,765,86,884,71,1025,61,1175,50,1459,48,1645"/>
+<area shape="rect" id="Node000127" href="$classISocketMultiplexerJob.html" title="Socket multiplexer job." alt="" coords="162,688,310,713"/>
+<area shape="poly" id="edge128_Node000008_Node000127" title=" " alt="" coords="43,1644,47,1481,60,1236,71,1107,85,986,104,884,128,809,147,778,170,751,215,711,219,715,174,754,151,781,133,811,109,885,90,987,76,1107,65,1236,53,1481,48,1645"/>
+<area shape="rect" id="Node000129" href="$classIXWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="137,821,336,846"/>
+<area shape="poly" id="edge130_Node000008_Node000129" title=" " alt="" coords="44,1644,53,1508,69,1311,94,1112,110,1030,128,969,148,930,173,895,219,845,223,848,177,899,153,933,133,971,115,1031,99,1113,74,1312,58,1509,49,1645"/>
+<area shape="rect" id="Node000119" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="173,449,300,474"/>
+<area shape="poly" id="edge137_Node000008_Node000119" title=" " alt="" coords="43,1644,46,1405,57,1036,67,848,82,682,102,555,115,512,129,485,148,470,172,461,174,466,151,474,133,489,119,514,107,556,88,683,73,849,62,1036,51,1405,48,1644"/>
+<area shape="poly" id="edge8_Node000007_Node000001" title=" " alt="" coords="294,24,343,41,389,67,432,97,493,151,490,155,428,102,386,71,341,45,292,29"/>
+<area shape="rect" id="Node000010" href="$classApp.html" title=" " alt="" coords="484,969,528,994"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="276,989,483,980,483,985,276,995"/>
+<area shape="rect" id="Node000011" href="$classClientApp.html" title=" " alt="" coords="753,969,832,994"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="543,979,753,979,753,984,543,984"/>
+<area shape="rect" id="Node000012" href="$classServerApp.html" title=" " alt="" coords="751,920,834,945"/>
+<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="543,973,750,937,751,942,544,978"/>
+<area shape="rect" id="Node000014" href="$classAppUtil.html" title=" " alt="" coords="474,1019,538,1043"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="286,1049,473,1031,473,1037,286,1054"/>
+<area shape="rect" id="Node000015" href="$classAppUtilUnix.html" title=" " alt="" coords="747,1068,838,1093"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="554,1036,747,1070,746,1075,553,1042"/>
+<area shape="rect" id="Node000016" href="$classAppUtilWindows.html" title=" " alt="" coords="733,1019,852,1043"/>
+<area shape="poly" id="edge16_Node000014_Node000016" title=" " alt="" coords="553,1028,733,1028,733,1034,553,1034"/>
+<area shape="rect" id="Node000018" href="$classArchDaemonNone.html" title="Dummy implementation of IArchDaemon." alt="" coords="442,1117,569,1142"/>
+<area shape="poly" id="edge18_Node000017_Node000018" title=" " alt="" coords="302,1127,442,1127,442,1132,302,1132"/>
+<area shape="rect" id="Node000020" href="$classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="430,1068,581,1093"/>
+<area shape="poly" id="edge20_Node000017_Node000020" title=" " alt="" coords="301,1115,434,1091,435,1096,302,1121"/>
+<area shape="rect" id="Node000019" href="$classArchDaemonUnix.html" title="Unix implementation of IArchDaemon." alt="" coords="731,1117,854,1142"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="585,1127,731,1127,731,1132,585,1132"/>
+<area shape="rect" id="Node000022" href="$classArchLogUnix.html" title="Unix implementation of IArchLog." alt="" coords="458,1216,554,1241"/>
+<area shape="poly" id="edge22_Node000021_Node000022" title=" " alt="" coords="289,1226,457,1226,457,1231,289,1231"/>
+<area shape="rect" id="Node000023" href="$classArchLogWindows.html" title="Win32 implementation of IArchLog." alt="" coords="444,1167,567,1191"/>
+<area shape="poly" id="edge23_Node000021_Node000023" title=" " alt="" coords="288,1216,443,1188,444,1193,289,1222"/>
+<area shape="rect" id="Node000025" href="$classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="433,1315,578,1339"/>
+<area shape="poly" id="edge25_Node000024_Node000025" title=" " alt="" coords="310,1324,432,1324,432,1330,310,1330"/>
+<area shape="rect" id="Node000026" href="$classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="422,1265,589,1290"/>
+<area shape="poly" id="edge26_Node000024_Node000026" title=" " alt="" coords="309,1311,434,1288,435,1293,310,1316"/>
+<area shape="rect" id="Node000028" href="$classArchNetworkBSD.html" title="Berkeley (BSD) sockets implementation of IArchNetwork." alt="" coords="443,1413,568,1438"/>
+<area shape="poly" id="edge28_Node000027_Node000028" title=" " alt="" coords="302,1423,442,1423,442,1428,302,1428"/>
+<area shape="rect" id="Node000029" href="$classArchNetworkWinsock.html" title="Win32 implementation of IArchNetwork." alt="" coords="432,1364,580,1389"/>
+<area shape="poly" id="edge29_Node000027_Node000029" title=" " alt="" coords="301,1411,434,1387,435,1392,302,1416"/>
+<area shape="rect" id="Node000031" href="$classArchSleepUnix.html" title="Unix implementation of IArchSleep." alt="" coords="452,1512,560,1537"/>
+<area shape="poly" id="edge31_Node000030_Node000031" title=" " alt="" coords="294,1522,451,1522,451,1527,294,1527"/>
+<area shape="rect" id="Node000032" href="$classArchSleepWindows.html" title="Win32 implementation of IArchSleep." alt="" coords="438,1463,573,1487"/>
+<area shape="poly" id="edge32_Node000030_Node000032" title=" " alt="" coords="294,1511,437,1485,438,1490,295,1517"/>
+<area shape="rect" id="Node000034" href="$classArchTimeUnix.html" title="Generic Unix implementation of IArchTime." alt="" coords="454,1611,558,1635"/>
+<area shape="poly" id="edge34_Node000033_Node000034" title=" " alt="" coords="293,1620,453,1620,453,1626,293,1626"/>
+<area shape="rect" id="Node000035" href="$classArchTimeWindows.html" title="Win32 implementation of IArchTime." alt="" coords="440,1561,571,1586"/>
+<area shape="poly" id="edge35_Node000033_Node000035" title=" " alt="" coords="292,1610,439,1583,440,1588,293,1615"/>
+<area shape="rect" id="Node000037" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="468,1808,544,1833"/>
+<area shape="poly" id="edge37_Node000036_Node000037" title=" " alt="" coords="275,1739,329,1767,391,1792,468,1812,467,1817,389,1798,326,1772,272,1744"/>
+<area shape="rect" id="Node000038" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="430,1660,581,1685"/>
+<area shape="poly" id="edge38_Node000036_Node000038" title=" " alt="" coords="291,1709,434,1683,435,1688,292,1714"/>
+<area shape="rect" id="Node000039" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="454,1709,557,1734"/>
+<area shape="poly" id="edge39_Node000036_Node000039" title=" " alt="" coords="292,1719,453,1719,453,1724,292,1724"/>
+<area shape="rect" id="Node000040" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="436,1759,575,1783"/>
+<area shape="poly" id="edge40_Node000036_Node000040" title=" " alt="" coords="293,1729,436,1756,435,1761,292,1734"/>
+<area shape="rect" id="Node000042" href="$classFunctionEventJob.html" title="Use a function as an event job." alt="" coords="443,1907,568,1931"/>
+<area shape="poly" id="edge42_Node000041_Node000042" title=" " alt="" coords="292,1877,443,1905,442,1910,291,1882"/>
+<area shape="rect" id="Node000043" href="$classTMethodEventJob.html" title="Use a member function as an event job." alt="" coords="426,1857,585,1882"/>
+<area shape="poly" id="edge43_Node000041_Node000043" title=" " alt="" coords="292,1867,426,1867,426,1872,292,1872"/>
+<area shape="rect" id="Node000045" href="$classEventQueue.html" title="Event queue." alt="" coords="460,1956,552,1981"/>
+<area shape="poly" id="edge45_Node000044_Node000045" title=" " alt="" coords="300,1946,459,1961,459,1967,300,1952"/>
+<area shape="rect" id="Node000047" href="$classMSWindowsEventQueueBuffer.html" title="Event queue buffer for Win32." alt="" coords="406,2104,606,2129"/>
+<area shape="poly" id="edge47_Node000046_Node000047" title=" " alt="" coords="317,2097,406,2105,405,2110,317,2102"/>
+<area shape="rect" id="Node000048" href="$classOSXEventQueueBuffer.html" title="Event queue buffer for OS X." alt="" coords="428,2153,583,2178"/>
+<area shape="poly" id="edge48_Node000046_Node000048" title=" " alt="" coords="291,2108,391,2138,442,2150,441,2155,389,2143,289,2113"/>
+<area shape="rect" id="Node000049" href="$classSimpleEventQueueBuffer.html" title="In&#45;memory event queue buffer." alt="" coords="422,2203,589,2227"/>
+<area shape="poly" id="edge49_Node000046_Node000049" title=" " alt="" coords="267,2112,323,2151,391,2187,429,2200,427,2205,389,2192,320,2155,264,2117"/>
+<area shape="rect" id="Node000050" href="$classXWindowsEventQueueBuffer.html" title="Event queue buffer for X11." alt="" coords="411,2005,600,2030"/>
+<area shape="poly" id="edge50_Node000046_Node000050" title=" " alt="" coords="288,2072,389,2040,441,2028,442,2033,391,2046,289,2077"/>
+<area shape="rect" id="Node000051" href="$classdeskflow_1_1EiEventQueueBuffer.html" title="Event queue buffer for Ei." alt="" coords="407,2055,604,2079"/>
+<area shape="poly" id="edge51_Node000046_Node000051" title=" " alt="" coords="317,2082,407,2074,407,2079,317,2087"/>
+<area shape="rect" id="Node000053" href="$classFunctionJob.html" title="Use a function as a job." alt="" coords="460,2301,552,2326"/>
+<area shape="poly" id="edge53_Node000052_Node000053" title=" " alt="" coords="275,2230,309,2237,343,2250,358,2259,368,2268,377,2277,391,2286,425,2298,460,2306,458,2311,424,2303,389,2291,374,2282,364,2272,355,2263,341,2255,307,2243,274,2235"/>
+<area shape="rect" id="Node000054" href="$classTMethodJob.html" title="Use a function as a job." alt="" coords="443,2252,568,2277"/>
+<area shape="poly" id="edge54_Node000052_Node000054" title=" " alt="" coords="275,2230,443,2253,442,2258,275,2235"/>
+<area shape="rect" id="Node000056" href="$classIPlatformScreen.html" title="Screen interface." alt="" coords="448,2351,563,2375"/>
+<area shape="poly" id="edge56_Node000055_Node000056" title=" " alt="" coords="291,2370,447,2363,448,2368,291,2375"/>
+<area shape="rect" id="Node000082" href="$classKeyState.html" title="Core key state." alt="" coords="468,2400,543,2425"/>
+<area shape="poly" id="edge62_Node000055_Node000082" title=" " alt="" coords="291,2380,468,2405,468,2410,291,2385"/>
+<area shape="rect" id="Node000057" href="$classPlatformScreen.html" title="Base screen implementation." alt="" coords="737,2252,848,2277"/>
+<area shape="poly" id="edge57_Node000056_Node000057" title=" " alt="" coords="578,2351,620,2335,634,2324,643,2312,652,2299,668,2287,702,2274,736,2266,737,2271,703,2279,671,2292,656,2303,647,2315,638,2328,623,2340,579,2356"/>
+<area shape="rect" id="Node000058" href="$classMSWindowsScreen.html" title="Implementation of IPlatformScreen for Microsoft Windows." alt="" coords="964,2277,1100,2302"/>
+<area shape="poly" id="edge58_Node000057_Node000058" title=" " alt="" coords="864,2269,964,2280,963,2285,863,2274"/>
+<area shape="rect" id="Node000059" href="$classOSXScreen.html" title="Implementation of IPlatformScreen for OS X." alt="" coords="987,2327,1078,2351"/>
+<area shape="poly" id="edge59_Node000057_Node000059" title=" " alt="" coords="864,2273,917,2287,941,2299,965,2311,995,2324,993,2328,963,2316,939,2303,915,2292,863,2278"/>
+<area shape="rect" id="Node000060" href="$classXWindowsScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="970,2179,1095,2203"/>
+<area shape="poly" id="edge60_Node000057_Node000060" title=" " alt="" coords="849,2244,988,2201,990,2206,851,2249"/>
+<area shape="rect" id="Node000061" href="$classdeskflow_1_1EiScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="966,2228,1099,2253"/>
+<area shape="poly" id="edge61_Node000057_Node000061" title=" " alt="" coords="863,2255,965,2244,965,2250,864,2260"/>
+<area shape="rect" id="Node000083" href="$classMSWindowsKeyState.html" title="Microsoft Windows key mapper." alt="" coords="718,2449,867,2474"/>
+<area shape="poly" id="edge63_Node000082_Node000083" title=" " alt="" coords="558,2419,718,2446,717,2452,557,2424"/>
+<area shape="rect" id="Node000084" href="$classOSXKeyState.html" title="OS X key state." alt="" coords="741,2301,844,2326"/>
+<area shape="poly" id="edge64_Node000082_Node000084" title=" " alt="" coords="558,2405,590,2397,620,2385,634,2374,643,2361,652,2349,668,2337,704,2323,740,2315,741,2320,705,2328,671,2341,656,2352,647,2365,638,2377,623,2389,591,2402,559,2410"/>
+<area shape="rect" id="Node000085" href="$classXWindowsKeyState.html" title="X Windows key state." alt="" coords="724,2351,861,2375"/>
+<area shape="poly" id="edge65_Node000082_Node000085" title=" " alt="" coords="557,2401,723,2372,724,2377,558,2406"/>
+<area shape="rect" id="Node000086" href="$classdeskflow_1_1EiKeyState.html" title="A key state for Ei." alt="" coords="720,2400,865,2425"/>
+<area shape="poly" id="edge66_Node000082_Node000086" title=" " alt="" coords="558,2410,720,2410,720,2415,558,2415"/>
+<area shape="rect" id="Node000088" href="$classConsoleLogOutputter.html" title="Write log to console." alt="" coords="434,2745,578,2770"/>
+<area shape="poly" id="edge68_Node000087_Node000088" title=" " alt="" coords="302,2736,433,2748,433,2754,301,2741"/>
+<area shape="rect" id="Node000089" href="$classFileLogOutputter.html" title="Write log to file." alt="" coords="447,2795,564,2819"/>
+<area shape="poly" id="edge69_Node000087_Node000089" title=" " alt="" coords="289,2748,391,2779,447,2793,446,2798,389,2784,288,2753"/>
+<area shape="rect" id="Node000090" href="$classMSWindowsDebugOutputter.html" title="Write log to debugger." alt="" coords="412,2844,599,2869"/>
+<area shape="poly" id="edge70_Node000087_Node000090" title=" " alt="" coords="267,2752,322,2791,391,2829,429,2841,427,2846,389,2833,319,2796,264,2757"/>
+<area shape="rect" id="Node000091" href="$classStopLogOutputter.html" title="Stop traversing log chain outputter." alt="" coords="444,2647,567,2671"/>
+<area shape="poly" id="edge71_Node000087_Node000091" title=" " alt="" coords="289,2712,389,2682,443,2669,444,2674,391,2687,291,2717"/>
+<area shape="rect" id="Node000092" href="$classSystemLogOutputter.html" title="Write log to system log." alt="" coords="436,2696,576,2721"/>
+<area shape="poly" id="edge72_Node000087_Node000092" title=" " alt="" coords="301,2724,435,2712,435,2717,302,2729"/>
+<area shape="rect" id="Node000094" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="406,2956,605,2994"/>
+<area shape="poly" id="edge74_Node000093_Node000094" title=" " alt="" coords="308,2926,420,2953,419,2958,307,2931"/>
+<area shape="rect" id="Node000098" href="$classMSWindowsClipboardBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="410,2893,601,2932"/>
+<area shape="poly" id="edge78_Node000093_Node000098" title=" " alt="" coords="358,2910,410,2910,410,2915,358,2915"/>
+<area shape="rect" id="Node000095" href="$classMSWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="671,2920,914,2945"/>
+<area shape="poly" id="edge75_Node000094_Node000095" title=" " alt="" coords="620,2955,704,2943,705,2948,621,2961"/>
+<area shape="rect" id="Node000096" href="$classMSWindowsClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="676,2969,909,2994"/>
+<area shape="poly" id="edge76_Node000094_Node000096" title=" " alt="" coords="620,2975,676,2976,676,2982,620,2980"/>
+<area shape="rect" id="Node000097" href="$classMSWindowsClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="669,2871,916,2895"/>
+<area shape="poly" id="edge77_Node000094_Node000097" title=" " alt="" coords="608,2947,620,2942,643,2924,653,2915,668,2906,704,2893,706,2898,670,2911,657,2919,647,2928,623,2947,610,2952"/>
+<area shape="rect" id="Node000100" href="$classMSWindowsClipboardFacade.html" title=" " alt="" coords="409,3019,602,3043"/>
+<area shape="poly" id="edge80_Node000099_Node000100" title=" " alt="" coords="350,3008,409,3016,408,3021,350,3014"/>
+<area shape="rect" id="Node000077" href="$classClient.html" title="Deskflow client." alt="" coords="765,2548,820,2573"/>
+<area shape="poly" id="edge82_Node000078_Node000077" title=" " alt="" coords="280,2558,764,2558,764,2563,280,2563"/>
+<area shape="rect" id="Node000079" href="$classServer.html" title="Deskflow server." alt="" coords="476,2597,535,2622"/>
+<area shape="poly" id="edge83_Node000078_Node000079" title=" " alt="" coords="280,2565,476,2602,475,2607,279,2571"/>
+<area shape="rect" id="Node000102" href="$classOSXClipboardAnyBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="394,3167,618,3191"/>
+<area shape="poly" id="edge85_Node000101_Node000102" title=" " alt="" coords="289,3120,391,3151,442,3164,441,3169,389,3156,288,3125"/>
+<area shape="rect" id="Node000103" href="$classOSXClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="402,3068,610,3093"/>
+<area shape="poly" id="edge86_Node000101_Node000103" title=" " alt="" coords="334,3093,401,3087,401,3092,334,3098"/>
+<area shape="rect" id="Node000108" href="$classOSXClipboardBMPConverter.html" title="Convert to/from some text encoding." alt="" coords="411,3117,600,3142"/>
+<area shape="poly" id="edge91_Node000101_Node000108" title=" " alt="" coords="335,3111,411,3118,411,3123,334,3116"/>
+<area shape="rect" id="Node000104" href="$classOSXClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="695,3167,890,3191"/>
+<area shape="poly" id="edge87_Node000103_Node000104" title=" " alt="" coords="607,3096,623,3103,638,3115,647,3128,656,3140,671,3151,701,3164,699,3169,668,3156,652,3144,643,3131,634,3119,620,3108,605,3101"/>
+<area shape="rect" id="Node000105" href="$classOSXClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="700,3019,885,3043"/>
+<area shape="poly" id="edge88_Node000103_Node000105" title=" " alt="" coords="596,3062,716,3041,717,3047,597,3067"/>
+<area shape="rect" id="Node000106" href="$classOSXClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="693,3068,892,3093"/>
+<area shape="poly" id="edge89_Node000103_Node000106" title=" " alt="" coords="626,3078,693,3078,693,3083,626,3083"/>
+<area shape="rect" id="Node000107" href="$classOSXClipboardUTF8Converter.html" title=" " alt="" coords="696,3117,889,3142"/>
+<area shape="poly" id="edge90_Node000103_Node000107" title=" " alt="" coords="597,3093,717,3114,716,3119,596,3099"/>
+<area shape="rect" id="Node000110" href="$classOSXUchrKeyResource.html" title=" " alt="" coords="428,3216,583,3241"/>
+<area shape="poly" id="edge93_Node000109_Node000110" title=" " alt="" coords="317,3208,428,3218,428,3224,317,3213"/>
+<area shape="poly" id="edge95_Node000062_Node000056" title=" " alt="" coords="308,2287,343,2299,358,2308,368,2318,377,2327,391,2335,448,2353,447,2358,389,2340,374,2331,364,2322,355,2313,341,2304,307,2292"/>
+<area shape="poly" id="edge111_Node000063_Node000056" title=" " alt="" coords="279,2427,389,2386,447,2371,448,2376,391,2391,281,2432"/>
+<area shape="rect" id="Node000064" href="$classIClient.html" title="Client interface." alt="" coords="476,2449,535,2474"/>
+<area shape="poly" id="edge97_Node000063_Node000064" title=" " alt="" coords="285,2448,476,2458,476,2463,285,2453"/>
+<area shape="rect" id="Node000080" href="$classdeskflow_1_1Screen.html" title="Platform independent screen." alt="" coords="445,2499,566,2523"/>
+<area shape="poly" id="edge112_Node000063_Node000080" title=" " alt="" coords="285,2457,391,2483,446,2496,444,2501,389,2488,284,2463"/>
+<area shape="poly" id="edge110_Node000064_Node000077" title=" " alt="" coords="552,2463,587,2471,623,2485,638,2497,647,2509,656,2522,671,2533,719,2550,765,2557,764,2562,718,2555,668,2537,652,2525,643,2513,634,2500,620,2489,586,2476,550,2468"/>
+<area shape="rect" id="Node000065" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="733,2499,852,2523"/>
+<area shape="poly" id="edge98_Node000064_Node000065" title=" " alt="" coords="551,2467,733,2498,732,2503,550,2472"/>
+<area shape="rect" id="Node000066" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="988,2475,1077,2499"/>
+<area shape="poly" id="edge99_Node000065_Node000066" title=" " alt="" coords="867,2501,987,2489,987,2494,868,2506"/>
+<area shape="rect" id="Node000076" href="$classPrimaryClient.html" title="Primary screen as pseudo&#45;client." alt="" coords="982,2524,1083,2549"/>
+<area shape="poly" id="edge109_Node000065_Node000076" title=" " alt="" coords="868,2516,981,2528,981,2534,867,2521"/>
+<area shape="rect" id="Node000067" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="1149,2475,1259,2499"/>
+<area shape="poly" id="edge100_Node000066_Node000067" title=" " alt="" coords="1092,2484,1149,2484,1149,2490,1092,2490"/>
+<area shape="rect" id="Node000068" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="1307,2475,1418,2499"/>
+<area shape="poly" id="edge101_Node000067_Node000068" title=" " alt="" coords="1275,2484,1307,2484,1307,2490,1275,2490"/>
+<area shape="rect" id="Node000069" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="1466,2475,1576,2499"/>
+<area shape="poly" id="edge102_Node000068_Node000069" title=" " alt="" coords="1434,2484,1465,2484,1465,2490,1434,2490"/>
+<area shape="rect" id="Node000070" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="1624,2475,1734,2499"/>
+<area shape="poly" id="edge103_Node000069_Node000070" title=" " alt="" coords="1592,2484,1624,2484,1624,2490,1592,2490"/>
+<area shape="rect" id="Node000071" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="1782,2475,1893,2499"/>
+<area shape="poly" id="edge104_Node000070_Node000071" title=" " alt="" coords="1750,2484,1782,2484,1782,2490,1750,2490"/>
+<area shape="rect" id="Node000072" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="1941,2475,2051,2499"/>
+<area shape="poly" id="edge105_Node000071_Node000072" title=" " alt="" coords="1909,2484,1940,2484,1940,2490,1909,2490"/>
+<area shape="rect" id="Node000073" href="$classClientProxy1__6.html" title="Proxy for client implementing protocol version 1.6." alt="" coords="2099,2475,2209,2499"/>
+<area shape="poly" id="edge106_Node000072_Node000073" title=" " alt="" coords="2067,2484,2099,2484,2099,2490,2067,2490"/>
+<area shape="rect" id="Node000074" href="$classClientProxy1__7.html" title="Proxy for client implementing protocol version 1.7." alt="" coords="2257,2475,2368,2499"/>
+<area shape="poly" id="edge107_Node000073_Node000074" title=" " alt="" coords="2225,2484,2257,2484,2257,2490,2225,2490"/>
+<area shape="rect" id="Node000075" href="$classClientProxy1__8.html" title=" " alt="" coords="2416,2475,2526,2499"/>
+<area shape="poly" id="edge108_Node000074_Node000075" title=" " alt="" coords="2384,2484,2415,2484,2415,2490,2384,2490"/>
+<area shape="rect" id="Node000112" href="$classMSWindowsScreenSaver.html" title="Microsoft windows screen saver implementation." alt="" coords="421,301,590,326"/>
+<area shape="poly" id="edge114_Node000111_Node000112" title=" " alt="" coords="301,349,434,324,435,329,302,354"/>
+<area shape="rect" id="Node000113" href="$classOSXScreenSaver.html" title="OSX screen saver implementation." alt="" coords="444,351,567,375"/>
+<area shape="poly" id="edge115_Node000111_Node000113" title=" " alt="" coords="302,360,444,360,444,366,302,366"/>
+<area shape="rect" id="Node000114" href="$classXWindowsScreenSaver.html" title="X11 screen saver implementation." alt="" coords="426,252,585,277"/>
+<area shape="poly" id="edge116_Node000111_Node000114" title=" " alt="" coords="300,351,341,335,355,324,364,312,373,299,389,287,425,273,427,278,391,292,377,303,368,315,359,328,343,340,302,356"/>
+<area shape="poly" id="edge118_Node000081_Node000056" title=" " alt="" coords="317,2334,448,2352,447,2358,316,2339"/>
+<area shape="rect" id="Node000116" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="460,449,552,474"/>
+<area shape="poly" id="edge120_Node000115_Node000116" title=" " alt="" coords="284,500,458,467,459,473,285,505"/>
+<area shape="rect" id="Node000122" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="456,499,556,523"/>
+<area shape="poly" id="edge123_Node000115_Node000122" title=" " alt="" coords="284,508,455,508,455,514,284,514"/>
+<area shape="rect" id="Node000117" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="748,449,837,474"/>
+<area shape="poly" id="edge121_Node000116_Node000117" title=" " alt="" coords="567,459,748,459,748,464,567,464"/>
+<area shape="rect" id="Node000118" href="$classSecureSocket.html" title="Secure socket." alt="" coords="981,449,1084,474"/>
+<area shape="poly" id="edge122_Node000117_Node000118" title=" " alt="" coords="852,459,981,459,981,464,852,464"/>
+<area shape="rect" id="Node000123" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="731,499,854,523"/>
+<area shape="poly" id="edge124_Node000122_Node000123" title=" " alt="" coords="571,508,730,508,730,514,571,514"/>
+<area shape="rect" id="Node000124" href="$classSecureListenSocket.html" title=" " alt="" coords="964,499,1101,523"/>
+<area shape="poly" id="edge125_Node000123_Node000124" title=" " alt="" coords="870,508,963,508,963,514,870,514"/>
+<area shape="rect" id="Node000126" href="$classTCPSocketFactory.html" title="Socket factory for TCP sockets." alt="" coords="439,548,572,573"/>
+<area shape="poly" id="edge127_Node000125_Node000126" title=" " alt="" coords="307,560,439,558,439,564,307,565"/>
+<area shape="rect" id="Node000128" href="$classTSocketMultiplexerMethodJob.html" title="Use a method as a socket multiplexer job." alt="" coords="418,597,593,636"/>
+<area shape="poly" id="edge129_Node000127_Node000128" title=" " alt="" coords="287,680,389,646,430,634,432,639,391,651,289,685"/>
+<area shape="rect" id="Node000130" href="$classXWindowsClipboardAnyBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="404,709,607,748"/>
+<area shape="poly" id="edge131_Node000129_Node000130" title=" " alt="" coords="273,811,327,784,389,758,425,746,427,751,391,763,329,789,275,816"/>
+<area shape="rect" id="Node000131" href="$classXWindowsClipboardBMPConverter.html" title="Convert to/from some text encoding." alt="" coords="393,772,618,797"/>
+<area shape="poly" id="edge132_Node000129_Node000131" title=" " alt="" coords="322,815,434,795,435,800,323,821"/>
+<area shape="rect" id="Node000132" href="$classXWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="390,821,621,846"/>
+<area shape="poly" id="edge133_Node000129_Node000132" title=" " alt="" coords="352,831,389,831,389,836,352,836"/>
+<area shape="rect" id="Node000133" href="$classXWindowsClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="395,871,616,895"/>
+<area shape="poly" id="edge134_Node000129_Node000133" title=" " alt="" coords="323,847,435,867,434,873,322,852"/>
+<area shape="rect" id="Node000134" href="$classXWindowsClipboardUCS2Converter.html" title="Convert to/from UCS&#45;2 encoding." alt="" coords="390,920,621,945"/>
+<area shape="poly" id="edge135_Node000129_Node000134" title=" " alt="" coords="275,851,329,879,391,904,435,917,433,922,389,910,326,884,272,856"/>
+<area shape="rect" id="Node000135" href="$classXWindowsClipboardUTF8Converter.html" title="Convert to/from UTF&#45;8 encoding." alt="" coords="392,660,620,685"/>
+<area shape="poly" id="edge136_Node000129_Node000135" title=" " alt="" coords="255,808,311,750,348,719,389,694,417,683,419,688,391,699,351,724,315,754,259,811"/>
+<area shape="poly" id="edge138_Node000119_Node000116" title=" " alt="" coords="315,459,459,459,459,464,315,464"/>
+<area shape="rect" id="Node000120" href="$classStreamFilter.html" title="A stream filter." alt="" coords="460,400,552,425"/>
+<area shape="poly" id="edge139_Node000119_Node000120" title=" " alt="" coords="314,445,459,418,460,423,315,450"/>
+<area shape="rect" id="Node000121" href="$classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="726,400,859,425"/>
+<area shape="poly" id="edge140_Node000120_Node000121" title=" " alt="" coords="567,410,726,410,726,415,567,415"/>
+</map>

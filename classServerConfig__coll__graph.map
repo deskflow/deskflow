@@ -1,0 +1,7 @@
+<map id="ServerConfig" name="ServerConfig">
+<area shape="rect" id="Node000001" title=" " alt="" coords="90,78,187,103"/>
+<area shape="rect" id="Node000002" href="$classScreenConfig.html" title="Screen configuration base class." alt="" coords="5,5,106,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,38,126,76,123,80,79,43"/>
+<area shape="rect" id="Node000003" href="$classdeskflow_1_1gui_1_1IServerConfig.html" title=" " alt="" coords="130,5,315,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="199,42,153,80,150,76,195,38"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="SecureSocket" name="SecureSocket">
+<area shape="rect" id="Node000001" title="Secure socket." alt="" coords="203,351,305,376"/>
+<area shape="rect" id="Node000002" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="210,277,298,302"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,317,257,351,251,351,251,317"/>
+<area shape="rect" id="Node000003" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="112,177,204,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="182,211,245,275,241,279,178,214"/>
+<area shape="rect" id="Node000004" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,79,71,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="66,112,145,174,142,178,63,116"/>
+<area shape="rect" id="Node000005" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="119,5,197,30"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="127,40,59,81,56,77,125,36"/>
+<area shape="rect" id="Node000006" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,79,221,104"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="161,45,161,79,155,79,155,45"/>
+<area shape="rect" id="Node000007" href="$classIEventQueue.html" title="Event queue interface." alt="" coords="208,128,305,153"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="191,37,214,55,235,78,249,103,256,127,251,128,244,105,230,81,210,59,187,41"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="161,120,161,177,155,177,155,120"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="259,168,257,277,252,277,254,168"/>
+<area shape="rect" id="Node000008" href="$classStreamBuffer.html" title="FIFO of bytes." alt="" coords="339,177,436,201"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="361,213,271,279,268,275,358,209"/>
+</map>

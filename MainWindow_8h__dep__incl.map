@@ -1,0 +1,9 @@
+<map id="src/lib/gui/MainWindow.h" name="src/lib/gui/MainWindow.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="186,5,352,30"/>
+<area shape="rect" id="Node000002" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="5,78,155,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,39,127,80,125,75,226,34"/>
+<area shape="rect" id="Node000003" href="$MainWindow_8cpp.html" title=" " alt="" coords="179,85,360,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="272,46,272,85,267,85,267,46"/>
+<area shape="rect" id="Node000004" href="$ServerConfig_8cpp.html" title=" " alt="" coords="384,85,566,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="315,33,445,82,443,87,313,38"/>
+</map>

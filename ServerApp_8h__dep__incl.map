@@ -1,0 +1,9 @@
+<map id="src/lib/deskflow/ServerApp.h" name="src/lib/deskflow/ServerApp.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="175,5,363,30"/>
+<area shape="rect" id="Node000002" href="$deskflow-core_8cpp.html" title=" " alt="" coords="5,78,162,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,39,129,80,127,75,226,34"/>
+<area shape="rect" id="Node000003" href="$deskflow-server_8cpp.html" title=" " alt="" coords="185,78,352,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="272,46,272,77,266,77,266,46"/>
+<area shape="rect" id="Node000004" href="$ServerApp_8cpp.html" title=" " alt="" coords="377,85,579,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="315,33,448,82,446,87,314,38"/>
+</map>

@@ -1,0 +1,15 @@
+<map id="IEventQueueBuffer" name="IEventQueueBuffer">
+<area shape="rect" id="Node000001" title="Event queue buffer interface." alt="" coords="131,104,261,129"/>
+<area shape="rect" id="Node000003" href="$classMSWindowsEventQueueBuffer.html" title="Event queue buffer for Win32." alt="" coords="309,5,509,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="224,92,262,65,308,41,344,28,345,33,310,45,265,70,227,96"/>
+<area shape="rect" id="Node000004" href="$classOSXEventQueueBuffer.html" title="Event queue buffer for OS X." alt="" coords="332,55,486,79"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="267,97,352,77,353,83,268,102"/>
+<area shape="rect" id="Node000005" href="$classSimpleEventQueueBuffer.html" title="In&#45;memory event queue buffer." alt="" coords="326,104,492,129"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="277,114,326,114,326,119,277,119"/>
+<area shape="rect" id="Node000006" href="$classXWindowsEventQueueBuffer.html" title="Event queue buffer for X11." alt="" coords="314,153,504,178"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="268,130,353,150,352,155,267,135"/>
+<area shape="rect" id="Node000007" href="$classdeskflow_1_1EiEventQueueBuffer.html" title="Event queue buffer for Ei." alt="" coords="310,203,508,227"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="227,136,265,163,310,187,345,200,344,205,308,192,262,167,224,141"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="5,104,83,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,114,130,114,130,119,98,119"/>
+</map>

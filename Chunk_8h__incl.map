@@ -1,0 +1,21 @@
+<map id="src/lib/deskflow/Chunk.h" name="src/lib/deskflow/Chunk.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="196,5,362,30"/>
+<area shape="rect" id="Node000002" href="$Common_8h.html" title=" " alt="" coords="167,151,306,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="278,31,247,137,242,135,273,29"/>
+<area shape="rect" id="Node000008" href="$Event_8h.html" title=" " alt="" coords="274,78,370,103"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="288,29,309,63,305,66,284,32"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,223,73,248"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="205,178,87,220,85,215,203,173"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="97,223,165,248"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="220,178,163,217,160,212,217,174"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="365,223,428,248"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="264,173,357,214,355,219,262,178"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="189,223,252,248"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="236,176,229,209,224,208,231,175"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="276,223,340,248"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="250,174,288,210,284,214,246,178"/>
+<area shape="poly" id="edge10_Node000008_Node000002" title=" " alt="" coords="309,105,263,143,260,139,306,101"/>
+<area shape="rect" id="Node000009" href="$EventTypes_8h.html" title=" " alt="" coords="338,151,438,175"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="335,101,369,137,365,141,331,105"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="392,176,396,207,391,208,387,176"/>
+</map>

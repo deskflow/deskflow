@@ -1,0 +1,11 @@
+<map id="IAppUtil" name="IAppUtil">
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,78,149,103"/>
+<area shape="rect" id="Node000003" href="$classAppUtil.html" title=" " alt="" coords="83,151,147,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="118,118,118,150,112,150,112,118"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="76,5,154,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,46,118,78,112,78,112,46"/>
+<area shape="rect" id="Node000004" href="$classAppUtilUnix.html" title=" " alt="" coords="5,223,97,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="96,189,63,225,59,221,92,185"/>
+<area shape="rect" id="Node000005" href="$classAppUtilWindows.html" title=" " alt="" coords="121,223,240,248"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="138,185,172,221,168,225,134,189"/>
+</map>

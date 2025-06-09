@@ -1,0 +1,23 @@
+<map id="src/lib/arch/win32/XArchWindows.h" name="src/lib/arch/win32/XArchWindows.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="865,5,992,44"/>
+<area shape="rect" id="Node000002" href="$ArchDaemonWindows_8cpp.html" title=" " alt="" coords="5,92,185,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="850,34,562,56,380,73,197,95,185,96,185,91,196,89,379,68,561,50,850,28"/>
+<area shape="rect" id="Node000003" href="$ArchMiscWindows_8cpp.html" title=" " alt="" coords="209,92,368,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="850,36,637,59,379,95,369,96,368,91,379,89,636,54,849,31"/>
+<area shape="rect" id="Node000004" href="$ArchNetworkWinsock_8cpp.html" title=" " alt="" coords="392,92,569,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="851,43,570,96,569,91,850,38"/>
+<area shape="rect" id="Node000005" href="$XArchWindows_8cpp.html" title=" " alt="" coords="593,92,733,131"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="856,52,723,94,721,89,854,47"/>
+<area shape="rect" id="Node000006" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="757,92,908,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="898,56,855,93,852,89,894,52"/>
+<area shape="rect" id="Node000007" href="$MSWindowsKeyState_8cpp.html" title=" " alt="" coords="932,92,1117,131"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="963,52,1005,89,1001,93,959,56"/>
+<area shape="rect" id="Node000008" href="$MSWindowsProcess_8cpp.html" title=" " alt="" coords="1141,92,1326,131"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1007,45,1167,89,1165,94,1005,50"/>
+<area shape="rect" id="Node000009" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1350,92,1536,131"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1007,36,1339,89,1350,91,1350,96,1339,95,1006,41"/>
+<area shape="rect" id="Node000010" href="$MSWindowsSession_8cpp.html" title=" " alt="" coords="1560,92,1745,131"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1007,30,1249,53,1549,89,1560,91,1559,96,1548,95,1249,59,1007,35"/>
+<area shape="rect" id="Node000011" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1769,92,1954,131"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1007,27,1335,48,1545,66,1758,89,1769,91,1768,96,1757,95,1545,71,1334,53,1007,33"/>
+</map>

@@ -1,0 +1,37 @@
+<map id="src/lib/deskflow/INode.h" name="src/lib/deskflow/INode.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1169,5,1331,30"/>
+<area shape="rect" id="Node000002" href="$Client_8h.html" title=" " alt="" coords="535,78,674,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1153,32,675,84,675,79,1153,27"/>
+<area shape="rect" id="Node000008" href="$Server_8h.html" title=" " alt="" coords="1929,78,2078,103"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1347,25,1928,79,1928,85,1347,31"/>
+<area shape="rect" id="Node000003" href="$Client_8cpp.html" title=" " alt="" coords="5,158,159,182"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="520,104,357,125,170,153,136,160,135,154,170,148,357,120,519,99"/>
+<area shape="rect" id="Node000004" href="$ServerProxy_8cpp.html" title=" " alt="" coords="182,158,374,182"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="541,109,328,160,327,154,540,104"/>
+<area shape="rect" id="Node000005" href="$ClientApp_8cpp.html" title=" " alt="" coords="398,158,596,182"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="578,114,515,159,511,155,575,110"/>
+<area shape="rect" id="Node000006" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="620,151,805,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="634,110,688,148,685,152,631,114"/>
+<area shape="rect" id="Node000007" href="$OSXScreen_8mm.html" title=" " alt="" coords="830,158,1036,182"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="670,104,884,154,883,160,668,109"/>
+<area shape="rect" id="Node000009" href="$ServerApp_8cpp.html" title=" " alt="" coords="1060,158,1262,182"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1913,99,1628,119,1274,153,1229,160,1228,154,1274,148,1628,114,1913,94"/>
+<area shape="rect" id="Node000010" href="$ClientListener_8cpp.html" title=" " alt="" coords="1286,158,1491,182"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="1914,104,1504,153,1461,160,1460,154,1503,148,1913,99"/>
+<area shape="rect" id="Node000011" href="$ClientProxy1__4_8cpp.html" title=" " alt="" coords="1516,151,1691,189"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="1929,109,1692,154,1691,149,1928,103"/>
+<area shape="rect" id="Node000012" href="$ClientProxy1__5_8cpp.html" title=" " alt="" coords="1716,151,1891,189"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="1960,111,1853,153,1851,148,1958,106"/>
+<area shape="rect" id="Node000013" href="$ClientProxy1__6_8cpp.html" title=" " alt="" coords="1916,151,2091,189"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="2006,118,2006,150,2001,150,2001,118"/>
+<area shape="rect" id="Node000014" href="$ClientProxy1__7_8cpp.html" title=" " alt="" coords="2116,151,2291,189"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="2048,106,2156,148,2154,153,2047,111"/>
+<area shape="rect" id="Node000015" href="$ClientProxyUnknown_8cpp.html" title=" " alt="" coords="2315,151,2484,189"/>
+<area shape="poly" id="edge14_Node000008_Node000015" title=" " alt="" coords="2078,104,2315,150,2314,155,2077,109"/>
+<area shape="rect" id="Node000016" href="$server_2Config_8cpp.html" title=" " alt="" coords="2507,158,2670,182"/>
+<area shape="poly" id="edge15_Node000008_Node000016" title=" " alt="" coords="2094,98,2279,119,2496,148,2532,154,2532,160,2495,153,2279,124,2093,103"/>
+<area shape="rect" id="Node000017" href="$InputFilter_8cpp.html" title=" " alt="" coords="2694,158,2878,182"/>
+<area shape="poly" id="edge16_Node000008_Node000017" title=" " alt="" coords="2094,94,2358,114,2682,148,2724,154,2724,160,2682,153,2358,119,2093,100"/>
+<area shape="rect" id="Node000018" href="$Server_8cpp.html" title=" " alt="" coords="2902,158,3065,182"/>
+<area shape="poly" id="edge17_Node000008_Node000018" title=" " alt="" coords="2093,91,2443,107,2666,124,2890,148,2930,154,2929,160,2890,153,2666,129,2443,113,2093,97"/>
+</map>

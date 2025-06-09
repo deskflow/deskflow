@@ -1,0 +1,19 @@
+<map id="src/lib/deskflow/ProtocolUtil.h" name="src/lib/deskflow/ProtocolUtil.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="161,5,326,44"/>
+<area shape="rect" id="Node000002" href="$EventTypes_8h.html" title=" " alt="" coords="5,92,138,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,47,112,88,110,83,201,42"/>
+<area shape="rect" id="Node000004" href="$XIO_8h.html" title=" " alt="" coords="162,92,232,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="234,46,214,80,209,77,230,43"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="256,92,324,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="257,43,278,77,273,80,253,46"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="349,92,405,117"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="277,42,345,81,342,86,274,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="40,165,103,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,117,74,149,69,149,69,117"/>
+<area shape="rect" id="Node000005" href="$XBase_8h.html" title=" " alt="" coords="145,165,248,189"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="200,117,200,149,194,149,194,117"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="113,237,190,262"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="192,191,169,226,165,223,187,188"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="214,237,268,262"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="206,188,228,223,223,226,202,191"/>
+</map>

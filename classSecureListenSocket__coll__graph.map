@@ -1,0 +1,20 @@
+<map id="SecureListenSocket" name="SecureListenSocket">
+<area shape="rect" id="Node000001" title=" " alt="" coords="227,337,364,362"/>
+<area shape="rect" id="Node000002" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="234,263,357,288"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="298,303,298,337,293,337,293,303"/>
+<area shape="rect" id="Node000003" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="5,177,106,201"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,208,137,237,185,253,234,263,233,268,184,258,134,242,82,213"/>
+<area shape="rect" id="Node000004" href="$classISocket.html" title="Generic socket interface." alt="" coords="43,79,108,104"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="73,120,60,177,55,176,67,119"/>
+<area shape="rect" id="Node000005" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="76,5,153,30"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="103,45,84,80,79,78,99,42"/>
+<area shape="rect" id="Node000008" href="$classIEventQueue.html" title="Event queue interface." alt="" coords="103,128,200,153"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="125,44,150,127,145,128,120,46"/>
+<area shape="rect" id="Node000006" href="$classArchSocketImpl.html" title="Internal socket data. An architecture dependent type holding the necessary data for a socket." alt="" coords="239,177,352,201"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="298,217,298,263,293,263,293,217"/>
+<area shape="rect" id="Node000007" href="$classMutex.html" title="Mutual exclusion." alt="" coords="376,177,434,201"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="389,216,362,241,323,265,320,261,359,237,385,212"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="156,167,160,184,168,200,188,220,212,237,260,260,258,265,209,242,185,224,164,203,155,186,151,169"/>
+<area shape="rect" id="Node000009" href="$classSocketMultiplexer.html" title="Socket multiplexer." alt="" coords="458,177,581,201"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="493,212,441,242,399,256,358,266,357,261,398,251,438,237,491,208"/>
+</map>

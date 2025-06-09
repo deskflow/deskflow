@@ -1,0 +1,12 @@
+<map id="src/lib/gui/validators/ComputerNameValidator.cpp" name="src/lib/gui/validators/ComputerNameValidator.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="61,5,254,44"/>
+<area shape="rect" id="Node000002" href="$ComputerNameValidator_8h.html" title=" " alt="" coords="9,92,183,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,46,117,81,113,78,141,43"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="150,165,290,189"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="172,43,197,91,216,148,211,150,192,93,167,46"/>
+<area shape="rect" id="Node000003" href="$IStringValidator_8h.html" title=" " alt="" coords="5,165,126,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,118,79,151,74,149,89,116"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="118,115,188,154,185,159,115,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="33,237,98,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,190,68,222,63,222,63,190"/>
+</map>

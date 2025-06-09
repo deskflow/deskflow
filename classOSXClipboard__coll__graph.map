@@ -1,0 +1,7 @@
+<map id="OSXClipboard" name="OSXClipboard">
+<area shape="rect" id="Node000001" title="OS X clipboard implementation." alt="" coords="5,151,109,175"/>
+<area shape="rect" id="Node000002" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="17,78,97,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,118,60,150,54,150,54,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="18,5,96,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,46,60,78,54,78,54,46"/>
+</map>

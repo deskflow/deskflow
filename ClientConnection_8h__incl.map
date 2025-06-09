@@ -1,0 +1,16 @@
+<map id="src/lib/gui/core/ClientConnection.h" name="src/lib/gui/core/ClientConnection.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="174,5,396,30"/>
+<area shape="rect" id="Node000002" href="$Messages_8h.html" title=" " alt="" coords="62,78,175,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,33,161,74,159,69,256,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="180,151,246,175"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="276,32,258,53,241,79,229,108,221,136,216,135,224,106,236,77,254,50,272,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="250,78,320,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="288,31,288,62,282,62,282,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="344,78,416,103"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="302,28,354,67,351,71,299,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="440,78,509,103"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="317,28,430,70,428,75,315,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,157,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,104,96,138,92,136,110,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="136,101,187,139,184,144,132,105"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="XWindowsKeyState" name="XWindowsKeyState">
+<area shape="rect" id="Node000001" title="X Windows key state." alt="" coords="5,223,143,248"/>
+<area shape="rect" id="Node000002" href="$classKeyState.html" title="Core key state." alt="" coords="37,151,111,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,191,77,223,71,223,71,191"/>
+<area shape="rect" id="Node000003" href="$classIKeyState.html" title="Key state interface." alt="" coords="35,78,113,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,118,77,150,71,150,71,118"/>
+<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="35,5,113,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="77,46,77,78,71,78,71,46"/>
+</map>

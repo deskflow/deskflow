@@ -1,0 +1,7 @@
+<map id="ArchLogUnix" name="ArchLogUnix">
+<area shape="rect" id="Node000001" title="Unix implementation of IArchLog." alt="" coords="5,151,102,175"/>
+<area shape="rect" id="Node000002" href="$classIArchLog.html" title="Interface for architecture dependent logging." alt="" coords="17,78,90,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,118,56,150,51,150,51,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="15,5,92,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="56,46,56,78,51,78,51,46"/>
+</map>

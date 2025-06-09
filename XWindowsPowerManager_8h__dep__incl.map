@@ -1,0 +1,9 @@
+<map id="src/lib/platform/XWindowsPowerManager.h" name="src/lib/platform/XWindowsPowerManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="104,5,278,44"/>
+<area shape="rect" id="Node000002" href="$XWindowsPowerManager_8cpp.html" title=" " alt="" coords="5,92,180,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,56,116,93,113,89,156,52"/>
+<area shape="rect" id="Node000003" href="$XWindowsScreen_8h.html" title=" " alt="" coords="204,92,378,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,52,271,89,267,93,223,56"/>
+<area shape="rect" id="Node000004" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="204,179,378,217"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="294,147,294,178,288,178,288,147"/>
+</map>

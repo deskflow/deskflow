@@ -1,0 +1,17 @@
+<map id="src/lib/gui/FileTail.cpp" name="src/lib/gui/FileTail.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="111,5,258,30"/>
+<area shape="rect" id="Node000002" href="$FileTail_8h.html" title=" " alt="" coords="38,78,111,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,33,107,72,104,67,165,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,58,175"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="112,30,64,47,44,61,27,79,21,92,19,106,24,135,19,136,14,106,16,91,23,77,40,57,62,43,110,25"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="98,151,168,175"/>
+<area shape="poly" id="edge7_Node000001_Node000004" title=" " alt="" coords="183,31,145,137,140,135,178,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="186,78,256,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="193,29,211,63,206,66,188,32"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="279,78,424,103"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="213,28,311,69,309,74,211,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="448,78,546,103"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="237,28,433,72,432,77,236,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,105,49,139,44,136,65,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="86,102,116,137,111,140,82,105"/>
+</map>

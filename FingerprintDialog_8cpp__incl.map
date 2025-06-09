@@ -1,0 +1,28 @@
+<map id="src/lib/gui/dialogs/FingerprintDialog.cpp" name="src/lib/gui/dialogs/FingerprintDialog.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="461,5,610,44"/>
+<area shape="rect" id="Node000002" href="$FingerprintDialog_8h.html" title=" " alt="" coords="96,92,228,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="461,44,234,91,233,86,460,39"/>
+<area shape="rect" id="Node000008" href="$FingerprintPreview_8h.html" title=" " alt="" coords="252,92,441,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="491,47,389,88,387,83,489,42"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="466,92,523,117"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="528,46,510,79,505,77,523,43"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="547,92,609,117"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="548,43,567,77,562,79,543,46"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="634,92,733,117"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="573,42,649,82,647,87,570,47"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="757,92,858,117"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="602,42,752,85,751,90,601,47"/>
+<area shape="rect" id="Node000003" href="$Fingerprint_8h.html" title=" " alt="" coords="251,165,366,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="188,115,272,155,270,160,185,120"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="5,165,74,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="143,120,74,159,71,154,141,115"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="98,165,227,189"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="165,117,165,149,160,149,160,117"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="212,237,302,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="302,191,276,226,272,223,298,188"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="326,237,396,262"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="320,188,346,223,341,226,315,191"/>
+<area shape="poly" id="edge9_Node000008_Node000003" title=" " alt="" coords="342,118,324,152,320,150,338,116"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="391,165,459,189"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="361,115,403,152,399,156,357,119"/>
+</map>

@@ -1,0 +1,24 @@
+<map id="src/lib/gui/FileTail.h" name="src/lib/gui/FileTail.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="367,5,500,30"/>
+<area shape="rect" id="Node000002" href="$FileTail_8cpp.html" title=" " alt="" coords="262,78,410,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="407,42,353,80,350,75,403,37"/>
+<area shape="rect" id="Node000003" href="$CoreProcess_8h.html" title=" " alt="" coords="433,78,631,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="464,37,517,75,514,80,460,41"/>
+<area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="384,244,565,269"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="471,111,440,128,417,152,412,164,412,176,423,201,441,224,461,242,458,246,438,228,418,204,407,177,407,163,412,149,437,123,468,106"/>
+<area shape="rect" id="Node000005" href="$MainWindow_8h.html" title=" " alt="" coords="186,158,352,182"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="479,110,310,160,308,155,478,105"/>
+<area shape="rect" id="Node000008" href="$CoreProcess_8cpp.html" title=" " alt="" coords="426,158,638,182"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="535,118,535,157,529,157,529,118"/>
+<area shape="rect" id="Node000009" href="$SettingsDialog_8cpp.html" title=" " alt="" coords="704,237,840,276"/>
+<area shape="poly" id="edge9_Node000003_Node000009" title=" " alt="" coords="646,100,738,119,774,132,798,149,807,171,806,195,797,219,787,238,782,236,793,216,800,194,802,172,794,152,772,137,736,124,645,106"/>
+<area shape="rect" id="Node000010" href="$SettingsDialog_8h.html" title=" " alt="" coords="662,151,784,189"/>
+<area shape="poly" id="edge10_Node000003_Node000010" title=" " alt="" coords="575,106,677,148,676,152,573,111"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="312,186,447,241,445,246,310,191"/>
+<area shape="rect" id="Node000006" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="5,237,155,276"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="231,191,123,239,121,234,228,187"/>
+<area shape="rect" id="Node000007" href="$ServerConfig_8cpp.html" title=" " alt="" coords="178,244,360,269"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="272,198,272,244,267,244,267,198"/>
+<area shape="poly" id="edge11_Node000010_Node000004" title=" " alt="" coords="654,197,510,246,508,241,653,192"/>
+<area shape="poly" id="edge12_Node000010_Node000009" title=" " alt="" coords="744,202,763,235,759,238,739,204"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="Server" name="Server">
+<area shape="rect" id="Node000001" title="Deskflow server." alt="" coords="14,151,74,175"/>
+<area shape="rect" id="Node000002" href="$classINode.html" title=" " alt="" coords="16,78,72,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,118,47,150,41,150,41,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="5,5,83,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="47,46,47,78,41,78,41,46"/>
+</map>

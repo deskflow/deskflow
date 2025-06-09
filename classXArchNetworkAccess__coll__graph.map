@@ -1,0 +1,7 @@
+<map id="XArchNetworkAccess" name="XArchNetworkAccess">
+<area shape="rect" id="Node000001" title="Network insufficient permission." alt="" coords="5,151,156,175"/>
+<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="27,78,134,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,118,83,150,78,150,78,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="19,5,142,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,46,83,78,78,78,78,46"/>
+</map>

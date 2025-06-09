@@ -1,0 +1,47 @@
+<map id="src/lib/deskflow/App.h" name="src/lib/deskflow/App.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="1226,5,1376,30"/>
+<area shape="rect" id="Node000002" href="$App_8cpp.html" title=" " alt="" coords="160,85,325,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1211,23,830,39,585,55,338,81,298,87,297,82,337,75,584,50,830,33,1211,18"/>
+<area shape="rect" id="Node000003" href="$ArgParser_8cpp.html" title=" " alt="" coords="349,85,549,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1211,27,924,47,568,81,521,87,520,82,568,75,923,42,1210,22"/>
+<area shape="rect" id="Node000004" href="$ClientApp_8h.html" title=" " alt="" coords="1054,85,1239,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1266,40,1171,87,1169,82,1263,35"/>
+<area shape="rect" id="Node000010" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1883,165,2068,203"/>
+<area shape="poly" id="edge22_Node000001_Node000010" title=" " alt="" coords="1297,46,1296,82,1300,100,1310,115,1322,122,1343,129,1406,139,1583,152,1764,157,1872,162,1883,164,1883,169,1872,167,1763,163,1583,157,1405,145,1342,134,1320,127,1306,119,1295,102,1290,83,1292,45"/>
+<area shape="rect" id="Node000013" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="2093,165,2267,203"/>
+<area shape="poly" id="edge24_Node000001_Node000013" title=" " alt="" coords="1310,44,1325,82,1337,100,1353,114,1371,122,1400,128,1483,139,1712,151,1943,157,2081,162,2093,164,2092,169,2081,167,1943,162,1712,156,1483,144,1399,134,1370,127,1350,119,1333,104,1320,85,1305,46"/>
+<area shape="rect" id="Node000014" href="$DaemonApp_8cpp.html" title=" " alt="" coords="1364,85,1577,110"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="1341,34,1446,82,1444,87,1339,39"/>
+<area shape="rect" id="Node000015" href="$KeyMap_8cpp.html" title=" " alt="" coords="1600,85,1789,110"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="1376,31,1636,82,1635,87,1375,36"/>
+<area shape="rect" id="Node000016" href="$PlatformScreen_8cpp.html" title=" " alt="" coords="1813,78,1978,117"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="1392,25,1581,46,1802,75,1813,77,1812,82,1801,81,1580,51,1391,30"/>
+<area shape="rect" id="Node000017" href="$ServerApp_8cpp.html" title=" " alt="" coords="5,172,208,196"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="1211,23,1064,28,891,38,728,55,662,66,613,80,598,89,588,99,578,110,562,119,513,137,470,149,394,157,317,159,220,167,179,174,178,168,220,162,317,153,394,152,469,143,511,132,560,114,575,105,584,95,595,85,611,76,661,61,727,49,891,32,1064,23,1211,18"/>
+<area shape="rect" id="Node000018" href="$ServerApp_8h.html" title=" " alt="" coords="624,85,813,110"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="1211,34,807,87,806,82,1210,28"/>
+<area shape="rect" id="Node000020" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="2002,78,2152,117"/>
+<area shape="poly" id="edge21_Node000001_Node000020" title=" " alt="" coords="1392,21,1661,39,1826,55,1991,75,2002,77,2001,82,1990,81,1825,60,1661,44,1392,26"/>
+<area shape="rect" id="Node000021" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="2176,78,2362,117"/>
+<area shape="poly" id="edge23_Node000001_Node000021" title=" " alt="" coords="1392,20,1732,37,1947,53,2164,75,2177,77,2176,82,2164,81,1947,59,1732,43,1392,25"/>
+<area shape="rect" id="Node000005" href="$deskflow-client_8cpp.html" title=" " alt="" coords="1257,165,1420,203"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="1188,114,1297,162,1295,167,1185,119"/>
+<area shape="rect" id="Node000006" href="$deskflow-core_8cpp.html" title=" " alt="" coords="423,165,579,203"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="1039,112,832,135,592,167,580,169,579,164,591,162,831,129,1039,106"/>
+<area shape="rect" id="Node000007" href="$ClientApp_8cpp.html" title=" " alt="" coords="1443,172,1642,196"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="1217,111,1488,168,1487,174,1215,116"/>
+<area shape="rect" id="Node000008" href="$KeyState_8cpp.html" title=" " alt="" coords="1665,172,1860,196"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="1230,110,1258,114,1455,138,1654,162,1695,168,1695,174,1653,167,1455,143,1257,119,1229,115"/>
+<area shape="rect" id="Node000009" href="$EiKeyState_8cpp.html" title=" " alt="" coords="603,172,804,196"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="1071,116,766,174,765,168,1070,110"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="1228,110,1257,114,1430,131,1565,137,1700,145,1872,162,1883,163,1883,169,1872,167,1699,150,1564,143,1430,136,1257,119,1227,115"/>
+<area shape="rect" id="Node000011" href="$OSXScreen_8mm.html" title=" " alt="" coords="829,172,1035,196"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="1104,118,963,174,961,169,1102,113"/>
+<area shape="rect" id="Node000012" href="$XWindowsKeyState_8cpp.html" title=" " alt="" coords="1059,165,1234,203"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="1149,125,1149,164,1144,164,1144,125"/>
+<area shape="poly" id="edge12_Node000004_Node000013" title=" " alt="" coords="1254,109,1308,114,1525,128,1695,134,1865,141,2081,162,2093,163,2092,169,2081,167,1864,146,1695,139,1525,134,1308,119,1254,114"/>
+<area shape="poly" id="edge18_Node000018_Node000006" title=" " alt="" coords="676,118,550,167,548,162,674,113"/>
+<area shape="poly" id="edge20_Node000018_Node000017" title=" " alt="" coords="633,115,606,119,413,143,220,167,178,174,177,168,219,162,412,138,605,114,632,110"/>
+<area shape="rect" id="Node000019" href="$deskflow-server_8cpp.html" title=" " alt="" coords="232,165,400,203"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="649,116,400,168,399,163,648,111"/>
+</map>

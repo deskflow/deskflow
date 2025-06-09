@@ -1,0 +1,5 @@
+<map id="ArchNetAddressImpl" name="ArchNetAddressImpl">
+<area shape="rect" id="Node000001" title="Internal network address data. An architecture dependent type holding the necessary data for a networ..." alt="" coords="5,92,148,117"/>
+<area shape="rect" id="Node000002" href="$structsockaddr__storage.html" title=" " alt="" coords="14,5,139,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,45,79,92,74,92,74,45"/>
+</map>

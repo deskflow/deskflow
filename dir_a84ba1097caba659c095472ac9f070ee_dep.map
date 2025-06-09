@@ -1,0 +1,25 @@
+<map id="src/lib/gui/dialogs" name="src/lib/gui/dialogs">
+<area shape="rect" id="node1" href="dir_00d753f0c10974c39dc450cbdcd64c24.html" title="tls" alt="" coords="26,124,65,149"/>
+<area shape="rect" id="node2" href="dir_1002216e319566c65ba849e54f5ae169.html" title="core" alt="" coords="89,124,135,149"/>
+<area shape="rect" id="node3" href="dir_3ff4f3859d29e4b9d0eef20a26879564.html" title="validators" alt="" coords="159,124,236,149"/>
+<area shape="rect" id="node4" href="dir_da58851cf6af1fd60b06cfef734271e0.html" title="config" alt="" coords="260,124,316,149"/>
+<area shape="rect" id="node5" href="dir_f4d7a2d7e0cddc98a37df9ffb775e48b.html" title="widgets" alt="" coords="340,124,406,149"/>
+<area shape="rect" id="node6" href="dir_a84ba1097caba659c095472ac9f070ee.html" title="dialogs" alt="" coords="257,51,319,76"/>
+<area shape="poly" id="edge1" href="dir_000014_000028.html" alt="" coords="257,76,80,126,79,121,256,71"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000014_000028.html" title="3" alt="" coords="81,124,88,138"/>
+<area shape="poly" id="edge2" href="dir_000014_000006.html" alt="" coords="260,79,150,123,148,118,258,74"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000014_000006.html" title="2" alt="" coords="152,120,159,134"/>
+<area shape="poly" id="edge5" href="dir_000014_000031.html" alt="" coords="275,79,225,117,222,112,271,74"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000014_000031.html" title="4" alt="" coords="228,112,235,126"/>
+<area shape="poly" id="edge6" href="dir_000014_000005.html" alt="" coords="291,77,291,108,285,108,285,77"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000014_000005.html" title="2" alt="" coords="293,99,300,113"/>
+<area shape="poly" id="edge7" href="dir_000014_000032.html" alt="" coords="304,74,350,112,346,116,300,79"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000014_000032.html" title="1" alt="" coords="347,99,354,113"/>
+<area shape="rect" id="node7" href="dir_101750fb3e6d5167734ab1bd49650f60.html" title="common" alt="" coords="431,124,502,149"/>
+<area shape="poly" id="edge3" href="dir_000014_000004.html" alt="" coords="318,74,424,115,422,120,317,79"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000014_000004.html" title="1" alt="" coords="420,102,427,116"/>
+<area shape="rect" id="node8" href="dir_17fce9a7fe0b20664146c80d77334bc0.html" title="net" alt="" coords="527,124,566,149"/>
+<area shape="poly" id="edge4" href="dir_000014_000023.html" alt="" coords="320,70,512,121,511,126,319,75"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000014_000023.html" title="1" alt="" coords="508,107,515,121"/>
+<area shape="rect" id="clust1" href="dir_1e2980927ba7513c665ee0bc67e39bcf.html" title="gui" alt="" coords="16,16,417,159"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="ArchNetworkWinsock" name="ArchNetworkWinsock">
+<area shape="rect" id="Node000001" title="Win32 implementation of IArchNetwork." alt="" coords="5,151,154,175"/>
+<area shape="rect" id="Node000002" href="$classIArchNetwork.html" title="Interface for architecture dependent networking." alt="" coords="29,78,130,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,118,82,150,77,150,77,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="41,5,118,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,46,82,78,77,78,77,46"/>
+</map>

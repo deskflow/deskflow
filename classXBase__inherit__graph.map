@@ -1,0 +1,7 @@
+<map id="XBase" name="XBase">
+<area shape="rect" id="Node000001" title="Exception base class." alt="" coords="75,78,136,103"/>
+<area shape="rect" id="Node000003" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="5,151,206,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,118,108,150,103,150,103,118"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="44,5,167,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,46,108,78,103,78,103,46"/>
+</map>

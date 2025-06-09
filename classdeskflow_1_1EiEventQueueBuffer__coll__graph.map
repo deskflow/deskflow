@@ -1,0 +1,7 @@
+<map id="deskflow::EiEventQueueBuffer" name="deskflow::EiEventQueueBuffer">
+<area shape="rect" id="Node000001" title="Event queue buffer for Ei." alt="" coords="5,151,203,175"/>
+<area shape="rect" id="Node000002" href="$classIEventQueueBuffer.html" title="Event queue buffer interface." alt="" coords="39,78,169,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,118,107,150,101,150,101,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="65,5,143,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,46,107,78,101,78,101,46"/>
+</map>

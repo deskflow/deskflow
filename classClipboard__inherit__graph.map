@@ -1,0 +1,7 @@
+<map id="Clipboard" name="Clipboard">
+<area shape="rect" id="Node000001" title="Memory buffer clipboard." alt="" coords="7,151,84,175"/>
+<area shape="rect" id="Node000002" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="5,78,86,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="48,118,48,150,43,150,43,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="7,5,84,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="48,46,48,78,43,78,43,46"/>
+</map>

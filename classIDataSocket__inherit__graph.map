@@ -1,0 +1,14 @@
+<map id="IDataSocket" name="IDataSocket">
+<area shape="rect" id="Node000001" title="Data stream socket interface." alt="" coords="52,151,144,175"/>
+<area shape="rect" id="Node000005" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="54,223,142,248"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="101,191,101,223,95,223,95,191"/>
+<area shape="rect" id="Node000002" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,78,71,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,113,90,149,86,152,56,116"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="59,5,137,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,44,50,79,46,76,76,40"/>
+<area shape="rect" id="Node000004" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,78,221,103"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="120,40,150,76,146,79,116,44"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,116,110,152,106,149,136,113"/>
+<area shape="rect" id="Node000006" href="$classSecureSocket.html" title="Secure socket." alt="" coords="47,296,149,321"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="101,264,101,296,95,296,95,264"/>
+</map>

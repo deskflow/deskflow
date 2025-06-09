@@ -1,0 +1,11 @@
+<map id="src/lib/arch/IArchLog.h" name="src/lib/arch/IArchLog.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,255,30"/>
+<area shape="rect" id="Node000002" href="$ArchLogUnix_8h.html" title=" " alt="" coords="8,78,173,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,42,114,79,110,75,153,38"/>
+<area shape="rect" id="Node000004" href="$ArchLogWindows_8h.html" title=" " alt="" coords="199,78,337,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,38,248,75,245,79,201,42"/>
+<area shape="rect" id="Node000003" href="$ArchLogUnix_8cpp.html" title=" " alt="" coords="5,165,171,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,132,91,164,86,164,87,132"/>
+<area shape="rect" id="Node000005" href="$ArchLogWindows_8cpp.html" title=" " alt="" coords="194,165,347,203"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="272,132,273,164,267,164,266,132"/>
+</map>

@@ -1,0 +1,19 @@
+<map id="src/lib/gui/Action.cpp" name="src/lib/gui/Action.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="153,5,296,30"/>
+<area shape="rect" id="Node000002" href="$Action_8h.html" title=" " alt="" coords="91,78,160,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,33,156,71,153,66,206,28"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="185,78,264,103"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="227,31,227,62,222,62,222,31"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="288,78,387,103"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="244,28,307,67,304,72,242,33"/>
+<area shape="rect" id="Node000003" href="$KeySequence_8h.html" title=" " alt="" coords="23,151,135,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,105,97,139,93,136,116,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="9,223,61,248"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="92,102,48,120,29,134,13,152,9,165,9,180,20,209,15,211,4,181,3,165,9,149,25,130,46,115,90,97"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="90,223,156,248"/>
+<area shape="poly" id="edge6_Node000002_Node000005" title=" " alt="" coords="134,102,147,135,150,155,150,176,138,210,133,208,144,175,145,155,142,136,129,104"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="209,151,295,175"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="148,101,219,140,217,145,145,106"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="74,177,52,212,48,209,69,174"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="88,174,110,209,105,212,84,177"/>
+</map>

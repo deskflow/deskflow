@@ -1,0 +1,17 @@
+<map id="IXWindowsClipboardConverter" name="IXWindowsClipboardConverter">
+<area shape="rect" id="Node000001" title="Clipboard format converter interface." alt="" coords="131,143,330,168"/>
+<area shape="rect" id="Node000003" href="$classXWindowsClipboardAnyBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="392,5,595,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="257,131,311,92,377,54,408,42,410,47,379,59,314,97,260,135"/>
+<area shape="rect" id="Node000004" href="$classXWindowsClipboardBMPConverter.html" title="Convert to/from some text encoding." alt="" coords="381,68,606,93"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,135,377,103,428,91,429,96,379,109,281,140"/>
+<area shape="rect" id="Node000005" href="$classXWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="378,118,609,142"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="345,142,377,138,378,144,346,147"/>
+<area shape="rect" id="Node000006" href="$classXWindowsClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="383,167,604,192"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="346,163,383,167,382,172,345,168"/>
+<area shape="rect" id="Node000007" href="$classXWindowsClipboardUCS2Converter.html" title="Convert to/from UCS&#45;2 encoding." alt="" coords="378,216,609,241"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="283,171,379,201,429,213,428,218,377,206,281,176"/>
+<area shape="rect" id="Node000008" href="$classXWindowsClipboardUTF8Converter.html" title="Convert to/from UTF&#45;8 encoding." alt="" coords="380,266,608,290"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="260,176,313,214,379,250,416,263,415,268,377,255,311,219,257,180"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="5,143,83,168"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,153,130,153,130,158,98,158"/>
+</map>

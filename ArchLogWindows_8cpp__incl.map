@@ -1,0 +1,26 @@
+<map id="src/lib/arch/win32/ArchLogWindows.cpp" name="src/lib/arch/win32/ArchLogWindows.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="251,5,403,44"/>
+<area shape="rect" id="Node000002" href="$ArchLogWindows_8h.html" title=" " alt="" coords="157,92,358,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="312,46,280,82,276,78,308,43"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="364,383,428,407"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="344,43,379,100,393,137,399,175,399,251,399,367,394,367,394,251,394,176,388,138,374,102,340,46"/>
+<area shape="rect" id="Node000003" href="$IArchLog_8h.html" title=" " alt="" coords="106,165,220,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="244,119,192,158,189,153,240,115"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="244,165,330,189"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="265,116,279,149,274,151,260,118"/>
+<area shape="rect" id="Node000004" href="$ELevel_8h.html" title=" " alt="" coords="22,237,125,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="150,192,101,230,98,226,147,188"/>
+<area shape="rect" id="Node000005" href="$IInterface_8h.html" title=" " alt="" coords="149,237,292,262"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="175,188,203,224,199,227,170,192"/>
+<area shape="rect" id="Node000006" href="$Common_8h.html" title=" " alt="" coords="178,310,263,335"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="223,263,223,294,218,294,218,263"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="5,383,73,407"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="191,338,84,379,82,374,189,333"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="97,383,165,407"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="207,337,159,375,155,371,204,333"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="189,383,252,407"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="223,335,223,367,218,367,218,335"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="277,383,340,407"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="237,333,284,371,280,375,233,337"/>
+<area shape="poly" id="edge10_Node000006_Node000011" title=" " alt="" coords="250,333,354,374,352,379,248,338"/>
+</map>

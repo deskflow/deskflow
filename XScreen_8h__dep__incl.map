@@ -1,0 +1,19 @@
+<map id="src/lib/deskflow/XScreen.h" name="src/lib/deskflow/XScreen.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="781,5,958,30"/>
+<area shape="rect" id="Node000002" href="$ClientApp_8cpp.html" title=" " alt="" coords="5,85,204,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="766,29,515,49,215,81,171,87,171,82,215,75,514,44,765,23"/>
+<area shape="rect" id="Node000003" href="$ServerApp_8cpp.html" title=" " alt="" coords="227,85,430,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="767,35,442,81,401,87,400,82,441,75,766,30"/>
+<area shape="rect" id="Node000004" href="$XScreen_8cpp.html" title=" " alt="" coords="454,85,646,110"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="807,37,599,87,597,82,806,32"/>
+<area shape="rect" id="Node000005" href="$EiScreen_8cpp.html" title=" " alt="" coords="670,85,859,110"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="844,41,782,86,779,82,841,37"/>
+<area shape="rect" id="Node000006" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="884,78,1069,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="899,37,952,75,949,80,896,41"/>
+<area shape="rect" id="Node000007" href="$MSWindowsHook_8cpp.html" title=" " alt="" coords="1093,78,1278,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="933,32,1110,75,1109,80,931,37"/>
+<area shape="rect" id="Node000008" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1302,78,1488,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="974,30,1292,75,1303,77,1302,82,1291,81,974,35"/>
+<area shape="rect" id="Node000009" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="1512,78,1686,117"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="974,23,1215,43,1501,75,1512,77,1511,82,1500,81,1215,48,974,29"/>
+</map>

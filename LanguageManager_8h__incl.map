@@ -1,0 +1,36 @@
+<map id="src/lib/deskflow/languages/LanguageManager.h" name="src/lib/deskflow/languages/LanguageManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="239,5,414,44"/>
+<area shape="rect" id="Node000002" href="$AppUtil_8h.html" title=" " alt="" coords="209,92,340,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,46,293,80,288,77,312,43"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="373,237,429,262"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="336,43,354,91,396,222,391,223,349,93,331,45"/>
+<area shape="rect" id="Node000003" href="$IAppUtil_8h.html" title=" " alt="" coords="207,165,342,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="277,117,277,149,272,149,272,117"/>
+<area shape="rect" id="Node000014" href="$XDeskflow_8h.html" title=" " alt="" coords="15,165,166,189"/>
+<area shape="poly" id="edge14_Node000002_Node000014" title=" " alt="" coords="245,120,136,161,134,156,243,115"/>
+<area shape="rect" id="Node000004" href="$IInterface_8h.html" title=" " alt="" coords="208,310,351,335"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="261,192,246,205,232,223,223,242,225,261,237,281,253,298,249,302,233,284,220,263,218,241,227,220,242,202,257,188"/>
+<area shape="rect" id="Node000011" href="$IApp_8h.html" title=" " alt="" coords="234,237,349,262"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="280,189,288,222,283,223,275,191"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="120,310,173,335"/>
+<area shape="poly" id="edge12_Node000003_Node000012" title=" " alt="" coords="264,192,216,239,166,299,162,296,212,236,260,188"/>
+<area shape="poly" id="edge13_Node000003_Node000013" title=" " alt="" coords="297,188,368,227,366,232,294,192"/>
+<area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="237,383,322,407"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="282,335,282,367,277,367,277,335"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="65,455,132,480"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="251,410,143,452,141,447,249,405"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="156,455,224,480"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="267,410,218,448,215,444,263,406"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="248,455,311,480"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="282,408,282,440,277,440,277,408"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="336,455,399,480"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="296,406,343,443,340,448,293,410"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="424,455,488,480"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="310,405,414,447,412,452,308,410"/>
+<area shape="poly" id="edge11_Node000011_Node000004" title=" " alt="" coords="292,263,287,295,282,294,287,262"/>
+<area shape="rect" id="Node000015" href="$XBase_8h.html" title=" " alt="" coords="5,237,109,262"/>
+<area shape="poly" id="edge15_Node000014_Node000015" title=" " alt="" coords="87,191,71,224,66,222,82,189"/>
+<area shape="poly" id="edge17_Node000015_Node000012" title=" " alt="" coords="73,260,122,298,119,303,70,265"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="18,310,96,335"/>
+<area shape="poly" id="edge16_Node000015_Node000016" title=" " alt="" coords="60,263,60,294,54,294,54,263"/>
+</map>

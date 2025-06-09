@@ -1,0 +1,9 @@
+<map id="src/lib/gui/core/WaylandWarnings.h" name="src/lib/gui/core/WaylandWarnings.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="24,5,184,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,78,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,46,62,82,58,78,87,43"/>
+<area shape="rect" id="Node000003" href="$Wayland_8h.html" title=" " alt="" coords="102,92,235,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="122,43,151,78,147,82,118,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="142,165,195,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="171,117,171,149,166,149,166,117"/>
+</map>

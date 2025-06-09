@@ -1,0 +1,15 @@
+<map id="KeyState" name="KeyState">
+<area shape="rect" id="Node000001" title="Core key state." alt="" coords="264,151,338,175"/>
+<area shape="rect" id="Node000004" href="$classMSWindowsKeyState.html" title="Microsoft Windows key mapper." alt="" coords="5,223,154,248"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="251,183,117,225,115,220,249,178"/>
+<area shape="rect" id="Node000005" href="$classOSXKeyState.html" title="OS X key state." alt="" coords="178,223,280,248"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="280,188,242,225,239,221,276,185"/>
+<area shape="rect" id="Node000006" href="$classXWindowsKeyState.html" title="X Windows key state." alt="" coords="304,223,442,248"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="326,185,363,221,359,225,322,188"/>
+<area shape="rect" id="Node000007" href="$classdeskflow_1_1EiKeyState.html" title="A key state for Ei." alt="" coords="466,223,611,248"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="353,177,500,220,498,225,352,182"/>
+<area shape="rect" id="Node000002" href="$classIKeyState.html" title="Key state interface." alt="" coords="262,78,340,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,118,304,150,298,150,298,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="262,5,340,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="304,46,304,78,298,78,298,46"/>
+</map>

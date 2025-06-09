@@ -1,0 +1,7 @@
+<map id="XWindowsClipboardUCS2Converter" name="XWindowsClipboardUCS2Converter">
+<area shape="rect" id="Node000001" title="Convert to/from UCS&#45;2 encoding." alt="" coords="5,151,237,175"/>
+<area shape="rect" id="Node000002" href="$classIXWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="21,78,221,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,118,124,150,118,150,118,118"/>
+<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="82,5,160,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,46,124,78,118,78,118,46"/>
+</map>

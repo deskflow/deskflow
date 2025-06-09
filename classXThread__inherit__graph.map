@@ -1,0 +1,9 @@
+<map id="XThread" name="XThread">
+<area shape="rect" id="Node000001" title="Generic thread exception." alt="" coords="88,78,158,103"/>
+<area shape="rect" id="Node000003" href="$classXThreadCancel.html" title="Thread exception to cancel." alt="" coords="5,151,116,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,116,73,152,69,149,101,113"/>
+<area shape="rect" id="Node000004" href="$classXThreadExit.html" title="Thread exception to exit." alt="" coords="139,151,232,175"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="146,113,178,149,174,152,142,116"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="72,5,174,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,46,126,78,120,78,120,46"/>
+</map>

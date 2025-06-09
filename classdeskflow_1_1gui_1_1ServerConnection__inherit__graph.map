@@ -1,0 +1,5 @@
+<map id="deskflow::gui::ServerConnection" name="deskflow::gui::ServerConnection">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,78,215,103"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="75,5,145,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,46,113,78,107,78,107,46"/>
+</map>

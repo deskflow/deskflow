@@ -1,0 +1,9 @@
+<map id="MSWindowsClipboardUTF16Converter" name="MSWindowsClipboardUTF16Converter">
+<area shape="rect" id="Node000001" title="Convert to/from UTF&#45;16 encoding." alt="" coords="5,237,252,262"/>
+<area shape="rect" id="Node000002" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="29,151,228,189"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,205,131,237,126,237,126,205"/>
+<area shape="rect" id="Node000003" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="23,78,234,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,118,131,150,126,150,126,118"/>
+<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="90,5,167,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="131,46,131,78,126,78,126,46"/>
+</map>

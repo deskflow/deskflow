@@ -1,0 +1,9 @@
+<map id="deskflow::KeyMap::Keystroke" name="deskflow::KeyMap::Keystroke">
+<area shape="rect" id="Node000001" title="A keystroke." alt="" coords="113,207,305,231"/>
+<area shape="rect" id="Node000002" href="$uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html" title=" " alt="" coords="113,106,305,145"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,160,212,206,206,206,206,160"/>
+<area shape="rect" id="Node000003" href="$structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html" title=" " alt="" coords="5,5,197,44"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="134,53,191,104,187,108,131,57"/>
+<area shape="rect" id="Node000004" href="$structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html" title=" " alt="" coords="221,5,413,44"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="287,57,231,108,227,104,284,53"/>
+</map>

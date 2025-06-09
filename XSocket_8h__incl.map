@@ -1,0 +1,24 @@
+<map id="src/lib/net/XSocket.h" name="src/lib/net/XSocket.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="89,5,231,30"/>
+<area shape="rect" id="Node000002" href="$XBase_8h.html" title=" " alt="" coords="36,151,140,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,32,133,53,116,79,104,108,96,136,91,135,99,106,111,77,129,50,147,29"/>
+<area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="264,78,403,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="190,28,291,69,289,74,188,33"/>
+<area shape="rect" id="Node000011" href="$XIO_8h.html" title=" " alt="" coords="125,78,195,103"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="163,31,163,62,157,62,157,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,223,83,248"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,177,61,212,57,209,78,174"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="107,223,160,248"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="98,174,120,209,115,212,93,177"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="164,151,231,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="312,106,235,146,232,141,310,101"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="255,151,324,175"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="328,105,307,139,302,136,324,102"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="347,151,410,175"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="343,102,365,136,361,139,339,105"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="435,151,498,175"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="357,101,433,141,430,145,354,106"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="522,151,587,175"/>
+<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="371,101,509,144,507,149,369,106"/>
+<area shape="poly" id="edge11_Node000011_Node000002" title=" " alt="" coords="150,105,112,142,109,138,146,101"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="XArchNetworkNameUnavailable" name="XArchNetworkNameUnavailable">
+<area shape="rect" id="Node000001" title="Temporary name server error." alt="" coords="5,223,214,248"/>
+<area shape="rect" id="Node000002" href="$classXArchNetworkName.html" title="Generic network name lookup erros." alt="" coords="39,151,180,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,191,112,223,107,223,107,191"/>
+<area shape="rect" id="Node000003" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="56,78,163,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,118,112,150,107,150,107,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="48,5,171,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="112,46,112,78,107,78,107,46"/>
+</map>

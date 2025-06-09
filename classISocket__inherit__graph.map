@@ -1,0 +1,17 @@
+<map id="ISocket" name="ISocket">
+<area shape="rect" id="Node000001" title="Generic socket interface." alt="" coords="94,78,160,103"/>
+<area shape="rect" id="Node000003" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="21,151,113,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,116,79,152,75,149,105,113"/>
+<area shape="rect" id="Node000006" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="141,151,241,175"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="150,112,183,149,179,152,146,116"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="88,5,166,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,46,130,78,124,78,124,46"/>
+<area shape="rect" id="Node000004" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="19,223,107,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,191,66,223,61,223,63,191"/>
+<area shape="rect" id="Node000005" href="$classSecureSocket.html" title="Secure socket." alt="" coords="5,296,108,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="63,264,60,296,55,295,58,264"/>
+<area shape="rect" id="Node000007" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="135,223,258,248"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="196,191,198,223,193,223,191,191"/>
+<area shape="rect" id="Node000008" href="$classSecureListenSocket.html" title=" " alt="" coords="132,296,269,321"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="201,264,203,296,197,296,195,264"/>
+</map>

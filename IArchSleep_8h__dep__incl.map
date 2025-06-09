@@ -1,0 +1,11 @@
+<map id="src/lib/arch/IArchSleep.h" name="src/lib/arch/IArchSleep.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="108,5,272,30"/>
+<area shape="rect" id="Node000002" href="$ArchSleepUnix_8h.html" title=" " alt="" coords="8,78,185,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,42,121,79,117,75,163,38"/>
+<area shape="rect" id="Node000004" href="$ArchSleepWindows_8h.html" title=" " alt="" coords="211,78,361,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="218,38,265,75,261,80,214,42"/>
+<area shape="rect" id="Node000003" href="$ArchSleepUnix_8cpp.html" title=" " alt="" coords="5,165,183,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,132,97,164,92,164,93,132"/>
+<area shape="rect" id="Node000005" href="$ArchSleepWindows_8cpp.html" title=" " alt="" coords="206,165,371,203"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="290,132,291,164,285,164,284,132"/>
+</map>

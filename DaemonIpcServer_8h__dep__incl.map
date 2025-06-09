@@ -1,0 +1,9 @@
+<map id="src/lib/deskflow/ipc/DaemonIpcServer.h" name="src/lib/deskflow/ipc/DaemonIpcServer.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="242,5,383,44"/>
+<area shape="rect" id="Node000002" href="$deskflow-daemon_8cpp.html" title=" " alt="" coords="5,92,183,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,53,143,94,141,89,249,48"/>
+<area shape="rect" id="Node000003" href="$DaemonApp_8cpp.html" title=" " alt="" coords="206,99,419,124"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="315,60,315,98,310,98,310,60"/>
+<area shape="rect" id="Node000004" href="$DaemonIpcServer_8cpp.html" title=" " alt="" coords="444,92,598,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="374,48,476,89,474,94,372,53"/>
+</map>

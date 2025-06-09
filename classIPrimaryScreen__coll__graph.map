@@ -1,0 +1,5 @@
+<map id="IPrimaryScreen" name="IPrimaryScreen">
+<area shape="rect" id="Node000001" title="Primary screen interface." alt="" coords="5,78,118,103"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="23,5,100,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,46,64,78,59,78,59,46"/>
+</map>

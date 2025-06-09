@@ -1,0 +1,7 @@
+<map id="XArchNetworkConnectionRefused" name="XArchNetworkConnectionRefused">
+<area shape="rect" id="Node000001" title="Remote end of socket refused connection." alt="" coords="5,151,226,175"/>
+<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="62,78,169,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,118,118,150,113,150,113,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="54,5,177,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,46,118,78,113,78,113,46"/>
+</map>

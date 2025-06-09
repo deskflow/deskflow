@@ -1,0 +1,9 @@
+<map id="src/lib/arch/ArchDaemonNone.h" name="src/lib/arch/ArchDaemonNone.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="127,5,333,30"/>
+<area shape="rect" id="Node000002" href="$ArchDaemonNone_8cpp.html" title=" " alt="" coords="5,85,226,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,41,134,87,131,82,199,36"/>
+<area shape="rect" id="Node000003" href="$ArchDaemonUnix_8h.html" title=" " alt="" coords="250,78,442,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,37,320,75,317,80,258,41"/>
+<area shape="rect" id="Node000004" href="$ArchDaemonUnix_8cpp.html" title=" " alt="" coords="250,165,442,203"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="349,133,349,164,344,164,344,133"/>
+</map>

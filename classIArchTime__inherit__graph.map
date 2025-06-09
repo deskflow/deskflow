@@ -1,0 +1,9 @@
+<map id="IArchTime" name="IArchTime">
+<area shape="rect" id="Node000001" title="Interface for architecture dependent time operations." alt="" coords="88,78,169,103"/>
+<area shape="rect" id="Node000003" href="$classArchTimeUnix.html" title="Generic Unix implementation of IArchTime." alt="" coords="5,151,110,175"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,116,71,152,67,148,104,112"/>
+<area shape="rect" id="Node000004" href="$classArchTimeWindows.html" title="Win32 implementation of IArchTime." alt="" coords="133,151,264,175"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="152,112,189,148,186,152,149,116"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="90,5,167,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="131,46,131,78,126,78,126,46"/>
+</map>

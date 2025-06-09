@@ -1,0 +1,13 @@
+<map id="src/lib/deskflow/languages/LanguageManager.h" name="src/lib/deskflow/languages/LanguageManager.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="292,5,467,44"/>
+<area shape="rect" id="Node000002" href="$ServerProxy_8h.html" title=" " alt="" coords="91,99,268,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,53,208,101,206,96,320,48"/>
+<area shape="rect" id="Node000005" href="$LanguageManager_8cpp.html" title=" " alt="" coords="292,92,467,131"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="382,60,382,91,377,91,377,60"/>
+<area shape="rect" id="Node000006" href="$ClientProxy1__8_8cpp.html" title=" " alt="" coords="492,92,667,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="439,48,536,89,534,94,436,53"/>
+<area shape="rect" id="Node000003" href="$Client_8cpp.html" title=" " alt="" coords="5,179,159,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="155,135,98,180,95,176,152,131"/>
+<area shape="rect" id="Node000004" href="$ServerProxy_8cpp.html" title=" " alt="" coords="182,179,374,203"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="207,131,265,176,262,180,204,135"/>
+</map>

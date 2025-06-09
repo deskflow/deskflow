@@ -1,0 +1,9 @@
+<map id="XArchNetworkNameFailure" name="XArchNetworkNameFailure">
+<area shape="rect" id="Node000001" title="Non&#45;recoverable name server error." alt="" coords="5,223,186,248"/>
+<area shape="rect" id="Node000002" href="$classXArchNetworkName.html" title="Generic network name lookup erros." alt="" coords="25,151,166,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,191,98,223,93,223,93,191"/>
+<area shape="rect" id="Node000003" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="42,78,149,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="98,118,98,150,93,150,93,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="34,5,157,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="98,46,98,78,93,78,93,46"/>
+</map>

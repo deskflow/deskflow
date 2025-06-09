@@ -1,0 +1,21 @@
+<map id="src/lib/arch/win32/ArchMiscWindows.h" name="src/lib/arch/win32/ArchMiscWindows.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="796,5,941,44"/>
+<area shape="rect" id="Node000002" href="$ArchDaemonWindows_8cpp.html" title=" " alt="" coords="5,92,185,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="780,35,518,58,197,95,185,96,185,91,196,89,518,53,780,30"/>
+<area shape="rect" id="Node000003" href="$ArchMiscWindows_8cpp.html" title=" " alt="" coords="209,92,368,131"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="781,39,596,63,381,95,369,97,368,91,380,89,595,57,780,34"/>
+<area shape="rect" id="Node000004" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="392,92,542,131"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="781,47,543,97,542,92,780,42"/>
+<area shape="rect" id="Node000005" href="$MSWindowsClipboard_8cpp.html" title=" " alt="" coords="566,92,752,131"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="809,53,706,94,704,89,807,48"/>
+<area shape="rect" id="Node000006" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="776,92,961,131"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="871,60,871,91,866,91,866,60"/>
+<area shape="rect" id="Node000007" href="$MSWindowsEventQueueBuffer_8cpp.html" title=" " alt="" coords="985,92,1170,131"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="930,48,1032,89,1030,94,928,53"/>
+<area shape="rect" id="Node000008" href="$MSWindowsPowerManager_8cpp.html" title=" " alt="" coords="1194,92,1380,131"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="957,41,1195,89,1194,94,956,46"/>
+<area shape="rect" id="Node000009" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1404,92,1589,131"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="957,33,1156,57,1393,89,1404,91,1403,96,1392,95,1156,62,956,38"/>
+<area shape="rect" id="Node000010" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="1613,92,1798,131"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="957,29,1244,51,1423,68,1602,89,1613,91,1612,96,1601,95,1422,74,1243,57,956,34"/>
+</map>
