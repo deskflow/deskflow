@@ -32,7 +32,6 @@
 #include "Config.h"
 #endif
 
-#include <QApplication>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QLocalServer>

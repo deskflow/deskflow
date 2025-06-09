@@ -17,7 +17,6 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QGuiApplication>
 #include <QLocalSocket>
 #include <QMessageBox>
 #include <QSharedMemory>
