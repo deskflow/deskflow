@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['packages_0',['Making deskflow packages',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
+  ['packages_0',['Making Deskflow packages',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
   ['packetstreamfilter_1',['PacketStreamFilter',['../classPacketStreamFilter.html',1,'PacketStreamFilter'],['../classPacketStreamFilter.html#a87680bb31ed8687fadc1faf10676a090',1,'PacketStreamFilter::PacketStreamFilter()']]],
   ['packetstreamfilter_2ecpp_2',['PacketStreamFilter.cpp',['../PacketStreamFilter_8cpp.html',1,'']]],
   ['packetstreamfilter_2eh_3',['PacketStreamFilter.h',['../PacketStreamFilter_8h.html',1,'']]],

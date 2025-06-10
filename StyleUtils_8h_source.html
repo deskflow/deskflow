@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>deskflow: src/lib/gui/StyleUtils.h Source File</title>
+<title>Deskflow: src/lib/gui/StyleUtils.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -32,7 +32,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">deskflow<span id="projectnumber">&#160;1.22.0.14</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.33</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -116,58 +116,57 @@ $(function(){initNavTree('StyleUtils_8h_source.html',''); initResizable(true); }
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QDir&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;QFileInfoList&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QGuiApplication&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;QPalette&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;QStyleHints&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="}">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">   23</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">isDarkMode</a>()</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">const</span> QPalette defaultPalette;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">const</span> <span class="keyword">auto</span> text = defaultPalette.color(QPalette::WindowText);</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">const</span> <span class="keyword">auto</span> window = defaultPalette.color(QPalette::Window);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordflow">return</span> text.lightness() &gt; window.lightness();</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>}</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QPalette&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;QStyleHints&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
+<div class="foldopen" id="foldopen00022" data-start="{" data-end="}">
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">   22</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">isDarkMode</a>()</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">const</span> QPalette defaultPalette;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keyword">const</span> <span class="keyword">auto</span> text = defaultPalette.color(QPalette::WindowText);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">const</span> <span class="keyword">auto</span> window = defaultPalette.color(QPalette::Window);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordflow">return</span> text.lightness() &gt; window.lightness();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>}</div>
 </div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
-<div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">   34</a></span><span class="keyword">inline</span> QString <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a>()</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>{</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">isDarkMode</a>() ? QStringLiteral(<span class="stringliteral">&quot;dark&quot;</span>) : QStringLiteral(<span class="stringliteral">&quot;light&quot;</span>);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>}</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
+<div class="foldopen" id="foldopen00033" data-start="{" data-end="}">
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">   33</a></span><span class="keyword">inline</span> QString <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a>()</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>{</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordflow">return</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">isDarkMode</a>() ? QStringLiteral(<span class="stringliteral">&quot;dark&quot;</span>) : QStringLiteral(<span class="stringliteral">&quot;light&quot;</span>);</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>}</div>
 </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
-<div class="foldopen" id="foldopen00044" data-start="{" data-end="}">
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">   44</a></span><span class="keyword">inline</span> QStringList <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(<span class="keyword">const</span> QString &amp;path)</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>{</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  QStringList paths;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">auto</span> dir = QDir(path);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">const</span> QFileInfoList items = dir.entryInfoList({<span class="stringliteral">&quot;*&quot;</span>}, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> QFileInfo &amp;item : items) {</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>    <span class="keywordflow">if</span> (item.isDir()) {</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      paths.append(item.absoluteFilePath());</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>      paths.append(<a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(item.absoluteFilePath()));</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    }</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  }</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keywordflow">return</span> paths;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>}</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
+<div class="foldopen" id="foldopen00043" data-start="{" data-end="}">
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">   43</a></span><span class="keyword">inline</span> QStringList <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(<span class="keyword">const</span> QString &amp;path)</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>{</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  QStringList paths;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">auto</span> dir = QDir(path);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">const</span> QFileInfoList items = dir.entryInfoList({<span class="stringliteral">&quot;*&quot;</span>}, QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordflow">for</span> (<span class="keyword">const</span> QFileInfo &amp;item : items) {</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    <span class="keywordflow">if</span> (item.isDir()) {</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>      paths.append(item.absoluteFilePath());</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>      paths.append(<a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(item.absoluteFilePath()));</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>    }</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  }</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keywordflow">return</span> paths;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>}</div>
 </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="foldopen" id="foldopen00061" data-start="{" data-end="}">
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">   61</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">setIconFallbackPaths</a>()</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>{</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  QStringList paths = <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(QStringLiteral(<span class="stringliteral">&quot;:/icons/deskflow-%1&quot;</span>).arg(<a class="code hl_function" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a>()));</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  QIcon::setFallbackSearchPaths(paths);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>}</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">   60</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">setIconFallbackPaths</a>()</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>{</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  QStringList paths = <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a>(QStringLiteral(<span class="stringliteral">&quot;:/icons/deskflow-%1&quot;</span>).arg(<a class="code hl_function" href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a>()));</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  QIcon::setFallbackSearchPaths(paths);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>}</div>
 </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>} <span class="comment">// namespace deskflow::gui</span></div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>} <span class="comment">// namespace deskflow::gui</span></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_html_a16e33430308ec7d6129ab689eaa0a05b"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">deskflow::gui::checkSubDir</a></div><div class="ttdeci">QStringList checkSubDir(const QString &amp;path)</div><div class="ttdoc">checkSubDir checks for subdirs in a dir</div><div class="ttdef"><b>Definition</b> StyleUtils.h:44</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_html_a4ce58eb342c1918591b330b9a32cc9d2"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">deskflow::gui::setIconFallbackPaths</a></div><div class="ttdeci">void setIconFallbackPaths()</div><div class="ttdoc">setIconFallbackPaths Set the icon fallback path to our light or dark theme</div><div class="ttdef"><b>Definition</b> StyleUtils.h:61</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_html_a6c3353d5cbfbd26b2acd734e71d61b12"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">deskflow::gui::iconMode</a></div><div class="ttdeci">QString iconMode()</div><div class="ttdoc">get a string for the iconMode</div><div class="ttdef"><b>Definition</b> StyleUtils.h:34</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_html_aafd8747004a0dc462453e60e4602a918"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">deskflow::gui::isDarkMode</a></div><div class="ttdeci">bool isDarkMode()</div><div class="ttdoc">Detects dark mode in a universal manner (all Qt versions). Until better platform support is added,...</div><div class="ttdef"><b>Definition</b> StyleUtils.h:23</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1gui_html_a16e33430308ec7d6129ab689eaa0a05b"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b">deskflow::gui::checkSubDir</a></div><div class="ttdeci">QStringList checkSubDir(const QString &amp;path)</div><div class="ttdoc">checkSubDir checks for subdirs in a dir</div><div class="ttdef"><b>Definition</b> StyleUtils.h:43</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1gui_html_a4ce58eb342c1918591b330b9a32cc9d2"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2">deskflow::gui::setIconFallbackPaths</a></div><div class="ttdeci">void setIconFallbackPaths()</div><div class="ttdoc">setIconFallbackPaths Set the icon fallback path to our light or dark theme</div><div class="ttdef"><b>Definition</b> StyleUtils.h:60</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1gui_html_a6c3353d5cbfbd26b2acd734e71d61b12"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12">deskflow::gui::iconMode</a></div><div class="ttdeci">QString iconMode()</div><div class="ttdoc">get a string for the iconMode</div><div class="ttdef"><b>Definition</b> StyleUtils.h:33</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1gui_html_aafd8747004a0dc462453e60e4602a918"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918">deskflow::gui::isDarkMode</a></div><div class="ttdeci">bool isDarkMode()</div><div class="ttdoc">Detects dark mode in a universal manner (all Qt versions). Until better platform support is added,...</div><div class="ttdef"><b>Definition</b> StyleUtils.h:22</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.13.2"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>deskflow: Building deskflow</title>
+<title>Deskflow: Building Deskflow</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -32,7 +32,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">deskflow<span id="projectnumber">&#160;1.22.0.14</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.33</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,11 +103,11 @@ $(function(){initNavTree('md_doc_2dev_2build.html',''); initResizable(true); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Building deskflow</div></div>
+  <div class="headertitle"><div class="title">Building Deskflow</div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
-<p>To build deskflow you will a minimum of:</p><ul>
+<p>To build Deskflow you will a minimum of:</p><ul>
 <li><a href="https://cmake.org/">cmake</a> 3.24+</li>
 <li><a href="https://www.qt.io">Qt</a> 6.7.0+</li>
 <li><a href="https://www.openssl.org/">openssl</a> 3.0+</li>
@@ -120,8 +120,8 @@ $(function(){initNavTree('md_doc_2dev_2build.html',''); initResizable(true); });
 <blockquote class="doxtable">
 <p>^ Will be fetched if not found on the host system. </p>
 </blockquote>
-<p>A Default Build of deskflow will build:</p><ul>
-<li>The Gui application deskflow</li>
+<p>By default a build of Deskflow will:</p><ul>
+<li>The GUI application deskflow</li>
 <li>The <a class="el" href="classClient.html" title="Deskflow client.">Client</a> application deskflow-client</li>
 <li>The <a class="el" href="classServer.html" title="Deskflow server.">Server</a> application deskflow-server</li>
 <li>Documentation if <a href="http://www.stack.nl/~dimitri/doxygen/">doxygen</a> was found on your system</li>
@@ -129,16 +129,16 @@ $(function(){initNavTree('md_doc_2dev_2build.html',''); initResizable(true); });
 </ul>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Configuration</h1>
-<p>deskflow Supports Several Build options</p>
+<p>Deskflow supports the following build options</p>
 <p>CMake options: </p><table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadCenter">Option   </th><th class="markdownTableHeadCenter">Description   </th><th class="markdownTableHeadCenter">Default Value   </th><th class="markdownTableHeadCenter">Additional requirements    </th></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">BUILD_GUI   </td><td class="markdownTableBodyCenter">Build GUI   </td><td class="markdownTableBodyCenter">ON   </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">BUILD_USER_DOCS   </td><td class="markdownTableBodyCenter">Build User Documentation   </td><td class="markdownTableBodyCenter">DOXYGEN_FOUND   </td><td class="markdownTableBodyCenter"><code>Doxygen</code>    </td></tr>
+<td class="markdownTableBodyCenter">BUILD_USER_DOCS   </td><td class="markdownTableBodyCenter">Build user documentation   </td><td class="markdownTableBodyCenter">DOXYGEN_FOUND   </td><td class="markdownTableBodyCenter"><code>Doxygen</code>    </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">BUILD_DEV_DOCS   </td><td class="markdownTableBodyCenter">Build Development Documentation   </td><td class="markdownTableBodyCenter">DOXYGEN_FOUND   </td><td class="markdownTableBodyCenter"><code>Doxygen</code>    </td></tr>
+<td class="markdownTableBodyCenter">BUILD_DEV_DOCS   </td><td class="markdownTableBodyCenter">Build development documentation   </td><td class="markdownTableBodyCenter">OFF   </td><td class="markdownTableBodyCenter"><code>Doxygen</code>    </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">BUILD_INSTALLER   </td><td class="markdownTableBodyCenter">Build installers/packages   </td><td class="markdownTableBodyCenter">ON   </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
@@ -156,15 +156,15 @@ Windows Configuration</h2>
 <p>It is recommended to use vcpkg to get the dependencies to install. The first configuration will build all depends while configuing the project. If you do not want to instal qt via vcpkg you should remove the qt packages from vcpkg.json in the of the project BEFORE attempting to configure the project.</p>
 <h1><a class="anchor" id="autotoc_md3"></a>
 Build</h1>
-<p>After Configuring you Should be able to run make to build all targets.</p>
+<p>After Configuring you should be able to run make to build all targets.</p>
 <p><code>cmake --build build</code></p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Install</h1>
 <p>To test installation run <code>DESTDIR=&lt;installDIR&gt; cmake --install build</code> to install into <code>&lt;installDir&gt;/&lt;CMAKE_INSTALL_PREFIX&gt;</code> <br  />
  Running <code>cmake --install build</code> will install to the <code>CMAKE_INSTALL_PREFIX</code></p>
 <h1><a class="anchor" id="autotoc_md5"></a>
-Making deskflow packages</h1>
-<p>deskflow can generate several packages using cpack To generate packages build the <code>package</code> or <code>package_source</code> target example <code>cmake --build build --target package package_source</code> would generate both package and package source packages. deskflow can generate several packge types depending on the system. Archive based packages should work on all platforms. On Linux deb and rpm info is setup, flatpaks can be generated from the included file in deploy/linux and a PKGBUILD for arch linux is generated in the build folder. On macos a dmg file will be created and signed. For windows wix can be used to create an installer. </p>
+Making Deskflow packages</h1>
+<p>Deskflow can generate several packages using cpack. To generate packages build the <code>package</code> or <code>package_source</code> target. Example: <code>cmake --build build --target package package_source</code> would generate both package and package source packages. Deskflow can generate several package types depending on the system. Archive-based packages should work on all platforms. On Linux deb and rpm info is set up, flatpaks can be generated from the included file in deploy/linux and a PKGBUILD for <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> linux is generated in the build folder. On macos a dmg file will be created and signed. For windows wix can be used to create an installer. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

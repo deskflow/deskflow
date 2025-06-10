@@ -34,7 +34,7 @@ var searchData=
   ['buf_31',['buf',['../ArchNetworkWinsock_8cpp.html#ac2b1742b0d829eff8513995ebd5a0bac',1,'ArchNetworkWinsock.cpp']]],
   ['build_32',['Build',['../md_doc_2dev_2build.html#autotoc_md3',1,'']]],
   ['build_2emd_33',['build.md',['../build_8md.html',1,'']]],
-  ['building_20deskflow_34',['Building deskflow',['../md_doc_2dev_2build.html',1,'']]],
+  ['building_20deskflow_34',['Building Deskflow',['../md_doc_2dev_2build.html',1,'']]],
   ['button_35',['Button',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html',1,'deskflow::KeyMap::Keystroke']]],
   ['buttonid_36',['ButtonID',['../MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee',1,'MouseTypes.h']]],
   ['buttoninfo_37',['ButtonInfo',['../classIPrimaryScreen_1_1ButtonInfo.html',1,'IPrimaryScreen']]],

@@ -24,15 +24,15 @@
 */
 var NAVTREE =
 [
-  [ "deskflow", "index.html", [
-    [ "Building deskflow", "md_doc_2dev_2build.html", [
+  [ "Deskflow", "index.html", [
+    [ "Building Deskflow", "md_doc_2dev_2build.html", [
       [ "More info", "index.html#autotoc_md8", null ],
       [ "Configuration", "md_doc_2dev_2build.html#autotoc_md1", [
         [ "Windows Configuration", "md_doc_2dev_2build.html#autotoc_md2", null ]
       ] ],
       [ "Build", "md_doc_2dev_2build.html#autotoc_md3", null ],
       [ "Install", "md_doc_2dev_2build.html#autotoc_md4", null ],
-      [ "Making deskflow packages", "md_doc_2dev_2build.html#autotoc_md5", null ]
+      [ "Making Deskflow packages", "md_doc_2dev_2build.html#autotoc_md5", null ]
     ] ],
     [ "Contributing to Deskflow", "md_doc_2dev_2contributing.html", [
       [ "Read the Full Guidelines", "md_doc_2dev_2contributing.html#autotoc_md7", null ]

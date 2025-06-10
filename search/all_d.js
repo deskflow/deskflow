@@ -130,7 +130,7 @@ var searchData=
   ['mainwindow_2eh_127',['MainWindow.h',['../MainWindow_8h.html',1,'']]],
   ['makepollfd_128',['makePollFD',['../structArchNetworkBSD_1_1Deps.html#adcac3640b39350d7f4121a0fa96c3847',1,'ArchNetworkBSD::Deps']]],
   ['makequotedargs_129',['makeQuotedArgs',['../namespacedeskflow_1_1gui.html#a7398bc69c7d5ee2a69459843b27372a3',1,'deskflow::gui']]],
-  ['making_20deskflow_20packages_130',['Making deskflow packages',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
+  ['making_20deskflow_20packages_130',['Making Deskflow packages',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
   ['map_5fkey_5ffrom_5fkeyval_131',['map_key_from_keyval',['../classdeskflow_1_1EiKeyState.html#a9883c0a757cf594f32fcc842dc84cc79',1,'deskflow::EiKeyState']]],
   ['mapbuttontovirtualkey_132',['mapButtonToVirtualKey',['../classMSWindowsKeyState.html#a8b57983005599168d2ddbd860af1254d',1,'MSWindowsKeyState']]],
   ['mapclientscrolldirection_133',['mapClientScrollDirection',['../classPlatformScreen.html#a395adf1076033b25c832ff03c0ab0776',1,'PlatformScreen']]],
