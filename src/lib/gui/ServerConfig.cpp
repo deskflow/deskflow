@@ -505,7 +505,7 @@ int ServerConfig::showAddClientDialog(const QString &clientName)
   return result;
 }
 
-void ::ServerConfig::addToFirstEmptyGrid(const QString &clientName)
+void ServerConfig::addToFirstEmptyGrid(const QString &clientName)
 {
   for (int i = 0; i < screens().size(); i++) {
     if (screens()[i].isNull()) {
