@@ -41,3 +41,4 @@ add_library(base STATIC
   XBase.h
 )
 
+target_link_libraries(base PRIVATE arch)
