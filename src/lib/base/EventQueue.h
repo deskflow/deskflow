@@ -15,10 +15,9 @@
 
 #include <map>
 #include <memory>
+#include <mutex>
 #include <queue>
 #include <set>
-
-class Mutex;
 
 //! Event queue
 /*!
@@ -104,7 +103,7 @@ private:
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 
   int m_systemTarget = 0;
-  ArchMutex m_mutex;
+  mutable std::mutex m_mutex;
 
   // buffer of events
   std::unique_ptr<IEventQueueBuffer> m_buffer;
