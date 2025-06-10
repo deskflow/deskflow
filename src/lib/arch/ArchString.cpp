@@ -6,28 +6,21 @@
  */
 
 #include "arch/ArchString.h"
-#include "arch/Arch.h"
 
 #include <climits>
 #include <cstdlib>
 #include <cstring>
+#include <mutex>
 
-static ArchMutex s_mutex = nullptr;
+std::mutex s_mutex;
 
 //
 // use C library non-reentrant multibyte conversion with mutex
 //
 
-ArchString::~ArchString()
-{
-  if (s_mutex != nullptr) {
-    ARCH->closeMutex(s_mutex);
-    s_mutex = nullptr;
-  }
-}
-
 int ArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool *errors) const
 {
+  std::lock_guard<std::mutex> lock(s_mutex);
   ptrdiff_t len = 0;
 
   bool dummyErrors;
@@ -35,12 +28,6 @@ int ArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool
     errors = &dummyErrors;
   }
   *errors = false;
-
-  if (s_mutex == nullptr) {
-    s_mutex = ARCH->newMutex();
-  }
-
-  ARCH->lockMutex(s_mutex);
 
   if (dst == nullptr) {
     char dummy[MB_LEN_MAX];
@@ -75,7 +62,6 @@ int ArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool
     }
     len = dst - dst0;
   }
-  ARCH->unlockMutex(s_mutex);
 
   return static_cast<int>(len);
 }
@@ -91,6 +77,7 @@ ArchString::EWideCharEncoding ArchString::getWideCharEncoding() const
 
 int ArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool *errors) const
 {
+  std::lock_guard<std::mutex> lock(s_mutex);
   ptrdiff_t len = 0;
   wchar_t dummy;
 
@@ -99,12 +86,6 @@ int ArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool
     errors = &dummyErrors;
   }
   *errors = false;
-
-  if (s_mutex == nullptr) {
-    s_mutex = ARCH->newMutex();
-  }
-
-  ARCH->lockMutex(s_mutex);
 
   if (dst == nullptr) {
     const char *scan = src;
@@ -177,7 +158,6 @@ int ArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool
     }
     len = dst - dst0;
   }
-  ARCH->unlockMutex(s_mutex);
 
   return static_cast<int>(len);
 }
