@@ -10,6 +10,7 @@
 #include "arch/IArchMultithread.h"
 
 #include <list>
+#include <mutex>
 #include <pthread.h>
 
 #define ARCH_MULTITHREAD ArchMultithreadPosix
@@ -101,7 +102,7 @@ private:
 
   bool m_newThreadCalled = false;
 
-  ArchMutex m_threadMutex;
+  std::mutex m_threadMutex;
   ArchThread m_mainThread;
   ThreadList m_threadList;
   ThreadID m_nextID = 0;

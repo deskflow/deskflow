@@ -66,9 +66,6 @@ ArchMultithreadPosix::ArchMultithreadPosix()
     m_signalUserData[i] = nullptr;
   }
 
-  // create mutex for thread list
-  m_threadMutex = newMutex();
-
   // create thread for calling (main) thread and add it to our
   // list.  no need to lock the mutex since we're the only thread.
   m_mainThread = new ArchThreadImpl;
@@ -104,25 +101,20 @@ ArchMultithreadPosix::ArchMultithreadPosix()
 ArchMultithreadPosix::~ArchMultithreadPosix()
 {
   assert(s_instance != nullptr);
-
-  closeMutex(m_threadMutex);
   s_instance = nullptr;
 }
 
 void ArchMultithreadPosix::setNetworkDataForCurrentThread(void *data)
 {
-  lockMutex(m_threadMutex);
+  std::lock_guard<std::mutex> lock(m_threadMutex);
   ArchThreadImpl *thread = find(pthread_self());
   thread->m_networkData = data;
-  unlockMutex(m_threadMutex);
 }
 
 void *ArchMultithreadPosix::getNetworkDataForThread(ArchThread thread)
 {
-  lockMutex(m_threadMutex);
-  void *data = thread->m_networkData;
-  unlockMutex(m_threadMutex);
-  return data;
+  std::lock_guard<std::mutex> lock(m_threadMutex);
+  return thread->m_networkData;
 }
 
 ArchMultithreadPosix *ArchMultithreadPosix::getInstance()
@@ -292,7 +284,8 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data)
     startSignalHandler();
   }
 
-  lockMutex(m_threadMutex);
+  // note that the child thread will wait until we release this mutex
+  std::lock_guard<std::mutex> lock(m_threadMutex);
 
   // create thread impl for new thread
   auto *thread = new ArchThreadImpl;
@@ -321,17 +314,13 @@ ArchThread ArchMultithreadPosix::newThread(ThreadFunc func, void *data)
     refThread(thread);
   }
 
-  // note that the child thread will wait until we release this mutex
-  unlockMutex(m_threadMutex);
-
   return thread;
 }
 
 ArchThread ArchMultithreadPosix::newCurrentThread()
 {
-  lockMutex(m_threadMutex);
+  std::lock_guard<std::mutex> lock(m_threadMutex);
   ArchThreadImpl *thread = find(pthread_self());
-  unlockMutex(m_threadMutex);
   assert(thread != nullptr);
   return thread;
 }
@@ -348,10 +337,11 @@ void ArchMultithreadPosix::closeThread(ArchThread thread)
     }
 
     // remove thread from list
-    lockMutex(m_threadMutex);
-    assert(findNoRef(thread->m_thread) == thread);
-    erase(thread);
-    unlockMutex(m_threadMutex);
+    {
+      std::lock_guard<std::mutex> lock(m_threadMutex);
+      assert(findNoRef(thread->m_thread) == thread);
+      erase(thread);
+    }
 
     // done with thread
     delete thread;
@@ -370,12 +360,14 @@ void ArchMultithreadPosix::cancelThread(ArchThread thread)
 
   // set cancel and wakeup flags if thread can be cancelled
   bool wakeup = false;
-  lockMutex(m_threadMutex);
-  if (!thread->m_exited && !thread->m_cancelling) {
-    thread->m_cancel = true;
-    wakeup = true;
+
+  {
+    std::lock_guard<std::mutex> lock(m_threadMutex);
+    if (!thread->m_exited && !thread->m_cancelling) {
+      thread->m_cancel = true;
+      wakeup = true;
+    }
   }
-  unlockMutex(m_threadMutex);
 
   // force thread to exit system calls if wakeup is true
   if (wakeup) {
@@ -393,10 +385,11 @@ void ArchMultithreadPosix::setPriorityOfThread(ArchThread thread, int /*n*/)
 void ArchMultithreadPosix::testCancelThread()
 {
   // find current thread
-  lockMutex(m_threadMutex);
-  ArchThreadImpl *thread = findNoRef(pthread_self());
-  unlockMutex(m_threadMutex);
-
+  ArchThreadImpl *thread = nullptr;
+  {
+    std::lock_guard<std::mutex> lock(m_threadMutex);
+    thread = findNoRef(pthread_self());
+  }
   // test cancel on thread
   testCancelThreadImpl(thread);
 }
@@ -405,21 +398,18 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
 {
   assert(target != nullptr);
 
-  lockMutex(m_threadMutex);
-
-  // find current thread
-  ArchThreadImpl *self = findNoRef(pthread_self());
-
-  // ignore wait if trying to wait on ourself
-  if (target == self) {
-    unlockMutex(m_threadMutex);
-    return false;
+  ArchThreadImpl *self = nullptr;
+  {
+    std::lock_guard<std::mutex> lock(m_threadMutex);
+    // find current thread
+    self = findNoRef(pthread_self());
+    // ignore wait if trying to wait on ourself
+    if (target == self) {
+      return false;
+    }
+    // ref the target so it can't go away while we're watching it
+    refThread(target);
   }
-
-  // ref the target so it can't go away while we're watching it
-  refThread(target);
-
-  unlockMutex(m_threadMutex);
 
   try {
     // do first test regardless of timeout
@@ -462,18 +452,14 @@ bool ArchMultithreadPosix::isSameThread(ArchThread thread1, ArchThread thread2)
 
 bool ArchMultithreadPosix::isExitedThread(ArchThread thread)
 {
-  lockMutex(m_threadMutex);
-  bool exited = thread->m_exited;
-  unlockMutex(m_threadMutex);
-  return exited;
+  std::lock_guard<std::mutex> lock(m_threadMutex);
+  return thread->m_exited;
 }
 
 void *ArchMultithreadPosix::getResultOfThread(ArchThread thread)
 {
-  lockMutex(m_threadMutex);
-  void *result = thread->m_result;
-  unlockMutex(m_threadMutex);
-  return result;
+  std::lock_guard<std::mutex> lock(m_threadMutex);
+  return thread->m_result;
 }
 
 IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(ArchThread thread)
@@ -483,22 +469,20 @@ IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(ArchThread thread
 
 void ArchMultithreadPosix::setSignalHandler(ESignal signal, SignalFunc func, void *userData)
 {
-  lockMutex(m_threadMutex);
+  std::lock_guard<std::mutex> lock(m_threadMutex);
   m_signalFunc[signal] = func;
   m_signalUserData[signal] = userData;
-  unlockMutex(m_threadMutex);
 }
 
 void ArchMultithreadPosix::raiseSignal(ESignal signal)
 {
-  lockMutex(m_threadMutex);
+  std::lock_guard<std::mutex> lock(m_threadMutex);
   if (m_signalFunc[signal] != nullptr) {
     m_signalFunc[signal](signal, m_signalUserData[signal]);
     pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
   } else if (signal == kINTERRUPT || signal == kTERMINATE) {
     ARCH->cancelThread(m_mainThread);
   }
-  unlockMutex(m_threadMutex);
 }
 
 void ArchMultithreadPosix::startSignalHandler()
@@ -586,14 +570,13 @@ void ArchMultithreadPosix::testCancelThreadImpl(ArchThreadImpl *thread)
   assert(thread != nullptr);
 
   // update cancel state
-  lockMutex(m_threadMutex);
+  std::lock_guard<std::mutex> lock(m_threadMutex);
   bool cancel = false;
   if (thread->m_cancel && !thread->m_cancelling) {
     thread->m_cancelling = true;
     thread->m_cancel = false;
     cancel = true;
   }
-  unlockMutex(m_threadMutex);
 
   // unwind thread's stack if cancelling
   if (cancel) {
@@ -623,8 +606,9 @@ void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
   setPriorityOfThread(thread, 1);
 
   // wait for parent to initialize this object
-  lockMutex(m_threadMutex);
-  unlockMutex(m_threadMutex);
+  {
+    std::lock_guard<std::mutex> lock(m_threadMutex);
+  }
 
   void *result = nullptr;
   try {
@@ -638,18 +622,20 @@ void ArchMultithreadPosix::doThreadFunc(ArchThread thread)
     result = nullptr;
   } catch (...) {
     // note -- don't catch (...) to avoid masking bugs
-    lockMutex(m_threadMutex);
-    thread->m_exited = true;
-    unlockMutex(m_threadMutex);
+    {
+      std::lock_guard<std::mutex> lock(m_threadMutex);
+      thread->m_exited = true;
+    }
     closeThread(thread);
     throw;
   }
 
   // thread has exited
-  lockMutex(m_threadMutex);
-  thread->m_result = result;
-  thread->m_exited = true;
-  unlockMutex(m_threadMutex);
+  {
+    std::lock_guard<std::mutex> lock(m_threadMutex);
+    thread->m_result = result;
+    thread->m_exited = true;
+  }
 
   // done with thread
   closeThread(thread);
