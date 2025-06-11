@@ -10,7 +10,8 @@
 #include "arch/IArchNetwork.h"
 #include "net/IListenSocket.h"
 
-class Mutex;
+#include <mutex>
+
 class ISocketMultiplexerJob;
 class IEventQueue;
 class SocketMultiplexer;
@@ -46,7 +47,7 @@ public:
 
 protected:
   ArchSocket m_socket;
-  Mutex *m_mutex = nullptr;
+  std::mutex m_mutex;
   IEventQueue *m_events;
   SocketMultiplexer *m_socketMultiplexer;
 };

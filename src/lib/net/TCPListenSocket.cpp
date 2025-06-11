@@ -12,8 +12,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "io/XIO.h"
-#include "mt/Lock.h"
-#include "mt/Mutex.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocket.h"
@@ -30,7 +28,6 @@ TCPListenSocket::TCPListenSocket(
     : m_events(events),
       m_socketMultiplexer(socketMultiplexer)
 {
-  m_mutex = new Mutex;
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
   } catch (XArchNetwork &e) {
@@ -49,13 +46,12 @@ TCPListenSocket::~TCPListenSocket()
     // ignore
     LOG((CLOG_WARN "error while closing TCP socket"));
   }
-  delete m_mutex;
 }
 
 void TCPListenSocket::bind(const NetworkAddress &addr)
 {
   try {
-    Lock lock(m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     ARCH->setReuseAddrOnSocket(m_socket, true);
     ARCH->bindSocket(m_socket, addr.getAddress());
     ARCH->listenOnSocket(m_socket);
@@ -73,7 +69,7 @@ void TCPListenSocket::bind(const NetworkAddress &addr)
 
 void TCPListenSocket::close()
 {
-  Lock lock(m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   if (m_socket == nullptr) {
     throw XIOClosed();
   }
