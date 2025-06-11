@@ -21,6 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 #include <list>
+#include <mutex>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -51,7 +52,7 @@ public:
 class ArchNetworkWinsock : public IArchNetwork
 {
 public:
-  ArchNetworkWinsock();
+  ArchNetworkWinsock() = default;
   ~ArchNetworkWinsock() override;
 
   void init() override;
@@ -97,6 +98,6 @@ private:
 private:
   using EventList = std::list<WSAEVENT>;
 
-  ArchMutex m_mutex;
+  std::mutex m_mutex;
   EventList m_unblockEvents;
 };
