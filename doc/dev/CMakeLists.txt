@@ -15,6 +15,8 @@ target_sources(dev-docs PRIVATE
   mainpage.md
   contributing.md
   build.md
+  protocol_tutorial.md
+  protocol_reference.md
 )
 
 # missing install target is intended generate a local copy
