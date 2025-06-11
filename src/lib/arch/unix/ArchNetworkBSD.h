@@ -11,6 +11,7 @@
 #include "arch/IArchNetwork.h"
 
 #include <memory>
+#include <mutex>
 #include <poll.h>
 #include <sys/socket.h>
 
@@ -62,7 +63,7 @@ public:
   }
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
-  ~ArchNetworkBSD() override;
+  ~ArchNetworkBSD() = default;
 
   ArchNetworkBSD &operator=(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD &operator=(ArchNetworkBSD &&) = delete;
@@ -108,5 +109,5 @@ private:
 
 private:
   std::shared_ptr<Deps> m_pDeps;
-  ArchMutex m_mutex{};
+  std::mutex m_mutex;
 };
