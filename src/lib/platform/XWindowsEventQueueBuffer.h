@@ -8,8 +8,8 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
-#include "mt/Mutex.h"
 
+#include <mutex>
 #include <vector>
 
 #include <X11/Xlib.h>
@@ -47,7 +47,7 @@ private:
 private:
   using EventList = std::vector<XEvent>;
 
-  Mutex m_mutex;
+  mutable std::mutex m_mutex;
   Display *m_display;
   Window m_window;
   Atom m_userEvent;
