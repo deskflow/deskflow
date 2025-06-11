@@ -7,6 +7,8 @@
 
 #include "deskflow/ProtocolTypes.h"
 
+// Protocol names used in network handshake messages (capitalized, must be exactly 7 chars).
+// Note that @ref kSynergyProtocolOption / @ref kBarrierProtocolOption use lowercase names.
 const char *const kSynergyProtocolName = "Synergy";
 const char *const kBarrierProtocolName = "Barrier";
 

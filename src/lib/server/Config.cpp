@@ -23,6 +23,8 @@ using namespace deskflow::string;
 
 namespace deskflow::server {
 
+// Protocol options used in configuration files (lowercase).
+// Note that @ref kSynergyProtocolName / @ref kBarrierProtocolName use capitalized names.
 const auto kSynergyProtocolOption = "synergy";
 const auto kBarrierProtocolOption = "barrier";
 
