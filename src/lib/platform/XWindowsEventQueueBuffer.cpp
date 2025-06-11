@@ -9,7 +9,6 @@
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
-#include "mt/Lock.h"
 #include "mt/Thread.h"
 
 #include <fcntl.h>
@@ -51,7 +50,7 @@ XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
 
 int XWindowsEventQueueBuffer::getPendingCountLocked()
 {
-  Lock lock(&m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   return XPending(m_display);
 }
 
@@ -69,7 +68,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
   }
 
   {
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     // we're now waiting for events
     m_waiting = true;
 
@@ -123,7 +122,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
   {
     // we're no longer waiting for events
-    Lock lock(&m_mutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_waiting = false;
   }
 
@@ -132,7 +131,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
 
 IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
-  Lock lock(&m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
 
   // push out pending events
   flush();
@@ -161,7 +160,7 @@ bool XWindowsEventQueueBuffer::addEvent(uint32_t dataID)
   xevent.xclient.data.l[0] = static_cast<long>(dataID);
 
   // save the message
-  Lock lock(&m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   m_postedEvents.push_back(xevent);
 
   // if we're currently waiting for an event then send saved events to
@@ -187,7 +186,7 @@ bool XWindowsEventQueueBuffer::addEvent(uint32_t dataID)
 
 bool XWindowsEventQueueBuffer::isEmpty() const
 {
-  Lock lock(&m_mutex);
+  std::lock_guard<std::mutex> lock(m_mutex);
   return (XPending(m_display) == 0);
 }
 
