@@ -107,7 +107,7 @@ void ServerApp::help()
        << " [--address <address>]"
 
 #if WINAPI_XWINDOWS
-       << " [--display <display>] [--no-xinitthreads]"
+       << " [--display <display>]"
 #endif
 
        << HELP_SYS_ARGS HELP_COMMON_ARGS "\n"
@@ -127,7 +127,6 @@ void ServerApp::help()
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
        << "                             at <display>.\n"
-       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
 
        << "* marks defaults.\n"
@@ -517,9 +516,7 @@ deskflow::Screen *ServerApp::createScreen()
 
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
-  return new deskflow::Screen(
-      new XWindowsScreen(args().m_display, true, args().m_disableXInitThreads, 0, m_events), m_events
-  );
+  return new deskflow::Screen(new XWindowsScreen(args().m_display, true, 0, m_events), m_events);
 #elif WINAPI_CARBON
   return new deskflow::Screen(new OSXScreen(m_events, true), m_events);
 #endif

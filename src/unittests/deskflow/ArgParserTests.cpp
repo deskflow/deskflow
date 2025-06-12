@@ -197,15 +197,7 @@ void ArgParserTests::serverArgs()
 {
   deskflow::ServerArgs args;
   args.m_daemon = false;
-  char const *argv[] = {
-      "deskflow", "--help"
-#if WINAPI_XWINDOWS
-      ,
-      "--no-xinitthreads"
-#endif
-      ,
-      "--res-w", "888"
-  };
+  char const *argv[] = {"deskflow", "--help", "--res-w", "888"};
 
   QVERIFY(m_parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   QVERIFY(args.m_shouldExitOk);
@@ -215,18 +207,7 @@ void ArgParserTests::clientArgs()
 {
   deskflow::ClientArgs args;
   args.m_daemon = false;
-  char const *argv[] = {
-      kAppId,
-      "--help"
-#if WINAPI_XWINDOWS
-      ,
-      "--no-xinitthreads"
-#endif
-      ,
-      "--res-w",
-      "888",
-      "127.0.0.1"
-  };
+  char const *argv[] = {kAppId, "--help", "--res-w", "888", "127.0.0.1"};
 
   QVERIFY(m_parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   QVERIFY(args.m_shouldExitOk);
