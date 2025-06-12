@@ -8,7 +8,6 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/Stopwatch.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/languages/LanguageManager.h"
