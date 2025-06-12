@@ -1,6 +1,6 @@
 var classXWindowsScreen =
 [
-    [ "XWindowsScreen", "classXWindowsScreen.html#a7fad74fdcb47f1a9d8266f4c48f8bffe", null ],
+    [ "XWindowsScreen", "classXWindowsScreen.html#a125529b1d16958bfe540c54a84702bec", null ],
     [ "~XWindowsScreen", "classXWindowsScreen.html#a7ffbe069f0b92febcdcb4bf8b97ebc61", null ],
     [ "canLeave", "classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086", null ],
     [ "checkClipboards", "classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38", null ],
