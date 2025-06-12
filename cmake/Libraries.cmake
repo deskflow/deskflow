@@ -82,12 +82,10 @@ macro(configure_unix_libs)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
 
-  check_include_files(sys/select.h HAVE_SYS_SELECT_H)
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
   check_include_files(sys/time.h HAVE_SYS_TIME_H)
   check_include_files(unistd.h HAVE_UNISTD_H)
 
-  check_function_exists(nanosleep HAVE_NANOSLEEP)
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
   check_function_exists(inet_aton HAVE_INET_ATON)
 

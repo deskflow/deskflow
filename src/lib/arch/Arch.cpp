@@ -7,6 +7,8 @@
 
 #include "arch/Arch.h"
 
+#include <thread>
+
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
@@ -40,4 +42,13 @@ Arch *Arch::getInstance()
 {
   assert(s_instance != nullptr);
   return s_instance;
+}
+
+void Arch::sleep(double timeout)
+{
+  ARCH->testCancelThread();
+  if (timeout < 0.0)
+    return;
+  const auto msec = static_cast<uint64_t>(timeout * 1000);
+  std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 }
