@@ -105,7 +105,6 @@ void ClientApp::help()
        << " [--invert-scroll]"
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
-       << " [--no-xinitthreads]"
 #endif
        << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
        << "\n\n"
@@ -123,7 +122,6 @@ void ClientApp::help()
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
        << "                             at <display>.\n"
-       << "      --no-xinitthreads    do not call XInitThreads()\n"
 #endif
        << HELP_COMMON_INFO_2 << "\n"
        << "* marks defaults.\n"
@@ -180,11 +178,7 @@ deskflow::Screen *ClientApp::createScreen()
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
   return new deskflow::Screen(
-      new XWindowsScreen(
-          args().m_display, false, args().m_disableXInitThreads, args().m_yscroll, m_events,
-          args().m_clientScrollDirection
-      ),
-      m_events
+      new XWindowsScreen(args().m_display, false, args().m_yscroll, m_events, args().m_clientScrollDirection), m_events
   );
 
 #endif

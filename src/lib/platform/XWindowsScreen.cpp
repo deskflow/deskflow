@@ -86,7 +86,7 @@ static int xi_opcode;
 XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
 XWindowsScreen::XWindowsScreen(
-    const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
+    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events,
     deskflow::ClientScrollDirection scrollDirection
 )
     : PlatformScreen(events, scrollDirection),
@@ -101,12 +101,8 @@ XWindowsScreen::XWindowsScreen(
     m_mouseScrollDelta = 120;
   s_screen = this;
 
-  if (!disableXInitThreads) {
-    // initializes Xlib support for concurrent threads.
-    if (XInitThreads() == 0)
-      throw std::runtime_error("XInitThreads() returned zero");
-  } else {
-    LOG((CLOG_DEBUG "skipping XInitThreads()"));
+  if (XInitThreads() == 0) {
+    throw std::runtime_error("XInitThreads() returned zero");
   }
 
   // set the X I/O error handler so we catch the display disconnecting

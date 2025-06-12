@@ -77,10 +77,6 @@ public:
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
 
-#if WINAPI_XWINDOWS
-  bool m_disableXInitThreads = false;
-#endif
-
 protected:
   /// @brief deletes pointers and sets the value to null
   template <class T> static inline void destroy(T *&p)

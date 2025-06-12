@@ -130,10 +130,6 @@ bool ArgParser::parsePlatformArgs(
     argsBase.m_display = argv[++i];
   }
 
-  else if (isArg(i, argc, argv, nullptr, "--no-xinitthreads")) {
-    argsBase.m_disableXInitThreads = true;
-  }
-
   else {
     // option not supported here
     return false;

@@ -31,7 +31,7 @@ class XWindowsScreen : public PlatformScreen
 {
 public:
   XWindowsScreen(
-      const char *displayName, bool isPrimary, bool disableXInitThreads, int mouseScrollDelta, IEventQueue *events,
+      const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events,
       deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::SERVER
   );
   ~XWindowsScreen() override;
