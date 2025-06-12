@@ -10,7 +10,6 @@
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/Stopwatch.h"
 #include "base/String.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ProtocolTypes.h"
