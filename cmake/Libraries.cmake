@@ -82,12 +82,10 @@ macro(configure_unix_libs)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
 
-  check_include_files(sys/select.h HAVE_SYS_SELECT_H)
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
   check_include_files(sys/time.h HAVE_SYS_TIME_H)
   check_include_files(unistd.h HAVE_UNISTD_H)
 
-  check_function_exists(nanosleep HAVE_NANOSLEEP)
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
   check_function_exists(inet_aton HAVE_INET_ATON)
 
@@ -157,9 +155,6 @@ macro(configure_unix_libs)
   # For config.h, set some static values; it may be a good idea to make these
   # values dynamic for non-standard UNIX compilers.
   set(HAVE_PTHREAD_SIGNAL 1)
-  set(SELECT_TYPE_ARG1 int)
-  set(SELECT_TYPE_ARG234 " (fd_set *)")
-  set(SELECT_TYPE_ARG5 " (struct timeval *)")
   set(TIME_WITH_SYS_TIME 1)
   set(HAVE_SOCKLEN_T 1)
 
