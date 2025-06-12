@@ -16,8 +16,6 @@ if(WIN32)
     win32/ArchMultithreadWindows.h
     win32/ArchNetworkWinsock.cpp
     win32/ArchNetworkWinsock.h
-    win32/ArchTimeWindows.cpp
-    win32/ArchTimeWindows.h
     win32/XArchWindows.cpp
     win32/XArchWindows.h
   )
@@ -32,8 +30,6 @@ elseif(UNIX)
     unix/ArchMultithreadPosix.h
     unix/ArchNetworkBSD.cpp
     unix/ArchNetworkBSD.h
-    unix/ArchTimeUnix.cpp
-    unix/ArchTimeUnix.h
     unix/XArchUnix.cpp
     unix/XArchUnix.h
   )
@@ -50,7 +46,6 @@ add_library(arch STATIC ${PLATFORM_CODE}
   IArchNetwork.h
   ArchString.cpp
   ArchString.h
-  IArchTime.h
   XArch.h
 )
 

@@ -52,3 +52,10 @@ void Arch::sleep(double timeout)
   const auto msec = static_cast<uint64_t>(timeout * 1000);
   std::this_thread::sleep_for(std::chrono::milliseconds(msec));
 }
+
+double Arch::time()
+{
+  auto sinceEpoch = std::chrono::steady_clock::now().time_since_epoch();
+  auto uSecSinceEpoch = std::chrono::duration_cast<std::chrono::microseconds>(sinceEpoch).count();
+  return uSecSinceEpoch / 1000000.0;
+}
