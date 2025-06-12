@@ -32,7 +32,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.36</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.37</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -139,7 +139,7 @@ $(function(){initNavTree('Wayland_8h_source.html',''); initResizable(true); });
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362">   31</a></span><span class="keyword">inline</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362">isWayland</a>()</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>{</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">const</span> <span class="keyword">auto</span> session = getenv(<span class="stringliteral">&quot;XDG_SESSION_TYPE&quot;</span>);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">const</span> <span class="keyword">auto</span> session = std::getenv(<span class="stringliteral">&quot;XDG_SESSION_TYPE&quot;</span>);</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordflow">return</span> session != <span class="keyword">nullptr</span> &amp;&amp; std::string(session) == <span class="stringliteral">&quot;wayland&quot;</span>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>}</div>
 </div>
