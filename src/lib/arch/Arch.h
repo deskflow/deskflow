@@ -33,14 +33,12 @@
 #include "arch/win32/ArchLogWindows.h"
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/ArchNetworkWinsock.h"
-#include "arch/win32/ArchTimeWindows.h"
 
 #elif SYSAPI_UNIX
 
 #include "arch/unix/ArchDaemonUnix.h"
 #include "arch/unix/ArchLogUnix.h"
 #include "arch/unix/ArchNetworkBSD.h"
-#include "arch/unix/ArchTimeUnix.h"
 
 #if HAVE_PTHREAD
 #include "arch/unix/ArchMultithreadPosix.h"
@@ -64,12 +62,7 @@ to each method to those implementations.  Clients should use the
 exactly one of these objects before attempting to call any method,
 typically at the beginning of \c main().
 */
-class Arch : public ARCH_DAEMON,
-             public ARCH_LOG,
-             public ARCH_MULTITHREAD,
-             public ARCH_NETWORK,
-             public ArchString,
-             public ARCH_TIME
+class Arch : public ARCH_DAEMON, public ARCH_LOG, public ARCH_MULTITHREAD, public ARCH_NETWORK, public ArchString
 {
 public:
   Arch();
@@ -104,6 +97,13 @@ public:
    * @param timeout - blocking time in seconds. if < 0 not blocked if == 0 then caller yields the CPU
    */
   static void sleep(double timeout);
+
+  /**
+   * @brief time
+   * @return Returns the number of seconds since some arbitrary starting time.
+   * This should return as high a precision as reasonable.
+   */
+  static double time();
 
 private:
   static Arch *s_instance;
