@@ -83,7 +83,6 @@ macro(configure_unix_libs)
   include(CheckCSourceCompiles)
 
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
-  check_include_files(sys/time.h HAVE_SYS_TIME_H)
   check_include_files(unistd.h HAVE_UNISTD_H)
 
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
@@ -158,7 +157,6 @@ macro(configure_unix_libs)
   set(SELECT_TYPE_ARG1 int)
   set(SELECT_TYPE_ARG234 " (fd_set *)")
   set(SELECT_TYPE_ARG5 " (struct timeval *)")
-  set(TIME_WITH_SYS_TIME 1)
   set(HAVE_SOCKLEN_T 1)
 
   # Unix only: For config.h, save the results based on a template (config.h.in).
