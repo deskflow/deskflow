@@ -28,9 +28,6 @@
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #cmakedefine HAVE_SYS_SOCKET_H @HAVE_SYS_SOCKET_H@
 
-/* Define to 1 if you have the <sys/time.h> header file. */
-#cmakedefine HAVE_SYS_TIME_H @HAVE_SYS_TIME_H@
-
 /* Define to 1 if you have the <sys/types.h> header file. */
 #cmakedefine HAVE_SYS_TYPES_H @HAVE_SYS_TYPES_H@
 
@@ -54,9 +51,6 @@
 
 /* Define this if the XKB extension is available. */
 #cmakedefine HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@
-
-/* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#cmakedefine TIME_WITH_SYS_TIME @TIME_WITH_SYS_TIME@
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #cmakedefine X_DISPLAY_MISSING @X_DISPLAY_MISSING@
