@@ -18,10 +18,12 @@
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
+#include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "deskflow/IScreen.h"
 
 #include <algorithm>
 #include <cmath>
@@ -49,6 +51,7 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
 {
   init_ei();
   key_state_ = new EiKeyState(this, events);
+  clipboard_ = new EiClipboard();
   // install event handlers
   events_->adoptHandler(
       EventTypes::System, events_->getSystemTarget(), new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent)
@@ -86,6 +89,7 @@ EiScreen::~EiScreen()
   cleanup_ei();
 
   delete key_state_;
+  delete clipboard_;
 
   delete portal_remote_desktop_;
   delete portal_input_capture_;
@@ -164,7 +168,16 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  return false;
+  if (!clipboard_ || !clipboard_->isAvailable()) {
+    return false;
+  }
+
+  IClipboard* sourceClipboard = clipboard_->getClipboard(id);
+  if (!sourceClipboard) {
+    return false;
+  }
+
+  return IClipboard::copy(clipboard, sourceClipboard);
 }
 
 void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
@@ -321,12 +334,16 @@ void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
 void EiScreen::enable()
 {
   // Nothing really to be done here
+  if (clipboard_ && clipboard_->isAvailable()) {
+    clipboard_->startMonitoring();
+  }
 }
 
 void EiScreen::disable()
 {
-  // Nothing really to be done here, maybe cleanup in the future but ideally
-  // that's handled elsewhere
+  if (clipboard_ && clipboard_->isAvailable()) {
+    clipboard_->stopMonitoring();
+  }
 }
 
 void EiScreen::enter()
@@ -374,12 +391,32 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  return false;
+  if (!clipboard || !clipboard_ || !clipboard_->isAvailable()) {
+    return false;
+  }
+
+  IClipboard* targetClipboard = clipboard_->getClipboard(id);
+  if (!targetClipboard) {
+    return false;
+  }
+
+  return IClipboard::copy(targetClipboard, clipboard);
 }
 
 void EiScreen::checkClipboards()
 {
   // do nothing, we're always up to date
+  if (!clipboard_ || !clipboard_->isAvailable()) {
+    return;
+  }
+
+  if (clipboard_->hasChanged()) {
+    // Send clipboard change events for all clipboard types
+    for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+      sendClipboardEvent(EventTypes::ClipboardChanged, id);
+    }
+    clipboard_->resetChanged();
+  }
 }
 
 void EiScreen::openScreensaver(bool notify)
@@ -406,11 +443,6 @@ void EiScreen::resetOptions()
 void EiScreen::setOptions(const OptionsList &options)
 {
   // We don't have ei-specific options, nothing to do here
-}
-
-void EiScreen::setSequenceNumber(uint32_t seqNum)
-{
-  // FIXME: what is this used for?
 }
 
 bool EiScreen::isPrimary() const
@@ -514,6 +546,25 @@ void EiScreen::remove_device(struct ei_device *device)
 void EiScreen::sendEvent(EventTypes type, void *data)
 {
   events_->addEvent(Event(type, getEventTarget(), data));
+}
+
+void EiScreen::sendClipboardEvent(EventTypes type, ClipboardID id) const
+{
+  auto *info = static_cast<ClipboardInfo *>(malloc(sizeof(ClipboardInfo)));
+  if (info == nullptr) {
+    LOG_ERR("malloc failed for ClipboardInfo");
+    return;
+  }
+  info->m_id = id;
+  info->m_sequenceNumber = m_sequenceNumber;
+
+  // Use const_cast to call non-const sendEvent from const method
+  const_cast<EiScreen*>(this)->sendEvent(type, info);
+}
+
+void EiScreen::setSequenceNumber(uint32_t seqNum)
+{
+  m_sequenceNumber = seqNum;
 }
 
 ButtonID EiScreen::map_button_from_evdev(ei_event *event) const
