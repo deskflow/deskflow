@@ -16,6 +16,8 @@
 #include <set>
 #include <vector>
 
+#include <QString>
+
 #include <X11/Xlib.h>
 
 class XWindowsClipboard;
