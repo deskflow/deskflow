@@ -12,9 +12,6 @@
 #include <map>
 #include <vector>
 
-#if X_DISPLAY_MISSING
-#error X11 is required to build deskflow
-#else
 #include <X11/Xlib.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H
 #include <X11/extensions/XTest.h>
@@ -23,7 +20,6 @@
 #endif
 #if HAVE_XKB_EXTENSION
 #include <X11/extensions/XKBstr.h>
-#endif
 #endif
 
 class IEventQueue;
