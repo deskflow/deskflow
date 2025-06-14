@@ -132,6 +132,7 @@ var NAVTREEINDEX0 =
 "ArchNetworkWinsock_8h.html#aeecc4911c4b0f3489b007ac960004a14":[4,0,1,1,0,1,9,4],
 "ArchNetworkWinsock_8h_source.html":[4,0,1,1,0,1,9],
 "ArchString_8cpp.html":[4,0,1,1,0,6],
+"ArchString_8cpp.html#a3718a89190f6c2e985b89ab21dd5f2e5":[4,0,1,1,0,6,0],
 "ArchString_8h.html":[4,0,1,1,0,7],
 "ArchString_8h_source.html":[4,0,1,1,0,7],
 "Arch_8cpp.html":[4,0,1,1,0,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX0 =
 "DotEnv_8h.html":[4,0,1,1,5,15],
 "DotEnv_8h_source.html":[4,0,1,1,5,15],
 "ELevel_8h.html":[4,0,1,1,1,0],
-"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786":[4,0,1,1,1,0,0],
-"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a3b8ebff72cf1a2f992adf5da9077f0aa":[4,0,1,1,1,0,0,5]
+"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786":[4,0,1,1,1,0,0]
 };

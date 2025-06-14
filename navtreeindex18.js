@@ -1,5 +1,6 @@
 var NAVTREEINDEX18 =
 {
+"classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585":[2,0,0,3,5,4],
 "classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585":[3,0,0,2,4,4],
 "classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af":[2,0,0,3,5,2],
 "classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af":[3,0,0,2,4,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX18 =
 "classdeskflow_1_1server_1_1Config.html#a26913cc61248fce45702c67605baf214":[2,0,0,6,0,15],
 "classdeskflow_1_1server_1_1Config.html#a26913cc61248fce45702c67605baf214":[3,0,0,5,0,15],
 "classdeskflow_1_1server_1_1Config.html#a2f5a95f3d48dee8a26a8457a51ebea95":[2,0,0,6,0,40],
-"classdeskflow_1_1server_1_1Config.html#a2f5a95f3d48dee8a26a8457a51ebea95":[3,0,0,5,0,40],
-"classdeskflow_1_1server_1_1Config.html#a31c76775c691d6edf36d8d4f00427f5f":[2,0,0,6,0,11]
+"classdeskflow_1_1server_1_1Config.html#a2f5a95f3d48dee8a26a8457a51ebea95":[3,0,0,5,0,40]
 };

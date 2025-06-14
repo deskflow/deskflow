@@ -32,7 +32,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.50</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.60</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,11 +132,11 @@ Collaboration diagram for SecureListenSocket:</div>
 <div class="dyncontent">
 <div class="center"><img src="classSecureListenSocket__coll__graph.png" border="0" usemap="#aSecureListenSocket_coll__map" alt="Collaboration graph"/></div>
 <map name="aSecureListenSocket_coll__map" id="aSecureListenSocket_coll__map">
-<area shape="rect" title=" " alt="" coords="227,337,364,362"/>
-<area shape="rect" href="classTCPListenSocket.html" title="TCP listen socket." alt="" coords="234,263,357,288"/>
-<area shape="poly" title=" " alt="" coords="298,303,298,337,293,337,293,303"/>
+<area shape="rect" title=" " alt="" coords="156,337,294,362"/>
+<area shape="rect" href="classTCPListenSocket.html" title="TCP listen socket." alt="" coords="163,263,286,288"/>
+<area shape="poly" title=" " alt="" coords="228,303,228,337,222,337,222,303"/>
 <area shape="rect" href="classIListenSocket.html" title="Listen socket interface." alt="" coords="5,177,106,201"/>
-<area shape="poly" title=" " alt="" coords="84,208,137,237,185,253,234,263,233,268,184,258,134,242,82,213"/>
+<area shape="poly" title=" " alt="" coords="86,208,137,237,192,260,190,265,134,242,83,212"/>
 <area shape="rect" href="classISocket.html" title="Generic socket interface." alt="" coords="43,79,108,104"/>
 <area shape="poly" title=" " alt="" coords="73,120,60,177,55,176,67,119"/>
 <area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="76,5,153,30"/>
@@ -144,12 +144,10 @@ Collaboration diagram for SecureListenSocket:</div>
 <area shape="rect" href="classIEventQueue.html" title="Event queue interface." alt="" coords="103,128,200,153"/>
 <area shape="poly" title=" " alt="" coords="125,44,150,127,145,128,120,46"/>
 <area shape="rect" href="classArchSocketImpl.html" title="Internal socket data. An architecture dependent type holding the necessary data for a socket." alt="" coords="239,177,352,201"/>
-<area shape="poly" title=" " alt="" coords="298,217,298,263,293,263,293,217"/>
-<area shape="rect" href="classMutex.html" title="Mutual exclusion." alt="" coords="376,177,434,201"/>
-<area shape="poly" title=" " alt="" coords="389,216,362,241,323,265,320,261,359,237,385,212"/>
-<area shape="poly" title=" " alt="" coords="156,167,160,184,168,200,188,220,212,237,260,260,258,265,209,242,185,224,164,203,155,186,151,169"/>
-<area shape="rect" href="classSocketMultiplexer.html" title="Socket multiplexer." alt="" coords="458,177,581,201"/>
-<area shape="poly" title=" " alt="" coords="493,212,441,242,399,256,358,266,357,261,398,251,438,237,491,208"/>
+<area shape="poly" title=" " alt="" coords="278,215,236,265,232,261,274,212"/>
+<area shape="poly" title=" " alt="" coords="158,167,169,200,191,235,215,261,211,265,187,238,164,202,153,169"/>
+<area shape="rect" href="classSocketMultiplexer.html" title="Socket multiplexer." alt="" coords="376,177,500,201"/>
+<area shape="poly" title=" " alt="" coords="402,211,331,242,264,265,262,260,329,237,400,206"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -202,8 +200,8 @@ Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pro_attribs_classTCPListenSocket"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_classTCPListenSocket')"><img src="closed.png" alt="-"/>&#160;Protected Attributes inherited from <a class="el" href="classTCPListenSocket.html">TCPListenSocket</a></td></tr>
 <tr class="memitem:ad8f99f9020c6fd3cf38c8f7e6759d9d7 inherit pro_attribs_classTCPListenSocket" id="r_ad8f99f9020c6fd3cf38c8f7e6759d9d7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTCPListenSocket.html#ad8f99f9020c6fd3cf38c8f7e6759d9d7">m_socket</a></td></tr>
 <tr class="separator:ad8f99f9020c6fd3cf38c8f7e6759d9d7 inherit pro_attribs_classTCPListenSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a174dd771ec78f07a484f2d6bfb5dfa65 inherit pro_attribs_classTCPListenSocket" id="r_a174dd771ec78f07a484f2d6bfb5dfa65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classMutex.html">Mutex</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTCPListenSocket.html#a174dd771ec78f07a484f2d6bfb5dfa65">m_mutex</a> = nullptr</td></tr>
-<tr class="separator:a174dd771ec78f07a484f2d6bfb5dfa65 inherit pro_attribs_classTCPListenSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77e28c59df2a56c3248ad8d8ca6d7929 inherit pro_attribs_classTCPListenSocket" id="r_a77e28c59df2a56c3248ad8d8ca6d7929"><td class="memItemLeft" align="right" valign="top">std::mutex&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTCPListenSocket.html#a77e28c59df2a56c3248ad8d8ca6d7929">m_mutex</a></td></tr>
+<tr class="separator:a77e28c59df2a56c3248ad8d8ca6d7929 inherit pro_attribs_classTCPListenSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af237cf22f5a56ad173d6634e04c089c1 inherit pro_attribs_classTCPListenSocket" id="r_af237cf22f5a56ad173d6634e04c089c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIEventQueue.html">IEventQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTCPListenSocket.html#af237cf22f5a56ad173d6634e04c089c1">m_events</a></td></tr>
 <tr class="separator:af237cf22f5a56ad173d6634e04c089c1 inherit pro_attribs_classTCPListenSocket"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a140855a836088d066ffa0690a73988c8 inherit pro_attribs_classTCPListenSocket" id="r_a140855a836088d066ffa0690a73988c8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSocketMultiplexer.html">SocketMultiplexer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classTCPListenSocket.html#a140855a836088d066ffa0690a73988c8">m_socketMultiplexer</a></td></tr>

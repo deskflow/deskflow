@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"ServerMessage_8h_source.html":[4,0,1,1,5,1,9],
 "ServerProxy_8cpp.html":[4,0,1,1,2,4],
 "ServerProxy_8h.html":[4,0,1,1,2,5],
 "ServerProxy_8h_source.html":[4,0,1,1,2,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "classAction.html#a299e0248ee64190b156f01c61833d4daad15c9ea82f08ab56c40cd0d32956b867":[3,0,4,2,0],
 "classAction.html#a2c2d597d8b771cc0792cadbebf04c7c2":[3,0,4,14],
 "classAction.html#a73bff7e6ea7bb2c5b3e2da34b1baa295":[3,0,4,8],
-"classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[3,0,4,16],
-"classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[3,0,4,25]
+"classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[3,0,4,16]
 };

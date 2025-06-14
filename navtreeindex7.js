@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classClientProxy.html#a6160d419ed6d56d637fec4e1ced040da":[3,0,38,10],
 "classClientProxy.html#a6359eba9c794ef073075a037b8ba549e":[3,0,38,6],
 "classClientProxy.html#a78f13e672750bd90ff024f6ab56e0c01":[3,0,38,5],
 "classClientProxy.html#a7968d82142b540753635e9b10054e306":[3,0,38,25],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classFileLogOutputter.html#ae2212a2807c2acee4ac2a7f0718ee68b":[3,0,63,4],
 "classFingerprintDatabase.html":[3,0,65],
 "classFingerprintDatabase.html#a14c88c7e3cb1446ea5e0043362d4d568":[3,0,65,2],
-"classFingerprintDatabase.html#a1f2c239dac5220a13b005f300256f6de":[3,0,65,6],
-"classFingerprintDatabase.html#a3b3016c6215f5838ae0148f7b884d856":[3,0,65,7]
+"classFingerprintDatabase.html#a1f2c239dac5220a13b005f300256f6de":[3,0,65,6]
 };

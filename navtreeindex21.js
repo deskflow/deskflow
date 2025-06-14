@@ -1,5 +1,6 @@
 var NAVTREEINDEX21 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2abeb2c179916e917c350d2dd1a8406291":[2,0,0,22,4],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac66cb6f7cff95301c5edc0f73d7cbf78":[2,0,0,22,16],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac77089d6902012f955034af8113a4aef":[2,0,0,22,41],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac822031d3d3a99b4a94af0c3841feee8":[2,0,0,22,58],
@@ -248,6 +249,5 @@ var NAVTREEINDEX21 =
 "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html#a84cb178e1ee46a5c19d76d38dbe464b7":[2,0,0,16,1,0,2],
 "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html#a84cb178e1ee46a5c19d76d38dbe464b7":[3,0,0,15,1,0,2],
 "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html#a97cc7d159a8f3145db51eb46fda459fe":[2,0,0,16,1,0,0],
-"structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html#a97cc7d159a8f3145db51eb46fda459fe":[3,0,0,15,1,0,0],
-"structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html":[2,0,0,16,1,2]
+"structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html#a97cc7d159a8f3145db51eb46fda459fe":[3,0,0,15,1,0,0]
 };

@@ -136,7 +136,7 @@ var searchData=
   ['archnetworkbsd_133',['ArchNetworkBSD',['../classArchNetworkBSD.html',1,'ArchNetworkBSD'],['../classArchNetworkBSD.html#a365423023cf159c0373b6864406244cb',1,'ArchNetworkBSD::ArchNetworkBSD(std::shared_ptr&lt; Deps &gt; deps=std::make_shared&lt; Deps &gt;())'],['../classArchNetworkBSD.html#ab5769aa8c185dfccbb7e58b4d1dfb709',1,'ArchNetworkBSD::ArchNetworkBSD(ArchNetworkBSD const &amp;)=delete'],['../classArchNetworkBSD.html#a0b7e77f82ef7c64464b7696e1bbe5f7c',1,'ArchNetworkBSD::ArchNetworkBSD(ArchNetworkBSD &amp;&amp;)=delete']]],
   ['archnetworkbsd_2ecpp_134',['ArchNetworkBSD.cpp',['../ArchNetworkBSD_8cpp.html',1,'']]],
   ['archnetworkbsd_2eh_135',['ArchNetworkBSD.h',['../ArchNetworkBSD_8h.html',1,'']]],
-  ['archnetworkwinsock_136',['ArchNetworkWinsock',['../classArchNetworkWinsock.html',1,'ArchNetworkWinsock'],['../classArchNetworkWinsock.html#acdd0a21b50c16acc1e350a28ea79b3f8',1,'ArchNetworkWinsock::ArchNetworkWinsock()']]],
+  ['archnetworkwinsock_136',['ArchNetworkWinsock',['../classArchNetworkWinsock.html',1,'ArchNetworkWinsock'],['../classArchNetworkWinsock.html#ade569f4d7712dc6cb02d4a866a769afb',1,'ArchNetworkWinsock::ArchNetworkWinsock()']]],
   ['archnetworkwinsock_2ecpp_137',['ArchNetworkWinsock.cpp',['../ArchNetworkWinsock_8cpp.html',1,'']]],
   ['archnetworkwinsock_2eh_138',['ArchNetworkWinsock.h',['../ArchNetworkWinsock_8h.html',1,'']]],
   ['archsocket_139',['ArchSocket',['../IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635',1,'IArchNetwork.h']]],

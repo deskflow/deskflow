@@ -1,17 +1,19 @@
 <map id="src/lib/arch/win32/ArchNetworkWinsock.h" name="src/lib/arch/win32/ArchNetworkWinsock.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="357,5,521,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="428,5,591,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="9,92,93,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,45,109,94,108,89,356,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="428,41,109,94,108,89,427,36"/>
 <area shape="rect" id="Node000003" href="$IArchMultithread_8h.html" title=" " alt="" coords="117,92,273,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="381,47,247,89,245,84,379,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="434,47,258,90,256,85,433,42"/>
 <area shape="rect" id="Node000011" href="$IArchNetwork_8h.html" title=" " alt="" coords="298,92,439,117"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="424,46,391,82,387,78,420,43"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="477,47,404,86,402,82,474,42"/>
 <area shape="rect" id="Node000014" title=" " alt="" coords="464,92,556,117"/>
-<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="458,43,491,78,487,82,454,46"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="512,45,512,76,507,76,507,45"/>
 <area shape="rect" id="Node000015" title=" " alt="" coords="580,92,666,117"/>
-<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="485,42,583,83,581,88,483,47"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="539,42,595,81,592,85,536,47"/>
 <area shape="rect" id="Node000016" title=" " alt="" coords="690,92,729,117"/>
-<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="512,42,677,89,675,94,510,47"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="559,42,677,88,675,93,557,47"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="753,92,810,117"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="576,42,739,88,737,93,575,47"/>
 <area shape="rect" id="Node000004" href="$IInterface_8h.html" title=" " alt="" coords="149,165,292,189"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="202,116,214,149,209,151,197,118"/>
 <area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="178,237,263,262"/>

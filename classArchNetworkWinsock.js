@@ -1,6 +1,6 @@
 var classArchNetworkWinsock =
 [
-    [ "ArchNetworkWinsock", "classArchNetworkWinsock.html#acdd0a21b50c16acc1e350a28ea79b3f8", null ],
+    [ "ArchNetworkWinsock", "classArchNetworkWinsock.html#ade569f4d7712dc6cb02d4a866a769afb", null ],
     [ "~ArchNetworkWinsock", "classArchNetworkWinsock.html#ad8a39ba26fb41058ae18b7168ec5f9cf", null ],
     [ "acceptSocket", "classArchNetworkWinsock.html#a4500154a30ebcdfb1701dedb63c07a46", null ],
     [ "addrToName", "classArchNetworkWinsock.html#a7187508ec0fad5b463088c9dcd2277cc", null ],

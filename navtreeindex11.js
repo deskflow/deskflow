@@ -1,5 +1,6 @@
 var NAVTREEINDEX11 =
 {
+"classMSWindowsKeyState.html#a71c17e5d0a3ed64ef9044c4f90b9ec51":[3,0,125,11],
 "classMSWindowsKeyState.html#a7c26d769be861c5c331392887ebcca14":[3,0,125,28],
 "classMSWindowsKeyState.html#a80f6ee28bdfe3f90f432371896fb87c8":[3,0,125,1],
 "classMSWindowsKeyState.html#a81fd4aede475a132b47579ff95c3d1af":[3,0,125,23],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0":[3,0,145,26],
 "classOSXScreen.html#aa0c44b192824d21b1e088c9cc5d96bdf":[3,0,145,27],
 "classOSXScreen.html#aa80e25911f77d21a72d70a0db274b9dc":[3,0,145,16],
-"classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf":[3,0,145,22],
-"classOSXScreen.html#ab7489399034844a18628e1a3b3e76222":[3,0,145,3]
+"classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf":[3,0,145,22]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classXSocketAddress.html#a87311c724c67f1d7486c7baa9edb9600":[3,0,226,6],
 "classXSocketAddress.html#ac82c7603450e2a9c30b587f46ce56172":[3,0,226,3],
 "classXSocketAddress.html#afd6c5fae4aef02896ab6c6bd450dda79":[3,0,226,1],
 "classXSocketAddress.html#afecca7662d04b56c62ec02395c7749b0":[3,0,226,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classXWindowsScreenSaver.html#afabd11dbadf4bb516bc2d1aab273be91":[3,0,242,2],
 "classXWindowsScreenSaver.html#afccd29c11574538c51c300269d8fa31d":[3,0,242,1],
 "classXWindowsUtil.html":[3,0,243],
-"classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea":[3,0,243,1],
-"classXWindowsUtil_1_1ErrorLock.html":[3,0,243,0]
+"classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea":[3,0,243,1]
 };

@@ -6,7 +6,7 @@ var dir_4a83f83f9f34bf91f892293091b64170 =
     [ "Arch.h", "Arch_8h.html", "Arch_8h" ],
     [ "ArchDaemonNone.cpp", "ArchDaemonNone_8cpp.html", null ],
     [ "ArchDaemonNone.h", "ArchDaemonNone_8h.html", "ArchDaemonNone_8h" ],
-    [ "ArchString.cpp", "ArchString_8cpp.html", null ],
+    [ "ArchString.cpp", "ArchString_8cpp.html", "ArchString_8cpp" ],
     [ "ArchString.h", "ArchString_8h.html", "ArchString_8h" ],
     [ "IArchDaemon.h", "IArchDaemon_8h.html", "IArchDaemon_8h" ],
     [ "IArchLog.h", "IArchLog_8h.html", "IArchLog_8h" ],

@@ -1,5 +1,6 @@
 var NAVTREEINDEX8 =
 {
+"classFingerprintDatabase.html#a3b3016c6215f5838ae0148f7b884d856":[3,0,65,7],
 "classFingerprintDatabase.html#a52bd36afd65a15d7c6ce2c5255537582":[3,0,65,4],
 "classFingerprintDatabase.html#a56b912ae93cabf1f2014c19be7f912c0":[3,0,65,5],
 "classFingerprintDatabase.html#a756a96faae41686f597f15cf1b6e91b1":[3,0,65,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classIKeyState.html#a6ccc71dd0844bce866034fdcaf49ccc9":[3,0,86,2],
 "classIKeyState.html#a9cd829a74695cc65e20a824518d5f244":[3,0,86,15],
 "classIKeyState.html#aa5129d1c9e92ca0b40bc8ab5d2bd8d7c":[3,0,86,3],
-"classIKeyState.html#aae7fcd31aac7b12e33bb1eca46c17483":[3,0,86,12],
-"classIKeyState.html#ab246c57cd47334d890fb1caf9c13db1e":[3,0,86,16]
+"classIKeyState.html#aae7fcd31aac7b12e33bb1eca46c17483":[3,0,86,12]
 };
