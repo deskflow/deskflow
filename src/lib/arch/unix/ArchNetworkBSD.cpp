@@ -18,10 +18,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <netinet/in.h>
-
-#if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 
 #if !defined(TCP_NODELAY)
 #include <netinet/tcp.h>

@@ -83,7 +83,12 @@ macro(configure_unix_libs)
   include(CheckCSourceCompiles)
 
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
+
+
   check_include_files(unistd.h HAVE_UNISTD_H)
+  if (NOT HAVE_UNISTD_H)
+    message(FATAL_ERROR "Missing unistd.h")
+  endif()
 
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
   check_function_exists(inet_aton HAVE_INET_ATON)
