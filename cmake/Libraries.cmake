@@ -194,11 +194,6 @@ macro(configure_xorg_libs)
   check_include_files("${XKBlib}" HAVE_X11_XKBLIB_H)
   check_include_files("X11/extensions/XInput2.h" HAVE_XI2)
 
-  if(HAVE_X11_EXTENSIONS_DPMS_H)
-    # Assume that function prototypes declared, when include exists.
-    set(HAVE_DPMS_PROTOTYPES 1)
-  endif()
-
   if(NOT HAVE_X11_XKBLIB_H)
     message(FATAL_ERROR "Missing header: " ${XKBlib})
   endif()
