@@ -16,9 +16,6 @@
 /* Define if you have POSIX threads libraries and header files. */
 #cmakedefine HAVE_PTHREAD @HAVE_PTHREAD@
 
-/* Define if your compiler defines socklen_t. */
-#cmakedefine HAVE_SOCKLEN_T @HAVE_SOCKLEN_T@
-
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #cmakedefine HAVE_SYS_SOCKET_H @HAVE_SYS_SOCKET_H@
 
