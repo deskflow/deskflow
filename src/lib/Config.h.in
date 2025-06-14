@@ -13,9 +13,6 @@
 /* Define if you have a POSIX `sigwait` function. */
 #cmakedefine HAVE_POSIX_SIGWAIT @HAVE_POSIX_SIGWAIT@
 
-/* Define if you have POSIX threads libraries and header files. */
-#cmakedefine HAVE_PTHREAD @HAVE_PTHREAD@
-
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #cmakedefine HAVE_SYS_SOCKET_H @HAVE_SYS_SOCKET_H@
 

@@ -38,11 +38,8 @@
 
 #include "arch/unix/ArchDaemonUnix.h"
 #include "arch/unix/ArchLogUnix.h"
-#include "arch/unix/ArchNetworkBSD.h"
-
-#if HAVE_PTHREAD
 #include "arch/unix/ArchMultithreadPosix.h"
-#endif
+#include "arch/unix/ArchNetworkBSD.h"
 
 #endif
 
