@@ -83,6 +83,9 @@ macro(configure_unix_libs)
   include(CheckCSourceCompiles)
 
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
+  if (NOT HAVE_SYS_SOCKET_H)
+    message(FATAL_ERROR "Missing header: sys/socket.h")
+  endif()
 
 
   check_include_files(unistd.h HAVE_UNISTD_H)
