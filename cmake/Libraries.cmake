@@ -158,7 +158,6 @@ macro(configure_unix_libs)
 
   # For config.h, set some static values; it may be a good idea to make these
   # values dynamic for non-standard UNIX compilers.
-  set(HAVE_PTHREAD_SIGNAL 1)
   set(HAVE_SOCKLEN_T 1)
 
   # Unix only: For config.h, save the results based on a template (config.h.in).
