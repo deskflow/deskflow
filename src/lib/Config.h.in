@@ -7,9 +7,6 @@
 
 // clang-format off
 
-/* Define if the <X11/extensions/dpms.h> header file declares function prototypes. */
-#cmakedefine HAVE_DPMS_PROTOTYPES @HAVE_DPMS_PROTOTYPES@
-
 /* Define if you have the `inet_aton` function. */
 #cmakedefine HAVE_INET_ATON @HAVE_INET_ATON@
 
