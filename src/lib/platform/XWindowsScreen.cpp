@@ -26,14 +26,11 @@
 #include "platform/XWindowsScreenSaver.h"
 #include "platform/XWindowsUtil.h"
 
+#include <X11/X.h>
+#include <X11/Xutil.h>
 #include <algorithm>
 #include <cstdlib>
 #include <cstring>
-#if X_DISPLAY_MISSING
-#error X11 is required to build deskflow
-#else
-#include <X11/X.h>
-#include <X11/Xutil.h>
 #define XK_MISCELLANY
 #define XK_XKB_KEYS
 #include <X11/keysymdef.h>
@@ -63,7 +60,6 @@ extern "C"
 #endif
 #ifdef HAVE_XI2
 #include <X11/extensions/XInput2.h>
-#endif
 #endif
 
 static int xi_opcode;

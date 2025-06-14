@@ -46,7 +46,4 @@
 /* Define this if the XKB extension is available. */
 #cmakedefine HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@
 
-/* Define to 1 if the X Window System is missing or not being used. */
-#cmakedefine X_DISPLAY_MISSING @X_DISPLAY_MISSING@
-
 // clang-format on
