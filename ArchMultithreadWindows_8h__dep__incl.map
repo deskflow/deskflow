@@ -1,9 +1,7 @@
 <map id="src/lib/arch/win32/ArchMultithreadWindows.h" name="src/lib/arch/win32/ArchMultithreadWindows.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="223,5,404,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="118,5,299,44"/>
 <area shape="rect" id="Node000002" href="$ArchMultithreadWindows_8cpp.html" title=" " alt="" coords="5,92,201,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="254,53,151,94,149,89,252,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="175,56,128,93,125,89,172,52"/>
 <area shape="rect" id="Node000003" href="$ArchNetworkWinsock_8cpp.html" title=" " alt="" coords="225,92,402,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="316,60,316,91,311,91,311,60"/>
-<area shape="rect" id="Node000004" href="$ArchSleepWindows_8cpp.html" title=" " alt="" coords="426,92,590,131"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="372,48,466,89,464,94,370,53"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="245,52,292,89,289,93,242,56"/>
 </map>

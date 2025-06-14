@@ -25,13 +25,9 @@ var searchData=
   ['archnetaddressimpl_22',['ArchNetAddressImpl',['../classArchNetAddressImpl.html',1,'']]],
   ['archnetworkbsd_23',['ArchNetworkBSD',['../classArchNetworkBSD.html',1,'']]],
   ['archnetworkwinsock_24',['ArchNetworkWinsock',['../classArchNetworkWinsock.html',1,'']]],
-  ['archsleepunix_25',['ArchSleepUnix',['../classArchSleepUnix.html',1,'']]],
-  ['archsleepwindows_26',['ArchSleepWindows',['../classArchSleepWindows.html',1,'']]],
-  ['archsocketimpl_27',['ArchSocketImpl',['../classArchSocketImpl.html',1,'']]],
-  ['archstring_28',['ArchString',['../classArchString.html',1,'']]],
-  ['archthreadimpl_29',['ArchThreadImpl',['../classArchThreadImpl.html',1,'']]],
-  ['archtimeunix_30',['ArchTimeUnix',['../classArchTimeUnix.html',1,'']]],
-  ['archtimewindows_31',['ArchTimeWindows',['../classArchTimeWindows.html',1,'']]],
-  ['argparser_32',['ArgParser',['../classArgParser.html',1,'']]],
-  ['argsbase_33',['ArgsBase',['../classdeskflow_1_1ArgsBase.html',1,'deskflow']]]
+  ['archsocketimpl_25',['ArchSocketImpl',['../classArchSocketImpl.html',1,'']]],
+  ['archstring_26',['ArchString',['../classArchString.html',1,'']]],
+  ['archthreadimpl_27',['ArchThreadImpl',['../classArchThreadImpl.html',1,'']]],
+  ['argparser_28',['ArgParser',['../classArgParser.html',1,'']]],
+  ['argsbase_29',['ArgsBase',['../classdeskflow_1_1ArgsBase.html',1,'deskflow']]]
 ];

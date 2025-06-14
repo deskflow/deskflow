@@ -10,7 +10,7 @@ var searchData=
   ['texttoutf8_7',['textToUTF8',['../classUnicode.html#a9a0b955ca46970fe52a3f1d6a38eb5e7',1,'Unicode']]],
   ['thread_8',['Thread',['../classThread.html#a01061ad89e5cd91c126e0e24ba6085cb',1,'Thread::Thread(IJob *adoptedJob)'],['../classThread.html#a17bbcef542a2eeae36b3f15db6fbc5af',1,'Thread::Thread(const Thread &amp;)']]],
   ['throwerroronsocket_9',['throwErrorOnSocket',['../classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9',1,'IArchNetwork::throwErrorOnSocket()'],['../classArchNetworkBSD.html#abfdcbbd569e4114d037ea16ed626f656',1,'ArchNetworkBSD::throwErrorOnSocket()'],['../classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154',1,'ArchNetworkWinsock::throwErrorOnSocket()']]],
-  ['time_10',['time',['../classIArchTime.html#a9da1e09a4cbe114b59a6f5457ea8a574',1,'IArchTime::time()'],['../classArchTimeUnix.html#a6a2fe9d36a392badbbf6f565ff996cd1',1,'ArchTimeUnix::time()'],['../classArchTimeWindows.html#a5bb0f84ccc48dbdf561e5f8d09acbb9f',1,'ArchTimeWindows::time()']]],
+  ['time_10',['time',['../classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d',1,'Arch']]],
   ['tlscertificate_11',['TlsCertificate',['../classTlsCertificate.html#acdd82c682ad924a82b83a697ea7d7ed0',1,'TlsCertificate']]],
   ['tlsdir_12',['tlsDir',['../classSettings.html#a3939d0dc722052c081a3f05dfa0dcc8d',1,'Settings']]],
   ['tlslocaldb_13',['tlsLocalDb',['../classSettings.html#a081924873915e2b6b972a15618de05da',1,'Settings']]],

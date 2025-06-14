@@ -93,9 +93,6 @@ var searchData=
   ['protocolutil_2ecpp_90',['ProtocolUtil.cpp',['../ProtocolUtil_8cpp.html',1,'']]],
   ['protocolutil_2eh_91',['ProtocolUtil.h',['../ProtocolUtil_8h.html',1,'']]],
   ['proxy_92',['proxy',['../classSettings.html#a6debf0cebe43970f836cd1969ded08e9',1,'Settings']]],
-  ['pthread_5fkill_93',['pthread_kill',['../ArchMultithreadPosix_8cpp.html#a7b816aeecbc0a39166f5b0ceea73de33',1,'ArchMultithreadPosix.cpp']]],
-  ['pthread_5fsigmask_94',['pthread_sigmask',['../ArchMultithreadPosix_8cpp.html#a61c84edca81bce3350252972118e11c8',1,'ArchMultithreadPosix.cpp']]],
-  ['ptimegettime_95',['PTimeGetTime',['../ArchTimeWindows_8cpp.html#af427ba9b9c0da6c5719cb46b7d55693f',1,'ArchTimeWindows.cpp']]],
-  ['push_96',['push',['../classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39',1,'PriorityQueue']]],
-  ['pushreplies_97',['pushReplies',['../classXWindowsClipboard.html#aa8b2d798b957c0852744977f49ea311b',1,'XWindowsClipboard::pushReplies()'],['../classXWindowsClipboard.html#a4d85e3fd8cb8276ac4a33febfd547dea',1,'XWindowsClipboard::pushReplies(ReplyMap::iterator &amp;, ReplyList &amp;, ReplyList::iterator)']]]
+  ['push_93',['push',['../classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39',1,'PriorityQueue']]],
+  ['pushreplies_94',['pushReplies',['../classXWindowsClipboard.html#aa8b2d798b957c0852744977f49ea311b',1,'XWindowsClipboard::pushReplies()'],['../classXWindowsClipboard.html#a4d85e3fd8cb8276ac4a33febfd547dea',1,'XWindowsClipboard::pushReplies(ReplyMap::iterator &amp;, ReplyList &amp;, ReplyList::iterator)']]]
 ];

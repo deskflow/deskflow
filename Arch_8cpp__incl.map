@@ -1,7 +1,9 @@
 <map id="src/lib/arch/Arch.cpp" name="src/lib/arch/Arch.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="251,5,392,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="299,5,440,30"/>
 <area shape="rect" id="Node000002" href="$Arch_8h.html" title=" " alt="" coords="278,78,366,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="324,31,324,62,319,62,319,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="364,32,340,67,336,64,360,29"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="390,78,448,103"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="380,29,404,64,400,67,376,32"/>
 <area shape="rect" id="Node000003" href="$ArchString_8h.html" title=" " alt="" coords="211,151,334,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,105,291,139,287,136,311,102"/>
 <area shape="rect" id="Node000004" href="$Common_8h.html" title=" " alt="" coords="151,296,290,321"/>

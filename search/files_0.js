@@ -40,17 +40,9 @@ var searchData=
   ['archnetworkbsd_2eh_37',['ArchNetworkBSD.h',['../ArchNetworkBSD_8h.html',1,'']]],
   ['archnetworkwinsock_2ecpp_38',['ArchNetworkWinsock.cpp',['../ArchNetworkWinsock_8cpp.html',1,'']]],
   ['archnetworkwinsock_2eh_39',['ArchNetworkWinsock.h',['../ArchNetworkWinsock_8h.html',1,'']]],
-  ['archsleepunix_2ecpp_40',['ArchSleepUnix.cpp',['../ArchSleepUnix_8cpp.html',1,'']]],
-  ['archsleepunix_2eh_41',['ArchSleepUnix.h',['../ArchSleepUnix_8h.html',1,'']]],
-  ['archsleepwindows_2ecpp_42',['ArchSleepWindows.cpp',['../ArchSleepWindows_8cpp.html',1,'']]],
-  ['archsleepwindows_2eh_43',['ArchSleepWindows.h',['../ArchSleepWindows_8h.html',1,'']]],
-  ['archstring_2ecpp_44',['ArchString.cpp',['../ArchString_8cpp.html',1,'']]],
-  ['archstring_2eh_45',['ArchString.h',['../ArchString_8h.html',1,'']]],
-  ['archtimeunix_2ecpp_46',['ArchTimeUnix.cpp',['../ArchTimeUnix_8cpp.html',1,'']]],
-  ['archtimeunix_2eh_47',['ArchTimeUnix.h',['../ArchTimeUnix_8h.html',1,'']]],
-  ['archtimewindows_2ecpp_48',['ArchTimeWindows.cpp',['../ArchTimeWindows_8cpp.html',1,'']]],
-  ['archtimewindows_2eh_49',['ArchTimeWindows.h',['../ArchTimeWindows_8h.html',1,'']]],
-  ['argparser_2ecpp_50',['ArgParser.cpp',['../ArgParser_8cpp.html',1,'']]],
-  ['argparser_2eh_51',['ArgParser.h',['../ArgParser_8h.html',1,'']]],
-  ['argsbase_2eh_52',['ArgsBase.h',['../ArgsBase_8h.html',1,'']]]
+  ['archstring_2ecpp_40',['ArchString.cpp',['../ArchString_8cpp.html',1,'']]],
+  ['archstring_2eh_41',['ArchString.h',['../ArchString_8h.html',1,'']]],
+  ['argparser_2ecpp_42',['ArgParser.cpp',['../ArgParser_8cpp.html',1,'']]],
+  ['argparser_2eh_43',['ArgParser.h',['../ArgParser_8h.html',1,'']]],
+  ['argsbase_2eh_44',['ArgsBase.h',['../ArgsBase_8h.html',1,'']]]
 ];

@@ -23,12 +23,6 @@ var hierarchy =
     [ "ARCH_NETWORK", null, [
       [ "Arch", "classArch.html", null ]
     ] ],
-    [ "ARCH_SLEEP", null, [
-      [ "Arch", "classArch.html", null ]
-    ] ],
-    [ "ARCH_TIME", null, [
-      [ "Arch", "classArch.html", null ]
-    ] ],
     [ "ArchCondImpl", "classArchCondImpl.html", null ],
     [ "ArchMiscWindows", "classArchMiscWindows.html", null ],
     [ "ArchMutexImpl", "classArchMutexImpl.html", null ],
@@ -134,14 +128,6 @@ var hierarchy =
       [ "IArchNetwork", "classIArchNetwork.html", [
         [ "ArchNetworkBSD", "classArchNetworkBSD.html", null ],
         [ "ArchNetworkWinsock", "classArchNetworkWinsock.html", null ]
-      ] ],
-      [ "IArchSleep", "classIArchSleep.html", [
-        [ "ArchSleepUnix", "classArchSleepUnix.html", null ],
-        [ "ArchSleepWindows", "classArchSleepWindows.html", null ]
-      ] ],
-      [ "IArchTime", "classIArchTime.html", [
-        [ "ArchTimeUnix", "classArchTimeUnix.html", null ],
-        [ "ArchTimeWindows", "classArchTimeWindows.html", null ]
       ] ],
       [ "IClipboard", "classIClipboard.html", [
         [ "Clipboard", "classClipboard.html", null ],
@@ -451,7 +437,6 @@ var hierarchy =
     [ "Settings::Server", "structSettings_1_1Server.html", null ],
     [ "deskflow::gui::ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", null ],
     [ "ServerProxy", "classServerProxy.html", null ],
-    [ "sockaddr_storage", "structsockaddr__storage.html", null ],
     [ "SocketMultiplexer", "classSocketMultiplexer.html", null ],
     [ "Ssl", "structSsl.html", null ],
     [ "SslLogger", "classSslLogger.html", null ],

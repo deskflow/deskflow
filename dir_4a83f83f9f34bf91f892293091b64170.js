@@ -12,7 +12,5 @@ var dir_4a83f83f9f34bf91f892293091b64170 =
     [ "IArchLog.h", "IArchLog_8h.html", "IArchLog_8h" ],
     [ "IArchMultithread.h", "IArchMultithread_8h.html", "IArchMultithread_8h" ],
     [ "IArchNetwork.h", "IArchNetwork_8h.html", "IArchNetwork_8h" ],
-    [ "IArchSleep.h", "IArchSleep_8h.html", "IArchSleep_8h" ],
-    [ "IArchTime.h", "IArchTime_8h.html", "IArchTime_8h" ],
     [ "XArch.h", "XArch_8h.html", "XArch_8h" ]
 ];

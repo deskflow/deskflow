@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['data_0',['data',['../structFingerprint.html#ac0a51b5ec53e509b02bb0ff329484340',1,'Fingerprint::data'],['../ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63',1,'data:&#160;ArchNetworkWinsock.cpp']]],
-  ['dummywindow_1',['dummyWindow',['../OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7',1,'OSXCocoaApp.m']]],
-  ['dword_2',['DWORD',['../ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7',1,'ArchNetworkWinsock.cpp']]]
+  ['elevate_0',['Elevate',['../structSettings_1_1Daemon.html#a771cef30da81388437b4565ce8c3ec21',1,'Settings::Daemon']]],
+  ['exceptfds_1',['exceptfds',['../ArchNetworkWinsock_8cpp.html#a83b39b991fea62ae3743fc34f1c49331',1,'ArchNetworkWinsock.cpp']]],
+  ['externalconfig_2',['ExternalConfig',['../structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2',1,'Settings::Server']]],
+  ['externalconfigfile_3',['ExternalConfigFile',['../structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d',1,'Settings::Server']]]
 ];

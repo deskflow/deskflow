@@ -8,10 +8,6 @@ var dir_d0863834074a37de83eedc688b57e6e6 =
     [ "ArchMultithreadPosix.h", "ArchMultithreadPosix_8h.html", "ArchMultithreadPosix_8h" ],
     [ "ArchNetworkBSD.cpp", "ArchNetworkBSD_8cpp.html", null ],
     [ "ArchNetworkBSD.h", "ArchNetworkBSD_8h.html", "ArchNetworkBSD_8h" ],
-    [ "ArchSleepUnix.cpp", "ArchSleepUnix_8cpp.html", null ],
-    [ "ArchSleepUnix.h", "ArchSleepUnix_8h.html", "ArchSleepUnix_8h" ],
-    [ "ArchTimeUnix.cpp", "ArchTimeUnix_8cpp.html", null ],
-    [ "ArchTimeUnix.h", "ArchTimeUnix_8h.html", "ArchTimeUnix_8h" ],
     [ "XArchUnix.cpp", "XArchUnix_8cpp.html", "XArchUnix_8cpp" ],
     [ "XArchUnix.h", "XArchUnix_8h.html", "XArchUnix_8h" ]
 ];

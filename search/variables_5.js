@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['elevate_0',['Elevate',['../structSettings_1_1Daemon.html#a771cef30da81388437b4565ce8c3ec21',1,'Settings::Daemon']]],
-  ['exceptfds_1',['exceptfds',['../ArchNetworkWinsock_8cpp.html#a83b39b991fea62ae3743fc34f1c49331',1,'ArchNetworkWinsock.cpp']]],
-  ['externalconfig_2',['ExternalConfig',['../structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2',1,'Settings::Server']]],
-  ['externalconfigfile_3',['ExternalConfigFile',['../structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d',1,'Settings::Server']]]
+  ['fdset_0',['fdset',['../ArchNetworkWinsock_8cpp.html#a1090ad3c224a4e94802b39f903edb66a',1,'ArchNetworkWinsock.cpp']]],
+  ['file_1',['File',['../structSettings_1_1Log.html#a8a5b078f91feb4dc4029194a32094481',1,'Settings::Log']]],
+  ['flags_2',['flags',['../ArchNetworkWinsock_8cpp.html#a6c50550d1a116a362712205288efdc21',1,'ArchNetworkWinsock.cpp']]]
 ];

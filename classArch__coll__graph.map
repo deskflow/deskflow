@@ -1,19 +1,15 @@
 <map id="Arch" name="Arch">
-<area shape="rect" id="Node000001" title="Delegating implementation of architecture dependent interfaces." alt="" coords="494,151,542,175"/>
+<area shape="rect" id="Node000001" title="Delegating implementation of architecture dependent interfaces." alt="" coords="324,151,372,175"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,129,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,101,493,155,492,160,144,106"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,104,324,153,323,158,128,110"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="153,78,245,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,103,494,154,492,159,260,108"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="238,107,325,148,323,153,236,112"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="269,78,428,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="391,107,494,149,492,154,389,111"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="351,118,351,150,346,150,346,118"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="451,78,584,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="520,118,520,150,515,150,515,118"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="609,78,717,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="626,112,543,152,541,148,624,107"/>
-<area shape="rect" id="Node000007" href="$classArchString.html" title="Interface for architecture dependent string operations." alt="" coords="742,78,824,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="728,109,543,158,541,153,726,104"/>
-<area shape="rect" id="Node000008" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="744,5,822,30"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="786,46,786,78,780,78,780,46"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="848,78,945,103"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="833,106,543,160,542,154,832,101"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="477,111,374,154,372,149,475,107"/>
+<area shape="rect" id="Node000006" href="$classArchString.html" title="Interface for architecture dependent string operations." alt="" coords="608,78,691,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="594,107,373,159,372,153,593,102"/>
+<area shape="rect" id="Node000007" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="611,5,688,30"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="652,46,652,78,647,78,647,46"/>
 </map>

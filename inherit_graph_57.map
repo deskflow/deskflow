@@ -1,17 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classInputFilter_1_1Action.html" title=" " alt="" coords="5,187,130,212"/>
 <area shape="rect" id="Node000001" href="$classInputFilter_1_1KeyboardBroadcastAction.html" title=" " alt="" coords="178,5,378,44"/>
-<area shape="poly" id="edge150_Node000000_Node000001" title=" " alt="" coords="80,172,118,113,145,82,176,54,198,42,201,47,179,59,149,85,122,116,84,175"/>
+<area shape="poly" id="edge142_Node000000_Node000001" title=" " alt="" coords="80,172,118,113,145,82,176,54,198,42,201,47,179,59,149,85,122,116,84,175"/>
 <area shape="rect" id="Node000002" href="$classInputFilter_1_1KeystrokeAction.html" title=" " alt="" coords="188,68,368,93"/>
-<area shape="poly" id="edge151_Node000000_Node000002" title=" " alt="" coords="88,174,126,137,176,102,204,91,206,96,179,107,130,141,91,178"/>
+<area shape="poly" id="edge143_Node000000_Node000002" title=" " alt="" coords="88,174,126,137,176,102,204,91,206,96,179,107,130,141,91,178"/>
 <area shape="rect" id="Node000003" href="$classInputFilter_1_1LockCursorToScreenAction.html" title=" " alt="" coords="193,117,362,156"/>
-<area shape="poly" id="edge152_Node000000_Node000003" title=" " alt="" coords="125,179,210,154,211,159,127,185"/>
+<area shape="poly" id="edge144_Node000000_Node000003" title=" " alt="" coords="125,179,210,154,211,159,127,185"/>
 <area shape="rect" id="Node000004" href="$classInputFilter_1_1MouseButtonAction.html" title=" " alt="" coords="196,180,360,219"/>
-<area shape="poly" id="edge153_Node000000_Node000004" title=" " alt="" coords="145,197,195,197,195,202,145,202"/>
+<area shape="poly" id="edge145_Node000000_Node000004" title=" " alt="" coords="145,197,195,197,195,202,145,202"/>
 <area shape="rect" id="Node000005" href="$classInputFilter_1_1RestartServer.html" title=" " alt="" coords="194,243,362,268"/>
-<area shape="poly" id="edge154_Node000000_Node000005" title=" " alt="" coords="129,214,178,227,226,240,224,245,177,233,127,219"/>
+<area shape="poly" id="edge146_Node000000_Node000005" title=" " alt="" coords="129,214,178,227,226,240,224,245,177,233,127,219"/>
 <area shape="rect" id="Node000006" href="$classInputFilter_1_1SwitchInDirectionAction.html" title=" " alt="" coords="183,292,373,331"/>
-<area shape="poly" id="edge155_Node000000_Node000006" title=" " alt="" coords="95,219,134,249,179,277,207,289,205,294,176,282,130,253,92,223"/>
+<area shape="poly" id="edge147_Node000000_Node000006" title=" " alt="" coords="95,219,134,249,179,277,207,289,205,294,176,282,130,253,92,223"/>
 <area shape="rect" id="Node000007" href="$classInputFilter_1_1SwitchToScreenAction.html" title=" " alt="" coords="187,355,369,393"/>
-<area shape="poly" id="edge156_Node000000_Node000007" title=" " alt="" coords="84,224,122,283,149,313,179,340,201,352,198,356,176,344,145,317,118,286,80,227"/>
+<area shape="poly" id="edge148_Node000000_Node000007" title=" " alt="" coords="84,224,122,283,149,313,179,340,201,352,198,356,176,344,145,317,118,286,80,227"/>
 </map>

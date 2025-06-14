@@ -1,11 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,80,91,105"/>
-<area shape="rect" id="Node000001" href="$classXDuplicateClient.html" title="Client already connected exception." alt="" coords="148,5,268,30"/>
-<area shape="poly" id="edge236_Node000000_Node000001" title=" " alt="" coords="82,70,138,41,168,28,170,33,140,45,85,74"/>
-<area shape="rect" id="Node000002" href="$classXExitApp.html" title="Generic exit eception." alt="" coords="170,55,246,79"/>
-<area shape="poly" id="edge237_Node000000_Node000002" title=" " alt="" coords="105,81,169,70,170,76,106,86"/>
-<area shape="rect" id="Node000003" href="$classXIncompatibleClient.html" title="Incompatible client exception." alt="" coords="139,104,277,129"/>
-<area shape="poly" id="edge238_Node000000_Node000003" title=" " alt="" coords="106,98,139,103,138,109,106,104"/>
-<area shape="rect" id="Node000004" href="$classXUnknownClient.html" title="Client not in map exception." alt="" coords="148,153,268,178"/>
-<area shape="poly" id="edge239_Node000000_Node000004" title=" " alt="" coords="86,110,140,138,170,150,168,155,138,143,83,115"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,50,30"/>
+<area shape="rect" id="Node000001" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="98,5,229,30"/>
+<area shape="poly" id="edge232_Node000000_Node000001" title=" " alt="" coords="65,15,97,15,97,20,65,20"/>
 </map>

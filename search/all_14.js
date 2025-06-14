@@ -22,7 +22,7 @@ var searchData=
   ['threadid_19',['ThreadID',['../classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803',1,'IArchMultithread']]],
   ['throwerroronsocket_20',['throwErrorOnSocket',['../classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9',1,'IArchNetwork::throwErrorOnSocket()'],['../classArchNetworkBSD.html#abfdcbbd569e4114d037ea16ed626f656',1,'ArchNetworkBSD::throwErrorOnSocket()'],['../classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154',1,'ArchNetworkWinsock::throwErrorOnSocket()']]],
   ['time_21',['Time',['../classIClipboard.html#a9e15948af1b97562218eb262d3790c29',1,'IClipboard']]],
-  ['time_22',['time',['../classIArchTime.html#a9da1e09a4cbe114b59a6f5457ea8a574',1,'IArchTime::time()'],['../classArchTimeUnix.html#a6a2fe9d36a392badbbf6f565ff996cd1',1,'ArchTimeUnix::time()'],['../classArchTimeWindows.html#a5bb0f84ccc48dbdf561e5f8d09acbb9f',1,'ArchTimeWindows::time()']]],
+  ['time_22',['time',['../classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d',1,'Arch']]],
   ['timeout_23',['timeout',['../ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749',1,'ArchNetworkWinsock.cpp']]],
   ['timeout_5fdelay_24',['TIMEOUT_DELAY',['../XWindowsEventQueueBuffer_8cpp.html#a8032a941e3dca02cdfade5cc3cfe1dc6',1,'XWindowsEventQueueBuffer.cpp']]],
   ['timer_25',['Timer',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aefb4777327e6f704fb1519c1882f93ec',1,'deskflow']]],

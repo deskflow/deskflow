@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['ucs4_0',['ucs4',['../structcodepair.html#a159f98121ee2eaed28ff7afd08aac77f',1,'codepair']]],
-  ['updateurl_1',['UpdateUrl',['../structSettings_1_1Core.html#ac9abe007912bc0f8cd98d53aa0e267ab',1,'Settings::Core']]],
-  ['userdir_2',['UserDir',['../classSettings.html#a33616afa82a5433ced5104646ab88dee',1,'Settings']]],
-  ['usersettingfile_3',['UserSettingFile',['../classSettings.html#a37be043c4fa4b592b9e334520bef9814',1,'Settings']]]
+  ['windowgeometry_0',['WindowGeometry',['../structSettings_1_1Gui.html#a7b5d5c6beaa38f2eface2cb931d83a1b',1,'Settings::Gui']]],
+  ['writefds_1',['writefds',['../ArchNetworkWinsock_8cpp.html#a8471bf81bbee9614f1edd6361edb3bfe',1,'ArchNetworkWinsock.cpp']]],
+  ['wsaevent_2',['WSAEVENT',['../ArchNetworkWinsock_8cpp.html#acdd8686d6df899c1259adb98f9573991',1,'ArchNetworkWinsock.cpp']]]
 ];

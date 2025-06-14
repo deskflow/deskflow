@@ -32,7 +32,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.37</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.49</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -121,110 +121,106 @@ $(function(){initNavTree('XWindowsUtil_8h_source.html',''); initResizable(true);
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#if X_DISPLAY_MISSING</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#error X11 is required to build deskflow</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;X11/Xlib.h&gt;</span></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
-<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classXWindowsUtil.html">   23</a></span><span class="keyword">class </span><a class="code hl_class" href="classXWindowsUtil.html">XWindowsUtil</a></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">   26</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">KeySyms</a> = std::vector&lt;KeySym&gt;;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsUtil.html#aa225a3a10a43d139294773550eb65840">getWindowProperty</a>(</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>      Display *, Window window, Atom property, std::string *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Atom *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, int32_t *format, <span class="keywordtype">bool</span> deleteProperty</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  );</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsUtil.html#acd39bfb02176fa6028247ffbcbab3b6f">setWindowProperty</a>(</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>      Display *, Window window, Atom property, <span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t size, Atom <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, int32_t format</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  );</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;X11/Xlib.h&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span></div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classXWindowsUtil.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classXWindowsUtil.html">XWindowsUtil</a></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">   22</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">KeySyms</a> = std::vector&lt;KeySym&gt;;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsUtil.html#aa225a3a10a43d139294773550eb65840">getWindowProperty</a>(</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>      Display *, Window window, Atom property, std::string *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Atom *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, int32_t *format, <span class="keywordtype">bool</span> deleteProperty</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  );</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsUtil.html#acd39bfb02176fa6028247ffbcbab3b6f">setWindowProperty</a>(</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      Display *, Window window, Atom property, <span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t size, Atom <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, int32_t format</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  );</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">static</span> Time <a class="code hl_function" href="classXWindowsUtil.html#af63751ea085ff9852a68f309dccdae22">getCurrentTime</a>(Display *, Window);</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">static</span> Time <a class="code hl_function" href="classXWindowsUtil.html#af63751ea085ff9852a68f309dccdae22">getCurrentTime</a>(Display *, Window);</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">static</span> uint32_t <a class="code hl_function" href="classXWindowsUtil.html#a78b0a889bd6a3336a067e5985ec7c0e3">mapKeySymToKeyID</a>(KeySym);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keyword">static</span> uint32_t <a class="code hl_function" href="classXWindowsUtil.html#aaf8b4f8f549daae50746d14a7f28e848">getModifierBitForKeySym</a>(KeySym keysym);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">static</span> uint32_t <a class="code hl_function" href="classXWindowsUtil.html#a78b0a889bd6a3336a067e5985ec7c0e3">mapKeySymToKeyID</a>(KeySym);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">static</span> uint32_t <a class="code hl_function" href="classXWindowsUtil.html#aaf8b4f8f549daae50746d14a7f28e848">getModifierBitForKeySym</a>(KeySym keysym);</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span></div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f">atomToString</a>(Display *, Atom atom);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f">atomToString</a>(Display *, Atom atom);</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60">atomsToString</a>(Display *display, <span class="keyword">const</span> Atom *atom, uint32_t num);</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a29f63609eb6b5e3565ab4cdb67f6e3e9">convertAtomProperty</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a9abcaf0404f31a6ba9cf9ba93709583a">appendAtomData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Atom atom);</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#af24dc03672e63abbebd9730fd6b35e07">replaceAtomData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t index, Atom atom);</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a09c34924bbd6eb39f555210a31f2369b">appendTimeData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Time time);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
-<div class="foldopen" id="foldopen00119" data-start="{" data-end="};">
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html">  119</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a></div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  {</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">  123</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> = void (*)(Display *, XErrorEvent *, <span class="keywordtype">void</span> *userData);</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *);</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983">  129</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983">ErrorLock</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44">  130</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44">ErrorLock</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3">  132</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3">operator=</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2">  133</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2">operator=</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span></div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *, <span class="keywordtype">bool</span> *errorFlag);</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span></div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *, <a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> handler, <span class="keywordtype">void</span> *userData);</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#a6e7f7e57e1237295eb993b57d6e61a62">~ErrorLock</a>();</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span> </div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>    <span class="keywordtype">void</span> install(<a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a>, <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> internalHandler(Display *, XErrorEvent *);</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> ignoreHandler(Display *, XErrorEvent *, <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> saveHandler(Display *, XErrorEvent *, <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keyword">using </span>XErrorHandler = int (*)(Display *, XErrorEvent *);</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    Display *m_display;</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> m_handler;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    <span class="keywordtype">void</span> *m_userData;</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    XErrorHandler m_oldXHandler;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> *m_next;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>    <span class="keyword">static</span> <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> *s_top;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  };</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60">atomsToString</a>(Display *display, <span class="keyword">const</span> Atom *atom, uint32_t num);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a29f63609eb6b5e3565ab4cdb67f6e3e9">convertAtomProperty</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a9abcaf0404f31a6ba9cf9ba93709583a">appendAtomData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Atom atom);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#af24dc03672e63abbebd9730fd6b35e07">replaceAtomData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t index, Atom atom);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsUtil.html#a09c34924bbd6eb39f555210a31f2369b">appendTimeData</a>(std::string &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, Time time);</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span></div>
+<div class="foldopen" id="foldopen00115" data-start="{" data-end="};">
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html">  115</a></span>  <span class="keyword">class </span><a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">  119</a></span>    <span class="keyword">using </span><a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> = void (*)(Display *, XErrorEvent *, <span class="keywordtype">void</span> *userData);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keyword">explicit</span> <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983">  125</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983">ErrorLock</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44">  126</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44">ErrorLock</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3">  128</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#a0f672607eea2c0210a567bb6f0983cd3">operator=</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno"><a class="line" href="classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2">  129</a></span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2">operator=</a>(<a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span></div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *, <span class="keywordtype">bool</span> *errorFlag);</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a>(Display *, <a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> handler, <span class="keywordtype">void</span> *userData);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span> </div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#a6e7f7e57e1237295eb993b57d6e61a62">~ErrorLock</a>();</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span> </div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordtype">void</span> install(<a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a>, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">static</span> <span class="keywordtype">int</span> internalHandler(Display *, XErrorEvent *);</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> ignoreHandler(Display *, XErrorEvent *, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>    <span class="keyword">static</span> <span class="keywordtype">void</span> saveHandler(Display *, XErrorEvent *, <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="keyword">using </span>XErrorHandler = int (*)(Display *, XErrorEvent *);</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>    Display *m_display;</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <a class="code hl_typedef" href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">ErrorHandler</a> m_handler;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>    <span class="keywordtype">void</span> *m_userData;</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    XErrorHandler m_oldXHandler;</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> *m_next;</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="keyword">static</span> <a class="code hl_function" href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">ErrorLock</a> *s_top;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  };</div>
 </div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keyword">class </span>PropertyNotifyPredicateInfo</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    Window m_window;</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    Atom m_property;</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  };</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span> </div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keyword">class </span>PropertyNotifyPredicateInfo</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>    Window m_window;</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    Atom m_property;</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  };</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  <span class="keyword">static</span> Bool propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg);</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> initKeyMaps();</div>
 <div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span> </div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keyword">static</span> Bool propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg);</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> initKeyMaps();</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keyword">using </span>KeySymMap = std::map&lt;KeySym, uint32_t&gt;;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keyword">static</span> KeySymMap s_keySymToUCS4;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>};</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keyword">using </span>KeySymMap = std::map&lt;KeySym, uint32_t&gt;;</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span> </div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  <span class="keyword">static</span> KeySymMap s_keySymToUCS4;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_aa36d05423b2dd8f3c8296093b4674b63"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a></div><div class="ttdeci">static int void FAR * data</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:34</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:44</div></div>
@@ -234,11 +230,11 @@ $(function(){initNavTree('XWindowsUtil_8h_source.html',''); initResizable(true);
 <div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_aa672dc8f759a9a26675f4cdd3ee833c2"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#aa672dc8f759a9a26675f4cdd3ee833c2">XWindowsUtil::ErrorLock::operator=</a></div><div class="ttdeci">ErrorLock &amp; operator=(ErrorLock &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_abccc7ccfb39f10bb3340934ac3dd1d44"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#abccc7ccfb39f10bb3340934ac3dd1d44">XWindowsUtil::ErrorLock::ErrorLock</a></div><div class="ttdeci">ErrorLock(ErrorLock &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_ad1f5fe77f5be4bfc7e6c7edc6011e983"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#ad1f5fe77f5be4bfc7e6c7edc6011e983">XWindowsUtil::ErrorLock::ErrorLock</a></div><div class="ttdeci">ErrorLock(ErrorLock const &amp;)=delete</div></div>
-<div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_ad2c02db4ed15e327d38b989027785cc6"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">XWindowsUtil::ErrorLock::ErrorHandler</a></div><div class="ttdeci">void(*)(Display *, XErrorEvent *, void *userData) ErrorHandler</div><div class="ttdoc">Error handler type.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:123</div></div>
+<div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_ad2c02db4ed15e327d38b989027785cc6"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#ad2c02db4ed15e327d38b989027785cc6">XWindowsUtil::ErrorLock::ErrorHandler</a></div><div class="ttdeci">void(*)(Display *, XErrorEvent *, void *userData) ErrorHandler</div><div class="ttdoc">Error handler type.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:119</div></div>
 <div class="ttc" id="aclassXWindowsUtil_1_1ErrorLock_html_af7064a3ae6fdae8512ef305986c2fa3d"><div class="ttname"><a href="classXWindowsUtil_1_1ErrorLock.html#af7064a3ae6fdae8512ef305986c2fa3d">XWindowsUtil::ErrorLock::ErrorLock</a></div><div class="ttdeci">ErrorLock(Display *)</div><div class="ttdef"><b>Definition</b> XWindowsUtil.cpp:1900</div></div>
-<div class="ttc" id="aclassXWindowsUtil_html"><div class="ttname"><a href="classXWindowsUtil.html">XWindowsUtil</a></div><div class="ttdoc">X11 utility functions.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:24</div></div>
+<div class="ttc" id="aclassXWindowsUtil_html"><div class="ttname"><a href="classXWindowsUtil.html">XWindowsUtil</a></div><div class="ttdoc">X11 utility functions.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:20</div></div>
 <div class="ttc" id="aclassXWindowsUtil_html_a09c34924bbd6eb39f555210a31f2369b"><div class="ttname"><a href="classXWindowsUtil.html#a09c34924bbd6eb39f555210a31f2369b">XWindowsUtil::appendTimeData</a></div><div class="ttdeci">static void appendTimeData(std::string &amp;data, Time time)</div><div class="ttdoc">Append an Time to property data.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.cpp:1871</div></div>
-<div class="ttc" id="aclassXWindowsUtil_html_a201e1401f49fca161f1993f2830edaea"><div class="ttname"><a href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">XWindowsUtil::KeySyms</a></div><div class="ttdeci">std::vector&lt; KeySym &gt; KeySyms</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:26</div></div>
+<div class="ttc" id="aclassXWindowsUtil_html_a201e1401f49fca161f1993f2830edaea"><div class="ttname"><a href="classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea">XWindowsUtil::KeySyms</a></div><div class="ttdeci">std::vector&lt; KeySym &gt; KeySyms</div><div class="ttdef"><b>Definition</b> XWindowsUtil.h:22</div></div>
 <div class="ttc" id="aclassXWindowsUtil_html_a29f63609eb6b5e3565ab4cdb67f6e3e9"><div class="ttname"><a href="classXWindowsUtil.html#a29f63609eb6b5e3565ab4cdb67f6e3e9">XWindowsUtil::convertAtomProperty</a></div><div class="ttdeci">static void convertAtomProperty(std::string &amp;data)</div><div class="ttdoc">Prepare a property of atoms for use.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.cpp:1847</div></div>
 <div class="ttc" id="aclassXWindowsUtil_html_a709f164a95f839252d36c21b08005e60"><div class="ttname"><a href="classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60">XWindowsUtil::atomsToString</a></div><div class="ttdeci">static std::string atomsToString(Display *display, const Atom *atom, uint32_t num)</div><div class="ttdoc">Convert several Atoms to a string.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.cpp:1823</div></div>
 <div class="ttc" id="aclassXWindowsUtil_html_a78b0a889bd6a3336a067e5985ec7c0e3"><div class="ttname"><a href="classXWindowsUtil.html#a78b0a889bd6a3336a067e5985ec7c0e3">XWindowsUtil::mapKeySymToKeyID</a></div><div class="ttdeci">static uint32_t mapKeySymToKeyID(KeySym)</div><div class="ttdoc">Convert KeySym to KeyID.</div><div class="ttdef"><b>Definition</b> XWindowsUtil.cpp:1669</div></div>
