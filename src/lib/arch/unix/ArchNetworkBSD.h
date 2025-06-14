@@ -25,10 +25,6 @@ struct sockaddr_storage
 };
 #endif
 
-#if !HAVE_SOCKLEN_T
-using socklen_t = int;
-#endif
-
 #include <poll.h>
 
 #define ARCH_NETWORK ArchNetworkBSD

@@ -156,10 +156,6 @@ macro(configure_unix_libs)
     endif()
   endif()
 
-  # For config.h, set some static values; it may be a good idea to make these
-  # values dynamic for non-standard UNIX compilers.
-  set(HAVE_SOCKLEN_T 1)
-
   # Unix only: For config.h, save the results based on a template (config.h.in).
   # Note that this won't work on Windows because filenames are not case sensitive,
   # and we have header files named "Config.h" (upper case 'C').
