@@ -1,7 +1,7 @@
 <map id="TCPSocket" name="TCPSocket">
-<area shape="rect" id="Node000001" title="TCP data socket." alt="" coords="210,277,298,302"/>
+<area shape="rect" id="Node000001" title="TCP data socket." alt="" coords="210,291,298,315"/>
 <area shape="rect" id="Node000002" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="112,177,204,201"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,211,245,275,241,279,178,214"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,212,246,288,242,292,176,215"/>
 <area shape="rect" id="Node000003" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,79,71,104"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="66,112,145,174,142,178,63,116"/>
 <area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="119,5,197,30"/>
@@ -11,7 +11,7 @@
 <area shape="rect" id="Node000006" href="$classIEventQueue.html" title="Event queue interface." alt="" coords="208,128,305,153"/>
 <area shape="poly" id="edge7_Node000006_Node000004" title=" " alt="" coords="191,37,214,55,235,78,249,103,256,127,251,128,244,105,230,81,210,59,187,41"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="161,120,161,177,155,177,155,120"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="259,168,257,277,252,277,254,168"/>
-<area shape="rect" id="Node000007" href="$classStreamBuffer.html" title="FIFO of bytes." alt="" coords="339,177,436,201"/>
-<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="361,213,271,279,268,275,358,209"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="259,168,257,290,252,290,254,168"/>
+<area shape="rect" id="Node000007" href="$classStreamBuffer.html" title="FIFO of bytes." alt="" coords="343,177,440,201"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="367,214,270,292,267,288,364,209"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="ArchCondImpl" name="ArchCondImpl">
-<area shape="rect" id="Node000001" title="Internal condition variable data. An architecture dependent type holding the necessary data for a con..." alt="" coords="8,92,112,117"/>
+<area shape="rect" id="Node000001" title="Internal condition variable data. An architecture dependent type holding the necessary data for a con..." alt="" coords="8,100,112,125"/>
 <area shape="rect" id="Node000002" href="$classArchMutexImpl.html" title="Internal mutex data. An architecture dependent type holding the necessary data for a mutex." alt="" coords="5,5,115,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,45,63,92,57,92,57,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,46,63,100,57,100,57,46"/>
 </map>
