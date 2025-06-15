@@ -42,6 +42,19 @@ ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig,
 void ServerConnection::handleLogLine(const QString &logLine)
 {
   ServerMessage message(logLine);
+  const auto clientName = message.getClientName();
+
+  if (message.isDisconnectedMessage()) {
+    m_connectedClients.remove(clientName);
+    Q_EMIT clientsChanged(connectedClients());
+    return;
+  }
+
+  if (message.isConnectedMessage()) {
+    m_connectedClients.insert(clientName);
+    Q_EMIT clientsChanged(connectedClients());
+    return;
+  }
 
   if (!message.isNewClientMessage()) {
     return;
@@ -62,19 +75,17 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (const auto &client = message.getClientName(); m_receivedClients.contains(client)) {
-    qDebug("already got request, skipping new client prompt for: %s", qPrintable(client));
+  if (m_connectedClients.contains(clientName)) {
+    qDebug("already got request, skipping new client prompt for: %s", qPrintable(clientName));
     return;
   }
 
-  handleNewClient(message.getClientName());
+  handleNewClient(clientName);
 }
 
 void ServerConnection::handleNewClient(const QString &clientName)
 {
   using enum messages::NewClientPromptResult;
-
-  m_receivedClients.append(clientName);
 
   if (m_serverConfig.isFull()) {
     qDebug("server config full, skipping new client prompt for: %s", qPrintable(clientName));
@@ -102,6 +113,14 @@ void ServerConnection::handleNewClient(const QString &clientName)
   } else {
     qFatal("unexpected add client result");
   }
+
+  m_connectedClients.insert(clientName);
+  Q_EMIT clientsChanged(connectedClients());
+}
+
+QStringList ServerConnection::connectedClients() const
+{
+  return QStringList(m_connectedClients.begin(), m_connectedClients.end());
 }
 
 } // namespace deskflow::gui
