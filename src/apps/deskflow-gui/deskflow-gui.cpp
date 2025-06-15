@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   // Add Command Line Options
-  auto helpOption = QCommandLineOption("help", "Display Help on the command line");
-  auto versionOption = QCommandLineOption("version", "Display version information");
+  auto helpOption = QCommandLineOption({"h", "help"}, "Display Help on the command line");
+  auto versionOption = QCommandLineOption({"v", "version"}, "Display version information");
   auto resetOption = QCommandLineOption("reset", "Reset all settings");
 
   QCommandLineParser parser;
