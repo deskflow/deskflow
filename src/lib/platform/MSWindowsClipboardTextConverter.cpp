@@ -9,6 +9,8 @@
 
 #include "base/Unicode.h"
 
+#include <QString>
+
 //
 // MSWindowsClipboardTextConverter
 //
@@ -20,17 +22,12 @@ UINT MSWindowsClipboardTextConverter::getWin32Format() const
 
 std::string MSWindowsClipboardTextConverter::doFromIClipboard(const std::string &data) const
 {
-  // convert and add nul terminator
-  return Unicode::UTF8ToText(data) += '\0';
+  return QString::fromStdString(data).toLatin1().toStdString() + '\0';
 }
 
 std::string MSWindowsClipboardTextConverter::doToIClipboard(const std::string &data) const
 {
-  // convert and truncate at first nul terminator
-  std::string dst = Unicode::textToUTF8(data);
-  std::string::size_type n = dst.find('\0');
-  if (n != std::string::npos) {
-    dst.erase(n);
-  }
-  return dst;
+  auto q = QString::fromStdString(data);
+  q.truncate(q.indexOf('\0'));
+  return q.toStdString();
 }
