@@ -2,7 +2,7 @@
 <component type="desktop-application">
 	<id>org.deskflow.deskflow</id>
 	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>GPL-2.0</project_license>
+	<project_license>GPL-2.0-only</project_license>
 	<name>Deskflow</name>
 	<developer id="org.deskflow">
 		<name>Deskflow Developers</name>
@@ -16,6 +16,10 @@
 	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
 	<url type="homepage">https://deskflow.org</url>
 	<url type="bugtracker">https://github.com/deskflow/deskflow/issues</url>
+	<url type="faq">https://github.com/deskflow/deskflow/wiki/Project-FAQ</url>
+	<url type="help">https://github.com/deskflow/deskflow/wiki#user-guides</url>
+	<url type="vcs-browser">https://github.com/deskflow/deskflow</url>
+	<url type="contribute">https://github.com/deskflow/deskflow/wiki/Contributing</url>
 	<screenshots>
 		<screenshot type="default">
 			<image>https://deskflow.org/screenshots/deskflow.png</image>
