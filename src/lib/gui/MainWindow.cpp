@@ -320,6 +320,7 @@ void MainWindow::connectSlots()
 #endif
 
   connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
+  connect(&m_serverConnection, &ServerConnection::clientsChanged, this, &MainWindow::serverClientsChanged);
 
   connect(&m_serverConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
   connect(&m_clientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
@@ -873,6 +874,7 @@ void MainWindow::updateStatus()
 {
   const auto connection = m_coreProcess.connectionState();
   const auto process = m_coreProcess.processState();
+  const bool isServer = (m_coreProcess.mode() == CoreMode::Server);
 
   updateSecurityIcon(false);
   switch (process) {
@@ -899,7 +901,7 @@ void MainWindow::updateStatus()
       using enum CoreConnectionState;
 
     case Listening: {
-      if (m_coreProcess.mode() == CoreMode::Server) {
+      if (isServer) {
         updateSecurityIcon(true);
         setStatus(tr("%1 is waiting for clients").arg(kAppName));
       }
@@ -913,7 +915,10 @@ void MainWindow::updateStatus()
 
     case Connected: {
       updateSecurityIcon(true);
-      setStatus(tr("%1 is connected").arg(kAppName));
+      if (!isServer) {
+        setStatus(tr("%1 is connected as client of %2")
+                      .arg(kAppName, Settings::value(Settings::Client::RemoteHost).toString()));
+      }
       break;
     }
 
@@ -1137,6 +1142,37 @@ bool MainWindow::regenerateLocalFingerprints()
 
   updateLocalFingerprint();
   return true;
+}
+
+void MainWindow::serverClientsChanged(const QStringList &clients)
+{
+  if (m_coreProcess.mode() != CoreMode::Server || !m_coreProcess.isStarted())
+    return;
+
+  switch (clients.size()) {
+  case 0:
+    setStatus(tr("%1 is waiting for clients").arg(kAppName));
+    ui->statusBar->setToolTip("");
+    break;
+
+  case 1:
+    setStatus(tr("%1 is connected to a client: %2").arg(kAppName, clients.first()));
+    ui->statusBar->setToolTip("");
+    break;
+
+  case 2:
+  case 3:
+  case 4:
+    setStatus(
+        tr("%1 is connected, with %2 clients: %3").arg(kAppName, QString::number(clients.size()), clients.join(", "))
+    );
+    ui->statusBar->setToolTip(tr("Clients:\n %1").arg(clients.join("\n")));
+    break;
+  default:
+    setStatus(tr("%1 is connected, with %n client(s)", "", clients.size()).arg(kAppName));
+    ui->statusBar->setToolTip(tr("Clients:\n  %1").arg(clients.join("\n")));
+    break;
+  }
 }
 
 void MainWindow::daemonIpcClientConnectionFailed()
