@@ -17,7 +17,7 @@ A socket multiplexer job class that invokes a member function.
 template <class T> class TSocketMultiplexerMethodJob : public ISocketMultiplexerJob
 {
 public:
-  using Method = ISocketMultiplexerJob *(T::*)(ISocketMultiplexerJob *, bool, bool, bool);
+  using Method = MultiplexerJobStatus (T::*)(ISocketMultiplexerJob *, bool, bool, bool);
 
   //! run() invokes \c object->method(arg)
   TSocketMultiplexerMethodJob(T *object, Method method, ArchSocket socket, bool readable, bool writeable);
@@ -29,7 +29,7 @@ public:
   TSocketMultiplexerMethodJob &operator=(TSocketMultiplexerMethodJob &&) = delete;
 
   // IJob overrides
-  ISocketMultiplexerJob *run(bool readable, bool writable, bool error) override;
+  MultiplexerJobStatus run(bool readable, bool writable, bool error) override;
   ArchSocket getSocket() const override;
   bool isReadable() const override;
   bool isWritable() const override;
@@ -61,12 +61,12 @@ template <class T> inline TSocketMultiplexerMethodJob<T>::~TSocketMultiplexerMet
   ARCH->closeSocket(m_socket);
 }
 
-template <class T> inline ISocketMultiplexerJob *TSocketMultiplexerMethodJob<T>::run(bool read, bool write, bool error)
+template <class T> inline MultiplexerJobStatus TSocketMultiplexerMethodJob<T>::run(bool read, bool write, bool error)
 {
-  if (m_object != nullptr) {
+  if (m_object) {
     return (m_object->*m_method)(this, read, write, error);
   }
-  return nullptr;
+  return {false, {}};
 }
 
 template <class T> inline ArchSocket TSocketMultiplexerMethodJob<T>::getSocket() const
