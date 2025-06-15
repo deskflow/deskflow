@@ -7,7 +7,6 @@
 #pragma once
 
 #include <QString>
-#include <QStringList>
 
 #include "gui/Messages.h"
 #include "gui/config/IServerConfig.h"
@@ -35,14 +34,16 @@ public:
 Q_SIGNALS:
   void messageShowing();
   void configureClient(const QString &clientName);
+  void clientsChanged(const QStringList &clients);
 
 private:
   void handleNewClient(const QString &clientName);
+  QStringList connectedClients() const;
 
   QWidget *m_pParent;
   IServerConfig &m_serverConfig;
   std::shared_ptr<Deps> m_pDeps;
-  QStringList m_receivedClients;
+  QSet<QString> m_connectedClients;
   bool m_messageShowing = false;
 };
 
