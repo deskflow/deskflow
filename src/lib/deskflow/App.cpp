@@ -101,7 +101,7 @@ int App::run(int argc, char **argv)
     // display invalid exceptions can occur when going to sleep. When this
     // process exits, the UI will restart us instantly. We don't really want
     // that behevior, so we quies for a bit
-    ARCH->sleep(10);
+    Arch::sleep(10);
   } catch (std::runtime_error &re) {
     LOG((CLOG_CRIT "a runtime error occurred: %s\n", re.what()));
   } catch (std::exception &e) {

@@ -1887,7 +1887,7 @@ bool XWindowsScreen::grabMouseAndKeyboard()
       assert(result != GrabNotViewable);
       if (result != GrabSuccess) {
         LOG((CLOG_DEBUG2 "waiting to grab keyboard"));
-        ARCH->sleep(0.05);
+        Arch::sleep(0.05);
         if (timer.getTime() >= s_timeout) {
           LOG((CLOG_DEBUG2 "grab keyboard timed out"));
           return false;
@@ -1904,7 +1904,7 @@ bool XWindowsScreen::grabMouseAndKeyboard()
       // back off to avoid grab deadlock
       XUngrabKeyboard(m_display, CurrentTime);
       LOG((CLOG_DEBUG2 "ungrabbed keyboard, waiting to grab pointer"));
-      ARCH->sleep(0.05);
+      Arch::sleep(0.05);
       if (timer.getTime() >= s_timeout) {
         LOG((CLOG_DEBUG2 "grab pointer timed out"));
         return false;

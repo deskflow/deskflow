@@ -116,7 +116,7 @@ void OSXKeyStateTests::fakePollCharWithModifier()
 bool OSXKeyStateTests::isKeyPressed(const OSXKeyState &keyState, KeyButton button)
 {
   // HACK: allow os to realize key state changes.
-  ARCH->sleep(.2);
+  Arch::sleep(.2);
 
   IKeyState::KeyButtonSet pressed;
   keyState.pollPressedKeys(pressed);

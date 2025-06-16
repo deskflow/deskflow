@@ -213,7 +213,7 @@ void MSWindowsScreenSaver::watchDesktopThread(void *)
 
   for (;;) {
     // wait a bit
-    ARCH->sleep(0.2);
+    Arch::sleep(0.2);
 
     BOOL running;
     SystemParametersInfo(SPI_GETSCREENSAVERRUNNING, 0, &running, 0);

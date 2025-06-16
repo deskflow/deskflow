@@ -1387,7 +1387,7 @@ void MSWindowsScreen::warpCursorNoFlush(int32_t x, int32_t y)
   // chance of undesired behavior.  we'll also check for very
   // large motions that look suspiciously like about half width
   // or height of the screen.
-  ARCH->sleep(0.0);
+  Arch::sleep(0.0);
 
   // send an event that we can recognize after the mouse warp
   PostThreadMessage(GetCurrentThreadId(), DESKFLOW_MSG_POST_WARP, 0, 0);

@@ -436,7 +436,7 @@ int SecureSocket::secureAccept(int socket)
     LOG((CLOG_ERR "failed to accept secure socket"));
     LOG((CLOG_WARN "client connection may not be secure"));
     m_secureReady = false;
-    ARCH->sleep(1);
+    Arch::sleep(1);
     retry = 0;
     return -1; // Failed, error out
   }
@@ -459,7 +459,7 @@ int SecureSocket::secureAccept(int socket)
   if (retry > 0) {
     LOG((CLOG_DEBUG2 "retry accepting secure socket"));
     m_secureReady = false;
-    ARCH->sleep(s_retryDelay);
+    Arch::sleep(s_retryDelay);
     return 0;
   }
 
@@ -507,7 +507,7 @@ int SecureSocket::secureConnect(int socket)
   if (retry > 0) {
     LOG((CLOG_DEBUG2 "retry connect secure socket"));
     m_secureReady = false;
-    ARCH->sleep(s_retryDelay);
+    Arch::sleep(s_retryDelay);
     return 0;
   }
 
