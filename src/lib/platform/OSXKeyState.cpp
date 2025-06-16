@@ -889,7 +889,7 @@ void OSXKeyState::setGroup(int32_t group)
   // event queue and without a delay the subsequent key press
   // event could be applied before the keyboard layout would
   // actually be changed.
-  ARCH->sleep(.01);
+  Arch::sleep(.01);
 }
 
 void OSXKeyState::adjustAltGrModifier(const KeyIDs &ids, KeyModifierMask *mask, bool isCommand) const

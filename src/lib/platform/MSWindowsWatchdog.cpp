@@ -241,7 +241,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
     // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
     LOG_DEBUG3("watchdog main loop sleeping");
-    ARCH->sleep(0.1);
+    Arch::sleep(0.1);
   }
 
   LOG_DEBUG("watchdog main loop finished");
@@ -309,7 +309,7 @@ void MSWindowsWatchdog::startProcess()
   } else {
     // Wait for program to fail. This needs to be 1 second, as the process may take some time to fail.
     LOG_DEBUG("watchdog waiting for process start result");
-    ARCH->sleep(1);
+    Arch::sleep(1);
 
     if (!isProcessRunning()) {
       m_process.reset();
@@ -357,7 +357,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
     if (!success || bytesRead == 0) {
       // Sleep for only 100ms rather than 1 second so that the service can shut down faster.
-      ARCH->sleep(0.1);
+      Arch::sleep(0.1);
     } else {
       buffer[bytesRead] = '\0';
 
@@ -524,7 +524,7 @@ void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signatur
   while (m_running) {
     if (m_processState != ProcessState::Running) {
       LOG_DEBUG2("watchdog not running, skipping SendSAS");
-      ARCH->sleep(1);
+      Arch::sleep(1);
       continue;
     }
 
@@ -532,7 +532,7 @@ void MSWindowsWatchdog::sasLoop(void *) // NOSONAR - Thread entry point signatur
     MSWindowsHandle sendSasEvent(CreateEvent(nullptr, FALSE, FALSE, kSendSasEventName));
     if (sendSasEvent.get() == nullptr) {
       LOG_ERR("could not create SAS event, error: %s", windowsErrorToString(GetLastError()).c_str());
-      ARCH->sleep(1);
+      Arch::sleep(1);
       continue;
     }
 

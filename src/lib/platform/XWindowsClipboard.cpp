@@ -1232,7 +1232,7 @@ bool XWindowsClipboard::CICCCMGetClipboard::readClipboard(
         }
       }
     } else {
-      ARCH->sleep(0.01);
+      Arch::sleep(0.01);
     }
   }
 

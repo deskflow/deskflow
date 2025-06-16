@@ -424,7 +424,7 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
       const double start = Arch::time();
       do {
         // wait a little
-        ARCH->sleep(0.05);
+        Arch::sleep(0.05);
 
         // repeat test
         testCancelThreadImpl(self);
