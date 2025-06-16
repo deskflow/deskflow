@@ -508,13 +508,13 @@ void OSXScreen::fakeMouseButton(ButtonID id, bool press)
   // This will allow for higher than triple click but the quartz documenation
   // does not specify that this should be limited to triple click
   if (press) {
-    if ((ARCH->time() - m_lastClickTime) <= clickTime && diff <= maxDiff) {
+    if ((Arch::time() - m_lastClickTime) <= clickTime && diff <= maxDiff) {
       m_clickState++;
     } else {
       m_clickState = 1;
     }
 
-    m_lastClickTime = ARCH->time();
+    m_lastClickTime = Arch::time();
   }
 
   if (m_clickState == 1) {
@@ -1752,11 +1752,11 @@ void OSXScreen::waitForCarbonLoop() const
 
   LOG((CLOG_DEBUG "waiting for carbon loop"));
 
-  double timeout = ARCH->time() + kCarbonLoopWaitTimeout;
+  double timeout = Arch::time() + kCarbonLoopWaitTimeout;
   while (!m_carbonLoopReady->wait()) {
-    if (ARCH->time() > timeout) {
+    if (Arch::time() > timeout) {
       LOG((CLOG_DEBUG "carbon loop not ready, waiting again"));
-      timeout = ARCH->time() + kCarbonLoopWaitTimeout;
+      timeout = Arch::time() + kCarbonLoopWaitTimeout;
     }
   }
 
