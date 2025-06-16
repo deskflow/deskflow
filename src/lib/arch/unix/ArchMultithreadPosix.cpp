@@ -421,7 +421,7 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
 
     // wait and repeat test if there's a timeout
     if (timeout != 0.0) {
-      const double start = ARCH->time();
+      const double start = Arch::time();
       do {
         // wait a little
         ARCH->sleep(0.05);
@@ -434,7 +434,7 @@ bool ArchMultithreadPosix::wait(ArchThread target, double timeout)
         }
 
         // repeat wait and test until timed out
-      } while (timeout < 0.0 || (ARCH->time() - start) <= timeout);
+      } while (timeout < 0.0 || (Arch::time() - start) <= timeout);
     }
 
     closeThread(target);

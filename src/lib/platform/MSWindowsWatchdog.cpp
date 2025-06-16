@@ -196,7 +196,7 @@ void MSWindowsWatchdog::mainLoop(void *)
 
     case StartScheduled: {
       LOG_DEBUG3("watchdog process start scheduled");
-      if (m_nextStartTime.has_value() && m_nextStartTime.value() <= ARCH->time()) {
+      if (m_nextStartTime.has_value() && m_nextStartTime.value() <= Arch::time()) {
         LOG_DEBUG("start time reached, queueing process start");
         m_processState = StartPending;
       }
@@ -442,7 +442,7 @@ MSWindowsWatchdog::ProcessState MSWindowsWatchdog::handleStartError(const std::s
 
   // When there has been more than one consecutive failure, slow down the retry rate.
   if (m_startFailures > 1) {
-    m_nextStartTime = ARCH->time() + kStartDelaySeconds;
+    m_nextStartTime = Arch::time() + kStartDelaySeconds;
     LOG_WARN("start failed %d times, delaying start", m_startFailures);
     LOG_DEBUG("start delay, seconds=%d, time=%f", kStartDelaySeconds, m_nextStartTime.value());
     return ProcessState::StartScheduled;
