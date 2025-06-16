@@ -124,7 +124,7 @@ ArchSocket ArchNetworkBSD::copySocket(ArchSocket s)
   assert(s != nullptr);
 
   // ref the socket and return it
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   ++s->m_refCount;
   return s;
 }
@@ -136,7 +136,7 @@ void ArchNetworkBSD::closeSocket(ArchSocket s)
   bool doClose = false;
   // unref the socket and note if it should be released
   {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     doClose = (--s->m_refCount == 0);
   }
 
@@ -146,7 +146,7 @@ void ArchNetworkBSD::closeSocket(ArchSocket s)
       // close failed.  restore the last ref and throw.
       int err = errno;
       {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::scoped_lock lock{m_mutex};
         ++s->m_refCount;
       }
       throwError(err);
@@ -531,7 +531,7 @@ std::vector<ArchNetAddress> ArchNetworkBSD::nameToAddr(const std::string &name)
   }
 
   // done with static buffer
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   struct addrinfo *pResult = nullptr;
 
   if (int ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult); ret != 0) {
@@ -568,7 +568,7 @@ std::string ArchNetworkBSD::addrToName(ArchNetAddress addr)
   assert(addr != nullptr);
 
   // mutexed name lookup (ugh)
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   char host[1024];
   char service[20];
 
@@ -591,7 +591,7 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
   switch (getAddrFamily(addr)) {
   case kINET: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     std::string s = inet_ntoa(ipAddr->sin_addr);
     return s;
   }
@@ -600,7 +600,7 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
     char strAddr[INET6_ADDRSTRLEN];
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     {
-      std::lock_guard<std::mutex> lock(m_mutex);
+      std::scoped_lock lock{m_mutex};
       inet_ntop(AF_INET6, &ipAddr->sin6_addr, strAddr, INET6_ADDRSTRLEN);
     }
     return strAddr;

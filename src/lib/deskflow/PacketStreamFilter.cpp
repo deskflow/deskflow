@@ -26,7 +26,7 @@ PacketStreamFilter::PacketStreamFilter(IEventQueue *events, deskflow::IStream *s
 
 void PacketStreamFilter::close()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   m_size = 0;
   m_buffer.pop(m_buffer.getSize());
   StreamFilter::close();
@@ -38,7 +38,7 @@ uint32_t PacketStreamFilter::read(void *buffer, uint32_t n)
     return 0;
   }
 
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
 
   // if not enough data yet then give up
   if (!isReadyNoLock()) {
@@ -84,7 +84,7 @@ void PacketStreamFilter::write(const void *buffer, uint32_t count)
 
 void PacketStreamFilter::shutdownInput()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   m_size = 0;
   m_buffer.pop(m_buffer.getSize());
   StreamFilter::shutdownInput();
@@ -92,13 +92,13 @@ void PacketStreamFilter::shutdownInput()
 
 bool PacketStreamFilter::isReady() const
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   return isReadyNoLock();
 }
 
 uint32_t PacketStreamFilter::getSize() const
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   return isReadyNoLock() ? m_size : 0;
 }
 
@@ -157,13 +157,13 @@ bool PacketStreamFilter::readMore()
 void PacketStreamFilter::filterEvent(const Event &event)
 {
   if (event.getType() == EventTypes::StreamInputReady) {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     if (!readMore()) {
       return;
     }
   } else if (event.getType() == EventTypes::StreamInputShutdown) {
     // discard this if we have buffered data
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     m_inputShutdown = true;
     if (m_size != 0) {
       return;

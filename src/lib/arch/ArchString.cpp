@@ -20,7 +20,7 @@ std::mutex s_mutex;
 
 int ArchString::convStringWCToMB(char *dst, const wchar_t *src, uint32_t n, bool *errors) const
 {
-  std::lock_guard<std::mutex> lock(s_mutex);
+  std::scoped_lock lock{s_mutex};
   ptrdiff_t len = 0;
 
   bool dummyErrors;
@@ -77,7 +77,7 @@ ArchString::EWideCharEncoding ArchString::getWideCharEncoding() const
 
 int ArchString::convStringMBToWC(wchar_t *dst, const char *src, uint32_t n, bool *errors) const
 {
-  std::lock_guard<std::mutex> lock(s_mutex);
+  std::scoped_lock lock{s_mutex};
   ptrdiff_t len = 0;
   wchar_t dummy;
 

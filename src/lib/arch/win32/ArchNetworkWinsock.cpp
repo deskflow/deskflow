@@ -225,7 +225,7 @@ ArchSocket ArchNetworkWinsock::copySocket(ArchSocket s)
   assert(s != nullptr);
 
   // ref the socket and return it
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   ++s->m_refCount;
   return s;
 }
@@ -237,7 +237,7 @@ void ArchNetworkWinsock::closeSocket(ArchSocket s)
   // unref the socket and note if it should be released
   bool doClose = false;
   {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     doClose = (--s->m_refCount == 0);
   }
 
@@ -247,7 +247,7 @@ void ArchNetworkWinsock::closeSocket(ArchSocket s)
       // close failed.  restore the last ref and throw.
       int err = getsockerror_winsock();
       {
-        std::lock_guard<std::mutex> lock(m_mutex);
+        std::scoped_lock lock{m_mutex};
         ++s->m_refCount;
       }
       throwError(err);
@@ -684,7 +684,7 @@ std::vector<ArchNetAddress> ArchNetworkWinsock::nameToAddr(const std::string &na
   hints.ai_family = AF_UNSPEC;
   int ret = -1;
 
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   if ((ret = getaddrinfo(name.c_str(), nullptr, &hints, &pResult)) != 0) {
     throwNameError(ret);
   }

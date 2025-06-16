@@ -197,7 +197,7 @@ void AppUtilWindows::eventLoop()
 
   LOG_DEBUG("windows event loop running");
   {
-    std::lock_guard lock(m_eventThreadStartedMutex);
+    std::scoped_lock lock{m_eventThreadStartedMutex};
     m_eventThreadRunning = true;
   }
   m_eventThreadStartedCond.notify_one();
