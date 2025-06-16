@@ -150,6 +150,13 @@ MainWindow::MainWindow()
 
   // Force generation of SHA256 for the localhost
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
+    if (Settings::value(Settings::Security::KeySize).toInt() < 2048) {
+      QMessageBox::information(
+          this, kAppName,
+          tr("Your current TLS key is smaller than the minimum allowed size, A new key 2048-bit key will be generated.")
+      );
+      regenerateLocalFingerprints();
+    }
     if (!QFile::exists(Settings::tlsLocalDb())) {
       regenerateLocalFingerprints();
       return;

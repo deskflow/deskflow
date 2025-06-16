@@ -39,6 +39,13 @@ bool TlsUtility::generateCertificate()
   }
 
   auto length = Settings::value(Settings::Security::KeySize).toInt();
+
+  if (length < 2048) {
+    length = 2048;
+    qDebug("selected size too small setting certificate size to 2048");
+    Settings::setValue(Settings::Security::KeySize, 2048);
+  }
+
   const auto certificate = Settings::value(Settings::Security::Certificate).toString();
   return m_certificate.generateCertificate(certificate, length);
 }
