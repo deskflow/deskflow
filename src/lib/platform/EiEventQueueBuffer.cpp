@@ -66,7 +66,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
 
   if (int retval = poll(pfds, POLLFD_COUNT, timeout); retval > 0) {
     if (pfds[EIFD].revents & POLLIN) {
-      std::lock_guard lock(mutex_);
+      std::scoped_lock lock{mutex_};
 
       // libei doesn't allow ei_event_ref() because events are
       // supposed to be short-lived only. So instead, we create an nullptr-data
@@ -108,7 +108,7 @@ IEventQueueBuffer::Type EiEventQueueBuffer::getEvent(Event &event, uint32_t &dat
   // we just have a "something happened" event on the ei fd and the rest is
   // handled by the EiScreen.
   //
-  std::lock_guard lock(mutex_);
+  std::scoped_lock lock{mutex_};
   auto pair = queue_.front();
   queue_.pop();
 
@@ -125,7 +125,7 @@ IEventQueueBuffer::Type EiEventQueueBuffer::getEvent(Event &event, uint32_t &dat
 
 bool EiEventQueueBuffer::addEvent(uint32_t dataID)
 {
-  std::lock_guard lock(mutex_);
+  std::scoped_lock lock{mutex_};
   queue_.push({false, dataID});
 
   // tickle the pipe so our read thread wakes up
@@ -137,7 +137,7 @@ bool EiEventQueueBuffer::addEvent(uint32_t dataID)
 
 bool EiEventQueueBuffer::isEmpty() const
 {
-  std::lock_guard lock(mutex_);
+  std::scoped_lock lock{mutex_};
 
   return queue_.empty();
 }

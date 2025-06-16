@@ -51,7 +51,7 @@ TCPListenSocket::~TCPListenSocket()
 void TCPListenSocket::bind(const NetworkAddress &addr)
 {
   try {
-    std::lock_guard<std::mutex> lock(m_mutex);
+    std::scoped_lock lock{m_mutex};
     ARCH->setReuseAddrOnSocket(m_socket, true);
     ARCH->bindSocket(m_socket, addr.getAddress());
     ARCH->listenOnSocket(m_socket);
@@ -69,7 +69,7 @@ void TCPListenSocket::bind(const NetworkAddress &addr)
 
 void TCPListenSocket::close()
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   if (m_socket == nullptr) {
     throw XIOClosed();
   }

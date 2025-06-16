@@ -208,7 +208,7 @@ void Log::insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead)
 {
   assert(adoptedOutputter != nullptr);
 
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   if (alwaysAtHead) {
     m_alwaysOutputters.push_front(adoptedOutputter);
   } else {
@@ -220,14 +220,14 @@ void Log::insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead)
 
 void Log::remove(ILogOutputter *outputter)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   m_outputters.remove(outputter);
   m_alwaysOutputters.remove(outputter);
 }
 
 void Log::pop_front(bool alwaysAtHead)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   OutputterList *list = alwaysAtHead ? &m_alwaysOutputters : &m_outputters;
   if (!list->empty()) {
     delete list->front();
@@ -251,13 +251,13 @@ bool Log::setFilter(const char *maxPriority)
 
 void Log::setFilter(int maxPriority)
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   m_maxPriority = maxPriority;
 }
 
 int Log::getFilter() const
 {
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
   return m_maxPriority;
 }
 
@@ -268,7 +268,7 @@ void Log::output(ELevel priority, const char *msg)
   if (!msg)
     return;
 
-  std::lock_guard<std::mutex> lock(m_mutex);
+  std::scoped_lock lock{m_mutex};
 
   OutputterList::const_iterator i;
 
