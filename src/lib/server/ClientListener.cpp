@@ -24,9 +24,10 @@
 //
 
 ClientListener::ClientListener(
-    const NetworkAddress &address, ISocketFactory *socketFactory, IEventQueue *events, SecurityLevel securityLevel
+    const NetworkAddress &address, std::unique_ptr<ISocketFactory> socketFactory, IEventQueue *events,
+    SecurityLevel securityLevel
 )
-    : m_socketFactory(socketFactory),
+    : m_socketFactory{std::move(socketFactory)},
       m_events(events),
       m_securityLevel(securityLevel),
       m_address(address)
@@ -37,11 +38,11 @@ ClientListener::ClientListener(
     start();
   } catch (XSocketAddressInUse &) {
     cleanupListenSocket();
-    delete m_socketFactory;
+    m_socketFactory.reset();
     throw;
   } catch (XBase &) {
     cleanupListenSocket();
-    delete m_socketFactory;
+    m_socketFactory.reset();
     throw;
   }
   LOG((CLOG_DEBUG1 "listening for clients"));
@@ -50,7 +51,7 @@ ClientListener::ClientListener(
 ClientListener::~ClientListener()
 {
   stop();
-  delete m_socketFactory;
+  m_socketFactory.reset();
 }
 
 void ClientListener::setServer(Server *server)

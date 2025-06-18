@@ -17,6 +17,8 @@
 #include "net/NetworkAddress.h"
 #include "server/Config.h"
 
+#include <memory>
+
 enum EServerState
 {
   kUninitialized,
@@ -124,7 +126,7 @@ public:
 
 private:
   void handleScreenSwitched(const Event &e);
-  ISocketFactory *getSocketFactory() const;
+  std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
   Server *m_server = nullptr;
