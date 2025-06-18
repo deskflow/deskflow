@@ -13,7 +13,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "base/TMethodEventJob.h"
 #include "common/Constants.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
@@ -50,22 +49,18 @@ EiScreen::EiScreen(bool is_primary, IEventQueue *events, bool use_portal)
   init_ei();
   key_state_ = new EiKeyState(this, events);
   // install event handlers
-  events_->adoptHandler(
-      EventTypes::System, events_->getSystemTarget(), new TMethodEventJob<EiScreen>(this, &EiScreen::handleSystemEvent)
-  );
+  events_->addHandler(EventTypes::System, events_->getSystemTarget(), [this](const auto &e) { handleSystemEvent(e); });
 
   if (use_portal) {
-    events_->adoptHandler(
-        EventTypes::EIConnected, getEventTarget(),
-        new TMethodEventJob<EiScreen>(this, &EiScreen::handle_connected_to_eis_event)
-    );
+    events_->addHandler(EventTypes::EIConnected, getEventTarget(), [this](const auto &e) {
+      handle_connected_to_eis_event(e);
+    });
     if (is_primary) {
       portal_input_capture_ = new PortalInputCapture(this, events_);
     } else {
-      events_->adoptHandler(
-          EventTypes::EISessionClosed, getEventTarget(),
-          new TMethodEventJob<EiScreen>(this, &EiScreen::handle_portal_session_closed)
-      );
+      events_->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
+        handle_portal_session_closed();
+      });
       portal_remote_desktop_ = new PortalRemoteDesktop(this, events_);
     }
   } else {
@@ -698,7 +693,7 @@ void EiScreen::on_abs_motion_event(const ei_event *event) const
   assert(is_primary_);
 }
 
-void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
+void EiScreen::handle_connected_to_eis_event(const Event &event)
 {
   int fd = static_cast<EiConnectInfo *>(event.getData())->m_fd;
   LOG_DEBUG("eis connection established, fd=%d", fd);
@@ -709,7 +704,7 @@ void EiScreen::handle_connected_to_eis_event(const Event &event, void *)
   }
 }
 
-void EiScreen::handle_portal_session_closed(const Event &event, void *)
+void EiScreen::handle_portal_session_closed()
 {
   // Portal may or may not EI_EVENT_DISCONNECT us before sending the DBus Closed
   // signal. Let's clean up either way.
@@ -718,7 +713,7 @@ void EiScreen::handle_portal_session_closed(const Event &event, void *)
   init_ei();
 }
 
-void EiScreen::handleSystemEvent(const Event &sysevent, void *)
+void EiScreen::handleSystemEvent(const Event &sysevent)
 {
   std::scoped_lock lock{mutex_};
 
@@ -779,7 +774,7 @@ void EiScreen::handleSystemEvent(const Event &sysevent, void *)
           portal_input_capture_ = new PortalInputCapture(this, this->events_);
         }
       }
-      this->handle_portal_session_closed(sysevent, nullptr);
+      this->handle_portal_session_closed();
       break;
     case EI_EVENT_DEVICE_PAUSED:
       LOG_DEBUG("device %s is paused", ei_device_get_name(device));

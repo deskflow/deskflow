@@ -7,7 +7,6 @@
 #include "server/ClientProxy1_6.h"
 
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
@@ -22,10 +21,7 @@ ClientProxy1_6::ClientProxy1_6(const std::string &name, deskflow::IStream *strea
     : ClientProxy1_5(name, stream, server, events),
       m_events(events)
 {
-  m_events->adoptHandler(
-      EventTypes::ClipboardSending, this,
-      new TMethodEventJob<ClientProxy1_6>(this, &ClientProxy1_6::handleClipboardSendingEvent)
-  );
+  m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) { handleClipboardSendingEvent(e); });
 }
 
 void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
@@ -45,7 +41,7 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
   }
 }
 
-void ClientProxy1_6::handleClipboardSendingEvent(const Event &event, void *)
+void ClientProxy1_6::handleClipboardSendingEvent(const Event &event)
 {
   ClipboardChunk::send(getStream(), event.getDataObject());
 }

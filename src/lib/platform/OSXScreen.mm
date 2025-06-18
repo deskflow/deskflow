@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -11,7 +12,6 @@
 #include "base/EventQueue.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
 #include "deskflow/ClientApp.h"
@@ -142,10 +142,9 @@ OSXScreen::OSXScreen(
     constructMouseButtonEventMap();
 
     // watch for requests to sleep
-    m_events->adoptHandler(
-        EventTypes::OsxScreenConfirmSleep, getEventTarget(),
-        new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleConfirmSleep)
-    );
+    m_events->addHandler(EventTypes::OsxScreenConfirmSleep, getEventTarget(), [this](const auto &e) {
+      handleConfirmSleep(e);
+    });
 
     // create thread for monitoring system power state.
     *m_pmThreadReady = false;
@@ -167,10 +166,9 @@ OSXScreen::OSXScreen(
   }
 
   // install event handlers
-  m_events->adoptHandler(
-      EventTypes::System, m_events->getSystemTarget(),
-      new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleSystemEvent)
-  );
+  m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
+    handleSystemEvent(e);
+  });
 
   // install the platform event queue
   m_events->adoptBuffer(new OSXEventQueueBuffer(m_events));
@@ -649,9 +647,7 @@ void OSXScreen::enable()
 {
   // watch the clipboard
   m_clipboardTimer = m_events->newTimer(1.0, nullptr);
-  m_events->adoptHandler(
-      EventTypes::Timer, m_clipboardTimer, new TMethodEventJob<OSXScreen>(this, &OSXScreen::handleClipboardCheck)
-  );
+  m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { handleClipboardCheck(); });
 
   if (m_isPrimary) {
     // FIXME -- start watching jump zones
@@ -836,7 +832,7 @@ void OSXScreen::sendClipboardEvent(EventTypes type, ClipboardID id) const
   sendEvent(type, info);
 }
 
-void OSXScreen::handleSystemEvent(const Event &event, void *)
+void OSXScreen::handleSystemEvent(const Event &event)
 {
   EventRef *carbonEvent = static_cast<EventRef *>(event.getData());
   assert(carbonEvent != nullptr);
@@ -996,7 +992,7 @@ bool OSXScreen::onMouseWheel(int32_t xDelta, int32_t yDelta) const
   return true;
 }
 
-void OSXScreen::handleClipboardCheck(const Event &, void *)
+void OSXScreen::handleClipboardCheck()
 {
   checkClipboards();
 }
@@ -1448,7 +1444,7 @@ void OSXScreen::handlePowerChangeRequest(natural_t messageType, void *messageArg
   }
 }
 
-void OSXScreen::handleConfirmSleep(const Event &event, void *)
+void OSXScreen::handleConfirmSleep(const Event &event)
 {
   long messageArg = (long)event.getData();
   if (messageArg != 0) {

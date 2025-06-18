@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -289,28 +290,28 @@ private:
   void processOptions();
 
   // event handlers
-  void handleShapeChanged(const Event &, void *);
-  void handleClipboardGrabbed(const Event &, void *);
-  void handleClipboardChanged(const Event &, void *);
-  void handleKeyDownEvent(const Event &, void *);
-  void handleKeyUpEvent(const Event &, void *);
-  void handleKeyRepeatEvent(const Event &, void *);
-  void handleButtonDownEvent(const Event &, void *);
-  void handleButtonUpEvent(const Event &, void *);
-  void handleMotionPrimaryEvent(const Event &, void *);
-  void handleMotionSecondaryEvent(const Event &, void *);
-  void handleWheelEvent(const Event &, void *);
-  void handleScreensaverActivatedEvent(const Event &, void *);
-  void handleScreensaverDeactivatedEvent(const Event &, void *);
-  void handleSwitchWaitTimeout(const Event &, void *);
-  void handleClientDisconnected(const Event &, void *);
-  void handleClientCloseTimeout(const Event &, void *);
-  void handleSwitchToScreenEvent(const Event &, void *);
-  void handleSwitchInDirectionEvent(const Event &, void *);
-  void handleKeyboardBroadcastEvent(const Event &, void *);
-  void handleLockCursorToScreenEvent(const Event &, void *);
-  void handleFakeInputBeginEvent(const Event &, void *);
-  void handleFakeInputEndEvent(const Event &, void *);
+  void handleShapeChanged(BaseClientProxy *client);
+  void handleClipboardGrabbed(const Event &event, BaseClientProxy *client);
+  void handleClipboardChanged(const Event &event, BaseClientProxy *client);
+  void handleKeyDownEvent(const Event &event);
+  void handleKeyUpEvent(const Event &event);
+  void handleKeyRepeatEvent(const Event &event);
+  void handleButtonDownEvent(const Event &event);
+  void handleButtonUpEvent(const Event &event);
+  void handleMotionPrimaryEvent(const Event &event);
+  void handleMotionSecondaryEvent(const Event &event);
+  void handleWheelEvent(const Event &event);
+  void handleScreensaverActivatedEvent();
+  void handleScreensaverDeactivatedEvent();
+  void handleSwitchWaitTimeout();
+  void handleClientDisconnected(BaseClientProxy *client);
+  void handleClientCloseTimeout(BaseClientProxy *client);
+  void handleSwitchToScreenEvent(const Event &event);
+  void handleSwitchInDirectionEvent(const Event &event);
+  void handleKeyboardBroadcastEvent(const Event &event);
+  void handleLockCursorToScreenEvent(const Event &event);
+  void handleFakeInputBeginEvent();
+  void handleFakeInputEndEvent();
 
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);

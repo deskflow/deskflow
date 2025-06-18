@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -43,15 +44,15 @@ public:
   EventQueueTimer *newTimer(double duration, void *target) override;
   EventQueueTimer *newOneShotTimer(double duration, void *target) override;
   void deleteTimer(EventQueueTimer *) override;
-  void adoptHandler(EventTypes type, void *target, IEventJob *handler) override;
+  void addHandler(EventTypes type, void *target, const EventHandler &handler) override;
   void removeHandler(EventTypes type, void *target) override;
   void removeHandlers(void *target) override;
   bool isEmpty() const override;
-  IEventJob *getHandler(EventTypes type, void *target) const override;
   void *getSystemTarget() override;
   void waitForReady() const override;
 
 private:
+  const EventHandler *getHandler(EventTypes type, void *target) const;
   uint32_t saveEvent(const Event &event);
   Event removeEvent(uint32_t eventID);
   bool hasTimerExpired(Event &event);
@@ -99,7 +100,7 @@ private:
   using TimerQueue = PriorityQueue<Timer>;
   using EventTable = std::map<uint32_t, Event>;
   using EventIDList = std::vector<uint32_t>;
-  using TypeHandlerTable = std::map<EventTypes, std::unique_ptr<IEventJob>>;
+  using TypeHandlerTable = std::map<EventTypes, EventHandler>;
   using HandlerTable = std::map<void *, TypeHandlerTable>;
 
   int m_systemTarget = 0;

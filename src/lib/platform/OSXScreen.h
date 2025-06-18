@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -99,7 +100,7 @@ public:
 
 protected:
   // IPlatformScreen overrides
-  void handleSystemEvent(const Event &, void *) override;
+  void handleSystemEvent(const Event &e) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;
 
@@ -148,7 +149,7 @@ private:
   double getScrollSpeed() const;
 
   // clipboard check timer handler
-  void handleClipboardCheck(const Event &, void *);
+  void handleClipboardCheck();
 
   // Resolution switch callback
   static void displayReconfigurationCallback(CGDirectDisplayID, CGDisplayChangeSummaryFlags, void *);
@@ -162,7 +163,7 @@ private:
   static void powerChangeCallback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument);
   void handlePowerChangeRequest(natural_t messageType, void *messageArgument);
 
-  void handleConfirmSleep(const Event &event, void *);
+  void handleConfirmSleep(const Event &event);
 
   // global hotkey operating mode
   static bool isGlobalHotKeyOperatingModeAvailable();

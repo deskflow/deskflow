@@ -64,11 +64,11 @@ public:
 
 private:
   // client connection event handlers
-  void handleClientConnecting(const Event &, void *);
-  void handleClientAccepted(const Event &, void *);
-  void handleUnknownClient(const Event &, void *);
-  void handleUnknownClientFailure(const Event &, void *);
-  void handleClientDisconnected(const Event &, void *);
+  void handleClientConnecting();
+  void handleClientAccepted(IDataSocket *socket);
+  void handleUnknownClient(ClientProxyUnknown *unknownClient);
+  void handleUnknownClientFailure(ClientProxyUnknown *client);
+  void handleClientDisconnected(ClientProxy *client);
 
   void cleanupListenSocket();
   void cleanupClientSockets();

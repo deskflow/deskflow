@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -168,17 +169,17 @@ private:
   void cleanupScreen();
   void cleanupTimer();
   void cleanupStream();
-  void handleConnected(const Event &, void *);
-  void handleConnectionFailed(const Event &, void *);
-  void handleConnectTimeout(const Event &, void *);
-  void handleOutputError(const Event &, void *);
-  void handleDisconnected(const Event &, void *);
-  void handleShapeChanged(const Event &, void *);
-  void handleClipboardGrabbed(const Event &, void *);
-  void handleHello(const Event &, void *);
-  void handleSuspend(const Event &event, void *);
-  void handleResume(const Event &event, void *);
-  void handleStopRetry(const Event &, void *);
+  void handleConnected();
+  void handleConnectionFailed(const Event &event);
+  void handleConnectTimeout();
+  void handleOutputError();
+  void handleDisconnected();
+  void handleShapeChanged();
+  void handleClipboardGrabbed(const Event &event);
+  void handleHello();
+  void handleSuspend();
+  void handleResume();
+  void handleStopRetry();
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
 

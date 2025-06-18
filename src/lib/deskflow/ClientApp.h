@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -64,15 +65,15 @@ public:
 
   void updateStatus() const;
   void updateStatus(const std::string &msg) const;
-  void handleScreenError(const Event &, void *);
+  void handleScreenError();
   deskflow::Screen *openClientScreen();
   void closeClientScreen(deskflow::Screen *screen);
-  void handleClientRestart(const Event &, void *vtimer);
+  void handleClientRestart(const Event &, EventQueueTimer *vtimer);
   void scheduleClientRestart(double retryTime);
-  void handleClientConnected(const Event &, void *);
-  void handleClientFailed(const Event &e, void *);
-  void handleClientRefused(const Event &e, void *);
-  void handleClientDisconnected(const Event &, void *);
+  void handleClientConnected();
+  void handleClientFailed(const Event &e);
+  void handleClientRefused(const Event &e);
+  void handleClientDisconnected();
   Client *openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen);
   void closeClient(Client *client);
   bool startClient();

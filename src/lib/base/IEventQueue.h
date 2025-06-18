@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,9 +11,10 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "common/IInterface.h"
+
+#include <functional>
 #include <string>
 
-class IEventJob;
 class IEventQueueBuffer;
 
 // Opaque type for timer info.  This is defined by subclasses of
@@ -29,6 +31,7 @@ timers which generate events periodically.
 class IEventQueue : public IInterface
 {
 public:
+  using EventHandler = std::function<void(const Event &)>;
   class TimerEvent
   {
   public:
@@ -64,6 +67,9 @@ public:
   /*!
   Looks up the dispatcher for the event's target and invokes it.
   Returns true iff a dispatcher exists for the target.
+
+  The caller must ensure that the target of the event is not removed by removeHandler() or
+  removeHandlers().
   */
   virtual bool dispatchEvent(const Event &event) = 0;
 
@@ -119,7 +125,7 @@ public:
   of type \p type.  If no such handler exists it will use the handler
   for \p target and type \p kUnknown if it exists.
   */
-  virtual void adoptHandler(EventTypes type, void *target, IEventJob *handler) = 0;
+  virtual void addHandler(EventTypes type, void *target, const EventHandler &handler) = 0;
 
   //! Unregister an event handler for an event type
   /*!
@@ -151,13 +157,6 @@ public:
   events.
   */
   virtual bool isEmpty() const = 0;
-
-  //! Get an event handler
-  /*!
-  Finds and returns the event handler for the \p type, \p target pair
-  if it exists, otherwise it returns nullptr.
-  */
-  virtual IEventJob *getHandler(EventTypes type, void *target) const = 0;
 
   //! Get the system event type target
   /*!

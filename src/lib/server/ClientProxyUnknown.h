@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -59,11 +60,11 @@ private:
   void removeHandlers();
   void initProxy(const std::string &name, int major, int minor);
   void removeTimer();
-  void handleData(const Event &, void *);
-  void handleWriteError(const Event &, void *);
-  void handleTimeout(const Event &, void *);
-  void handleDisconnect(const Event &, void *);
-  void handleReady(const Event &, void *);
+  void handleData();
+  void handleWriteError();
+  void handleTimeout();
+  void handleDisconnect();
+  void handleReady();
 
 private:
   deskflow::IStream *m_stream = nullptr;

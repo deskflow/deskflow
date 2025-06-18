@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2005 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,6 @@
 #include "server/InputFilter.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "deskflow/KeyMap.h"
 #include "server/PrimaryClient.h"
 #include "server/Server.h"
@@ -796,38 +796,30 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
   m_primaryClient = client;
 
   if (m_primaryClient != nullptr) {
-    m_events->adoptHandler(
-        EventTypes::KeyStateKeyDown, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::KeyStateKeyUp, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::KeyStateKeyRepeat, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::PrimaryScreenButtonDown, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::PrimaryScreenButtonUp, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
-    m_events->adoptHandler(
-        EventTypes::ServerConnected, m_primaryClient->getEventTarget(),
-        new TMethodEventJob<InputFilter>(this, &InputFilter::handleEvent)
-    );
+    m_events->addHandler(EventTypes::KeyStateKeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::KeyStateKeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::KeyStateKeyRepeat, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::PrimaryScreenButtonDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::PrimaryScreenButtonUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
+    m_events->addHandler(EventTypes::ServerConnected, m_primaryClient->getEventTarget(), [this](const auto &e) {
+      handleEvent(e);
+    });
 
     for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
       rule->enable(m_primaryClient);
@@ -878,7 +870,7 @@ bool InputFilter::operator!=(const InputFilter &x) const
   return !operator==(x);
 }
 
-void InputFilter::handleEvent(const Event &event, void *)
+void InputFilter::handleEvent(const Event &event)
 {
   // copy event and adjust target
   Event myEvent(

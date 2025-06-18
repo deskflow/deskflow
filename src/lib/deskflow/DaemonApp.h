@@ -60,7 +60,6 @@ public:
 private:
   void daemonize();
   void handleError(const char *message);
-  void handleIpcMessage(const Event &e, void *);
   int mainLoop();
   int daemonLoop();
   void saveLogLevel(const QString &logLevel) const;
