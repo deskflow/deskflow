@@ -12,7 +12,6 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/String.h"
-#include "base/TMethodEventJob.h"
 #include "common/Settings.h"
 #include "mt/Lock.h"
 #include "net/FingerprintDatabase.h"
@@ -87,11 +86,9 @@ void SecureSocket::close()
 
 void SecureSocket::connect(const NetworkAddress &addr)
 {
-  m_events->adoptHandler(
-      EventTypes::DataSocketConnected, getEventTarget(),
-      new TMethodEventJob<SecureSocket>(this, &SecureSocket::handleTCPConnected)
-  );
-
+  m_events->addHandler(EventTypes::DataSocketConnected, getEventTarget(), [this](const auto &e) {
+    handleTCPConnected(e);
+  });
   TCPSocket::connect(addr);
 }
 
@@ -728,7 +725,7 @@ ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, b
   );
 }
 
-void SecureSocket::handleTCPConnected(const Event &, void *)
+void SecureSocket::handleTCPConnected(const Event &)
 {
   if (getSocket() == nullptr) {
     LOG((CLOG_DEBUG "disregarding stale connect event"));

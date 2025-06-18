@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -78,11 +79,11 @@ public:
   // Regular functions
   //
 
-  void reloadConfig(const Event &, void *);
-  void forceReconnect(const Event &, void *);
-  void resetServer(const Event &, void *);
-  void handleClientConnected(const Event &, void *vlistener);
-  void handleClientsDisconnected(const Event &, void *);
+  void reloadConfig();
+  void forceReconnect();
+  void resetServer();
+  void handleClientConnected(const Event &e, ClientListener *listener);
+  void handleClientsDisconnected();
   void closeServer(Server *server);
   void stopRetryTimer();
   void updateStatus() const;
@@ -93,15 +94,15 @@ public:
   void closeServerScreen(deskflow::Screen *screen);
   void cleanupServer();
   bool initServer();
-  void retryHandler(const Event &, void *);
+  void retryHandler();
   deskflow::Screen *openServerScreen();
   PrimaryClient *openPrimaryClient(const std::string &name, deskflow::Screen *screen);
-  void handleScreenError(const Event &, void *);
-  void handleSuspend(const Event &, void *);
-  void handleResume(const Event &, void *);
+  void handleScreenError();
+  void handleSuspend();
+  void handleResume();
   ClientListener *openClientListener(const NetworkAddress &address);
   Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
-  void handleNoClients(const Event &, void *);
+  void handleNoClients();
   bool startServer();
   Server *getServerPtr()
   {
@@ -124,7 +125,7 @@ public:
   }
 
 private:
-  void handleScreenSwitched(const Event &, void *data);
+  void handleScreenSwitched(const Event &e);
   ISocketFactory *getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 

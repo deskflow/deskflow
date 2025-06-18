@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2005 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -324,7 +325,7 @@ public:
     void disable(PrimaryClient *);
 
     // event handling
-    bool handleEvent(const Event &);
+    bool handleEvent(const Event &e);
 
     // convert rule to a string
     std::string format() const;
@@ -387,7 +388,7 @@ public:
 
 private:
   // event handling
-  void handleEvent(const Event &, void *);
+  void handleEvent(const Event &);
 
 private:
   RuleList m_ruleList;

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -69,10 +70,10 @@ private:
   void disconnect();
   void removeHandlers();
 
-  void handleData(const Event &, void *);
-  void handleDisconnect(const Event &, void *);
-  void handleWriteError(const Event &, void *);
-  void handleFlatline(const Event &, void *);
+  void handleData();
+  void handleDisconnect();
+  void handleWriteError();
+  void handleFlatline();
 
   bool recvInfo();
   bool recvGrabClipboard();

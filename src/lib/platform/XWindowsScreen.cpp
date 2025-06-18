@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,7 +13,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "base/TMethodEventJob.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
@@ -151,10 +151,9 @@ XWindowsScreen::XWindowsScreen(
   }
 
   // install event handlers
-  m_events->adoptHandler(
-      EventTypes::System, m_events->getSystemTarget(),
-      new TMethodEventJob<XWindowsScreen>(this, &XWindowsScreen::handleSystemEvent)
-  );
+  m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
+    handleSystemEvent(e);
+  });
 
   // install the platform event queue
   m_events->adoptBuffer(new XWindowsEventQueueBuffer(m_display, m_window, m_events));
@@ -1111,7 +1110,7 @@ Bool XWindowsScreen::findKeyEvent(Display *, XEvent *xevent, XPointer arg)
              : False;
 }
 
-void XWindowsScreen::handleSystemEvent(const Event &event, void *)
+void XWindowsScreen::handleSystemEvent(const Event &event)
 {
   auto *xevent = static_cast<XEvent *>(event.getData());
   assert(xevent != nullptr);

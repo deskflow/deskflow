@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,7 +10,6 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
@@ -26,29 +26,20 @@ ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *strea
       m_events(events)
 {
   // install event handlers
-  m_events->adoptHandler(
-      EventTypes::StreamInputReady, stream->getEventTarget(),
-      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleData, nullptr)
-  );
-  m_events->adoptHandler(
-      EventTypes::StreamOutputError, stream->getEventTarget(),
-      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleWriteError, nullptr)
-  );
-  m_events->adoptHandler(
-      EventTypes::StreamInputShutdown, stream->getEventTarget(),
-      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, nullptr)
-  );
-  m_events->adoptHandler(
-      EventTypes::StreamInputFormatError, stream->getEventTarget(),
-      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleDisconnect, nullptr)
-  );
-  m_events->adoptHandler(
-      EventTypes::StreamOutputShutdown, stream->getEventTarget(),
-      new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleWriteError, nullptr)
-  );
-  m_events->adoptHandler(
-      EventTypes::Timer, this, new TMethodEventJob<ClientProxy1_0>(this, &ClientProxy1_0::handleFlatline, nullptr)
-  );
+  m_events->addHandler(EventTypes::StreamInputReady, stream->getEventTarget(), [this](const auto &) { handleData(); });
+  m_events->addHandler(EventTypes::StreamOutputError, stream->getEventTarget(), [this](const auto &) {
+    handleWriteError();
+  });
+  m_events->addHandler(EventTypes::StreamInputShutdown, stream->getEventTarget(), [this](const auto &) {
+    handleDisconnect();
+  });
+  m_events->addHandler(EventTypes::StreamInputFormatError, stream->getEventTarget(), [this](const auto &) {
+    handleDisconnect();
+  });
+  m_events->addHandler(EventTypes::StreamOutputShutdown, stream->getEventTarget(), [this](const auto &) {
+    handleWriteError();
+  });
+  m_events->addHandler(EventTypes::Timer, this, [this](const auto &) { handleFlatline(); });
 
   setHeartbeatRate(kHeartRate, kHeartRate * kHeartBeatsUntilDeath);
 
@@ -114,7 +105,7 @@ void ClientProxy1_0::setHeartbeatRate(double, double alarm)
   m_heartbeatAlarm = alarm;
 }
 
-void ClientProxy1_0::handleData(const Event &, void *)
+void ClientProxy1_0::handleData()
 {
   // handle messages until there are no more.  first read message code.
   uint8_t code[4];
@@ -192,19 +183,19 @@ bool ClientProxy1_0::parseMessage(const uint8_t *code)
   return false;
 }
 
-void ClientProxy1_0::handleDisconnect(const Event &, void *)
+void ClientProxy1_0::handleDisconnect()
 {
   LOG((CLOG_NOTE "client \"%s\" has disconnected", getName().c_str()));
   disconnect();
 }
 
-void ClientProxy1_0::handleWriteError(const Event &, void *)
+void ClientProxy1_0::handleWriteError()
 {
   LOG((CLOG_WARN "error writing to client \"%s\"", getName().c_str()));
   disconnect();
 }
 
-void ClientProxy1_0::handleFlatline(const Event &, void *)
+void ClientProxy1_0::handleFlatline()
 {
   // didn't get a heartbeat fast enough.  assume client is dead.
   LOG((CLOG_NOTE "client \"%s\" is dead", getName().c_str()));

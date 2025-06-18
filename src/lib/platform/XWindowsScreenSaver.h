@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -87,7 +88,7 @@ private:
   void updateDisableTimer();
 
   // called periodically to prevent the screen saver from starting
-  void handleDisableTimer(const Event &, void *);
+  void handleDisableTimer();
 
   // force DPMS to activate or deactivate
   void activateDPMS(bool activate);

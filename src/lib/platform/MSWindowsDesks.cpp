@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -11,7 +12,6 @@
 #include "base/IEventQueue.h"
 #include "base/IJob.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "deskflow/IScreenSaver.h"
 #include "deskflow/XScreen.h"
@@ -144,9 +144,7 @@ void MSWindowsDesks::enable()
   // we wouldn't need this if windows notified us of a desktop
   // change but as far as i can tell it doesn't.
   m_timer = m_events->newTimer(0.2, nullptr);
-  m_events->adoptHandler(
-      EventTypes::Timer, m_timer, new TMethodEventJob<MSWindowsDesks>(this, &MSWindowsDesks::handleCheckDesk)
-  );
+  m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { handleCheckDesk(); });
 
   updateKeys();
 }
@@ -807,7 +805,7 @@ void MSWindowsDesks::waitForDesk() const
   self->m_deskReady = false;
 }
 
-void MSWindowsDesks::handleCheckDesk(const Event &, void *)
+void MSWindowsDesks::handleCheckDesk()
 {
   checkDesk();
 

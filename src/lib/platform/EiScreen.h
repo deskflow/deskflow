@@ -76,7 +76,7 @@ public:
 
 protected:
   // IPlatformScreen overrides
-  void handleSystemEvent(const Event &event, void *) override;
+  void handleSystemEvent(const Event &event) override;
   void updateButtons() override;
   IKeyState *getKeyState() const override;
   std::string getSecureInputApp() const override;
@@ -100,8 +100,8 @@ private:
   bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
   void handle_ei_log_event(ei_log_priority priority, const char *message) const;
 
-  void handle_connected_to_eis_event(const Event &event, void *);
-  void handle_portal_session_closed(const Event &event, void *);
+  void handle_connected_to_eis_event(const Event &event);
+  void handle_portal_session_closed();
 
   static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
   {

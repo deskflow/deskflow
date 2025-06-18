@@ -9,7 +9,6 @@
 
 #include "arch/Arch.h"
 #include "arch/XArch.h"
-#include "base/IEventJob.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "mt/Lock.h"

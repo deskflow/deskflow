@@ -22,11 +22,10 @@ public:
   MOCK_METHOD(void, removeHandlers, (void *), (override));
   MOCK_METHOD(EventTypes, registerType, (const char *));
   MOCK_METHOD(bool, isEmpty, (), (const, override));
-  MOCK_METHOD(void, adoptHandler, (EventTypes, void *, IEventJob *), (override));
+  MOCK_METHOD(void, addHandler, (EventTypes, void *, const EventHandler &), (override));
   MOCK_METHOD(void, addEvent, (const Event &), (override));
   MOCK_METHOD(void, removeHandler, (EventTypes, void *), (override));
   MOCK_METHOD(bool, dispatchEvent, (const Event &), (override));
-  MOCK_METHOD(IEventJob *, getHandler, (EventTypes, void *), (const, override));
   MOCK_METHOD(void, deleteTimer, (EventQueueTimer *), (override));
   MOCK_METHOD(void *, getSystemTarget, (), (override));
   MOCK_METHOD(void, waitForReady, (), (const, override));

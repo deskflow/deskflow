@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,7 +13,6 @@
 #include "arch/win32/XArchWindows.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "client/Client.h"
 #include "common/Constants.h"
@@ -131,10 +131,9 @@ MSWindowsScreen::MSWindowsScreen(
   }
 
   // install event handlers
-  m_events->adoptHandler(
-      EventTypes::System, m_events->getSystemTarget(),
-      new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleSystemEvent)
-  );
+  m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
+    handleSystemEvent(e);
+  });
 
   // install the platform event queue
   m_events->adoptBuffer(new MSWindowsEventQueueBuffer(m_events));
@@ -178,9 +177,7 @@ void MSWindowsScreen::enable()
 
   // we need to poll some things to fix them
   m_fixTimer = m_events->newTimer(1.0, nullptr);
-  m_events->adoptHandler(
-      EventTypes::Timer, m_fixTimer, new TMethodEventJob<MSWindowsScreen>(this, &MSWindowsScreen::handleFixes)
-  );
+  m_events->addHandler(EventTypes::Timer, m_fixTimer, [this](const auto &) { handleFixes(); });
 
   // install our clipboard snooper
   if (!AddClipboardFormatListener(m_window)) {
@@ -830,7 +827,7 @@ void MSWindowsScreen::sendClipboardEvent(EventTypes type, ClipboardID id)
   sendEvent(type, info);
 }
 
-void MSWindowsScreen::handleSystemEvent(const Event &event, void *)
+void MSWindowsScreen::handleSystemEvent(const Event &event)
 {
   MSG *msg = static_cast<MSG *>(event.getData());
   assert(msg != nullptr);
@@ -1424,7 +1421,7 @@ void MSWindowsScreen::updateScreenShape()
   m_desks->setShape(m_x, m_y, m_w, m_h, m_xCenter, m_yCenter, m_multimon);
 }
 
-void MSWindowsScreen::handleFixes(const Event &, void *)
+void MSWindowsScreen::handleFixes()
 {
   // fix clipboard chain
   fixClipboardViewer();

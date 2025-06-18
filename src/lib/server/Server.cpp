@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,7 +11,6 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "base/TMethodJob.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/IPlatformScreen.h"
@@ -71,67 +71,55 @@ Server::Server(
   }
 
   // install event handlers
-  m_events->adoptHandler(EventTypes::Timer, this, new TMethodEventJob<Server>(this, &Server::handleSwitchWaitTimeout));
-  m_events->adoptHandler(
-      EventTypes::KeyStateKeyDown, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyDownEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::KeyStateKeyUp, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyUpEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::KeyStateKeyRepeat, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleKeyRepeatEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::PrimaryScreenButtonDown, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleButtonDownEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::PrimaryScreenButtonUp, m_inputFilter, new TMethodEventJob<Server>(this, &Server::handleButtonUpEvent)
-  );
-  m_events->adoptHandler(
+  m_events->addHandler(EventTypes::Timer, this, [this](const auto &) { handleSwitchWaitTimeout(); });
+  m_events->addHandler(EventTypes::KeyStateKeyDown, m_inputFilter, [this](const auto &e) { handleKeyDownEvent(e); });
+  m_events->addHandler(EventTypes::KeyStateKeyUp, m_inputFilter, [this](const auto &e) { handleKeyUpEvent(e); });
+  m_events->addHandler(EventTypes::KeyStateKeyRepeat, m_inputFilter, [this](const auto &e) {
+    handleKeyRepeatEvent(e);
+  });
+  m_events->addHandler(EventTypes::PrimaryScreenButtonDown, m_inputFilter, [this](const auto &e) {
+    handleButtonDownEvent(e);
+  });
+  m_events->addHandler(EventTypes::PrimaryScreenButtonUp, m_inputFilter, [this](const auto &e) {
+    handleButtonUpEvent(e);
+  });
+  m_events->addHandler(
       EventTypes::PrimaryScreenMotionOnPrimary, m_primaryClient->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleMotionPrimaryEvent)
+      [this](const auto &e) { handleMotionPrimaryEvent(e); }
   );
-  m_events->adoptHandler(
+  m_events->addHandler(
       EventTypes::PrimaryScreenMotionOnSecondary, m_primaryClient->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleMotionSecondaryEvent)
+      [this](const auto &e) { handleMotionSecondaryEvent(e); }
   );
-  m_events->adoptHandler(
-      EventTypes::PrimaryScreenWheel, m_primaryClient->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleWheelEvent)
-  );
-  m_events->adoptHandler(
+  m_events->addHandler(EventTypes::PrimaryScreenWheel, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    handleWheelEvent(e);
+  });
+  m_events->addHandler(
       EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleScreensaverActivatedEvent)
+      [this](const auto &) { handleScreensaverActivatedEvent(); }
   );
-  m_events->adoptHandler(
+  m_events->addHandler(
       EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleScreensaverDeactivatedEvent)
+      [this](const auto &) { handleScreensaverDeactivatedEvent(); }
   );
-  m_events->adoptHandler(
-      EventTypes::ServerSwitchToScreen, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleSwitchToScreenEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::ServerSwitchInDirection, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleSwitchInDirectionEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::ServerKeyboardBroadcast, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleKeyboardBroadcastEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::ServerLockCursorToScreen, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleLockCursorToScreenEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleFakeInputBeginEvent)
-  );
-  m_events->adoptHandler(
-      EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter,
-      new TMethodEventJob<Server>(this, &Server::handleFakeInputEndEvent)
-  );
+  m_events->addHandler(EventTypes::ServerSwitchToScreen, m_inputFilter, [this](const auto &e) {
+    handleSwitchToScreenEvent(e);
+  });
+  m_events->addHandler(EventTypes::ServerSwitchInDirection, m_inputFilter, [this](const auto &e) {
+    handleSwitchInDirectionEvent(e);
+  });
+  m_events->addHandler(EventTypes::ServerKeyboardBroadcast, m_inputFilter, [this](const auto &e) {
+    handleKeyboardBroadcastEvent(e);
+  });
+  m_events->addHandler(EventTypes::ServerLockCursorToScreen, m_inputFilter, [this](const auto &e) {
+    handleLockCursorToScreenEvent(e);
+  });
+  m_events->addHandler(EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter, [this](const auto &) {
+    handleFakeInputBeginEvent();
+  });
+  m_events->addHandler(EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter, [this](const auto &) {
+    handleFakeInputEndEvent();
+  });
 
   // add connection
   addClient(m_primaryClient);
@@ -237,10 +225,9 @@ void Server::adoptClient(BaseClientProxy *client)
   assert(client != nullptr);
 
   // watch for client disconnection
-  m_events->adoptHandler(
-      EventTypes::ClientProxyDisconnected, client,
-      new TMethodEventJob<Server>(this, &Server::handleClientDisconnected, client)
-  );
+  m_events->addHandler(EventTypes::ClientProxyDisconnected, client, [this, client](const auto &e) {
+    handleClientDisconnected(client);
+  });
 
   // name must be in our configuration
   if (!m_config->isScreen(client->getName())) {
@@ -1128,10 +1115,8 @@ void Server::processOptions()
   m_relativeMoves = newRelativeMoves;
 }
 
-void Server::handleShapeChanged(const Event &, void *vclient)
+void Server::handleShapeChanged(BaseClientProxy *client)
 {
-  // ignore events from unknown clients
-  auto *client = static_cast<BaseClientProxy *>(vclient);
   if (m_clientSet.count(client) == 0) {
     return;
   }
@@ -1160,14 +1145,13 @@ void Server::handleShapeChanged(const Event &, void *vclient)
   }
 }
 
-void Server::handleClipboardGrabbed(const Event &event, void *vclient)
+void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber)
 {
   if (!m_enableClipboard || (m_maximumClipboardSize == 0)) {
     return;
   }
 
   // ignore events from unknown clients
-  auto *grabber = static_cast<BaseClientProxy *>(vclient);
   if (m_clientSet.count(grabber) == 0) {
     return;
   }
@@ -1216,78 +1200,77 @@ void Server::handleClipboardGrabbed(const Event &event, void *vclient)
   }
 }
 
-void Server::handleClipboardChanged(const Event &event, void *vclient)
+void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
 {
   // ignore events from unknown clients
-  auto *sender = static_cast<BaseClientProxy *>(vclient);
-  if (m_clientSet.count(sender) == 0) {
+  if (m_clientSet.count(client) == 0) {
     return;
   }
   const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
-  onClipboardChanged(sender, info->m_id, info->m_sequenceNumber);
+  onClipboardChanged(client, info->m_id, info->m_sequenceNumber);
 }
 
-void Server::handleKeyDownEvent(const Event &event, void *)
+void Server::handleKeyDownEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyDown(info->m_key, info->m_mask, info->m_button, lang, info->m_screens);
 }
 
-void Server::handleKeyUpEvent(const Event &event, void *)
+void Server::handleKeyUpEvent(const Event &event)
 {
   auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
   onKeyUp(info->m_key, info->m_mask, info->m_button, info->m_screens);
 }
 
-void Server::handleKeyRepeatEvent(const Event &event, void *)
+void Server::handleKeyRepeatEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::KeyInfo *>(event.getData());
   auto lang = AppUtil::instance().getCurrentLanguageCode();
   onKeyRepeat(info->m_key, info->m_mask, info->m_count, info->m_button, lang);
 }
 
-void Server::handleButtonDownEvent(const Event &event, void *)
+void Server::handleButtonDownEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
   onMouseDown(info->m_button);
 }
 
-void Server::handleButtonUpEvent(const Event &event, void *)
+void Server::handleButtonUpEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
   onMouseUp(info->m_button);
 }
 
-void Server::handleMotionPrimaryEvent(const Event &event, void *)
+void Server::handleMotionPrimaryEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
   onMouseMovePrimary(info->m_x, info->m_y);
 }
 
-void Server::handleMotionSecondaryEvent(const Event &event, void *)
+void Server::handleMotionSecondaryEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::MotionInfo *>(event.getData());
   onMouseMoveSecondary(info->m_x, info->m_y);
 }
 
-void Server::handleWheelEvent(const Event &event, void *)
+void Server::handleWheelEvent(const Event &event)
 {
   const auto *info = static_cast<IPlatformScreen::WheelInfo *>(event.getData());
   onMouseWheel(info->m_xDelta, info->m_yDelta);
 }
 
-void Server::handleScreensaverActivatedEvent(const Event &, void *)
+void Server::handleScreensaverActivatedEvent()
 {
   onScreensaver(true);
 }
 
-void Server::handleScreensaverDeactivatedEvent(const Event &, void *)
+void Server::handleScreensaverDeactivatedEvent()
 {
   onScreensaver(false);
 }
 
-void Server::handleSwitchWaitTimeout(const Event &, void *)
+void Server::handleSwitchWaitTimeout()
 {
   // ignore if mouse is locked to screen
   if (isLockedToScreen()) {
@@ -1300,28 +1283,26 @@ void Server::handleSwitchWaitTimeout(const Event &, void *)
   switchScreen(m_switchScreen, m_switchWaitX, m_switchWaitY, false);
 }
 
-void Server::handleClientDisconnected(const Event &, void *vclient)
+void Server::handleClientDisconnected(BaseClientProxy *client)
 {
   // client has disconnected.  it might be an old client or an
   // active client.  we don't care so just handle it both ways.
-  auto *client = static_cast<BaseClientProxy *>(vclient);
   removeActiveClient(client);
   removeOldClient(client);
 
   delete client;
 }
 
-void Server::handleClientCloseTimeout(const Event &, void *vclient)
+void Server::handleClientCloseTimeout(BaseClientProxy *client)
 {
   // client took too long to disconnect.  just dump it.
-  auto *client = static_cast<BaseClientProxy *>(vclient);
   LOG((CLOG_NOTE "forced disconnection of client \"%s\"", getName(client).c_str()));
   removeOldClient(client);
 
   delete client;
 }
 
-void Server::handleSwitchToScreenEvent(const Event &event, void *)
+void Server::handleSwitchToScreenEvent(const Event &event)
 {
   auto *info = static_cast<SwitchToScreenInfo *>(event.getData());
 
@@ -1333,7 +1314,7 @@ void Server::handleSwitchToScreenEvent(const Event &event, void *)
   }
 }
 
-void Server::handleSwitchInDirectionEvent(const Event &event, void *)
+void Server::handleSwitchInDirectionEvent(const Event &event)
 {
   const auto *info = static_cast<SwitchInDirectionInfo *>(event.getData());
 
@@ -1348,7 +1329,7 @@ void Server::handleSwitchInDirectionEvent(const Event &event, void *)
   }
 }
 
-void Server::handleKeyboardBroadcastEvent(const Event &event, void *)
+void Server::handleKeyboardBroadcastEvent(const Event &event)
 {
   const auto *info = (KeyboardBroadcastInfo *)event.getData();
 
@@ -1380,7 +1361,7 @@ void Server::handleKeyboardBroadcastEvent(const Event &event, void *)
   }
 }
 
-void Server::handleLockCursorToScreenEvent(const Event &event, void *)
+void Server::handleLockCursorToScreenEvent(const Event &event)
 {
   const auto *info = (LockCursorToScreenInfo *)event.getData();
 
@@ -1413,12 +1394,12 @@ void Server::handleLockCursorToScreenEvent(const Event &event, void *)
   }
 }
 
-void Server::handleFakeInputBeginEvent(const Event &, void *)
+void Server::handleFakeInputBeginEvent()
 {
   m_primaryClient->fakeInputBegin();
 }
 
-void Server::handleFakeInputEndEvent(const Event &, void *)
+void Server::handleFakeInputEndEvent()
 {
   m_primaryClient->fakeInputEnd();
 }
@@ -1884,18 +1865,15 @@ bool Server::addClient(BaseClientProxy *client)
   }
 
   // add event handlers
-  m_events->adoptHandler(
-      EventTypes::ScreenShapeChanged, client->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleShapeChanged, client)
-  );
-  m_events->adoptHandler(
-      EventTypes::ClipboardGrabbed, client->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleClipboardGrabbed, client)
-  );
-  m_events->adoptHandler(
-      EventTypes::ClipboardChanged, client->getEventTarget(),
-      new TMethodEventJob<Server>(this, &Server::handleClipboardChanged, client)
-  );
+  m_events->addHandler(EventTypes::ScreenShapeChanged, client->getEventTarget(), [this, client](const auto &e) {
+    handleShapeChanged(client);
+  });
+  m_events->addHandler(EventTypes::ClipboardGrabbed, client->getEventTarget(), [this, client](const auto &e) {
+    handleClipboardGrabbed(e, client);
+  });
+  m_events->addHandler(EventTypes::ClipboardChanged, client->getEventTarget(), [this, client](const auto &e) {
+    handleClipboardChanged(e, client);
+  });
 
   // add to list
   m_clientSet.insert(client);
@@ -1950,14 +1928,13 @@ void Server::closeClient(BaseClientProxy *client, const char *msg)
 
   // send message
   // FIXME -- avoid type cast (kinda hard, though)
-  ((ClientProxy *)client)->close(msg);
+  auto clientProxy = static_cast<ClientProxy *>(client);
+  clientProxy->close(msg);
 
   // install timer.  wait timeout seconds for client to close.
   double timeout = 5.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
-  m_events->adoptHandler(
-      EventTypes::Timer, timer, new TMethodEventJob<Server>(this, &Server::handleClientCloseTimeout, client)
-  );
+  m_events->addHandler(EventTypes::Timer, timer, [this, client](const auto &e) { handleClientCloseTimeout(client); });
 
   // move client to closing list
   removeClient(client);

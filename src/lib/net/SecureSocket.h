@@ -83,7 +83,7 @@ private:
 
   ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
 
-  void handleTCPConnected(const Event &event, void *);
+  void handleTCPConnected(const Event &event);
 
 private:
   // all accesses to m_ssl must be protected by this mutex. The only function that is called

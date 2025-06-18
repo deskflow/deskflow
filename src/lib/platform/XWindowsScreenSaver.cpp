@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,7 +11,6 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodEventJob.h"
 #include "deskflow/IPlatformScreen.h"
 #include "platform/XWindowsUtil.h"
 
@@ -82,9 +82,7 @@ XWindowsScreenSaver::XWindowsScreenSaver(Display *display, Window window, void *
   }
 
   // install disable timer event handler
-  m_events->adoptHandler(
-      EventTypes::Timer, this, new TMethodEventJob<XWindowsScreenSaver>(this, &XWindowsScreenSaver::handleDisableTimer)
-  );
+  m_events->addHandler(EventTypes::Timer, this, [this](const auto &) { handleDisableTimer(); });
 }
 
 XWindowsScreenSaver::~XWindowsScreenSaver()
@@ -446,7 +444,7 @@ void XWindowsScreenSaver::updateDisableTimer()
   }
 }
 
-void XWindowsScreenSaver::handleDisableTimer(const Event &, void *)
+void XWindowsScreenSaver::handleDisableTimer()
 {
   // send fake mouse motion directly to xscreensaver
   if (m_xscreensaver != None) {

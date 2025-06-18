@@ -33,7 +33,6 @@ add_library(base STATIC
   Stopwatch.h
   String.cpp
   String.h
-  TMethodEventJob.h
   TMethodJob.h
   Unicode.cpp
   Unicode.h

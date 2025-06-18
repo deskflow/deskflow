@@ -96,7 +96,7 @@ protected:
   virtual IKeyState *getKeyState() const = 0;
 
   // IPlatformScreen overrides
-  void handleSystemEvent(const Event &event, void *) override = 0;
+  void handleSystemEvent(const Event &event) override = 0;
 
   /*!
    * \brief mapClientScrollDirection
