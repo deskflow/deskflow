@@ -67,7 +67,6 @@ private:
   void handleClientConnecting();
   void handleClientAccepted(IDataSocket *socket);
   void handleUnknownClient(ClientProxyUnknown *unknownClient);
-  void handleUnknownClientFailure(ClientProxyUnknown *client);
   void handleClientDisconnected(ClientProxy *client);
 
   void cleanupListenSocket();

@@ -301,8 +301,6 @@ private:
   void handleMotionPrimaryEvent(const Event &event);
   void handleMotionSecondaryEvent(const Event &event);
   void handleWheelEvent(const Event &event);
-  void handleScreensaverActivatedEvent();
-  void handleScreensaverDeactivatedEvent();
   void handleSwitchWaitTimeout();
   void handleClientDisconnected(BaseClientProxy *client);
   void handleClientCloseTimeout(BaseClientProxy *client);
@@ -310,8 +308,6 @@ private:
   void handleSwitchInDirectionEvent(const Event &event);
   void handleKeyboardBroadcastEvent(const Event &event);
   void handleLockCursorToScreenEvent(const Event &event);
-  void handleFakeInputBeginEvent();
-  void handleFakeInputEndEvent();
 
   // event processing
   void onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum);

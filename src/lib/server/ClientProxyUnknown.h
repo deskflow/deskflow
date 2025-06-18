@@ -64,7 +64,6 @@ private:
   void handleWriteError();
   void handleTimeout();
   void handleDisconnect();
-  void handleReady();
 
 private:
   deskflow::IStream *m_stream = nullptr;

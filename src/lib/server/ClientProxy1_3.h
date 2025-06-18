@@ -25,8 +25,6 @@ public:
   // IClient overrides
   void mouseWheel(int32_t xDelta, int32_t yDelta) override;
 
-  void handleKeepAlive();
-
 protected:
   // ClientProxy overrides
   bool parseMessage(const uint8_t *code) override;

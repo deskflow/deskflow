@@ -60,9 +60,6 @@ protected:
   virtual void filterEvent(const Event &);
 
 private:
-  void handleUpstreamEvent(const Event &);
-
-private:
   deskflow::IStream *m_stream;
   bool m_adopted;
   IEventQueue *m_events;

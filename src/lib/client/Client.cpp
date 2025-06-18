@@ -423,7 +423,7 @@ void Client::setupConnection()
     handleDisconnected();
   });
   m_events->addHandler(EventTypes::SocketStopRetry, m_stream->getEventTarget(), [this](const auto &) {
-    handleStopRetry();
+    m_args.m_restartable = false;
   });
 }
 
@@ -644,9 +644,4 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
     LOG((CLOG_WARN "%s", e.what()));
     LOG((CLOG_WARN "operating system will select network interface automatically"));
   }
-}
-
-void Client::handleStopRetry()
-{
-  m_args.m_restartable = false;
 }
