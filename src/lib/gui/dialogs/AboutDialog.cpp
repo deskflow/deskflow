@@ -32,10 +32,18 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   ui->lblVersion->setText(kDisplayVersion);
-
   ui->lblDescription->setText(kAppDescription);
   ui->lblCopyright->setText(kCopyright);
-  ui->lblImportantDevs->setText(QStringLiteral("%1\n").arg(s_awesomeDevs.join(", ")));
+
+  // Use non-breaking space in each awesome dev name so names are not split across lines.
+  QStringList devsNbsp;
+  for (const auto &dev : s_awesomeDevs) {
+    QString withNbsp = dev;
+    devsNbsp.append(withNbsp.replace(" ", QStringLiteral("&nbsp;")));
+  }
+
+  ui->lblImportantDevs->setTextFormat(Qt::RichText);
+  ui->lblImportantDevs->setText(QStringLiteral("%1\n").arg(devsNbsp.join(", ")));
 
   ui->btnOk->setDefault(true);
   connect(ui->btnOk, &QPushButton::clicked, this, [this] { close(); });
