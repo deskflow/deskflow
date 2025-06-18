@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.68</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.70</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -260,8 +260,8 @@ manipulators</h2></td></tr>
 <tr class="memdesc:a55576c3b399ae336727a4f6172e6d528"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if is primary screen.  <br /></td></tr>
 <tr class="memitem:a8461e181a589d839973d10c21d5be392" id="r_a8461e181a589d839973d10c21d5be392"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8461e181a589d839973d10c21d5be392">getSecureInputApp</a> () const override</td></tr>
 <tr class="memdesc:a8461e181a589d839973d10c21d5be392"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determine the name of the app causing a secure input state.  <br /></td></tr>
-<tr class="memitem:a4d41cfb7f0a97d19aea3fa346d36f0ff" id="r_a4d41cfb7f0a97d19aea3fa346d36f0ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d41cfb7f0a97d19aea3fa346d36f0ff">handleSystemEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;, void *) override</td></tr>
-<tr class="memdesc:a4d41cfb7f0a97d19aea3fa346d36f0ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle system event.  <br /></td></tr>
+<tr class="memitem:a0413b95e0050c362e98b926adcca1e79" id="r_a0413b95e0050c362e98b926adcca1e79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0413b95e0050c362e98b926adcca1e79">handleSystemEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event) override</td></tr>
+<tr class="memdesc:a0413b95e0050c362e98b926adcca1e79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle system event.  <br /></td></tr>
 <tr class="memitem:a48faae98bd8c86a19d969a59f220ecf5" id="r_a48faae98bd8c86a19d969a59f220ecf5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48faae98bd8c86a19d969a59f220ecf5">updateButtons</a> () override</td></tr>
 <tr class="memdesc:a48faae98bd8c86a19d969a59f220ecf5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update mouse buttons.  <br /></td></tr>
 <tr class="memitem:af1e7f83220b4a34343af344c009f9b21" id="r_af1e7f83220b4a34343af344c009f9b21"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIKeyState.html">IKeyState</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1e7f83220b4a34343af344c009f9b21">getKeyState</a> () const override</td></tr>
@@ -984,8 +984,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a4d41cfb7f0a97d19aea3fa346d36f0ff" name="a4d41cfb7f0a97d19aea3fa346d36f0ff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d41cfb7f0a97d19aea3fa346d36f0ff">&#9670;&#160;</a></span>handleSystemEvent()</h2>
+<a id="a0413b95e0050c362e98b926adcca1e79" name="a0413b95e0050c362e98b926adcca1e79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0413b95e0050c362e98b926adcca1e79">&#9670;&#160;</a></span>handleSystemEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -996,12 +996,8 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void XWindowsScreen::handleSystemEvent </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classEvent.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">const <a class="el" href="classEvent.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -1012,16 +1008,14 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Handle system event. </p>
-<p>A platform screen is expected to install a handler for system events in its c'tor like so: </p><div class="fragment"><div class="line">m_events-&gt;adoptHandler(EventTypes::System,</div>
+<p>A platform screen is expected to install a handler for system events in its c'tor like so: </p><div class="fragment"><div class="line">m_events-&gt;addHandler(EventTypes::System,</div>
 <div class="line">                      m_events-&gt;getSystemTarget(),</div>
-<div class="line">                      <span class="keyword">new</span> <a class="code hl_class" href="classTMethodEventJob.html">TMethodEventJob&lt;CXXXPlatformScreen&gt;</a>(<span class="keyword">this</span>,</div>
-<div class="line">                          &amp;CXXXPlatformScreen::handleSystemEvent));</div>
-<div class="ttc" id="aclassTMethodEventJob_html"><div class="ttname"><a href="classTMethodEventJob.html">TMethodEventJob</a></div><div class="ttdoc">Use a member function as an event job.</div><div class="ttdef"><b>Definition</b> TMethodEventJob.h:17</div></div>
-</div><!-- fragment --><p> It should remove the handler in its d'tor. Override the <code><a class="el" href="#a4d41cfb7f0a97d19aea3fa346d36f0ff" title="Handle system event.">handleSystemEvent()</a></code> method to process system events. It should post the events <code><a class="el" href="classIScreen.html" title="Screen interface.">IScreen</a></code> as appropriate.</p>
+<div class="line">                      [<span class="keyword">this</span>] (<span class="keyword">const</span> <span class="keyword">auto</span> &amp;e) {handleSystemEvent(e);});</div>
+</div><!-- fragment --><p> It should remove the handler in its d'tor. Override the <code><a class="el" href="#a0413b95e0050c362e98b926adcca1e79" title="Handle system event.">handleSystemEvent()</a></code> method to process system events. It should post the events <code><a class="el" href="classIScreen.html" title="Screen interface.">IScreen</a></code> as appropriate.</p>
 <p>A primary screen has further responsibilities. It should post the events in <code><a class="el" href="classIPrimaryScreen.html" title="Primary screen interface.">IPrimaryScreen</a></code> as appropriate. It should also call <code>onKey()</code> on its <code><a class="el" href="classKeyState.html" title="Core key state.">KeyState</a></code> whenever a key is pressed or released (but not for key repeats). And it should call <code><a class="el" href="classPlatformScreen.html#a33f7a5a5569dfe2db604048ad0e4e813" title="Update the keyboard map.">updateKeyMap()</a></code> on its <code><a class="el" href="classKeyState.html" title="Core key state.">KeyState</a></code> if necessary when the keyboard mapping changes.</p>
 <p>The target of all events should be the value returned by <code><a class="el" href="#a7a3b90aaa18ef712da654387fea5b864" title="Get event target.">getEventTarget()</a></code>. </p>
 
-<p>Implements <a class="el" href="classPlatformScreen.html#a5ca88816cda7ffd316a4af5d2d5b68d4">PlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classPlatformScreen.html#a555dedbff35e03142e5e0220a28c001c">PlatformScreen</a>.</p>
 
 </div>
 </div>

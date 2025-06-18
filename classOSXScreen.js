@@ -23,7 +23,7 @@ var classOSXScreen =
     [ "getKeyState", "classOSXScreen.html#af3b4fde38f0632867c002d9d739dd74b", null ],
     [ "getSecureInputApp", "classOSXScreen.html#a07cbdbcdb68cc3a14ea106507867157c", null ],
     [ "getShape", "classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf", null ],
-    [ "handleSystemEvent", "classOSXScreen.html#ab8b136117bb43b807883a1813e6cf11b", null ],
+    [ "handleSystemEvent", "classOSXScreen.html#a40563f010746ae747baa9cbaacc42160", null ],
     [ "isAnyMouseButtonDown", "classOSXScreen.html#a844fd85759735df238bbd48e50a9176e", null ],
     [ "isPrimary", "classOSXScreen.html#aca30212ec71dcf62789e7c002857490d", null ],
     [ "leave", "classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0", null ],

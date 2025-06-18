@@ -22,7 +22,7 @@ var classXWindowsScreen =
     [ "getKeyState", "classXWindowsScreen.html#af1e7f83220b4a34343af344c009f9b21", null ],
     [ "getSecureInputApp", "classXWindowsScreen.html#a8461e181a589d839973d10c21d5be392", null ],
     [ "getShape", "classXWindowsScreen.html#a8af145455ca1a8f2057cca9aab6048bc", null ],
-    [ "handleSystemEvent", "classXWindowsScreen.html#a4d41cfb7f0a97d19aea3fa346d36f0ff", null ],
+    [ "handleSystemEvent", "classXWindowsScreen.html#a0413b95e0050c362e98b926adcca1e79", null ],
     [ "isAnyMouseButtonDown", "classXWindowsScreen.html#afdb9087193132fee08e0eb3914e0d9cd", null ],
     [ "isPrimary", "classXWindowsScreen.html#a55576c3b399ae336727a4f6172e6d528", null ],
     [ "leave", "classXWindowsScreen.html#a9d34e7b8ec494fbbd8151276c189405e", null ],

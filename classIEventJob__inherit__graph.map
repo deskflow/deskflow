@@ -1,9 +1,7 @@
 <map id="IEventJob" name="IEventJob">
-<area shape="rect" id="Node000001" title="Event handler interface." alt="" coords="111,78,190,103"/>
+<area shape="rect" id="Node000001" title="Event handler interface." alt="" coords="28,78,108,103"/>
 <area shape="rect" id="Node000003" href="$classFunctionEventJob.html" title="Use a function as an event job." alt="" coords="5,151,131,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="127,115,83,152,80,148,124,111"/>
-<area shape="rect" id="Node000004" href="$classTMethodEventJob.html" title="Use a member function as an event job." alt="" coords="154,151,312,175"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,111,222,148,218,152,174,115"/>
-<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="112,5,189,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,46,153,78,148,78,148,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="71,118,71,150,65,150,65,118"/>
+<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="29,5,107,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,46,71,78,65,78,65,46"/>
 </map>

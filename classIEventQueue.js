@@ -1,13 +1,13 @@
 var classIEventQueue =
 [
     [ "TimerEvent", "classIEventQueue_1_1TimerEvent.html", "classIEventQueue_1_1TimerEvent" ],
+    [ "EventHandler", "classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8", null ],
     [ "addEvent", "classIEventQueue.html#a51529b3c2b81c013b4106802958510ad", null ],
+    [ "addHandler", "classIEventQueue.html#a0245c52f3630880e8e4ac265520a806e", null ],
     [ "adoptBuffer", "classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5", null ],
-    [ "adoptHandler", "classIEventQueue.html#aa788297521d4256a01d79a433623dab3", null ],
     [ "deleteTimer", "classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc", null ],
     [ "dispatchEvent", "classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564", null ],
     [ "getEvent", "classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66", null ],
-    [ "getHandler", "classIEventQueue.html#a33cb75aa81ba9205c2cbf9499a11c26b", null ],
     [ "getSystemTarget", "classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3", null ],
     [ "isEmpty", "classIEventQueue.html#a3551f61e6739a7a981e532d2ee1a92c2", null ],
     [ "loop", "classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4", null ],

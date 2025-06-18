@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.68</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.70</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,6 +124,10 @@ Collaboration diagram for IEventQueue:</div>
 Classes</h2></td></tr>
 <tr class="memitem:TimerEvent" id="r_TimerEvent"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIEventQueue_1_1TimerEvent.html">TimerEvent</a></td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a26d1cc702a73d6399e46120f7b51b2d8" id="r_a26d1cc702a73d6399e46120f7b51b2d8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26d1cc702a73d6399e46120f7b51b2d8">EventHandler</a> = std::function&lt;void(const <a class="el" href="classEvent.html">Event</a> &amp;)&gt;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
@@ -143,8 +147,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a729346cb4e7faf9b9510dd8b48935e3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a one-shot timer.  <br /></td></tr>
 <tr class="memitem:a9a504772d2d2e06e4b5b831f5a12e7dc" id="r_a9a504772d2d2e06e4b5b831f5a12e7dc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9a504772d2d2e06e4b5b831f5a12e7dc">deleteTimer</a> (<a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *)=0</td></tr>
 <tr class="memdesc:a9a504772d2d2e06e4b5b831f5a12e7dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a timer.  <br /></td></tr>
-<tr class="memitem:aa788297521d4256a01d79a433623dab3" id="r_aa788297521d4256a01d79a433623dab3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa788297521d4256a01d79a433623dab3">adoptHandler</a> (<a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, void *target, <a class="el" href="classIEventJob.html">IEventJob</a> *handler)=0</td></tr>
-<tr class="memdesc:aa788297521d4256a01d79a433623dab3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register an event handler for an event type.  <br /></td></tr>
+<tr class="memitem:a0245c52f3630880e8e4ac265520a806e" id="r_a0245c52f3630880e8e4ac265520a806e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0245c52f3630880e8e4ac265520a806e">addHandler</a> (<a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, void *target, const <a class="el" href="#a26d1cc702a73d6399e46120f7b51b2d8">EventHandler</a> &amp;handler)=0</td></tr>
+<tr class="memdesc:a0245c52f3630880e8e4ac265520a806e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register an event handler for an event type.  <br /></td></tr>
 <tr class="memitem:a3ff4e1913c2a794be3b4314948ec4e5c" id="r_a3ff4e1913c2a794be3b4314948ec4e5c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ff4e1913c2a794be3b4314948ec4e5c">removeHandler</a> (<a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, void *target)=0</td></tr>
 <tr class="memdesc:a3ff4e1913c2a794be3b4314948ec4e5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister an event handler for an event type.  <br /></td></tr>
 <tr class="memitem:a7980284a1d3dd7e2c3f496f1bfb293a9" id="r_a7980284a1d3dd7e2c3f496f1bfb293a9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7980284a1d3dd7e2c3f496f1bfb293a9">removeHandlers</a> (void *target)=0</td></tr>
@@ -154,8 +158,6 @@ Public Member Functions</h2></td></tr>
 <tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
 <tr class="memitem:a3551f61e6739a7a981e532d2ee1a92c2" id="r_a3551f61e6739a7a981e532d2ee1a92c2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3551f61e6739a7a981e532d2ee1a92c2">isEmpty</a> () const =0</td></tr>
 <tr class="memdesc:a3551f61e6739a7a981e532d2ee1a92c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if queue is empty.  <br /></td></tr>
-<tr class="memitem:a33cb75aa81ba9205c2cbf9499a11c26b" id="r_a33cb75aa81ba9205c2cbf9499a11c26b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIEventJob.html">IEventJob</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33cb75aa81ba9205c2cbf9499a11c26b">getHandler</a> (<a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, void *target) const =0</td></tr>
-<tr class="memdesc:a33cb75aa81ba9205c2cbf9499a11c26b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an event handler.  <br /></td></tr>
 <tr class="memitem:ac5534abeb246a36c64f63bb04a38b7c3" id="r_ac5534abeb246a36c64f63bb04a38b7c3"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5534abeb246a36c64f63bb04a38b7c3">getSystemTarget</a> ()=0</td></tr>
 <tr class="memdesc:ac5534abeb246a36c64f63bb04a38b7c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system event type target.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
@@ -165,7 +167,22 @@ Public Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classEvent.html" title="Event.">Event</a> queue interface. </p>
 <p>An event queue provides a queue of Events. Clients can block waiting on any event becoming available at the head of the queue and can place new events at the end of the queue. Clients can also add and remove timers which generate events periodically. </p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="a26d1cc702a73d6399e46120f7b51b2d8" name="a26d1cc702a73d6399e46120f7b51b2d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26d1cc702a73d6399e46120f7b51b2d8">&#9670;&#160;</a></span>EventHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a26d1cc702a73d6399e46120f7b51b2d8">IEventQueue::EventHandler</a> = std::function&lt;void(const <a class="el" href="classEvent.html">Event</a> &amp;)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a51529b3c2b81c013b4106802958510ad" name="a51529b3c2b81c013b4106802958510ad"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a51529b3c2b81c013b4106802958510ad">&#9670;&#160;</a></span>addEvent()</h2>
 
@@ -196,6 +213,45 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a0245c52f3630880e8e4ac265520a806e" name="a0245c52f3630880e8e4ac265520a806e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0245c52f3630880e8e4ac265520a806e">&#9670;&#160;</a></span>addHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IEventQueue::addHandler </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>target</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="#a26d1cc702a73d6399e46120f7b51b2d8">EventHandler</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>handler</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Register an event handler for an event type. </p>
+<p>Registers an event handler for <code class="param">type</code> and <code class="param">target</code>. The <code class="param">handler</code> is adopted. Any existing handler for the type,target pair is deleted. <code><a class="el" href="#a9af1fcd05003a150ebb85c5c57c2c564" title="Dispatch an event.">dispatchEvent()</a></code> will invoke <code class="param">handler</code> for any event for <code class="param">target</code> of type <code class="param">type</code>. If no such handler exists it will use the handler for <code class="param">target</code> and type <code class="param">kUnknown</code> if it exists. </p>
+
+<p>Implemented in <a class="el" href="classEventQueue.html#a07298fa009c56da6460a900612f33c03">EventQueue</a>.</p>
+
+</div>
+</div>
 <a id="aecbae935d6739631699414d2ff5ac6c5" name="aecbae935d6739631699414d2ff5ac6c5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aecbae935d6739631699414d2ff5ac6c5">&#9670;&#160;</a></span>adoptBuffer()</h2>
 
@@ -223,45 +279,6 @@ Public Member Functions</h2></td></tr>
 <p>Replace the current event queue buffer. Any queued events are discarded. The queue takes ownership of the buffer. </p>
 
 <p>Implemented in <a class="el" href="classEventQueue.html#aa4997d4e34e0f2f61dabd6f0133b4a66">EventQueue</a>.</p>
-
-</div>
-</div>
-<a id="aa788297521d4256a01d79a433623dab3" name="aa788297521d4256a01d79a433623dab3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa788297521d4256a01d79a433623dab3">&#9670;&#160;</a></span>adoptHandler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IEventQueue::adoptHandler </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>target</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classIEventJob.html">IEventJob</a> *</td>          <td class="paramname"><span class="paramname"><em>handler</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Register an event handler for an event type. </p>
-<p>Registers an event handler for <code class="param">type</code> and <code class="param">target</code>. The <code class="param">handler</code> is adopted. Any existing handler for the type,target pair is deleted. <code><a class="el" href="#a9af1fcd05003a150ebb85c5c57c2c564" title="Dispatch an event.">dispatchEvent()</a></code> will invoke <code class="param">handler</code> for any event for <code class="param">target</code> of type <code class="param">type</code>. If no such handler exists it will use the handler for <code class="param">target</code> and type <code class="param">kUnknown</code> if it exists. </p>
-
-<p>Implemented in <a class="el" href="classEventQueue.html#a9ab511433e5f16612ab6ba4350ed4e3e">EventQueue</a>.</p>
 
 </div>
 </div>
@@ -319,7 +336,8 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Dispatch an event. </p>
-<p>Looks up the dispatcher for the event's target and invokes it. Returns true iff a dispatcher exists for the target. </p>
+<p>Looks up the dispatcher for the event's target and invokes it. Returns true iff a dispatcher exists for the target.</p>
+<p>The caller must ensure that the target of the event is not removed by <a class="el" href="#a3ff4e1913c2a794be3b4314948ec4e5c" title="Unregister an event handler for an event type.">removeHandler()</a> or <a class="el" href="#a7980284a1d3dd7e2c3f496f1bfb293a9" title="Unregister all event handlers for an event target.">removeHandlers()</a>. </p>
 
 <p>Implemented in <a class="el" href="classEventQueue.html#a6934fca3d8c36d6e629c6150808c410e">EventQueue</a>.</p>
 
@@ -356,40 +374,6 @@ Public Member Functions</h2></td></tr>
 <p>Returns the next event on the queue into <code class="param">event</code>. If no event is available then blocks for up to <code class="param">timeout</code> seconds, or forever if <code class="param">timeout</code> is negative. Returns true iff an event was available. </p>
 
 <p>Implemented in <a class="el" href="classEventQueue.html#a0e30a16c3e4ad4cc4cc5d9f1d11fbb05">EventQueue</a>.</p>
-
-</div>
-</div>
-<a id="a33cb75aa81ba9205c2cbf9499a11c26b" name="a33cb75aa81ba9205c2cbf9499a11c26b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33cb75aa81ba9205c2cbf9499a11c26b">&#9670;&#160;</a></span>getHandler()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classIEventJob.html">IEventJob</a> * IEventQueue::getHandler </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">void *</td>          <td class="paramname"><span class="paramname"><em>target</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get an event handler. </p>
-<p>Finds and returns the event handler for the <code class="param">type</code>, <code class="param">target</code> pair if it exists, otherwise it returns nullptr. </p>
-
-<p>Implemented in <a class="el" href="classEventQueue.html#afbe0fef215e5126e69abea12af370553">EventQueue</a>.</p>
 
 </div>
 </div>

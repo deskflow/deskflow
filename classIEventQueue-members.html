@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.68</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.70</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,12 +96,12 @@ $(function(){initNavTree('classIEventQueue.html','',''); });
 <p>This is the complete list of members for <a class="el" href="classIEventQueue.html">IEventQueue</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#a51529b3c2b81c013b4106802958510ad">addEvent</a>(const Event &amp;event)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5">adoptBuffer</a>(IEventQueueBuffer *)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#aa788297521d4256a01d79a433623dab3">adoptHandler</a>(EventTypes type, void *target, IEventJob *handler)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#a0245c52f3630880e8e4ac265520a806e">addHandler</a>(EventTypes type, void *target, const EventHandler &amp;handler)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5">adoptBuffer</a>(IEventQueueBuffer *)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc">deleteTimer</a>(EventQueueTimer *)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564">dispatchEvent</a>(const Event &amp;event)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66">getEvent</a>(Event &amp;event, double timeout=-1.0)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#a33cb75aa81ba9205c2cbf9499a11c26b">getHandler</a>(EventTypes type, void *target) const =0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8">EventHandler</a> typedef</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66">getEvent</a>(Event &amp;event, double timeout=-1.0)=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3">getSystemTarget</a>()=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIEventQueue.html#a3551f61e6739a7a981e532d2ee1a92c2">isEmpty</a>() const =0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4">loop</a>()=0</td><td class="entry"><a class="el" href="classIEventQueue.html">IEventQueue</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>

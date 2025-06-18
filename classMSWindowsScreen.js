@@ -28,7 +28,7 @@ var classMSWindowsScreen =
     [ "getSecureInputApp", "classMSWindowsScreen.html#aa951776f036c122c0dd90ac1f426569e", null ],
     [ "getShape", "classMSWindowsScreen.html#a291ef5a8a5d75d63f970d4a8900c86c6", null ],
     [ "getThisCursorPos", "classMSWindowsScreen.html#adc5133d4076059a32f150c01fd69b57f", null ],
-    [ "handleSystemEvent", "classMSWindowsScreen.html#aa71be06df5c3af4faf5b6746530de29f", null ],
+    [ "handleSystemEvent", "classMSWindowsScreen.html#a32506d299e745880278714833aed4db9", null ],
     [ "isAnyMouseButtonDown", "classMSWindowsScreen.html#a407ab83fad280d82cb3d9f35e897b057", null ],
     [ "isPrimary", "classMSWindowsScreen.html#ac8c111f268e4d91060a1eea4b6f70e22", null ],
     [ "leave", "classMSWindowsScreen.html#a315bfcaed9e57b83d7dda52f198a093f", null ],

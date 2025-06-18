@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.68</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.70</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -159,29 +159,28 @@ $(function(){initNavTree('DaemonApp_8h_source.html','',''); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordtype">void</span> daemonize();</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keywordtype">void</span> handleError(<span class="keyword">const</span> <span class="keywordtype">char</span> *message);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">void</span> handleIpcMessage(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;e, <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordtype">int</span> mainLoop();</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">int</span> daemonLoop();</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">void</span> saveLogLevel(<span class="keyword">const</span> QString &amp;logLevel) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">void</span> setElevate(<span class="keywordtype">bool</span> elevate);</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">void</span> setCommand(<span class="keyword">const</span> QString &amp;command);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">void</span> applyWatchdogCommand() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">void</span> clearWatchdogCommand();</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">void</span> clearSettings() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> showConsole();</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="preprocessor">#if SYSAPI_WIN32</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  std::unique_ptr&lt;MSWindowsWatchdog&gt; m_pWatchdog;</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> &amp;m_events;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a> *m_pFileLogOutputter = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <a class="code hl_class" href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html">deskflow::core::ipc::DaemonIpcServer</a> *m_ipcServer = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  std::string m_command = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">bool</span> m_elevate = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keywordtype">bool</span> m_foreground = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">int</span> mainLoop();</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keywordtype">int</span> daemonLoop();</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keywordtype">void</span> saveLogLevel(<span class="keyword">const</span> QString &amp;logLevel) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="keywordtype">void</span> setElevate(<span class="keywordtype">bool</span> elevate);</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  <span class="keywordtype">void</span> setCommand(<span class="keyword">const</span> QString &amp;command);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">void</span> applyWatchdogCommand() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">void</span> clearWatchdogCommand();</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">void</span> clearSettings() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> showConsole();</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span> </div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="preprocessor">#if SYSAPI_WIN32</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  std::unique_ptr&lt;MSWindowsWatchdog&gt; m_pWatchdog;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> &amp;m_events;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a> *m_pFileLogOutputter = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <a class="code hl_class" href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html">deskflow::core::ipc::DaemonIpcServer</a> *m_ipcServer = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  std::string m_command = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">bool</span> m_elevate = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">bool</span> m_foreground = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>};</div>
 </div>
 <div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
 <div class="ttc" id="aDaemonApp_8h_html_a7e2111404fd176f2a996f64ba42e9826"><div class="ttname"><a href="DaemonApp_8h.html#a7e2111404fd176f2a996f64ba42e9826">kLogFilename</a></div><div class="ttdeci">const char *const kLogFilename</div></div>
@@ -204,7 +203,7 @@ $(function(){initNavTree('DaemonApp_8h_source.html','',''); });
 <div class="ttc" id="aclassDaemonApp_html_ae49af1be8b475b0c96e6c820f0a0e3a1"><div class="ttname"><a href="classDaemonApp.html#ae49af1be8b475b0c96e6c820f0a0e3a1">DaemonApp::DaemonApp</a></div><div class="ttdeci">DaemonApp(IEventQueue &amp;events)</div><div class="ttdef"><b>Definition</b> DaemonApp.cpp:42</div></div>
 <div class="ttc" id="aclassEvent_html"><div class="ttname"><a href="classEvent.html">Event</a></div><div class="ttdoc">Event.</div><div class="ttdef"><b>Definition</b> Event.h:27</div></div>
 <div class="ttc" id="aclassFileLogOutputter_html"><div class="ttname"><a href="classFileLogOutputter.html">FileLogOutputter</a></div><div class="ttdoc">Write log to file.</div><div class="ttdef"><b>Definition</b> LogOutputters.h:60</div></div>
-<div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:30</div></div>
+<div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:32</div></div>
 <div class="ttc" id="aclassMSWindowsWatchdog_html"><div class="ttname"><a href="classMSWindowsWatchdog.html">MSWindowsWatchdog</a></div><div class="ttdoc">Monitors and controls a core process on Windows, elevating if necessary.</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.h:29</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer_html"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html">deskflow::core::ipc::DaemonIpcServer</a></div><div class="ttdef"><b>Definition</b> DaemonIpcServer.h:18</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1core_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1core_1_1ipc.html">deskflow::core::ipc</a></div><div class="ttdef"><b>Definition</b> DaemonApp.h:22</div></div>

@@ -27,7 +27,7 @@ var classIPlatformScreen =
     [ "getJumpZoneSize", "classIPlatformScreen.html#ae48dcc3f997c8f9b6112579ee84aa209", null ],
     [ "getSecureInputApp", "classIPlatformScreen.html#ad85af72ff780c248393b9da1b161bea3", null ],
     [ "getShape", "classIPlatformScreen.html#a04688a7e547d65b64b523e7653025c0c", null ],
-    [ "handleSystemEvent", "classIPlatformScreen.html#a77db7471b1ab4c944eb931b4b57ed0e3", null ],
+    [ "handleSystemEvent", "classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1", null ],
     [ "isAnyMouseButtonDown", "classIPlatformScreen.html#a30e6872727a1c3c11843c1f10c25d94c", null ],
     [ "isKeyDown", "classIPlatformScreen.html#a706a36da7f0f85b58d35aeb06a6d98a2", null ],
     [ "isPrimary", "classIPlatformScreen.html#a22e026489cf9eba85c95d1fb7a3935d1", null ],

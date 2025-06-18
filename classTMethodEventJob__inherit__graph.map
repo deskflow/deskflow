@@ -1,7 +1,0 @@
-<map id="TMethodEventJob&lt; T &gt;" name="TMethodEventJob&lt; T &gt;">
-<area shape="rect" id="Node000001" title="Use a member function as an event job." alt="" coords="5,151,164,175"/>
-<area shape="rect" id="Node000002" href="$classIEventJob.html" title="Event handler interface." alt="" coords="45,78,124,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,118,87,150,82,150,82,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="46,5,123,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,46,87,78,82,78,82,46"/>
-</map>

@@ -136,8 +136,7 @@ var hierarchy =
         [ "XWindowsClipboard", "classXWindowsClipboard.html", null ]
       ] ],
       [ "IEventJob", "classIEventJob.html", [
-        [ "FunctionEventJob", "classFunctionEventJob.html", null ],
-        [ "TMethodEventJob< T >", "classTMethodEventJob.html", null ]
+        [ "FunctionEventJob", "classFunctionEventJob.html", null ]
       ] ],
       [ "IEventQueue", "classIEventQueue.html", [
         [ "EventQueue", "classEventQueue.html", null ]

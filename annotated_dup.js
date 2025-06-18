@@ -258,7 +258,6 @@ var annotated_dup =
     [ "TCPSocketFactory", "classTCPSocketFactory.html", "classTCPSocketFactory" ],
     [ "Thread", "classThread.html", "classThread" ],
     [ "TlsCertificate", "classTlsCertificate.html", "classTlsCertificate" ],
-    [ "TMethodEventJob", "classTMethodEventJob.html", "classTMethodEventJob" ],
     [ "TMethodJob", "classTMethodJob.html", "classTMethodJob" ],
     [ "TrashScreenWidget", "classTrashScreenWidget.html", "classTrashScreenWidget" ],
     [ "TSocketMultiplexerMethodJob", "classTSocketMultiplexerMethodJob.html", "classTSocketMultiplexerMethodJob" ],
