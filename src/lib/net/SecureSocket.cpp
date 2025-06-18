@@ -45,8 +45,8 @@ enum
 
 struct Ssl
 {
-  SSL_CTX *m_context;
-  SSL *m_ssl;
+  SSL_CTX *m_context = nullptr;
+  SSL *m_ssl = nullptr;
 };
 
 static int verifyIgnoreCertCallback(X509_STORE_CTX *, void *)
@@ -289,9 +289,7 @@ void SecureSocket::initSsl(bool server)
 {
   std::scoped_lock ssl_lock{ssl_mutex_};
 
-  m_ssl = new Ssl();
-  m_ssl->m_context = nullptr;
-  m_ssl->m_ssl = nullptr;
+  m_ssl = std::make_unique<Ssl>();
 
   initContext(server);
 }
@@ -407,7 +405,6 @@ void SecureSocket::freeSSL()
       SSL_CTX_free(m_ssl->m_context);
       m_ssl->m_context = nullptr;
     }
-    delete m_ssl;
     m_ssl = nullptr;
   }
 }
