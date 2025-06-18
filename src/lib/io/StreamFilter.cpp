@@ -20,9 +20,7 @@ StreamFilter::StreamFilter(IEventQueue *events, deskflow::IStream *stream, bool 
 {
   // replace handlers for m_stream
   m_events->removeHandlers(m_stream->getEventTarget());
-  m_events->addHandler(EventTypes::Unknown, m_stream->getEventTarget(), [this](const auto &e) {
-    handleUpstreamEvent(e);
-  });
+  m_events->addHandler(EventTypes::Unknown, m_stream->getEventTarget(), [this](const auto &e) { filterEvent(e); });
 }
 
 StreamFilter::~StreamFilter()
@@ -86,9 +84,4 @@ deskflow::IStream *StreamFilter::getStream() const
 void StreamFilter::filterEvent(const Event &event)
 {
   m_events->dispatchEvent(Event(event.getType(), getEventTarget(), event.getData()));
-}
-
-void StreamFilter::handleUpstreamEvent(const Event &event)
-{
-  filterEvent(event);
 }

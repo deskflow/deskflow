@@ -47,7 +47,9 @@ ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue 
   m_events->addHandler(EventTypes::StreamInputReady, m_stream->getEventTarget(), [this](const auto &) {
     handleData();
   });
-  m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) { handleClipboardSendingEvent(e); });
+  m_events->addHandler(EventTypes::ClipboardSending, this, [this](const auto &e) {
+    ClipboardChunk::send(m_stream, e.getDataObject());
+  });
 
   // send heartbeat
   setKeepAliveRate(kKeepAliveRate);
@@ -803,11 +805,6 @@ void ServerProxy::infoAcknowledgment()
 {
   LOG((CLOG_DEBUG1 "recv info acknowledgment"));
   m_ignoreMouse = false;
-}
-
-void ServerProxy::handleClipboardSendingEvent(const Event &event)
-{
-  ClipboardChunk::send(m_stream, event.getDataObject());
 }
 
 void ServerProxy::secureInputNotification()

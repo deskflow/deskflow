@@ -160,7 +160,7 @@ void ClientListener::handleClientAccepted(IDataSocket *socket)
     handleUnknownClient(client);
   });
   m_events->addHandler(EventTypes::ClientProxyUnknownFailure, client, [this, client](const auto &) {
-    handleUnknownClientFailure(client);
+    removeUnknownClient(client);
   });
 }
 
@@ -188,11 +188,6 @@ void ClientListener::handleUnknownClient(ClientProxyUnknown *unknownClient)
 
   // now finished with unknown client
   removeUnknownClient(unknownClient);
-}
-
-void ClientListener::handleUnknownClientFailure(ClientProxyUnknown *client)
-{
-  removeUnknownClient(client);
 }
 
 void ClientListener::handleClientDisconnected(ClientProxy *client)

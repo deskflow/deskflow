@@ -73,7 +73,7 @@ void ClientProxy1_3::addHeartbeatTimer()
   // create and install a timer to periodically send keep alives
   if (m_keepAliveRate > 0.0) {
     m_keepAliveTimer = m_events->newTimer(m_keepAliveRate, nullptr);
-    m_events->addHandler(EventTypes::Timer, m_keepAliveTimer, [this](const auto &) { handleKeepAlive(); });
+    m_events->addHandler(EventTypes::Timer, m_keepAliveTimer, [this](const auto &) { keepAlive(); });
   }
 
   // superclass does the alarm
@@ -91,11 +91,6 @@ void ClientProxy1_3::removeHeartbeatTimer()
 
   // superclass does the alarm
   ClientProxy1_2::removeHeartbeatTimer();
-}
-
-void ClientProxy1_3::handleKeepAlive()
-{
-  keepAlive();
 }
 
 void ClientProxy1_3::keepAlive()

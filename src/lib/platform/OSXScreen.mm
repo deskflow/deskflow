@@ -647,7 +647,7 @@ void OSXScreen::enable()
 {
   // watch the clipboard
   m_clipboardTimer = m_events->newTimer(1.0, nullptr);
-  m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { handleClipboardCheck(); });
+  m_events->addHandler(EventTypes::Timer, m_clipboardTimer, [this](const auto &) { checkClipboards(); });
 
   if (m_isPrimary) {
     // FIXME -- start watching jump zones
@@ -990,11 +990,6 @@ bool OSXScreen::onMouseWheel(int32_t xDelta, int32_t yDelta) const
   LOG((CLOG_DEBUG1 "event: button wheel delta=%+d,%+d", xDelta, yDelta));
   sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(xDelta, yDelta));
   return true;
-}
-
-void OSXScreen::handleClipboardCheck()
-{
-  checkClipboards();
 }
 
 void OSXScreen::displayReconfigurationCallback(

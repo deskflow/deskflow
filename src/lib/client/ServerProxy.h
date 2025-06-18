@@ -96,7 +96,6 @@ private:
   void setOptions();
   void queryInfo();
   void infoAcknowledgment();
-  void handleClipboardSendingEvent(const Event &event);
   void secureInputNotification();
   void setServerLanguages();
   void setActiveServerLanguage(const std::string &language);

@@ -83,7 +83,6 @@ public:
   void forceReconnect();
   void resetServer();
   void handleClientConnected(const Event &e, ClientListener *listener);
-  void handleClientsDisconnected();
   void closeServer(Server *server);
   void stopRetryTimer();
   void updateStatus() const;
@@ -102,7 +101,6 @@ public:
   void handleResume();
   ClientListener *openClientListener(const NetworkAddress &address);
   Server *openServer(ServerConfig &config, PrimaryClient *primaryClient);
-  void handleNoClients();
   bool startServer();
   Server *getServerPtr()
   {

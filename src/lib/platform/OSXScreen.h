@@ -148,9 +148,6 @@ private:
   // get the current scroll wheel speed
   double getScrollSpeed() const;
 
-  // clipboard check timer handler
-  void handleClipboardCheck();
-
   // Resolution switch callback
   static void displayReconfigurationCallback(CGDirectDisplayID, CGDisplayChangeSummaryFlags, void *);
 

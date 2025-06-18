@@ -22,8 +22,5 @@ public:
   bool recvClipboard() override;
 
 private:
-  void handleClipboardSendingEvent(const Event &e);
-
-private:
   IEventQueue *m_events;
 };

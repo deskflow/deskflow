@@ -96,11 +96,11 @@ Server::Server(
   });
   m_events->addHandler(
       EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget(),
-      [this](const auto &) { handleScreensaverActivatedEvent(); }
+      [this](const auto &) { onScreensaver(true); }
   );
   m_events->addHandler(
       EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget(),
-      [this](const auto &) { handleScreensaverDeactivatedEvent(); }
+      [this](const auto &) { onScreensaver(false); }
   );
   m_events->addHandler(EventTypes::ServerSwitchToScreen, m_inputFilter, [this](const auto &e) {
     handleSwitchToScreenEvent(e);
@@ -115,10 +115,10 @@ Server::Server(
     handleLockCursorToScreenEvent(e);
   });
   m_events->addHandler(EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter, [this](const auto &) {
-    handleFakeInputBeginEvent();
+    m_primaryClient->fakeInputBegin();
   });
   m_events->addHandler(EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter, [this](const auto &) {
-    handleFakeInputEndEvent();
+    m_primaryClient->fakeInputEnd();
   });
 
   // add connection
@@ -1260,16 +1260,6 @@ void Server::handleWheelEvent(const Event &event)
   onMouseWheel(info->m_xDelta, info->m_yDelta);
 }
 
-void Server::handleScreensaverActivatedEvent()
-{
-  onScreensaver(true);
-}
-
-void Server::handleScreensaverDeactivatedEvent()
-{
-  onScreensaver(false);
-}
-
 void Server::handleSwitchWaitTimeout()
 {
   // ignore if mouse is locked to screen
@@ -1392,16 +1382,6 @@ void Server::handleLockCursorToScreenEvent(const Event &event)
       stopRelativeMoves();
     }
   }
-}
-
-void Server::handleFakeInputBeginEvent()
-{
-  m_primaryClient->fakeInputBegin();
-}
-
-void Server::handleFakeInputEndEvent()
-{
-  m_primaryClient->fakeInputEnd();
 }
 
 void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, uint32_t seqNum)

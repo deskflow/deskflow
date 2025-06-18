@@ -113,7 +113,7 @@ void ClientProxyUnknown::addProxyHandlers()
 {
   assert(m_proxy != nullptr);
 
-  m_events->addHandler(EventTypes::ClientProxyReady, m_proxy, [this](const auto &e) { handleReady(); });
+  m_events->addHandler(EventTypes::ClientProxyReady, m_proxy, [this](const auto &e) { sendSuccess(); });
   m_events->addHandler(EventTypes::ClientProxyDisconnected, m_proxy, [this](const auto &e) { handleDisconnect(); });
 }
 
@@ -260,9 +260,4 @@ void ClientProxyUnknown::handleDisconnect()
 {
   LOG((CLOG_NOTE "new client disconnected"));
   sendFailure();
-}
-
-void ClientProxyUnknown::handleReady()
-{
-  sendSuccess();
 }

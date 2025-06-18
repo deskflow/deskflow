@@ -179,7 +179,6 @@ private:
   void handleHello();
   void handleSuspend();
   void handleResume();
-  void handleStopRetry();
   void sendClipboardThread(void *);
   void bindNetworkInterface(IDataSocket *socket) const;
 

@@ -210,11 +210,6 @@ void ServerApp::handleClientConnected(const Event &, ClientListener *listener)
   }
 }
 
-void ServerApp::handleClientsDisconnected()
-{
-  m_events->addEvent(Event(EventTypes::Quit));
-}
-
 void ServerApp::closeServer(Server *server)
 {
   if (server == nullptr) {
@@ -227,8 +222,10 @@ void ServerApp::closeServer(Server *server)
   // wait for clients to disconnect for up to timeout seconds
   double timeout = 3.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
-  m_events->addHandler(EventTypes::Timer, timer, [this](const auto &) { handleClientsDisconnected(); });
-  m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { handleClientsDisconnected(); });
+  m_events->addHandler(EventTypes::Timer, timer, [this](const auto &) { m_events->addEvent(Event(EventTypes::Quit)); });
+  m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) {
+    m_events->addEvent(Event(EventTypes::Quit));
+  });
 
   m_events->loop();
 
@@ -557,7 +554,7 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
 {
   auto *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {
-    m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { handleNoClients(); });
+    m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { updateStatus(); });
     m_events->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &e) { handleScreenSwitched(e); });
 
   } catch (std::bad_alloc &ba) {
@@ -566,11 +563,6 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   }
 
   return server;
-}
-
-void ServerApp::handleNoClients()
-{
-  updateStatus();
 }
 
 void ServerApp::handleScreenSwitched(const Event &e)
