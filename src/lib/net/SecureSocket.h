@@ -11,6 +11,8 @@
 #include "net/SecurityLevel.h"
 #include "net/TCPSocket.h"
 #include "net/XSocket.h"
+
+#include <memory>
 #include <mutex>
 
 class IEventQueue;
@@ -91,7 +93,7 @@ private:
   // by it.
   std::mutex ssl_mutex_;
 
-  Ssl *m_ssl = nullptr;
+  std::unique_ptr<Ssl> m_ssl;
   bool m_secureReady = false;
   bool m_fatal = false;
   SecurityLevel m_securityLevel = SecurityLevel::Encrypted;
