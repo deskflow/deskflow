@@ -39,10 +39,6 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
 
   ui->btnOk->setDefault(true);
   connect(ui->btnOk, &QPushButton::clicked, this, [this] { close(); });
-
-  setFixedWidth(600);
-  adjustSize();
-  setMinimumSize(size());
 }
 
 void AboutDialog::copyVersionText() const

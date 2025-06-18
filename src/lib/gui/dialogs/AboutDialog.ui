@@ -3,18 +3,18 @@
  <class>AboutDialog</class>
  <widget class="QDialog" name="AboutDialog">
   <property name="windowModality">
-   <enum>Qt::ApplicationModal</enum>
+   <enum>Qt::WindowModality::ApplicationModal</enum>
   </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>475</height>
+    <width>525</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -35,7 +35,7 @@
    <item>
     <widget class="QWidget" name="frameLogo" native="true">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -67,7 +67,7 @@ p, li { white-space: pre-wrap; }
       <item row="6" column="1">
        <spacer name="verticalSpacer">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -80,7 +80,7 @@ p, li { white-space: pre-wrap; }
       <item row="0" column="1">
        <spacer name="verticalSpacer_3">
         <property name="orientation">
-         <enum>Qt::Vertical</enum>
+         <enum>Qt::Orientation::Vertical</enum>
         </property>
         <property name="sizeHint" stdset="0">
          <size>
@@ -92,6 +92,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="1" column="1">
        <widget class="QLabel" name="lblName">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="font">
          <font>
           <pointsize>28</pointsize>
@@ -105,7 +111,7 @@ p, li { white-space: pre-wrap; }
          <bool>false</bool>
         </property>
         <property name="alignment">
-         <set>Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft</set>
+         <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
         </property>
         <property name="indent">
          <number>0</number>
@@ -117,6 +123,12 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="0" column="0" rowspan="9">
        <widget class="QLabel" name="lblIcon">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="autoFillBackground">
          <bool>false</bool>
         </property>
@@ -158,7 +170,7 @@ p, li { white-space: pre-wrap; }
             <string>Version: </string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="indent">
             <number>0</number>
@@ -182,7 +194,7 @@ p, li { white-space: pre-wrap; }
             <string>lbl_version</string>
            </property>
            <property name="alignment">
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
            </property>
            <property name="smaller_text" stdset="0">
             <bool>true</bool>
@@ -224,7 +236,7 @@ p, li { white-space: pre-wrap; }
             </sizepolicy>
            </property>
            <property name="orientation">
-            <enum>Qt::Horizontal</enum>
+            <enum>Qt::Orientation::Horizontal</enum>
            </property>
            <property name="sizeHint" stdset="0">
             <size>
@@ -272,14 +284,14 @@ p, li { white-space: pre-wrap; }
       <string>lblDescription</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QLabel" name="lblCopyright">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -292,10 +304,10 @@ p, li { white-space: pre-wrap; }
    <item>
     <spacer name="verticalSpacer_2">
      <property name="orientation">
-      <enum>Qt::Vertical</enum>
+      <enum>Qt::Orientation::Vertical</enum>
      </property>
      <property name="sizeType">
-      <enum>QSizePolicy::Fixed</enum>
+      <enum>QSizePolicy::Policy::Fixed</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -307,8 +319,14 @@ p, li { white-space: pre-wrap; }
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="sizeAdjustPolicy">
-      <enum>QAbstractScrollArea::AdjustIgnored</enum>
+      <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored</enum>
      </property>
      <property name="widgetResizable">
       <bool>true</bool>
@@ -318,12 +336,12 @@ p, li { white-space: pre-wrap; }
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>574</width>
-        <height>191</height>
+        <width>505</width>
+        <height>294</height>
        </rect>
       </property>
       <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
         <horstretch>0</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -363,7 +381,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -372,6 +390,9 @@ p, li { white-space: pre-wrap; }
           <string>Important Developers</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
           <property name="leftMargin">
            <number>3</number>
           </property>
@@ -392,6 +413,9 @@ p, li { white-space: pre-wrap; }
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="frameShape">
+             <enum>QFrame::Shape::NoFrame</enum>
+            </property>
             <property name="text">
              <string>lblImportantDevs</string>
             </property>
@@ -405,18 +429,6 @@ p, li { white-space: pre-wrap; }
        </item>
       </layout>
      </widget>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget1" native="true">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-     </layout>
     </widget>
    </item>
    <item>
