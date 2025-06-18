@@ -14,6 +14,7 @@
 #include "server/Config.h"
 
 #include <deque>
+#include <memory>
 #include <set>
 
 class ClientProxy;
@@ -29,7 +30,10 @@ class ClientListener
 {
 public:
   // The factories are adopted.
-  ClientListener(const NetworkAddress &, ISocketFactory *, IEventQueue *events, SecurityLevel securityLevel);
+  ClientListener(
+      const NetworkAddress &, std::unique_ptr<ISocketFactory> socketFactory, IEventQueue *events,
+      SecurityLevel securityLevel
+  );
   ClientListener(ClientListener const &) = delete;
   ClientListener(ClientListener &&) = delete;
   ~ClientListener();
@@ -81,7 +85,7 @@ private:
   using ClientSockets = std::set<IDataSocket *>;
 
   IListenSocket *m_listen;
-  ISocketFactory *m_socketFactory;
+  std::unique_ptr<ISocketFactory> m_socketFactory;
   NewClients m_newClients;
   WaitingClients m_waitingClients;
   Server *m_server = nullptr;

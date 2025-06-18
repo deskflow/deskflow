@@ -570,9 +570,9 @@ void ServerApp::handleScreenSwitched(const Event &e)
   // do nothing
 }
 
-ISocketFactory *ServerApp::getSocketFactory() const
+std::unique_ptr<ISocketFactory> ServerApp::getSocketFactory() const
 {
-  return new TCPSocketFactory(m_events, getSocketMultiplexer());
+  return std::make_unique<TCPSocketFactory>(m_events, getSocketMultiplexer());
 }
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress &address) const
