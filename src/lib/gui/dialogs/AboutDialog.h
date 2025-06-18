@@ -64,7 +64,11 @@ private:
       QStringLiteral("Owen Phillips"),
       QStringLiteral("Daniel Evenson"),
 
-      // Prominent Deskflow development community members
+      // Barrier & Input Leap maintainers
+      QStringLiteral("Povilas Kanapickas"),
+      QStringLiteral("Dom Rodriguez"),
+
+      // Deskflow maintainers
       QStringLiteral("Chris Rizzitello"),
   };
 };
