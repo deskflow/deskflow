@@ -481,7 +481,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
     for (int j = 0; j < maxKeysyms; ++j) {
       item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[j]);
       if (item.m_id == kKeyNone) {
-        if (j != 0 && modifierButtons.count(keycode) > 0) {
+        if (j != 0 && modifierButtons.contains(keycode)) {
           // pretend the modifier works in other shift levels
           // because it probably does.
           if (keysyms[1] == NoSymbol || j != 3) {
@@ -509,7 +509,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
 
       item.m_generates = 0;
       item.m_lock = false;
-      if (modifierButtons.count(keycode) > 0) {
+      if (modifierButtons.contains(keycode)) {
         // get flags for modifier keys
         deskflow::KeyMap::initModifierKey(item);
 

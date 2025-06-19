@@ -784,7 +784,7 @@ bool KeyMap::keysToRestoreModifiers(
   // release unwanted keys
   for (ModifierToKeys::const_iterator i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
     KeyButton button = i->second.m_button;
-    if (button != keyItem.m_button && newKeys.count(button) == 0) {
+    if (button != keyItem.m_button && !newKeys.contains(button)) {
       EKeystroke type = kKeystrokeRelease;
       if (i->second.m_lock) {
         type = kKeystrokeUnmodify;
@@ -796,7 +796,7 @@ bool KeyMap::keysToRestoreModifiers(
   // press wanted keys
   for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
     const KeyButton button = i->second.m_button;
-    if (button != keyItem.m_button && oldKeys.count(button) == 0) {
+    if (button != keyItem.m_button && !oldKeys.contains(button)) {
       EKeystroke type = kKeystrokePress;
       if (i->second.m_lock) {
         type = kKeystrokeModify;
@@ -943,7 +943,7 @@ void KeyMap::addKeystrokes(
       }
 
       // if no more keys for this modifier then deactivate modifier
-      if (activeModifiers.count(keyItem.m_generates) == 0) {
+      if (!activeModifiers.contains(keyItem.m_generates)) {
         currentState &= ~keyItem.m_generates;
       }
     }
@@ -965,7 +965,7 @@ void KeyMap::addKeystrokes(
   case kKeystrokeUnmodify:
     if (keyItem.m_lock) {
       // we assume there's just one button for this modifier
-      if (m_halfDuplex.count(button) > 0) {
+      if (m_halfDuplex.contains(button)) {
         if (type == kKeystrokeModify) {
           // turn half-duplex toggle on (press)
           keystrokes.push_back(Keystroke(button, true, false, data));
@@ -1084,13 +1084,13 @@ std::string KeyMap::formatKey(KeyID key, KeyModifierMask mask)
   std::string x;
   for (int32_t i = 0; i < kKeyModifierNumBits; ++i) {
     KeyModifierMask mod = (1u << i);
-    if ((mask & mod) != 0 && s_modifierToNameMap->count(mod) > 0) {
+    if ((mask & mod) != 0 && s_modifierToNameMap->contains(mod)) {
       x += s_modifierToNameMap->find(mod)->second;
       x += "+";
     }
   }
   if (key != kKeyNone) {
-    if (s_keyToNameMap->count(key) > 0) {
+    if (s_keyToNameMap->contains(key)) {
       x += s_keyToNameMap->find(key)->second;
     }
     // XXX -- we're assuming ASCII here
@@ -1113,7 +1113,7 @@ bool KeyMap::parseKey(const std::string &x, KeyID &key)
 
   // parse the key
   key = kKeyNone;
-  if (s_nameToKeyMap->count(x) > 0) {
+  if (s_nameToKeyMap->contains(x)) {
     key = s_nameToKeyMap->find(x)->second;
   }
   // XXX -- we're assuming ASCII encoding here
@@ -1157,7 +1157,7 @@ bool KeyMap::parseModifiers(std::string &x, KeyModifierMask &mask)
       return false;
     }
 
-    if (s_nameToModifierMap->count(c) > 0) {
+    if (s_nameToModifierMap->contains(c)) {
       KeyModifierMask mod = s_nameToModifierMap->find(c)->second;
       if ((mask & mod) != 0) {
         // modifier appears twice

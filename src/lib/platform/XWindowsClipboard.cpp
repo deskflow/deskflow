@@ -814,7 +814,7 @@ void XWindowsClipboard::insertReply(Reply *reply)
   // find the right reply when handling property notify events we stick
   // to just the requestor.
 
-  const bool newWindow = (m_replies.count(reply->m_requestor) == 0);
+  const bool newWindow = !m_replies.contains(reply->m_requestor);
   m_replies[reply->m_requestor].push_back(reply);
 
   // adjust requestor's event mask if we haven't done so already.  we

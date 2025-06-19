@@ -90,7 +90,7 @@ bool HelloBack::shouldDowngrade(int major, int minor) const
     auto versions = map.find(minor);
     if (versions != map.end()) {
       auto compatibleVersions = versions->second;
-      if (compatibleVersions.find(m_minorVersion) != compatibleVersions.end()) {
+      if (compatibleVersions.contains(m_minorVersion)) {
         return true;
       }
     }
