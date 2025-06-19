@@ -42,7 +42,7 @@ ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig,
 void ServerConnection::handleLogLine(const QString &logLine)
 {
   ServerMessage message(logLine);
-  const auto clientName = message.getClientName();
+  const auto &clientName = message.getClientName();
 
   if (message.isDisconnectedMessage()) {
     m_connectedClients.remove(clientName);
