@@ -25,9 +25,7 @@ std::string vectorToString(const std::vector<std::string> &vector, const std::st
 
 } // anonymous namespace
 
-namespace deskflow {
-
-namespace languages {
+namespace deskflow::languages {
 
 LanguageManager::LanguageManager(const std::vector<std::string> &localLanguages) : m_localLanguages(localLanguages)
 {
@@ -88,6 +86,4 @@ bool LanguageManager::isLanguageInstalled(const std::string &language) const
   return isInstalled;
 }
 
-} // namespace languages
-
-} // namespace deskflow
+} // namespace deskflow::languages

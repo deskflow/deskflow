@@ -10,9 +10,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-namespace deskflow {
-
-namespace filesystem {
+namespace deskflow::filesystem {
 
 #ifdef SYSAPI_WIN32
 
@@ -36,6 +34,4 @@ std::string path(const std::string &filePath)
 }
 #endif
 
-} // namespace filesystem
-
-} // namespace deskflow
+} // namespace deskflow::filesystem

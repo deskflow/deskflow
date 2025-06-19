@@ -9,9 +9,7 @@
 #include "deskflow/AppUtil.h"
 #include <vector>
 
-namespace deskflow {
-
-namespace languages {
+namespace deskflow::languages {
 
 class LanguageManager
 {
@@ -62,6 +60,4 @@ public:
   bool isLanguageInstalled(const std::string &language) const;
 };
 
-} // namespace languages
-
-} // namespace deskflow
+} // namespace deskflow::languages

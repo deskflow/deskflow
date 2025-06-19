@@ -13,9 +13,7 @@
 #include <X11/extensions/XKBrules.h>
 #include <cstdio>
 
-namespace deskflow {
-
-namespace linux {
+namespace deskflow::linux {
 
 class DeskflowXkbKeyboard
 {
@@ -32,8 +30,6 @@ public:
   ~DeskflowXkbKeyboard();
 };
 
-} // namespace linux
-
-} // namespace deskflow
+} // namespace deskflow::linux
 
 #endif // WINAPI_XWINDOWS

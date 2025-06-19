@@ -12,13 +12,11 @@
 
 #include <string>
 
-namespace deskflow {
-
 //! std::string utilities
 /*!
 Provides functions for string manipulation.
 */
-namespace string {
+namespace deskflow::string {
 
 //! Format positional arguments
 /*!
@@ -76,5 +74,4 @@ public:
   static bool cmpLess(const std::string::value_type &a, const std::string::value_type &b);
 };
 
-} // namespace string
-} // namespace deskflow
+} // namespace deskflow::string
