@@ -23,7 +23,6 @@ public:
     // do nothing
   }
 
-public:
   void dragEnterEvent(QDragEnterEvent *event) override;
   void dropEvent(QDropEvent *event) override;
 

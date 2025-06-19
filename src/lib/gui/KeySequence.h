@@ -17,7 +17,6 @@ class KeySequence
 public:
   KeySequence() = default;
 
-public:
   QString toString() const;
   bool appendKey(int modifiers, int key);
   bool appendMouseButton(int button);
@@ -53,7 +52,6 @@ private:
     return m_Sequence;
   }
 
-private:
   QList<int> m_Sequence = {};
   int m_Modifiers = 0;
   bool m_IsValid = false;

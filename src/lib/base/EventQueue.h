@@ -122,7 +122,6 @@ private:
   // event handlers
   HandlerTable m_handlers;
 
-private:
   Mutex *m_readyMutex = nullptr;
   CondVar<bool> *m_readyCondVar = nullptr;
   std::queue<Event> m_pending;

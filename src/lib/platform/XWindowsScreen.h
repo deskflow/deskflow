@@ -106,7 +106,6 @@ private:
   void onError();
   static int ioErrorHandler(Display *);
 
-private:
   class KeyEventFilter
   {
   public:
