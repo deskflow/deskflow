@@ -39,13 +39,13 @@ public:
   void deleteTimer(EventQueueTimer *) const override;
 
 private:
-  ei *ei_;
-  IEventQueue *events_;
-  std::queue<std::pair<bool, uint32_t>> queue_;
-  int pipe_w_;
-  int pipe_r_;
+  ei *m_ei;
+  IEventQueue *m_events;
+  std::queue<std::pair<bool, uint32_t>> m_queue;
+  int m_pipeWrite;
+  int m_pipeRead;
 
-  mutable std::mutex mutex_;
+  mutable std::mutex m_mutex;
 };
 
 } // namespace deskflow
