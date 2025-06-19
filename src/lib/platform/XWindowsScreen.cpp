@@ -1175,7 +1175,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
 
     // discard matching key releases for key presses that were
     // filtered and remove them from our filtered list.
-    else if (xevent->type == KeyRelease && m_filtered.count(xevent->xkey.keycode) > 0) {
+    else if (xevent->type == KeyRelease && m_filtered.contains(xevent->xkey.keycode)) {
       m_filtered.erase(xevent->xkey.keycode);
       return;
     }

@@ -1203,7 +1203,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
 void Server::handleClipboardChanged(const Event &event, BaseClientProxy *client)
 {
   // ignore events from unknown clients
-  if (m_clientSet.count(client) == 0) {
+  if (!m_clientSet.contains(client)) {
     return;
   }
   const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
