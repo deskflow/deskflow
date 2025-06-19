@@ -63,7 +63,7 @@ public:
   }
   ArchNetworkBSD(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD(ArchNetworkBSD &&) = delete;
-  ~ArchNetworkBSD() = default;
+  ~ArchNetworkBSD() override = default;
 
   ArchNetworkBSD &operator=(ArchNetworkBSD const &) = delete;
   ArchNetworkBSD &operator=(ArchNetworkBSD &&) = delete;

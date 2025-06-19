@@ -24,7 +24,7 @@ public:
   ArchString() = default;
   ArchString(const ArchString &) = delete;
   ArchString(ArchString &&) = delete;
-  ~ArchString() = default;
+  ~ArchString() override = default;
 
   ArchString &operator=(const ArchString &) = delete;
   ArchString &operator=(ArchString &&) = delete;
