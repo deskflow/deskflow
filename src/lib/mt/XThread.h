@@ -23,7 +23,7 @@ public:
   {
     // do nothing
   }
-  ~XThreadExit() = default;
+  ~XThreadExit() override = default;
 
 public:
   void *m_result;
