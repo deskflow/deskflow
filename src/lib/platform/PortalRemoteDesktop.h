@@ -13,6 +13,8 @@
 #include <glib.h>
 #include <libportal/portal.h>
 
+#include <memory>
+
 namespace deskflow {
 
 class PortalRemoteDesktop
@@ -22,37 +24,35 @@ public:
   ~PortalRemoteDesktop();
 
 private:
-  void glib_thread(void *);
-  gboolean timeout_handler() const;
-  gboolean init_remote_desktop_session();
-  void cb_init_remote_desktop_session(GObject *object, GAsyncResult *res);
-  void cb_session_started(GObject *object, GAsyncResult *res);
-  void cb_session_closed(XdpSession *session);
+  void glibThread(void *);
+  gboolean timeoutHandler() const;
+  gboolean initSession();
+  void handleInitSession(GObject *object, GAsyncResult *res);
+  void handleSessionStarted(GObject *object, GAsyncResult *res);
+  void handleSessionClosed(XdpSession *session);
   void reconnect(unsigned int timeout = 1000);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data)
+  static void handleSessionClosedCallback(XdpSession *session, gpointer data)
   {
-    static_cast<PortalRemoteDesktop *>(data)->cb_session_closed(session);
+    static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
   }
 
-  int fake_eis_fd();
-
 private:
-  EiScreen *screen_;
-  IEventQueue *events_;
+  EiScreen *m_screen;
+  IEventQueue *m_events;
 
-  Thread *glib_thread_;
-  GMainLoop *glib_main_loop_ = nullptr;
+  Thread *m_glibThread;
+  GMainLoop *m_glibMainLoop = nullptr;
 
-  XdpPortal *portal_ = nullptr;
-  XdpSession *session_ = nullptr;
-  char *session_restore_token_ = nullptr;
+  XdpPortal *m_portal = nullptr;
+  XdpSession *m_session = nullptr;
+  char *m_sessionRestoreToken = nullptr;
 
-  guint session_signal_id_ = 0;
+  guint m_sessionSignalId = 0;
 
   /// The number of successful sessions we've had already
-  guint session_iteration_ = 0;
+  guint m_sessionIteration = 0;
 };
 
 } // namespace deskflow
