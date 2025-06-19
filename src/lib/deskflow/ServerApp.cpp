@@ -555,7 +555,7 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   auto *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
   try {
     m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { updateStatus(); });
-    m_events->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &e) { handleScreenSwitched(e); });
+    m_events->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
 
   } catch (std::bad_alloc &ba) {
     delete server;
@@ -565,7 +565,7 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
   return server;
 }
 
-void ServerApp::handleScreenSwitched(const Event &e)
+void ServerApp::handleScreenSwitched() const
 {
   // do nothing
 }
