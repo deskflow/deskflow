@@ -787,7 +787,7 @@ void ServerProxy::setOptions()
     }
 
     if (id != kKeyModifierIDNull) {
-      m_modifierTranslationTable[id] = static_cast<KeyModifierID>(options[i + 1]);
+      m_modifierTranslationTable[id] = options[i + 1];
       LOG((CLOG_DEBUG1 "modifier %d mapped to %d", id, m_modifierTranslationTable[id]));
     }
   }
