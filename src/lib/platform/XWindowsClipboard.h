@@ -10,6 +10,8 @@
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
 
+#include <QString>
+
 #include <list>
 #include <map>
 #include <vector>
