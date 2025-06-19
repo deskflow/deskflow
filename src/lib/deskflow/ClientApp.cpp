@@ -241,7 +241,7 @@ void ClientApp::scheduleClientRestart(double retryTime)
   m_events->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
 
-void ClientApp::handleClientConnected()
+void ClientApp::handleClientConnected() const
 {
   LOG((CLOG_NOTE "connected to server"));
   updateStatus();
