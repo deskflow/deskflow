@@ -46,7 +46,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   ui->lblImportantDevs->setText(QStringLiteral("%1\n").arg(devsNbsp.join(", ")));
 
   ui->btnOk->setDefault(true);
-  connect(ui->btnOk, &QPushButton::clicked, this, [this] { close(); });
+  connect(ui->btnOk, &QPushButton::clicked, this, &AboutDialog::close);
 }
 
 void AboutDialog::copyVersionText() const
