@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-// TODO: consider whether or not to use either encapsulation (as below)
+// Consider whether or not to use either encapsulation (as below)
 // or inheritance (as it is now) for the ARCH stuff.
 //
 // case for encapsulation:
