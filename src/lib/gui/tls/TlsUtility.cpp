@@ -23,7 +23,7 @@ bool TlsUtility::isEnabled() const
   return Settings::value(Settings::Security::TlsEnabled).toBool();
 }
 
-bool TlsUtility::generateCertificate()
+bool TlsUtility::generateCertificate() const
 {
   qDebug(
       "generating tls certificate, "
@@ -50,7 +50,7 @@ bool TlsUtility::generateCertificate()
   return m_certificate.generateCertificate(certificate, length);
 }
 
-bool TlsUtility::persistCertificate()
+bool TlsUtility::persistCertificate() const
 {
   qDebug("persisting tls certificate");
 

@@ -19,8 +19,8 @@ class TlsUtility : public QObject
 public:
   explicit TlsUtility(QObject *parent = nullptr);
 
-  bool generateCertificate();
-  bool persistCertificate();
+  bool generateCertificate() const;
+  bool persistCertificate() const;
 
   /**
    * @brief Combines the availability and the enabled status of TLS.
