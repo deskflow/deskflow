@@ -225,7 +225,7 @@ void Server::adoptClient(BaseClientProxy *client)
   assert(client != nullptr);
 
   // watch for client disconnection
-  m_events->addHandler(EventTypes::ClientProxyDisconnected, client, [this, client](const auto &e) {
+  m_events->addHandler(EventTypes::ClientProxyDisconnected, client, [this, client](const auto &) {
     handleClientDisconnected(client);
   });
 
@@ -1845,7 +1845,7 @@ bool Server::addClient(BaseClientProxy *client)
   }
 
   // add event handlers
-  m_events->addHandler(EventTypes::ScreenShapeChanged, client->getEventTarget(), [this, client](const auto &e) {
+  m_events->addHandler(EventTypes::ScreenShapeChanged, client->getEventTarget(), [this, client](const auto &) {
     handleShapeChanged(client);
   });
   m_events->addHandler(EventTypes::ClipboardGrabbed, client->getEventTarget(), [this, client](const auto &e) {
@@ -1914,7 +1914,7 @@ void Server::closeClient(BaseClientProxy *client, const char *msg)
   // install timer.  wait timeout seconds for client to close.
   double timeout = 5.0;
   EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
-  m_events->addHandler(EventTypes::Timer, timer, [this, client](const auto &e) { handleClientCloseTimeout(client); });
+  m_events->addHandler(EventTypes::Timer, timer, [this, client](const auto &) { handleClientCloseTimeout(client); });
 
   // move client to closing list
   removeClient(client);

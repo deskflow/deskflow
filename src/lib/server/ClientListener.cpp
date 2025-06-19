@@ -177,7 +177,7 @@ void ClientListener::handleUnknownClient(ClientProxyUnknown *unknownClient)
     m_events->addEvent(Event(EventTypes::ClientListenerAccepted, this));
 
     // watch for client to disconnect while it's in our queue
-    m_events->addHandler(EventTypes::ClientProxyDisconnected, client, [this, client](const auto &e) {
+    m_events->addHandler(EventTypes::ClientProxyDisconnected, client, [this, client](const auto &) {
       handleClientDisconnected(client);
     });
   } else {
