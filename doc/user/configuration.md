@@ -1,6 +1,6 @@
 # GUI Config
 
- Deskflow will automaticlly figure out where to save settings and other files.
+ Deskflow will automatically figure out where to save settings and other files.
 
 
 ## Unix Systems
