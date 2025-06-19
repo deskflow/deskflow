@@ -139,7 +139,7 @@ QVariant Settings::defaultValue(const QString &key)
   return QVariant();
 }
 
-const QString Settings::logLevelText()
+QString Settings::logLevelText()
 {
   return instance()->m_logLevels.at(instance()->value(Log::Level).toInt());
 }
@@ -156,7 +156,7 @@ void Settings::save(bool emitSaving)
   instance()->m_settings->sync();
 }
 
-const QStringList Settings::validKeys()
+QStringList Settings::validKeys()
 {
   return instance()->m_validKeys;
 }
@@ -173,34 +173,34 @@ bool Settings::isNativeMode()
   return instance()->m_settings->format() == QSettings::NativeFormat;
 }
 
-const QString Settings::settingsFile()
+QString Settings::settingsFile()
 {
   return instance()->m_settings->fileName();
 }
 
-const QString Settings::settingsPath()
+QString Settings::settingsPath()
 {
   if (instance()->isNativeMode())
     return SystemDir;
   return QFileInfo(instance()->m_settings->fileName()).absolutePath();
 }
 
-const QString Settings::tlsDir()
+QString Settings::tlsDir()
 {
   return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kTlsDirName);
 }
 
-const QString Settings::tlsLocalDb()
+QString Settings::tlsLocalDb()
 {
   return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintLocalFilename);
 }
 
-const QString Settings::tlsTrustedServersDb()
+QString Settings::tlsTrustedServersDb()
 {
   return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);
 }
 
-const QString Settings::tlsTrustedClientsDb()
+QString Settings::tlsTrustedClientsDb()
 {
   return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedClientsFilename);
 }

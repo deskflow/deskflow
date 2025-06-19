@@ -118,16 +118,16 @@ public:
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
   static bool isNativeMode();
-  static const QString settingsFile();
-  static const QString settingsPath();
-  static const QString tlsDir();
-  static const QString tlsLocalDb();
-  static const QString tlsTrustedServersDb();
-  static const QString tlsTrustedClientsDb();
-  static const QString logLevelText();
+  static QString settingsFile();
+  static QString settingsPath();
+  static QString tlsDir();
+  static QString tlsLocalDb();
+  static QString tlsTrustedServersDb();
+  static QString tlsTrustedClientsDb();
+  static QString logLevelText();
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
-  static const QStringList validKeys();
+  static QStringList validKeys();
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
