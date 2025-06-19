@@ -1,15 +1,17 @@
 <map id="src/lib/net/SecureSocket.h" name="src/lib/net/SecureSocket.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="438,5,611,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="486,5,659,30"/>
 <area shape="rect" id="Node000002" href="$Filesystem_8h.html" title=" " alt="" coords="125,78,233,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,33,249,78,248,72,467,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="508,33,249,79,248,74,507,28"/>
 <area shape="rect" id="Node000007" href="$SecurityLevel_8h.html" title=" " alt="" coords="308,78,440,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="501,33,414,73,411,69,499,28"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="541,33,422,75,420,70,539,28"/>
 <area shape="rect" id="Node000008" href="$TCPSocket_8h.html" title=" " alt="" coords="464,78,585,103"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="527,31,527,62,522,62,522,31"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="567,32,543,67,539,64,562,29"/>
 <area shape="rect" id="Node000031" href="$XSocket_8h.html" title=" " alt="" coords="989,151,1092,175"/>
-<area shape="poly" id="edge47_Node000001_Node000031" title=" " alt="" coords="539,28,585,65,616,84,650,100,735,127,823,144,905,153,974,158,974,163,905,159,822,149,733,132,648,105,614,89,582,69,536,33"/>
-<area shape="rect" id="Node000035" title=" " alt="" coords="660,78,717,103"/>
-<area shape="poly" id="edge54_Node000001_Node000035" title=" " alt="" coords="553,28,649,69,647,74,551,33"/>
+<area shape="poly" id="edge47_Node000001_Node000031" title=" " alt="" coords="581,29,607,65,626,85,648,100,674,111,708,120,795,136,974,155,974,160,795,141,707,125,672,116,646,105,623,89,603,69,577,32"/>
+<area shape="rect" id="Node000035" title=" " alt="" coords="659,78,729,103"/>
+<area shape="poly" id="edge54_Node000001_Node000035" title=" " alt="" coords="594,28,662,68,660,72,591,33"/>
+<area shape="rect" id="Node000036" title=" " alt="" coords="753,78,811,103"/>
+<area shape="poly" id="edge55_Node000001_Node000036" title=" " alt="" coords="608,28,739,72,737,77,606,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="151,151,207,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="182,103,182,135,177,135,177,103"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="232,151,311,175"/>

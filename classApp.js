@@ -26,7 +26,7 @@ var classApp =
     [ "runEventsLoop", "classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f", null ],
     [ "setByeFunc", "classApp.html#a7007955907d7a63830ee966fc25110da", null ],
     [ "setEvents", "classApp.html#acbc962ac1eea477e7cf22e97c1c04bed", null ],
-    [ "setSocketMultiplexer", "classApp.html#a5a20ff185b1d2c44f5a49ba759870737", null ],
+    [ "setSocketMultiplexer", "classApp.html#ad4d9e0526734148f3d7364f2933c6d57", null ],
     [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ],
     [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ],
     [ "m_bye", "classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc", null ],

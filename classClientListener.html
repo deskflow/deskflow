@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.76</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.79</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -97,7 +97,7 @@ $(function(){initNavTree('classClientListener.html','','classClientListener-memb
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a61afe7f3e74375a6bba9c12e843f42ee" id="r_a61afe7f3e74375a6bba9c12e843f42ee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a61afe7f3e74375a6bba9c12e843f42ee">ClientListener</a> (const <a class="el" href="classNetworkAddress.html">NetworkAddress</a> &amp;, <a class="el" href="classISocketFactory.html">ISocketFactory</a> *, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400">SecurityLevel</a> securityLevel)</td></tr>
+<tr class="memitem:a8497e9dddfec5fca65c8816578d22bc8" id="r_a8497e9dddfec5fca65c8816578d22bc8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8497e9dddfec5fca65c8816578d22bc8">ClientListener</a> (const <a class="el" href="classNetworkAddress.html">NetworkAddress</a> &amp;, std::unique_ptr&lt; <a class="el" href="classISocketFactory.html">ISocketFactory</a> &gt; socketFactory, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400">SecurityLevel</a> securityLevel)</td></tr>
 <tr class="memitem:af66409fe2b32325ffb5815020a9c1c88" id="r_af66409fe2b32325ffb5815020a9c1c88"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af66409fe2b32325ffb5815020a9c1c88">ClientListener</a> (<a class="el" href="classClientListener.html">ClientListener</a> const &amp;)=delete</td></tr>
 <tr class="memitem:a7d56ff7d1bdcc2939db5d2f00ea4f675" id="r_a7d56ff7d1bdcc2939db5d2f00ea4f675"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d56ff7d1bdcc2939db5d2f00ea4f675">ClientListener</a> (<a class="el" href="classClientListener.html">ClientListener</a> &amp;&amp;)=delete</td></tr>
 <tr class="memitem:ad92afe7edff2a94afcaaeda86b4af7e6" id="r_ad92afe7edff2a94afcaaeda86b4af7e6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad92afe7edff2a94afcaaeda86b4af7e6">~ClientListener</a> ()</td></tr>
@@ -114,8 +114,8 @@ accessors</h2></td></tr>
 <tr class="memdesc:ad49d807da29e255e2347313575dcd548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get server which owns this listener.  <br /></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a61afe7f3e74375a6bba9c12e843f42ee" name="a61afe7f3e74375a6bba9c12e843f42ee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61afe7f3e74375a6bba9c12e843f42ee">&#9670;&#160;</a></span>ClientListener() <span class="overload">[1/3]</span></h2>
+<a id="a8497e9dddfec5fca65c8816578d22bc8" name="a8497e9dddfec5fca65c8816578d22bc8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8497e9dddfec5fca65c8816578d22bc8">&#9670;&#160;</a></span>ClientListener() <span class="overload">[1/3]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,7 +128,7 @@ accessors</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classISocketFactory.html">ISocketFactory</a> *</td>          <td class="paramname"><span class="paramname"><em>socketFactory</em></span>, </td>
+          <td class="paramtype">std::unique_ptr&lt; <a class="el" href="classISocketFactory.html">ISocketFactory</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>socketFactory</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
