@@ -25,7 +25,6 @@ public:
   HotkeyDialog(QWidget *parent, Hotkey &hotkey);
   ~HotkeyDialog() override;
 
-public:
   const Hotkey &hotkey() const
   {
     return m_Hotkey;

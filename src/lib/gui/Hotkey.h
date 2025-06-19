@@ -28,7 +28,6 @@ class Hotkey
 public:
   Hotkey() = default;
 
-public:
   QString text() const;
   const KeySequence &keySequence() const
   {

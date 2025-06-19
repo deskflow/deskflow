@@ -27,7 +27,6 @@ class ScreenSetupModel : public QAbstractTableModel
 public:
   ScreenSetupModel(ScreenList &screens, int numColumns, int numRows);
 
-public:
   static const QString &mimeType()
   {
     return m_MimeType;

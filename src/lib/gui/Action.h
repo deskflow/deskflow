@@ -65,7 +65,6 @@ public:
 public:
   Action() = default;
 
-public:
   QString text() const;
   const KeySequence &keySequence() const
   {
