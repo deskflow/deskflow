@@ -13,8 +13,7 @@
 #include <sstream>
 #include <vector>
 
-namespace deskflow {
-namespace string {
+namespace deskflow::string {
 
 std::string format(const char *fmt, ...)
 {
@@ -178,5 +177,4 @@ bool CaselessCmp::cmpLess(const std::string::value_type &a, const std::string::v
   return tolower(a) < tolower(b);
 }
 
-} // namespace string
-} // namespace deskflow
+} // namespace deskflow::string

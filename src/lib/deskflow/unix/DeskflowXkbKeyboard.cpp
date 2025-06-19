@@ -11,9 +11,7 @@
 #include "DeskflowXkbKeyboard.h"
 #include "base/Log.h"
 
-namespace deskflow {
-
-namespace linux {
+namespace deskflow::linux {
 
 DeskflowXkbKeyboard::DeskflowXkbKeyboard()
 {
@@ -47,8 +45,6 @@ DeskflowXkbKeyboard::~DeskflowXkbKeyboard()
   std::free(m_data.options);
 }
 
-} // namespace linux
-
-} // namespace deskflow
+} // namespace deskflow::linux
 
 #endif // WINAPI_XWINDOWS

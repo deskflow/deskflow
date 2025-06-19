@@ -9,9 +9,7 @@
 #include "common/Common.h"
 #include <string>
 
-namespace deskflow {
-
-namespace filesystem {
+namespace deskflow::filesystem {
 
 #ifdef SYSAPI_WIN32
 std::wstring path(const std::string &filePath);
@@ -19,6 +17,4 @@ std::wstring path(const std::string &filePath);
 std::string path(const std::string &filePath);
 #endif
 
-} // namespace filesystem
-
-} // namespace deskflow
+} // namespace deskflow::filesystem
