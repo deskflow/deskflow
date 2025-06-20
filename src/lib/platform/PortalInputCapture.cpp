@@ -157,7 +157,7 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   handleZonesChanged(m_session, nullptr);
 }
 
-void PortalInputCapture::handleSetPointerBarriers(const GObject *object, GAsyncResult *res)
+void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult *res)
 {
   g_autoptr(GError) error = nullptr;
 
@@ -239,7 +239,7 @@ void PortalInputCapture::release(double x, double y)
   m_isActive = false;
 }
 
-void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *session, const GVariant *option)
+void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *, const GVariant *)
 {
   LOG_DEBUG("portal cb disabled");
 
@@ -264,9 +264,7 @@ void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *session, c
   );
 }
 
-void PortalInputCapture::handleActivated(
-    const XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options
-)
+void PortalInputCapture::handleActivated(const XdpInputCaptureSession *, std::uint32_t activationId, GVariant *options)
 {
   LOG_DEBUG("portal cb activated, id=%d", activationId);
 
@@ -285,15 +283,13 @@ void PortalInputCapture::handleActivated(
   m_isActive = true;
 }
 
-void PortalInputCapture::handleDeactivated(
-    const XdpInputCaptureSession *session, std::uint32_t activationId, const GVariant *options
-)
+void PortalInputCapture::handleDeactivated(const XdpInputCaptureSession *, std::uint32_t activationId, const GVariant *)
 {
   LOG_DEBUG("cb deactivated, id=%i", activationId);
   m_isActive = false;
 }
 
-void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, GVariant *options)
+void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, const GVariant *)
 {
   for (auto b : m_barriers)
     g_object_unref(b);
