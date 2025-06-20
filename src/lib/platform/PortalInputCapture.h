@@ -71,6 +71,15 @@ private:
   int fakeEisFd() const;
 
 private:
+  enum class Signal : uint8_t
+  {
+    SessionClosed,
+    Disabled,
+    Activated,
+    Deactivated,
+    ZonesChanged
+  };
+
   EiScreen *m_screen = nullptr;
   IEventQueue *m_events = nullptr;
 
@@ -80,7 +89,13 @@ private:
   XdpPortal *m_portal = nullptr;
   XdpInputCaptureSession *m_session = nullptr;
 
-  std::vector<guint> m_signals;
+  std::map<Signal, guint> m_signals = {
+      {Signal::SessionClosed, 0},
+      {Signal::Disabled, 0},
+      {Signal::Activated, 0},
+      {Signal::Deactivated, 0},
+      {Signal::ZonesChanged, 0}
+  };
 
   bool m_enabled = false;
   bool m_isActive = false;
