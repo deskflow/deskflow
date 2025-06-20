@@ -29,64 +29,62 @@ public:
   void release(double x, double y);
   bool is_active() const
   {
-    return is_active_;
+    return m_isActive;
   }
 
 private:
-  void glib_thread(void *);
-  gboolean timeout_handler() const;
-  gboolean init_input_capture_session();
-  void cb_init_input_capture_session(GObject *object, GAsyncResult *res);
-  void cb_set_pointer_barriers(const GObject *object, GAsyncResult *res);
-  void cb_session_closed(XdpSession *session);
-  void cb_disabled(const XdpInputCaptureSession *session, const GVariant *option);
-  void cb_activated(const XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options);
-  void cb_deactivated(const XdpInputCaptureSession *session, std::uint32_t activation_id, const GVariant *options);
-  void cb_zones_changed(XdpInputCaptureSession *session, GVariant *options);
+  void glibThread(void *);
+  gboolean timeoutHandler() const;
+  gboolean initSession();
+  void handleInitSession(GObject *object, GAsyncResult *res);
+  void handleSetPointerBarriers(const GObject *object, GAsyncResult *res);
+  void handleSessionClosed(XdpSession *session);
+  void handleDisabled(const XdpInputCaptureSession *session, const GVariant *option);
+  void handleActivated(const XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options);
+  void handleDeactivated(const XdpInputCaptureSession *session, std::uint32_t activationId, const GVariant *options);
+  void handleZonesChanged(XdpInputCaptureSession *session, GVariant *options);
 
   /// g_signal_connect callback wrapper
-  static void cb_session_closed_cb(XdpSession *session, gpointer data)
+  static void sessionClosed(XdpSession *session, gpointer data)
   {
-    static_cast<PortalInputCapture *>(data)->cb_session_closed(session);
+    static_cast<PortalInputCapture *>(data)->handleSessionClosed(session);
   }
-  static void cb_disabled_cb(XdpInputCaptureSession *session, GVariant *options, gpointer data)
+  static void disabled(XdpInputCaptureSession *session, GVariant *options, gpointer data)
   {
-    static_cast<PortalInputCapture *>(data)->cb_disabled(session, options);
+    static_cast<PortalInputCapture *>(data)->handleDisabled(session, options);
   }
-  static void
-  cb_activated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
+  static void activated(XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options, gpointer data)
   {
-    static_cast<PortalInputCapture *>(data)->cb_activated(session, activation_id, options);
+    static_cast<PortalInputCapture *>(data)->handleActivated(session, activationId, options);
   }
-  static void
-  cb_deactivated_cb(XdpInputCaptureSession *session, std::uint32_t activation_id, GVariant *options, gpointer data)
+  static void deactivated(XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options, gpointer data)
   {
-    static_cast<PortalInputCapture *>(data)->cb_deactivated(session, activation_id, options);
+    static_cast<PortalInputCapture *>(data)->handleDeactivated(session, activationId, options);
   }
-  static void cb_zones_changed_cb(XdpInputCaptureSession *session, GVariant *options, gpointer data)
+  static void zonesChanged(XdpInputCaptureSession *session, GVariant *options, gpointer data)
   {
-    static_cast<PortalInputCapture *>(data)->cb_zones_changed(session, options);
+    static_cast<PortalInputCapture *>(data)->handleZonesChanged(session, options);
   }
 
-  int fake_eis_fd() const;
+  int fakeEisFd() const;
 
 private:
-  EiScreen *screen_ = nullptr;
-  IEventQueue *events_ = nullptr;
+  EiScreen *m_screen = nullptr;
+  IEventQueue *m_events = nullptr;
 
-  Thread *glib_thread_;
-  GMainLoop *glib_main_loop_ = nullptr;
+  Thread *m_glibThread;
+  GMainLoop *m_glibMainLoop = nullptr;
 
-  XdpPortal *portal_ = nullptr;
-  XdpInputCaptureSession *session_ = nullptr;
+  XdpPortal *m_portal = nullptr;
+  XdpInputCaptureSession *m_session = nullptr;
 
-  std::vector<guint> signals_;
+  std::vector<guint> m_signals;
 
-  bool enabled_ = false;
-  bool is_active_ = false;
-  std::uint32_t activation_id_ = 0;
+  bool m_enabled = false;
+  bool m_isActive = false;
+  std::uint32_t m_activationId = 0;
 
-  std::vector<XdpInputCapturePointerBarrier *> barriers_;
+  std::vector<XdpInputCapturePointerBarrier *> m_barriers;
 };
 
 } // namespace deskflow
