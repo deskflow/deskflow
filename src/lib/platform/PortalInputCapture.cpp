@@ -24,9 +24,9 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
   m_glibMainLoop = g_main_loop_new(nullptr, true);
   m_glibThread = new Thread(new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread));
 
-  auto init_capture_cb = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
+  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
 
-  g_idle_add(init_capture_cb, this);
+  g_idle_add(captureCallback, this);
 }
 
 PortalInputCapture::~PortalInputCapture()
@@ -252,7 +252,9 @@ void PortalInputCapture::handleDisabled(const XdpInputCaptureSession *, const GV
   );
 }
 
-void PortalInputCapture::handleActivated(const XdpInputCaptureSession *, std::uint32_t activationId, GVariant *options)
+void PortalInputCapture::handleActivated(
+    const XdpInputCaptureSession *, const std::uint32_t activationId, GVariant *options
+)
 {
   LOG_DEBUG("portal cb activated, id=%d", activationId);
 
@@ -271,7 +273,9 @@ void PortalInputCapture::handleActivated(const XdpInputCaptureSession *, std::ui
   m_isActive = true;
 }
 
-void PortalInputCapture::handleDeactivated(const XdpInputCaptureSession *, std::uint32_t activationId, const GVariant *)
+void PortalInputCapture::handleDeactivated(
+    const XdpInputCaptureSession *, const std::uint32_t activationId, const GVariant *
+)
 {
   LOG_DEBUG("cb deactivated, id=%i", activationId);
   m_isActive = false;
