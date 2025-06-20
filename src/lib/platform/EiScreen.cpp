@@ -197,7 +197,7 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
   auto set = m_hotkeys.find(key);
   if (set == m_hotkeys.end()) {
-    m_hotkeys.emplace(key, HotKeySet{key});
+    m_hotkeys.try_emplace(key, HotKeySet{key});
     set = m_hotkeys.find(key);
   }
   set->second.addItem(HotKeyItem(mask, id));
@@ -207,8 +207,9 @@ std::uint32_t EiScreen::registerHotKey(KeyID key, KeyModifierMask mask)
 
 void EiScreen::unregisterHotKey(uint32_t id)
 {
-  for (auto &set : m_hotkeys) {
-    if (set.second.removeById(id)) {
+  for (auto &[key, set] : m_hotkeys) {
+    (void)key;
+    if (set.removeById(id)) {
       break;
     }
   }
@@ -689,7 +690,7 @@ void EiScreen::onMotionEvent(ei_event *event)
   }
 }
 
-void EiScreen::onAbsMotionEvent(const ei_event *event) const
+void EiScreen::onAbsMotionEvent(const ei_event *) const
 {
   assert(m_isPrimary);
 }
