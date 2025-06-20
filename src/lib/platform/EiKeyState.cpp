@@ -22,28 +22,28 @@ namespace deskflow {
 
 EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
     : KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
-      screen_{screen}
+      m_screen{screen}
 {
-  xkb_ = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+  m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
 
   // FIXME: PrimaryClient->enable() calls into our keymap, so we must have
   // one during initial startup - even before we know what our actual keymap is.
   // Once we get the actual keymap from EIS, we swap it out so hopefully that's
   // enough.
-  init_default_keymap();
+  initDefaultKeymap();
 }
 
-void EiKeyState::init_default_keymap()
+void EiKeyState::initDefaultKeymap()
 {
-  if (xkb_keymap_) {
-    xkb_keymap_unref(xkb_keymap_);
+  if (m_xkbKeymap) {
+    xkb_keymap_unref(m_xkbKeymap);
   }
-  xkb_keymap_ = xkb_keymap_new_from_names(xkb_, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
+  m_xkbKeymap = xkb_keymap_new_from_names(m_xkb, nullptr, XKB_KEYMAP_COMPILE_NO_FLAGS);
 
-  if (xkb_state_) {
-    xkb_state_unref(xkb_state_);
+  if (m_xkbState) {
+    xkb_state_unref(m_xkbState);
   }
-  xkb_state_ = xkb_state_new(xkb_keymap_);
+  m_xkbState = xkb_state_new(m_xkbKeymap);
 }
 
 void EiKeyState::init(int fd, size_t len)
@@ -62,30 +62,30 @@ void EiKeyState::init(int fd, size_t len)
   // whole thing as string.
 
   buffer[len] = '\0'; // guarantee null-termination
-  auto keymap = xkb_keymap_new_from_string(xkb_, buffer.get(), XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
+  auto keymap = xkb_keymap_new_from_string(m_xkb, buffer.get(), XKB_KEYMAP_FORMAT_TEXT_V1, XKB_KEYMAP_COMPILE_NO_FLAGS);
   if (!keymap) {
     LOG_WARN("failed to compile keymap, falling back to defaults");
     // Falling back to layout "us" is a lot more useful than segfaulting
-    init_default_keymap();
+    initDefaultKeymap();
     return;
   }
 
-  if (xkb_keymap_) {
-    xkb_keymap_unref(xkb_keymap_);
+  if (m_xkbKeymap) {
+    xkb_keymap_unref(m_xkbKeymap);
   }
-  xkb_keymap_ = keymap;
+  m_xkbKeymap = keymap;
 
-  if (xkb_state_) {
-    xkb_state_unref(xkb_state_);
+  if (m_xkbState) {
+    xkb_state_unref(m_xkbState);
   }
-  xkb_state_ = xkb_state_new(xkb_keymap_);
+  m_xkbState = xkb_state_new(m_xkbKeymap);
 }
 
 EiKeyState::~EiKeyState()
 {
-  xkb_context_unref(xkb_);
-  xkb_keymap_unref(xkb_keymap_);
-  xkb_state_unref(xkb_state_);
+  xkb_context_unref(m_xkb);
+  xkb_keymap_unref(m_xkbKeymap);
+  xkb_state_unref(m_xkbState);
 }
 
 bool EiKeyState::fakeCtrlAltDel()
@@ -96,13 +96,13 @@ bool EiKeyState::fakeCtrlAltDel()
 
 KeyModifierMask EiKeyState::pollActiveModifiers() const
 {
-  std::uint32_t xkb_mask = xkb_state_serialize_mods(xkb_state_, XKB_STATE_MODS_EFFECTIVE);
-  return convert_mod_mask(xkb_mask);
+  std::uint32_t xkb_mask = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_EFFECTIVE);
+  return convertModMask(xkb_mask);
 }
 
 std::int32_t EiKeyState::pollActiveGroup() const
 {
-  return xkb_state_serialize_layout(xkb_state_, XKB_STATE_LAYOUT_EFFECTIVE);
+  return xkb_state_serialize_layout(m_xkbState, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
 void EiKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
@@ -111,15 +111,15 @@ void EiKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
   return;
 }
 
-std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const
+std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
 {
   std::uint32_t barrier_mask = 0;
 
-  for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(xkb_keymap_); xkbmod++) {
+  for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(m_xkbKeymap); xkbmod++) {
     if ((xkb_mask & (1 << xkbmod)) == 0)
       continue;
 
-    const char *name = xkb_keymap_mod_get_name(xkb_keymap_, xkbmod);
+    const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbmod);
     if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitShift);
     else if (strcmp(XKB_MOD_NAME_CAPS, name) == 0)
@@ -138,13 +138,13 @@ std::uint32_t EiKeyState::convert_mod_mask(std::uint32_t xkb_mask) const
 // Only way to figure out whether a key is a modifier key is to press it,
 // check if a modifier changed state and then release it again.
 // Luckily xkbcommon allows us to do this in a separate state.
-void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, deskflow::KeyMap::KeyItem &item)
+void EiKeyState::assignGeneratedModifiers(std::uint32_t keycode, deskflow::KeyMap::KeyItem &item)
 {
   std::uint32_t mods_generates = 0;
-  auto state = xkb_state_new(xkb_keymap_);
+  auto state = xkb_state_new(m_xkbKeymap);
 
   if (enum xkb_state_component changed = xkb_state_update_key(state, keycode, XKB_KEY_DOWN); changed) {
-    for (xkb_mod_index_t m = 0; m < xkb_keymap_num_mods(xkb_keymap_); m++) {
+    for (xkb_mod_index_t m = 0; m < xkb_keymap_num_mods(m_xkbKeymap); m++) {
       if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_LOCKED))
         item.m_lock = true;
 
@@ -156,27 +156,27 @@ void EiKeyState::assign_generated_modifiers(std::uint32_t keycode, deskflow::Key
   xkb_state_update_key(state, keycode, XKB_KEY_UP);
   xkb_state_unref(state);
 
-  item.m_generates = convert_mod_mask(mods_generates);
+  item.m_generates = convertModMask(mods_generates);
 }
 
 void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 {
-  auto min_keycode = xkb_keymap_min_keycode(xkb_keymap_);
-  auto max_keycode = xkb_keymap_max_keycode(xkb_keymap_);
+  auto min_keycode = xkb_keymap_min_keycode(m_xkbKeymap);
+  auto max_keycode = xkb_keymap_max_keycode(m_xkbKeymap);
 
   // X keycodes are evdev keycodes + 8 (libei gives us evdev keycodes)
   for (auto keycode = min_keycode; keycode <= max_keycode; keycode++) {
 
     // skip keys with no groups (they generate no symbols)
-    if (xkb_keymap_num_layouts_for_key(xkb_keymap_, keycode) == 0)
+    if (xkb_keymap_num_layouts_for_key(m_xkbKeymap, keycode) == 0)
       continue;
 
-    for (auto group = 0U; group < xkb_keymap_num_layouts(xkb_keymap_); group++) {
-      for (auto level = 0U; level < xkb_keymap_num_levels_for_key(xkb_keymap_, keycode, group); level++) {
+    for (auto group = 0U; group < xkb_keymap_num_layouts(m_xkbKeymap); group++) {
+      for (auto level = 0U; level < xkb_keymap_num_levels_for_key(m_xkbKeymap, keycode, group); level++) {
         const xkb_keysym_t *syms;
         xkb_mod_mask_t masks[64];
-        auto nmasks = xkb_keymap_key_get_mods_for_level(xkb_keymap_, keycode, group, level, masks, 64);
-        auto nsyms = xkb_keymap_key_get_syms_by_level(xkb_keymap_, keycode, group, level, &syms);
+        auto nmasks = xkb_keymap_key_get_mods_for_level(m_xkbKeymap, keycode, group, level, masks, 64);
+        auto nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keycode, group, level, &syms);
 
         if (nsyms == 0)
           continue;
@@ -200,15 +200,15 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         for (auto n = 0U; n < nmasks; n++) {
           mods_sensitive |= masks[n];
         }
-        item.m_sensitive = convert_mod_mask(mods_sensitive);
+        item.m_sensitive = convertModMask(mods_sensitive);
 
         uint32_t mods_required = 0;
         for (std::size_t m = 0; m < nmasks; m++) {
           mods_required |= masks[m];
         }
-        item.m_required = convert_mod_mask(mods_required);
+        item.m_required = convertModMask(mods_required);
 
-        assign_generated_modifiers(keycode, item);
+        assignGeneratedModifiers(keycode, item);
 
         // add capslock version of key is sensitive to capslock
         if (item.m_sensitive & KeyModifierShift && item.m_sensitive & KeyModifierCapsLock) {
@@ -236,17 +236,17 @@ void EiKeyState::fakeKey(const Keystroke &keystroke)
         "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
         keystroke.m_data.m_button.m_press ? "down" : "up"
     );
-    screen_->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
+    m_screen->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
     break;
   default:
     break;
   }
 }
 
-KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
+KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
 {
   // FIXME: That might be a bit crude...?
-  xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(xkb_state_, keyval);
+  xkb_keysym_t xkb_keysym = xkb_state_key_get_one_sym(m_xkbState, keyval);
   auto keysym = static_cast<KeySym>(xkb_keysym);
 
   KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
@@ -255,10 +255,10 @@ KeyID EiKeyState::map_key_from_keyval(uint32_t keyval) const
   return keyid;
 }
 
-void EiKeyState::update_xkb_state(uint32_t keyval, bool is_pressed)
+void EiKeyState::updateXkbState(uint32_t keyval, bool is_pressed)
 {
   LOG_DEBUG1("update key state: keyval=%d pressed=%i", keyval, is_pressed);
-  xkb_state_update_key(xkb_state_, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
+  xkb_state_update_key(m_xkbState, keyval, is_pressed ? XKB_KEY_DOWN : XKB_KEY_UP);
 }
 
 } // namespace deskflow
