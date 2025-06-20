@@ -31,7 +31,7 @@ class PortalInputCapture;
 class EiScreen : public PlatformScreen
 {
 public:
-  EiScreen(bool is_primary, IEventQueue *events, bool use_portal);
+  EiScreen(bool isPrimary, IEventQueue *events, bool usePortal);
   ~EiScreen() override;
 
   // IScreen overrides
@@ -81,72 +81,72 @@ protected:
   IKeyState *getKeyState() const override;
   std::string getSecureInputApp() const override;
 
-  void update_shape();
-  void add_device(ei_device *device);
-  void remove_device(ei_device *device);
+  void updateShape();
+  void addDevice(ei_device *device);
+  void removeDevice(ei_device *device);
 
 private:
-  void init_ei();
-  void cleanup_ei();
+  void initEi();
+  void cleanupEi();
   void sendEvent(EventTypes type, void *data);
-  ButtonID map_button_from_evdev(ei_event *event) const;
-  void on_key_event(ei_event *event);
-  void on_button_event(ei_event *event);
-  void send_wheel_events(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
-  void on_pointer_scroll_event(ei_event *event);
-  void on_pointer_scroll_discrete_event(ei_event *event);
-  void on_motion_event(ei_event *event);
-  void on_abs_motion_event(const ei_event *event) const;
-  bool on_hotkey(KeyID key, bool is_press, KeyModifierMask mask);
-  void handle_ei_log_event(ei_log_priority priority, const char *message) const;
+  ButtonID mapButtonFromEvdev(ei_event *event) const;
+  void onKeyEvent(ei_event *event);
+  void onButtonEvent(ei_event *event);
+  void sendWheelEvents(ei_device *device, const int threshold, double dx, double dy, bool is_discrete);
+  void onPointerScrollEvent(ei_event *event);
+  void onPointerScrollDiscreteEvent(ei_event *event);
+  void onMotionEvent(ei_event *event);
+  void onAbsMotionEvent(const ei_event *event) const;
+  bool onHotkey(KeyID key, bool is_press, KeyModifierMask mask);
+  void eiLogEvent(ei_log_priority priority, const char *message) const;
 
-  void handle_connected_to_eis_event(const Event &event);
-  void handle_portal_session_closed();
+  void handleConnectedToEisEvent(const Event &event);
+  void handlePortalSessionClosed();
 
-  static void cb_handle_ei_log_event(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
+  static void handleEiLogEvent(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
   {
     auto screen = static_cast<EiScreen *>(ei_get_user_data(ei));
-    screen->handle_ei_log_event(priority, message);
+    screen->eiLogEvent(priority, message);
   }
 
 private:
   // true if screen is being used as a primary screen, false otherwise
-  bool is_primary_ = false;
-  IEventQueue *events_ = nullptr;
+  bool m_isPrimary = false;
+  IEventQueue *m_events = nullptr;
 
   // keyboard stuff
-  EiKeyState *key_state_ = nullptr;
+  EiKeyState *m_keyState = nullptr;
 
-  std::vector<ei_device *> ei_devices_;
+  std::vector<ei_device *> m_eiDevices;
 
-  ei *ei_ = nullptr;
-  ei_seat *ei_seat_ = nullptr;
-  ei_device *ei_pointer_ = nullptr;
-  ei_device *ei_keyboard_ = nullptr;
-  ei_device *ei_abs_ = nullptr;
+  ei *m_ei = nullptr;
+  ei_seat *m_eiSeat = nullptr;
+  ei_device *m_eiPointer = nullptr;
+  ei_device *m_eiKeyboard = nullptr;
+  ei_device *m_eiAbs = nullptr;
 
-  std::uint32_t sequence_number_ = 0;
+  std::uint32_t m_sequenceNumber = 0;
 
-  std::uint32_t x_ = 0;
-  std::uint32_t y_ = 0;
-  std::uint32_t w_ = 0;
-  std::uint32_t h_ = 0;
+  std::uint32_t m_x = 0;
+  std::uint32_t m_y = 0;
+  std::uint32_t m_w = 0;
+  std::uint32_t m_h = 0;
 
   // true if mouse has entered the screen
-  bool is_on_screen_;
+  bool m_isOnScreen;
 
   // server: last pointer position
   // client: position sent before enter()
-  std::int32_t cursor_x_ = 0;
-  std::int32_t cursor_y_ = 0;
+  std::int32_t m_cursorX = 0;
+  std::int32_t m_cursorY = 0;
 
-  double buffer_dx = 0;
-  double buffer_dy = 0;
+  double m_bufferDX = 0;
+  double m_bufferDY = 0;
 
-  mutable std::mutex mutex_;
+  mutable std::mutex m_mutex;
 
-  PortalRemoteDesktop *portal_remote_desktop_ = nullptr;
-  PortalInputCapture *portal_input_capture_ = nullptr;
+  PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
+  PortalInputCapture *m_portalInputCapture = nullptr;
 
   struct HotKeyItem
   {
@@ -154,12 +154,12 @@ private:
     HotKeyItem(std::uint32_t mask, std::uint32_t id);
     bool operator<(const HotKeyItem &other) const
     {
-      return mask_ < other.mask_;
+      return mask < other.mask;
     };
 
   public:
-    std::uint32_t mask_ = 0;
-    std::uint32_t id_ = 0; // for registering the hotkey
+    std::uint32_t mask = 0;
+    std::uint32_t id = 0; // for registering the hotkey
   };
 
   class HotKeySet
@@ -168,20 +168,20 @@ private:
     explicit HotKeySet(KeyID keyid);
     KeyID keyid() const
     {
-      return id_;
+      return m_id;
     };
-    bool remove_by_id(std::uint32_t id);
-    void add_item(HotKeyItem item);
-    std::uint32_t find_by_mask(std::uint32_t mask) const;
+    bool removeById(std::uint32_t id);
+    void addItem(HotKeyItem item);
+    std::uint32_t findByMask(std::uint32_t mask) const;
 
   private:
-    KeyID id_ = 0;
-    std::vector<HotKeyItem> set_;
+    KeyID m_id = 0;
+    std::vector<HotKeyItem> m_set;
   };
 
   using HotKeyMap = std::map<KeyID, HotKeySet>;
 
-  HotKeyMap hotkeys_;
+  HotKeyMap m_hotkeys;
 };
 
 } // namespace deskflow
