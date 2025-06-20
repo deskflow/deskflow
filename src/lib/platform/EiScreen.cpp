@@ -308,7 +308,7 @@ void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
     return;
 
   auto xkb_keycode = keycode + 8;
-  key_state_->update_xkb_state(xkb_keycode, is_down);
+  key_state_->updateXkbState(xkb_keycode, is_down);
   ei_device_keyboard_key(ei_keyboard_, keycode, is_down);
   ei_device_frame(ei_keyboard_, ei_now(ei_));
 }
@@ -468,7 +468,7 @@ void EiScreen::add_device(struct ei_device *device)
       // whatever libxkbcommon thinks is default. At least this way we can
       // influence with env vars what we get
       LOG_WARN("keyboard device %s does not have a keymap, we are guessing", ei_device_get_name(device));
-      key_state_->init_default_keymap();
+      key_state_->initDefaultKeymap();
     }
     key_state_->updateKeyMap();
   }
@@ -556,10 +556,10 @@ void EiScreen::on_key_event(ei_event *event)
   auto keycode = ei_event_keyboard_get_key(event);
   uint32_t keyval = keycode + 8;
   bool pressed = ei_event_keyboard_get_key_is_press(event);
-  KeyID keyid = key_state_->map_key_from_keyval(keyval);
+  KeyID keyid = key_state_->mapKeyFromKeyval(keyval);
   auto keybutton = static_cast<KeyButton>(keyval);
 
-  key_state_->update_xkb_state(keyval, pressed);
+  key_state_->updateXkbState(keyval, pressed);
   KeyModifierMask mask = key_state_->pollActiveModifiers();
 
   LOG_DEBUG1("event: key %s keycode=%d keyid=%d mask=0x%x", pressed ? "press" : "release", keycode, keyid, mask);
