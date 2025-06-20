@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.80</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.93</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,23 +103,18 @@ $(function(){initNavTree('Path_8h_source.html','',''); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="Common_8h.html">common/Common.h</a>&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow.html">deskflow</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1filesystem.html">deskflow::filesystem</a> {</div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1filesystem.html">filesystem</a> {</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#ifdef SYSAPI_WIN32</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>std::wstring <a class="code hl_function" href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">path</a>(<span class="keyword">const</span> std::string &amp;filePath);</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>std::string <a class="code hl_function" href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">path</a>(<span class="keyword">const</span> std::string &amp;filePath);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>} <span class="comment">// namespace filesystem</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>} <span class="comment">// namespace deskflow</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#ifdef SYSAPI_WIN32</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>std::wstring <a class="code hl_function" href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">path</a>(<span class="keyword">const</span> std::string &amp;filePath);</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>std::string <a class="code hl_function" href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">path</a>(<span class="keyword">const</span> std::string &amp;filePath);</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>} <span class="comment">// namespace deskflow::filesystem</span></div>
 <div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
-<div class="ttc" id="anamespacedeskflow_1_1filesystem_html"><div class="ttname"><a href="namespacedeskflow_1_1filesystem.html">deskflow::filesystem</a></div><div class="ttdef"><b>Definition</b> Path.cpp:15</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1filesystem_html_a10409508645291342692b373ebfcd2df"><div class="ttname"><a href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">deskflow::filesystem::path</a></div><div class="ttdeci">std::string path(const std::string &amp;filePath)</div><div class="ttdef"><b>Definition</b> Path.cpp:33</div></div>
-<div class="ttc" id="anamespacedeskflow_html"><div class="ttname"><a href="namespacedeskflow.html">deskflow</a></div><div class="ttdef"><b>Definition</b> EventTypes.h:11</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1filesystem_html"><div class="ttname"><a href="namespacedeskflow_1_1filesystem.html">deskflow::filesystem</a></div><div class="ttdef"><b>Definition</b> Path.cpp:13</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1filesystem_html_a10409508645291342692b373ebfcd2df"><div class="ttname"><a href="namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df">deskflow::filesystem::path</a></div><div class="ttdeci">std::string path(const std::string &amp;filePath)</div><div class="ttdef"><b>Definition</b> Path.cpp:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

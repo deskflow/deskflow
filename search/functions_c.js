@@ -28,7 +28,7 @@ var searchData=
   ['logfilename_25',['logFilename',['../classDaemonApp.html#a11bd3b2ec38da293a9a0dfebf873e62f',1,'DaemonApp']]],
   ['loggingfilterwarning_26',['loggingFilterWarning',['../classApp.html#a699f3588a184a543d55effeaac0e49c1',1,'App']]],
   ['loglevelchanged_27',['logLevelChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a1f2f52740caf1549da28d5769506df41',1,'deskflow::core::ipc::DaemonIpcServer']]],
-  ['logleveltext_28',['logLevelText',['../classSettings.html#a2a5d27cc4a572182b7b8da000cde5371',1,'Settings']]],
+  ['logleveltext_28',['logLevelText',['../classSettings.html#ae9e80e06caddd4c619dc286848b1f187',1,'Settings']]],
   ['logline_29',['logLine',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80',1,'deskflow::gui::CoreProcess']]],
   ['logsecurecipherinfo_30',['logSecureCipherInfo',['../classSslLogger.html#a7c7865b270c39016211299627aa4e7d5',1,'SslLogger']]],
   ['logsecureconnectinfo_31',['logSecureConnectInfo',['../classSslLogger.html#a8fde3eab2bafe94aa1cc11314027a306',1,'SslLogger']]],

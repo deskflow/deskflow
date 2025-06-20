@@ -247,7 +247,7 @@ var NAVTREEINDEX14 =
 "classXThread.html":[3,0,226],
 "classXThreadCancel.html":[3,0,227],
 "classXThreadExit.html":[3,0,228],
-"classXThreadExit.html#a62843fc7e94b58083b12e05a55dfd9fb":[3,0,228,1],
 "classXThreadExit.html#a9d078d709ed05176e848e89480f27ab4":[3,0,228,0],
+"classXThreadExit.html#aa2f1b43924413a2ba30aafd670138fcb":[3,0,228,1],
 "classXThreadExit.html#af6079da6a6d268b8e2afd2e19057dfd7":[3,0,228,2]
 };

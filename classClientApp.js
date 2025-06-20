@@ -11,7 +11,7 @@ var classClientApp =
     [ "daemonName", "classClientApp.html#a6fd5bc186ce674f67a1f644f5f6679a1", null ],
     [ "foregroundStartup", "classClientApp.html#af27e8bef92d4f1cb9d3ea6b4186df6e9", null ],
     [ "getClientPtr", "classClientApp.html#ada018e5652bfcbbc0648dc50d8bbe5c5", null ],
-    [ "handleClientConnected", "classClientApp.html#ad16f594f75ae844f0f7d155af2a748a0", null ],
+    [ "handleClientConnected", "classClientApp.html#a207e31c7d2165d89817fe9901d745ff1", null ],
     [ "handleClientDisconnected", "classClientApp.html#a573297fb43edfe71eec4156c6b535de8", null ],
     [ "handleClientFailed", "classClientApp.html#aafa40e2e47be311b5b5cfa16d4d2eea2", null ],
     [ "handleClientRefused", "classClientApp.html#a49de08e2beda98b19641d57d26e2a89a", null ],

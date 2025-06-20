@@ -4,7 +4,7 @@ var classArchNetworkBSD =
     [ "ArchNetworkBSD", "classArchNetworkBSD.html#a365423023cf159c0373b6864406244cb", null ],
     [ "ArchNetworkBSD", "classArchNetworkBSD.html#ab5769aa8c185dfccbb7e58b4d1dfb709", null ],
     [ "ArchNetworkBSD", "classArchNetworkBSD.html#a0b7e77f82ef7c64464b7696e1bbe5f7c", null ],
-    [ "~ArchNetworkBSD", "classArchNetworkBSD.html#a88e07850e2835ea9b6b71e105104a62b", null ],
+    [ "~ArchNetworkBSD", "classArchNetworkBSD.html#a4675592c838d7848509d6cee82aea5b0", null ],
     [ "acceptSocket", "classArchNetworkBSD.html#a568eb50bbc8e14341a22d50f7502e3a5", null ],
     [ "addrToName", "classArchNetworkBSD.html#a9fcdf8354bcccf2fe1c342839e17b383", null ],
     [ "addrToString", "classArchNetworkBSD.html#a938cb799b65e99e9c577deaabd5cba9b", null ],

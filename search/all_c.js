@@ -73,7 +73,7 @@ var searchData=
   ['loggingfilterwarning_70',['loggingFilterWarning',['../classApp.html#a699f3588a184a543d55effeaac0e49c1',1,'App']]],
   ['loglevel_71',['LogLevel',['../classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2b',1,'MainWindow::LogLevel'],['../structSettings_1_1Daemon.html#afc62a8aba1ac94925a03d6294d36a9e7',1,'Settings::Daemon::LogLevel']]],
   ['loglevelchanged_72',['logLevelChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a1f2f52740caf1549da28d5769506df41',1,'deskflow::core::ipc::DaemonIpcServer']]],
-  ['logleveltext_73',['logLevelText',['../classSettings.html#a2a5d27cc4a572182b7b8da000cde5371',1,'Settings']]],
+  ['logleveltext_73',['logLevelText',['../classSettings.html#ae9e80e06caddd4c619dc286848b1f187',1,'Settings']]],
   ['logline_74',['logLine',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80',1,'deskflow::gui::CoreProcess']]],
   ['logoutputters_2ecpp_75',['LogOutputters.cpp',['../LogOutputters_8cpp.html',1,'']]],
   ['logoutputters_2eh_76',['LogOutputters.h',['../LogOutputters_8h.html',1,'']]],

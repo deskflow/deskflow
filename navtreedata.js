@@ -84,7 +84,7 @@ var NAVTREEINDEX =
 "OSXScreen_8mm.html#a1e7b25f05d53afeb25723c48396770ca",
 "ServerMessage_8h_source.html",
 "classAction.html#a85fb294eb12d96369e42dc4c7f56f474",
-"classArchNetworkBSD.html#a875bf0c0c3f6f1a194e952dbc972696c",
+"classArchNetworkBSD.html#a6dc5e1d34668476fe6b17de3ebe82b56",
 "classClientProxy.html#a78f13e672750bd90ff024f6ab56e0c01",
 "classFingerprintDatabase.html#a96b14056d161c6b9edab1cfc6efded75",
 "classIKeyState.html#abca6d885cbb75924a9e8d36b5ba0a829",

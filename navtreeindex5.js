@@ -247,7 +247,7 @@ var NAVTREEINDEX5 =
 "classArchNetworkBSD.html#a1f0529b9e5494f011df1215e0502f316":[3,0,24,10],
 "classArchNetworkBSD.html#a365423023cf159c0373b6864406244cb":[3,0,24,1],
 "classArchNetworkBSD.html#a4046b45b08391f9181424a53b796d6b8":[3,0,24,24],
+"classArchNetworkBSD.html#a4675592c838d7848509d6cee82aea5b0":[3,0,24,4],
 "classArchNetworkBSD.html#a568eb50bbc8e14341a22d50f7502e3a5":[3,0,24,5],
-"classArchNetworkBSD.html#a68fdb90882e98a375599e756f6883398":[3,0,24,11],
-"classArchNetworkBSD.html#a6dc5e1d34668476fe6b17de3ebe82b56":[3,0,24,21]
+"classArchNetworkBSD.html#a68fdb90882e98a375599e756f6883398":[3,0,24,11]
 };
