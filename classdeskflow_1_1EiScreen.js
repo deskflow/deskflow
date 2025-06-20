@@ -1,8 +1,8 @@
 var classdeskflow_1_1EiScreen =
 [
-    [ "EiScreen", "classdeskflow_1_1EiScreen.html#ad6c43be0d1f90c5d27948f668e935d73", null ],
+    [ "EiScreen", "classdeskflow_1_1EiScreen.html#a80b44d237c1496c82a80ef6719765dbe", null ],
     [ "~EiScreen", "classdeskflow_1_1EiScreen.html#a0e22758b3879a012f161aec0a84a5d4f", null ],
-    [ "add_device", "classdeskflow_1_1EiScreen.html#a70efe18bf41c3b3fbd9ef3ad79855c20", null ],
+    [ "addDevice", "classdeskflow_1_1EiScreen.html#a54dc324f4e1c9f1e60366a5586c9ce05", null ],
     [ "canLeave", "classdeskflow_1_1EiScreen.html#ab52c25fbce6bb6b8ff8794e5a264f81a", null ],
     [ "checkClipboards", "classdeskflow_1_1EiScreen.html#a0fe3dff0bd24f2eac358f7ea1a0ed51c", null ],
     [ "closeScreensaver", "classdeskflow_1_1EiScreen.html#a886ed632764c724baed756ab5c29d5c0", null ],
@@ -31,14 +31,14 @@ var classdeskflow_1_1EiScreen =
     [ "openScreensaver", "classdeskflow_1_1EiScreen.html#a4a6d0e6d1541f1a5e46c3357951bfb1d", null ],
     [ "reconfigure", "classdeskflow_1_1EiScreen.html#a99d5647706869ff1fb8c2fbb8c5f5e5c", null ],
     [ "registerHotKey", "classdeskflow_1_1EiScreen.html#a7a787b752dc25d204694128bcb17cab0", null ],
-    [ "remove_device", "classdeskflow_1_1EiScreen.html#aa807afe68f5bffef13fe4e66458fbf50", null ],
+    [ "removeDevice", "classdeskflow_1_1EiScreen.html#ac6327dcaeac354431567d7133e3e7de2", null ],
     [ "resetOptions", "classdeskflow_1_1EiScreen.html#a7ec34963ad8dbd120549b692fe2d8cc4", null ],
     [ "screensaver", "classdeskflow_1_1EiScreen.html#aaca12e4fff5e3e46e39919696e35cef0", null ],
     [ "setClipboard", "classdeskflow_1_1EiScreen.html#adcc10298372540e181c8fe6f4d021afa", null ],
     [ "setOptions", "classdeskflow_1_1EiScreen.html#a22d0416498b85e86abdfbcf27f15b234", null ],
     [ "setSequenceNumber", "classdeskflow_1_1EiScreen.html#aa4702a7945c7329d29c4868f8ef1a06d", null ],
     [ "unregisterHotKey", "classdeskflow_1_1EiScreen.html#a11a9fbeb85e1cf4f95096d51b1a1750a", null ],
-    [ "update_shape", "classdeskflow_1_1EiScreen.html#ada236e815c4988e73fe8b79ea82d6ebb", null ],
     [ "updateButtons", "classdeskflow_1_1EiScreen.html#a9535566ce9ce4b699e8f7a1cac047bba", null ],
+    [ "updateShape", "classdeskflow_1_1EiScreen.html#ad2afa1dc14c19f3542b94a2e80fa0bb2", null ],
     [ "warpCursor", "classdeskflow_1_1EiScreen.html#a3b01acda09e87cfba2a85b6127019dd9", null ]
 ];

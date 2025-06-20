@@ -4,7 +4,7 @@ var searchData=
   ['edithotkey_1',['editHotkey',['../classServerConfigDialog.html#adcea9be5c7ad2a7e27e728ee92812cdc',1,'ServerConfigDialog']]],
   ['eieventqueuebuffer_2',['EiEventQueueBuffer',['../classdeskflow_1_1EiEventQueueBuffer.html#a0045e645461699cf400d0f8d901802d3',1,'deskflow::EiEventQueueBuffer']]],
   ['eikeystate_3',['EiKeyState',['../classdeskflow_1_1EiKeyState.html#a096b4c669242628cfcd40acab3634682',1,'deskflow::EiKeyState']]],
-  ['eiscreen_4',['EiScreen',['../classdeskflow_1_1EiScreen.html#ad6c43be0d1f90c5d27948f668e935d73',1,'deskflow::EiScreen']]],
+  ['eiscreen_4',['EiScreen',['../classdeskflow_1_1EiScreen.html#a80b44d237c1496c82a80ef6719765dbe',1,'deskflow::EiScreen']]],
   ['elevatemodechanged_5',['elevateModeChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#af652c5beb12e0277cf61b37693497605',1,'deskflow::core::ipc::DaemonIpcServer']]],
   ['empty_6',['empty',['../classPriorityQueue.html#aa00600cf36c39802edaf825ca7c126cb',1,'PriorityQueue::empty()'],['../classClipboard.html#a195be5a60c4c38fb9b594c89a8ba7fe6',1,'Clipboard::empty()'],['../classIClipboard.html#a5eea232f00e11ff558ae97dd4157a151',1,'IClipboard::empty()'],['../classMSWindowsClipboard.html#a3cd9c06c3e66cf4ac0c65964598b5161',1,'MSWindowsClipboard::empty()'],['../classOSXClipboard.html#a984ba93944a6c7a228bbc16b261b647c',1,'OSXClipboard::empty()'],['../classXWindowsClipboard.html#a05c1cabfd1ce449f9c85f8723353bee8',1,'XWindowsClipboard::empty()']]],
   ['emptystringvalidator_7',['EmptyStringValidator',['../classvalidators_1_1EmptyStringValidator.html#a7d6066a990ddb50a9db0d244730687b7',1,'validators::EmptyStringValidator']]],
