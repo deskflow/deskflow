@@ -89,14 +89,6 @@ var namespacedeskflow =
       [ "EIConnected", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac822031d3d3a99b4a94af0c3841feee8", null ],
       [ "EISessionClosed", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a4c2d64df525190d29b1023bcb7d4da2b", null ]
     ] ],
-    [ "signals", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948", [
-      [ "SESSION_CLOSED", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948aba98ba11927993e78382d4b22024cc83", null ],
-      [ "DISABLED", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948a28a307b1112cce342e0a3a5dc49ebf99", null ],
-      [ "ACTIVATED", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948a398b7ded56fca22a3e1c244d12d94f37", null ],
-      [ "DEACTIVATED", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948a579d7a5072f0c104fdd7c50e85e9d570", null ],
-      [ "ZONES_CHANGED", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948acb8fe9a98b7f17d4fea14d6e130bdc40", null ],
-      [ "_N_SIGNALS", "namespacedeskflow.html#a9ff0a472812497643752960bc0a4a948a837a4f3a5947407eb2a92ec6286b1993", null ]
-    ] ],
     [ "finally", "namespacedeskflow.html#ade08d401408bb88f3f10cfbaec22668b", null ],
     [ "fopenUtf8Path", "namespacedeskflow.html#a108d2978bd73d96786e7e28c9960c501", null ],
     [ "formatSSLFingerprint", "namespacedeskflow.html#a421442748c7922d0c2154f6a2980b772", null ],

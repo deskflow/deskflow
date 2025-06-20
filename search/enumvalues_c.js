@@ -1,8 +1,8 @@
 var searchData=
 [
-  ['meta_0',['Meta',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814ab6755d218d5f4e1cef9cce9cc39aeda9',1,'ScreenConfig']]],
-  ['modifycursorlock_1',['ModifyCursorLock',['../classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa2b17a23b9415f4b692dad28c52a57dbe',1,'ActionDialog']]],
-  ['mousebutton_2',['mousebutton',['../classAction.html#ab1851cee70a9061c928e69d44e6cba0ba53fc8f67a4ead37d2ce8febfc7b8a39a',1,'Action']]],
-  ['mousedown_3',['mouseDown',['../classAction.html#ab1851cee70a9061c928e69d44e6cba0ba7703ca52db8fcdbd012c71112adccf9c',1,'Action']]],
-  ['mouseup_4',['mouseUp',['../classAction.html#ab1851cee70a9061c928e69d44e6cba0bac8c63251cd8461489c916d9d185802b7',1,'Action']]]
+  ['none_0',['None',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfa928ed0ea45cdd0bb91c21da315112b98',1,'Settings::None'],['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a6adf97f83acf6453d4a6a4b1070f3754',1,'ScreenConfig::None']]],
+  ['numfixes_1',['NumFixes',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5af2fb27420a8d2d658ec170b9fad506eb',1,'ScreenConfig']]],
+  ['numlock_2',['NumLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5acf6cc0261135c6d163fd4305375773d2',1,'ScreenConfig']]],
+  ['nummodifiers_3',['NumModifiers',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a1e1d357a199c55b82db55f2992a484f0',1,'ScreenConfig']]],
+  ['numswitchcorners_4',['NumSwitchCorners',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73da4000ff2f520f31580950263b6032bd11',1,'ScreenConfig']]]
 ];

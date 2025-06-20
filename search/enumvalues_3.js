@@ -1,20 +1,9 @@
 var searchData=
 [
-  ['capslock_0',['CapsLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a8d0f4171170104d094d8b6d4f8bf49e6',1,'ScreenConfig']]],
-  ['client_1',['Client',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfac9b7a86f41949562eed74c335af65640',1,'Settings::Client'],['../FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99ae5d09f815b2438dc14af448d00837cc8',1,'Client:&#160;FingerprintDialog.h']]],
-  ['clientconnected_2',['ClientConnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2abeb2c179916e917c350d2dd1a8406291',1,'deskflow']]],
-  ['clientconnectionfailed_3',['ClientConnectionFailed',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e',1,'deskflow']]],
-  ['clientconnectionrefused_4',['ClientConnectionRefused',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab6da58f2ed9f88ddbc4842fb5c1e7fcc',1,'deskflow']]],
-  ['clientdisconnected_5',['ClientDisconnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a9b3e510654adce623b3c8c2149dacba7',1,'deskflow']]],
-  ['clientlisteneraccepted_6',['ClientListenerAccepted',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a17685eb2fb162dd47cafb15eebdbc01a',1,'deskflow']]],
-  ['clientproxydisconnected_7',['ClientProxyDisconnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a2942e4107fb2c55256eaf2e96cc36a48',1,'deskflow']]],
-  ['clientproxyready_8',['ClientProxyReady',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8',1,'deskflow']]],
-  ['clientproxyunknownfailure_9',['ClientProxyUnknownFailure',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a2bab6dbecfbdbc56bc745565cc1046ab',1,'deskflow']]],
-  ['clientproxyunknownsuccess_10',['ClientProxyUnknownSuccess',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0bfd7cd9b871f07b663aa5e92f680681',1,'deskflow']]],
-  ['clipboardchanged_11',['ClipboardChanged',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db',1,'deskflow']]],
-  ['clipboardgrabbed_12',['ClipboardGrabbed',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121',1,'deskflow']]],
-  ['clipboardsending_13',['ClipboardSending',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2',1,'deskflow']]],
-  ['connected_14',['Connected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9a2ec0d16e4ca169baedb9b2d50ec5c6d7',1,'deskflow::gui::CoreProcess']]],
-  ['connecting_15',['Connecting',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9ae321c53b354930ba96f0243e652df458',1,'deskflow::gui::CoreProcess']]],
-  ['ctrl_16',['Ctrl',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a2b61e0d5977f2e38f06e16281c802b47',1,'ScreenConfig']]]
+  ['datasocketconnected_0',['DataSocketConnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a004547810dfb2badbe0c7c42f3d94aed',1,'deskflow']]],
+  ['datasocketconnectionfailed_1',['DataSocketConnectionFailed',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac66cb6f7cff95301c5edc0f73d7cbf78',1,'deskflow']]],
+  ['datasocketsecureconnected_2',['DataSocketSecureConnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ad5db6027d7d3f0d44b4a97a7c97e4315',1,'deskflow']]],
+  ['defaultmod_3',['DefaultMod',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814ac4640319a26ddefaa529bd0d954c6b9e',1,'ScreenConfig']]],
+  ['desktop_4',['Desktop',['../classSettings.html#aac26728c616513838b3f9efb70a5cdd5a7d2a66d646087713b2c9250f177aa30f',1,'Settings']]],
+  ['disconnected_5',['Disconnected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9aef70e46fd3bbc21e3e1f0b6815e750c0',1,'deskflow::gui::CoreProcess']]]
 ];
