@@ -16,21 +16,10 @@
 
 namespace deskflow {
 
-enum signals
-{
-  SESSION_CLOSED,
-  DISABLED,
-  ACTIVATED,
-  DEACTIVATED,
-  ZONES_CHANGED,
-  _N_SIGNALS,
-};
-
 PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
     : m_screen{screen},
       m_events{events},
-      m_portal{xdp_portal_new()},
-      m_signals{_N_SIGNALS}
+      m_portal{xdp_portal_new()}
 {
   m_glibMainLoop = g_main_loop_new(nullptr, true);
   m_glibThread = new Thread(new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread));
@@ -55,12 +44,13 @@ PortalInputCapture::~PortalInputCapture()
   }
 
   if (m_session) {
-    XdpSession *parent_session = xdp_input_capture_session_get_session(m_session);
-    g_signal_handler_disconnect(G_OBJECT(parent_session), m_signals[SESSION_CLOSED]);
-    g_signal_handler_disconnect(m_session, m_signals[DISABLED]);
-    g_signal_handler_disconnect(m_session, m_signals[ACTIVATED]);
-    g_signal_handler_disconnect(m_session, m_signals[DEACTIVATED]);
-    g_signal_handler_disconnect(m_session, m_signals[ZONES_CHANGED]);
+    using enum Signal;
+    XdpSession *parentSession = xdp_input_capture_session_get_session(m_session);
+    g_signal_handler_disconnect(G_OBJECT(parentSession), m_signals.at(SessionClosed));
+    g_signal_handler_disconnect(m_session, m_signals.at(Disabled));
+    g_signal_handler_disconnect(m_session, m_signals.at(Activated));
+    g_signal_handler_disconnect(m_session, m_signals.at(Deactivated));
+    g_signal_handler_disconnect(m_session, m_signals.at(ZonesChanged));
     g_object_unref(m_session);
   }
 
@@ -109,8 +99,8 @@ void PortalInputCapture::handleSessionClosed(XdpSession *session)
   g_main_loop_quit(m_glibMainLoop);
   m_events->addEvent(EventTypes::Quit);
 
-  g_signal_handler_disconnect(session, m_signals[SESSION_CLOSED]);
-  m_signals[SESSION_CLOSED] = 0;
+  g_signal_handler_disconnect(session, m_signals.at(Signal::SessionClosed));
+  m_signals.at(Signal::SessionClosed) = 0;
 }
 
 void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
@@ -145,15 +135,13 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   // Socket ownership is transferred to the EiScreen
   m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
-  // FIXME: the lambda trick doesn't work here for unknown reasons, we need
-  // the static function
-  m_signals[DISABLED] = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
-  m_signals[ACTIVATED] = g_signal_connect(G_OBJECT(m_session), "activated", G_CALLBACK(activated), this);
-  m_signals[DEACTIVATED] = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
-  m_signals[ZONES_CHANGED] = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
-  XdpSession *parent_session = xdp_input_capture_session_get_session(session);
-  m_signals[SESSION_CLOSED] = g_signal_connect(G_OBJECT(parent_session), "closed", G_CALLBACK(sessionClosed), this);
-
+  using enum Signal;
+  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
+  m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
+  m_signals.at(Activated) = g_signal_connect(G_OBJECT(m_session), "activated", G_CALLBACK(activated), this);
+  m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
+  m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
+  m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
   handleZonesChanged(m_session, nullptr);
 }
 
