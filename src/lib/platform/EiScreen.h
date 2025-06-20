@@ -11,6 +11,7 @@
 #include "deskflow/PlatformScreen.h"
 
 #include <libei.h>
+#include <memory>
 #include <mutex>
 #include <set>
 #include <vector>
@@ -96,14 +97,14 @@ private:
   void onPointerScrollEvent(ei_event *event);
   void onPointerScrollDiscreteEvent(ei_event *event);
   void onMotionEvent(ei_event *event);
-  void onAbsMotionEvent(const ei_event *event) const;
+  void onAbsMotionEvent(const ei_event *) const;
   bool onHotkey(KeyID key, bool is_press, KeyModifierMask mask);
   void eiLogEvent(ei_log_priority priority, const char *message) const;
 
   void handleConnectedToEisEvent(const Event &event);
   void handlePortalSessionClosed();
 
-  static void handleEiLogEvent(ei *ei, ei_log_priority priority, const char *message, ei_log_context *context)
+  static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
     auto screen = static_cast<EiScreen *>(ei_get_user_data(ei));
     screen->eiLogEvent(priority, message);
