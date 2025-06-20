@@ -42,7 +42,7 @@ private:
   void handleDisabled(const XdpInputCaptureSession *session, const GVariant *option);
   void handleActivated(const XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options);
   void handleDeactivated(const XdpInputCaptureSession *session, std::uint32_t activationId, const GVariant *options);
-  void handleZonesChanged(XdpInputCaptureSession *session, GVariant *options);
+  void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, gpointer data)
@@ -53,11 +53,13 @@ private:
   {
     static_cast<PortalInputCapture *>(data)->handleDisabled(session, options);
   }
-  static void activated(XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options, gpointer data)
+  static void
+  activated(const XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options, gpointer data)
   {
     static_cast<PortalInputCapture *>(data)->handleActivated(session, activationId, options);
   }
-  static void deactivated(XdpInputCaptureSession *session, std::uint32_t activationId, GVariant *options, gpointer data)
+  static void
+  deactivated(const XdpInputCaptureSession *session, std::uint32_t activationId, const GVariant *options, gpointer data)
   {
     static_cast<PortalInputCapture *>(data)->handleDeactivated(session, activationId, options);
   }
