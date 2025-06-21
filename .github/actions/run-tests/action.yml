@@ -77,8 +77,8 @@ runs:
         path: ${{ steps.row.outputs.file }}
 
     - name: Check test outcome
-      if: steps.unittests.outcome == 'failure'
+      if: (steps.unittests.outcome != 'success' || steps.legacytests.outcome != 'success')
       run: |
-        echo "Unit tests failed"
+        echo "Tests failed"
         exit 1
       shell: bash
