@@ -146,8 +146,6 @@ private:
   "      --enable-crypto      enable TLS encryption.\n"                                                                \
   "      --tls-cert           specify the path to the TLS certificate file.\n"
 
-#define DRAG_AND_DROP "      --enable-drag-drop   enable file drag & drop.\n"
-
 #define HELP_COMMON_INFO_2                                                                                             \
   "  -h, --help               display this help and exit.\n"                                                           \
   "      --version            display version information and exit.\n"

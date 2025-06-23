@@ -113,9 +113,6 @@ void ClientApp::help()
        << "  -a, --address <address>  local network interface address.\n"
        << HELP_COMMON_INFO_1 << HELP_SYS_INFO << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
-#ifndef WINAPI_XWINDOWS
-       << DRAG_AND_DROP "\n"
-#endif
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
        << "                             computer.\n"

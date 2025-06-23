@@ -57,10 +57,6 @@ public:
   {
     return m_Screens;
   }
-  bool enableDragAndDrop() const override
-  {
-    return m_EnableDragAndDrop;
-  }
 
   //
   // New methods
@@ -229,10 +225,6 @@ private:
   {
     m_SwitchCornerSize = val;
   }
-  void setEnableDragAndDrop(bool on)
-  {
-    m_EnableDragAndDrop = on;
-  }
   void setDisableLockToScreen(bool on)
   {
     m_DisableLockToScreen = on;
@@ -269,7 +261,6 @@ private:
   bool m_HasSwitchDoubleTap = false;
   int m_SwitchDoubleTap = 0;
   int m_SwitchCornerSize = 0;
-  bool m_EnableDragAndDrop = false;
   bool m_DisableLockToScreen = false;
   bool m_ClipboardSharing = true;
   QString m_ClientAddress = "";
