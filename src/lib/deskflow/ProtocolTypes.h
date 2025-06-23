@@ -71,23 +71,6 @@ enum EDirectionMask
   kBottomMask = 1 << kBottom
 };
 
-// Data transfer constants
-enum EDataTransfer
-{
-  kDataStart = 1,
-  kDataChunk = 2,
-  kDataEnd = 3
-};
-
-// Data received constants
-enum EDataReceived
-{
-  kStart,
-  kNotFinish,
-  kFinish,
-  kError
-};
-
 //
 // message codes (trailing NUL is not part of code).  in comments, $n
 // refers to the n'th argument (counting from one).  message codes are
