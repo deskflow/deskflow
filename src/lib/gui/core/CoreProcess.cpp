@@ -459,14 +459,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
   args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
 
-#ifndef Q_OS_LINUX
-
-  if (m_serverConfig.enableDragAndDrop()) {
-    args << "--enable-drag-drop";
-  }
-
-#endif
-
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
   }
