@@ -111,8 +111,13 @@ int main(int argc, char *argv[])
   }
 #endif
 
-  // Sets the fallback icon path
-  setIconFallbackPaths();
+  // Sets the fallback icon path and fallback theme
+  const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
+  if (QIcon::themeName().isEmpty())
+    QIcon::setThemeName(themeName);
+  else
+    QIcon::setFallbackThemeName(themeName);
+  QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   qInfo("%s v%s", kAppName, qPrintable(kVersion));
