@@ -83,12 +83,6 @@ MainWindow::MainWindow()
       m_actionRestartCore{new QAction(tr("Rest&art"), this)},
       m_actionStopCore{new QAction(tr("S&top"), this)}
 {
-  const auto themeName = QStringLiteral("deskflow-%1").arg(iconMode());
-  if (QIcon::themeName().isEmpty())
-    QIcon::setThemeName(themeName);
-  else
-    QIcon::setFallbackThemeName(themeName);
-
   ui->setupUi(this);
 
   // Setup Actions
