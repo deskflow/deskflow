@@ -38,11 +38,10 @@ var NAVTREEINDEX0 =
 "App_8cpp.html":[7,0,1,1,4,4],
 "App_8h.html":[7,0,1,1,4,5],
 "App_8h.html#a250989ede9f9b4639597b6ab4109743c":[7,0,1,1,4,5,2],
-"App_8h.html#aaa90b332c11fdc04ff935ae24b2d038a":[7,0,1,1,4,5,4],
-"App_8h.html#ac7ef9b60cff18957d5eedea2ec0dc554":[7,0,1,1,4,5,3],
-"App_8h.html#af08554c3ff5e661c0943d334f14b8996":[7,0,1,1,4,5,7],
-"App_8h.html#af2550e85d701f6b3266a13ff79c01aef":[7,0,1,1,4,5,5],
-"App_8h.html#affe487d0e26d92493cf7077671660c86":[7,0,1,1,4,5,6],
+"App_8h.html#aaa90b332c11fdc04ff935ae24b2d038a":[7,0,1,1,4,5,3],
+"App_8h.html#af08554c3ff5e661c0943d334f14b8996":[7,0,1,1,4,5,6],
+"App_8h.html#af2550e85d701f6b3266a13ff79c01aef":[7,0,1,1,4,5,4],
+"App_8h.html#affe487d0e26d92493cf7077671660c86":[7,0,1,1,4,5,5],
 "App_8h_source.html":[7,0,1,1,4,5],
 "ArchDaemonNone_8cpp.html":[7,0,1,1,0,4],
 "ArchDaemonNone_8h.html":[7,0,1,1,0,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "DotEnv_8h.html":[7,0,1,1,5,15],
 "DotEnv_8h_source.html":[7,0,1,1,5,15],
 "ELevel_8h.html":[7,0,1,1,1,0],
-"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786":[7,0,1,1,1,0,0]
+"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786":[7,0,1,1,1,0,0],
+"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a3b8ebff72cf1a2f992adf5da9077f0aa":[7,0,1,1,1,0,0,5]
 };

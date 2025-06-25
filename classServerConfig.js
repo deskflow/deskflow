@@ -9,7 +9,6 @@ var classServerConfig =
     [ "commit", "classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c", null ],
     [ "configFile", "classServerConfig.html#ad21f4d9780d151a630efb5cc6742dc57", null ],
     [ "disableLockToScreen", "classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a", null ],
-    [ "enableDragAndDrop", "classServerConfig.html#a6f9a7bbfb19069ba1fda00ed518fe7b6", null ],
     [ "getClientAddress", "classServerConfig.html#a9cf06188a5228d4a03490f47a1fb9398", null ],
     [ "getServerName", "classServerConfig.html#a2c0f5701a90bda965ee2fee0a4b1fd7a", null ],
     [ "hasHeartbeat", "classServerConfig.html#a03b3f88897a63eda3d7b2a0fc48a5fd5", null ],

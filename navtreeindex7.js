@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classClientProxy1__6.html#a5895c2115fdb0dace4265a07f66434e1":[6,0,45,1],
 "classClientProxy1__6.html#a731bfb89df06b5020d3494d9302677b8":[6,0,45,2],
 "classClientProxy1__6.html#ac90c3956f116213e099654ba187da411":[6,0,45,0],
 "classClientProxy1__7.html":[6,0,46],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a4791587276fc77f5b105ddad24d46689":[6,0,76,3,4],
 "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a6b6e803fda54e4b10bbe9bf6d9a65dd0":[6,0,76,3,0],
 "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a9414f3bea1af7a69d47781d3b0d76d76":[6,0,76,3,2],
-"classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487ab52edff6cf88686165c0854f419860e3":[6,0,76,3,3]
+"classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487ab52edff6cf88686165c0854f419860e3":[6,0,76,3,3],
+"classIArchMultithread.html#af273bf7f0b396b59063040613d3b2d3f":[6,0,76,5]
 };

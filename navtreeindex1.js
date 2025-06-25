@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a3b8ebff72cf1a2f992adf5da9077f0aa":[7,0,1,1,1,0,0,5],
 "ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a42da32db32690cc55e7ebc3de0109ec3":[7,0,1,1,1,0,0,11],
 "ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a4c233970cf20a7fd19e9a426b9badbb8":[7,0,1,1,1,0,0,6],
 "ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786a5969a489832a8dd56d313915045adcb8":[7,0,1,1,1,0,0,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "MSWindowsClipboardTextConverter_8cpp.html":[7,0,1,1,9,19],
 "MSWindowsClipboardTextConverter_8h.html":[7,0,1,1,9,20],
 "MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20],
-"MSWindowsClipboardUTF16Converter_8cpp.html":[7,0,1,1,9,21]
+"MSWindowsClipboardUTF16Converter_8cpp.html":[7,0,1,1,9,21],
+"MSWindowsClipboardUTF16Converter_8h.html":[7,0,1,1,9,22]
 };

@@ -132,12 +132,11 @@ var searchData=
   ['dotoiclipboard_129',['doToIClipboard',['../classMSWindowsClipboardAnyTextConverter.html#a0fb2e7da0a2a9e58b15b135d0380cd84',1,'MSWindowsClipboardAnyTextConverter::doToIClipboard()'],['../classMSWindowsClipboardHTMLConverter.html#aaff082fe29b3d3e9d550c20c486a352d',1,'MSWindowsClipboardHTMLConverter::doToIClipboard()'],['../classMSWindowsClipboardTextConverter.html#abe59e1e112df00f53ef2660d01dfd7af',1,'MSWindowsClipboardTextConverter::doToIClipboard()'],['../classMSWindowsClipboardUTF16Converter.html#ade3abc7d0050625fb7c7756f4f90e9a5',1,'MSWindowsClipboardUTF16Converter::doToIClipboard()'],['../classOSXClipboardAnyBitmapConverter.html#a2bc56b1dbd1b13397cc788c29b60c5ed',1,'OSXClipboardAnyBitmapConverter::doToIClipboard()'],['../classOSXClipboardAnyTextConverter.html#ac72a27321a7f7635c3e7d60a3030bceb',1,'OSXClipboardAnyTextConverter::doToIClipboard()'],['../classOSXClipboardHTMLConverter.html#afb0f19774d7da394aad4229fa588f1ef',1,'OSXClipboardHTMLConverter::doToIClipboard()'],['../classOSXClipboardTextConverter.html#a776116eb4ac694786db145a8d639b1cb',1,'OSXClipboardTextConverter::doToIClipboard()'],['../classOSXClipboardUTF16Converter.html#ad82a8b2c0d163fd95ddf70fdf419a4e8',1,'OSXClipboardUTF16Converter::doToIClipboard()'],['../classXWindowsClipboardAnyBitmapConverter.html#a38ccb83b7dc80d56b2e9a5682afbbb38',1,'XWindowsClipboardAnyBitmapConverter::doToIClipboard()']]],
   ['download_130',['download',['../classDataDownloader.html#a97132dc185294b437fe7a3653c8eaaee',1,'DataDownloader']]],
   ['dowrite_131',['doWrite',['../classSecureSocket.html#a7b4ebcb753290477ab55180a8c344e68',1,'SecureSocket::doWrite()'],['../classTCPSocket.html#ae75fae9a2124ff5351c0249b6b71ae85',1,'TCPSocket::doWrite()']]],
-  ['drag_5fand_5fdrop_132',['DRAG_AND_DROP',['../App_8h.html#ac7ef9b60cff18957d5eedea2ec0dc554',1,'App.h']]],
-  ['dragenterevent_133',['dragEnterEvent',['../classScreenSetupView.html#a6f2c425ae11e8bc2b8ced368ff5748f0',1,'ScreenSetupView::dragEnterEvent()'],['../classTrashScreenWidget.html#ad3bec5b7e997975cc22daadb14485745',1,'TrashScreenWidget::dragEnterEvent()']]],
-  ['draginforeceived_134',['dragInfoReceived',['../classClientProxy1__5.html#a9305da066d34935ad1f80412d54780b0',1,'ClientProxy1_5']]],
-  ['dragmoveevent_135',['dragMoveEvent',['../classScreenSetupView.html#af8fcff3883694377bb05b8a385934af5',1,'ScreenSetupView']]],
-  ['dropevent_136',['dropEvent',['../classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4',1,'TrashScreenWidget']]],
-  ['dropmimedata_137',['dropMimeData',['../classScreenSetupModel.html#aa49751d31f444debbbcad8e7ea08ebe6',1,'ScreenSetupModel']]],
-  ['dummywindow_138',['dummyWindow',['../OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7',1,'OSXCocoaApp.m']]],
-  ['dword_139',['DWORD',['../ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7',1,'ArchNetworkWinsock.cpp']]]
+  ['dragenterevent_132',['dragEnterEvent',['../classScreenSetupView.html#a6f2c425ae11e8bc2b8ced368ff5748f0',1,'ScreenSetupView::dragEnterEvent()'],['../classTrashScreenWidget.html#ad3bec5b7e997975cc22daadb14485745',1,'TrashScreenWidget::dragEnterEvent()']]],
+  ['draginforeceived_133',['dragInfoReceived',['../classClientProxy1__5.html#a9305da066d34935ad1f80412d54780b0',1,'ClientProxy1_5']]],
+  ['dragmoveevent_134',['dragMoveEvent',['../classScreenSetupView.html#af8fcff3883694377bb05b8a385934af5',1,'ScreenSetupView']]],
+  ['dropevent_135',['dropEvent',['../classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4',1,'TrashScreenWidget']]],
+  ['dropmimedata_136',['dropMimeData',['../classScreenSetupModel.html#aa49751d31f444debbbcad8e7ea08ebe6',1,'ScreenSetupModel']]],
+  ['dummywindow_137',['dummyWindow',['../OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7',1,'OSXCocoaApp.m']]],
+  ['dword_138',['DWORD',['../ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7',1,'ArchNetworkWinsock.cpp']]]
 ];

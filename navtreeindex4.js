@@ -1,6 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"XArchWindows_8h.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,11,1],
 "XArchWindows_8h.html#aa8bc1ba0d5344a265d4093aef962dcab":[7,0,1,1,0,1,11,2],
 "XArchWindows_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,0,1,11,0],
 "XArchWindows_8h_source.html":[7,0,1,1,0,1,11],
@@ -249,5 +248,6 @@ var NAVTREEINDEX4 =
 "classApp_1_1XNoEiSupport.html":[6,0,7,0],
 "classApp_1_1XNoEiSupport.html#a9f6c5560e08e0b46f890960c51e6a45a":[6,0,7,0,0],
 "classArch.html":[6,0,11],
-"classArch.html#a6c1f0485f65368f1fde5d07ce345a925":[6,0,11,2]
+"classArch.html#a6c1f0485f65368f1fde5d07ce345a925":[6,0,11,2],
+"classArch.html#a6f64ff645c6e2b2f5087eb8044119a9b":[6,0,11,1]
 };

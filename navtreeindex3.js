@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"OSXScreen_8mm.html#a1e7b25f05d53afeb25723c48396770ca":[7,0,1,1,9,76,0],
 "OSXScreen_8mm.html#a38cb7af89c29a152f0a820c8ce7217bb":[7,0,1,1,9,76,5],
 "OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f":[7,0,1,1,9,76,1],
 "OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd":[7,0,1,1,9,76,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX3 =
 "XArchWindows_8cpp.html":[7,0,1,1,0,1,10],
 "XArchWindows_8cpp.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,10,0],
 "XArchWindows_8cpp.html#aa8bc1ba0d5344a265d4093aef962dcab":[7,0,1,1,0,1,10,1],
-"XArchWindows_8h.html":[7,0,1,1,0,1,11]
+"XArchWindows_8h.html":[7,0,1,1,0,1,11],
+"XArchWindows_8h.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,11,1]
 };

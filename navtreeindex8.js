@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classIArchMultithread.html#af273bf7f0b396b59063040613d3b2d3f":[6,0,76,5],
 "classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3":[6,0,76,4],
 "classIArchNetwork.html":[6,0,77],
 "classIArchNetwork.html#a006b80ac975e611bbb39e59834bba1c8":[6,0,77,21],
@@ -249,5 +248,6 @@ var NAVTREEINDEX8 =
 "classIPrimaryScreen.html#affc513d87f302cb40746304d2e422356":[6,0,96,10],
 "classIPrimaryScreen_1_1ButtonInfo.html":[6,0,96,0],
 "classIPrimaryScreen_1_1ButtonInfo.html#a8576c142ef788508114f77b23d5910df":[6,0,96,0,0],
-"classIPrimaryScreen_1_1ButtonInfo.html#ac0565e5aa398017516d2a513245495e1":[6,0,96,0,1]
+"classIPrimaryScreen_1_1ButtonInfo.html#ac0565e5aa398017516d2a513245495e1":[6,0,96,0,1],
+"classIPrimaryScreen_1_1EiConnectInfo.html":[6,0,96,1]
 };

@@ -27,6 +27,5 @@ var searchData=
   ['deskflow_5fmsg_5fscreen_5fsaver_24',['DESKFLOW_MSG_SCREEN_SAVER',['../MSWindowsHook_8h.html#ac808a397a067fdab20d31c7c3455714c',1,'MSWindowsHook.h']]],
   ['deskflow_5fmsg_5fscreensaver_25',['DESKFLOW_MSG_SCREENSAVER',['../MSWindowsDesks_8cpp.html#aa089f675a38a27d6d7275ec57e80041d',1,'MSWindowsDesks.cpp']]],
   ['deskflow_5fmsg_5fswitch_26',['DESKFLOW_MSG_SWITCH',['../MSWindowsDesks_8cpp.html#ada38a4fb9d53587af056e661b8c6de2d',1,'MSWindowsDesks.cpp']]],
-  ['deskflow_5fmsg_5fsync_5fkeys_27',['DESKFLOW_MSG_SYNC_KEYS',['../MSWindowsDesks_8cpp.html#a5888d7a67129edfea2f1298c57335c43',1,'MSWindowsDesks.cpp']]],
-  ['drag_5fand_5fdrop_28',['DRAG_AND_DROP',['../App_8h.html#ac7ef9b60cff18957d5eedea2ec0dc554',1,'App.h']]]
+  ['deskflow_5fmsg_5fsync_5fkeys_27',['DESKFLOW_MSG_SYNC_KEYS',['../MSWindowsDesks_8cpp.html#a5888d7a67129edfea2f1298c57335c43',1,'MSWindowsDesks.cpp']]]
 ];

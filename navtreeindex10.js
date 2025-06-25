@@ -1,6 +1,5 @@
 var NAVTREEINDEX10 =
 {
-"classKeyState.html#af41f9e91386b2e4b9027746a1ceb3ec3":[6,0,109,4],
 "classLock.html":[6,0,110],
 "classLock.html#a2a20266e824cb565a4b036cc29ee0e15":[6,0,110,1],
 "classLock.html#a7ab6d9485c8665bb3643710432882971":[6,0,110,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX10 =
 "classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2ba902b0d55fddef6f8d651fe1035b7d4bd":[6,0,112,0,0],
 "classMutex.html":[6,0,131],
 "classMutex.html#a08139a0953b9529d6bff118a4537c03a":[6,0,131,3],
-"classMutex.html#a201127851a64538f2174186385fd5f0d":[6,0,131,1]
+"classMutex.html#a201127851a64538f2174186385fd5f0d":[6,0,131,1],
+"classMutex.html#a403f134f4e1d31f1a4c0807ed2e76f74":[6,0,131,5]
 };

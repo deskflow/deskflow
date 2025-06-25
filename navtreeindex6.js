@@ -1,6 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classArgParser.html#a8c85a06b6125ab2b1c57365b0a4be9a8":[6,0,29,1],
 "classArgParser.html#aab594cdd4fffa9737f9edfc7ac3d18b8":[6,0,29,4],
 "classArgParser.html#aba4827829d9daedc3fe6ae2a4725168d":[6,0,29,3],
 "classBaseClientProxy.html":[6,0,30],
@@ -249,5 +248,6 @@ var NAVTREEINDEX6 =
 "classClientProxy1__5.html#ada82c382d4bc8e2906001b7559aade01":[6,0,44,1],
 "classClientProxy1__5.html#afad41fa23c305e578234d002ae35c08c":[6,0,44,6],
 "classClientProxy1__6.html":[6,0,45],
-"classClientProxy1__6.html#a03a29c4447264b9fc060281770926030":[6,0,45,3]
+"classClientProxy1__6.html#a03a29c4447264b9fc060281770926030":[6,0,45,3],
+"classClientProxy1__6.html#a5895c2115fdb0dace4265a07f66434e1":[6,0,45,1]
 };

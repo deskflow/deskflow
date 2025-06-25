@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classIPrimaryScreen_1_1EiConnectInfo.html":[6,0,96,1],
 "classIPrimaryScreen_1_1EiConnectInfo.html#a7f03b0a327422898d4465c423898d34a":[6,0,96,1,0],
 "classIPrimaryScreen_1_1HotKeyInfo.html":[6,0,96,2],
 "classIPrimaryScreen_1_1HotKeyInfo.html#a1d6c53ea0d832ab863f15c30cdcd4298":[6,0,96,2,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX9 =
 "classKeyState.html#ad90837d4c765072cb4119eec0b7d12be":[6,0,109,11],
 "classKeyState.html#ae80c9b1612385c63db9963a2729298c6":[6,0,109,8],
 "classKeyState.html#aef72f76ade23905e8149f3431f02c6cd":[6,0,109,6],
-"classKeyState.html#af3367ffb0f6cd1743e90e7cceba1dc65":[6,0,109,19]
+"classKeyState.html#af3367ffb0f6cd1743e90e7cceba1dc65":[6,0,109,19],
+"classKeyState.html#af41f9e91386b2e4b9027746a1ceb3ec3":[6,0,109,4]
 };
