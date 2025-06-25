@@ -1,6 +1,6 @@
 <map id="src/lib/server/PrimaryClient.h" name="src/lib/server/PrimaryClient.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="246,5,436,30"/>
-<area shape="rect" id="Node000002" href="$ProtocolTypes_8h.html" title=" " alt="" coords="18,78,189,103"/>
+<area shape="rect" id="Node000002" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="18,78,189,103"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="302,33,158,76,156,71,301,28"/>
 <area shape="rect" id="Node000006" href="$BaseClientProxy_8h.html" title=" " alt="" coords="375,78,544,103"/>
 <area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="362,28,428,67,426,72,359,33"/>

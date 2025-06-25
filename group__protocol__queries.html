@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Deskflow: Contributing to Deskflow</title>
+<title>Deskflow: Query Messages</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.103</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.104</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('md_doc_2dev_2contributing.html','',''); });
+$(function(){initNavTree('group__protocol__queries.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,20 +88,69 @@ $(function(){initNavTree('md_doc_2dev_2contributing.html','',''); });
 </div>
 </div>
 
-<div><div class="header">
-  <div class="headertitle"><div class="title">Contributing to Deskflow </div></div>
+<div class="header">
+  <div class="headertitle"><div class="title">Query Messages <div class="ingroups"><a class="el" href="group__protocol__messages.html">Protocol Message Definitions</a></div></div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md6"></a></p>
-<p>Thanks for your interest in contributing to Deskflow! We welcome all kinds of contributions — bug reports, feature suggestions, documentation improvements, and code.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
-Read the Full Guidelines</h1>
-<p>To keep this repository clean and contribution-friendly, we've outlined our full contributing guidelines on the Deskflow Wiki:</p>
-<p>👉 <a href="https://github.com/deskflow/deskflow/wiki/Contributing">How to Contribute to Deskflow</a></p>
-<p>Please take a moment to read through the page before opening an issue or submitting a pull request.</p>
-<p>Thanks again for helping make Deskflow better! </p>
-</div></div><!-- contents -->
-</div><!-- PageDoc -->
+
+<p>Information request messages.  
+<a href="#details">More...</a></p>
+<div class="dynheader">
+Collaboration diagram for Query Messages:</div>
+<div class="dyncontent">
+<div class="center"><img src="group__protocol__queries.png" border="0" usemap="#agroup____protocol____queries" loading="lazy" alt=""/></div>
+<map name="agroup____protocol____queries" id="agroup____protocol____queries">
+<area shape="rect" href="group__protocol__messages.html" title="All protocol message types and their format specifications." alt="" coords="5,5,198,30"/>
+<area shape="rect" title="Information request messages." alt="" coords="246,5,367,30"/>
+</map>
+</div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gaa563a996c14cf572767d3698a36ee042" id="r_gaa563a996c14cf572767d3698a36ee042"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gaa563a996c14cf572767d3698a36ee042">kMsgQInfo</a></td></tr>
+<tr class="memdesc:gaa563a996c14cf572767d3698a36ee042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query screen information.  <br /></td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<p>Information request messages. </p>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="gaa563a996c14cf572767d3698a36ee042" name="gaa563a996c14cf572767d3698a36ee042"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa563a996c14cf572767d3698a36ee042">&#9670;&#160;</a></span>kMsgQInfo</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* const kMsgQInfo</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query screen information. </p>
+<p><b>Message Code</b>: <span class="tt">"QINF"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: No parameters</p>
+<p>Requests the secondary screen to send its current screen information. The client should respond with a kMsgDInfo message containing:</p><ul>
+<li><a class="el" href="classScreen.html">Screen</a> dimensions and position</li>
+<li>Current mouse position</li>
+<li>Other screen-related data</li>
+</ul>
+<p>This is typically sent:</p><ul>
+<li>During initial connection setup</li>
+<li>When the server needs updated screen information</li>
+<li>After configuration changes</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__protocol__info.html#ga86ae71f251fa22768bbe55892d763ca0" title="Client screen information.">kMsgDInfo</a>, <a class="el" href="group__protocol__commands.html#ga456ac55bffa2a967a0790698fa4126bd" title="Screen information acknowledgment.">kMsgCInfoAck</a> </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

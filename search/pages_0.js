@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['build_0',['Build',['../md_doc_2dev_2build.html#autotoc_md3',1,'']]],
-  ['building_20deskflow_1',['Building Deskflow',['../md_doc_2dev_2build.html',1,'']]]
+  ['3_0',['Keep-Alive Mechanism (Protocol v1.3+)',['../md_doc_2dev_2protocol__reference.html#autotoc_md24',1,'']]]
 ];

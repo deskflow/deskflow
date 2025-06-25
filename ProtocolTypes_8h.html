@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.103</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.104</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -92,6 +92,9 @@ $(function(){initNavTree('ProtocolTypes_8h.html','',''); });
   <div class="headertitle"><div class="title">ProtocolTypes.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>Deskflow Network Protocol Specification and Implementation.  
+<a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="EventTypes_8h_source.html">base/EventTypes.h</a>&quot;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -99,7 +102,7 @@ Include dependency graph for ProtocolTypes.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="ProtocolTypes_8h__incl.png" border="0" usemap="#asrc_2lib_2deskflow_2ProtocolTypes_8h" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2deskflow_2ProtocolTypes_8h" id="asrc_2lib_2deskflow_2ProtocolTypes_8h">
-<area shape="rect" title=" " alt="" coords="49,5,214,44"/>
+<area shape="rect" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="49,5,214,44"/>
 <area shape="rect" href="EventTypes_8h.html" title=" " alt="" coords="5,92,138,117"/>
 <area shape="poly" title=" " alt="" coords="119,46,92,81,88,78,115,43"/>
 <area shape="rect" title=" " alt="" coords="161,92,222,117"/>
@@ -113,7 +116,7 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="ProtocolTypes_8h__dep__incl.png" border="0" usemap="#asrc_2lib_2deskflow_2ProtocolTypes_8hdep" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2deskflow_2ProtocolTypes_8hdep" id="asrc_2lib_2deskflow_2ProtocolTypes_8hdep">
-<area shape="rect" title=" " alt="" coords="1546,5,1711,44"/>
+<area shape="rect" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="1546,5,1711,44"/>
 <area shape="rect" href="Client_8cpp.html" title=" " alt="" coords="5,272,159,297"/>
 <area shape="poly" title=" " alt="" coords="1531,28,1277,29,950,37,784,45,631,57,500,73,401,95,353,112,305,134,216,186,144,237,97,274,94,270,141,233,213,182,302,130,351,107,400,89,499,68,630,52,784,40,950,31,1277,23,1531,23"/>
 <area shape="rect" href="HelloBack_8cpp.html" title=" " alt="" coords="276,186,456,210"/>
@@ -249,1051 +252,134 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:ClientInfo" id="r_ClientInfo"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classClientInfo.html">ClientInfo</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> information.  <a href="classClientInfo.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClient.html" title="Deskflow client.">Client</a> screen information structure.  <a href="classClientInfo.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:acb2b033915f6659a71a38b5aa6e4eb42" id="r_acb2b033915f6659a71a38b5aa6e4eb42"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42">EDirection</a> { <br />
-&#160;&#160;<a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a">kNoDirection</a>
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a">kLeft</a>
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889">kRight</a>
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435">kTop</a>
+<tr class="memitem:gacb2b033915f6659a71a38b5aa6e4eb42" id="r_gacb2b033915f6659a71a38b5aa6e4eb42"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__enums.html#gacb2b033915f6659a71a38b5aa6e4eb42">EDirection</a> { <br />
+&#160;&#160;<a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a">kNoDirection</a>
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a">kLeft</a>
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889">kRight</a>
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435">kTop</a>
 , <br />
-&#160;&#160;<a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0">kBottom</a>
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27">kFirstDirection</a> = kLeft
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19">kLastDirection</a> = kBottom
-, <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a">kNumDirections</a> = kLastDirection - kFirstDirection + 1
+&#160;&#160;<a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0">kBottom</a>
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27">kFirstDirection</a> = kLeft
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19">kLastDirection</a> = kBottom
+, <a class="el" href="group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a">kNumDirections</a> = kLastDirection - kFirstDirection + 1
 <br />
  }</td></tr>
-<tr class="memitem:ac74e3f917b6c58041978d8ab82760563" id="r_ac74e3f917b6c58041978d8ab82760563"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac74e3f917b6c58041978d8ab82760563">EDirectionMask</a> { <br />
-&#160;&#160;<a class="el" href="#ac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040">kNoDirMask</a> = 0
-, <a class="el" href="#ac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619">kLeftMask</a> = 1 &lt;&lt; kLeft
-, <a class="el" href="#ac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1">kRightMask</a> = 1 &lt;&lt; kRight
-, <a class="el" href="#ac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e">kTopMask</a> = 1 &lt;&lt; kTop
+<tr class="memdesc:gacb2b033915f6659a71a38b5aa6e4eb42"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> edge directions for mouse movement.  <a href="group__protocol__enums.html#gacb2b033915f6659a71a38b5aa6e4eb42">More...</a><br /></td></tr>
+<tr class="memitem:gac74e3f917b6c58041978d8ab82760563" id="r_gac74e3f917b6c58041978d8ab82760563"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__enums.html#gac74e3f917b6c58041978d8ab82760563">EDirectionMask</a> { <br />
+&#160;&#160;<a class="el" href="group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040">kNoDirMask</a> = 0
+, <a class="el" href="group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619">kLeftMask</a> = 1 &lt;&lt; kLeft
+, <a class="el" href="group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1">kRightMask</a> = 1 &lt;&lt; kRight
+, <a class="el" href="group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e">kTopMask</a> = 1 &lt;&lt; kTop
 , <br />
-&#160;&#160;<a class="el" href="#ac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be">kBottomMask</a> = 1 &lt;&lt; kBottom
+&#160;&#160;<a class="el" href="group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be">kBottomMask</a> = 1 &lt;&lt; kBottom
 <br />
  }</td></tr>
-<tr class="memitem:a88294b10db1f1b5a1d4b455d6eadc26b" id="r_a88294b10db1f1b5a1d4b455d6eadc26b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a88294b10db1f1b5a1d4b455d6eadc26b">EDataTransfer</a> { <a class="el" href="#a88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7">kDataStart</a> = 1
-, <a class="el" href="#a88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81">kDataChunk</a> = 2
-, <a class="el" href="#a88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af">kDataEnd</a> = 3
+<tr class="memdesc:gac74e3f917b6c58041978d8ab82760563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitmask values for screen edge directions.  <a href="group__protocol__enums.html#gac74e3f917b6c58041978d8ab82760563">More...</a><br /></td></tr>
+<tr class="memitem:ga88294b10db1f1b5a1d4b455d6eadc26b" id="r_ga88294b10db1f1b5a1d4b455d6eadc26b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__enums.html#ga88294b10db1f1b5a1d4b455d6eadc26b">EDataTransfer</a> { <a class="el" href="group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7">kDataStart</a> = 1
+, <a class="el" href="group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81">kDataChunk</a> = 2
+, <a class="el" href="group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af">kDataEnd</a> = 3
  }</td></tr>
-<tr class="memitem:afcae250eb629e4b5915fdda07f95ccee" id="r_afcae250eb629e4b5915fdda07f95ccee"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afcae250eb629e4b5915fdda07f95ccee">EDataReceived</a> { <a class="el" href="#afcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8">kStart</a>
-, <a class="el" href="#afcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155">kNotFinish</a>
-, <a class="el" href="#afcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22">kFinish</a>
-, <a class="el" href="#afcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171">kError</a>
+<tr class="memdesc:ga88294b10db1f1b5a1d4b455d6eadc26b"><td class="mdescLeft">&#160;</td><td class="mdescRight">File transfer data chunk types.  <a href="group__protocol__enums.html#ga88294b10db1f1b5a1d4b455d6eadc26b">More...</a><br /></td></tr>
+<tr class="memitem:gafcae250eb629e4b5915fdda07f95ccee" id="r_gafcae250eb629e4b5915fdda07f95ccee"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__enums.html#gafcae250eb629e4b5915fdda07f95ccee">EDataReceived</a> { <a class="el" href="group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8">kStart</a>
+, <a class="el" href="group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155">kNotFinish</a>
+, <a class="el" href="group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22">kFinish</a>
+, <a class="el" href="group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171">kError</a>
  }</td></tr>
+<tr class="memdesc:gafcae250eb629e4b5915fdda07f95ccee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data reception status codes.  <a href="group__protocol__enums.html#gafcae250eb629e4b5915fdda07f95ccee">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aa12cde1e2a95ec6f663c1a73b57f84d1" id="r_aa12cde1e2a95ec6f663c1a73b57f84d1"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa12cde1e2a95ec6f663c1a73b57f84d1">kSynergyProtocolName</a></td></tr>
-<tr class="memitem:a023a1e0dc40921e040d7a816292f49c7" id="r_a023a1e0dc40921e040d7a816292f49c7"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a023a1e0dc40921e040d7a816292f49c7">kBarrierProtocolName</a></td></tr>
-<tr class="memitem:a7fe883657ad6c4ac7077705202493ff6" id="r_a7fe883657ad6c4ac7077705202493ff6"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7fe883657ad6c4ac7077705202493ff6">kMsgHello</a></td></tr>
-<tr class="memitem:a8b406d6f067791e9f4117d73f587c683" id="r_a8b406d6f067791e9f4117d73f587c683"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8b406d6f067791e9f4117d73f587c683">kMsgHelloArgs</a></td></tr>
-<tr class="memitem:afc643c9a9e9f9daf5082657a4faf6575" id="r_afc643c9a9e9f9daf5082657a4faf6575"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc643c9a9e9f9daf5082657a4faf6575">kMsgHelloBack</a></td></tr>
-<tr class="memitem:afb82d058b11b4cb463f49ce16bd6bb0f" id="r_afb82d058b11b4cb463f49ce16bd6bb0f"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb82d058b11b4cb463f49ce16bd6bb0f">kMsgHelloBackArgs</a></td></tr>
-<tr class="memitem:a80abe7e15842ff8d5834c5af68f8616f" id="r_a80abe7e15842ff8d5834c5af68f8616f"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80abe7e15842ff8d5834c5af68f8616f">kMsgCNoop</a></td></tr>
-<tr class="memitem:a666d7243ecfed71d4392be6cf6119a32" id="r_a666d7243ecfed71d4392be6cf6119a32"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a666d7243ecfed71d4392be6cf6119a32">kMsgCClose</a></td></tr>
-<tr class="memitem:ae826571a53b798c573418568f4397190" id="r_ae826571a53b798c573418568f4397190"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae826571a53b798c573418568f4397190">kMsgCEnter</a></td></tr>
-<tr class="memitem:a35d0d7f0915dec1e257361c62375c368" id="r_a35d0d7f0915dec1e257361c62375c368"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a35d0d7f0915dec1e257361c62375c368">kMsgCLeave</a></td></tr>
-<tr class="memitem:ad64d30f8ea795e2b64f812f87152c749" id="r_ad64d30f8ea795e2b64f812f87152c749"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad64d30f8ea795e2b64f812f87152c749">kMsgCClipboard</a></td></tr>
-<tr class="memitem:a299a8050499523009e1f6438b7558bd2" id="r_a299a8050499523009e1f6438b7558bd2"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a299a8050499523009e1f6438b7558bd2">kMsgCScreenSaver</a></td></tr>
-<tr class="memitem:a44769e3185babe739e6572d96fe56554" id="r_a44769e3185babe739e6572d96fe56554"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44769e3185babe739e6572d96fe56554">kMsgCResetOptions</a></td></tr>
-<tr class="memitem:a456ac55bffa2a967a0790698fa4126bd" id="r_a456ac55bffa2a967a0790698fa4126bd"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a456ac55bffa2a967a0790698fa4126bd">kMsgCInfoAck</a></td></tr>
-<tr class="memitem:abb47e6edadb9364155073384faf00f29" id="r_abb47e6edadb9364155073384faf00f29"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb47e6edadb9364155073384faf00f29">kMsgCKeepAlive</a></td></tr>
-<tr class="memitem:a5e748f301d5c78cdd49a31d5f69eeb11" id="r_a5e748f301d5c78cdd49a31d5f69eeb11"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5e748f301d5c78cdd49a31d5f69eeb11">kMsgDKeyDownLang</a></td></tr>
-<tr class="memitem:a3347d0669e9605acefc17c4f1ee07a7d" id="r_a3347d0669e9605acefc17c4f1ee07a7d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3347d0669e9605acefc17c4f1ee07a7d">kMsgDKeyDown</a></td></tr>
-<tr class="memitem:a0b9f14c45b7c0fba21e9c15c58f81eed" id="r_a0b9f14c45b7c0fba21e9c15c58f81eed"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0b9f14c45b7c0fba21e9c15c58f81eed">kMsgDKeyDown1_0</a></td></tr>
-<tr class="memitem:ace067c18c861c66f9552dcd2a48c5479" id="r_ace067c18c861c66f9552dcd2a48c5479"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace067c18c861c66f9552dcd2a48c5479">kMsgDKeyRepeat</a></td></tr>
-<tr class="memitem:af6c321be43e712fc8e0b9700832dc1a7" id="r_af6c321be43e712fc8e0b9700832dc1a7"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af6c321be43e712fc8e0b9700832dc1a7">kMsgDKeyRepeat1_0</a></td></tr>
-<tr class="memitem:a913e15118bd280fffb9c8c32b09c66cc" id="r_a913e15118bd280fffb9c8c32b09c66cc"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a913e15118bd280fffb9c8c32b09c66cc">kMsgDKeyUp</a></td></tr>
-<tr class="memitem:ac95ca806f815bc93e9f6d82c4856a807" id="r_ac95ca806f815bc93e9f6d82c4856a807"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac95ca806f815bc93e9f6d82c4856a807">kMsgDKeyUp1_0</a></td></tr>
-<tr class="memitem:aff32db0e9923aae3eba184bde7aecb87" id="r_aff32db0e9923aae3eba184bde7aecb87"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff32db0e9923aae3eba184bde7aecb87">kMsgDMouseDown</a></td></tr>
-<tr class="memitem:aae6fdcf9a64d2cb4adce0d5e5e7b63cb" id="r_aae6fdcf9a64d2cb4adce0d5e5e7b63cb"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae6fdcf9a64d2cb4adce0d5e5e7b63cb">kMsgDMouseUp</a></td></tr>
-<tr class="memitem:abdaf456469bf555b61c284c1587f35cd" id="r_abdaf456469bf555b61c284c1587f35cd"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abdaf456469bf555b61c284c1587f35cd">kMsgDMouseMove</a></td></tr>
-<tr class="memitem:a2db68d1c245d15bed224bf6fa9f6cd2d" id="r_a2db68d1c245d15bed224bf6fa9f6cd2d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2db68d1c245d15bed224bf6fa9f6cd2d">kMsgDMouseRelMove</a></td></tr>
-<tr class="memitem:aa1680c0b3dccb8d646a2840f43782f3d" id="r_aa1680c0b3dccb8d646a2840f43782f3d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1680c0b3dccb8d646a2840f43782f3d">kMsgDMouseWheel</a></td></tr>
-<tr class="memitem:ad981fdfa385cbe52050fa58d17c1a273" id="r_ad981fdfa385cbe52050fa58d17c1a273"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad981fdfa385cbe52050fa58d17c1a273">kMsgDMouseWheel1_0</a></td></tr>
-<tr class="memitem:ae9a3165781ac7a11ff3b3c7a10216b7b" id="r_ae9a3165781ac7a11ff3b3c7a10216b7b"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae9a3165781ac7a11ff3b3c7a10216b7b">kMsgDClipboard</a></td></tr>
-<tr class="memitem:a86ae71f251fa22768bbe55892d763ca0" id="r_a86ae71f251fa22768bbe55892d763ca0"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a86ae71f251fa22768bbe55892d763ca0">kMsgDInfo</a></td></tr>
-<tr class="memitem:a67849a45cec6d87bf9228776b3dd876e" id="r_a67849a45cec6d87bf9228776b3dd876e"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67849a45cec6d87bf9228776b3dd876e">kMsgDSetOptions</a></td></tr>
-<tr class="memitem:a6a6132d276034c56749d3bdf43c8bf3c" id="r_a6a6132d276034c56749d3bdf43c8bf3c"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a6132d276034c56749d3bdf43c8bf3c">kMsgDFileTransfer</a></td></tr>
-<tr class="memitem:a3b49e5983952babb837a4a528da6b5d4" id="r_a3b49e5983952babb837a4a528da6b5d4"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b49e5983952babb837a4a528da6b5d4">kMsgDDragInfo</a></td></tr>
-<tr class="memitem:a7e76e67c020b09782d6c865db429819b" id="r_a7e76e67c020b09782d6c865db429819b"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e76e67c020b09782d6c865db429819b">kMsgDSecureInputNotification</a></td></tr>
-<tr class="memitem:a95ee69b1c74a09b08615e339e5dfb838" id="r_a95ee69b1c74a09b08615e339e5dfb838"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a95ee69b1c74a09b08615e339e5dfb838">kMsgDLanguageSynchronisation</a></td></tr>
-<tr class="memitem:aa563a996c14cf572767d3698a36ee042" id="r_aa563a996c14cf572767d3698a36ee042"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa563a996c14cf572767d3698a36ee042">kMsgQInfo</a></td></tr>
-<tr class="memitem:ad20ee86c779fc4fb0149d38e0aabd627" id="r_ad20ee86c779fc4fb0149d38e0aabd627"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad20ee86c779fc4fb0149d38e0aabd627">kMsgEIncompatible</a></td></tr>
-<tr class="memitem:a7ab9c494db2633d5cc130efd48d88867" id="r_a7ab9c494db2633d5cc130efd48d88867"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ab9c494db2633d5cc130efd48d88867">kMsgEBusy</a></td></tr>
-<tr class="memitem:aa968fb3f8a1086ec79204b0c75041403" id="r_aa968fb3f8a1086ec79204b0c75041403"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa968fb3f8a1086ec79204b0c75041403">kMsgEUnknown</a></td></tr>
-<tr class="memitem:ae59bb1efdb84cbccd8e07c3b2a588db9" id="r_ae59bb1efdb84cbccd8e07c3b2a588db9"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae59bb1efdb84cbccd8e07c3b2a588db9">kMsgEBad</a></td></tr>
+<tr class="memitem:gaa12cde1e2a95ec6f663c1a73b57f84d1" id="r_gaa12cde1e2a95ec6f663c1a73b57f84d1"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1">kSynergyProtocolName</a></td></tr>
+<tr class="memdesc:gaa12cde1e2a95ec6f663c1a73b57f84d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol name for Synergy compatibility.  <br /></td></tr>
+<tr class="memitem:ga023a1e0dc40921e040d7a816292f49c7" id="r_ga023a1e0dc40921e040d7a816292f49c7"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7">kBarrierProtocolName</a></td></tr>
+<tr class="memdesc:ga023a1e0dc40921e040d7a816292f49c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol name for Barrier compatibility.  <br /></td></tr>
+<tr class="memitem:ga7fe883657ad6c4ac7077705202493ff6" id="r_ga7fe883657ad6c4ac7077705202493ff6"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#ga7fe883657ad6c4ac7077705202493ff6">kMsgHello</a></td></tr>
+<tr class="memdesc:ga7fe883657ad6c4ac7077705202493ff6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classServer.html" title="Deskflow server.">Server</a> hello message.  <br /></td></tr>
+<tr class="memitem:ga8b406d6f067791e9f4117d73f587c683" id="r_ga8b406d6f067791e9f4117d73f587c683"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#ga8b406d6f067791e9f4117d73f587c683">kMsgHelloArgs</a></td></tr>
+<tr class="memdesc:ga8b406d6f067791e9f4117d73f587c683"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format string for server hello message arguments.  <br /></td></tr>
+<tr class="memitem:gafc643c9a9e9f9daf5082657a4faf6575" id="r_gafc643c9a9e9f9daf5082657a4faf6575"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#gafc643c9a9e9f9daf5082657a4faf6575">kMsgHelloBack</a></td></tr>
+<tr class="memdesc:gafc643c9a9e9f9daf5082657a4faf6575"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClient.html" title="Deskflow client.">Client</a> hello response message.  <br /></td></tr>
+<tr class="memitem:gafb82d058b11b4cb463f49ce16bd6bb0f" id="r_gafb82d058b11b4cb463f49ce16bd6bb0f"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__handshake.html#gafb82d058b11b4cb463f49ce16bd6bb0f">kMsgHelloBackArgs</a></td></tr>
+<tr class="memdesc:gafb82d058b11b4cb463f49ce16bd6bb0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Format string for client hello response arguments.  <br /></td></tr>
+<tr class="memitem:ga80abe7e15842ff8d5834c5af68f8616f" id="r_ga80abe7e15842ff8d5834c5af68f8616f"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga80abe7e15842ff8d5834c5af68f8616f">kMsgCNoop</a></td></tr>
+<tr class="memdesc:ga80abe7e15842ff8d5834c5af68f8616f"><td class="mdescLeft">&#160;</td><td class="mdescRight">No operation command.  <br /></td></tr>
+<tr class="memitem:ga666d7243ecfed71d4392be6cf6119a32" id="r_ga666d7243ecfed71d4392be6cf6119a32"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga666d7243ecfed71d4392be6cf6119a32">kMsgCClose</a></td></tr>
+<tr class="memdesc:ga666d7243ecfed71d4392be6cf6119a32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close connection command.  <br /></td></tr>
+<tr class="memitem:gae826571a53b798c573418568f4397190" id="r_gae826571a53b798c573418568f4397190"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#gae826571a53b798c573418568f4397190">kMsgCEnter</a></td></tr>
+<tr class="memdesc:gae826571a53b798c573418568f4397190"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter screen command.  <br /></td></tr>
+<tr class="memitem:ga35d0d7f0915dec1e257361c62375c368" id="r_ga35d0d7f0915dec1e257361c62375c368"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga35d0d7f0915dec1e257361c62375c368">kMsgCLeave</a></td></tr>
+<tr class="memdesc:ga35d0d7f0915dec1e257361c62375c368"><td class="mdescLeft">&#160;</td><td class="mdescRight">Leave screen command.  <br /></td></tr>
+<tr class="memitem:gad64d30f8ea795e2b64f812f87152c749" id="r_gad64d30f8ea795e2b64f812f87152c749"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#gad64d30f8ea795e2b64f812f87152c749">kMsgCClipboard</a></td></tr>
+<tr class="memdesc:gad64d30f8ea795e2b64f812f87152c749"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> grab notification.  <br /></td></tr>
+<tr class="memitem:ga299a8050499523009e1f6438b7558bd2" id="r_ga299a8050499523009e1f6438b7558bd2"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga299a8050499523009e1f6438b7558bd2">kMsgCScreenSaver</a></td></tr>
+<tr class="memdesc:ga299a8050499523009e1f6438b7558bd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Screensaver state change.  <br /></td></tr>
+<tr class="memitem:ga44769e3185babe739e6572d96fe56554" id="r_ga44769e3185babe739e6572d96fe56554"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga44769e3185babe739e6572d96fe56554">kMsgCResetOptions</a></td></tr>
+<tr class="memdesc:ga44769e3185babe739e6572d96fe56554"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset options command.  <br /></td></tr>
+<tr class="memitem:ga456ac55bffa2a967a0790698fa4126bd" id="r_ga456ac55bffa2a967a0790698fa4126bd"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#ga456ac55bffa2a967a0790698fa4126bd">kMsgCInfoAck</a></td></tr>
+<tr class="memdesc:ga456ac55bffa2a967a0790698fa4126bd"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> information acknowledgment.  <br /></td></tr>
+<tr class="memitem:gabb47e6edadb9364155073384faf00f29" id="r_gabb47e6edadb9364155073384faf00f29"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__commands.html#gabb47e6edadb9364155073384faf00f29">kMsgCKeepAlive</a></td></tr>
+<tr class="memdesc:gabb47e6edadb9364155073384faf00f29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Keep-alive message.  <br /></td></tr>
+<tr class="memitem:ga5e748f301d5c78cdd49a31d5f69eeb11" id="r_ga5e748f301d5c78cdd49a31d5f69eeb11"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#ga5e748f301d5c78cdd49a31d5f69eeb11">kMsgDKeyDownLang</a></td></tr>
+<tr class="memdesc:ga5e748f301d5c78cdd49a31d5f69eeb11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key press with language code (v1.8+)  <br /></td></tr>
+<tr class="memitem:ga3347d0669e9605acefc17c4f1ee07a7d" id="r_ga3347d0669e9605acefc17c4f1ee07a7d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#ga3347d0669e9605acefc17c4f1ee07a7d">kMsgDKeyDown</a></td></tr>
+<tr class="memdesc:ga3347d0669e9605acefc17c4f1ee07a7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key press event.  <br /></td></tr>
+<tr class="memitem:ga0b9f14c45b7c0fba21e9c15c58f81eed" id="r_ga0b9f14c45b7c0fba21e9c15c58f81eed"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#ga0b9f14c45b7c0fba21e9c15c58f81eed">kMsgDKeyDown1_0</a></td></tr>
+<tr class="memdesc:ga0b9f14c45b7c0fba21e9c15c58f81eed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key press event (legacy v1.0)  <br /></td></tr>
+<tr class="memitem:gace067c18c861c66f9552dcd2a48c5479" id="r_gace067c18c861c66f9552dcd2a48c5479"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#gace067c18c861c66f9552dcd2a48c5479">kMsgDKeyRepeat</a></td></tr>
+<tr class="memdesc:gace067c18c861c66f9552dcd2a48c5479"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key auto-repeat event.  <br /></td></tr>
+<tr class="memitem:gaf6c321be43e712fc8e0b9700832dc1a7" id="r_gaf6c321be43e712fc8e0b9700832dc1a7"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#gaf6c321be43e712fc8e0b9700832dc1a7">kMsgDKeyRepeat1_0</a></td></tr>
+<tr class="memdesc:gaf6c321be43e712fc8e0b9700832dc1a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key auto-repeat event (legacy v1.0)  <br /></td></tr>
+<tr class="memitem:ga913e15118bd280fffb9c8c32b09c66cc" id="r_ga913e15118bd280fffb9c8c32b09c66cc"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#ga913e15118bd280fffb9c8c32b09c66cc">kMsgDKeyUp</a></td></tr>
+<tr class="memdesc:ga913e15118bd280fffb9c8c32b09c66cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key release event.  <br /></td></tr>
+<tr class="memitem:gac95ca806f815bc93e9f6d82c4856a807" id="r_gac95ca806f815bc93e9f6d82c4856a807"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__keyboard.html#gac95ca806f815bc93e9f6d82c4856a807">kMsgDKeyUp1_0</a></td></tr>
+<tr class="memdesc:gac95ca806f815bc93e9f6d82c4856a807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Key release event (legacy v1.0)  <br /></td></tr>
+<tr class="memitem:gaff32db0e9923aae3eba184bde7aecb87" id="r_gaff32db0e9923aae3eba184bde7aecb87"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#gaff32db0e9923aae3eba184bde7aecb87">kMsgDMouseDown</a></td></tr>
+<tr class="memdesc:gaff32db0e9923aae3eba184bde7aecb87"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse button press event.  <br /></td></tr>
+<tr class="memitem:gaae6fdcf9a64d2cb4adce0d5e5e7b63cb" id="r_gaae6fdcf9a64d2cb4adce0d5e5e7b63cb"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#gaae6fdcf9a64d2cb4adce0d5e5e7b63cb">kMsgDMouseUp</a></td></tr>
+<tr class="memdesc:gaae6fdcf9a64d2cb4adce0d5e5e7b63cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse button release event.  <br /></td></tr>
+<tr class="memitem:gabdaf456469bf555b61c284c1587f35cd" id="r_gabdaf456469bf555b61c284c1587f35cd"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#gabdaf456469bf555b61c284c1587f35cd">kMsgDMouseMove</a></td></tr>
+<tr class="memdesc:gabdaf456469bf555b61c284c1587f35cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Absolute mouse movement.  <br /></td></tr>
+<tr class="memitem:ga2db68d1c245d15bed224bf6fa9f6cd2d" id="r_ga2db68d1c245d15bed224bf6fa9f6cd2d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#ga2db68d1c245d15bed224bf6fa9f6cd2d">kMsgDMouseRelMove</a></td></tr>
+<tr class="memdesc:ga2db68d1c245d15bed224bf6fa9f6cd2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Relative mouse movement.  <br /></td></tr>
+<tr class="memitem:gaa1680c0b3dccb8d646a2840f43782f3d" id="r_gaa1680c0b3dccb8d646a2840f43782f3d"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#gaa1680c0b3dccb8d646a2840f43782f3d">kMsgDMouseWheel</a></td></tr>
+<tr class="memdesc:gaa1680c0b3dccb8d646a2840f43782f3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse wheel scroll event.  <br /></td></tr>
+<tr class="memitem:gad981fdfa385cbe52050fa58d17c1a273" id="r_gad981fdfa385cbe52050fa58d17c1a273"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__mouse.html#gad981fdfa385cbe52050fa58d17c1a273">kMsgDMouseWheel1_0</a></td></tr>
+<tr class="memdesc:gad981fdfa385cbe52050fa58d17c1a273"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse wheel scroll event (legacy v1.0-1.2)  <br /></td></tr>
+<tr class="memitem:gae9a3165781ac7a11ff3b3c7a10216b7b" id="r_gae9a3165781ac7a11ff3b3c7a10216b7b"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__clipboard.html#gae9a3165781ac7a11ff3b3c7a10216b7b">kMsgDClipboard</a></td></tr>
+<tr class="memdesc:gae9a3165781ac7a11ff3b3c7a10216b7b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> data transfer.  <br /></td></tr>
+<tr class="memitem:ga86ae71f251fa22768bbe55892d763ca0" id="r_ga86ae71f251fa22768bbe55892d763ca0"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__info.html#ga86ae71f251fa22768bbe55892d763ca0">kMsgDInfo</a></td></tr>
+<tr class="memdesc:ga86ae71f251fa22768bbe55892d763ca0"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClient.html" title="Deskflow client.">Client</a> screen information.  <br /></td></tr>
+<tr class="memitem:ga67849a45cec6d87bf9228776b3dd876e" id="r_ga67849a45cec6d87bf9228776b3dd876e"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__info.html#ga67849a45cec6d87bf9228776b3dd876e">kMsgDSetOptions</a></td></tr>
+<tr class="memdesc:ga67849a45cec6d87bf9228776b3dd876e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set client options.  <br /></td></tr>
+<tr class="memitem:ga6a6132d276034c56749d3bdf43c8bf3c" id="r_ga6a6132d276034c56749d3bdf43c8bf3c"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__files.html#ga6a6132d276034c56749d3bdf43c8bf3c">kMsgDFileTransfer</a></td></tr>
+<tr class="memdesc:ga6a6132d276034c56749d3bdf43c8bf3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">File transfer data.  <br /></td></tr>
+<tr class="memitem:ga3b49e5983952babb837a4a528da6b5d4" id="r_ga3b49e5983952babb837a4a528da6b5d4"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__files.html#ga3b49e5983952babb837a4a528da6b5d4">kMsgDDragInfo</a></td></tr>
+<tr class="memdesc:ga3b49e5983952babb837a4a528da6b5d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drag and drop information.  <br /></td></tr>
+<tr class="memitem:ga7e76e67c020b09782d6c865db429819b" id="r_ga7e76e67c020b09782d6c865db429819b"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__system.html#ga7e76e67c020b09782d6c865db429819b">kMsgDSecureInputNotification</a></td></tr>
+<tr class="memdesc:ga7e76e67c020b09782d6c865db429819b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Secure input notification (macOS)  <br /></td></tr>
+<tr class="memitem:ga95ee69b1c74a09b08615e339e5dfb838" id="r_ga95ee69b1c74a09b08615e339e5dfb838"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__system.html#ga95ee69b1c74a09b08615e339e5dfb838">kMsgDLanguageSynchronisation</a></td></tr>
+<tr class="memdesc:ga95ee69b1c74a09b08615e339e5dfb838"><td class="mdescLeft">&#160;</td><td class="mdescRight">Language synchronization.  <br /></td></tr>
+<tr class="memitem:gaa563a996c14cf572767d3698a36ee042" id="r_gaa563a996c14cf572767d3698a36ee042"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042">kMsgQInfo</a></td></tr>
+<tr class="memdesc:gaa563a996c14cf572767d3698a36ee042"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query screen information.  <br /></td></tr>
+<tr class="memitem:gad20ee86c779fc4fb0149d38e0aabd627" id="r_gad20ee86c779fc4fb0149d38e0aabd627"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__errors.html#gad20ee86c779fc4fb0149d38e0aabd627">kMsgEIncompatible</a></td></tr>
+<tr class="memdesc:gad20ee86c779fc4fb0149d38e0aabd627"><td class="mdescLeft">&#160;</td><td class="mdescRight">Incompatible protocol versions.  <br /></td></tr>
+<tr class="memitem:ga7ab9c494db2633d5cc130efd48d88867" id="r_ga7ab9c494db2633d5cc130efd48d88867"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__errors.html#ga7ab9c494db2633d5cc130efd48d88867">kMsgEBusy</a></td></tr>
+<tr class="memdesc:ga7ab9c494db2633d5cc130efd48d88867"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClient.html" title="Deskflow client.">Client</a> name already in use.  <br /></td></tr>
+<tr class="memitem:gaa968fb3f8a1086ec79204b0c75041403" id="r_gaa968fb3f8a1086ec79204b0c75041403"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__errors.html#gaa968fb3f8a1086ec79204b0c75041403">kMsgEUnknown</a></td></tr>
+<tr class="memdesc:gaa968fb3f8a1086ec79204b0c75041403"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unknown client name.  <br /></td></tr>
+<tr class="memitem:gae59bb1efdb84cbccd8e07c3b2a588db9" id="r_gae59bb1efdb84cbccd8e07c3b2a588db9"><td class="memItemLeft" align="right" valign="top">const char *const&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__protocol__errors.html#gae59bb1efdb84cbccd8e07c3b2a588db9">kMsgEBad</a></td></tr>
+<tr class="memdesc:gae59bb1efdb84cbccd8e07c3b2a588db9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Protocol violation.  <br /></td></tr>
 </table>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
-<a id="afcae250eb629e4b5915fdda07f95ccee" name="afcae250eb629e4b5915fdda07f95ccee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afcae250eb629e4b5915fdda07f95ccee">&#9670;&#160;</a></span>EDataReceived</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#afcae250eb629e4b5915fdda07f95ccee">EDataReceived</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="afcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8" name="afcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8"></a>kStart&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="afcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155" name="afcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155"></a>kNotFinish&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="afcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22" name="afcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22"></a>kFinish&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="afcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171" name="afcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171"></a>kError&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="a88294b10db1f1b5a1d4b455d6eadc26b" name="a88294b10db1f1b5a1d4b455d6eadc26b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a88294b10db1f1b5a1d4b455d6eadc26b">&#9670;&#160;</a></span>EDataTransfer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#a88294b10db1f1b5a1d4b455d6eadc26b">EDataTransfer</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7" name="a88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7"></a>kDataStart&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81" name="a88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81"></a>kDataChunk&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af" name="a88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af"></a>kDataEnd&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="acb2b033915f6659a71a38b5aa6e4eb42" name="acb2b033915f6659a71a38b5aa6e4eb42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb2b033915f6659a71a38b5aa6e4eb42">&#9670;&#160;</a></span>EDirection</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#acb2b033915f6659a71a38b5aa6e4eb42">EDirection</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a" name="acb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a"></a>kNoDirection&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a" name="acb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a"></a>kLeft&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889" name="acb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889"></a>kRight&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435" name="acb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435"></a>kTop&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0" name="acb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0"></a>kBottom&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27" name="acb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27"></a>kFirstDirection&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19" name="acb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19"></a>kLastDirection&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a" name="acb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a"></a>kNumDirections&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="ac74e3f917b6c58041978d8ab82760563" name="ac74e3f917b6c58041978d8ab82760563"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac74e3f917b6c58041978d8ab82760563">&#9670;&#160;</a></span>EDirectionMask</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#ac74e3f917b6c58041978d8ab82760563">EDirectionMask</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040" name="ac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040"></a>kNoDirMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619" name="ac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619"></a>kLeftMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1" name="ac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1"></a>kRightMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e" name="ac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e"></a>kTopMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be" name="ac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be"></a>kBottomMask&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
-<a id="a023a1e0dc40921e040d7a816292f49c7" name="a023a1e0dc40921e040d7a816292f49c7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a023a1e0dc40921e040d7a816292f49c7">&#9670;&#160;</a></span>kBarrierProtocolName</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kBarrierProtocolName</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad64d30f8ea795e2b64f812f87152c749" name="ad64d30f8ea795e2b64f812f87152c749"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad64d30f8ea795e2b64f812f87152c749">&#9670;&#160;</a></span>kMsgCClipboard</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCClipboard</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a666d7243ecfed71d4392be6cf6119a32" name="a666d7243ecfed71d4392be6cf6119a32"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a666d7243ecfed71d4392be6cf6119a32">&#9670;&#160;</a></span>kMsgCClose</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCClose</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae826571a53b798c573418568f4397190" name="ae826571a53b798c573418568f4397190"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae826571a53b798c573418568f4397190">&#9670;&#160;</a></span>kMsgCEnter</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCEnter</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a456ac55bffa2a967a0790698fa4126bd" name="a456ac55bffa2a967a0790698fa4126bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a456ac55bffa2a967a0790698fa4126bd">&#9670;&#160;</a></span>kMsgCInfoAck</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCInfoAck</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abb47e6edadb9364155073384faf00f29" name="abb47e6edadb9364155073384faf00f29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb47e6edadb9364155073384faf00f29">&#9670;&#160;</a></span>kMsgCKeepAlive</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCKeepAlive</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a35d0d7f0915dec1e257361c62375c368" name="a35d0d7f0915dec1e257361c62375c368"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35d0d7f0915dec1e257361c62375c368">&#9670;&#160;</a></span>kMsgCLeave</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCLeave</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a80abe7e15842ff8d5834c5af68f8616f" name="a80abe7e15842ff8d5834c5af68f8616f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80abe7e15842ff8d5834c5af68f8616f">&#9670;&#160;</a></span>kMsgCNoop</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCNoop</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a44769e3185babe739e6572d96fe56554" name="a44769e3185babe739e6572d96fe56554"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a44769e3185babe739e6572d96fe56554">&#9670;&#160;</a></span>kMsgCResetOptions</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCResetOptions</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a299a8050499523009e1f6438b7558bd2" name="a299a8050499523009e1f6438b7558bd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a299a8050499523009e1f6438b7558bd2">&#9670;&#160;</a></span>kMsgCScreenSaver</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgCScreenSaver</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae9a3165781ac7a11ff3b3c7a10216b7b" name="ae9a3165781ac7a11ff3b3c7a10216b7b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9a3165781ac7a11ff3b3c7a10216b7b">&#9670;&#160;</a></span>kMsgDClipboard</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDClipboard</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3b49e5983952babb837a4a528da6b5d4" name="a3b49e5983952babb837a4a528da6b5d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b49e5983952babb837a4a528da6b5d4">&#9670;&#160;</a></span>kMsgDDragInfo</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDDragInfo</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6a6132d276034c56749d3bdf43c8bf3c" name="a6a6132d276034c56749d3bdf43c8bf3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6a6132d276034c56749d3bdf43c8bf3c">&#9670;&#160;</a></span>kMsgDFileTransfer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDFileTransfer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a86ae71f251fa22768bbe55892d763ca0" name="a86ae71f251fa22768bbe55892d763ca0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a86ae71f251fa22768bbe55892d763ca0">&#9670;&#160;</a></span>kMsgDInfo</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDInfo</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a3347d0669e9605acefc17c4f1ee07a7d" name="a3347d0669e9605acefc17c4f1ee07a7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3347d0669e9605acefc17c4f1ee07a7d">&#9670;&#160;</a></span>kMsgDKeyDown</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyDown</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a0b9f14c45b7c0fba21e9c15c58f81eed" name="a0b9f14c45b7c0fba21e9c15c58f81eed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b9f14c45b7c0fba21e9c15c58f81eed">&#9670;&#160;</a></span>kMsgDKeyDown1_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyDown1_0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5e748f301d5c78cdd49a31d5f69eeb11" name="a5e748f301d5c78cdd49a31d5f69eeb11"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e748f301d5c78cdd49a31d5f69eeb11">&#9670;&#160;</a></span>kMsgDKeyDownLang</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyDownLang</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ace067c18c861c66f9552dcd2a48c5479" name="ace067c18c861c66f9552dcd2a48c5479"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace067c18c861c66f9552dcd2a48c5479">&#9670;&#160;</a></span>kMsgDKeyRepeat</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyRepeat</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af6c321be43e712fc8e0b9700832dc1a7" name="af6c321be43e712fc8e0b9700832dc1a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6c321be43e712fc8e0b9700832dc1a7">&#9670;&#160;</a></span>kMsgDKeyRepeat1_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyRepeat1_0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a913e15118bd280fffb9c8c32b09c66cc" name="a913e15118bd280fffb9c8c32b09c66cc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a913e15118bd280fffb9c8c32b09c66cc">&#9670;&#160;</a></span>kMsgDKeyUp</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyUp</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ac95ca806f815bc93e9f6d82c4856a807" name="ac95ca806f815bc93e9f6d82c4856a807"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac95ca806f815bc93e9f6d82c4856a807">&#9670;&#160;</a></span>kMsgDKeyUp1_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDKeyUp1_0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a95ee69b1c74a09b08615e339e5dfb838" name="a95ee69b1c74a09b08615e339e5dfb838"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a95ee69b1c74a09b08615e339e5dfb838">&#9670;&#160;</a></span>kMsgDLanguageSynchronisation</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDLanguageSynchronisation</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aff32db0e9923aae3eba184bde7aecb87" name="aff32db0e9923aae3eba184bde7aecb87"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aff32db0e9923aae3eba184bde7aecb87">&#9670;&#160;</a></span>kMsgDMouseDown</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseDown</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="abdaf456469bf555b61c284c1587f35cd" name="abdaf456469bf555b61c284c1587f35cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdaf456469bf555b61c284c1587f35cd">&#9670;&#160;</a></span>kMsgDMouseMove</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseMove</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2db68d1c245d15bed224bf6fa9f6cd2d" name="a2db68d1c245d15bed224bf6fa9f6cd2d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2db68d1c245d15bed224bf6fa9f6cd2d">&#9670;&#160;</a></span>kMsgDMouseRelMove</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseRelMove</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aae6fdcf9a64d2cb4adce0d5e5e7b63cb" name="aae6fdcf9a64d2cb4adce0d5e5e7b63cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae6fdcf9a64d2cb4adce0d5e5e7b63cb">&#9670;&#160;</a></span>kMsgDMouseUp</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseUp</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa1680c0b3dccb8d646a2840f43782f3d" name="aa1680c0b3dccb8d646a2840f43782f3d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa1680c0b3dccb8d646a2840f43782f3d">&#9670;&#160;</a></span>kMsgDMouseWheel</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseWheel</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad981fdfa385cbe52050fa58d17c1a273" name="ad981fdfa385cbe52050fa58d17c1a273"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad981fdfa385cbe52050fa58d17c1a273">&#9670;&#160;</a></span>kMsgDMouseWheel1_0</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDMouseWheel1_0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7e76e67c020b09782d6c865db429819b" name="a7e76e67c020b09782d6c865db429819b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7e76e67c020b09782d6c865db429819b">&#9670;&#160;</a></span>kMsgDSecureInputNotification</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDSecureInputNotification</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a67849a45cec6d87bf9228776b3dd876e" name="a67849a45cec6d87bf9228776b3dd876e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a67849a45cec6d87bf9228776b3dd876e">&#9670;&#160;</a></span>kMsgDSetOptions</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgDSetOptions</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae59bb1efdb84cbccd8e07c3b2a588db9" name="ae59bb1efdb84cbccd8e07c3b2a588db9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae59bb1efdb84cbccd8e07c3b2a588db9">&#9670;&#160;</a></span>kMsgEBad</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgEBad</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7ab9c494db2633d5cc130efd48d88867" name="a7ab9c494db2633d5cc130efd48d88867"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ab9c494db2633d5cc130efd48d88867">&#9670;&#160;</a></span>kMsgEBusy</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgEBusy</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ad20ee86c779fc4fb0149d38e0aabd627" name="ad20ee86c779fc4fb0149d38e0aabd627"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad20ee86c779fc4fb0149d38e0aabd627">&#9670;&#160;</a></span>kMsgEIncompatible</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgEIncompatible</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa968fb3f8a1086ec79204b0c75041403" name="aa968fb3f8a1086ec79204b0c75041403"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa968fb3f8a1086ec79204b0c75041403">&#9670;&#160;</a></span>kMsgEUnknown</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgEUnknown</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a7fe883657ad6c4ac7077705202493ff6" name="a7fe883657ad6c4ac7077705202493ff6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7fe883657ad6c4ac7077705202493ff6">&#9670;&#160;</a></span>kMsgHello</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgHello</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a8b406d6f067791e9f4117d73f587c683" name="a8b406d6f067791e9f4117d73f587c683"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b406d6f067791e9f4117d73f587c683">&#9670;&#160;</a></span>kMsgHelloArgs</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgHelloArgs</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afc643c9a9e9f9daf5082657a4faf6575" name="afc643c9a9e9f9daf5082657a4faf6575"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc643c9a9e9f9daf5082657a4faf6575">&#9670;&#160;</a></span>kMsgHelloBack</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgHelloBack</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="afb82d058b11b4cb463f49ce16bd6bb0f" name="afb82d058b11b4cb463f49ce16bd6bb0f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afb82d058b11b4cb463f49ce16bd6bb0f">&#9670;&#160;</a></span>kMsgHelloBackArgs</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgHelloBackArgs</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa563a996c14cf572767d3698a36ee042" name="aa563a996c14cf572767d3698a36ee042"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa563a996c14cf572767d3698a36ee042">&#9670;&#160;</a></span>kMsgQInfo</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kMsgQInfo</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa12cde1e2a95ec6f663c1a73b57f84d1" name="aa12cde1e2a95ec6f663c1a73b57f84d1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa12cde1e2a95ec6f663c1a73b57f84d1">&#9670;&#160;</a></span>kSynergyProtocolName</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const char* const kSynergyProtocolName</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel extern">extern</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Deskflow Network Protocol Specification and Implementation. </p>
+<h1 class="doxsection"><a class="anchor" id="protocol_overview"></a>
+Protocol Overview</h1>
+<p>This file defines the data types, constants, and message structures for the Deskflow network protocol. For a high-level conceptual overview of the protocol, including the distinction between Client/Server and Primary/Secondary roles, please see the <b>Protocol Reference</b> document in <span class="tt"><a class="el" href="protocol__reference_8md.html">doc/dev/protocol_reference.md</a></span>. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>

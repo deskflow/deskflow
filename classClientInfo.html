@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.103</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.104</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -89,11 +89,11 @@ $(function(){initNavTree('classClientInfo.html','','classClientInfo-members'); }
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">ClientInfo Class Reference</div></div>
+  <div class="headertitle"><div class="title">ClientInfo Class Reference<div class="ingroups"><a class="el" href="group__protocol__structures.html">Protocol Data Structures</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
-<p><a class="el" href="classScreen.html">Screen</a> information.  
+<p><a class="el" href="classClient.html" title="Deskflow client.">Client</a> screen information structure.  
  <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ProtocolTypes_8h_source.html">ProtocolTypes.h</a>&gt;</code></p>
@@ -101,20 +101,35 @@ $(function(){initNavTree('classClientInfo.html','','classClientInfo-members'); }
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ae1d4cb9fc516223cba323196199683b8" id="r_ae1d4cb9fc516223cba323196199683b8"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae1d4cb9fc516223cba323196199683b8">m_x</a></td></tr>
-<tr class="memdesc:ae1d4cb9fc516223cba323196199683b8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> position.  <br /></td></tr>
+<tr class="memdesc:ae1d4cb9fc516223cba323196199683b8"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> position coordinates.  <br /></td></tr>
 <tr class="memitem:a3f23857bfa3b5fd8b335d56613ea564a" id="r_a3f23857bfa3b5fd8b335d56613ea564a"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3f23857bfa3b5fd8b335d56613ea564a">m_y</a></td></tr>
+<tr class="memdesc:a3f23857bfa3b5fd8b335d56613ea564a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Top edge Y coordinate.  <br /></td></tr>
 <tr class="memitem:a0bdb7cd63cd2d0a81d2773e7ed585cbb" id="r_a0bdb7cd63cd2d0a81d2773e7ed585cbb"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bdb7cd63cd2d0a81d2773e7ed585cbb">m_w</a></td></tr>
-<tr class="memdesc:a0bdb7cd63cd2d0a81d2773e7ed585cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> size.  <br /></td></tr>
+<tr class="memdesc:a0bdb7cd63cd2d0a81d2773e7ed585cbb"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> dimensions.  <br /></td></tr>
 <tr class="memitem:ada2109fd27004578f1f93b3e02fb524b" id="r_ada2109fd27004578f1f93b3e02fb524b"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada2109fd27004578f1f93b3e02fb524b">m_h</a></td></tr>
+<tr class="memdesc:ada2109fd27004578f1f93b3e02fb524b"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> height in pixels.  <br /></td></tr>
 <tr class="memitem:a1b47ae70627f9b9c31be58ae5c36ec1c" id="r_a1b47ae70627f9b9c31be58ae5c36ec1c"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1b47ae70627f9b9c31be58ae5c36ec1c">obsolete1</a></td></tr>
-<tr class="memdesc:a1b47ae70627f9b9c31be58ae5c36ec1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obsolete (jump zone size)  <br /></td></tr>
+<tr class="memdesc:a1b47ae70627f9b9c31be58ae5c36ec1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Obsolete jump zone size.  <br /></td></tr>
 <tr class="memitem:a2281df54128ca356bab09bf1ad28364e" id="r_a2281df54128ca356bab09bf1ad28364e"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2281df54128ca356bab09bf1ad28364e">m_mx</a></td></tr>
-<tr class="memdesc:a2281df54128ca356bab09bf1ad28364e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse position.  <br /></td></tr>
+<tr class="memdesc:a2281df54128ca356bab09bf1ad28364e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current mouse position.  <br /></td></tr>
 <tr class="memitem:a8ca91b8d74478e7afd0a534d404515f8" id="r_a8ca91b8d74478e7afd0a534d404515f8"><td class="memItemLeft" align="right" valign="top">int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ca91b8d74478e7afd0a534d404515f8">m_my</a></td></tr>
+<tr class="memdesc:a8ca91b8d74478e7afd0a534d404515f8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mouse Y position.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p><a class="el" href="classScreen.html">Screen</a> information. </p>
-<p>This class contains information about a screen. </p>
+<div class="textblock"><p><a class="el" href="classClient.html" title="Deskflow client.">Client</a> screen information structure. </p>
+<p>Contains comprehensive information about a secondary screen, including dimensions, position, and current mouse location. This data is sent via kMsgDInfo messages.</p>
+<p><b>Usage</b>:</p><ul>
+<li>Sent by client in response to kMsgQInfo</li>
+<li>Sent when screen resolution changes</li>
+<li>Used by server for screen layout calculations</li>
+</ul>
+<p><b>Coordinate System</b>:</p><ul>
+<li>Origin (0,0) is typically top-left corner</li>
+<li>Coordinates can be negative for multi-monitor setups</li>
+<li>All values are in pixels</li>
+</ul>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__protocol__info.html#ga86ae71f251fa22768bbe55892d763ca0" title="Client screen information.">kMsgDInfo</a>, <a class="el" href="group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042" title="Query screen information.">kMsgQInfo</a> </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 </div><a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
 <a id="ada2109fd27004578f1f93b3e02fb524b" name="ada2109fd27004578f1f93b3e02fb524b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ada2109fd27004578f1f93b3e02fb524b">&#9670;&#160;</a></span>m_h</h2>
@@ -127,6 +142,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p><a class="el" href="classScreen.html">Screen</a> height in pixels. </p>
 
 </div>
 </div>
@@ -142,8 +159,14 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Mouse position. </p>
-<p>The current location of the mouse cursor. </p>
+<p>Current mouse position. </p>
+<p>The current location of the mouse cursor on this screen. Coordinates are relative to the screen's coordinate system (m_x, m_y represent the origin).</p>
+<p><b>Usage</b>:</p><ul>
+<li>Updated when mouse moves on this screen</li>
+<li>Used for cursor synchronization between screens</li>
+<li>Helps with smooth transitions during screen switching</li>
+</ul>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 Mouse X position </dd></dl>
 
 </div>
 </div>
@@ -159,6 +182,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Mouse Y position. </p>
+
 </div>
 </div>
 <a id="a0bdb7cd63cd2d0a81d2773e7ed585cbb" name="a0bdb7cd63cd2d0a81d2773e7ed585cbb"></a>
@@ -173,8 +198,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="classScreen.html">Screen</a> size. </p>
-<p>The size of the screen in pixels. </p>
+<p><a class="el" href="classScreen.html">Screen</a> dimensions. </p>
+<p>The size of the screen in pixels. These values represent the usable screen area for mouse movement and window placement.</p>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 <a class="el" href="classScreen.html">Screen</a> width in pixels </dd></dl>
 
 </div>
 </div>
@@ -190,8 +216,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p><a class="el" href="classScreen.html">Screen</a> position. </p>
-<p>The position of the upper-left corner of the screen. This is typically 0,0. </p>
+<p><a class="el" href="classScreen.html">Screen</a> position coordinates. </p>
+<p>The position of the upper-left corner of the screen in the virtual desktop coordinate system. This is typically (0,0) for single-monitor setups, but can be different in multi-monitor configurations.</p>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 Left edge X coordinate </dd></dl>
 
 </div>
 </div>
@@ -207,6 +234,8 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Top edge Y coordinate. </p>
+
 </div>
 </div>
 <a id="a1b47ae70627f9b9c31be58ae5c36ec1c" name="a1b47ae70627f9b9c31be58ae5c36ec1c"></a>
@@ -221,7 +250,9 @@ Public Attributes</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Obsolete (jump zone size) </p>
+<p>Obsolete jump zone size. </p>
+<dl class="deprecated"><dt><b><a class="el" href="deprecated.html#_deprecated000009">Deprecated</a></b></dt><dd>This field is no longer used and should be set to 0 </dd></dl>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 
 </div>
 </div>

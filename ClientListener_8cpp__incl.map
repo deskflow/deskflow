@@ -50,7 +50,7 @@
 <area shape="poly" id="edge15_Node000012_Node000017" title=" " alt="" coords="822,241,748,246,666,256,594,273,567,284,550,298,545,307,544,316,556,333,580,348,611,361,609,366,578,353,552,337,539,317,539,306,546,294,565,280,592,268,665,251,748,241,821,236"/>
 <area shape="rect" id="Node000029" href="$OptionTypes_8h.html" title=" " alt="" coords="612,441,772,466"/>
 <area shape="poly" id="edge21_Node000012_Node000029" title=" " alt="" coords="822,242,675,258,588,275,502,299,425,321,397,338,372,370,367,381,371,391,399,404,455,417,596,438,596,444,454,422,397,409,367,395,362,381,367,367,394,334,423,316,501,293,587,269,674,253,821,237"/>
-<area shape="rect" id="Node000031" href="$ProtocolTypes_8h.html" title=" " alt="" coords="381,369,552,393"/>
+<area shape="rect" id="Node000031" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="381,369,552,393"/>
 <area shape="poly" id="edge22_Node000012_Node000031" title=" " alt="" coords="822,245,666,264,590,280,537,298,506,325,482,357,478,354,502,322,535,294,588,274,665,259,821,239"/>
 <area shape="rect" id="Node000033" href="$NetworkAddress_8h.html" title=" " alt="" coords="918,296,1069,321"/>
 <area shape="poly" id="edge24_Node000012_Node000033" title=" " alt="" coords="898,246,963,285,960,290,895,251"/>

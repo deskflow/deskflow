@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.103</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.104</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -93,10 +93,51 @@ $(function(){initNavTree('index.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_doc_2dev_2mainpage"></a> <b>Deskflow</b> is a free and open source keyboard and mouse sharing app. Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.</p>
-<p>Check out our <a class="el" href="md_doc_2dev_2build.html">Building</a> guide or our general <a class="el" href="md_doc_2dev_2contributing.html">Contributing</a> section</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
-More info</h2>
-<p>For more info, see our <a href="https://github.com/deskflow/deskflow/wiki">Wiki</a>. </p>
+<p>Deskflow acts as a software KVM (without video) that allows you to:</p><ul>
+<li>Share keyboard and mouse input across multiple computers</li>
+<li>Synchronize clipboard content between machines</li>
+<li>Work seamlessly across different operating systems (Windows, macOS, Linux, BSD)</li>
+</ul>
+<p>Deskflow software consists of a <b>server</b> (primary computer) that shares its input devices and <b>clients</b> (secondary computers) that receive and execute the input commands over a TCP network connection.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+Architecture Overview</h3>
+<p>Deskflow is built with a modular, cross-platform architecture:</p>
+<div class="fragment"><div class="line">┌─────────────────┐    Network Protocol    ┌─────────────────┐</div>
+<div class="line">│   Server App    │◄──────────────────────►│  Client App     │</div>
+<div class="line">│                 │     (Port 24800)       │   (Windows)     │</div>
+<div class="line">│ ┌─────────────┐ │                        │ ┌─────────────┐ │</div>
+<div class="line">│ │   Screen    │ │                        │ │   Screen    │ │</div>
+<div class="line">│ │  Platform   │ │                        │ │  Platform   │ │</div>
+<div class="line">│ │   Layer     │ │                        │ │   Layer     │ │</div>
+<div class="line">│ └─────────────┘ │                        │ └─────────────┘ │</div>
+<div class="line">└─────────────────┘                        └─────────────────┘</div>
+<div class="line">┌───────┐ ┌───────┐</div>
+<div class="line">│ Keyb. │ │ Mouse │</div>
+<div class="line">└───────┘ └───────┘</div>
+<div class="line"> </div>
+<div class="line">                                           ┌─────────────────┐</div>
+<div class="line">                                           │  Client App     │</div>
+<div class="line">                                           │    (macOS)      │</div>
+<div class="line">                                           │ ┌─────────────┐ │</div>
+<div class="line">                                           │ │   Screen    │ │</div>
+<div class="line">                                           │ │  Platform   │ │</div>
+<div class="line">                                           │ │   Layer     │ │</div>
+<div class="line">                                           │ └─────────────┘ │</div>
+<div class="line">                                           └─────────────────┘</div>
+<div class="line"> </div>
+<div class="line">                                           ┌─────────────────┐</div>
+<div class="line">                                           │  Client App     │</div>
+<div class="line">                                           │   (Custom)      │</div>
+<div class="line">                                           │ ┌─────────────┐ │</div>
+<div class="line">                                           │ │   Screen    │ │</div>
+<div class="line">                                           │ │  Platform   │ │</div>
+<div class="line">                                           │ │   Layer     │ │</div>
+<div class="line">                                           │ └─────────────┘ │</div>
+<div class="line">                                           └─────────────────┘</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+More info</h3>
+<p>For more info, see our <a href="https://github.com/deskflow/deskflow/wiki">Wiki</a>.</p>
+<p>Check out our <a class="el" href="md_doc_2dev_2build.html">Building guide</a> or our general <a class="el" href="contributing_guide.html">Contributing section</a>. We also have a detailed <a class="el" href="md_doc_2dev_2protocol__reference.html">Protocol Reference</a>. </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

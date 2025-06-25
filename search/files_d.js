@@ -13,8 +13,9 @@ var searchData=
   ['primaryclient_2ecpp_10',['PrimaryClient.cpp',['../PrimaryClient_8cpp.html',1,'']]],
   ['primaryclient_2eh_11',['PrimaryClient.h',['../PrimaryClient_8h.html',1,'']]],
   ['priorityqueue_2eh_12',['PriorityQueue.h',['../PriorityQueue_8h.html',1,'']]],
-  ['protocoltypes_2ecpp_13',['ProtocolTypes.cpp',['../ProtocolTypes_8cpp.html',1,'']]],
-  ['protocoltypes_2eh_14',['ProtocolTypes.h',['../ProtocolTypes_8h.html',1,'']]],
-  ['protocolutil_2ecpp_15',['ProtocolUtil.cpp',['../ProtocolUtil_8cpp.html',1,'']]],
-  ['protocolutil_2eh_16',['ProtocolUtil.h',['../ProtocolUtil_8h.html',1,'']]]
+  ['protocol_5freference_2emd_13',['protocol_reference.md',['../protocol__reference_8md.html',1,'']]],
+  ['protocoltypes_2ecpp_14',['ProtocolTypes.cpp',['../ProtocolTypes_8cpp.html',1,'']]],
+  ['protocoltypes_2eh_15',['ProtocolTypes.h',['../ProtocolTypes_8h.html',1,'']]],
+  ['protocolutil_2ecpp_16',['ProtocolUtil.cpp',['../ProtocolUtil_8cpp.html',1,'']]],
+  ['protocolutil_2eh_17',['ProtocolUtil.h',['../ProtocolUtil_8h.html',1,'']]]
 ];

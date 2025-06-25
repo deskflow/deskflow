@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="1898,5,2052,30"/>
 <area shape="rect" id="Node000002" href="$Client_8h.html" title=" " alt="" coords="698,78,799,103"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1898,25,1467,46,886,81,814,86,814,81,886,75,1467,41,1898,20"/>
-<area shape="rect" id="Node000021" href="$ProtocolTypes_8h.html" title=" " alt="" coords="622,237,793,262"/>
+<area shape="rect" id="Node000021" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="622,237,793,262"/>
 <area shape="poly" id="edge62_Node000001_Node000021" title=" " alt="" coords="1898,24,1517,41,1313,58,1229,68,1165,81,1095,105,1044,132,993,161,924,192,847,217,774,236,773,231,845,211,922,187,990,157,1041,127,1093,100,1164,75,1228,63,1312,52,1517,36,1898,18"/>
 <area shape="rect" id="Node000026" title=" " alt="" coords="91,237,160,262"/>
 <area shape="poly" id="edge92_Node000001_Node000026" title=" " alt="" coords="1898,23,1035,41,561,58,388,69,286,81,184,97,165,104,146,114,128,130,111,152,104,169,104,187,115,223,110,224,99,188,99,168,106,149,124,126,143,110,162,99,183,92,285,75,388,63,561,53,1035,35,1898,17"/>
