@@ -1,6 +1,4 @@
-\page contributing_guide Contributing to Deskflow
-
-# Contributing to Deskflow
+# Contributing to Deskflow {#contributing_guide}
 
 Thanks for your interest in contributing to Deskflow! We welcome all kinds of contributions — bug reports, feature suggestions, documentation improvements, and code.
 

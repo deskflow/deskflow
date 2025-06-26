@@ -1,4 +1,4 @@
-# Protocol Reference
+# Protocol Reference {#protocol_reference}
 
 This document provides a comprehensive reference for the Deskflow network protocol. It is the primary source of information for developers implementing Deskflow clients or extending the protocol.
 

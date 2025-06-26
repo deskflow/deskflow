@@ -20,7 +20,7 @@
  * This file defines the data types, constants, and message structures for the
  * Deskflow network protocol. For a high-level conceptual overview of the protocol,
  * including the distinction between Client/Server and Primary/Secondary roles,
- * please see the **Protocol Reference** document in `doc/dev/protocol_reference.md`.
+ * please see the @ref protocol_reference "Protocol Reference" document.
  */
 
 /**
