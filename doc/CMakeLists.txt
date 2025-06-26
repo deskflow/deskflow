@@ -8,6 +8,7 @@ option(BUILD_DEV_DOCS "Build and install developer documentation" OFF)
 if (DOXYGEN_FOUND)
   # Generic Doxygen options
   set(DOXYGEN_EXTRACT_ALL YES)
+  set(DOXYGEN_EXTRACT_STATIC YES)
   set(DOXYGEN_STRIP_FROM_PATH ${CMAKE_SOURCE_DIR})
   set(DOXYGEN_QUIET YES)
   set(DOXYGEN_PROJECT_NAME ${CMAKE_PROJECT_PROPER_NAME})
