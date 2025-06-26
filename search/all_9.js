@@ -147,6 +147,6 @@ var searchData=
   ['group_144',['Group',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html',1,'deskflow::KeyMap::Keystroke']]],
   ['guardruntimeversion_145',['guardRuntimeVersion',['../classArchMiscWindows.html#a6a0f920c122e781c4a3bcbae40a82a0e',1,'ArchMiscWindows']]],
   ['gui_146',['Gui',['../structSettings_1_1Gui.html',1,'Settings']]],
-  ['guide_147',['Version Migration Guide',['../md_doc_2dev_2protocol__reference.html#autotoc_md28',1,'']]],
-  ['guidelines_148',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md7',1,'']]]
+  ['guide_147',['Version Migration Guide',['../protocol_reference.html#autotoc_md26',1,'']]],
+  ['guidelines_148',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md6',1,'']]]
 ];

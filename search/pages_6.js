@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['entry_0',['Synchronization on Screen Entry',['../md_doc_2dev_2protocol__reference.html#autotoc_md25',1,'']]],
-  ['examples_1',['Implementation Examples',['../md_doc_2dev_2protocol__reference.html#autotoc_md29',1,'']]],
-  ['exchange_20sequence_2',['Complete Message Exchange Sequence',['../md_doc_2dev_2protocol__reference.html#autotoc_md32',1,'']]]
+  ['entry_0',['Synchronization on Screen Entry',['../protocol_reference.html#autotoc_md23',1,'']]],
+  ['examples_1',['Implementation Examples',['../protocol_reference.html#autotoc_md27',1,'']]],
+  ['exchange_20sequence_2',['Complete Message Exchange Sequence',['../protocol_reference.html#autotoc_md30',1,'']]]
 ];
