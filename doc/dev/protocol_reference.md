@@ -228,7 +228,7 @@ When encryption is enabled, the protocol follows this sequence:
 3. Protocol handshake begins only after TLS session is established
 
 - **Implementation Details**:
-    - The client initiates a standard TCP connection, then the @ref SecureSocket::handleTCPConnected method is called, which begins the TLS handshake
+    - The client initiates a standard TCP connection, then the (private) SecureSocket::handleTCPConnected method is called, which begins the TLS handshake
 
 - **Certificate Validation**:
     - Client implementations **must** validate the server's certificate
@@ -260,7 +260,7 @@ A modifier (modifier mask) represents the state of modifier keys (like Shift, Co
 - Upon receiving a kMsgCKeepAlive message, the client must immediately send a kMsgCKeepAlive message back
 - The client maintains a timeout that is reset each time any message is received
 - If no message is received for 9.0 seconds (3 × @ref kKeepAliveRate), client must disconnect
-- This is handled by the @ref ServerProxy::handleKeepAliveAlarm method
+- This is handled by the  (private) ServerProxy::handleKeepAliveAlarm method
 
 <a id="constraint-screen-entry-sync"></a>
 ### Synchronization on Screen Entry
