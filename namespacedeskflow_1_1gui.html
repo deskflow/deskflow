@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.105</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.106</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,10 +137,6 @@ Functions</h2></td></tr>
 <tr class="memdesc:aafd8747004a0dc462453e60e4602a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects dark mode in a universal manner (all Qt versions). Until better platform support is added, it's more reliable to use the old way (compare text and window lightness), because the newer versions in Qt 6.5+ are not always correct and some return <span class="tt">UnknownScheme</span>. <a href="https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5">https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5</a>.  <br /></td></tr>
 <tr class="memitem:a6c3353d5cbfbd26b2acd734e71d61b12" id="r_a6c3353d5cbfbd26b2acd734e71d61b12"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a> ()</td></tr>
 <tr class="memdesc:a6c3353d5cbfbd26b2acd734e71d61b12"><td class="mdescLeft">&#160;</td><td class="mdescRight">get a string for the iconMode  <br /></td></tr>
-<tr class="memitem:a16e33430308ec7d6129ab689eaa0a05b" id="r_a16e33430308ec7d6129ab689eaa0a05b"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16e33430308ec7d6129ab689eaa0a05b">checkSubDir</a> (const QString &amp;path)</td></tr>
-<tr class="memdesc:a16e33430308ec7d6129ab689eaa0a05b"><td class="mdescLeft">&#160;</td><td class="mdescRight">checkSubDir checks for subdirs in a dir  <br /></td></tr>
-<tr class="memitem:a4ce58eb342c1918591b330b9a32cc9d2" id="r_a4ce58eb342c1918591b330b9a32cc9d2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ce58eb342c1918591b330b9a32cc9d2">setIconFallbackPaths</a> ()</td></tr>
-<tr class="memdesc:a4ce58eb342c1918591b330b9a32cc9d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">setIconFallbackPaths Set the icon fallback path to our light or dark theme  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -190,40 +186,6 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="a16e33430308ec7d6129ab689eaa0a05b" name="a16e33430308ec7d6129ab689eaa0a05b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a16e33430308ec7d6129ab689eaa0a05b">&#9670;&#160;</a></span>checkSubDir()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">QStringList deskflow::gui::checkSubDir </td>
-          <td>(</td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>checkSubDir checks for subdirs in a dir </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">path</td><td>The path to check for subdirs </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>list of subdirs </dd></dl>
-
-</div>
-</div>
 <a id="ab4c997166f1edb383c9a46fb94672d12" name="ab4c997166f1edb383c9a46fb94672d12"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab4c997166f1edb383c9a46fb94672d12">&#9670;&#160;</a></span>dotenv()</h2>
 
@@ -452,33 +414,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a4ce58eb342c1918591b330b9a32cc9d2" name="a4ce58eb342c1918591b330b9a32cc9d2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4ce58eb342c1918591b330b9a32cc9d2">&#9670;&#160;</a></span>setIconFallbackPaths()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void deskflow::gui::setIconFallbackPaths </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>setIconFallbackPaths Set the icon fallback path to our light or dark theme </p>
 
 </div>
 </div>

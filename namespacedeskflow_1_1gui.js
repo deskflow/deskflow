@@ -20,7 +20,6 @@ var namespacedeskflow_1_1gui =
       [ "kSynergy", "namespacedeskflow_1_1gui.html#af3938504d72c59323f246b74114e968ba104f7ca9a20a599f1cc7591b1a3e0a4a", null ],
       [ "kBarrier", "namespacedeskflow_1_1gui.html#af3938504d72c59323f246b74114e968baffa5976cb7170d234d6b69921bf0f085", null ]
     ] ],
-    [ "checkSubDir", "namespacedeskflow_1_1gui.html#a16e33430308ec7d6129ab689eaa0a05b", null ],
     [ "dotenv", "namespacedeskflow_1_1gui.html#ab4c997166f1edb383c9a46fb94672d12", null ],
     [ "getPair", "namespacedeskflow_1_1gui.html#a4c76fb6206a264805e66241483d320a1", null ],
     [ "iconMode", "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12", null ],
@@ -31,7 +30,6 @@ var namespacedeskflow_1_1gui =
     [ "printLine", "namespacedeskflow_1_1gui.html#a40f5198f8a7052ac571200e651efbcad", null ],
     [ "processModeToString", "namespacedeskflow_1_1gui.html#a26acd26a06180a0a2e94803c29b373aa", null ],
     [ "processStateToString", "namespacedeskflow_1_1gui.html#a21a204364c5d5b80acdb091d3932ea65", null ],
-    [ "setIconFallbackPaths", "namespacedeskflow_1_1gui.html#a4ce58eb342c1918591b330b9a32cc9d2", null ],
     [ "stripQuotes", "namespacedeskflow_1_1gui.html#af092c9dc4508e1e94f2005d4de88b930", null ],
     [ "wrapIpv6", "namespacedeskflow_1_1gui.html#a7a0d85d8ad8f6adc5acb2418f6b01adf", null ],
     [ "kColorError", "namespacedeskflow_1_1gui.html#a898a7c122870d1fac5a4c991baa7ed4a", null ],
