@@ -3,6 +3,7 @@
 
 set(DOXYGEN_USE_MDFILE_AS_MAINPAGE mainpage.md)
 set(DOXYGEN_EXCLUDE_PATTERNS "*unittests/*")
+set(DOXYGEN_DOT_GRAPH_MAX_NODES 100)
 
 # Files used to make our documents
 doxygen_add_docs(dev-docs
