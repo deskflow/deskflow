@@ -463,44 +463,44 @@ For platform-specific implementation details, refer to:
 
 ### Basic Client Implementation
 
-- [ ] **Connection Management**
-  - [ ] TCP connection to server port 24800
-  - [ ] Protocol handshake (Hello/HelloBack)
-  - [ ] Version negotiation
-  - [ ] Keep-alive handling
+- **Connection Management**
+  - TCP connection to server port 24800
+  - Protocol handshake (Hello/HelloBack)
+  - Version negotiation
+  - Keep-alive handling
 
-- [ ] **Message Processing**
-  - [ ] Message parsing and validation
-  - [ ] Command message handling (Enter/Leave)
-  - [ ] Input event processing (keyboard/mouse)
-  - [ ] Error handling and recovery
+- **Message Processing**
+  - Message parsing and validation
+  - Command message handling (Enter/Leave)
+  - Input event processing (keyboard/mouse)
+  - Error handling and recovery
 
-- [ ] **Screen Management**
-  - [ ] Screen information reporting (DINF)
-  - [ ] Resolution change detection
-  - [ ] Mouse cursor positioning
+- **Screen Management**
+  - Screen information reporting (DINF)
+  - Resolution change detection
+  - Mouse cursor positioning
 
-- [ ] **Input Synthesis**
-  - [ ] Keyboard event injection
-  - [ ] Mouse event injection
-  - [ ] Modifier key synchronization
+- **Input Synthesis**
+  - Keyboard event injection
+  - Mouse event injection
+  - Modifier key synchronization
 
 ### Advanced Features
 
-- [ ] **Clipboard Synchronization**
-  - [ ] Clipboard grab notifications
-  - [ ] Data transfer (@ref kMsgDClipboard - text, images, HTML)
-  - [ ] Streaming for large data (v1.6+)
+- **Clipboard Synchronization**
+  - Clipboard grab notifications
+  - Data transfer (@ref kMsgDClipboard - text, images, HTML)
+  - Streaming for large data (v1.6+)
 
-- [ ] **File Transfer** (v1.5+)
-  - [ ] Drag-and-drop initiation
-  - [ ] Chunked file transfer
-  - [ ] Progress tracking
+- **File Transfer** (v1.5+)
+  - Drag-and-drop initiation
+  - Chunked file transfer
+  - Progress tracking
 
-- [ ] **Security Features**
-  - [ ] TLS/SSL encryption (v1.4+)
-  - [ ] Secure input notifications (v1.7+)
-  - [ ] Input validation and limits
+- **Security Features**
+  - TLS/SSL encryption (v1.4+)
+  - Secure input notifications (v1.7+)
+  - Input validation and limits
 
 ## Reference Implementation
 
