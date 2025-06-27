@@ -1,4 +1,4 @@
 var Unicode_8h =
 [
-    [ "Unicode", "classUnicode.html", null ]
+    [ "Unicode", "classUnicode.html", "classUnicode" ]
 ];

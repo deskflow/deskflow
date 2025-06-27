@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -168,7 +168,7 @@ accessors</h2></td></tr>
 <tr class="memdesc:a292179420d594851c9f1f41d4c366d33"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a thread reference.  <br /></td></tr>
 <tr class="memitem:a503f5e77640634e5bcd66093a3cdbc03" id="r_a503f5e77640634e5bcd66093a3cdbc03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a503f5e77640634e5bcd66093a3cdbc03">cancelThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a>) override</td></tr>
 <tr class="memdesc:a503f5e77640634e5bcd66093a3cdbc03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force a thread to exit.  <br /></td></tr>
-<tr class="memitem:a33e6fe3a382f7be01175ebac590467e0" id="r_a33e6fe3a382f7be01175ebac590467e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33e6fe3a382f7be01175ebac590467e0">setPriorityOfThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a>, int n) override</td></tr>
+<tr class="memitem:a33e6fe3a382f7be01175ebac590467e0" id="r_a33e6fe3a382f7be01175ebac590467e0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33e6fe3a382f7be01175ebac590467e0">setPriorityOfThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> n) override</td></tr>
 <tr class="memdesc:a33e6fe3a382f7be01175ebac590467e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change thread priority.  <br /></td></tr>
 <tr class="memitem:aa6f55cedc4657b1d4f08d06f5509435e" id="r_aa6f55cedc4657b1d4f08d06f5509435e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa6f55cedc4657b1d4f08d06f5509435e">testCancelThread</a> () override</td></tr>
 <tr class="memdesc:aa6f55cedc4657b1d4f08d06f5509435e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancellation point.  <br /></td></tr>
@@ -203,7 +203,7 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:af1fb29fd2be90ef6c426b64ff2ce1487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of signals.  <a href="classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487">More...</a><br /></td></tr>
 <tr class="memitem:a72d3a0de72be941d9959944c8515f2b0 inherit pub_types_classIArchMultithread" id="r_a72d3a0de72be941d9959944c8515f2b0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchMultithread.html#a72d3a0de72be941d9959944c8515f2b0">ThreadFunc</a> = void *(*)(void *)</td></tr>
 <tr class="memdesc:a72d3a0de72be941d9959944c8515f2b0 inherit pub_types_classIArchMultithread"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of thread entry point.  <br /></td></tr>
-<tr class="memitem:a7a5038908a309c784bc9a39b85adf803 inherit pub_types_classIArchMultithread" id="r_a7a5038908a309c784bc9a39b85adf803"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = unsigned int</td></tr>
+<tr class="memitem:a7a5038908a309c784bc9a39b85adf803 inherit pub_types_classIArchMultithread" id="r_a7a5038908a309c784bc9a39b85adf803"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td></tr>
 <tr class="memdesc:a7a5038908a309c784bc9a39b85adf803 inherit pub_types_classIArchMultithread"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of thread identifier.  <br /></td></tr>
 <tr class="memitem:a48295f51e6f45ac5c02b0deadc2a6dac inherit pub_types_classIArchMultithread" id="r_a48295f51e6f45ac5c02b0deadc2a6dac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchMultithread.html#a48295f51e6f45ac5c02b0deadc2a6dac">SignalFunc</a> = void (*)(<a class="el" href="classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487">ESignal</a>, void *userData)</td></tr>
 <tr class="memdesc:a48295f51e6f45ac5c02b0deadc2a6dac inherit pub_types_classIArchMultithread"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of signal handler function.  <br /></td></tr>
@@ -916,7 +916,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

@@ -7,6 +7,7 @@ var classdeskflow_1_1ArgsBase =
     ] ],
     [ "ArgsBase", "classdeskflow_1_1ArgsBase.html#af17bc7cc9df8fd15e11e72b5d35c5e26", null ],
     [ "~ArgsBase", "classdeskflow_1_1ArgsBase.html#add0a667fab9435c0ac8c39c840e69358", null ],
+    [ "destroy", "classdeskflow_1_1ArgsBase.html#a04a05b26e128de2e7a6d25f3dfacf90b", null ],
     [ "m_classType", "classdeskflow_1_1ArgsBase.html#a9337bda495f09b43ba3e5ae048461877", null ],
     [ "m_daemon", "classdeskflow_1_1ArgsBase.html#aa3b9777e21b2862d1467f61a48d2b30e", null ],
     [ "m_deskflowAddress", "classdeskflow_1_1ArgsBase.html#a9c0adfe6a91817c033c8e3e199723778", null ],

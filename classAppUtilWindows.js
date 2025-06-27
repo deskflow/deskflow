@@ -8,6 +8,7 @@ var classAppUtilWindows =
     [ "getCurrentKeyboardLayout", "classAppUtilWindows.html#a578d2325aaa58f333206f31ebb80abac", null ],
     [ "getCurrentLanguageCode", "classAppUtilWindows.html#a0bd450cbb1f31aaf6a247fd867fdbcb5", null ],
     [ "getKeyboardLayoutList", "classAppUtilWindows.html#a9ed9ee4a7a868426c4134da6495cf96f", null ],
+    [ "instance", "classAppUtilWindows.html#a0ed84a88f3bacd3535555d7fccb9825e", null ],
     [ "run", "classAppUtilWindows.html#a3ca00ad1bca3f96ecba44b1bc00b25bc", null ],
     [ "startNode", "classAppUtilWindows.html#a7232855f44e385dd28a9440598aa667f", null ]
 ];

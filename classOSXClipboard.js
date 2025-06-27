@@ -8,6 +8,7 @@ var classOSXClipboard =
     [ "get", "classOSXClipboard.html#a9fb7b591e8431335fd89cc58d84be726", null ],
     [ "getTime", "classOSXClipboard.html#a0826a6baa01ebbd9205e59aaa944ad31", null ],
     [ "has", "classOSXClipboard.html#acce24dd81cd73f31f27383dfb2c6b205", null ],
+    [ "isOwnedByDeskflow", "classOSXClipboard.html#ace77204585d7f138c202fa5b8ecf1235", null ],
     [ "open", "classOSXClipboard.html#a861d53feb2830eea809370a8245e74d1", null ],
     [ "synchronize", "classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c", null ]
 ];

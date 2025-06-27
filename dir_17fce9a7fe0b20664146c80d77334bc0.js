@@ -25,7 +25,7 @@ var dir_17fce9a7fe0b20664146c80d77334bc0 =
     [ "SslLogger.h", "SslLogger_8h.html", "SslLogger_8h" ],
     [ "TCPListenSocket.cpp", "TCPListenSocket_8cpp.html", null ],
     [ "TCPListenSocket.h", "TCPListenSocket_8h.html", "TCPListenSocket_8h" ],
-    [ "TCPSocket.cpp", "TCPSocket_8cpp.html", null ],
+    [ "TCPSocket.cpp", "TCPSocket_8cpp.html", "TCPSocket_8cpp" ],
     [ "TCPSocket.h", "TCPSocket_8h.html", "TCPSocket_8h" ],
     [ "TCPSocketFactory.cpp", "TCPSocketFactory_8cpp.html", null ],
     [ "TCPSocketFactory.h", "TCPSocketFactory_8h.html", "TCPSocketFactory_8h" ],

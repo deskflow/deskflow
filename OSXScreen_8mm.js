@@ -6,5 +6,7 @@ var OSXScreen_8mm =
     [ "getProcessName", "OSXScreen_8mm.html#a197d03862e70575dbbe6beb53bfec725", null ],
     [ "getSecureInputEventPID", "OSXScreen_8mm.html#aff07fb5fda4f2d6b23716a311b2513ca", null ],
     [ "logCursorVisibility", "OSXScreen_8mm.html#a38cb7af89c29a152f0a820c8ce7217bb", null ],
-    [ "setZeroSuppressionInterval", "OSXScreen_8mm.html#ab59a1e754b858874c471a6a5e1955c39", null ]
+    [ "setZeroSuppressionInterval", "OSXScreen_8mm.html#ab59a1e754b858874c471a6a5e1955c39", null ],
+    [ "kCarbonLoopWaitTimeout", "OSXScreen_8mm.html#a0befc5d91cae5936cb81bacd0c5cb06a", null ],
+    [ "magic_section", "OSXScreen_8mm.html#a1a03b970897173cd5ad998e9cb2eaaf3", null ]
 ];

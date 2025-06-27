@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -113,17 +113,17 @@ Public Types</h2></td></tr>
 , <a class="el" href="#a0338c2fb1a7194e19af8961ef0db4e24aee344497aaeab143ada6f7ccb783d407">kSYSTEM</a> = 0x0001
 , <a class="el" href="#a0338c2fb1a7194e19af8961ef0db4e24a4caac1cd8b05302637732a78eb73315c">kDISPLAY</a> = 0x0002
  }</td></tr>
-<tr class="memitem:a7be4c53b9504a222ea81c1d2e37d00c5" id="r_a7be4c53b9504a222ea81c1d2e37d00c5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a> = std::function&lt;int(void)&gt;</td></tr>
+<tr class="memitem:a7be4c53b9504a222ea81c1d2e37d00c5" id="r_a7be4c53b9504a222ea81c1d2e37d00c5"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(void)&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1879b7be8bafc875ab8f754395c1a876" id="r_a1879b7be8bafc875ab8f754395c1a876"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1879b7be8bafc875ab8f754395c1a876">init</a> ()</td></tr>
 <tr class="memdesc:a1879b7be8bafc875ab8f754395c1a876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize.  <br /></td></tr>
-<tr class="memitem:af1c7cebddb8f59ed0b6b1fbf05476350" id="r_af1c7cebddb8f59ed0b6b1fbf05476350"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1c7cebddb8f59ed0b6b1fbf05476350">runDaemon</a> (<a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a> runFunc)</td></tr>
+<tr class="memitem:af1c7cebddb8f59ed0b6b1fbf05476350" id="r_af1c7cebddb8f59ed0b6b1fbf05476350"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1c7cebddb8f59ed0b6b1fbf05476350">runDaemon</a> (<a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a> runFunc)</td></tr>
 <tr class="memdesc:af1c7cebddb8f59ed0b6b1fbf05476350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the daemon.  <br /></td></tr>
 <tr class="memitem:a6cde99dc95dcc64c65c317c53a551596" id="r_a6cde99dc95dcc64c65c317c53a551596"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cde99dc95dcc64c65c317c53a551596">daemonRunning</a> (bool running)</td></tr>
 <tr class="memdesc:a6cde99dc95dcc64c65c317c53a551596"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicate daemon is in main loop.  <br /></td></tr>
-<tr class="memitem:a360732a6f21a223a0595c1a75354dbd0" id="r_a360732a6f21a223a0595c1a75354dbd0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360732a6f21a223a0595c1a75354dbd0">daemonFailed</a> (int result)</td></tr>
+<tr class="memitem:a360732a6f21a223a0595c1a75354dbd0" id="r_a360732a6f21a223a0595c1a75354dbd0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360732a6f21a223a0595c1a75354dbd0">daemonFailed</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> result)</td></tr>
 <tr class="memdesc:a360732a6f21a223a0595c1a75354dbd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicate failure of running daemon.  <br /></td></tr>
 <tr class="memitem:a6b5a02c76621c4201286f457bba3999c" id="r_a6b5a02c76621c4201286f457bba3999c"><td class="memItemLeft" align="right" valign="top">static UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b5a02c76621c4201286f457bba3999c">getDaemonQuitMessage</a> ()</td></tr>
 <tr class="memdesc:a6b5a02c76621c4201286f457bba3999c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get daemon quit message.  <br /></td></tr>
@@ -180,7 +180,7 @@ Static Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">ArchMiscWindows::RunFunc</a> = std::function&lt;int(void)&gt;</td>
+          <td class="memname">using <a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">ArchMiscWindows::RunFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(void)&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -357,7 +357,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void ArchMiscWindows::daemonFailed </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>result</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>result</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -784,7 +784,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int ArchMiscWindows::runDaemon </td>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchMiscWindows::runDaemon </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a></td>          <td class="paramname"><span class="paramname"><em>runFunc</em></span></td><td>)</td>
           <td></td>

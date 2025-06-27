@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -131,7 +131,7 @@ Public Types</h2></td></tr>
 <tr class="memitem:a7873d9f17423279aa15c8cd9e419beef" id="r_a7873d9f17423279aa15c8cd9e419beef"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="#a7873d9f17423279aa15c8cd9e419beefabf46e35a4023038c8e253a73f09e75c7">kGroupPoll</a> = -1
 , <a class="el" href="#a7873d9f17423279aa15c8cd9e419beefa870df79c3f957b0164197a0a1aaed3aa">kGroupPollAndSet</a> = -2
  }</td></tr>
-<tr class="memitem:a33962df2ce6bffdda23f9bcee8236c00" id="r_a33962df2ce6bffdda23f9bcee8236c00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33962df2ce6bffdda23f9bcee8236c00">KeycodeList</a> = std::vector&lt;int&gt;</td></tr>
+<tr class="memitem:a33962df2ce6bffdda23f9bcee8236c00" id="r_a33962df2ce6bffdda23f9bcee8236c00"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33962df2ce6bffdda23f9bcee8236c00">KeycodeList</a> = std::vector&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&gt;</td></tr>
 <tr class="inherit_header pub_types_classIKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_classIKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="classIKeyState.html">IKeyState</a></td></tr>
 <tr class="memitem:a90148e15989486fa812c98d80d738391 inherit pub_types_classIKeyState" id="r_a90148e15989486fa812c98d80d738391"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classIKeyState.html#a90148e15989486fa812c98d80d738391aa62dbcdf5d5cdd6bf9ab520ddb7c0987">kNumButtons</a> = 0x200
  }</td></tr>
@@ -185,9 +185,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
 accessors</h2></td></tr>
-<tr class="memitem:a2029127015fa45d2263fc50b61a0fee6" id="r_a2029127015fa45d2263fc50b61a0fee6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2029127015fa45d2263fc50b61a0fee6">mapModifiersFromX</a> (unsigned int state) const</td></tr>
+<tr class="memitem:a2029127015fa45d2263fc50b61a0fee6" id="r_a2029127015fa45d2263fc50b61a0fee6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2029127015fa45d2263fc50b61a0fee6">mapModifiersFromX</a> (unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> state) const</td></tr>
 <tr class="memdesc:a2029127015fa45d2263fc50b61a0fee6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert X modifier mask to deskflow mask.  <br /></td></tr>
-<tr class="memitem:a59a073f61b08c63f1b1bee5381a67e0e" id="r_a59a073f61b08c63f1b1bee5381a67e0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59a073f61b08c63f1b1bee5381a67e0e">mapModifiersToX</a> (<a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a>, unsigned int &amp;) const</td></tr>
+<tr class="memitem:a59a073f61b08c63f1b1bee5381a67e0e" id="r_a59a073f61b08c63f1b1bee5381a67e0e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59a073f61b08c63f1b1bee5381a67e0e">mapModifiersToX</a> (<a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a>, unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> &amp;) const</td></tr>
 <tr class="memdesc:a59a073f61b08c63f1b1bee5381a67e0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert deskflow modifier mask to X mask.  <br /></td></tr>
 <tr class="memitem:ac4af84616c7341dd0fda20c6b057813b" id="r_ac4af84616c7341dd0fda20c6b057813b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4af84616c7341dd0fda20c6b057813b">mapKeyToKeycodes</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="el" href="KeySequence_8cpp.html#a35af0be900467fedbb610bd6ea65ed78">key</a>, <a class="el" href="#a33962df2ce6bffdda23f9bcee8236c00">KeycodeList</a> &amp;keycodes) const</td></tr>
 <tr class="memdesc:ac4af84616c7341dd0fda20c6b057813b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert deskflow key to all corresponding X keycodes.  <br /></td></tr>
@@ -228,7 +228,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a33962df2ce6bffdda23f9bcee8236c00">XWindowsKeyState::KeycodeList</a> = std::vector&lt;int&gt;</td>
+          <td class="memname">using <a class="el" href="#a33962df2ce6bffdda23f9bcee8236c00">XWindowsKeyState::KeycodeList</a> = std::vector&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -461,7 +461,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> XWindowsKeyState::mapModifiersFromX </td>
           <td>(</td>
-          <td class="paramtype">unsigned int</td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
+          <td class="paramtype">unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>state</em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -486,7 +486,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int &amp;</td>          <td class="paramname"><span class="paramname"><em>modifiers</em></span>&#160;) const</td>
+          <td class="paramtype">unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>modifiers</em></span>&#160;) const</td>
         </tr>
       </table>
 </div><div class="memdoc">

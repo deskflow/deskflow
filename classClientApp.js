@@ -18,6 +18,7 @@ var classClientApp =
     [ "handleClientRestart", "classClientApp.html#ae4a765893f132f28e07849ffcc14979b", null ],
     [ "handleScreenError", "classClientApp.html#a401a5a06cd9fc12c9d3d86c0da974ae6", null ],
     [ "help", "classClientApp.html#a9993ad03a708094a17d4af4b28416643", null ],
+    [ "instance", "classClientApp.html#a6e4af3a42cc9ece5c368af5b23c3ffe8", null ],
     [ "loadConfig", "classClientApp.html#aee6830f88444842bc81db990ab9cf8e7", null ],
     [ "loadConfig", "classClientApp.html#a21d8f196a71baae6bf898bacffd16974", null ],
     [ "mainLoop", "classClientApp.html#aa706a22a82a41d89cb4a3d8526850e6a", null ],

@@ -5,6 +5,7 @@ var classSocketMultiplexer =
     [ "SocketMultiplexer", "classSocketMultiplexer.html#a2022b9ba87446e302966ec53ba8be534", null ],
     [ "~SocketMultiplexer", "classSocketMultiplexer.html#a0633cfe385a11a7f36451f6dd95d2fc4", null ],
     [ "addSocket", "classSocketMultiplexer.html#a00220aae41a4db7ff779303b27bb27a3", null ],
+    [ "getInstance", "classSocketMultiplexer.html#a4a79e71e8032a021cd85c445b29e3086", null ],
     [ "operator=", "classSocketMultiplexer.html#a64624ae9174818950ea349e04d8bab0d", null ],
     [ "operator=", "classSocketMultiplexer.html#a5b1233614f0495eb81dab3ff4d60be20", null ],
     [ "removeSocket", "classSocketMultiplexer.html#afdf7ea27e6662f0bec410cc0c144167e", null ]

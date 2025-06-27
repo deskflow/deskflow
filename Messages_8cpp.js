@@ -1,6 +1,6 @@
 var Messages_8cpp =
 [
-    [ "deskflow::gui::messages::Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", null ],
+    [ "deskflow::gui::messages::Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", "structdeskflow_1_1gui_1_1messages_1_1Errors" ],
     [ "deskflow::gui::messages::fileLine", "namespacedeskflow_1_1gui_1_1messages.html#ae18075df8499e361db2d41463fd3f5cc", null ],
     [ "deskflow::gui::messages::messageHandler", "namespacedeskflow_1_1gui_1_1messages.html#a277abda2c3390810def8d1d2e4bff73b", null ],
     [ "deskflow::gui::messages::raiseCriticalDialog", "namespacedeskflow_1_1gui_1_1messages.html#aeaa785620dafb9bb8fd52f785f3c1016", null ],

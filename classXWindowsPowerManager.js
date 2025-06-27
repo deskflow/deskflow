@@ -9,5 +9,6 @@ var classXWindowsPowerManager =
     [ "XWindowsPowerManager", "classXWindowsPowerManager.html#a2c248c567766b67b95580e018f36d670", null ],
     [ "disableSleep", "classXWindowsPowerManager.html#afa3c456401a7bda9b66013f008a8c770", null ],
     [ "enableSleep", "classXWindowsPowerManager.html#a1622f8ccc1163330df975dbe0aebab81", null ],
+    [ "inhibitScreenCall", "classXWindowsPowerManager.html#a1390c7d0e0a179af0d358bd3a816dbca", null ],
     [ "operator=", "classXWindowsPowerManager.html#a7bf61e92042d7c6799b94b1f3e419225", null ]
 ];

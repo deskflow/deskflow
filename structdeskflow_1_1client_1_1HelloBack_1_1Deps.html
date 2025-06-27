@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -98,11 +98,11 @@ $(function(){initNavTree('structdeskflow_1_1client_1_1HelloBack_1_1Deps.html',''
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ac710209564b654cabc73151f799d80fe" id="r_ac710209564b654cabc73151f799d80fe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac710209564b654cabc73151f799d80fe">Deps</a> ()=default</td></tr>
-<tr class="memitem:aaabb2a7780b6e5ceecf70c5772a5fafa" id="r_aaabb2a7780b6e5ceecf70c5772a5fafa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaabb2a7780b6e5ceecf70c5772a5fafa">Deps</a> (std::function&lt; void()&gt; <a class="el" href="#a28afb3dccfc9ea4bf5d26a8d01fd1703">invalidHello</a>, std::function&lt; void(int, int)&gt; <a class="el" href="#a0abd446ad8d12ee80b156801fcf9f0b8">incompatible</a>)</td></tr>
+<tr class="memitem:aaabb2a7780b6e5ceecf70c5772a5fafa" id="r_aaabb2a7780b6e5ceecf70c5772a5fafa"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaabb2a7780b6e5ceecf70c5772a5fafa">Deps</a> (std::function&lt; void()&gt; <a class="el" href="#a28afb3dccfc9ea4bf5d26a8d01fd1703">invalidHello</a>, std::function&lt; void(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>)&gt; <a class="el" href="#a0abd446ad8d12ee80b156801fcf9f0b8">incompatible</a>)</td></tr>
 <tr class="memitem:a2a8ef245067686204fe75a9ea95d9295" id="r_a2a8ef245067686204fe75a9ea95d9295"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2a8ef245067686204fe75a9ea95d9295">~Deps</a> ()=default</td></tr>
 <tr class="memitem:a28afb3dccfc9ea4bf5d26a8d01fd1703" id="r_a28afb3dccfc9ea4bf5d26a8d01fd1703"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a28afb3dccfc9ea4bf5d26a8d01fd1703">invalidHello</a> ()</td></tr>
 <tr class="memdesc:a28afb3dccfc9ea4bf5d26a8d01fd1703"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call when invalid hello message received from server.  <br /></td></tr>
-<tr class="memitem:a0abd446ad8d12ee80b156801fcf9f0b8" id="r_a0abd446ad8d12ee80b156801fcf9f0b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0abd446ad8d12ee80b156801fcf9f0b8">incompatible</a> (int major, int minor)</td></tr>
+<tr class="memitem:a0abd446ad8d12ee80b156801fcf9f0b8" id="r_a0abd446ad8d12ee80b156801fcf9f0b8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0abd446ad8d12ee80b156801fcf9f0b8">incompatible</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> major, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> minor)</td></tr>
 <tr class="memdesc:a0abd446ad8d12ee80b156801fcf9f0b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call when the client is incompatible with the server.  <br /></td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -148,7 +148,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::function&lt; void(int, int)&gt;</td>          <td class="paramname"><span class="paramname"><em>incompatible</em></span>&#160;)</td>
+          <td class="paramtype">std::function&lt; void(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>)&gt;</td>          <td class="paramname"><span class="paramname"><em>incompatible</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -198,12 +198,12 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void deskflow::client::HelloBack::Deps::incompatible </td>
           <td>(</td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>major</em></span>, </td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>major</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>minor</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>minor</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

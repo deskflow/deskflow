@@ -1,6 +1,6 @@
 var namespacedeskflow_1_1gui_1_1messages =
 [
-    [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", null ],
+    [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", "structdeskflow_1_1gui_1_1messages_1_1Errors" ],
     [ "ClientError", "namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93", [
       [ "AlreadyConnected", "namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34", null ],
       [ "HostnameError", "namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a4799233e783a39e6b720d33fb45a33d7", null ],

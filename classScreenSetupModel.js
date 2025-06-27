@@ -9,6 +9,7 @@ var classScreenSetupModel =
     [ "flags", "classScreenSetupModel.html#a09ac2635cbce07775618b69c5f9b7836", null ],
     [ "isFull", "classScreenSetupModel.html#ac0f529cae821155e8a40d252f498a8b3", null ],
     [ "mimeData", "classScreenSetupModel.html#aa19979a38cbba64efd03386c06b7bb12", null ],
+    [ "mimeType", "classScreenSetupModel.html#ac3716420418f8a20317a2de843e98d48", null ],
     [ "mimeTypes", "classScreenSetupModel.html#a0fb7687eda91d24dd617445bd0ac8be7", null ],
     [ "rowCount", "classScreenSetupModel.html#ae00e9bc1a1e3bfe09b11e3176af84d29", null ],
     [ "rowCount", "classScreenSetupModel.html#a726bf08b08735264dc0067459c4ee87f", null ],

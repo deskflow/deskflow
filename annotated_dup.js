@@ -17,7 +17,7 @@ var annotated_dup =
           [ "DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient" ]
         ] ],
         [ "messages", "namespacedeskflow_1_1gui_1_1messages.html", [
-          [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", null ]
+          [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", "structdeskflow_1_1gui_1_1messages_1_1Errors" ]
         ] ],
         [ "proxy", "namespacedeskflow_1_1gui_1_1proxy.html", [
           [ "QProcessProxy", "classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html", "classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy" ]
@@ -222,7 +222,7 @@ var annotated_dup =
     [ "PlatformScreen", "classPlatformScreen.html", "classPlatformScreen" ],
     [ "PrimaryClient", "classPrimaryClient.html", "classPrimaryClient" ],
     [ "PriorityQueue", "classPriorityQueue.html", "classPriorityQueue" ],
-    [ "ProtocolUtil", "classProtocolUtil.html", null ],
+    [ "ProtocolUtil", "classProtocolUtil.html", "classProtocolUtil" ],
     [ "QSettingsProxy", "classQSettingsProxy.html", "classQSettingsProxy" ],
     [ "Screen", "classScreen.html", "classScreen" ],
     [ "ScreenConfig", "classScreenConfig.html", "classScreenConfig" ],
@@ -245,11 +245,11 @@ var annotated_dup =
     [ "SimpleEventQueueBuffer", "classSimpleEventQueueBuffer.html", "classSimpleEventQueueBuffer" ],
     [ "SocketMultiplexer", "classSocketMultiplexer.html", "classSocketMultiplexer" ],
     [ "Ssl", "structSsl.html", "structSsl" ],
-    [ "SslLogger", "classSslLogger.html", null ],
+    [ "SslLogger", "classSslLogger.html", "classSslLogger" ],
     [ "StopLogOutputter", "classStopLogOutputter.html", "classStopLogOutputter" ],
     [ "Stopwatch", "classStopwatch.html", "classStopwatch" ],
     [ "StreamBuffer", "classStreamBuffer.html", "classStreamBuffer" ],
-    [ "StreamChunker", "classStreamChunker.html", null ],
+    [ "StreamChunker", "classStreamChunker.html", "classStreamChunker" ],
     [ "StreamFilter", "classStreamFilter.html", "classStreamFilter" ],
     [ "SystemLogger", "classSystemLogger.html", "classSystemLogger" ],
     [ "SystemLogOutputter", "classSystemLogOutputter.html", "classSystemLogOutputter" ],
@@ -261,7 +261,7 @@ var annotated_dup =
     [ "TMethodJob", "classTMethodJob.html", "classTMethodJob" ],
     [ "TrashScreenWidget", "classTrashScreenWidget.html", "classTrashScreenWidget" ],
     [ "TSocketMultiplexerMethodJob", "classTSocketMultiplexerMethodJob.html", "classTSocketMultiplexerMethodJob" ],
-    [ "Unicode", "classUnicode.html", null ],
+    [ "Unicode", "classUnicode.html", "classUnicode" ],
     [ "VersionChecker", "classVersionChecker.html", "classVersionChecker" ],
     [ "Win32Modifiers", "structWin32Modifiers.html", "structWin32Modifiers" ],
     [ "XArchDaemon", "classXArchDaemon.html", null ],

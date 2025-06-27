@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,7 +136,7 @@ Public Types</h2></td></tr>
 <tr class="memdesc:af1fb29fd2be90ef6c426b64ff2ce1487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Types of signals.  <a href="#af1fb29fd2be90ef6c426b64ff2ce1487">More...</a><br /></td></tr>
 <tr class="memitem:a72d3a0de72be941d9959944c8515f2b0" id="r_a72d3a0de72be941d9959944c8515f2b0"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a72d3a0de72be941d9959944c8515f2b0">ThreadFunc</a> = void *(*)(void *)</td></tr>
 <tr class="memdesc:a72d3a0de72be941d9959944c8515f2b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of thread entry point.  <br /></td></tr>
-<tr class="memitem:a7a5038908a309c784bc9a39b85adf803" id="r_a7a5038908a309c784bc9a39b85adf803"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = unsigned int</td></tr>
+<tr class="memitem:a7a5038908a309c784bc9a39b85adf803" id="r_a7a5038908a309c784bc9a39b85adf803"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td></tr>
 <tr class="memdesc:a7a5038908a309c784bc9a39b85adf803"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of thread identifier.  <br /></td></tr>
 <tr class="memitem:a48295f51e6f45ac5c02b0deadc2a6dac" id="r_a48295f51e6f45ac5c02b0deadc2a6dac"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a48295f51e6f45ac5c02b0deadc2a6dac">SignalFunc</a> = void (*)(<a class="el" href="#af1fb29fd2be90ef6c426b64ff2ce1487">ESignal</a>, void *userData)</td></tr>
 <tr class="memdesc:a48295f51e6f45ac5c02b0deadc2a6dac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type of signal handler function.  <br /></td></tr>
@@ -172,7 +172,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1102335f648f0ba1d79ec72151dfd46c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release a thread reference.  <br /></td></tr>
 <tr class="memitem:af273bf7f0b396b59063040613d3b2d3f" id="r_af273bf7f0b396b59063040613d3b2d3f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af273bf7f0b396b59063040613d3b2d3f">cancelThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a> thread)=0</td></tr>
 <tr class="memdesc:af273bf7f0b396b59063040613d3b2d3f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force a thread to exit.  <br /></td></tr>
-<tr class="memitem:a6483b65429b101bb824b9b7d952f3e9e" id="r_a6483b65429b101bb824b9b7d952f3e9e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6483b65429b101bb824b9b7d952f3e9e">setPriorityOfThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a>, int n)=0</td></tr>
+<tr class="memitem:a6483b65429b101bb824b9b7d952f3e9e" id="r_a6483b65429b101bb824b9b7d952f3e9e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6483b65429b101bb824b9b7d952f3e9e">setPriorityOfThread</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> n)=0</td></tr>
 <tr class="memdesc:a6483b65429b101bb824b9b7d952f3e9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Change thread priority.  <br /></td></tr>
 <tr class="memitem:a01aba5f03e0b7856dd128a2f24aaf625" id="r_a01aba5f03e0b7856dd128a2f24aaf625"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01aba5f03e0b7856dd128a2f24aaf625">testCancelThread</a> ()=0</td></tr>
 <tr class="memdesc:a01aba5f03e0b7856dd128a2f24aaf625"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancellation point.  <br /></td></tr>
@@ -237,7 +237,7 @@ Public Member Functions</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a7a5038908a309c784bc9a39b85adf803">IArchMultithread::ThreadID</a> = unsigned int</td>
+          <td class="memname">using <a class="el" href="#a7a5038908a309c784bc9a39b85adf803">IArchMultithread::ThreadID</a> = unsigned <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -779,7 +779,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>n</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

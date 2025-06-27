@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -176,14 +176,14 @@ Protocol State Machine</h1>
 <div class="line">(Leave)  │      (Enter)│                              │</div>
 <div class="line">         │             ▼                              │</div>
 <div class="line">         │    ┌──────────────────┐                    │</div>
-<div class="line">         │    │      ACTIVE      │  CCLOSE (close)    │</div>
-<div class="line">         └────┤  (Receiving all  ├───────────────────►┘</div>
-<div class="line">              │   input events)  ├◄─────┐</div>
-<div class="line">              └────────┬─────────┘      │</div>
-<div class="line">                       │                │</div>
-<div class="line">                       ▼                │</div>
-<div class="line">              ┌──────────────────┐      │</div>
-<div class="line">              │  PROCESS EVENT   ├──────┘</div>
+<div class="line">         └────┤      ACTIVE      │  CCLOSE (close)    │</div>
+<div class="line">              │  (Receiving all  ├───────────────────►┘</div>
+<div class="line">         ┌───►│   input events)  │</div>
+<div class="line">         │    └────────┬─────────┘</div>
+<div class="line">         │             │</div>
+<div class="line">         │             ▼</div>
+<div class="line">         │    ┌──────────────────┐</div>
+<div class="line">         └────┤  PROCESS EVENT   │</div>
 <div class="line">              └──────────────────┘</div>
 </div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 State Descriptions</h2>
@@ -333,15 +333,15 @@ Protocol Constraints</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Message and Data Size Limits</h2>
 <p><b>Maximum Message Size:</b> <br  />
- <a class="anchor" id="constraint-protocol-max-message-length"></a><b>4,194,304 bytes (4 MB)</b> — PROTOCOL_MAX_MESSAGE_LENGTH <br  />
+ <a class="anchor" id="constraint-protocol-max-message-length"></a><b>4,194,304 bytes (4 MB)</b> — <a class="el" href="group__protocol__constants.html#gad5b510266c8a03bcd0ee9745ae7046b6">PROTOCOL_MAX_MESSAGE_LENGTH</a> <br  />
  Maximum total size of any single, length-prefixed data packet <br  />
  Defined in Protocol Limits</p>
 <p><b>Maximum List Size:</b> <br  />
- <a class="anchor" id="constraint-max-list"></a><b>1,048,576 elements</b> — PROTOCOL_MAX_LIST_LENGTH <br  />
+ <a class="anchor" id="constraint-max-list"></a><b>1,048,576 elements</b> — <a class="el" href="group__protocol__constants.html#gab0f7d7d0c8719715c9d6dcb2ef83e8f0">PROTOCOL_MAX_LIST_LENGTH</a> <br  />
  Maximum number of items in a list/vector within a message <br  />
  Defined in Protocol Limits</p>
 <p><b>Maximum Hello Size:</b> <br  />
- <a class="anchor" id="constraint-max-hello"></a><b>1,024 bytes</b> — kMaxHelloLength <br  />
+ <a class="anchor" id="constraint-max-hello"></a><b>1,024 bytes</b> — <a class="el" href="group__protocol__constants.html#ga98962d84082470b4473418edba98067c">kMaxHelloLength</a> <br  />
  Maximum size of the initial Connection Handshake message <br  />
  Defined in Protocol Limits</p>
 <p><a class="anchor" id="constraint-tls"></a></p>
@@ -355,7 +355,7 @@ TLS Handshake and Security (Protocol v1.4+)</h2>
 </ol>
 <ul>
 <li><b>Implementation Details</b>:<ul>
-<li>The client initiates a standard TCP connection, then the SecureSocket::handleTCPConnected method is called, which begins the TLS handshake</li>
+<li>The client initiates a standard TCP connection, then the (private) SecureSocket::handleTCPConnected method is called, which begins the TLS handshake</li>
 </ul>
 </li>
 <li><b>Certificate Validation</b>:<ul>
@@ -383,14 +383,14 @@ Timing and Synchronization</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Keep-Alive Mechanism (Protocol v1.3+)</h2>
 <p><b>Server-Side Behavior:</b></p><ul>
-<li>The server sends kMsgCKeepAlive messages every 3.0 seconds (defined by kKeepAliveRate)</li>
+<li>The server sends kMsgCKeepAlive messages every 3.0 seconds (defined by <a class="el" href="group__protocol__constants.html#ga8460e7dc3aae99da87dcff40b2fad424">kKeepAliveRate</a>)</li>
 <li>This timer is implemented in <a class="el" href="classClientProxy1__3.html#aef002a8aeb088ba7fa4ba26b5a4f923c">ClientProxy1_3::addHeartbeatTimer</a> in the <a class="el" href="classClientProxy1__3.html">ClientProxy1_3</a> class</li>
 </ul>
 <p><b>Client-Side Behavior:</b></p><ul>
 <li>Upon receiving a kMsgCKeepAlive message, the client must immediately send a kMsgCKeepAlive message back</li>
 <li>The client maintains a timeout that is reset each time any message is received</li>
-<li>If no message is received for 9.0 seconds (3 × kKeepAliveRate), client must disconnect</li>
-<li>This is handled by the ServerProxy::handleKeepAliveAlarm method</li>
+<li>If no message is received for 9.0 seconds (3 × <a class="el" href="group__protocol__constants.html#ga8460e7dc3aae99da87dcff40b2fad424">kKeepAliveRate</a>), client must disconnect</li>
+<li>This is handled by the (private) ServerProxy::handleKeepAliveAlarm method</li>
 </ul>
 <p><a class="anchor" id="constraint-screen-entry-sync"></a> </p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>

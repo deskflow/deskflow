@@ -11,6 +11,7 @@ var classArchMultithreadPosix =
     [ "closeThread", "classArchMultithreadPosix.html#a292179420d594851c9f1f41d4c366d33", null ],
     [ "copyThread", "classArchMultithreadPosix.html#ad974c64692ff8102c788286b6b5142e8", null ],
     [ "getIDOfThread", "classArchMultithreadPosix.html#accaeb23e9ddb826bcf8faefb917a474c", null ],
+    [ "getInstance", "classArchMultithreadPosix.html#ae675b845f105a89cf8191fffca928303", null ],
     [ "getNetworkDataForThread", "classArchMultithreadPosix.html#a1bb202527e92f6c0976c75c390bac12a", null ],
     [ "getResultOfThread", "classArchMultithreadPosix.html#a35b845ae433272d18ba1d3ac460a88a9", null ],
     [ "isExitedThread", "classArchMultithreadPosix.html#ab571c044586cf834b09bc912ac248887", null ],

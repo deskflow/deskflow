@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['port_0',['Port',['../structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d',1,'Settings::Core']]],
-  ['preventsleep_1',['PreventSleep',['../structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99',1,'Settings::Core']]],
-  ['processmode_2',['ProcessMode',['../structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e',1,'Settings::Core']]],
-  ['protocol_3',['protocol',['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'ArchNetworkWinsock.cpp']]]
+  ['obsolete1_0',['obsolete1',['../classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c',1,'ClientInfo']]],
+  ['offset_1',['offset',['../structCBMPHeader.html#a18b61053c16e3cb290b9cfeab36d23b0',1,'CBMPHeader']]],
+  ['optlen_2',['optlen',['../ArchNetworkWinsock_8cpp.html#a82fbeb7c36893dda09623f43ea4bddf9',1,'ArchNetworkWinsock.cpp']]],
+  ['optname_3',['optname',['../ArchNetworkWinsock_8cpp.html#a8ecb1799ec4580a32ab9ed3f76aeab64',1,'ArchNetworkWinsock.cpp']]],
+  ['optval_4',['optval',['../ArchNetworkWinsock_8cpp.html#a38090b374921cb8482bf204afdf02005',1,'ArchNetworkWinsock.cpp']]]
 ];

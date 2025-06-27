@@ -29,6 +29,12 @@ var ProtocolTypes_8h =
       [ "kBottomMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be", null ]
     ] ],
     [ "kBarrierProtocolName", "group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7", null ],
+    [ "kDefaultPort", "group__protocol__constants.html#ga1dadac496650a32d93f69f5b5c63a6ca", null ],
+    [ "kHeartBeatsUntilDeath", "group__protocol__constants.html#gaf71713baa0aee7c370fa81755dcd518c", null ],
+    [ "kHeartRate", "group__protocol__constants.html#gac6862c2c4ace969eaa5986166c5435b4", null ],
+    [ "kKeepAliveRate", "group__protocol__constants.html#ga8460e7dc3aae99da87dcff40b2fad424", null ],
+    [ "kKeepAlivesUntilDeath", "group__protocol__constants.html#ga5c730a96bc41c32cb014dff8d28f3a28", null ],
+    [ "kMaxHelloLength", "group__protocol__constants.html#ga98962d84082470b4473418edba98067c", null ],
     [ "kMsgCClipboard", "group__protocol__commands.html#gad64d30f8ea795e2b64f812f87152c749", null ],
     [ "kMsgCClose", "group__protocol__commands.html#ga666d7243ecfed71d4392be6cf6119a32", null ],
     [ "kMsgCEnter", "group__protocol__commands.html#gae826571a53b798c573418568f4397190", null ],
@@ -67,5 +73,10 @@ var ProtocolTypes_8h =
     [ "kMsgHelloBack", "group__protocol__handshake.html#gafc643c9a9e9f9daf5082657a4faf6575", null ],
     [ "kMsgHelloBackArgs", "group__protocol__handshake.html#gafb82d058b11b4cb463f49ce16bd6bb0f", null ],
     [ "kMsgQInfo", "group__protocol__queries.html#gaa563a996c14cf572767d3698a36ee042", null ],
-    [ "kSynergyProtocolName", "group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1", null ]
+    [ "kProtocolMajorVersion", "group__protocol__constants.html#gaf73d6c67cc665814e18b0791fbdf9913", null ],
+    [ "kProtocolMinorVersion", "group__protocol__constants.html#ga57d2ad7c9cfe055ca7b73d1abca9135e", null ],
+    [ "kSynergyProtocolName", "group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1", null ],
+    [ "PROTOCOL_MAX_LIST_LENGTH", "group__protocol__constants.html#gab0f7d7d0c8719715c9d6dcb2ef83e8f0", null ],
+    [ "PROTOCOL_MAX_MESSAGE_LENGTH", "group__protocol__constants.html#gad5b510266c8a03bcd0ee9745ae7046b6", null ],
+    [ "PROTOCOL_MAX_STRING_LENGTH", "group__protocol__constants.html#ga9ab73fe1896f46e4fe33be70edd710de", null ]
 ];

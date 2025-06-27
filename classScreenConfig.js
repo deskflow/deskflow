@@ -26,7 +26,10 @@ var classScreenConfig =
     ] ],
     [ "ScreenConfig", "classScreenConfig.html#ad3625809ad5d53534773d9713e53cd57", null ],
     [ "~ScreenConfig", "classScreenConfig.html#a5293db2c1a9f7b6fc817b2b78cc34884", null ],
+    [ "fixName", "classScreenConfig.html#ac7deded16472a37b87b2cfccdde036dc", null ],
+    [ "modifierName", "classScreenConfig.html#ad762dc8ee812c3db4916ddb19416f31a", null ],
     [ "readSettings", "classScreenConfig.html#a3c99c44aa98489afc15035552c0bb7a9", null ],
     [ "readSettings", "classScreenConfig.html#a561ae66839a07592e46f8be423dec943", null ],
+    [ "switchCornerName", "classScreenConfig.html#ab4f336028c5aab1fc34b993f4cb56f65", null ],
     [ "writeSettings", "classScreenConfig.html#ab9dfc8ab8dff1cca5fd7e3d0523f5371", null ]
 ];

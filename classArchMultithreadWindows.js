@@ -10,6 +10,7 @@ var classArchMultithreadWindows =
     [ "copyThread", "classArchMultithreadWindows.html#a8a6c82bcbd067c7e9579abff6acfaf58", null ],
     [ "getCancelEventForCurrentThread", "classArchMultithreadWindows.html#a432a4ea519efdca2ef137a442cb189d3", null ],
     [ "getIDOfThread", "classArchMultithreadWindows.html#a75ef9332d4ee162a1d30a7ac1201e0f2", null ],
+    [ "getInstance", "classArchMultithreadWindows.html#a048cb10680ca40cddc4a19c6a3934f29", null ],
     [ "getNetworkDataForThread", "classArchMultithreadWindows.html#ab66998a90d85ff9908d115e1991bb34d", null ],
     [ "getResultOfThread", "classArchMultithreadWindows.html#a704e8e058276d834763f932b6233f4c2", null ],
     [ "isExitedThread", "classArchMultithreadWindows.html#aebd9716fcbf37d528ffd39f57f2364b8", null ],

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -176,35 +176,52 @@ Macros</h2></td></tr>
 <tr class="memitem:a0d02a891286ee61c9e7ecd291c96567f" id="r_a0d02a891286ee61c9e7ecd291c96567f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0d02a891286ee61c9e7ecd291c96567f">FD_ISSET</a>(fd,  set)</td></tr>
 <tr class="memitem:ab1e488dbea7122aa0033117f3b780dd4" id="r_ab1e488dbea7122aa0033117f3b780dd4"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab1e488dbea7122aa0033117f3b780dd4">setfunc</a>(var,  <a class="el" href="#a129068cd4154b9a162b20d566a10d8b6">name</a>,  <a class="el" href="#ac765329451135abec74c45e1897abf26">type</a>)</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a7bb54c9cead75ac4a547133fedc432b7" id="r_a7bb54c9cead75ac4a547133fedc432b7"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a> (PASCAL FAR *accept_winsock)(SOCKET s</td></tr>
+<tr class="memitem:ad2573eea84512de995e58415e5512fec" id="r_ad2573eea84512de995e58415e5512fec"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> (PASCAL FAR *bind_winsock)(<a class="el" href="#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a> s</td></tr>
+<tr class="memitem:abbd93b0dd8b636eb1e46f973ebb18e51" id="r_abbd93b0dd8b636eb1e46f973ebb18e51"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbd93b0dd8b636eb1e46f973ebb18e51">u_short</a> (PASCAL FAR *htons_winsock)(u_short v)</td></tr>
+<tr class="memitem:a867da8a7ca2d54a4cc1da491e63f1635" id="r_a867da8a7ca2d54a4cc1da491e63f1635"><td class="memItemLeft" align="right" valign="top">static char FAR *PASCAL FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a867da8a7ca2d54a4cc1da491e63f1635">inet_ntoa_winsock</a> (struct in_addr in)</td></tr>
+<tr class="memitem:a2b70d06c0aace9c8693696cc736f3a31" id="r_a2b70d06c0aace9c8693696cc736f3a31"><td class="memItemLeft" align="right" valign="top">static unsigned&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b70d06c0aace9c8693696cc736f3a31">long</a> (PASCAL FAR *inet_addr_winsock)(const char FAR *cp)</td></tr>
+<tr class="memitem:a6b7fa97aa84efd23c8d015dea6d4b792" id="r_a6b7fa97aa84efd23c8d015dea6d4b792"><td class="memItemLeft" align="right" valign="top">static struct hostent FAR *PASCAL FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b7fa97aa84efd23c8d015dea6d4b792">gethostbyaddr_winsock</a> (const char FAR *<a class="el" href="#a44ed2a3b9f41a148fe2c905da8b5d699">addr</a>, <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#a116668e65e11e5e00d5ff946bfc24cb4">len</a>, <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ac765329451135abec74c45e1897abf26">type</a>)</td></tr>
+<tr class="memitem:ad1bda8f279a084bd918c415916c9fd5c" id="r_ad1bda8f279a084bd918c415916c9fd5c"><td class="memItemLeft" align="right" valign="top">static struct hostent FAR *PASCAL FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1bda8f279a084bd918c415916c9fd5c">gethostbyname_winsock</a> (const char FAR *<a class="el" href="#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
+<tr class="memitem:a27e43184180d478cc9fdbcad71da181e" id="r_a27e43184180d478cc9fdbcad71da181e"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a27e43184180d478cc9fdbcad71da181e">WSAEVENT</a> (PASCAL FAR *WSACreateEvent_winsock)(void)</td></tr>
+<tr class="memitem:a903a7b84bb86345e3255c5f2217a7178" id="r_a903a7b84bb86345e3255c5f2217a7178"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a903a7b84bb86345e3255c5f2217a7178">BOOL</a> (PASCAL FAR *WSACloseEvent_winsock)(<a class="el" href="#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a>)</td></tr>
+<tr class="memitem:a580adfb9e0f9b8b27e8c2c11bcce0bb9" id="r_a580adfb9e0f9b8b27e8c2c11bcce0bb9"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a580adfb9e0f9b8b27e8c2c11bcce0bb9">DWORD</a> (PASCAL FAR *WSAWaitForMultipleEvents_winsock)(DWORD</td></tr>
+<tr class="memitem:af1ed7e0d553745f5cfd4d948ad7ccc7c" id="r_af1ed7e0d553745f5cfd4d948ad7ccc7c"><td class="memItemLeft" align="right" valign="top">static FARPROC&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1ed7e0d553745f5cfd4d948ad7ccc7c">netGetProcAddress</a> (HMODULE module, LPCSTR <a class="el" href="#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
+<tr class="memitem:a190fe583bc8297b58c52144b8956fb37" id="r_a190fe583bc8297b58c52144b8956fb37"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a190fe583bc8297b58c52144b8956fb37">s_family</a> []</td></tr>
+<tr class="memitem:a98cf40bd7ba312e4e24e08b66241d6fe" id="r_a98cf40bd7ba312e4e24e08b66241d6fe"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a98cf40bd7ba312e4e24e08b66241d6fe">s_type</a> [] = {SOCK_DGRAM, SOCK_STREAM}</td></tr>
 <tr class="memitem:a44ed2a3b9f41a148fe2c905da8b5d699" id="r_a44ed2a3b9f41a148fe2c905da8b5d699"><td class="memItemLeft" align="right" valign="top">static struct sockaddr FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a44ed2a3b9f41a148fe2c905da8b5d699">addr</a></td></tr>
-<tr class="memitem:a8c91350f2366acb50b48de7e994091c0" id="r_a8c91350f2366acb50b48de7e994091c0"><td class="memItemLeft" align="right" valign="top">static struct sockaddr FAR int FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c91350f2366acb50b48de7e994091c0">addrlen</a></td></tr>
-<tr class="memitem:ac3eb3b32c1f0502b5d34ad31824bac85" id="r_ac3eb3b32c1f0502b5d34ad31824bac85"><td class="memItemLeft" align="right" valign="top">static const struct sockaddr FAR int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3eb3b32c1f0502b5d34ad31824bac85">namelen</a></td></tr>
+<tr class="memitem:a8c91350f2366acb50b48de7e994091c0" id="r_a8c91350f2366acb50b48de7e994091c0"><td class="memItemLeft" align="right" valign="top">static struct sockaddr FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8c91350f2366acb50b48de7e994091c0">addrlen</a></td></tr>
+<tr class="memitem:ac3eb3b32c1f0502b5d34ad31824bac85" id="r_ac3eb3b32c1f0502b5d34ad31824bac85"><td class="memItemLeft" align="right" valign="top">static const struct sockaddr FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac3eb3b32c1f0502b5d34ad31824bac85">namelen</a></td></tr>
 <tr class="memitem:a129068cd4154b9a162b20d566a10d8b6" id="r_a129068cd4154b9a162b20d566a10d8b6"><td class="memItemLeft" align="right" valign="top">static const struct sockaddr FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a129068cd4154b9a162b20d566a10d8b6">name</a></td></tr>
-<tr class="memitem:a16b9a398646d8d46205fb34769946458" id="r_a16b9a398646d8d46205fb34769946458"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16b9a398646d8d46205fb34769946458">level</a></td></tr>
-<tr class="memitem:a8ecb1799ec4580a32ab9ed3f76aeab64" id="r_a8ecb1799ec4580a32ab9ed3f76aeab64"><td class="memItemLeft" align="right" valign="top">static int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ecb1799ec4580a32ab9ed3f76aeab64">optname</a></td></tr>
-<tr class="memitem:a38090b374921cb8482bf204afdf02005" id="r_a38090b374921cb8482bf204afdf02005"><td class="memItemLeft" align="right" valign="top">static int int void FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38090b374921cb8482bf204afdf02005">optval</a></td></tr>
-<tr class="memitem:a82fbeb7c36893dda09623f43ea4bddf9" id="r_a82fbeb7c36893dda09623f43ea4bddf9"><td class="memItemLeft" align="right" valign="top">static int int void FAR int FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82fbeb7c36893dda09623f43ea4bddf9">optlen</a></td></tr>
-<tr class="memitem:a85092d82ab6ea85dad51ba78cbda36a0" id="r_a85092d82ab6ea85dad51ba78cbda36a0"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85092d82ab6ea85dad51ba78cbda36a0">cmd</a></td></tr>
-<tr class="memitem:aa36d05423b2dd8f3c8296093b4674b63" id="r_aa36d05423b2dd8f3c8296093b4674b63"><td class="memItemLeft" align="right" valign="top">static int void FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36d05423b2dd8f3c8296093b4674b63">data</a></td></tr>
-<tr class="memitem:a9507e1c27beffe02ed97c7b076a42f24" id="r_a9507e1c27beffe02ed97c7b076a42f24"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9507e1c27beffe02ed97c7b076a42f24">backlog</a></td></tr>
+<tr class="memitem:a16b9a398646d8d46205fb34769946458" id="r_a16b9a398646d8d46205fb34769946458"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a16b9a398646d8d46205fb34769946458">level</a></td></tr>
+<tr class="memitem:a8ecb1799ec4580a32ab9ed3f76aeab64" id="r_a8ecb1799ec4580a32ab9ed3f76aeab64"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ecb1799ec4580a32ab9ed3f76aeab64">optname</a></td></tr>
+<tr class="memitem:a38090b374921cb8482bf204afdf02005" id="r_a38090b374921cb8482bf204afdf02005"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> void FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a38090b374921cb8482bf204afdf02005">optval</a></td></tr>
+<tr class="memitem:a82fbeb7c36893dda09623f43ea4bddf9" id="r_a82fbeb7c36893dda09623f43ea4bddf9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82fbeb7c36893dda09623f43ea4bddf9">optlen</a></td></tr>
+<tr class="memitem:a85092d82ab6ea85dad51ba78cbda36a0" id="r_a85092d82ab6ea85dad51ba78cbda36a0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85092d82ab6ea85dad51ba78cbda36a0">cmd</a></td></tr>
+<tr class="memitem:aa36d05423b2dd8f3c8296093b4674b63" id="r_aa36d05423b2dd8f3c8296093b4674b63"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> void FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa36d05423b2dd8f3c8296093b4674b63">data</a></td></tr>
+<tr class="memitem:a9507e1c27beffe02ed97c7b076a42f24" id="r_a9507e1c27beffe02ed97c7b076a42f24"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9507e1c27beffe02ed97c7b076a42f24">backlog</a></td></tr>
 <tr class="memitem:ac2b1742b0d829eff8513995ebd5a0bac" id="r_ac2b1742b0d829eff8513995ebd5a0bac"><td class="memItemLeft" align="right" valign="top">static void FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac2b1742b0d829eff8513995ebd5a0bac">buf</a></td></tr>
-<tr class="memitem:a116668e65e11e5e00d5ff946bfc24cb4" id="r_a116668e65e11e5e00d5ff946bfc24cb4"><td class="memItemLeft" align="right" valign="top">static void FAR int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a116668e65e11e5e00d5ff946bfc24cb4">len</a></td></tr>
-<tr class="memitem:a6c50550d1a116a362712205288efdc21" id="r_a6c50550d1a116a362712205288efdc21"><td class="memItemLeft" align="right" valign="top">static void FAR int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c50550d1a116a362712205288efdc21">flags</a></td></tr>
+<tr class="memitem:a116668e65e11e5e00d5ff946bfc24cb4" id="r_a116668e65e11e5e00d5ff946bfc24cb4"><td class="memItemLeft" align="right" valign="top">static void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a116668e65e11e5e00d5ff946bfc24cb4">len</a></td></tr>
+<tr class="memitem:a6c50550d1a116a362712205288efdc21" id="r_a6c50550d1a116a362712205288efdc21"><td class="memItemLeft" align="right" valign="top">static void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c50550d1a116a362712205288efdc21">flags</a></td></tr>
 <tr class="memitem:afb46b0b697be5d94ec8249a260ac5dfa" id="r_afb46b0b697be5d94ec8249a260ac5dfa"><td class="memItemLeft" align="right" valign="top">static fd_set FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb46b0b697be5d94ec8249a260ac5dfa">readfds</a></td></tr>
 <tr class="memitem:a8471bf81bbee9614f1edd6361edb3bfe" id="r_a8471bf81bbee9614f1edd6361edb3bfe"><td class="memItemLeft" align="right" valign="top">static fd_set FAR fd_set FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8471bf81bbee9614f1edd6361edb3bfe">writefds</a></td></tr>
 <tr class="memitem:a83b39b991fea62ae3743fc34f1c49331" id="r_a83b39b991fea62ae3743fc34f1c49331"><td class="memItemLeft" align="right" valign="top">static fd_set FAR fd_set FAR fd_set FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83b39b991fea62ae3743fc34f1c49331">exceptfds</a></td></tr>
 <tr class="memitem:ab81cb286ad3395f720d8b4e645596749" id="r_ab81cb286ad3395f720d8b4e645596749"><td class="memItemLeft" align="right" valign="top">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab81cb286ad3395f720d8b4e645596749">timeout</a></td></tr>
-<tr class="memitem:a4c8d98272cffc776bb7dfe1dfbadf6a7" id="r_a4c8d98272cffc776bb7dfe1dfbadf6a7"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c8d98272cffc776bb7dfe1dfbadf6a7">how</a></td></tr>
-<tr class="memitem:ac765329451135abec74c45e1897abf26" id="r_ac765329451135abec74c45e1897abf26"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac765329451135abec74c45e1897abf26">type</a></td></tr>
-<tr class="memitem:a00b6b4ede6be4f05c59f106b34ec4043" id="r_a00b6b4ede6be4f05c59f106b34ec4043"><td class="memItemLeft" align="right" valign="top">static int int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00b6b4ede6be4f05c59f106b34ec4043">protocol</a></td></tr>
+<tr class="memitem:a4c8d98272cffc776bb7dfe1dfbadf6a7" id="r_a4c8d98272cffc776bb7dfe1dfbadf6a7"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c8d98272cffc776bb7dfe1dfbadf6a7">how</a></td></tr>
+<tr class="memitem:ac765329451135abec74c45e1897abf26" id="r_ac765329451135abec74c45e1897abf26"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac765329451135abec74c45e1897abf26">type</a></td></tr>
+<tr class="memitem:a00b6b4ede6be4f05c59f106b34ec4043" id="r_a00b6b4ede6be4f05c59f106b34ec4043"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a00b6b4ede6be4f05c59f106b34ec4043">protocol</a></td></tr>
 <tr class="memitem:a1090ad3c224a4e94802b39f903edb66a" id="r_a1090ad3c224a4e94802b39f903edb66a"><td class="memItemLeft" align="right" valign="top">static fd_set FAR *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1090ad3c224a4e94802b39f903edb66a">fdset</a></td></tr>
 <tr class="memitem:acdd8686d6df899c1259adb98f9573991" id="r_acdd8686d6df899c1259adb98f9573991"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a></td></tr>
 <tr class="memitem:a0bc651ef7626a7868da4cbfdbe70f96f" id="r_a0bc651ef7626a7868da4cbfdbe70f96f"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0bc651ef7626a7868da4cbfdbe70f96f">long</a></td></tr>
 <tr class="memitem:a36a00ba9910ecdadcef4246d090b3e1f" id="r_a36a00ba9910ecdadcef4246d090b3e1f"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a> FAR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a></td></tr>
 <tr class="memitem:a268ed61838e67a46467dcebfee0dcbe7" id="r_a268ed61838e67a46467dcebfee0dcbe7"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a> FAR&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td></tr>
 <tr class="memitem:aa1b63b60fb3f206fad88bf4f0f008d6b" id="r_aa1b63b60fb3f206fad88bf4f0f008d6b"><td class="memItemLeft" align="right" valign="top">static&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1b63b60fb3f206fad88bf4f0f008d6b">LPWSANETWORKEVENTS</a></td></tr>
+<tr class="memitem:af9ce57c37d26ff9b27948159c20374a0" id="r_af9ce57c37d26ff9b27948159c20374a0"><td class="memItemLeft" align="right" valign="top">static HMODULE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af9ce57c37d26ff9b27948159c20374a0">s_networkModule</a> = nullptr</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a0d02a891286ee61c9e7ecd291c96567f" name="a0d02a891286ee61c9e7ecd291c96567f"></a>
@@ -225,7 +242,8 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">WSAFDIsSet_winsock((SOCKET)(fd), (fd_set FAR *)(set))</div>
+<b>Value:</b><div class="fragment"><div class="line">WSAFDIsSet_winsock((<a class="code hl_function" href="#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a>)(fd), (fd_set FAR *)(set))</div>
+<div class="ttc" id="aArchNetworkWinsock_8cpp_html_a7bb54c9cead75ac4a547133fedc432b7"><div class="ttname"><a href="#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a></div><div class="ttdeci">static SOCKET(PASCAL FAR *accept_winsock)(SOCKET s</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -252,10 +270,300 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">var = (<a class="code hl_variable" href="#ac765329451135abec74c45e1897abf26">type</a>)netGetProcAddress(module, #<a class="code hl_variable" href="#a129068cd4154b9a162b20d566a10d8b6">name</a>)</div>
+<b>Value:</b><div class="fragment"><div class="line">var = (<a class="code hl_variable" href="#ac765329451135abec74c45e1897abf26">type</a>)<a class="code hl_function" href="#af1ed7e0d553745f5cfd4d948ad7ccc7c">netGetProcAddress</a>(module, #<a class="code hl_variable" href="#a129068cd4154b9a162b20d566a10d8b6">name</a>)</div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:44</div></div>
+<div class="ttc" id="aArchNetworkWinsock_8cpp_html_af1ed7e0d553745f5cfd4d948ad7ccc7c"><div class="ttname"><a href="#af1ed7e0d553745f5cfd4d948ad7ccc7c">netGetProcAddress</a></div><div class="ttdeci">static FARPROC netGetProcAddress(HMODULE module, LPCSTR name)</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:64</div></div>
 </div><!-- fragment -->
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a903a7b84bb86345e3255c5f2217a7178" name="a903a7b84bb86345e3255c5f2217a7178"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903a7b84bb86345e3255c5f2217a7178">&#9670;&#160;</a></span>BOOL()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">BOOL </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>WSACloseEvent_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a580adfb9e0f9b8b27e8c2c11bcce0bb9" name="a580adfb9e0f9b8b27e8c2c11bcce0bb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a580adfb9e0f9b8b27e8c2c11bcce0bb9">&#9670;&#160;</a></span>DWORD()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">DWORD </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>WSAWaitForMultipleEvents_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6b7fa97aa84efd23c8d015dea6d4b792" name="a6b7fa97aa84efd23c8d015dea6d4b792"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b7fa97aa84efd23c8d015dea6d4b792">&#9670;&#160;</a></span>gethostbyaddr_winsock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct hostent FAR *PASCAL FAR * gethostbyaddr_winsock </td>
+          <td>(</td>
+          <td class="paramtype">const char FAR *</td>          <td class="paramname"><span class="paramname"><em>addr</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>len</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad1bda8f279a084bd918c415916c9fd5c" name="ad1bda8f279a084bd918c415916c9fd5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1bda8f279a084bd918c415916c9fd5c">&#9670;&#160;</a></span>gethostbyname_winsock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct hostent FAR *PASCAL FAR * gethostbyname_winsock </td>
+          <td>(</td>
+          <td class="paramtype">const char FAR *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a867da8a7ca2d54a4cc1da491e63f1635" name="a867da8a7ca2d54a4cc1da491e63f1635"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a867da8a7ca2d54a4cc1da491e63f1635">&#9670;&#160;</a></span>inet_ntoa_winsock()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">char FAR *PASCAL FAR * inet_ntoa_winsock </td>
+          <td>(</td>
+          <td class="paramtype">struct in_addr</td>          <td class="paramname"><span class="paramname"><em>in</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad2573eea84512de995e58415e5512fec" name="ad2573eea84512de995e58415e5512fec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2573eea84512de995e58415e5512fec">&#9670;&#160;</a></span>int()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>bind_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2b70d06c0aace9c8693696cc736f3a31" name="a2b70d06c0aace9c8693696cc736f3a31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2b70d06c0aace9c8693696cc736f3a31">&#9670;&#160;</a></span>long()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">unsigned long </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>inet_addr_winsock</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af1ed7e0d553745f5cfd4d948ad7ccc7c" name="af1ed7e0d553745f5cfd4d948ad7ccc7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1ed7e0d553745f5cfd4d948ad7ccc7c">&#9670;&#160;</a></span>netGetProcAddress()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">FARPROC netGetProcAddress </td>
+          <td>(</td>
+          <td class="paramtype">HMODULE</td>          <td class="paramname"><span class="paramname"><em>module</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">LPCSTR</td>          <td class="paramname"><span class="paramname"><em>name</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7bb54c9cead75ac4a547133fedc432b7" name="a7bb54c9cead75ac4a547133fedc432b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bb54c9cead75ac4a547133fedc432b7">&#9670;&#160;</a></span>SOCKET()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">SOCKET </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>accept_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abbd93b0dd8b636eb1e46f973ebb18e51" name="abbd93b0dd8b636eb1e46f973ebb18e51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbd93b0dd8b636eb1e46f973ebb18e51">&#9670;&#160;</a></span>u_short()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">u_short </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>htons_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a27e43184180d478cc9fdbcad71da181e" name="a27e43184180d478cc9fdbcad71da181e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a27e43184180d478cc9fdbcad71da181e">&#9670;&#160;</a></span>WSAEVENT()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">WSAEVENT </td>
+          <td>(</td>
+          <td class="paramtype">PASCAL FAR *</td>          <td class="paramname"><span class="paramname"><em>WSACreateEvent_winsock</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
@@ -280,7 +588,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">struct sockaddr FAR int FAR* addrlen</td>
+          <td class="memname">struct sockaddr FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> FAR* addrlen</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -294,7 +602,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int backlog</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> backlog</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -336,7 +644,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int cmd</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> cmd</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -350,7 +658,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int void FAR* data</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> void FAR* data</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -406,7 +714,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const void FAR int int flags</td>
+          <td class="memname">const void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> flags</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -420,7 +728,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int how</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> how</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -434,7 +742,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const void FAR int len</td>
+          <td class="memname">const void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> len</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -448,7 +756,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int level</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> level</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -504,7 +812,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int namelen</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> namelen</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -518,7 +826,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int int const void FAR int optlen</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> const void FAR <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> optlen</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -532,7 +840,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int int optname</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> optname</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -546,7 +854,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int int const void FAR * optval</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> const void FAR * optval</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -560,7 +868,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int int protocol</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> protocol</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -577,6 +885,77 @@ Variables</h2></td></tr>
           <td class="memname">fd_set FAR* readfds</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a190fe583bc8297b58c52144b8956fb37" name="a190fe583bc8297b58c52144b8956fb37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a190fe583bc8297b58c52144b8956fb37">&#9670;&#160;</a></span>s_family</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> s_family[]</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">    PF_UNSPEC,</div>
+<div class="line">    PF_INET,</div>
+<div class="line">    PF_INET6,</div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="af9ce57c37d26ff9b27948159c20374a0" name="af9ce57c37d26ff9b27948159c20374a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9ce57c37d26ff9b27948159c20374a0">&#9670;&#160;</a></span>s_networkModule</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">HMODULE s_networkModule = nullptr</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a98cf40bd7ba312e4e24e08b66241d6fe" name="a98cf40bd7ba312e4e24e08b66241d6fe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a98cf40bd7ba312e4e24e08b66241d6fe">&#9670;&#160;</a></span>s_type</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> s_type[] = {SOCK_DGRAM, SOCK_STREAM}</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -602,7 +981,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int type</td>
+          <td class="memname"><a class="el" href="#ad2573eea84512de995e58415e5512fec">int</a> type</td>
         </tr>
       </table>
 </div><div class="memdoc">

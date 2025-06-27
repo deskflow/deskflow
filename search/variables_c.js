@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['obsolete1_0',['obsolete1',['../classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c',1,'ClientInfo']]],
-  ['offset_1',['offset',['../structCBMPHeader.html#a18b61053c16e3cb290b9cfeab36d23b0',1,'CBMPHeader']]],
-  ['optlen_2',['optlen',['../ArchNetworkWinsock_8cpp.html#a82fbeb7c36893dda09623f43ea4bddf9',1,'ArchNetworkWinsock.cpp']]],
-  ['optname_3',['optname',['../ArchNetworkWinsock_8cpp.html#a8ecb1799ec4580a32ab9ed3f76aeab64',1,'ArchNetworkWinsock.cpp']]],
-  ['optval_4',['optval',['../ArchNetworkWinsock_8cpp.html#a38090b374921cb8482bf204afdf02005',1,'ArchNetworkWinsock.cpp']]]
+  ['name_0',['name',['../ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6',1,'name:&#160;ArchNetworkWinsock.cpp'],['../KeySequence_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;KeySequence.cpp'],['../ServerConfig_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;ServerConfig.cpp']]],
+  ['namelen_1',['namelen',['../ArchNetworkWinsock_8cpp.html#ac3eb3b32c1f0502b5d34ad31824bac85',1,'ArchNetworkWinsock.cpp']]],
+  ['neighbourdirs_2',['neighbourDirs',['../ServerConfig_8cpp.html#a1149f5038b5ae9cce1d024a9ecf31716',1,'ServerConfig.cpp']]],
+  ['numbuttonids_3',['NumButtonIDs',['../MouseTypes_8h.html#afb8283e11d4d520390cfdf6bae83f1cc',1,'MouseTypes.h']]]
 ];

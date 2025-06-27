@@ -38,5 +38,5 @@ var searchData=
   ['writesettings_35',['writeSettings',['../classScreenConfig.html#ab9dfc8ab8dff1cca5fd7e3d0523f5371',1,'ScreenConfig']]],
   ['writesocket_36',['writeSocket',['../classIArchNetwork.html#ae320c3d16957f3ec892284c9a60cf5a5',1,'IArchNetwork::writeSocket()'],['../classArchNetworkBSD.html#ac803ef0829996f718c2cb147fca86d45',1,'ArchNetworkBSD::writeSocket()'],['../classArchNetworkWinsock.html#ab84bfe5b7210e306308d47af9fd06d45',1,'ArchNetworkWinsock::writeSocket()']]],
   ['writestream_37',['writeStream',['../classFingerprintDatabase.html#a3b3016c6215f5838ae0148f7b884d856',1,'FingerprintDatabase']]],
-  ['wsaevent_38',['WSAEVENT',['../ArchNetworkWinsock_8cpp.html#acdd8686d6df899c1259adb98f9573991',1,'ArchNetworkWinsock.cpp']]]
+  ['wsaevent_38',['WSAEVENT',['../ArchNetworkWinsock_8cpp.html#acdd8686d6df899c1259adb98f9573991',1,'WSAEVENT:&#160;ArchNetworkWinsock.cpp'],['../ArchNetworkWinsock_8cpp.html#a27e43184180d478cc9fdbcad71da181e',1,'WSAEVENT(PASCAL FAR *WSACreateEvent_winsock)(void):&#160;ArchNetworkWinsock.cpp']]]
 ];

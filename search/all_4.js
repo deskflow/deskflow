@@ -26,7 +26,7 @@ var searchData=
   ['biwidth_23',['biWidth',['../structCBMPInfoHeader.html#a4a19e9822b8f32a5e9558d70cf349618',1,'CBMPInfoHeader']]],
   ['bixpelspermeter_24',['biXPelsPerMeter',['../structCBMPInfoHeader.html#aae67b93de47f697d38f8decc15175a5f',1,'CBMPInfoHeader']]],
   ['biypelspermeter_25',['biYPelsPerMeter',['../structCBMPInfoHeader.html#ab4bd17342a4d6704cec23da8d9c282c9',1,'CBMPInfoHeader']]],
-  ['bool_26',['BOOL',['../ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f',1,'ArchNetworkWinsock.cpp']]],
+  ['bool_26',['BOOL',['../ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f',1,'BOOL:&#160;ArchNetworkWinsock.cpp'],['../ArchNetworkWinsock_8cpp.html#a903a7b84bb86345e3255c5f2217a7178',1,'BOOL(PASCAL FAR *WSACloseEvent_winsock)(WSAEVENT):&#160;ArchNetworkWinsock.cpp']]],
   ['bottomleft_27',['BottomLeft',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73da98e5a1c44509157ebcaf46c515c78875',1,'ScreenConfig']]],
   ['bottomright_28',['BottomRight',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73da9146bfc669fddc88db2c4d89297d0e9a',1,'ScreenConfig']]],
   ['broadcast_29',['broadcast',['../classCondVarBase.html#ac51c24891aa0ccc8c892b2a6bf9eaa32',1,'CondVarBase']]],

@@ -1,7 +1,10 @@
 var searchData=
 [
-  ['readfds_0',['readfds',['../ArchNetworkWinsock_8cpp.html#afb46b0b697be5d94ec8249a260ac5dfa',1,'ArchNetworkWinsock.cpp']]],
-  ['remotehost_1',['RemoteHost',['../structSettings_1_1Client.html#ad698d8035f8fb5bce2e895b5502a590e',1,'Settings::Client']]],
-  ['reserved1_2',['reserved1',['../structCBMPHeader.html#affa5707b2cb1ea213497ddd409132bca',1,'CBMPHeader']]],
-  ['reserved2_3',['reserved2',['../structCBMPHeader.html#a0a701986061e90b66bece5b02b9bd10a',1,'CBMPHeader']]]
+  ['port_0',['Port',['../structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d',1,'Settings::Core']]],
+  ['preventsleep_1',['PreventSleep',['../structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99',1,'Settings::Core']]],
+  ['processmode_2',['ProcessMode',['../structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e',1,'Settings::Core']]],
+  ['protocol_3',['protocol',['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'ArchNetworkWinsock.cpp']]],
+  ['protocol_5fmax_5flist_5flength_4',['PROTOCOL_MAX_LIST_LENGTH',['../group__protocol__constants.html#gab0f7d7d0c8719715c9d6dcb2ef83e8f0',1,'ProtocolTypes.h']]],
+  ['protocol_5fmax_5fmessage_5flength_5',['PROTOCOL_MAX_MESSAGE_LENGTH',['../group__protocol__constants.html#gad5b510266c8a03bcd0ee9745ae7046b6',1,'ProtocolTypes.h']]],
+  ['protocol_5fmax_5fstring_5flength_6',['PROTOCOL_MAX_STRING_LENGTH',['../group__protocol__constants.html#ga9ab73fe1896f46e4fe33be70edd710de',1,'ProtocolTypes.h']]]
 ];

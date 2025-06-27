@@ -10,8 +10,9 @@ var searchData=
   ['beginwritearray_7',['beginWriteArray',['../classQSettingsProxy.html#a0dae83850431563113c6e23c27063a0b',1,'QSettingsProxy']]],
   ['bind_8',['bind',['../classIDataSocket.html#a082f25acd579e91212937d49f12f7770',1,'IDataSocket::bind()'],['../classIListenSocket.html#a59460bcba2ee4686621dedbb41ebf378',1,'IListenSocket::bind()'],['../classISocket.html#af33566df32e8275637ee58c01952c4c1',1,'ISocket::bind()'],['../classTCPListenSocket.html#a70a39c96ef1da9d1dee05fd1615abe7b',1,'TCPListenSocket::bind()'],['../classTCPSocket.html#a8f565e1877ee464b808125fb826f039c',1,'TCPSocket::bind()']]],
   ['bindsocket_9',['bindSocket',['../classIArchNetwork.html#a0174cb401462609cd591237ef42278e7',1,'IArchNetwork::bindSocket()'],['../classArchNetworkBSD.html#ab9012bef3f2ce199a41e912dce29a862',1,'ArchNetworkBSD::bindSocket()'],['../classArchNetworkWinsock.html#a37710bdf58cdf35faef5bde29fcd609a',1,'ArchNetworkWinsock::bindSocket()']]],
-  ['broadcast_10',['broadcast',['../classCondVarBase.html#ac51c24891aa0ccc8c892b2a6bf9eaa32',1,'CondVarBase']]],
-  ['broadcastcondvar_11',['broadcastCondVar',['../classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3',1,'IArchMultithread::broadcastCondVar()'],['../classArchMultithreadPosix.html#a3194088ccd4748a2d310142661bed80b',1,'ArchMultithreadPosix::broadcastCondVar()'],['../classArchMultithreadWindows.html#ad9221ff3656c81cfd59514abcbf6f430',1,'ArchMultithreadWindows::broadcastCondVar()']]],
-  ['browseconfigfile_12',['browseConfigFile',['../classServerConfigDialog.html#af21a737077f157f315f015baaaa476c4',1,'ServerConfigDialog']]],
-  ['bye_13',['bye',['../classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048',1,'App::bye()'],['../classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7',1,'IApp::bye()']]]
+  ['bool_10',['BOOL',['../ArchNetworkWinsock_8cpp.html#a903a7b84bb86345e3255c5f2217a7178',1,'ArchNetworkWinsock.cpp']]],
+  ['broadcast_11',['broadcast',['../classCondVarBase.html#ac51c24891aa0ccc8c892b2a6bf9eaa32',1,'CondVarBase']]],
+  ['broadcastcondvar_12',['broadcastCondVar',['../classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3',1,'IArchMultithread::broadcastCondVar()'],['../classArchMultithreadPosix.html#a3194088ccd4748a2d310142661bed80b',1,'ArchMultithreadPosix::broadcastCondVar()'],['../classArchMultithreadWindows.html#ad9221ff3656c81cfd59514abcbf6f430',1,'ArchMultithreadWindows::broadcastCondVar()']]],
+  ['browseconfigfile_13',['browseConfigFile',['../classServerConfigDialog.html#af21a737077f157f315f015baaaa476c4',1,'ServerConfigDialog']]],
+  ['bye_14',['bye',['../classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048',1,'App::bye()'],['../classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7',1,'IApp::bye()']]]
 ];

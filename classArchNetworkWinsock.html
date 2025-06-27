@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -145,7 +145,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a4500154a30ebcdfb1701dedb63c07a46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept connection on socket.  <br /></td></tr>
 <tr class="memitem:a23f42c40529c7c19d3b94bab3c090ef5" id="r_a23f42c40529c7c19d3b94bab3c090ef5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23f42c40529c7c19d3b94bab3c090ef5">connectSocket</a> (<a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a> s, <a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>) override</td></tr>
 <tr class="memdesc:a23f42c40529c7c19d3b94bab3c090ef5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Connect socket.  <br /></td></tr>
-<tr class="memitem:a67750426aff0d7faaf7c933e1dad09c7" id="r_a67750426aff0d7faaf7c933e1dad09c7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67750426aff0d7faaf7c933e1dad09c7">pollSocket</a> (<a class="el" href="classIArchNetwork_1_1PollEntry.html">PollEntry</a>[], int num, double <a class="el" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) override</td></tr>
+<tr class="memitem:a67750426aff0d7faaf7c933e1dad09c7" id="r_a67750426aff0d7faaf7c933e1dad09c7"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67750426aff0d7faaf7c933e1dad09c7">pollSocket</a> (<a class="el" href="classIArchNetwork_1_1PollEntry.html">PollEntry</a>[], <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> num, double <a class="el" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) override</td></tr>
 <tr class="memdesc:a67750426aff0d7faaf7c933e1dad09c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check socket state.  <br /></td></tr>
 <tr class="memitem:a78d36e5d03c788c549d8fecee67b8e0e" id="r_a78d36e5d03c788c549d8fecee67b8e0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a78d36e5d03c788c549d8fecee67b8e0e">unblockPollSocket</a> (<a class="el" href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a> thread) override</td></tr>
 <tr class="memdesc:a78d36e5d03c788c549d8fecee67b8e0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unblock thread in <a class="el" href="#a67750426aff0d7faaf7c933e1dad09c7" title="Check socket state.">pollSocket()</a>  <br /></td></tr>
@@ -175,9 +175,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1e4b37c52e972be8227056e7b5042407"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert an address to a string.  <br /></td></tr>
 <tr class="memitem:aac7ffc5b934687de85c90ca9ffa118e4" id="r_aac7ffc5b934687de85c90ca9ffa118e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIArchNetwork.html#a9b60d6c6f00b91760d9ddbc580feebda">EAddressFamily</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac7ffc5b934687de85c90ca9ffa118e4">getAddrFamily</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>) override</td></tr>
 <tr class="memdesc:aac7ffc5b934687de85c90ca9ffa118e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get an address's family.  <br /></td></tr>
-<tr class="memitem:a0f735f2e437cb1b7f1af78ed16540f79" id="r_a0f735f2e437cb1b7f1af78ed16540f79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f735f2e437cb1b7f1af78ed16540f79">setAddrPort</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>, int port) override</td></tr>
+<tr class="memitem:a0f735f2e437cb1b7f1af78ed16540f79" id="r_a0f735f2e437cb1b7f1af78ed16540f79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0f735f2e437cb1b7f1af78ed16540f79">setAddrPort</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> port) override</td></tr>
 <tr class="memdesc:a0f735f2e437cb1b7f1af78ed16540f79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the port of an address.  <br /></td></tr>
-<tr class="memitem:a953e1d9ef4c182a17b976a460a36dede" id="r_a953e1d9ef4c182a17b976a460a36dede"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a953e1d9ef4c182a17b976a460a36dede">getAddrPort</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>) override</td></tr>
+<tr class="memitem:a953e1d9ef4c182a17b976a460a36dede" id="r_a953e1d9ef4c182a17b976a460a36dede"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a953e1d9ef4c182a17b976a460a36dede">getAddrPort</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>) override</td></tr>
 <tr class="memdesc:a953e1d9ef4c182a17b976a460a36dede"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the port of an address.  <br /></td></tr>
 <tr class="memitem:a56655c50a0541f69f1e2b49f5a1c9496" id="r_a56655c50a0541f69f1e2b49f5a1c9496"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a56655c50a0541f69f1e2b49f5a1c9496">isAnyAddr</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>) override</td></tr>
 <tr class="memdesc:a56655c50a0541f69f1e2b49f5a1c9496"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test for the "any" address.  <br /></td></tr>
@@ -638,7 +638,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int ArchNetworkWinsock::getAddrPort </td>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchNetworkWinsock::getAddrPort </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -908,14 +908,14 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int ArchNetworkWinsock::pollSocket </td>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchNetworkWinsock::pollSocket </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classIArchNetwork_1_1PollEntry.html">PollEntry</a></td>          <td class="paramname"><span class="paramname"><em></em></span>[], </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>num</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -994,7 +994,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int</td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>port</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

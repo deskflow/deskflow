@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,7 +124,7 @@ $(function(){initNavTree('ArchNetworkWinsock_8h_source.html','',''); });
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">class </span><a class="code hl_class" href="classArchSocketImpl.html">ArchSocketImpl</a></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>{</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classArchSocketImpl.html#a946c62fe506ebedf4243e5d404b8ad42">   33</a></span>  SOCKET <a class="code hl_variable" href="classArchSocketImpl.html#a946c62fe506ebedf4243e5d404b8ad42">m_socket</a>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classArchSocketImpl.html#a946c62fe506ebedf4243e5d404b8ad42">   33</a></span>  <a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a> <a class="code hl_variable" href="classArchSocketImpl.html#a946c62fe506ebedf4243e5d404b8ad42">m_socket</a>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">int</span> <a class="code hl_variable" href="classArchSocketImpl.html#ad740fa8fc13581a1ef772c5cca294f20">m_refCount</a>;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classArchSocketImpl.html#a2dbc9618067af1f083841b58bfda68cf">   35</a></span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a> <a class="code hl_variable" href="classArchSocketImpl.html#a2dbc9618067af1f083841b58bfda68cf">m_event</a>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classArchSocketImpl.html#a0f3972810f53e980a72d14eb86bcb9d3">   36</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classArchSocketImpl.html#a0f3972810f53e980a72d14eb86bcb9d3">m_pollWrite</a>;</div>
@@ -184,7 +184,7 @@ $(function(){initNavTree('ArchNetworkWinsock_8h_source.html','',''); });
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keywordtype">void</span> initModule(HMODULE);</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">void</span> setBlockingOnSocket(SOCKET, <span class="keywordtype">bool</span> blocking);</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">void</span> setBlockingOnSocket(<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a>, <span class="keywordtype">bool</span> blocking);</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span> </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keywordtype">void</span> throwError(<span class="keywordtype">int</span>);</div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">void</span> throwNameError(<span class="keywordtype">int</span>);</div>
@@ -199,6 +199,7 @@ $(function(){initNavTree('ArchNetworkWinsock_8h_source.html','',''); });
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a116668e65e11e5e00d5ff946bfc24cb4"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a116668e65e11e5e00d5ff946bfc24cb4">len</a></div><div class="ttdeci">static void FAR int len</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:37</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a44ed2a3b9f41a148fe2c905da8b5d699"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a44ed2a3b9f41a148fe2c905da8b5d699">addr</a></div><div class="ttdeci">static struct sockaddr FAR * addr</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:24</div></div>
+<div class="ttc" id="aArchNetworkWinsock_8cpp_html_a7bb54c9cead75ac4a547133fedc432b7"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a7bb54c9cead75ac4a547133fedc432b7">SOCKET</a></div><div class="ttdeci">static SOCKET(PASCAL FAR *accept_winsock)(SOCKET s</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:39</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac2b1742b0d829eff8513995ebd5a0bac"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac2b1742b0d829eff8513995ebd5a0bac">buf</a></div><div class="ttdeci">static void FAR * buf</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:37</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_acdd8686d6df899c1259adb98f9573991"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#acdd8686d6df899c1259adb98f9573991">WSAEVENT</a></div><div class="ttdeci">static WSAEVENT</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:53</div></div>

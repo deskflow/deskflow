@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,7 +117,7 @@ $(function(){initNavTree('ArchDaemonWindows_8h_source.html','',''); });
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classArchDaemonWindows.html">   23</a></span><span class="keyword">class </span><a class="code hl_function" href="classArchDaemonWindows.html#af043ae17d505e8d937bfccca868355b5">ArchDaemonWindows</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIArchDaemon.html">IArchDaemon</a></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classArchDaemonWindows.html#a5999e8da6d1f79715e2a373175b5abad">   26</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classArchDaemonWindows.html#a5999e8da6d1f79715e2a373175b5abad">RunFunc</a> = std::function&lt;int()&gt;;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classArchDaemonWindows.html#a5999e8da6d1f79715e2a373175b5abad">   26</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classArchDaemonWindows.html#a5999e8da6d1f79715e2a373175b5abad">RunFunc</a> = std::function&lt;<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;;</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <a class="code hl_function" href="classArchDaemonWindows.html#af043ae17d505e8d937bfccca868355b5">ArchDaemonWindows</a>();</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classArchDaemonWindows.html#a08591b7b1d78b90feb396b7ae3a0e546">   29</a></span>  <a class="code hl_function" href="classArchDaemonWindows.html#a08591b7b1d78b90feb396b7ae3a0e546">~ArchDaemonWindows</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
@@ -212,6 +212,7 @@ $(function(){initNavTree('ArchDaemonWindows_8h_source.html','',''); });
 <div class="line"><a id="l00141" name="l00141"></a><span class="lineno"><a class="line" href="ArchDaemonWindows_8h.html#ab8232800a094ca5686bf36f5be537bbf">  141</a></span><span class="preprocessor">#define LEGACY_CLIENT_DAEMON_NAME _T(&quot;Deskflow Client&quot;)</span></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a268ed61838e67a46467dcebfee0dcbe7"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></div><div class="ttdeci">static const WSAEVENT FAR DWORD</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:54</div></div>
+<div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>
 <div class="ttc" id="aIArchDaemon_8h_html"><div class="ttname"><a href="IArchDaemon_8h.html">IArchDaemon.h</a></div></div>
 <div class="ttc" id="aIArchMultithread_8h_html"><div class="ttname"><a href="IArchMultithread_8h.html">IArchMultithread.h</a></div></div>
 <div class="ttc" id="aIArchMultithread_8h_html_a921954f8b2f982e48ac4560610018210"><div class="ttname"><a href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a></div><div class="ttdeci">ArchMutexImpl * ArchMutex</div><div class="ttdoc">Opaque mutex type. An opaque type representing a mutex.</div><div class="ttdef"><b>Definition</b> IArchMultithread.h:39</div></div>

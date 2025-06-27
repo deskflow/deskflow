@@ -26,5 +26,7 @@ var MSWindowsDesks_8cpp =
     [ "WM_XBUTTONDOWN", "MSWindowsDesks_8cpp.html#a847d827f781702b7b7ecf13a70d0cf56", null ],
     [ "WM_XBUTTONUP", "MSWindowsDesks_8cpp.html#a616cb7a5bd545fb32808031dfd5f587f", null ],
     [ "XBUTTON1", "MSWindowsDesks_8cpp.html#a466ba152ad50de01f74de9926c77933d", null ],
-    [ "XBUTTON2", "MSWindowsDesks_8cpp.html#a9d5df0a70bb9ac15388bda51fd56115e", null ]
+    [ "XBUTTON2", "MSWindowsDesks_8cpp.html#a9d5df0a70bb9ac15388bda51fd56115e", null ],
+    [ "send_keyboard_input", "MSWindowsDesks_8cpp.html#aaeb3d61f0a48390f27a68f044a41263a", null ],
+    [ "send_mouse_input", "MSWindowsDesks_8cpp.html#aee3d96aa1dbccdbbdd83daa77c2545a2", null ]
 ];

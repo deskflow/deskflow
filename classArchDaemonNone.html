@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,7 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a36b10d9b07bb51d9fbddec655abe7e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install daemon.  <br /></td></tr>
 <tr class="memitem:a231fe6ec4d802f81dec881f6ef7f8a62" id="r_a231fe6ec4d802f81dec881f6ef7f8a62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a231fe6ec4d802f81dec881f6ef7f8a62">uninstallDaemon</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>) override</td></tr>
 <tr class="memdesc:a231fe6ec4d802f81dec881f6ef7f8a62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uninstall daemon.  <br /></td></tr>
-<tr class="memitem:adaaedb73390a69ad0f12437aefb4dd65" id="r_adaaedb73390a69ad0f12437aefb4dd65"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adaaedb73390a69ad0f12437aefb4dd65">daemonize</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func) override</td></tr>
+<tr class="memitem:adaaedb73390a69ad0f12437aefb4dd65" id="r_adaaedb73390a69ad0f12437aefb4dd65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adaaedb73390a69ad0f12437aefb4dd65">daemonize</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func) override</td></tr>
 <tr class="memdesc:adaaedb73390a69ad0f12437aefb4dd65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
 <tr class="memitem:a498d4936310c98705d3b0d866384203c" id="r_a498d4936310c98705d3b0d866384203c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a498d4936310c98705d3b0d866384203c">canInstallDaemon</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>) override</td></tr>
 <tr class="memdesc:a498d4936310c98705d3b0d866384203c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if user has permission to install the daemon.  <br /></td></tr>
@@ -152,7 +152,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classIArchDaemon"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_classIArchDaemon')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="classIArchDaemon.html">IArchDaemon</a></td></tr>
-<tr class="memitem:a442974912ac1dbb3cd2ff4c70800fa39 inherit pub_types_classIArchDaemon" id="r_a442974912ac1dbb3cd2ff4c70800fa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> = std::function&lt;int(int, const char **)&gt;</td></tr>
+<tr class="memitem:a442974912ac1dbb3cd2ff4c70800fa39 inherit pub_types_classIArchDaemon" id="r_a442974912ac1dbb3cd2ff4c70800fa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, const char **)&gt;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Dummy implementation of <a class="el" href="classIArchDaemon.html" title="Interface for architecture dependent daemonizing.">IArchDaemon</a>. </p>
@@ -279,7 +279,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int ArchDaemonNone::daemonize </td>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchDaemonNone::daemonize </td>
           <td>(</td>
           <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>

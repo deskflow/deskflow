@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -121,7 +121,7 @@ $(function(){initNavTree('IArchMultithread_8h_source.html','',''); });
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>{</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classIArchMultithread.html#a72d3a0de72be941d9959944c8515f2b0">   64</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classIArchMultithread.html#a72d3a0de72be941d9959944c8515f2b0">ThreadFunc</a> = <span class="keywordtype">void</span> *(*)(<span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">   66</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = <span class="keywordtype">unsigned</span> int;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">   66</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803">ThreadID</a> = <span class="keywordtype">unsigned</span> <a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>;</div>
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span></div>
 <div class="foldopen" id="foldopen00072" data-start="{" data-end="};">
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487">   72</a></span>  <span class="keyword">enum</span> <a class="code hl_enumeration" href="classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487">ESignal</a></div>
@@ -218,6 +218,7 @@ $(function(){initNavTree('IArchMultithread_8h_source.html','',''); });
 <div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:39</div></div>
+<div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>
 <div class="ttc" id="aIArchMultithread_8h_html_a822f5b5ead450c0bacb9897909f16ed6"><div class="ttname"><a href="IArchMultithread_8h.html#a822f5b5ead450c0bacb9897909f16ed6">ArchThread</a></div><div class="ttdeci">ArchThreadImpl * ArchThread</div><div class="ttdoc">Opaque thread type. An opaque type representing a thread.</div><div class="ttdef"><b>Definition</b> IArchMultithread.h:53</div></div>
 <div class="ttc" id="aIArchMultithread_8h_html_a921954f8b2f982e48ac4560610018210"><div class="ttname"><a href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a></div><div class="ttdeci">ArchMutexImpl * ArchMutex</div><div class="ttdoc">Opaque mutex type. An opaque type representing a mutex.</div><div class="ttdef"><b>Definition</b> IArchMultithread.h:39</div></div>
 <div class="ttc" id="aIArchMultithread_8h_html_a933450e841ce709f6002dbdde2c2db9f"><div class="ttname"><a href="IArchMultithread_8h.html#a933450e841ce709f6002dbdde2c2db9f">ArchCond</a></div><div class="ttdeci">ArchCondImpl * ArchCond</div><div class="ttdoc">Opaque condition variable type. An opaque type representing a condition variable.</div><div class="ttdef"><b>Definition</b> IArchMultithread.h:25</div></div>

@@ -10,6 +10,7 @@ var classMSWindowsClipboard =
     [ "get", "classMSWindowsClipboard.html#a899caa427535ebe3d3af4822dfe56ae8", null ],
     [ "getTime", "classMSWindowsClipboard.html#ad14ff5016dc5716933ce588094bb8da7", null ],
     [ "has", "classMSWindowsClipboard.html#a4b3c8bd2cdda2d4f6ebb4109417c47b9", null ],
+    [ "isOwnedByDeskflow", "classMSWindowsClipboard.html#adf543862c0e4eae5fbad3cdda605e310", null ],
     [ "open", "classMSWindowsClipboard.html#a5e554860266ee9d40d3102e88d1723e3", null ],
     [ "setFacade", "classMSWindowsClipboard.html#ada89d0e664afdf37f71ccdc29fbaaa72", null ]
 ];

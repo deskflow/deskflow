@@ -9,6 +9,7 @@ var classLog =
     [ "getFilter", "classLog.html#afefd738e1d77781478d9b24c5bbb3250", null ],
     [ "getFilterName", "classLog.html#aded3e07f99a313623841dfd4d7469112", null ],
     [ "getFilterName", "classLog.html#acc3e5f3afd8c16e06b24feac8bd44e7b", null ],
+    [ "getInstance", "classLog.html#a987f3ff401eea783d0e80daaea1d7aca", null ],
     [ "insert", "classLog.html#a6c175d8f7e551245fe983ef74aafb333", null ],
     [ "operator=", "classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142", null ],
     [ "operator=", "classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a", null ],

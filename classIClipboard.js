@@ -9,9 +9,13 @@ var classIClipboard =
     ] ],
     [ "add", "classIClipboard.html#a815377b3bf329ec0b1e3ba786208c27e", null ],
     [ "close", "classIClipboard.html#ac4baa709cc801acd2bd72a1b2404eceb", null ],
+    [ "copy", "classIClipboard.html#a36863b148ae50b8df7bed6b9b52e5a6b", null ],
+    [ "copy", "classIClipboard.html#ad250f04c761938a626ecc26b8a6c3429", null ],
     [ "empty", "classIClipboard.html#a5eea232f00e11ff558ae97dd4157a151", null ],
     [ "get", "classIClipboard.html#ab0cbb2678755a71972eb0b65aaa3825d", null ],
     [ "getTime", "classIClipboard.html#adc13e5ad0408d8a157fe099a46fb637c", null ],
     [ "has", "classIClipboard.html#ade396538851f2dbdc519e29c71465c4e", null ],
-    [ "open", "classIClipboard.html#a943ac453b759e3bf174ee99114243d5e", null ]
+    [ "marshall", "classIClipboard.html#a952be2b476e25f70c8a2d0d51690f5a0", null ],
+    [ "open", "classIClipboard.html#a943ac453b759e3bf174ee99114243d5e", null ],
+    [ "unmarshall", "classIClipboard.html#a7c084944837c68934cb90c3b46dfaee6", null ]
 ];

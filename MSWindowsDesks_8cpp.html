@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.107</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -282,6 +282,11 @@ Macros</h2></td></tr>
 <tr class="memitem:aa089f675a38a27d6d7275ec57e80041d" id="r_aa089f675a38a27d6d7275ec57e80041d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa089f675a38a27d6d7275ec57e80041d">DESKFLOW_MSG_SCREENSAVER</a>&#160;&#160;&#160;<a class="el" href="MSWindowsHook_8h.html#ad5ed0ab97b06dba4c08f8ab6518f6f60">DESKFLOW_HOOK_LAST_MSG</a> + 10</td></tr>
 <tr class="memitem:a84a38b724e9981393f2e9fee955a3bda" id="r_a84a38b724e9981393f2e9fee955a3bda"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a84a38b724e9981393f2e9fee955a3bda">DESKFLOW_MSG_FAKE_REL_MOVE</a>&#160;&#160;&#160;<a class="el" href="MSWindowsHook_8h.html#ad5ed0ab97b06dba4c08f8ab6518f6f60">DESKFLOW_HOOK_LAST_MSG</a> + 11</td></tr>
 <tr class="memitem:a8365c5fe4c638efc320611d3e6dbc8f7" id="r_a8365c5fe4c638efc320611d3e6dbc8f7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8365c5fe4c638efc320611d3e6dbc8f7">DESKFLOW_MSG_FAKE_INPUT</a>&#160;&#160;&#160;<a class="el" href="MSWindowsHook_8h.html#ad5ed0ab97b06dba4c08f8ab6518f6f60">DESKFLOW_HOOK_LAST_MSG</a> + 12</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aaeb3d61f0a48390f27a68f044a41263a" id="r_aaeb3d61f0a48390f27a68f044a41263a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aaeb3d61f0a48390f27a68f044a41263a">send_keyboard_input</a> (WORD wVk, WORD wScan, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> dwFlags)</td></tr>
+<tr class="memitem:aee3d96aa1dbccdbbdd83daa77c2545a2" id="r_aee3d96aa1dbccdbbdd83daa77c2545a2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee3d96aa1dbccdbbdd83daa77c2545a2">send_mouse_input</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> dwFlags, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> dx, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> dy, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> dwData)</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="a9fa75462d238de3eff1e044434c07f40" name="a9fa75462d238de3eff1e044434c07f40"></a>
@@ -658,6 +663,80 @@ Macros</h2></td></tr>
           <td class="memname">#define XBUTTON2&#160;&#160;&#160;0x0002</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="aaeb3d61f0a48390f27a68f044a41263a" name="aaeb3d61f0a48390f27a68f044a41263a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaeb3d61f0a48390f27a68f044a41263a">&#9670;&#160;</a></span>send_keyboard_input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void send_keyboard_input </td>
+          <td>(</td>
+          <td class="paramtype">WORD</td>          <td class="paramname"><span class="paramname"><em>wVk</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">WORD</td>          <td class="paramname"><span class="paramname"><em>wScan</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>dwFlags</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aee3d96aa1dbccdbbdd83daa77c2545a2" name="aee3d96aa1dbccdbbdd83daa77c2545a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee3d96aa1dbccdbbdd83daa77c2545a2">&#9670;&#160;</a></span>send_mouse_input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void send_mouse_input </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>dwFlags</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>dx</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>dy</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>dwData</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

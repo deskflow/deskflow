@@ -5,9 +5,12 @@ var structFingerprint =
       [ "SHA1", "structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78a9a9f4eb6d0036a164588b6ee74390442", null ],
       [ "SHA256", "structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78ab505df5aa812b4f320420b8a952f20e5", null ]
     ] ],
+    [ "fromDbLine", "structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a", null ],
     [ "isValid", "structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc", null ],
     [ "operator==", "structFingerprint.html#a7aa3895b3c5eecd5ada2cfbe79705756", null ],
     [ "toDbLine", "structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a", null ],
+    [ "typeFromString", "structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5", null ],
+    [ "typeToString", "structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287", null ],
     [ "data", "structFingerprint.html#ac0a51b5ec53e509b02bb0ff329484340", null ],
     [ "type", "structFingerprint.html#a030170043d67afd657a30201d0d39d1a", null ]
 ];
