@@ -9,11 +9,21 @@
 
 #include "base/XBase.h"
 
-//! Generic multithreading exception
-XBASE_SUBCLASS(XMT, XBase);
+/**
+ * @brief XMT generic multithreading exception
+ */
+class XMT : public XBase
+{
+  using XBase::XBase;
+};
 
-//! Thread creation exception
-/*!
-Thrown when a thread cannot be created.
-*/
-XBASE_SUBCLASS_WHAT(XMTThreadUnavailable, XMT);
+/**
+ * @brief XMTThreadUnavailable - Thrown when a thread cannot be created.
+ */
+class XMTThreadUnavailable : public XMT
+{
+  using XMT::XMT;
+
+protected:
+  std::string getWhat() const throw() override;
+};
