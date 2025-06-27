@@ -90,14 +90,14 @@ The client's connection lifecycle is defined by five primary states:
            (Leave)  │      (Enter)│                              │
                     │             ▼                              │
                     │    ┌──────────────────┐                    │
-                    │    │      ACTIVE      │  CCLOSE (close)    │
-                    └────┤  (Receiving all  ├───────────────────►┘
-                         │   input events)  ├◄─────┐
-                         └────────┬─────────┘      │
-                                  │                │
-                                  ▼                │
-                         ┌──────────────────┐      │
-                         │  PROCESS EVENT   ├──────┘
+                    └────┤      ACTIVE      │  CCLOSE (close)    │
+                         │  (Receiving all  ├───────────────────►┘
+                    ┌───►│   input events)  │
+                    │    └────────┬─────────┘
+                    │             │
+                    │             ▼
+                    │    ┌──────────────────┐
+                    └────┤  PROCESS EVENT   │
                          └──────────────────┘
                                   
                                   
