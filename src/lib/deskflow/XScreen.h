@@ -9,20 +9,35 @@
 
 #include "base/XBase.h"
 
-//! Generic screen exception
-XBASE_SUBCLASS(XScreen, XBase);
+/**
+ * @brief The XScreen class, generic screen exception
+ */
+class XScreen : public XBase
+{
+  using XBase::XBase;
+};
 
-//! Cannot open screen exception
-/*!
-Thrown when a screen cannot be opened or initialized.
-*/
-XBASE_SUBCLASS_WHAT(XScreenOpenFailure, XScreen);
+/**
+ * @brief XScreenOpenFailure - Thrown when a screen cannot be opened or initialized.
+ */
+class XScreenOpenFailure : public XScreen
+{
+  using XScreen::XScreen;
 
-//! XInput exception
-/*!
-Thrown when an XInput error occurs
-*/
-XBASE_SUBCLASS_WHAT(XScreenXInputFailure, XScreen);
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XScreenXInputFailure - Thrown when an XInput error occurs
+ */
+class XScreenXInputFailure : public XScreen
+{
+  using XScreen::XScreen;
+
+protected:
+  std::string getWhat() const throw() override;
+};
 
 //! Screen unavailable exception
 /*!
