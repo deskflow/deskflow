@@ -110,6 +110,8 @@ public:
   }
   void setMode(Settings::CoreMode mode)
   {
+    if (m_mode == mode)
+      return;
     m_mode = mode;
   }
 
