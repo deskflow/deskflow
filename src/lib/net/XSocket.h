@@ -11,8 +11,13 @@
 #include "common/Common.h"
 #include "io/XIO.h"
 
-//! Generic socket exception
-XBASE_SUBCLASS(XSocket, XBase);
+/**
+ * @brief XSocket generic socket exception
+ */
+class XSocket : public XBase
+{
+  using XBase::XBase;
+};
 
 //! Socket bad address exception
 /*!
@@ -56,33 +61,132 @@ private:
   int m_port;
 };
 
-//! I/O closing exception
-/*!
-Thrown if a stream cannot be closed.
-*/
-XBASE_SUBCLASS_FORMAT(XSocketIOClose, XIOClose);
+/**
+ * @brief XSocketIOClose - Thrown if a stream cannot be closed.
+ */
+class XSocketIOClose : public XIOClose
+{
+public:
+  XSocketIOClose() : XIOClose(), m_state(kDone)
+  {
+    // do nothing
+  }
+  explicit XSocketIOClose(const std::string &msg) : XIOClose(msg), m_state(kFirst)
+  {
+    // do nothing
+  }
+  ~XSocketIOClose() throw() override = default;
 
-//! Socket cannot bind address exception
-/*!
-Thrown when a socket cannot be bound to an address.
-*/
-XBASE_SUBCLASS_FORMAT(XSocketBind, XSocket);
+  const char *what() const throw() override
+  {
+    if (m_state == kFirst) {
+      m_state = kFormat;
+      m_formatted = getWhat();
+      m_state = kDone;
+    }
+    if (m_state == kDone) {
+      return m_formatted.c_str();
+    } else {
+      return XIOClose::what();
+    }
+  }
 
-//! Socket address in use exception
-/*!
-Thrown when a socket cannot be bound to an address because the address
-is already in use.
-*/
-XBASE_SUBCLASS(XSocketAddressInUse, XSocketBind);
+protected:
+  std::string getWhat() const throw() override;
 
-//! Cannot connect socket exception
-/*!
-Thrown when a socket cannot connect to a remote endpoint.
-*/
-XBASE_SUBCLASS_FORMAT(XSocketConnect, XSocket);
+private:
+  enum EState
+  {
+    kFirst,
+    kFormat,
+    kDone
+  };
+  mutable EState m_state;
+  mutable std::string m_formatted;
+};
 
-//! Cannot create socket exception
-/*!
-Thrown when a socket cannot be created (by the operating system).
-*/
-XBASE_SUBCLASS_FORMAT(XSocketCreate, XSocket);
+/**
+ * @brief XSocketWithWhat - generic XSocket Exception with a generic `what` method impl
+ */
+class XSocketWithWhat : public XSocket
+{
+public:
+  XSocketWithWhat() : XSocket(), m_state(kDone)
+  {
+    // do nothing
+  }
+  explicit XSocketWithWhat(const std::string &msg) : XSocket(msg), m_state(kFirst)
+  {
+    // do nothing
+  }
+  ~XSocketWithWhat() throw() override = default;
+
+  const char *what() const throw() override
+  {
+    if (m_state == kFirst) {
+      m_state = kFormat;
+      m_formatted = getWhat();
+      m_state = kDone;
+    }
+    if (m_state == kDone) {
+      return m_formatted.c_str();
+    } else {
+      return XSocket::what();
+    }
+  }
+
+private:
+  enum EState
+  {
+    kFirst,
+    kFormat,
+    kDone
+  };
+  mutable EState m_state;
+  mutable std::string m_formatted;
+};
+
+/**
+ * @brief XSocketBind - Thrown when a socket cannot be bound to an address.
+ */
+class XSocketBind : public XSocketWithWhat
+{
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XSocketAddressInUse
+ * Thrown when a socket cannot be bound to an address because the address is already in use.
+ */
+class XSocketAddressInUse : public XSocketWithWhat
+{
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XSocketConnect - Thrown when a socket cannot connect to a remote endpoint.
+ */
+class XSocketConnect : public XSocketWithWhat
+{
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XSocketConnect - Thrown when a socket cannot be created (by the operating system).
+ */
+class XSocketCreate : public XSocketWithWhat
+{
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
+};

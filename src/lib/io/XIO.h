@@ -9,30 +9,51 @@
 
 #include "base/XBase.h"
 
-//! Generic I/O exception
-XBASE_SUBCLASS(XIO, XBase);
+/**
+ * @brief The XIO class Generic i/o exception class
+ */
+class XIO : public XBase
+{
+  using XBase::XBase;
+};
 
-//! I/O closing exception
-/*!
-Thrown if a stream cannot be closed.
-*/
-XBASE_SUBCLASS(XIOClose, XIO);
+/**
+ * @brief The XIOClose - Thrown if a stream cannot be closed.
+ */
+class XIOClose : public XIO
+{
+  using XIO::XIO;
+};
 
-//! I/O already closed exception
-/*!
-Thrown when attempting to close or perform I/O on an already closed.
-stream.
-*/
-XBASE_SUBCLASS_WHAT(XIOClosed, XIO);
+/**
+ * @brief XIOClosed - Thrown when attempting to close or perform I/O on an already closed.
+ */
+class XIOClosed : public XIO
+{
+  using XIO::XIO;
 
-//! I/O end of stream exception
-/*!
-Thrown when attempting to read beyond the end of a stream.
-*/
-XBASE_SUBCLASS_WHAT(XIOEndOfStream, XIO);
+protected:
+  std::string getWhat() const throw() override;
+};
 
-//! I/O would block exception
-/*!
-Thrown if an operation on a stream would block.
-*/
-XBASE_SUBCLASS_WHAT(XIOWouldBlock, XIO);
+/**
+ * @brief XIOEndOfStream - Thrown when attempting to read beyond the end of a stream.
+ */
+class XIOEndOfStream : public XIO
+{
+  using XIO::XIO;
+
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XIOWouldBlock - Thrown if an operation on a stream would block.
+ */
+class XIOWouldBlock : public XIO
+{
+  using XIO::XIO;
+
+protected:
+  std::string getWhat() const throw() override;
+};

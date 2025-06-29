@@ -276,8 +276,10 @@ extern const char *const kBarrierProtocolName;
  * - `$3`: Server minor version number (2 bytes)
  *
  * **Example**:
+ *
+ *  Barrier protocol, version 1.8
  * ```
- * "Barrier\x00\x01\x00\x08"  // Barrier protocol, version 1.8
+ * "Barrier\x00\x01\x00\x08"
  * ```
  *
  * This is the first message sent by the server after a client connects.
@@ -318,9 +320,10 @@ extern const char *const kMsgHelloArgs;
  * - `$4`: Client name (string) - A standard length-prefixed string.
  *
  * **Example**:
+ *
+ * Barrier protocol, version 1.8, client name "workstation"
  * ```
  * "Barrier\x00\x01\x00\x08\x00\x00\x00\x0Bworkstation"
- * // Barrier protocol, version 1.8, client name "workstation"
  * ```
  *
  * Sent by the client in response to kMsgHello. After this exchange,
@@ -396,9 +399,10 @@ extern const char *const kMsgCClose;
  * - `$4`: Modifier key mask (2 bytes, unsigned)
  *
  * **Example**:
+ *
+ * Enter at (400, 300), sequence 1, no modifiers
  * ```
  * "CINN\x01\x90\x01\x2C\x00\x00\x00\x01\x00\x00"
- * // Enter at (400, 300), sequence 1, no modifiers
  * ```
  *
  * Sent when the mouse cursor enters the secondary screen from the primary.
@@ -441,9 +445,10 @@ extern const char *const kMsgCLeave;
  * - `$2`: Sequence number (4 bytes)
  *
  * **Example**:
+ *
+ * Primary clipboard grabbed, sequence 1
  * ```
  * "CCLP\x00\x00\x00\x00\x01"
- * // Primary clipboard grabbed, sequence 1
  * ```
  *
  * Sent when an application grabs a clipboard on either screen.
@@ -468,11 +473,16 @@ extern const char *const kMsgCClipboard;
  * **Format**: `"CSEC%1i"`
  * **Parameters**:
  * - `$1`: Screensaver state (1 byte): 1 = started, 0 = stopped
+ * **Examples**:
  *
- * **Example**:
+ * Screensaver started
  * ```
- * "CSEC\x01"  // Screensaver started
- * "CSEC\x00"  // Screensaver stopped
+ * "CSEC\x01"
+ * ```
+ *
+ * Screensaver stopped
+ * ```
+ * "CSEC\x00"
  * ```
  *
  * Notifies the secondary screen when the primary's screensaver
@@ -568,9 +578,10 @@ extern const char *const kMsgCKeepAlive;
  * - `$4`: Language code (string) - Keyboard language identifier
  *
  * **Example**:
+ *
+ * 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E), English
  * ```
  * "DKDL\x00\x61\x00\x00\x00\x1E\x00\x00\x00\x02en"
- * // 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E), English
  * ```
  *
  * Enhanced version of kMsgDKeyDown that includes language information
@@ -595,9 +606,10 @@ extern const char *const kMsgDKeyDownLang;
  * platform-dependent scan code of the key pressed.
  *
  * **Example**:
+ *
+ * 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E)
  * ```
  * "DKDN\x00\x61\x00\x00\x00\x1E"
- * // 'a' key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E)
  * ```
  *
  * **Key Mapping Strategy**:
@@ -652,9 +664,10 @@ extern const char *const kMsgDKeyDown1_0;
  * - `$5`: Language code (string) - Keyboard language identifier
  *
  * **Example**:
+ *
+ * 'a' key repeating 3 times, English layout
  * ```
  * "DKRP\x00\x61\x00\x00\x00\x03\x00\x1E\x00\x00\x00\x02en"
- * // 'a' key repeating 3 times, English layout
  * ```
  *
  * Sent when a key is held down and auto-repeating. The repeat count
@@ -698,9 +711,10 @@ extern const char *const kMsgDKeyRepeat1_0;
  * platform-dependent scan code of the key pressed.
  *
  * **Example**:
+ *
+ * Release 'a' key, physical key 0x1E
  * ```
  * "DKUP\x00\x61\x00\x00\x00\x1E"
- * // Release 'a' key, physical key 0x1E
  * ```
  *
  * **Important**: The secondary screen should use KeyButton (not KeyID)
@@ -747,11 +761,21 @@ extern const char *const kMsgDKeyUp1_0;
  * **Parameters**:
  * - `$1`: ButtonID (1 byte) - Mouse button identifier
  *
- * **Example**:
+ * **Examples**:
+ *
+ * Left mouse button pressed
  * ```
- * "DMDN\x01"  // Left mouse button pressed
- * "DMDN\x02"  // Right mouse button pressed
- * "DMDN\x03"  // Middle mouse button pressed
+ * "DMDN\x01"
+ * ```
+ *
+ * Right mouse button pressed
+ * ```
+ * "DMDN\x02"
+ * ```
+ *
+ * Middle mouse button pressed
+ * ```
+ * "DMDN\x03"
  * ```
  *
  * **Button IDs**:
@@ -775,8 +799,10 @@ extern const char *const kMsgDMouseDown;
  * - `$1`: ButtonID (1 byte) - Mouse button identifier
  *
  * **Example**:
+ *
+ * Left mouse button released
  * ```
- * "DMUP\x01"  // Left mouse button released
+ * "DMUP\x01"
  * ```
  *
  * Button IDs are the same as for kMsgDMouseDown.
@@ -797,8 +823,10 @@ extern const char *const kMsgDMouseUp;
  * - `$2`: Y coordinate (2 bytes, signed) - Absolute screen position
  *
  * **Example**:
+ *
+ * Move to (400, 300)
  * ```
- * "DMMV\x01\x90\x01\x2C"  // Move to (400, 300)
+ * "DMMV\x01\x90\x01\x2C"
  * ```
  *
  * Coordinates are absolute positions on the secondary screen.
@@ -820,8 +848,10 @@ extern const char *const kMsgDMouseMove;
  * - `$2`: Y delta (2 bytes, signed) - Vertical movement
  *
  * **Example**:
+ *
+ * Move right 10, up 10 pixels
  * ```
- * "DMRM\x00\x0A\xFF\xF6"  // Move right 10, up 10 pixels
+ * "DMRM\x00\x0A\xFF\xF6"
  * ```
  *
  * Relative movement is useful for:
@@ -845,10 +875,20 @@ extern const char *const kMsgDMouseRelMove;
  * - `$2`: Y delta (2 bytes, signed) - Vertical scroll
  *
  * **Example**:
+ *
+ * Scroll up one tick (+120)
  * ```
- * "DMWM\x00\x00\x00\x78"  // Scroll up one tick (+120)
- * "DMWM\x00\x00\xFF\x88"  // Scroll down one tick (-120)
- * "DMWM\x00\x78\x00\x00"  // Scroll right one tick (+120)
+ * "DMWM\x00\x00\x00\x78"
+ * ```
+ *
+ * Scroll down one tick (-120)
+ * ```
+ * "DMWM\x00\x00\xFF\x88"
+ * ```
+ *
+ * Scroll right one tick (+120)
+ * ```
+ * "DMWM\x00\x78\x00\x00"
  * ```
  *
  * **Scroll Values**:
@@ -904,9 +944,10 @@ extern const char *const kMsgDMouseWheel1_0;
  * - `$4`: Clipboard data (string)
  *
  * **Example**:
+ *
+ * Primary clipboard, sequence 1, no flags, text "Hello World"
  * ```
  * "DCLP\x00\x00\x00\x00\x01\x00\x00\x00\x00\x0BHello World"
- * // Primary clipboard, sequence 1, no flags, text "Hello World"
  * ```
  *
  * **Clipboard Identifiers**:
@@ -953,9 +994,10 @@ extern const char *const kMsgDClipboard;
  * - `$7`: Mouse Y position (2 bytes, signed)
  *
  * **Example**:
+ *
+ * Screen at (0,0), 1920x1080, mouse at (400,300)
  * ```
  * "DINF\x00\x00\x00\x00\x07\x80\x04\x38\x00\x00\x01\x90\x01\x2C"
- * // Screen at (0,0), 1920x1080, mouse at (400,300)
  * ```
  *
  * **When to Send**:
@@ -984,9 +1026,10 @@ extern const char *const kMsgDInfo;
  * - `$1`: Option/value pairs (4-byte integer list)
  *
  * **Example**:
+ *
  * ```
  * "DSOP\x00\x00\x00\x02\x00\x00\x00\x01\x00\x00\x00\x01\x00\x00\x00\x02\x00\x00\x00\x00"
- * // 2 pairs: option 1 = value 1, option 2 = value 0
+ * 2 pairs: option 1 = value 1, option 2 = value 0
  * ```
  *
  * Sets configuration options on the client. Options are sent as
@@ -1022,13 +1065,15 @@ extern const char *const kMsgDSetOptions;
  * - `3` (kDataEnd): Transfer complete (data may be empty)
  *
  * **Example Transfer Sequence**:
+ *
+ * Send 4096 bytes
  * ```
- * "DFTR\x01\x00\x00\x00\x00\x00\x00\x10\x00"  // Start: 4096 bytes
- * "DFTR\x02[1024 bytes of file data]"          // Chunk: data
- * "DFTR\x02[1024 bytes of file data]"          // Chunk: data
- * "DFTR\x02[1024 bytes of file data]"          // Chunk: data
- * "DFTR\x02[1024 bytes of file data]"          // Chunk: data
- * "DFTR\x03"                                   // End: complete
+ * "DFTR\x01\x00\x00\x00\x00\x00\x00\x10\x00"
+ * "DFTR\x02[1024 bytes of file data]"
+ * "DFTR\x02[1024 bytes of file data]"
+ * "DFTR\x02[1024 bytes of file data]"
+ * "DFTR\x02[1024 bytes of file data]"
+ * "DFTR\x03"
  * ```
  *
  * **Protocol Flow**:
@@ -1054,8 +1099,9 @@ extern const char *const kMsgDFileTransfer;
  * - `$2`: File paths (string) - Null-separated file paths
  *
  * **Example**:
+ *
+ * Dragging 2 files
  * ``` * "DDRG\x00\x02/path/to/file1.txt\x00/path/to/file2.txt\x00"
- * // Dragging 2 files
  * ```
  *
  * Sent when a drag-and-drop operation begins. Contains the list
@@ -1091,9 +1137,10 @@ extern const char *const kMsgDDragInfo;
  * - `$1`: Application name (string) - App requesting secure input
  *
  * **Example**:
+ *
+ * Terminal app is requesting secure input
  * ```
  * "SECN\x00\x00\x00\x08Terminal"
- * // Terminal app is requesting secure input
  * ```
  *
  * Notifies the secondary screen when an application on the primary
@@ -1120,9 +1167,10 @@ extern const char *const kMsgDSecureInputNotification;
  * - `$1`: Language list (string) - Available server languages
  *
  * **Example**:
+ *
+ * Server supports English, French, German, Spanish
  * ```
  * "LSYN\x00\x00\x00\x0Ben,fr,de,es"
- * // Server supports English, French, German, Spanish
  * ```
  *
  * Synchronizes keyboard language/layout information between
@@ -1190,8 +1238,10 @@ extern const char *const kMsgQInfo;
  * - `$2`: Primary minor version (2 bytes)
  *
  * **Example**:
+ *
+ * Server is version 1.8
  * ```
- * "EICV\x00\x01\x00\x08"  // Server is version 1.8
+ * "EICV\x00\x01\x00\x08"
  * ```
  *
  * Sent when the client and server have incompatible protocol versions.

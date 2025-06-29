@@ -9,26 +9,43 @@
 
 #include "base/XBase.h"
 
-//! Generic deskflow exception
-XBASE_SUBCLASS(XDeskflow, XBase);
+/**
+ * @brief The XDeskflow class Generic deskflow exception class
+ */
+class XDeskflow : public XBase
+{
+  using XBase::XBase;
+};
 
-//! Subscription error
-/*!
-Thrown when there is a problem with the subscription.
-*/
-XBASE_SUBCLASS(XSubscription, XDeskflow);
+/**
+ * @brief XSubscription - Thrown when there is a problem with the subscription.
+ */
+class XSubscription : public XDeskflow
+{
+  using XDeskflow::XDeskflow;
+};
 
-//! Client error exception
-/*!
-Thrown when the client fails to follow the protocol.
-*/
-XBASE_SUBCLASS_WHAT(XBadClient, XDeskflow);
+/**
+ * @brief XBadClient - Thrown when the client fails to follow the protocol.
+ */
+class XBadClient : public XDeskflow
+{
+  using XDeskflow::XDeskflow;
 
-//! Server protocol error
-/*!
-Thrown when the server protocol is unrecognized.
-*/
-XBASE_SUBCLASS_WHAT(XInvalidProtocol, XDeskflow);
+protected:
+  std::string getWhat() const throw() override;
+};
+
+/**
+ * @brief XInvalidProtocol - Thrown when the server protocol is unreconized.
+ */
+class XInvalidProtocol : public XDeskflow
+{
+  using XDeskflow::XDeskflow;
+
+protected:
+  std::string getWhat() const throw() override;
+};
 
 //! Incompatible client exception
 /*!
