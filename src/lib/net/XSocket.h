@@ -106,20 +106,20 @@ private:
 };
 
 /**
- * @brief XSocketBind - Thrown when a socket cannot be bound to an address.
+ * @brief XSocketWithWhat - generic XSocket Exception with a generic `what` method impl
  */
-class XSocketBind : public XSocket
+class XSocketWithWhat : public XSocket
 {
 public:
-  XSocketBind() : XSocket(), m_state(kDone)
+  XSocketWithWhat() : XSocket(), m_state(kDone)
   {
     // do nothing
   }
-  explicit XSocketBind(const std::string &msg) : XSocket(msg), m_state(kFirst)
+  explicit XSocketWithWhat(const std::string &msg) : XSocket(msg), m_state(kFirst)
   {
     // do nothing
   }
-  ~XSocketBind() throw() override = default;
+  ~XSocketWithWhat() throw() override = default;
 
   const char *what() const throw() override
   {
@@ -135,9 +135,6 @@ public:
     }
   }
 
-protected:
-  std::string getWhat() const throw() override;
-
 private:
   enum EState
   {
@@ -148,99 +145,48 @@ private:
   mutable EState m_state;
   mutable std::string m_formatted;
 };
+
+/**
+ * @brief XSocketBind - Thrown when a socket cannot be bound to an address.
+ */
+class XSocketBind : public XSocketWithWhat
+{
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
+};
+
 /**
  * @brief XSocketAddressInUse
  * Thrown when a socket cannot be bound to an address because the address is already in use.
  */
-class XSocketAddressInUse : public XSocketBind
+class XSocketAddressInUse : public XSocketWithWhat
 {
-  using XSocketBind::XSocketBind;
+  using XSocketWithWhat::XSocketWithWhat;
+
+protected:
+  std::string getWhat() const throw() override;
 };
 
 /**
  * @brief XSocketConnect - Thrown when a socket cannot connect to a remote endpoint.
  */
-class XSocketConnect : public XSocket
+class XSocketConnect : public XSocketWithWhat
 {
-public:
-  XSocketConnect() : XSocket(), m_state(kDone)
-  {
-    // do nothing
-  }
-  explicit XSocketConnect(const std::string &msg) : XSocket(msg), m_state(kFirst)
-  {
-    // do nothing
-  }
-  ~XSocketConnect() throw() override = default;
-
-  const char *what() const throw() override
-  {
-    if (m_state == kFirst) {
-      m_state = kFormat;
-      m_formatted = getWhat();
-      m_state = kDone;
-    }
-    if (m_state == kDone) {
-      return m_formatted.c_str();
-    } else {
-      return XSocket::what();
-    }
-  }
+  using XSocketWithWhat::XSocketWithWhat;
 
 protected:
   std::string getWhat() const throw() override;
-
-private:
-  enum EState
-  {
-    kFirst,
-    kFormat,
-    kDone
-  };
-  mutable EState m_state;
-  mutable std::string m_formatted;
 };
 
 /**
  * @brief XSocketConnect - Thrown when a socket cannot be created (by the operating system).
  */
-class XSocketCreate : public XSocket
+class XSocketCreate : public XSocketWithWhat
 {
-public:
-  XSocketCreate() : XSocket(), m_state(kDone)
-  {
-    // do nothing
-  }
-  explicit XSocketCreate(const std::string &msg) : XSocket(msg), m_state(kFirst)
-  {
-    // do nothing
-  }
-  ~XSocketCreate() throw() override = default;
-
-  const char *what() const throw() override
-  {
-    if (m_state == kFirst) {
-      m_state = kFormat;
-      m_formatted = getWhat();
-      m_state = kDone;
-    }
-    if (m_state == kDone) {
-      return m_formatted.c_str();
-    } else {
-      return XSocket::what();
-    }
-  }
+  using XSocketWithWhat::XSocketWithWhat;
 
 protected:
   std::string getWhat() const throw() override;
-
-private:
-  enum EState
-  {
-    kFirst,
-    kFormat,
-    kDone
-  };
-  mutable EState m_state;
-  mutable std::string m_formatted;
 };

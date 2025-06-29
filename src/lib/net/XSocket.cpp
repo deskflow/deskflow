@@ -70,6 +70,15 @@ std::string XSocketBind::getWhat() const throw()
 }
 
 //
+// XSocketAddressInUse
+//
+
+std::string XSocketAddressInUse::getWhat() const throw()
+{
+  return format("XSocketAddressInUse", "cannot bind address: %{1}", what());
+}
+
+//
 // XSocketConnect
 //
 
