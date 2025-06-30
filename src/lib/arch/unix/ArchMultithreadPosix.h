@@ -76,8 +76,8 @@ public:
   bool isExitedThread(ArchThread) override;
   void *getResultOfThread(ArchThread) override;
   ThreadID getIDOfThread(ArchThread) override;
-  void setSignalHandler(ESignal, SignalFunc, void *) override;
-  void raiseSignal(ESignal) override;
+  void setSignalHandler(ThreadSignal, SignalFunc, void *) override;
+  void raiseSignal(ThreadSignal) override;
 
 private:
   void startSignalHandler();
@@ -108,6 +108,6 @@ private:
   ThreadID m_nextID = 0;
 
   pthread_t m_signalThread;
-  SignalFunc m_signalFunc[kNUM_SIGNALS];
-  void *m_signalUserData[kNUM_SIGNALS];
+  SignalFunc m_signalFunc[static_cast<int>(ThreadSignal::MaxSignals)];
+  void *m_signalUserData[static_cast<int>(ThreadSignal::MaxSignals)];
 };

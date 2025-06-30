@@ -140,7 +140,7 @@ void ServerApp::help()
   LOG((CLOG_PRINT "%s", help.str().c_str()));
 }
 
-void ServerApp::reloadSignalHandler(Arch::ESignal, void *)
+void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
 {
   IEventQueue *events = App::instance().getEvents();
   events->addEvent(Event(EventTypes::ServerAppReloadConfig, events->getSystemTarget()));
@@ -608,7 +608,7 @@ int ServerApp::mainLoop()
   appUtil().startNode();
 
   // handle hangup signal by reloading the server's configuration
-  ARCH->setSignalHandler(Arch::kHANGUP, &reloadSignalHandler, nullptr);
+  ARCH->setSignalHandler(Arch::ThreadSignal::Hangup, &reloadSignalHandler, nullptr);
   m_events->addHandler(EventTypes::ServerAppReloadConfig, m_events->getSystemTarget(), [this](const auto &) {
     reloadConfig();
   });

@@ -80,7 +80,7 @@ ArchMultithreadWindows::ArchMultithreadWindows()
   s_instance = this;
 
   // no signal handlers
-  for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
+  for (size_t i = 0; i < static_cast<size_t>(ThreadSignal::MaxSignals); ++i) {
     m_signalFunc[i] = nullptr;
     m_signalUserData[i] = nullptr;
   }
@@ -474,20 +474,23 @@ IArchMultithread::ThreadID ArchMultithreadWindows::getIDOfThread(ArchThread thre
   return static_cast<ThreadID>(thread->m_id);
 }
 
-void ArchMultithreadWindows::setSignalHandler(ESignal signal, SignalFunc func, void *userData)
+void ArchMultithreadWindows::setSignalHandler(ThreadSignal signal, SignalFunc func, void *userData)
 {
   std::scoped_lock lock{m_threadMutex};
-  m_signalFunc[signal] = func;
-  m_signalUserData[signal] = userData;
+  const auto index = static_cast<int>(signal);
+  m_signalFunc[index] = func;
+  m_signalUserData[index] = userData;
 }
 
-void ArchMultithreadWindows::raiseSignal(ESignal signal)
+void ArchMultithreadWindows::raiseSignal(ThreadSignal signal)
 {
+  using enum IArchMultithread::ThreadSignal;
   std::scoped_lock lock{m_threadMutex};
-  if (m_signalFunc[signal] != nullptr) {
-    m_signalFunc[signal](signal, m_signalUserData[signal]);
+  const auto index = static_cast<int>(signal);
+  if (m_signalFunc[index] != nullptr) {
+    m_signalFunc[index](signal, m_signalUserData[index]);
     ARCH->unblockPollSocket(m_mainThread);
-  } else if (signal == kINTERRUPT || signal == kTERMINATE) {
+  } else if (signal == Interrupt || signal == Terminate) {
     ARCH->cancelThread(m_mainThread);
   }
 }

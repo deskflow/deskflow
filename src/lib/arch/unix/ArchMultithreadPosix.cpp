@@ -61,7 +61,7 @@ ArchMultithreadPosix::ArchMultithreadPosix()
   s_instance = this;
 
   // no signal handlers
-  for (size_t i = 0; i < kNUM_SIGNALS; ++i) {
+  for (size_t i = 0; i < static_cast<size_t>(ThreadSignal::MaxSignals); ++i) {
     m_signalFunc[i] = nullptr;
     m_signalUserData[i] = nullptr;
   }
@@ -467,20 +467,24 @@ IArchMultithread::ThreadID ArchMultithreadPosix::getIDOfThread(ArchThread thread
   return thread->m_id;
 }
 
-void ArchMultithreadPosix::setSignalHandler(ESignal signal, SignalFunc func, void *userData)
+void ArchMultithreadPosix::setSignalHandler(ThreadSignal signal, SignalFunc func, void *userData)
 {
   std::scoped_lock lock{m_threadMutex};
-  m_signalFunc[signal] = func;
-  m_signalUserData[signal] = userData;
+  const auto index = static_cast<int>(signal);
+  m_signalFunc[index] = func;
+  m_signalUserData[index] = userData;
 }
 
-void ArchMultithreadPosix::raiseSignal(ESignal signal)
+void ArchMultithreadPosix::raiseSignal(ThreadSignal signal)
 {
+  using enum ThreadSignal;
+
   std::scoped_lock lock{m_threadMutex};
-  if (m_signalFunc[signal] != nullptr) {
-    m_signalFunc[signal](signal, m_signalUserData[signal]);
+  const auto index = static_cast<int>(signal);
+  if (m_signalFunc[index] != nullptr) {
+    m_signalFunc[index](signal, m_signalUserData[index]);
     pthread_kill(m_mainThread->m_thread, SIGWAKEUP);
-  } else if (signal == kINTERRUPT || signal == kTERMINATE) {
+  } else if (signal == Interrupt || signal == Terminate) {
     ARCH->cancelThread(m_mainThread);
   }
 }
@@ -677,20 +681,21 @@ void *ArchMultithreadPosix::threadSignalHandler(void *)
 
     // if we get here then the signal was raised
     switch (signal) {
+      using enum ThreadSignal;
     case SIGINT:
-      ARCH->raiseSignal(kINTERRUPT);
+      ARCH->raiseSignal(Interrupt);
       break;
 
     case SIGTERM:
-      ARCH->raiseSignal(kTERMINATE);
+      ARCH->raiseSignal(Terminate);
       break;
 
     case SIGHUP:
-      ARCH->raiseSignal(kHANGUP);
+      ARCH->raiseSignal(Hangup);
       break;
 
     case SIGUSR2:
-      ARCH->raiseSignal(kUSER);
+      ARCH->raiseSignal(User);
       break;
 
     default:
