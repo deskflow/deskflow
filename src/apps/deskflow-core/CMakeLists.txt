@@ -40,7 +40,7 @@ if(APPLE)
   )
 elseif(UNIX)
   install(TARGETS ${target} DESTINATION bin)
-  generate_app_man(${target})
+  generate_app_man(${target} "${CMAKE_PROJECT_DESCRIPTION}")
 elseif(WIN32)
   install(
     TARGETS ${target}

@@ -10,11 +10,12 @@ if(UNIX AND NOT APPLE)
   endif()
 endif()
 
-function(generate_app_man TARGET)
+function(generate_app_man TARGET NAME)
   if(HELP2MAN)
     add_custom_command(
       TARGET ${target} POST_BUILD
         COMMAND QT_QPA_PLATFORM=minimal PATH=$<TARGET_FILE_DIR:${target}>:${PATH} ${HELP2MAN}
+          --name ${NAME}
           --include ${CMAKE_SOURCE_DIR}/src/apps/res/manpage.txt
           --no-info
           ${target}
