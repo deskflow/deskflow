@@ -118,7 +118,7 @@ public:
   // Static functions
   //
 
-  static void reloadSignalHandler(Arch::ESignal, void *);
+  static void reloadSignalHandler(Arch::ThreadSignal, void *);
   static ServerApp &instance()
   {
     return (ServerApp &)App::instance();

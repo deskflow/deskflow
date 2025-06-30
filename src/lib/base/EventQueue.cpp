@@ -17,7 +17,7 @@
 #include <stdexcept>
 
 // interrupt handler.  this just adds a quit event to the queue.
-static void interrupt(Arch::ESignal, void *data)
+static void interrupt(Arch::ThreadSignal, void *data)
 {
   auto *events = static_cast<EventQueue *>(data);
   events->addEvent(Event(EventTypes::Quit));
@@ -29,8 +29,8 @@ static void interrupt(Arch::ESignal, void *data)
 
 EventQueue::EventQueue() : m_readyMutex(new Mutex), m_readyCondVar(new CondVar<bool>(m_readyMutex, false))
 {
-  ARCH->setSignalHandler(Arch::kINTERRUPT, &interrupt, this);
-  ARCH->setSignalHandler(Arch::kTERMINATE, &interrupt, this);
+  ARCH->setSignalHandler(Arch::ThreadSignal::Interrupt, &interrupt, this);
+  ARCH->setSignalHandler(Arch::ThreadSignal::Terminate, &interrupt, this);
   m_buffer = std::make_unique<SimpleEventQueueBuffer>();
 }
 
@@ -39,8 +39,8 @@ EventQueue::~EventQueue()
   delete m_readyCondVar;
   delete m_readyMutex;
 
-  ARCH->setSignalHandler(Arch::kINTERRUPT, nullptr, nullptr);
-  ARCH->setSignalHandler(Arch::kTERMINATE, nullptr, nullptr);
+  ARCH->setSignalHandler(Arch::ThreadSignal::Interrupt, nullptr, nullptr);
+  ARCH->setSignalHandler(Arch::ThreadSignal::Terminate, nullptr, nullptr);
 }
 
 void EventQueue::loop()
