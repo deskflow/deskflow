@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -139,8 +139,8 @@ Variables</h2></td></tr>
 <p><b>Message Code</b>: <span class="tt">"LSYN"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"LSYN%s"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Language list (string) - Available server languages</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;LSYN\x00\x00\x00\x0Ben,fr,de,es&quot;</span></div>
-<div class="line"><span class="comment">// Server supports English, French, German, Spanish</span></div>
+<p><b>Example</b>:</p>
+<p><a class="el" href="classServer.html" title="Deskflow server.">Server</a> supports English, French, German, Spanish </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;LSYN\x00\x00\x00\x0Ben,fr,de,es&quot;</span></div>
 </div><!-- fragment --><p>Synchronizes keyboard language/layout information between primary and secondary screens. Helps ensure proper character mapping when different keyboard layouts are used.</p>
 <p><b>Language Format</b>:</p><ul>
 <li>Comma-separated list of language codes</li>
@@ -175,8 +175,8 @@ Variables</h2></td></tr>
 <p><b>Message Code</b>: <span class="tt">"SECN"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"SECN%s"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Application name (string) - <a class="el" href="classApp.html">App</a> requesting secure input</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;SECN\x00\x00\x00\x08Terminal&quot;</span></div>
-<div class="line"><span class="comment">// Terminal app is requesting secure input</span></div>
+<p><b>Example</b>:</p>
+<p>Terminal app is requesting secure input </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;SECN\x00\x00\x00\x08Terminal&quot;</span></div>
 </div><!-- fragment --><p>Notifies the secondary screen when an application on the primary requests secure input mode. This is primarily a macOS feature where certain applications (like password fields) can request exclusive keyboard access.</p>
 <p>The secondary can use this information to:</p><ul>
 <li>Display security warnings to the user</li>

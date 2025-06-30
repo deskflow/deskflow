@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -154,8 +154,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$1</span>: <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> identifier (1 byte)</li>
 <li><span class="tt">$2</span>: Sequence number (4 bytes)</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CCLP\x00\x00\x00\x00\x01&quot;</span></div>
-<div class="line"><span class="comment">// Primary clipboard grabbed, sequence 1</span></div>
+<p><b>Example</b>:</p>
+<p>Primary clipboard grabbed, sequence 1 </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CCLP\x00\x00\x00\x00\x01&quot;</span></div>
 </div><!-- fragment --><p>Sent when an application grabs a clipboard on either screen. This notifies the other screen that clipboard ownership has changed. Secondary screens must use the sequence number from the most recent kMsgCEnter. The primary always sends sequence number 0.</p>
 <p><b><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> Identifiers</b>:</p><ul>
 <li><span class="tt">0</span>: Primary clipboard (Ctrl+C/Ctrl+V)</li>
@@ -220,8 +220,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$3</span>: Sequence number (4 bytes, unsigned)</li>
 <li><span class="tt">$4</span>: <a class="el" href="gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814">Modifier</a> key mask (2 bytes, unsigned)</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CINN\x01\x90\x01\x2C\x00\x00\x00\x01\x00\x00&quot;</span></div>
-<div class="line"><span class="comment">// Enter at (400, 300), sequence 1, no modifiers</span></div>
+<p><b>Example</b>:</p>
+<p>Enter at (400, 300), sequence 1, no modifiers </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CINN\x01\x90\x01\x2C\x00\x00\x00\x01\x00\x00&quot;</span></div>
 </div><!-- fragment --><p>Sent when the mouse cursor enters the secondary screen from the primary. The coordinates specify the exact entry point. The sequence number is used to order messages and must be returned in subsequent messages from the client. The modifier mask indicates which toggle keys (Caps <a class="el" href="classLock.html" title="Mutual exclusion lock utility.">Lock</a>, Num <a class="el" href="classLock.html" title="Mutual exclusion lock utility.">Lock</a>, etc.) are active and should be synchronized on the secondary screen.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga35d0d7f0915dec1e257361c62375c368" title="Leave screen command.">kMsgCLeave</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -403,10 +403,10 @@ Variables</h2></td></tr>
 
 <p>Screensaver state change. </p>
 <p><b>Message Code</b>: <span class="tt">"CSEC"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"CSEC%1i"</span> <b>Parameters</b>:</p><ul>
-<li><span class="tt">$1</span>: Screensaver state (1 byte): 1 = started, 0 = stopped</li>
+<li><span class="tt">$1</span>: Screensaver state (1 byte): 1 = started, 0 = stopped <b>Examples</b>:</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CSEC\x01&quot;</span>  <span class="comment">// Screensaver started</span></div>
-<div class="line"><span class="stringliteral">&quot;CSEC\x00&quot;</span>  <span class="comment">// Screensaver stopped</span></div>
+<p>Screensaver started </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CSEC\x01&quot;</span></div>
+</div><!-- fragment --><p>Screensaver stopped </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;CSEC\x00&quot;</span></div>
 </div><!-- fragment --><p>Notifies the secondary screen when the primary's screensaver starts or stops. The secondary can use this to synchronize its own screensaver state.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 

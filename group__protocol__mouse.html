@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -147,9 +147,10 @@ Variables</h2></td></tr>
 <p><b>Message Code</b>: <span class="tt">"DMDN"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMDN%1i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee" title="Mouse button ID.">ButtonID</a> (1 byte) - Mouse button identifier</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMDN\x01&quot;</span>  <span class="comment">// Left mouse button pressed</span></div>
-<div class="line"><span class="stringliteral">&quot;DMDN\x02&quot;</span>  <span class="comment">// Right mouse button pressed</span></div>
-<div class="line"><span class="stringliteral">&quot;DMDN\x03&quot;</span>  <span class="comment">// Middle mouse button pressed</span></div>
+<p><b>Examples</b>:</p>
+<p>Left mouse button pressed </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMDN\x01&quot;</span></div>
+</div><!-- fragment --><p>Right mouse button pressed </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMDN\x02&quot;</span></div>
+</div><!-- fragment --><p>Middle mouse button pressed </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMDN\x03&quot;</span></div>
 </div><!-- fragment --><p><b>Button IDs</b>:</p><ul>
 <li><span class="tt">1</span>: Left button</li>
 <li><span class="tt">2</span>: Right button</li>
@@ -186,7 +187,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$1</span>: X coordinate (2 bytes, signed) - Absolute screen position</li>
 <li><span class="tt">$2</span>: Y coordinate (2 bytes, signed) - Absolute screen position</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMMV\x01\x90\x01\x2C&quot;</span>  <span class="comment">// Move to (400, 300)</span></div>
+<p><b>Example</b>:</p>
+<p>Move to (400, 300) </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMMV\x01\x90\x01\x2C&quot;</span></div>
 </div><!-- fragment --><p>Coordinates are absolute positions on the secondary screen. The origin (0,0) is typically the top-left corner.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga2db68d1c245d15bed224bf6fa9f6cd2d" title="Relative mouse movement.">kMsgDMouseRelMove</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -218,7 +220,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$1</span>: X delta (2 bytes, signed) - Horizontal movement</li>
 <li><span class="tt">$2</span>: Y delta (2 bytes, signed) - Vertical movement</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMRM\x00\x0A\xFF\xF6&quot;</span>  <span class="comment">// Move right 10, up 10 pixels</span></div>
+<p><b>Example</b>:</p>
+<p>Move right 10, up 10 pixels </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMRM\x00\x0A\xFF\xF6&quot;</span></div>
 </div><!-- fragment --><p>Relative movement is useful for:</p><ul>
 <li>High-precision input devices</li>
 <li>Gaming applications</li>
@@ -253,7 +256,8 @@ Variables</h2></td></tr>
 <p><b>Message Code</b>: <span class="tt">"DMUP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DMUP%1i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee" title="Mouse button ID.">ButtonID</a> (1 byte) - Mouse button identifier</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMUP\x01&quot;</span>  <span class="comment">// Left mouse button released</span></div>
+<p><b>Example</b>:</p>
+<p>Left mouse button released </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMUP\x01&quot;</span></div>
 </div><!-- fragment --><p>Button IDs are the same as for kMsgDMouseDown.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#gaff32db0e9923aae3eba184bde7aecb87" title="Mouse button press event.">kMsgDMouseDown</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -285,9 +289,10 @@ Variables</h2></td></tr>
 <li><span class="tt">$1</span>: X delta (2 bytes, signed) - Horizontal scroll</li>
 <li><span class="tt">$2</span>: Y delta (2 bytes, signed) - Vertical scroll</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMWM\x00\x00\x00\x78&quot;</span>  <span class="comment">// Scroll up one tick (+120)</span></div>
-<div class="line"><span class="stringliteral">&quot;DMWM\x00\x00\xFF\x88&quot;</span>  <span class="comment">// Scroll down one tick (-120)</span></div>
-<div class="line"><span class="stringliteral">&quot;DMWM\x00\x78\x00\x00&quot;</span>  <span class="comment">// Scroll right one tick (+120)</span></div>
+<p><b>Example</b>:</p>
+<p>Scroll up one tick (+120) </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMWM\x00\x00\x00\x78&quot;</span></div>
+</div><!-- fragment --><p>Scroll down one tick (-120) </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMWM\x00\x00\xFF\x88&quot;</span></div>
+</div><!-- fragment --><p>Scroll right one tick (+120) </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DMWM\x00\x78\x00\x00&quot;</span></div>
 </div><!-- fragment --><p><b>Scroll Values</b>:</p><ul>
 <li><span class="tt">+120</span>: One tick forward (away from user) or right</li>
 <li><span class="tt">-120</span>: One tick backward (toward user) or left</li>

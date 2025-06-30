@@ -1,0 +1,11 @@
+<map id="XScreen" name="XScreen">
+<area shape="rect" id="Node000001" title="The XScreen class, generic screen exception." alt="" coords="40,151,112,175"/>
+<area shape="rect" id="Node000004" href="$classXScreenOpenFailure.html" title="XScreenOpenFailure &#45; Thrown when a screen cannot be opened or initialized." alt="" coords="5,223,147,248"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="79,191,79,223,73,223,73,191"/>
+<area shape="rect" id="Node000002" href="$classXBase.html" title="Exception base class." alt="" coords="46,78,106,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,118,79,150,73,150,73,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="14,5,138,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="79,46,79,78,73,78,73,46"/>
+<area shape="rect" id="Node000005" href="$classXScreenUnavailable.html" title="Screen unavailable exception." alt="" coords="7,296,145,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="79,264,79,296,73,296,73,264"/>
+</map>

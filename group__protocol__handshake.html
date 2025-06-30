@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -175,7 +175,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$2</span>: <a class="el" href="classServer.html" title="Deskflow server.">Server</a> major version number (2 bytes)</li>
 <li><span class="tt">$3</span>: <a class="el" href="classServer.html" title="Deskflow server.">Server</a> minor version number (2 bytes)</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;Barrier\x00\x01\x00\x08&quot;</span>  <span class="comment">// Barrier protocol, version 1.8</span></div>
+<p><b>Example</b>:</p>
+<p>Barrier protocol, version 1.8 </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;Barrier\x00\x01\x00\x08&quot;</span></div>
 </div><!-- fragment --><p>This is the first message sent by the server after a client connects. The client uses this to determine protocol compatibility.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#gafc643c9a9e9f9daf5082657a4faf6575" title="Client hello response message.">kMsgHelloBack</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
@@ -240,8 +241,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$3</span>: <a class="el" href="classClient.html" title="Deskflow client.">Client</a> minor version number (2 bytes)</li>
 <li><span class="tt">$4</span>: <a class="el" href="classClient.html" title="Deskflow client.">Client</a> name (string) - A standard length-prefixed string.</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;Barrier\x00\x01\x00\x08\x00\x00\x00\x0Bworkstation&quot;</span></div>
-<div class="line"><span class="comment">// Barrier protocol, version 1.8, client name &quot;workstation&quot;</span></div>
+<p><b>Example</b>:</p>
+<p>Barrier protocol, version 1.8, client name "workstation" </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;Barrier\x00\x01\x00\x08\x00\x00\x00\x0Bworkstation&quot;</span></div>
 </div><!-- fragment --><p>Sent by the client in response to kMsgHello. After this exchange, both sides negotiate to use the minimum supported protocol version.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga7fe883657ad6c4ac7077705202493ff6" title="Server hello message.">kMsgHello</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>

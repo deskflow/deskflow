@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -151,8 +151,8 @@ Variables</h2></td></tr>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3`: <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw, platform-dependent scan code of the key pressed.</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKDN\x00\x61\x00\x00\x00\x1E&quot;</span></div>
-<div class="line"><span class="comment">// &#39;a&#39; key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E)</span></div>
+<p><b>Example</b>:</p>
+<p>'a' key (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> 0x61), no modifiers, physical key (<a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> 0x1E) </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKDN\x00\x61\x00\x00\x00\x1E&quot;</span></div>
 </div><!-- fragment --><p><b>Key Mapping Strategy</b>: The <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> parameter is crucial for proper key release handling. The secondary screen should:</p><ol type="1">
 <li>Map the <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> to its local virtual key</li>
 <li>Remember the association between <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> and the local physical key</li>
@@ -228,8 +228,8 @@ Variables</h2></td></tr>
    platform-dependent scan code of the key pressed.</span></li>
 <li><span class="tt"></span>$4`: Language code (string) - Keyboard language identifier</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKDL\x00\x61\x00\x00\x00\x1E\x00\x00\x00\x02en&quot;</span></div>
-<div class="line"><span class="comment">// &#39;a&#39; key (KeyID 0x61), no modifiers, physical key (KeyButton 0x1E), English</span></div>
+<p><b>Example</b>:</p>
+<p>'a' key (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> 0x61), no modifiers, physical key (<a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> 0x1E), English </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKDL\x00\x61\x00\x00\x00\x1E\x00\x00\x00\x02en&quot;</span></div>
 </div><!-- fragment --><p>Enhanced version of kMsgDKeyDown that includes language information to help clients handle unknown language characters correctly.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga3347d0669e9605acefc17c4f1ee07a7d" title="Key press event.">kMsgDKeyDown</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.8 </dd></dl>
@@ -265,8 +265,8 @@ Variables</h2></td></tr>
    platform-dependent scan code of the key pressed.</span></li>
 <li><span class="tt"></span>$5`: Language code (string) - Keyboard language identifier</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKRP\x00\x61\x00\x00\x00\x03\x00\x1E\x00\x00\x00\x02en&quot;</span></div>
-<div class="line"><span class="comment">// &#39;a&#39; key repeating 3 times, English layout</span></div>
+<p><b>Example</b>:</p>
+<p>'a' key repeating 3 times, English layout </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKRP\x00\x61\x00\x00\x00\x03\x00\x1E\x00\x00\x00\x02en&quot;</span></div>
 </div><!-- fragment --><p>Sent when a key is held down and auto-repeating. The repeat count indicates how many repeat events occurred since the last message.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga3347d0669e9605acefc17c4f1ee07a7d" title="Key press event.">kMsgDKeyDown</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.1 </dd></dl>
@@ -332,8 +332,8 @@ Variables</h2></td></tr>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3`: <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw, platform-dependent scan code of the key pressed.</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKUP\x00\x61\x00\x00\x00\x1E&quot;</span></div>
-<div class="line"><span class="comment">// Release &#39;a&#39; key, physical key 0x1E</span></div>
+<p><b>Example</b>:</p>
+<p>Release 'a' key, physical key 0x1E </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DKUP\x00\x61\x00\x00\x00\x1E&quot;</span></div>
 </div><!-- fragment --><p><b>Important</b>: The secondary screen should use <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (not <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a>) to determine which physical key to release. This ensures correct behavior with dead keys and layout differences.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga3347d0669e9605acefc17c4f1ee07a7d" title="Key press event.">kMsgDKeyDown</a> </dd></dl>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.1 </dd></dl>

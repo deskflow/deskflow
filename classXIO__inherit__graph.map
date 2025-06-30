@@ -1,0 +1,19 @@
+<map id="XIO" name="XIO">
+<area shape="rect" id="Node000001" title="The XIO class Generic i/o exception class." alt="" coords="276,151,320,175"/>
+<area shape="rect" id="Node000004" href="$classXIOClose.html" title="The XIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="25,223,104,248"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="261,178,104,225,102,220,260,173"/>
+<area shape="rect" id="Node000006" href="$classXIOClosed.html" title="XIOClosed &#45; Thrown when attempting to close or perform I/O on an already closed." alt="" coords="127,223,212,248"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="265,186,192,225,190,220,262,181"/>
+<area shape="rect" id="Node000007" href="$classXIOEndOfStream.html" title="XIOEndOfStream &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="236,223,360,248"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="300,191,300,223,295,223,295,191"/>
+<area shape="rect" id="Node000008" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="384,223,516,248"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="335,179,426,220,424,225,333,183"/>
+<area shape="rect" id="Node000009" href="$classXIOWouldBlock.html" title="XIOWouldBlock &#45; Thrown if an operation on a stream would block." alt="" coords="540,223,653,248"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="336,170,548,220,546,225,334,176"/>
+<area shape="rect" id="Node000002" href="$classXBase.html" title="Exception base class." alt="" coords="268,78,328,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,118,300,150,295,150,295,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="236,5,360,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="300,46,300,78,295,78,295,46"/>
+<area shape="rect" id="Node000005" href="$classXSocketIOClose.html" title="XSocketIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="5,296,124,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="67,264,67,296,62,296,62,264"/>
+</map>

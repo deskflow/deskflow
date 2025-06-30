@@ -1,7 +1,59 @@
 <map id="XBase" name="XBase">
-<area shape="rect" id="Node000001" title="Exception base class." alt="" coords="75,78,136,103"/>
-<area shape="rect" id="Node000003" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="5,151,206,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,118,108,150,103,150,103,118"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="44,5,167,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,46,108,78,103,78,103,46"/>
+<area shape="rect" id="Node000001" title="Exception base class." alt="" coords="177,573,237,598"/>
+<area shape="rect" id="Node000003" href="$classXDeskflow.html" title="The XDeskflow class Generic deskflow exception class." alt="" coords="342,153,428,178"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,558,376,178,381,180,222,560"/>
+<area shape="rect" id="Node000010" href="$classXIO.html" title="The XIO class Generic i/o exception class." alt="" coords="363,425,407,450"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="233,561,367,448,371,452,236,565"/>
+<area shape="rect" id="Node000017" href="$classXMT.html" title="XMT generic multithreading exception." alt="" coords="360,548,410,573"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="252,577,360,561,360,566,253,582"/>
+<area shape="rect" id="Node000019" href="$classXScreen.html" title="The XScreen class, generic screen exception." alt="" coords="350,597,421,622"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="253,589,349,602,349,608,252,594"/>
+<area shape="rect" id="Node000022" href="$classXSocket.html" title="XSocket generic socket exception." alt="" coords="350,647,420,671"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="239,604,286,631,350,650,349,655,284,636,236,609"/>
+<area shape="rect" id="Node000029" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="285,696,485,721"/>
+<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="224,610,250,647,267,665,286,681,312,693,310,698,284,685,264,669,246,651,220,613"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,573,129,598"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,583,176,583,176,588,145,588"/>
+<area shape="rect" id="Node000004" href="$classXBadClient.html" title="XBadClient &#45; Thrown when the client fails to follow the protocol." alt="" coords="568,5,655,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="407,140,461,90,496,64,532,41,566,26,569,31,535,45,499,68,465,94,411,144"/>
+<area shape="rect" id="Node000005" href="$classXDuplicateClient.html" title="Client already connected exception." alt="" coords="552,55,671,79"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="421,143,532,90,566,77,568,82,534,95,424,148"/>
+<area shape="rect" id="Node000006" href="$classXExitApp.html" title="Generic exit eception." alt="" coords="573,104,650,129"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="442,151,572,122,574,127,444,156"/>
+<area shape="rect" id="Node000007" href="$classXIncompatibleClient.html" title="Incompatible client exception." alt="" coords="542,153,681,178"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="443,163,542,163,542,168,443,168"/>
+<area shape="rect" id="Node000008" href="$classXInvalidProtocol.html" title="XInvalidProtocol &#45; Thrown when the server protocol is unreconized." alt="" coords="554,203,669,227"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="443,175,554,200,553,205,442,181"/>
+<area shape="rect" id="Node000009" href="$classXUnknownClient.html" title="Client not in map exception." alt="" coords="552,252,671,277"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="424,183,534,237,568,249,566,254,532,241,421,188"/>
+<area shape="rect" id="Node000011" href="$classXIOClose.html" title="The XIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="572,301,651,326"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="413,414,466,375,532,337,571,322,573,327,534,341,469,380,416,418"/>
+<area shape="rect" id="Node000013" href="$classXIOClosed.html" title="XIOClosed &#45; Thrown when attempting to close or perform I/O on an already closed." alt="" coords="569,351,654,375"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="421,423,532,386,570,373,572,379,534,391,423,428"/>
+<area shape="rect" id="Node000014" href="$classXIOEndOfStream.html" title="XIOEndOfStream &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="550,400,673,425"/>
+<area shape="poly" id="edge13_Node000010_Node000014" title=" " alt="" coords="422,431,549,417,550,422,423,436"/>
+<area shape="rect" id="Node000015" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="546,449,677,474"/>
+<area shape="poly" id="edge14_Node000010_Node000015" title=" " alt="" coords="423,439,546,452,545,457,423,444"/>
+<area shape="rect" id="Node000016" href="$classXIOWouldBlock.html" title="XIOWouldBlock &#45; Thrown if an operation on a stream would block." alt="" coords="555,499,668,523"/>
+<area shape="poly" id="edge15_Node000010_Node000016" title=" " alt="" coords="423,447,572,496,570,501,421,452"/>
+<area shape="rect" id="Node000012" href="$classXSocketIOClose.html" title="XSocketIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="755,301,874,326"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="666,311,755,311,755,316,666,316"/>
+<area shape="rect" id="Node000018" href="$classXMTThreadUnavailable.html" title="XMTThreadUnavailable &#45; Thrown when a thread cannot be created." alt="" coords="533,548,690,573"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="426,558,533,558,533,563,426,563"/>
+<area shape="rect" id="Node000020" href="$classXScreenOpenFailure.html" title="XScreenOpenFailure &#45; Thrown when a screen cannot be opened or initialized." alt="" coords="541,597,682,622"/>
+<area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="437,607,540,607,540,612,437,612"/>
+<area shape="rect" id="Node000021" href="$classXScreenUnavailable.html" title="Screen unavailable exception." alt="" coords="745,597,884,622"/>
+<area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="697,607,745,607,745,612,697,612"/>
+<area shape="rect" id="Node000023" href="$classXSocketAddress.html" title="Socket bad address exception." alt="" coords="552,647,671,671"/>
+<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="436,656,552,656,552,662,436,662"/>
+<area shape="rect" id="Node000024" href="$classXSocketWithWhat.html" title="XSocketWithWhat &#45; generic XSocket Exception with a generic what method impl." alt="" coords="547,696,676,721"/>
+<area shape="poly" id="edge23_Node000022_Node000024" title=" " alt="" coords="436,667,552,693,551,698,435,672"/>
+<area shape="rect" id="Node000025" href="$classXSocketAddressInUse.html" title="XSocketAddressInUse Thrown when a socket cannot be bound to an address because the address is already..." alt="" coords="738,647,891,671"/>
+<area shape="poly" id="edge24_Node000024_Node000025" title=" " alt="" coords="679,689,760,669,761,675,681,694"/>
+<area shape="rect" id="Node000026" href="$classXSocketBind.html" title="XSocketBind &#45; Thrown when a socket cannot be bound to an address." alt="" coords="766,696,862,721"/>
+<area shape="poly" id="edge25_Node000024_Node000026" title=" " alt="" coords="691,706,766,706,766,711,691,711"/>
+<area shape="rect" id="Node000027" href="$classXSocketConnect.html" title="XSocketConnect &#45; Thrown when a socket cannot connect to a remote endpoint." alt="" coords="755,745,874,770"/>
+<area shape="poly" id="edge26_Node000024_Node000027" title=" " alt="" coords="681,722,761,742,760,747,679,727"/>
+<area shape="rect" id="Node000028" href="$classXSocketCreate.html" title="XSocketConnect &#45; Thrown when a socket cannot be created (by the operating system)." alt="" coords="760,795,869,819"/>
+<area shape="poly" id="edge27_Node000024_Node000028" title=" " alt="" coords="646,727,690,754,739,779,770,792,768,797,737,784,687,758,644,732"/>
 </map>

@@ -12,7 +12,7 @@ var searchData=
   ['waslaunchedasservice_9',['wasLaunchedAsService',['../classArchMiscWindows.html#abfa597a607ef86b942bae3dc15294c45',1,'ArchMiscWindows']]],
   ['wasownedattime_10',['wasOwnedAtTime',['../classXWindowsClipboard.html#afda0ab2663db2de2e1cb4dc4b3b7a47b',1,'XWindowsClipboard']]],
   ['waylandwarnings_11',['WaylandWarnings',['../classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html#af136611c979a6bc5c3497ecfdc9d64e5',1,'deskflow::gui::core::WaylandWarnings']]],
-  ['what_12',['what',['../classXBase.html#ae07ee67df190700ec78a1a6bfda6acf5',1,'XBase']]],
+  ['what_12',['what',['../classXBase.html#ae07ee67df190700ec78a1a6bfda6acf5',1,'XBase::what()'],['../classXSocketIOClose.html#ae3a6ad83b09c23f6616a0c84d039bb59',1,'XSocketIOClose::what()'],['../classXSocketWithWhat.html#abfc8a8be038aa97dc301be09aeb4f357',1,'XSocketWithWhat::what()']]],
   ['win32keepforeground_13',['win32KeepForeground',['../classServerConfig.html#a302bb0f6af4598923574f2be20b03615',1,'ServerConfig']]],
   ['windowserrortostring_14',['windowsErrorToString',['../XArchWindows_8cpp.html#a2b35d1b9337a4df470bcd38d27177da8',1,'windowsErrorToString(DWORD error):&#160;XArchWindows.cpp'],['../XArchWindows_8h.html#a2b35d1b9337a4df470bcd38d27177da8',1,'windowsErrorToString(DWORD error):&#160;XArchWindows.cpp']]],
   ['winsockerrortostring_15',['winsockErrorToString',['../XArchWindows_8cpp.html#aa8bc1ba0d5344a265d4093aef962dcab',1,'winsockErrorToString(int error):&#160;XArchWindows.cpp'],['../XArchWindows_8h.html#aa8bc1ba0d5344a265d4093aef962dcab',1,'winsockErrorToString(int error):&#160;XArchWindows.cpp']]],

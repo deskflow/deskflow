@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -140,8 +140,8 @@ Variables</h2></td></tr>
 <li><span class="tt">$1</span>: Number of files (2 bytes)</li>
 <li><span class="tt">$2</span>: File paths (string) - Null-separated file paths</li>
 </ul>
-<p><b>Example</b>: </p><div class="fragment"><div class="line">* <span class="stringliteral">&quot;DDRG\x00\x02/path/to/file1.txt\x00/path/to/file2.txt\x00&quot;</span></div>
-<div class="line">  <span class="comment">// Dragging 2 files</span></div>
+<p><b>Example</b>:</p>
+<p>Dragging 2 files </p><div class="fragment"><div class="line">* <span class="stringliteral">&quot;DDRG\x00\x02/path/to/file1.txt\x00/path/to/file2.txt\x00&quot;</span></div>
 </div><!-- fragment --><p>Sent when a drag-and-drop operation begins. Contains the list of files being dragged. The actual file transfer follows using kMsgDFileTransfer messages.</p>
 <p><b>File Path Format</b>:</p><ul>
 <li>Paths are null-terminated strings</li>
@@ -184,12 +184,13 @@ Variables</h2></td></tr>
 <li><span class="tt">2</span> (kDataChunk): Data contains file content chunk</li>
 <li><span class="tt">3</span> (kDataEnd): Transfer complete (data may be empty)</li>
 </ul>
-<p><b>Example Transfer Sequence</b>: </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DFTR\x01\x00\x00\x00\x00\x00\x00\x10\x00&quot;</span>  <span class="comment">// Start: 4096 bytes</span></div>
-<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span>          <span class="comment">// Chunk: data</span></div>
-<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span>          <span class="comment">// Chunk: data</span></div>
-<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span>          <span class="comment">// Chunk: data</span></div>
-<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span>          <span class="comment">// Chunk: data</span></div>
-<div class="line"><span class="stringliteral">&quot;DFTR\x03&quot;</span>                                   <span class="comment">// End: complete</span></div>
+<p><b>Example Transfer Sequence</b>:</p>
+<p>Send 4096 bytes </p><div class="fragment"><div class="line"><span class="stringliteral">&quot;DFTR\x01\x00\x00\x00\x00\x00\x00\x10\x00&quot;</span></div>
+<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span></div>
+<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span></div>
+<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span></div>
+<div class="line"><span class="stringliteral">&quot;DFTR\x02[1024 bytes of file data]&quot;</span></div>
+<div class="line"><span class="stringliteral">&quot;DFTR\x03&quot;</span></div>
 </div><!-- fragment --><p><b>Protocol Flow</b>:</p><ol type="1">
 <li>Sender initiates with kDataStart containing total file size</li>
 <li>Sender sends multiple kDataChunk messages with file content</li>

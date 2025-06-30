@@ -418,6 +418,40 @@ var hierarchy =
         [ "XArchNetworkTimedOut", "classXArchNetworkTimedOut.html", null ]
       ] ],
       [ "XBase", "classXBase.html", [
+        [ "XDeskflow", "classXDeskflow.html", [
+          [ "XBadClient", "classXBadClient.html", null ],
+          [ "XDuplicateClient", "classXDuplicateClient.html", null ],
+          [ "XExitApp", "classXExitApp.html", null ],
+          [ "XIncompatibleClient", "classXIncompatibleClient.html", null ],
+          [ "XInvalidProtocol", "classXInvalidProtocol.html", null ],
+          [ "XUnknownClient", "classXUnknownClient.html", null ]
+        ] ],
+        [ "XIO", "classXIO.html", [
+          [ "XIOClose", "classXIOClose.html", [
+            [ "XSocketIOClose", "classXSocketIOClose.html", null ]
+          ] ],
+          [ "XIOClosed", "classXIOClosed.html", null ],
+          [ "XIOEndOfStream", "classXIOEndOfStream.html", null ],
+          [ "XIOReadMismatch", "classXIOReadMismatch.html", null ],
+          [ "XIOWouldBlock", "classXIOWouldBlock.html", null ]
+        ] ],
+        [ "XMT", "classXMT.html", [
+          [ "XMTThreadUnavailable", "classXMTThreadUnavailable.html", null ]
+        ] ],
+        [ "XScreen", "classXScreen.html", [
+          [ "XScreenOpenFailure", "classXScreenOpenFailure.html", [
+            [ "XScreenUnavailable", "classXScreenUnavailable.html", null ]
+          ] ]
+        ] ],
+        [ "XSocket", "classXSocket.html", [
+          [ "XSocketAddress", "classXSocketAddress.html", null ],
+          [ "XSocketWithWhat", "classXSocketWithWhat.html", [
+            [ "XSocketAddressInUse", "classXSocketAddressInUse.html", null ],
+            [ "XSocketBind", "classXSocketBind.html", null ],
+            [ "XSocketConnect", "classXSocketConnect.html", null ],
+            [ "XSocketCreate", "classXSocketCreate.html", null ]
+          ] ]
+        ] ],
         [ "deskflow::server::XConfigRead", "classdeskflow_1_1server_1_1XConfigRead.html", null ]
       ] ],
       [ "deskflow::Config::NoConfigFilenameError", "classdeskflow_1_1Config_1_1NoConfigFilenameError.html", null ],
@@ -451,21 +485,6 @@ var hierarchy =
     [ "deskflow::gui::core::WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", null ],
     [ "IPrimaryScreen::WheelInfo", "classIPrimaryScreen_1_1WheelInfo.html", null ],
     [ "Win32Modifiers", "structWin32Modifiers.html", null ],
-    [ "XDeskflow", null, [
-      [ "XDuplicateClient", "classXDuplicateClient.html", null ],
-      [ "XExitApp", "classXExitApp.html", null ],
-      [ "XIncompatibleClient", "classXIncompatibleClient.html", null ],
-      [ "XUnknownClient", "classXUnknownClient.html", null ]
-    ] ],
-    [ "XIO", null, [
-      [ "XIOReadMismatch", "classXIOReadMismatch.html", null ]
-    ] ],
-    [ "XScreenOpenFailure", null, [
-      [ "XScreenUnavailable", "classXScreenUnavailable.html", null ]
-    ] ],
-    [ "XSocket", null, [
-      [ "XSocketAddress", "classXSocketAddress.html", null ]
-    ] ],
     [ "XWindowsPowerManager", "classXWindowsPowerManager.html", null ],
     [ "XWindowsUtil", "classXWindowsUtil.html", null ]
 ];

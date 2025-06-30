@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.109</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.116</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -595,95 +595,53 @@ Platform-Specific Implementations</h1>
 Implementation Checklist</h1>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
 Basic Client Implementation</h2>
-<ul class="check">
-<li class="unchecked"><b>Connection Management</b><ul class="check">
-<li class="unchecked">TCP connection to server port 24800</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Protocol handshake (Hello/HelloBack)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Version negotiation</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Keep-alive handling</li>
+<ul>
+<li><b>Connection Management</b><ul>
+<li>TCP connection to server port 24800</li>
+<li>Protocol handshake (Hello/HelloBack)</li>
+<li>Version negotiation</li>
+<li>Keep-alive handling</li>
 </ul>
 </li>
-</ul>
-<ul class="check">
-<li class="unchecked"><b>Message Processing</b><ul class="check">
-<li class="unchecked">Message parsing and validation</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Command message handling (Enter/Leave)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Input event processing (keyboard/mouse)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Error handling and recovery</li>
+<li><b>Message Processing</b><ul>
+<li>Message parsing and validation</li>
+<li>Command message handling (Enter/Leave)</li>
+<li>Input event processing (keyboard/mouse)</li>
+<li>Error handling and recovery</li>
 </ul>
 </li>
-</ul>
-<ul class="check">
-<li class="unchecked"><b><a class="el" href="classScreen.html">Screen</a> Management</b><ul class="check">
-<li class="unchecked"><a class="el" href="classScreen.html">Screen</a> information reporting (DINF)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Resolution change detection</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Mouse cursor positioning</li>
+<li><b><a class="el" href="classScreen.html">Screen</a> Management</b><ul>
+<li><a class="el" href="classScreen.html">Screen</a> information reporting (DINF)</li>
+<li>Resolution change detection</li>
+<li>Mouse cursor positioning</li>
 </ul>
 </li>
-</ul>
-<ul class="check">
-<li class="unchecked"><b>Input Synthesis</b><ul class="check">
-<li class="unchecked">Keyboard event injection</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Mouse event injection</li>
-</ul>
-<ul class="check">
-<li class="unchecked"><a class="el" href="gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814">Modifier</a> key synchronization</li>
+<li><b>Input Synthesis</b><ul>
+<li>Keyboard event injection</li>
+<li>Mouse event injection</li>
+<li><a class="el" href="gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814">Modifier</a> key synchronization</li>
 </ul>
 </li>
 </ul>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Advanced Features</h2>
-<ul class="check">
-<li class="unchecked"><b><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> Synchronization</b><ul class="check">
-<li class="unchecked"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> grab notifications</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Data transfer (<a class="el" href="group__protocol__clipboard.html#gae9a3165781ac7a11ff3b3c7a10216b7b">kMsgDClipboard</a> - text, images, HTML)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Streaming for large data (v1.6+)</li>
+<ul>
+<li><b><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> Synchronization</b><ul>
+<li><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> grab notifications</li>
+<li>Data transfer (<a class="el" href="group__protocol__clipboard.html#gae9a3165781ac7a11ff3b3c7a10216b7b">kMsgDClipboard</a> - text, images, HTML)</li>
+<li>Streaming for large data (v1.6+)</li>
 </ul>
 </li>
-</ul>
-<ul class="check">
-<li class="unchecked"><b>File Transfer</b> (v1.5+)<ul class="check">
-<li class="unchecked">Drag-and-drop initiation</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Chunked file transfer</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Progress tracking</li>
+<li><b>File Transfer</b> (v1.5+)<ul>
+<li>Drag-and-drop initiation</li>
+<li>Chunked file transfer</li>
+<li>Progress tracking</li>
 </ul>
 </li>
-</ul>
-<ul class="check">
-<li class="unchecked"><b>Security Features</b><ul class="check">
-<li class="unchecked">TLS/SSL encryption (v1.4+)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Secure input notifications (v1.7+)</li>
-</ul>
-<ul class="check">
-<li class="unchecked">Input validation and limits</li>
+<li><b>Security Features</b><ul>
+<li>TLS/SSL encryption (v1.4+)</li>
+<li>Secure input notifications (v1.7+)</li>
+<li>Input validation and limits</li>
 </ul>
 </li>
 </ul>
