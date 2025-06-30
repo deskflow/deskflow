@@ -28,17 +28,6 @@ protected:
   std::string getWhat() const throw() override;
 };
 
-/**
- * @brief XScreenXInputFailure - Thrown when an XInput error occurs
- */
-class XScreenXInputFailure : public XScreen
-{
-  using XScreen::XScreen;
-
-protected:
-  std::string getWhat() const throw() override;
-};
-
 //! Screen unavailable exception
 /*!
 Thrown when a screen cannot be opened or initialized but retrying later

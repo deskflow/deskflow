@@ -17,15 +17,6 @@ std::string XScreenOpenFailure::getWhat() const throw()
 }
 
 //
-// XScreenXInputFailure
-//
-
-std::string XScreenXInputFailure::getWhat() const throw()
-{
-  return "";
-}
-
-//
 // XScreenUnavailable
 //
 
