@@ -18,14 +18,6 @@ class XDeskflow : public XBase
 };
 
 /**
- * @brief XSubscription - Thrown when there is a problem with the subscription.
- */
-class XSubscription : public XDeskflow
-{
-  using XDeskflow::XDeskflow;
-};
-
-/**
  * @brief XBadClient - Thrown when the client fails to follow the protocol.
  */
 class XBadClient : public XDeskflow
