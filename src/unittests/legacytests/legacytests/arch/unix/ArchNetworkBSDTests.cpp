@@ -186,7 +186,7 @@ TEST(ArchNetworkBSDTests, isAnyAddr_goodAddress_returnsTrue)
   auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
-  addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
+  addr.reset(networkBSD.newAnyAddr(IArchNetwork::AddressFamily::INet6));
 
   auto result = networkBSD.isAnyAddr(addr.get());
 
@@ -198,7 +198,7 @@ TEST(ArchNetworkBSDTests, isAnyAddr_badAddress_returnsFalse)
   auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   std::unique_ptr<ArchNetAddressImpl> addr;
-  addr.reset(networkBSD.newAnyAddr(IArchNetwork::kINET6));
+  addr.reset(networkBSD.newAnyAddr(IArchNetwork::AddressFamily::INet6));
   auto scratch = (char *)&addr->m_addr;
   std::string badAddr = "badaddr";
   std::ranges::copy(badAddr, scratch + 2);

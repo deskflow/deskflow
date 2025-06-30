@@ -25,7 +25,7 @@ TCPSocketFactory::TCPSocketFactory(IEventQueue *events, SocketMultiplexer *socke
   // do nothing
 }
 
-IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
+IDataSocket *TCPSocketFactory::create(IArchNetwork::AddressFamily family, SecurityLevel securityLevel) const
 {
   if (securityLevel != SecurityLevel::PlainText) {
     auto *secureSocket = new SecureSocket(m_events, m_socketMultiplexer, family, securityLevel);
@@ -36,7 +36,7 @@ IDataSocket *TCPSocketFactory::create(IArchNetwork::EAddressFamily family, Secur
   }
 }
 
-IListenSocket *TCPSocketFactory::createListen(IArchNetwork::EAddressFamily family, SecurityLevel securityLevel) const
+IListenSocket *TCPSocketFactory::createListen(IArchNetwork::AddressFamily family, SecurityLevel securityLevel) const
 {
   IListenSocket *socket = nullptr;
   if (securityLevel != SecurityLevel::PlainText) {

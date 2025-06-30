@@ -95,10 +95,10 @@ void ArchNetworkBSD::init()
   // do nothing
 }
 
-ArchSocket ArchNetworkBSD::newSocket(EAddressFamily family, ESocketType type)
+ArchSocket ArchNetworkBSD::newSocket(AddressFamily family, ESocketType type)
 {
   // create socket
-  int fd = socket(s_family[family], s_type[type], 0);
+  int fd = socket(s_family[static_cast<int>(family)], s_type[type], 0);
   if (fd == -1) {
     throwError(errno);
   }
@@ -469,14 +469,16 @@ std::string ArchNetworkBSD::getHostName()
   return name;
 }
 
-ArchNetAddress ArchNetworkBSD::newAnyAddr(EAddressFamily family)
+ArchNetAddress ArchNetworkBSD::newAnyAddr(AddressFamily family)
 {
+  using enum AddressFamily;
+
   // allocate address
   auto *addr = new ArchNetAddressImpl;
 
   // fill it in
   switch (family) {
-  case kINET: {
+  case INet: {
     auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     ipAddr->sin_family = AF_INET;
     ipAddr->sin_port = 0;
@@ -485,7 +487,7 @@ ArchNetAddress ArchNetworkBSD::newAnyAddr(EAddressFamily family)
     break;
   }
 
-  case kINET6: {
+  case INet6: {
     auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     ipAddr->sin6_family = AF_INET6;
     ipAddr->sin6_port = 0;
@@ -583,17 +585,19 @@ std::string ArchNetworkBSD::addrToName(ArchNetAddress addr)
 
 std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
 {
+  using enum AddressFamily;
+
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case INet: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     std::scoped_lock lock{m_mutex};
     std::string s = inet_ntoa(ipAddr->sin_addr);
     return s;
   }
 
-  case kINET6: {
+  case INet6: {
     char strAddr[INET6_ADDRSTRLEN];
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     {
@@ -609,33 +613,37 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
   }
 }
 
-IArchNetwork::EAddressFamily ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
+IArchNetwork::AddressFamily ArchNetworkBSD::getAddrFamily(ArchNetAddress addr)
 {
+  using enum AddressFamily;
+
   assert(addr != nullptr);
 
   switch (addr->m_addr.ss_family) {
   case AF_INET:
-    return kINET;
+    return INet;
   case AF_INET6:
-    return kINET6;
+    return INet6;
 
   default:
-    return kUNKNOWN;
+    return Unknown;
   }
 }
 
 void ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 {
+  using enum AddressFamily;
+
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case INet: {
     auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     ipAddr->sin_port = htons(port);
     break;
   }
 
-  case kINET6: {
+  case INet6: {
     auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     ipAddr->sin6_port = htons(port);
     break;
@@ -649,15 +657,17 @@ void ArchNetworkBSD::setAddrPort(ArchNetAddress addr, int port)
 
 int ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 {
+  using enum AddressFamily;
+
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case INet: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return ntohs(ipAddr->sin_port);
   }
 
-  case kINET6: {
+  case INet6: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return ntohs(ipAddr->sin6_port);
   }
@@ -670,15 +680,17 @@ int ArchNetworkBSD::getAddrPort(ArchNetAddress addr)
 
 bool ArchNetworkBSD::isAnyAddr(ArchNetAddress addr)
 {
+  using enum AddressFamily;
+
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case INet: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return (ipAddr->sin_addr.s_addr == INADDR_ANY && addr->m_len == static_cast<socklen_t>(sizeof(struct sockaddr_in)));
   }
 
-  case kINET6: {
+  case INet6: {
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return (
         addr->m_len == (socklen_t)sizeof(struct sockaddr_in6) &&

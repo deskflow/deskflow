@@ -28,12 +28,14 @@ public:
 
   //! Create data socket
   virtual IDataSocket *create(
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+      IArchNetwork::AddressFamily family = IArchNetwork::AddressFamily::INet,
+      SecurityLevel securityLevel = SecurityLevel::PlainText
   ) const = 0;
 
   //! Create listen socket
   virtual IListenSocket *createListen(
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+      IArchNetwork::AddressFamily family = IArchNetwork::AddressFamily::INet,
+      SecurityLevel securityLevel = SecurityLevel::PlainText
   ) const = 0;
 
   //@}

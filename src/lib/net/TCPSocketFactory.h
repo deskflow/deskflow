@@ -23,10 +23,12 @@ public:
 
   // ISocketFactory overrides
   IDataSocket *create(
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+      IArchNetwork::AddressFamily family = IArchNetwork::AddressFamily::INet,
+      SecurityLevel securityLevel = SecurityLevel::PlainText
   ) const override;
   IListenSocket *createListen(
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET, SecurityLevel securityLevel = SecurityLevel::PlainText
+      IArchNetwork::AddressFamily family = IArchNetwork::AddressFamily::INet,
+      SecurityLevel securityLevel = SecurityLevel::PlainText
   ) const override;
 
 private:

@@ -58,7 +58,7 @@ public:
   void init() override;
 
   // IArchNetwork overrides
-  ArchSocket newSocket(EAddressFamily, ESocketType) override;
+  ArchSocket newSocket(AddressFamily, ESocketType) override;
   ArchSocket copySocket(ArchSocket s) override;
   void closeSocket(ArchSocket s) override;
   void closeSocketForRead(ArchSocket s) override;
@@ -75,13 +75,13 @@ public:
   bool setNoDelayOnSocket(ArchSocket, bool noDelay) override;
   bool setReuseAddrOnSocket(ArchSocket, bool reuse) override;
   std::string getHostName() override;
-  ArchNetAddress newAnyAddr(EAddressFamily) override;
+  ArchNetAddress newAnyAddr(AddressFamily) override;
   ArchNetAddress copyAddr(ArchNetAddress) override;
   std::vector<ArchNetAddress> nameToAddr(const std::string &) override;
   void closeAddr(ArchNetAddress) override;
   std::string addrToName(ArchNetAddress) override;
   std::string addrToString(ArchNetAddress) override;
-  EAddressFamily getAddrFamily(ArchNetAddress) override;
+  AddressFamily getAddrFamily(ArchNetAddress) override;
   void setAddrPort(ArchNetAddress, int port) override;
   int getAddrPort(ArchNetAddress) override;
   bool isAnyAddr(ArchNetAddress) override;

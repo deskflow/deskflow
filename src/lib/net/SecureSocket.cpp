@@ -55,7 +55,7 @@ static int verifyIgnoreCertCallback(X509_STORE_CTX *, void *)
 }
 
 SecureSocket::SecureSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family,
     SecurityLevel securityLevel
 )
     : TCPSocket(events, socketMultiplexer, family),

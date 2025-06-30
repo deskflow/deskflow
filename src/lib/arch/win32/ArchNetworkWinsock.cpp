@@ -192,10 +192,10 @@ void ArchNetworkWinsock::initModule(HMODULE module)
   s_networkModule = module;
 }
 
-ArchSocket ArchNetworkWinsock::newSocket(EAddressFamily family, ESocketType type)
+ArchSocket ArchNetworkWinsock::newSocket(AddressFamily family, ESocketType type)
 {
   // create socket
-  SOCKET fd = socket_winsock(s_family[family], s_type[type], 0);
+  SOCKET fd = socket_winsock(s_family[static_cast<int>(family)], s_type[type], 0);
   if (fd == INVALID_SOCKET) {
     throwError(getsockerror_winsock());
   }
@@ -636,11 +636,11 @@ std::string ArchNetworkWinsock::getHostName()
   return name;
 }
 
-ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
+ArchNetAddress ArchNetworkWinsock::newAnyAddr(AddressFamily family)
 {
   ArchNetAddressImpl *addr = nullptr;
   switch (family) {
-  case kINET: {
+  case AddressFamily::INet: {
     addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in));
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     ipAddr->sin_family = AF_INET;
@@ -649,7 +649,7 @@ ArchNetAddress ArchNetworkWinsock::newAnyAddr(EAddressFamily family)
     break;
   }
 
-  case kINET6: {
+  case AddressFamily::INet6: {
     addr = ArchNetAddressImpl::alloc(sizeof(struct sockaddr_in6));
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     ipAddr->sin6_family = AF_INET6;
@@ -734,12 +734,12 @@ std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr)
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case AddressFamily::INet: {
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return inet_ntoa_winsock(ipAddr->sin_addr);
   }
 
-  case kINET6: {
+  case AddressFamily::INet6: {
     char strAddr[INET6_ADDRSTRLEN];
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     inet_ntop(AF_INET6, &ipAddr->sin6_addr, strAddr, INET6_ADDRSTRLEN);
@@ -752,19 +752,19 @@ std::string ArchNetworkWinsock::addrToString(ArchNetAddress addr)
   }
 }
 
-IArchNetwork::EAddressFamily ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr)
+IArchNetwork::AddressFamily ArchNetworkWinsock::getAddrFamily(ArchNetAddress addr)
 {
   assert(addr != nullptr);
 
   switch (addr->m_addr.ss_family) {
   case AF_INET:
-    return kINET;
+    return AddressFamily::INet;
 
   case AF_INET6:
-    return kINET6;
+    return AddressFamily::INet6;
 
   default:
-    return kUNKNOWN;
+    return AddressFamily::Unknown;
   }
 }
 
@@ -773,13 +773,13 @@ void ArchNetworkWinsock::setAddrPort(ArchNetAddress addr, int port)
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case AddressFamily::INet: {
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     ipAddr->sin_port = htons_winsock(static_cast<u_short>(port));
     break;
   }
 
-  case kINET6: {
+  case AddressFamily::INet6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     ipAddr->sin6_port = htons_winsock(static_cast<u_short>(port));
     break;
@@ -796,12 +796,12 @@ int ArchNetworkWinsock::getAddrPort(ArchNetAddress addr)
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case AddressFamily::INet: {
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return ntohs_winsock(ipAddr->sin_port);
   }
 
-  case kINET6: {
+  case AddressFamily::INet6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return ntohs_winsock(ipAddr->sin6_port);
   }
@@ -817,12 +817,12 @@ bool ArchNetworkWinsock::isAnyAddr(ArchNetAddress addr)
   assert(addr != nullptr);
 
   switch (getAddrFamily(addr)) {
-  case kINET: {
+  case AddressFamily::INet: {
     struct sockaddr_in *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
     return (addr->m_len == sizeof(struct sockaddr_in) && ipAddr->sin_addr.s_addr == INADDR_ANY);
   }
 
-  case kINET6: {
+  case AddressFamily::INet6: {
     struct sockaddr_in6 *ipAddr = TYPED_ADDR(struct sockaddr_in6, addr);
     return (
         addr->m_len == sizeof(struct sockaddr_in) && memcmp(&ipAddr->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0

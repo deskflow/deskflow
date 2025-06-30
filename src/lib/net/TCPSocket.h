@@ -28,7 +28,7 @@ class TCPSocket : public IDataSocket
 public:
   TCPSocket(
       IEventQueue *events, SocketMultiplexer *socketMultiplexer,
-      IArchNetwork::EAddressFamily family = IArchNetwork::kINET
+      IArchNetwork::AddressFamily family = IArchNetwork::AddressFamily::INet
   );
   TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket);
   TCPSocket(TCPSocket const &) = delete;
