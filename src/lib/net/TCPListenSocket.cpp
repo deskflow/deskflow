@@ -23,7 +23,7 @@
 //
 
 TCPListenSocket::TCPListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family
 )
     : m_events(events),
       m_socketMultiplexer(socketMultiplexer)

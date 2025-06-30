@@ -27,7 +27,7 @@ static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
 // TCPSocket
 //
 
-TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family)
+TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family)
     : IDataSocket(events),
       m_events(events),
       m_flushed(&m_mutex, true),

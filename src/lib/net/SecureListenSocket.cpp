@@ -22,7 +22,7 @@
 //
 
 SecureListenSocket::SecureListenSocket(
-    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family,
+    IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family,
     SecurityLevel securityLevel
 )
     : TCPListenSocket(events, socketMultiplexer, family),

@@ -23,7 +23,7 @@ A listen socket using TCP.
 class TCPListenSocket : public IListenSocket
 {
 public:
-  TCPListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::EAddressFamily family);
+  TCPListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family);
   TCPListenSocket(TCPListenSocket const &) = delete;
   TCPListenSocket(TCPListenSocket &&) = delete;
   ~TCPListenSocket() override;

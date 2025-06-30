@@ -53,11 +53,11 @@ class IArchNetwork : public IInterface
 {
 public:
   //! Supported address families
-  enum EAddressFamily
+  enum class AddressFamily : uint8_t
   {
-    kUNKNOWN,
-    kINET,
-    kINET6,
+    Unknown,
+    INet,
+    INet6
   };
 
   //! Supported socket types
@@ -105,7 +105,7 @@ public:
   /*!
   The socket is an opaque data type.
   */
-  virtual ArchSocket newSocket(EAddressFamily, ESocketType) = 0;
+  virtual ArchSocket newSocket(AddressFamily, ESocketType) = 0;
 
   //! Copy a socket object
   /*!
@@ -236,7 +236,7 @@ public:
   virtual std::string getHostName() = 0;
 
   //! Create an "any" network address
-  virtual ArchNetAddress newAnyAddr(EAddressFamily) = 0;
+  virtual ArchNetAddress newAnyAddr(AddressFamily) = 0;
 
   //! Copy a network address
   virtual ArchNetAddress copyAddr(ArchNetAddress) = 0;
@@ -254,7 +254,7 @@ public:
   virtual std::string addrToString(ArchNetAddress) = 0;
 
   //! Get an address's family
-  virtual EAddressFamily getAddrFamily(ArchNetAddress) = 0;
+  virtual AddressFamily getAddrFamily(ArchNetAddress) = 0;
 
   //! Set the port of an address
   virtual void setAddrPort(ArchNetAddress, int port) = 0;

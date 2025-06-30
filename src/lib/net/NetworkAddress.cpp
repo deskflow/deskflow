@@ -23,7 +23,7 @@
 NetworkAddress::NetworkAddress(int port) : m_port(port)
 {
   checkPort();
-  m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+  m_address = ARCH->newAnyAddr(IArchNetwork::AddressFamily::INet);
   ARCH->setAddrPort(m_address, m_port);
 }
 
@@ -125,7 +125,7 @@ size_t NetworkAddress::resolve(size_t index)
     // if hostname is empty then use wildcard address otherwise look
     // up the name.
     if (m_hostname.empty()) {
-      m_address = ARCH->newAnyAddr(IArchNetwork::kINET);
+      m_address = ARCH->newAnyAddr(IArchNetwork::AddressFamily::INet);
       resolvedAddressesCount = 1;
     } else {
       // Logic for temporary filtring only ipv4 addresses
@@ -133,7 +133,7 @@ size_t NetworkAddress::resolve(size_t index)
       {
         auto addresses = ARCH->nameToAddr(m_hostname);
         for (auto address : addresses) {
-          if (ARCH->getAddrFamily(address) == IArchNetwork::kINET) {
+          if (ARCH->getAddrFamily(address) == IArchNetwork::AddressFamily::INet) {
             ipv4OnlyAddresses.emplace_back(address);
           } else {
             ARCH->closeAddr(address);
