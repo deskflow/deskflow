@@ -104,10 +104,9 @@ private:
   const int *getUnblockPipe();
   const int *getUnblockPipeForThread(ArchThread);
   void setBlockingOnSocket(int fd, bool blocking) const;
-  void throwError(int) const;
-  void throwNameError(int) const;
+  [[noreturn]] void throwError(int) const override;
+  [[noreturn]] void throwNameError(int) const override;
 
-private:
   std::shared_ptr<Deps> m_pDeps;
   std::mutex m_mutex;
 };
