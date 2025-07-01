@@ -537,7 +537,14 @@ void ServerApp::handleResume()
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
   using enum SecurityLevel;
-  auto securityLevel = args().m_enableCrypto ? args().m_chkPeerCert ? PeerAuth : Encrypted : PlainText;
+  auto securityLevel = PlainText;
+  if (args().m_enableCrypto) {
+    if (args().m_chkPeerCert) {
+      securityLevel = PeerAuth;
+    } else {
+      securityLevel = Encrypted;
+    }
+  }
 
   auto *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 
