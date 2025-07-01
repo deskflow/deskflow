@@ -278,10 +278,10 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
   for (int i = 0; i < num; ++i) {
     pfd[i].fd = (pe[i].m_socket == nullptr) ? -1 : pe[i].m_socket->m_fd;
     pfd[i].events = 0;
-    if ((pe[i].m_events & kPOLLIN) != 0) {
+    if ((pe[i].m_events & PollEventMask::In) != 0) {
       pfd[i].events |= POLLIN;
     }
-    if ((pe[i].m_events & kPOLLOUT) != 0) {
+    if ((pe[i].m_events & PollEventMask::Out) != 0) {
       pfd[i].events |= POLLOUT;
     }
   }
@@ -328,16 +328,16 @@ int ArchNetworkBSD::pollSocket(PollEntry pe[], int num, double timeout)
   for (int i = 0; i < num; ++i) {
     pe[i].m_revents = 0;
     if ((pfd[i].revents & POLLIN) != 0) {
-      pe[i].m_revents |= kPOLLIN;
+      pe[i].m_revents |= PollEventMask::In;
     }
     if ((pfd[i].revents & POLLOUT) != 0) {
-      pe[i].m_revents |= kPOLLOUT;
+      pe[i].m_revents |= PollEventMask::Out;
     }
     if ((pfd[i].revents & POLLERR) != 0) {
-      pe[i].m_revents |= kPOLLERR;
+      pe[i].m_revents |= PollEventMask::Error;
     }
     if ((pfd[i].revents & POLLNVAL) != 0) {
-      pe[i].m_revents |= kPOLLNVAL;
+      pe[i].m_revents |= PollEventMask::Invalid;
     }
   }
 

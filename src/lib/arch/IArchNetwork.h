@@ -72,12 +72,12 @@ public:
   Events for \c poll() are bitmasks and can be combined using the
   bitwise operators.
   */
-  enum
+  struct PollEventMask
   {
-    kPOLLIN = 1,  //!< Socket is readable
-    kPOLLOUT = 2, //!< Socket is writable
-    kPOLLERR = 4, //!< The socket is in an error state
-    kPOLLNVAL = 8 //!< The socket is invalid
+    inline static const int In = 1;      //!< Socket is readable
+    inline static const int Out = 2;     //!< Socket is writable
+    inline static const int Error = 4;   //!< The socket is in an error state
+    inline static const int Invalid = 8; //!< The socket is invalid
   };
 
   //! A socket query for \c poll()
@@ -89,8 +89,7 @@ public:
 
     //! The events to query for
     /*!
-    The events to query for can be any combination of kPOLLIN and
-    kPOLLOUT.
+    The events to query for can be any combination of PollEventMask::In and PollEventMask::Out.
     */
     unsigned short m_events;
 
@@ -175,9 +174,9 @@ public:
   and/or writable (or indefinitely if \c timeout < 0).  Returns the
   number of sockets that were readable (if readability was being
   queried) or writable (if writablility was being queried) and sets
-  the \c m_revents members of the entries.  \c kPOLLERR and \c kPOLLNVAL
+  the \c m_revents members of the entries.  \c PollEventMask::Error and \c PollEventMask::Invalid
   are set in \c m_revents as appropriate.  If a socket indicates
-  \c kPOLLERR then \c throwErrorOnSocket() can be used to determine
+  \c PollEventMask::Error then \c throwErrorOnSocket() can be used to determine
   the type of error.  Returns 0 immediately regardless of the \c timeout
   if no valid sockets are selected for testing.
 

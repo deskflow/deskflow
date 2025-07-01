@@ -84,7 +84,8 @@ TEST(ArchNetworkBSDTests, pollSocket_pfdHasRevents_copiedToEntries)
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
-  const auto expect = IArchNetwork::kPOLLIN | IArchNetwork::kPOLLOUT | IArchNetwork::kPOLLERR | IArchNetwork::kPOLLNVAL;
+  const auto expect = IArchNetwork::PollEventMask::In | IArchNetwork::PollEventMask::Out |
+                      IArchNetwork::PollEventMask::Error | IArchNetwork::PollEventMask::Invalid;
   EXPECT_EQ(entries[0].m_revents, expect);
 }
 
@@ -116,7 +117,7 @@ TEST(ArchNetworkBSDTests, pollSocket_eventHasPollInBit_bitWasSet)
   auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
-  PollEntries entries{{&socket, IArchNetwork::kPOLLIN, 0}};
+  PollEntries entries{{&socket, IArchNetwork::PollEventMask::In, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 
@@ -128,7 +129,7 @@ TEST(ArchNetworkBSDTests, pollSocket_eventHasPollOutBit_bitWasSet)
   auto deps = MockDeps::makeNice();
   ArchNetworkBSD networkBSD(deps);
   ArchSocketImpl socket{1, 0};
-  PollEntries entries{{&socket, IArchNetwork::kPOLLOUT, 0}};
+  PollEntries entries{{&socket, IArchNetwork::PollEventMask::Out, 0}};
 
   networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1);
 

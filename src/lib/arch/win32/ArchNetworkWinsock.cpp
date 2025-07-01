@@ -380,16 +380,16 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
 
     // set invalid flag if socket is bogus then go to next socket
     if (pe[i].m_socket == nullptr) {
-      pe[i].m_revents |= kPOLLNVAL;
+      pe[i].m_revents |= PollEventMask::Invalid;
       continue;
     }
 
     // select desired events
     long socketEvents = 0;
-    if ((pe[i].m_events & kPOLLIN) != 0) {
+    if ((pe[i].m_events & PollEventMask::In) != 0) {
       socketEvents |= FD_READ | FD_ACCEPT | FD_CLOSE;
     }
-    if ((pe[i].m_events & kPOLLOUT) != 0) {
+    if ((pe[i].m_events & PollEventMask::Out) != 0) {
       socketEvents |= FD_WRITE | FD_CONNECT | FD_CLOSE;
 
       // if m_pollWrite is false then we assume the socket is
@@ -397,7 +397,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
       // when the state changes from unwritable.
       if (!pe[i].m_socket->m_pollWrite) {
         canWrite = true;
-        pe[i].m_revents |= kPOLLOUT;
+        pe[i].m_revents |= PollEventMask::Out;
       }
     }
 
@@ -462,7 +462,7 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
   }
   for (i = 0, n = 0; i < num; ++i) {
     // skip events we didn't check
-    if (pe[i].m_socket == nullptr || (pe[i].m_events & (kPOLLIN | kPOLLOUT)) == 0) {
+    if (pe[i].m_socket == nullptr || (pe[i].m_events & (PollEventMask::In | PollEventMask::Out)) == 0) {
       continue;
     }
 
@@ -472,13 +472,13 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
       continue;
     }
     if ((info.lNetworkEvents & FD_READ) != 0) {
-      pe[i].m_revents |= kPOLLIN;
+      pe[i].m_revents |= PollEventMask::In;
     }
     if ((info.lNetworkEvents & FD_ACCEPT) != 0) {
-      pe[i].m_revents |= kPOLLIN;
+      pe[i].m_revents |= PollEventMask::In;
     }
     if ((info.lNetworkEvents & FD_WRITE) != 0) {
-      pe[i].m_revents |= kPOLLOUT;
+      pe[i].m_revents |= PollEventMask::Out;
 
       // socket is now writable so don't bothing polling for
       // writable until it becomes unwritable.
@@ -486,21 +486,21 @@ int ArchNetworkWinsock::pollSocket(PollEntry pe[], int num, double timeout)
     }
     if ((info.lNetworkEvents & FD_CONNECT) != 0) {
       if (info.iErrorCode[FD_CONNECT_BIT] != 0) {
-        pe[i].m_revents |= kPOLLERR;
+        pe[i].m_revents |= PollEventMask::Error;
       } else {
-        pe[i].m_revents |= kPOLLOUT;
+        pe[i].m_revents |= PollEventMask::Out;
         pe[i].m_socket->m_pollWrite = false;
       }
     }
     if ((info.lNetworkEvents & FD_CLOSE) != 0) {
       if (info.iErrorCode[FD_CLOSE_BIT] != 0) {
-        pe[i].m_revents |= kPOLLERR;
+        pe[i].m_revents |= PollEventMask::Error;
       } else {
-        if ((pe[i].m_events & kPOLLIN) != 0) {
-          pe[i].m_revents |= kPOLLIN;
+        if ((pe[i].m_events & PollEventMask::In) != 0) {
+          pe[i].m_revents |= PollEventMask::In;
         }
-        if ((pe[i].m_events & kPOLLOUT) != 0) {
-          pe[i].m_revents |= kPOLLOUT;
+        if ((pe[i].m_events & PollEventMask::Out) != 0) {
+          pe[i].m_revents |= PollEventMask::Out;
         }
       }
     }
