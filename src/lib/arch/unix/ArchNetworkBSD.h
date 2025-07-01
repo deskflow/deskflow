@@ -71,7 +71,7 @@ public:
   void init() override;
 
   // IArchNetwork overrides
-  ArchSocket newSocket(AddressFamily, ESocketType) override;
+  ArchSocket newSocket(AddressFamily, SocketType) override;
   ArchSocket copySocket(ArchSocket s) override;
   void closeSocket(ArchSocket s) override;
   void closeSocketForRead(ArchSocket s) override;

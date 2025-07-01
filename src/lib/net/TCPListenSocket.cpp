@@ -29,7 +29,7 @@ TCPListenSocket::TCPListenSocket(
       m_socketMultiplexer(socketMultiplexer)
 {
   try {
-    m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
+    m_socket = ARCH->newSocket(family, IArchNetwork::SocketType::Stream);
   } catch (XArchNetwork &e) {
     throw XSocketCreate(e.what());
   }

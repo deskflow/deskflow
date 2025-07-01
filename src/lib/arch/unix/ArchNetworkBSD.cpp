@@ -95,10 +95,10 @@ void ArchNetworkBSD::init()
   // do nothing
 }
 
-ArchSocket ArchNetworkBSD::newSocket(AddressFamily family, ESocketType type)
+ArchSocket ArchNetworkBSD::newSocket(AddressFamily family, SocketType type)
 {
   // create socket
-  int fd = socket(s_family[static_cast<int>(family)], s_type[type], 0);
+  int fd = socket(s_family[static_cast<int>(family)], s_type[static_cast<int>(type)], 0);
   if (fd == -1) {
     throwError(errno);
   }
