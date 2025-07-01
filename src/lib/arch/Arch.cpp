@@ -57,5 +57,5 @@ double Arch::time()
 {
   auto sinceEpoch = std::chrono::steady_clock::now().time_since_epoch();
   auto uSecSinceEpoch = std::chrono::duration_cast<std::chrono::microseconds>(sinceEpoch).count();
-  return uSecSinceEpoch / 1000000.0;
+  return double(uSecSinceEpoch / 1000000);
 }
