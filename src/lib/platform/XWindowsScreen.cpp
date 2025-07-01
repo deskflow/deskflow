@@ -1477,17 +1477,18 @@ void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
 
 void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
 {
+  using enum EventTypes;
   LOG((CLOG_DEBUG1 "event: ButtonRelease button=%d", xbutton.button));
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
-    sendEvent(EventTypes::PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
+    sendEvent(PrimaryScreenButtonUp, ButtonInfo::alloc(button, mask));
   } else if (xbutton.button == 4) {
     // wheel forward (away from user)
-    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(0, 120));
+    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(0, 120));
   } else if (xbutton.button == 5) {
     // wheel backward (toward user)
-    sendEvent(EventTypes::PrimaryScreenWheel, WheelInfo::alloc(0, -120));
+    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(0, -120));
   }
   // XXX -- support x-axis scrolling
 }

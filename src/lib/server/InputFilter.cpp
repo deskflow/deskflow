@@ -444,15 +444,12 @@ std::string InputFilter::KeystrokeAction::format() const
 
 void InputFilter::KeystrokeAction::perform(const Event &event)
 {
-  EventTypes type = m_press ? EventTypes::KeyStateKeyDown : EventTypes::KeyStateKeyUp;
+  using enum EventTypes;
+  EventTypes type = m_press ? KeyStateKeyDown : KeyStateKeyUp;
 
-  m_events->addEvent(
-      Event(EventTypes::PrimaryScreenFakeInputBegin, event.getTarget(), nullptr, Event::kDeliverImmediately)
-  );
+  m_events->addEvent(Event(PrimaryScreenFakeInputBegin, event.getTarget(), nullptr, Event::kDeliverImmediately));
   m_events->addEvent(Event(type, event.getTarget(), m_keyInfo, Event::kDeliverImmediately | Event::kDontFreeData));
-  m_events->addEvent(
-      Event(EventTypes::PrimaryScreenFakeInputEnd, event.getTarget(), nullptr, Event::kDeliverImmediately)
-  );
+  m_events->addEvent(Event(PrimaryScreenFakeInputEnd, event.getTarget(), nullptr, Event::kDeliverImmediately));
 }
 
 const char *InputFilter::KeystrokeAction::formatName() const
@@ -501,15 +498,16 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
 
 {
   // send modifiers
+  using enum EventTypes;
   IPlatformScreen::KeyInfo *modifierInfo = nullptr;
   if (m_buttonInfo->m_mask != 0) {
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
     modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-    m_events->addEvent(Event(EventTypes::KeyStateKeyDown, event.getTarget(), modifierInfo, Event::kDeliverImmediately));
+    m_events->addEvent(Event(KeyStateKeyDown, event.getTarget(), modifierInfo, Event::kDeliverImmediately));
   }
 
   // send button
-  EventTypes type = m_press ? EventTypes::PrimaryScreenButtonDown : EventTypes::PrimaryScreenButtonUp;
+  EventTypes type = m_press ? PrimaryScreenButtonDown : PrimaryScreenButtonUp;
   m_events->addEvent(Event(type, event.getTarget(), m_buttonInfo, Event::kDeliverImmediately | Event::kDontFreeData));
 }
 
@@ -778,48 +776,43 @@ void InputFilter::setPrimaryClient(PrimaryClient *client)
     return;
   }
 
+  using enum EventTypes;
   if (m_primaryClient != nullptr) {
     for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
       rule->disable(m_primaryClient);
     }
 
-    m_events->removeHandler(EventTypes::KeyStateKeyDown, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::KeyStateKeyUp, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::KeyStateKeyRepeat, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::PrimaryScreenButtonDown, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::PrimaryScreenButtonUp, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget());
-    m_events->removeHandler(EventTypes::ServerConnected, m_primaryClient->getEventTarget());
+    m_events->removeHandler(KeyStateKeyDown, m_primaryClient->getEventTarget());
+    m_events->removeHandler(KeyStateKeyUp, m_primaryClient->getEventTarget());
+    m_events->removeHandler(KeyStateKeyRepeat, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryScreenButtonDown, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryScreenButtonUp, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget());
+    m_events->removeHandler(PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget());
+    m_events->removeHandler(ServerConnected, m_primaryClient->getEventTarget());
   }
 
   m_primaryClient = client;
 
   if (m_primaryClient != nullptr) {
-    m_events->addHandler(EventTypes::KeyStateKeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(KeyStateKeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) { handleEvent(e); });
+    m_events->addHandler(KeyStateKeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) { handleEvent(e); });
+    m_events->addHandler(KeyStateKeyRepeat, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(EventTypes::KeyStateKeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryScreenButtonDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(EventTypes::KeyStateKeyRepeat, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryScreenButtonUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(EventTypes::PrimaryScreenButtonDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(EventTypes::PrimaryScreenButtonUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
+    m_events->addHandler(PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
       handleEvent(e);
     });
-    m_events->addHandler(EventTypes::PrimaryScreenHotkeyDown, m_primaryClient->getEventTarget(), [this](const auto &e) {
-      handleEvent(e);
-    });
-    m_events->addHandler(EventTypes::PrimaryScreenHotkeyUp, m_primaryClient->getEventTarget(), [this](const auto &e) {
-      handleEvent(e);
-    });
-    m_events->addHandler(EventTypes::ServerConnected, m_primaryClient->getEventTarget(), [this](const auto &e) {
-      handleEvent(e);
-    });
+    m_events->addHandler(ServerConnected, m_primaryClient->getEventTarget(), [this](const auto &e) { handleEvent(e); });
 
     for (auto rule = m_ruleList.begin(); rule != m_ruleList.end(); ++rule) {
       rule->enable(m_primaryClient);

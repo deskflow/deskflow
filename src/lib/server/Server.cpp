@@ -142,19 +142,20 @@ Server::Server(
 Server::~Server()
 {
   // remove event handlers and timers
-  m_events->removeHandler(EventTypes::KeyStateKeyDown, m_inputFilter);
-  m_events->removeHandler(EventTypes::KeyStateKeyUp, m_inputFilter);
-  m_events->removeHandler(EventTypes::KeyStateKeyRepeat, m_inputFilter);
-  m_events->removeHandler(EventTypes::PrimaryScreenButtonDown, m_inputFilter);
-  m_events->removeHandler(EventTypes::PrimaryScreenButtonUp, m_inputFilter);
-  m_events->removeHandler(EventTypes::PrimaryScreenMotionOnPrimary, m_primaryClient->getEventTarget());
-  m_events->removeHandler(EventTypes::PrimaryScreenMotionOnSecondary, m_primaryClient->getEventTarget());
-  m_events->removeHandler(EventTypes::PrimaryScreenWheel, m_primaryClient->getEventTarget());
-  m_events->removeHandler(EventTypes::PrimaryScreenSaverActivated, m_primaryClient->getEventTarget());
-  m_events->removeHandler(EventTypes::PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget());
-  m_events->removeHandler(EventTypes::PrimaryScreenFakeInputBegin, m_inputFilter);
-  m_events->removeHandler(EventTypes::PrimaryScreenFakeInputEnd, m_inputFilter);
-  m_events->removeHandler(EventTypes::Timer, this);
+  using enum EventTypes;
+  m_events->removeHandler(KeyStateKeyDown, m_inputFilter);
+  m_events->removeHandler(KeyStateKeyUp, m_inputFilter);
+  m_events->removeHandler(KeyStateKeyRepeat, m_inputFilter);
+  m_events->removeHandler(PrimaryScreenButtonDown, m_inputFilter);
+  m_events->removeHandler(PrimaryScreenButtonUp, m_inputFilter);
+  m_events->removeHandler(PrimaryScreenMotionOnPrimary, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryScreenMotionOnSecondary, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryScreenWheel, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryScreenSaverActivated, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryScreenSaverDeactivated, m_primaryClient->getEventTarget());
+  m_events->removeHandler(PrimaryScreenFakeInputBegin, m_inputFilter);
+  m_events->removeHandler(PrimaryScreenFakeInputEnd, m_inputFilter);
+  m_events->removeHandler(Timer, this);
   stopSwitch();
 
   try {
@@ -167,8 +168,8 @@ Server::~Server()
   for (auto index = m_oldClients.begin(); index != m_oldClients.end(); ++index) {
     BaseClientProxy *client = index->first;
     m_events->deleteTimer(index->second);
-    m_events->removeHandler(EventTypes::Timer, client);
-    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
+    m_events->removeHandler(Timer, client);
+    m_events->removeHandler(ClientProxyDisconnected, client);
     delete client;
   }
 
@@ -1873,6 +1874,7 @@ bool Server::addClient(BaseClientProxy *client)
 
 bool Server::removeClient(BaseClientProxy *client)
 {
+  using enum EventTypes;
   // return false if not in list
   ClientSet::iterator i = m_clientSet.find(client);
   if (i == m_clientSet.end()) {
@@ -1880,9 +1882,9 @@ bool Server::removeClient(BaseClientProxy *client)
   }
 
   // remove event handlers
-  m_events->removeHandler(EventTypes::ScreenShapeChanged, client->getEventTarget());
-  m_events->removeHandler(EventTypes::ClipboardGrabbed, client->getEventTarget());
-  m_events->removeHandler(EventTypes::ClipboardChanged, client->getEventTarget());
+  m_events->removeHandler(ScreenShapeChanged, client->getEventTarget());
+  m_events->removeHandler(ClipboardGrabbed, client->getEventTarget());
+  m_events->removeHandler(ClipboardChanged, client->getEventTarget());
 
   // remove from list
   m_clients.erase(getName(client));
@@ -1961,14 +1963,15 @@ void Server::removeActiveClient(BaseClientProxy *client)
 
 void Server::removeOldClient(BaseClientProxy *client)
 {
+  using enum EventTypes;
   OldClients::iterator i = m_oldClients.find(client);
   if (i != m_oldClients.end()) {
-    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
-    m_events->removeHandler(EventTypes::Timer, i->second);
+    m_events->removeHandler(ClientProxyDisconnected, client);
+    m_events->removeHandler(Timer, i->second);
     m_events->deleteTimer(i->second);
     m_oldClients.erase(i);
     if (m_clients.size() == 1 && m_oldClients.empty()) {
-      m_events->addEvent(Event(EventTypes::ServerDisconnected, this));
+      m_events->addEvent(Event(ServerDisconnected, this));
     }
   }
 }

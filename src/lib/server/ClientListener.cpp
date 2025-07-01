@@ -87,14 +87,15 @@ void ClientListener::start()
 
 void ClientListener::stop()
 {
+  using enum EventTypes;
   LOG((CLOG_DEBUG1 "stop listening for clients"));
 
   // discard already connected clients
   for (auto index = m_newClients.begin(); index != m_newClients.end(); ++index) {
     ClientProxyUnknown *client = *index;
-    m_events->removeHandler(EventTypes::ClientProxyUnknownSuccess, client);
-    m_events->removeHandler(EventTypes::ClientProxyUnknownFailure, client);
-    m_events->removeHandler(EventTypes::ClientProxyDisconnected, client);
+    m_events->removeHandler(ClientProxyUnknownSuccess, client);
+    m_events->removeHandler(ClientProxyUnknownFailure, client);
+    m_events->removeHandler(ClientProxyDisconnected, client);
     delete client;
   }
 
@@ -105,7 +106,7 @@ void ClientListener::stop()
     client = getNextClient();
   }
 
-  m_events->removeHandler(EventTypes::ListenSocketConnecting, m_listen);
+  m_events->removeHandler(ListenSocketConnecting, m_listen);
   cleanupListenSocket();
   cleanupClientSockets();
 }

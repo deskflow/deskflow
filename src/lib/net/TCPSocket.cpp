@@ -485,16 +485,18 @@ ISocketMultiplexerJob *TCPSocket::serviceConnecting(ISocketMultiplexerJob *job, 
 
 ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, bool read, bool write, bool error)
 {
+  using enum EventTypes;
   Lock lock(&m_mutex);
 
   if (error) {
-    sendEvent(EventTypes::SocketDisconnected);
+    sendEvent(SocketDisconnected);
     onDisconnected();
     return newJob();
   }
 
   EJobResult readResult = kRetry;
   EJobResult writeResult = kRetry;
+
   if (write) {
     try {
       writeResult = doWrite();
@@ -502,23 +504,23 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       // remote read end of stream hungup.  our output side
       // has therefore shutdown.
       onOutputShutdown();
-      sendEvent(EventTypes::StreamOutputShutdown);
+      sendEvent(StreamOutputShutdown);
       if (!m_readable && m_inputBuffer.getSize() == 0) {
-        sendEvent(EventTypes::SocketDisconnected);
+        sendEvent(SocketDisconnected);
         m_connected = false;
       }
       writeResult = kNew;
     } catch (XArchNetworkDisconnected &) {
       // stream hungup
       onDisconnected();
-      sendEvent(EventTypes::SocketDisconnected);
+      sendEvent(SocketDisconnected);
       writeResult = kNew;
     } catch (XArchNetwork &e) {
       // other write error
       LOG((CLOG_WARN "error writing socket: %s", e.what()));
       onDisconnected();
-      sendEvent(EventTypes::StreamOutputError);
-      sendEvent(EventTypes::SocketDisconnected);
+      sendEvent(StreamOutputError);
+      sendEvent(SocketDisconnected);
       writeResult = kNew;
     }
   }
@@ -528,7 +530,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       readResult = doRead();
     } catch (XArchNetworkDisconnected &) {
       // stream hungup
-      sendEvent(EventTypes::SocketDisconnected);
+      sendEvent(SocketDisconnected);
       onDisconnected();
       readResult = kNew;
     } catch (XArchNetwork &e) {

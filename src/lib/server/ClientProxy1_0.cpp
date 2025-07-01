@@ -61,13 +61,14 @@ void ClientProxy1_0::disconnect()
 
 void ClientProxy1_0::removeHandlers()
 {
+  using enum EventTypes;
   // uninstall event handlers
-  m_events->removeHandler(EventTypes::StreamInputReady, getStream()->getEventTarget());
-  m_events->removeHandler(EventTypes::StreamOutputError, getStream()->getEventTarget());
-  m_events->removeHandler(EventTypes::StreamInputShutdown, getStream()->getEventTarget());
-  m_events->removeHandler(EventTypes::StreamOutputShutdown, getStream()->getEventTarget());
-  m_events->removeHandler(EventTypes::StreamInputFormatError, getStream()->getEventTarget());
-  m_events->removeHandler(EventTypes::Timer, this);
+  m_events->removeHandler(StreamInputReady, getStream()->getEventTarget());
+  m_events->removeHandler(StreamOutputError, getStream()->getEventTarget());
+  m_events->removeHandler(StreamInputShutdown, getStream()->getEventTarget());
+  m_events->removeHandler(StreamOutputShutdown, getStream()->getEventTarget());
+  m_events->removeHandler(StreamInputFormatError, getStream()->getEventTarget());
+  m_events->removeHandler(Timer, this);
 
   // remove timer
   removeHeartbeatTimer();

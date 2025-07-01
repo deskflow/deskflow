@@ -708,20 +708,21 @@ void KeyState::sendKeyEvent(
     void *target, bool press, bool isAutoRepeat, KeyID key, KeyModifierMask mask, int32_t count, KeyButton button
 )
 {
+  using enum EventTypes;
   if (m_keyMap.isHalfDuplex(key, button)) {
     if (isAutoRepeat) {
       // ignore auto-repeat on half-duplex keys
     } else {
-      m_events->addEvent(Event(EventTypes::KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
-      m_events->addEvent(Event(EventTypes::KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
     }
   } else {
     if (isAutoRepeat) {
-      m_events->addEvent(Event(EventTypes::KeyStateKeyRepeat, target, KeyInfo::alloc(key, mask, button, count)));
+      m_events->addEvent(Event(KeyStateKeyRepeat, target, KeyInfo::alloc(key, mask, button, count)));
     } else if (press) {
-      m_events->addEvent(Event(EventTypes::KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(KeyStateKeyDown, target, KeyInfo::alloc(key, mask, button, 1)));
     } else {
-      m_events->addEvent(Event(EventTypes::KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
+      m_events->addEvent(Event(KeyStateKeyUp, target, KeyInfo::alloc(key, mask, button, 1)));
     }
   }
 }
