@@ -318,11 +318,11 @@ void ClientApp::closeClient(Client *client)
   if (client == nullptr) {
     return;
   }
-
-  m_events->removeHandler(EventTypes::ClientConnected, client);
-  m_events->removeHandler(EventTypes::ClientConnectionFailed, client);
-  m_events->removeHandler(EventTypes::ClientConnectionRefused, client);
-  m_events->removeHandler(EventTypes::ClientDisconnected, client);
+  using enum EventTypes;
+  m_events->removeHandler(ClientConnected, client);
+  m_events->removeHandler(ClientConnectionFailed, client);
+  m_events->removeHandler(ClientConnectionRefused, client);
+  m_events->removeHandler(ClientDisconnected, client);
   delete client;
 }
 

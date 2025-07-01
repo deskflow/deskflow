@@ -12,11 +12,12 @@
 bool Fingerprint::isValid() const
 {
   switch (type) {
-  case Fingerprint::Type::Invalid:
+    using enum Type;
+  case Invalid:
     return false;
-  case Fingerprint::Type::SHA1:
+  case SHA1:
     return data.length() == 20;
-  case Fingerprint::Type::SHA256:
+  case SHA256:
     return data.length() == 32;
   default:
     return false;
@@ -68,12 +69,13 @@ Fingerprint Fingerprint::fromDbLine(const QString &line)
 
 Fingerprint::Type Fingerprint::typeFromString(const QString &type)
 {
+  using enum Type;
   const auto t = type.toLower();
   if (t == m_type_sha1)
-    return Type::SHA1;
+    return SHA1;
   if (t == m_type_sha256)
-    return Type::SHA256;
-  return Type::Invalid;
+    return SHA256;
+  return Invalid;
 }
 
 QString Fingerprint::typeToString(Fingerprint::Type type)

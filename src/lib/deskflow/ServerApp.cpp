@@ -285,9 +285,10 @@ void ServerApp::closePrimaryClient(PrimaryClient *primaryClient)
 void ServerApp::closeServerScreen(deskflow::Screen *screen)
 {
   if (screen != nullptr) {
-    m_events->removeHandler(EventTypes::ScreenError, screen->getEventTarget());
-    m_events->removeHandler(EventTypes::ScreenSuspend, screen->getEventTarget());
-    m_events->removeHandler(EventTypes::ScreenResume, screen->getEventTarget());
+    using enum EventTypes;
+    m_events->removeHandler(ScreenError, screen->getEventTarget());
+    m_events->removeHandler(ScreenSuspend, screen->getEventTarget());
+    m_events->removeHandler(ScreenResume, screen->getEventTarget());
     delete screen;
   }
 }
@@ -535,8 +536,8 @@ void ServerApp::handleResume()
 
 ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
-  auto securityLevel = args().m_enableCrypto ? args().m_chkPeerCert ? SecurityLevel::PeerAuth : SecurityLevel::Encrypted
-                                             : SecurityLevel::PlainText;
+  using enum SecurityLevel;
+  auto securityLevel = args().m_enableCrypto ? args().m_chkPeerCert ? PeerAuth : Encrypted : PlainText;
 
   auto *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
 

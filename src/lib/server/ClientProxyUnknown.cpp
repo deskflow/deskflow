@@ -119,16 +119,17 @@ void ClientProxyUnknown::addProxyHandlers()
 
 void ClientProxyUnknown::removeHandlers()
 {
+  using enum EventTypes;
   if (m_stream != nullptr) {
-    m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamOutputError, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamInputShutdown, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamInputFormatError, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamOutputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(StreamInputReady, m_stream->getEventTarget());
+    m_events->removeHandler(StreamOutputError, m_stream->getEventTarget());
+    m_events->removeHandler(StreamInputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(StreamInputFormatError, m_stream->getEventTarget());
+    m_events->removeHandler(StreamOutputShutdown, m_stream->getEventTarget());
   }
   if (m_proxy != nullptr) {
-    m_events->removeHandler(EventTypes::ClientProxyReady, m_proxy);
-    m_events->removeHandler(EventTypes::ClientProxyDisconnected, m_proxy);
+    m_events->removeHandler(ClientProxyReady, m_proxy);
+    m_events->removeHandler(ClientProxyDisconnected, m_proxy);
   }
 }
 

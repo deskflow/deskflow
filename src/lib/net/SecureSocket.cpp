@@ -626,9 +626,10 @@ void SecureSocket::checkResult(int status, int &retry)
 
 void SecureSocket::disconnect()
 {
-  sendEvent(EventTypes::SocketStopRetry);
-  sendEvent(EventTypes::SocketDisconnected);
-  sendEvent(EventTypes::StreamInputShutdown);
+  using enum EventTypes;
+  sendEvent(SocketStopRetry);
+  sendEvent(SocketDisconnected);
+  sendEvent(StreamInputShutdown);
 }
 
 bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath) const

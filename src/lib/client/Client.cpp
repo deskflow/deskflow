@@ -468,12 +468,13 @@ void Client::cleanupConnecting()
 void Client::cleanupConnection()
 {
   if (m_stream != nullptr) {
-    m_events->removeHandler(EventTypes::StreamInputReady, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamOutputError, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamInputShutdown, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::StreamOutputShutdown, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::SocketDisconnected, m_stream->getEventTarget());
-    m_events->removeHandler(EventTypes::SocketStopRetry, m_stream->getEventTarget());
+    using enum EventTypes;
+    m_events->removeHandler(StreamInputReady, m_stream->getEventTarget());
+    m_events->removeHandler(StreamOutputError, m_stream->getEventTarget());
+    m_events->removeHandler(StreamInputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(StreamOutputShutdown, m_stream->getEventTarget());
+    m_events->removeHandler(SocketDisconnected, m_stream->getEventTarget());
+    m_events->removeHandler(SocketStopRetry, m_stream->getEventTarget());
     cleanupStream();
   }
 }
