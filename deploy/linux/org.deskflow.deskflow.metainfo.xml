@@ -69,7 +69,7 @@
 				</ul>
 			</description>
 			<url>https://github.com/deskflow/deskflow/releases/tag/v1.22.0</url>
-		</release>/
+		</release>
 		<release version="1.21.2" date="2025-04-07" urgency="high">
 			<description>
 				<p>This stable release fixes a few critical bugs in 1.21.1. For the full changelog see the release page.</p>
