@@ -61,10 +61,10 @@ public:
   };
 
   //! Supported socket types
-  enum ESocketType
+  enum class SocketType : uint8_t
   {
-    kDGRAM,
-    kSTREAM
+    DataGram,
+    Stream
   };
 
   //! Events for \c poll()
@@ -105,7 +105,7 @@ public:
   /*!
   The socket is an opaque data type.
   */
-  virtual ArchSocket newSocket(AddressFamily, ESocketType) = 0;
+  virtual ArchSocket newSocket(AddressFamily, SocketType) = 0;
 
   //! Copy a socket object
   /*!

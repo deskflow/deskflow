@@ -192,10 +192,10 @@ void ArchNetworkWinsock::initModule(HMODULE module)
   s_networkModule = module;
 }
 
-ArchSocket ArchNetworkWinsock::newSocket(AddressFamily family, ESocketType type)
+ArchSocket ArchNetworkWinsock::newSocket(AddressFamily family, SocketType type)
 {
   // create socket
-  SOCKET fd = socket_winsock(s_family[static_cast<int>(family)], s_type[type], 0);
+  SOCKET fd = socket_winsock(s_family[static_cast<int>(family)], s_type[static_cast<int>(type)], 0);
   if (fd == INVALID_SOCKET) {
     throwError(getsockerror_winsock());
   }

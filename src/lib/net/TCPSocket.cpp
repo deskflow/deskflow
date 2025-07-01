@@ -34,7 +34,7 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, 
       m_socketMultiplexer(socketMultiplexer)
 {
   try {
-    m_socket = ARCH->newSocket(family, IArchNetwork::kSTREAM);
+    m_socket = ARCH->newSocket(family, IArchNetwork::SocketType::Stream);
   } catch (const XArchNetwork &e) {
     throw XSocketCreate(e.what());
   }
