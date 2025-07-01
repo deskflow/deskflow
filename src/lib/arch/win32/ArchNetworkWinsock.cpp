@@ -840,7 +840,7 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   return (a == b || (a->m_len == b->m_len && memcmp(&a->m_addr, &b->m_addr, a->m_len) == 0));
 }
 
-void ArchNetworkWinsock::throwError(int err)
+[[noreturn]] void ArchNetworkWinsock::throwError(int err) const
 {
   switch (err) {
   case WSAEACCES:
@@ -910,7 +910,7 @@ void ArchNetworkWinsock::throwError(int err)
   }
 }
 
-void ArchNetworkWinsock::throwNameError(int err)
+[[noreturn]] void ArchNetworkWinsock::throwNameError(int err) const
 {
   switch (err) {
   case WSAHOST_NOT_FOUND:

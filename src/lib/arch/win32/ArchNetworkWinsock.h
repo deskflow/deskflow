@@ -92,10 +92,9 @@ private:
 
   void setBlockingOnSocket(SOCKET, bool blocking);
 
-  void throwError(int);
-  void throwNameError(int);
+  [[noreturn]] void throwError(int) const override;
+  [[noreturn]] void throwNameError(int) const override;
 
-private:
   using EventList = std::list<WSAEVENT>;
 
   std::mutex m_mutex;

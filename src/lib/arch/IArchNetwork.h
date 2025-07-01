@@ -274,4 +274,15 @@ public:
   //@}
 
   virtual void init() = 0;
+
+private:
+  /**
+   * @brief throwError, Used to throw network errors
+   */
+  [[noreturn]] virtual void throwError(int) const = 0;
+
+  /**
+   * @brief throwNameError, Errors related to client names.
+   */
+  [[noreturn]] virtual void throwNameError(int) const = 0;
 };
