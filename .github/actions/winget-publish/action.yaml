@@ -21,12 +21,13 @@ runs:
         Invoke-WebRequest https://aka.ms/wingetcreate/latest -OutFile wingetcreate.exe
         
         $packageId = "Deskflow.Deskflow"
-        $installerUrl = "https://github.com/deskflow/deskflow/releases/download/v${{ inputs.release-version }}/deskflow-${{ inputs.release-version }}-win-x64.msi"
+        $x64Url = "https://github.com/deskflow/deskflow/releases/download/v${{ inputs.release-version }}/deskflow-${{ inputs.release-version }}-win-x64.msi"
+        $arm64Url = "https://github.com/deskflow/deskflow/releases/download/v${{ inputs.release-version }}/deskflow-${{ inputs.release-version }}-win-arm64.msi"
 
         # Submit package update
         .\wingetcreate.exe update "$packageId" `
           --version "${{ inputs.release-version }}" `
-          --urls "$installerUrl" `
+          --urls "$x64Url|x64" "$arm64Url|arm64"`
           --submit `
           --token "${{ inputs.token }}"
       shell: pwsh
