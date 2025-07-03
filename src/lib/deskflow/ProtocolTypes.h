@@ -178,13 +178,13 @@ enum EDirection
  *
  * @since Protocol version 1.0
  */
-enum EDirectionMask
+enum class DirectionMask
 {
-  kNoDirMask = 0,            ///< No direction mask
-  kLeftMask = 1 << kLeft,    ///< Left edge mask
-  kRightMask = 1 << kRight,  ///< Right edge mask
-  kTopMask = 1 << kTop,      ///< Top edge mask
-  kBottomMask = 1 << kBottom ///< Bottom edge mask
+  NoDirMask = 0,            ///< No direction mask
+  LeftMask = 1 << kLeft,    ///< Left edge mask
+  RightMask = 1 << kRight,  ///< Right edge mask
+  TopMask = 1 << kTop,      ///< Top edge mask
+  BottomMask = 1 << kBottom ///< Bottom edge mask
 };
 
 /**
