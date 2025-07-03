@@ -63,36 +63,38 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, uint32_t sequence)
   return end;
 }
 
-int ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence)
+TransferState
+ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence)
 {
+  using enum TransferState;
   uint8_t mark;
   std::string data;
 
   if (!ProtocolUtil::readf(stream, kMsgDClipboard + 4, &id, &sequence, &mark, &data)) {
-    return kError;
+    return Error;
   }
 
   if (mark == kDataStart) {
     s_expectedSize = deskflow::string::stringToSizeType(data);
     LOG((CLOG_DEBUG "start receiving clipboard data"));
     dataCached.clear();
-    return kStart;
+    return Started;
   } else if (mark == kDataChunk) {
     dataCached.append(data);
-    return kNotFinish;
+    return InProgress;
   } else if (mark == kDataEnd) {
     // validate
     if (id >= kClipboardEnd) {
-      return kError;
+      return Error;
     } else if (s_expectedSize != dataCached.size()) {
       LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
-      return kError;
+      return Error;
     }
-    return kFinish;
+    return Finished;
   }
 
   LOG((CLOG_ERR "clipboard transmission failed: unknown error"));
-  return kError;
+  return Error;
 }
 
 void ClipboardChunk::send(deskflow::IStream *stream, void *data)
