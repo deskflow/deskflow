@@ -14,6 +14,10 @@
 #include <fstream>
 #include <iostream>
 
+#include <QFile>
+#include <QString>
+#include <QTextStream>
+
 enum EFileLogOutputter
 {
   kFileSizeLimit = 1024 // kb
@@ -23,7 +27,7 @@ enum EFileLogOutputter
 // StopLogOutputter
 //
 
-void StopLogOutputter::open(const char *)
+void StopLogOutputter::open(const QString &)
 {
   // do nothing
 }
@@ -38,7 +42,7 @@ void StopLogOutputter::show(bool)
   // do nothing
 }
 
-bool StopLogOutputter::write(ELevel, const char *)
+bool StopLogOutputter::write(ELevel, const QString &)
 {
   return false;
 }
@@ -47,7 +51,7 @@ bool StopLogOutputter::write(ELevel, const char *)
 // ConsoleLogOutputter
 //
 
-void ConsoleLogOutputter::open(const char *title)
+void ConsoleLogOutputter::open(const QString &title)
 {
   // do nothing
 }
@@ -62,12 +66,12 @@ void ConsoleLogOutputter::show(bool showIfEmpty)
   // do nothing
 }
 
-bool ConsoleLogOutputter::write(ELevel level, const char *msg)
+bool ConsoleLogOutputter::write(ELevel level, const QString &msg)
 {
   if ((level >= kFATAL) && (level <= kWARNING))
-    std::cerr << msg << std::endl;
+    QTextStream(stderr) << msg << Qt::endl;
   else
-    std::cout << msg << std::endl;
+    QTextStream(stdout) << msg << Qt::endl;
   std::cout.flush();
   return true;
 }
@@ -81,7 +85,7 @@ void ConsoleLogOutputter::flush() const
 // SystemLogOutputter
 //
 
-void SystemLogOutputter::open(const char *title)
+void SystemLogOutputter::open(const QString &title)
 {
   ARCH->openLog(title);
 }
@@ -96,7 +100,7 @@ void SystemLogOutputter::show(bool showIfEmpty)
   ARCH->showLog(showIfEmpty);
 }
 
-bool SystemLogOutputter::write(ELevel level, const char *msg)
+bool SystemLogOutputter::write(ELevel level, const QString &msg)
 {
   ARCH->writeLog(level, msg);
   return true;
@@ -106,7 +110,7 @@ bool SystemLogOutputter::write(ELevel level, const char *msg)
 // SystemLogger
 //
 
-SystemLogger::SystemLogger(const char *title, bool blockConsole)
+SystemLogger::SystemLogger(const QString &title, bool blockConsole)
 {
   // redirect log messages
   if (blockConsole) {
@@ -132,44 +136,40 @@ SystemLogger::~SystemLogger()
 // FileLogOutputter
 //
 
-FileLogOutputter::FileLogOutputter(const char *logFile)
+FileLogOutputter::FileLogOutputter(const QString &logFile)
 {
   setLogFilename(logFile);
 }
 
-void FileLogOutputter::setLogFilename(const char *logFile)
+void FileLogOutputter::setLogFilename(const QString &logFile)
 {
   assert(logFile != nullptr);
   m_fileName = logFile;
 }
 
-bool FileLogOutputter::write(ELevel level, const char *message)
+bool FileLogOutputter::write(ELevel level, const QString &message)
 {
   bool moveFile = false;
 
-  std::ofstream m_handle;
-  m_handle.open(deskflow::filesystem::path(m_fileName), std::fstream::app);
-  if (m_handle.is_open() && m_handle.fail() != true) {
-    m_handle << message << std::endl;
+  QFile file(m_fileName);
+  if (!file.open(QFile::WriteOnly))
+    return false;
 
-    // when file size exceeds limits, move to 'old log' filename.
-    size_t p = m_handle.tellp();
-    if (p > (kFileSizeLimit * 1024)) {
-      moveFile = true;
-    }
-  }
-  m_handle.close();
+  QTextStream(&file) << message << Qt::endl;
+  file.close();
+
+  moveFile = (file.size() > (kFileSizeLimit * 1024));
 
   if (moveFile) {
-    std::string oldLogFilename = deskflow::string::sprintf("%s.1", m_fileName.c_str());
-    remove(oldLogFilename.c_str());
-    rename(m_fileName.c_str(), oldLogFilename.c_str());
+    auto oldFile = QStringLiteral("%1.1").arg(m_fileName);
+    file.remove(m_fileName);
+    file.rename(m_fileName, oldFile);
   }
 
   return true;
 }
 
-void FileLogOutputter::open(const char *title)
+void FileLogOutputter::open(const QString &title)
 {
   // do nothing
 }
