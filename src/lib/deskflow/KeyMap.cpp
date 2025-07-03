@@ -35,7 +35,7 @@ KeyMap::KeyMap() : m_numGroups(0), m_composeAcrossGroups(false)
   m_modifierKeyItem.m_client = 0;
 }
 
-void KeyMap::swap(KeyMap &x)
+void KeyMap::swap(KeyMap &x) noexcept
 {
   m_keyIDMap.swap(x.m_keyIDMap);
   m_modifierKeys.swap(x.m_modifierKeys);
