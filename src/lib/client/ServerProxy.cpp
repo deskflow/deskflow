@@ -33,7 +33,6 @@
 ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
-      m_parser(&ServerProxy::parseHandshakeMessage),
       m_events(events)
 {
   assert(m_client != nullptr);
