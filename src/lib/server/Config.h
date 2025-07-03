@@ -58,15 +58,15 @@ public:
   class CellEdge
   {
   public:
-    CellEdge(EDirection side, float position);
-    CellEdge(EDirection side, const Interval &);
-    CellEdge(const std::string &name, EDirection side, const Interval &);
+    CellEdge(Direction side, float position);
+    CellEdge(Direction side, const Interval &);
+    CellEdge(const std::string &name, Direction side, const Interval &);
     ~CellEdge() = default;
 
     Interval getInterval() const;
     void setName(const std::string_view &newName);
     std::string getName() const;
-    EDirection getSide() const;
+    Direction getSide() const;
     bool overlaps(const CellEdge &) const;
     bool isInside(float x) const;
 
@@ -84,11 +84,11 @@ public:
     bool operator!=(const CellEdge &) const;
 
   private:
-    void init(const std::string_view &name, EDirection side, const Interval &);
+    void init(const std::string_view &name, Direction side, const Interval &);
 
   private:
     std::string m_name;
-    EDirection m_side;
+    Direction m_side;
     Interval m_interval;
   };
 
@@ -114,15 +114,15 @@ private:
     using const_iterator = EdgeLinks::const_iterator;
 
     bool add(const CellEdge &src, const CellEdge &dst);
-    void remove(EDirection side);
-    void remove(EDirection side, float position);
+    void remove(Direction side);
+    void remove(Direction side, float position);
     void remove(const Name &destinationName);
     void rename(const Name &oldName, const std::string &newName);
 
     bool hasEdge(const CellEdge &) const;
     bool overlaps(const CellEdge &) const;
 
-    bool getLink(EDirection side, float position, const CellEdge *&src, const CellEdge *&dst) const;
+    bool getLink(Direction side, float position, const CellEdge *&src, const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
     bool operator!=(const Cell &) const;
@@ -278,7 +278,7 @@ public:
   be inside the range [0,1].
   */
   bool connect(
-      const std::string &srcName, EDirection srcSide, float srcStart, float srcEnd, const std::string &dstName,
+      const std::string &srcName, Direction srcSide, float srcStart, float srcEnd, const std::string &dstName,
       float dstStart, float dstEnd
   );
 
@@ -287,7 +287,7 @@ public:
   Removes all connections created by connect() on side \c srcSide.
   Returns false if \c srcName is unknown.
   */
-  bool disconnect(const std::string &srcName, EDirection srcSide);
+  bool disconnect(const std::string &srcName, Direction srcSide);
 
   //! Disconnect screens
   /*!
@@ -295,7 +295,7 @@ public:
   covering position \c position.  Returns false if \c srcName is
   unknown.
   */
-  bool disconnect(const std::string &srcName, EDirection srcSide, float position);
+  bool disconnect(const std::string &srcName, Direction srcSide, float position);
 
   //! Set server address
   /*!
@@ -381,21 +381,21 @@ public:
   saves the position on the neighbor in \c positionOut if it's not
   \c nullptr.
   */
-  std::string getNeighbor(const std::string &, EDirection, float position, float *positionOut) const;
+  std::string getNeighbor(const std::string &, Direction, float position, float *positionOut) const;
 
   //! Check for neighbor
   /*!
   Returns \c true if the screen has a neighbor anywhere along the edge
   given by the direction.
   */
-  bool hasNeighbor(const std::string &, EDirection) const;
+  bool hasNeighbor(const std::string &, Direction) const;
 
   //! Check for neighbor
   /*!
   Returns \c true if the screen has a neighbor in the given range along
   the edge given by the direction.
   */
-  bool hasNeighbor(const std::string &, EDirection, float start, float end) const;
+  bool hasNeighbor(const std::string &, Direction, float start, float end) const;
 
   //! Get beginning neighbor iterator
   link_const_iterator beginNeighbor(const std::string &) const;
@@ -448,7 +448,7 @@ public:
   /*!
   Returns the name of a direction (for debugging).
   */
-  static const char *dirName(EDirection);
+  static const char *dirName(Direction);
 
   //! Get interval as string
   /*!
