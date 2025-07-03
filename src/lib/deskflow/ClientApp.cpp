@@ -106,12 +106,12 @@ void ClientApp::help()
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
 #endif
-       << HELP_SYS_ARGS << HELP_COMMON_ARGS << " <server-address>"
+       << s_helpSysArgs << s_helpCommonArgs << " <server-address>"
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  local network interface address.\n"
-       << HELP_COMMON_INFO_1 << HELP_SYS_INFO << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
+       << s_helpGeneralArgs << s_helpSysInfo << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
@@ -120,10 +120,10 @@ void ClientApp::help()
        << "      --display <display>  when in X mode, connect to the X server\n"
        << "                             at <display>.\n"
 #endif
-       << HELP_COMMON_INFO_2 << "\n"
+       << s_helpVersionArgs << "\n"
        << "* marks defaults.\n"
 
-       << kHelpNoWayland
+       << s_helpNoWayland
 
        << "\n"
        << "The server address is of the form: [<hostname>][:<port>].\n"
