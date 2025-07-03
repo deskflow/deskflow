@@ -195,17 +195,17 @@ enum EDirectionMask
  *
  * @since Protocol version 1.5
  */
-enum EDataTransfer
+struct ChunkType
 {
-  kDataStart = 1, ///< Start of transfer (contains file size)
-  kDataChunk = 2, ///< Data chunk (contains file content)
-  kDataEnd = 3    ///< End of transfer (transfer complete)
+  inline static const auto DataStart = 1; ///< Start of transfer (contains file size)
+  inline static const auto DataChunk = 2; ///< Data chunk (contains file content)
+  inline static const auto DataEnd = 3;   ///< End of transfer (transfer complete)
 };
 
 /**
- * @brief Data reception status codes
+ * @brief Data reception state codes
  *
- * Used internally to track the status of data reception
+ * Used internally to track the state of data reception
  * during clipboard operations.
  *
  * @since Protocol version 1.5

@@ -21,7 +21,7 @@ void ClipboardChunksTests::startFormatData()
 
   QCOMPARE(chunk->m_chunk[0], id);
   QCOMPARE(temp_m_chunk, sequence);
-  QCOMPARE(chunk->m_chunk[5], kDataStart);
+  QCOMPARE(chunk->m_chunk[5], ChunkType::DataStart);
   QCOMPARE(chunk->m_chunk[6], '1');
   QCOMPARE(chunk->m_chunk[7], '0');
   QCOMPARE(chunk->m_chunk[8], '\0');
@@ -37,7 +37,7 @@ void ClipboardChunksTests::formatDataChunk()
 
   QCOMPARE(chunk->m_chunk[0], id);
   QCOMPARE((uint32_t)chunk->m_chunk[1], sequence);
-  QCOMPARE(chunk->m_chunk[5], kDataChunk);
+  QCOMPARE(chunk->m_chunk[5], ChunkType::DataChunk);
   QCOMPARE(chunk->m_chunk[6], 'm');
   QCOMPARE(chunk->m_chunk[7], 'o');
   QCOMPARE(chunk->m_chunk[8], 'c');
@@ -60,7 +60,7 @@ void ClipboardChunksTests::endFormatData()
 
   QCOMPARE(chunk->m_chunk[0], id);
   QCOMPARE((uint32_t)chunk->m_chunk[1], sequence);
-  QCOMPARE(chunk->m_chunk[5], kDataEnd);
+  QCOMPARE(chunk->m_chunk[5], ChunkType::DataEnd);
   QCOMPARE(chunk->m_chunk[6], '\0');
 
   delete chunk;

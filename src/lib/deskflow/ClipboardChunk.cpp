@@ -28,7 +28,7 @@ ClipboardChunk *ClipboardChunk::start(ClipboardID id, uint32_t sequence, const s
 
   chunk[0] = id;
   std::memcpy(&chunk[1], &sequence, 4);
-  chunk[5] = kDataStart;
+  chunk[5] = ChunkType::DataStart;
   memcpy(&chunk[6], size.c_str(), sizeLength);
   chunk[sizeLength + s_clipboardChunkMetaSize - 1] = '\0';
 
@@ -43,7 +43,7 @@ ClipboardChunk *ClipboardChunk::data(ClipboardID id, uint32_t sequence, const st
 
   chunkData[0] = id;
   std::memcpy(&chunkData[1], &sequence, 4);
-  chunkData[5] = kDataChunk;
+  chunkData[5] = ChunkType::DataChunk;
   memcpy(&chunkData[6], data.c_str(), dataSize);
   chunkData[dataSize + s_clipboardChunkMetaSize - 1] = '\0';
 
@@ -57,9 +57,8 @@ ClipboardChunk *ClipboardChunk::end(ClipboardID id, uint32_t sequence)
 
   chunk[0] = id;
   std::memcpy(&chunk[1], &sequence, 4);
-  chunk[5] = kDataEnd;
+  chunk[5] = ChunkType::DataEnd;
   chunk[s_clipboardChunkMetaSize - 1] = '\0';
-
   return end;
 }
 
@@ -74,15 +73,15 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
     return Error;
   }
 
-  if (mark == kDataStart) {
+  if (mark == ChunkType::DataStart) {
     s_expectedSize = deskflow::string::stringToSizeType(data);
     LOG((CLOG_DEBUG "start receiving clipboard data"));
     dataCached.clear();
     return Started;
-  } else if (mark == kDataChunk) {
+  } else if (mark == ChunkType::DataChunk) {
     dataCached.append(data);
-    return InProgress;
-  } else if (mark == kDataEnd) {
+    return TransferState::InProgress;
+  } else if (mark == ChunkType::DataEnd) {
     // validate
     if (id >= kClipboardEnd) {
       return Error;
@@ -111,15 +110,15 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
   std::string dataChunk(&chunk[6], clipboardData->m_dataSize);
 
   switch (mark) {
-  case kDataStart:
+  case ChunkType::DataStart:
     LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", dataChunk.c_str()));
     break;
 
-  case kDataChunk:
+  case ChunkType::DataChunk:
     LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", dataChunk.size()));
     break;
 
-  case kDataEnd:
+  case ChunkType::DataEnd:
     LOG((CLOG_DEBUG2 "sending clipboard finished"));
     break;
   }
