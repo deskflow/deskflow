@@ -297,14 +297,14 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event)
   m_events->addEvent(Event(EventTypes::ServerSwitchToScreen, event.getTarget(), info, Event::kDeliverImmediately));
 }
 
-InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(IEventQueue *events, EDirection direction)
+InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(IEventQueue *events, Direction direction)
     : m_direction(direction),
       m_events(events)
 {
   // do nothing
 }
 
-EDirection InputFilter::SwitchInDirectionAction::getDirection() const
+Direction InputFilter::SwitchInDirectionAction::getDirection() const
 {
   return m_direction;
 }
@@ -318,7 +318,7 @@ std::string InputFilter::SwitchInDirectionAction::format() const
 {
   static const char *s_names[] = {"", "left", "right", "up", "down"};
 
-  return deskflow::string::sprintf("switchInDirection(%s)", s_names[m_direction]);
+  return deskflow::string::sprintf("switchInDirection(%s)", s_names[static_cast<int>(m_direction)]);
 }
 
 void InputFilter::SwitchInDirectionAction::perform(const Event &event)

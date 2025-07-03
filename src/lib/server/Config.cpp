@@ -197,11 +197,11 @@ void Config::removeAllAliases()
 }
 
 bool Config::connect(
-    const std::string &srcName, EDirection srcSide, float srcStart, float srcEnd, const std::string &dstName,
+    const std::string &srcName, Direction srcSide, float srcStart, float srcEnd, const std::string &dstName,
     float dstStart, float dstEnd
 )
 {
-  assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+  assert(srcSide >= Direction::FirstDirection && srcSide <= Direction::LastDirection);
 
   // find source cell
   CellMap::iterator index = m_map.find(getCanonicalName(srcName));
@@ -215,9 +215,9 @@ bool Config::connect(
   return index->second.add(srcEdge, dstEdge);
 }
 
-bool Config::disconnect(const std::string &srcName, EDirection srcSide)
+bool Config::disconnect(const std::string &srcName, Direction srcSide)
 {
-  assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+  assert(srcSide >= Direction::FirstDirection && srcSide <= Direction::LastDirection);
 
   // find source cell
   CellMap::iterator index = m_map.find(srcName);
@@ -231,9 +231,9 @@ bool Config::disconnect(const std::string &srcName, EDirection srcSide)
   return true;
 }
 
-bool Config::disconnect(const std::string &srcName, EDirection srcSide, float position)
+bool Config::disconnect(const std::string &srcName, Direction srcSide, float position)
 {
-  assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+  assert(srcSide >= Direction::FirstDirection && srcSide <= Direction::LastDirection);
 
   // find source cell
   CellMap::iterator index = m_map.find(srcName);
@@ -405,10 +405,9 @@ std::string Config::getCanonicalName(const std::string &name) const
   }
 }
 
-std::string
-Config::getNeighbor(const std::string &srcName, EDirection srcSide, float position, float *positionOut) const
+std::string Config::getNeighbor(const std::string &srcName, Direction srcSide, float position, float *positionOut) const
 {
-  assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+  assert(srcSide >= Direction::FirstDirection && srcSide <= Direction::LastDirection);
 
   // find source cell
   CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
@@ -433,14 +432,14 @@ Config::getNeighbor(const std::string &srcName, EDirection srcSide, float positi
   }
 }
 
-bool Config::hasNeighbor(const std::string &srcName, EDirection srcSide) const
+bool Config::hasNeighbor(const std::string &srcName, Direction srcSide) const
 {
   return hasNeighbor(srcName, srcSide, 0.0f, 1.0f);
 }
 
-bool Config::hasNeighbor(const std::string &srcName, EDirection srcSide, float start, float end) const
+bool Config::hasNeighbor(const std::string &srcName, Direction srcSide, float start, float end) const
 {
-  assert(srcSide >= kFirstDirection && srcSide <= kLastDirection);
+  assert(srcSide >= Direction::FirstDirection && srcSide <= Direction::LastDirection);
 
   // find source cell
   CellMap::const_iterator index = m_map.find(getCanonicalName(srcName));
@@ -556,13 +555,13 @@ void Config::read(ConfigReadContext &context)
   *this = tmp;
 }
 
-const char *Config::dirName(EDirection dir)
+const char *Config::dirName(Direction dir)
 {
   static const char *s_name[] = {"left", "right", "up", "down"};
 
-  assert(dir >= kFirstDirection && dir <= kLastDirection);
+  assert(dir >= Direction::FirstDirection && dir <= Direction::LastDirection);
 
-  return s_name[dir - kFirstDirection];
+  return s_name[static_cast<int>(dir) - static_cast<int>(Direction::FirstDirection)];
 }
 
 InputFilter *Config::getInputFilter()
@@ -855,15 +854,16 @@ void Config::readSectionLinks(ConfigReadContext &s)
       Interval dstInterval(s.parseInterval(dstArgs));
 
       // handle argument
-      EDirection dir;
+      using enum Direction;
+      Direction dir;
       if (side == "left") {
-        dir = kLeft;
+        dir = Left;
       } else if (side == "right") {
-        dir = kRight;
+        dir = Right;
       } else if (side == "up") {
-        dir = kTop;
+        dir = Top;
       } else if (side == "down") {
-        dir = kBottom;
+        dir = Bottom;
       } else {
         // unknown argument
         throw XConfigRead(s, "unknown side \"%{1}\" in link", side);
@@ -1048,15 +1048,16 @@ void Config::parseAction(
       throw XConfigRead(s, "syntax for action: switchInDirection(<left|right|up|down>)");
     }
 
-    EDirection direction;
+    Direction direction;
+    using enum Direction;
     if (args[0] == "left") {
-      direction = kLeft;
+      direction = Left;
     } else if (args[0] == "right") {
-      direction = kRight;
+      direction = Right;
     } else if (args[0] == "up") {
-      direction = kTop;
+      direction = Top;
     } else if (args[0] == "down") {
-      direction = kBottom;
+      direction = Bottom;
     } else {
       throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
     }
@@ -1343,12 +1344,12 @@ bool Config::Name::operator==(const std::string &name) const
 // Config::CellEdge
 //
 
-Config::CellEdge::CellEdge(EDirection side, float position)
+Config::CellEdge::CellEdge(Direction side, float position)
 {
   init("", side, Interval(position, position));
 }
 
-Config::CellEdge::CellEdge(EDirection side, const Interval &interval)
+Config::CellEdge::CellEdge(Direction side, const Interval &interval)
 {
   assert(interval.first >= 0.0f);
   assert(interval.second <= 1.0f);
@@ -1357,7 +1358,7 @@ Config::CellEdge::CellEdge(EDirection side, const Interval &interval)
   init("", side, interval);
 }
 
-Config::CellEdge::CellEdge(const std::string &name, EDirection side, const Interval &interval)
+Config::CellEdge::CellEdge(const std::string &name, Direction side, const Interval &interval)
 {
   assert(interval.first >= 0.0f);
   assert(interval.second <= 1.0f);
@@ -1366,9 +1367,9 @@ Config::CellEdge::CellEdge(const std::string &name, EDirection side, const Inter
   init(name, side, interval);
 }
 
-void Config::CellEdge::init(const std::string_view &name, EDirection side, const Interval &interval)
+void Config::CellEdge::init(const std::string_view &name, Direction side, const Interval &interval)
 {
-  assert(side != kNoDirection);
+  assert(side != Direction::NoDirection);
 
   m_name = name;
   m_side = side;
@@ -1390,7 +1391,7 @@ std::string Config::CellEdge::getName() const
   return m_name;
 }
 
-EDirection Config::CellEdge::getSide() const
+Direction Config::CellEdge::getSide() const
 {
   return m_side;
 }
@@ -1459,7 +1460,7 @@ bool Config::Cell::add(const CellEdge &src, const CellEdge &dst)
   return true;
 }
 
-void Config::Cell::remove(EDirection side)
+void Config::Cell::remove(Direction side)
 {
   for (auto j = m_neighbors.begin(); j != m_neighbors.end();) {
     if (j->first.getSide() == side) {
@@ -1470,7 +1471,7 @@ void Config::Cell::remove(EDirection side)
   }
 }
 
-void Config::Cell::remove(EDirection side, float position)
+void Config::Cell::remove(Direction side, float position)
 {
   for (auto j = m_neighbors.begin(); j != m_neighbors.end(); ++j) {
     if (j->first.getSide() == side && j->first.isInside(position)) {
@@ -1517,7 +1518,7 @@ bool Config::Cell::overlaps(const CellEdge &edge) const
   return false;
 }
 
-bool Config::Cell::getLink(EDirection side, float position, const CellEdge *&src, const CellEdge *&dst) const
+bool Config::Cell::getLink(Direction side, float position, const CellEdge *&src, const CellEdge *&dst) const
 {
   CellEdge edge(side, position);
   EdgeLinks::const_iterator i = m_neighbors.upper_bound(edge);

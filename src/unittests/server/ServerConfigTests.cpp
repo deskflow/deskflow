@@ -41,12 +41,12 @@ void ServerConfigTests::equalityCheck()
 
   QVERIFY(a.addScreen("screenB"));
   QVERIFY(a.addScreen("screenC"));
-  QVERIFY(a.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(a.connect("screenB", EDirection::kLeft, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(a.connect("screenB", Direction::Left, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
   QVERIFY(b.addScreen("screenA"));
   QVERIFY(b.addScreen("screenC"));
-  QVERIFY(b.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
-  QVERIFY(b.connect("screenB", EDirection::kLeft, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(b.connect("screenB", Direction::Left, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
   QVERIFY(a.addOption("screenA", kOptionClipboardSharing, 1));
   QVERIFY(b.addOption("screenA", kOptionClipboardSharing, 1));
   QVERIFY(a.addOption(std::string(), kOptionClipboardSharing, 1));
@@ -125,7 +125,7 @@ void ServerConfigTests::equalityCheck_diff_neighbours1()
   Config b(nullptr);
   QVERIFY(a.addScreen("screenA"));
   QVERIFY(a.addScreen("screenB"));
-  QVERIFY(a.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
   QVERIFY(b.addScreen("screenA"));
   QVERIFY(b.addScreen("screenB"));
   QVERIFY(a != b);
@@ -138,10 +138,10 @@ void ServerConfigTests::equalityCheck_diff_neighbours2()
   Config b(nullptr);
   QVERIFY(a.addScreen("screenA"));
   QVERIFY(a.addScreen("screenB"));
-  QVERIFY(a.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
   QVERIFY(b.addScreen("screenA"));
   QVERIFY(b.addScreen("screenB"));
-  QVERIFY(b.connect("screenA", EDirection::kBottom, 0.0f, 0.25f, "screenB", 0.25f, 1.0f));
+  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.25f, "screenB", 0.25f, 1.0f));
   QVERIFY(a != b);
 }
 
@@ -152,11 +152,11 @@ void ServerConfigTests::equalityCheck_diff_neighbours3()
   QVERIFY(a.addScreen("screenA"));
   QVERIFY(a.addScreen("screenB"));
   QVERIFY(a.addScreen("screenC"));
-  QVERIFY(a.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
+  QVERIFY(a.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenB", 0.5f, 1.0f));
   QVERIFY(b.addScreen("screenA"));
   QVERIFY(b.addScreen("screenB"));
   QVERIFY(b.addScreen("screenC"));
-  QVERIFY(b.connect("screenA", EDirection::kBottom, 0.0f, 0.5f, "screenC", 0.5f, 1.0f));
+  QVERIFY(b.connect("screenA", Direction::Bottom, 0.0f, 0.5f, "screenC", 0.5f, 1.0f));
   QVERIFY(a != b);
 }
 

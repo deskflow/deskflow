@@ -197,9 +197,9 @@ public:
   class SwitchInDirectionAction : public Action
   {
   public:
-    SwitchInDirectionAction(IEventQueue *events, EDirection);
+    SwitchInDirectionAction(IEventQueue *events, Direction);
 
-    EDirection getDirection() const;
+    Direction getDirection() const;
 
     // Action overrides
     Action *clone() const override;
@@ -207,7 +207,7 @@ public:
     void perform(const Event &) override;
 
   private:
-    EDirection m_direction;
+    Direction m_direction;
     IEventQueue *m_events;
   };
 

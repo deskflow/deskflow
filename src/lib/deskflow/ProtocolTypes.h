@@ -158,16 +158,16 @@ static constexpr uint32_t PROTOCOL_MAX_STRING_LENGTH = 1024 * 1024;
  *
  * @since Protocol version 1.0
  */
-enum EDirection
+enum class Direction : uint8_t
 {
-  kNoDirection,                                         ///< No specific direction
-  kLeft,                                                ///< Left edge of screen
-  kRight,                                               ///< Right edge of screen
-  kTop,                                                 ///< Top edge of screen
-  kBottom,                                              ///< Bottom edge of screen
-  kFirstDirection = kLeft,                              ///< First valid direction value
-  kLastDirection = kBottom,                             ///< Last valid direction value
-  kNumDirections = kLastDirection - kFirstDirection + 1 ///< Total number of directions
+  NoDirection,                                                             ///< No specific direction
+  Left,                                                                    ///< Left edge of screen
+  Right,                                                                   ///< Right edge of screen
+  Top,                                                                     ///< Top edge of screen
+  Bottom,                                                                  ///< Bottom edge of screen
+  FirstDirection = Direction::Left,                                        ///< First valid direction value
+  LastDirection = Direction::Bottom,                                       ///< Last valid direction value
+  NumDirections = Direction::LastDirection - Direction::FirstDirection + 1 ///< Total number of directions
 };
 
 /**
@@ -180,11 +180,11 @@ enum EDirection
  */
 enum class DirectionMask
 {
-  NoDirMask = 0,            ///< No direction mask
-  LeftMask = 1 << kLeft,    ///< Left edge mask
-  RightMask = 1 << kRight,  ///< Right edge mask
-  TopMask = 1 << kTop,      ///< Top edge mask
-  BottomMask = 1 << kBottom ///< Bottom edge mask
+  NoDirMask = 0,                                        ///< No direction mask
+  LeftMask = 1 << static_cast<int>(Direction::Left),    ///< Left edge mask
+  RightMask = 1 << static_cast<int>(Direction::Right),  ///< Right edge mask
+  TopMask = 1 << static_cast<int>(Direction::Top),      ///< Top edge mask
+  BottomMask = 1 << static_cast<int>(Direction::Bottom) ///< Bottom edge mask
 };
 
 /**

@@ -77,10 +77,10 @@ public:
   class SwitchInDirectionInfo
   {
   public:
-    static SwitchInDirectionInfo *alloc(EDirection direction);
+    static SwitchInDirectionInfo *alloc(Direction direction);
 
   public:
-    EDirection m_direction;
+    Direction m_direction;
   };
 
   //! Screen connected data
@@ -215,35 +215,35 @@ private:
 
   // convert pixel position to fraction, using x or y depending on the
   // direction.
-  float mapToFraction(const BaseClientProxy *, EDirection, int32_t x, int32_t y) const;
+  float mapToFraction(const BaseClientProxy *, Direction, int32_t x, int32_t y) const;
 
   // convert fraction to pixel position, writing only x or y depending
   // on the direction.
-  void mapToPixel(const BaseClientProxy *, EDirection, float f, int32_t &x, int32_t &y) const;
+  void mapToPixel(const BaseClientProxy *, Direction, float f, int32_t &x, int32_t &y) const;
 
   // returns true if the client has a neighbor anywhere along the edge
   // indicated by the direction.
-  bool hasAnyNeighbor(const BaseClientProxy *, EDirection) const;
+  bool hasAnyNeighbor(const BaseClientProxy *, Direction) const;
 
   // lookup neighboring screen, mapping the coordinate independent of
   // the direction to the neighbor's coordinate space.
-  BaseClientProxy *getNeighbor(const BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
+  BaseClientProxy *getNeighbor(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
   // lookup neighboring screen.  given a position relative to the
   // source screen, find the screen we should move onto and where.
   // if the position is sufficiently far from the source then we
   // cross multiple screens.  if there is no suitable screen then
   // return nullptr and x,y are not modified.
-  BaseClientProxy *mapToNeighbor(BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
+  BaseClientProxy *mapToNeighbor(BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
   // adjusts x and y or neither to avoid ending up in a jump zone
   // after entering the client in the given direction.
-  void avoidJumpZone(const BaseClientProxy *, EDirection, int32_t &x, int32_t &y) const;
+  void avoidJumpZone(const BaseClientProxy *, Direction, int32_t &x, int32_t &y) const;
 
   // test if a switch is permitted.  this includes testing user
   // options like switch delay and tracking any state required to
   // implement them.  returns true iff a switch is permitted.
-  bool isSwitchOkay(BaseClientProxy *dst, EDirection, int32_t x, int32_t y, int32_t xActive, int32_t yActive);
+  bool isSwitchOkay(BaseClientProxy *dst, Direction, int32_t x, int32_t y, int32_t xActive, int32_t yActive);
 
   // update switch state due to a mouse move at \p x, \p y that
   // doesn't switch screens.
@@ -409,7 +409,7 @@ private:
 
   // common state for screen switch tests.  all tests are always
   // trying to reach the same screen in the same direction.
-  EDirection m_switchDir = EDirection::kNoDirection;
+  Direction m_switchDir = Direction::NoDirection;
   BaseClientProxy *m_switchScreen = nullptr;
 
   // state for delayed screen switching
