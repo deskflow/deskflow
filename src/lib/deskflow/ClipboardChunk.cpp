@@ -121,6 +121,9 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
   case ChunkType::DataEnd:
     LOG((CLOG_DEBUG2 "sending clipboard finished"));
     break;
+
+  default:
+    break;
   }
 
   ProtocolUtil::writef(stream, kMsgDClipboard, id, sequence, mark, &dataChunk);

@@ -441,6 +441,9 @@ KeyID ServerProxy::translateKey(KeyID id) const
     id2 = kKeyModifierIDSuper;
     side = 1;
     break;
+
+  default:
+    break;
   }
 
   if (id2 != kKeyModifierIDNull) {

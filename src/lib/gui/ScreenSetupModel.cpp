@@ -57,6 +57,9 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
 
   case Qt::DisplayRole:
     return screen(index).name();
+
+  default:
+    break;
   }
   return QVariant();
 }
