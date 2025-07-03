@@ -123,7 +123,7 @@ public:
   //@{
 
   //! Swap with another \c KeyMap
-  virtual void swap(KeyMap &);
+  virtual void swap(KeyMap &) noexcept;
 
   //! Add a key entry
   /*!
