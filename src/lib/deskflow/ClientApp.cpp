@@ -58,7 +58,7 @@
 #include <sstream>
 #include <stdio.h>
 
-#define RETRY_TIME 1.0
+constexpr static auto s_retryTime = 1.0;
 
 ClientApp::ClientApp(IEventQueue *events) : App(events, new deskflow::ClientArgs())
 {
@@ -252,7 +252,7 @@ void ClientApp::handleClientFailed(const Event &e)
     updateStatus(std::string("Failed to connect to server: ") + info->m_what + " Trying next address...");
     LOG((CLOG_WARN "failed to connect to server=%s, trying next address", info->m_what.c_str()));
     if (!m_suspended) {
-      scheduleClientRestart(RETRY_TIME);
+      scheduleClientRestart(s_retryTime);
     }
   } else {
     m_lastServerAddressIndex = 0;
@@ -271,7 +271,7 @@ void ClientApp::handleClientRefused(const Event &e)
   } else {
     LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
     if (!m_suspended) {
-      scheduleClientRestart(RETRY_TIME);
+      scheduleClientRestart(s_retryTime);
     }
   }
 }
@@ -282,7 +282,7 @@ void ClientApp::handleClientDisconnected()
   if (!args().m_restartable) {
     m_events->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
-    scheduleClientRestart(RETRY_TIME);
+    scheduleClientRestart(s_retryTime);
   }
   updateStatus();
 }
