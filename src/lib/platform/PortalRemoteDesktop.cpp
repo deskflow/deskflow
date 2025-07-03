@@ -17,7 +17,9 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
       m_portal{xdp_portal_new()}
 {
   m_glibMainLoop = g_main_loop_new(nullptr, true);
-  m_glibThread = new Thread(new TMethodJob<PortalRemoteDesktop>(this, &PortalRemoteDesktop::glibThread));
+
+  auto tMethodJob = new TMethodJob<PortalRemoteDesktop>(this, &PortalRemoteDesktop::glibThread);
+  m_glibThread = new Thread(tMethodJob);
 
   reconnect(0);
 }
