@@ -55,7 +55,7 @@ Thread &Thread::operator=(const Thread &thread)
   return *this;
 }
 
-void Thread::exit(void *result)
+[[noreturn]] void Thread::exit(void *result)
 {
   throw XThreadExit(result);
 }

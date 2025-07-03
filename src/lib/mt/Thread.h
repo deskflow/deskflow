@@ -78,7 +78,7 @@ public:
   \endcode
   or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
   */
-  static void exit(void *);
+  [[noreturn]] static void exit(void *);
 
   //! Cancel thread
   /*!
