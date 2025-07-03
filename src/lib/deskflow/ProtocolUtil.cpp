@@ -255,6 +255,10 @@ uint32_t ProtocolUtil::getLength(const char *fmt, va_list args)
         case 4:
           len = 4 * (uint32_t)(va_arg(args, std::vector<uint32_t> *))->size() + 4;
           break;
+
+        default:
+          LOG((CLOG_ERR "format specifier %%I%d has invalid length", len));
+          break;
         }
         break;
 

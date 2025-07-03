@@ -181,6 +181,9 @@ void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor
     case 8:
       m_proxy = new ClientProxy1_8(name, m_stream, m_server, m_events);
       break;
+
+    default:
+      break;
     }
   }
 

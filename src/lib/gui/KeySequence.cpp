@@ -163,6 +163,9 @@ QString KeySequence::keyToString(int key)
       return "2";
     case Qt::MiddleButton:
       return "3";
+    default:
+      qDebug() << "unknown key" << key;
+      break;
     }
 
     return "4"; // qt only knows three mouse buttons, so assume it's an unknown
