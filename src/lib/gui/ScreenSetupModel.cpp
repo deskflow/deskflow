@@ -124,22 +124,24 @@ bool ScreenSetupModel::dropMimeData(
   stream >> sourceColumn;
   stream >> sourceRow;
 
+  const auto pColumn = parent.column();
+  const auto pRow = parent.row();
+
   // don't drop screen onto itself
-  if (sourceColumn == parent.column() && sourceRow == parent.row())
+  if (sourceColumn == pColumn && sourceRow == pRow)
     return false;
 
   Screen droppedScreen;
   stream >> droppedScreen;
 
-  auto oldScreen = Screen(screen(parent.column(), parent.row()));
-  if (!oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
+  if (auto oldScreen = Screen(screen(pColumn, pRow)); !oldScreen.isNull() && sourceColumn != -1 && sourceRow != -1) {
     // mark the screen so it isn't deleted after the dragndrop succeeded
     // see ScreenSetupView::startDrag()
     oldScreen.setSwapped(true);
     screen(sourceColumn, sourceRow) = oldScreen;
   }
 
-  screen(parent.column(), parent.row()) = droppedScreen;
+  screen(pColumn, pRow) = droppedScreen;
 
   Q_EMIT screensChanged();
 
