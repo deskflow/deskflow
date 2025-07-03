@@ -210,12 +210,12 @@ enum EDataTransfer
  *
  * @since Protocol version 1.5
  */
-enum EDataReceived
+enum class TransferState : uint8_t
 {
-  kStart,     ///< Reception started
-  kNotFinish, ///< Reception in progress
-  kFinish,    ///< Reception completed successfully
-  kError      ///< Reception failed with error
+  Started,    ///< Reception started
+  InProgress, ///< Reception in progress
+  Finished,   ///< Reception completed successfully
+  Error       ///< Reception failed with error
 };
 
 /** @} */ // end of protocol_enums group
