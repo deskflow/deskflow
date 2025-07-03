@@ -109,16 +109,16 @@ void ServerApp::help()
        << " [--display <display>]"
 #endif
 
-       << HELP_SYS_ARGS HELP_COMMON_ARGS "\n"
+       << s_helpSysArgs << s_helpCommonArgs << "\n"
        << "\n"
        << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  path of the configuration file\n"
-       << HELP_COMMON_INFO_1
+       << s_helpGeneralArgs
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
-       << HELP_SYS_INFO HELP_COMMON_INFO_2 << "\n"
+       << s_helpSysInfo << s_helpVersionArgs << "\n"
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
@@ -127,7 +127,7 @@ void ServerApp::help()
 
        << "* marks defaults.\n"
 
-       << kHelpNoWayland
+       << s_helpNoWayland
 
        << "\n"
        << "The argument for --address is of the form: [<hostname>][:<port>].  "
