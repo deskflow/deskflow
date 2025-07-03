@@ -630,6 +630,9 @@ uint32_t Unicode::fromUTF8(const uint8_t *&data, uint32_t &n)
       truncated = true;
       size = 1;
     }
+
+  default:
+    break;
   }
 
   // update parameters
