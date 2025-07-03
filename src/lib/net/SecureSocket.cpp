@@ -546,10 +546,7 @@ void SecureSocket::checkResult(int status, int &retry)
 {
   // ssl errors are a little quirky. the "want" errors are normal and
   // should result in a retry.
-
-  int errorCode = SSL_get_error(m_ssl->m_ssl, status);
-
-  switch (errorCode) {
+  switch (auto errorCode = SSL_get_error(m_ssl->m_ssl, status); errorCode) {
   case SSL_ERROR_NONE:
     retry = 0;
     // operation completed

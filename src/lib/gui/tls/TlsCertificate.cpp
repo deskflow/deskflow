@@ -32,8 +32,7 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) con
   qDebug("generating tls certificate: %s", qUtf8Printable(path));
 
   QFileInfo info(path);
-  QDir dir(info.absolutePath());
-  if (!dir.exists() && !dir.mkpath(".")) {
+  if (QDir dir(info.absolutePath()); !dir.exists() && !dir.mkpath(".")) {
     qCritical("failed to create directory for tls certificate");
     return false;
   }
