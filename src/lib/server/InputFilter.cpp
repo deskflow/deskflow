@@ -721,7 +721,7 @@ const InputFilter::Action &InputFilter::Rule::getAction(bool onActivation, uint3
 // -----------------------------------------------------------------------------
 // Input Filter Class
 // -----------------------------------------------------------------------------
-InputFilter::InputFilter(IEventQueue *events) : m_primaryClient(nullptr), m_events(events)
+InputFilter::InputFilter(IEventQueue *events) : m_events(events)
 {
   // do nothing
 }

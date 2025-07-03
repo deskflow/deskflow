@@ -1381,12 +1381,9 @@ XWindowsClipboard::Reply::Reply(
       m_target(target),
       m_time(time),
       m_property(property),
-      m_replied(false),
-      m_done(false),
       m_data(data),
       m_type(type),
-      m_format(format),
-      m_ptr(0)
+      m_format(format)
 {
   // do nothing
 }
