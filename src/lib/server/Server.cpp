@@ -305,19 +305,20 @@ std::string Server::getName(const BaseClientProxy *client) const
 
 uint32_t Server::getActivePrimarySides() const
 {
+  using enum DirectionMask;
   uint32_t sides = 0;
   if (!isLockedToScreenServer()) {
     if (hasAnyNeighbor(m_primaryClient, kLeft)) {
-      sides |= kLeftMask;
+      sides |= static_cast<int>(LeftMask);
     }
     if (hasAnyNeighbor(m_primaryClient, kRight)) {
-      sides |= kRightMask;
+      sides |= static_cast<int>(RightMask);
     }
     if (hasAnyNeighbor(m_primaryClient, kTop)) {
-      sides |= kTopMask;
+      sides |= static_cast<int>(TopMask);
     }
     if (hasAnyNeighbor(m_primaryClient, kBottom)) {
-      sides |= kBottomMask;
+      sides |= static_cast<int>(BottomMask);
     }
   }
   return sides;
