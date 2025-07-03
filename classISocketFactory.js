@@ -1,5 +1,5 @@
 var classISocketFactory =
 [
-    [ "create", "classISocketFactory.html#ab940830ae1b23e7239e229bcb1142809", null ],
-    [ "createListen", "classISocketFactory.html#a403d8e51d8a5cea9413cc12fffe71806", null ]
+    [ "create", "classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f", null ],
+    [ "createListen", "classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b", null ]
 ];

@@ -1,14 +1,14 @@
 var classIArchMultithread =
 [
-    [ "SignalFunc", "classIArchMultithread.html#a48295f51e6f45ac5c02b0deadc2a6dac", null ],
+    [ "SignalFunc", "classIArchMultithread.html#a7b79358d1b562152032ea816db20b68c", null ],
     [ "ThreadFunc", "classIArchMultithread.html#a72d3a0de72be941d9959944c8515f2b0", null ],
     [ "ThreadID", "classIArchMultithread.html#a7a5038908a309c784bc9a39b85adf803", null ],
-    [ "ESignal", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487", [
-      [ "kINTERRUPT", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a6b6e803fda54e4b10bbe9bf6d9a65dd0", null ],
-      [ "kTERMINATE", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a278092c143c84ee439e61af055d314de", null ],
-      [ "kHANGUP", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a9414f3bea1af7a69d47781d3b0d76d76", null ],
-      [ "kUSER", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487ab52edff6cf88686165c0854f419860e3", null ],
-      [ "kNUM_SIGNALS", "classIArchMultithread.html#af1fb29fd2be90ef6c426b64ff2ce1487a4791587276fc77f5b105ddad24d46689", null ]
+    [ "ThreadSignal", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1", [
+      [ "Interrupt", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a1ce92afa20b1c7f6a4e5d0dc73e5c92a", null ],
+      [ "Terminate", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a056fa3d840f48b7bfbbd68c19a4797b3", null ],
+      [ "Hangup", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a77bd384c19f071f8d0579398b90df0b6", null ],
+      [ "User", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a8f9bfe9d1345237cb3b2b205864da075", null ],
+      [ "MaxSignals", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a5be0f76b3f87187577779bbf575e009c", null ]
     ] ],
     [ "broadcastCondVar", "classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3", null ],
     [ "cancelThread", "classIArchMultithread.html#af273bf7f0b396b59063040613d3b2d3f", null ],
@@ -25,9 +25,9 @@ var classIArchMultithread =
     [ "newCurrentThread", "classIArchMultithread.html#a5ae3ee91c6370da222394310b1b3aa76", null ],
     [ "newMutex", "classIArchMultithread.html#abd1136274e15383a854583be43abdeb8", null ],
     [ "newThread", "classIArchMultithread.html#adf565c898b28b8642a1ab68468d0c4a9", null ],
-    [ "raiseSignal", "classIArchMultithread.html#a5284a21f8071b3f48adf2efd7c81ebaa", null ],
+    [ "raiseSignal", "classIArchMultithread.html#a7150c55afc59ab6fac5cc83399bb88c7", null ],
     [ "setPriorityOfThread", "classIArchMultithread.html#a6483b65429b101bb824b9b7d952f3e9e", null ],
-    [ "setSignalHandler", "classIArchMultithread.html#aa316f089e1ff4bcabefc3eca7b116375", null ],
+    [ "setSignalHandler", "classIArchMultithread.html#a927964ae546f8cca9820651a2ef07085", null ],
     [ "signalCondVar", "classIArchMultithread.html#a06c4205dbf79d9d82e4b7af4a0271aa5", null ],
     [ "testCancelThread", "classIArchMultithread.html#a01aba5f03e0b7856dd128a2f24aaf625", null ],
     [ "unlockMutex", "classIArchMultithread.html#a482c73cd0157d62162628e9ce173d972", null ],

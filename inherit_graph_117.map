@@ -1,3 +1,117 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classStopwatch.html" title="A timer class." alt="" coords="5,5,88,30"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,475,129,499"/>
+<area shape="rect" id="Node000001" href="$classApp_1_1XNoEiSupport.html" title=" " alt="" coords="203,155,340,179"/>
+<area shape="poly" id="edge192_Node000000_Node000001" title=" " alt="" coords="68,459,76,402,93,330,107,292,125,255,147,221,175,190,201,175,204,179,178,194,152,224,130,258,112,294,98,332,81,403,73,459"/>
+<area shape="rect" id="Node000002" href="$classDisplayInvalidException.html" title=" " alt="" coords="192,204,351,229"/>
+<area shape="poly" id="edge193_Node000000_Node000002" title=" " alt="" coords="70,459,81,411,100,352,131,292,151,264,175,240,196,227,198,231,178,244,155,267,135,294,105,354,86,412,75,460"/>
+<area shape="rect" id="Node000003" href="$classXArchDaemon.html" title="Generic daemon exception." alt="" coords="219,253,324,278"/>
+<area shape="poly" id="edge194_Node000000_Node000003" title=" " alt="" coords="88,462,256,277,260,280,92,465"/>
+<area shape="rect" id="Node000008" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="218,475,324,499"/>
+<area shape="poly" id="edge199_Node000000_Node000008" title=" " alt="" coords="144,484,218,484,218,490,144,490"/>
+<area shape="rect" id="Node000028" href="$classXBase.html" title="Exception base class." alt="" coords="241,1016,302,1041"/>
+<area shape="poly" id="edge219_Node000000_Node000028" title=" " alt="" coords="81,513,268,1014,263,1016,76,515"/>
+<area shape="rect" id="Node000056" href="$classdeskflow_1_1Config_1_1NoConfigFilenameError.html" title=" " alt="" coords="181,1065,362,1104"/>
+<area shape="poly" id="edge247_Node000000_Node000056" title=" " alt="" coords="73,514,82,630,102,791,116,872,133,947,154,1009,179,1051,192,1062,189,1066,175,1054,149,1011,128,949,111,873,96,791,77,630,67,515"/>
+<area shape="rect" id="Node000057" href="$classdeskflow_1_1Config_1_1ParseError.html" title=" " alt="" coords="177,1128,366,1153"/>
+<area shape="poly" id="edge248_Node000000_Node000057" title=" " alt="" coords="72,515,79,642,96,822,110,914,128,998,151,1067,164,1093,179,1113,195,1125,191,1130,175,1117,160,1096,146,1069,123,999,105,915,91,822,74,642,67,515"/>
+<area shape="rect" id="Node000004" href="$classXArchDaemonFailed.html" title="Could not daemonize." alt="" coords="454,5,594,30"/>
+<area shape="poly" id="edge195_Node000003_Node000004" title=" " alt="" coords="337,255,364,238,381,215,388,191,389,166,387,141,385,116,386,91,394,66,412,41,431,28,453,19,455,24,434,32,416,45,398,68,391,92,390,116,392,141,395,166,394,192,386,217,368,242,340,260"/>
+<area shape="rect" id="Node000006" href="$classXArchDaemonInstallFailed.html" title="Could not install daemon." alt="" coords="436,55,612,79"/>
+<area shape="poly" id="edge197_Node000003_Node000006" title=" " alt="" coords="337,254,364,238,378,221,385,203,387,166,389,128,397,109,412,90,435,76,437,80,416,94,402,112,395,129,392,166,390,204,383,224,368,242,340,259"/>
+<area shape="rect" id="Node000007" href="$classXArchDaemonUninstallFailed.html" title="Could not uninstall daemon." alt="" coords="428,104,620,129"/>
+<area shape="poly" id="edge198_Node000003_Node000007" title=" " alt="" coords="338,253,364,238,375,227,381,215,387,190,393,165,400,152,412,140,434,127,437,131,416,144,405,155,398,167,392,191,386,217,379,230,368,242,340,258"/>
+<area shape="rect" id="Node000005" href="$classXArchDaemonUninstallNotInstalled.html" title="Attempted to uninstall a daemon that was not installed." alt="" coords="682,5,909,30"/>
+<area shape="poly" id="edge196_Node000004_Node000005" title=" " alt="" coords="609,15,682,15,682,20,609,20"/>
+<area shape="rect" id="Node000009" href="$classXArchNetworkAccess.html" title="Network insufficient permission." alt="" coords="449,153,599,178"/>
+<area shape="poly" id="edge200_Node000008_Node000009" title=" " alt="" coords="283,459,412,189,447,171,450,176,416,193,288,462"/>
+<area shape="rect" id="Node000010" href="$classXArchNetworkAddressInUse.html" title="Network address in use." alt="" coords="430,203,619,227"/>
+<area shape="poly" id="edge201_Node000008_Node000010" title=" " alt="" coords="282,460,342,339,379,278,396,254,412,238,435,226,438,230,416,242,400,258,383,281,347,341,287,462"/>
+<area shape="rect" id="Node000011" href="$classXArchNetworkConnectionRefused.html" title="Remote end of socket refused connection." alt="" coords="414,252,634,277"/>
+<area shape="poly" id="edge202_Node000008_Node000011" title=" " alt="" coords="282,459,301,421,330,374,367,327,413,287,438,275,440,280,415,292,371,331,334,377,306,423,286,462"/>
+<area shape="rect" id="Node000012" href="$classXArchNetworkDisconnected.html" title="Remote end of socket has disconnected." alt="" coords="431,301,617,326"/>
+<area shape="poly" id="edge203_Node000008_Node000012" title=" " alt="" coords="287,460,338,398,373,365,413,337,442,324,444,329,415,341,377,369,342,402,291,464"/>
+<area shape="rect" id="Node000013" href="$classXArchNetworkIO.html" title="Network I/O error." alt="" coords="464,351,584,375"/>
+<area shape="poly" id="edge204_Node000008_Node000013" title=" " alt="" coords="297,462,348,423,413,386,463,370,465,375,415,391,351,428,300,467"/>
+<area shape="rect" id="Node000014" href="$classXArchNetworkInterrupted.html" title="Operation was interrupted." alt="" coords="440,400,608,425"/>
+<area shape="poly" id="edge205_Node000008_Node000014" title=" " alt="" coords="320,466,413,435,461,423,463,428,415,440,322,471"/>
+<area shape="rect" id="Node000015" href="$classXArchNetworkName.html" title="Generic network name lookup erros." alt="" coords="454,449,595,474"/>
+<area shape="poly" id="edge206_Node000008_Node000015" title=" " alt="" coords="340,478,453,466,453,471,340,483"/>
+<area shape="rect" id="Node000021" href="$classXArchNetworkNoAddress.html" title="Network address is unavailable or not local." alt="" coords="438,499,610,523"/>
+<area shape="poly" id="edge212_Node000008_Node000021" title=" " alt="" coords="341,491,438,500,438,506,340,496"/>
+<area shape="rect" id="Node000022" href="$classXArchNetworkNoRoute.html" title="No route to address." alt="" coords="445,548,603,573"/>
+<area shape="poly" id="edge213_Node000008_Node000022" title=" " alt="" coords="322,502,415,532,463,545,462,550,413,538,321,507"/>
+<area shape="rect" id="Node000023" href="$classXArchNetworkNotConnected.html" title="Socket not connected." alt="" coords="429,597,619,622"/>
+<area shape="poly" id="edge214_Node000008_Node000023" title=" " alt="" coords="300,507,352,546,415,582,451,594,449,599,413,587,349,550,297,512"/>
+<area shape="rect" id="Node000024" href="$classXArchNetworkResource.html" title="Network insufficient resources." alt="" coords="444,647,605,671"/>
+<area shape="poly" id="edge215_Node000008_Node000024" title=" " alt="" coords="292,510,342,572,377,604,415,631,444,644,442,649,413,636,373,608,339,576,288,514"/>
+<area shape="rect" id="Node000025" href="$classXArchNetworkShutdown.html" title="Remote read end of socket has closed." alt="" coords="442,696,606,721"/>
+<area shape="poly" id="edge216_Node000008_Node000025" title=" " alt="" coords="287,513,306,551,335,597,371,643,415,681,443,694,440,699,413,685,367,646,330,600,302,554,282,515"/>
+<area shape="rect" id="Node000026" href="$classXArchNetworkSupport.html" title="No support for requested network resource/service." alt="" coords="448,745,600,770"/>
+<area shape="poly" id="edge217_Node000008_Node000026" title=" " alt="" coords="283,513,300,561,327,620,365,680,389,707,415,730,449,746,447,751,413,735,385,711,361,683,322,622,295,563,278,515"/>
+<area shape="rect" id="Node000027" href="$classXArchNetworkTimedOut.html" title="Remote end of socket is not responding." alt="" coords="442,795,606,819"/>
+<area shape="poly" id="edge218_Node000008_Node000027" title=" " alt="" coords="280,514,294,570,320,643,338,680,360,717,385,751,416,780,444,795,441,799,412,784,381,754,355,720,333,683,315,645,289,572,275,515"/>
+<area shape="rect" id="Node000016" href="$classXArchNetworkNameFailure.html" title="Non&#45;recoverable name server error." alt="" coords="705,351,886,375"/>
+<area shape="poly" id="edge207_Node000015_Node000016" title=" " alt="" coords="609,445,633,434,647,423,656,411,665,398,681,386,711,373,713,378,684,391,669,402,660,414,651,427,636,439,611,450"/>
+<area shape="rect" id="Node000017" href="$classXArchNetworkNameNoAddress.html" title="The named host is known but has no address." alt="" coords="692,400,899,425"/>
+<area shape="poly" id="edge208_Node000015_Node000017" title=" " alt="" coords="610,444,723,423,724,428,611,449"/>
+<area shape="rect" id="Node000018" href="$classXArchNetworkNameUnavailable.html" title="Temporary name server error." alt="" coords="691,449,900,474"/>
+<area shape="poly" id="edge209_Node000015_Node000018" title=" " alt="" coords="610,459,691,459,691,464,610,464"/>
+<area shape="rect" id="Node000019" href="$classXArchNetworkNameUnknown.html" title="The named host is unknown." alt="" coords="697,499,894,523"/>
+<area shape="poly" id="edge210_Node000015_Node000019" title=" " alt="" coords="611,475,724,495,723,501,610,480"/>
+<area shape="rect" id="Node000020" href="$classXArchNetworkNameUnsupported.html" title="The named host is known but no supported address." alt="" coords="687,548,904,573"/>
+<area shape="poly" id="edge211_Node000015_Node000020" title=" " alt="" coords="611,474,636,485,651,497,660,509,669,522,684,533,713,545,711,550,681,537,665,525,656,513,647,500,633,489,609,479"/>
+<area shape="rect" id="Node000029" href="$classXDeskflow.html" title="The XDeskflow class Generic deskflow exception class." alt="" coords="482,844,567,869"/>
+<area shape="poly" id="edge220_Node000028_Node000029" title=" " alt="" coords="302,1005,503,867,506,871,305,1009"/>
+<area shape="rect" id="Node000036" href="$classXIO.html" title="The XIO class Generic i/o exception class." alt="" coords="502,1016,546,1041"/>
+<area shape="poly" id="edge227_Node000028_Node000036" title=" " alt="" coords="317,1026,501,1026,501,1031,317,1031"/>
+<area shape="rect" id="Node000043" href="$classXMT.html" title="XMT generic multithreading exception." alt="" coords="500,1115,549,1139"/>
+<area shape="poly" id="edge234_Node000028_Node000043" title=" " alt="" coords="318,1035,367,1050,441,1081,501,1112,498,1117,439,1086,365,1055,316,1040"/>
+<area shape="rect" id="Node000045" href="$classXScreen.html" title="The XScreen class, generic screen exception." alt="" coords="488,1189,560,1214"/>
+<area shape="poly" id="edge236_Node000028_Node000045" title=" " alt="" coords="318,1029,344,1037,368,1050,387,1075,394,1100,400,1124,416,1149,451,1174,489,1190,487,1195,449,1179,412,1153,395,1127,389,1101,382,1077,364,1054,342,1042,316,1034"/>
+<area shape="rect" id="Node000048" href="$classXSocket.html" title="XSocket generic socket exception." alt="" coords="489,1263,559,1287"/>
+<area shape="poly" id="edge239_Node000028_Node000048" title=" " alt="" coords="318,1028,344,1035,368,1050,385,1072,393,1094,395,1137,395,1180,402,1202,416,1224,432,1239,451,1250,490,1265,488,1270,448,1255,429,1243,412,1227,397,1204,390,1181,389,1137,388,1095,380,1075,364,1054,342,1040,317,1033"/>
+<area shape="rect" id="Node000055" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="424,1312,624,1337"/>
+<area shape="poly" id="edge246_Node000028_Node000055" title=" " alt="" coords="318,1027,344,1035,368,1050,389,1082,398,1114,397,1145,392,1176,388,1207,387,1238,395,1268,416,1297,432,1309,429,1314,412,1301,390,1270,382,1238,382,1207,387,1176,392,1145,392,1114,384,1084,364,1054,342,1040,316,1032"/>
+<area shape="rect" id="Node000030" href="$classXBadClient.html" title="XBadClient &#45; Thrown when the client fails to follow the protocol." alt="" coords="752,621,839,646"/>
+<area shape="poly" id="edge221_Node000029_Node000030" title=" " alt="" coords="581,852,609,844,633,829,648,809,655,788,656,745,656,701,664,679,680,657,696,646,714,638,751,631,752,636,716,643,699,650,684,661,668,681,661,702,661,745,661,789,653,811,636,833,611,849,582,857"/>
+<area shape="rect" id="Node000031" href="$classXDuplicateClient.html" title="Client already connected exception." alt="" coords="736,671,855,695"/>
+<area shape="poly" id="edge222_Node000029_Node000031" title=" " alt="" coords="582,851,609,843,633,829,645,815,652,800,656,769,660,737,667,722,681,706,706,691,735,683,736,688,708,696,684,710,672,724,665,739,661,770,657,802,650,818,636,833,611,848,583,856"/>
+<area shape="rect" id="Node000032" href="$classXExitApp.html" title="Generic exit eception." alt="" coords="757,720,834,745"/>
+<area shape="poly" id="edge223_Node000029_Node000032" title=" " alt="" coords="581,849,608,841,633,829,649,812,656,793,664,774,681,756,718,738,757,731,758,736,720,743,684,760,668,777,661,795,653,815,636,833,610,846,583,854"/>
+<area shape="rect" id="Node000033" href="$classXIncompatibleClient.html" title="Incompatible client exception." alt="" coords="726,769,865,794"/>
+<area shape="poly" id="edge224_Node000029_Node000033" title=" " alt="" coords="581,843,633,829,657,817,681,805,725,792,727,797,683,809,660,821,635,833,582,848"/>
+<area shape="rect" id="Node000034" href="$classXInvalidProtocol.html" title="XInvalidProtocol &#45; Thrown when the server protocol is unreconized." alt="" coords="738,819,853,843"/>
+<area shape="poly" id="edge225_Node000029_Node000034" title=" " alt="" coords="582,848,737,834,738,839,582,854"/>
+<area shape="rect" id="Node000035" href="$classXUnknownClient.html" title="Client not in map exception." alt="" coords="736,868,855,893"/>
+<area shape="poly" id="edge226_Node000029_Node000035" title=" " alt="" coords="583,859,736,872,735,878,582,864"/>
+<area shape="rect" id="Node000037" href="$classXIOClose.html" title="The XIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="756,917,835,942"/>
+<area shape="poly" id="edge228_Node000036_Node000037" title=" " alt="" coords="559,1007,616,979,681,952,755,934,756,939,683,958,618,984,561,1012"/>
+<area shape="rect" id="Node000039" href="$classXIOClosed.html" title="XIOClosed &#45; Thrown when attempting to close or perform I/O on an already closed." alt="" coords="753,967,838,991"/>
+<area shape="poly" id="edge230_Node000036_Node000039" title=" " alt="" coords="561,1019,752,984,753,989,562,1024"/>
+<area shape="rect" id="Node000040" href="$classXIOEndOfStream.html" title="XIOEndOfStream &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="734,1016,857,1041"/>
+<area shape="poly" id="edge231_Node000036_Node000040" title=" " alt="" coords="562,1026,734,1026,734,1031,562,1031"/>
+<area shape="rect" id="Node000041" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="730,1065,861,1090"/>
+<area shape="poly" id="edge232_Node000036_Node000041" title=" " alt="" coords="562,1032,730,1063,729,1068,561,1038"/>
+<area shape="rect" id="Node000042" href="$classXIOWouldBlock.html" title="XIOWouldBlock &#45; Thrown if an operation on a stream would block." alt="" coords="739,1115,852,1139"/>
+<area shape="poly" id="edge233_Node000036_Node000042" title=" " alt="" coords="561,1045,618,1073,683,1099,739,1114,738,1119,681,1104,616,1077,559,1050"/>
+<area shape="rect" id="Node000038" href="$classXSocketIOClose.html" title="XSocketIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="974,917,1092,942"/>
+<area shape="poly" id="edge229_Node000037_Node000038" title=" " alt="" coords="850,927,974,927,974,932,850,932"/>
+<area shape="rect" id="Node000044" href="$classXMTThreadUnavailable.html" title="XMTThreadUnavailable &#45; Thrown when a thread cannot be created." alt="" coords="717,1164,874,1189"/>
+<area shape="poly" id="edge235_Node000043_Node000044" title=" " alt="" coords="564,1131,724,1161,723,1166,563,1137"/>
+<area shape="rect" id="Node000046" href="$classXScreenOpenFailure.html" title="XScreenOpenFailure &#45; Thrown when a screen cannot be opened or initialized." alt="" coords="725,1213,866,1238"/>
+<area shape="poly" id="edge237_Node000045_Node000046" title=" " alt="" coords="575,1203,725,1217,724,1222,575,1209"/>
+<area shape="rect" id="Node000047" href="$classXScreenUnavailable.html" title="Screen unavailable exception." alt="" coords="964,1213,1102,1238"/>
+<area shape="poly" id="edge238_Node000046_Node000047" title=" " alt="" coords="882,1223,964,1223,964,1228,882,1228"/>
+<area shape="rect" id="Node000049" href="$classXSocketAddress.html" title="Socket bad address exception." alt="" coords="736,1263,855,1287"/>
+<area shape="poly" id="edge240_Node000048_Node000049" title=" " alt="" coords="575,1272,736,1272,736,1278,575,1278"/>
+<area shape="rect" id="Node000050" href="$classXSocketWithWhat.html" title="XSocketWithWhat &#45; generic XSocket Exception with a generic what method impl." alt="" coords="731,1312,860,1337"/>
+<area shape="poly" id="edge241_Node000048_Node000050" title=" " alt="" coords="575,1281,731,1310,730,1315,574,1287"/>
+<area shape="rect" id="Node000051" href="$classXSocketAddressInUse.html" title="XSocketAddressInUse Thrown when a socket cannot be bound to an address because the address is already..." alt="" coords="957,1263,1110,1287"/>
+<area shape="poly" id="edge242_Node000050_Node000051" title=" " alt="" coords="873,1306,970,1285,971,1291,874,1311"/>
+<area shape="rect" id="Node000052" href="$classXSocketBind.html" title="XSocketBind &#45; Thrown when a socket cannot be bound to an address." alt="" coords="985,1312,1082,1337"/>
+<area shape="poly" id="edge243_Node000050_Node000052" title=" " alt="" coords="875,1322,985,1322,985,1327,875,1327"/>
+<area shape="rect" id="Node000053" href="$classXSocketConnect.html" title="XSocketConnect &#45; Thrown when a socket cannot connect to a remote endpoint." alt="" coords="974,1361,1093,1386"/>
+<area shape="poly" id="edge244_Node000050_Node000053" title=" " alt="" coords="874,1338,974,1359,973,1364,873,1343"/>
+<area shape="rect" id="Node000054" href="$classXSocketCreate.html" title="XSocketConnect &#45; Thrown when a socket cannot be created (by the operating system)." alt="" coords="979,1411,1088,1435"/>
+<area shape="poly" id="edge245_Node000050_Node000054" title=" " alt="" coords="837,1341,958,1395,992,1408,990,1413,956,1400,835,1346"/>
 </map>

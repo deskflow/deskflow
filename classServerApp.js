@@ -31,7 +31,7 @@ var classServerApp =
     [ "openServerScreen", "classServerApp.html#a4d1c3356a7f09af674f02b4770ed9be5", null ],
     [ "parseArgs", "classServerApp.html#af9b9d4fff5499771a77ed9fefe3da261", null ],
     [ "reloadConfig", "classServerApp.html#af1b85054ef546d40e4e2e6a4ff58cc87", null ],
-    [ "reloadSignalHandler", "classServerApp.html#ae6bbd19c4711cbcee17df68755d5370c", null ],
+    [ "reloadSignalHandler", "classServerApp.html#a1a8ffff2b31271913d8d0a34d122262a", null ],
     [ "resetServer", "classServerApp.html#a1753d0644d3123f4188db10b6b591e98", null ],
     [ "retryHandler", "classServerApp.html#a43f22db9bcb7d101de647162556ca397", null ],
     [ "runInner", "classServerApp.html#a33e69daea4ac0cc73df154857a3b9714", null ],

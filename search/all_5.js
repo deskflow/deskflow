@@ -220,8 +220,8 @@ var searchData=
   ['coreprocess_2ecpp_217',['CoreProcess.cpp',['../CoreProcess_8cpp.html',1,'']]],
   ['coreprocess_2eh_218',['CoreProcess.h',['../CoreProcess_8h.html',1,'']]],
   ['coreprocessstate_219',['CoreProcessState',['../MainWindow_8cpp.html#a52fe3c0eb356cbf29818c0edbc83da3c',1,'MainWindow.cpp']]],
-  ['create_220',['create',['../classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html#aa8c6115d11818aaeaaa09c7e7f724737',1,'deskflow::gui::proxy::QProcessProxy::create()'],['../classISocketFactory.html#ab940830ae1b23e7239e229bcb1142809',1,'ISocketFactory::create()'],['../classTCPSocketFactory.html#a293021f1c922ff05eac06b6f9066e156',1,'TCPSocketFactory::create()']]],
-  ['createlisten_221',['createListen',['../classISocketFactory.html#a403d8e51d8a5cea9413cc12fffe71806',1,'ISocketFactory::createListen()'],['../classTCPSocketFactory.html#a1c1a6cc8ab8863f273a026edfec2affe',1,'TCPSocketFactory::createListen()']]],
+  ['create_220',['create',['../classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html#aa8c6115d11818aaeaaa09c7e7f724737',1,'deskflow::gui::proxy::QProcessProxy::create()'],['../classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f',1,'ISocketFactory::create()'],['../classTCPSocketFactory.html#a7fd971d4d22e5a82817d3d2f079db912',1,'TCPSocketFactory::create()']]],
+  ['createlisten_221',['createListen',['../classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b',1,'ISocketFactory::createListen()'],['../classTCPSocketFactory.html#a4f875b602566e69d1c826aa60f8081bc',1,'TCPSocketFactory::createListen()']]],
   ['createpipes_222',['createPipes',['../classdeskflow_1_1platform_1_1MSWindowsProcess.html#a4cae0ccf5636bc438a7a05721d7bf5b1',1,'deskflow::platform::MSWindowsProcess']]],
   ['createscreen_223',['createScreen',['../classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00',1,'ClientApp::createScreen()'],['../classIApp.html#ad8b76d3777672aa8d28cd9c847f87729',1,'IApp::createScreen()'],['../classServerApp.html#aa35aa3f57d370b20f4fdc31d535c7864',1,'ServerApp::createScreen()']]],
   ['ctrl_224',['Ctrl',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a2b61e0d5977f2e38f06e16281c802b47',1,'ScreenConfig']]]

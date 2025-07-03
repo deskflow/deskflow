@@ -322,6 +322,7 @@ var hierarchy =
     ] ],
     [ "OSXPowerManager", "classOSXPowerManager.html", null ],
     [ "IArchNetwork::PollEntry", "classIArchNetwork_1_1PollEntry.html", null ],
+    [ "IArchNetwork::PollEventMask", "structIArchNetwork_1_1PollEventMask.html", null ],
     [ "deskflow::PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", null ],
     [ "deskflow::PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", null ],
     [ "PriorityQueue< T, Container, Compare >", "classPriorityQueue.html", null ],

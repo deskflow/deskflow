@@ -5,7 +5,7 @@ var classTCPSocket =
       [ "kRetry", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54a54b88a2453704a2bee4ea8a24c220ef0", null ],
       [ "kNew", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54ada10488f2dd7806211c10f9f02b113d1", null ]
     ] ],
-    [ "TCPSocket", "classTCPSocket.html#a42f2e980a2e1410085784eb1da00855d", null ],
+    [ "TCPSocket", "classTCPSocket.html#af715a366acfbeba720de92becf761f77", null ],
     [ "TCPSocket", "classTCPSocket.html#a6ced6f9f13d4c16bf83c9e190ee747b9", null ],
     [ "TCPSocket", "classTCPSocket.html#a87e2439c485c7bb3080dba2f3e44e4ac", null ],
     [ "TCPSocket", "classTCPSocket.html#a946c326e9102dbb179759444ca1883c3", null ],

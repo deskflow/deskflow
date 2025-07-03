@@ -1,5 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,12,129,37"/>
-<area shape="rect" id="Node000001" href="$classdeskflow_1_1server_1_1Config_1_1const__iterator.html" title=" " alt="" coords="177,5,339,44"/>
-<area shape="poly" id="edge191_Node000000_Node000001" title=" " alt="" coords="144,22,176,22,176,27,144,27"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,31,108,55"/>
+<area shape="rect" id="Node000001" href="$classXThread.html" title="Generic thread exception." alt="" coords="156,31,226,55"/>
+<area shape="poly" id="edge188_Node000000_Node000001" title=" " alt="" coords="123,40,155,40,155,46,123,46"/>
+<area shape="rect" id="Node000002" href="$classXThreadCancel.html" title="Thread exception to cancel." alt="" coords="274,5,384,30"/>
+<area shape="poly" id="edge189_Node000001_Node000002" title=" " alt="" coords="241,31,273,25,274,30,242,36"/>
+<area shape="rect" id="Node000003" href="$classXThreadExit.html" title="Thread exception to exit." alt="" coords="282,55,376,79"/>
+<area shape="poly" id="edge190_Node000001_Node000003" title=" " alt="" coords="242,49,283,56,282,62,241,54"/>
 </map>

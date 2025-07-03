@@ -1,7 +1,7 @@
 var searchData=
 [
   ['raisecriticaldialog_0',['raiseCriticalDialog',['../namespacedeskflow_1_1gui_1_1messages.html#aeaa785620dafb9bb8fd52f785f3c1016',1,'deskflow::gui::messages']]],
-  ['raisesignal_1',['raiseSignal',['../classIArchMultithread.html#a5284a21f8071b3f48adf2efd7c81ebaa',1,'IArchMultithread::raiseSignal()'],['../classArchMultithreadPosix.html#a1d021c5249fbc4c7669cd959a315f2c0',1,'ArchMultithreadPosix::raiseSignal()'],['../classArchMultithreadWindows.html#a8ac3f896c1dd4e42ad71fb8913f16973',1,'ArchMultithreadWindows::raiseSignal()']]],
+  ['raisesignal_1',['raiseSignal',['../classIArchMultithread.html#a7150c55afc59ab6fac5cc83399bb88c7',1,'IArchMultithread::raiseSignal()'],['../classArchMultithreadPosix.html#ac2969d138fcca410c512d81cf6bce8f2',1,'ArchMultithreadPosix::raiseSignal()'],['../classArchMultithreadWindows.html#a46984db493eaeed651bf0acb74847d98',1,'ArchMultithreadWindows::raiseSignal()']]],
   ['read_2',['read',['../structArchNetworkBSD_1_1Deps.html#a8614c9bc6d2b882cf1958eceabf40fc0',1,'ArchNetworkBSD::Deps::read()'],['../classPacketStreamFilter.html#a651e3ab1be978afb4b8eaa35dc6d507d',1,'PacketStreamFilter::read()'],['../classdeskflow_1_1IStream.html#a62d845cca05a66438ede7cec206da293',1,'deskflow::IStream::read()'],['../classStreamFilter.html#acd2d6260bc3d574cbb023b33898292a2',1,'StreamFilter::read()'],['../classFingerprintDatabase.html#a52bd36afd65a15d7c6ce2c5255537582',1,'FingerprintDatabase::read()'],['../classIDataSocket.html#a1085a85358918c090178f2684f967740',1,'IDataSocket::read()'],['../classTCPSocket.html#ab9b12f7fe3afd27feceee4259e5d78b1',1,'TCPSocket::read()'],['../classdeskflow_1_1server_1_1Config.html#a3d795f37312809bf15e13e2d6f320d5e',1,'deskflow::server::Config::read()']]],
   ['readallstandarderror_3',['readAllStandardError',['../classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html#ad039d840a1b29b9caf12706c5aa23233',1,'deskflow::gui::proxy::QProcessProxy']]],
   ['readallstandardoutput_4',['readAllStandardOutput',['../classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html#ad1efa35acdc61e608c2149deeea91546',1,'deskflow::gui::proxy::QProcessProxy']]],
@@ -25,7 +25,7 @@ var searchData=
   ['relativemousemoves_22',['relativeMouseMoves',['../classServerConfig.html#a7e70843d41deda17e8275886f7329748',1,'ServerConfig']]],
   ['release_23',['release',['../classdeskflow_1_1PortalInputCapture.html#afbf97d974161b3a9c5479ac2eaa51897',1,'deskflow::PortalInputCapture::release()'],['../classdeskflow_1_1PortalInputCapture.html#a20bff17f95f553d452dfbc66b8702425',1,'deskflow::PortalInputCapture::release(double x, double y)']]],
   ['reloadconfig_24',['reloadConfig',['../classServerApp.html#af1b85054ef546d40e4e2e6a4ff58cc87',1,'ServerApp']]],
-  ['reloadsignalhandler_25',['reloadSignalHandler',['../classServerApp.html#ae6bbd19c4711cbcee17df68755d5370c',1,'ServerApp']]],
+  ['reloadsignalhandler_25',['reloadSignalHandler',['../classServerApp.html#a1a8ffff2b31271913d8d0a34d122262a',1,'ServerApp']]],
   ['remove_26',['remove',['../classLog.html#aebe9467118266e13cb73b43bf3f0e680',1,'Log::remove()'],['../classQSettingsProxy.html#adf6bf8a5c052b5ed1cfd31b2a9fbc09f',1,'QSettingsProxy::remove()']]],
   ['removeaction_27',['removeAction',['../classServerConfigDialog.html#a4232d07f1b3d0e7b13125e31982d06bd',1,'ServerConfigDialog::removeAction()'],['../classInputFilter_1_1Rule.html#a6d1ae58c9bfb4d31ad877561c34e3294',1,'InputFilter::Rule::removeAction()']]],
   ['removealias_28',['removeAlias',['../classdeskflow_1_1server_1_1Config.html#a981d5963616548b2574a596fb5c7ec44',1,'deskflow::server::Config']]],
