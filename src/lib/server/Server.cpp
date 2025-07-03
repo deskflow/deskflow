@@ -27,6 +27,9 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 
+#ifdef _WIN32
+#include <array>
+#endif
 #include <climits>
 #include <cmath>
 #include <cstdlib>
@@ -1641,16 +1644,16 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   }
 
   // check both horizontally and vertically
-  Direction dirs[] = {dirh, dirv};
-  int32_t xs[] = {xh, x};
-  int32_t ys[] = {y, yv};
+  std::array<Direction, 2> dirs = {dirh, dirv};
+  std::array<int32_t, 2> xs = {xh, x};
+  std::array<int32_t, 2> ys = {y, yv};
   for (int i = 0; i < 2; ++i) {
-    Direction dir = dirs[i];
+    Direction dir = dirs.at(i);
     if (dir == NoDirection) {
       continue;
     }
-    x = xs[i], y = ys[i];
-
+    x = xs.at(i);
+    y = ys.at(i);
     // get jump destination
     BaseClientProxy *newScreen = mapToNeighbor(m_active, dir, x, y);
 
