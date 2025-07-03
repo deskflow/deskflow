@@ -119,7 +119,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
   unlockJobList();
 }
 
-void SocketMultiplexer::serviceThread(void *)
+[[noreturn]] void SocketMultiplexer::serviceThread(void *)
 {
   std::vector<IArchNetwork::PollEntry> pfds;
   IArchNetwork::PollEntry pfd;
