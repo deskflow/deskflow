@@ -12,7 +12,7 @@
 
 #include <string>
 
-#define CLIPBOARD_CHUNK_META_SIZE 7
+constexpr static auto s_clipboardChunkMetaSize = 7;
 
 namespace deskflow {
 class IStream;

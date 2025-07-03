@@ -17,20 +17,20 @@ size_t ClipboardChunk::s_expectedSize = 0;
 
 ClipboardChunk::ClipboardChunk(size_t size) : Chunk(size)
 {
-  m_dataSize = size - CLIPBOARD_CHUNK_META_SIZE;
+  m_dataSize = size - s_clipboardChunkMetaSize;
 }
 
 ClipboardChunk *ClipboardChunk::start(ClipboardID id, uint32_t sequence, const std::string &size)
 {
   size_t sizeLength = size.size();
-  auto *start = new ClipboardChunk(sizeLength + CLIPBOARD_CHUNK_META_SIZE);
+  auto *start = new ClipboardChunk(sizeLength + s_clipboardChunkMetaSize);
   char *chunk = start->m_chunk;
 
   chunk[0] = id;
   std::memcpy(&chunk[1], &sequence, 4);
   chunk[5] = kDataStart;
   memcpy(&chunk[6], size.c_str(), sizeLength);
-  chunk[sizeLength + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
+  chunk[sizeLength + s_clipboardChunkMetaSize - 1] = '\0';
 
   return start;
 }
@@ -38,27 +38,27 @@ ClipboardChunk *ClipboardChunk::start(ClipboardID id, uint32_t sequence, const s
 ClipboardChunk *ClipboardChunk::data(ClipboardID id, uint32_t sequence, const std::string &data)
 {
   size_t dataSize = data.size();
-  auto *chunk = new ClipboardChunk(dataSize + CLIPBOARD_CHUNK_META_SIZE);
+  auto *chunk = new ClipboardChunk(dataSize + s_clipboardChunkMetaSize);
   char *chunkData = chunk->m_chunk;
 
   chunkData[0] = id;
   std::memcpy(&chunkData[1], &sequence, 4);
   chunkData[5] = kDataChunk;
   memcpy(&chunkData[6], data.c_str(), dataSize);
-  chunkData[dataSize + CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
+  chunkData[dataSize + s_clipboardChunkMetaSize - 1] = '\0';
 
   return chunk;
 }
 
 ClipboardChunk *ClipboardChunk::end(ClipboardID id, uint32_t sequence)
 {
-  auto *end = new ClipboardChunk(CLIPBOARD_CHUNK_META_SIZE);
+  auto *end = new ClipboardChunk(s_clipboardChunkMetaSize);
   char *chunk = end->m_chunk;
 
   chunk[0] = id;
   std::memcpy(&chunk[1], &sequence, 4);
   chunk[5] = kDataEnd;
-  chunk[CLIPBOARD_CHUNK_META_SIZE - 1] = '\0';
+  chunk[s_clipboardChunkMetaSize - 1] = '\0';
 
   return end;
 }
