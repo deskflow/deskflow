@@ -22,7 +22,9 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
       m_portal{xdp_portal_new()}
 {
   m_glibMainLoop = g_main_loop_new(nullptr, true);
-  m_glibThread = new Thread(new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread));
+
+  auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
+  m_glibThread = new Thread(tMethodJob);
 
   auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
 
