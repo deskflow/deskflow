@@ -36,7 +36,8 @@ SocketMultiplexer::SocketMultiplexer()
   m_cursorMark = reinterpret_cast<ISocketMultiplexerJob *>(this);
 
   // start thread
-  m_thread = new Thread(new TMethodJob<SocketMultiplexer>(this, &SocketMultiplexer::serviceThread));
+  auto tMethodJob = new TMethodJob<SocketMultiplexer>(this, &SocketMultiplexer::serviceThread);
+  m_thread = new Thread(tMethodJob);
 }
 
 SocketMultiplexer::~SocketMultiplexer()
@@ -118,7 +119,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
   unlockJobList();
 }
 
-void SocketMultiplexer::serviceThread(void *)
+[[noreturn]] void SocketMultiplexer::serviceThread(void *)
 {
   std::vector<IArchNetwork::PollEntry> pfds;
   IArchNetwork::PollEntry pfd;

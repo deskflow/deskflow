@@ -31,10 +31,7 @@
 //
 // SecureSocket
 //
-
-#define MAX_ERROR_SIZE 65535
-
-static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
+static const std::size_t s_maxInputBufferSize = 1024 * 1024;
 
 static const float s_retryDelay = 0.01f;
 
@@ -142,7 +139,7 @@ TCPSocket::EJobResult SecureSocket::doRead()
     do {
       m_inputBuffer.write(buffer, bytesRead);
 
-      if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+      if (m_inputBuffer.getSize() > s_maxInputBufferSize) {
         break;
       }
 
@@ -549,10 +546,7 @@ void SecureSocket::checkResult(int status, int &retry)
 {
   // ssl errors are a little quirky. the "want" errors are normal and
   // should result in a retry.
-
-  int errorCode = SSL_get_error(m_ssl->m_ssl, status);
-
-  switch (errorCode) {
+  switch (auto errorCode = SSL_get_error(m_ssl->m_ssl, status); errorCode) {
   case SSL_ERROR_NONE:
     retry = 0;
     // operation completed

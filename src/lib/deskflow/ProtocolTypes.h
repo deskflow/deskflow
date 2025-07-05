@@ -158,16 +158,16 @@ static constexpr uint32_t PROTOCOL_MAX_STRING_LENGTH = 1024 * 1024;
  *
  * @since Protocol version 1.0
  */
-enum EDirection
+enum class Direction : uint8_t
 {
-  kNoDirection,                                         ///< No specific direction
-  kLeft,                                                ///< Left edge of screen
-  kRight,                                               ///< Right edge of screen
-  kTop,                                                 ///< Top edge of screen
-  kBottom,                                              ///< Bottom edge of screen
-  kFirstDirection = kLeft,                              ///< First valid direction value
-  kLastDirection = kBottom,                             ///< Last valid direction value
-  kNumDirections = kLastDirection - kFirstDirection + 1 ///< Total number of directions
+  NoDirection,                                                             ///< No specific direction
+  Left,                                                                    ///< Left edge of screen
+  Right,                                                                   ///< Right edge of screen
+  Top,                                                                     ///< Top edge of screen
+  Bottom,                                                                  ///< Bottom edge of screen
+  FirstDirection = Direction::Left,                                        ///< First valid direction value
+  LastDirection = Direction::Bottom,                                       ///< Last valid direction value
+  NumDirections = Direction::LastDirection - Direction::FirstDirection + 1 ///< Total number of directions
 };
 
 /**
@@ -178,13 +178,13 @@ enum EDirection
  *
  * @since Protocol version 1.0
  */
-enum EDirectionMask
+enum class DirectionMask
 {
-  kNoDirMask = 0,            ///< No direction mask
-  kLeftMask = 1 << kLeft,    ///< Left edge mask
-  kRightMask = 1 << kRight,  ///< Right edge mask
-  kTopMask = 1 << kTop,      ///< Top edge mask
-  kBottomMask = 1 << kBottom ///< Bottom edge mask
+  NoDirMask = 0,                                        ///< No direction mask
+  LeftMask = 1 << static_cast<int>(Direction::Left),    ///< Left edge mask
+  RightMask = 1 << static_cast<int>(Direction::Right),  ///< Right edge mask
+  TopMask = 1 << static_cast<int>(Direction::Top),      ///< Top edge mask
+  BottomMask = 1 << static_cast<int>(Direction::Bottom) ///< Bottom edge mask
 };
 
 /**
@@ -195,27 +195,27 @@ enum EDirectionMask
  *
  * @since Protocol version 1.5
  */
-enum EDataTransfer
+struct ChunkType
 {
-  kDataStart = 1, ///< Start of transfer (contains file size)
-  kDataChunk = 2, ///< Data chunk (contains file content)
-  kDataEnd = 3    ///< End of transfer (transfer complete)
+  inline static const auto DataStart = 1; ///< Start of transfer (contains file size)
+  inline static const auto DataChunk = 2; ///< Data chunk (contains file content)
+  inline static const auto DataEnd = 3;   ///< End of transfer (transfer complete)
 };
 
 /**
- * @brief Data reception status codes
+ * @brief Data reception state codes
  *
- * Used internally to track the status of data reception
+ * Used internally to track the state of data reception
  * during clipboard operations.
  *
  * @since Protocol version 1.5
  */
-enum EDataReceived
+enum class TransferState : uint8_t
 {
-  kStart,     ///< Reception started
-  kNotFinish, ///< Reception in progress
-  kFinish,    ///< Reception completed successfully
-  kError      ///< Reception failed with error
+  Started,    ///< Reception started
+  InProgress, ///< Reception in progress
+  Finished,   ///< Reception completed successfully
+  Error       ///< Reception failed with error
 };
 
 /** @} */ // end of protocol_enums group

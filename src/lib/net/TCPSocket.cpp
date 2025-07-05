@@ -21,7 +21,7 @@
 #include <cstring>
 #include <memory>
 
-static const std::size_t MAX_INPUT_BUFFER_SIZE = 1024 * 1024;
+static const std::size_t s_maxInputBufferSize = 1024 * 1024;
 
 //
 // TCPSocket
@@ -311,7 +311,7 @@ TCPSocket::EJobResult TCPSocket::doRead()
     do {
       m_inputBuffer.write(buffer, static_cast<uint32_t>(bytesRead));
 
-      if (m_inputBuffer.getSize() > MAX_INPUT_BUFFER_SIZE) {
+      if (m_inputBuffer.getSize() > s_maxInputBufferSize) {
         break;
       }
 

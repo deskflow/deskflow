@@ -22,7 +22,6 @@
 
 ClientProxy1_0::ClientProxy1_0(const std::string &name, deskflow::IStream *stream, IEventQueue *events)
     : ClientProxy(name, stream),
-      m_parser(&ClientProxy1_0::parseHandshakeMessage),
       m_events(events)
 {
   // install event handlers

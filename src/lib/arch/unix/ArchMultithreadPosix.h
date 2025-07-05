@@ -95,7 +95,6 @@ private:
   static void threadCancel(int);
   static void *threadSignalHandler(void *vrep);
 
-private:
   using ThreadList = std::list<ArchThread>;
 
   static ArchMultithreadPosix *s_instance;

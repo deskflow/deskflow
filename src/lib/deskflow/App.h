@@ -130,59 +130,53 @@ private:
 #else
 #define DAEMON_RUNNING(running_)
 #endif
+constexpr static auto s_helpGeneralArgs = //
+    "  -d, --debug <level>      filter out log messages with priority below level.\n"
+    "                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
+    "                             DEBUG, DEBUG1, DEBUG2.\n"
+    "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
+    "                             this screen in the configuration.\n"
+    "  -1, --no-restart         do not try to restart on failure.\n"
+    "*     --restart            restart the server automatically if it fails.\n"
+    "  -l  --log <file>         write log messages to file.\n"
+    "      --enable-crypto      enable TLS encryption.\n"
+    "      --tls-cert           specify the path to the TLS certificate file.\n";
 
-#define HELP_COMMON_INFO_1                                                                                             \
-  "  -d, --debug <level>      filter out log messages with priority below "                                            \
-  "level.\n"                                                                                                           \
-  "                             level may be: FATAL, ERROR, WARNING, NOTE, "                                           \
-  "INFO,\n"                                                                                                            \
-  "                             DEBUG, DEBUG1, DEBUG2.\n"                                                              \
-  "  -n, --name <screen-name> use screen-name instead the hostname to "                                                \
-  "identify\n"                                                                                                         \
-  "                             this screen in the configuration.\n"                                                   \
-  "  -1, --no-restart         do not try to restart on failure.\n"                                                     \
-  "*     --restart            restart the server automatically if it fails.\n"                                         \
-  "  -l  --log <file>         write log messages to file.\n"                                                           \
-  "      --enable-crypto      enable TLS encryption.\n"                                                                \
-  "      --tls-cert           specify the path to the TLS certificate file.\n"
+constexpr static auto s_helpVersionArgs = //
+    "  -h, --help               display this help and exit.\n"
+    "      --version            display version information and exit.\n";
 
-#define HELP_COMMON_INFO_2                                                                                             \
-  "  -h, --help               display this help and exit.\n"                                                           \
-  "      --version            display version information and exit.\n"
-
-#define HELP_COMMON_ARGS                                                                                               \
-  " [--name <screen-name>]"                                                                                            \
-  " [--restart|--no-restart]"                                                                                          \
-  " [--debug <level>]"
+constexpr static auto s_helpCommonArgs = //
+    " [--name <screen-name>]"
+    " [--restart|--no-restart]"
+    " [--debug <level>]";
 
 // system args (windows/unix)
 #if SYSAPI_UNIX
 
 // unix daemon mode args
-#define HELP_SYS_ARGS " [--daemon|--no-daemon]"
-#define HELP_SYS_INFO                                                                                                  \
-  "  -f, --no-daemon          run in the foreground.\n"                                                                \
-  "*     --daemon             run as a daemon.\n"
+constexpr static auto s_helpSysArgs = " [--daemon|--no-daemon]";
+constexpr static auto s_helpSysInfo = //
+    "  -f, --no-daemon          run in the foreground.\n"
+    "*     --daemon             run as a daemon.\n";
 
 #elif SYSAPI_WIN32
 
 // windows args
-#define HELP_SYS_ARGS " [--service <action>] [--relaunch]"
-#define HELP_SYS_INFO                                                                                                  \
-  "      --service <action>   manage the windows service, valid options "                                              \
-  "are:\n"                                                                                                             \
-  "                             install/uninstall/start/stop\n"                                                        \
-  "      --relaunch           persistently relaunches process in current "                                             \
-  "user \n"                                                                                                            \
-  "                             session (useful for vista and upward).\n"
+constexpr static auto s_helpSysArgs = " [--service <action>] [--relaunch]";
+constexpr static auto s_helpSysInfo = //
+    "      --service <action>   manage the windows service, valid options are:\n"
+    "                             install/uninstall/start/stop\n"
+    "      --relaunch           persistently relaunches process in current user \n"
+    "                             session (useful for vista and upward).\n";
 #endif
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
-const auto kHelpNoWayland = "\n"
-                            "Your Linux distribution does not support Wayland EI (emulated input)\n"
-                            "which is required for Wayland support.  Please use a Linux distribution\n"
-                            "that supports Wayland EI.\n";
+constexpr static auto s_helpNoWayland = //
+    "\nYour Linux distribution does not support Wayland EI (emulated input)\n"
+    "which is required for Wayland support.  Please use a Linux distribution\n"
+    "that supports Wayland EI.\n";
 
 #else
-const auto kHelpNoWayland = "";
+constexpr static auto s_helpNoWayland = "";
 #endif

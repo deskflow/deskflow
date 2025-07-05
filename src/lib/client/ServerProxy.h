@@ -123,7 +123,7 @@ private:
   double m_keepAliveAlarm = 0.0;
   EventQueueTimer *m_keepAliveAlarmTimer = nullptr;
 
-  MessageParser m_parser;
+  MessageParser m_parser = &ServerProxy::parseHandshakeMessage;
   IEventQueue *m_events = nullptr;
   std::string m_serverLanguage = "";
   bool m_isUserNotifiedAboutLanguageSyncError = false;

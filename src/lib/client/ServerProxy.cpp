@@ -33,7 +33,6 @@
 ServerProxy::ServerProxy(Client *client, deskflow::IStream *stream, IEventQueue *events)
     : m_client(client),
       m_stream(stream),
-      m_parser(&ServerProxy::parseHandshakeMessage),
       m_events(events)
 {
   assert(m_client != nullptr);
@@ -442,6 +441,9 @@ KeyID ServerProxy::translateKey(KeyID id) const
     id2 = kKeyModifierIDSuper;
     side = 1;
     break;
+
+  default:
+    break;
   }
 
   if (id2 != kKeyModifierIDNull) {
@@ -522,12 +524,12 @@ void ServerProxy::setClipboard()
   ClipboardID id;
   uint32_t seq;
 
-  int r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
+  auto r = ClipboardChunk::assemble(m_stream, dataCached, id, seq);
 
-  if (r == kStart) {
+  if (r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize();
     LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
-  } else if (r == kFinish) {
+  } else if (r == TransferState::Finished) {
     LOG((CLOG_DEBUG "received clipboard %d size=%d", id, dataCached.size()));
 
     // forward

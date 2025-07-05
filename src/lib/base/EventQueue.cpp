@@ -464,8 +464,3 @@ void EventQueue::Timer::fillEvent(TimerEvent &event) const
     event.m_count = static_cast<uint32_t>((m_timeout - m_time) / m_timeout);
   }
 }
-
-bool EventQueue::Timer::operator<(const Timer &t) const
-{
-  return m_time < t.m_time;
-}

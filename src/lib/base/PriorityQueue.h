@@ -76,13 +76,13 @@ public:
   }
 
   //! Swap contents with another priority queue
-  void swap(PriorityQueue<T, Container, Compare> &q)
+  void swap(PriorityQueue<T, Container, Compare> &q) noexcept
   {
     c.swap(q.c);
   }
 
   //! Swap contents with another container
-  void swap(Container &c2)
+  void swap(Container &c2) noexcept
   {
     c.swap(c2);
     std::make_heap(c.begin(), c.end(), comp);

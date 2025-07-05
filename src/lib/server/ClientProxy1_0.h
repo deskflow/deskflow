@@ -98,6 +98,6 @@ private:
   ClientInfo m_info;
   double m_heartbeatAlarm;
   EventQueueTimer *m_heartbeatTimer = nullptr;
-  MessageParser m_parser;
+  MessageParser m_parser = &ClientProxy1_0::parseHandshakeMessage;
   IEventQueue *m_events;
 };

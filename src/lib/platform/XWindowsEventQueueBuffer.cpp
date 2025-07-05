@@ -103,12 +103,12 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
   // and continue doing this until timeout is reached.
   // The human eye can notice 60hz (ansi) which is 16ms, however
   // we want to give the cpu a chance s owe up this to 25ms
-#define TIMEOUT_DELAY 25
+  static const int s_timeoutDelay = 25;
 
   while (((dtimeout < 0.0) || (remaining > 0)) && getPendingCountLocked() == 0 && retval == 0) {
 
-    retval = poll(pfds, 2, TIMEOUT_DELAY); // 16ms = 60hz, but we make it > to
-                                           // play nicely with the cpu
+    retval = poll(pfds, 2, s_timeoutDelay); // 16ms = 60hz, but we make it > to
+                                            // play nicely with the cpu
     if (pfds[1].revents & POLLIN) {
       ssize_t read_response = read(m_pipefd[0], buf, 15);
 
@@ -117,7 +117,7 @@ void XWindowsEventQueueBuffer::waitForEvent(double dtimeout)
         // todo: handle read response
       }
     }
-    remaining -= TIMEOUT_DELAY;
+    remaining -= s_timeoutDelay;
   }
 
   {

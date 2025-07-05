@@ -86,8 +86,6 @@ private:
     void *getTarget() const;
     void fillEvent(TimerEvent &) const;
 
-    bool operator<(const Timer &) const;
-
   private:
     EventQueueTimer *m_timer;
     double m_timeout;

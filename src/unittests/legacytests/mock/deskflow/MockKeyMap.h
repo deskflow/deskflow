@@ -13,7 +13,7 @@
 class MockKeyMap : public deskflow::KeyMap
 {
 public:
-  MOCK_METHOD(void, swap, (KeyMap &), (override));
+  MOCK_METHOD(void, swap, (KeyMap &), (noexcept));
   MOCK_METHOD(void, finish, (), (override));
   MOCK_METHOD(void, foreachKey, (ForeachKeyCallback, void *), (override));
   MOCK_METHOD(void, addHalfDuplexModifier, (KeyID), (override));

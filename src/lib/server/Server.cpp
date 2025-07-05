@@ -27,6 +27,9 @@
 #include "server/ClientProxyUnknown.h"
 #include "server/PrimaryClient.h"
 
+#ifdef _WIN32
+#include <array>
+#endif
 #include <climits>
 #include <cmath>
 #include <cstdlib>
@@ -305,19 +308,21 @@ std::string Server::getName(const BaseClientProxy *client) const
 
 uint32_t Server::getActivePrimarySides() const
 {
+  using enum DirectionMask;
+  using enum Direction;
   uint32_t sides = 0;
   if (!isLockedToScreenServer()) {
-    if (hasAnyNeighbor(m_primaryClient, kLeft)) {
-      sides |= kLeftMask;
+    if (hasAnyNeighbor(m_primaryClient, Left)) {
+      sides |= static_cast<int>(LeftMask);
     }
-    if (hasAnyNeighbor(m_primaryClient, kRight)) {
-      sides |= kRightMask;
+    if (hasAnyNeighbor(m_primaryClient, Right)) {
+      sides |= static_cast<int>(RightMask);
     }
-    if (hasAnyNeighbor(m_primaryClient, kTop)) {
-      sides |= kTopMask;
+    if (hasAnyNeighbor(m_primaryClient, Top)) {
+      sides |= static_cast<int>(TopMask);
     }
-    if (hasAnyNeighbor(m_primaryClient, kBottom)) {
-      sides |= kBottomMask;
+    if (hasAnyNeighbor(m_primaryClient, Bottom)) {
+      sides |= static_cast<int>(BottomMask);
     }
   }
   return sides;
@@ -489,7 +494,7 @@ void Server::jumpToScreen(BaseClientProxy *newScreen)
   switchScreen(newScreen, x, y, false);
 }
 
-float Server::mapToFraction(const BaseClientProxy *client, EDirection dir, int32_t x, int32_t y) const
+float Server::mapToFraction(const BaseClientProxy *client, Direction dir, int32_t x, int32_t y) const
 {
   int32_t sx;
   int32_t sy;
@@ -497,22 +502,23 @@ float Server::mapToFraction(const BaseClientProxy *client, EDirection dir, int32
   int32_t sh;
   client->getShape(sx, sy, sw, sh);
   switch (dir) {
-  case kLeft:
-  case kRight:
+    using enum Direction;
+  case Left:
+  case Right:
     return static_cast<float>(y - sy + 0.5f) / static_cast<float>(sh);
 
-  case kTop:
-  case kBottom:
+  case Top:
+  case Bottom:
     return static_cast<float>(x - sx + 0.5f) / static_cast<float>(sw);
 
-  case kNoDirection:
+  case NoDirection:
     assert(0 && "bad direction");
     break;
   }
   return 0.0f;
 }
 
-void Server::mapToPixel(const BaseClientProxy *client, EDirection dir, float f, int32_t &x, int32_t &y) const
+void Server::mapToPixel(const BaseClientProxy *client, Direction dir, float f, int32_t &x, int32_t &y) const
 {
   int32_t sx;
   int32_t sy;
@@ -520,30 +526,31 @@ void Server::mapToPixel(const BaseClientProxy *client, EDirection dir, float f, 
   int32_t sh;
   client->getShape(sx, sy, sw, sh);
   switch (dir) {
-  case kLeft:
-  case kRight:
+    using enum Direction;
+  case Left:
+  case Right:
     y = static_cast<int32_t>(f * sh) + sy;
     break;
 
-  case kTop:
-  case kBottom:
+  case Top:
+  case Bottom:
     x = static_cast<int32_t>(f * sw) + sx;
     break;
 
-  case kNoDirection:
+  case NoDirection:
     assert(0 && "bad direction");
     break;
   }
 }
 
-bool Server::hasAnyNeighbor(const BaseClientProxy *client, EDirection dir) const
+bool Server::hasAnyNeighbor(const BaseClientProxy *client, Direction dir) const
 {
   assert(client != nullptr);
 
   return m_config->hasNeighbor(getName(client), dir);
 }
 
-BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, EDirection dir, int32_t &x, int32_t &y) const
+BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, Direction dir, int32_t &x, int32_t &y) const
 {
   // note -- must be locked on entry
 
@@ -588,7 +595,7 @@ BaseClientProxy *Server::getNeighbor(const BaseClientProxy *src, EDirection dir,
   }
 }
 
-BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide, int32_t &x, int32_t &y) const
+BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, Direction srcSide, int32_t &x, int32_t &y) const
 {
   // note -- must be locked on entry
 
@@ -614,7 +621,8 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
   // actual to canonical position on entry to and from canonical to
   // actual on exit from the search.
   switch (srcSide) {
-  case kLeft:
+    using enum Direction;
+  case Left:
     x -= dx;
     while (dst != nullptr) {
       lastGoodScreen = dst;
@@ -630,7 +638,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
     x += dx;
     break;
 
-  case kRight:
+  case Right:
     x -= dx;
     while (dst != nullptr) {
       x -= dw;
@@ -646,7 +654,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
     x += dx;
     break;
 
-  case kTop:
+  case Top:
     y -= dy;
     while (dst != nullptr) {
       lastGoodScreen = dst;
@@ -662,7 +670,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
     y += dy;
     break;
 
-  case kBottom:
+  case Bottom:
     y -= dy;
     while (dst != nullptr) {
       y -= dh;
@@ -678,7 +686,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
     y += dy;
     break;
 
-  case kNoDirection:
+  case NoDirection:
     assert(0 && "bad direction");
     return nullptr;
   }
@@ -696,7 +704,7 @@ BaseClientProxy *Server::mapToNeighbor(BaseClientProxy *src, EDirection srcSide,
   return dst;
 }
 
-void Server::avoidJumpZone(const BaseClientProxy *dst, EDirection dir, int32_t &x, int32_t &y) const
+void Server::avoidJumpZone(const BaseClientProxy *dst, Direction dir, int32_t &x, int32_t &y) const
 {
   // we only need to avoid jump zones on the primary screen
   if (dst != m_primaryClient) {
@@ -716,33 +724,34 @@ void Server::avoidJumpZone(const BaseClientProxy *dst, EDirection dir, int32_t &
   // that doesn't have a neighbor (i.e. an asymmetrical side) then we
   // don't need to move inwards because that side can't provoke a jump.
   switch (dir) {
-  case kLeft:
-    if (!m_config->getNeighbor(dstName, kRight, t, nullptr).empty() && x > dx + dw - 1 - z)
+    using enum Direction;
+  case Left:
+    if (!m_config->getNeighbor(dstName, Right, t, nullptr).empty() && x > dx + dw - 1 - z)
       x = dx + dw - 1 - z;
     break;
 
-  case kRight:
-    if (!m_config->getNeighbor(dstName, kLeft, t, nullptr).empty() && x < dx + z)
+  case Right:
+    if (!m_config->getNeighbor(dstName, Left, t, nullptr).empty() && x < dx + z)
       x = dx + z;
     break;
 
-  case kTop:
-    if (!m_config->getNeighbor(dstName, kBottom, t, nullptr).empty() && y > dy + dh - 1 - z)
+  case Top:
+    if (!m_config->getNeighbor(dstName, Bottom, t, nullptr).empty() && y > dy + dh - 1 - z)
       y = dy + dh - 1 - z;
     break;
 
-  case kBottom:
-    if (!m_config->getNeighbor(dstName, kTop, t, nullptr).empty() && y < dy + z)
+  case Bottom:
+    if (!m_config->getNeighbor(dstName, Top, t, nullptr).empty() && y < dy + z)
       y = dy + z;
     break;
 
-  case kNoDirection:
+  case NoDirection:
     assert(0 && "bad direction");
   }
 }
 
 bool Server::isSwitchOkay(
-    BaseClientProxy *newScreen, EDirection dir, int32_t x, int32_t y, int32_t xActive, int32_t yActive
+    BaseClientProxy *newScreen, Direction dir, int32_t x, int32_t y, int32_t xActive, int32_t yActive
 )
 {
   LOG((CLOG_DEBUG1 "try to leave \"%s\" on %s", getName(m_active).c_str(), Config::dirName(dir)));
@@ -844,7 +853,7 @@ void Server::stopSwitch()
 {
   if (m_switchScreen != nullptr) {
     m_switchScreen = nullptr;
-    m_switchDir = kNoDirection;
+    m_switchDir = Direction::NoDirection;
     stopSwitchTwoTap();
     stopSwitchWait();
   }
@@ -881,19 +890,20 @@ void Server::armSwitchTwoTap(int32_t x, int32_t y)
         // move in the opposite direction that the mouse actually
         // moved.  try to ignore that crap here.
         switch (m_switchDir) {
-        case kLeft:
+          using enum Direction;
+        case Left:
           m_switchTwoTapArmed = (m_xDelta > 0 && m_xDelta2 > 0);
           break;
 
-        case kRight:
+        case Right:
           m_switchTwoTapArmed = (m_xDelta < 0 && m_xDelta2 < 0);
           break;
 
-        case kTop:
+        case Top:
           m_switchTwoTapArmed = (m_yDelta > 0 && m_yDelta2 > 0);
           break;
 
-        case kBottom:
+        case Bottom:
           m_switchTwoTapArmed = (m_yDelta < 0 && m_yDelta2 < 0);
           break;
 
@@ -1608,40 +1618,42 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
   // see if we should change screens
   // when the cursor is in a corner, there may be a screen either
   // horizontally or vertically.  check both directions.
-  EDirection dirh = kNoDirection, dirv = kNoDirection;
+  using enum Direction;
+  auto dirh = NoDirection;
+  auto dirv = NoDirection;
   int32_t xh = x;
   int32_t yv = y;
   if (x < ax + zoneSize) {
     xh -= zoneSize;
-    dirh = kLeft;
+    dirh = Left;
   } else if (x >= ax + aw - zoneSize) {
     xh += zoneSize;
-    dirh = kRight;
+    dirh = Right;
   }
   if (y < ay + zoneSize) {
     yv -= zoneSize;
-    dirv = kTop;
+    dirv = Top;
   } else if (y >= ay + ah - zoneSize) {
     yv += zoneSize;
-    dirv = kBottom;
+    dirv = Bottom;
   }
-  if (dirh == kNoDirection && dirv == kNoDirection) {
+  if (dirh == NoDirection && dirv == NoDirection) {
     // still on local screen
     noSwitch(x, y);
     return false;
   }
 
   // check both horizontally and vertically
-  EDirection dirs[] = {dirh, dirv};
-  int32_t xs[] = {xh, x};
-  int32_t ys[] = {y, yv};
+  std::array<Direction, 2> dirs = {dirh, dirv};
+  std::array<int32_t, 2> xs = {xh, x};
+  std::array<int32_t, 2> ys = {y, yv};
   for (int i = 0; i < 2; ++i) {
-    EDirection dir = dirs[i];
-    if (dir == kNoDirection) {
+    Direction dir = dirs.at(i);
+    if (dir == NoDirection) {
       continue;
     }
-    x = xs[i], y = ys[i];
-
+    x = xs.at(i);
+    y = ys.at(i);
     // get jump destination
     BaseClientProxy *newScreen = mapToNeighbor(m_active, dir, x, y);
 
@@ -1735,15 +1747,16 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
       yc = ay + ah - 1;
     }
 
-    EDirection dir;
+    Direction dir;
+    using enum Direction;
     if (m_x < ax) {
-      dir = kLeft;
+      dir = Left;
     } else if (m_x > ax + aw - 1) {
-      dir = kRight;
+      dir = Right;
     } else if (m_y < ay) {
-      dir = kTop;
+      dir = Top;
     } else if (m_y > ay + ah - 1) {
-      dir = kBottom;
+      dir = Bottom;
     } else {
       // we haven't left the screen
       newScreen = m_active;
@@ -1756,19 +1769,19 @@ void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
         bool clearWait;
         int32_t zoneSize = m_primaryClient->getJumpZoneSize();
         switch (m_switchDir) {
-        case kLeft:
+        case Left:
           clearWait = (m_x >= ax + zoneSize);
           break;
 
-        case kRight:
+        case Right:
           clearWait = (m_x <= ax + aw - 1 - zoneSize);
           break;
 
-        case kTop:
+        case Top:
           clearWait = (m_y >= ay + zoneSize);
           break;
 
-        case kBottom:
+        case Bottom:
           clearWait = (m_y <= ay + ah - 1 + zoneSize);
           break;
 
@@ -2041,7 +2054,7 @@ Server::SwitchToScreenInfo *Server::SwitchToScreenInfo::alloc(const std::string 
 // Server::SwitchInDirectionInfo
 //
 
-Server::SwitchInDirectionInfo *Server::SwitchInDirectionInfo::alloc(EDirection direction)
+Server::SwitchInDirectionInfo *Server::SwitchInDirectionInfo::alloc(Direction direction)
 {
   auto *info = (SwitchInDirectionInfo *)malloc(sizeof(SwitchInDirectionInfo));
   info->m_direction = direction;

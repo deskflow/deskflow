@@ -35,14 +35,15 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
   ui->m_pLabelNameError->setStyleSheet(kStyleErrorActiveLabel);
 
   ui->m_pLineEditName->setText(m_pScreen->name());
-  ui->m_pLineEditName->setValidator(new validators::ScreenNameValidator(
-      ui->m_pLineEditName, new validators::ValidationError(this, ui->m_pLabelNameError), pScreens
-  ));
+
+  auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
+  auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
+  ui->m_pLineEditName->setValidator(valName);
   ui->m_pLineEditName->selectAll();
 
-  ui->m_pLineEditAlias->setValidator(new validators::AliasValidator(
-      ui->m_pLineEditAlias, new validators::ValidationError(this, ui->m_pLabelAliasError)
-  ));
+  auto valAliasError = new validators::ValidationError(this, ui->m_pLabelAliasError);
+  auto valAlias = new validators::AliasValidator(ui->m_pLineEditAlias, valAliasError);
+  ui->m_pLineEditAlias->setValidator(valAlias);
 
   for (int i = 0; i < m_pScreen->aliases().count(); i++)
     new QListWidgetItem(m_pScreen->aliases()[i], ui->m_pListAliases);

@@ -9,10 +9,11 @@
 #include "common/Common.h"
 #include "deskflow/Chunk.h"
 #include "deskflow/ClipboardTypes.h"
+#include "deskflow/ProtocolTypes.h"
 
 #include <string>
 
-#define CLIPBOARD_CHUNK_META_SIZE 7
+constexpr static auto s_clipboardChunkMetaSize = 7;
 
 namespace deskflow {
 class IStream;
@@ -27,7 +28,8 @@ public:
   static ClipboardChunk *data(ClipboardID id, uint32_t sequence, const std::string &data);
   static ClipboardChunk *end(ClipboardID id, uint32_t sequence);
 
-  static int assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence);
+  static TransferState
+  assemble(deskflow::IStream *stream, std::string &dataCached, ClipboardID &id, uint32_t &sequence);
 
   static void send(deskflow::IStream *stream, void *data);
 
