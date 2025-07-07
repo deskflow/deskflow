@@ -349,9 +349,7 @@ void ArchNetworkBSD::unblockPollSocket(ArchThread thread)
   const int *unblockPipe = getUnblockPipeForThread(thread);
   if (unblockPipe != nullptr) {
     char dummy = 0;
-    int ignore;
-
-    ignore = write(unblockPipe[1], &dummy, 1);
+    std::ignore = write(unblockPipe[1], &dummy, 1);
   }
 }
 
