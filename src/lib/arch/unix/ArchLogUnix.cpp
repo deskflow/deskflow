@@ -28,24 +28,25 @@ void ArchLogUnix::showLog(bool)
   // do nothing
 }
 
-void ArchLogUnix::writeLog(ELevel level, const char *msg)
+void ArchLogUnix::writeLog(LogLevel level, const char *msg)
 {
   // convert level
   int priority;
   switch (level) {
-  case kERROR:
+    using enum LogLevel;
+  case Error:
     priority = LOG_ERR;
     break;
 
-  case kWARNING:
+  case Warning:
     priority = LOG_WARNING;
     break;
 
-  case kNOTE:
+  case Note:
     priority = LOG_NOTICE;
     break;
 
-  case kINFO:
+  case Info:
     priority = LOG_INFO;
     break;
 

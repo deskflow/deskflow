@@ -25,7 +25,7 @@ public:
   void openLog(const char *name) override;
   void closeLog() override;
   void showLog(bool showIfEmpty) override;
-  void writeLog(ELevel, const char *) override;
+  void writeLog(LogLevel, const char *) override;
 
 private:
   HANDLE m_eventLog;

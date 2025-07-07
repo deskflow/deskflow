@@ -990,7 +990,7 @@ bool XWindowsClipboard::sendReply(Reply *reply)
   reply->m_replied = true;
 
   // nothing to log
-  if (CLOG->getFilter() < kDEBUG2) {
+  if (CLOG->getFilter() < LogLevel::Debug2) {
     sendNotify(
         reply->m_requestor, m_selection, reply->m_target, reply->m_property, static_cast<unsigned int>(reply->m_time)
     );

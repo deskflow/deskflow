@@ -65,7 +65,7 @@ void logRemoteSecureCipherInfo(const SSL *ssl)
 
 void SslLogger::logSecureLibInfo()
 {
-  if (CLOG->getFilter() >= kDEBUG) {
+  if (CLOG->getFilter() >= LogLevel::Debug) {
     LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
     LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
     LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
@@ -76,7 +76,7 @@ void SslLogger::logSecureLibInfo()
 
 void SslLogger::logSecureCipherInfo(const SSL *ssl)
 {
-  if (ssl && CLOG->getFilter() >= kDEBUG1) {
+  if (ssl && CLOG->getFilter() >= LogLevel::Debug1) {
     logLocalSecureCipherInfo(ssl);
     logRemoteSecureCipherInfo(ssl);
   }

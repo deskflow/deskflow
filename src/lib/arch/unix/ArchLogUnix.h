@@ -22,5 +22,5 @@ public:
   void openLog(const char *name) override;
   void closeLog() override;
   void showLog(bool) override;
-  void writeLog(ELevel, const char *) override;
+  void writeLog(LogLevel, const char *) override;
 };

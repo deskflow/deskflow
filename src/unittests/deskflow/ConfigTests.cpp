@@ -18,7 +18,7 @@ void ConfigTests::initTestCase()
   QVERIFY(dir.mkpath("tmp/test"));
 
   m_arch.init();
-  m_log.setFilter(kDEBUG2);
+  m_log.setFilter(LogLevel::Debug2);
 }
 
 void ConfigTests::loadFile()

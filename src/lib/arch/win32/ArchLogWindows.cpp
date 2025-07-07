@@ -38,17 +38,17 @@ void ArchLogWindows::showLog(bool)
   // do nothing
 }
 
-void ArchLogWindows::writeLog(ELevel level, const char *msg)
+void ArchLogWindows::writeLog(LogLevel level, const char *msg)
 {
   if (m_eventLog != nullptr) {
     // convert priority
     WORD type;
     switch (level) {
-    case kERROR:
+    case LogLevel::Error:
       type = EVENTLOG_ERROR_TYPE;
       break;
 
-    case kWARNING:
+    case LogLevel::Warning:
       type = EVENTLOG_WARNING_TYPE;
       break;
 

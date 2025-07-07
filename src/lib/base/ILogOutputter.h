@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "base/ELevel.h"
 #include "base/Log.h"
+#include "base/LogLevel.h"
 #include "common/IInterface.h"
 
 //! Outputter interface
@@ -53,7 +53,7 @@ public:
   message to all outputters in the outputter chain, otherwise
   it continues.  Most implementations should return true.
   */
-  virtual bool write(ELevel level, const char *message) = 0;
+  virtual bool write(LogLevel level, const char *message) = 0;
 
   //@}
 };

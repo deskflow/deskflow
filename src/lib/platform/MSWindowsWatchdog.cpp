@@ -8,8 +8,8 @@
 
 #include "arch/Arch.h"
 #include "arch/win32/XArchWindows.h"
-#include "base/ELevel.h"
 #include "base/Log.h"
+#include "base/LogLevel.h"
 #include "base/LogOutputters.h"
 #include "base/TMethodJob.h"
 #include "common/Constants.h"
@@ -363,7 +363,7 @@ void MSWindowsWatchdog::outputLoop(void *)
 
       // strip out windows \r chars to prevent extra lines in log file.
       std::string output = trimOutputBuffer(buffer);
-      m_fileLogOutputter.write(kPRINT, output.c_str());
+      m_fileLogOutputter.write(LogLevel::Print, output.c_str());
 
 #if SYSAPI_WIN32
       if (m_foreground) {

@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "base/ELevel.h"
+#include "base/LogLevel.h"
 #include "common/IInterface.h"
 
 //! Interface for architecture dependent logging
@@ -47,7 +47,7 @@ public:
   /*!
   Writes the given string to the log with the given level.
   */
-  virtual void writeLog(ELevel, const char *) = 0;
+  virtual void writeLog(LogLevel, const char *) = 0;
 
   //@}
 };

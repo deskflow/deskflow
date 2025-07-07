@@ -87,7 +87,7 @@ public:
   bool setFilter(const char *name);
 
   //! Set the minimum priority filter (by ordinal).
-  void setFilter(int);
+  void setFilter(LogLevel);
 
   //@}
   //! @name accessors
@@ -102,28 +102,28 @@ public:
   void print(const char *file, int line, const char *format, ...);
 
   //! Get the minimum priority level.
-  int getFilter() const;
+  LogLevel getFilter() const;
 
   //! Get the filter name of the current filter level.
   const char *getFilterName() const;
 
   //! Get the filter name of a specified filter level.
-  const char *getFilterName(int level) const;
+  const char *getFilterName(LogLevel level) const;
 
   //! Get the singleton instance of the log
   static Log *getInstance();
 
   //! Get the console filter level (messages above this are not sent to
   //! console).
-  int getConsoleMaxLevel() const
+  LogLevel getConsoleMaxLevel() const
   {
-    return kDEBUG2;
+    return LogLevel::Debug2;
   }
 
   //@}
 
 private:
-  void output(ELevel priority, const char *msg);
+  void output(LogLevel priority, const char *msg);
 
 private:
   using OutputterList = std::list<ILogOutputter *>;
@@ -133,7 +133,7 @@ private:
   mutable std::mutex m_mutex;
   OutputterList m_outputters;
   OutputterList m_alwaysOutputters;
-  int m_maxPriority;
+  LogLevel m_maxPriority;
 };
 
 /*!
@@ -145,7 +145,7 @@ LOG((CLOG_XXX "%d and %d are %s", x, y, x == y ? "equal" : "not equal"));
 \endcode
 In particular, notice the double open and close parentheses.  Also note
 that there is no comma after the \c CLOG_XXX.  The \c XXX should be
-replaced by one of enumerants in \c Log::ELevel without the leading
+replaced by one of enumerants in \c Log::LogLevel without the leading
 \c k.  For example, \c CLOG_INFO.  The special \c CLOG_PRINT level will
 not be filtered and is never prefixed by the filename and line number.
 
@@ -164,7 +164,7 @@ LOGC(x == y, (CLOG_XXX "%d and %d are equal", x, y));
 \endcode
 In particular, notice the parentheses around everything after the boolean
 expression.    Also note that there is no comma after the \c CLOG_XXX.
-The \c XXX should be replaced by one of enumerants in \c Log::ELevel
+The \c XXX should be replaced by one of enumerants in \c Log::LogLevel
 without the leading \c k.  For example, \c CLOG_INFO.  The special
 \c CLOG_PRINT level will not be filtered and is never prefixed by the
 filename and line number.
