@@ -849,7 +849,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
   }
 
   if (m_saveOnExit) {
-    Settings::setValue(Settings::Gui::WindowGeometry, frameGeometry());
+    Settings::setValue(Settings::Gui::WindowGeometry, geometry());
   }
   qDebug() << "quitting application";
   event->accept();
