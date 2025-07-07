@@ -33,6 +33,6 @@ var classdeskflow_1_1KeyMap =
     [ "parseKey", "classdeskflow_1_1KeyMap.html#a96ff8c796feab9da3d8ba488ddd49a0a", null ],
     [ "parseModifiers", "classdeskflow_1_1KeyMap.html#a8aa58250fe051e6cbcac1fd7ed19020f", null ],
     [ "setLanguageData", "classdeskflow_1_1KeyMap.html#a92cde43b05ff9802fedef4f8b4774549", null ],
-    [ "swap", "classdeskflow_1_1KeyMap.html#a6a8ad408a23df41d907cf7e6d4ab7f4f", null ],
+    [ "swap", "classdeskflow_1_1KeyMap.html#a6bc14b34548aac4e1362adf9ecf1693c", null ],
     [ "KeyMapTests", "classdeskflow_1_1KeyMap.html#aa22a6d7a665c36d1f4fb04925918f309", null ]
 ];

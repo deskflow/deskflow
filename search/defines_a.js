@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['pbt_5fapmresumeautomatic_0',['PBT_APMRESUMEAUTOMATIC',['../MSWindowsScreen_8cpp.html#ac51593a374233bc8b2b7b133e243e010',1,'MSWindowsScreen.cpp']]]
+  ['rethrow_5fxthread_0',['RETHROW_XTHREAD',['../XArch_8h.html#a80d94fdcaf28b486d69cd9117226ecf1',1,'XArch.h']]]
 ];

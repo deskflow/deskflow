@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,10 +122,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aeb7034acce02598b6f250fcb3893e889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get start iterator.  <br /></td></tr>
 <tr class="memitem:a6d8a051ec280be31e78685a47300b1df" id="r_a6d8a051ec280be31e78685a47300b1df"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a5bafced7aaea079a6df66c54068fa5f6">iterator</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d8a051ec280be31e78685a47300b1df">end</a> ()</td></tr>
 <tr class="memdesc:a6d8a051ec280be31e78685a47300b1df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get end iterator.  <br /></td></tr>
-<tr class="memitem:ab570948df1d8ca6e1edba53fdf29249e" id="r_ab570948df1d8ca6e1edba53fdf29249e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab570948df1d8ca6e1edba53fdf29249e">swap</a> (<a class="el" href="classPriorityQueue.html">PriorityQueue</a>&lt; T, Container, Compare &gt; &amp;q)</td></tr>
-<tr class="memdesc:ab570948df1d8ca6e1edba53fdf29249e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap contents with another priority queue.  <br /></td></tr>
-<tr class="memitem:a0ea01facb47f5b83a7d2972b8662aef6" id="r_a0ea01facb47f5b83a7d2972b8662aef6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ea01facb47f5b83a7d2972b8662aef6">swap</a> (Container &amp;c2)</td></tr>
-<tr class="memdesc:a0ea01facb47f5b83a7d2972b8662aef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap contents with another container.  <br /></td></tr>
+<tr class="memitem:aefb791549f4f4806d35796060d0e2c6f" id="r_aefb791549f4f4806d35796060d0e2c6f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefb791549f4f4806d35796060d0e2c6f">swap</a> (<a class="el" href="classPriorityQueue.html">PriorityQueue</a>&lt; T, Container, Compare &gt; &amp;q) noexcept</td></tr>
+<tr class="memdesc:aefb791549f4f4806d35796060d0e2c6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap contents with another priority queue.  <br /></td></tr>
+<tr class="memitem:ad1fbf1013135e37234431ea2c3e35e2b" id="r_ad1fbf1013135e37234431ea2c3e35e2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad1fbf1013135e37234431ea2c3e35e2b">swap</a> (Container &amp;c2) noexcept</td></tr>
+<tr class="memdesc:ad1fbf1013135e37234431ea2c3e35e2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap contents with another container.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
 accessors</h2></td></tr>
@@ -569,8 +569,8 @@ template&lt;class T, class Container = std::vector&lt;T&gt;, class Compare = std
 
 </div>
 </div>
-<a id="a0ea01facb47f5b83a7d2972b8662aef6" name="a0ea01facb47f5b83a7d2972b8662aef6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ea01facb47f5b83a7d2972b8662aef6">&#9670;&#160;</a></span>swap() <span class="overload">[1/2]</span></h2>
+<a id="ad1fbf1013135e37234431ea2c3e35e2b" name="ad1fbf1013135e37234431ea2c3e35e2b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1fbf1013135e37234431ea2c3e35e2b">&#9670;&#160;</a></span>swap() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -589,7 +589,7 @@ template&lt;class T, class Container = std::vector&lt;T&gt;, class Compare = std
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -598,8 +598,8 @@ template&lt;class T, class Container = std::vector&lt;T&gt;, class Compare = std
 
 </div>
 </div>
-<a id="ab570948df1d8ca6e1edba53fdf29249e" name="ab570948df1d8ca6e1edba53fdf29249e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab570948df1d8ca6e1edba53fdf29249e">&#9670;&#160;</a></span>swap() <span class="overload">[2/2]</span></h2>
+<a id="aefb791549f4f4806d35796060d0e2c6f" name="aefb791549f4f4806d35796060d0e2c6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aefb791549f4f4806d35796060d0e2c6f">&#9670;&#160;</a></span>swap() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -618,7 +618,7 @@ template&lt;class T, class Container = std::vector&lt;T&gt;, class Compare = std
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel noexcept">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

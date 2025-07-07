@@ -26,7 +26,7 @@ var searchData=
   ['socketdisconnected_23',['SocketDisconnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2accb8293e8d767b9891d98fbc10a6894e',1,'deskflow']]],
   ['socketstopretry_24',['SocketStopRetry',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a04f7a055ad9674c92ee642a8823db2c2',1,'deskflow']]],
   ['startdaemon_25',['StartDaemon',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a93d50575e86ae2d0517248aabd42af1d',1,'DaemonApp']]],
-  ['started_26',['Started',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca8428552d86c0d262a542a528af490afa',1,'deskflow::gui::CoreProcess']]],
+  ['started_26',['Started',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca8428552d86c0d262a542a528af490afa',1,'deskflow::gui::CoreProcess::Started'],['../group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa',1,'Started:&#160;ProtocolTypes.h']]],
   ['startfailed_27',['StartFailed',['../classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467a65004ae0dc2e9512cfa7d0e6dbcdab1e',1,'deskflow::gui::CoreProcess']]],
   ['starting_28',['Starting',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac2efe4bbd13e6cb0db293e72884273c0',1,'deskflow::gui::CoreProcess']]],
   ['stopped_29',['Stopped',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac23e2b09ebe6bf4cb5e2a9abe85c0be2',1,'deskflow::gui::CoreProcess']]],

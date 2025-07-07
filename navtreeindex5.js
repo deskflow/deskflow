@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"StreamBuffer_8h.html":[7,0,1,1,6,4],
 "StreamBuffer_8h_source.html":[7,0,1,1,6,4],
 "StreamChunker_8cpp.html":[7,0,1,1,4,64],
 "StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,64,0],
@@ -23,7 +22,7 @@ var NAVTREEINDEX5 =
 "TCPSocketFactory_8h.html":[7,0,1,1,8,28],
 "TCPSocketFactory_8h_source.html":[7,0,1,1,8,28],
 "TCPSocket_8cpp.html":[7,0,1,1,8,25],
-"TCPSocket_8cpp.html#a03e0b848034ca5a551fa0da53679c4d9":[7,0,1,1,8,25,0],
+"TCPSocket_8cpp.html#aed3a4950f14d56f62edf1c120190788a":[7,0,1,1,8,25,0],
 "TCPSocket_8h.html":[7,0,1,1,8,26],
 "TCPSocket_8h_source.html":[7,0,1,1,8,26],
 "TMethodJob_8h.html":[7,0,1,1,1,29],
@@ -141,7 +140,6 @@ var NAVTREEINDEX5 =
 "XWindowsClipboard_8h.html":[7,0,1,1,9,90],
 "XWindowsClipboard_8h_source.html":[7,0,1,1,9,90],
 "XWindowsEventQueueBuffer_8cpp.html":[7,0,1,1,9,103],
-"XWindowsEventQueueBuffer_8cpp.html#a8032a941e3dca02cdfade5cc3cfe1dc6":[7,0,1,1,9,103,1],
 "XWindowsEventQueueBuffer_8h.html":[7,0,1,1,9,104],
 "XWindowsEventQueueBuffer_8h_source.html":[7,0,1,1,9,104],
 "XWindowsKeyState_8cpp.html":[7,0,1,1,9,105],
@@ -249,5 +247,7 @@ var NAVTREEINDEX5 =
 "classActionDialog.html#a262d9d0da1335c5ebee603364464e921":[6,0,5,1],
 "classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8a":[6,0,5,0],
 "classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa2b17a23b9415f4b692dad28c52a57dbe":[6,0,5,0,5],
-"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa390a98f6d93471719cf9909c265051ea":[6,0,5,0,3]
+"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa390a98f6d93471719cf9909c265051ea":[6,0,5,0,3],
+"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa462779407c7f4e77d7a78dbbc2cda077":[6,0,5,0,6],
+"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa4b284a3e0e9cb9e6abc4949308710e54":[6,0,5,0,1]
 };

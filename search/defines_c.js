@@ -1,8 +1,4 @@
 var searchData=
 [
-  ['setfunc_0',['setfunc',['../ArchNetworkWinsock_8cpp.html#ab1e488dbea7122aa0033117f3b780dd4',1,'ArchNetworkWinsock.cpp']]],
-  ['sigwakeup_1',['SIGWAKEUP',['../ArchMultithreadPosix_8cpp.html#a7362709efb9cf87de47cff16da70d66e',1,'ArchMultithreadPosix.cpp']]],
-  ['spi_5fgetmousespeed_2',['SPI_GETMOUSESPEED',['../MSWindowsDesks_8cpp.html#a229eb3cb01c581e4a20a2428af85df87',1,'MSWindowsDesks.cpp']]],
-  ['spi_5fgetscreensaverrunning_3',['SPI_GETSCREENSAVERRUNNING',['../MSWindowsDesks_8cpp.html#a9a25b6d41cf97e2859efc0cfeef1b094',1,'SPI_GETSCREENSAVERRUNNING:&#160;MSWindowsDesks.cpp'],['../MSWindowsScreenSaver_8cpp.html#a9a25b6d41cf97e2859efc0cfeef1b094',1,'SPI_GETSCREENSAVERRUNNING:&#160;MSWindowsScreenSaver.cpp']]],
-  ['spi_5fsetmousespeed_4',['SPI_SETMOUSESPEED',['../MSWindowsDesks_8cpp.html#ae43698312d5027bb0741f8fcbb0c490b',1,'MSWindowsDesks.cpp']]]
+  ['typed_5faddr_0',['TYPED_ADDR',['../ArchNetworkBSD_8h.html#a852861a685ec22fcd7f722811a5b231a',1,'TYPED_ADDR:&#160;ArchNetworkBSD.h'],['../ArchNetworkWinsock_8h.html#a852861a685ec22fcd7f722811a5b231a',1,'TYPED_ADDR:&#160;ArchNetworkWinsock.h']]]
 ];

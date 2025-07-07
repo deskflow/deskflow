@@ -41,6 +41,7 @@ var hierarchy =
     [ "CBMPHeader", "structCBMPHeader.html", null ],
     [ "CBMPInfoHeader", "structCBMPInfoHeader.html", null ],
     [ "deskflow::server::Config::CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html", null ],
+    [ "ChunkType", "structChunkType.html", null ],
     [ "XWindowsClipboard::CICCCMGetClipboard", "classXWindowsClipboard_1_1CICCCMGetClipboard.html", null ],
     [ "Settings::Client", "structSettings_1_1Client.html", null ],
     [ "ClientProxy1_0::ClientClipboard", "structClientProxy1__0_1_1ClientClipboard.html", null ],

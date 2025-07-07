@@ -104,6 +104,7 @@ var annotated_dup =
     [ "CBMPHeader", "structCBMPHeader.html", "structCBMPHeader" ],
     [ "CBMPInfoHeader", "structCBMPInfoHeader.html", "structCBMPInfoHeader" ],
     [ "Chunk", "classChunk.html", "classChunk" ],
+    [ "ChunkType", "structChunkType.html", "structChunkType" ],
     [ "Client", "classClient.html", "classClient" ],
     [ "ClientApp", "classClientApp.html", "classClientApp" ],
     [ "ClientInfo", "classClientInfo.html", "classClientInfo" ],

@@ -17,7 +17,7 @@ var classPriorityQueue =
     [ "pop", "classPriorityQueue.html#a45750406820a70eb4fed0138f9ac9be7", null ],
     [ "push", "classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39", null ],
     [ "size", "classPriorityQueue.html#a6c19925c8f10e3fb5478c1069d1c44bd", null ],
-    [ "swap", "classPriorityQueue.html#a0ea01facb47f5b83a7d2972b8662aef6", null ],
-    [ "swap", "classPriorityQueue.html#ab570948df1d8ca6e1edba53fdf29249e", null ],
+    [ "swap", "classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b", null ],
+    [ "swap", "classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f", null ],
     [ "top", "classPriorityQueue.html#a2e331d8b71e8b59fc565ec31f2694c3d", null ]
 ];

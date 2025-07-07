@@ -26,7 +26,7 @@ var searchData=
   ['m_5fdead_23',['m_dead',['../structdeskflow_1_1KeyMap_1_1KeyItem.html#a6d8d553170f357f55d4166bd8b94e8c1',1,'deskflow::KeyMap::KeyItem']]],
   ['m_5fdeleted_24',['m_deleted',['../classXWindowsClipboard_1_1MotifClipFormat.html#a8044d65999364e1461417290a318d657',1,'XWindowsClipboard::MotifClipFormat']]],
   ['m_5fdeskflowaddress_25',['m_deskflowAddress',['../classdeskflow_1_1ArgsBase.html#a9c0adfe6a91817c033c8e3e199723778',1,'deskflow::ArgsBase']]],
-  ['m_5fdirection_26',['m_direction',['../classServer_1_1SwitchInDirectionInfo.html#ad20de058351d6b390f34660cb8f63660',1,'Server::SwitchInDirectionInfo']]],
+  ['m_5fdirection_26',['m_direction',['../classServer_1_1SwitchInDirectionInfo.html#a90bdb6c725309a0c8d030d682aa62422',1,'Server::SwitchInDirectionInfo']]],
   ['m_5fdirty_27',['m_dirty',['../structClientProxy1__0_1_1ClientClipboard.html#af123963f0bb7bb90736cd7483adebbbc',1,'ClientProxy1_0::ClientClipboard']]],
   ['m_5fdisabletray_28',['m_disableTray',['../classdeskflow_1_1ArgsBase.html#a23aca01b6520227010bb64a62ca42381',1,'deskflow::ArgsBase']]],
   ['m_5fdisplay_29',['m_display',['../classdeskflow_1_1ArgsBase.html#a3a61214324af84d98a67935a00578371',1,'deskflow::ArgsBase']]],
@@ -122,6 +122,5 @@ var searchData=
   ['m_5fydelta_119',['m_yDelta',['../classIPrimaryScreen_1_1WheelInfo.html#a36463259d04cc2dde4154908e27d30ac',1,'IPrimaryScreen::WheelInfo']]],
   ['m_5fyscroll_120',['m_yscroll',['../classdeskflow_1_1ClientArgs.html#aaa85ba3537f7cad35f806f3388dbe3f8',1,'deskflow::ClientArgs']]],
   ['magic_5fsection_121',['magic_section',['../OSXScreen_8mm.html#a1a03b970897173cd5ad998e9cb2eaaf3',1,'OSXScreen.mm']]],
-  ['max_5finput_5fbuffer_5fsize_122',['MAX_INPUT_BUFFER_SIZE',['../SecureSocket_8cpp.html#a03e0b848034ca5a551fa0da53679c4d9',1,'MAX_INPUT_BUFFER_SIZE:&#160;SecureSocket.cpp'],['../TCPSocket_8cpp.html#a03e0b848034ca5a551fa0da53679c4d9',1,'MAX_INPUT_BUFFER_SIZE:&#160;TCPSocket.cpp']]],
-  ['modifiersfromxdefaultsize_123',['ModifiersFromXDefaultSize',['../XWindowsKeyState_8cpp.html#a2cd5801a15ae657aea7ab2755550ad75',1,'XWindowsKeyState.cpp']]]
+  ['modifiersfromxdefaultsize_122',['ModifiersFromXDefaultSize',['../XWindowsKeyState_8cpp.html#a2cd5801a15ae657aea7ab2755550ad75',1,'XWindowsKeyState.cpp']]]
 ];

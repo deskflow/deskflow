@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['lockcursormode_0',['LockCursorMode',['../classAction.html#a21996b8e336065685f74fdfe046f12d5',1,'Action']]],
-  ['loglevel_1',['LogLevel',['../classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2b',1,'MainWindow']]]
+  ['inhibitscreenservices_0',['InhibitScreenServices',['../classXWindowsPowerManager.html#a418e70566b45e916aa5b23d6b4251587',1,'XWindowsPowerManager']]],
+  ['initresult_1',['InitResult',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713',1,'DaemonApp']]]
 ];

@@ -1,7 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classdeskflow_1_1PortalInputCapture.html#a4c17a6c47be233195deef46941643b71":[6,0,0,16,0],
-"classdeskflow_1_1PortalInputCapture.html#a90b2869cde38be40116737152f69621d":[5,0,0,17,3],
 "classdeskflow_1_1PortalInputCapture.html#a90b2869cde38be40116737152f69621d":[6,0,0,16,3],
 "classdeskflow_1_1PortalInputCapture.html#ad860fb29c0f721cd00a03bd37fc75eeb":[5,0,0,17,4],
 "classdeskflow_1_1PortalInputCapture.html#ad860fb29c0f721cd00a03bd37fc75eeb":[6,0,0,16,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467aab65ff559decc23457d1965158e7928a":[6,0,0,2,5,2,0],
 "classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80":[5,0,0,3,6,14],
 "classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80":[6,0,0,2,5,14],
-"classdeskflow_1_1gui_1_1CoreProcess.html#af349d08668435ae71d5e87f68eb3e1d4":[5,0,0,3,6,22]
+"classdeskflow_1_1gui_1_1CoreProcess.html#af349d08668435ae71d5e87f68eb3e1d4":[5,0,0,3,6,22],
+"classdeskflow_1_1gui_1_1CoreProcess.html#af349d08668435ae71d5e87f68eb3e1d4":[6,0,0,2,5,22],
+"classdeskflow_1_1gui_1_1FileTail.html":[5,0,0,3,7]
 };

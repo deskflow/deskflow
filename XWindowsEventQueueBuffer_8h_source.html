@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,33 +126,34 @@ $(function(){initNavTree('XWindowsEventQueueBuffer_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classXWindowsEventQueueBuffer.html#a5ee2a531e87370de28bce5d857172357">   32</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#a5ee2a531e87370de28bce5d857172357">init</a>()<span class="keyword"> override</span></div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  }</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="comment">// do nothing</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  }</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#afaa2358e158741f5fbfae7b45b575436">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27">Type</a> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#a56af58d0f82bbee0aae3ce65b3d63e7f">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#af0b1e27570133fd9390e892884bfaf51">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#ad8588c9dcf0dfea41703d1ee416f88da">isEmpty</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *<a class="code hl_function" href="classXWindowsEventQueueBuffer.html#a4344657ec997922feefa6512c600bd87">newTimer</a>(<span class="keywordtype">double</span> duration, <span class="keywordtype">bool</span> oneShot) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#ad56bb4b346f2d98db777770b48a4928b">deleteTimer</a>(<a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> flush();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">int</span> getPendingCountLocked();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">using </span>EventList = std::vector&lt;XEvent&gt;;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keyword">mutable</span> std::mutex m_mutex;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  Display *m_display;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  Window m_window;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  Atom m_userEvent;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  XEvent m_event;</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  EventList m_postedEvents;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keywordtype">bool</span> m_waiting = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keywordtype">int</span> m_pipefd[2];</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>};</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#afaa2358e158741f5fbfae7b45b575436">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27">Type</a> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#a56af58d0f82bbee0aae3ce65b3d63e7f">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#af0b1e27570133fd9390e892884bfaf51">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#ad8588c9dcf0dfea41703d1ee416f88da">isEmpty</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *<a class="code hl_function" href="classXWindowsEventQueueBuffer.html#a4344657ec997922feefa6512c600bd87">newTimer</a>(<span class="keywordtype">double</span> duration, <span class="keywordtype">bool</span> oneShot) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classXWindowsEventQueueBuffer.html#ad56bb4b346f2d98db777770b48a4928b">deleteTimer</a>(<a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> flush();</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">int</span> getPendingCountLocked();</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keyword">using </span>EventList = std::vector&lt;XEvent&gt;;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">mutable</span> std::mutex m_mutex;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  Display *m_display;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  Window m_window;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  Atom m_userEvent;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  XEvent m_event;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  EventList m_postedEvents;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <span class="keywordtype">bool</span> m_waiting = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <span class="keywordtype">int</span> m_pipefd[2];</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:39</div></div>
 <div class="ttc" id="aIEventQueueBuffer_8h_html"><div class="ttname"><a href="IEventQueueBuffer_8h.html">IEventQueueBuffer.h</a></div></div>

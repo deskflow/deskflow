@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,7 +126,7 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00036" data-start="{" data-end="}">
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#ab1fd0952ad2e78d4749bf69bef0b9707">   36</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classPriorityQueue.html#ab1fd0952ad2e78d4749bf69bef0b9707">PriorityQueue</a>(Container &amp;swappedIn)</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_function" href="classPriorityQueue.html#ab570948df1d8ca6e1edba53fdf29249e">swap</a>(swappedIn);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <a class="code hl_function" href="classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f">swap</a>(swappedIn);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  }</div>
 </div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#a84c716b041108c8636a89d15e6d824f5">   40</a></span>  <a class="code hl_function" href="classPriorityQueue.html#a84c716b041108c8636a89d15e6d824f5">~PriorityQueue</a>() = <span class="keywordflow">default</span>;</div>
@@ -172,14 +172,14 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 </div>
 <div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
 <div class="foldopen" id="foldopen00079" data-start="{" data-end="}">
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#ab570948df1d8ca6e1edba53fdf29249e">   79</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#ab570948df1d8ca6e1edba53fdf29249e">swap</a>(<a class="code hl_function" href="classPriorityQueue.html#ab0aea96d90b65b7fb2d9f6069abde25b">PriorityQueue&lt;T, Container, Compare&gt;</a> &amp;q)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f">   79</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f">swap</a>(<a class="code hl_function" href="classPriorityQueue.html#ab0aea96d90b65b7fb2d9f6069abde25b">PriorityQueue&lt;T, Container, Compare&gt;</a> &amp;q) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  {</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    c.swap(q.c);</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  }</div>
 </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
 <div class="foldopen" id="foldopen00085" data-start="{" data-end="}">
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#a0ea01facb47f5b83a7d2972b8662aef6">   85</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#a0ea01facb47f5b83a7d2972b8662aef6">swap</a>(Container &amp;c2)</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b">   85</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b">swap</a>(Container &amp;c2) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    c.swap(c2);</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::make_heap(c.begin(), c.end(), comp);</div>
@@ -229,7 +229,6 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  Compare comp;</div>
 <div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>};</div>
 </div>
-<div class="ttc" id="aclassPriorityQueue_html_a0ea01facb47f5b83a7d2972b8662aef6"><div class="ttname"><a href="classPriorityQueue.html#a0ea01facb47f5b83a7d2972b8662aef6">PriorityQueue::swap</a></div><div class="ttdeci">void swap(Container &amp;c2)</div><div class="ttdoc">Swap contents with another container.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:85</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_a2e331d8b71e8b59fc565ec31f2694c3d"><div class="ttname"><a href="classPriorityQueue.html#a2e331d8b71e8b59fc565ec31f2694c3d">PriorityQueue::top</a></div><div class="ttdeci">const value_type &amp; top() const</div><div class="ttdoc">Returns the head element.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:108</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_a45750406820a70eb4fed0138f9ac9be7"><div class="ttname"><a href="classPriorityQueue.html#a45750406820a70eb4fed0138f9ac9be7">PriorityQueue::pop</a></div><div class="ttdeci">void pop()</div><div class="ttdoc">Remove head element.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:53</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_a4cfe23172d15aa3f99081387dde511a9"><div class="ttname"><a href="classPriorityQueue.html#a4cfe23172d15aa3f99081387dde511a9">PriorityQueue&lt; Timer &gt;::size_type</a></div><div class="ttdeci">std::vector&lt; Timer &gt;::size_type size_type</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:30</div></div>
@@ -246,9 +245,10 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="ttc" id="aclassPriorityQueue_html_aa00600cf36c39802edaf825ca7c126cb"><div class="ttname"><a href="classPriorityQueue.html#aa00600cf36c39802edaf825ca7c126cb">PriorityQueue::empty</a></div><div class="ttdeci">bool empty() const</div><div class="ttdoc">Returns true if there are no elements.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:96</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_ab0aea96d90b65b7fb2d9f6069abde25b"><div class="ttname"><a href="classPriorityQueue.html#ab0aea96d90b65b7fb2d9f6069abde25b">PriorityQueue::PriorityQueue</a></div><div class="ttdeci">PriorityQueue()=default</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_ab1fd0952ad2e78d4749bf69bef0b9707"><div class="ttname"><a href="classPriorityQueue.html#ab1fd0952ad2e78d4749bf69bef0b9707">PriorityQueue::PriorityQueue</a></div><div class="ttdeci">PriorityQueue(Container &amp;swappedIn)</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:36</div></div>
-<div class="ttc" id="aclassPriorityQueue_html_ab570948df1d8ca6e1edba53fdf29249e"><div class="ttname"><a href="classPriorityQueue.html#ab570948df1d8ca6e1edba53fdf29249e">PriorityQueue::swap</a></div><div class="ttdeci">void swap(PriorityQueue&lt; T, Container, Compare &gt; &amp;q)</div><div class="ttdoc">Swap contents with another priority queue.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:79</div></div>
+<div class="ttc" id="aclassPriorityQueue_html_ad1fbf1013135e37234431ea2c3e35e2b"><div class="ttname"><a href="classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b">PriorityQueue::swap</a></div><div class="ttdeci">void swap(Container &amp;c2) noexcept</div><div class="ttdoc">Swap contents with another container.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:85</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_ae2316c3c0268deaa2953a74439b98817"><div class="ttname"><a href="classPriorityQueue.html#ae2316c3c0268deaa2953a74439b98817">PriorityQueue::erase</a></div><div class="ttdeci">void erase(iterator i)</div><div class="ttdoc">Erase element.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:60</div></div>
 <div class="ttc" id="aclassPriorityQueue_html_aeb7034acce02598b6f250fcb3893e889"><div class="ttname"><a href="classPriorityQueue.html#aeb7034acce02598b6f250fcb3893e889">PriorityQueue::begin</a></div><div class="ttdeci">iterator begin()</div><div class="ttdoc">Get start iterator.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:67</div></div>
+<div class="ttc" id="aclassPriorityQueue_html_aefb791549f4f4806d35796060d0e2c6f"><div class="ttname"><a href="classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f">PriorityQueue::swap</a></div><div class="ttdeci">void swap(PriorityQueue&lt; T, Container, Compare &gt; &amp;q) noexcept</div><div class="ttdoc">Swap contents with another priority queue.</div><div class="ttdef"><b>Definition</b> PriorityQueue.h:79</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

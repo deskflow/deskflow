@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['timeout_5fdelay_0',['TIMEOUT_DELAY',['../XWindowsEventQueueBuffer_8cpp.html#a8032a941e3dca02cdfade5cc3cfe1dc6',1,'XWindowsEventQueueBuffer.cpp']]],
-  ['typed_5faddr_1',['TYPED_ADDR',['../ArchNetworkBSD_8h.html#a852861a685ec22fcd7f722811a5b231a',1,'TYPED_ADDR:&#160;ArchNetworkBSD.h'],['../ArchNetworkWinsock_8h.html#a852861a685ec22fcd7f722811a5b231a',1,'TYPED_ADDR:&#160;ArchNetworkWinsock.h']]]
+  ['vk_5fxbutton1_0',['VK_XBUTTON1',['../MSWindowsDesks_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsScreen.cpp']]],
+  ['vk_5fxbutton2_1',['VK_XBUTTON2',['../MSWindowsDesks_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsScreen.cpp']]]
 ];

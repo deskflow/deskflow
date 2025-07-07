@@ -1,31 +1,31 @@
 var group__protocol__enums =
 [
-    [ "EDataReceived", "group__protocol__enums.html#gafcae250eb629e4b5915fdda07f95ccee", [
-      [ "kStart", "group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8", null ],
-      [ "kNotFinish", "group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155", null ],
-      [ "kFinish", "group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22", null ],
-      [ "kError", "group__protocol__enums.html#ggafcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171", null ]
+    [ "ChunkType", "structChunkType.html", [
+      [ "DataChunk", "structChunkType.html#afca93ef4079887b13f65cde55cceefd9", null ],
+      [ "DataEnd", "structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11", null ],
+      [ "DataStart", "structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80", null ]
     ] ],
-    [ "EDataTransfer", "group__protocol__enums.html#ga88294b10db1f1b5a1d4b455d6eadc26b", [
-      [ "kDataStart", "group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7", null ],
-      [ "kDataChunk", "group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81", null ],
-      [ "kDataEnd", "group__protocol__enums.html#gga88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af", null ]
+    [ "Direction", "group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6", [
+      [ "Direction::NoDirection", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6a545d58d31ac8edb11ff73ea27d17d9ba", null ],
+      [ "Direction::Left", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6a945d5e233cf7d6240f6b783b36a374ff", null ],
+      [ "Direction::Right", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6a92b09c7c48c520c3c55e497875da437c", null ],
+      [ "Direction::Top", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6aa4ffdcf0dc1f31b9acaf295d75b51d00", null ],
+      [ "Direction::Bottom", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6a2ad9d63b69c4a10a5cc9cad923133bc4", null ],
+      [ "Direction::FirstDirection", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80", null ],
+      [ "Direction::LastDirection", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6a40d961b4321f05443220ee5ae3b4615f", null ],
+      [ "Direction::NumDirections", "group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd", null ]
     ] ],
-    [ "EDirection", "group__protocol__enums.html#gacb2b033915f6659a71a38b5aa6e4eb42", [
-      [ "kNoDirection", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a", null ],
-      [ "kLeft", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a", null ],
-      [ "kRight", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889", null ],
-      [ "kTop", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435", null ],
-      [ "kBottom", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0", null ],
-      [ "kFirstDirection", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27", null ],
-      [ "kLastDirection", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19", null ],
-      [ "kNumDirections", "group__protocol__enums.html#ggacb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a", null ]
+    [ "DirectionMask", "group__protocol__enums.html#ga1702cf626a6f3bc79a7db1382e2fbba9", [
+      [ "DirectionMask::NoDirMask", "group__protocol__enums.html#gga1702cf626a6f3bc79a7db1382e2fbba9ab45adeb2432e54f1d6f07ff2d84624e6", null ],
+      [ "DirectionMask::LeftMask", "group__protocol__enums.html#gga1702cf626a6f3bc79a7db1382e2fbba9a74044a5052a37ed3eb128dd9da6eece5", null ],
+      [ "DirectionMask::RightMask", "group__protocol__enums.html#gga1702cf626a6f3bc79a7db1382e2fbba9a209d68cc56db4e67477bb78108b826a9", null ],
+      [ "DirectionMask::TopMask", "group__protocol__enums.html#gga1702cf626a6f3bc79a7db1382e2fbba9a98da48f74f4a4f01a962a2ce68fb2ccf", null ],
+      [ "DirectionMask::BottomMask", "group__protocol__enums.html#gga1702cf626a6f3bc79a7db1382e2fbba9a5fbb93d97c829f0d7e76f749d3af73c9", null ]
     ] ],
-    [ "EDirectionMask", "group__protocol__enums.html#gac74e3f917b6c58041978d8ab82760563", [
-      [ "kNoDirMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040", null ],
-      [ "kLeftMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619", null ],
-      [ "kRightMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1", null ],
-      [ "kTopMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e", null ],
-      [ "kBottomMask", "group__protocol__enums.html#ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be", null ]
+    [ "TransferState", "group__protocol__enums.html#ga7a47af6600fb20bf999564b4e19dced5", [
+      [ "TransferState::Started", "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa", null ],
+      [ "TransferState::InProgress", "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a12d868c18cb29bf58f02b504be9033fd", null ],
+      [ "TransferState::Finished", "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b", null ],
+      [ "TransferState::Error", "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd", null ]
     ] ]
 ];

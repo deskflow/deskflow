@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,161 +96,159 @@ $(function(){initNavTree('group__protocol__enums.html','',''); });
 <p>Enumeration types used in protocol messages.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:ChunkType" id="r_ChunkType"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structChunkType.html">ChunkType</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">File transfer data chunk types.  <a href="structChunkType.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:gacb2b033915f6659a71a38b5aa6e4eb42" id="r_gacb2b033915f6659a71a38b5aa6e4eb42"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gacb2b033915f6659a71a38b5aa6e4eb42">EDirection</a> { <br />
-&#160;&#160;<a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a">kNoDirection</a>
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a">kLeft</a>
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889">kRight</a>
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435">kTop</a>
+<tr class="memitem:ga5d16bedaff50120f1b7fc0b264d62da6" id="r_ga5d16bedaff50120f1b7fc0b264d62da6"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga5d16bedaff50120f1b7fc0b264d62da6">Direction</a> : uint8_t { <br />
+&#160;&#160;<a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6a545d58d31ac8edb11ff73ea27d17d9ba">Direction::NoDirection</a>
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6a945d5e233cf7d6240f6b783b36a374ff">Direction::Left</a>
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6a92b09c7c48c520c3c55e497875da437c">Direction::Right</a>
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6aa4ffdcf0dc1f31b9acaf295d75b51d00">Direction::Top</a>
 , <br />
-&#160;&#160;<a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0">kBottom</a>
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27">kFirstDirection</a> = kLeft
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19">kLastDirection</a> = kBottom
-, <a class="el" href="#ggacb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a">kNumDirections</a> = kLastDirection - kFirstDirection + 1
+&#160;&#160;<a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6a2ad9d63b69c4a10a5cc9cad923133bc4">Direction::Bottom</a>
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80">Direction::FirstDirection</a> = Direction::Left
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6a40d961b4321f05443220ee5ae3b4615f">Direction::LastDirection</a> = Direction::Bottom
+, <a class="el" href="#gga5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd">Direction::NumDirections</a> = Direction::LastDirection - Direction::FirstDirection + 1
 <br />
  }</td></tr>
-<tr class="memdesc:gacb2b033915f6659a71a38b5aa6e4eb42"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> edge directions for mouse movement.  <a href="#gacb2b033915f6659a71a38b5aa6e4eb42">More...</a><br /></td></tr>
-<tr class="memitem:gac74e3f917b6c58041978d8ab82760563" id="r_gac74e3f917b6c58041978d8ab82760563"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gac74e3f917b6c58041978d8ab82760563">EDirectionMask</a> { <br />
-&#160;&#160;<a class="el" href="#ggac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040">kNoDirMask</a> = 0
-, <a class="el" href="#ggac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619">kLeftMask</a> = 1 &lt;&lt; kLeft
-, <a class="el" href="#ggac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1">kRightMask</a> = 1 &lt;&lt; kRight
-, <a class="el" href="#ggac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e">kTopMask</a> = 1 &lt;&lt; kTop
+<tr class="memdesc:ga5d16bedaff50120f1b7fc0b264d62da6"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classScreen.html">Screen</a> edge directions for mouse movement.  <a href="#ga5d16bedaff50120f1b7fc0b264d62da6">More...</a><br /></td></tr>
+<tr class="memitem:ga1702cf626a6f3bc79a7db1382e2fbba9" id="r_ga1702cf626a6f3bc79a7db1382e2fbba9"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga1702cf626a6f3bc79a7db1382e2fbba9">DirectionMask</a> { <br />
+&#160;&#160;<a class="el" href="#gga1702cf626a6f3bc79a7db1382e2fbba9ab45adeb2432e54f1d6f07ff2d84624e6">DirectionMask::NoDirMask</a> = 0
+, <a class="el" href="#gga1702cf626a6f3bc79a7db1382e2fbba9a74044a5052a37ed3eb128dd9da6eece5">DirectionMask::LeftMask</a> = 1 &lt;&lt; static_cast&lt;int&gt;(Direction::Left)
+, <a class="el" href="#gga1702cf626a6f3bc79a7db1382e2fbba9a209d68cc56db4e67477bb78108b826a9">DirectionMask::RightMask</a> = 1 &lt;&lt; static_cast&lt;int&gt;(Direction::Right)
+, <a class="el" href="#gga1702cf626a6f3bc79a7db1382e2fbba9a98da48f74f4a4f01a962a2ce68fb2ccf">DirectionMask::TopMask</a> = 1 &lt;&lt; static_cast&lt;int&gt;(Direction::Top)
 , <br />
-&#160;&#160;<a class="el" href="#ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be">kBottomMask</a> = 1 &lt;&lt; kBottom
+&#160;&#160;<a class="el" href="#gga1702cf626a6f3bc79a7db1382e2fbba9a5fbb93d97c829f0d7e76f749d3af73c9">DirectionMask::BottomMask</a> = 1 &lt;&lt; static_cast&lt;int&gt;(Direction::Bottom)
 <br />
  }</td></tr>
-<tr class="memdesc:gac74e3f917b6c58041978d8ab82760563"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitmask values for screen edge directions.  <a href="#gac74e3f917b6c58041978d8ab82760563">More...</a><br /></td></tr>
-<tr class="memitem:ga88294b10db1f1b5a1d4b455d6eadc26b" id="r_ga88294b10db1f1b5a1d4b455d6eadc26b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga88294b10db1f1b5a1d4b455d6eadc26b">EDataTransfer</a> { <a class="el" href="#gga88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7">kDataStart</a> = 1
-, <a class="el" href="#gga88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81">kDataChunk</a> = 2
-, <a class="el" href="#gga88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af">kDataEnd</a> = 3
+<tr class="memdesc:ga1702cf626a6f3bc79a7db1382e2fbba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bitmask values for screen edge directions.  <a href="#ga1702cf626a6f3bc79a7db1382e2fbba9">More...</a><br /></td></tr>
+<tr class="memitem:ga7a47af6600fb20bf999564b4e19dced5" id="r_ga7a47af6600fb20bf999564b4e19dced5"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ga7a47af6600fb20bf999564b4e19dced5">TransferState</a> : uint8_t { <a class="el" href="#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa">TransferState::Started</a>
+, <a class="el" href="#gga7a47af6600fb20bf999564b4e19dced5a12d868c18cb29bf58f02b504be9033fd">TransferState::InProgress</a>
+, <a class="el" href="#gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b">TransferState::Finished</a>
+, <a class="el" href="#gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd">TransferState::Error</a>
  }</td></tr>
-<tr class="memdesc:ga88294b10db1f1b5a1d4b455d6eadc26b"><td class="mdescLeft">&#160;</td><td class="mdescRight">File transfer data chunk types.  <a href="#ga88294b10db1f1b5a1d4b455d6eadc26b">More...</a><br /></td></tr>
-<tr class="memitem:gafcae250eb629e4b5915fdda07f95ccee" id="r_gafcae250eb629e4b5915fdda07f95ccee"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#gafcae250eb629e4b5915fdda07f95ccee">EDataReceived</a> { <a class="el" href="#ggafcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8">kStart</a>
-, <a class="el" href="#ggafcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155">kNotFinish</a>
-, <a class="el" href="#ggafcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22">kFinish</a>
-, <a class="el" href="#ggafcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171">kError</a>
- }</td></tr>
-<tr class="memdesc:gafcae250eb629e4b5915fdda07f95ccee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data reception status codes.  <a href="#gafcae250eb629e4b5915fdda07f95ccee">More...</a><br /></td></tr>
+<tr class="memdesc:ga7a47af6600fb20bf999564b4e19dced5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Data reception state codes.  <a href="#ga7a47af6600fb20bf999564b4e19dced5">More...</a><br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <p>Enumeration types used in protocol messages. </p>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
-<a id="gafcae250eb629e4b5915fdda07f95ccee" name="gafcae250eb629e4b5915fdda07f95ccee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gafcae250eb629e4b5915fdda07f95ccee">&#9670;&#160;</a></span>EDataReceived</h2>
+<a id="ga5d16bedaff50120f1b7fc0b264d62da6" name="ga5d16bedaff50120f1b7fc0b264d62da6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5d16bedaff50120f1b7fc0b264d62da6">&#9670;&#160;</a></span>Direction</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#gafcae250eb629e4b5915fdda07f95ccee">EDataReceived</a></td>
+          <td class="memname">enum class <a class="el" href="#ga5d16bedaff50120f1b7fc0b264d62da6">Direction</a> : uint8_t</td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-<p>Data reception status codes. </p>
-<p>Used internally to track the status of data reception during clipboard operations.</p>
-<dl class="section since"><dt>Since</dt><dd>Protocol version 1.5 </dd></dl>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggafcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8" name="ggafcae250eb629e4b5915fdda07f95cceeaaf95f6aef1f9f36214053d164ccb5ff8"></a>kStart&#160;</td><td class="fielddoc"><p>Reception started. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ggafcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155" name="ggafcae250eb629e4b5915fdda07f95cceea4f92dce35ee72eb8e91277910c354155"></a>kNotFinish&#160;</td><td class="fielddoc"><p>Reception in progress. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ggafcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22" name="ggafcae250eb629e4b5915fdda07f95cceeaff577f73e6ea4af10a732b6cb362eb22"></a>kFinish&#160;</td><td class="fielddoc"><p>Reception completed successfully. </p>
-</td></tr>
-<tr><td class="fieldname"><a id="ggafcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171" name="ggafcae250eb629e4b5915fdda07f95cceeaacb2c04376333850bff6fb1065c0c171"></a>kError&#160;</td><td class="fielddoc"><p>Reception failed with error. </p>
-</td></tr>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
 </table>
-
-</div>
-</div>
-<a id="ga88294b10db1f1b5a1d4b455d6eadc26b" name="ga88294b10db1f1b5a1d4b455d6eadc26b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga88294b10db1f1b5a1d4b455d6eadc26b">&#9670;&#160;</a></span>EDataTransfer</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#ga88294b10db1f1b5a1d4b455d6eadc26b">EDataTransfer</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>File transfer data chunk types. </p>
-<p>Used in kMsgDFileTransfer messages to indicate the type of data being transferred in each chunk. Used in clipboard operations.</p>
-<dl class="section since"><dt>Since</dt><dd>Protocol version 1.5 </dd></dl>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7" name="gga88294b10db1f1b5a1d4b455d6eadc26ba89907fc170aa1102c50143117666b0e7"></a>kDataStart&#160;</td><td class="fielddoc"><p>Start of transfer (contains file size) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81" name="gga88294b10db1f1b5a1d4b455d6eadc26bab8d98521b8492f27248c686a3c962c81"></a>kDataChunk&#160;</td><td class="fielddoc"><p>Data chunk (contains file content) </p>
-</td></tr>
-<tr><td class="fieldname"><a id="gga88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af" name="gga88294b10db1f1b5a1d4b455d6eadc26ba0c1f9045114a705ccb01fc54019a51af"></a>kDataEnd&#160;</td><td class="fielddoc"><p>End of transfer (transfer complete) </p>
-</td></tr>
-</table>
-
-</div>
-</div>
-<a id="gacb2b033915f6659a71a38b5aa6e4eb42" name="gacb2b033915f6659a71a38b5aa6e4eb42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gacb2b033915f6659a71a38b5aa6e4eb42">&#9670;&#160;</a></span>EDirection</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#gacb2b033915f6659a71a38b5aa6e4eb42">EDirection</a></td>
-        </tr>
-      </table>
 </div><div class="memdoc">
 
 <p><a class="el" href="classScreen.html">Screen</a> edge directions for mouse movement. </p>
 <p>Used to specify which edge of a screen the mouse cursor crosses when moving between primary and secondary screens.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a" name="ggacb2b033915f6659a71a38b5aa6e4eb42a87e054da76bada3343762974c988e80a"></a>kNoDirection&#160;</td><td class="fielddoc"><p>No specific direction. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6a545d58d31ac8edb11ff73ea27d17d9ba" name="gga5d16bedaff50120f1b7fc0b264d62da6a545d58d31ac8edb11ff73ea27d17d9ba"></a>NoDirection&#160;</td><td class="fielddoc"><p>No specific direction. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a" name="ggacb2b033915f6659a71a38b5aa6e4eb42aa9953673f54fd9f854de23739ebe2f7a"></a>kLeft&#160;</td><td class="fielddoc"><p>Left edge of screen. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6a945d5e233cf7d6240f6b783b36a374ff" name="gga5d16bedaff50120f1b7fc0b264d62da6a945d5e233cf7d6240f6b783b36a374ff"></a>Left&#160;</td><td class="fielddoc"><p>Left edge of screen. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889" name="ggacb2b033915f6659a71a38b5aa6e4eb42a28e0f004d9fc43a042d60286f37b6889"></a>kRight&#160;</td><td class="fielddoc"><p>Right edge of screen. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6a92b09c7c48c520c3c55e497875da437c" name="gga5d16bedaff50120f1b7fc0b264d62da6a92b09c7c48c520c3c55e497875da437c"></a>Right&#160;</td><td class="fielddoc"><p>Right edge of screen. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435" name="ggacb2b033915f6659a71a38b5aa6e4eb42a4bbdb3e71aa3fcbb2924835cf5242435"></a>kTop&#160;</td><td class="fielddoc"><p>Top edge of screen. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6aa4ffdcf0dc1f31b9acaf295d75b51d00" name="gga5d16bedaff50120f1b7fc0b264d62da6aa4ffdcf0dc1f31b9acaf295d75b51d00"></a>Top&#160;</td><td class="fielddoc"><p>Top edge of screen. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0" name="ggacb2b033915f6659a71a38b5aa6e4eb42a99876be9e5eee47e0384740c1d911bf0"></a>kBottom&#160;</td><td class="fielddoc"><p>Bottom edge of screen. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6a2ad9d63b69c4a10a5cc9cad923133bc4" name="gga5d16bedaff50120f1b7fc0b264d62da6a2ad9d63b69c4a10a5cc9cad923133bc4"></a>Bottom&#160;</td><td class="fielddoc"><p>Bottom edge of screen. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27" name="ggacb2b033915f6659a71a38b5aa6e4eb42a8a8ab094dad881bb388257c1c3216a27"></a>kFirstDirection&#160;</td><td class="fielddoc"><p>First valid direction value. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80" name="gga5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80"></a>FirstDirection&#160;</td><td class="fielddoc"><p>First valid direction value. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19" name="ggacb2b033915f6659a71a38b5aa6e4eb42ac3505d5d2b1f088b43e6fa2a579e2f19"></a>kLastDirection&#160;</td><td class="fielddoc"><p>Last valid direction value. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6a40d961b4321f05443220ee5ae3b4615f" name="gga5d16bedaff50120f1b7fc0b264d62da6a40d961b4321f05443220ee5ae3b4615f"></a>LastDirection&#160;</td><td class="fielddoc"><p>Last valid direction value. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggacb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a" name="ggacb2b033915f6659a71a38b5aa6e4eb42a3978da23465871e28eee6ec515aa193a"></a>kNumDirections&#160;</td><td class="fielddoc"><p>Total number of directions. </p>
+<tr><td class="fieldname"><a id="gga5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd" name="gga5d16bedaff50120f1b7fc0b264d62da6ac9c069620433eed024689459b556cafd"></a>NumDirections&#160;</td><td class="fielddoc"><p>Total number of directions. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
-<a id="gac74e3f917b6c58041978d8ab82760563" name="gac74e3f917b6c58041978d8ab82760563"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gac74e3f917b6c58041978d8ab82760563">&#9670;&#160;</a></span>EDirectionMask</h2>
+<a id="ga1702cf626a6f3bc79a7db1382e2fbba9" name="ga1702cf626a6f3bc79a7db1382e2fbba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1702cf626a6f3bc79a7db1382e2fbba9">&#9670;&#160;</a></span>DirectionMask</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#gac74e3f917b6c58041978d8ab82760563">EDirectionMask</a></td>
+          <td class="memname">enum class <a class="el" href="#ga1702cf626a6f3bc79a7db1382e2fbba9">DirectionMask</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Bitmask values for screen edge directions. </p>
 <p>Used to create bitmasks representing multiple screen edges. Useful for configuration and edge detection.</p>
 <dl class="section since"><dt>Since</dt><dd>Protocol version 1.0 </dd></dl>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040" name="ggac74e3f917b6c58041978d8ab82760563a9ab8f87b2ef0181740b645bb86e06040"></a>kNoDirMask&#160;</td><td class="fielddoc"><p>No direction mask. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga1702cf626a6f3bc79a7db1382e2fbba9ab45adeb2432e54f1d6f07ff2d84624e6" name="gga1702cf626a6f3bc79a7db1382e2fbba9ab45adeb2432e54f1d6f07ff2d84624e6"></a>NoDirMask&#160;</td><td class="fielddoc"><p>No direction mask. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619" name="ggac74e3f917b6c58041978d8ab82760563a918190b626f37830fca7546f3bb35619"></a>kLeftMask&#160;</td><td class="fielddoc"><p>Left edge mask. </p>
+<tr><td class="fieldname"><a id="gga1702cf626a6f3bc79a7db1382e2fbba9a74044a5052a37ed3eb128dd9da6eece5" name="gga1702cf626a6f3bc79a7db1382e2fbba9a74044a5052a37ed3eb128dd9da6eece5"></a>LeftMask&#160;</td><td class="fielddoc"><p>Left edge mask. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1" name="ggac74e3f917b6c58041978d8ab82760563ad63075577fbc50d715a6e6591ca996b1"></a>kRightMask&#160;</td><td class="fielddoc"><p>Right edge mask. </p>
+<tr><td class="fieldname"><a id="gga1702cf626a6f3bc79a7db1382e2fbba9a209d68cc56db4e67477bb78108b826a9" name="gga1702cf626a6f3bc79a7db1382e2fbba9a209d68cc56db4e67477bb78108b826a9"></a>RightMask&#160;</td><td class="fielddoc"><p>Right edge mask. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e" name="ggac74e3f917b6c58041978d8ab82760563aeb97655a4d69cb20b6bc6f356dbadd7e"></a>kTopMask&#160;</td><td class="fielddoc"><p>Top edge mask. </p>
+<tr><td class="fieldname"><a id="gga1702cf626a6f3bc79a7db1382e2fbba9a98da48f74f4a4f01a962a2ce68fb2ccf" name="gga1702cf626a6f3bc79a7db1382e2fbba9a98da48f74f4a4f01a962a2ce68fb2ccf"></a>TopMask&#160;</td><td class="fielddoc"><p>Top edge mask. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be" name="ggac74e3f917b6c58041978d8ab82760563ad4ac70d959ca6ed1bbb3b84cc875b3be"></a>kBottomMask&#160;</td><td class="fielddoc"><p>Bottom edge mask. </p>
+<tr><td class="fieldname"><a id="gga1702cf626a6f3bc79a7db1382e2fbba9a5fbb93d97c829f0d7e76f749d3af73c9" name="gga1702cf626a6f3bc79a7db1382e2fbba9a5fbb93d97c829f0d7e76f749d3af73c9"></a>BottomMask&#160;</td><td class="fielddoc"><p>Bottom edge mask. </p>
+</td></tr>
+</table>
+
+</div>
+</div>
+<a id="ga7a47af6600fb20bf999564b4e19dced5" name="ga7a47af6600fb20bf999564b4e19dced5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7a47af6600fb20bf999564b4e19dced5">&#9670;&#160;</a></span>TransferState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum class <a class="el" href="#ga7a47af6600fb20bf999564b4e19dced5">TransferState</a> : uint8_t</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Data reception state codes. </p>
+<p>Used internally to track the state of data reception during clipboard operations.</p>
+<dl class="section since"><dt>Since</dt><dd>Protocol version 1.5 </dd></dl>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa" name="gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa"></a>Started&#160;</td><td class="fielddoc"><p>Reception started. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7a47af6600fb20bf999564b4e19dced5a12d868c18cb29bf58f02b504be9033fd" name="gga7a47af6600fb20bf999564b4e19dced5a12d868c18cb29bf58f02b504be9033fd"></a>InProgress&#160;</td><td class="fielddoc"><p>Reception in progress. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b" name="gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b"></a>Finished&#160;</td><td class="fielddoc"><p>Reception completed successfully. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd" name="gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd"></a>Error&#160;</td><td class="fielddoc"><p>Reception failed with error. </p>
 </td></tr>
 </table>
 

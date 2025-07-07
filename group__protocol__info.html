@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,7 +136,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClient.html" title="Deskflow client.">Client</a> screen information. </p>
-<p><b>Message Code</b>: <span class="tt">"DINF"</span> <b>Direction</b>: Secondary → Primary <b>Format</b>: <span class="tt">"DINF%2i%2i%2i%2i%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DINF"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Secondary → Primary <b>Format</b>: <span class="tt">"DINF%2i%2i%2i%2i%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Left edge coordinate (2 bytes, signed)</li>
 <li><span class="tt">$2</span>: Top edge coordinate (2 bytes, signed)</li>
 <li><span class="tt">$3</span>: <a class="el" href="classScreen.html">Screen</a> width in pixels (2 bytes, unsigned)</li>
@@ -183,7 +183,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Set client options. </p>
-<p><b>Message Code</b>: <span class="tt">"DSOP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DSOP%4I"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DSOP"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DSOP%4I"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: Option/value pairs (4-byte integer list)</li>
 </ul>
 <p><b>Example</b>:</p>

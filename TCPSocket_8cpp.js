@@ -1,4 +1,4 @@
 var TCPSocket_8cpp =
 [
-    [ "MAX_INPUT_BUFFER_SIZE", "TCPSocket_8cpp.html#a03e0b848034ca5a551fa0da53679c4d9", null ]
+    [ "s_maxInputBufferSize", "TCPSocket_8cpp.html#aed3a4950f14d56f62edf1c120190788a", null ]
 ];

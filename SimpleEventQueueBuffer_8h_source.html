@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,23 +122,24 @@ $(function(){initNavTree('SimpleEventQueueBuffer_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classSimpleEventQueueBuffer.html#ade5199c5ee076af38f45533ac1c3c0d4">   30</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#ade5199c5ee076af38f45533ac1c3c0d4">init</a>()<span class="keyword"> override</span></div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  }</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="comment">// do nothing</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  }</div>
 </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a71d5d9347ce17280b77e220ffcaaf79b">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27">Type</a> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a2c01276cbb3afc0a8772e967e6da5d0f">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a34a5b80110085fe4f9e0b0a0a1089bcc">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a555b82c38339b712737b0891ba66a913">isEmpty</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *<a class="code hl_function" href="classSimpleEventQueueBuffer.html#add64dd0746a028710559d60c543c6711">newTimer</a>(<span class="keywordtype">double</span> duration, <span class="keywordtype">bool</span> oneShot) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#ae456c6383bf1c86eff2edc3ab07991d6">deleteTimer</a>(<a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">using </span>EventDeque = std::deque&lt;uint32_t&gt;;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> m_queueMutex;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a933450e841ce709f6002dbdde2c2db9f">ArchCond</a> m_queueReadyCond;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">bool</span> m_queueReady = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  EventDeque m_queue;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>};</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a71d5d9347ce17280b77e220ffcaaf79b">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27">Type</a> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a2c01276cbb3afc0a8772e967e6da5d0f">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a34a5b80110085fe4f9e0b0a0a1089bcc">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#a555b82c38339b712737b0891ba66a913">isEmpty</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *<a class="code hl_function" href="classSimpleEventQueueBuffer.html#add64dd0746a028710559d60c543c6711">newTimer</a>(<span class="keywordtype">double</span> duration, <span class="keywordtype">bool</span> oneShot) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classSimpleEventQueueBuffer.html#ae456c6383bf1c86eff2edc3ab07991d6">deleteTimer</a>(<a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">using </span>EventDeque = std::deque&lt;uint32_t&gt;;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> m_queueMutex;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a933450e841ce709f6002dbdde2c2db9f">ArchCond</a> m_queueReadyCond;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">bool</span> m_queueReady = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  EventDeque m_queue;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:39</div></div>
 <div class="ttc" id="aIArchMultithread_8h_html"><div class="ttname"><a href="IArchMultithread_8h.html">IArchMultithread.h</a></div></div>

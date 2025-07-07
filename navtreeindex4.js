@@ -167,10 +167,9 @@ var NAVTREEINDEX4 =
 "SecureListenSocket_8h.html":[7,0,1,1,8,13],
 "SecureListenSocket_8h_source.html":[7,0,1,1,8,13],
 "SecureSocket_8cpp.html":[7,0,1,1,8,14],
-"SecureSocket_8cpp.html#a03e0b848034ca5a551fa0da53679c4d9":[7,0,1,1,8,14,3],
-"SecureSocket_8cpp.html#a1aac307e7da605f642885cb660abae00":[7,0,1,1,8,14,4],
-"SecureSocket_8cpp.html#a65c89d1d0a1292b0cb20a62e33f99902":[7,0,1,1,8,14,1],
-"SecureSocket_8cpp.html#a8644521a3d8e3e7cd9821f7ce9d30294":[7,0,1,1,8,14,2],
+"SecureSocket_8cpp.html#a1aac307e7da605f642885cb660abae00":[7,0,1,1,8,14,3],
+"SecureSocket_8cpp.html#a8644521a3d8e3e7cd9821f7ce9d30294":[7,0,1,1,8,14,1],
+"SecureSocket_8cpp.html#aed3a4950f14d56f62edf1c120190788a":[7,0,1,1,8,14,2],
 "SecureSocket_8h.html":[7,0,1,1,8,15],
 "SecureSocket_8h_source.html":[7,0,1,1,8,15],
 "SecureUtils_8cpp.html":[7,0,1,1,8,16],
@@ -249,5 +248,6 @@ var NAVTREEINDEX4 =
 "Stopwatch_8cpp.html":[7,0,1,1,1,25],
 "Stopwatch_8h.html":[7,0,1,1,1,26],
 "Stopwatch_8h_source.html":[7,0,1,1,1,26],
-"StreamBuffer_8cpp.html":[7,0,1,1,6,3]
+"StreamBuffer_8cpp.html":[7,0,1,1,6,3],
+"StreamBuffer_8h.html":[7,0,1,1,6,4]
 };

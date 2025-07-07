@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -146,7 +146,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key press event. </p>
-<p><b>Message Code</b>: <span class="tt">"DKDN"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDN%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKDN"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDN%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier, often called a "keysym" on Linux/X11. This is platform-dependent and corresponds to values like <span class="tt">XK_a</span> on X11/Linux, &lsquo;'a&rsquo;<span class="tt"> on macOS, and </span>'A'<span class="tt"> on Windows.</span></li>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3`: <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw, platform-dependent scan code of the key pressed.</li>
@@ -189,7 +189,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key press event (legacy v1.0) </p>
-<p><b>Message Code</b>: <span class="tt">"DKDN"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDN%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKDN"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDN%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier</li>
 <li><span class="tt">$2</span>: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</li>
 </ul>
@@ -221,7 +221,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key press with language code (v1.8+) </p>
-<p><b>Message Code</b>: <span class="tt">"DKDL"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDL%2i%2i%2i%s"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKDL"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKDL%2i%2i%2i%s"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier, often called a "keysym" on Linux/X11. This is platform-dependent and corresponds to values like <span class="tt">XK_a</span> on X11/Linux, &lsquo;'a&rsquo;<span class="tt"> on macOS, and </span>'A'<span class="tt"> on Windows.</span></li>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3<span class="tt">: <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw,
@@ -257,7 +257,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key auto-repeat event. </p>
-<p><b>Message Code</b>: <span class="tt">"DKRP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKRP%2i%2i%2i%2i%s"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKRP"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKRP%2i%2i%2i%2i%s"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier, often called a "keysym" on Linux/X11. This is platform-dependent and corresponds to values like <span class="tt">XK_a</span> on X11/Linux, &lsquo;'a&rsquo;<span class="tt"> on macOS, and </span>'A'<span class="tt"> on Windows.</span></li>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3<span class="tt">: Repeat count (2 bytes) - Number of repeats</span></li>
@@ -294,7 +294,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key auto-repeat event (legacy v1.0) </p>
-<p><b>Message Code</b>: <span class="tt">"DKRP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKRP%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKRP"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKRP%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier</li>
 <li><span class="tt">$2</span>: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</li>
 <li><span class="tt">$3</span>: Repeat count (2 bytes) - Number of repeats</li>
@@ -327,7 +327,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key release event. </p>
-<p><b>Message Code</b>: <span class="tt">"DKUP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKUP%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKUP"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKUP%2i%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier, often called a "keysym" on Linux/X11. This is platform-dependent and corresponds to values like <span class="tt">XK_a</span> on X11/Linux, &lsquo;'a&rsquo;<span class="tt"> on macOS, and </span>'A'<span class="tt"> on Windows.</span></li>
 <li><span class="tt"></span>$2<span class="tt">: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</span></li>
 <li><span class="tt"></span>$3`: <a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60" title="Key Code.">KeyButton</a> (2 bytes) - Physical key code, often called a "keycode" or "scancode". This is the raw, platform-dependent scan code of the key pressed.</li>
@@ -361,7 +361,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Key release event (legacy v1.0) </p>
-<p><b>Message Code</b>: <span class="tt">"DKUP"</span> <b>Direction</b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKUP%2i%2i"</span> <b>Parameters</b>:</p><ul>
+<p><b>Message Code</b>: <span class="tt">"DKUP"</span> <b><a class="el" href="group__protocol__enums.html#ga5d16bedaff50120f1b7fc0b264d62da6" title="Screen edge directions for mouse movement.">Direction</a></b>: Primary → Secondary <b>Format</b>: <span class="tt">"DKUP%2i%2i"</span> <b>Parameters</b>:</p><ul>
 <li><span class="tt">$1</span>: <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (2 bytes) - Virtual key identifier</li>
 <li><span class="tt">$2</span>: <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13" title="Modifier key mask.">KeyModifierMask</a> (2 bytes) - Active modifier keys</li>
 </ul>

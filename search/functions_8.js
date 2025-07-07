@@ -21,7 +21,7 @@ var searchData=
   ['haschanged_18',['hasChanged',['../classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93',1,'MSWindowsSession']]],
   ['hasheartbeat_19',['hasHeartbeat',['../classServerConfig.html#a03b3f88897a63eda3d7b2a0fc48a5fd5',1,'ServerConfig']]],
   ['haslocktoscreenaction_20',['hasLockToScreenAction',['../classdeskflow_1_1server_1_1Config.html#af224d470299368ce6f10fff62bbef68d',1,'deskflow::server::Config']]],
-  ['hasneighbor_21',['hasNeighbor',['../classdeskflow_1_1server_1_1Config.html#abfc814a833b6eca9e059f08ab0d2f7d2',1,'deskflow::server::Config::hasNeighbor(const std::string &amp;, EDirection) const'],['../classdeskflow_1_1server_1_1Config.html#a8e259c10ba0cab034dd439b420e16a32',1,'deskflow::server::Config::hasNeighbor(const std::string &amp;, EDirection, float start, float end) const']]],
+  ['hasneighbor_21',['hasNeighbor',['../classdeskflow_1_1server_1_1Config.html#a2a8890541580510eac45522b20b15df2',1,'deskflow::server::Config::hasNeighbor(const std::string &amp;, Direction) const'],['../classdeskflow_1_1server_1_1Config.html#a8f6b0548e7bd3c6f768577d4cf11c040',1,'deskflow::server::Config::hasNeighbor(const std::string &amp;, Direction, float start, float end) const']]],
   ['hasswitchdelay_22',['hasSwitchDelay',['../classServerConfig.html#aa4cfe2ba697a83cc5f2e8e405e370525',1,'ServerConfig']]],
   ['hasswitchdoubletap_23',['hasSwitchDoubleTap',['../classServerConfig.html#ab040a16da46bd870409da3e346ddf359',1,'ServerConfig']]],
   ['havescreens_24',['haveScreens',['../classAction.html#a00196def802cadd57256eff068ae163e',1,'Action']]],

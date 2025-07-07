@@ -1,12 +1,12 @@
 var classdeskflow_1_1server_1_1Config_1_1CellEdge =
 [
-    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a7d41df951617adc286bee0589478b924", null ],
-    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a6602e60885bad5373250d882af520e2d", null ],
-    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a3cabc9db193796daf538cd53e6e1960e", null ],
+    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#ada6da078d7d79dcbcbc27289b1dd3900", null ],
+    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#af9f382a3650cc6a97ce52e6b3334151b", null ],
+    [ "CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a62f2010223a62b0373a5b12f51aed63a", null ],
     [ "~CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#ac7dcd5ddf8cbae46256608c76ecc7a82", null ],
     [ "getInterval", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#ac57c4cf4feb7922033615c512adcc5d1", null ],
     [ "getName", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a1ff7936c9deed2188df4ad9d02505d39", null ],
-    [ "getSide", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a6d9ea6c4118523be582c00a50dfde42e", null ],
+    [ "getSide", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#abf5ca76b3ea581bdbef0a1ab4b250557", null ],
     [ "inverseTransform", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a0037cafd7326cdd026cbbad462273e13", null ],
     [ "isInside", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a0dbf435a92deaff7f3b7ac3f7e0d477f", null ],
     [ "operator!=", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html#aa87c2a718e61a11f14d5cf051bc5a292", null ],

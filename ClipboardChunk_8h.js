@@ -1,5 +1,5 @@
 var ClipboardChunk_8h =
 [
     [ "ClipboardChunk", "classClipboardChunk.html", "classClipboardChunk" ],
-    [ "CLIPBOARD_CHUNK_META_SIZE", "ClipboardChunk_8h.html#a3466f7387c14199be72976a50234023f", null ]
+    [ "s_clipboardChunkMetaSize", "ClipboardChunk_8h.html#a7358c2b663f25b0d85d1d1c0b5215b98", null ]
 ];

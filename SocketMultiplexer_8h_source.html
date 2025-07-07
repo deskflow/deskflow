@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.130</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.152</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -148,7 +148,7 @@ $(function(){initNavTree('SocketMultiplexer_8h_source.html','',''); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="comment">// and m_update while m_pollable and m_polling are true.  all other</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="comment">// threads must only modify these when m_pollable and m_polling are</span></div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="comment">// false.  only the service thread sets m_polling.</span></div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keywordtype">void</span> serviceThread(<span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  [[noreturn]] <span class="keywordtype">void</span> serviceThread(<span class="keywordtype">void</span> *);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span> </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="comment">// create, iterate, and destroy a cursor.  a cursor is used to</span></div>
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  <span class="comment">// safely iterate through the job list while other threads modify</span></div>
@@ -196,15 +196,15 @@ $(function(){initNavTree('SocketMultiplexer_8h_source.html','',''); });
 <div class="ttc" id="aclassISocketMultiplexerJob_html"><div class="ttname"><a href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a></div><div class="ttdoc">Socket multiplexer job.</div><div class="ttdef"><b>Definition</b> ISocketMultiplexerJob.h:18</div></div>
 <div class="ttc" id="aclassISocket_html"><div class="ttname"><a href="classISocket.html">ISocket</a></div><div class="ttdoc">Generic socket interface.</div><div class="ttdef"><b>Definition</b> ISocket.h:22</div></div>
 <div class="ttc" id="aclassMutex_html"><div class="ttname"><a href="classMutex.html">Mutex</a></div><div class="ttdoc">Mutual exclusion.</div><div class="ttdef"><b>Definition</b> Mutex.h:22</div></div>
-<div class="ttc" id="aclassSocketMultiplexer_html_a00220aae41a4db7ff779303b27bb27a3"><div class="ttname"><a href="classSocketMultiplexer.html#a00220aae41a4db7ff779303b27bb27a3">SocketMultiplexer::addSocket</a></div><div class="ttdeci">void addSocket(ISocket *, ISocketMultiplexerJob *)</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:61</div></div>
-<div class="ttc" id="aclassSocketMultiplexer_html_a0633cfe385a11a7f36451f6dd95d2fc4"><div class="ttname"><a href="classSocketMultiplexer.html#a0633cfe385a11a7f36451f6dd95d2fc4">SocketMultiplexer::~SocketMultiplexer</a></div><div class="ttdeci">~SocketMultiplexer()</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:42</div></div>
+<div class="ttc" id="aclassSocketMultiplexer_html_a00220aae41a4db7ff779303b27bb27a3"><div class="ttname"><a href="classSocketMultiplexer.html#a00220aae41a4db7ff779303b27bb27a3">SocketMultiplexer::addSocket</a></div><div class="ttdeci">void addSocket(ISocket *, ISocketMultiplexerJob *)</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:62</div></div>
+<div class="ttc" id="aclassSocketMultiplexer_html_a0633cfe385a11a7f36451f6dd95d2fc4"><div class="ttname"><a href="classSocketMultiplexer.html#a0633cfe385a11a7f36451f6dd95d2fc4">SocketMultiplexer::~SocketMultiplexer</a></div><div class="ttdeci">~SocketMultiplexer()</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:43</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a2022b9ba87446e302966ec53ba8be534"><div class="ttname"><a href="classSocketMultiplexer.html#a2022b9ba87446e302966ec53ba8be534">SocketMultiplexer::SocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer(SocketMultiplexer &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a4059367e38a05279c6e18743e5e16dda"><div class="ttname"><a href="classSocketMultiplexer.html#a4059367e38a05279c6e18743e5e16dda">SocketMultiplexer::SocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer()</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:26</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a42d57bd9eb2dd94d416acba85d19d627"><div class="ttname"><a href="classSocketMultiplexer.html#a42d57bd9eb2dd94d416acba85d19d627">SocketMultiplexer::SocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer(SocketMultiplexer const &amp;)=delete</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a4a79e71e8032a021cd85c445b29e3086"><div class="ttname"><a href="classSocketMultiplexer.html#a4a79e71e8032a021cd85c445b29e3086">SocketMultiplexer::getInstance</a></div><div class="ttdeci">static SocketMultiplexer * getInstance()</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a5b1233614f0495eb81dab3ff4d60be20"><div class="ttname"><a href="classSocketMultiplexer.html#a5b1233614f0495eb81dab3ff4d60be20">SocketMultiplexer::operator=</a></div><div class="ttdeci">SocketMultiplexer &amp; operator=(SocketMultiplexer const &amp;)=delete</div></div>
 <div class="ttc" id="aclassSocketMultiplexer_html_a64624ae9174818950ea349e04d8bab0d"><div class="ttname"><a href="classSocketMultiplexer.html#a64624ae9174818950ea349e04d8bab0d">SocketMultiplexer::operator=</a></div><div class="ttdeci">SocketMultiplexer &amp; operator=(SocketMultiplexer &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassSocketMultiplexer_html_afdf7ea27e6662f0bec410cc0c144167e"><div class="ttname"><a href="classSocketMultiplexer.html#afdf7ea27e6662f0bec410cc0c144167e">SocketMultiplexer::removeSocket</a></div><div class="ttdeci">void removeSocket(ISocket *)</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:95</div></div>
+<div class="ttc" id="aclassSocketMultiplexer_html_afdf7ea27e6662f0bec410cc0c144167e"><div class="ttname"><a href="classSocketMultiplexer.html#afdf7ea27e6662f0bec410cc0c144167e">SocketMultiplexer::removeSocket</a></div><div class="ttdeci">void removeSocket(ISocket *)</div><div class="ttdef"><b>Definition</b> SocketMultiplexer.cpp:96</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

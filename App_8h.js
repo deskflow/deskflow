@@ -3,8 +3,8 @@ var App_8h =
     [ "App", "classApp.html", "classApp" ],
     [ "App::XNoEiSupport", "classApp_1_1XNoEiSupport.html", "classApp_1_1XNoEiSupport" ],
     [ "DAEMON_RUNNING", "App_8h.html#a250989ede9f9b4639597b6ab4109743c", null ],
-    [ "HELP_COMMON_ARGS", "App_8h.html#aaa90b332c11fdc04ff935ae24b2d038a", null ],
-    [ "HELP_COMMON_INFO_1", "App_8h.html#af2550e85d701f6b3266a13ff79c01aef", null ],
-    [ "HELP_COMMON_INFO_2", "App_8h.html#affe487d0e26d92493cf7077671660c86", null ],
-    [ "kHelpNoWayland", "App_8h.html#af08554c3ff5e661c0943d334f14b8996", null ]
+    [ "s_helpCommonArgs", "App_8h.html#a049d335c837b9bc401247316f3789613", null ],
+    [ "s_helpGeneralArgs", "App_8h.html#ac5654df7f0374f9a3da48ff9ef57b6cc", null ],
+    [ "s_helpNoWayland", "App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44", null ],
+    [ "s_helpVersionArgs", "App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532", null ]
 ];

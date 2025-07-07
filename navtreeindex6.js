@@ -1,7 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa462779407c7f4e77d7a78dbbc2cda077":[6,0,5,0,6],
-"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa4b284a3e0e9cb9e6abc4949308710e54":[6,0,5,0,1],
 "classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa713bc5b4291d6300d53fab0f34bf77e3":[6,0,5,0,0],
 "classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aaa74439aefb9c66dd0b17de65687ceca2":[6,0,5,0,2],
 "classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aaec3e6a7824106d12bc826973ca535318":[6,0,5,0,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX6 =
 "classArchNetAddressImpl.html#ab6a91f46d0dd176581a6e6dff794cea7":[6,0,23,0],
 "classArchNetAddressImpl.html#adb3b01e0357fecd83610be15ac17ceba":[6,0,23,1],
 "classArchNetAddressImpl.html#ae72075a93c492ed605e4e22d356df97d":[6,0,23,3],
-"classArchNetAddressImpl.html#aebf85682500df71ecef74196840c7ebb":[6,0,23,4]
+"classArchNetAddressImpl.html#aebf85682500df71ecef74196840c7ebb":[6,0,23,4],
+"classArchNetworkBSD.html":[6,0,24],
+"classArchNetworkBSD.html#a05665cd209d136ea319d8d8ff2d24ea1":[6,0,24,25]
 };
