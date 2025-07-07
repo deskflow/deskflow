@@ -28,7 +28,7 @@ public:
   void open(const char *title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(ELevel level, const char *message) override;
+  bool write(LogLevel level, const char *message) override;
 };
 
 //! Write log to console
@@ -46,7 +46,7 @@ public:
   void open(const char *title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(ELevel level, const char *message) override;
+  bool write(LogLevel level, const char *message) override;
   void flush() const;
 };
 
@@ -66,7 +66,7 @@ public:
   void open(const char *title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(ELevel level, const char *message) override;
+  bool write(LogLevel level, const char *message) override;
 
   void setLogFilename(const char *title);
 
@@ -88,7 +88,7 @@ public:
   void open(const char *title) override;
   void close() override;
   void show(bool showIfEmpty) override;
-  bool write(ELevel level, const char *message) override;
+  bool write(LogLevel level, const char *message) override;
 };
 
 //! Write log to system log only

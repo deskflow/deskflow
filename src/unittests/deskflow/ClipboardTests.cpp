@@ -13,7 +13,7 @@
 void ClipboardTests::initTestCase()
 {
   m_arch.init();
-  m_log.setFilter(kDEBUG2);
+  m_log.setFilter(LogLevel::Debug2);
 }
 
 void ClipboardTests::basicFunction()

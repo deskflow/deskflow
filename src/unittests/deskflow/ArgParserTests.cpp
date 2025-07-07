@@ -17,7 +17,7 @@
 void ArgParserTests::initTestCase()
 {
   m_arch.init();
-  m_log.setFilter(kDEBUG2);
+  m_log.setFilter(LogLevel::Debug2);
   static deskflow::ArgsBase base;
   m_parser.setArgsBase(base);
 }

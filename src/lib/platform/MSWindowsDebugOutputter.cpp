@@ -26,7 +26,7 @@ void MSWindowsDebugOutputter::show(bool showIfEmpty)
   // do nothing
 }
 
-bool MSWindowsDebugOutputter::write(ELevel level, const char *msg)
+bool MSWindowsDebugOutputter::write(LogLevel level, const char *msg)
 {
   OutputDebugString((std::string(msg) + "\n").c_str());
   return true;
