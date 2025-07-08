@@ -49,12 +49,12 @@ IEventQueueBuffer::Type SimpleEventQueueBuffer::getEvent(Event &, uint32_t &data
 {
   ArchMutexLock lock(m_queueMutex);
   if (!m_queueReady) {
-    return kNone;
+    return IEventQueueBuffer::Type::Unknown;
   }
   dataID = m_queue.back();
   m_queue.pop_back();
   m_queueReady = !m_queue.empty();
-  return kUser;
+  return IEventQueueBuffer::Type::User;
 }
 
 bool SimpleEventQueueBuffer::addEvent(uint32_t dataID)

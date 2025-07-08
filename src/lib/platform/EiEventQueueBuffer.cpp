@@ -115,12 +115,12 @@ IEventQueueBuffer::Type EiEventQueueBuffer::getEvent(Event &event, uint32_t &dat
   // if this an injected special event, just return the data and exit
   if (pair.first == false) {
     dataID = pair.second;
-    return kUser;
+    return IEventQueueBuffer::Type::User;
   }
 
   event = Event(EventTypes::System, m_events->getSystemTarget());
 
-  return kSystem;
+  return IEventQueueBuffer::Type::System;
 }
 
 bool EiEventQueueBuffer::addEvent(uint32_t dataID)

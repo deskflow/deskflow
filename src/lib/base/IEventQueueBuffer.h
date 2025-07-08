@@ -20,11 +20,11 @@ An event queue buffer provides a queue of events for an IEventQueue.
 class IEventQueueBuffer : public IInterface
 {
 public:
-  enum Type
+  enum class Type : uint8_t
   {
-    kNone,   //!< No event is available
-    kSystem, //!< Event is a system event
-    kUser    //!< Event is a user event
+    Unknown, //!< No event is available
+    System,  //!< Event is a system event
+    User     //!< Event is a user event
   };
 
   //! @name manipulators
@@ -45,11 +45,11 @@ public:
 
   //! Get the next event
   /*!
-  Get the next event from the buffer.  Return kNone if no event is
-  available.  If a system event is next, return kSystem and fill in
+  Get the next event from the buffer.  Return None if no event is
+  available.  If a system event is next, return System and fill in
   event.  The event data in a system event can point to a static
   buffer (because Event::deleteData() will not attempt to delete
-  data in a kSystem event).  Otherwise, return kUser and fill in
+  data in a System event).  Otherwise, return User and fill in
   \p dataID with the value passed to \c addEvent().
   */
   virtual Type getEvent(Event &event, uint32_t &dataID) = 0;
