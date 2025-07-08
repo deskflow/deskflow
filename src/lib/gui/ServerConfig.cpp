@@ -330,23 +330,23 @@ int ServerConfig::autoAddScreen(const QString name)
   int targetIndex = -1;
   const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
   if (!findScreenName(screenName, serverIndex) && !fixNoServer(screenName, serverIndex)) {
-    return kAutoAddScreenManualServer;
+    return AutoAddScreenManualServer;
   }
 
   if (findScreenName(name, targetIndex)) {
     qDebug("ignoring screen already in config: %s", qPrintable(name));
-    return kAutoAddScreenIgnore;
+    return AutoAddScreenIgnore;
   }
 
   auto result = static_cast<AddAction>(showAddClientDialog(name));
 
   if (result == AddClientIgnore) {
-    return kAutoAddScreenIgnore;
+    return AutoAddScreenIgnore;
   }
 
   if (result == AddClientOther) {
     addToFirstEmptyGrid(name);
-    return kAutoAddScreenManualClient;
+    return AutoAddScreenManualClient;
   }
 
   bool success = false;
@@ -379,10 +379,10 @@ int ServerConfig::autoAddScreen(const QString name)
 
   if (!success) {
     addToFirstEmptyGrid(name);
-    return kAutoAddScreenManualClient;
+    return AutoAddScreenManualClient;
   }
 
-  return kAutoAddScreenOk;
+  return AutoAddScreenOk;
 }
 
 const QString ServerConfig::getServerName() const
