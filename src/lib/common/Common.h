@@ -33,11 +33,8 @@
 #endif
 #endif
 
-enum
-{
-  kExitSuccess = 0,    // successful completion
-  kExitFailed = 1,     // general failure
-  kExitTerminated = 2, // killed by signal
-  kExitArgs = 3,       // bad arguments
-  kExitConfig = 4,     // cannot read configuration
-};
+static const int s_exitSuccess = 0;    //!< App successfully completed
+static const int s_exitFailed = 1;     //!< App had a general failure
+static const int s_exitTerminated = 2; //!< App was kill by a signal
+static const int s_exitArgs = 3;       //!< App was unable to run due to bad arguments being passed
+static const int s_exitConfig = 4;     //!< App was unable to read the configuration

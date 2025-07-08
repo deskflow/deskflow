@@ -87,7 +87,7 @@ int App::run(int argc, char **argv)
   appUtil().adoptApp(this);
 
   // HACK: fail by default (saves us setting result in each catch)
-  int result = kExitFailed;
+  int result = s_exitFailed;
 
   try {
     result = appUtil().run(argc, argv);
@@ -172,7 +172,7 @@ void App::initApp(int argc, const char **argv)
     LOG((
         CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname
     ));
-    m_bye(kExitArgs);
+    m_bye(s_exitArgs);
   }
   loggingFilterWarning();
 
