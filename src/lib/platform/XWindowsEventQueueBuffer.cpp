@@ -142,10 +142,10 @@ IEventQueueBuffer::Type XWindowsEventQueueBuffer::getEvent(Event &event, uint32_
   // process event
   if (m_event.xany.type == ClientMessage && m_event.xclient.message_type == m_userEvent) {
     dataID = static_cast<uint32_t>(m_event.xclient.data.l[0]);
-    return kUser;
+    return IEventQueueBuffer::Type::User;
   } else {
     event = Event(EventTypes::System, m_events->getSystemTarget(), &m_event);
-    return kSystem;
+    return IEventQueueBuffer::Type::System;
   }
 }
 

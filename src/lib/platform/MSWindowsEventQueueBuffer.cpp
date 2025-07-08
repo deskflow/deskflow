@@ -66,6 +66,7 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
 
 IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
+  using enum IEventQueueBuffer::Type;
   // NOTE: QS_ALLINPUT was replaced with QS_ALLPOSTMESSAGE.
   //
   // peek at messages first.  waiting for QS_ALLINPUT will return
@@ -73,25 +74,25 @@ IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, uint32
   // dispatch that message behind our backs and block.  PeekMessage
   // will also dispatch behind our backs but won't block.
   if (!PeekMessage(&m_event, nullptr, 0, 0, PM_NOREMOVE) && !PeekMessage(&m_event, (HWND)-1, 0, 0, PM_NOREMOVE)) {
-    return kNone;
+    return Unknown;
   }
 
   // BOOL.  yeah, right.
   BOOL result = GetMessage(&m_event, nullptr, 0, 0);
   if (result == -1) {
-    return kNone;
+    return Unknown;
   } else if (result == 0) {
     event = Event(EventTypes::Quit);
-    return kSystem;
+    return System;
   } else if (m_daemonQuit != 0 && m_event.message == m_daemonQuit) {
     event = Event(EventTypes::Quit);
-    return kSystem;
+    return System;
   } else if (m_event.message == m_userEvent) {
     dataID = static_cast<uint32_t>(m_event.wParam);
-    return kUser;
+    return User;
   } else {
     event = Event(EventTypes::System, m_events->getSystemTarget(), &m_event);
-    return kSystem;
+    return System;
   }
 }
 
