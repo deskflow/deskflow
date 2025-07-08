@@ -24,11 +24,7 @@ class IKeyState : public IInterface
 {
 public:
   explicit IKeyState(const IEventQueue *events);
-
-  enum
-  {
-    kNumButtons = 0x200
-  };
+  inline static const auto s_numButtons = 0x200;
 
   //! Key event data
   class KeyInfo
