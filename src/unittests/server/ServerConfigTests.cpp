@@ -21,9 +21,10 @@ public:
     return "";
   }
 
-  InputFilter::EFilterStatus match(const Event &ev) override
+  InputFilter::FilterStatus match(const Event &ev) override
   {
-    return ev.getType() == EventTypes::System ? InputFilter::kActivate : InputFilter::kNoMatch;
+    return ev.getType() == EventTypes::System ? InputFilter::FilterStatus::Activate
+                                              : InputFilter::FilterStatus::NoMatch;
   }
 };
 

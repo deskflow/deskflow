@@ -26,11 +26,11 @@ public:
   // -------------------------------------------------------------------------
   // Input Filter Condition Classes
   // -------------------------------------------------------------------------
-  enum EFilterStatus
+  enum class FilterStatus
   {
-    kNoMatch,
-    kActivate,
-    kDeactivate
+    NoMatch,
+    Activate,
+    Deactivate
   };
 
   class Condition
@@ -42,7 +42,7 @@ public:
     virtual Condition *clone() const = 0;
     virtual std::string format() const = 0;
 
-    virtual EFilterStatus match(const Event &) = 0;
+    virtual FilterStatus match(const Event &) = 0;
 
     virtual void enablePrimary(PrimaryClient *);
     virtual void disablePrimary(PrimaryClient *);
@@ -62,7 +62,7 @@ public:
     // Condition overrides
     Condition *clone() const override;
     std::string format() const override;
-    EFilterStatus match(const Event &) override;
+    FilterStatus match(const Event &) override;
     void enablePrimary(PrimaryClient *) override;
     void disablePrimary(PrimaryClient *) override;
 
@@ -87,7 +87,7 @@ public:
     // Condition overrides
     Condition *clone() const override;
     std::string format() const override;
-    EFilterStatus match(const Event &) override;
+    FilterStatus match(const Event &) override;
 
   private:
     ButtonID m_button;
@@ -105,7 +105,7 @@ public:
     // Condition overrides
     Condition *clone() const override;
     std::string format() const override;
-    EFilterStatus match(const Event &) override;
+    FilterStatus match(const Event &) override;
 
   private:
     std::string m_screen;

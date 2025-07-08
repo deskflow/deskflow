@@ -66,22 +66,23 @@ std::string InputFilter::KeystrokeCondition::format() const
   return deskflow::string::sprintf("keystroke(%s)", deskflow::KeyMap::formatKey(m_key, m_mask).c_str());
 }
 
-InputFilter::EFilterStatus InputFilter::KeystrokeCondition::match(const Event &event)
+InputFilter::FilterStatus InputFilter::KeystrokeCondition::match(const Event &event)
 {
-  EFilterStatus status;
+  using enum FilterStatus;
+  FilterStatus status;
 
   // check for hotkey events
   if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenHotkeyDown) {
-    status = kActivate;
+    status = Activate;
   } else if (type == EventTypes::PrimaryScreenHotkeyUp) {
-    status = kDeactivate;
+    status = Deactivate;
   } else {
-    return kNoMatch;
+    return NoMatch;
   }
 
   // check if it's our hotkey
   if (const auto *kinfo = static_cast<IPlatformScreen::HotKeyInfo *>(event.getData()); kinfo->m_id != m_id) {
-    return kNoMatch;
+    return NoMatch;
   }
 
   return status;
@@ -138,27 +139,28 @@ std::string InputFilter::MouseButtonCondition::format() const
   return deskflow::string::sprintf("mousebutton(%s%d)", key.c_str(), m_button);
 }
 
-InputFilter::EFilterStatus InputFilter::MouseButtonCondition::match(const Event &event)
+InputFilter::FilterStatus InputFilter::MouseButtonCondition::match(const Event &event)
 {
   static const KeyModifierMask s_ignoreMask =
       KeyModifierAltGr | KeyModifierCapsLock | KeyModifierNumLock | KeyModifierScrollLock;
 
-  EFilterStatus status;
+  FilterStatus status;
 
+  using enum FilterStatus;
   // check for hotkey events
   if (EventTypes type = event.getType(); type == EventTypes::PrimaryScreenButtonDown) {
-    status = kActivate;
+    status = Activate;
   } else if (type == EventTypes::PrimaryScreenButtonUp) {
-    status = kDeactivate;
+    status = Deactivate;
   } else {
-    return kNoMatch;
+    return NoMatch;
   }
 
   // check if it's the right button and modifiers.  ignore modifiers
   // that cannot be combined with a mouse button.
   if (const auto *minfo = static_cast<IPlatformScreen::ButtonInfo *>(event.getData());
       minfo->m_button != m_button || (minfo->m_mask & ~s_ignoreMask) != m_mask) {
-    return kNoMatch;
+    return NoMatch;
   }
 
   return status;
@@ -181,16 +183,16 @@ std::string InputFilter::ScreenConnectedCondition::format() const
   return deskflow::string::sprintf("connect(%s)", m_screen.c_str());
 }
 
-InputFilter::EFilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
+InputFilter::FilterStatus InputFilter::ScreenConnectedCondition::match(const Event &event)
 {
   if (event.getType() == EventTypes::ServerConnected) {
     const auto *info = static_cast<Server::ScreenConnectedInfo *>(event.getData());
     if (m_screen == info->m_screen || m_screen.empty()) {
-      return kActivate;
+      return FilterStatus::Activate;
     }
   }
 
-  return kNoMatch;
+  return FilterStatus::NoMatch;
 }
 
 // -----------------------------------------------------------------------------
@@ -649,16 +651,17 @@ bool InputFilter::Rule::handleEvent(const Event &event)
   // match
   const ActionList *actions;
   switch (m_condition->match(event)) {
+    using enum FilterStatus;
   default:
     // not handled
     return false;
 
-  case kActivate:
+  case Activate:
     actions = &m_activateActions;
     LOG((CLOG_DEBUG1 "activate actions"));
     break;
 
-  case kDeactivate:
+  case Deactivate:
     actions = &m_deactivateActions;
     LOG((CLOG_DEBUG1 "deactivate actions"));
     break;
