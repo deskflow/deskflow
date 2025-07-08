@@ -181,7 +181,7 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   }
 
   // Last resort, terminate the process forcefully.
-  if (TerminateProcess(handle, kExitSuccess)) {
+  if (TerminateProcess(handle, s_exitSuccess)) {
     LOG_WARN("forcefully terminated process %d", pid);
   } else {
     LOG_ERR("failed to terminate process %d, error: %s", pid, windowsErrorToString(GetLastError()).c_str());

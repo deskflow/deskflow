@@ -196,7 +196,7 @@ int DaemonApp::mainLoop()
 #if SYSAPI_WIN32
   if (m_pWatchdog == nullptr) {
     LOG_ERR("watchdog not initialized");
-    return kExitFailed;
+    return s_exitFailed;
   }
 #endif
 
@@ -235,7 +235,7 @@ int DaemonApp::mainLoop()
 #endif
 
   DAEMON_RUNNING(false);
-  return kExitSuccess;
+  return s_exitSuccess;
 }
 
 QString DaemonApp::logFilename()
