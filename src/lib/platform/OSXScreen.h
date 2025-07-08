@@ -46,7 +46,7 @@ class OSXScreen : public PlatformScreen
 public:
   OSXScreen(
       IEventQueue *events, bool isPrimary, bool enableLangSync = false,
-      deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::SERVER
+      deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
   );
 
   virtual ~OSXScreen();
