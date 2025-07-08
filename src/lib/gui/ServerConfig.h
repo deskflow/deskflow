@@ -276,10 +276,10 @@ private:
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
-enum
+enum AddResults
 {
-  kAutoAddScreenOk,
-  kAutoAddScreenManualServer,
-  kAutoAddScreenManualClient,
-  kAutoAddScreenIgnore
+  AutoAddScreenOk,
+  AutoAddScreenManualServer,
+  AutoAddScreenManualClient,
+  AutoAddScreenIgnore
 };
