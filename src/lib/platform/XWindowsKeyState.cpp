@@ -71,17 +71,17 @@ void XWindowsKeyState::init(const Display *display, bool useXKB)
     m_xkb = nullptr;
   }
 #endif
-  setActiveGroup(kGroupPoll);
+  setActiveGroup(s_groupPoll);
 }
 
 void XWindowsKeyState::setActiveGroup(int32_t group)
 {
-  if (group == kGroupPollAndSet) {
+  if (group == s_groupPollAndSet) {
     // we need to set the group to -1 in order for pollActiveGroup() to
     // actually poll for the group
     m_group = -1;
     m_group = pollActiveGroup();
-  } else if (group == kGroupPoll) {
+  } else if (group == s_groupPoll) {
     m_group = -1;
   } else {
     assert(group >= 0);
