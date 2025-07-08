@@ -34,7 +34,7 @@ const char *XBase::what() const throw()
   return m_what.c_str();
 }
 
-std::string XBase::format(const char * /*id*/, const char *fmt, ...) const throw()
+std::string XBase::format(const char * /*id*/, const char *fmt, ...) const noexcept
 {
   // FIXME -- lookup message string using id as an index.  set
   // fmt to that string if it exists.

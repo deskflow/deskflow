@@ -52,9 +52,9 @@ public:
   //@{
 
   //! Get client's major version number
-  int getMajor() const throw();
+  int getMajor() const noexcept;
   //! Get client's minor version number
-  int getMinor() const throw();
+  int getMinor() const noexcept;
 
   //@}
 
@@ -81,7 +81,7 @@ public:
   //@{
 
   //! Get client's name
-  virtual const std::string &getName() const throw();
+  virtual const std::string &getName() const noexcept;
 
   //@}
 
@@ -107,7 +107,7 @@ public:
   //@{
 
   //! Get the client's name
-  virtual const std::string &getName() const throw();
+  virtual const std::string &getName() const noexcept;
 
   //@}
 
@@ -131,7 +131,7 @@ public:
   ~XExitApp() throw() override = default;
 
   //! Get the exit code
-  int getCode() const throw();
+  int getCode() const noexcept;
 
 protected:
   std::string getWhat() const throw() override;

@@ -28,7 +28,7 @@ public:
 
 protected:
   //! Get a human readable string describing the exception
-  virtual std::string getWhat() const throw()
+  virtual std::string getWhat() const noexcept
   {
     return "";
   }
@@ -39,7 +39,7 @@ protected:
   no format can be found, then replaces positional parameters in
   the format string and returns the result.
   */
-  virtual std::string format(const char *id, const char *defaultFormat, ...) const throw();
+  virtual std::string format(const char *id, const char *defaultFormat, ...) const noexcept;
 
 private:
   mutable std::string m_what;

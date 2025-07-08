@@ -36,18 +36,18 @@ public:
     kBadPort      //!< The port is invalid
   };
 
-  XSocketAddress(EError, const std::string &hostname, int port) throw();
+  XSocketAddress(EError, const std::string &hostname, int port) noexcept;
   ~XSocketAddress() throw() override = default;
 
   //! @name accessors
   //@{
 
   //! Get the error code
-  EError getError() const throw();
+  EError getError() const noexcept;
   //! Get the hostname
-  std::string getHostname() const throw();
+  std::string getHostname() const noexcept;
   //! Get the port
-  int getPort() const throw();
+  int getPort() const noexcept;
 
   //@}
 
