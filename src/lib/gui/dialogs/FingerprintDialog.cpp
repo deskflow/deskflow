@@ -35,7 +35,7 @@ FingerprintDialog::FingerprintDialog(QWidget *parent, const Fingerprint &fingerp
   layout->addWidget(m_buttonBox);
   setLayout(layout);
 
-  if (mode == Local) {
+  if (mode == FingerprintDialogMode::Local) {
     setWindowTitle(tr("Local Fingerprints"));
     m_lblHeader->setText(tr("Local computer's fingerprints"));
     m_lblFooter->setVisible(false);

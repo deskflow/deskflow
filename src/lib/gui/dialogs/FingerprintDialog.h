@@ -11,7 +11,7 @@
 #include <QDialog>
 #include <QDialogButtonBox>
 
-enum FingerprintDialogMode
+enum class FingerprintDialogMode
 {
   Local,
   Client,
