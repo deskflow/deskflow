@@ -49,23 +49,20 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
 {
   Thread::testCancel();
 
-  enum
-  {
-    EIFD,
-    PIPEFD,
-    POLLFD_COUNT, // Last element
-  };
+  static const auto s_eiFd = 0;
+  static const auto s_pipeFd = 1;
+  static const auto s_pollFdCount = 2;
 
-  struct pollfd pfds[POLLFD_COUNT];
-  pfds[EIFD].fd = ei_get_fd(m_ei);
-  pfds[EIFD].events = POLLIN;
-  pfds[PIPEFD].fd = m_pipeRead;
-  pfds[PIPEFD].events = POLLIN;
+  struct pollfd pfds[s_pollFdCount];
+  pfds[s_eiFd].fd = ei_get_fd(m_ei);
+  pfds[s_eiFd].events = POLLIN;
+  pfds[s_pipeFd].fd = m_pipeRead;
+  pfds[s_pipeFd].events = POLLIN;
 
   int timeout = (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
 
-  if (int retval = poll(pfds, POLLFD_COUNT, timeout); retval > 0) {
-    if (pfds[EIFD].revents & POLLIN) {
+  if (int retval = poll(pfds, s_pollFdCount, timeout); retval > 0) {
+    if (pfds[s_eiFd].revents & POLLIN) {
       std::scoped_lock lock{m_mutex};
 
       // libei doesn't allow ei_event_ref() because events are
@@ -80,7 +77,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
     }
     // the pipefd data doesn't matter, it only exists to wake up the thread
     // and potentially testCancel
-    if (pfds[PIPEFD].revents & POLLIN) {
+    if (pfds[s_pipeFd].revents & POLLIN) {
       char buf[64];
       ssize_t total = 0;
       ssize_t result;
