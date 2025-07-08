@@ -35,12 +35,12 @@ XIncompatibleClient::XIncompatibleClient(int major, int minor) : m_major(major),
   // do nothing
 }
 
-int XIncompatibleClient::getMajor() const throw()
+int XIncompatibleClient::getMajor() const noexcept
 {
   return m_major;
 }
 
-int XIncompatibleClient::getMinor() const throw()
+int XIncompatibleClient::getMinor() const noexcept
 {
   return m_minor;
 }
@@ -62,7 +62,7 @@ XDuplicateClient::XDuplicateClient(const std::string &name) : m_name(name)
   // do nothing
 }
 
-const std::string &XDuplicateClient::getName() const throw()
+const std::string &XDuplicateClient::getName() const noexcept
 {
   return m_name;
 }
@@ -81,7 +81,7 @@ XUnknownClient::XUnknownClient(const std::string &name) : m_name(name)
   // do nothing
 }
 
-const std::string &XUnknownClient::getName() const throw()
+const std::string &XUnknownClient::getName() const noexcept
 {
   return m_name;
 }
@@ -100,7 +100,7 @@ XExitApp::XExitApp(int code) : m_code(code)
   // do nothing
 }
 
-int XExitApp::getCode() const throw()
+int XExitApp::getCode() const noexcept
 {
   return m_code;
 }

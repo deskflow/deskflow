@@ -12,7 +12,7 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int port) throw()
+XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int port) noexcept
     : m_error(error),
       m_hostname(hostname),
       m_port(port)
@@ -20,17 +20,17 @@ XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int po
   // do nothing
 }
 
-XSocketAddress::EError XSocketAddress::getError() const throw()
+XSocketAddress::EError XSocketAddress::getError() const noexcept
 {
   return m_error;
 }
 
-std::string XSocketAddress::getHostname() const throw()
+std::string XSocketAddress::getHostname() const noexcept
 {
   return m_hostname;
 }
 
-int XSocketAddress::getPort() const throw()
+int XSocketAddress::getPort() const noexcept
 {
   return m_port;
 }
