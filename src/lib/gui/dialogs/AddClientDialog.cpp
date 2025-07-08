@@ -65,30 +65,30 @@ AddClientDialog::~AddClientDialog() = default;
 
 void AddClientDialog::handleButtonLeft()
 {
-  m_AddResult = kAddClientLeft;
+  m_AddResult = AddAction::AddClientLeft;
   close();
 }
 
 void AddClientDialog::handleButtonUp()
 {
-  m_AddResult = kAddClientUp;
+  m_AddResult = AddAction::AddClientUp;
   close();
 }
 
 void AddClientDialog::handleButtonRight()
 {
-  m_AddResult = kAddClientRight;
+  m_AddResult = AddAction::AddClientRight;
   close();
 }
 
 void AddClientDialog::handleButtonDown()
 {
-  m_AddResult = kAddClientDown;
+  m_AddResult = AddAction::AddClientDown;
   close();
 }
 
 void AddClientDialog::handleButtonAdvanced()
 {
-  m_AddResult = kAddClientOther;
+  m_AddResult = AddAction::AddClientOther;
   close();
 }

@@ -15,14 +15,14 @@ namespace Ui {
 class AddClientDialog;
 }
 
-enum
+enum class AddAction
 {
-  kAddClientRight,
-  kAddClientLeft,
-  kAddClientUp,
-  kAddClientDown,
-  kAddClientOther,
-  kAddClientIgnore
+  AddClientRight,
+  AddClientLeft,
+  AddClientUp,
+  AddClientDown,
+  AddClientOther,
+  AddClientIgnore
 };
 
 class AddClientDialog : public QDialog
@@ -32,7 +32,7 @@ public:
   AddClientDialog(const QString &clientName, QWidget *parent = nullptr);
   ~AddClientDialog() override;
 
-  int addResult() const
+  AddAction addResult() const
   {
     return m_AddResult;
   }
@@ -51,5 +51,5 @@ private:
   QPushButton *m_pButtonRight;
   QPushButton *m_pButtonDown;
   QLabel *m_pLabelCenter;
-  int m_AddResult = kAddClientIgnore;
+  AddAction m_AddResult = AddAction::AddClientIgnore;
 };
