@@ -96,10 +96,11 @@ void ServerProxy::handleData()
     LOG((CLOG_DEBUG2 "msg from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
     try {
       switch ((this->*m_parser)(code)) {
-      case kOkay:
+        using enum ConnectionResult;
+      case Okay:
         break;
 
-      case kUnknown:
+      case Unknown:
         LOG((CLOG_ERR "invalid message from server: %c%c%c%c", code[0], code[1], code[2], code[3]));
         // not possible to determine message boundaries
         // read the whole stream to discard unkonwn data
@@ -107,7 +108,7 @@ void ServerProxy::handleData()
           ;
         break;
 
-      case kDisconnect:
+      case Disconnect:
         return;
       }
     } catch (const XBadClient &e) {
@@ -124,8 +125,10 @@ void ServerProxy::handleData()
   flushCompressedMouse();
 }
 
-ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
+ServerProxy::ConnectionResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
 {
+  using enum ConnectionResult;
+
   if (memcmp(code, kMsgQInfo, 4) == 0) {
     queryInfo();
   }
@@ -161,7 +164,7 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
     // server wants us to hangup
     LOG((CLOG_DEBUG1 "recv close"));
     m_client->disconnect(nullptr);
-    return kDisconnect;
+    return Disconnect;
   }
 
   else if (memcmp(code, kMsgEIncompatible, 4) == 0) {
@@ -170,36 +173,38 @@ ServerProxy::EResult ServerProxy::parseHandshakeMessage(const uint8_t *code)
     ProtocolUtil::readf(m_stream, kMsgEIncompatible + 4, &major, &minor);
     LOG((CLOG_ERR "server has incompatible version %d.%d", major, minor));
     m_client->refuseConnection("server has incompatible version");
-    return kDisconnect;
+    return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBusy, 4) == 0) {
     LOG((CLOG_ERR "server already has a connected client with name \"%s\"", m_client->getName().c_str()));
     m_client->refuseConnection("server already has a connected client with our name");
-    return kDisconnect;
+    return Disconnect;
   }
 
   else if (memcmp(code, kMsgEUnknown, 4) == 0) {
     LOG((CLOG_ERR "server refused client with name \"%s\"", m_client->getName().c_str()));
     m_client->refuseConnection("server refused client with our name");
-    return kDisconnect;
+    return Disconnect;
   }
 
   else if (memcmp(code, kMsgEBad, 4) == 0) {
     LOG((CLOG_ERR "server disconnected due to a protocol error"));
     m_client->refuseConnection("server reported a protocol error");
-    return kDisconnect;
+    return Disconnect;
   } else if (memcmp(code, kMsgDLanguageSynchronisation, 4) == 0) {
     setServerLanguages();
   } else {
-    return kUnknown;
+    return Unknown;
   }
 
-  return kOkay;
+  return Okay;
 }
 
-ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
+ServerProxy::ConnectionResult ServerProxy::parseMessage(const uint8_t *code)
 {
+  using enum ConnectionResult;
+
   if (memcmp(code, kMsgDMouseMove, 4) == 0) {
     mouseMove();
   }
@@ -305,13 +310,13 @@ ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
     // server wants us to hangup
     LOG((CLOG_DEBUG1 "recv close"));
     m_client->disconnect(nullptr);
-    return kDisconnect;
+    return Disconnect;
   } else if (memcmp(code, kMsgEBad, 4) == 0) {
     LOG((CLOG_ERR "server disconnected due to a protocol error"));
     m_client->disconnect("server reported a protocol error");
-    return kDisconnect;
+    return Disconnect;
   } else {
-    return kUnknown;
+    return Unknown;
   }
 
   // send a reply.  this is intended to work around a delay when
@@ -323,7 +328,7 @@ ServerProxy::EResult ServerProxy::parseMessage(const uint8_t *code)
   // TCP_NODELAY is enabled.
   ProtocolUtil::writef(m_stream, kMsgCNoop);
 
-  return kOkay;
+  return Okay;
 }
 
 void ServerProxy::handleKeepAliveAlarm()
