@@ -87,7 +87,7 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
         // we'll try to resolve the address each time we connect to the
         // server.  a bad port will never get better.  patch by Brent
         // Priddy.
-        if (!args().m_restartable || e.getError() == XSocketAddress::kBadPort) {
+        if (!args().m_restartable || e.getError() == XSocketAddress::SocketError::BadPort) {
           LOG((CLOG_CRIT "%s: %s" BYE, args().m_pname, e.what(), args().m_pname));
           m_bye(s_exitFailed);
         }

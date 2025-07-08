@@ -27,23 +27,23 @@ class XSocketAddress : public XSocket
 {
 public:
   //! Failure codes
-  enum EError
+  enum class SocketError
   {
-    kUnknown,     //!< Unknown error
-    kNotFound,    //!< The hostname is unknown
-    kNoAddress,   //!< The hostname is valid but has no IP address
-    kUnsupported, //!< The hostname is valid but has no supported address
-    kBadPort      //!< The port is invalid
+    Unknown,     //!< Unknown error
+    NotFound,    //!< The hostname is unknown
+    NoAddress,   //!< The hostname is valid but has no IP address
+    Unsupported, //!< The hostname is valid but has no supported address
+    BadPort      //!< The port is invalid
   };
 
-  XSocketAddress(EError, const std::string &hostname, int port) noexcept;
+  XSocketAddress(SocketError, const std::string &hostname, int port) noexcept;
   ~XSocketAddress() throw() override = default;
 
   //! @name accessors
   //@{
 
   //! Get the error code
-  EError getError() const noexcept;
+  SocketError getError() const noexcept;
   //! Get the hostname
   std::string getHostname() const noexcept;
   //! Get the port
@@ -56,7 +56,7 @@ protected:
   std::string getWhat() const throw() override;
 
 private:
-  EError m_error;
+  SocketError m_error;
   std::string m_hostname;
   int m_port;
 };
