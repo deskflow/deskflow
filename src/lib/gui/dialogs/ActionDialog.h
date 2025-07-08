@@ -24,15 +24,15 @@ class ActionDialog : public QDialog
   Q_OBJECT
 
 public:
-  enum ActionTypes
+  struct ActionTypes
   {
-    PressKey,
-    ReleaseKey,
-    ToggleKey,
-    SwitchTo,
-    SwitchInDirection,
-    ModifyCursorLock,
-    RestartServer
+    inline static const auto PressKey = 0;
+    inline static const auto ReleaseKey = 1;
+    inline static const auto ToggleKey = 2;
+    inline static const auto SwitchTo = 3;
+    inline static const auto SwitchInDirection = 4;
+    inline static const auto ModifyCursorLock = 5;
+    inline static const auto RestartServer = 6;
   };
 
   ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action);
