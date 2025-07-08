@@ -35,11 +35,6 @@ static const std::size_t s_maxInputBufferSize = 1024 * 1024;
 
 static const float s_retryDelay = 0.01f;
 
-enum
-{
-  kMsgSize = 128
-};
-
 struct Ssl
 {
   SSL_CTX *m_context = nullptr;
