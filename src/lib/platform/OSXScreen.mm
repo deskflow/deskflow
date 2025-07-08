@@ -1421,7 +1421,9 @@ void OSXScreen::handlePowerChangeRequest(natural_t messageType, void *messageArg
     // OSXScreen has to handle this in the main thread so we have to
     // queue a confirm sleep event here.  we actually don't allow the
     // system to sleep until the event is handled.
-    m_events->addEvent(Event(EventTypes::OsxScreenConfirmSleep, getEventTarget(), messageArg, Event::kDontFreeData));
+    m_events->addEvent(
+        Event(EventTypes::OsxScreenConfirmSleep, getEventTarget(), messageArg, Event::EventFlags::DontFreeData)
+    );
     return;
 
   case kIOMessageSystemHasPoweredOn:
@@ -1446,7 +1448,9 @@ void OSXScreen::handleConfirmSleep(const Event &event)
     Lock lock(m_pmMutex);
     if (m_pmRootPort != 0) {
       // deliver suspend event immediately.
-      m_events->addEvent(Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::kDeliverImmediately));
+      m_events->addEvent(
+          Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+      );
 
       LOG((CLOG_DEBUG "system will sleep"));
       IOAllowPowerChange(m_pmRootPort, messageArg);

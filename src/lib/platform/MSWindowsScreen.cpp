@@ -951,7 +951,8 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
   /* On windows 10 we don't receive WM_POWERBROADCAST after sleep.
    We receive only WM_TIMECHANGE hence this message is used to resume.*/
   case WM_TIMECHANGE:
-    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::kDeliverImmediately));
+    m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+    );
     break;
 
   case WM_POWERBROADCAST:
@@ -959,11 +960,15 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     case PBT_APMRESUMEAUTOMATIC:
     case PBT_APMRESUMECRITICAL:
     case PBT_APMRESUMESUSPEND:
-      m_events->addEvent(Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::kDeliverImmediately));
+      m_events->addEvent(
+          Event(EventTypes::ScreenResume, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+      );
       break;
 
     case PBT_APMSUSPEND:
-      m_events->addEvent(Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::kDeliverImmediately));
+      m_events->addEvent(
+          Event(EventTypes::ScreenSuspend, getEventTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+      );
       break;
     }
     *result = TRUE;

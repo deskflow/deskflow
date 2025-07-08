@@ -184,7 +184,7 @@ void EventQueue::addEvent(const Event &event)
     break;
   }
 
-  if ((event.getFlags() & Event::kDeliverImmediately) != 0) {
+  if ((event.getFlags() & Event::EventFlags::DeliverImmediately) != 0) {
     dispatchEvent(event);
     Event::deleteData(event);
   } else if (!(*m_readyCondVar)) {

@@ -27,11 +27,11 @@ class Event
 {
 public:
   using Flags = uint32_t;
-  enum
+  struct EventFlags
   {
-    kNone = 0x00,               //!< No flags
-    kDeliverImmediately = 0x01, //!< Dispatch and free event immediately
-    kDontFreeData = 0x02        //!< Don't free data in deleteData
+    inline static const Flags NoFlags = 0x00;            //!< No flags
+    inline static const Flags DeliverImmediately = 0x01; //!< Dispatch and free event immediately
+    inline static const Flags DontFreeData = 0x02;       //!< Don't free data in deleteData
   };
 
   Event() = default;
@@ -45,7 +45,7 @@ public:
   \p target is the intended recipient of the event.
   \p flags is any combination of \c Flags.
   */
-  Event(EventTypes type, void *target = nullptr, void *data = nullptr, Flags flags = kNone);
+  Event(EventTypes type, void *target = nullptr, void *data = nullptr, Flags flags = EventFlags::NoFlags);
 
   //! Create \c Event with non-POD data
   /*!
@@ -113,6 +113,6 @@ private:
   EventTypes m_type = EventTypes::Unknown;
   void *m_target = nullptr;
   void *m_data = nullptr;
-  Flags m_flags = kNone;
+  Flags m_flags = EventFlags::NoFlags;
   EventData *m_dataObject = nullptr;
 };

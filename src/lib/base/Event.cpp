@@ -63,7 +63,7 @@ void Event::deleteData(const Event &event)
     break;
 
   default:
-    if ((event.getFlags() & kDontFreeData) == 0) {
+    if ((event.getFlags() & EventFlags::DontFreeData) == 0) {
       free(event.getData());
       delete event.getDataObject();
     }

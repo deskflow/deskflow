@@ -229,7 +229,9 @@ void InputFilter::LockCursorToScreenAction::perform(const Event &event)
 
   // send event
   Server::LockCursorToScreenInfo *info = Server::LockCursorToScreenInfo::alloc(s_state[m_mode]);
-  m_events->addEvent(Event(EventTypes::ServerLockCursorToScreen, event.getTarget(), info, Event::kDeliverImmediately));
+  m_events->addEvent(
+      Event(EventTypes::ServerLockCursorToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
 }
 
 InputFilter::RestartServer::RestartServer(IEventQueue *events, Mode mode) : m_mode(mode), m_events(events)
@@ -294,7 +296,9 @@ void InputFilter::SwitchToScreenAction::perform(const Event &event)
 
   // send event
   Server::SwitchToScreenInfo *info = Server::SwitchToScreenInfo::alloc(screen);
-  m_events->addEvent(Event(EventTypes::ServerSwitchToScreen, event.getTarget(), info, Event::kDeliverImmediately));
+  m_events->addEvent(
+      Event(EventTypes::ServerSwitchToScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
 }
 
 InputFilter::SwitchInDirectionAction::SwitchInDirectionAction(IEventQueue *events, Direction direction)
@@ -324,7 +328,9 @@ std::string InputFilter::SwitchInDirectionAction::format() const
 void InputFilter::SwitchInDirectionAction::perform(const Event &event)
 {
   Server::SwitchInDirectionInfo *info = Server::SwitchInDirectionInfo::alloc(m_direction);
-  m_events->addEvent(Event(EventTypes::ServerSwitchInDirection, event.getTarget(), info, Event::kDeliverImmediately));
+  m_events->addEvent(
+      Event(EventTypes::ServerSwitchInDirection, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
 }
 
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue *events, Mode mode)
@@ -384,7 +390,9 @@ void InputFilter::KeyboardBroadcastAction::perform(const Event &event)
 
   // send event
   Server::KeyboardBroadcastInfo *info = Server::KeyboardBroadcastInfo::alloc(s_state[m_mode], m_screens);
-  m_events->addEvent(Event(EventTypes::ServerKeyboardBroadcast, event.getTarget(), info, Event::kDeliverImmediately));
+  m_events->addEvent(
+      Event(EventTypes::ServerKeyboardBroadcast, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
 }
 
 InputFilter::KeystrokeAction::KeystrokeAction(IEventQueue *events, IPlatformScreen::KeyInfo *info, bool press)
@@ -445,11 +453,13 @@ std::string InputFilter::KeystrokeAction::format() const
 void InputFilter::KeystrokeAction::perform(const Event &event)
 {
   using enum EventTypes;
+  using Flags = Event::EventFlags;
+
   EventTypes type = m_press ? KeyStateKeyDown : KeyStateKeyUp;
 
-  m_events->addEvent(Event(PrimaryScreenFakeInputBegin, event.getTarget(), nullptr, Event::kDeliverImmediately));
-  m_events->addEvent(Event(type, event.getTarget(), m_keyInfo, Event::kDeliverImmediately | Event::kDontFreeData));
-  m_events->addEvent(Event(PrimaryScreenFakeInputEnd, event.getTarget(), nullptr, Event::kDeliverImmediately));
+  m_events->addEvent(Event(PrimaryScreenFakeInputBegin, event.getTarget(), nullptr, Flags::DeliverImmediately));
+  m_events->addEvent(Event(type, event.getTarget(), m_keyInfo, Flags::DeliverImmediately | Flags::DontFreeData));
+  m_events->addEvent(Event(PrimaryScreenFakeInputEnd, event.getTarget(), nullptr, Flags::DeliverImmediately));
 }
 
 const char *InputFilter::KeystrokeAction::formatName() const
@@ -503,12 +513,14 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
   if (m_buttonInfo->m_mask != 0) {
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
     modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
-    m_events->addEvent(Event(KeyStateKeyDown, event.getTarget(), modifierInfo, Event::kDeliverImmediately));
+    m_events->addEvent(Event(KeyStateKeyDown, event.getTarget(), modifierInfo, Event::EventFlags::DeliverImmediately));
   }
 
   // send button
   EventTypes type = m_press ? PrimaryScreenButtonDown : PrimaryScreenButtonUp;
-  m_events->addEvent(Event(type, event.getTarget(), m_buttonInfo, Event::kDeliverImmediately | Event::kDontFreeData));
+  m_events->addEvent(Event(
+      type, event.getTarget(), m_buttonInfo, Event::EventFlags::DeliverImmediately | Event::EventFlags::DontFreeData
+  ));
 }
 
 const char *InputFilter::MouseButtonAction::formatName() const
@@ -867,7 +879,8 @@ void InputFilter::handleEvent(const Event &event)
 {
   // copy event and adjust target
   Event myEvent(
-      event.getType(), this, event.getData(), event.getFlags() | Event::kDontFreeData | Event::kDeliverImmediately
+      event.getType(), this, event.getData(),
+      event.getFlags() | Event::EventFlags::DontFreeData | Event::EventFlags::DeliverImmediately
   );
 
   // let each rule try to match the event until one does
