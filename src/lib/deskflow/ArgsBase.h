@@ -22,15 +22,15 @@ public:
   virtual ~ArgsBase() = default;
 
   /// @brief This sets the type of the derived class
-  enum Type
+  enum class ClassType
   {
-    kBase,
-    kServer,
-    kClient
+    Base,
+    Server,
+    Client
   };
 
   /// @brief Stores what type of object this is
-  Type m_classType = kBase;
+  ClassType m_classType = ClassType::Base;
 
   /// @brief Should run as a daemon
   bool m_daemon = true;
