@@ -64,8 +64,8 @@ public:
   void secureAccept();
   int secureRead(void *buffer, int size, int &read);
   int secureWrite(const void *buffer, int size, int &wrote);
-  EJobResult doRead() override;
-  EJobResult doWrite() override;
+  JobResult doRead() override;
+  JobResult doWrite() override;
   void initSsl(bool server);
   bool loadCertificates(const std::string &CertFile);
 

@@ -59,11 +59,11 @@ public:
   virtual ISocketMultiplexerJob *newJob();
 
 protected:
-  enum EJobResult
+  enum class JobResult
   {
-    kBreak = -1, //!< Break the Job chain
-    kRetry,      //!< Retry the same job
-    kNew         //!< Require a new job
+    Break = -1, //!< Break the Job chain
+    Retry,      //!< Retry the same job
+    New         //!< Require a new job
   };
 
   ArchSocket getSocket()
@@ -74,8 +74,8 @@ protected:
   {
     return m_events;
   }
-  virtual EJobResult doRead();
-  virtual EJobResult doWrite();
+  virtual JobResult doRead();
+  virtual JobResult doWrite();
 
   void setJob(ISocketMultiplexerJob *);
 

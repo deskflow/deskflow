@@ -109,8 +109,9 @@ void SecureSocket::secureAccept()
   ));
 }
 
-TCPSocket::EJobResult SecureSocket::doRead()
+TCPSocket::JobResult SecureSocket::doRead()
 {
+  using enum JobResult;
   static uint8_t buffer[4096];
   memset(buffer, 0, sizeof(buffer));
   int bytesRead = 0;
@@ -119,12 +120,12 @@ TCPSocket::EJobResult SecureSocket::doRead()
   if (isSecureReady()) {
     status = secureRead(buffer, sizeof(buffer), bytesRead);
     if (status < 0) {
-      return kBreak;
+      return Break;
     } else if (status == 0) {
-      return kNew;
+      return New;
     }
   } else {
-    return kRetry;
+    return Retry;
   }
 
   if (bytesRead > 0) {
@@ -140,7 +141,7 @@ TCPSocket::EJobResult SecureSocket::doRead()
 
       status = secureRead(buffer, sizeof(buffer), bytesRead);
       if (status < 0) {
-        return kBreak;
+        return Break;
       }
     } while (bytesRead > 0 || status > 0);
 
@@ -158,14 +159,15 @@ TCPSocket::EJobResult SecureSocket::doRead()
       m_connected = false;
     }
     m_readable = false;
-    return kNew;
+    return New;
   }
 
-  return kRetry;
+  return Retry;
 }
 
-TCPSocket::EJobResult SecureSocket::doWrite()
+TCPSocket::JobResult SecureSocket::doWrite()
 {
+  using enum JobResult;
   static bool s_retry = false;
   static int s_retrySize = 0;
   static int s_staticBufferSize = 0;
@@ -190,7 +192,7 @@ TCPSocket::EJobResult SecureSocket::doWrite()
   }
 
   if (bufferSize == 0) {
-    return kRetry;
+    return Retry;
   }
 
   if (isSecureReady()) {
@@ -199,22 +201,22 @@ TCPSocket::EJobResult SecureSocket::doWrite()
       s_retry = false;
       bufferSize = 0;
     } else if (status < 0) {
-      return kBreak;
+      return Break;
     } else if (status == 0) {
       s_retry = true;
       s_retrySize = bufferSize;
-      return kNew;
+      return New;
     }
   } else {
-    return kRetry;
+    return Retry;
   }
 
   if (bytesWrote > 0) {
     discardWrittenData(bytesWrote);
-    return kNew;
+    return New;
   }
 
-  return kRetry;
+  return Retry;
 }
 
 int SecureSocket::secureRead(void *buffer, int size, int &read)
