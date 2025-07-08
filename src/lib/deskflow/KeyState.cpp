@@ -15,7 +15,7 @@
 #include <iterator>
 #include <list>
 
-static const KeyButton kButtonMask = (KeyButton)(IKeyState::kNumButtons - 1);
+static const KeyButton kButtonMask = (KeyButton)(IKeyState::s_numButtons - 1);
 
 static const KeyID s_decomposeTable[] = {
     // spacing version of dead keys
@@ -943,7 +943,7 @@ bool KeyState::fakeKeyUp(KeyButton serverID)
 void KeyState::fakeAllKeysUp()
 {
   Keystrokes keys;
-  for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
+  for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
     if (m_syntheticKeys[i] > 0) {
       keys.push_back(Keystroke(i, false, false, m_keyClientData[i]));
       m_keys[i] = 0;

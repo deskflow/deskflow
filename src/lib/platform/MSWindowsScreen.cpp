@@ -302,7 +302,7 @@ void MSWindowsScreen::leave()
     m_hook.setMode(kHOOK_RELAY_EVENTS);
 
     m_primaryKeyDownList.clear();
-    for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
+    for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       if (m_keyState->isKeyDown(i)) {
         m_primaryKeyDownList.push_back(i);
         LOG((CLOG_DEBUG1 "key button %d is down before leaving to another screen", i));
@@ -1549,10 +1549,10 @@ bool MSWindowsScreen::mapPressFromEvent(WPARAM msg, LPARAM) const
 void MSWindowsScreen::updateKeysCB(void *)
 {
   // record which keys we think are down
-  bool down[IKeyState::kNumButtons];
+  bool down[IKeyState::s_numButtons];
   bool sendFixes = (isPrimary() && !m_isOnScreen);
   if (sendFixes) {
-    for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
+    for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       down[i] = m_keyState->isKeyDown(i);
     }
   }
@@ -1569,7 +1569,7 @@ void MSWindowsScreen::updateKeysCB(void *)
   // send key releases for these keys to the active client.
   if (sendFixes) {
     KeyModifierMask mask = pollActiveModifiers();
-    for (KeyButton i = 0; i < IKeyState::kNumButtons; ++i) {
+    for (KeyButton i = 0; i < IKeyState::s_numButtons; ++i) {
       if (down[i] && !m_keyState->isKeyDown(i)) {
         m_keyState->sendKeyEvent(getEventTarget(), false, false, kKeyNone, mask, 1, i);
       }
