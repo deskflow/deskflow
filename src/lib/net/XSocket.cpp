@@ -12,7 +12,7 @@
 // XSocketAddress
 //
 
-XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int port) noexcept
+XSocketAddress::XSocketAddress(SocketError error, const std::string &hostname, int port) noexcept
     : m_error(error),
       m_hostname(hostname),
       m_port(port)
@@ -20,7 +20,7 @@ XSocketAddress::XSocketAddress(EError error, const std::string &hostname, int po
   // do nothing
 }
 
-XSocketAddress::EError XSocketAddress::getError() const noexcept
+XSocketAddress::SocketError XSocketAddress::getError() const noexcept
 {
   return m_error;
 }
@@ -46,8 +46,9 @@ std::string XSocketAddress::getWhat() const throw()
       "unsupported address for: %{1}",
       "invalid port" // m_port may not be set to the bad port
   };
+  const auto index = static_cast<int>(m_error);
   return format(
-      s_errorID[m_error], s_errorMsg[m_error], m_hostname.c_str(), deskflow::string::sprintf("%d", m_port).c_str()
+      s_errorID[index], s_errorMsg[index], m_hostname.c_str(), deskflow::string::sprintf("%d", m_port).c_str()
   );
 }
 

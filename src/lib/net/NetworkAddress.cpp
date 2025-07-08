@@ -43,7 +43,7 @@ NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostna
     try {
       m_port = std::stoi(m_hostname.substr(hostIt + 1));
     } catch (...) {
-      throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+      throw XSocketAddress(XSocketAddress::SocketError::BadPort, m_hostname, m_port);
     }
 
     auto endHostnameIt = static_cast<int>(hostIt);
@@ -57,19 +57,19 @@ NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostna
 
       // bad syntax of ipv6 with port
       if (hostIt == std::string::npos) {
-        throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+        throw XSocketAddress(XSocketAddress::SocketError::Unknown, m_hostname, m_port);
       }
 
       auto portSuffix = m_hostname.substr(hostIt + portDelimeter.size());
       // port is implied but omitted
       if (portSuffix.empty()) {
-        throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+        throw XSocketAddress(XSocketAddress::SocketError::BadPort, m_hostname, m_port);
       }
       try {
         m_port = std::stoi(portSuffix);
       } catch (...) {
         // port is not a number
-        throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+        throw XSocketAddress(XSocketAddress::SocketError::BadPort, m_hostname, m_port);
       }
 
       auto endHostnameIt = static_cast<int>(hostIt) - 1;
@@ -78,7 +78,7 @@ NetworkAddress::NetworkAddress(const std::string &hostname, int port) : m_hostna
 
     // ensure that ipv6 link-local adress ended with scope id
     if (m_hostname.rfind("fe80:", 0) == 0 && m_hostname.find('%') == std::string::npos) {
-      throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+      throw XSocketAddress(XSocketAddress::SocketError::Unknown, m_hostname, m_port);
     }
   }
 
@@ -156,13 +156,13 @@ size_t NetworkAddress::resolve(size_t index)
       }
     }
   } catch (XArchNetworkNameUnknown &) {
-    throw XSocketAddress(XSocketAddress::kNotFound, m_hostname, m_port);
+    throw XSocketAddress(XSocketAddress::SocketError::NotFound, m_hostname, m_port);
   } catch (XArchNetworkNameNoAddress &) {
-    throw XSocketAddress(XSocketAddress::kNoAddress, m_hostname, m_port);
+    throw XSocketAddress(XSocketAddress::SocketError::NoAddress, m_hostname, m_port);
   } catch (XArchNetworkNameUnsupported &) {
-    throw XSocketAddress(XSocketAddress::kUnsupported, m_hostname, m_port);
+    throw XSocketAddress(XSocketAddress::SocketError::Unsupported, m_hostname, m_port);
   } catch (XArchNetworkName &) {
-    throw XSocketAddress(XSocketAddress::kUnknown, m_hostname, m_port);
+    throw XSocketAddress(XSocketAddress::SocketError::Unknown, m_hostname, m_port);
   }
 
   // set port in address
@@ -205,6 +205,6 @@ void NetworkAddress::checkPort() const
 {
   // check port number
   if (m_port < 0 || m_port > 65535) {
-    throw XSocketAddress(XSocketAddress::kBadPort, m_hostname, m_port);
+    throw XSocketAddress(XSocketAddress::SocketError::BadPort, m_hostname, m_port);
   }
 }
