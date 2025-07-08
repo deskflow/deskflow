@@ -14,10 +14,7 @@
 #include <fstream>
 #include <iostream>
 
-enum EFileLogOutputter
-{
-  kFileSizeLimit = 1024 // kb
-};
+constexpr auto s_logFileSizeLimit = 1024 * 1024; //!< Max Log size before rotating (1Mb)
 
 //
 // StopLogOutputter
@@ -154,7 +151,7 @@ bool FileLogOutputter::write(LogLevel level, const char *message)
 
     // when file size exceeds limits, move to 'old log' filename.
     size_t p = m_handle.tellp();
-    if (p > (kFileSizeLimit * 1024)) {
+    if (p > s_logFileSizeLimit) {
       moveFile = true;
     }
   }
