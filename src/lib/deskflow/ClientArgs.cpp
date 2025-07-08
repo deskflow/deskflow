@@ -10,6 +10,6 @@ namespace deskflow {
 
 ClientArgs::ClientArgs()
 {
-  m_classType = kClient;
+  m_classType = ClassType::Client;
 }
 } // namespace deskflow

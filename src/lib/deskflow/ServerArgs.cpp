@@ -10,6 +10,6 @@ namespace deskflow {
 
 ServerArgs::ServerArgs()
 {
-  m_classType = kServer;
+  m_classType = ClassType::Server;
 }
 } // namespace deskflow
