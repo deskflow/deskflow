@@ -157,7 +157,7 @@ void Client::refuseConnection(const char *msg)
   if (msg) {
     auto info = new FailInfo(msg);
     info->m_retry = true;
-    Event event(EventTypes::ClientConnectionRefused, getEventTarget(), info, Event::kDontFreeData);
+    Event event(EventTypes::ClientConnectionRefused, getEventTarget(), info, Event::EventFlags::DontFreeData);
     m_events->addEvent(event);
   }
 }
@@ -381,7 +381,7 @@ void Client::sendConnectionFailedEvent(const char *msg)
 {
   auto *info = new FailInfo(msg);
   info->m_retry = true;
-  Event event(EventTypes::ClientConnectionFailed, getEventTarget(), info, Event::kDontFreeData);
+  Event event(EventTypes::ClientConnectionFailed, getEventTarget(), info, Event::EventFlags::DontFreeData);
   m_events->addEvent(event);
 }
 
