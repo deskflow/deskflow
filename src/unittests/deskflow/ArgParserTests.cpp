@@ -244,7 +244,7 @@ void ArgParserTests::client_setInvertScroll()
 
   m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
-  QCOMPARE(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::INVERT_SERVER);
+  QCOMPARE(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::Inverted);
 }
 
 void ArgParserTests::client_commonArgs()

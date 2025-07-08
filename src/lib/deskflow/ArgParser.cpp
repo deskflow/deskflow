@@ -87,7 +87,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "--sync-language")) {
       args.m_enableLangSync = true;
     } else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
-      args.m_clientScrollDirection = deskflow::ClientScrollDirection::INVERT_SERVER;
+      args.m_clientScrollDirection = deskflow::ClientScrollDirection::Inverted;
     } else if (isArg(i, argc, argv, nullptr, "client")) {
       ++i;
       continue;

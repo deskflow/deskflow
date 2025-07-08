@@ -9,10 +9,10 @@
 #include "ArgsBase.h"
 
 namespace deskflow {
-enum ClientScrollDirection
+enum class ClientScrollDirection
 {
-  SERVER = 1,
-  INVERT_SERVER = -1
+  Normal = 1,   //!< Same direction as the server
+  Inverted = -1 //!< Inverted scroll direction from the server
 };
 
 class ClientArgs : public ArgsBase
@@ -32,7 +32,7 @@ public:
    * @brief m_clientScrollDirection
    * This option is responcible for scroll direction on client side.
    */
-  ClientScrollDirection m_clientScrollDirection = ClientScrollDirection::SERVER;
+  ClientScrollDirection m_clientScrollDirection = ClientScrollDirection::Normal;
 
   /**
    * @brief m_serverAddress stores deskflow server address

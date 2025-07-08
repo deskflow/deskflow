@@ -86,5 +86,5 @@ void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
 
 int32_t PlatformScreen::mapClientScrollDirection(int32_t x) const
 {
-  return (x * m_clientScrollDirection);
+  return (x * static_cast<int>(m_clientScrollDirection));
 }
