@@ -199,7 +199,7 @@ public:
 
   //! Add screen
   /*!
-  Adds a screen, returning true iff successful.  If a screen or
+  Adds a screen, returning true if successful.  If a screen or
   alias with the given name exists then it fails.
   */
   bool addScreen(const std::string &name);
