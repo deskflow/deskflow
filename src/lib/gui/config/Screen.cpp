@@ -31,6 +31,11 @@ void Screen::loadSettings(QSettingsProxy &settings)
   readSettings(settings, modifiers(), "modifier", static_cast<int>(DefaultMod), static_cast<int>(NumModifiers));
   readSettings(settings, switchCorners(), "switchCorner", false, static_cast<int>(NumSwitchCorners));
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
+
+  auto enterCommand = settings.value("EnterScreenCommand").toString();
+  m_enterScreenCommand = enter_command.isEmpty() ? std::nullopt : enterCommand;
+  auto exitCommand = settings.value("ExitScreenCommand").toString();
+  m_exitScreenCommand = exit_command.isEmpty() ? std::nullopt : exitCommand;
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
@@ -46,6 +51,18 @@ void Screen::saveSettings(QSettingsProxy &settings) const
   writeSettings(settings, modifiers(), "modifier");
   writeSettings(settings, switchCorners(), "switchCorner");
   writeSettings(settings, fixes(), "fix");
+
+  if (m_enterScreenCommand.has_value()) {
+    settings.setValue("EnterScreenCommand", m_enterScreenCommand.value());
+  } else {
+    settings.remove("EnterScreenCommand");
+  }
+
+  if (m_exitScreenCommand.has_value()) {
+    settings.setValue("ExitScreenCommand", m_exitScreenCommand.value());
+  } else {
+    settings.remove("ExitScreenCommand");
+  }
 }
 
 QString Screen::screensSection() const
@@ -89,5 +106,6 @@ bool Screen::operator==(const Screen &screen) const
 {
   return m_Name == screen.m_Name && m_Aliases == screen.m_Aliases && m_Modifiers == screen.m_Modifiers &&
          m_SwitchCorners == screen.m_SwitchCorners && m_SwitchCornerSize == screen.m_SwitchCornerSize &&
-         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer;
+         m_Fixes == screen.m_Fixes && m_Swapped == screen.m_Swapped && m_isServer == screen.m_isServer &&
+         m_enterScreenCommand == screen.m_enterScreenCommand && m_exitScreenCommand == screen.m_exitScreenCommand;
 }
