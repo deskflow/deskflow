@@ -117,8 +117,18 @@ void ScreenSettingsDialog::accept()
   m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
 
-  m_screen->m_enterScreenCommand = ui->m_runEnterScreen->text().isEmpty() ? std::nullopt : ui->m_runEnterScreen->text();
-  m_screen->m_exitScreenCommand = ui->m_runLeaveScreen->text().isEmpty() ? std::nullopt : ui->m_runLeaveScreen->text();
+  if (ui->lineRunEnterScreen->text().isEmpty()) {
+    m_screen->m_enterScreenCommand = std::nullopt;
+  } else {
+    m_screen->m_enterScreenCommand = ui->lineRunEnterScreen->text();
+  }
+
+  if (ui->lineRunLeaveScreen->text().isEmpty()) {
+    m_screen->m_exitScreenCommand = std::nullopt;
+  } else {
+    m_screen->m_exitScreenCommand = ui->lineRunLeaveScreen->text();
+  }
+
   QDialog::accept();
 }
 

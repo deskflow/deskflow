@@ -33,9 +33,18 @@ void Screen::loadSettings(QSettingsProxy &settings)
   readSettings(settings, fixes(), "fix", 0, static_cast<int>(NumFixes));
 
   auto enterCommand = settings.value("EnterScreenCommand").toString();
-  m_enterScreenCommand = enter_command.isEmpty() ? std::nullopt : enterCommand;
+  if (enterCommand.isEmpty()) {
+    m_enterScreenCommand = std::nullopt;
+  } else {
+    m_enterScreenCommand = enterCommand;
+  }
+
   auto exitCommand = settings.value("ExitScreenCommand").toString();
-  m_exitScreenCommand = exit_command.isEmpty() ? std::nullopt : exitCommand;
+  if (exitCommand.isEmpty()) {
+    m_exitScreenCommand = std::nullopt;
+  } else {
+    m_exitScreenCommand = exitCommand;
+  }
 }
 
 void Screen::saveSettings(QSettingsProxy &settings) const
