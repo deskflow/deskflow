@@ -12,7 +12,7 @@
 #include "Action.h"
 #include "Hotkey.h"
 #include "KeySequence.h"
-#include "ServerConfig.h"
+#include "config/ServerConfig.h"
 
 #include <QTimer>
 

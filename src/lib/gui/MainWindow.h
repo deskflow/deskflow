@@ -16,7 +16,7 @@
 #include <QSystemTrayIcon>
 #include <QThread>
 
-#include "ServerConfig.h"
+#include "config/ServerConfig.h"
 #include "VersionChecker.h"
 #include "gui/core/ClientConnection.h"
 #include "gui/core/CoreProcess.h"

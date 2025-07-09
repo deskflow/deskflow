@@ -13,6 +13,8 @@
 
 namespace deskflow::gui {
 
+// TODO: Remove this class, it's completely unneeded.
+// Only one class inherits from it.
 class IServerConfig
 {
 public:

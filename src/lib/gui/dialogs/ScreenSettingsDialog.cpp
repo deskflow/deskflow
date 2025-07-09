@@ -36,8 +36,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
 
   ui->m_pLineEditName->setText(m_pScreen->name());
 
-  auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
-  auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
+  const auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
+  const auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
   ui->m_pLineEditName->setValidator(valName);
   ui->m_pLineEditName->selectAll();
 
@@ -64,6 +64,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
   ui->m_pCheckBoxNumLock->setChecked(m_pScreen->fix(NumLock));
   ui->m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(ScrollLock));
   ui->m_pCheckBoxXTest->setChecked(m_pScreen->fix(XTest));
+  ui->m_runEnterScreen->setText(m_pScreen->m_enterScreenCommand.value_or(QString()));
+  ui->m_runLeaveScreen->setText(m_pScreen->m_exitScreenCommand.value_or(QString()));
 }
 
 void ScreenSettingsDialog::accept()
@@ -112,6 +114,17 @@ void ScreenSettingsDialog::accept()
   m_pScreen->setFix(ScrollLock, ui->m_pCheckBoxScrollLock->isChecked());
   m_pScreen->setFix(XTest, ui->m_pCheckBoxXTest->isChecked());
 
+  if (ui->m_runEnterScreen->text().isEmpty()) {
+    m_pScreen->m_enterScreenCommand = std::nullopt;
+  } else {
+    m_pScreen->m_enterScreenCommand = ui->m_runEnterScreen->text();
+  }
+
+  if (ui->m_runLeaveScreen->text().isEmpty()) {
+    m_pScreen->m_exitScreenCommand = std::nullopt;
+  } else {
+    m_pScreen->m_exitScreenCommand = ui->m_runLeaveScreen->text();
+  }
   QDialog::accept();
 }
 
@@ -131,10 +144,7 @@ void ScreenSettingsDialog::on_m_pLineEditAlias_textChanged(const QString &text)
 
 void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()
 {
-  QList<QListWidgetItem *> items = ui->m_pListAliases->selectedItems();
-
-  for (int i = 0; i < items.count(); i++)
-    delete items[i];
+  qDeleteAll(ui->m_pListAliases->selectedItems());
 }
 
 void ScreenSettingsDialog::on_m_pListAliases_itemSelectionChanged()
