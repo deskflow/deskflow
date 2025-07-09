@@ -64,6 +64,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
   ui->m_pCheckBoxNumLock->setChecked(m_pScreen->fix(NumLock));
   ui->m_pCheckBoxScrollLock->setChecked(m_pScreen->fix(ScrollLock));
   ui->m_pCheckBoxXTest->setChecked(m_pScreen->fix(XTest));
+  ui->m_runEnterScreen->setText(m_pScreen->m_enterScreenCommand.value_or(QString()));
+  ui->m_runLeaveScreen->setText(m_pScreen->m_exitScreenCommand.value_or(QString()));
 }
 
 void ScreenSettingsDialog::accept()
@@ -112,6 +114,8 @@ void ScreenSettingsDialog::accept()
   m_pScreen->setFix(ScrollLock, ui->m_pCheckBoxScrollLock->isChecked());
   m_pScreen->setFix(XTest, ui->m_pCheckBoxXTest->isChecked());
 
+  m_pScreen->m_enterScreenCommand = ui->m_runEnterScreen->text().isEmpty() ? std::nullopt : ui->m_runEnterScreen->text();
+  m_pScreen->m_exitScreenCommand = ui->m_runLeaveScreen->text().isEmpty() ? std::nullopt : ui->m_runLeaveScreen->text();
   QDialog::accept();
 }
 
