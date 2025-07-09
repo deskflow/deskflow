@@ -13,6 +13,7 @@
 
 namespace deskflow::gui {
 
+// TODO: Remove this class, when the ServerConnectionTests are ported to QTests
 class IServerConfig
 {
 public:
