@@ -36,8 +36,8 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
 
   ui->m_pLineEditName->setText(m_pScreen->name());
 
-  auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
-  auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
+  const auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
+  const auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
   ui->m_pLineEditName->setValidator(valName);
   ui->m_pLineEditName->selectAll();
 
