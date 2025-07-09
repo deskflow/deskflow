@@ -114,8 +114,17 @@ void ScreenSettingsDialog::accept()
   m_pScreen->setFix(ScrollLock, ui->m_pCheckBoxScrollLock->isChecked());
   m_pScreen->setFix(XTest, ui->m_pCheckBoxXTest->isChecked());
 
-  m_pScreen->m_enterScreenCommand = ui->m_runEnterScreen->text().isEmpty() ? std::nullopt : ui->m_runEnterScreen->text();
-  m_pScreen->m_exitScreenCommand = ui->m_runLeaveScreen->text().isEmpty() ? std::nullopt : ui->m_runLeaveScreen->text();
+  if (ui->m_runEnterScreen->text().isEmpty()) {
+    m_pScreen->m_enterScreenCommand = std::nullopt;
+  } else {
+    m_pScreen->m_enterScreenCommand = ui->m_runEnterScreen->text();
+  }
+
+  if (ui->m_runLeaveScreen->text().isEmpty()) {
+    m_pScreen->m_exitScreenCommand = std::nullopt;
+  } else {
+    m_pScreen->m_exitScreenCommand = ui->m_runLeaveScreen->text();
+  }
   QDialog::accept();
 }
 
