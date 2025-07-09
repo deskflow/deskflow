@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Hotkey.h"
+#include "../Hotkey.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"

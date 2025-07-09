@@ -38,8 +38,6 @@ add_library(${target} STATIC
   Messages.h
   ScreenSetupModel.cpp
   ScreenSetupModel.h
-  ServerConfig.cpp
-  ServerConfig.h
   Styles.h
   StyleUtils.h
   VersionChecker.cpp
@@ -51,6 +49,8 @@ add_library(${target} STATIC
   config/ScreenConfig.h
   config/ScreenList.cpp
   config/ScreenList.h
+  config/ServerConfig.cpp
+  config/ServerConfig.h
   core/ClientConnection.cpp
   core/ClientConnection.h
   core/CommandProcess.cpp
