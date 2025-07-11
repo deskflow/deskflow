@@ -40,8 +40,10 @@ public:
   static bool searchDoubleQuotes(const std::string_view &command, size_t &left, size_t &right, size_t startPos = 0);
   static void removeDoubleQuotes(std::string_view &arg);
   static const char **getArgv(std::vector<std::string> &argsArray);
-  static std::string
-  assembleCommand(std::vector<std::string> &argsArray, std::string ignoreArg = "", int parametersRequired = 0);
+  static std::string assembleCommand(
+      std::vector<std::string> &argsArray, const std::string_view &ignoreArg = std::string_view(),
+      int parametersRequired = 0
+  );
 
   static deskflow::ArgsBase &argsBase()
   {
