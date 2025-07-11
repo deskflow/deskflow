@@ -192,7 +192,7 @@ void ClientApp::updateStatus() const
   updateStatus("");
 }
 
-void ClientApp::updateStatus(const std::string &msg) const
+void ClientApp::updateStatus(const std::string_view &) const
 {
   // do nothing
 }
