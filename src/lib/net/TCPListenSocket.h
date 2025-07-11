@@ -39,15 +39,15 @@ public:
   // IListenSocket overrides
   std::unique_ptr<IDataSocket> accept() override;
 
-protected:
-  void setListeningJob();
-
-public:
   ISocketMultiplexerJob *serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
-  ArchSocket m_socket;
-  std::mutex m_mutex;
+  void setListeningJob();
+
   IEventQueue *m_events;
+  ArchSocket m_socket;
   SocketMultiplexer *m_socketMultiplexer;
+
+private:
+  std::mutex m_mutex;
 };
