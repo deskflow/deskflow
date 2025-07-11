@@ -88,7 +88,7 @@ ISocketMultiplexerJob *SecureSocket::newJob()
 {
   // after TCP connection is established, SecureSocket will pick up
   // connected event and do secureConnect
-  if (m_connected && !m_secureReady) {
+  if (isConnected() && !m_secureReady) {
     return nullptr;
   }
 
@@ -155,11 +155,11 @@ TCPSocket::JobResult SecureSocket::doRead()
     // has therefore shutdown but don't flush our buffer
     // since there's still data to be read.
     sendEvent(EventTypes::StreamInputShutdown);
-    if (!m_writable && m_inputBuffer.getSize() == 0) {
+    if (!isWritable() && m_inputBuffer.getSize() == 0) {
       sendEvent(EventTypes::SocketDisconnected);
-      m_connected = false;
+      setConnected(false);
     }
-    m_readable = false;
+    setReadable(false);
     return New;
   }
 
@@ -565,7 +565,7 @@ void SecureSocket::checkResult(int status, int &retry)
     // Need to make sure the socket is known to be writable so the impending
     // select action actually triggers on a write. This isn't necessary for
     // m_readable because the socket logic is always readable
-    m_writable = true;
+    setWritable(true);
     retry++;
     LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", errorCode, retry));
     break;
