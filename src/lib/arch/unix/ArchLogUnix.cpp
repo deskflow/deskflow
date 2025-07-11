@@ -7,15 +7,15 @@
 
 #include "arch/unix/ArchLogUnix.h"
 
+#include <QString>
 #include <syslog.h>
-
 //
 // ArchLogUnix
 //
 
-void ArchLogUnix::openLog(const char *name)
+void ArchLogUnix::openLog(const QString &name)
 {
-  openlog(name, 0, LOG_DAEMON);
+  openlog(name.toStdString().c_str(), 0, LOG_DAEMON);
 }
 
 void ArchLogUnix::closeLog()
@@ -28,7 +28,7 @@ void ArchLogUnix::showLog(bool)
   // do nothing
 }
 
-void ArchLogUnix::writeLog(LogLevel level, const char *msg)
+void ArchLogUnix::writeLog(LogLevel level, const QString &msg)
 {
   // convert level
   int priority;
@@ -56,5 +56,5 @@ void ArchLogUnix::writeLog(LogLevel level, const char *msg)
   }
 
   // log it
-  syslog(priority, "%s", msg);
+  syslog(priority, "%s", msg.toStdString().c_str());
 }
