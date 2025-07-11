@@ -1885,7 +1885,7 @@ Bool XWindowsUtil::propertyNotifyPredicate(Display *, XEvent *xevent, XPointer a
 void XWindowsUtil::initKeyMaps()
 {
   if (s_keySymToUCS4.empty()) {
-    for (size_t i = 0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
+    for (size_t i = 0; i < std::size(s_keymap); ++i) {
       s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
     }
   }
