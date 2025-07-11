@@ -249,8 +249,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   for (int i = 0; i < config.screens().size(); i++) {
     if (!config.screens()[i].isNull()) {
       outStream << "\t" << config.screens()[i].name() << ":" << Qt::endl;
-
-      for (unsigned int j = 0; j < sizeof(neighbourDirs) / sizeof(neighbourDirs[0]); j++) {
+      for (unsigned int j = 0; j < std::size(neighbourDirs); j++) {
         int idx = config.adjacentScreenIndex(i, neighbourDirs[j].x, neighbourDirs[j].y);
         if (idx != -1 && !config.screens()[idx].isNull())
           outStream << "\t\t" << neighbourDirs[j].name << " = " << config.screens()[idx].name() << Qt::endl;

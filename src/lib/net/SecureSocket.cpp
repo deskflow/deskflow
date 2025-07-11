@@ -113,12 +113,13 @@ TCPSocket::JobResult SecureSocket::doRead()
 {
   using enum JobResult;
   static uint8_t buffer[4096];
-  memset(buffer, 0, sizeof(buffer));
+  static const auto bufferSize = std::size(buffer);
+  memset(buffer, 0, bufferSize);
   int bytesRead = 0;
   int status = 0;
 
   if (isSecureReady()) {
-    status = secureRead(buffer, sizeof(buffer), bytesRead);
+    status = secureRead(buffer, bufferSize, bytesRead);
     if (status < 0) {
       return Break;
     } else if (status == 0) {
@@ -139,7 +140,7 @@ TCPSocket::JobResult SecureSocket::doRead()
         break;
       }
 
-      status = secureRead(buffer, sizeof(buffer), bytesRead);
+      status = secureRead(buffer, bufferSize, bytesRead);
       if (status < 0) {
         return Break;
       }

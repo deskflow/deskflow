@@ -1028,7 +1028,7 @@ void KeyState::addKeypadEntries()
   // map every numpad key to its equivalent non-numpad key if it's not
   // on the keyboard.
   for (int32_t g = 0, n = m_keyMap.getNumGroups(); g < n; ++g) {
-    for (size_t i = 0; i < sizeof(s_numpadTable) / sizeof(s_numpadTable[0]); i += 2) {
+    for (size_t i = 0; i < std::size(s_numpadTable); i += 2) {
       m_keyMap.addKeyCombinationEntry(s_numpadTable[i], g, s_numpadTable + i + 1, 1);
     }
   }
