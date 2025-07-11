@@ -129,6 +129,7 @@ private:
   std::unique_ptr<ISocketFactory> getSocketFactory() const;
   NetworkAddress getAddress(const NetworkAddress &address) const;
 
+  bool m_suspended = false;
   Server *m_server = nullptr;
   EServerState m_serverState = EServerState::kUninitialized;
   deskflow::Screen *m_serverScreen = nullptr;
