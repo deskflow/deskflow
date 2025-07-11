@@ -92,7 +92,7 @@ QVariant Settings::defaultValue(const QString &key)
     return QRect();
 
   if (key == Security::Certificate)
-    return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsCertificateFilename);
+    return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsCertificateFilename);
 
   if (key == Security::KeySize)
     return 2048;
@@ -110,19 +110,19 @@ QVariant Settings::defaultValue(const QString &key)
     return kServerBinName;
 
   if (key == Daemon::Elevate)
-    return instance()->isNativeMode();
+    return Settings::isNativeMode();
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
 
   if (key == Server::ExternalConfigFile)
-    return QStringLiteral("%1/%2-server.conf").arg(instance()->settingsPath(), kAppId);
+    return QStringLiteral("%1/%2-server.conf").arg(Settings::settingsPath(), kAppId);
 
   if (key == Core::Port)
     return 24800;
 
   if (key == Core::ProcessMode) {
-    if (instance()->isNativeMode())
+    if (Settings::isNativeMode())
       return Settings::ProcessMode::Service;
     else
       return Settings::ProcessMode::Desktop;
@@ -132,7 +132,7 @@ QVariant Settings::defaultValue(const QString &key)
 #ifdef Q_OS_WIN
     return QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kDaemonLogFilename);
 #else
-    return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kDaemonLogFilename);
+    return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kDaemonLogFilename);
 #endif
   }
 
@@ -141,7 +141,7 @@ QVariant Settings::defaultValue(const QString &key)
 
 QString Settings::logLevelText()
 {
-  return instance()->m_logLevels.at(instance()->value(Log::Level).toInt());
+  return Settings::m_logLevels.at(Settings::value(Log::Level).toInt());
 }
 
 QSettingsProxy &Settings::proxy()
@@ -158,12 +158,12 @@ void Settings::save(bool emitSaving)
 
 QStringList Settings::validKeys()
 {
-  return instance()->m_validKeys;
+  return Settings::m_validKeys;
 }
 
 bool Settings::isWritable()
 {
-  if (instance()->isNativeMode())
+  if (Settings::isNativeMode())
     return true;
   return instance()->m_settings->isWritable();
 }
