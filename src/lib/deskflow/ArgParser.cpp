@@ -30,7 +30,7 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
   updateCommonArgs(argv);
   int i = 1;
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i, true) || parseGenericArgs(argc, argv, i) ||
+    if (parsePlatformArgs(args, argc, argv, i) || parseGenericArgs(argc, argv, i) ||
         parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
@@ -60,7 +60,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
   int i{1};
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i, false) || parseGenericArgs(argc, argv, i) ||
+    if (parsePlatformArgs(args, argc, argv, i) || parseGenericArgs(argc, argv, i) ||
         parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "client")) {
       ++i;
       continue;
@@ -98,9 +98,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
   return true;
 }
 
-bool ArgParser::parsePlatformArgs(
-    deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i, bool isServer
-) const
+bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i) const
 {
 #if !WINAPI_XWINDOWS
   // no options for carbon or windows
