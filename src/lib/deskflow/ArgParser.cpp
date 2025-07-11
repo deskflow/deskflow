@@ -30,21 +30,13 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
   updateCommonArgs(argv);
   int i = 1;
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i, true)) {
-      ++i;
-      continue;
-    } else if (parseGenericArgs(argc, argv, i)) {
-      ++i;
-      continue;
-    } else if (parseDeprecatedArgs(argc, argv, i)) {
+    if (parsePlatformArgs(args, argc, argv, i, true) || parseGenericArgs(argc, argv, i) ||
+        parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
       // save configuration file path
       args.m_configFile = argv[++i];
-    } else if (isArg(i, argc, argv, nullptr, "server")) {
-      ++i;
-      continue;
     } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
       args.m_chkPeerCert = false;
     } else {
@@ -68,18 +60,11 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
   int i{1};
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i, false)) {
+    if (parsePlatformArgs(args, argc, argv, i, false) || parseGenericArgs(argc, argv, i) ||
+        parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "client")) {
       ++i;
       continue;
-    } else if (parseGenericArgs(argc, argv, i)) {
-      ++i;
-      continue;
-    } else if (parseDeprecatedArgs(argc, argv, i)) {
-      ++i;
-      continue;
-    } else if (isArg(i, argc, argv, nullptr, "--camp")) {
-      // ignore -- included for backwards compatibility
-    } else if (isArg(i, argc, argv, nullptr, "--no-camp")) {
+    } else if (isArg(i, argc, argv, nullptr, "--camp") || isArg(i, argc, argv, nullptr, "--no-camp")) {
       // ignore -- included for backwards compatibility
     } else if (isArg(i, argc, argv, nullptr, "--yscroll", 1)) {
       // define scroll
@@ -88,9 +73,6 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
       args.m_enableLangSync = true;
     } else if (isArg(i, argc, argv, nullptr, "--invert-scroll")) {
       args.m_clientScrollDirection = deskflow::ClientScrollDirection::Inverted;
-    } else if (isArg(i, argc, argv, nullptr, "client")) {
-      ++i;
-      continue;
     } else {
       if (i + 1 == argc) {
         args.m_serverAddress = argv[i];
