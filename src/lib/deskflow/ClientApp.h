@@ -100,6 +100,7 @@ public:
 private:
   ISocketFactory *getSocketFactory() const;
 
+  bool m_suspended = false;
   Client *m_client = nullptr;
   deskflow::Screen *m_clientScreen = nullptr;
   NetworkAddress *m_serverAddress = nullptr;
