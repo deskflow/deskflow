@@ -144,7 +144,7 @@ std::string sizeTypeToString(size_t n)
   return ss.str();
 }
 
-size_t stringToSizeType(std::string string)
+size_t stringToSizeType(const std::string &string)
 {
   std::istringstream iss(string);
   size_t value;
