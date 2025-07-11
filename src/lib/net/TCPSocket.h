@@ -79,13 +79,40 @@ protected:
 
   void setJob(ISocketMultiplexerJob *);
 
+  bool isConnected() const
+  {
+    return m_connected;
+  }
+
+  void setConnected(bool connected)
+  {
+    if (m_connected == connected)
+      return;
+    m_connected = connected;
+  }
+
   bool isReadable() const
   {
     return m_readable;
   }
+
+  void setReadable(bool readable)
+  {
+    if (m_readable == readable)
+      return;
+    m_readable = readable;
+  }
+
   bool isWritable() const
   {
     return m_writable;
+  }
+
+  void setWritable(bool canWrite)
+  {
+    if (canWrite == m_writable)
+      return;
+    m_writable = canWrite;
   }
 
   Mutex &getMutex()
@@ -95,6 +122,10 @@ protected:
 
   void sendEvent(EventTypes);
   void discardWrittenData(int bytesWrote);
+
+  IEventQueue *m_events;
+  StreamBuffer m_inputBuffer;
+  StreamBuffer m_outputBuffer;
 
 private:
   void init();
@@ -108,15 +139,9 @@ private:
   ISocketMultiplexerJob *serviceConnecting(ISocketMultiplexerJob *, bool, bool, bool);
   ISocketMultiplexerJob *serviceConnected(ISocketMultiplexerJob *, bool, bool, bool);
 
-protected:
   bool m_readable;
   bool m_writable;
   bool m_connected;
-  IEventQueue *m_events;
-  StreamBuffer m_inputBuffer;
-  StreamBuffer m_outputBuffer;
-
-private:
   Mutex m_mutex;
   ArchSocket m_socket;
   CondVar<bool> m_flushed;
