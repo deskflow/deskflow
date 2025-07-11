@@ -1,6 +1,6 @@
 var classOSXScreen =
 [
-    [ "OSXScreen", "classOSXScreen.html#a9564750234600a9b0b27ad2b595e280a", null ],
+    [ "OSXScreen", "classOSXScreen.html#a898d5589a3f2ad4b4c8e9213fe364a1d", null ],
     [ "~OSXScreen", "classOSXScreen.html#a52a46101a17ecfe975876d8d8e4e3438", null ],
     [ "canLeave", "classOSXScreen.html#a25a6221c6eb475b644f101abd3e28f84", null ],
     [ "checkClipboards", "classOSXScreen.html#ab7489399034844a18628e1a3b3e76222", null ],

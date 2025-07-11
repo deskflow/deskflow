@@ -1,11 +1,11 @@
 <map id="src/lib/arch/unix/ArchLogUnix.h" name="src/lib/arch/unix/ArchLogUnix.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,230,44"/>
-<area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="90,92,204,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,45,150,76,144,76,144,45"/>
-<area shape="rect" id="Node000003" href="$ELevel_8h.html" title=" " alt="" coords="22,165,125,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,119,98,156,94,152,133,115"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="60,5,226,44"/>
+<area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="86,92,200,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,45,146,76,140,76,140,45"/>
+<area shape="rect" id="Node000003" href="$LogLevel_8h.html" title=" " alt="" coords="9,165,125,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,119,92,156,89,152,129,115"/>
 <area shape="rect" id="Node000004" href="$IInterface_8h.html" title=" " alt="" coords="149,165,292,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="161,115,200,152,196,156,157,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="158,115,198,152,195,156,154,119"/>
 <area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="178,237,263,262"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="223,190,223,222,218,222,218,190"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="5,310,73,335"/>

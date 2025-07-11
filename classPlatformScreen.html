@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -154,7 +154,7 @@ Collaboration diagram for PlatformScreen:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9be9b32e0fcb600938772f6ef8c89b9e" id="r_a9be9b32e0fcb600938772f6ef8c89b9e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9be9b32e0fcb600938772f6ef8c89b9e">PlatformScreen</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a> scrollDirection=<a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a">deskflow::ClientScrollDirection::SERVER</a>)</td></tr>
+<tr class="memitem:abe740ec47ce4b572adcfcfb5fa07df49" id="r_abe740ec47ce4b572adcfcfb5fa07df49"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe740ec47ce4b572adcfcfb5fa07df49">PlatformScreen</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a> scrollDirection=<a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a>)</td></tr>
 <tr class="memitem:a2f288569bd4751fa8c75b08ffc237b85" id="r_a2f288569bd4751fa8c75b08ffc237b85"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2f288569bd4751fa8c75b08ffc237b85">~PlatformScreen</a> () override=default</td></tr>
 <tr class="memitem:ab8873e332c68b405d8c0a2c0e85336b3" id="r_ab8873e332c68b405d8c0a2c0e85336b3"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab8873e332c68b405d8c0a2c0e85336b3">getEventTarget</a> () const override=0</td></tr>
 <tr class="memdesc:ab8873e332c68b405d8c0a2c0e85336b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event target.  <br /></td></tr>
@@ -273,16 +273,16 @@ Protected Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classIKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_classIKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="classIKeyState.html">IKeyState</a></td></tr>
-<tr class="memitem:a90148e15989486fa812c98d80d738391 inherit pub_types_classIKeyState" id="r_a90148e15989486fa812c98d80d738391"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="classIKeyState.html#a90148e15989486fa812c98d80d738391aa62dbcdf5d5cdd6bf9ab520ddb7c0987">kNumButtons</a> = 0x200
- }</td></tr>
 <tr class="memitem:a0a0409190bff7ac81cf797d3f03a93d7 inherit pub_types_classIKeyState" id="r_a0a0409190bff7ac81cf797d3f03a93d7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> = std::set&lt;<a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a>&gt;</td></tr>
+<tr class="inherit_header pub_static_attribs_classIKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_classIKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="classIKeyState.html">IKeyState</a></td></tr>
+<tr class="memitem:a732e1848279a8454794b808b71a75d27 inherit pub_static_attribs_classIKeyState" id="r_a732e1848279a8454794b808b71a75d27"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIKeyState.html#a732e1848279a8454794b808b71a75d27">s_numButtons</a> = 0x200</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Base screen implementation. </p>
 <p>This screen implementation is the superclass of all other screen implementations. It implements a handful of methods and requires subclasses to implement the rest. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9be9b32e0fcb600938772f6ef8c89b9e" name="a9be9b32e0fcb600938772f6ef8c89b9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9be9b32e0fcb600938772f6ef8c89b9e">&#9670;&#160;</a></span>PlatformScreen()</h2>
+<a id="abe740ec47ce4b572adcfcfb5fa07df49" name="abe740ec47ce4b572adcfcfb5fa07df49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe740ec47ce4b572adcfcfb5fa07df49">&#9670;&#160;</a></span>PlatformScreen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -295,7 +295,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a></td>          <td class="paramname"><span class="paramname"><em>scrollDirection</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a">deskflow::ClientScrollDirection::SERVER</a></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a></td>          <td class="paramname"><span class="paramname"><em>scrollDirection</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

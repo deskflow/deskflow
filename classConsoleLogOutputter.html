@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,8 +132,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae7195c4c7d09e259b0aae8da62074b4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the outputter.  <br /></td></tr>
 <tr class="memitem:aa0a78dc812b4666e8b52eb24cc360d79" id="r_aa0a78dc812b4666e8b52eb24cc360d79"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa0a78dc812b4666e8b52eb24cc360d79">show</a> (bool showIfEmpty) override</td></tr>
 <tr class="memdesc:aa0a78dc812b4666e8b52eb24cc360d79"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the outputter.  <br /></td></tr>
-<tr class="memitem:ac4daee44f5f1c6a2132408ca52273bfc" id="r_ac4daee44f5f1c6a2132408ca52273bfc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac4daee44f5f1c6a2132408ca52273bfc">write</a> (<a class="el" href="ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786">ELevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const char *message) override</td></tr>
-<tr class="memdesc:ac4daee44f5f1c6a2132408ca52273bfc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
+<tr class="memitem:a26875e9109d14345dad89c78454fc32e" id="r_a26875e9109d14345dad89c78454fc32e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a26875e9109d14345dad89c78454fc32e">write</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const char *message) override</td></tr>
+<tr class="memdesc:a26875e9109d14345dad89c78454fc32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
 <tr class="memitem:a6af820d1705c919bfc95f695ed32cfcd" id="r_a6af820d1705c919bfc95f695ed32cfcd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6af820d1705c919bfc95f695ed32cfcd">flush</a> () const</td></tr>
 <tr class="inherit_header pub_methods_classILogOutputter"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classILogOutputter')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classILogOutputter.html">ILogOutputter</a></td></tr>
 <tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
@@ -302,8 +302,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac4daee44f5f1c6a2132408ca52273bfc" name="ac4daee44f5f1c6a2132408ca52273bfc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac4daee44f5f1c6a2132408ca52273bfc">&#9670;&#160;</a></span>write()</h2>
+<a id="a26875e9109d14345dad89c78454fc32e" name="a26875e9109d14345dad89c78454fc32e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26875e9109d14345dad89c78454fc32e">&#9670;&#160;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -314,7 +314,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool ConsoleLogOutputter::write </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786">ELevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+          <td class="paramtype"><a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -332,7 +332,7 @@ Public Member Functions</h2></td></tr>
 <p>Write a message with level. </p>
 <p>Writes <code>message</code>, which has the given <code>level</code>, to a log. If this method returns true then <a class="el" href="classLog.html" title="Logging facility.">Log</a> will stop passing the message to all outputters in the outputter chain, otherwise it continues. Most implementations should return true. </p>
 
-<p>Implements <a class="el" href="classILogOutputter.html#afc6bbaf8f5a527fc3f4b99010260286d">ILogOutputter</a>.</p>
+<p>Implements <a class="el" href="classILogOutputter.html#a194848b9f0a317c40c6348b32b8a547b">ILogOutputter</a>.</p>
 
 </div>
 </div>

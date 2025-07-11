@@ -1,6 +1,5 @@
 var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
 [
-    [ "ELevel.h", "ELevel_8h.html", "ELevel_8h" ],
     [ "Event.cpp", "Event_8cpp.html", null ],
     [ "Event.h", "Event_8h.html", "Event_8h" ],
     [ "EventQueue.cpp", "EventQueue_8cpp.html", "EventQueue_8cpp" ],
@@ -18,6 +17,7 @@ var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
     [ "ILogOutputter.h", "ILogOutputter_8h.html", "ILogOutputter_8h" ],
     [ "Log.cpp", "Log_8cpp.html", "Log_8cpp" ],
     [ "Log.h", "Log_8h.html", "Log_8h" ],
+    [ "LogLevel.h", "LogLevel_8h.html", "LogLevel_8h" ],
     [ "LogOutputters.cpp", "LogOutputters_8cpp.html", "LogOutputters_8cpp" ],
     [ "LogOutputters.h", "LogOutputters_8h.html", "LogOutputters_8h" ],
     [ "Path.cpp", "Path_8cpp.html", "Path_8cpp" ],

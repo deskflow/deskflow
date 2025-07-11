@@ -1,14 +1,14 @@
 var classdeskflow_1_1ArgsBase =
 [
-    [ "Type", "classdeskflow_1_1ArgsBase.html#a3158ec68ebd7d093b981391a3f3c127c", [
-      [ "kBase", "classdeskflow_1_1ArgsBase.html#a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5", null ],
-      [ "kServer", "classdeskflow_1_1ArgsBase.html#a3158ec68ebd7d093b981391a3f3c127ca1d171464147efad70aabb664df7afdee", null ],
-      [ "kClient", "classdeskflow_1_1ArgsBase.html#a3158ec68ebd7d093b981391a3f3c127cad9d99ddad875be7bd980b909001eaed9", null ]
+    [ "ClassType", "classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4b", [
+      [ "Base", "classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49", null ],
+      [ "Server", "classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba9aa1b03934893d7134a660af4204f2a9", null ],
+      [ "Client", "classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba577d7068826de925ea2aec01dbadf5e4", null ]
     ] ],
     [ "ArgsBase", "classdeskflow_1_1ArgsBase.html#af17bc7cc9df8fd15e11e72b5d35c5e26", null ],
     [ "~ArgsBase", "classdeskflow_1_1ArgsBase.html#add0a667fab9435c0ac8c39c840e69358", null ],
     [ "destroy", "classdeskflow_1_1ArgsBase.html#a04a05b26e128de2e7a6d25f3dfacf90b", null ],
-    [ "m_classType", "classdeskflow_1_1ArgsBase.html#a9337bda495f09b43ba3e5ae048461877", null ],
+    [ "m_classType", "classdeskflow_1_1ArgsBase.html#a93384cd90ea434feabaac36d32d2ff2d", null ],
     [ "m_daemon", "classdeskflow_1_1ArgsBase.html#aa3b9777e21b2862d1467f61a48d2b30e", null ],
     [ "m_deskflowAddress", "classdeskflow_1_1ArgsBase.html#a9c0adfe6a91817c033c8e3e199723778", null ],
     [ "m_disableTray", "classdeskflow_1_1ArgsBase.html#a23aca01b6520227010bb64a62ca42381", null ],

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,23 +117,23 @@ $(function(){initNavTree('XBase_8h_source.html','',''); });
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>protected:</div>
 <div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classXBase.html#ac228449d7fa4d52373b052aaa9d99df0">   31</a></span>  virtual <a class="code hl_namespace" href="namespacestd.html">std</a>::<span class="keywordtype">string</span> <a class="code hl_function" href="classXBase.html#ac228449d7fa4d52373b052aaa9d99df0">getWhat</a>() const throw()</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classXBase.html#acbe58189f3c509932bc8c3852f0515fd">   31</a></span>  virtual <a class="code hl_namespace" href="namespacestd.html">std</a>::<span class="keywordtype">string</span> <a class="code hl_function" href="classXBase.html#acbe58189f3c509932bc8c3852f0515fd">getWhat</a>() const noexcept</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  {</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <span class="keywordflow">return</span> <span class="stringliteral">&quot;&quot;</span>;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  }</div>
 </div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classXBase.html#abe2be904f9d1c1d57d4a62ab6700a9ef">format</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> *defaultFormat, ...) <span class="keyword">const</span> throw();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classXBase.html#ad796fea2eb605637cfa51c579bdd436b">format</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<span class="keywordtype">id</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> *defaultFormat, ...) const noexcept;</div>
 <div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>private:</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  mutable <a class="code hl_namespace" href="namespacestd.html">std</a>::<span class="keywordtype">string</span> m_what;</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>};</div>
 </div>
 <div class="ttc" id="aclassXBase_html_a641d3de557a3ef76a5a9fc9c288f84ae"><div class="ttname"><a href="classXBase.html#a641d3de557a3ef76a5a9fc9c288f84ae">XBase::XBase</a></div><div class="ttdeci">XBase()</div><div class="ttdoc">Use getWhat() as the result of what()</div><div class="ttdef"><b>Definition</b> XBase.cpp:17</div></div>
-<div class="ttc" id="aclassXBase_html_abe2be904f9d1c1d57d4a62ab6700a9ef"><div class="ttname"><a href="classXBase.html#abe2be904f9d1c1d57d4a62ab6700a9ef">XBase::format</a></div><div class="ttdeci">virtual std::string format(const char *id, const char *defaultFormat,...) const</div><div class="ttdoc">Format a string.</div><div class="ttdef"><b>Definition</b> XBase.cpp:37</div></div>
-<div class="ttc" id="aclassXBase_html_ac228449d7fa4d52373b052aaa9d99df0"><div class="ttname"><a href="classXBase.html#ac228449d7fa4d52373b052aaa9d99df0">XBase::getWhat</a></div><div class="ttdeci">virtual std::string getWhat() const</div><div class="ttdoc">Get a human readable string describing the exception.</div><div class="ttdef"><b>Definition</b> XBase.h:31</div></div>
+<div class="ttc" id="aclassXBase_html_acbe58189f3c509932bc8c3852f0515fd"><div class="ttname"><a href="classXBase.html#acbe58189f3c509932bc8c3852f0515fd">XBase::getWhat</a></div><div class="ttdeci">virtual std::string getWhat() const noexcept</div><div class="ttdoc">Get a human readable string describing the exception.</div><div class="ttdef"><b>Definition</b> XBase.h:31</div></div>
 <div class="ttc" id="aclassXBase_html_ad0ab6f1f18bcb7b09eea4656dc1fc42b"><div class="ttname"><a href="classXBase.html#ad0ab6f1f18bcb7b09eea4656dc1fc42b">XBase::~XBase</a></div><div class="ttdeci">~XBase() override=default</div></div>
+<div class="ttc" id="aclassXBase_html_ad796fea2eb605637cfa51c579bdd436b"><div class="ttname"><a href="classXBase.html#ad796fea2eb605637cfa51c579bdd436b">XBase::format</a></div><div class="ttdeci">virtual std::string format(const char *id, const char *defaultFormat,...) const noexcept</div><div class="ttdoc">Format a string.</div><div class="ttdef"><b>Definition</b> XBase.cpp:37</div></div>
 <div class="ttc" id="aclassXBase_html_ae07ee67df190700ec78a1a6bfda6acf5"><div class="ttname"><a href="classXBase.html#ae07ee67df190700ec78a1a6bfda6acf5">XBase::what</a></div><div class="ttdeci">const char * what() const override</div><div class="ttdoc">Reason for exception.</div><div class="ttdef"><b>Definition</b> XBase.cpp:27</div></div>
 <div class="ttc" id="anamespacestd_html"><div class="ttname"><a href="namespacestd.html">std</a></div><div class="ttdef"><b>Definition</b> Config.h:29</div></div>
 </div><!-- fragment --></div><!-- contents -->

@@ -5,5 +5,5 @@ var classArchLogUnix =
     [ "closeLog", "classArchLogUnix.html#a0fc900391abfebe12c3d87e418d67d61", null ],
     [ "openLog", "classArchLogUnix.html#a3370948d7e36f5d17ee557bff3676671", null ],
     [ "showLog", "classArchLogUnix.html#ac54a671658c8a90bbcd5332ad7f1bee0", null ],
-    [ "writeLog", "classArchLogUnix.html#a112dd20e92484a3b493bdca0b67c4ef9", null ]
+    [ "writeLog", "classArchLogUnix.html#abe4295c24bc341017531116cc9190d3c", null ]
 ];

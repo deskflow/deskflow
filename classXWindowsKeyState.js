@@ -14,5 +14,7 @@ var classXWindowsKeyState =
     [ "pollActiveModifiers", "classXWindowsKeyState.html#a214c85f7660e96a886e21b195e433063", null ],
     [ "pollPressedKeys", "classXWindowsKeyState.html#a087f00b6b6aa6629cd2aecd58c303a40", null ],
     [ "setActiveGroup", "classXWindowsKeyState.html#aefcb909b70380c24cf48bfea565e52a4", null ],
-    [ "setAutoRepeat", "classXWindowsKeyState.html#a99d0447d1be25509bcb7f34c10cbb231", null ]
+    [ "setAutoRepeat", "classXWindowsKeyState.html#a99d0447d1be25509bcb7f34c10cbb231", null ],
+    [ "s_groupPoll", "classXWindowsKeyState.html#aed630ad24acd47150fe0e784cc5db3bb", null ],
+    [ "s_groupPollAndSet", "classXWindowsKeyState.html#a1f62e8db4afb941f4015337c05d02a5f", null ]
 ];

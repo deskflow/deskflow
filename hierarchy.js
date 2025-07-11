@@ -10,6 +10,7 @@ var hierarchy =
       [ "InputFilter::SwitchInDirectionAction", "classInputFilter_1_1SwitchInDirectionAction.html", null ],
       [ "InputFilter::SwitchToScreenAction", "classInputFilter_1_1SwitchToScreenAction.html", null ]
     ] ],
+    [ "ActionDialog::ActionTypes", "structActionDialog_1_1ActionTypes.html", null ],
     [ "KeyState::AddActiveModifierContext", "structKeyState_1_1AddActiveModifierContext.html", null ],
     [ "ARCH_DAEMON", null, [
       [ "Arch", "classArch.html", null ]
@@ -80,6 +81,7 @@ var hierarchy =
         [ "ClipboardChunk", "classClipboardChunk.html", null ]
       ] ]
     ] ],
+    [ "Event::EventFlags", "structEvent_1_1EventFlags.html", null ],
     [ "EventQueueTimer", "classEventQueueTimer.html", null ],
     [ "std::exception", null, [
       [ "XThread", "classXThread.html", [

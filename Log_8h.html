@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -617,7 +617,7 @@ Macros</h2></td></tr>
 <div class="ttc" id="aLog_8h_html_a5216b78c92cbb3c416d909eb9f3253d1"><div class="ttname"><a href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a></div><div class="ttdeci">#define LOG(_a1)</div><div class="ttdef"><b>Definition</b> Log.h:189</div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a0a2f84ed7838f07779ae24c5a9086d33"><div class="ttname"><a href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:27</div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a6150e0515f7202e2fb518f7206ed97dc"><div class="ttname"><a href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:26</div></div>
-</div><!-- fragment --><p> In particular, notice the double open and close parentheses. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::ELevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
+</div><!-- fragment --><p> In particular, notice the double open and close parentheses. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::LogLevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
 <p>If <code>NOLOGGING</code> is defined during the build then this macro expands to nothing. If <code>NDEBUG</code> is defined during the build then it expands to a call to <a class="el" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf" title="Print a log message.">Log::print</a>. Otherwise it expands to a call to <a class="el" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf" title="Print a log message.">Log::print</a>, which includes the filename and line number. </p>
 
 </div>
@@ -872,7 +872,7 @@ Macros</h2></td></tr>
 <div class="line">  <a class="code hl_define" href="#a05785244b5afab2f72b74f922dfb777b">CLOG</a>-&gt;print _a2</div>
 </div><!-- fragment --><p>Write to the log if and only if expr is true. Because macros cannot accept variable arguments, this should be invoked like so: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#a8e30ee25bb9b218db18f0805c5063522">LOGC</a>(<a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a> == <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>, (CLOG_XXX <span class="stringliteral">&quot;%d and %d are equal&quot;</span>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>));</div>
 <div class="ttc" id="aLog_8h_html_a8e30ee25bb9b218db18f0805c5063522"><div class="ttname"><a href="#a8e30ee25bb9b218db18f0805c5063522">LOGC</a></div><div class="ttdeci">#define LOGC(_a1, _a2)</div><div class="ttdef"><b>Definition</b> Log.h:190</div></div>
-</div><!-- fragment --><p> In particular, notice the parentheses around everything after the boolean expression. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::ELevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
+</div><!-- fragment --><p> In particular, notice the parentheses around everything after the boolean expression. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::LogLevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
 <p>If <code>NOLOGGING</code> is defined during the build then this macro expands to nothing. If <code>NDEBUG</code> is not defined during the build then it expands to a call to <a class="el" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf" title="Print a log message.">Log::print</a> that prints the filename and line number, otherwise it expands to a call that doesn't. </p>
 
 </div>

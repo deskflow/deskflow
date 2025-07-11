@@ -24,8 +24,8 @@ var namespacedeskflow =
     [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
     [ "ServerArgs", "classdeskflow_1_1ServerArgs.html", "classdeskflow_1_1ServerArgs" ],
     [ "ClientScrollDirection", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76", [
-      [ "SERVER", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a", null ],
-      [ "INVERT_SERVER", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a39fcddd797dbf8283c3c2b122f880a8e", null ]
+      [ "Normal", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0", null ],
+      [ "Inverted", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76acf4c2a4bf7c328c4e51f902350475343", null ]
     ] ],
     [ "EventTypes", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2", [
       [ "Unknown", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e", null ],

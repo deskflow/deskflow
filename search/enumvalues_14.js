@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['xtest_0',['XTest',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a2f20216b051fdb649283e30b6fc9fecc',1,'ScreenConfig']]]
+  ['warning_0',['Warning',['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a0eaadb4fcb48a0a0ed7bc9868be9fbaa',1,'LogLevel.h']]]
 ];

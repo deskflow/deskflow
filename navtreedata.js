@@ -86,8 +86,7 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
-        [ "Enumerations", "namespacemembers_enum.html", null ],
-        [ "Enumerator", "namespacemembers_eval.html", null ]
+        [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -122,30 +121,30 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AboutDialog_8cpp.html",
-"DaemonApp_8h.html",
-"KeyTypes_8h.html#a332f60e50a590fdd1418b764c6ca12fc",
-"MSWindowsDesks_8cpp.html#a764704869b58a8e99131a56720dfb1ac",
-"OSXMediaKeySupport_8m.html#ae6eaf0ad25f2b22025d5ceca4abcaabb",
-"StreamBuffer_8h_source.html",
-"classActionDialog.html#a2c3a68d66fdff06edd33dbd953fe4b8aa713bc5b4291d6300d53fab0f34bf77e3",
-"classArchNetworkBSD.html#a082304969f7d5168184fa40cf8bf3a9a",
-"classClientProxy.html",
-"classEventQueue.html#a83a3df042611c634df2b2035049dd23d",
-"classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27adb95964099fa11f3c4c9d6f65a003447",
-"classInputFilter_1_1KeystrokeCondition.html",
-"classMSWindowsDesks.html#af62898cd3f884c040dc33990d2bc7afb",
-"classOSXEventQueueBuffer.html#af95c5535d7a01685a4b5075000bc8a47",
-"classScreen.html#ad8aac80091cdff8f3168d9a852b6af86",
-"classServerProxy.html#a0276fe2944ef99512e2e38495645316ca263e43dfa1c84ca4aecb5d65da1e6a03",
-"classThread.html#a6b6aa2f3fce1de502a56129355cc5cf4",
-"classXWindowsClipboardUTF8Converter.html#ab062fa86dd7ad9d9adc281fd2054a2d0",
-"classdeskflow_1_1EiEventQueueBuffer.html#a1db476fa50e35bbe809d0bd9d8d1530b",
-"classdeskflow_1_1PortalInputCapture.html#a90b2869cde38be40116737152f69621d",
-"classdeskflow_1_1gui_1_1FileTail.html",
-"classdeskflow_1_1server_1_1Config.html#af409de3b8d399c0869787e1f73093e17",
-"functions_a.html",
-"namespaceSettingsKeys.html#ad9fb8de23203a3e91677f2d71116073c",
-"structChunkType.html#afca93ef4079887b13f65cde55cceefd9"
+"Common_8h_source.html",
+"KeyTypes_8h.html#a3ad809f4722dc4a7fa806c52b33605b7",
+"MSWindowsDebugOutputter_8h_source.html",
+"OSXKeyState_8h_source.html",
+"SimpleEventQueueBuffer_8h.html",
+"classAction.html#ab1851cee70a9061c928e69d44e6cba0bafe980ecdeb35f5b9e60c603b41a2e5f5",
+"classArchNetAddressImpl.html",
+"classClientListener.html#a31faa67edf30307eff017353626f94af",
+"classEventQueue.html#a28691f56ac27312585b11a8711b8188e",
+"classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3",
+"classInputFilter_1_1KeystrokeAction.html#a4c67f77ae8ad6809c7756afd5dfe9e28",
+"classMSWindowsDesks.html#a8f5ccf474c6102b90a4846268f6c2fa7",
+"classOSXEventQueueBuffer.html",
+"classScreen.html#a6b15e7496fd7a135e73eed573201f2bd",
+"classServerConfigDialog.html#ae7b274d6f24e48bdc6b2781b1304ffb7",
+"classTSocketMultiplexerMethodJob.html#a9741a8ea1368b1be8d870df97d27ff8c",
+"classXWindowsClipboardUCS2Converter.html#a466ca25731f55eaddaf78404a9f0ddc4",
+"classdeskflow_1_1Config_1_1ParseError.html",
+"classdeskflow_1_1KeyMap_1_1Keystroke.html#ad0b6e11191adf099f670625f6376e15b",
+"classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467",
+"classdeskflow_1_1server_1_1Config.html#ae62c95233b0cc51cf94431da93c8fa01",
+"dir_cd3aacb8a45237fa9a46f471cfa9b1b3.html",
+"md_doc_2dev_2build.html#autotoc_md1",
+"structCBMPHeader.html#a18b61053c16e3cb290b9cfeab36d23b0"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

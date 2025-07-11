@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -115,7 +115,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ab9065298baca9ac1119101d29627f4ad" id="r_ab9065298baca9ac1119101d29627f4ad"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9065298baca9ac1119101d29627f4ad">~Condition</a> ()=default</td></tr>
 <tr class="memitem:a023ce5cc43fae21f5966e1b39ddf89f2" id="r_a023ce5cc43fae21f5966e1b39ddf89f2"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classInputFilter_1_1Condition.html">Condition</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a023ce5cc43fae21f5966e1b39ddf89f2">clone</a> () const =0</td></tr>
 <tr class="memitem:a7d97f60a5d610f8262e0d9f231e9c497" id="r_a7d97f60a5d610f8262e0d9f231e9c497"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7d97f60a5d610f8262e0d9f231e9c497">format</a> () const =0</td></tr>
-<tr class="memitem:a66ce43e6a9d1aa2adef5ac6350da3db7" id="r_a66ce43e6a9d1aa2adef5ac6350da3db7"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3d">EFilterStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a66ce43e6a9d1aa2adef5ac6350da3db7">match</a> (const <a class="el" href="classEvent.html">Event</a> &amp;)=0</td></tr>
+<tr class="memitem:ad960b4bf2c2dcf62d447ab77e21aaa18" id="r_ad960b4bf2c2dcf62d447ab77e21aaa18"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48ed">FilterStatus</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad960b4bf2c2dcf62d447ab77e21aaa18">match</a> (const <a class="el" href="classEvent.html">Event</a> &amp;)=0</td></tr>
 <tr class="memitem:a0fe285adc97ec40405e9bc9edd37fc51" id="r_a0fe285adc97ec40405e9bc9edd37fc51"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fe285adc97ec40405e9bc9edd37fc51">enablePrimary</a> (<a class="el" href="classPrimaryClient.html">PrimaryClient</a> *)</td></tr>
 <tr class="memitem:a194565de77c56c63744fd762022b8fc8" id="r_a194565de77c56c63744fd762022b8fc8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194565de77c56c63744fd762022b8fc8">disablePrimary</a> (<a class="el" href="classPrimaryClient.html">PrimaryClient</a> *)</td></tr>
 </table>
@@ -279,8 +279,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a66ce43e6a9d1aa2adef5ac6350da3db7" name="a66ce43e6a9d1aa2adef5ac6350da3db7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a66ce43e6a9d1aa2adef5ac6350da3db7">&#9670;&#160;</a></span>match()</h2>
+<a id="ad960b4bf2c2dcf62d447ab77e21aaa18" name="ad960b4bf2c2dcf62d447ab77e21aaa18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad960b4bf2c2dcf62d447ab77e21aaa18">&#9670;&#160;</a></span>match()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -289,7 +289,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3d">EFilterStatus</a> InputFilter::Condition::match </td>
+          <td class="memname">virtual <a class="el" href="classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48ed">FilterStatus</a> InputFilter::Condition::match </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classEvent.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -302,7 +302,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classInputFilter_1_1KeystrokeCondition.html#af357b1d58bf31e25c46fc2637ca0d142">InputFilter::KeystrokeCondition</a>, <a class="el" href="classInputFilter_1_1MouseButtonCondition.html#a6c19690f97bc98b1b9cacb85071e0b53">InputFilter::MouseButtonCondition</a>, and <a class="el" href="classInputFilter_1_1ScreenConnectedCondition.html#a406adc47d282e16062e1f494ba5a4f55">InputFilter::ScreenConnectedCondition</a>.</p>
+<p>Implemented in <a class="el" href="classInputFilter_1_1KeystrokeCondition.html#ad63fbef52522a58a56e1a5eeb643a68b">InputFilter::KeystrokeCondition</a>, <a class="el" href="classInputFilter_1_1MouseButtonCondition.html#a8264a7e72a45a351675539cac144e754">InputFilter::MouseButtonCondition</a>, and <a class="el" href="classInputFilter_1_1ScreenConnectedCondition.html#a32aff783f628079534b24df00783a6fc">InputFilter::ScreenConnectedCondition</a>.</p>
 
 </div>
 </div>

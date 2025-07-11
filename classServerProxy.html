@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -109,22 +109,22 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-member-group" class="groupheader"><a id="member-group" name="member-group"></a>
 manipulators</h2></td></tr>
-<tr class="memitem:a0276fe2944ef99512e2e38495645316c" id="r_a0276fe2944ef99512e2e38495645316c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0276fe2944ef99512e2e38495645316c">EResult</a> { <a class="el" href="#a0276fe2944ef99512e2e38495645316caee6b72ff13b45de88418e5a0754aeb02">kOkay</a>
-, <a class="el" href="#a0276fe2944ef99512e2e38495645316ca263e43dfa1c84ca4aecb5d65da1e6a03">kUnknown</a>
-, <a class="el" href="#a0276fe2944ef99512e2e38495645316ca7161baf9eeb6c816bf1c1e4a7a21dcfc">kDisconnect</a>
+<tr class="memitem:a1bc5a0b70c8bbfe20fb415ee40cd9d76" id="r_a1bc5a0b70c8bbfe20fb415ee40cd9d76"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ConnectionResult</a> { <a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76a26b63f278101527e06a5547719568bb5">Okay</a>
+, <a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76a88183b946cc5f0e8c96b2e66e1c74a7e">Unknown</a>
+, <a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac">Disconnect</a>
  }</td></tr>
 <tr class="memitem:ae67da2ce4101e20ea50929959ae7daba" id="r_ae67da2ce4101e20ea50929959ae7daba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae67da2ce4101e20ea50929959ae7daba">onInfoChanged</a> ()</td></tr>
 <tr class="memitem:a434afafcb6ff777e9ea9f5671b40696a" id="r_a434afafcb6ff777e9ea9f5671b40696a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a434afafcb6ff777e9ea9f5671b40696a">onGrabClipboard</a> (<a class="el" href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a>)</td></tr>
 <tr class="memitem:a2dd3e8b171182615c1a994888e14f7e7" id="r_a2dd3e8b171182615c1a994888e14f7e7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2dd3e8b171182615c1a994888e14f7e7">onClipboardChanged</a> (<a class="el" href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a>, const <a class="el" href="classIClipboard.html">IClipboard</a> *)</td></tr>
-<tr class="memitem:a8219217de8ba12d4b806d5774c2dacdc" id="r_a8219217de8ba12d4b806d5774c2dacdc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0276fe2944ef99512e2e38495645316c">EResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8219217de8ba12d4b806d5774c2dacdc">parseHandshakeMessage</a> (const uint8_t *code)</td></tr>
-<tr class="memitem:ad9f78802b421e2ac23d300303616fcff" id="r_ad9f78802b421e2ac23d300303616fcff"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a0276fe2944ef99512e2e38495645316c">EResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad9f78802b421e2ac23d300303616fcff">parseMessage</a> (const uint8_t *code)</td></tr>
+<tr class="memitem:ad0b077058cbfcecc5d8ca77ceff20a36" id="r_ad0b077058cbfcecc5d8ca77ceff20a36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ConnectionResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad0b077058cbfcecc5d8ca77ceff20a36">parseHandshakeMessage</a> (const uint8_t *code)</td></tr>
+<tr class="memitem:a108d5d614e21d8245b608abffe085740" id="r_a108d5d614e21d8245b608abffe085740"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ConnectionResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a108d5d614e21d8245b608abffe085740">parseMessage</a> (const uint8_t *code)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Proxy for server. </p>
 <p>This class acts a proxy for the server, converting calls into messages to the server and messages from the server to calls on the client. </p>
 </div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a0276fe2944ef99512e2e38495645316c" name="a0276fe2944ef99512e2e38495645316c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0276fe2944ef99512e2e38495645316c">&#9670;&#160;</a></span>EResult</h2>
+<a id="a1bc5a0b70c8bbfe20fb415ee40cd9d76" name="a1bc5a0b70c8bbfe20fb415ee40cd9d76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">&#9670;&#160;</a></span>ConnectionResult</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -133,19 +133,19 @@ manipulators</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#a0276fe2944ef99512e2e38495645316c">ServerProxy::EResult</a></td>
+          <td class="memname">enum class <a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ServerProxy::ConnectionResult</a></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel strong">strong</span><span class="mlabel protected">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a0276fe2944ef99512e2e38495645316caee6b72ff13b45de88418e5a0754aeb02" name="a0276fe2944ef99512e2e38495645316caee6b72ff13b45de88418e5a0754aeb02"></a>kOkay&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0276fe2944ef99512e2e38495645316ca263e43dfa1c84ca4aecb5d65da1e6a03" name="a0276fe2944ef99512e2e38495645316ca263e43dfa1c84ca4aecb5d65da1e6a03"></a>kUnknown&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a0276fe2944ef99512e2e38495645316ca7161baf9eeb6c816bf1c1e4a7a21dcfc" name="a0276fe2944ef99512e2e38495645316ca7161baf9eeb6c816bf1c1e4a7a21dcfc"></a>kDisconnect&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1bc5a0b70c8bbfe20fb415ee40cd9d76a26b63f278101527e06a5547719568bb5" name="a1bc5a0b70c8bbfe20fb415ee40cd9d76a26b63f278101527e06a5547719568bb5"></a>Okay&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1bc5a0b70c8bbfe20fb415ee40cd9d76a88183b946cc5f0e8c96b2e66e1c74a7e" name="a1bc5a0b70c8bbfe20fb415ee40cd9d76a88183b946cc5f0e8c96b2e66e1c74a7e"></a>Unknown&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac" name="a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac"></a>Disconnect&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -351,8 +351,8 @@ manipulators</h2></td></tr>
 
 </div>
 </div>
-<a id="a8219217de8ba12d4b806d5774c2dacdc" name="a8219217de8ba12d4b806d5774c2dacdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8219217de8ba12d4b806d5774c2dacdc">&#9670;&#160;</a></span>parseHandshakeMessage()</h2>
+<a id="ad0b077058cbfcecc5d8ca77ceff20a36" name="ad0b077058cbfcecc5d8ca77ceff20a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0b077058cbfcecc5d8ca77ceff20a36">&#9670;&#160;</a></span>parseHandshakeMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -361,7 +361,7 @@ manipulators</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0276fe2944ef99512e2e38495645316c">ServerProxy::EResult</a> ServerProxy::parseHandshakeMessage </td>
+          <td class="memname"><a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ServerProxy::ConnectionResult</a> ServerProxy::parseHandshakeMessage </td>
           <td>(</td>
           <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>code</em></span></td><td>)</td>
           <td></td>
@@ -376,8 +376,8 @@ manipulators</h2></td></tr>
 
 </div>
 </div>
-<a id="ad9f78802b421e2ac23d300303616fcff" name="ad9f78802b421e2ac23d300303616fcff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad9f78802b421e2ac23d300303616fcff">&#9670;&#160;</a></span>parseMessage()</h2>
+<a id="a108d5d614e21d8245b608abffe085740" name="a108d5d614e21d8245b608abffe085740"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a108d5d614e21d8245b608abffe085740">&#9670;&#160;</a></span>parseMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -386,7 +386,7 @@ manipulators</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a0276fe2944ef99512e2e38495645316c">ServerProxy::EResult</a> ServerProxy::parseMessage </td>
+          <td class="memname"><a class="el" href="#a1bc5a0b70c8bbfe20fb415ee40cd9d76">ServerProxy::ConnectionResult</a> ServerProxy::parseMessage </td>
           <td>(</td>
           <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>code</em></span></td><td>)</td>
           <td></td>

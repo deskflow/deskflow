@@ -92,7 +92,7 @@ var searchData=
   ['seterror_89',['setError',['../Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b',1,'Unicode.cpp']]],
   ['setevents_90',['setEvents',['../classApp.html#acbc962ac1eea477e7cf22e97c1c04bed',1,'App']]],
   ['setfacade_91',['setFacade',['../classMSWindowsClipboard.html#ada89d0e664afdf37f71ccdc29fbaaa72',1,'MSWindowsClipboard']]],
-  ['setfilter_92',['setFilter',['../classLog.html#a1fe958673083e5fa23690668d39a3553',1,'Log::setFilter(const char *name)'],['../classLog.html#a24752e2be2a6de97e9971bf47d3a7bf6',1,'Log::setFilter(int)']]],
+  ['setfilter_92',['setFilter',['../classLog.html#a1fe958673083e5fa23690668d39a3553',1,'Log::setFilter(const char *name)'],['../classLog.html#a09384c18e959332a4c7cf3a12a827208',1,'Log::setFilter(LogLevel)']]],
   ['setfix_93',['setFix',['../classScreen.html#af3d2ed7bfdfd67e9ba76dde8e831df73',1,'Screen']]],
   ['setforeground_94',['setForeground',['../classDaemonApp.html#a9760570352c929772dcd53a3acfff527',1,'DaemonApp']]],
   ['sethalfduplexmask_95',['setHalfDuplexMask',['../classIKeyState.html#a4c1f06a56dfe9a0ba1c3bde71a1d7d7b',1,'IKeyState::setHalfDuplexMask()'],['../classIPlatformScreen.html#a6cd3980306ef5c5eda8170486fb2aafe',1,'IPlatformScreen::setHalfDuplexMask()'],['../classKeyState.html#a2fdc25955f6e888f765349c28ac7f1e0',1,'KeyState::setHalfDuplexMask()'],['../classPlatformScreen.html#a6b08635a26bb5073159bdebf3eb98d1e',1,'PlatformScreen::setHalfDuplexMask()']]],

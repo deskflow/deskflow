@@ -1,9 +1,9 @@
 var classTCPSocket =
 [
-    [ "EJobResult", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54", [
-      [ "kBreak", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54a2855cbc28e536c638a6c4f8301efd02b", null ],
-      [ "kRetry", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54a54b88a2453704a2bee4ea8a24c220ef0", null ],
-      [ "kNew", "classTCPSocket.html#ac660acfddd88bef4a9dbdbff82f81f54ada10488f2dd7806211c10f9f02b113d1", null ]
+    [ "JobResult", "classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856b", [
+      [ "Break", "classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856bae4c38d6d45baf080943d323dd51a2ce8", null ],
+      [ "Retry", "classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856ba6327b4e59f58137083214a1fec358855", null ],
+      [ "New", "classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856ba03c2e7e41ffc181a4e84080b4710e81e", null ]
     ] ],
     [ "TCPSocket", "classTCPSocket.html#af715a366acfbeba720de92becf761f77", null ],
     [ "TCPSocket", "classTCPSocket.html#a6ced6f9f13d4c16bf83c9e190ee747b9", null ],
@@ -14,8 +14,8 @@ var classTCPSocket =
     [ "close", "classTCPSocket.html#a4a621f6a0a1e4a53bbd244c0ceeec4e3", null ],
     [ "connect", "classTCPSocket.html#a8d512b5dce1a8678617aa86957227b8a", null ],
     [ "discardWrittenData", "classTCPSocket.html#a7d3d500da7178fffa2bb1abca5ed6bfc", null ],
-    [ "doRead", "classTCPSocket.html#a6eb9791a1252fcdd92785e3a821cea8a", null ],
-    [ "doWrite", "classTCPSocket.html#ae75fae9a2124ff5351c0249b6b71ae85", null ],
+    [ "doRead", "classTCPSocket.html#ad3c28700ac731afca591bd98d0d0793b", null ],
+    [ "doWrite", "classTCPSocket.html#a9d6540be107b73a9e06114f38dca73a6", null ],
     [ "flush", "classTCPSocket.html#a6d0240e24c16c9df20bb0d848e514ae9", null ],
     [ "getEvents", "classTCPSocket.html#aeaeaa5f9e861c1afb95d0a2738d9beb8", null ],
     [ "getEventTarget", "classTCPSocket.html#ae20b60ebfae002f81e94fc1480fab37e", null ],

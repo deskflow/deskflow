@@ -1,9 +1,9 @@
 var classServerProxy =
 [
-    [ "EResult", "classServerProxy.html#a0276fe2944ef99512e2e38495645316c", [
-      [ "kOkay", "classServerProxy.html#a0276fe2944ef99512e2e38495645316caee6b72ff13b45de88418e5a0754aeb02", null ],
-      [ "kUnknown", "classServerProxy.html#a0276fe2944ef99512e2e38495645316ca263e43dfa1c84ca4aecb5d65da1e6a03", null ],
-      [ "kDisconnect", "classServerProxy.html#a0276fe2944ef99512e2e38495645316ca7161baf9eeb6c816bf1c1e4a7a21dcfc", null ]
+    [ "ConnectionResult", "classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76", [
+      [ "Okay", "classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76a26b63f278101527e06a5547719568bb5", null ],
+      [ "Unknown", "classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
+      [ "Disconnect", "classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac", null ]
     ] ],
     [ "ServerProxy", "classServerProxy.html#a8f34c080f23d2e7c6c969633eca445ff", null ],
     [ "ServerProxy", "classServerProxy.html#a2efa7cbe8c4679a4df9392c1577f1f0c", null ],
@@ -14,6 +14,6 @@ var classServerProxy =
     [ "onInfoChanged", "classServerProxy.html#ae67da2ce4101e20ea50929959ae7daba", null ],
     [ "operator=", "classServerProxy.html#ab83e538672264252a00bc9c9491f80f9", null ],
     [ "operator=", "classServerProxy.html#ab36c7e14499bc9f21d922a3fa7300874", null ],
-    [ "parseHandshakeMessage", "classServerProxy.html#a8219217de8ba12d4b806d5774c2dacdc", null ],
-    [ "parseMessage", "classServerProxy.html#ad9f78802b421e2ac23d300303616fcff", null ]
+    [ "parseHandshakeMessage", "classServerProxy.html#ad0b077058cbfcecc5d8ca77ceff20a36", null ],
+    [ "parseMessage", "classServerProxy.html#a108d5d614e21d8245b608abffe085740", null ]
 ];

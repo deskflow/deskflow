@@ -30,7 +30,7 @@ var searchData=
   ['addkeyentry_27',['addKeyEntry',['../classdeskflow_1_1KeyMap.html#abffaa0f00b4408c26c4be014517c91d6',1,'deskflow::KeyMap']]],
   ['addoption_28',['addOption',['../classdeskflow_1_1server_1_1Config.html#a7eb7dbde2b17231229ed7f97e5027a3b',1,'deskflow::server::Config']]],
   ['addrequest_29',['addRequest',['../classXWindowsClipboard.html#a3ffed82518e908be2a213166294bf4da',1,'XWindowsClipboard']]],
-  ['addresult_30',['addResult',['../classAddClientDialog.html#a36abda98f2e622cc446b2888e7d6b3c1',1,'AddClientDialog']]],
+  ['addresult_30',['addResult',['../classAddClientDialog.html#ad9bd98857c9f69f6e16a3735c9f03b0a',1,'AddClientDialog']]],
   ['addrtoname_31',['addrToName',['../classIArchNetwork.html#a5c332270c7689907e9e635ae18c6ce67',1,'IArchNetwork::addrToName()'],['../classArchNetworkBSD.html#a9fcdf8354bcccf2fe1c342839e17b383',1,'ArchNetworkBSD::addrToName()'],['../classArchNetworkWinsock.html#a7187508ec0fad5b463088c9dcd2277cc',1,'ArchNetworkWinsock::addrToName()']]],
   ['addrtostring_32',['addrToString',['../classIArchNetwork.html#a9acc63bd87c1e113187d7ed490cfd79d',1,'IArchNetwork::addrToString()'],['../classArchNetworkBSD.html#a938cb799b65e99e9c577deaabd5cba9b',1,'ArchNetworkBSD::addrToString()'],['../classArchNetworkWinsock.html#a1e4b37c52e972be8227056e7b5042407',1,'ArchNetworkWinsock::addrToString()']]],
   ['addscreen_33',['addScreen',['../classScreenSetupModel.html#a4e750b6cf198be9d44c29433ce0d9532',1,'ScreenSetupModel::addScreen()'],['../classdeskflow_1_1server_1_1Config.html#a31c76775c691d6edf36d8d4f00427f5f',1,'deskflow::server::Config::addScreen()']]],

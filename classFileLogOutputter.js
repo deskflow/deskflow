@@ -6,5 +6,5 @@ var classFileLogOutputter =
     [ "open", "classFileLogOutputter.html#a6c5bf1ec51a91dc3715e943d95b63573", null ],
     [ "setLogFilename", "classFileLogOutputter.html#ae2212a2807c2acee4ac2a7f0718ee68b", null ],
     [ "show", "classFileLogOutputter.html#a11bb432416a7a0dbae7ef6606805e600", null ],
-    [ "write", "classFileLogOutputter.html#a8cd2a4d3a6e3603a1f9f49239332e323", null ]
+    [ "write", "classFileLogOutputter.html#a321af25c5cb18fe9570531c261eb49a8", null ]
 ];

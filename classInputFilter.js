@@ -14,10 +14,10 @@ var classInputFilter =
     [ "SwitchInDirectionAction", "classInputFilter_1_1SwitchInDirectionAction.html", "classInputFilter_1_1SwitchInDirectionAction" ],
     [ "SwitchToScreenAction", "classInputFilter_1_1SwitchToScreenAction.html", "classInputFilter_1_1SwitchToScreenAction" ],
     [ "RuleList", "classInputFilter.html#aad2d5a65753cf46b14ba313a90b07461", null ],
-    [ "EFilterStatus", "classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3d", [
-      [ "kNoMatch", "classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3dacc32a861f69ca1537a94dddce373124f", null ],
-      [ "kActivate", "classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3da35858988c2aa57094740bee053ae613d", null ],
-      [ "kDeactivate", "classInputFilter.html#a403e7ffb5696db5556288e2b6a3f4f3daff75ab5c96e48151659ff5136596b66f", null ]
+    [ "FilterStatus", "classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48ed", [
+      [ "NoMatch", "classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48edac8b77721c677e0429241a9250972122d", null ],
+      [ "Activate", "classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48edaa13367a8e2a3f3bf4f3409079e3fdf87", null ],
+      [ "Deactivate", "classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48eda109fec06829bd79d222cfc8af52aaaf1", null ]
     ] ],
     [ "InputFilter", "classInputFilter.html#a098543f13ca4a4f5dae286be9d04a86e", null ],
     [ "InputFilter", "classInputFilter.html#a42836b94b0ddb87699e6858758a0d154", null ],

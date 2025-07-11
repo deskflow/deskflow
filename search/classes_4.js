@@ -9,6 +9,7 @@ var searchData=
   ['errors_6',['Errors',['../structdeskflow_1_1gui_1_1messages_1_1Errors.html',1,'deskflow::gui::messages']]],
   ['event_7',['Event',['../classEvent.html',1,'']]],
   ['eventdata_8',['EventData',['../classEventData.html',1,'']]],
-  ['eventqueue_9',['EventQueue',['../classEventQueue.html',1,'']]],
-  ['eventqueuetimer_10',['EventQueueTimer',['../classEventQueueTimer.html',1,'']]]
+  ['eventflags_9',['EventFlags',['../structEvent_1_1EventFlags.html',1,'Event']]],
+  ['eventqueue_10',['EventQueue',['../classEventQueue.html',1,'']]],
+  ['eventqueuetimer_11',['EventQueueTimer',['../classEventQueueTimer.html',1,'']]]
 ];

@@ -1,5 +1,14 @@
 var NAVTREEINDEX12 =
 {
+"classMSWindowsDesks.html#a8f5ccf474c6102b90a4846268f6c2fa7":[6,0,122,3],
+"classMSWindowsDesks.html#a93eb3b27c3c55a7434b656f083b9cad0":[6,0,122,18],
+"classMSWindowsDesks.html#a94db1aa9652b4f1f07d59727a1e7ff24":[6,0,122,15],
+"classMSWindowsDesks.html#a9ede24dee0f8eaacfa46a802c0f3282f":[6,0,122,10],
+"classMSWindowsDesks.html#aa60c459fdbf699c1b5d1d7487f627eec":[6,0,122,9],
+"classMSWindowsDesks.html#aa8612aa127c003cea6f71a5469567f60":[6,0,122,7],
+"classMSWindowsDesks.html#aab6bb29648272c03a4d07c1fab386eb1":[6,0,122,13],
+"classMSWindowsDesks.html#ad2301c3e811efd5e8760ce1a64ef6fad":[6,0,122,1],
+"classMSWindowsDesks.html#ae6442ce988c18c8ee1d4cba7d21d8f72":[6,0,122,17],
 "classMSWindowsDesks.html#af62898cd3f884c040dc33990d2bc7afb":[6,0,122,12],
 "classMSWindowsEventQueueBuffer.html":[6,0,123],
 "classMSWindowsEventQueueBuffer.html#a556d9f5d80b71befb743f5b5cff113d3":[6,0,123,6],
@@ -97,9 +106,9 @@ var NAVTREEINDEX12 =
 "classMSWindowsScreen.html#a9d102cc1b8c4971f83c007d0649f8784":[6,0,128,16],
 "classMSWindowsScreen.html#aa24f4bde73e65cd9f1ff59415b00a539":[6,0,128,40],
 "classMSWindowsScreen.html#aa35676117e1959a6dff9ae4f19516fb7":[6,0,128,37],
+"classMSWindowsScreen.html#aa83a05206f765f2b2cf243afb71dc1c8":[6,0,128,0],
 "classMSWindowsScreen.html#aa951776f036c122c0dd90ac1f426569e":[6,0,128,25],
 "classMSWindowsScreen.html#aaf87c5e3ea5be71d669611f59d97c9be":[6,0,128,10],
-"classMSWindowsScreen.html#ab01f0c1b76bd586bf93787ec37626c36":[6,0,128,0],
 "classMSWindowsScreen.html#ab1433b8143cd76b0f072ee9c11ffe147":[6,0,128,41],
 "classMSWindowsScreen.html#ab32e21e2e6c0e15937d885ea9262bc9d":[6,0,128,18],
 "classMSWindowsScreen.html#abcd08e094dd4ec5fec232dbf193bf155":[6,0,128,8],
@@ -240,14 +249,5 @@ var NAVTREEINDEX12 =
 "classOSXClipboardUTF8Converter.html":[6,0,142],
 "classOSXClipboardUTF8Converter.html#a5562ded9d595325d1bffe7a34ec5e39b":[6,0,142,2],
 "classOSXClipboardUTF8Converter.html#ab7227b50eb19ecfd620810df0c51a342":[6,0,142,1],
-"classOSXClipboardUTF8Converter.html#abe733d4d37d7fbdb066730c15d1964e9":[6,0,142,0],
-"classOSXEventQueueBuffer.html":[6,0,143],
-"classOSXEventQueueBuffer.html#a1f0eb121fbc427e63255a8c831d9a11f":[6,0,143,1],
-"classOSXEventQueueBuffer.html#a21ba8204145b44ce61a77971c14a42aa":[6,0,143,2],
-"classOSXEventQueueBuffer.html#a310cf045e5a8687dbe88299101aded90":[6,0,143,5],
-"classOSXEventQueueBuffer.html#a3a97d4fcd037503a6907834f7ebfc74b":[6,0,143,7],
-"classOSXEventQueueBuffer.html#a5eebaea190840fa46f144a4fa378e9e5":[6,0,143,3],
-"classOSXEventQueueBuffer.html#a7ca5dd6fa078243fc8f60a3ae51f2934":[6,0,143,8],
-"classOSXEventQueueBuffer.html#aabea31add1b4f4cbb7b8a015970c92a6":[6,0,143,0],
-"classOSXEventQueueBuffer.html#ae48906ec277d1e6d6c37b1a062ba610a":[6,0,143,4]
+"classOSXClipboardUTF8Converter.html#abe733d4d37d7fbdb066730c15d1964e9":[6,0,142,0]
 };

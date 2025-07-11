@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,8 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a1a25270747c3028b2977f74f57cd20f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the outputter.  <br /></td></tr>
 <tr class="memitem:acfe18b140c97de70052ee281da764485" id="r_acfe18b140c97de70052ee281da764485"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acfe18b140c97de70052ee281da764485">show</a> (bool showIfEmpty)=0</td></tr>
 <tr class="memdesc:acfe18b140c97de70052ee281da764485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the outputter.  <br /></td></tr>
-<tr class="memitem:afc6bbaf8f5a527fc3f4b99010260286d" id="r_afc6bbaf8f5a527fc3f4b99010260286d"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afc6bbaf8f5a527fc3f4b99010260286d">write</a> (<a class="el" href="ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786">ELevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const char *message)=0</td></tr>
-<tr class="memdesc:afc6bbaf8f5a527fc3f4b99010260286d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
+<tr class="memitem:a194848b9f0a317c40c6348b32b8a547b" id="r_a194848b9f0a317c40c6348b32b8a547b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a194848b9f0a317c40c6348b32b8a547b">write</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const char *message)=0</td></tr>
+<tr class="memdesc:a194848b9f0a317c40c6348b32b8a547b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
 <tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
 <tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
@@ -237,8 +237,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="afc6bbaf8f5a527fc3f4b99010260286d" name="afc6bbaf8f5a527fc3f4b99010260286d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afc6bbaf8f5a527fc3f4b99010260286d">&#9670;&#160;</a></span>write()</h2>
+<a id="a194848b9f0a317c40c6348b32b8a547b" name="a194848b9f0a317c40c6348b32b8a547b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a194848b9f0a317c40c6348b32b8a547b">&#9670;&#160;</a></span>write()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,7 +249,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual bool ILogOutputter::write </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="ELevel_8h.html#a7cd66fd9f1b78589fbb50b32467ce786">ELevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
+          <td class="paramtype"><a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a></td>          <td class="paramname"><span class="paramname"><em>level</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -267,7 +267,7 @@ Public Member Functions</h2></td></tr>
 <p>Write a message with level. </p>
 <p>Writes <code>message</code>, which has the given <code>level</code>, to a log. If this method returns true then <a class="el" href="classLog.html" title="Logging facility.">Log</a> will stop passing the message to all outputters in the outputter chain, otherwise it continues. Most implementations should return true. </p>
 
-<p>Implemented in <a class="el" href="classConsoleLogOutputter.html#ac4daee44f5f1c6a2132408ca52273bfc">ConsoleLogOutputter</a>, <a class="el" href="classFileLogOutputter.html#a8cd2a4d3a6e3603a1f9f49239332e323">FileLogOutputter</a>, <a class="el" href="classMSWindowsDebugOutputter.html#a40a0de65ef098813b2deb3e08243015b">MSWindowsDebugOutputter</a>, <a class="el" href="classStopLogOutputter.html#a1c10eda1ecf9f4d637671dbb46961aa3">StopLogOutputter</a>, and <a class="el" href="classSystemLogOutputter.html#a53b8e87a426c2e57800e75bffe952ab5">SystemLogOutputter</a>.</p>
+<p>Implemented in <a class="el" href="classConsoleLogOutputter.html#a26875e9109d14345dad89c78454fc32e">ConsoleLogOutputter</a>, <a class="el" href="classFileLogOutputter.html#a321af25c5cb18fe9570531c261eb49a8">FileLogOutputter</a>, <a class="el" href="classMSWindowsDebugOutputter.html#a0cb49d95bfc33e4a72605e083d38b4f4">MSWindowsDebugOutputter</a>, <a class="el" href="classStopLogOutputter.html#ad4f853042d83e1397387dfa683081c51">StopLogOutputter</a>, and <a class="el" href="classSystemLogOutputter.html#a19c3f812dbcf31cc9de833dfba76e372">SystemLogOutputter</a>.</p>
 
 </div>
 </div>

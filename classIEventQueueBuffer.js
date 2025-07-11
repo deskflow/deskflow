@@ -1,9 +1,9 @@
 var classIEventQueueBuffer =
 [
-    [ "Type", "classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27", [
-      [ "kNone", "classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27afc7d507d3db6509632e708714ef669fc", null ],
-      [ "kSystem", "classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27a11d96fadbc7fd5df4c2e4402c82af57d", null ],
-      [ "kUser", "classIEventQueueBuffer.html#a8cd5521b307725befe10a2b509bd7e27adb95964099fa11f3c4c9d6f65a003447", null ]
+    [ "Type", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674", [
+      [ "Unknown", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
+      [ "System", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a", null ],
+      [ "User", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a8f9bfe9d1345237cb3b2b205864da075", null ]
     ] ],
     [ "addEvent", "classIEventQueueBuffer.html#abc249c7752d7273b50fdd4ca090b9a59", null ],
     [ "deleteTimer", "classIEventQueueBuffer.html#a2da8721379cbf34b44b5064423efda0a", null ],

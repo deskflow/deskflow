@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -147,8 +147,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a90148e15989486fa812c98d80d738391" id="r_a90148e15989486fa812c98d80d738391"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <a class="el" href="#a90148e15989486fa812c98d80d738391aa62dbcdf5d5cdd6bf9ab520ddb7c0987">kNumButtons</a> = 0x200
- }</td></tr>
 <tr class="memitem:a0a0409190bff7ac81cf797d3f03a93d7" id="r_a0a0409190bff7ac81cf797d3f03a93d7"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> = std::set&lt;<a class="el" href="KeyTypes_8h.html#a65108f2128c351ed94a2cfa247da1e60">KeyButton</a>&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -187,6 +185,10 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
 <tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
 <tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a732e1848279a8454794b808b71a75d27" id="r_a732e1848279a8454794b808b71a75d27"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a732e1848279a8454794b808b71a75d27">s_numButtons</a> = 0x200</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Key state interface. </p>
@@ -203,24 +205,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a90148e15989486fa812c98d80d738391" name="a90148e15989486fa812c98d80d738391"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a90148e15989486fa812c98d80d738391">&#9670;&#160;</a></span>anonymous enum</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">anonymous enum</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a90148e15989486fa812c98d80d738391aa62dbcdf5d5cdd6bf9ab520ddb7c0987" name="a90148e15989486fa812c98d80d738391aa62dbcdf5d5cdd6bf9ab520ddb7c0987"></a>kNumButtons&#160;</td><td class="fielddoc"></td></tr>
-</table>
 
 </div>
 </div>
@@ -701,6 +685,29 @@ Public Member Functions</h2></td></tr>
 <p>Causes the key state to get updated to reflect the physical keyboard state. </p>
 
 <p>Implemented in <a class="el" href="classIPlatformScreen.html#aee94ca0afb739f940ef6c0b96473c063">IPlatformScreen</a>, <a class="el" href="classKeyState.html#ac90aea1f3eeb0dff6bd208f8983bffdf">KeyState</a>, and <a class="el" href="classPlatformScreen.html#a0bcdee139982e2cac2c7303e6cd0fe2f">PlatformScreen</a>.</p>
+
+</div>
+</div>
+<a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a732e1848279a8454794b808b71a75d27" name="a732e1848279a8454794b808b71a75d27"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a732e1848279a8454794b808b71a75d27">&#9670;&#160;</a></span>s_numButtons</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto IKeyState::s_numButtons = 0x200</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

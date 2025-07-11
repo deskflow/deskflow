@@ -1,5 +1,16 @@
 var NAVTREEINDEX3 =
 {
+"MSWindowsDebugOutputter_8h_source.html":[7,0,1,1,9,24],
+"MSWindowsDesks_8cpp.html":[7,0,1,1,9,25],
+"MSWindowsDesks_8cpp.html#a229eb3cb01c581e4a20a2428af85df87":[7,0,1,1,9,25,14],
+"MSWindowsDesks_8cpp.html#a22d10b903873cdbaadbe303273b04f9c":[7,0,1,1,9,25,4],
+"MSWindowsDesks_8cpp.html#a466ba152ad50de01f74de9926c77933d":[7,0,1,1,9,25,25],
+"MSWindowsDesks_8cpp.html#a5888d7a67129edfea2f1298c57335c43":[7,0,1,1,9,25,11],
+"MSWindowsDesks_8cpp.html#a616cb7a5bd545fb32808031dfd5f587f":[7,0,1,1,9,25,24],
+"MSWindowsDesks_8cpp.html#a67bddffae0d971cda003b663bdea5e25":[7,0,1,1,9,25,5],
+"MSWindowsDesks_8cpp.html#a6ac79a0ed451ffb414017cbf4adc69da":[7,0,1,1,9,25,21],
+"MSWindowsDesks_8cpp.html#a71b058d1e00473c447e670f1461b0ac3":[7,0,1,1,9,25,8],
+"MSWindowsDesks_8cpp.html#a7461a17472766186ae856ec27a8905dc":[7,0,1,1,9,25,20],
 "MSWindowsDesks_8cpp.html#a764704869b58a8e99131a56720dfb1ac":[7,0,1,1,9,25,13],
 "MSWindowsDesks_8cpp.html#a8365c5fe4c638efc320611d3e6dbc8f7":[7,0,1,1,9,25,3],
 "MSWindowsDesks_8cpp.html#a847d827f781702b7b7ecf13a70d0cf56":[7,0,1,1,9,25,23],
@@ -238,16 +249,5 @@ var NAVTREEINDEX3 =
 "OSXKeyState_8cpp.html#ac05df8405182a5111d542557ce205c64":[7,0,1,1,9,67,10],
 "OSXKeyState_8cpp.html#af34dcd5e47f5657f1e06bbaf48684af5":[7,0,1,1,9,67,4],
 "OSXKeyState_8cpp.html#affd353771c5f441401e17230a26431c0":[7,0,1,1,9,67,1],
-"OSXKeyState_8h.html":[7,0,1,1,9,68],
-"OSXKeyState_8h_source.html":[7,0,1,1,9,68],
-"OSXMediaKeySupport_8h.html":[7,0,1,1,9,69],
-"OSXMediaKeySupport_8h.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,69,0],
-"OSXMediaKeySupport_8h.html#aae250337d4f6eaef671fd86035c0c201":[7,0,1,1,9,69,1],
-"OSXMediaKeySupport_8h.html#ae6eaf0ad25f2b22025d5ceca4abcaabb":[7,0,1,1,9,69,2],
-"OSXMediaKeySupport_8h_source.html":[7,0,1,1,9,69],
-"OSXMediaKeySupport_8m.html":[7,0,1,1,9,70],
-"OSXMediaKeySupport_8m.html#a3335d4beeebeaee57e9a206c10608cb0":[7,0,1,1,9,70,2],
-"OSXMediaKeySupport_8m.html#aa7616ecd13f91fc1ed9207263edda8e5":[7,0,1,1,9,70,1],
-"OSXMediaKeySupport_8m.html#ab5633be05317db6e44f853c5f3c4c9ac":[7,0,1,1,9,70,3],
-"OSXMediaKeySupport_8m.html#ae1eaec7091c38e6f9244b4d1ce756189":[7,0,1,1,9,70,0]
+"OSXKeyState_8h.html":[7,0,1,1,9,68]
 };

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -209,8 +209,8 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a34787a880fd439e02383f336665d7bc2a4c2d64df525190d29b1023bcb7d4da2b">EISessionClosed</a>
 <br />
  }</td></tr>
-<tr class="memitem:a1d386d431506559251758fd2bb0b7d76" id="r_a1d386d431506559251758fd2bb0b7d76"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d386d431506559251758fd2bb0b7d76">ClientScrollDirection</a> { <a class="el" href="#a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a">SERVER</a> = 1
-, <a class="el" href="#a1d386d431506559251758fd2bb0b7d76a39fcddd797dbf8283c3c2b122f880a8e">INVERT_SERVER</a> = -1
+<tr class="memitem:a1d386d431506559251758fd2bb0b7d76" id="r_a1d386d431506559251758fd2bb0b7d76"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d386d431506559251758fd2bb0b7d76">ClientScrollDirection</a> { <a class="el" href="#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">Normal</a> = 1
+, <a class="el" href="#a1d386d431506559251758fd2bb0b7d76acf4c2a4bf7c328c4e51f902350475343">Inverted</a> = -1
  }</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
@@ -236,15 +236,25 @@ Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a></td>
+          <td class="memname">enum class <a class="el" href="#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a" name="a1d386d431506559251758fd2bb0b7d76ae5bf1d76d31acf0668c2aaad9b99547a"></a>SERVER&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a1d386d431506559251758fd2bb0b7d76a39fcddd797dbf8283c3c2b122f880a8e" name="a1d386d431506559251758fd2bb0b7d76a39fcddd797dbf8283c3c2b122f880a8e"></a>INVERT_SERVER&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0" name="a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0"></a>Normal&#160;</td><td class="fielddoc"><p>Same direction as the server. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a1d386d431506559251758fd2bb0b7d76acf4c2a4bf7c328c4e51f902350475343" name="a1d386d431506559251758fd2bb0b7d76acf4c2a4bf7c328c4e51f902350475343"></a>Inverted&#160;</td><td class="fielddoc"><p>Inverted scroll direction from the server. </p>
+</td></tr>
 </table>
 
 </div>

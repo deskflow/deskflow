@@ -6,5 +6,5 @@ var classMSWindowsDebugOutputter =
     [ "flush", "classMSWindowsDebugOutputter.html#a31c9265e7be657f0d15bbe446844fb09", null ],
     [ "open", "classMSWindowsDebugOutputter.html#a713e0cf94f75c5e4b2c5f10e201bce87", null ],
     [ "show", "classMSWindowsDebugOutputter.html#a30c983cbcaf4c733b81c5e5e806e2720", null ],
-    [ "write", "classMSWindowsDebugOutputter.html#a40a0de65ef098813b2deb3e08243015b", null ]
+    [ "write", "classMSWindowsDebugOutputter.html#a0cb49d95bfc33e4a72605e083d38b4f4", null ]
 ];

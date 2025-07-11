@@ -1,13 +1,13 @@
 <map id="src/lib/arch/win32/ArchLogWindows.h" name="src/lib/arch/win32/ArchLogWindows.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="139,5,278,44"/>
-<area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="90,92,204,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,46,168,81,164,78,191,43"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="228,92,314,117"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="226,43,254,78,250,82,221,46"/>
-<area shape="rect" id="Node000003" href="$ELevel_8h.html" title=" " alt="" coords="22,165,125,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="137,119,98,156,94,152,133,115"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="135,5,274,44"/>
+<area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="86,92,200,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,46,164,81,160,78,187,43"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="224,92,310,117"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="222,43,250,78,246,82,217,46"/>
+<area shape="rect" id="Node000003" href="$LogLevel_8h.html" title=" " alt="" coords="9,165,125,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="132,119,92,156,89,152,129,115"/>
 <area shape="rect" id="Node000004" href="$IInterface_8h.html" title=" " alt="" coords="149,165,292,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="161,115,200,152,196,156,157,119"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="158,115,198,152,195,156,154,119"/>
 <area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="178,237,263,262"/>
 <area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="223,190,223,222,218,222,218,190"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="5,310,73,335"/>

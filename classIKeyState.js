@@ -16,5 +16,6 @@ var classIKeyState =
     [ "pollPressedKeys", "classIKeyState.html#ad28fd1330ed2b626537445c9488857f8", null ],
     [ "setHalfDuplexMask", "classIKeyState.html#a4c1f06a56dfe9a0ba1c3bde71a1d7d7b", null ],
     [ "updateKeyMap", "classIKeyState.html#a9cd829a74695cc65e20a824518d5f244", null ],
-    [ "updateKeyState", "classIKeyState.html#ab246c57cd47334d890fb1caf9c13db1e", null ]
+    [ "updateKeyState", "classIKeyState.html#ab246c57cd47334d890fb1caf9c13db1e", null ],
+    [ "s_numButtons", "classIKeyState.html#a732e1848279a8454794b808b71a75d27", null ]
 ];

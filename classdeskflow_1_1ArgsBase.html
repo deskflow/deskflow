@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.154</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -112,11 +112,11 @@ Inheritance diagram for deskflow::ArgsBase:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a3158ec68ebd7d093b981391a3f3c127c" id="r_a3158ec68ebd7d093b981391a3f3c127c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3158ec68ebd7d093b981391a3f3c127c">Type</a> { <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5">kBase</a>
-, <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127ca1d171464147efad70aabb664df7afdee">kServer</a>
-, <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127cad9d99ddad875be7bd980b909001eaed9">kClient</a>
+<tr class="memitem:a3cf576ce39039dc1dded52186a108c4b" id="r_a3cf576ce39039dc1dded52186a108c4b"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cf576ce39039dc1dded52186a108c4b">ClassType</a> { <a class="el" href="#a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49">Base</a>
+, <a class="el" href="#a3cf576ce39039dc1dded52186a108c4ba9aa1b03934893d7134a660af4204f2a9">Server</a>
+, <a class="el" href="#a3cf576ce39039dc1dded52186a108c4ba577d7068826de925ea2aec01dbadf5e4">Client</a>
  }</td></tr>
-<tr class="memdesc:a3158ec68ebd7d093b981391a3f3c127c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This sets the type of the derived class.  <a href="#a3158ec68ebd7d093b981391a3f3c127c">More...</a><br /></td></tr>
+<tr class="memdesc:a3cf576ce39039dc1dded52186a108c4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">This sets the type of the derived class.  <a href="#a3cf576ce39039dc1dded52186a108c4b">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -125,8 +125,8 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a9337bda495f09b43ba3e5ae048461877" id="r_a9337bda495f09b43ba3e5ae048461877"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a3158ec68ebd7d093b981391a3f3c127c">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9337bda495f09b43ba3e5ae048461877">m_classType</a> = <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5">kBase</a></td></tr>
-<tr class="memdesc:a9337bda495f09b43ba3e5ae048461877"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores what type of object this is.  <br /></td></tr>
+<tr class="memitem:a93384cd90ea434feabaac36d32d2ff2d" id="r_a93384cd90ea434feabaac36d32d2ff2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a3cf576ce39039dc1dded52186a108c4b">ClassType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a93384cd90ea434feabaac36d32d2ff2d">m_classType</a> = <a class="el" href="#a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49">ClassType::Base</a></td></tr>
+<tr class="memdesc:a93384cd90ea434feabaac36d32d2ff2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores what type of object this is.  <br /></td></tr>
 <tr class="memitem:aa3b9777e21b2862d1467f61a48d2b30e" id="r_aa3b9777e21b2862d1467f61a48d2b30e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3b9777e21b2862d1467f61a48d2b30e">m_daemon</a> = true</td></tr>
 <tr class="memdesc:aa3b9777e21b2862d1467f61a48d2b30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Should run as a daemon.  <br /></td></tr>
 <tr class="memitem:a814bc3ef07b1699ff7083917563168a7" id="r_a814bc3ef07b1699ff7083917563168a7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a814bc3ef07b1699ff7083917563168a7">m_restartable</a> = true</td></tr>
@@ -167,23 +167,31 @@ Static Protected Member Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This is the base Argument class that will store the generic arguments passed into the applications this will be derived from and expanded to include application specific arguments. </p>
 </div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a3158ec68ebd7d093b981391a3f3c127c" name="a3158ec68ebd7d093b981391a3f3c127c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3158ec68ebd7d093b981391a3f3c127c">&#9670;&#160;</a></span>Type</h2>
+<a id="a3cf576ce39039dc1dded52186a108c4b" name="a3cf576ce39039dc1dded52186a108c4b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3cf576ce39039dc1dded52186a108c4b">&#9670;&#160;</a></span>ClassType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127c">deskflow::ArgsBase::Type</a></td>
+          <td class="memname">enum class <a class="el" href="#a3cf576ce39039dc1dded52186a108c4b">deskflow::ArgsBase::ClassType</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>This sets the type of the derived class. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5" name="a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5"></a>kBase&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a3158ec68ebd7d093b981391a3f3c127ca1d171464147efad70aabb664df7afdee" name="a3158ec68ebd7d093b981391a3f3c127ca1d171464147efad70aabb664df7afdee"></a>kServer&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a3158ec68ebd7d093b981391a3f3c127cad9d99ddad875be7bd980b909001eaed9" name="a3158ec68ebd7d093b981391a3f3c127cad9d99ddad875be7bd980b909001eaed9"></a>kClient&#160;</td><td class="fielddoc"></td></tr>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49" name="a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49"></a>Base&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3cf576ce39039dc1dded52186a108c4ba9aa1b03934893d7134a660af4204f2a9" name="a3cf576ce39039dc1dded52186a108c4ba9aa1b03934893d7134a660af4204f2a9"></a>Server&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a3cf576ce39039dc1dded52186a108c4ba577d7068826de925ea2aec01dbadf5e4" name="a3cf576ce39039dc1dded52186a108c4ba577d7068826de925ea2aec01dbadf5e4"></a>Client&#160;</td><td class="fielddoc"></td></tr>
 </table>
 
 </div>
@@ -270,14 +278,14 @@ template&lt;class T&gt; </div>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a9337bda495f09b43ba3e5ae048461877" name="a9337bda495f09b43ba3e5ae048461877"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9337bda495f09b43ba3e5ae048461877">&#9670;&#160;</a></span>m_classType</h2>
+<a id="a93384cd90ea434feabaac36d32d2ff2d" name="a93384cd90ea434feabaac36d32d2ff2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93384cd90ea434feabaac36d32d2ff2d">&#9670;&#160;</a></span>m_classType</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a3158ec68ebd7d093b981391a3f3c127c">Type</a> deskflow::ArgsBase::m_classType = <a class="el" href="#a3158ec68ebd7d093b981391a3f3c127cafb152884832a2a75815eb42a2910d8c5">kBase</a></td>
+          <td class="memname"><a class="el" href="#a3cf576ce39039dc1dded52186a108c4b">ClassType</a> deskflow::ArgsBase::m_classType = <a class="el" href="#a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49">ClassType::Base</a></td>
         </tr>
       </table>
 </div><div class="memdoc">

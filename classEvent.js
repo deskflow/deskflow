@@ -1,8 +1,9 @@
 var classEvent =
 [
+    [ "EventFlags", "structEvent_1_1EventFlags.html", "structEvent_1_1EventFlags" ],
     [ "Flags", "classEvent.html#a0e11da93de1ef32d11f43c51a3cec656", null ],
     [ "Event", "classEvent.html#aee6a4269152dcdb7a11de3e24d90c229", null ],
-    [ "Event", "classEvent.html#a42d1cb457d08a610ab01f880c1d7ad67", null ],
+    [ "Event", "classEvent.html#a565bf8a816edbed2ad3072f57e03f688", null ],
     [ "Event", "classEvent.html#ab478412608853061117a54d6398ddbda", null ],
     [ "deleteData", "classEvent.html#a72116643a54884af95978c63e3c14166", null ],
     [ "getData", "classEvent.html#a66e3660db6ad05261724596001a15a4a", null ],

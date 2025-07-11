@@ -1,6 +1,4 @@
 var LogOutputters_8cpp =
 [
-    [ "EFileLogOutputter", "LogOutputters_8cpp.html#aa5cd11eca895a2836c2536f3e9a83089", [
-      [ "kFileSizeLimit", "LogOutputters_8cpp.html#aa5cd11eca895a2836c2536f3e9a83089a5516e323469a92ab2e73159740de6a9f", null ]
-    ] ]
+    [ "s_logFileSizeLimit", "LogOutputters_8cpp.html#a15697d1f132f2d1f48fea64bedd940d1", null ]
 ];
