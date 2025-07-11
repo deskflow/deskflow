@@ -74,7 +74,7 @@ public:
   Convert from UCS-2 to UTF-8.  If errors is not nullptr then *errors is
   set to true iff any character could not be decoded.
   */
-  static std::string UCS2ToUTF8(const std::string &, bool *errors = nullptr);
+  static std::string UCS2ToUTF8(const std::string_view &, bool *errors = nullptr);
 
   //! Convert from UCS-4 to UTF-8
   /*!
