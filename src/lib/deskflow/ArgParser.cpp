@@ -299,8 +299,9 @@ const char **ArgParser::getArgv(std::vector<std::string> &argsArray)
   return argv;
 }
 
-std::string
-ArgParser::assembleCommand(std::vector<std::string> &argsArray, std::string ignoreArg, int parametersRequired)
+std::string ArgParser::assembleCommand(
+    std::vector<std::string> &argsArray, const std::string_view &ignoreArg, int parametersRequired
+)
 {
   std::string result;
 
