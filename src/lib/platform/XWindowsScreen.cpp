@@ -551,7 +551,7 @@ uint32_t XWindowsScreen::registerHotKey(KeyID key, KeyModifierMask mask)
       };
 
       XModifierKeymap *modKeymap = XGetModifierMapping(m_display);
-      for (size_t j = 0; j < sizeof(s_hotKeyModifiers) / sizeof(s_hotKeyModifiers[0]) && !err; ++j) {
+      for (size_t j = 0; j < std::size(s_hotKeyModifiers) / sizeof(s_hotKeyModifiers[0]) && !err; ++j) {
         // skip modifier if not in mask
         if ((mask & s_hotKeyModifiers[j]) == 0) {
           continue;
@@ -1723,7 +1723,7 @@ KeyID XWindowsScreen::mapKeyFromX(XKeyEvent *event) const
     // do multibyte lookup.  can only call XmbLookupString with a
     // key press event and a valid XIC so we checked those above.
     char scratch[32];
-    int n = sizeof(scratch) / sizeof(scratch[0]);
+    auto n = static_cast<int>(std::size(scratch) / sizeof(scratch[0]));
     char *buffer = scratch;
     int status;
     n = XmbLookupString(m_ic, event, buffer, n, &keysym, &status);

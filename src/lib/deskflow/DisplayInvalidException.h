@@ -17,7 +17,7 @@ public:
     // do nothing
   }
 
-  explicit DisplayInvalidException(std::string msg) : std::runtime_error(msg)
+  explicit DisplayInvalidException(const std::string &msg) : std::runtime_error(msg)
   {
     // do nothing
   }

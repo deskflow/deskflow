@@ -114,7 +114,6 @@ public:
 protected:
   void runEventsLoop(void *);
 
-  bool m_suspended = false;
   IEventQueue *m_events = nullptr;
 
 private:

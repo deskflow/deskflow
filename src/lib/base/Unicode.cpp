@@ -18,7 +18,9 @@ inline static uint16_t decode16(const uint8_t *n, bool byteSwapped)
   {
     uint8_t n8[2];
     uint16_t n16;
-  } c;
+  };
+  x16 c;
+
   if (byteSwapped) {
     c.n8[0] = n[1];
     c.n8[1] = n[0];
@@ -35,7 +37,8 @@ inline static uint32_t decode32(const uint8_t *n, bool byteSwapped)
   {
     uint8_t n8[4];
     uint32_t n32;
-  } c;
+  };
+  x32 c;
   if (byteSwapped) {
     c.n8[0] = n[3];
     c.n8[1] = n[2];
@@ -216,7 +219,7 @@ std::string Unicode::UTF8ToText(const std::string &src, bool *errors)
   return text;
 }
 
-std::string Unicode::UCS2ToUTF8(const std::string &src, bool *errors)
+std::string Unicode::UCS2ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
   resetError(errors);
@@ -563,29 +566,29 @@ uint32_t Unicode::fromUTF8(const uint8_t *&data, uint32_t &n)
     break;
 
   case 2:
-    c = ((static_cast<uint32_t>(data[0]) & 0x1f) << 6) | ((static_cast<uint32_t>(data[1]) & 0x3f));
+    c = ((static_cast<uint32_t>(data[0]) & 0x1f) << 6) | (static_cast<uint32_t>(data[1]) & 0x3f);
     break;
 
   case 3:
     c = ((static_cast<uint32_t>(data[0]) & 0x0f) << 12) | ((static_cast<uint32_t>(data[1]) & 0x3f) << 6) |
-        ((static_cast<uint32_t>(data[2]) & 0x3f));
+        (static_cast<uint32_t>(data[2]) & 0x3f);
     break;
 
   case 4:
     c = ((static_cast<uint32_t>(data[0]) & 0x07) << 18) | ((static_cast<uint32_t>(data[1]) & 0x3f) << 12) |
-        ((static_cast<uint32_t>(data[2]) & 0x3f) << 6) | ((static_cast<uint32_t>(data[3]) & 0x3f));
+        ((static_cast<uint32_t>(data[2]) & 0x3f) << 6) | (static_cast<uint32_t>(data[3]) & 0x3f);
     break;
 
   case 5:
     c = ((static_cast<uint32_t>(data[0]) & 0x03) << 24) | ((static_cast<uint32_t>(data[1]) & 0x3f) << 18) |
         ((static_cast<uint32_t>(data[2]) & 0x3f) << 12) | ((static_cast<uint32_t>(data[3]) & 0x3f) << 6) |
-        ((static_cast<uint32_t>(data[4]) & 0x3f));
+        (static_cast<uint32_t>(data[4]) & 0x3f);
     break;
 
   case 6:
     c = ((static_cast<uint32_t>(data[0]) & 0x01) << 30) | ((static_cast<uint32_t>(data[1]) & 0x3f) << 24) |
         ((static_cast<uint32_t>(data[2]) & 0x3f) << 18) | ((static_cast<uint32_t>(data[3]) & 0x3f) << 12) |
-        ((static_cast<uint32_t>(data[4]) & 0x3f) << 6) | ((static_cast<uint32_t>(data[5]) & 0x3f));
+        ((static_cast<uint32_t>(data[4]) & 0x3f) << 6) | (static_cast<uint32_t>(data[5]) & 0x3f);
     break;
 
   default:

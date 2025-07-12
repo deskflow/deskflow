@@ -64,7 +64,7 @@ public:
   //
 
   void updateStatus() const;
-  void updateStatus(const std::string &msg) const;
+  void updateStatus(const std::string_view &) const;
   void handleScreenError();
   deskflow::Screen *openClientScreen();
   void closeClientScreen(deskflow::Screen *screen);
@@ -100,6 +100,7 @@ public:
 private:
   ISocketFactory *getSocketFactory() const;
 
+  bool m_suspended = false;
   Client *m_client = nullptr;
   deskflow::Screen *m_clientScreen = nullptr;
   NetworkAddress *m_serverAddress = nullptr;
