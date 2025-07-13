@@ -72,8 +72,6 @@ private:
     static_cast<PortalInputCapture *>(data)->handleZonesChanged(session, options);
   }
 
-  int fakeEisFd() const;
-
 private:
   enum class Signal : uint8_t
   {

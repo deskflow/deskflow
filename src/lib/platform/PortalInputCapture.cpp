@@ -68,33 +68,6 @@ gboolean PortalInputCapture::timeoutHandler() const
   return true; // keep re-triggering
 }
 
-int PortalInputCapture::fakeEisFd() const
-{
-  auto path = std::getenv("LIBEI_SOCKET");
-
-  if (!path) {
-    LOG_DEBUG("cannot fake eis socket, env var not set: LIBEI_SOCKET");
-    return -1;
-  }
-
-  auto sock = socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK, 0);
-
-  // Dealing with the socket directly because nothing in lib/... supports
-  // AF_UNIX and I'm too lazy to fix all this for a temporary hack
-  int fd = sock;
-  struct sockaddr_un addr = {
-      .sun_family = AF_UNIX,
-      .sun_path = {0},
-  };
-  std::snprintf(addr.sun_path, sizeof(addr.sun_path), "%s", path);
-
-  if (auto result = connect(fd, (struct sockaddr *)&addr, sizeof(addr)); result != 0) {
-    LOG_DEBUG("faked eis fd failed: %s", strerror(errno));
-  }
-
-  return sock;
-}
-
 void PortalInputCapture::handleSessionClosed(XdpSession *session)
 {
   LOG_ERR("portal input capture session was closed, exiting");
@@ -123,17 +96,11 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   auto fd = xdp_input_capture_session_connect_to_eis(session, &error);
   if (fd < 0) {
     LOG_ERR("failed to connect to eis: %s", error->message);
-
-    // FIXME: Development hack to avoid having to assemble all parts just for
-    // testing this code.
-    fd = fakeEisFd();
-
-    if (fd < 0) {
-      g_main_loop_quit(m_glibMainLoop);
-      m_events->addEvent(EventTypes::Quit);
-      return;
-    }
+    g_main_loop_quit(m_glibMainLoop);
+    m_events->addEvent(EventTypes::Quit);
+    return;
   }
+
   // Socket ownership is transferred to the EiScreen
   m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
