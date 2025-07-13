@@ -85,6 +85,12 @@ public:
   */
   virtual void reconfigure(uint32_t activeSides) = 0;
 
+  /**
+   * @brief activeSides
+   * @return a bitmask of DirectionMask indicating which sides of the primary screen are linked to clients
+   */
+  virtual uint32_t activeSides() = 0;
+
   //! Warp cursor
   /*!
   Warp the cursor to the absolute coordinates \c x,y.  Also

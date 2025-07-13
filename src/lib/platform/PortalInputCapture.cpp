@@ -7,6 +7,7 @@
  */
 
 #include "platform/PortalInputCapture.h"
+#include "base/DirectionTypes.h"
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
@@ -252,10 +253,15 @@ void PortalInputCapture::handleDeactivated(
 
 void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, const GVariant *)
 {
+
   for (auto b : m_barriers)
     g_object_unref(b);
   m_barriers.clear();
 
+  const auto activeSides = m_screen->activeSides();
+  using enum DirectionMask;
+
+  // May not correctly handle different sized screens
   auto zones = xdp_input_capture_session_get_zones(session);
   while (zones != nullptr) {
     guint w;
@@ -271,47 +277,55 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
     int y1;
     int y2;
 
-    // Hardcoded behaviour: our pointer barriers are always at the edges of
-    // all zones. Since the implementation is supposed to reject the ones in
-    // the wrong place, we can just install barriers everywhere and let EIS
-    // figure it out. Also a lot easier to implement for now though it doesn't
-    // cover differently-sized screens...
-    auto id = m_barriers.size() + 1;
-    x1 = x;
-    y1 = y;
-    x2 = x + w - 1;
-    y2 = y;
-    LOG_DEBUG("barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-    m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-        g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
-    ));
-    id = m_barriers.size() + 1;
-    x1 = x + w;
-    y1 = y;
-    x2 = x + w;
-    y2 = y + h - 1;
-    LOG_DEBUG("barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-    m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-        g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
-    ));
-    id = m_barriers.size() + 1;
-    x1 = x;
-    y1 = y;
-    x2 = x;
-    y2 = y + h - 1;
-    LOG_DEBUG("barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-    m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-        g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
-    ));
-    id = m_barriers.size() + 1;
-    x1 = x;
-    y1 = y + h;
-    x2 = x + w - 1;
-    y2 = y + h;
-    LOG_DEBUG("barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
-    m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(
-        g_object_new(XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr)
-    ));
+    auto id = 0;
+
+    if (activeSides & static_cast<int>(LeftMask)) {
+      id++;
+      x1 = x;
+      y1 = y;
+      x2 = x;
+      y2 = y + h - 1;
+      LOG_DEBUG("barrier (left) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
+      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
+          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
+      )));
+    }
+
+    if (activeSides & static_cast<int>(RightMask)) {
+      id++;
+      x1 = x + w;
+      y1 = y;
+      x2 = x + w;
+      y2 = y + h - 1;
+      LOG_DEBUG("barrier (right) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
+      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
+          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
+      )));
+    }
+
+    if (activeSides & static_cast<int>(TopMask)) {
+      id++;
+      x1 = x;
+      y1 = y;
+      x2 = x + w - 1;
+      y2 = y;
+      LOG_DEBUG("barrier (top) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
+      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
+          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
+      )));
+    }
+
+    if (activeSides & static_cast<int>(BottomMask)) {
+      id++;
+      x1 = x;
+      y1 = y + h;
+      x2 = x + w - 1;
+      y2 = y + h;
+      LOG_DEBUG("barrier (bottom) %zd at %d,%d-%d,%d", id, x1, y1, x2, y2);
+      m_barriers.push_back(XDP_INPUT_CAPTURE_POINTER_BARRIER(g_object_new(
+          XDP_TYPE_INPUT_CAPTURE_POINTER_BARRIER, "id", id, "x1", x1, "y1", y1, "x2", x2, "y2", y2, nullptr
+      )));
+    }
     zones = zones->next;
   }
 

@@ -477,9 +477,14 @@ void XWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
   }
 }
 
-void XWindowsScreen::reconfigure(uint32_t)
+void XWindowsScreen::reconfigure(uint32_t activeSides)
 {
-  // do nothing
+  m_activeSides = activeSides;
+}
+
+uint32_t XWindowsScreen::activeSides()
+{
+  return m_activeSides;
 }
 
 void XWindowsScreen::warpCursor(int32_t x, int32_t y)

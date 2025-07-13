@@ -7,9 +7,8 @@
 
 #pragma once
 
+#include "base/DirectionTypes.h"
 #include "base/EventTypes.h"
-
-#include <cstdint>
 
 /**
  * @file ProtocolTypes.h
@@ -149,43 +148,6 @@ static constexpr uint32_t PROTOCOL_MAX_STRING_LENGTH = 1024 * 1024;
  * @brief Enumeration types used in protocol messages
  * @{
  */
-
-/**
- * @brief Screen edge directions for mouse movement
- *
- * Used to specify which edge of a screen the mouse cursor crosses
- * when moving between primary and secondary screens.
- *
- * @since Protocol version 1.0
- */
-enum class Direction : uint8_t
-{
-  NoDirection,                                                             ///< No specific direction
-  Left,                                                                    ///< Left edge of screen
-  Right,                                                                   ///< Right edge of screen
-  Top,                                                                     ///< Top edge of screen
-  Bottom,                                                                  ///< Bottom edge of screen
-  FirstDirection = Direction::Left,                                        ///< First valid direction value
-  LastDirection = Direction::Bottom,                                       ///< Last valid direction value
-  NumDirections = Direction::LastDirection - Direction::FirstDirection + 1 ///< Total number of directions
-};
-
-/**
- * @brief Bitmask values for screen edge directions
- *
- * Used to create bitmasks representing multiple screen edges.
- * Useful for configuration and edge detection.
- *
- * @since Protocol version 1.0
- */
-enum class DirectionMask
-{
-  NoDirMask = 0,                                        ///< No direction mask
-  LeftMask = 1 << static_cast<int>(Direction::Left),    ///< Left edge mask
-  RightMask = 1 << static_cast<int>(Direction::Right),  ///< Right edge mask
-  TopMask = 1 << static_cast<int>(Direction::Top),      ///< Top edge mask
-  BottomMask = 1 << static_cast<int>(Direction::Bottom) ///< Bottom edge mask
-};
 
 /**
  * @brief File transfer data chunk types

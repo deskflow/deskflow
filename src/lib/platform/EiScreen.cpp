@@ -177,9 +177,15 @@ void EiScreen::getCursorPos(int32_t &x, int32_t &y) const
   y = m_cursorY;
 }
 
-void EiScreen::reconfigure(uint32_t)
+void EiScreen::reconfigure(uint32_t activeSides)
 {
-  // do nothing
+  LOG((CLOG_DEBUG "active sides: %x", activeSides));
+  m_activeSides = activeSides;
+}
+
+std::uint32_t EiScreen::activeSides()
+{
+  return m_activeSides;
 }
 
 void EiScreen::warpCursor(int32_t x, int32_t y)

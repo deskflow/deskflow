@@ -244,9 +244,15 @@ void OSXScreen::getCursorPos(int32_t &x, int32_t &y) const
   CFRelease(event);
 }
 
-void OSXScreen::reconfigure(uint32_t)
+void OSXScreen::reconfigure(uint32_t activeSides)
 {
-  // do nothing
+  LOG((CLOG_DEBUG "active sides: %x", activeSides));
+  m_activeSides = activeSides;
+}
+
+uint32_t OSXScreen::activeSides()
+{
+  return m_activeSides;
 }
 
 void OSXScreen::warpCursor(int32_t x, int32_t y)
