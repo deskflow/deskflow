@@ -46,6 +46,7 @@ public:
 
   // IPrimaryScreen overrides
   void reconfigure(uint32_t activeSides) override;
+  uint32_t activeSides() override;
   void warpCursor(int32_t x, int32_t y) override;
   uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
   void unregisterHotKey(uint32_t id) override;
@@ -175,6 +176,7 @@ private:
   // true if mouse has entered the screen
   bool m_isOnScreen;
 
+  uint32_t m_activeSides = 0;
   // screen shape stuff
   int32_t m_x = 0;
   int32_t m_y = 0;

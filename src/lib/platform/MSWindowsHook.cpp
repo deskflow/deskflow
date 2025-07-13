@@ -115,6 +115,11 @@ void MSWindowsHook::setSides(uint32_t sides)
   g_zoneSides = sides;
 }
 
+uint32_t MSWindowsHook::getSides()
+{
+  return g_zoneSides;
+}
+
 void MSWindowsHook::setZone(int32_t x, int32_t y, int32_t w, int32_t h, int32_t jumpZoneSize)
 {
   g_zoneSize = jumpZoneSize;

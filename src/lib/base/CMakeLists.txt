@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 add_library(base STATIC
+  DirectionTypes.h
   Event.cpp
   Event.h
   EventQueue.cpp

@@ -507,6 +507,11 @@ void MSWindowsScreen::reconfigure(uint32_t activeSides)
   m_hook.setSides(activeSides);
 }
 
+uint32_t MSWindowsScreen::activeSides()
+{
+  return m_hook.getSides();
+}
+
 void MSWindowsScreen::warpCursor(int32_t x, int32_t y)
 {
   // warp mouse

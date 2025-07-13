@@ -43,6 +43,7 @@ public:
 
   // IPrimaryScreen overrides
   void reconfigure(std::uint32_t activeSides) override;
+  std::uint32_t activeSides() override;
   void warpCursor(std::int32_t x, std::int32_t y) override;
   std::uint32_t registerHotKey(KeyID key, KeyModifierMask mask) override;
   void unregisterHotKey(std::uint32_t id) override;
@@ -128,6 +129,7 @@ private:
 
   std::uint32_t m_sequenceNumber = 0;
 
+  std::uint32_t m_activeSides = 0;
   std::uint32_t m_x = 0;
   std::uint32_t m_y = 0;
   std::uint32_t m_w = 0;

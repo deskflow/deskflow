@@ -56,6 +56,7 @@ public:
   int cleanup();
 
   void setSides(uint32_t sides);
+  uint32_t getSides();
 
   void setZone(int32_t x, int32_t y, int32_t w, int32_t h, int32_t jumpZoneSize);
 
