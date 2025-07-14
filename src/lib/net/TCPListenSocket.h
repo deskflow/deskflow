@@ -9,10 +9,11 @@
 
 #include "arch/IArchNetwork.h"
 #include "net/IListenSocket.h"
+#include "net/ISocketMultiplexerJob.h"
 
 #include <mutex>
 
-class ISocketMultiplexerJob;
+class Mutex;
 class IEventQueue;
 class SocketMultiplexer;
 
@@ -43,7 +44,7 @@ protected:
   void setListeningJob();
 
 public:
-  ISocketMultiplexerJob *serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
+  MultiplexerJobStatus serviceListening(ISocketMultiplexerJob *, bool, bool, bool);
 
 protected:
   ArchSocket m_socket;
