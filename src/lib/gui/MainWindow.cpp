@@ -85,6 +85,14 @@ MainWindow::MainWindow()
 {
   ui->setupUi(this);
 
+  // setup the log font
+  ui->textLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
+#ifdef Q_OS_MAC
+  auto f = ui->textLog->font();
+  f.setPixelSize(12);
+  ui->textLog->setFont(f);
+#endif
+
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
