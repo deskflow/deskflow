@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.177</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -161,8 +161,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ab3f6fb838702f3a22e118ea73596a2bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get screen shape.  <br /></td></tr>
 <tr class="memitem:aa80e25911f77d21a72d70a0db274b9dc" id="r_aa80e25911f77d21a72d70a0db274b9dc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa80e25911f77d21a72d70a0db274b9dc">getCursorPos</a> (int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) const override</td></tr>
 <tr class="memdesc:aa80e25911f77d21a72d70a0db274b9dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get cursor position.  <br /></td></tr>
-<tr class="memitem:a6f36f73c633f001195c1e676890bc00b" id="r_a6f36f73c633f001195c1e676890bc00b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f36f73c633f001195c1e676890bc00b">reconfigure</a> (uint32_t activeSides) override</td></tr>
+<tr class="memitem:a6f36f73c633f001195c1e676890bc00b" id="r_a6f36f73c633f001195c1e676890bc00b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f36f73c633f001195c1e676890bc00b">reconfigure</a> (uint32_t <a class="el" href="#a592ac1f22de03da131e97c2077155a92">activeSides</a>) override</td></tr>
 <tr class="memdesc:a6f36f73c633f001195c1e676890bc00b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update configuration.  <br /></td></tr>
+<tr class="memitem:a592ac1f22de03da131e97c2077155a92" id="r_a592ac1f22de03da131e97c2077155a92"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a592ac1f22de03da131e97c2077155a92">activeSides</a> () override</td></tr>
+<tr class="memdesc:a592ac1f22de03da131e97c2077155a92"><td class="mdescLeft">&#160;</td><td class="mdescRight">activeSides  <br /></td></tr>
 <tr class="memitem:a8f402f986943830b9926d2b5116aee8f" id="r_a8f402f986943830b9926d2b5116aee8f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f402f986943830b9926d2b5116aee8f">warpCursor</a> (int32_t <a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) override</td></tr>
 <tr class="memdesc:a8f402f986943830b9926d2b5116aee8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warp cursor.  <br /></td></tr>
 <tr class="memitem:a249bf3d9a2521593ef9195219b4ff615" id="r_a249bf3d9a2521593ef9195219b4ff615"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a249bf3d9a2521593ef9195219b4ff615">registerHotKey</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="el" href="KeySequence_8cpp.html#a35af0be900467fedbb610bd6ea65ed78">key</a>, <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> mask) override</td></tr>
@@ -339,6 +341,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a592ac1f22de03da131e97c2077155a92" name="a592ac1f22de03da131e97c2077155a92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a592ac1f22de03da131e97c2077155a92">&#9670;&#160;</a></span>activeSides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t OSXScreen::activeSides </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>activeSides </p>
+<dl class="section return"><dt>Returns</dt><dd>a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients </dd></dl>
+
+<p>Implements <a class="el" href="classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3">PlatformScreen</a>.</p>
+
+</div>
+</div>
 <a id="a25a6221c6eb475b644f101abd3e28f84" name="a25a6221c6eb475b644f101abd3e28f84"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a25a6221c6eb475b644f101abd3e28f84">&#9670;&#160;</a></span>canLeave()</h2>
 
@@ -1185,7 +1217,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update configuration. </p>
-<p>This is called when the configuration has changed. <code>activeSides</code> is a bitmask of <a class="el" href="group__protocol__enums.html#ga1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients. Override to handle the possible change in jump zones. </p>
+<p>This is called when the configuration has changed. <code>activeSides</code> is a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients. Override to handle the possible change in jump zones. </p>
 
 <p>Implements <a class="el" href="classPlatformScreen.html#adb8af518a7316101a7243735da1ab0a9">PlatformScreen</a>.</p>
 

@@ -2,6 +2,7 @@ var classdeskflow_1_1EiScreen =
 [
     [ "EiScreen", "classdeskflow_1_1EiScreen.html#a80b44d237c1496c82a80ef6719765dbe", null ],
     [ "~EiScreen", "classdeskflow_1_1EiScreen.html#a0e22758b3879a012f161aec0a84a5d4f", null ],
+    [ "activeSides", "classdeskflow_1_1EiScreen.html#a49ec5fcf0eea67fe831518f428d61447", null ],
     [ "addDevice", "classdeskflow_1_1EiScreen.html#a54dc324f4e1c9f1e60366a5586c9ce05", null ],
     [ "canLeave", "classdeskflow_1_1EiScreen.html#ab52c25fbce6bb6b8ff8794e5a264f81a", null ],
     [ "checkClipboards", "classdeskflow_1_1EiScreen.html#a0fe3dff0bd24f2eac358f7ea1a0ed51c", null ],

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.177</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -158,7 +158,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9dab63c3aabe1864a39e5a8a47f472c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard.  <br /></td></tr>
 <tr class="memitem:aab794f17042337d3583107f3ab308fd3" id="r_aab794f17042337d3583107f3ab308fd3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aab794f17042337d3583107f3ab308fd3">getShape</a> (std::int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, std::int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>, std::int32_t &amp;width, std::int32_t &amp;height) const override</td></tr>
 <tr class="memitem:a58dc761e566b304b79888aad99d70ccb" id="r_a58dc761e566b304b79888aad99d70ccb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58dc761e566b304b79888aad99d70ccb">getCursorPos</a> (std::int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, std::int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) const override</td></tr>
-<tr class="memitem:a99d5647706869ff1fb8c2fbb8c5f5e5c" id="r_a99d5647706869ff1fb8c2fbb8c5f5e5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99d5647706869ff1fb8c2fbb8c5f5e5c">reconfigure</a> (std::uint32_t activeSides) override</td></tr>
+<tr class="memitem:a99d5647706869ff1fb8c2fbb8c5f5e5c" id="r_a99d5647706869ff1fb8c2fbb8c5f5e5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a99d5647706869ff1fb8c2fbb8c5f5e5c">reconfigure</a> (std::uint32_t <a class="el" href="#a49ec5fcf0eea67fe831518f428d61447">activeSides</a>) override</td></tr>
+<tr class="memitem:a49ec5fcf0eea67fe831518f428d61447" id="r_a49ec5fcf0eea67fe831518f428d61447"><td class="memItemLeft" align="right" valign="top">std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a49ec5fcf0eea67fe831518f428d61447">activeSides</a> () override</td></tr>
+<tr class="memdesc:a49ec5fcf0eea67fe831518f428d61447"><td class="mdescLeft">&#160;</td><td class="mdescRight">activeSides  <br /></td></tr>
 <tr class="memitem:a3b01acda09e87cfba2a85b6127019dd9" id="r_a3b01acda09e87cfba2a85b6127019dd9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b01acda09e87cfba2a85b6127019dd9">warpCursor</a> (std::int32_t <a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, std::int32_t <a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) override</td></tr>
 <tr class="memitem:a7a787b752dc25d204694128bcb17cab0" id="r_a7a787b752dc25d204694128bcb17cab0"><td class="memItemLeft" align="right" valign="top">std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a787b752dc25d204694128bcb17cab0">registerHotKey</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="el" href="KeySequence_8cpp.html#a35af0be900467fedbb610bd6ea65ed78">key</a>, <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> mask) override</td></tr>
 <tr class="memdesc:a7a787b752dc25d204694128bcb17cab0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register a system hotkey.  <br /></td></tr>
@@ -211,7 +213,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a9fe42c8e215b7393b32da725cf262acb inherit pub_methods_classPlatformScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get screen shape.  <br /></td></tr>
 <tr class="memitem:a1f93d6f395e02611f29e2cfae839d34b inherit pub_methods_classPlatformScreen" id="r_a1f93d6f395e02611f29e2cfae839d34b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlatformScreen.html#a1f93d6f395e02611f29e2cfae839d34b">getCursorPos</a> (int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) const override=0</td></tr>
 <tr class="memdesc:a1f93d6f395e02611f29e2cfae839d34b inherit pub_methods_classPlatformScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get cursor position.  <br /></td></tr>
-<tr class="memitem:adb8af518a7316101a7243735da1ab0a9 inherit pub_methods_classPlatformScreen" id="r_adb8af518a7316101a7243735da1ab0a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlatformScreen.html#adb8af518a7316101a7243735da1ab0a9">reconfigure</a> (uint32_t activeSides) override=0</td></tr>
+<tr class="memitem:adb8af518a7316101a7243735da1ab0a9 inherit pub_methods_classPlatformScreen" id="r_adb8af518a7316101a7243735da1ab0a9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlatformScreen.html#adb8af518a7316101a7243735da1ab0a9">reconfigure</a> (uint32_t <a class="el" href="classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3">activeSides</a>) override=0</td></tr>
 <tr class="memdesc:adb8af518a7316101a7243735da1ab0a9 inherit pub_methods_classPlatformScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update configuration.  <br /></td></tr>
 <tr class="memitem:a535ef2dc3db23517b0a82d6904cdb892 inherit pub_methods_classPlatformScreen" id="r_a535ef2dc3db23517b0a82d6904cdb892"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classPlatformScreen.html#a535ef2dc3db23517b0a82d6904cdb892">warpCursor</a> (int32_t <a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) override=0</td></tr>
 <tr class="memdesc:a535ef2dc3db23517b0a82d6904cdb892 inherit pub_methods_classPlatformScreen"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warp cursor.  <br /></td></tr>
@@ -347,6 +349,36 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a49ec5fcf0eea67fe831518f428d61447" name="a49ec5fcf0eea67fe831518f428d61447"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49ec5fcf0eea67fe831518f428d61447">&#9670;&#160;</a></span>activeSides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::uint32_t deskflow::EiScreen::activeSides </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>activeSides </p>
+<dl class="section return"><dt>Returns</dt><dd>a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients </dd></dl>
+
+<p>Implements <a class="el" href="classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3">PlatformScreen</a>.</p>
+
+</div>
+</div>
 <a id="a54dc324f4e1c9f1e60366a5586c9ce05" name="a54dc324f4e1c9f1e60366a5586c9ce05"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a54dc324f4e1c9f1e60366a5586c9ce05">&#9670;&#160;</a></span>addDevice()</h2>
 

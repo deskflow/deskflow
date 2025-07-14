@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.175</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.177</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -203,8 +203,10 @@ accessors</h2></td></tr>
 <tr class="memdesc:a04688a7e547d65b64b523e7653025c0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get screen shape.  <br /></td></tr>
 <tr class="memitem:ae44be11fe80069c1cad4ab8dfde159e2" id="r_ae44be11fe80069c1cad4ab8dfde159e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae44be11fe80069c1cad4ab8dfde159e2">getCursorPos</a> (int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t &amp;<a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) const override=0</td></tr>
 <tr class="memdesc:ae44be11fe80069c1cad4ab8dfde159e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get cursor position.  <br /></td></tr>
-<tr class="memitem:abe7d86247e238b1492078d850e95e182" id="r_abe7d86247e238b1492078d850e95e182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe7d86247e238b1492078d850e95e182">reconfigure</a> (uint32_t activeSides) override=0</td></tr>
+<tr class="memitem:abe7d86247e238b1492078d850e95e182" id="r_abe7d86247e238b1492078d850e95e182"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abe7d86247e238b1492078d850e95e182">reconfigure</a> (uint32_t <a class="el" href="#a12c80e96375e5589b3d6f12c1de2c22f">activeSides</a>) override=0</td></tr>
 <tr class="memdesc:abe7d86247e238b1492078d850e95e182"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update configuration.  <br /></td></tr>
+<tr class="memitem:a12c80e96375e5589b3d6f12c1de2c22f" id="r_a12c80e96375e5589b3d6f12c1de2c22f"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a12c80e96375e5589b3d6f12c1de2c22f">activeSides</a> () override=0</td></tr>
+<tr class="memdesc:a12c80e96375e5589b3d6f12c1de2c22f"><td class="mdescLeft">&#160;</td><td class="mdescRight">activeSides  <br /></td></tr>
 <tr class="memitem:a681c264d6c9b5a7e2deb24d70a2ca6b6" id="r_a681c264d6c9b5a7e2deb24d70a2ca6b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a681c264d6c9b5a7e2deb24d70a2ca6b6">warpCursor</a> (int32_t <a class="el" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, int32_t <a class="el" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>) override=0</td></tr>
 <tr class="memdesc:a681c264d6c9b5a7e2deb24d70a2ca6b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Warp cursor.  <br /></td></tr>
 <tr class="memitem:a5c7bbb7be1d11ae322cecb3c09a61668" id="r_a5c7bbb7be1d11ae322cecb3c09a61668"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c7bbb7be1d11ae322cecb3c09a61668">registerHotKey</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="el" href="KeySequence_8cpp.html#a35af0be900467fedbb610bd6ea65ed78">key</a>, <a class="el" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> mask) override=0</td></tr>
@@ -297,6 +299,38 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a12c80e96375e5589b3d6f12c1de2c22f" name="a12c80e96375e5589b3d6f12c1de2c22f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12c80e96375e5589b3d6f12c1de2c22f">&#9670;&#160;</a></span>activeSides()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t IPlatformScreen::activeSides </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>activeSides </p>
+<dl class="section return"><dt>Returns</dt><dd>a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients </dd></dl>
+
+<p>Implements <a class="el" href="classIPrimaryScreen.html#aee64b865789af789f8f6197245611fdd">IPrimaryScreen</a>.</p>
+
+<p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a49ec5fcf0eea67fe831518f428d61447">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#afa90fbdfd8819b92cd00ae0235904574">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a592ac1f22de03da131e97c2077155a92">OSXScreen</a>, <a class="el" href="classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3">PlatformScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad">XWindowsScreen</a>.</p>
+
+</div>
+</div>
 <a id="a3893b318acf4129cb0961d1a5bc46ea1" name="a3893b318acf4129cb0961d1a5bc46ea1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3893b318acf4129cb0961d1a5bc46ea1">&#9670;&#160;</a></span>canLeave()</h2>
 
@@ -1497,7 +1531,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update configuration. </p>
-<p>This is called when the configuration has changed. <code>activeSides</code> is a bitmask of <a class="el" href="group__protocol__enums.html#ga1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients. Override to handle the possible change in jump zones. </p>
+<p>This is called when the configuration has changed. <code>activeSides</code> is a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients. Override to handle the possible change in jump zones. </p>
 
 <p>Implements <a class="el" href="classIPrimaryScreen.html#affc513d87f302cb40746304d2e422356">IPrimaryScreen</a>.</p>
 

@@ -2,6 +2,7 @@ var classXWindowsScreen =
 [
     [ "XWindowsScreen", "classXWindowsScreen.html#a4dd741637a8f3e54ae19a5cd258db38d", null ],
     [ "~XWindowsScreen", "classXWindowsScreen.html#a7ffbe069f0b92febcdcb4bf8b97ebc61", null ],
+    [ "activeSides", "classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad", null ],
     [ "canLeave", "classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086", null ],
     [ "checkClipboards", "classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38", null ],
     [ "closeScreensaver", "classXWindowsScreen.html#a45ab23756da4442b916fceb24ffcda22", null ],

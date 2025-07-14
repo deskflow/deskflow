@@ -59,7 +59,7 @@ var searchData=
   ['finish_56',['finish',['../classdeskflow_1_1KeyMap.html#ad9374d9db64395a1e49f246b681be82e',1,'deskflow::KeyMap']]],
   ['finished_57',['Finished',['../group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b',1,'ProtocolTypes.h']]],
   ['finished_58',['finished',['../classCommandProcess.html#aa1b5a807dac321f0628e34965d7b44a6',1,'CommandProcess::finished()'],['../classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html#aa4bf2fa3a35f03fc9cc7bb3f231812a0',1,'deskflow::gui::proxy::QProcessProxy::finished()']]],
-  ['firstdirection_59',['FirstDirection',['../group__protocol__enums.html#gga5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80',1,'ProtocolTypes.h']]],
+  ['firstdirection_59',['FirstDirection',['../DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6ae6a4b46cd9da9aea2c1d4beec6fd8d80',1,'DirectionTypes.h']]],
   ['fix_60',['Fix',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5',1,'ScreenConfig::Fix'],['../gui_2config_2Screen_8cpp.html#a9288122eb9f01fe71828c89207035bb5',1,'Fix:&#160;ScreenConfig.h'],['../ScreenSettingsDialog_8cpp.html#a9288122eb9f01fe71828c89207035bb5',1,'Fix:&#160;ScreenConfig.h'],['../ServerConfig_8cpp.html#a9288122eb9f01fe71828c89207035bb5',1,'Fix:&#160;ScreenConfig.h']]],
   ['fix_61',['fix',['../classScreen.html#a987da0c3d1a5f4a534fb00423eeb62e0',1,'Screen']]],
   ['fixes_62',['fixes',['../classScreen.html#a50ec376a4906cce68e5313790bdb8b29',1,'Screen::fixes() const'],['../classScreen.html#abb9544be6782c8f1b5f19ac9bdde4967',1,'Screen::fixes()']]],

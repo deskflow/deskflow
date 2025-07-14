@@ -1,11 +1,13 @@
 <map id="src/lib/deskflow/ProtocolTypes.cpp" name="src/lib/deskflow/ProtocolTypes.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="49,5,214,44"/>
-<area shape="rect" id="Node000002" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="46,92,217,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,45,134,76,129,76,129,45"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="5,165,138,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,119,93,155,89,151,120,115"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="161,165,222,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="143,115,174,151,170,155,139,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="40,237,103,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="74,190,74,222,69,222,69,190"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,245,44"/>
+<area shape="rect" id="Node000002" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="78,92,249,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,45,166,76,160,76,160,45"/>
+<area shape="rect" id="Node000003" href="$DirectionTypes_8h.html" title=" " alt="" coords="5,165,156,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="151,119,107,156,104,152,148,115"/>
+<area shape="rect" id="Node000005" href="$EventTypes_8h.html" title=" " alt="" coords="180,165,312,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="179,115,223,152,219,156,175,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="50,237,111,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,190,83,222,78,222,78,190"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="214,237,278,262"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="248,190,248,222,243,222,243,190"/>
 </map>

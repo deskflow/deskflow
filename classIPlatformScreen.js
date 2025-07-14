@@ -1,6 +1,7 @@
 var classIPlatformScreen =
 [
     [ "IPlatformScreen", "classIPlatformScreen.html#a0b5c4eae26eb869d5ad102eaac9c4444", null ],
+    [ "activeSides", "classIPlatformScreen.html#a12c80e96375e5589b3d6f12c1de2c22f", null ],
     [ "canLeave", "classIPlatformScreen.html#a3893b318acf4129cb0961d1a5bc46ea1", null ],
     [ "checkClipboards", "classIPlatformScreen.html#aac5b540eb1ee7f2934b2829d2c333b3b", null ],
     [ "closeScreensaver", "classIPlatformScreen.html#a5d060719edee3f6aa7db8051730fb1f6", null ],

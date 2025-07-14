@@ -8,8 +8,8 @@
 <area shape="poly" id="edge13_Node000001_Node000011" title=" " alt="" coords="286,47,204,94,121,157,118,153,201,90,283,42"/>
 <area shape="rect" id="Node000012" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="409,92,580,117"/>
 <area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="364,42,456,83,454,88,362,47"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="604,92,657,117"/>
-<area shape="poly" id="edge18_Node000001_Node000014" title=" " alt="" coords="401,42,590,89,588,94,400,47"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="604,92,657,117"/>
+<area shape="poly" id="edge19_Node000001_Node000015" title=" " alt="" coords="401,42,590,89,588,94,400,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="298,310,366,335"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="259,260,307,298,304,303,256,265"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="31,310,99,335"/>
@@ -28,7 +28,9 @@
 <area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="370,188,403,224,399,228,366,192"/>
 <area shape="poly" id="edge11_Node000010_Node000005" title=" " alt="" coords="424,263,424,294,418,294,418,263"/>
 <area shape="poly" id="edge14_Node000011_Node000002" title=" " alt="" coords="120,187,206,228,203,233,118,192"/>
-<area shape="poly" id="edge16_Node000012_Node000010" title=" " alt="" coords="491,118,436,225,432,222,486,116"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="480,165,541,189"/>
-<area shape="poly" id="edge17_Node000012_Node000013" title=" " alt="" coords="500,117,507,149,502,150,495,118"/>
+<area shape="poly" id="edge18_Node000012_Node000010" title=" " alt="" coords="491,118,436,225,432,222,486,116"/>
+<area shape="rect" id="Node000013" href="$DirectionTypes_8h.html" title=" " alt="" coords="479,165,630,189"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="506,115,537,151,533,155,502,119"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="524,237,585,262"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="557,190,557,222,552,222,552,190"/>
 </map>
