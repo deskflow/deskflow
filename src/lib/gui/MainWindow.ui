@@ -424,12 +424,6 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="font">
-          <font>
-           <family>Courier</family>
-           <kerning>true</kerning>
-          </font>
-         </property>
          <property name="lineWrapMode">
           <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
          </property>
