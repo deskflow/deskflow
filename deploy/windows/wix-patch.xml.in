@@ -44,7 +44,9 @@
            Control="Finish"
            Event="DoAction"
            Value="RunDeskflow"
-           Condition= "NOT Installed" />
+           Condition= "WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed" />
+       <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+       <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Run Deskflow when finished" />
     </UI>
     <CustomAction
       Id="CheckVCRedist"
