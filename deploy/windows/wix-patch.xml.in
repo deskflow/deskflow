@@ -28,6 +28,13 @@
     <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-client.exe" Scope="any"/>
   </CPackWiXFragment>
 
+  <CPackWiXFragment Id="CM_CP_deskflow.exe">
+    <RemoveRegistryKey
+     Root="HKCU"
+     Key="Software\Deskflow"
+     Action="removeOnUninstall"/>
+  </CPackWiXFragment>
+
   <CPackWiXFragment Id="#PRODUCT">
     <Property Id="VC_REDIST_INSTALLED">
       <RegistrySearch
