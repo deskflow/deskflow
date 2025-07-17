@@ -26,7 +26,7 @@ macro(configure_libs)
 
   # Define the location of Qt deployment tool
   if(WIN32)
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND NOT VCPKG_INSTALL_DIR STREQUAL "")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND VCPKG_QT)
       find_program(DEPLOYQT windeployqt.debug.bat)
     else()
       find_program(DEPLOYQT windeployqt)
