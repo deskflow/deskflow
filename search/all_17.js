@@ -1,7 +1,7 @@
 var searchData=
 [
   ['u_5fshort_0',['u_short',['../ArchNetworkWinsock_8cpp.html#abbd93b0dd8b636eb1e46f973ebb18e51',1,'ArchNetworkWinsock.cpp']]],
-  ['ucs2toutf8_1',['UCS2ToUTF8',['../classUnicode.html#a6068b0862b52a8fc6a06d5648ec97ca4',1,'Unicode']]],
+  ['ucs2toutf8_1',['UCS2ToUTF8',['../classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c',1,'Unicode']]],
   ['ucs4_2',['ucs4',['../structcodepair.html#a159f98121ee2eaed28ff7afd08aac77f',1,'codepair']]],
   ['ucs4toutf8_3',['UCS4ToUTF8',['../classUnicode.html#a01c9f5cfff80725d254e4f9a5f5b4541',1,'Unicode']]],
   ['ui_4',['Ui',['../namespaceUi.html',1,'']]],
@@ -30,7 +30,7 @@ var searchData=
   ['updateoutput_27',['updateOutput',['../classKeySequenceWidget.html#a4a2c15bf2211f2d4b01acbda8a7b1cfd',1,'KeySequenceWidget']]],
   ['updateservername_28',['updateServerName',['../classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9',1,'ServerConfig']]],
   ['updateshape_29',['updateShape',['../classdeskflow_1_1EiScreen.html#ad2afa1dc14c19f3542b94a2e80fa0bb2',1,'deskflow::EiScreen']]],
-  ['updatestatus_30',['updateStatus',['../classClientApp.html#a795856c5094ba9d96c25e70da1f66b47',1,'ClientApp::updateStatus() const'],['../classClientApp.html#a653707a463961250dea244c9a8d6b195',1,'ClientApp::updateStatus(const std::string &amp;msg) const'],['../classServerApp.html#a7e672605b75de41adf9a10923739d30f',1,'ServerApp::updateStatus() const'],['../classServerApp.html#a81a909553d3e96c1d288903885139c44',1,'ServerApp::updateStatus(const std::string_view &amp;msg) const']]],
+  ['updatestatus_30',['updateStatus',['../classClientApp.html#a795856c5094ba9d96c25e70da1f66b47',1,'ClientApp::updateStatus() const'],['../classClientApp.html#aba0e2634f245bbc71cab445e61c7a68f',1,'ClientApp::updateStatus(const std::string_view &amp;) const'],['../classServerApp.html#a7e672605b75de41adf9a10923739d30f',1,'ServerApp::updateStatus() const'],['../classServerApp.html#a81a909553d3e96c1d288903885139c44',1,'ServerApp::updateStatus(const std::string_view &amp;msg) const']]],
   ['updateurl_31',['UpdateUrl',['../structSettings_1_1Core.html#ac9abe007912bc0f8cd98d53aa0e267ab',1,'Settings::Core']]],
   ['updatexkbstate_32',['updateXkbState',['../classdeskflow_1_1EiKeyState.html#acb972abc20664d1e214ec13e0c65067e',1,'deskflow::EiKeyState']]],
   ['urlconstants_2eh_33',['UrlConstants.h',['../UrlConstants_8h.html',1,'']]],

@@ -1,6 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"interfaceScreenSaverController.html#a5457243b6bacd11b0461b20e4a9876fc":[6,0,159,12],
 "interfaceScreenSaverController.html#a594594543f4d136e7a53def10201c057":[6,0,159,14],
 "interfaceScreenSaverController.html#a6490e2ed166802147c7b8c51c6598711":[6,0,159,13],
 "interfaceScreenSaverController.html#a7261b9ea2d1b473c552c8a00fa1aef4a":[6,0,159,3],
@@ -186,11 +185,11 @@ var NAVTREEINDEX23 =
 "namespacedeskflow_1_1server.html#a5a51f32b98ec97b342b09ecc21e6dfa3":[5,0,0,6,5],
 "namespacedeskflow_1_1server.html#a5f7702a511027bc6ea306740cbb99d7c":[5,0,0,6,6],
 "namespacedeskflow_1_1string.html":[5,0,0,7],
+"namespacedeskflow_1_1string.html#a0e38cb7eb75c35e31e0f4fbbb6ce39c6":[5,0,0,7,4],
 "namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf":[5,0,0,7,5],
 "namespacedeskflow_1_1string.html#a3ff26b112bf6d8074716bc48ffa1759e":[5,0,0,7,1],
 "namespacedeskflow_1_1string.html#a47b7feb15d0cd395cd84a796f58e22ea":[5,0,0,7,2],
 "namespacedeskflow_1_1string.html#aaf08864e3398b76761c6626b623b9a27":[5,0,0,7,3],
-"namespacedeskflow_1_1string.html#affd01b43c80b2d38b23648914931e811":[5,0,0,7,4],
 "namespacemembers.html":[5,1,0],
 "namespacemembers_enum.html":[5,1,3],
 "namespacemembers_func.html":[5,1,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX23 =
 "structActionDialog_1_1ActionTypes.html#a61f6b12bfeefb44d211f0512639faf55":[6,0,5,0,1],
 "structActionDialog_1_1ActionTypes.html#a8df74127a3162dc5655e5034bae6cdcd":[6,0,5,0,0],
 "structActionDialog_1_1ActionTypes.html#aa62e7b4497bbca7239d649f16c1f21a6":[6,0,5,0,4],
-"structActionDialog_1_1ActionTypes.html#aa937c73ac9f429ee0ec73e95a2c263df":[6,0,5,0,6]
+"structActionDialog_1_1ActionTypes.html#aa937c73ac9f429ee0ec73e95a2c263df":[6,0,5,0,6],
+"structActionDialog_1_1ActionTypes.html#acec85eeb9a024dc66e36c1859e2636d7":[6,0,5,0,3]
 };

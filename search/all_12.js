@@ -23,7 +23,7 @@ var searchData=
   ['parsemodifiers_20',['parseModifiers',['../classdeskflow_1_1KeyMap.html#a8aa58250fe051e6cbcac1fd7ed19020f',1,'deskflow::KeyMap']]],
   ['parsemouse_21',['parseMouse',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a88efd34369685e066996104730015073',1,'deskflow::server::ConfigReadContext']]],
   ['parsenamewithargs_22',['parseNameWithArgs',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a46bd7f50cbfbd54167302679043a21f7',1,'deskflow::server::ConfigReadContext']]],
-  ['parseplatformargs_23',['parsePlatformArgs',['../classArgParser.html#aab594cdd4fffa9737f9edfc7ac3d18b8',1,'ArgParser']]],
+  ['parseplatformargs_23',['parsePlatformArgs',['../classArgParser.html#a8762fd3abf29179d03549da5823453a1',1,'ArgParser']]],
   ['parseprotocol_24',['parseProtocol',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a30b2301fb03f84b75ddbc5e6ccd761dd',1,'deskflow::server::ConfigReadContext']]],
   ['parseserverargs_25',['parseServerArgs',['../classArgParser.html#a472d5b79795b5f5102b56a3a39f47e28',1,'ArgParser']]],
   ['path_26',['path',['../namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df',1,'deskflow::filesystem']]],

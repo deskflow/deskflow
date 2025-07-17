@@ -31,6 +31,5 @@ var classApp =
     [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ],
     [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ],
     [ "m_bye", "classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc", null ],
-    [ "m_events", "classApp.html#a28da2ed88d81f4e01b7e44d341706279", null ],
-    [ "m_suspended", "classApp.html#a787d4eb6cea027458b0fadc7d252572b", null ]
+    [ "m_events", "classApp.html#a28da2ed88d81f4e01b7e44d341706279", null ]
 ];

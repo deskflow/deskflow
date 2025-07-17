@@ -1,10 +1,9 @@
 var NAVTREEINDEX16 =
 {
-"classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6":[6,0,185,20],
-"classTCPSocket.html#ae20b60ebfae002f81e94fc1480fab37e":[6,0,185,14],
-"classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c":[6,0,185,21],
-"classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8":[6,0,185,19],
+"classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c":[6,0,185,22],
+"classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8":[6,0,185,20],
 "classTCPSocket.html#aeaeaa5f9e861c1afb95d0a2738d9beb8":[6,0,185,13],
+"classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071":[6,0,185,18],
 "classTCPSocket.html#af715a366acfbeba720de92becf761f77":[6,0,185,1],
 "classTCPSocketFactory.html":[6,0,186],
 "classTCPSocketFactory.html#a3d305ca90048a59365fb0d3f4d6bed82":[6,0,186,0],
@@ -60,9 +59,9 @@ var NAVTREEINDEX16 =
 "classUnicode.html#a318adabcf876bf85a933412df0732c97":[6,0,192,0],
 "classUnicode.html#a3bdb942cd19651cda84c95311756d0db":[6,0,192,8],
 "classUnicode.html#a447a4b84823239d53c8522afa1e49ee8":[6,0,192,6],
-"classUnicode.html#a6068b0862b52a8fc6a06d5648ec97ca4":[6,0,192,2],
 "classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b":[6,0,192,9],
 "classUnicode.html#a6cf183d92569cbd9d50211908810ffec":[6,0,192,7],
+"classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c":[6,0,192,2],
 "classUnicode.html#a9a0b955ca46970fe52a3f1d6a38eb5e7":[6,0,192,1],
 "classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439":[6,0,192,10],
 "classUnicode.html#af35f349e90c98d8e51404b7f8ef63166":[6,0,192,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboardBMPConverter.html":[6,0,252],
 "classXWindowsClipboardBMPConverter.html#a26947c8699e0933e83935f23be25acae":[6,0,252,1],
 "classXWindowsClipboardBMPConverter.html#a3906766115b02ddc05ed7e963bbadc8d":[6,0,252,3],
-"classXWindowsClipboardBMPConverter.html#a6a05bfa6092517ec2a1a2a834523944a":[6,0,252,0]
+"classXWindowsClipboardBMPConverter.html#a6a05bfa6092517ec2a1a2a834523944a":[6,0,252,0],
+"classXWindowsClipboardBMPConverter.html#a79d3ad3cb6e0ee47eb48ff42e9b81259":[6,0,252,4]
 };

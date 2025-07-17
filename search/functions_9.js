@@ -44,7 +44,7 @@ var searchData=
   ['isclient_41',['isClient',['../deskflow-core_8cpp.html#a679aa2460504615f4d8aad8ccd9b3301',1,'deskflow-core.cpp']]],
   ['iscommand_42',['isCommand',['../classdeskflow_1_1KeyMap.html#ad03099a95f9440c2ceeb2a6502a00a01',1,'deskflow::KeyMap']]],
   ['iscomplete_43',['isComplete',['../classDataDownloader.html#ae6eccf7ce19db35c9cfd9edef8c7975a',1,'DataDownloader']]],
-  ['isconnected_44',['isConnected',['../classClient.html#adb70f8af5f71b5e09c4a0a8f6da3912c',1,'Client::isConnected()'],['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#ad487ec079c5d204dcee62bebcb0e8b20',1,'deskflow::gui::ipc::DaemonIpcClient::isConnected()']]],
+  ['isconnected_44',['isConnected',['../classClient.html#adb70f8af5f71b5e09c4a0a8f6da3912c',1,'Client::isConnected()'],['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#ad487ec079c5d204dcee62bebcb0e8b20',1,'deskflow::gui::ipc::DaemonIpcClient::isConnected()'],['../classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071',1,'TCPSocket::isConnected()']]],
   ['isconnectedmessage_45',['isConnectedMessage',['../classdeskflow_1_1gui_1_1ServerMessage.html#a971bc7860619677846b6c3b2ab01ea99',1,'deskflow::gui::ServerMessage']]],
   ['isconnecting_46',['isConnecting',['../classClient.html#ada0e989a6d46daee95b4fbca7f369af7',1,'Client']]],
   ['iscr_47',['isCR',['../OSXClipboardAnyTextConverter_8cpp.html#aa234529397757d7cc43d41c49cc4affb',1,'isCR(char ch):&#160;OSXClipboardAnyTextConverter.cpp'],['../XWindowsClipboardUTF8Converter_8cpp.html#aa234529397757d7cc43d41c49cc4affb',1,'isCR(char ch):&#160;XWindowsClipboardUTF8Converter.cpp']]],

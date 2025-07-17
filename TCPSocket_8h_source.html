@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.181</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.194</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -178,54 +178,87 @@ $(function(){initNavTree('TCPSocket_8h_source.html','',''); });
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#acc0fba3a617d4f1aac22a590a3490889">setJob</a>(<a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *);</div>
 <div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
 <div class="foldopen" id="foldopen00082" data-start="{" data-end="}">
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">   82</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">isReadable</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071">   82</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071">isConnected</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classTCPSocket.html#a8de236755fe9c6f8f37784f01dc3d590">m_readable</a>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    <span class="keywordflow">return</span> m_connected;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  }</div>
 </div>
-<div class="foldopen" id="foldopen00086" data-start="{" data-end="}">
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">   86</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">isWritable</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    <span class="keywordflow">return</span> <a class="code hl_variable" href="classTCPSocket.html#a201d0e4cb96d95e99ad042f67ca50c4b">m_writable</a>;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  }</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ad502ace74698b2baf91906173668bc13">   87</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#ad502ace74698b2baf91906173668bc13">setConnected</a>(<span class="keywordtype">bool</span> connected)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">if</span> (m_connected == connected)</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    m_connected = connected;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  }</div>
 </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">   91</a></span>  <a class="code hl_class" href="classMutex.html">Mutex</a> &amp;<a class="code hl_function" href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">getMutex</a>()</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">return</span> m_mutex;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
+<div class="foldopen" id="foldopen00094" data-start="{" data-end="}">
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">   94</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">isReadable</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    <span class="keywordflow">return</span> m_readable;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  }</div>
 </div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#a73e7396ea1d802e8e580949244b99dd6">sendEvent</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a>);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#a7d3d500da7178fffa2bb1abca5ed6bfc">discardWrittenData</a>(<span class="keywordtype">int</span> bytesWrote);</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">void</span> init();</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span> </div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">void</span> sendConnectionFailedEvent(<span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keywordtype">void</span> onConnected();</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="keywordtype">void</span> onInputShutdown();</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keywordtype">void</span> onOutputShutdown();</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keywordtype">void</span> onDisconnected();</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *serviceConnecting(<a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *serviceConnected(<a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>);</div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ab108acdd0bd4fc2069ef0688b08df11f">   99</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#ab108acdd0bd4fc2069ef0688b08df11f">setReadable</a>(<span class="keywordtype">bool</span> readable)</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">if</span> (m_readable == readable)</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>    m_readable = readable;</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  }</div>
+</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span> </div>
+<div class="foldopen" id="foldopen00106" data-start="{" data-end="}">
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">  106</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">isWritable</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>    <span class="keywordflow">return</span> m_writable;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  }</div>
+</div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a8de236755fe9c6f8f37784f01dc3d590">  112</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classTCPSocket.html#a8de236755fe9c6f8f37784f01dc3d590">m_readable</a>;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a201d0e4cb96d95e99ad042f67ca50c4b">  113</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classTCPSocket.html#a201d0e4cb96d95e99ad042f67ca50c4b">m_writable</a>;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a48614c7faa11863872c6591b157d53f6">  114</a></span>  <span class="keywordtype">bool</span> <a class="code hl_variable" href="classTCPSocket.html#a48614c7faa11863872c6591b157d53f6">m_connected</a>;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">  115</a></span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *<a class="code hl_variable" href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">m_events</a>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">  116</a></span>  <a class="code hl_class" href="classStreamBuffer.html">StreamBuffer</a> <a class="code hl_variable" href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">m_inputBuffer</a>;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">  117</a></span>  <a class="code hl_class" href="classStreamBuffer.html">StreamBuffer</a> <a class="code hl_variable" href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">m_outputBuffer</a>;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span> </div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_class" href="classMutex.html">Mutex</a> m_mutex;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_typedef" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a> m_socket;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <a class="code hl_class" href="classCondVar.html">CondVar&lt;bool&gt;</a> m_flushed;</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <a class="code hl_class" href="classSocketMultiplexer.html">SocketMultiplexer</a> *m_socketMultiplexer;</div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>};</div>
+<div class="foldopen" id="foldopen00111" data-start="{" data-end="}">
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ac6c0214c04c6a8e9cfc38d18e7b15fb6">  111</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#ac6c0214c04c6a8e9cfc38d18e7b15fb6">setWritable</a>(<span class="keywordtype">bool</span> canWrite)</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  {</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="keywordflow">if</span> (canWrite == m_writable)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>      <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    m_writable = canWrite;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  }</div>
+</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
+<div class="foldopen" id="foldopen00118" data-start="{" data-end="}">
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">  118</a></span>  <a class="code hl_class" href="classMutex.html">Mutex</a> &amp;<a class="code hl_function" href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">getMutex</a>()</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  {</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> m_mutex;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  }</div>
+</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#a73e7396ea1d802e8e580949244b99dd6">sendEvent</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a>);</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classTCPSocket.html#a7d3d500da7178fffa2bb1abca5ed6bfc">discardWrittenData</a>(<span class="keywordtype">int</span> bytesWrote);</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">  126</a></span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *<a class="code hl_variable" href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">m_events</a>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">  127</a></span>  <a class="code hl_class" href="classStreamBuffer.html">StreamBuffer</a> <a class="code hl_variable" href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">m_inputBuffer</a>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">  128</a></span>  <a class="code hl_class" href="classStreamBuffer.html">StreamBuffer</a> <a class="code hl_variable" href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">m_outputBuffer</a>;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keywordtype">void</span> init();</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordtype">void</span> sendConnectionFailedEvent(<span class="keyword">const</span> <span class="keywordtype">char</span> *);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keywordtype">void</span> onConnected();</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="keywordtype">void</span> onInputShutdown();</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keywordtype">void</span> onOutputShutdown();</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  <span class="keywordtype">void</span> onDisconnected();</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span> </div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *serviceConnecting(<a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>);</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *serviceConnected(<a class="code hl_class" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>, <span class="keywordtype">bool</span>);</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keywordtype">bool</span> m_readable;</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="keywordtype">bool</span> m_writable;</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <span class="keywordtype">bool</span> m_connected;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <a class="code hl_class" href="classMutex.html">Mutex</a> m_mutex;</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <a class="code hl_typedef" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a> m_socket;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <a class="code hl_class" href="classCondVar.html">CondVar&lt;bool&gt;</a> m_flushed;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <a class="code hl_class" href="classSocketMultiplexer.html">SocketMultiplexer</a> *m_socketMultiplexer;</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>};</div>
 </div>
 <div class="ttc" id="aCondVar_8h_html"><div class="ttname"><a href="CondVar_8h.html">CondVar.h</a></div></div>
 <div class="ttc" id="aIArchNetwork_8h_html"><div class="ttname"><a href="IArchNetwork_8h.html">IArchNetwork.h</a></div></div>
@@ -247,14 +280,12 @@ $(function(){initNavTree('TCPSocket_8h_source.html','',''); });
 <div class="ttc" id="aclassTCPSocket_html_a009d7b0c6ed5723df1423abb57b5856ba03c2e7e41ffc181a4e84080b4710e81e"><div class="ttname"><a href="classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856ba03c2e7e41ffc181a4e84080b4710e81e">TCPSocket::JobResult::New</a></div><div class="ttdeci">@ New</div><div class="ttdoc">Require a new job.</div><div class="ttdef"><b>Definition</b> TCPSocket.h:66</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a009d7b0c6ed5723df1423abb57b5856ba6327b4e59f58137083214a1fec358855"><div class="ttname"><a href="classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856ba6327b4e59f58137083214a1fec358855">TCPSocket::JobResult::Retry</a></div><div class="ttdeci">@ Retry</div><div class="ttdoc">Retry the same job.</div><div class="ttdef"><b>Definition</b> TCPSocket.h:65</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a009d7b0c6ed5723df1423abb57b5856bae4c38d6d45baf080943d323dd51a2ce8"><div class="ttname"><a href="classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856bae4c38d6d45baf080943d323dd51a2ce8">TCPSocket::JobResult::Break</a></div><div class="ttdeci">@ Break</div><div class="ttdoc">Break the Job chain.</div><div class="ttdef"><b>Definition</b> TCPSocket.h:64</div></div>
-<div class="ttc" id="aclassTCPSocket_html_a201d0e4cb96d95e99ad042f67ca50c4b"><div class="ttname"><a href="classTCPSocket.html#a201d0e4cb96d95e99ad042f67ca50c4b">TCPSocket::m_writable</a></div><div class="ttdeci">bool m_writable</div><div class="ttdef"><b>Definition</b> TCPSocket.h:113</div></div>
-<div class="ttc" id="aclassTCPSocket_html_a34be77c164e8a9a57a714e41828310c9"><div class="ttname"><a href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">TCPSocket::getMutex</a></div><div class="ttdeci">Mutex &amp; getMutex()</div><div class="ttdef"><b>Definition</b> TCPSocket.h:91</div></div>
+<div class="ttc" id="aclassTCPSocket_html_a34be77c164e8a9a57a714e41828310c9"><div class="ttname"><a href="classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9">TCPSocket::getMutex</a></div><div class="ttdeci">Mutex &amp; getMutex()</div><div class="ttdef"><b>Definition</b> TCPSocket.h:118</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a38a986d25f40740058f9fd2356bf1f72"><div class="ttname"><a href="classTCPSocket.html#a38a986d25f40740058f9fd2356bf1f72">TCPSocket::shutdownInput</a></div><div class="ttdeci">void shutdownInput() override</div><div class="ttdoc">Shutdown input.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:178</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a3f788c4d14634e96a557fafebb6d4b98"><div class="ttname"><a href="classTCPSocket.html#a3f788c4d14634e96a557fafebb6d4b98">TCPSocket::isFatal</a></div><div class="ttdeci">bool isFatal() const override</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:236</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a458334a4f576ea8b454516ffd897e5d3"><div class="ttname"><a href="classTCPSocket.html#a458334a4f576ea8b454516ffd897e5d3">TCPSocket::~TCPSocket</a></div><div class="ttdeci">~TCPSocket() override</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:64</div></div>
-<div class="ttc" id="aclassTCPSocket_html_a48614c7faa11863872c6591b157d53f6"><div class="ttname"><a href="classTCPSocket.html#a48614c7faa11863872c6591b157d53f6">TCPSocket::m_connected</a></div><div class="ttdeci">bool m_connected</div><div class="ttdef"><b>Definition</b> TCPSocket.h:114</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a4a621f6a0a1e4a53bbd244c0ceeec4e3"><div class="ttname"><a href="classTCPSocket.html#a4a621f6a0a1e4a53bbd244c0ceeec4e3">TCPSocket::close</a></div><div class="ttdeci">void close() override</div><div class="ttdoc">Close socket.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:85</div></div>
-<div class="ttc" id="aclassTCPSocket_html_a572db40f7cc7635a51211dc88578f834"><div class="ttname"><a href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">TCPSocket::m_events</a></div><div class="ttdeci">IEventQueue * m_events</div><div class="ttdef"><b>Definition</b> TCPSocket.h:115</div></div>
+<div class="ttc" id="aclassTCPSocket_html_a572db40f7cc7635a51211dc88578f834"><div class="ttname"><a href="classTCPSocket.html#a572db40f7cc7635a51211dc88578f834">TCPSocket::m_events</a></div><div class="ttdeci">IEventQueue * m_events</div><div class="ttdef"><b>Definition</b> TCPSocket.h:126</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a6d0240e24c16c9df20bb0d848e514ae9"><div class="ttname"><a href="classTCPSocket.html#a6d0240e24c16c9df20bb0d848e514ae9">TCPSocket::flush</a></div><div class="ttdeci">void flush() override</div><div class="ttdoc">Flush the stream.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:170</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a73e7396ea1d802e8e580949244b99dd6"><div class="ttname"><a href="classTCPSocket.html#a73e7396ea1d802e8e580949244b99dd6">TCPSocket::sendEvent</a></div><div class="ttdeci">void sendEvent(EventTypes)</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:401</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a7aca319d087b701b341f10171080ac87"><div class="ttname"><a href="classTCPSocket.html#a7aca319d087b701b341f10171080ac87">TCPSocket::operator=</a></div><div class="ttdeci">TCPSocket &amp; operator=(TCPSocket &amp;&amp;)=delete</div></div>
@@ -265,22 +296,25 @@ $(function(){initNavTree('TCPSocket_8h_source.html','',''); });
 <div class="ttc" id="aclassTCPSocket_html_a88a25461a7ec61794abb773054485191"><div class="ttname"><a href="classTCPSocket.html#a88a25461a7ec61794abb773054485191">TCPSocket::getSocket</a></div><div class="ttdeci">ArchSocket getSocket()</div><div class="ttdef"><b>Definition</b> TCPSocket.h:69</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a8b695decf82b29a7a9eb9b869de457e4"><div class="ttname"><a href="classTCPSocket.html#a8b695decf82b29a7a9eb9b869de457e4">TCPSocket::operator=</a></div><div class="ttdeci">TCPSocket &amp; operator=(TCPSocket const &amp;)=delete</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a8d512b5dce1a8678617aa86957227b8a"><div class="ttname"><a href="classTCPSocket.html#a8d512b5dce1a8678617aa86957227b8a">TCPSocket::connect</a></div><div class="ttdeci">void connect(const NetworkAddress &amp;) override</div><div class="ttdoc">Connect socket.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:249</div></div>
-<div class="ttc" id="aclassTCPSocket_html_a8de236755fe9c6f8f37784f01dc3d590"><div class="ttname"><a href="classTCPSocket.html#a8de236755fe9c6f8f37784f01dc3d590">TCPSocket::m_readable</a></div><div class="ttdeci">bool m_readable</div><div class="ttdef"><b>Definition</b> TCPSocket.h:112</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a8f565e1877ee464b808125fb826f039c"><div class="ttname"><a href="classTCPSocket.html#a8f565e1877ee464b808125fb826f039c">TCPSocket::bind</a></div><div class="ttdeci">void bind(const NetworkAddress &amp;) override</div><div class="ttdoc">Bind socket to address.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:74</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a946c326e9102dbb179759444ca1883c3"><div class="ttname"><a href="classTCPSocket.html#a946c326e9102dbb179759444ca1883c3">TCPSocket::TCPSocket</a></div><div class="ttdeci">TCPSocket(TCPSocket &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassTCPSocket_html_a9d6540be107b73a9e06114f38dca73a6"><div class="ttname"><a href="classTCPSocket.html#a9d6540be107b73a9e06114f38dca73a6">TCPSocket::doWrite</a></div><div class="ttdeci">virtual JobResult doWrite()</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:341</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ab108acdd0bd4fc2069ef0688b08df11f"><div class="ttname"><a href="classTCPSocket.html#ab108acdd0bd4fc2069ef0688b08df11f">TCPSocket::setReadable</a></div><div class="ttdeci">void setReadable(bool readable)</div><div class="ttdef"><b>Definition</b> TCPSocket.h:99</div></div>
 <div class="ttc" id="aclassTCPSocket_html_ab9b12f7fe3afd27feceee4259e5d78b1"><div class="ttname"><a href="classTCPSocket.html#ab9b12f7fe3afd27feceee4259e5d78b1">TCPSocket::read</a></div><div class="ttdeci">uint32_t read(void *buffer, uint32_t n) override</div><div class="ttdoc">Read from stream.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:118</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ac6c0214c04c6a8e9cfc38d18e7b15fb6"><div class="ttname"><a href="classTCPSocket.html#ac6c0214c04c6a8e9cfc38d18e7b15fb6">TCPSocket::setWritable</a></div><div class="ttdeci">void setWritable(bool canWrite)</div><div class="ttdef"><b>Definition</b> TCPSocket.h:111</div></div>
 <div class="ttc" id="aclassTCPSocket_html_acc0fba3a617d4f1aac22a590a3490889"><div class="ttname"><a href="classTCPSocket.html#acc0fba3a617d4f1aac22a590a3490889">TCPSocket::setJob</a></div><div class="ttdeci">void setJob(ISocketMultiplexerJob *)</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:359</div></div>
 <div class="ttc" id="aclassTCPSocket_html_acce0c0590ca9eee2548b18f438dff710"><div class="ttname"><a href="classTCPSocket.html#acce0c0590ca9eee2548b18f438dff710">TCPSocket::write</a></div><div class="ttdeci">void write(const void *buffer, uint32_t n) override</div><div class="ttdoc">Write to stream.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:139</div></div>
-<div class="ttc" id="aclassTCPSocket_html_ad2622b93e42ffab8b885651b98cb675e"><div class="ttname"><a href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">TCPSocket::m_outputBuffer</a></div><div class="ttdeci">StreamBuffer m_outputBuffer</div><div class="ttdef"><b>Definition</b> TCPSocket.h:117</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ad2622b93e42ffab8b885651b98cb675e"><div class="ttname"><a href="classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e">TCPSocket::m_outputBuffer</a></div><div class="ttdeci">StreamBuffer m_outputBuffer</div><div class="ttdef"><b>Definition</b> TCPSocket.h:128</div></div>
 <div class="ttc" id="aclassTCPSocket_html_ad3c28700ac731afca591bd98d0d0793b"><div class="ttname"><a href="classTCPSocket.html#ad3c28700ac731afca591bd98d0d0793b">TCPSocket::doRead</a></div><div class="ttdeci">virtual JobResult doRead()</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:299</div></div>
-<div class="ttc" id="aclassTCPSocket_html_ad4ace4e3c2a6ae812c5bce6f2dd24141"><div class="ttname"><a href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">TCPSocket::m_inputBuffer</a></div><div class="ttdeci">StreamBuffer m_inputBuffer</div><div class="ttdef"><b>Definition</b> TCPSocket.h:116</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ad4ace4e3c2a6ae812c5bce6f2dd24141"><div class="ttname"><a href="classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141">TCPSocket::m_inputBuffer</a></div><div class="ttdeci">StreamBuffer m_inputBuffer</div><div class="ttdef"><b>Definition</b> TCPSocket.h:127</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ad502ace74698b2baf91906173668bc13"><div class="ttname"><a href="classTCPSocket.html#ad502ace74698b2baf91906173668bc13">TCPSocket::setConnected</a></div><div class="ttdeci">void setConnected(bool connected)</div><div class="ttdef"><b>Definition</b> TCPSocket.h:87</div></div>
 <div class="ttc" id="aclassTCPSocket_html_ad9b31c64155ecbe934d2abb2728af56c"><div class="ttname"><a href="classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c">TCPSocket::shutdownOutput</a></div><div class="ttdeci">void shutdownOutput() override</div><div class="ttdoc">Shutdown output.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:204</div></div>
 <div class="ttc" id="aclassTCPSocket_html_addafa94e22ef69805776b5ac8940c8e6"><div class="ttname"><a href="classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6">TCPSocket::isReady</a></div><div class="ttdeci">bool isReady() const override</div><div class="ttdoc">Test if read() will succeed.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:230</div></div>
 <div class="ttc" id="aclassTCPSocket_html_ae20b60ebfae002f81e94fc1480fab37e"><div class="ttname"><a href="classTCPSocket.html#ae20b60ebfae002f81e94fc1480fab37e">TCPSocket::getEventTarget</a></div><div class="ttdeci">void * getEventTarget() const override</div><div class="ttdoc">Get event target.</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:113</div></div>
-<div class="ttc" id="aclassTCPSocket_html_ae24084f5bf3fd93f375533359b1aa93c"><div class="ttname"><a href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">TCPSocket::isWritable</a></div><div class="ttdeci">bool isWritable() const</div><div class="ttdef"><b>Definition</b> TCPSocket.h:86</div></div>
-<div class="ttc" id="aclassTCPSocket_html_ae5d519267c5befb89d112f2c521d34d8"><div class="ttname"><a href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">TCPSocket::isReadable</a></div><div class="ttdeci">bool isReadable() const</div><div class="ttdef"><b>Definition</b> TCPSocket.h:82</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ae24084f5bf3fd93f375533359b1aa93c"><div class="ttname"><a href="classTCPSocket.html#ae24084f5bf3fd93f375533359b1aa93c">TCPSocket::isWritable</a></div><div class="ttdeci">bool isWritable() const</div><div class="ttdef"><b>Definition</b> TCPSocket.h:106</div></div>
+<div class="ttc" id="aclassTCPSocket_html_ae5d519267c5befb89d112f2c521d34d8"><div class="ttname"><a href="classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8">TCPSocket::isReadable</a></div><div class="ttdeci">bool isReadable() const</div><div class="ttdef"><b>Definition</b> TCPSocket.h:94</div></div>
 <div class="ttc" id="aclassTCPSocket_html_aeaeaa5f9e861c1afb95d0a2738d9beb8"><div class="ttname"><a href="classTCPSocket.html#aeaeaa5f9e861c1afb95d0a2738d9beb8">TCPSocket::getEvents</a></div><div class="ttdeci">IEventQueue * getEvents()</div><div class="ttdef"><b>Definition</b> TCPSocket.h:73</div></div>
+<div class="ttc" id="aclassTCPSocket_html_af4c8b7c0ef446a3903466066a22b6071"><div class="ttname"><a href="classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071">TCPSocket::isConnected</a></div><div class="ttdeci">bool isConnected() const</div><div class="ttdef"><b>Definition</b> TCPSocket.h:82</div></div>
 <div class="ttc" id="aclassTCPSocket_html_af715a366acfbeba720de92becf761f77"><div class="ttname"><a href="classTCPSocket.html#af715a366acfbeba720de92becf761f77">TCPSocket::TCPSocket</a></div><div class="ttdeci">TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family=IArchNetwork::AddressFamily::INet)</div><div class="ttdef"><b>Definition</b> TCPSocket.cpp:30</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 <div class="ttc" id="anamespacedeskflow_html_a34787a880fd439e02383f336665d7bc2"><div class="ttname"><a href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a></div><div class="ttdeci">EventTypes</div><div class="ttdef"><b>Definition</b> EventTypes.h:13</div></div>

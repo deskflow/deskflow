@@ -32,5 +32,5 @@ var classClientApp =
     [ "startNode", "classClientApp.html#aa302821af245d6a9772d7c09da3a4e34", null ],
     [ "stopClient", "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858", null ],
     [ "updateStatus", "classClientApp.html#a795856c5094ba9d96c25e70da1f66b47", null ],
-    [ "updateStatus", "classClientApp.html#a653707a463961250dea244c9a8d6b195", null ]
+    [ "updateStatus", "classClientApp.html#aba0e2634f245bbc71cab445e61c7a68f", null ]
 ];

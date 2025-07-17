@@ -22,6 +22,7 @@ var classTCPSocket =
     [ "getMutex", "classTCPSocket.html#a34be77c164e8a9a57a714e41828310c9", null ],
     [ "getSize", "classTCPSocket.html#a7d67e983909ffe5d1c2b310305ed50c8", null ],
     [ "getSocket", "classTCPSocket.html#a88a25461a7ec61794abb773054485191", null ],
+    [ "isConnected", "classTCPSocket.html#af4c8b7c0ef446a3903466066a22b6071", null ],
     [ "isFatal", "classTCPSocket.html#a3f788c4d14634e96a557fafebb6d4b98", null ],
     [ "isReadable", "classTCPSocket.html#ae5d519267c5befb89d112f2c521d34d8", null ],
     [ "isReady", "classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6", null ],
@@ -31,14 +32,14 @@ var classTCPSocket =
     [ "operator=", "classTCPSocket.html#a8b695decf82b29a7a9eb9b869de457e4", null ],
     [ "read", "classTCPSocket.html#ab9b12f7fe3afd27feceee4259e5d78b1", null ],
     [ "sendEvent", "classTCPSocket.html#a73e7396ea1d802e8e580949244b99dd6", null ],
+    [ "setConnected", "classTCPSocket.html#ad502ace74698b2baf91906173668bc13", null ],
     [ "setJob", "classTCPSocket.html#acc0fba3a617d4f1aac22a590a3490889", null ],
+    [ "setReadable", "classTCPSocket.html#ab108acdd0bd4fc2069ef0688b08df11f", null ],
+    [ "setWritable", "classTCPSocket.html#ac6c0214c04c6a8e9cfc38d18e7b15fb6", null ],
     [ "shutdownInput", "classTCPSocket.html#a38a986d25f40740058f9fd2356bf1f72", null ],
     [ "shutdownOutput", "classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c", null ],
     [ "write", "classTCPSocket.html#acce0c0590ca9eee2548b18f438dff710", null ],
-    [ "m_connected", "classTCPSocket.html#a48614c7faa11863872c6591b157d53f6", null ],
     [ "m_events", "classTCPSocket.html#a572db40f7cc7635a51211dc88578f834", null ],
     [ "m_inputBuffer", "classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141", null ],
-    [ "m_outputBuffer", "classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e", null ],
-    [ "m_readable", "classTCPSocket.html#a8de236755fe9c6f8f37784f01dc3d590", null ],
-    [ "m_writable", "classTCPSocket.html#a201d0e4cb96d95e99ad042f67ca50c4b", null ]
+    [ "m_outputBuffer", "classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e", null ]
 ];

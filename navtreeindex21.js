@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classdeskflow_1_1server_1_1Config.html#aac557ef9305abe67d594831c82524e8e":[5,0,0,6,0,27],
 "classdeskflow_1_1server_1_1Config.html#aac557ef9305abe67d594831c82524e8e":[6,0,0,5,0,27],
 "classdeskflow_1_1server_1_1Config.html#ab6276586b10d0a441fa773a4e6e2e5d4":[5,0,0,6,0,20],
 "classdeskflow_1_1server_1_1Config.html#ab6276586b10d0a441fa773a4e6e2e5d4":[6,0,0,5,0,20],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "deskflow_2Screen_8cpp.html":[7,0,1,1,4,58],
 "deskflow_2Screen_8h.html":[7,0,1,1,4,59],
 "deskflow_2Screen_8h_source.html":[7,0,1,1,4,59],
-"dir_00d753f0c10974c39dc450cbdcd64c24.html":[7,0,1,1,5,5]
+"dir_00d753f0c10974c39dc450cbdcd64c24.html":[7,0,1,1,5,5],
+"dir_1002216e319566c65ba849e54f5ae169.html":[7,0,1,1,5,1]
 };

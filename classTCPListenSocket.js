@@ -13,7 +13,6 @@ var classTCPListenSocket =
     [ "serviceListening", "classTCPListenSocket.html#a411f3cf617eab343d9cb77e3c6462b7f", null ],
     [ "setListeningJob", "classTCPListenSocket.html#a2542c76b3edff5784463f2071b14650e", null ],
     [ "m_events", "classTCPListenSocket.html#af237cf22f5a56ad173d6634e04c089c1", null ],
-    [ "m_mutex", "classTCPListenSocket.html#a77e28c59df2a56c3248ad8d8ca6d7929", null ],
     [ "m_socket", "classTCPListenSocket.html#ad8f99f9020c6fd3cf38c8f7e6759d9d7", null ],
     [ "m_socketMultiplexer", "classTCPListenSocket.html#a140855a836088d066ffa0690a73988c8", null ]
 ];
