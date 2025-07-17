@@ -25,6 +25,9 @@ deskflow-config.toml
 /*.user
 *.ui.autosave
 
+# generated vcpkg file
+vcpkg.json
+
 #Generic linux files
 **/*.directory
 

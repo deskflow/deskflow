@@ -68,6 +68,15 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   endif()
 endif()
 
+#generate vcpkg file if needed
+if(WIN32)
+    option (VCPKG_QT "Use Qt from VCPKG" OFF)
+    if(VCPKG_QT)
+        set(QT_LIBS ", \"qttranslations\", \"qtsvg\"")
+    endif()
+    configure_file(cmake/vcpkg.json.in ${CMAKE_SOURCE_DIR}/vcpkg.json @ONLY)
+endif()
+
 #Define our project
 project(
   deskflow
