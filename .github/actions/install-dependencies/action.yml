@@ -27,9 +27,10 @@ runs:
 
   steps:
     - name: Install Depends
-      if: ${{ runner.os != 'Windows' }}
       run: |
-          if [ "$RUNNER_OS" == "macOS" ]; then
+          if [ "$RUNNER_OS" == "Windows" ]; then
+            choco install ninja
+          elif [ "$RUNNER_OS" == "macOS" ]; then
             brew install googletest openssl --quiet
           elif [ "$RUNNER_OS" == "Linux" ]; then
             if [ ${{inputs.like}} == "debian" ]; then
