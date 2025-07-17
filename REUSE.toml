@@ -55,18 +55,6 @@ SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
 [[annotations]]
-path = "vcpkg.json"
-precedence = "override"
-SPDX-FileCopyrightText = "Deskflow Developers"
-SPDX-License-Identifier = "MIT"
-
-[[annotations]]
-path = "vcpkg-configuration.json"
-precedence = "override"
-SPDX-FileCopyrightText = "Deskflow Developers"
-SPDX-License-Identifier = "MIT"
-
-[[annotations]]
 path = "doc/**"
 precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
