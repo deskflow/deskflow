@@ -88,7 +88,11 @@ if(WIN32)
       $<TARGET_FILE_DIR:${target}>
   )
 
-  install(DIRECTORY ${QT_DEPENDS_DIR}/ DESTINATION .)
+  install(
+    DIRECTORY ${QT_DEPENDS_DIR}/
+    DESTINATION .
+    PATTERN "dx*.dll" EXCLUDE
+  )
 
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
