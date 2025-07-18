@@ -72,10 +72,23 @@ if(WIN32)
     RUNTIME DESTINATION .
   )
 
+  set(QT_DEPENDS_DIR ${CMAKE_BINARY_DIR}/qt-depends)
+
   add_custom_command(
     TARGET ${target} POST_BUILD
-      COMMAND ${DEPLOYQT} --no-compiler-runtime --no-system-d3d-compiler --no-quick-import -network $<TARGET_FILE:${target}>
+    COMMAND ${DEPLOYQT}
+      --no-compiler-runtime
+      --no-system-d3d-compiler
+      --no-quick-import
+      --dir "${QT_DEPENDS_DIR}"
+      $<TARGET_FILE:${target}>
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different
+      ${QT_DEPENDS_DIR}
+      $<TARGET_FILE_DIR:${target}>
   )
+
+  install(DIRECTORY ${QT_DEPENDS_DIR}/ DESTINATION .)
+
 elseif(APPLE)
   set_target_properties(${target} PROPERTIES
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
