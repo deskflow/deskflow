@@ -133,7 +133,7 @@ jobs:
             runs-on: "windows-2022"
             timeout: 30
             config-args: "-G Ninja"
-            qt-version: 6.9.1
+            qt-version: 6.9.0
             vcpkg-triplet: x64-windows-release
             arch: "amd64"
 
