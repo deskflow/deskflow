@@ -85,6 +85,8 @@ MainWindow::MainWindow()
 {
   ui->setupUi(this);
 
+  setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+
   // setup the log font
   ui->textLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
 #ifdef Q_OS_MAC
