@@ -8,6 +8,7 @@
 #include "deskflow/App.h"
 
 #include "DisplayInvalidException.h"
+#include "VersionInfo.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"
