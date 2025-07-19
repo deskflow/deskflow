@@ -8,6 +8,7 @@
 
 #include "Logger.h"
 #include "Styles.h"
+#include "VersionInfo.h"
 
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
