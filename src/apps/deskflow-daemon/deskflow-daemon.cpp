@@ -5,6 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "VersionInfo.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"

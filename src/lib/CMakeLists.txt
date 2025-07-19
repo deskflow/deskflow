@@ -3,6 +3,8 @@
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
+configure_file(VersionInfo.h.in VersionInfo.h @ONLY)
+
 add_subdirectory(arch)
 add_subdirectory(base)
 add_subdirectory(client)
