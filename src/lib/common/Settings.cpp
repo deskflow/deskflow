@@ -129,11 +129,7 @@ QVariant Settings::defaultValue(const QString &key)
   }
 
   if (key == Daemon::LogFile) {
-#ifdef Q_OS_WIN
-    return QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kDaemonLogFilename);
-#else
     return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kDaemonLogFilename);
-#endif
   }
 
   return QVariant();
