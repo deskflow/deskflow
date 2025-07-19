@@ -28,7 +28,7 @@ public:
   Opens the outputter for writing.  Calling this method on an
   already open outputter must have no effect.
   */
-  virtual void open(const char *title) = 0;
+  virtual void open(const QString &title) = 0;
 
   //! Close the outputter
   /*!
@@ -53,7 +53,7 @@ public:
   message to all outputters in the outputter chain, otherwise
   it continues.  Most implementations should return true.
   */
-  virtual bool write(LogLevel level, const char *message) = 0;
+  virtual bool write(LogLevel level, const QString &message) = 0;
 
   //@}
 };
