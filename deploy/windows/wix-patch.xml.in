@@ -17,6 +17,7 @@
       />
     </ServiceInstall>
     <ServiceControl Id="ServiceControl" Name="Deskflow" Remove="uninstall" Start="install" Stop="both"/>
+    <RemoveFile Id="RmOldLog" On="install" Name="deskflow-daemon.log"/>
   </CPackWiXFragment>
 
   <CPackWiXFragment Id="CM_CP_deskflow_server.exe">
