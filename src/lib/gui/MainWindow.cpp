@@ -11,6 +11,7 @@
 
 #include "Diagnostic.h"
 #include "StyleUtils.h"
+#include "VersionInfo.h"
 
 #include "dialogs/AboutDialog.h"
 #include "dialogs/FingerprintDialog.h"
