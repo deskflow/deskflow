@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['table_0',['Message Reference Table',['../protocol_reference.html#autotoc_md15',1,'']]],
+  ['table_0',['Message Reference Table',['../protocol_reference.html#autotoc_md18',1,'']]],
   ['tcplistensocket_1',['TCPListenSocket',['../classTCPListenSocket.html',1,'TCPListenSocket'],['../classTCPListenSocket.html#aa43d26219f8f89f557b521a70a319968',1,'TCPListenSocket::TCPListenSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, IArchNetwork::AddressFamily family)'],['../classTCPListenSocket.html#aabdcee5f2d528e53829810799a35b664',1,'TCPListenSocket::TCPListenSocket(TCPListenSocket const &amp;)=delete'],['../classTCPListenSocket.html#a1d4f95807e2039e68763e16d5e46948d',1,'TCPListenSocket::TCPListenSocket(TCPListenSocket &amp;&amp;)=delete']]],
   ['tcplistensocket_2ecpp_2',['TCPListenSocket.cpp',['../TCPListenSocket_8cpp.html',1,'']]],
   ['tcplistensocket_2eh_3',['TCPListenSocket.h',['../TCPListenSocket_8h.html',1,'']]],
@@ -16,7 +16,7 @@ var searchData=
   ['testcancelthread_13',['testCancelThread',['../classIArchMultithread.html#a01aba5f03e0b7856dd128a2f24aaf625',1,'IArchMultithread::testCancelThread()'],['../classArchMultithreadPosix.html#aa6f55cedc4657b1d4f08d06f5509435e',1,'ArchMultithreadPosix::testCancelThread()'],['../structArchNetworkBSD_1_1Deps.html#a791dd7abdebbfefe88d7c515d1cc8612',1,'ArchNetworkBSD::Deps::testCancelThread()'],['../classArchMultithreadWindows.html#a08f4783330ef1c863dff30bac13ac96b',1,'ArchMultithreadWindows::testCancelThread()']]],
   ['text_14',['text',['../classAction.html#ad5c429df6ad6dddef813ca5748e360c9',1,'Action::text()'],['../classHotkey.html#a75198c283d4d6320de77db7363d77316',1,'Hotkey::text()']]],
   ['texttoutf8_15',['textToUTF8',['../classUnicode.html#a9a0b955ca46970fe52a3f1d6a38eb5e7',1,'Unicode']]],
-  ['the_20full_20guidelines_16',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md6',1,'']]],
+  ['the_20full_20guidelines_16',['Read the Full Guidelines',['../contributing_guide.html#autotoc_md9',1,'']]],
   ['thread_17',['Thread',['../classThread.html',1,'Thread'],['../classThread.html#a01061ad89e5cd91c126e0e24ba6085cb',1,'Thread::Thread(IJob *adoptedJob)'],['../classThread.html#a17bbcef542a2eeae36b3f15db6fbc5af',1,'Thread::Thread(const Thread &amp;)']]],
   ['thread_2ecpp_18',['Thread.cpp',['../Thread_8cpp.html',1,'']]],
   ['thread_2eh_19',['Thread.h',['../Thread_8h.html',1,'']]],
@@ -26,12 +26,12 @@ var searchData=
   ['throwerroronsocket_23',['throwErrorOnSocket',['../classIArchNetwork.html#a022b6ad93707bce3a595f09cd509c2e9',1,'IArchNetwork::throwErrorOnSocket()'],['../classArchNetworkBSD.html#abfdcbbd569e4114d037ea16ed626f656',1,'ArchNetworkBSD::throwErrorOnSocket()'],['../classArchNetworkWinsock.html#a82599cd8f917122c330252b700600154',1,'ArchNetworkWinsock::throwErrorOnSocket()']]],
   ['time_24',['Time',['../classIClipboard.html#a9e15948af1b97562218eb262d3790c29',1,'IClipboard']]],
   ['time_25',['time',['../classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d',1,'Arch']]],
-  ['timeout_26',['Handshake Timeout',['../protocol_reference.html#autotoc_md24',1,'']]],
+  ['timeout_26',['Handshake Timeout',['../protocol_reference.html#autotoc_md27',1,'']]],
   ['timeout_27',['timeout',['../ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749',1,'ArchNetworkWinsock.cpp']]],
   ['timer_28',['Timer',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aefb4777327e6f704fb1519c1882f93ec',1,'deskflow']]],
   ['timerevent_29',['TimerEvent',['../classIEventQueue_1_1TimerEvent.html',1,'IEventQueue']]],
-  ['timing_20and_20synchronization_30',['Timing and Synchronization',['../protocol_reference.html#autotoc_md21',1,'']]],
-  ['tls_20handshake_20and_20security_20protocol_20v1_204_31',['TLS Handshake and Security (Protocol v1.4+)',['../protocol_reference.html#autotoc_md19',1,'']]],
+  ['timing_20and_20synchronization_30',['Timing and Synchronization',['../protocol_reference.html#autotoc_md24',1,'']]],
+  ['tls_20handshake_20and_20security_20protocol_20v1_204_31',['TLS Handshake and Security (Protocol v1.4+)',['../protocol_reference.html#autotoc_md22',1,'']]],
   ['tlscertificate_32',['TlsCertificate',['../classTlsCertificate.html',1,'TlsCertificate'],['../classTlsCertificate.html#acdd82c682ad924a82b83a697ea7d7ed0',1,'TlsCertificate::TlsCertificate()']]],
   ['tlscertificate_2ecpp_33',['TlsCertificate.cpp',['../TlsCertificate_8cpp.html',1,'']]],
   ['tlscertificate_2eh_34',['TlsCertificate.h',['../TlsCertificate_8h.html',1,'']]],
@@ -64,7 +64,7 @@ var searchData=
   ['togglewin32foreground_61',['toggleWin32Foreground',['../classServerConfigDialog.html#a140c568c5c136c7d3f8e29a3437da833',1,'ServerConfigDialog']]],
   ['toiclipboard_62',['toIClipboard',['../classIMSWindowsClipboardConverter.html#a6e248e03c142b9e67cbfa4707bbb98e3',1,'IMSWindowsClipboardConverter::toIClipboard()'],['../classMSWindowsClipboardAnyTextConverter.html#a9cd5285484e3cf645dfdcbe763600ce2',1,'MSWindowsClipboardAnyTextConverter::toIClipboard()'],['../classMSWindowsClipboardBitmapConverter.html#aec6b5b4b017638c31204cb3c96d01078',1,'MSWindowsClipboardBitmapConverter::toIClipboard()'],['../classIOSXClipboardConverter.html#a5cacc689ad2be9a984557d15e123df14',1,'IOSXClipboardConverter::toIClipboard()'],['../classOSXClipboardAnyBitmapConverter.html#a96ea12792ffef9fa5e8c0a8872a3004d',1,'OSXClipboardAnyBitmapConverter::toIClipboard()'],['../classOSXClipboardAnyTextConverter.html#a109c406470834b24be55393655ad1737',1,'OSXClipboardAnyTextConverter::toIClipboard()'],['../classOSXClipboardBMPConverter.html#adcbaada422156479dc0238147cbd59eb',1,'OSXClipboardBMPConverter::toIClipboard()'],['../classIXWindowsClipboardConverter.html#a516ae11b95f3dbcc3a60fd538743951d',1,'IXWindowsClipboardConverter::toIClipboard()'],['../classXWindowsClipboardAnyBitmapConverter.html#ac8cd155a7a9a6afd9bf126a1a22ba011',1,'XWindowsClipboardAnyBitmapConverter::toIClipboard()'],['../classXWindowsClipboardBMPConverter.html#ad6bce259737d05910645639820f000f6',1,'XWindowsClipboardBMPConverter::toIClipboard()'],['../classXWindowsClipboardHTMLConverter.html#adb5d0ed6e05e1bbb033d9ebf60e1ee2d',1,'XWindowsClipboardHTMLConverter::toIClipboard()'],['../classXWindowsClipboardTextConverter.html#accc335b51431277d59005421f3ef74e8',1,'XWindowsClipboardTextConverter::toIClipboard()'],['../classXWindowsClipboardUCS2Converter.html#a68923b38f5c009c137fcd632e132a59b',1,'XWindowsClipboardUCS2Converter::toIClipboard()'],['../classXWindowsClipboardUTF8Converter.html#ab2d6949fdb57bc2ecf05808bd73a32db',1,'XWindowsClipboardUTF8Converter::toIClipboard()']]],
   ['tole_63',['toLE',['../OSXClipboardBMPConverter_8cpp.html#a819a5ae7bd0a410afa3de17410434c49',1,'toLE(uint8_t *&amp;dst, char src):&#160;OSXClipboardBMPConverter.cpp'],['../OSXClipboardBMPConverter_8cpp.html#af05ae33bea57cf65cb913f9797aea3c3',1,'toLE(uint8_t *&amp;dst, uint16_t src):&#160;OSXClipboardBMPConverter.cpp'],['../OSXClipboardBMPConverter_8cpp.html#ab75b57090621db7c7b2103d774c67c12',1,'toLE(uint8_t *&amp;dst, uint32_t src):&#160;OSXClipboardBMPConverter.cpp'],['../XWindowsClipboardAnyBitmapConverter_8cpp.html#af05ae33bea57cf65cb913f9797aea3c3',1,'toLE(uint8_t *&amp;dst, uint16_t src):&#160;XWindowsClipboardAnyBitmapConverter.cpp'],['../XWindowsClipboardAnyBitmapConverter_8cpp.html#a31c17484f76904fc9543e712ba795e0b',1,'toLE(uint8_t *&amp;dst, int32_t src):&#160;XWindowsClipboardAnyBitmapConverter.cpp'],['../XWindowsClipboardAnyBitmapConverter_8cpp.html#ab75b57090621db7c7b2103d774c67c12',1,'toLE(uint8_t *&amp;dst, uint32_t src):&#160;XWindowsClipboardAnyBitmapConverter.cpp'],['../XWindowsClipboardBMPConverter_8cpp.html#a819a5ae7bd0a410afa3de17410434c49',1,'toLE(uint8_t *&amp;dst, char src):&#160;XWindowsClipboardBMPConverter.cpp'],['../XWindowsClipboardBMPConverter_8cpp.html#af05ae33bea57cf65cb913f9797aea3c3',1,'toLE(uint8_t *&amp;dst, uint16_t src):&#160;XWindowsClipboardBMPConverter.cpp'],['../XWindowsClipboardBMPConverter_8cpp.html#ab75b57090621db7c7b2103d774c67c12',1,'toLE(uint8_t *&amp;dst, uint32_t src):&#160;XWindowsClipboardBMPConverter.cpp']]],
-  ['tools_64',['Debug Tools',['../protocol_reference.html#autotoc_md33',1,'']]],
+  ['tools_64',['Debug Tools',['../protocol_reference.html#autotoc_md36',1,'']]],
   ['top_65',['Top',['../DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6aa4ffdcf0dc1f31b9acaf295d75b51d00',1,'DirectionTypes.h']]],
   ['top_66',['top',['../classPriorityQueue.html#a2e331d8b71e8b59fc565ec31f2694c3d',1,'PriorityQueue']]],
   ['topleft_67',['TopLeft',['../classScreenConfig.html#a8998f4fde8b4d01dde07d3eccfbea73dab32beb056fbfe36afbabc6c88c81ab36',1,'ScreenConfig']]],
@@ -78,7 +78,7 @@ var searchData=
   ['trashscreenwidget_2ecpp_75',['TrashScreenWidget.cpp',['../TrashScreenWidget_8cpp.html',1,'']]],
   ['trashscreenwidget_2eh_76',['TrashScreenWidget.h',['../TrashScreenWidget_8h.html',1,'']]],
   ['trimoutputbuffer_77',['trimOutputBuffer',['../MSWindowsWatchdog_8cpp.html#a9493d52fdabe3630510f009672d52ca8',1,'MSWindowsWatchdog.cpp']]],
-  ['troubleshooting_78',['Debugging and Troubleshooting',['../protocol_reference.html#autotoc_md31',1,'']]],
+  ['troubleshooting_78',['Debugging and Troubleshooting',['../protocol_reference.html#autotoc_md34',1,'']]],
   ['tsocketmultiplexermethodjob_79',['TSocketMultiplexerMethodJob',['../classTSocketMultiplexerMethodJob.html',1,'TSocketMultiplexerMethodJob&lt; T &gt;'],['../classTSocketMultiplexerMethodJob.html#a716f05145ca757d3f34d1e14cb86f68e',1,'TSocketMultiplexerMethodJob::TSocketMultiplexerMethodJob(T *object, Method method, ArchSocket socket, bool readable, bool writeable)'],['../classTSocketMultiplexerMethodJob.html#a459e1ef3ac5ef44c2eacfc609a40a09e',1,'TSocketMultiplexerMethodJob::TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob const &amp;)=delete'],['../classTSocketMultiplexerMethodJob.html#a8e723f9817506555943a80bdfc844e85',1,'TSocketMultiplexerMethodJob::TSocketMultiplexerMethodJob(TSocketMultiplexerMethodJob &amp;&amp;)=delete']]],
   ['tsocketmultiplexermethodjob_2eh_80',['TSocketMultiplexerMethodJob.h',['../TSocketMultiplexerMethodJob_8h.html',1,'']]],
   ['type_81',['Type',['../classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674',1,'IEventQueueBuffer::Type'],['../structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78',1,'Fingerprint::Type']]],
@@ -88,5 +88,5 @@ var searchData=
   ['typeofvalue_85',['typeOfValue',['../classArchMiscWindows.html#a1465a7b5acf3f1465a908c888542502c',1,'ArchMiscWindows']]],
   ['typescreennames_86',['typeScreenNames',['../classAction.html#a22d1404cd612c863af9514688e9624cb',1,'Action::typeScreenNames() const'],['../classAction.html#a7de9f53c5ad2549614c6df202e3ade10',1,'Action::typeScreenNames()']]],
   ['typetostring_87',['typeToString',['../structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287',1,'Fingerprint']]],
-  ['typical_20control_20flow_88',['Typical Control Flow',['../protocol_reference.html#autotoc_md16',1,'']]]
+  ['typical_20control_20flow_88',['Typical Control Flow',['../protocol_reference.html#autotoc_md19',1,'']]]
 ];

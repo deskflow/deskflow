@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.200</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.22.0.203</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -135,20 +135,45 @@ Configuration</h1>
 <td class="markdownTableBodyCenter">ENABLE_COVERAGE  </td><td class="markdownTableBodyCenter">Enable test coverage  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"><span class="tt">gcov</span>  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">SKIP_BUILD_TESTS  </td><td class="markdownTableBodyCenter">Skip running of tests at build time  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 </table>
 <p>Example cmake configuration. <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Windows Configuration</h2>
-<p>It is recommended to use vcpkg to get the dependencies to install. The first configuration will build all depends while configuing the project. If you do not want to instal qt via vcpkg you should remove the qt packages from vcpkg.json in the of the project BEFORE attempting to configure the project.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<p>It is recommended to use vcpkg to install the dependencies. The first time you configure Deskflow, all dependencies other than Qt will be built. If you don't want to use vcpkg, you must manually setup the dependencies. However, that will not be covered by this document.</p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+Windows and Qt</h3>
+<p>There are two ways you can install <a href="https://www.qt.io">Qt</a> on Windows (vcpkg or Qt online installer). The default configuration expects you to use the Qt online installer. You should not install Qt in both ways, as having both can cause some weird things to happen, like Qt getting libs from one install and plugins from the other. When switching between them, remove the previous install first.</p>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+System Qt</h4>
+<ol type="1">
+<li>Download and install the <a href="https://www.qt.io">Qt</a> online installer from their website.</li>
+<li>Add the path of Qt's cmake files to your system path. (Skipping this may require you provide this path to cmake via <span class="tt">Qt6_DIR</span> at configure time)<ul>
+<li>Often <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\lib\cmake</span></li>
+</ul>
+</li>
+<li>Add the path of Qt's binary tools to your system path.<ul>
+<li>Often <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\bin</span></li>
+</ul>
+</li>
+</ol>
+<h4 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+Vcpkg managed Qt</h4>
+<ol type="1">
+<li>Add the option <span class="tt">-DVCPKG_QT=ON</span> to your cmake configuration command (i.e <span class="tt">cmake -S. -Bbuild -DVCPKG_QT=ON ...</span>) or if using an IDE, look for the option where you configure the project, have the IDE run cmake again.</li>
+<li>Once the configuration starts, you should see a lot more packages vcpkg will build. Building Qt takes a long time (potentially hours), so go find something else to do for a while.</li>
+<li>If you want to use the system Qt again, you must delete the <span class="tt">vcpkg.json</span> generated in the project root and the <span class="tt">build</span> folder and reconfigure the project from scratch.</li>
+</ol>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Build</h1>
-<p>After Configuring you should be able to run make to build all targets.</p>
+<p>After configuring you should be able to run make to build all targets.</p>
 <p><span class="tt">cmake --build build</span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Install</h1>
 <p>To test installation run <span class="tt">DESTDIR=&lt;installDIR&gt; cmake --install build</span> to install into <span class="tt">&lt;installDir&gt;/&lt;CMAKE_INSTALL_PREFIX&gt;</span> <br  />
  Running <span class="tt">cmake --install build</span> will install to the <span class="tt">CMAKE_INSTALL_PREFIX</span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Making Deskflow packages</h1>
 <p>Deskflow can generate several packages using cpack. To generate packages build the <span class="tt">package</span> or <span class="tt">package_source</span> target. Example: <span class="tt"> cmake --build build --target package package_source</span> would generate both package and package source packages. Deskflow can generate several package types depending on the system. Archive-based packages should work on all platforms. On Linux deb and rpm info is set up, flatpaks can be generated from the included file in deploy/linux and a PKGBUILD for <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> linux is generated in the build folder. On macos a dmg file will be created and signed. For windows wix can be used to create an installer. </p>
 </div></div><!-- contents -->
