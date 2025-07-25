@@ -9,13 +9,13 @@
 #include "platform/Wayland.h"
 
 #if WINAPI_LIBPORTAL
-#include <libportal/portal.h>
+#include <functional>
 #include <glib.h>
+#include <libportal/portal.h>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
-#include <map>
-#include <functional>
 #endif
 
 namespace deskflow::test {
@@ -30,74 +30,74 @@ an actual portal service to be running.
 class MockPortal
 {
 public:
-    //! Callback type for clipboard change notifications
-    using ClipboardChangeCallback = std::function<void(const std::vector<std::string>&)>;
+  //! Callback type for clipboard change notifications
+  using ClipboardChangeCallback = std::function<void(const std::vector<std::string> &)>;
 
-    MockPortal();
-    ~MockPortal();
+  MockPortal();
+  ~MockPortal();
 
-    //! Initialize the mock portal
-    bool initialize();
+  //! Initialize the mock portal
+  bool initialize();
 
-    //! Cleanup the mock portal
-    void cleanup();
+  //! Cleanup the mock portal
+  void cleanup();
 
-    //! Set clipboard data for a specific MIME type
-    void setClipboardData(const std::string& mimeType, const std::string& data);
+  //! Set clipboard data for a specific MIME type
+  void setClipboardData(const std::string &mimeType, const std::string &data);
 
-    //! Get clipboard data for a specific MIME type
-    std::string getClipboardData(const std::string& mimeType) const;
+  //! Get clipboard data for a specific MIME type
+  std::string getClipboardData(const std::string &mimeType) const;
 
-    //! Get available MIME types
-    std::vector<std::string> getAvailableMimeTypes() const;
+  //! Get available MIME types
+  std::vector<std::string> getAvailableMimeTypes() const;
 
-    //! Clear clipboard data
-    void clearClipboard();
+  //! Clear clipboard data
+  void clearClipboard();
 
-    //! Set clipboard change callback
-    void setClipboardChangeCallback(ClipboardChangeCallback callback);
+  //! Set clipboard change callback
+  void setClipboardChangeCallback(ClipboardChangeCallback callback);
 
-    //! Simulate clipboard change from external application
-    void simulateClipboardChange(const std::map<std::string, std::string>& data);
+  //! Simulate clipboard change from external application
+  void simulateClipboardChange(const std::map<std::string, std::string> &data);
 
-    //! Check if mock portal is available
-    bool isAvailable() const;
+  //! Check if mock portal is available
+  bool isAvailable() const;
 
-    //! Get mock portal instance (for testing)
-    XdpPortal* getPortalInstance() const;
+  //! Get mock portal instance (for testing)
+  XdpPortal *getPortalInstance() const;
 
 private:
-    //! Trigger clipboard change notification
-    void notifyClipboardChange();
+  //! Trigger clipboard change notification
+  void notifyClipboardChange();
 
-    //! Mock portal instance
-    XdpPortal* m_mockPortal;
-    
-    //! Clipboard data storage
-    std::map<std::string, std::string> m_clipboardData;
-    
-    //! Change callback
-    ClipboardChangeCallback m_changeCallback;
-    
-    //! Initialization state
-    bool m_initialized;
+  //! Mock portal instance
+  XdpPortal *m_mockPortal;
+
+  //! Clipboard data storage
+  std::map<std::string, std::string> m_clipboardData;
+
+  //! Change callback
+  ClipboardChangeCallback m_changeCallback;
+
+  //! Initialization state
+  bool m_initialized;
 };
 
 //! RAII helper for mock portal testing
 class MockPortalScope
 {
 public:
-    MockPortalScope();
-    ~MockPortalScope();
+  MockPortalScope();
+  ~MockPortalScope();
 
-    //! Get the mock portal instance
-    MockPortal& portal();
+  //! Get the mock portal instance
+  MockPortal &portal();
 
-    //! Check if mock portal is available
-    bool isAvailable() const;
+  //! Check if mock portal is available
+  bool isAvailable() const;
 
 private:
-    std::unique_ptr<MockPortal> m_mockPortal;
+  std::unique_ptr<MockPortal> m_mockPortal;
 };
 
 #else
@@ -105,16 +105,31 @@ private:
 class MockPortal
 {
 public:
-    bool initialize() { return false; }
-    void cleanup() {}
-    bool isAvailable() const { return false; }
+  bool initialize()
+  {
+    return false;
+  }
+  void cleanup()
+  {
+  }
+  bool isAvailable() const
+  {
+    return false;
+  }
 };
 
 class MockPortalScope
 {
 public:
-    MockPortal& portal() { static MockPortal stub; return stub; }
-    bool isAvailable() const { return false; }
+  MockPortal &portal()
+  {
+    static MockPortal stub;
+    return stub;
+  }
+  bool isAvailable() const
+  {
+    return false;
+  }
 };
 #endif
 

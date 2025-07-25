@@ -8,81 +8,79 @@
 
 #include "deskflow/IClipboard.h"
 
-#include <chrono>
 #include <atomic>
-#include <mutex>
+#include <chrono>
 #include <map>
-#include <vector>
+#include <mutex>
 #include <string>
+#include <vector>
 
 namespace deskflow {
 
 //! Clipboard operation metrics
 struct ClipboardOperationMetrics
 {
-    //! Operation type
-    enum class Operation {
-        Open,
-        Close,
-        Add,
-        Get,
-        Has,
-        Empty,
-        PortalSet,
-        PortalGet,
-        FormatNegotiation,
-        DataValidation,
-        DataSanitization
-    };
+  //! Operation type
+  enum class Operation
+  {
+    Open,
+    Close,
+    Add,
+    Get,
+    Has,
+    Empty,
+    PortalSet,
+    PortalGet,
+    FormatNegotiation,
+    DataValidation,
+    DataSanitization
+  };
 
-    Operation operation;
-    IClipboard::EFormat format;
-    std::chrono::steady_clock::time_point timestamp;
-    std::chrono::microseconds duration;
-    size_t dataSize;
-    bool success;
-    std::string error;
-    std::string mimeType;
+  Operation operation;
+  IClipboard::EFormat format;
+  std::chrono::steady_clock::time_point timestamp;
+  std::chrono::microseconds duration;
+  size_t dataSize;
+  bool success;
+  std::string error;
+  std::string mimeType;
 
-    ClipboardOperationMetrics(
-        Operation op,
-        IClipboard::EFormat fmt = IClipboard::kText,
-        std::chrono::microseconds dur = std::chrono::microseconds{0},
-        size_t size = 0,
-        bool succ = true,
-        const std::string& err = "",
-        const std::string& mime = "")
-        : operation(op),
-          format(fmt),
-          timestamp(std::chrono::steady_clock::now()),
-          duration(dur),
-          dataSize(size),
-          success(succ),
-          error(err),
-          mimeType(mime)
-    {
-    }
+  ClipboardOperationMetrics(
+      Operation op, IClipboard::EFormat fmt = IClipboard::kText,
+      std::chrono::microseconds dur = std::chrono::microseconds{0}, size_t size = 0, bool succ = true,
+      const std::string &err = "", const std::string &mime = ""
+  )
+      : operation(op),
+        format(fmt),
+        timestamp(std::chrono::steady_clock::now()),
+        duration(dur),
+        dataSize(size),
+        success(succ),
+        error(err),
+        mimeType(mime)
+  {
+  }
 };
 
 //! Performance statistics
 struct PerformanceStats
 {
-    std::chrono::microseconds averageOperationTime{0};
-    std::chrono::microseconds maxOperationTime{0};
-    std::chrono::microseconds minOperationTime{std::chrono::microseconds::max()};
-    size_t totalOperations = 0;
-    size_t successfulOperations = 0;
-    size_t failedOperations = 0;
-    double successRate = 0.0;
-    
-    // Data transfer statistics
-    size_t totalDataTransferred = 0;
-    size_t averageDataSize = 0;
-    size_t maxDataSize = 0;
-    
-    // Format usage statistics
-    std::map<IClipboard::EFormat, size_t> formatUsage;
-    std::map<std::string, size_t> mimeTypeUsage;
+  std::chrono::microseconds averageOperationTime{0};
+  std::chrono::microseconds maxOperationTime{0};
+  std::chrono::microseconds minOperationTime{std::chrono::microseconds::max()};
+  size_t totalOperations = 0;
+  size_t successfulOperations = 0;
+  size_t failedOperations = 0;
+  double successRate = 0.0;
+
+  // Data transfer statistics
+  size_t totalDataTransferred = 0;
+  size_t averageDataSize = 0;
+  size_t maxDataSize = 0;
+
+  // Format usage statistics
+  std::map<IClipboard::EFormat, size_t> formatUsage;
+  std::map<std::string, size_t> mimeTypeUsage;
 };
 
 //! Clipboard metrics collector and analyzer
@@ -94,135 +92,136 @@ performance, format usage patterns, and potential issues.
 class EiClipboardMetrics
 {
 public:
-    //! Metrics configuration
-    struct Config {
-        bool enabled = true;                        // Enable metrics collection
-        size_t maxMetricsHistory = 10000;          // Maximum metrics entries to keep
-        std::chrono::minutes metricsRetention{60}; // How long to keep metrics
-        bool collectDetailedMetrics = true;        // Collect detailed operation metrics
-        bool collectPerformanceStats = true;       // Collect performance statistics
-        bool collectUsageAnalytics = true;         // Collect usage analytics
-    };
+  //! Metrics configuration
+  struct Config
+  {
+    bool enabled = true;                       // Enable metrics collection
+    size_t maxMetricsHistory = 10000;          // Maximum metrics entries to keep
+    std::chrono::minutes metricsRetention{60}; // How long to keep metrics
+    bool collectDetailedMetrics = true;        // Collect detailed operation metrics
+    bool collectPerformanceStats = true;       // Collect performance statistics
+    bool collectUsageAnalytics = true;         // Collect usage analytics
+  };
 
-    explicit EiClipboardMetrics(const Config& config = Config{});
-    ~EiClipboardMetrics();
+  explicit EiClipboardMetrics(const Config &config = Config{});
+  ~EiClipboardMetrics();
 
-    //! Record clipboard operation
-    void recordOperation(const ClipboardOperationMetrics& metrics);
+  //! Record clipboard operation
+  void recordOperation(const ClipboardOperationMetrics &metrics);
 
-    //! Start timing an operation
-    class OperationTimer {
-    public:
-        OperationTimer(EiClipboardMetrics* metrics, 
-                      ClipboardOperationMetrics::Operation operation,
-                      IClipboard::EFormat format = IClipboard::kText);
-        ~OperationTimer();
-        
-        void setDataSize(size_t size);
-        void setMimeType(const std::string& mimeType);
-        void setSuccess(bool success);
-        void setError(const std::string& error);
-        
-    private:
-        EiClipboardMetrics* m_metrics;
-        ClipboardOperationMetrics m_operation;
-        std::chrono::steady_clock::time_point m_startTime;
-    };
+  //! Start timing an operation
+  class OperationTimer
+  {
+  public:
+    OperationTimer(
+        EiClipboardMetrics *metrics, ClipboardOperationMetrics::Operation operation,
+        IClipboard::EFormat format = IClipboard::kText
+    );
+    ~OperationTimer();
 
-    //! Create operation timer
-    std::unique_ptr<OperationTimer> startOperation(
-        ClipboardOperationMetrics::Operation operation,
-        IClipboard::EFormat format = IClipboard::kText);
+    void setDataSize(size_t size);
+    void setMimeType(const std::string &mimeType);
+    void setSuccess(bool success);
+    void setError(const std::string &error);
 
-    //! Get performance statistics
-    PerformanceStats getPerformanceStats() const;
+  private:
+    EiClipboardMetrics *m_metrics;
+    ClipboardOperationMetrics m_operation;
+    std::chrono::steady_clock::time_point m_startTime;
+  };
 
-    //! Get performance statistics for specific operation
-    PerformanceStats getPerformanceStats(ClipboardOperationMetrics::Operation operation) const;
+  //! Create operation timer
+  std::unique_ptr<OperationTimer>
+  startOperation(ClipboardOperationMetrics::Operation operation, IClipboard::EFormat format = IClipboard::kText);
 
-    //! Get performance statistics for specific format
-    PerformanceStats getPerformanceStats(IClipboard::EFormat format) const;
+  //! Get performance statistics
+  PerformanceStats getPerformanceStats() const;
 
-    //! Get recent metrics (last N operations)
-    std::vector<ClipboardOperationMetrics> getRecentMetrics(size_t count = 100) const;
+  //! Get performance statistics for specific operation
+  PerformanceStats getPerformanceStats(ClipboardOperationMetrics::Operation operation) const;
 
-    //! Get metrics for time range
-    std::vector<ClipboardOperationMetrics> getMetrics(
-        std::chrono::steady_clock::time_point start,
-        std::chrono::steady_clock::time_point end) const;
+  //! Get performance statistics for specific format
+  PerformanceStats getPerformanceStats(IClipboard::EFormat format) const;
 
-    //! Get error statistics
-    std::map<std::string, size_t> getErrorStatistics() const;
+  //! Get recent metrics (last N operations)
+  std::vector<ClipboardOperationMetrics> getRecentMetrics(size_t count = 100) const;
 
-    //! Get format usage statistics
-    std::map<IClipboard::EFormat, size_t> getFormatUsage() const;
+  //! Get metrics for time range
+  std::vector<ClipboardOperationMetrics>
+  getMetrics(std::chrono::steady_clock::time_point start, std::chrono::steady_clock::time_point end) const;
 
-    //! Get MIME type usage statistics
-    std::map<std::string, size_t> getMimeTypeUsage() const;
+  //! Get error statistics
+  std::map<std::string, size_t> getErrorStatistics() const;
 
-    //! Get operation frequency (operations per second)
-    double getOperationFrequency() const;
+  //! Get format usage statistics
+  std::map<IClipboard::EFormat, size_t> getFormatUsage() const;
 
-    //! Get data throughput (bytes per second)
-    double getDataThroughput() const;
+  //! Get MIME type usage statistics
+  std::map<std::string, size_t> getMimeTypeUsage() const;
 
-    //! Clear all metrics
-    void clearMetrics();
+  //! Get operation frequency (operations per second)
+  double getOperationFrequency() const;
 
-    //! Clear old metrics based on retention policy
-    void cleanupOldMetrics();
+  //! Get data throughput (bytes per second)
+  double getDataThroughput() const;
 
-    //! Get configuration
-    const Config& getConfig() const;
+  //! Clear all metrics
+  void clearMetrics();
 
-    //! Update configuration
-    void setConfig(const Config& config);
+  //! Clear old metrics based on retention policy
+  void cleanupOldMetrics();
 
-    //! Export metrics to JSON string
-    std::string exportMetricsJson() const;
+  //! Get configuration
+  const Config &getConfig() const;
 
-    //! Export performance report
-    std::string generatePerformanceReport() const;
+  //! Update configuration
+  void setConfig(const Config &config);
 
-    //! Check if metrics collection is enabled
-    bool isEnabled() const;
+  //! Export metrics to JSON string
+  std::string exportMetricsJson() const;
 
-    //! Enable/disable metrics collection
-    void setEnabled(bool enabled);
+  //! Export performance report
+  std::string generatePerformanceReport() const;
+
+  //! Check if metrics collection is enabled
+  bool isEnabled() const;
+
+  //! Enable/disable metrics collection
+  void setEnabled(bool enabled);
 
 private:
-    //! Update performance statistics
-    void updatePerformanceStats(const ClipboardOperationMetrics& metrics);
+  //! Update performance statistics
+  void updatePerformanceStats(const ClipboardOperationMetrics &metrics);
 
-    //! Calculate statistics from metrics
-    PerformanceStats calculateStats(const std::vector<ClipboardOperationMetrics>& metrics) const;
+  //! Calculate statistics from metrics
+  PerformanceStats calculateStats(const std::vector<ClipboardOperationMetrics> &metrics) const;
 
-    mutable std::mutex m_mutex;
-    Config m_config;
-    
-    // Metrics storage
-    std::vector<ClipboardOperationMetrics> m_metrics;
-    
-    // Cached statistics
-    mutable PerformanceStats m_cachedStats;
-    mutable std::chrono::steady_clock::time_point m_lastStatsUpdate;
-    mutable bool m_statsValid;
-    
-    // Operation counters
-    std::atomic<size_t> m_totalOperations{0};
-    std::atomic<size_t> m_successfulOperations{0};
-    std::atomic<size_t> m_failedOperations{0};
-    std::atomic<size_t> m_totalDataTransferred{0};
-    
-    // Error tracking
-    std::map<std::string, size_t> m_errorCounts;
-    
-    // Usage tracking
-    std::map<IClipboard::EFormat, size_t> m_formatCounts;
-    std::map<std::string, size_t> m_mimeTypeCounts;
+  mutable std::mutex m_mutex;
+  Config m_config;
 
-    // Timing
-    std::chrono::steady_clock::time_point m_startTime;
+  // Metrics storage
+  std::vector<ClipboardOperationMetrics> m_metrics;
+
+  // Cached statistics
+  mutable PerformanceStats m_cachedStats;
+  mutable std::chrono::steady_clock::time_point m_lastStatsUpdate;
+  mutable bool m_statsValid;
+
+  // Operation counters
+  std::atomic<size_t> m_totalOperations{0};
+  std::atomic<size_t> m_successfulOperations{0};
+  std::atomic<size_t> m_failedOperations{0};
+  std::atomic<size_t> m_totalDataTransferred{0};
+
+  // Error tracking
+  std::map<std::string, size_t> m_errorCounts;
+
+  // Usage tracking
+  std::map<IClipboard::EFormat, size_t> m_formatCounts;
+  std::map<std::string, size_t> m_mimeTypeCounts;
+
+  // Timing
+  std::chrono::steady_clock::time_point m_startTime;
 };
 
 } // namespace deskflow
