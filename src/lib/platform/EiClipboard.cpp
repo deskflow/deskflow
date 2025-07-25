@@ -6,9 +6,6 @@
 
 #include "platform/EiClipboard.h"
 #include "base/Log.h"
-#include "platform/EiClipboardCrypto.h"
-#include "platform/EiClipboardHistory.h"
-#include "platform/EiClipboardMetrics.h"
 #include "platform/EiClipboardMonitor.h"
 #include "platform/EiClipboardNegotiator.h"
 #include "platform/EiClipboardSync.h"
@@ -32,16 +29,12 @@ EiClipboard::EiClipboard()
       m_open(false),
       m_time(0),
       m_portalAvailable(false),
-      m_historyEnabled(true),
-      m_encryptionEnabled(false),
       m_syncOptimizationEnabled(true),
       m_maxDataSize(kDefaultMaxDataSize),
       m_cacheTimeout(kDefaultCacheTimeout)
 #else
     : m_open(false),
       m_time(0),
-      m_historyEnabled(true),
-      m_encryptionEnabled(false),
       m_syncOptimizationEnabled(true),
       m_maxDataSize(kDefaultMaxDataSize)
 #endif
@@ -70,11 +63,8 @@ EiClipboard::EiClipboard()
   LOG_DEBUG("compiled without libportal support, clipboard functionality disabled");
 #endif
 
-  // Initialize clipboard history, negotiator, metrics, crypto, and sync
-  m_history = std::make_shared<EiClipboardHistory>();
+  // Initialize negotiator and synchronization components
   m_negotiator = std::make_shared<EiClipboardNegotiator>();
-  m_metrics = std::make_shared<EiClipboardMetrics>();
-  m_crypto = std::make_shared<EiClipboardCrypto>();
   m_sync = std::make_shared<EiClipboardSync>();
 }
 
@@ -133,74 +123,39 @@ bool EiClipboard::empty()
 
 void EiClipboard::add(EFormat format, const std::string &data)
 {
-  auto timer = m_metrics ? m_metrics->startOperation(ClipboardOperationMetrics::Operation::Add, format) : nullptr;
-
   if (!m_open) {
     LOG_WARN("cannot add to clipboard, not open");
-    if (timer)
-      timer->setError("clipboard not open");
     return;
   }
 
   if (format < 0 || format >= kNumFormats) {
     LOG_WARN("invalid clipboard format: %d", format);
-    if (timer)
-      timer->setError("invalid format");
     return;
   }
 
   // Check data size limit
   if (data.size() > m_maxDataSize) {
     LOG_WARN("clipboard data too large: %zu bytes (limit: %zu)", data.size(), m_maxDataSize);
-    if (timer)
-      timer->setError("data too large");
     return;
   }
-
-  if (timer)
-    timer->setDataSize(data.size());
 
   // Validate and sanitize data
   if (!validateClipboardData(format, data)) {
     LOG_WARN("clipboard data validation failed for format %d", format);
-    if (timer)
-      timer->setError("validation failed");
     return;
   }
 
   std::string sanitizedData = sanitizeClipboardData(format, data);
-  if (sanitizedData != data) {
-    LOG_INFO("clipboard data was sanitized for format %d", format);
-  }
-
-  // Check for sensitive data
-  bool isSensitive = containsSensitiveData(sanitizedData);
-  if (isSensitive) {
-    LOG_INFO("clipboard contains potentially sensitive data");
-  }
-
-  // Calculate hash for history and deduplication
-  std::string dataHash = calculateDataHash(sanitizedData);
 
   LOG_DEBUG("adding %zu bytes to clipboard format %d", sanitizedData.size(), format);
   m_data[format] = sanitizedData;
   m_added[format] = true;
-
-  // Add to history if enabled
-  if (m_historyEnabled && m_history) {
-    m_history->addEntry(format, sanitizedData, dataHash, isSensitive, "local");
-  }
 
 #ifndef __APPLE__
   // Invalidate cache for this format
   m_cacheValid[format] = false;
   m_cacheTimestamp[format] = std::chrono::steady_clock::time_point{};
 #endif
-
-  if (timer) {
-    timer->setMimeType(formatToMimeType(format));
-    timer->setSuccess(true);
-  }
 }
 
 bool EiClipboard::open(Time time) const
@@ -751,89 +706,12 @@ std::string EiClipboard::calculateDataHash(const std::string &data) const
   return ss.str();
 }
 
-std::shared_ptr<EiClipboardHistory> EiClipboard::getHistory() const
-{
-  return m_history;
-}
-
-void EiClipboard::setHistoryEnabled(bool enabled)
-{
-  m_historyEnabled = enabled;
-  LOG_DEBUG("clipboard history %s", enabled ? "enabled" : "disabled");
-}
-
-bool EiClipboard::isHistoryEnabled() const
-{
-  return m_historyEnabled;
-}
-
-std::shared_ptr<EiClipboardNegotiator> EiClipboard::getNegotiator() const
-{
-  return m_negotiator;
-}
-
 std::string EiClipboard::selectBestMimeType(EFormat format, const std::vector<std::string> &availableTypes) const
 {
-  auto timer =
-      m_metrics ? m_metrics->startOperation(ClipboardOperationMetrics::Operation::FormatNegotiation, format) : nullptr;
-
   if (!m_negotiator) {
-    // Fallback to simple selection
-    std::string result = formatToMimeType(format);
-    if (timer) {
-      timer->setMimeType(result);
-      timer->setSuccess(true);
-    }
-    return result;
+    return formatToMimeType(format);
   }
-
-  std::string result = m_negotiator->selectBestMimeType(format, availableTypes);
-  if (timer) {
-    timer->setMimeType(result);
-    timer->setSuccess(true);
-  }
-  return result;
-}
-
-std::shared_ptr<EiClipboardMetrics> EiClipboard::getMetrics() const
-{
-  return m_metrics;
-}
-
-void EiClipboard::setMetricsEnabled(bool enabled)
-{
-  if (m_metrics) {
-    m_metrics->setEnabled(enabled);
-    LOG_DEBUG("clipboard metrics %s", enabled ? "enabled" : "disabled");
-  }
-}
-
-std::shared_ptr<EiClipboardCrypto> EiClipboard::getCrypto() const
-{
-  return m_crypto;
-}
-
-void EiClipboard::setEncryptionEnabled(bool enabled)
-{
-  m_encryptionEnabled = enabled;
-  LOG_DEBUG("clipboard encryption %s", enabled ? "enabled" : "disabled");
-}
-
-bool EiClipboard::setEncryptionPassword(const std::string &password)
-{
-  if (!m_crypto) {
-    LOG_WARN("crypto system not available");
-    return false;
-  }
-
-  bool success = m_crypto->setMasterPassword(password);
-  if (success) {
-    LOG_DEBUG("encryption password set successfully");
-  } else {
-    LOG_WARN("failed to set encryption password");
-  }
-
-  return success;
+  return m_negotiator->selectBestMimeType(format, availableTypes);
 }
 
 std::shared_ptr<EiClipboardSync> EiClipboard::getSync() const

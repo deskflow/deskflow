@@ -138,12 +138,6 @@ elseif(UNIX)
       list(APPEND PLATFORM_SOURCES
         EiClipboard.cpp
         EiClipboard.h
-        EiClipboardCrypto.cpp
-        EiClipboardCrypto.h
-        EiClipboardHistory.cpp
-        EiClipboardHistory.h
-        EiClipboardMetrics.cpp
-        EiClipboardMetrics.h
         EiClipboardMonitor.cpp
         EiClipboardMonitor.h
         EiClipboardNegotiator.cpp

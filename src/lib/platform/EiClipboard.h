@@ -22,10 +22,7 @@ namespace deskflow {
 
 class EiClipboardMonitor;
 class PortalClipboard;
-class EiClipboardHistory;
 class EiClipboardNegotiator;
-class EiClipboardMetrics;
-class EiClipboardCrypto;
 class EiClipboardSync;
 
 //! Wayland clipboard implementation using XDG Desktop Portal
@@ -65,35 +62,11 @@ public:
   //! Clear clipboard cache
   void clearCache();
 
-  //! Get clipboard history
-  std::shared_ptr<EiClipboardHistory> getHistory() const;
-
-  //! Enable/disable clipboard history
-  void setHistoryEnabled(bool enabled);
-
-  //! Check if clipboard history is enabled
-  bool isHistoryEnabled() const;
-
   //! Get format negotiator
   std::shared_ptr<EiClipboardNegotiator> getNegotiator() const;
 
   //! Select best format for available options
   std::string selectBestMimeType(EFormat format, const std::vector<std::string> &availableTypes) const;
-
-  //! Get metrics collector
-  std::shared_ptr<EiClipboardMetrics> getMetrics() const;
-
-  //! Enable/disable metrics collection
-  void setMetricsEnabled(bool enabled);
-
-  //! Get crypto system
-  std::shared_ptr<EiClipboardCrypto> getCrypto() const;
-
-  //! Enable/disable encryption for sensitive data
-  void setEncryptionEnabled(bool enabled);
-
-  //! Set encryption password
-  bool setEncryptionPassword(const std::string &password);
 
   //! Get synchronization system
   std::shared_ptr<EiClipboardSync> getSync() const;
@@ -179,19 +152,8 @@ private:
   // Portal clipboard interface
   std::unique_ptr<PortalClipboard> m_portalClipboard;
 
-  // Clipboard history
-  std::shared_ptr<EiClipboardHistory> m_history;
-  bool m_historyEnabled;
-
   // Format negotiation
   std::shared_ptr<EiClipboardNegotiator> m_negotiator;
-
-  // Metrics and analytics
-  std::shared_ptr<EiClipboardMetrics> m_metrics;
-
-  // Encryption system
-  std::shared_ptr<EiClipboardCrypto> m_crypto;
-  bool m_encryptionEnabled;
 
   // Synchronization system
   std::shared_ptr<EiClipboardSync> m_sync;
