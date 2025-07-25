@@ -44,6 +44,7 @@ protected Q_SLOTS:
 private:
   void updateSize();
   void keySequenceChanged();
+  void itemToggled() const;
   void actionTypeChanged(int index);
   bool isKeyAction(int index) const;
   bool canSave() const;
