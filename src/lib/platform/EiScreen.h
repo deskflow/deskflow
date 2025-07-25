@@ -91,6 +91,7 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
+  void sendClipboardEvent(EventTypes type, ClipboardID id);
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);

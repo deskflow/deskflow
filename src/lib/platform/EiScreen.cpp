@@ -15,6 +15,7 @@
 #include "base/Stopwatch.h"
 #include "common/Constants.h"
 #include "deskflow/Clipboard.h"
+#include "deskflow/IScreen.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
 #include "platform/EiClipboard.h"
@@ -558,6 +559,18 @@ void EiScreen::removeDevice(struct ei_device *device)
 void EiScreen::sendEvent(EventTypes type, void *data)
 {
   m_events->addEvent(Event(type, getEventTarget(), data));
+}
+
+void EiScreen::sendClipboardEvent(EventTypes type, ClipboardID id)
+{
+  ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
+  if (info == nullptr) {
+    LOG_ERR("malloc failed on %s:%d", __FILE__, __LINE__);
+    return;
+  }
+  info->m_id = id;
+  info->m_sequenceNumber = m_sequenceNumber;
+  sendEvent(type, info);
 }
 
 ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const

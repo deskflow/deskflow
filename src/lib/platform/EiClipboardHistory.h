@@ -69,11 +69,20 @@ public:
   //! History configuration
   struct Config
   {
-    size_t maxEntries = 100;                // Maximum number of history entries
-    size_t maxTotalSize = 50 * 1024 * 1024; // Maximum total size (50MB)
-    std::chrono::minutes maxAge{60};        // Maximum age of entries (1 hour)
-    bool enableSensitiveData = false;       // Whether to store sensitive data
-    bool enableDeduplication = true;        // Whether to deduplicate entries
+    size_t maxEntries;           // Maximum number of history entries
+    size_t maxTotalSize;         // Maximum total size (50MB)
+    std::chrono::minutes maxAge; // Maximum age of entries (1 hour)
+    bool enableSensitiveData;    // Whether to store sensitive data
+    bool enableDeduplication;    // Whether to deduplicate entries
+
+    Config()
+        : maxEntries(100),
+          maxTotalSize(50 * 1024 * 1024),
+          maxAge(60),
+          enableSensitiveData(false),
+          enableDeduplication(true)
+    {
+    }
   };
 
   explicit EiClipboardHistory(const Config &config = Config{});

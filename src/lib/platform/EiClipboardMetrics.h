@@ -95,12 +95,22 @@ public:
   //! Metrics configuration
   struct Config
   {
-    bool enabled = true;                       // Enable metrics collection
-    size_t maxMetricsHistory = 10000;          // Maximum metrics entries to keep
-    std::chrono::minutes metricsRetention{60}; // How long to keep metrics
-    bool collectDetailedMetrics = true;        // Collect detailed operation metrics
-    bool collectPerformanceStats = true;       // Collect performance statistics
-    bool collectUsageAnalytics = true;         // Collect usage analytics
+    bool enabled;                          // Enable metrics collection
+    size_t maxMetricsHistory;              // Maximum metrics entries to keep
+    std::chrono::minutes metricsRetention; // How long to keep metrics
+    bool collectDetailedMetrics;           // Collect detailed operation metrics
+    bool collectPerformanceStats;          // Collect performance statistics
+    bool collectUsageAnalytics;            // Collect usage analytics
+
+    Config()
+        : enabled(true),
+          maxMetricsHistory(10000),
+          metricsRetention(60),
+          collectDetailedMetrics(true),
+          collectPerformanceStats(true),
+          collectUsageAnalytics(true)
+    {
+    }
   };
 
   explicit EiClipboardMetrics(const Config &config = Config{});
