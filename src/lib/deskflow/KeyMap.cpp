@@ -780,29 +780,28 @@ bool KeyMap::keysToRestoreModifiers(
   collectButtons(desiredModifiers, newKeys);
 
   // release unwanted keys
-  for (ModifierToKeys::const_iterator i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
-    KeyButton button = i->second.m_button;
+  for (const auto &[_mask, _keyItem] : oldModifiers) {
+    KeyButton button = _keyItem.m_button;
     if (button != keyItem.m_button && !newKeys.contains(button)) {
       EKeystroke type = kKeystrokeRelease;
-      if (i->second.m_lock) {
+      if (_keyItem.m_lock) {
         type = kKeystrokeUnmodify;
       }
-      addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
+      addKeystrokes(type, _keyItem, activeModifiers, currentState, keystrokes);
     }
   }
 
   // press wanted keys
-  for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
-    const KeyButton button = i->second.m_button;
+  for (const auto &[_mask, _keyItem] : desiredModifiers) {
+    const KeyButton button = _keyItem.m_button;
     if (button != keyItem.m_button && !oldKeys.contains(button)) {
       EKeystroke type = kKeystrokePress;
-      if (i->second.m_lock) {
+      if (_keyItem.m_lock) {
         type = kKeystrokeModify;
       }
-      addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
+      addKeystrokes(type, _keyItem, activeModifiers, currentState, keystrokes);
     }
   }
-
   return true;
 }
 
