@@ -136,6 +136,22 @@ elseif(UNIX)
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
+        EiClipboard.cpp
+        EiClipboard.h
+        EiClipboardCrypto.cpp
+        EiClipboardCrypto.h
+        EiClipboardHistory.cpp
+        EiClipboardHistory.h
+        EiClipboardMetrics.cpp
+        EiClipboardMetrics.h
+        EiClipboardMonitor.cpp
+        EiClipboardMonitor.h
+        EiClipboardNegotiator.cpp
+        EiClipboardNegotiator.h
+        EiClipboardSync.cpp
+        EiClipboardSync.h
+        PortalClipboard.cpp
+        PortalClipboard.h
         PortalInputCapture.cpp
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
@@ -156,7 +172,7 @@ add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 target_link_libraries(platform client ${libs})
 
 macro(link_wayland_libs)
-  target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+  target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE HAVE_LIBPORTAL_CLIPBOARD)
 
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
                         ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}

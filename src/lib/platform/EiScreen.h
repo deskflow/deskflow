@@ -151,6 +151,9 @@ private:
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
 
+  // clipboard
+  std::unique_ptr<EiClipboard> m_clipboard;
+
   struct HotKeyItem
   {
   public:

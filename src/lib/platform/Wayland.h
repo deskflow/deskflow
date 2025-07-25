@@ -28,6 +28,12 @@ const auto kHasPortalInputCapture = true;
 const auto kHasPortalInputCapture = false;
 #endif
 
+#if HAVE_LIBPORTAL_CLIPBOARD
+const auto kHasPortalClipboard = true;
+#else
+const auto kHasPortalClipboard = false;
+#endif
+
 inline bool isWayland()
 {
   const auto session = std::getenv("XDG_SESSION_TYPE");
