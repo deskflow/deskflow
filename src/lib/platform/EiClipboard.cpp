@@ -25,7 +25,7 @@
 namespace deskflow {
 
 EiClipboard::EiClipboard()
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
     : m_portal(nullptr),
       m_operationComplete(false),
       m_operationSuccess(false),
@@ -50,14 +50,14 @@ EiClipboard::EiClipboard()
   for (int i = 0; i < kNumFormats; ++i) {
     m_added[i] = false;
     m_data[i] = "";
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
     m_cacheValid[i] = false;
     m_cachedData[i] = "";
     m_cacheTimestamp[i] = std::chrono::steady_clock::time_point{};
 #endif
   }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (deskflow::platform::kHasPortal && deskflow::platform::kHasPortalClipboard) {
     initPortal();
     m_monitor = std::make_unique<EiClipboardMonitor>();
@@ -80,7 +80,7 @@ EiClipboard::EiClipboard()
 
 EiClipboard::~EiClipboard()
 {
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (m_portal) {
     g_object_unref(m_portal);
     m_portal = nullptr;
@@ -90,8 +90,8 @@ EiClipboard::~EiClipboard()
 
 bool EiClipboard::isPortalAvailable() const
 {
-#if WINAPI_LIBPORTAL
-  return m_portalAvailable && deskflow::platform::kHasPortal && deskflow::platform::kHasPortalClipboard;
+#ifndef __APPLE__
+  return m_portalAvailable && deskflow::platform::kHasPortal;
 #else
   return false;
 #endif
@@ -104,7 +104,7 @@ bool EiClipboard::empty()
     return false;
   }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (!isPortalAvailable()) {
     LOG_WARN("portal clipboard not available");
     return false;
@@ -191,7 +191,7 @@ void EiClipboard::add(EFormat format, const std::string &data)
     m_history->addEntry(format, sanitizedData, dataHash, isSensitive, "local");
   }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   // Invalidate cache for this format
   m_cacheValid[format] = false;
   m_cacheTimestamp[format] = std::chrono::steady_clock::time_point{};
@@ -214,7 +214,7 @@ bool EiClipboard::open(Time time) const
   m_open = true;
   m_time = time;
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   // Invalidate all cached data when opening
   for (int i = 0; i < kNumFormats; ++i) {
     m_cacheValid[i] = false;
@@ -234,7 +234,7 @@ void EiClipboard::close() const
   LOG_DEBUG("closing clipboard");
   m_open = false;
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (isPortalAvailable()) {
     // TODO: Implement portal clipboard commit when API is available
     LOG_DEBUG("clipboard closed (portal commit not yet implemented)");
@@ -258,7 +258,7 @@ bool EiClipboard::has(EFormat format) const
     return false;
   }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (isPortalAvailable()) {
     // TODO: Implement portal clipboard format checking when API is available
     LOG_DEBUG("checking clipboard format %d (portal check not yet implemented)", format);
@@ -280,7 +280,7 @@ std::string EiClipboard::get(EFormat format) const
     return "";
   }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (isPortalAvailable()) {
     // Check cache validity
     if (m_cacheValid[format]) {
@@ -311,7 +311,7 @@ std::string EiClipboard::get(EFormat format) const
   return m_data[format];
 }
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
 void EiClipboard::initPortal()
 {
   try {
@@ -512,7 +512,7 @@ bool EiClipboard::checkClipboardInterface() const
 
 bool EiClipboard::startMonitoring()
 {
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (m_monitor) {
     return m_monitor->startMonitoring();
   }
@@ -522,7 +522,7 @@ bool EiClipboard::startMonitoring()
 
 void EiClipboard::stopMonitoring()
 {
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (m_monitor) {
     m_monitor->stopMonitoring();
   }
@@ -531,7 +531,7 @@ void EiClipboard::stopMonitoring()
 
 bool EiClipboard::isMonitoring() const
 {
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   if (m_monitor) {
     return m_monitor->isMonitoring();
   }
@@ -552,7 +552,7 @@ size_t EiClipboard::getMaxDataSize() const
 
 void EiClipboard::clearCache()
 {
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   for (int i = 0; i < kNumFormats; ++i) {
     m_cacheValid[i] = false;
     m_cachedData[i] = "";

@@ -10,11 +10,25 @@
 #include <chrono>
 #include <thread>
 
+#ifndef __APPLE__
+#include <QDBusConnection>
+#include <QDBusError>
+#include <QDBusInterface>
+#include <QDBusPendingCall>
+#include <QDBusPendingCallWatcher>
+#include <QDBusPendingReply>
+#include <QVariant>
+#endif
+
 namespace deskflow {
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
 
-PortalClipboard::PortalClipboard() : m_portal(nullptr), m_initialized(false), m_available(false), m_changeSignalId(0)
+PortalClipboard::PortalClipboard()
+    : QObject(nullptr),
+      m_dbusConnection(QDBusConnection::sessionBus()),
+      m_initialized(false),
+      m_available(false)
 {
 }
 
@@ -30,60 +44,46 @@ bool PortalClipboard::initialize()
   }
 
   try {
-    m_portal = xdp_portal_new();
-    if (!m_portal) {
-      LOG_WARN("failed to create XDG portal for clipboard");
+    if (!m_dbusConnection.isConnected()) {
+      LOG_WARN("failed to connect to D-Bus session bus");
       return false;
     }
 
-    // TODO: Check if clipboard interface is available when API exists
-    // For now, we'll assume it's not available since the interface doesn't exist yet
-    /*
-    // Future implementation when clipboard portal interface is available:
-    g_autoptr(GDBusProxy) proxy = g_dbus_proxy_new_for_bus_sync(
-        G_BUS_TYPE_SESSION,
-        G_DBUS_PROXY_FLAGS_NONE,
-        nullptr,
-        "org.freedesktop.portal.Desktop",
-        "/org/freedesktop/portal/desktop",
-        "org.freedesktop.portal.Clipboard",
-        nullptr, nullptr);
+    // Check if portal service is available
+    if (!checkPortalService()) {
+      LOG_WARN("XDG Desktop Portal service not available");
+      m_initialized = true;
+      m_available = false;
+      return false;
+    }
 
-    m_available = (proxy != nullptr);
-    */
+    // Create interface for clipboard portal
+    m_portalInterface = std::make_unique<QDBusInterface>(
+        "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop", "org.freedesktop.portal.Clipboard",
+        m_dbusConnection
+    );
 
-    m_available = false; // Set to true when interface becomes available
+    m_available = m_portalInterface->isValid();
     m_initialized = true;
 
     if (m_available) {
-      // TODO: Connect to clipboard change signal when available
-      /*
-      m_changeSignalId = g_signal_connect(m_portal, "clipboard-changed",
-                                         G_CALLBACK(onClipboardChanged), this);
-      */
-      LOG_INFO("portal clipboard interface initialized");
+      LOG_INFO("XDG-Clipboard portal interface initialized successfully");
     } else {
-      LOG_INFO("portal clipboard interface not yet available");
+      LOG_WARN("XDG-Clipboard portal interface not available");
     }
 
-    return true;
+    return m_available;
   } catch (...) {
     LOG_ERR("exception while initializing portal clipboard");
+    m_initialized = true;
+    m_available = false;
     return false;
   }
 }
 
 void PortalClipboard::cleanup()
 {
-  if (m_portal) {
-    if (m_changeSignalId > 0) {
-      g_signal_handler_disconnect(m_portal, m_changeSignalId);
-      m_changeSignalId = 0;
-    }
-    g_object_unref(m_portal);
-    m_portal = nullptr;
-  }
-
+  m_portalInterface.reset();
   m_initialized = false;
   m_available = false;
 
@@ -112,37 +112,40 @@ std::future<PortalClipboard::ClipboardResult> PortalClipboard::setClipboardAsync
     return future;
   }
 
-  // TODO: Implement actual portal clipboard set when API is available
-  /*
-  // Future implementation:
-  g_autoptr(GVariantBuilder) options = g_variant_builder_new(G_VARIANT_TYPE_VARDICT);
+  // Implement XDG-Clipboard portal set operation using QDbus
+  try {
+    QVariantMap options;
+    QString parent = QString::fromStdString(createParentWindow(parentWindow));
 
-  GBytes* dataBytes = g_bytes_new(data.c_str(), data.size());
-
-  std::string parent = createParentWindow(parentWindow);
-
-  // Store promise for callback
-  {
+    // Store promise for async callback
+    {
       std::lock_guard<std::mutex> lock(m_operationMutex);
       m_pendingOperations[promise.get()] = promise;
+    }
+
+    // Call the SetClipboard method
+    QDBusPendingCall call = m_portalInterface->asyncCall(
+        "SetClipboard", parent, options, QString::fromStdString(mimeType), QByteArray::fromStdString(data)
+    );
+
+    auto *watcher = new QDBusPendingCallWatcher(call, this);
+    connect(watcher, &QDBusPendingCallWatcher::finished, this, [this, promise, watcher]() {
+      QDBusPendingReply<QVariant> reply = *watcher;
+      ClipboardResult result = processDbusReply(reply, "SetClipboard");
+
+      {
+        std::lock_guard<std::mutex> lock(m_operationMutex);
+        m_pendingOperations.erase(promise.get());
+      }
+
+      promise->set_value(result);
+      watcher->deleteLater();
+    });
+
+  } catch (...) {
+    LOG_ERR("exception in setClipboardAsync");
+    promise->set_value(ClipboardResult{false, "D-Bus call failed", "", ""});
   }
-
-  xdp_portal_set_clipboard_async(
-      m_portal,
-      parent.empty() ? nullptr : parent.c_str(),
-      g_variant_builder_end(options),
-      mimeType.c_str(),
-      dataBytes,
-      nullptr,
-      onSetClipboardReady,
-      promise.get());
-
-  g_bytes_unref(dataBytes);
-  */
-
-  // Placeholder implementation
-  LOG_DEBUG("setClipboardAsync called (not yet implemented)");
-  promise->set_value(ClipboardResult{false, "Portal clipboard API not yet available", "", ""});
 
   return future;
 }
@@ -356,6 +359,51 @@ std::string PortalClipboard::createParentWindow(const std::string &parentWindow)
   // TODO: Implement proper parent window handling
   // This should create a proper parent window identifier for portal calls
   return parentWindow;
+}
+
+bool PortalClipboard::checkPortalService()
+{
+  if (!m_dbusConnection.isConnected()) {
+    return false;
+  }
+
+  // Check if the portal service is available
+  QDBusInterface portalService(
+      "org.freedesktop.portal.Desktop", "/org/freedesktop/portal/desktop", "org.freedesktop.DBus.Properties",
+      m_dbusConnection
+  );
+
+  return portalService.isValid();
+}
+
+PortalClipboard::ClipboardResult
+PortalClipboard::processDbusReply(const QDBusPendingReply<QVariant> &reply, const std::string &operation)
+{
+  ClipboardResult result;
+
+  if (reply.isError()) {
+    QDBusError error = reply.error();
+    result.success = false;
+    result.error = operation + " failed: " + error.message().toStdString();
+    LOG_WARN("D-Bus %s error: %s", operation.c_str(), result.error.c_str());
+  } else {
+    result.success = true;
+    // Process the reply data if needed
+    QVariant replyData = reply.value();
+    // For clipboard operations, we might get the data back
+    if (replyData.canConvert<QByteArray>()) {
+      QByteArray data = replyData.toByteArray();
+      result.data = std::string(data.constData(), data.size());
+    }
+    LOG_DEBUG("D-Bus %s completed successfully", operation.c_str());
+  }
+
+  return result;
+}
+
+void PortalClipboard::onDbusCallFinished()
+{
+  // This slot can be used for additional D-Bus call handling if needed
 }
 
 #endif

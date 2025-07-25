@@ -8,33 +8,35 @@
 
 #include "platform/Wayland.h"
 
-#if WINAPI_LIBPORTAL
 #include <condition_variable>
 #include <functional>
 #include <future>
-#include <glib.h>
-#include <libportal/portal.h>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
+
+#ifndef __APPLE__
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusPendingReply>
+#include <QObject>
 #endif
 
 namespace deskflow {
 
-#if WINAPI_LIBPORTAL
-//! XDG Desktop Portal clipboard interface wrapper
+#ifndef __APPLE__
+//! XDG Desktop Portal clipboard interface wrapper using QDbus
 /*!
 This class provides a high-level interface to the XDG Desktop Portal
-clipboard functionality. It handles the D-Bus communication and provides
-async/sync conversion for clipboard operations.
-
-Note: This implementation is prepared for the future clipboard portal
-interface that doesn't exist yet. When the interface becomes available,
-the TODO comments should be replaced with actual portal API calls.
+clipboard functionality using QDbus for D-Bus communication. It provides
+async/sync conversion for clipboard operations and supports Gnome and KDE
+desktop environments.
 */
-class PortalClipboard
+class PortalClipboard : public QObject
 {
+  Q_OBJECT
+
 public:
   //! Clipboard operation result
   struct ClipboardResult
@@ -90,15 +92,13 @@ public:
   //! Stop monitoring clipboard changes
   void stopMonitoring();
 
+private slots:
+  //! Handle D-Bus method call completion
+  void onDbusCallFinished();
+
 private:
-  //! Portal callback for set clipboard operation
-  static void onSetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data);
-
-  //! Portal callback for get clipboard operation
-  static void onGetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data);
-
-  //! Portal callback for clipboard change signal
-  static void onClipboardChanged(XdpPortal *portal, const char *const *mime_types, gpointer user_data);
+  //! Check if portal service is available
+  bool checkPortalService();
 
   //! Handle clipboard change notification
   void handleClipboardChange(const std::vector<std::string> &mimeTypes);
@@ -109,11 +109,14 @@ private:
   //! Wait for async operation to complete
   ClipboardResult waitForOperation(std::shared_ptr<std::promise<ClipboardResult>> promise, int timeoutMs);
 
-  // Portal state
-  XdpPortal *m_portal;
+  //! Convert QVariant to clipboard result
+  ClipboardResult processDbusReply(const QDBusPendingReply<QVariant> &reply, const std::string &operation);
+
+  // D-Bus connection and interface
+  QDBusConnection m_dbusConnection;
+  std::unique_ptr<QDBusInterface> m_portalInterface;
   bool m_initialized;
   bool m_available;
-  gulong m_changeSignalId;
 
   // Callback management
   ChangeCallback m_changeCallback;
@@ -121,18 +124,18 @@ private:
 
   // Operation tracking
   std::mutex m_operationMutex;
-  std::map<gpointer, std::shared_ptr<std::promise<ClipboardResult>>> m_pendingOperations;
+  std::map<void *, std::shared_ptr<std::promise<ClipboardResult>>> m_pendingOperations;
 };
 
 #else
-// Stub implementation for non-portal builds
+// Stub implementation for non-Linux builds
 class PortalClipboard
 {
 public:
   struct ClipboardResult
   {
     bool success = false;
-    std::string error = "Portal not available";
+    std::string error = "Portal not available on this platform";
     std::string data;
     std::string mimeType;
   };

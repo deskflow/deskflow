@@ -9,11 +9,9 @@
 #include "deskflow/IClipboard.h"
 #include "platform/Wayland.h"
 
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
 #include <chrono>
 #include <condition_variable>
-#include <glib.h>
-#include <libportal/portal.h>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -113,7 +111,7 @@ public:
   std::string get(EFormat format) const override;
 
 private:
-#if WINAPI_LIBPORTAL
+#ifndef __APPLE__
   //! Initialize the portal connection
   void initPortal();
 
