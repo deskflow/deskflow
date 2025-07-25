@@ -92,8 +92,7 @@ public:
   //! Stop monitoring clipboard changes
   void stopMonitoring();
 
-private slots:
-  //! Handle D-Bus method call completion
+private Q_SLOTS:
   void onDbusCallFinished();
 
 private:

@@ -11,6 +11,12 @@
 #include "platform/EiClipboardSync.h"
 #include "platform/PortalClipboard.h"
 
+#ifndef HAVE_LIBPORTAL_CLIPBOARD
+using XdpPortal = void;
+static inline XdpPortal *xdp_portal_new() { return nullptr; }
+static inline void g_object_unref(void *) {}
+#endif
+
 #include <algorithm>
 #include <chrono>
 #include <cstring>
@@ -51,14 +57,41 @@ EiClipboard::EiClipboard()
   }
 
 #ifndef __APPLE__
-  if (deskflow::platform::kHasPortal && deskflow::platform::kHasPortalClipboard) {
-    initPortal();
-    m_monitor = std::make_unique<EiClipboardMonitor>();
-    m_portalClipboard = std::make_unique<PortalClipboard>();
-    m_portalClipboard->initialize();
-  } else {
-    LOG_DEBUG("libportal clipboard not available, clipboard functionality disabled");
+  // Build without libportal: provide stub implementation
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+  try {
+    m_portal = xdp_portal_new();
+    if (m_portal) {
+      // Check if portal service is running
+      if (checkPortalService()) {
+        // Check if clipboard interface will be available
+        if (checkClipboardInterface()) {
+          m_portalAvailable = true;
+          LOG_INFO("portal clipboard interface available and ready");
+
+          // TODO: Connect to clipboard change signals when API is available
+          // g_signal_connect(m_portal, "clipboard-changed",
+          //                  G_CALLBACK(onClipboardChanged), this);
+        } else {
+          m_portalAvailable = false;
+          LOG_INFO("portal service running but clipboard interface not available");
+        }
+      } else {
+        m_portalAvailable = false;
+        LOG_WARN("portal service not running or not accessible");
+      }
+    } else {
+      LOG_WARN("failed to create XDG portal");
+      m_portalAvailable = false;
+    }
+  } catch (...) {
+    LOG_ERR("exception while initializing portal");
+    m_portalAvailable = false;
   }
+#else
+  m_portalAvailable = false;
+  LOG_DEBUG("libportal support disabled at compile time");
+#endif
 #else
   LOG_DEBUG("compiled without libportal support, clipboard functionality disabled");
 #endif

@@ -22,11 +22,8 @@ const auto kHasPortal = true; // Using QDbus for portal access
 const auto kHasPortal = false;
 #endif
 
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-const auto kHasPortalInputCapture = true;
-#else
+const auto kHasPortalClipboard = false;
 const auto kHasPortalInputCapture = false;
-#endif
 
 inline bool isWayland()
 {

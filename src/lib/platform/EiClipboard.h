@@ -16,6 +16,11 @@
 #include <mutex>
 #include <string>
 #include <vector>
+// Forward declarations to avoid hard dependency on libportal/glib when disabled
+struct GObject;
+struct GAsyncResult;
+using gpointer = void*;
+struct XdpPortal;
 #endif
 
 namespace deskflow {
