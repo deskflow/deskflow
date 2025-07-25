@@ -493,18 +493,16 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
   for (int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
     const auto effectiveGroup = getEffectiveGroup(group, groupOffset);
     const KeyEntryList &entryList = keyGroupTable[effectiveGroup];
-    for (size_t i = 0; i < entryList.size(); ++i) {
-      if (entryList[i].size() != 1) {
-        // ignore multikey entries
+    for (const auto &entry : entryList) {
+      if (entry.size() != 1) {
         continue;
       }
-
       // match based on shift and make sure all required modifiers,
       // except shift, are already in the desired mask;  we're
       // after the right button not the right character.
       // we'll use desiredMask as-is, overriding the key's required
       // modifiers, when synthesizing this button.
-      const KeyItem &item = entryList[i].back();
+      const auto &item = entry.back();
       KeyModifierMask desiredShiftMask = KeyModifierShift & desiredMask;
       KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
       if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
@@ -514,11 +512,11 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
         break;
       }
     }
-    if (keyItem != nullptr) {
+    if (keyItem) {
       break;
     }
   }
-  if (keyItem == nullptr) {
+  if (!keyItem) {
     // no mapping for this keysym
     LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
     return nullptr;
