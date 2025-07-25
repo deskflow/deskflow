@@ -22,7 +22,13 @@ const auto kHasPortal = true;
 const auto kHasPortal = false;
 #endif
 
-#if HAVE_LIBPORTAL_INPUTCAPTURE
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+const auto kHasPortalClipboard = true;
+#else
+const auto kHasPortalClipboard = false;
+#endif
+
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 const auto kHasPortalInputCapture = true;
 #else
 const auto kHasPortalInputCapture = false;

@@ -15,12 +15,20 @@
 #include "base/Stopwatch.h"
 #include "common/Constants.h"
 #include "deskflow/Clipboard.h"
+#include "deskflow/IScreen.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/XScreen.h"
+#include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include <gio/gio.h>
+#include <glib.h>
+#include <libportal/portal.h>
+#endif
 
 #include <algorithm>
 #include <cmath>
@@ -44,7 +52,8 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal)
       m_events{events},
       m_w{1},
       m_h{1},
-      m_isOnScreen{isPrimary}
+      m_isOnScreen{isPrimary},
+      m_clipboard{std::make_unique<EiClipboard>()}
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
@@ -160,7 +169,18 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
-  return false;
+  if (id != kClipboardClipboard || !m_clipboard || !clipboard) {
+    LOG_DEBUG("getClipboard: invalid parameters (id=%d, clipboard=%p)", id, clipboard);
+    return false;
+  }
+
+  if (!m_clipboard->isPortalAvailable()) {
+    LOG_DEBUG("getClipboard: portal clipboard not available");
+    return false;
+  }
+
+  LOG_DEBUG("getting clipboard data");
+  return Clipboard::copy(clipboard, m_clipboard.get());
 }
 
 void EiScreen::getShape(int32_t &x, int32_t &y, int32_t &w, int32_t &h) const
@@ -377,12 +397,40 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  return false;
+  if (id != kClipboardClipboard || !m_clipboard) {
+    LOG_DEBUG("setClipboard: invalid parameters (id=%d)", id);
+    return false;
+  }
+
+  if (!m_clipboard->isPortalAvailable()) {
+    LOG_DEBUG("setClipboard: portal clipboard not available");
+    return false;
+  }
+
+  if (clipboard != nullptr) {
+    LOG_DEBUG("setting clipboard data");
+    return Clipboard::copy(m_clipboard.get(), clipboard);
+  } else {
+    LOG_DEBUG("clearing clipboard");
+    if (!m_clipboard->open(0)) {
+      return false;
+    }
+    m_clipboard->empty();
+    m_clipboard->close();
+    return true;
+  }
 }
 
 void EiScreen::checkClipboards()
 {
-  // do nothing, we're always up to date
+  if (!m_clipboard || !m_clipboard->isPortalAvailable()) {
+    return;
+  }
+
+  // TODO: Implement clipboard change detection when portal API is available
+  // For now, send a clipboard event to indicate we should check for changes
+  LOG_DEBUG("checking clipboard for changes");
+  sendClipboardEvent(EventTypes::ClipboardGrabbed, kClipboardClipboard);
 }
 
 void EiScreen::openScreensaver(bool notify)
@@ -517,6 +565,18 @@ void EiScreen::removeDevice(struct ei_device *device)
 void EiScreen::sendEvent(EventTypes type, void *data)
 {
   m_events->addEvent(Event(type, getEventTarget(), data));
+}
+
+void EiScreen::sendClipboardEvent(EventTypes type, ClipboardID id)
+{
+  ClipboardInfo *info = (ClipboardInfo *)malloc(sizeof(ClipboardInfo));
+  if (info == nullptr) {
+    LOG_ERR("malloc failed on %s:%d", __FILE__, __LINE__);
+    return;
+  }
+  info->m_id = id;
+  info->m_sequenceNumber = m_sequenceNumber;
+  sendEvent(type, info);
 }
 
 ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const

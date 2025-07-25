@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 if (WIN32)
-  create_test(
+create_test(
     NAME MSWindowsClipboardTests
     DEPENDS platform
     LIBS base arch
@@ -32,4 +32,16 @@ elseif(UNIX)
     SOURCE XWindowsClipboardTests.cpp
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
+
+#EiClipboard tests(Wayland clipboard support)
+  if(LIBEI_FOUND AND LIBPORTAL_FOUND)
+    create_test(
+      NAME EiClipboardTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE EiClipboardTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+    target_compile_definitions(EiClipboardTests PRIVATE DESKFLOW_UNIT_TESTING)
+  endif()
 endif()

@@ -9,6 +9,7 @@ function(create_test)
     WORKING_DIRECTORY #Working Dir
     DEPENDS #Library being tested
     SOURCE #Single Source File
+    HEADERS #Headers that need moc processing
   )
   set(multiValueArgs
     LIBS #Any Additional libs that are not Qt::Test or the DEPENDS lib
@@ -33,7 +34,8 @@ function(create_test)
     message(FATAL_ERROR "create_test, tests require a DEPENDS")
   endif()
 
-  add_executable(${m_NAME} ${m_SOURCE})
+  add_executable(${m_NAME} ${m_SOURCE} ${m_HEADERS})
+  set_property(TARGET ${m_NAME} PROPERTY AUTOMOC TRUE)
   target_link_libraries(${m_NAME} ${m_DEPENDS} ${m_LIBS} Qt::Test)
   add_test(NAME ${m_NAME} COMMAND $<TARGET_FILE:${m_NAME}> WORKING_DIRECTORY ${m_WORKING_DIRECTORY})
   set_tests_properties(${m_NAME} PROPERTIES DEPENDS ${m_DEPENDS})

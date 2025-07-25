@@ -91,6 +91,7 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
+  void sendClipboardEvent(EventTypes type, ClipboardID id);
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
@@ -150,6 +151,9 @@ private:
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
   PortalInputCapture *m_portalInputCapture = nullptr;
+
+  // clipboard
+  std::unique_ptr<EiClipboard> m_clipboard;
 
   struct HotKeyItem
   {
