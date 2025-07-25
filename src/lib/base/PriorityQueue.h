@@ -46,13 +46,13 @@ public:
   void push(const value_type &v)
   {
     c.push_back(v);
-    std::push_heap(c.begin(), c.end(), comp);
+    std::ranges::push_heap(c, comp);
   }
 
   //! Remove head element
   void pop()
   {
-    std::pop_heap(c.begin(), c.end(), comp);
+    std::ranges::pop_heap(c, comp);
     c.pop_back();
   }
 
@@ -60,7 +60,7 @@ public:
   void erase(iterator i)
   {
     c.erase(i);
-    std::make_heap(c.begin(), c.end(), comp);
+    std::ranges::make_heap(c, comp);
   }
 
   //! Get start iterator
@@ -85,7 +85,7 @@ public:
   void swap(Container &c2) noexcept
   {
     c.swap(c2);
-    std::make_heap(c.begin(), c.end(), comp);
+    std::ranges::make_heap(c, comp);
   }
 
   //@}
