@@ -27,9 +27,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
   connect(
       ui->comboActionType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ActionDialog::actionTypeChanged
   );
-  connect(ui->listScreens, &QListWidget::itemChanged, this, [&] {
-    ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
-  });
+  connect(ui->listScreens, &QListWidget::itemChanged, this, &ActionDialog::itemToggled);
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
@@ -114,6 +112,11 @@ void ActionDialog::updateSize()
 void ActionDialog::keySequenceChanged()
 {
   ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
+}
+
+void ActionDialog::itemToggled() const
+{
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
 }
 

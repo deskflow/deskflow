@@ -493,18 +493,16 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
   for (int32_t groupOffset = 0; groupOffset < numGroups; ++groupOffset) {
     const auto effectiveGroup = getEffectiveGroup(group, groupOffset);
     const KeyEntryList &entryList = keyGroupTable[effectiveGroup];
-    for (size_t i = 0; i < entryList.size(); ++i) {
-      if (entryList[i].size() != 1) {
-        // ignore multikey entries
+    for (const auto &entry : entryList) {
+      if (entry.size() != 1) {
         continue;
       }
-
       // match based on shift and make sure all required modifiers,
       // except shift, are already in the desired mask;  we're
       // after the right button not the right character.
       // we'll use desiredMask as-is, overriding the key's required
       // modifiers, when synthesizing this button.
-      const KeyItem &item = entryList[i].back();
+      const auto &item = entry.back();
       KeyModifierMask desiredShiftMask = KeyModifierShift & desiredMask;
       KeyModifierMask requiredIgnoreShiftMask = item.m_required & ~KeyModifierShift;
       if ((item.m_required & desiredShiftMask) == (item.m_sensitive & desiredShiftMask) &&
@@ -514,11 +512,11 @@ const KeyMap::KeyItem *KeyMap::mapCommandKey(
         break;
       }
     }
-    if (keyItem != nullptr) {
+    if (keyItem) {
       break;
     }
   }
-  if (keyItem == nullptr) {
+  if (!keyItem) {
     // no mapping for this keysym
     LOG((CLOG_DEBUG1 "no mapping for key %04x", id));
     return nullptr;
@@ -782,29 +780,28 @@ bool KeyMap::keysToRestoreModifiers(
   collectButtons(desiredModifiers, newKeys);
 
   // release unwanted keys
-  for (ModifierToKeys::const_iterator i = oldModifiers.begin(); i != oldModifiers.end(); ++i) {
-    KeyButton button = i->second.m_button;
+  for (const auto &[_mask, _keyItem] : oldModifiers) {
+    KeyButton button = _keyItem.m_button;
     if (button != keyItem.m_button && !newKeys.contains(button)) {
       EKeystroke type = kKeystrokeRelease;
-      if (i->second.m_lock) {
+      if (_keyItem.m_lock) {
         type = kKeystrokeUnmodify;
       }
-      addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
+      addKeystrokes(type, _keyItem, activeModifiers, currentState, keystrokes);
     }
   }
 
   // press wanted keys
-  for (auto i = desiredModifiers.begin(); i != desiredModifiers.end(); ++i) {
-    const KeyButton button = i->second.m_button;
+  for (const auto &[_mask, _keyItem] : desiredModifiers) {
+    const KeyButton button = _keyItem.m_button;
     if (button != keyItem.m_button && !oldKeys.contains(button)) {
       EKeystroke type = kKeystrokePress;
-      if (i->second.m_lock) {
+      if (_keyItem.m_lock) {
         type = kKeystrokeModify;
       }
-      addKeystrokes(type, i->second, activeModifiers, currentState, keystrokes);
+      addKeystrokes(type, _keyItem, activeModifiers, currentState, keystrokes);
     }
   }
-
   return true;
 }
 
@@ -1231,7 +1228,7 @@ bool KeyMap::KeyItem::operator==(const KeyItem &x) const
 // KeyMap::Keystroke
 //
 
-KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t data) : m_type(kButton)
+KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t data) : m_type(KeyType::Button)
 {
   m_data.m_button.m_button = button;
   m_data.m_button.m_press = press;
@@ -1239,7 +1236,7 @@ KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t
   m_data.m_button.m_client = data;
 }
 
-KeyMap::Keystroke::Keystroke(int32_t group, bool absolute, bool restore) : m_type(kGroup)
+KeyMap::Keystroke::Keystroke(int32_t group, bool absolute, bool restore) : m_type(KeyType::Group)
 {
   m_data.m_group.m_group = group;
   m_data.m_group.m_absolute = absolute;
