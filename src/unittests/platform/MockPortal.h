@@ -25,12 +25,24 @@ public:
   MockPortal() = default;
   ~MockPortal() = default;
 
-  bool initialize() { return true; }
-  void cleanup() { m_clipboardData.clear(); }
-  bool isAvailable() const { return true; }
+  bool initialize()
+  {
+    return true;
+  }
+  void cleanup()
+  {
+    m_clipboardData.clear();
+  }
+  bool isAvailable() const
+  {
+    return true;
+  }
 
   // Minimal API used by tests
-  void setClipboardData(const std::string &mimeType, const std::string &data) { m_clipboardData[mimeType] = data; }
+  void setClipboardData(const std::string &mimeType, const std::string &data)
+  {
+    m_clipboardData[mimeType] = data;
+  }
   std::string getClipboardData(const std::string &mimeType) const
   {
     auto it = m_clipboardData.find(mimeType);
@@ -43,15 +55,20 @@ public:
       types.push_back(p.first);
     return types;
   }
-  void clearClipboard() { m_clipboardData.clear(); }
+  void clearClipboard()
+  {
+    m_clipboardData.clear();
+  }
 
-  void setClipboardChangeCallback(ClipboardChangeCallback cb) { m_changeCallback = std::move(cb); }
+  void setClipboardChangeCallback(ClipboardChangeCallback cb)
+  {
+    m_changeCallback = std::move(cb);
+  }
 
   void simulateClipboardChange(const std::map<std::string, std::string> &data)
   {
     m_clipboardData = data;
-    if (m_changeCallback)
-    {
+    if (m_changeCallback) {
       std::vector<std::string> types;
       for (const auto &p : data)
         types.push_back(p.first);

@@ -13,8 +13,13 @@
 
 #ifndef HAVE_LIBPORTAL_CLIPBOARD
 using XdpPortal = void;
-static inline XdpPortal *xdp_portal_new() { return nullptr; }
-static inline void g_object_unref(void *) {}
+static inline XdpPortal *xdp_portal_new()
+{
+  return nullptr;
+}
+static inline void g_object_unref(void *)
+{
+}
 #endif
 
 #include <algorithm>
