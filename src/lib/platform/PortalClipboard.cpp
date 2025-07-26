@@ -289,82 +289,8 @@ void PortalClipboard::stopMonitoring()
   LOG_DEBUG("stopMonitoring called (not yet implemented)");
 }
 
-void PortalClipboard::onSetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data)
-{
-#ifdef HAVE_LIBPORTAL_CLIPBOARD
-  // TODO: Implement when portal API is available
-  /*
-  auto* promise = static_cast<std::promise<ClipboardResult>*>(user_data);
-
-  g_autoptr(GError) error = nullptr;
-  gboolean success = xdp_portal_set_clipboard_finish(XDP_PORTAL(source), result, &error);
-
-  ClipboardResult clipboardResult;
-  clipboardResult.success = success;
-  if (error) {
-      clipboardResult.error = error->message;
-  }
-
-  promise->set_value(clipboardResult);
-  */
-#else
-  Q_UNUSED(source);
-  Q_UNUSED(result);
-  Q_UNUSED(user_data);
-#endif
-}
-
-void PortalClipboard::onGetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data)
-{
-#ifdef HAVE_LIBPORTAL_CLIPBOARD
-  // TODO: Implement when portal API is available
-  /*
-  auto* promise = static_cast<std::promise<ClipboardResult>*>(user_data);
-
-  g_autoptr(GError) error = nullptr;
-  g_autofree char* mimeType = nullptr;
-  GBytes* data = xdp_portal_get_clipboard_finish(XDP_PORTAL(source), result, &mimeType, &error);
-
-  ClipboardResult clipboardResult;
-  clipboardResult.success = (data != nullptr);
-  if (error) {
-      clipboardResult.error = error->message;
-  } else if (data) {
-      gsize size;
-      const char* dataPtr = static_cast<const char*>(g_bytes_get_data(data, &size));
-      clipboardResult.data = std::string(dataPtr, size);
-      clipboardResult.mimeType = mimeType ? mimeType : "";
-      g_bytes_unref(data);
-  }
-
-  promise->set_value(clipboardResult);
-  */
-#else
-  Q_UNUSED(source);
-  Q_UNUSED(result);
-  Q_UNUSED(user_data);
-#endif
-}
-
-void PortalClipboard::onClipboardChanged(XdpPortal *portal, const char *const *mime_types, gpointer user_data)
-{
-#ifdef HAVE_LIBPORTAL_CLIPBOARD
-  auto *clipboard = static_cast<PortalClipboard *>(user_data);
-
-  std::vector<std::string> mimeTypes;
-  if (mime_types) {
-    for (int i = 0; mime_types[i] != nullptr; ++i) {
-      mimeTypes.emplace_back(mime_types[i]);
-    }
-  }
-
-  clipboard->handleClipboardChange(mimeTypes);
-#else
-  Q_UNUSED(portal);
-  Q_UNUSED(mime_types);
-  Q_UNUSED(user_data);
-#endif
-}
+// Removed onSetClipboardReady, onGetClipboardReady, and onClipboardChanged as they are not used by QDBus
+// implementation.
 
 void PortalClipboard::handleClipboardChange(const std::vector<std::string> &mimeTypes)
 {

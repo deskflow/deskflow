@@ -57,9 +57,11 @@ private:
 
 void EiClipboardTests::constructorInitializesCorrectly()
 {
+  m_mockScope = std::make_unique<deskflow::test::MockPortalScope>(); // Initialize mock scope
   createClipboard();
   QVERIFY(m_clipboard != nullptr);
   QCOMPARE(m_clipboard->getTime(), IClipboard::Time(0));
+  m_mockScope.reset(); // Clean up mock scope
 }
 
 void EiClipboardTests::portalAvailabilityDetection()
