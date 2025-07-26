@@ -1,10 +1,8 @@
-# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
-# SPDX-FileCopyrightText: 2012 - 2024 Symless Ltd
-# SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
-# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2024 - 2025 Deskflow Developers
+# SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
 
-if(UNIX AND NOT APPLE)
-  pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
+if (UNIX AND NOT APPLE)
+pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
   message(STATUS "libei version: ${LIBEI_VERSION}")
 
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
@@ -133,9 +131,19 @@ elseif(UNIX)
       EiScreen.cpp
       EiScreen.h
     )
-    # The Portal sources also require EI.
+#The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
+        EiClipboard.cpp
+        EiClipboard.h
+        EiClipboardMonitor.cpp
+        EiClipboardMonitor.h
+        EiClipboardNegotiator.cpp
+        EiClipboardNegotiator.h
+        EiClipboardSync.cpp
+        EiClipboardSync.h
+        PortalClipboard.cpp
+        PortalClipboard.h
         PortalInputCapture.cpp
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
@@ -150,21 +158,22 @@ if(APPLE)
 endif()
 include_directories(${inc})
 
-# wayland.h is included to check for wayland support
+#wayland.h is included to check for wayland support
 add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 
 target_link_libraries(platform client ${libs})
 
 macro(link_wayland_libs)
-  target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
-
+  if(LIBPORTAL_FOUND)
+    target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE HAVE_LIBPORTAL_CLIPBOARD)
+  else()
+    target_compile_definitions(platform PUBLIC WINAPI_LIBEI)
+  endif()
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
                         ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
                         ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES}
   )
-
   target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
-
 endmacro()
 
 if(UNIX)

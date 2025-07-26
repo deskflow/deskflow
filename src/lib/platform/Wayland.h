@@ -16,17 +16,14 @@ const auto kHasEi = true;
 const auto kHasEi = false;
 #endif
 
-#if WINAPI_LIBPORTAL
-const auto kHasPortal = true;
+#ifndef __APPLE__
+const auto kHasPortal = true; // Using QDbus for portal access
 #else
 const auto kHasPortal = false;
 #endif
 
-#if HAVE_LIBPORTAL_INPUTCAPTURE
-const auto kHasPortalInputCapture = true;
-#else
+const auto kHasPortalClipboard = false;
 const auto kHasPortalInputCapture = false;
-#endif
 
 inline bool isWayland()
 {

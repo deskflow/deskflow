@@ -112,7 +112,7 @@ jobs:
   analyse-sonarcloud:
     needs: pr-comment-flags
     if: ${{ needs.pr-comment-flags.outputs.no-sonar != 'true' }}
-    uses: ./.github/workflows/sonarcloud-analysis.yml
+    uses: Excellencedev/deskflow/.github/workflows/sonarcloud-analysis.yml@master
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 

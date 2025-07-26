@@ -56,8 +56,13 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
+      - name: Configure CMake
+        run: |
+          cmake -B build -G Ninja -DCMAKE_INSTALL_PREFIX=/usr
+
+      - name: Build
+        run: |
+          cmake --build build
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
