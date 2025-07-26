@@ -11,7 +11,15 @@
 #include "platform/EiClipboardSync.h"
 #include "platform/PortalClipboard.h"
 
-#ifndef HAVE_LIBPORTAL_CLIPBOARD
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include <gio/gio.h>
+#include <glib.h>
+#include <libportal/inputcapture.h>
+#include <libportal/portal.h>
+#else
+using GObject = void;
+using GAsyncResult = void;
+using gpointer = void *;
 using XdpPortal = void;
 static inline XdpPortal *xdp_portal_new()
 {
@@ -19,6 +27,17 @@ static inline XdpPortal *xdp_portal_new()
 }
 static inline void g_object_unref(void *)
 {
+}
+static inline GDBusConnection *g_bus_get_sync(GBusType, GCancellable *, GError **)
+{
+  return nullptr;
+}
+static inline GDBusProxy *g_dbus_proxy_new_sync(
+    GDBusConnection *, GDBusProxyFlags, GDBusInterfaceInfo *, const char *, const char *, const char *, GCancellable *,
+    GError **
+)
+{
+  return nullptr;
 }
 #endif
 
@@ -457,6 +476,7 @@ void EiClipboard::onClipboardChanged(XdpPortal *portal, const char *const *mime_
 bool EiClipboard::checkPortalService() const
 {
   // Check if the portal D-Bus service is available
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
   g_autoptr(GDBusConnection) connection = g_bus_get_sync(G_BUS_TYPE_SESSION, nullptr, nullptr);
   if (!connection) {
     LOG_DEBUG("failed to connect to session bus");
@@ -475,6 +495,9 @@ bool EiClipboard::checkPortalService() const
 
   LOG_DEBUG("portal desktop service is available");
   return true;
+#else
+  return false;
+#endif
 }
 
 bool EiClipboard::checkClipboardInterface() const
@@ -488,6 +511,7 @@ bool EiClipboard::checkClipboardInterface() const
 
   LOG_DEBUG("checking clipboard interface availability");
 
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
   // TODO: Replace with actual interface check when available
   // g_autoptr(GDBusProxy) proxy = g_dbus_proxy_new_sync(
   //     connection,
@@ -498,6 +522,7 @@ bool EiClipboard::checkClipboardInterface() const
   //     "org.freedesktop.portal.Clipboard",
   //     nullptr, nullptr);
   // return proxy != nullptr;
+#endif
 
   return false; // Interface not yet available
 }

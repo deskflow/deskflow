@@ -7,17 +7,17 @@
 #pragma once
 
 #include "platform/Wayland.h"
-
-#if WINAPI_LIBPORTAL
 #include <atomic>
 #include <functional>
+#include <vector>
+
+#if WINAPI_LIBPORTAL
 #include <glib.h>
 #include <libportal/portal.h>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <thread>
-#include <vector>
 #endif
 
 namespace deskflow {

@@ -16,11 +16,6 @@
 #include <mutex>
 #include <string>
 #include <vector>
-// Forward declarations to avoid hard dependency on libportal/glib when disabled
-struct GObject;
-struct GAsyncResult;
-using gpointer = void *;
-struct XdpPortal;
 #endif
 
 namespace deskflow {
@@ -108,12 +103,6 @@ private:
   //! Wait for asynchronous portal operation to complete
   void waitForOperation() const;
 
-  //! Portal callback for clipboard operations
-  static void onClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data);
-
-  //! Portal callback for clipboard change notifications
-  static void onClipboardChanged(XdpPortal *portal, const char *const *mime_types, gpointer user_data);
-
   //! Check if portal D-Bus service is running
   bool checkPortalService() const;
 
@@ -133,7 +122,6 @@ private:
   std::string calculateDataHash(const std::string &data) const;
 
   // Portal state
-  XdpPortal *m_portal;
   mutable std::mutex m_mutex;
   mutable std::condition_variable m_cv;
   mutable bool m_operationComplete;

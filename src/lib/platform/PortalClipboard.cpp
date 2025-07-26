@@ -10,6 +10,18 @@
 #include <chrono>
 #include <thread>
 
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include <gio/gio.h>
+#include <glib.h>
+#include <libportal/portal.h>
+#else
+// Stub definitions for types from GLib/Libportal when not available
+using GObject = void;
+using GAsyncResult = void;
+using gpointer = void *;
+using XdpPortal = void;
+#endif
+
 #ifndef __APPLE__
 #include <QDBusConnection>
 #include <QDBusError>
@@ -279,6 +291,7 @@ void PortalClipboard::stopMonitoring()
 
 void PortalClipboard::onSetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
   // TODO: Implement when portal API is available
   /*
   auto* promise = static_cast<std::promise<ClipboardResult>*>(user_data);
@@ -294,10 +307,16 @@ void PortalClipboard::onSetClipboardReady(GObject *source, GAsyncResult *result,
 
   promise->set_value(clipboardResult);
   */
+#else
+  Q_UNUSED(source);
+  Q_UNUSED(result);
+  Q_UNUSED(user_data);
+#endif
 }
 
 void PortalClipboard::onGetClipboardReady(GObject *source, GAsyncResult *result, gpointer user_data)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
   // TODO: Implement when portal API is available
   /*
   auto* promise = static_cast<std::promise<ClipboardResult>*>(user_data);
@@ -320,10 +339,16 @@ void PortalClipboard::onGetClipboardReady(GObject *source, GAsyncResult *result,
 
   promise->set_value(clipboardResult);
   */
+#else
+  Q_UNUSED(source);
+  Q_UNUSED(result);
+  Q_UNUSED(user_data);
+#endif
 }
 
 void PortalClipboard::onClipboardChanged(XdpPortal *portal, const char *const *mime_types, gpointer user_data)
 {
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
   auto *clipboard = static_cast<PortalClipboard *>(user_data);
 
   std::vector<std::string> mimeTypes;
@@ -334,6 +359,11 @@ void PortalClipboard::onClipboardChanged(XdpPortal *portal, const char *const *m
   }
 
   clipboard->handleClipboardChange(mimeTypes);
+#else
+  Q_UNUSED(portal);
+  Q_UNUSED(mime_types);
+  Q_UNUSED(user_data);
+#endif
 }
 
 void PortalClipboard::handleClipboardChange(const std::vector<std::string> &mimeTypes)

@@ -24,6 +24,12 @@
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
 
+#ifdef HAVE_LIBPORTAL_CLIPBOARD
+#include <gio/gio.h>
+#include <glib.h>
+#include <libportal/portal.h>
+#endif
+
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
