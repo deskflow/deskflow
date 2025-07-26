@@ -874,7 +874,7 @@ bool KeyState::fakeKeyRepeat(KeyID id, KeyModifierMask mask, int32_t count, KeyB
     // replace key up with previous KeyButton but leave key down
     // alone so it uses the new KeyButton.
     for (auto &key : keys) {
-      if (key.m_type == Keystroke::kButton && key.m_data.m_button.m_button == localID) {
+      if (key.m_type == Keystroke::KeyType::Button && key.m_data.m_button.m_button == localID) {
         key.m_data.m_button.m_button = oldLocalID;
         break;
       }
@@ -1067,20 +1067,21 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
   // generate key events
   LOG((CLOG_DEBUG1 "keystrokes:"));
   for (auto k = keys.begin(); k != keys.end();) {
-    if (k->m_type == Keystroke::kButton && k->m_data.m_button.m_repeat) {
+    if (k->m_type == Keystroke::KeyType::Button && k->m_data.m_button.m_repeat) {
       // repeat from here up to but not including the next key
       // with m_repeat == false count times.
       Keystrokes::const_iterator start = k;
       while (count-- > 0) {
         // send repeating events
-        for (k = start; k != keys.end() && k->m_type == Keystroke::kButton && k->m_data.m_button.m_repeat; ++k) {
+        for (k = start; k != keys.end() && k->m_type == Keystroke::KeyType::Button && k->m_data.m_button.m_repeat;
+             ++k) {
           fakeKey(*k);
         }
       }
 
       // note -- k is now on the first non-repeat key after the
       // repeat keys, exactly where we'd like to continue from.
-    } else if (k->m_type != Keystroke::kGroup || (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
+    } else if (k->m_type != Keystroke::KeyType::Group || (!k->m_data.m_group.m_restore && m_isLangSyncEnabled)) {
       // send event
       fakeKey(*k);
 

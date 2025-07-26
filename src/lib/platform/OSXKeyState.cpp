@@ -594,7 +594,7 @@ void OSXKeyState::postKeyboardKey(CGKeyCode virtualKey, bool keyDown)
 void OSXKeyState::fakeKey(const Keystroke &keystroke)
 {
   switch (keystroke.m_type) {
-  case Keystroke::kButton: {
+  case Keystroke::KeyType::Button: {
     bool keyDown = keystroke.m_data.m_button.m_press;
     uint32_t client = keystroke.m_data.m_button.m_client;
     KeyButton button = keystroke.m_data.m_button.m_button;
@@ -614,7 +614,7 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
     break;
   }
 
-  case Keystroke::kGroup: {
+  case Keystroke::KeyType::Group: {
     int32_t group = keystroke.m_data.m_group.m_group;
     if (!keystroke.m_data.m_group.m_restore) {
       if (keystroke.m_data.m_group.m_absolute) {
