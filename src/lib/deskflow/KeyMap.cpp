@@ -1228,7 +1228,7 @@ bool KeyMap::KeyItem::operator==(const KeyItem &x) const
 // KeyMap::Keystroke
 //
 
-KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t data) : m_type(kButton)
+KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t data) : m_type(KeyType::Button)
 {
   m_data.m_button.m_button = button;
   m_data.m_button.m_press = press;
@@ -1236,7 +1236,7 @@ KeyMap::Keystroke::Keystroke(KeyButton button, bool press, bool repeat, uint32_t
   m_data.m_button.m_client = data;
 }
 
-KeyMap::Keystroke::Keystroke(int32_t group, bool absolute, bool restore) : m_type(kGroup)
+KeyMap::Keystroke::Keystroke(int32_t group, bool absolute, bool restore) : m_type(KeyType::Group)
 {
   m_data.m_group.m_group = group;
   m_data.m_group.m_absolute = absolute;

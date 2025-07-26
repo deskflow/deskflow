@@ -265,7 +265,7 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(int32_t group) const
 void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
 {
   switch (keystroke.m_type) {
-  case Keystroke::kButton:
+  case Keystroke::KeyType::Button:
     if (keystroke.m_data.m_button.m_repeat) {
       int c = keystroke.m_data.m_button.m_button;
       int i = (c >> 3);
@@ -281,7 +281,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
     );
     break;
 
-  case Keystroke::kGroup:
+  case Keystroke::KeyType::Group:
     if (keystroke.m_data.m_group.m_restore) {
       break;
     }
