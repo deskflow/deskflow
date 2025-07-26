@@ -231,7 +231,7 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 void EiKeyState::fakeKey(const Keystroke &keystroke)
 {
   switch (keystroke.m_type) {
-  case Keystroke::kButton:
+  case Keystroke::KeyType::Button:
     LOG_DEBUG1(
         "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
         keystroke.m_data.m_button.m_press ? "down" : "up"

@@ -290,7 +290,7 @@ TEST(KeyStateTests, fakeKeyRepeat_validKey_returnsTrue)
   MockEventQueue eventQueue;
   KeyStateImpl keyState(eventQueue, keyMap);
   s_stubKeyItem.m_client = 0;
-  s_stubKeystroke.m_type = deskflow::KeyMap::Keystroke::kButton;
+  s_stubKeystroke.m_type = deskflow::KeyMap::Keystroke::KeyType::Button;
   s_stubKeystroke.m_data.m_button.m_button = 2;
 
   // set the button to 1 for fakeKeyDown call

@@ -1163,7 +1163,7 @@ void MSWindowsKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
 {
   switch (keystroke.m_type) {
-  case Keystroke::kButton: {
+  case Keystroke::KeyType::Button: {
     LOG(
         (CLOG_DEBUG1 "  %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
          keystroke.m_data.m_button.m_press ? "down" : "up")
@@ -1201,7 +1201,7 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
     break;
   }
 
-  case Keystroke::kGroup:
+  case Keystroke::KeyType::Group:
     // we don't restore the group.  we'd like to but we can't be
     // sure the restoring group change will be processed after the
     // key events.
