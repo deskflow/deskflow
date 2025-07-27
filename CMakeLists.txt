@@ -39,7 +39,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 
-    if(GIT_TAG_COUNT EQUAL 0)
+    if(${GIT_TAG_COUNT} EQUAL 0)
       set(DESKFLOW_VERSION_TWEAK "9999")
     else()
       execute_process(
@@ -48,8 +48,8 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
         OUTPUT_VARIABLE GITREV
         ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
       )
-      string(FIND ${GITREV} "v" isRev)
-      if(NOT ifRev EQUAL -1)
+      string(FIND "${GITREV}" "v" isRev)
+      if(NOT ${isRev} EQUAL -1)
         string(REGEX MATCH [0-9]+ MAJOR ${GITREV})
         string(REGEX MATCH \\.[0-9]+ MINOR ${GITREV})
         string(REPLACE "." "" MINOR "${MINOR}")
