@@ -452,12 +452,50 @@ void MSWindowsDesks::deskMouseRelativeMove(int32_t dx, int32_t dy) const
   }
 }
 
+// the system shows the mouse cursor when an internal display count
+// is >= 0.  this count is maintained per application but there's
+// apparently a system wide count added to the application's count.
+// this system count is 0 if there's a mouse attached to the system
+// and -1 otherwise.  the mouse keys accessibility feature can modify
+// this system count by making the system appear to have a mouse.
+void setCursorVisibility(bool visible)
+{
+  LOG_DEBUG("%s cursor", visible ? "showing" : "hiding");
+
+  const int max = 10;
+  int attempts = 0;
+  while (attempts++ < max) {
+    const auto displayCounter = ShowCursor(visible ? TRUE : FALSE);
+    LOG_DEBUG1("cursor display counter: %d", displayCounter);
+
+    if (visible) {
+      if (displayCounter < 0) {
+        LOG_DEBUG1("cursor still hidden, retrying, attempt: %d", attempts);
+      } else {
+        LOG_DEBUG1("cursor is now visible, attempts: %d", attempts);
+        return;
+      }
+    } else {
+      if (displayCounter >= 0) {
+        LOG_DEBUG1("cursor still visible, retrying, attempt: %d", attempts);
+      } else {
+        LOG_DEBUG1("cursor is now hidden, attempts: %d", attempts);
+        return;
+      }
+    }
+  }
+
+  LOG_ERR("unable to set cursor visibility after %d attempts", attempts);
+}
+
 void MSWindowsDesks::deskEnter(Desk *desk)
 {
   if (!m_isPrimary) {
     ReleaseCapture();
   }
-  ShowCursor(TRUE);
+
+  setCursorVisibility(true);
+
   SetWindowPos(desk->m_window, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_HIDEWINDOW);
 
   // restore the foreground window
@@ -477,7 +515,8 @@ void MSWindowsDesks::deskEnter(Desk *desk)
 
 void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
 {
-  ShowCursor(FALSE);
+  setCursorVisibility(false);
+
   if (m_isPrimary) {
     // map a window to hide the cursor and to use whatever keyboard
     // layout we choose rather than the keyboard layout of the last
