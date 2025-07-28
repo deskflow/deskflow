@@ -176,6 +176,7 @@ MSWindowsScreen::getWindowInstance()
 void MSWindowsScreen::enable()
 {
   LOG_DEBUG("enabling %s screen", m_isPrimary ? "primary" : "secondary");
+  m_isEnabled = true;
 
   assert(m_isOnScreen == m_isPrimary);
 
@@ -203,6 +204,7 @@ void MSWindowsScreen::enable()
 void MSWindowsScreen::disable()
 {
   LOG_DEBUG("disabling %s screen", m_isPrimary ? "primary" : "secondary");
+  m_isEnabled = false;
 
   // stop tracking the active desk
   m_desks->disable();
@@ -231,7 +233,6 @@ void MSWindowsScreen::disable()
   }
 
   m_isOnScreen = m_isPrimary;
-  setupMouseKeys();
 }
 
 void MSWindowsScreen::enter()
@@ -316,7 +317,6 @@ void MSWindowsScreen::leave()
 
   // now off screen
   m_isOnScreen = false;
-  setupMouseKeys();
 }
 
 bool MSWindowsScreen::setClipboard(ClipboardID, const IClipboard *src)
@@ -983,12 +983,22 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     *result = TRUE;
     return true;
 
-  case WM_DEVICECHANGE:
+  case WM_DEVICECHANGE: {
+    // re-run mouse keys setup in case a mouse was plugged in or unplugged; i.e. if a mouse was
+    // unplugged from the client, make sure the mouse cursor is still visible.
+    // the device change event happens for every discreet hardware change, so if you're using a
+    // usb switcher, this generates many device change events. it would be nice to log here but
+    // the log would be too noisy.
     setupMouseKeys();
-    break;
+  } break;
 
   case WM_SETTINGCHANGE:
+    // sometimes fired when the mouse keys setting is changed, but doesn't seem very reliable.
+    // these events may arrive at any time (e.g. when the program is shutting down) if the message
+    // loop stops being processed for any reason. this may be a bug or something out of our control.
+    // forcing mouse keys on may help in scenarios where mouse keys are being turned off by another app.
     if (wParam == SPI_SETMOUSEKEYS) {
+      LOG_DEBUG("mouse keys setting was changed");
       setupMouseKeys();
     }
     break;
@@ -1586,47 +1596,78 @@ void MSWindowsScreen::updateKeysCB(void *)
 
 void MSWindowsScreen::setupMouseKeys()
 {
-  // check for mouse
-  m_hasMouse = (GetSystemMetrics(SM_MOUSEPRESENT) != 0);
-
-  // decide if we should show the mouse
-  bool showMouse = (!m_hasMouse && !m_isPrimary && m_isOnScreen);
-
-  // show/hide the mouse
-  if (showMouse != m_showingMouse) {
-    if (showMouse) {
-      m_oldMouseKeys.cbSize = sizeof(m_oldMouseKeys);
-      m_gotOldMouseKeys = (SystemParametersInfo(SPI_GETMOUSEKEYS, m_oldMouseKeys.cbSize, &m_oldMouseKeys, 0) != 0);
-      if (m_gotOldMouseKeys) {
-        m_mouseKeys = m_oldMouseKeys;
-        m_showingMouse = true;
-        updateMouseKeys();
-      }
-    } else {
-      if (m_gotOldMouseKeys) {
-        SystemParametersInfo(SPI_SETMOUSEKEYS, m_oldMouseKeys.cbSize, &m_oldMouseKeys, SPIF_SENDCHANGE);
-        m_showingMouse = false;
-      }
-    }
+  // we only need to enable the mouse keys feature when on a secondary screen.
+  // this tricks windows into showing the mouse cursor when there is no real mouse.
+  if (m_isPrimary) {
+    // silent return to avoid noise.
+    return;
   }
+
+  // this is the case when there is some kind of a mouse (real or simulated by mouse keys).
+  m_hasMouse = (GetSystemMetrics(SM_MOUSEPRESENT) != 0);
+  if (m_hasMouse) {
+    // silent return to avoid noise.
+    return;
+  }
+
+  // prevents mouse keys being configured again when the program is shutting down since this function
+  // is called based on system events such as system setting changes or hardware changes which
+  // can occur at any time.
+  if (!m_isEnabled) {
+    LOG_DEBUG("mouse keys setup skipped, screen is not enabled");
+    return;
+  }
+
+  m_mouseKeys.cbSize = sizeof(m_mouseKeys);
+  m_gotMouseKeys = (SystemParametersInfo(SPI_GETMOUSEKEYS, m_mouseKeys.cbSize, &m_mouseKeys, 0) != 0);
+  if (!m_gotMouseKeys) {
+    LOG_ERR("unable to get old mouse keys settings, error: %d", GetLastError());
+    return;
+  }
+
+  updateMouseKeys();
 }
 
 void MSWindowsScreen::updateMouseKeys()
 {
-  DWORD oldFlags = m_mouseKeys.dwFlags;
-
-  // turn on MouseKeys
-  m_mouseKeys.dwFlags = MKF_AVAILABLE | MKF_MOUSEKEYSON;
-
-  // make sure MouseKeys is active in whatever state the NumLock is
-  // not currently in.
-  if ((m_keyState->getActiveModifiers() & KeyModifierNumLock) != 0) {
-    m_mouseKeys.dwFlags |= MKF_REPLACENUMBERS;
+  if (m_hasMouse || !m_gotMouseKeys || m_isPrimary) {
+    // silent return to avoid noise.
+    return;
   }
 
-  // update MouseKeys
-  if (oldFlags != m_mouseKeys.dwFlags) {
-    SystemParametersInfo(SPI_SETMOUSEKEYS, m_mouseKeys.cbSize, &m_mouseKeys, SPIF_SENDCHANGE);
+  DWORD oldFlags = m_mouseKeys.dwFlags;
+
+  // turn on the windows mouse keys accessibility feature.
+  // this is referred to as 'MouseKeys' in the docs.
+  // makes the mouse cursor visible if there is no real mouse.
+  //
+  // historically, we would only set the `MKF_REPLACENUMBERS` flag when num lock is on.
+  // however, this was a strange hidden feature that the user will most likely not expect;
+  // it's probably more sensible to always set the `MKF_REPLACENUMBERS` flag, so that when the
+  // mouse keys feature is left on after the program exits, the num pad on a local keyboard still
+  // types numbers instead of moving the mouse cursor around (which would surprise most users).
+  //
+  // by default, windows 11 shows the mouse keys status in the system tray, but turning this on
+  // might actually cause confusion for users who are not familiar with the mouse keys feature.
+  m_mouseKeys.dwFlags = MKF_AVAILABLE | MKF_MOUSEKEYSON | MKF_REPLACENUMBERS;
+
+  // only update the mouse keys settings if different to avoid noise.
+  if (oldFlags == m_mouseKeys.dwFlags) {
+    // silent return to avoid noise.
+    return;
+  }
+
+  // we used to restore the old mouse keys settings but toggling the mouse keys feature on and off
+  // causes the mouse cursor to be come stuck in an invisible state even when there is a real mouse.
+  // we may want to reintroduce it (restore old mouse keys flags) as a user option in the future,
+  // e.g. for users who use periodically use their windows client directly and use the numpad for cursor keys.
+  LOG_INFO("enabling mouse keys for cursor visibility");
+  LOG_DEBUG("setting mouse keys flags: 0x%08x", m_mouseKeys.dwFlags);
+  const auto ok = SystemParametersInfo(SPI_SETMOUSEKEYS, m_mouseKeys.cbSize, &m_mouseKeys, SPIF_SENDCHANGE);
+  if (!ok) {
+    LOG_ERR("failed to set mouse keys, error: %d", GetLastError());
+  } else {
+    LOG_DEBUG1("mouse keys enabled successfully");
   }
 }
 

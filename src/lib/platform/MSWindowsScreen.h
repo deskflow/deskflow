@@ -209,14 +209,16 @@ private: // HACK
   // job to update the key state
   void updateKeysCB(void *);
 
-  // determine whether the mouse is hidden by the system and force
-  // it to be displayed if user has entered this secondary screen.
+  // determine whether the mouse is hidden by the system.
+  // if true and on secondary screen, enable mouse keys to show the cursor.
+  // we were previously restoring the old mouse key settings when not needed, but this was causing
+  // issues where the mouse cursor becomes permanently hidden, even if there is a real mouse
+  // attached to the system; this could be a windows bug, but losing your mouse is a nightmare
+  // so we shouldn't risk doing that.
   void setupMouseKeys();
 
-  // setupMouseKeys uses MouseKeys to show the cursor.  since we
-  // don't actually want MouseKeys behavior we have to make sure
-  // it applies when NumLock is in whatever state it's not in now.
-  // this method does that.
+  // enables the mouse keys accessibility feature to to ensure the
+  // mouse cursor can be shown.
   void updateMouseKeys();
 
   // our window proc
@@ -257,6 +259,9 @@ private:
 
   // true if mouse has entered the screen
   bool m_isOnScreen;
+
+  // true if the screen is enabled
+  bool m_isEnabled = false;
 
   // our resources
   ATOM m_class = 0;
@@ -317,22 +322,13 @@ private:
   // map of button state
   bool m_buttons[1 + kButtonExtra0 + 1];
 
-  // the system shows the mouse cursor when an internal display count
-  // is >= 0.  this count is maintained per application but there's
-  // apparently a system wide count added to the application's count.
-  // this system count is 0 if there's a mouse attached to the system
-  // and -1 otherwise.  the MouseKeys accessibility feature can modify
-  // this system count by making the system appear to have a mouse.
-  //
-  // m_hasMouse is true iff there's a mouse attached to the system or
-  // MouseKeys is simulating one.  we track this so we can force the
+  // m_hasMouse is true if there's a mouse attached to the system or
+  // mouse keys is simulating one.  we track this so we can force the
   // cursor to be displayed when the user has entered this screen.
-  // m_showingMouse is true when we're doing that.
   bool m_hasMouse;
-  bool m_showingMouse = false;
-  bool m_gotOldMouseKeys;
+
+  bool m_gotMouseKeys = false;
   MOUSEKEYS m_mouseKeys;
-  MOUSEKEYS m_oldMouseKeys;
 
   MSWindowsHook m_hook;
 

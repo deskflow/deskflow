@@ -452,12 +452,11 @@ void MSWindowsDesks::deskMouseRelativeMove(int32_t dx, int32_t dy) const
   }
 }
 
-// the system shows the mouse cursor when an internal display count
-// is >= 0.  this count is maintained per application but there's
-// apparently a system wide count added to the application's count.
-// this system count is 0 if there's a mouse attached to the system
-// and -1 otherwise.  the mouse keys accessibility feature can modify
-// this system count by making the system appear to have a mouse.
+/*!
+ * Wraps the `ShowCursor` function and calls it repeatedly until the cursor visibility is at
+ * the desired state. Windows maintains an internal counter for cursor visibility, and only
+ * shows or hides the cursor when it reaches a certain threshold.
+ */
 void setCursorVisibility(bool visible)
 {
   LOG_DEBUG("%s cursor", visible ? "showing" : "hiding");
