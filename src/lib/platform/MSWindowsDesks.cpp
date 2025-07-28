@@ -582,8 +582,16 @@ void MSWindowsDesks::deskLeave(Desk *desk, HKL keyLayout)
     // we aren't notified when the mouse leaves our window.
     SetCapture(desk->m_window);
 
-    // warp the mouse to the cursor center
-    LOG((CLOG_DEBUG2 "warping cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+    // windows can take a while to hide the cursor, so wait a few milliseconds to ensure the cursor
+    // is hidden before centering. this doesn't seem to affect the fluidity of the transition.
+    // without this, the cursor appears to flicker in the center of the screen which is annoying.
+    // a slightly more elegant but complex solution could be to use a timed event.
+    // 30 ms seems to work well enough without making the transition feel janky; a lower number
+    // would be better but 10 ms doesn't seem to be quite long enough, as we get noticeable flicker.
+    // this is largely a balance and out of our control, since windows can be unpredictable...
+    // maybe another approach would be to repeatedly check the cursor visibility until it is hidden.
+    LOG_DEBUG1("centering cursor on leave: %+d,%+d", m_xCenter, m_yCenter);
+    ARCH->sleep(0.03);
     deskMouseMove(m_xCenter, m_yCenter);
   }
 }
