@@ -111,7 +111,7 @@ MSWindowsScreen::MSWindowsScreen(
     updateScreenShape();
     m_class = createWindowClass();
     m_window = createWindow(m_class, kAppName);
-    forceShowCursor();
+    setupMouseKeys();
     LOG((CLOG_DEBUG "screen shape: %d,%d %dx%d %s", m_x, m_y, m_w, m_h, m_multimon ? "(multi-monitor)" : ""));
     LOG((CLOG_DEBUG "window is 0x%08x", m_window));
 
@@ -225,7 +225,7 @@ void MSWindowsScreen::disable()
   }
 
   m_isOnScreen = m_isPrimary;
-  forceShowCursor();
+  setupMouseKeys();
 }
 
 void MSWindowsScreen::enter()
@@ -255,7 +255,7 @@ void MSWindowsScreen::enter()
 
   // now on screen
   m_isOnScreen = true;
-  forceShowCursor();
+  setupMouseKeys();
 }
 
 bool MSWindowsScreen::canLeave()
@@ -312,7 +312,7 @@ void MSWindowsScreen::leave()
 
   // now off screen
   m_isOnScreen = false;
-  forceShowCursor();
+  setupMouseKeys();
 }
 
 bool MSWindowsScreen::setClipboard(ClipboardID, const IClipboard *src)
@@ -721,7 +721,7 @@ void MSWindowsScreen::updateKeys()
 void MSWindowsScreen::fakeKeyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std::string &lang)
 {
   PlatformScreen::fakeKeyDown(id, mask, button, lang);
-  updateForceShowCursor();
+  updateMouseKeys();
 }
 
 bool MSWindowsScreen::fakeKeyRepeat(
@@ -729,21 +729,21 @@ bool MSWindowsScreen::fakeKeyRepeat(
 )
 {
   bool result = PlatformScreen::fakeKeyRepeat(id, mask, count, button, lang);
-  updateForceShowCursor();
+  updateMouseKeys();
   return result;
 }
 
 bool MSWindowsScreen::fakeKeyUp(KeyButton button)
 {
   bool result = PlatformScreen::fakeKeyUp(button);
-  updateForceShowCursor();
+  updateMouseKeys();
   return result;
 }
 
 void MSWindowsScreen::fakeAllKeysUp()
 {
   PlatformScreen::fakeAllKeysUp();
-  updateForceShowCursor();
+  updateMouseKeys();
 }
 
 HCURSOR
@@ -980,12 +980,12 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
     return true;
 
   case WM_DEVICECHANGE:
-    forceShowCursor();
+    setupMouseKeys();
     break;
 
   case WM_SETTINGCHANGE:
     if (wParam == SPI_SETMOUSEKEYS) {
-      forceShowCursor();
+      setupMouseKeys();
     }
     break;
   }
@@ -1582,7 +1582,7 @@ void MSWindowsScreen::updateKeysCB(void *)
   }
 }
 
-void MSWindowsScreen::forceShowCursor()
+void MSWindowsScreen::setupMouseKeys()
 {
   // check for mouse
   m_hasMouse = (GetSystemMetrics(SM_MOUSEPRESENT) != 0);
@@ -1598,7 +1598,7 @@ void MSWindowsScreen::forceShowCursor()
       if (m_gotOldMouseKeys) {
         m_mouseKeys = m_oldMouseKeys;
         m_showingMouse = true;
-        updateForceShowCursor();
+        updateMouseKeys();
       }
     } else {
       if (m_gotOldMouseKeys) {
@@ -1609,7 +1609,7 @@ void MSWindowsScreen::forceShowCursor()
   }
 }
 
-void MSWindowsScreen::updateForceShowCursor()
+void MSWindowsScreen::updateMouseKeys()
 {
   DWORD oldFlags = m_mouseKeys.dwFlags;
 

@@ -211,13 +211,13 @@ private: // HACK
 
   // determine whether the mouse is hidden by the system and force
   // it to be displayed if user has entered this secondary screen.
-  void forceShowCursor();
+  void setupMouseKeys();
 
-  // forceShowCursor uses MouseKeys to show the cursor.  since we
+  // setupMouseKeys uses MouseKeys to show the cursor.  since we
   // don't actually want MouseKeys behavior we have to make sure
   // it applies when NumLock is in whatever state it's not in now.
   // this method does that.
-  void updateForceShowCursor();
+  void updateMouseKeys();
 
   // our window proc
   static LRESULT CALLBACK wndProc(HWND, UINT, WPARAM, LPARAM);
