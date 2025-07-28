@@ -83,7 +83,7 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   if (!xdp_session_start_finish(session, res, &error)) {
     LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
     g_main_loop_quit(m_glibMainLoop);
-    m_events->addEvent(EventTypes::Quit);
+    m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
 
@@ -96,7 +96,7 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   fd = xdp_session_connect_to_eis(session, &error);
   if (fd < 0) {
     g_main_loop_quit(m_glibMainLoop);
-    m_events->addEvent(EventTypes::Quit);
+    m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
 
@@ -116,7 +116,7 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
     // fails.
     if (m_sessionIteration == 0) {
       g_main_loop_quit(m_glibMainLoop);
-      m_events->addEvent(EventTypes::Quit);
+      m_events->addEvent(Event(EventTypes::Quit));
     } else {
       this->reconnect(1000);
     }
