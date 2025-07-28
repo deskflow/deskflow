@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classServerConfigDialog.html#a6db0469cdaa620f16cfb1027595c3237":[6,0,169,3],
 "classServerConfigDialog.html#a6f763b8f7f10c261c76165ac19d2246a":[6,0,169,24],
 "classServerConfigDialog.html#a799279161b343bd54c11096890d9f995":[6,0,169,32],
 "classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27":[6,0,169,19],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141":[6,0,185,36],
 "classTCPSocket.html#ad502ace74698b2baf91906173668bc13":[6,0,185,28],
 "classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c":[6,0,185,33],
-"classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6":[6,0,185,21],
-"classTCPSocket.html#ae20b60ebfae002f81e94fc1480fab37e":[6,0,185,14]
+"classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6":[6,0,185,21]
 };

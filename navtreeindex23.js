@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"interfaceScreenSaverController.html#a5457243b6bacd11b0461b20e4a9876fc":[6,0,159,12],
 "interfaceScreenSaverController.html#a594594543f4d136e7a53def10201c057":[6,0,159,14],
 "interfaceScreenSaverController.html#a6490e2ed166802147c7b8c51c6598711":[6,0,159,13],
 "interfaceScreenSaverController.html#a7261b9ea2d1b473c552c8a00fa1aef4a":[6,0,159,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "server_2Config_8h_source.html":[7,0,1,1,10,27],
 "structActionDialog_1_1ActionTypes.html":[6,0,5,0],
 "structActionDialog_1_1ActionTypes.html#a04be6ed89bf97b029fb0ed2065e98864":[6,0,5,0,5],
-"structActionDialog_1_1ActionTypes.html#a61f6b12bfeefb44d211f0512639faf55":[6,0,5,0,1],
-"structActionDialog_1_1ActionTypes.html#a8df74127a3162dc5655e5034bae6cdcd":[6,0,5,0,0]
+"structActionDialog_1_1ActionTypes.html#a61f6b12bfeefb44d211f0512639faf55":[6,0,5,0,1]
 };

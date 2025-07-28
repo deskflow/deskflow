@@ -29,6 +29,7 @@ var NAVTREEINDEX3 =
 "MSWindowsDesks_8cpp.html#a71b058d1e00473c447e670f1461b0ac3":[7,0,1,1,9,25,8],
 "MSWindowsDesks_8cpp.html#a7461a17472766186ae856ec27a8905dc":[7,0,1,1,9,25,20],
 "MSWindowsDesks_8cpp.html#a764704869b58a8e99131a56720dfb1ac":[7,0,1,1,9,25,13],
+"MSWindowsDesks_8cpp.html#a82170759008868615bb94ecf4503fa9e":[7,0,1,1,9,25,29],
 "MSWindowsDesks_8cpp.html#a8365c5fe4c638efc320611d3e6dbc8f7":[7,0,1,1,9,25,3],
 "MSWindowsDesks_8cpp.html#a847d827f781702b7b7ecf13a70d0cf56":[7,0,1,1,9,25,23],
 "MSWindowsDesks_8cpp.html#a84a38b724e9981393f2e9fee955a3bda":[7,0,1,1,9,25,6],
@@ -248,6 +249,5 @@ var NAVTREEINDEX3 =
 "OSXHelpers_8h_source.html":[7,0,1,1,5,28],
 "OSXHelpers_8mm.html":[7,0,1,1,5,29],
 "OSXHelpers_8mm.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,29,5],
-"OSXHelpers_8mm.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,29,4],
-"OSXHelpers_8mm.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,29,1]
+"OSXHelpers_8mm.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,29,4]
 };

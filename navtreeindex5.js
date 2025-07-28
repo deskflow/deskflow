@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"ServerConnection_8h.html":[7,0,1,1,5,1,7],
 "ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
 "ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
 "ServerMessage_8h.html":[7,0,1,1,5,1,9],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "classAction.html#a73bff7e6ea7bb2c5b3e2da34b1baa295":[6,0,4,8],
 "classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[6,0,4,16],
 "classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[6,0,4,25],
-"classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22],
-"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27]
+"classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22]
 };

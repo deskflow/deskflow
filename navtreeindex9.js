@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classEvent.html#a565bf8a816edbed2ad3072f57e03f688":[6,0,60,3],
 "classEvent.html#a66e3660db6ad05261724596001a15a4a":[6,0,60,6],
 "classEvent.html#a72116643a54884af95978c63e3c14166":[6,0,60,5],
 "classEvent.html#ab478412608853061117a54d6398ddbda":[6,0,60,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classIDataSocket.html#ac8f974b42d75d08161e7f2808f419ba1":[6,0,81,12],
 "classIDataSocket.html#acd3560a37d435af521b4a608e315616e":[6,0,81,6],
 "classIDataSocket.html#ad95421dfee23bcc59fc3cfea856e34b2":[6,0,81,7],
-"classIDataSocket_1_1ConnectionFailedInfo.html":[6,0,81,0],
-"classIDataSocket_1_1ConnectionFailedInfo.html#a0112a406a3784988bcb3d53adf5f8664":[6,0,81,0,0]
+"classIDataSocket_1_1ConnectionFailedInfo.html":[6,0,81,0]
 };

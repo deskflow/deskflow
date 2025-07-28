@@ -1,5 +1,6 @@
 var NAVTREEINDEX24 =
 {
+"structActionDialog_1_1ActionTypes.html#a8df74127a3162dc5655e5034bae6cdcd":[6,0,5,0,0],
 "structActionDialog_1_1ActionTypes.html#aa62e7b4497bbca7239d649f16c1f21a6":[6,0,5,0,4],
 "structActionDialog_1_1ActionTypes.html#aa937c73ac9f429ee0ec73e95a2c263df":[6,0,5,0,6],
 "structActionDialog_1_1ActionTypes.html#acec85eeb9a024dc66e36c1859e2636d7":[6,0,5,0,3],

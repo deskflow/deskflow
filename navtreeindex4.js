@@ -1,5 +1,6 @@
 var NAVTREEINDEX4 =
 {
+"OSXHelpers_8mm.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,29,1],
 "OSXHelpers_8mm.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,29,3],
 "OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,29,0],
 "OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,29,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h.html#af6e1240278311e5c6fdff1b97a4679b9ae4453097668a3401b12a9f8595428a35":[7,0,1,1,5,33,1,2],
 "ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,33,4],
 "ServerConfig_8h_source.html":[7,0,1,1,5,33],
-"ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
-"ServerConnection_8h.html":[7,0,1,1,5,1,7]
+"ServerConnection_8cpp.html":[7,0,1,1,5,1,6]
 };

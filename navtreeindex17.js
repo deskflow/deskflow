@@ -1,5 +1,6 @@
 var NAVTREEINDEX17 =
 {
+"classXWindowsClipboardBMPConverter.html#a79d3ad3cb6e0ee47eb48ff42e9b81259":[6,0,252,4],
 "classXWindowsClipboardBMPConverter.html#a84287c2b905e263940b5a99616ddc970":[6,0,252,2],
 "classXWindowsClipboardBMPConverter.html#ad6bce259737d05910645639820f000f6":[6,0,252,6],
 "classXWindowsClipboardBMPConverter.html#ae8e780626f979d59bac9ff12ab677ec8":[6,0,252,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX17 =
 "classdeskflow_1_1ClientArgs.html":[5,0,0,9],
 "classdeskflow_1_1ClientArgs.html":[6,0,0,8],
 "classdeskflow_1_1ClientArgs.html#a97c98ab58486c8e4adc537f55862f14a":[5,0,0,9,4],
-"classdeskflow_1_1ClientArgs.html#a97c98ab58486c8e4adc537f55862f14a":[6,0,0,8,4],
-"classdeskflow_1_1ClientArgs.html#aaa85ba3537f7cad35f806f3388dbe3f8":[5,0,0,9,5]
+"classdeskflow_1_1ClientArgs.html#a97c98ab58486c8e4adc537f55862f14a":[6,0,0,8,4]
 };

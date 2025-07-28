@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classArchMultithreadWindows.html#ad2d0159ef266ec86bc56914cc3a1983a":[6,0,20,1],
 "classArchMultithreadWindows.html#ad9221ff3656c81cfd59514abcbf6f430":[6,0,20,2],
 "classArchMultithreadWindows.html#ad9616d1e1180eb8cdf91e9da1a1399d3":[6,0,20,16],
 "classArchMultithreadWindows.html#adb6a1942465753933f59ec3fb6f635c2":[6,0,20,14],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classClientApp.html#aaa242dc99c9e94575add6a0dd8369622":[6,0,36,27],
 "classClientApp.html#aafa40e2e47be311b5b5cfa16d4d2eea2":[6,0,36,13],
 "classClientApp.html#aba0e2634f245bbc71cab445e61c7a68f":[6,0,36,32],
-"classClientApp.html#ac6ff44cd1566cdcfc382d58fda0ab6c8":[6,0,36,4],
-"classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00":[6,0,36,6]
+"classClientApp.html#ac6ff44cd1566cdcfc382d58fda0ab6c8":[6,0,36,4]
 };

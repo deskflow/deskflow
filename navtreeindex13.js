@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classOSXClipboardHTMLConverter.html#ae15be54853418885da99f8ee12377755":[6,0,139,6],
 "classOSXClipboardHTMLConverter.html#ae8f8a6c576858ffd551a6725c97f900e":[6,0,139,3],
 "classOSXClipboardHTMLConverter.html#af27f7b77e70697148c6369f5227f2242":[6,0,139,5],
 "classOSXClipboardHTMLConverter.html#afb0f19774d7da394aad4229fa588f1ef":[6,0,139,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classQSettingsProxy.html#a84f6cb4a45e167601573b99517815b13":[6,0,154,17],
 "classQSettingsProxy.html#a93bbea472045378f8a58a1c2ebdcbbf6":[6,0,154,4],
 "classQSettingsProxy.html#a9845f46a10bd54b021181c45efec7f62":[6,0,154,5],
-"classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7":[6,0,154,15],
-"classQSettingsProxy.html#aaaed336c8c079b3d6f8af2f5b2e2ce76":[6,0,154,16]
+"classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7":[6,0,154,15]
 };
