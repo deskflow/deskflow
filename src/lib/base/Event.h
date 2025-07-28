@@ -45,7 +45,7 @@ public:
   \p target is the intended recipient of the event.
   \p flags is any combination of \c Flags.
   */
-  Event(EventTypes type, void *target = nullptr, void *data = nullptr, Flags flags = EventFlags::NoFlags);
+  explicit Event(EventTypes type, void *target = nullptr, void *data = nullptr, Flags flags = EventFlags::NoFlags);
 
   //! Create \c Event with non-POD data
   /*!
@@ -53,7 +53,7 @@ public:
   \p target is the intended recipient of the event.
   \p dataObject with event data
   */
-  Event(EventTypes type, void *target, EventData *dataObject);
+  explicit Event(EventTypes type, void *target, EventData *dataObject);
 
   //! @name manipulators
   //@{
