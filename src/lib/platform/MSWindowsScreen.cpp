@@ -90,6 +90,8 @@ MSWindowsScreen::MSWindowsScreen(
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_events(events)
 {
+  LOG_DEBUG("settting up %s screen", m_isPrimary ? "primary" : "secondary");
+
   assert(s_windowInstance != nullptr);
   assert(s_screen == nullptr);
 
@@ -173,6 +175,8 @@ MSWindowsScreen::getWindowInstance()
 
 void MSWindowsScreen::enable()
 {
+  LOG_DEBUG("enabling %s screen", m_isPrimary ? "primary" : "secondary");
+
   assert(m_isOnScreen == m_isPrimary);
 
   // we need to poll some things to fix them
@@ -198,6 +202,8 @@ void MSWindowsScreen::enable()
 
 void MSWindowsScreen::disable()
 {
+  LOG_DEBUG("disabling %s screen", m_isPrimary ? "primary" : "secondary");
+
   // stop tracking the active desk
   m_desks->disable();
 
@@ -284,9 +290,7 @@ void MSWindowsScreen::leave()
   m_desks->leave(m_keyLayout);
 
   if (m_isPrimary) {
-
-    // warp to center
-    LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
+    LOG_DEBUG1("centering cursor on leave: %+d, %+d", m_xCenter, m_yCenter);
     warpCursor(m_xCenter, m_yCenter);
 
     // disable special key sequences on win95 family
@@ -1235,7 +1239,7 @@ bool MSWindowsScreen::onMouseMove(int32_t mx, int32_t my)
     // center on the server screen. if we don't do this, then the mouse
     // will always try to return to the original entry point on the
     // secondary screen.
-    LOG((CLOG_DEBUG5 "warping server cursor to center: %+d,%+d", m_xCenter, m_yCenter));
+    LOG((CLOG_DEBUG5 "centering cursor on motion: %+d,%+d", m_xCenter, m_yCenter));
     warpCursorNoFlush(m_xCenter, m_yCenter);
 
     // examine the motion.  if it's about the distance
@@ -1308,10 +1312,8 @@ bool MSWindowsScreen::onDisplayChange()
   // do nothing if resolution hasn't changed
   if (xOld != m_x || yOld != m_y || wOld != m_w || hOld != m_h) {
     if (m_isPrimary) {
-      // warp mouse to center if off screen
       if (!m_isOnScreen) {
-
-        LOG((CLOG_DEBUG1 "warping cursor to center: %+d, %+d", m_xCenter, m_yCenter));
+        LOG_DEBUG1("centering cursor on display change: %+d, %+d", m_xCenter, m_yCenter);
         warpCursor(m_xCenter, m_yCenter);
       }
 
