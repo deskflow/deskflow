@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.7</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -141,18 +141,19 @@ $(function(){initNavTree('ActionDialog_8h_source.html','',''); });
 <div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> updateSize();</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> keySequenceChanged();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> actionTypeChanged(<span class="keywordtype">int</span> index);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">bool</span> isKeyAction(<span class="keywordtype">int</span> index) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">bool</span> canSave() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  std::unique_ptr&lt;Ui::ActionDialog&gt; ui;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <a class="code hl_class" href="classHotkey.html">Hotkey</a> &amp;m_hotkey;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <a class="code hl_class" href="classAction.html">Action</a> &amp;m_action;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> itemToggled() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">void</span> actionTypeChanged(<span class="keywordtype">int</span> index);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <span class="keywordtype">bool</span> isKeyAction(<span class="keywordtype">int</span> index) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">bool</span> canSave() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  std::unique_ptr&lt;Ui::ActionDialog&gt; ui;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <a class="code hl_class" href="classHotkey.html">Hotkey</a> &amp;m_hotkey;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <a class="code hl_class" href="classAction.html">Action</a> &amp;m_action;</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>};</div>
 </div>
 <div class="ttc" id="aclassActionDialog_html_a262d9d0da1335c5ebee603364464e921"><div class="ttname"><a href="classActionDialog.html#a262d9d0da1335c5ebee603364464e921">ActionDialog::ActionDialog</a></div><div class="ttdeci">ActionDialog(QWidget *parent, const ServerConfig &amp;config, Hotkey &amp;hotkey, Action &amp;action)</div><div class="ttdef"><b>Definition</b> ActionDialog.cpp:19</div></div>
 <div class="ttc" id="aclassActionDialog_html_aa6760e0b0e044ac9d0c4cf73c0a1e2af"><div class="ttname"><a href="classActionDialog.html#aa6760e0b0e044ac9d0c4cf73c0a1e2af">ActionDialog::~ActionDialog</a></div><div class="ttdeci">~ActionDialog() override</div></div>
-<div class="ttc" id="aclassActionDialog_html_ac5baa7b5531578d891ad24163818d421"><div class="ttname"><a href="classActionDialog.html#ac5baa7b5531578d891ad24163818d421">ActionDialog::accept</a></div><div class="ttdeci">void accept() override</div><div class="ttdef"><b>Definition</b> ActionDialog.cpp:71</div></div>
+<div class="ttc" id="aclassActionDialog_html_ac5baa7b5531578d891ad24163818d421"><div class="ttname"><a href="classActionDialog.html#ac5baa7b5531578d891ad24163818d421">ActionDialog::accept</a></div><div class="ttdeci">void accept() override</div><div class="ttdef"><b>Definition</b> ActionDialog.cpp:69</div></div>
 <div class="ttc" id="aclassAction_html"><div class="ttname"><a href="classAction.html">Action</a></div><div class="ttdef"><b>Definition</b> Action.h:33</div></div>
 <div class="ttc" id="aclassHotkey_html"><div class="ttname"><a href="classHotkey.html">Hotkey</a></div><div class="ttdef"><b>Definition</b> Hotkey.h:23</div></div>
 <div class="ttc" id="aclassKeySequenceWidget_html"><div class="ttname"><a href="classKeySequenceWidget.html">KeySequenceWidget</a></div><div class="ttdef"><b>Definition</b> KeySequenceWidget.h:15</div></div>

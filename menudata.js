@@ -172,6 +172,7 @@ var menudata={children:[
 {text:"f",url:"functions_enum.html#index_f"},
 {text:"i",url:"functions_enum.html#index_i"},
 {text:"j",url:"functions_enum.html#index_j"},
+{text:"k",url:"functions_enum.html#index_k"},
 {text:"l",url:"functions_enum.html#index_l"},
 {text:"m",url:"functions_enum.html#index_m"},
 {text:"p",url:"functions_enum.html#index_p"},

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.7</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,14 +137,14 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39">   46</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39">push</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classPriorityQueue.html#a92d3158db78424bcdde42f1d4f59d07e">value_type</a> &amp;v)</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  {</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    c.push_back(v);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::push_heap(c.begin(), c.end(), comp);</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    std::ranges::push_heap(c, comp);</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  }</div>
 </div>
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
 <div class="foldopen" id="foldopen00053" data-start="{" data-end="}">
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#a45750406820a70eb4fed0138f9ac9be7">   53</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#a45750406820a70eb4fed0138f9ac9be7">pop</a>()</div>
 <div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  {</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::pop_heap(c.begin(), c.end(), comp);</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    std::ranges::pop_heap(c, comp);</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>    c.pop_back();</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  }</div>
 </div>
@@ -153,7 +153,7 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#ae2316c3c0268deaa2953a74439b98817">   60</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#ae2316c3c0268deaa2953a74439b98817">erase</a>(<a class="code hl_typedef" href="classPriorityQueue.html#a5bafced7aaea079a6df66c54068fa5f6">iterator</a> i)</div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  {</div>
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    c.erase(i);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::make_heap(c.begin(), c.end(), comp);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::ranges::make_heap(c, comp);</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  }</div>
 </div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
@@ -182,7 +182,7 @@ $(function(){initNavTree('PriorityQueue_8h_source.html','',''); });
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno"><a class="line" href="classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b">   85</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPriorityQueue.html#ad1fbf1013135e37234431ea2c3e35e2b">swap</a>(Container &amp;c2) <span class="keyword">noexcept</span></div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  {</div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>    c.swap(c2);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::make_heap(c.begin(), c.end(), comp);</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>    std::ranges::make_heap(c, comp);</div>
 <div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  }</div>
 </div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>

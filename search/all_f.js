@@ -104,7 +104,7 @@ var searchData=
   ['m_5ftime_101',['m_time',['../classXWindowsClipboard_1_1Reply.html#ab4f9070fc2bd134fd4c254d6464271f7',1,'XWindowsClipboard::Reply']]],
   ['m_5ftimer_102',['m_timer',['../classIEventQueue_1_1TimerEvent.html#a9faf0af9a7b2bbe287cc159842edee7e',1,'IEventQueue::TimerEvent']]],
   ['m_5ftlscertfile_103',['m_tlsCertFile',['../classdeskflow_1_1ArgsBase.html#a23df532146e0af13e6def2b2e9c22e10',1,'deskflow::ArgsBase']]],
-  ['m_5ftype_104',['m_type',['../classdeskflow_1_1KeyMap_1_1Keystroke.html#ae3a4c6be117dc7ece3a6a2b52540894b',1,'deskflow::KeyMap::Keystroke::m_type'],['../classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9',1,'XWindowsClipboard::MotifClipFormat::m_type'],['../classXWindowsClipboard_1_1Reply.html#a5028d5bad5b0428d42cedaa0a037a1d4',1,'XWindowsClipboard::Reply::m_type']]],
+  ['m_5ftype_104',['m_type',['../classdeskflow_1_1KeyMap_1_1Keystroke.html#ac278e755bc700870837c8425806811c5',1,'deskflow::KeyMap::Keystroke::m_type'],['../classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9',1,'XWindowsClipboard::MotifClipFormat::m_type'],['../classXWindowsClipboard_1_1Reply.html#a5028d5bad5b0428d42cedaa0a037a1d4',1,'XWindowsClipboard::Reply::m_type']]],
   ['m_5fuserdata_105',['m_userData',['../classArchThreadImpl.html#a029aa28c15b4e32f04f5f594defd6c0a',1,'ArchThreadImpl']]],
   ['m_5fvirtualkey_106',['m_virtualKey',['../structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c',1,'KeyEntry']]],
   ['m_5fvk_107',['m_vk',['../structWin32Modifiers.html#a2ff5e3069945d0f9cf9429388b2f22a6',1,'Win32Modifiers']]],

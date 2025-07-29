@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['mode_0',['Mode',['../classInputFilter_1_1LockCursorToScreenAction.html#ae328fd7d1efa2efe16c22265c924315b',1,'InputFilter::LockCursorToScreenAction::Mode'],['../classInputFilter_1_1RestartServer.html#a3d9bf2b6f9d60f076b50eda11499a178',1,'InputFilter::RestartServer::Mode'],['../classInputFilter_1_1KeyboardBroadcastAction.html#a7d4ee15361d42e7b8db01b88667271a2',1,'InputFilter::KeyboardBroadcastAction::Mode']]],
-  ['modifier_1',['Modifier',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814',1,'ScreenConfig::Modifier'],['../gui_2config_2Screen_8cpp.html#aa614b21714c5878160804fb6375ea814',1,'Modifier:&#160;ScreenConfig.h'],['../ScreenSettingsDialog_8cpp.html#aa614b21714c5878160804fb6375ea814',1,'Modifier:&#160;ScreenConfig.h'],['../ServerConfig_8cpp.html#aa614b21714c5878160804fb6375ea814',1,'Modifier:&#160;ScreenConfig.h']]],
-  ['motifclip_2',['MotifClip',['../classXWindowsClipboard.html#ab045f67769edfb0b2e262cc5cab82cf3',1,'XWindowsClipboard']]]
+  ['lockcursormode_0',['LockCursorMode',['../classAction.html#a21996b8e336065685f74fdfe046f12d5',1,'Action']]],
+  ['loglevel_1',['LogLevel',['../classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2b',1,'MainWindow::LogLevel'],['../LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9',1,'LogLevel:&#160;LogLevel.h']]]
 ];

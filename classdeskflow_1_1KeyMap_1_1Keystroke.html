@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.7</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -120,8 +120,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a5491688df4f2906bcedf65744cb24b23" id="r_a5491688df4f2906bcedf65744cb24b23"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5491688df4f2906bcedf65744cb24b23">EType</a> { <a class="el" href="#a5491688df4f2906bcedf65744cb24b23a4b475de41b358ad7493383b390bc5e4e">kButton</a>
-, <a class="el" href="#a5491688df4f2906bcedf65744cb24b23a3f6aaa19ab33f9724662fa1cb4804731">kGroup</a>
+<tr class="memitem:aa7148218bafe2b89c7003ae5871903c7" id="r_aa7148218bafe2b89c7003ae5871903c7"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7148218bafe2b89c7003ae5871903c7">KeyType</a> { <a class="el" href="#aa7148218bafe2b89c7003ae5871903c7a87b7760f14fbff78d8819291f36ab9a0">Button</a>
+, <a class="el" href="#aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0">Group</a>
  }</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
@@ -131,27 +131,35 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ae3a4c6be117dc7ece3a6a2b52540894b" id="r_ae3a4c6be117dc7ece3a6a2b52540894b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a5491688df4f2906bcedf65744cb24b23">EType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3a4c6be117dc7ece3a6a2b52540894b">m_type</a> {}</td></tr>
+<tr class="memitem:ac278e755bc700870837c8425806811c5" id="r_ac278e755bc700870837c8425806811c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#aa7148218bafe2b89c7003ae5871903c7">KeyType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac278e755bc700870837c8425806811c5">m_type</a> {}</td></tr>
 <tr class="memitem:ac1ae071268323a5c43768e210d8df5af" id="r_ac1ae071268323a5c43768e210d8df5af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html">Data</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac1ae071268323a5c43768e210d8df5af">m_data</a> {}</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A keystroke. </p>
 </div><a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a5491688df4f2906bcedf65744cb24b23" name="a5491688df4f2906bcedf65744cb24b23"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5491688df4f2906bcedf65744cb24b23">&#9670;&#160;</a></span>EType</h2>
+<a id="aa7148218bafe2b89c7003ae5871903c7" name="aa7148218bafe2b89c7003ae5871903c7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7148218bafe2b89c7003ae5871903c7">&#9670;&#160;</a></span>KeyType</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#a5491688df4f2906bcedf65744cb24b23">deskflow::KeyMap::Keystroke::EType</a></td>
+          <td class="memname">enum class <a class="el" href="#aa7148218bafe2b89c7003ae5871903c7">deskflow::KeyMap::Keystroke::KeyType</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a5491688df4f2906bcedf65744cb24b23a4b475de41b358ad7493383b390bc5e4e" name="a5491688df4f2906bcedf65744cb24b23a4b475de41b358ad7493383b390bc5e4e"></a>kButton&#160;</td><td class="fielddoc"><p>Synthesize button. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa7148218bafe2b89c7003ae5871903c7a87b7760f14fbff78d8819291f36ab9a0" name="aa7148218bafe2b89c7003ae5871903c7a87b7760f14fbff78d8819291f36ab9a0"></a>Button&#160;</td><td class="fielddoc"><p>Synthesize button. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a5491688df4f2906bcedf65744cb24b23a3f6aaa19ab33f9724662fa1cb4804731" name="a5491688df4f2906bcedf65744cb24b23a3f6aaa19ab33f9724662fa1cb4804731"></a>kGroup&#160;</td><td class="fielddoc"><p>Set new group. </p>
+<tr><td class="fieldname"><a id="aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0" name="aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0"></a>Group&#160;</td><td class="fielddoc"><p>Set new group. </p>
 </td></tr>
 </table>
 
@@ -230,14 +238,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae3a4c6be117dc7ece3a6a2b52540894b" name="ae3a4c6be117dc7ece3a6a2b52540894b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae3a4c6be117dc7ece3a6a2b52540894b">&#9670;&#160;</a></span>m_type</h2>
+<a id="ac278e755bc700870837c8425806811c5" name="ac278e755bc700870837c8425806811c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac278e755bc700870837c8425806811c5">&#9670;&#160;</a></span>m_type</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a5491688df4f2906bcedf65744cb24b23">EType</a> deskflow::KeyMap::Keystroke::m_type {}</td>
+          <td class="memname"><a class="el" href="#aa7148218bafe2b89c7003ae5871903c7">KeyType</a> deskflow::KeyMap::Keystroke::m_type {}</td>
         </tr>
       </table>
 </div><div class="memdoc">

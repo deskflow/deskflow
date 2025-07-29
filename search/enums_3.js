@@ -9,8 +9,7 @@ var searchData=
   ['escreenswitchcornermasks_6',['EScreenSwitchCornerMasks',['../OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46ac',1,'OptionTypes.h']]],
   ['escreenswitchcorners_7',['EScreenSwitchCorners',['../OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91',1,'OptionTypes.h']]],
   ['eserverstate_8',['EServerState',['../ServerApp_8h.html#a4d8db534fedb1ef5822530011a6798e3',1,'ServerApp.h']]],
-  ['etype_9',['EType',['../classdeskflow_1_1KeyMap_1_1Keystroke.html#a5491688df4f2906bcedf65744cb24b23',1,'deskflow::KeyMap::Keystroke']]],
-  ['evaluetype_10',['EValueType',['../classArchMiscWindows.html#adfd1eff8096cb641a8d68eb465e63204',1,'ArchMiscWindows']]],
-  ['eventtypes_11',['EventTypes',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2',1,'deskflow::EventTypes'],['../Event_8h.html#a34787a880fd439e02383f336665d7bc2',1,'EventTypes:&#160;EventTypes.h']]],
-  ['ewidecharencoding_12',['EWideCharEncoding',['../classArchString.html#a983e09e142a0af1f2ea3a46112235f24',1,'ArchString::EWideCharEncoding'],['../Unicode_8cpp.html#a983e09e142a0af1f2ea3a46112235f24',1,'EWideCharEncoding:&#160;ArchString.h']]]
+  ['evaluetype_9',['EValueType',['../classArchMiscWindows.html#adfd1eff8096cb641a8d68eb465e63204',1,'ArchMiscWindows']]],
+  ['eventtypes_10',['EventTypes',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2',1,'deskflow::EventTypes'],['../Event_8h.html#a34787a880fd439e02383f336665d7bc2',1,'EventTypes:&#160;EventTypes.h']]],
+  ['ewidecharencoding_11',['EWideCharEncoding',['../classArchString.html#a983e09e142a0af1f2ea3a46112235f24',1,'ArchString::EWideCharEncoding'],['../Unicode_8cpp.html#a983e09e142a0af1f2ea3a46112235f24',1,'EWideCharEncoding:&#160;ArchString.h']]]
 ];

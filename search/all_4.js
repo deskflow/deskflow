@@ -41,7 +41,7 @@ var searchData=
   ['build_38',['Build',['../md_doc_2dev_2build.html#autotoc_md6',1,'']]],
   ['build_2emd_39',['build.md',['../build_8md.html',1,'']]],
   ['building_20deskflow_40',['Building Deskflow',['../md_doc_2dev_2build.html',1,'']]],
-  ['button_41',['Button',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html',1,'deskflow::KeyMap::Keystroke']]],
+  ['button_41',['Button',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html',1,'deskflow::KeyMap::Keystroke::Button'],['../classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7a87b7760f14fbff78d8819291f36ab9a0',1,'deskflow::KeyMap::Keystroke::Button']]],
   ['buttonid_42',['ButtonID',['../MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee',1,'MouseTypes.h']]],
   ['buttoninfo_43',['ButtonInfo',['../classIPrimaryScreen_1_1ButtonInfo.html',1,'IPrimaryScreen']]],
   ['buttontokeymap_44',['ButtonToKeyMap',['../classdeskflow_1_1KeyMap.html#a3dd2e04cf139679828d24f73b7de7442',1,'deskflow::KeyMap']]],

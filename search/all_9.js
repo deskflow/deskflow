@@ -177,7 +177,7 @@ var searchData=
   ['getwindowinstance_174',['getWindowInstance',['../classMSWindowsScreen.html#a191ffb095bbac747eda76bb883b44872',1,'MSWindowsScreen']]],
   ['getwindowproperty_175',['getWindowProperty',['../classXWindowsUtil.html#aa225a3a10a43d139294773550eb65840',1,'XWindowsUtil']]],
   ['grabclipboard_176',['grabClipboard',['../classClient.html#a183b738f8eb2be95edd0da90ec6302b6',1,'Client::grabClipboard()'],['../classIClient.html#a0b888dcea257c93782f015675c8ce75c',1,'IClient::grabClipboard()'],['../classdeskflow_1_1Screen.html#ad625109983215a61cca9ebe2893df4c6',1,'deskflow::Screen::grabClipboard()'],['../classBaseClientProxy.html#adee8e5f163c3679dfcbea18740b6af99',1,'BaseClientProxy::grabClipboard()'],['../classClientProxy.html#a04dfd314810bcaae2796b219974cf691',1,'ClientProxy::grabClipboard()'],['../classClientProxy1__0.html#a9fa2709b05fbd08eb4bb8f9f505758e3',1,'ClientProxy1_0::grabClipboard()'],['../classPrimaryClient.html#abfe9feedb6f69601d4047c8c32efcec4',1,'PrimaryClient::grabClipboard()']]],
-  ['group_177',['Group',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html',1,'deskflow::KeyMap::Keystroke']]],
+  ['group_177',['Group',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html',1,'deskflow::KeyMap::Keystroke::Group'],['../classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7a03937134cedab9078be39a77ee3a48a0',1,'deskflow::KeyMap::Keystroke::Group']]],
   ['guardruntimeversion_178',['guardRuntimeVersion',['../classArchMiscWindows.html#a6a0f920c122e781c4a3bcbae40a82a0e',1,'ArchMiscWindows']]],
   ['gui_179',['Gui',['../structSettings_1_1Gui.html',1,'Settings']]],
   ['guide_180',['Version Migration Guide',['../protocol_reference.html#autotoc_md29',1,'']]],
