@@ -1296,16 +1296,16 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
   }
   if (id == kOptionScreenSwitchCorners) {
     std::string result("none");
-    if ((value & kTopLeftMask) != 0) {
+    if ((value & s_topLeftCornerMask) != 0) {
       result += " +top-left";
     }
-    if ((value & kTopRightMask) != 0) {
+    if ((value & s_topRightCornerMask) != 0) {
       result += " +top-right";
     }
-    if ((value & kBottomLeftMask) != 0) {
+    if ((value & s_bottomLeftCornerMask) != 0) {
       result += " +bottom-left";
     }
-    if ((value & kBottomRightMask) != 0) {
+    if ((value & s_bottomRightCornerMask) != 0) {
       result += " +bottom-right";
     }
     return result;
@@ -1783,25 +1783,25 @@ OptionValue ConfigReadContext::parseModifierKey(const std::string &arg) const
 OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
 {
   if (CaselessCmp::equal(arg, "left")) {
-    return kTopLeftMask | kBottomLeftMask;
+    return s_topLeftCornerMask | s_bottomLeftCornerMask;
   } else if (CaselessCmp::equal(arg, "right")) {
-    return kTopRightMask | kBottomRightMask;
+    return s_topRightCornerMask | s_bottomRightCornerMask;
   } else if (CaselessCmp::equal(arg, "top")) {
-    return kTopLeftMask | kTopRightMask;
+    return s_topLeftCornerMask | s_topRightCornerMask;
   } else if (CaselessCmp::equal(arg, "bottom")) {
-    return kBottomLeftMask | kBottomRightMask;
+    return s_bottomLeftCornerMask | s_bottomRightCornerMask;
   } else if (CaselessCmp::equal(arg, "top-left")) {
-    return kTopLeftMask;
+    return s_topLeftCornerMask;
   } else if (CaselessCmp::equal(arg, "top-right")) {
-    return kTopRightMask;
+    return s_topRightCornerMask;
   } else if (CaselessCmp::equal(arg, "bottom-left")) {
-    return kBottomLeftMask;
+    return s_bottomLeftCornerMask;
   } else if (CaselessCmp::equal(arg, "bottom-right")) {
-    return kBottomRightMask;
+    return s_bottomRightCornerMask;
   } else if (CaselessCmp::equal(arg, "none")) {
-    return kNoCornerMask;
+    return s_noCornerMask;
   } else if (CaselessCmp::equal(arg, "all")) {
-    return kAllCornersMask;
+    return s_allCornersMask;
   }
   throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
 }
