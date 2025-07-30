@@ -60,14 +60,14 @@ void ClipboardTests::basicText()
   clipboard.close();
 }
 
-void ClipboardTests::textSize285()
+void ClipboardTests::longerText()
 {
   std::string text;
-  text.append("Synergy is Free and Open Source Software that lets you ");
+  text.append("Deskflow is Free and Open Source Software that lets you ");
   text.append("easily share your mouse and keyboard between multiple ");
   text.append("computers, where each computer has it's own display. No ");
   text.append("special hardware is required, all you need is a local area ");
-  text.append("network. Synergy is supported on Windows, Mac OS X and Linux.");
+  text.append("network. Deskflow is supported on Windows, Mac OS X and Linux.");
 
   Clipboard clipboard;
   clipboard.open(0);
@@ -77,17 +77,17 @@ void ClipboardTests::textSize285()
   std::string actual = clipboard.marshall();
 
   // 4 asserts here, but that's ok because we're really just asserting 1
-  // thing. the 32-bit size value is split into 4 chars. if the size is 285
-  // (29 more than the 8-bit max size), the last char "rolls over" to 29
+  // thing. the 32-bit size value is split into 4 chars. if the size is 287
+  // (31 more than the 8-bit max size), the last char "rolls over" to 31
   // (this is caused by a bit-wise & on 0xff and 8-bit truncation). each
   // char before the last stores a bit-shifted version of the number, each
   // 1 more power than the last, which is done by bit-shifting [0] by 24,
   // [1] by 16, [2] by 8 ([3] is not bit-shifted).
   qInfo() << actual;
-  QCOMPARE(actual[8], 0);   // 285 >> 24 = 285 / (256^3) = 0
-  QCOMPARE(actual[9], 0);   // 285 >> 16 = 285 / (256^2) = 0
-  QCOMPARE(actual[10], 1);  // 285 >> 8 = 285 / (256^1) = 1(.11328125)
-  QCOMPARE(actual[11], 29); // 285 - 256 = 29
+  QCOMPARE(actual[8], 0);   // 287 >> 24 = 287 / (256^3) = 0
+  QCOMPARE(actual[9], 0);   // 287 >> 16 = 287 / (256^2) = 0
+  QCOMPARE(actual[10], 1);  // 287 >> 8 = 287 / (256^1) = 1(.121)
+  QCOMPARE(actual[11], 31); // 287 - 256 = 31
 }
 
 void ClipboardTests::htmlText()
@@ -148,16 +148,16 @@ void ClipboardTests::unMarshalText()
   clipboard.close();
 }
 
-void ClipboardTests::unMarshalText285()
+void ClipboardTests::unMarshalLongerText()
 {
   Clipboard clipboard;
 
   std::string text;
-  text.append("Synergy is Free and Open Source Software that lets you ");
+  text.append("Deskflow is Free and Open Source Software that lets you ");
   text.append("easily share your mouse and keyboard between multiple ");
   text.append("computers, where each computer has it's own display. No ");
   text.append("special hardware is required, all you need is a local area ");
-  text.append("network. Synergy is supported on Windows, Mac OS X and Linux.");
+  text.append("network. Deskflow is supported on Windows, Mac OS X and Linux.");
 
   std::string data;
   data += (char)0;
@@ -168,10 +168,10 @@ void ClipboardTests::unMarshalText285()
   data += (char)0;
   data += (char)0;
   data += (char)IClipboard::kText;
-  data += (char)0;  // 285 >> 24 = 285 / (256^3) = 0
-  data += (char)0;  // 285 >> 16 = 285 / (256^2) = 0
-  data += (char)1;  // 285 >> 8 = 285 / (256^1) = 1(.11328125)
-  data += (char)29; // 285 - 256 = 29
+  data += (char)0;  // 287 >> 24 = 287 / (256^3) = 0
+  data += (char)0;  // 287 >> 16 = 287 / (256^2) = 0
+  data += (char)1;  // 287 >> 8 = 287 / (256^1) = 1(.121)
+  data += (char)31; // 287 - 256 = 31
   data += text;
 
   clipboard.unmarshall(data, 0);

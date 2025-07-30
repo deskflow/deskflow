@@ -16,12 +16,12 @@ private Q_SLOTS:
   void initTestCase();
   void basicFunction();
   void basicText();
-  void textSize285();
+  void longerText();
   void htmlText();
   void dualText();
   void marshalText();
   void unMarshalText();
-  void unMarshalText285();
+  void unMarshalLongerText();
   void unMarshalTextAndHtml();
   void equalClipboards();
 
