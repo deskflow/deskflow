@@ -37,6 +37,14 @@ const auto kDefaultProtocol = ServerProtocol::kBarrier;
 
 } // namespace deskflow::gui
 
+enum class ScreenAddResults
+{
+  AutoAddScreenOk,
+  AutoAddScreenManualServer,
+  AutoAddScreenManualClient,
+  AutoAddScreenIgnore
+};
+
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
   using ServerProtocol = deskflow::gui::ServerProtocol;
@@ -148,7 +156,7 @@ public:
   //
   void commit();
   int numScreens() const;
-  int autoAddScreen(const QString name);
+  ScreenAddResults autoAddScreen(const QString name);
   const QString getServerName() const;
   void updateServerName();
   const QString configFile() const;
@@ -275,11 +283,3 @@ private:
 };
 
 QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
-
-enum AddResults
-{
-  AutoAddScreenOk,
-  AutoAddScreenManualServer,
-  AutoAddScreenManualClient,
-  AutoAddScreenIgnore
-};

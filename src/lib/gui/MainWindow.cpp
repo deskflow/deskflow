@@ -1037,7 +1037,7 @@ void MainWindow::autoAddScreen(const QString &name)
   if (name.isEmpty())
     return;
 
-  if (m_serverConfig.autoAddScreen(name) == AutoAddScreenManualClient) {
+  if (m_serverConfig.autoAddScreen(name) == ScreenAddResults::AutoAddScreenManualClient) {
     showConfigureServer(
         tr("Please add the client (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
     );

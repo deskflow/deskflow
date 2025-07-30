@@ -321,9 +321,10 @@ int ServerConfig::numScreens() const
   return rval;
 }
 
-int ServerConfig::autoAddScreen(const QString name)
+ScreenAddResults ServerConfig::autoAddScreen(const QString name)
 {
   using enum AddAction;
+  using enum ScreenAddResults;
 
   int serverIndex = -1;
   int targetIndex = -1;
