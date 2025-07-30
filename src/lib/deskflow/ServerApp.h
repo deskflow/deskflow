@@ -19,14 +19,14 @@
 
 #include <memory>
 
-enum EServerState
+enum class ServerState
 {
-  kUninitialized,
-  kInitializing,
-  kInitializingToStart,
-  kInitialized,
-  kStarting,
-  kStarted
+  Uninitialized,
+  Initializing,
+  InitializingToStart,
+  Initialized,
+  Starting,
+  Started
 };
 
 class Server;
@@ -131,7 +131,7 @@ private:
 
   bool m_suspended = false;
   Server *m_server = nullptr;
-  EServerState m_serverState = EServerState::kUninitialized;
+  ServerState m_serverState = ServerState::Uninitialized;
   deskflow::Screen *m_serverScreen = nullptr;
   PrimaryClient *m_primaryClient = nullptr;
   ClientListener *m_listener = nullptr;

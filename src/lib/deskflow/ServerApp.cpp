@@ -263,15 +263,16 @@ void ServerApp::closeClientListener(ClientListener *listen)
 
 void ServerApp::stopServer()
 {
-  if (m_serverState == kStarted) {
+  using enum ServerState;
+  if (m_serverState == Started) {
     closeServer(m_server);
     closeClientListener(m_listener);
     m_server = nullptr;
     m_listener = nullptr;
-    m_serverState = kInitialized;
-  } else if (m_serverState == kStarting) {
+    m_serverState = Initialized;
+  } else if (m_serverState == Starting) {
     stopRetryTimer();
-    m_serverState = kInitialized;
+    m_serverState = Initialized;
   }
   assert(m_server == nullptr);
   assert(m_listener == nullptr);
@@ -295,20 +296,21 @@ void ServerApp::closeServerScreen(deskflow::Screen *screen)
 
 void ServerApp::cleanupServer()
 {
+  using enum ServerState;
   stopServer();
-  if (m_serverState == kInitialized) {
+  if (m_serverState == Initialized) {
     closePrimaryClient(m_primaryClient);
     closeServerScreen(m_serverScreen);
     m_primaryClient = nullptr;
     m_serverScreen = nullptr;
-    m_serverState = kUninitialized;
-  } else if (m_serverState == kInitializing || m_serverState == kInitializingToStart) {
+    m_serverState = Uninitialized;
+  } else if (m_serverState == Initializing || m_serverState == InitializingToStart) {
     stopRetryTimer();
-    m_serverState = kUninitialized;
+    m_serverState = Uninitialized;
   }
   assert(m_primaryClient == nullptr);
   assert(m_serverScreen == nullptr);
-  assert(m_serverState == kUninitialized);
+  assert(m_serverState == Uninitialized);
 }
 
 void ServerApp::retryHandler()
@@ -319,26 +321,27 @@ void ServerApp::retryHandler()
 
   // try initializing/starting the server again
   switch (m_serverState) {
-  case kUninitialized:
-  case kInitialized:
-  case kStarted:
+    using enum ServerState;
+  case Uninitialized:
+  case Initialized:
+  case Started:
     assert(0 && "bad internal server state");
     break;
 
-  case kInitializing:
+  case Initializing:
     LOG((CLOG_DEBUG1 "retry server initialization"));
-    m_serverState = kUninitialized;
+    m_serverState = Uninitialized;
     if (!initServer()) {
       m_events->addEvent(Event(EventTypes::Quit));
     }
     break;
 
-  case kInitializingToStart:
+  case InitializingToStart:
     LOG((CLOG_DEBUG1 "retry server initialization"));
-    m_serverState = kUninitialized;
+    m_serverState = Uninitialized;
     if (!initServer()) {
       m_events->addEvent(Event(EventTypes::Quit));
-    } else if (m_serverState == kInitialized) {
+    } else if (m_serverState == Initialized) {
       LOG((CLOG_DEBUG1 "starting server"));
       if (!startServer()) {
         m_events->addEvent(Event(EventTypes::Quit));
@@ -346,9 +349,9 @@ void ServerApp::retryHandler()
     }
     break;
 
-  case kStarting:
+  case Starting:
     LOG((CLOG_DEBUG1 "retry starting server"));
-    m_serverState = kInitialized;
+    m_serverState = Initialized;
     if (!startServer()) {
       m_events->addEvent(Event(EventTypes::Quit));
     }
@@ -358,8 +361,9 @@ void ServerApp::retryHandler()
 
 bool ServerApp::initServer()
 {
+  using enum ServerState;
   // skip if already initialized or initializing
-  if (m_serverState != kUninitialized) {
+  if (m_serverState != Uninitialized) {
     return true;
   }
 
@@ -372,7 +376,7 @@ bool ServerApp::initServer()
     primaryClient = openPrimaryClient(name, serverScreen);
     m_serverScreen = serverScreen;
     m_primaryClient = primaryClient;
-    m_serverState = kInitialized;
+    m_serverState = Initialized;
     updateStatus();
     return true;
   } catch (XScreenUnavailable &e) {
@@ -399,7 +403,7 @@ bool ServerApp::initServer()
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     m_timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
-    m_serverState = kInitializing;
+    m_serverState = Initializing;
     return true;
   } else {
     // don't try again
@@ -420,23 +424,24 @@ deskflow::Screen *ServerApp::openServerScreen()
 
 bool ServerApp::startServer()
 {
+  using enum ServerState;
   // skip if already started or starting
-  if (m_serverState == kStarting || m_serverState == kStarted) {
+  if (m_serverState == Starting || m_serverState == Started) {
     return true;
   }
 
   // initialize if necessary
-  if (m_serverState != kInitialized) {
+  if (m_serverState != Initialized) {
     if (!initServer()) {
       // hard initialization failure
       return false;
     }
-    if (m_serverState == kInitializing) {
+    if (m_serverState == Initializing) {
       // not ready to start
-      m_serverState = kInitializingToStart;
+      m_serverState = InitializingToStart;
       return true;
     }
-    assert(m_serverState == kInitialized);
+    assert(m_serverState == Initialized);
   }
 
   ClientListener *listener = nullptr;
@@ -448,7 +453,7 @@ bool ServerApp::startServer()
     m_listener = listener;
     updateStatus();
     LOG((CLOG_NOTE "started server, waiting for clients"));
-    m_serverState = kStarted;
+    m_serverState = Started;
     return true;
   } catch (XSocketAddressInUse &e) {
     if (args().m_restartable) {
@@ -471,7 +476,7 @@ bool ServerApp::startServer()
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
     m_timer = m_events->newOneShotTimer(retryTime, nullptr);
     m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
-    m_serverState = kStarting;
+    m_serverState = Starting;
     return true;
   } else {
     // don't try again
