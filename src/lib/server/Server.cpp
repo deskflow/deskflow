@@ -989,22 +989,22 @@ uint32_t Server::getCorner(const BaseClientProxy *client, int32_t x, int32_t y, 
   // if against the left or right then check if y is within size
   if (xSide != 0) {
     if (y < ay + size) {
-      return (xSide < 0) ? kTopLeftMask : kTopRightMask;
+      return (xSide < 0) ? s_topLeftCornerMask : s_topRightCornerMask;
     } else if (y >= ay + ah - size) {
-      return (xSide < 0) ? kBottomLeftMask : kBottomRightMask;
+      return (xSide < 0) ? s_bottomLeftCornerMask : s_bottomRightCornerMask;
     }
   }
 
   // if against the left or right then check if y is within size
   if (ySide != 0) {
     if (x < ax + size) {
-      return (ySide < 0) ? kTopLeftMask : kBottomLeftMask;
+      return (ySide < 0) ? s_topLeftCornerMask : s_bottomLeftCornerMask;
     } else if (x >= ax + aw - size) {
-      return (ySide < 0) ? kTopRightMask : kBottomRightMask;
+      return (ySide < 0) ? s_topRightCornerMask : s_bottomRightCornerMask;
     }
   }
 
-  return kNoCornerMask;
+  return s_noCornerMask;
 }
 
 void Server::stopRelativeMoves()

@@ -62,31 +62,14 @@ static const OptionID kOptionClipboardSharing = OPTION_CODE("CLPS");
 static const OptionID kOptionClipboardSharingSize = OPTION_CODE("CLSZ");
 //@}
 
-//! @name Screen switch corner enumeration
-//@{
-enum EScreenSwitchCorners
-{
-  kNoCorner,
-  kTopLeft,
-  kTopRight,
-  kBottomLeft,
-  kBottomRight,
-  kFirstCorner = kTopLeft,
-  kLastCorner = kBottomRight
-};
-//@}
-
 //! @name Screen switch corner masks
 //@{
-enum EScreenSwitchCornerMasks
-{
-  kNoCornerMask = 0,
-  kTopLeftMask = 1 << (kTopLeft - kFirstCorner),
-  kTopRightMask = 1 << (kTopRight - kFirstCorner),
-  kBottomLeftMask = 1 << (kBottomLeft - kFirstCorner),
-  kBottomRightMask = 1 << (kBottomRight - kFirstCorner),
-  kAllCornersMask = kTopLeftMask | kTopRightMask | kBottomLeftMask | kBottomRightMask
-};
+inline static const auto s_noCornerMask = 0;
+inline static const auto s_topLeftCornerMask = 1 << 0;
+inline static const auto s_topRightCornerMask = 1 << 1;
+inline static const auto s_bottomLeftCornerMask = 1 << 2;
+inline static const auto s_bottomRightCornerMask = 1 << 3;
+inline static const auto s_allCornersMask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3;
 //@}
 
 //! @name Network protocol
