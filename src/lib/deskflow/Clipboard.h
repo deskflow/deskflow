@@ -44,18 +44,18 @@ public:
 
   // IClipboard overrides
   bool empty() final;
-  void add(EFormat, const std::string &data) override;
+  void add(Format, const std::string &data) override;
   bool open(Time) const final;
   void close() const override;
   Time getTime() const override;
-  bool has(EFormat) const override;
-  std::string get(EFormat) const override;
+  bool has(Format) const override;
+  std::string get(Format) const override;
 
 private:
   mutable bool m_open = false;
   mutable Time m_time;
   bool m_owner = false;
   Time m_timeOwned;
-  bool m_added[kNumFormats] = {false, false, false};
-  std::string m_data[kNumFormats] = {"", "", ""};
+  bool m_added[static_cast<int>(Format::TotalFormats)] = {false, false, false};
+  std::string m_data[static_cast<int>(Format::TotalFormats)] = {"", "", ""};
 };

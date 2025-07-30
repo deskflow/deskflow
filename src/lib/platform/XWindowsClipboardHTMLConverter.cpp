@@ -19,9 +19,9 @@ XWindowsClipboardHTMLConverter::XWindowsClipboardHTMLConverter(Display *display,
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardHTMLConverter::getFormat() const
+IClipboard::Format XWindowsClipboardHTMLConverter::getFormat() const
 {
-  return IClipboard::kHTML;
+  return IClipboard::Format::HTML;
 }
 
 Atom XWindowsClipboardHTMLConverter::getAtom() const

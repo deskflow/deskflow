@@ -30,7 +30,7 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
     // read each format
     for (uint32_t i = 0; i < numFormats; ++i) {
       // get the format id
-      auto format = static_cast<IClipboard::EFormat>(readUInt32(index));
+      auto format = static_cast<IClipboard::Format>(readUInt32(index));
       index += 4;
 
       // get the size of the format data
@@ -40,7 +40,7 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
       // save the data if it's a known format.  if either the client
       // or server supports more clipboard formats than the other
       // then one of them will get a format >= kNumFormats here.
-      if (format < IClipboard::kNumFormats) {
+      if (format < IClipboard::Format::TotalFormats) {
         clipboard->add(format, std::string(index, size));
       }
       index += size;
@@ -63,19 +63,19 @@ std::string IClipboard::marshall(const IClipboard *clipboard)
   assert(clipboard != nullptr);
 
   std::string data;
-
+  static const auto totalClipboardFormats = static_cast<int>(Format::TotalFormats);
   std::vector<std::string> formatData;
-  formatData.resize(IClipboard::kNumFormats);
+  formatData.resize(totalClipboardFormats);
   // FIXME -- use current time
   if (clipboard->open(0)) {
 
     // compute size of marshalled data
     uint32_t size = 4;
     uint32_t numFormats = 0;
-    for (uint32_t format = 0; format != IClipboard::kNumFormats; ++format) {
-      if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
+    for (uint32_t format = 0; format != totalClipboardFormats; ++format) {
+      if (clipboard->has(static_cast<IClipboard::Format>(format))) {
         ++numFormats;
-        formatData[format] = clipboard->get(static_cast<IClipboard::EFormat>(format));
+        formatData[format] = clipboard->get(static_cast<IClipboard::Format>(format));
         size += 4 + 4 + (uint32_t)formatData[format].size();
       }
     }
@@ -85,8 +85,8 @@ std::string IClipboard::marshall(const IClipboard *clipboard)
 
     // marshall the data
     writeUInt32(&data, numFormats);
-    for (uint32_t format = 0; format != IClipboard::kNumFormats; ++format) {
-      if (clipboard->has(static_cast<IClipboard::EFormat>(format))) {
+    for (uint32_t format = 0; format != totalClipboardFormats; ++format) {
+      if (clipboard->has(static_cast<IClipboard::Format>(format))) {
         writeUInt32(&data, format);
         writeUInt32(&data, (uint32_t)formatData[format].size());
         data += formatData[format];
@@ -115,8 +115,8 @@ bool IClipboard::copy(IClipboard *dst, const IClipboard *src, Time time)
   if (src->open(time)) {
     if (dst->open(time)) {
       if (dst->empty()) {
-        for (int32_t format = 0; format != IClipboard::kNumFormats; ++format) {
-          auto eFormat = (IClipboard::EFormat)format;
+        for (int32_t format = 0; format != static_cast<int>(Format::TotalFormats); ++format) {
+          auto eFormat = (IClipboard::Format)format;
           if (src->has(eFormat)) {
             dst->add(eFormat, src->get(eFormat));
           }

@@ -76,17 +76,17 @@ bool OSXClipboard::synchronize()
   return false;
 }
 
-void OSXClipboard::add(EFormat format, const std::string &data)
+void OSXClipboard::add(Format format, const std::string &data)
 {
   if (m_pboard == nullptr)
     return;
 
   LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
-  if (format == IClipboard::kText) {
+  if (format == IClipboard::Format::Text) {
     LOG((CLOG_DEBUG "format of data to be added to clipboard was kText"));
-  } else if (format == IClipboard::kBitmap) {
+  } else if (format == IClipboard::Format::Bitmap) {
     LOG((CLOG_DEBUG "format of data to be added to clipboard was kBitmap"));
-  } else if (format == IClipboard::kHTML) {
+  } else if (format == IClipboard::Format::HTML) {
     LOG((CLOG_DEBUG "format of data to be added to clipboard was kHTML"));
   }
 
@@ -132,7 +132,7 @@ IClipboard::Time OSXClipboard::getTime() const
   return m_time;
 }
 
-bool OSXClipboard::has(EFormat format) const
+bool OSXClipboard::has(Format format) const
 {
   if (m_pboard == nullptr)
     return false;
@@ -157,7 +157,7 @@ bool OSXClipboard::has(EFormat format) const
   return false;
 }
 
-std::string OSXClipboard::get(EFormat format) const
+std::string OSXClipboard::get(Format format) const
 {
   CFStringRef type;
   PasteboardItemID item;

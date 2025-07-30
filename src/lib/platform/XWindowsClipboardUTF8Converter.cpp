@@ -20,9 +20,9 @@ XWindowsClipboardUTF8Converter::XWindowsClipboardUTF8Converter(Display *display,
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardUTF8Converter::getFormat() const
+IClipboard::Format XWindowsClipboardUTF8Converter::getFormat() const
 {
-  return IClipboard::kText;
+  return IClipboard::Format::Text;
 }
 
 Atom XWindowsClipboardUTF8Converter::getAtom() const

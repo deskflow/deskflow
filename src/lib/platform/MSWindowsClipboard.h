@@ -46,19 +46,19 @@ public:
 
   // IClipboard overrides
   bool empty() override;
-  void add(EFormat, const std::string &data) override;
+  void add(Format, const std::string &data) override;
   bool open(Time) const override;
   void close() const override;
   Time getTime() const override;
-  bool has(EFormat) const override;
-  std::string get(EFormat) const override;
+  bool has(Format) const override;
+  std::string get(Format) const override;
 
   void setFacade(IMSWindowsClipboardFacade &facade);
 
 private:
   void clearConverters();
 
-  UINT convertFormatToWin32(EFormat) const;
+  UINT convertFormatToWin32(Format) const;
   HANDLE convertTextToWin32(const std::string &data) const;
   std::string convertTextFromWin32(HANDLE) const;
 
@@ -86,7 +86,7 @@ public:
   // accessors
 
   // return the clipboard format this object converts from/to
-  virtual IClipboard::EFormat getFormat() const = 0;
+  virtual IClipboard::Format getFormat() const = 0;
 
   // return the atom representing the win32 clipboard format that
   // this object converts from/to

@@ -9,9 +9,9 @@
 
 #include "base/Unicode.h"
 
-IClipboard::EFormat OSXClipboardHTMLConverter::getFormat() const
+IClipboard::Format OSXClipboardHTMLConverter::getFormat() const
 {
-  return IClipboard::kHTML;
+  return IClipboard::Format::HTML;
 }
 
 CFStringRef OSXClipboardHTMLConverter::getOSXFormat() const

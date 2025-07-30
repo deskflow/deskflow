@@ -18,9 +18,9 @@ MSWindowsClipboardHTMLConverter::MSWindowsClipboardHTMLConverter()
   m_format = RegisterClipboardFormat("HTML Format");
 }
 
-IClipboard::EFormat MSWindowsClipboardHTMLConverter::getFormat() const
+IClipboard::Format MSWindowsClipboardHTMLConverter::getFormat() const
 {
-  return IClipboard::kHTML;
+  return IClipboard::Format::HTML;
 }
 
 UINT MSWindowsClipboardHTMLConverter::getWin32Format() const

@@ -13,9 +13,9 @@
 // MSWindowsClipboardBitmapConverter
 //
 
-IClipboard::EFormat MSWindowsClipboardBitmapConverter::getFormat() const
+IClipboard::Format MSWindowsClipboardBitmapConverter::getFormat() const
 {
-  return IClipboard::kBitmap;
+  return IClipboard::Format::Bitmap;
 }
 
 UINT MSWindowsClipboardBitmapConverter::getWin32Format() const

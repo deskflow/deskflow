@@ -17,7 +17,7 @@ public:
   ~MSWindowsClipboardHTMLConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   UINT getWin32Format() const override;
 
 protected:

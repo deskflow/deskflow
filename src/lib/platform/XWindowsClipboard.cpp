@@ -147,7 +147,7 @@ bool XWindowsClipboard::addSimpleRequest(Window requestor, Atom target, ::Time t
   } else {
     const IXWindowsClipboardConverter *converter = getConverter(target);
     if (converter != nullptr) {
-      IClipboard::EFormat clipboardFormat = converter->getFormat();
+      const auto clipboardFormat = static_cast<int>(converter->getFormat());
       if (m_added[clipboardFormat]) {
         try {
           data = converter->fromIClipboard(m_data[clipboardFormat]);
@@ -262,15 +262,16 @@ bool XWindowsClipboard::empty()
   return true;
 }
 
-void XWindowsClipboard::add(EFormat format, const std::string &data)
+void XWindowsClipboard::add(Format format, const std::string &data)
 {
   assert(m_open);
   assert(m_owner);
 
   LOG((CLOG_DEBUG "add %d bytes to clipboard %d format: %d", data.size(), m_id, format));
 
-  m_data[format] = data;
-  m_added[format] = true;
+  const auto formatID = static_cast<int>(format);
+  m_data[formatID] = data;
+  m_added[formatID] = true;
 
   // FIXME -- set motif clipboard item?
 }
@@ -333,20 +334,20 @@ IClipboard::Time XWindowsClipboard::getTime() const
   return m_timeOwned;
 }
 
-bool XWindowsClipboard::has(EFormat format) const
+bool XWindowsClipboard::has(Format format) const
 {
   assert(m_open);
 
   fillCache();
-  return m_added[format];
+  return m_added[static_cast<int>(format)];
 }
 
-std::string XWindowsClipboard::get(EFormat format) const
+std::string XWindowsClipboard::get(Format format) const
 {
   assert(m_open);
 
   fillCache();
-  return m_data[format];
+  return m_data[static_cast<int>(format)];
 }
 
 void XWindowsClipboard::clearConverters()
@@ -372,8 +373,8 @@ IXWindowsClipboardConverter *XWindowsClipboard::getConverter(Atom target, bool o
   }
 
   // optionally skip already handled targets
-  if (onlyIfNotAdded && m_added[converter->getFormat()]) {
-    LOG((CLOG_DEBUG1 "  skipping handled format %d", converter->getFormat()));
+  if (const auto formatID = static_cast<int>(converter->getFormat()); onlyIfNotAdded && m_added[formatID]) {
+    LOG((CLOG_DEBUG1 "  skipping handled format %d", formatID));
     return nullptr;
   }
 
@@ -415,7 +416,7 @@ void XWindowsClipboard::doClearCache()
 {
   m_checkCache = false;
   m_cached = false;
-  for (int32_t index = 0; index < kNumFormats; ++index) {
+  for (int32_t index = 0; index < static_cast<int>(Format::TotalFormats); ++index) {
     m_data[index] = "";
     m_added[index] = false;
   }
@@ -468,9 +469,10 @@ void XWindowsClipboard::icccmFillCache()
   // preference).
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     const IXWindowsClipboardConverter *converter = *index;
+    const auto formatID = static_cast<int>(converter->getFormat());
 
     // skip already handled targets
-    if (m_added[converter->getFormat()]) {
+    if (m_added[formatID]) {
       continue;
     }
 
@@ -501,11 +503,10 @@ void XWindowsClipboard::icccmFillCache()
     }
 
     // add to clipboard and note we've done it
-    IClipboard::EFormat format = converter->getFormat();
-    m_data[format] = converter->toIClipboard(targetData);
-    m_added[format] = true;
+    m_data[formatID] = converter->toIClipboard(targetData);
+    m_added[formatID] = true;
     LOG(
-        (CLOG_DEBUG "added format %d for target %s (%u %s)", format,
+        (CLOG_DEBUG "added format %d for target %s (%u %s)", formatID,
          XWindowsUtil::atomToString(m_display, target).c_str(), targetData.size(),
          targetData.size() == 1 ? "byte" : "bytes")
     );
@@ -693,9 +694,10 @@ void XWindowsClipboard::motifFillCache()
   // preference).
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     const IXWindowsClipboardConverter *converter = *index;
+    const auto formatID = static_cast<int>(converter->getFormat());
 
     // skip already handled targets
-    if (m_added[converter->getFormat()]) {
+    if (m_added[formatID]) {
       continue;
     }
 
@@ -719,9 +721,8 @@ void XWindowsClipboard::motifFillCache()
     }
 
     // add to clipboard and note we've done it
-    IClipboard::EFormat format = converter->getFormat();
-    m_data[format] = converter->toIClipboard(targetData);
-    m_added[format] = true;
+    m_data[formatID] = converter->toIClipboard(targetData);
+    m_added[formatID] = true;
     LOG((CLOG_DEBUG "added format %d for target %s", format, XWindowsUtil::atomToString(m_display, target).c_str()));
   }
 }
@@ -1123,7 +1124,7 @@ Atom XWindowsClipboard::getTargetsData(std::string &data, int *format) const
     const IXWindowsClipboardConverter *converter = *index;
 
     // skip formats we don't have
-    if (m_added[converter->getFormat()]) {
+    if (m_added[static_cast<int>(converter->getFormat())]) {
       XWindowsUtil::appendAtomData(data, converter->getAtom());
     }
   }

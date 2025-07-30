@@ -83,7 +83,7 @@ bool MSWindowsClipboard::empty()
   return true;
 }
 
-void MSWindowsClipboard::add(EFormat format, const std::string &data)
+void MSWindowsClipboard::add(Format format, const std::string &data)
 {
   // exit early if there is no data to prevent spurious "failed to convert clipboard data" errors
   if (data.empty()) {
@@ -139,7 +139,7 @@ IClipboard::Time MSWindowsClipboard::getTime() const
   return m_time;
 }
 
-bool MSWindowsClipboard::has(EFormat format) const
+bool MSWindowsClipboard::has(Format format) const
 {
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
     IMSWindowsClipboardConverter *converter = *index;
@@ -152,7 +152,7 @@ bool MSWindowsClipboard::has(EFormat format) const
   return false;
 }
 
-std::string MSWindowsClipboard::get(EFormat format) const
+std::string MSWindowsClipboard::get(Format format) const
 {
   // find the converter for the first clipboard format we can handle
   IMSWindowsClipboardConverter *converter = nullptr;
