@@ -27,7 +27,7 @@ bool Clipboard::empty()
   }
 
   // clear all data
-  for (int32_t index = 0; index < kNumFormats; ++index) {
+  for (int32_t index = 0; index < static_cast<int>(Format::TotalFormats); ++index) {
     m_data[index] = "";
     m_added[index] = false;
   }
@@ -41,7 +41,7 @@ bool Clipboard::empty()
   return true;
 }
 
-void Clipboard::add(EFormat format, const std::string &data)
+void Clipboard::add(Format format, const std::string &data)
 {
   if (!m_open) {
     LOG_WARN("cannot add to clipboard, not open");
@@ -53,8 +53,9 @@ void Clipboard::add(EFormat format, const std::string &data)
     return;
   }
 
-  m_data[format] = data;
-  m_added[format] = true;
+  const auto formatID = static_cast<int>(format);
+  m_data[formatID] = data;
+  m_added[formatID] = true;
 }
 
 bool Clipboard::open(Time time) const
@@ -83,22 +84,22 @@ Clipboard::Time Clipboard::getTime() const
   return m_timeOwned;
 }
 
-bool Clipboard::has(EFormat format) const
+bool Clipboard::has(Format format) const
 {
   if (!m_open) {
     LOG_WARN("cannot check for clipboard format, not open");
     return false;
   }
-  return m_added[format];
+  return m_added[static_cast<int>(format)];
 }
 
-std::string Clipboard::get(EFormat format) const
+std::string Clipboard::get(Format format) const
 {
   if (!m_open) {
     LOG_WARN("cannot get clipboard format, not open");
     return "";
   }
-  return m_data[format];
+  return m_data[static_cast<int>(format)];
 }
 
 void Clipboard::unmarshall(const std::string &data, Time time)

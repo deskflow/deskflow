@@ -19,9 +19,9 @@ XWindowsClipboardTextConverter::XWindowsClipboardTextConverter(Display *display,
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardTextConverter::getFormat() const
+IClipboard::Format XWindowsClipboardTextConverter::getFormat() const
 {
-  return IClipboard::kText;
+  return IClipboard::Format::Text;
 }
 
 Atom XWindowsClipboardTextConverter::getAtom() const

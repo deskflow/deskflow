@@ -20,7 +20,7 @@ public:
   ~XWindowsClipboardHTMLConverter() override = default;
 
   // IXWindowsClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   Atom getAtom() const override;
   int getDataSize() const override;
   std::string fromIClipboard(const std::string &) const override;

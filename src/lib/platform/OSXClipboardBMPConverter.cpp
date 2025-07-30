@@ -48,9 +48,9 @@ static void toLE(uint8_t *&dst, uint32_t src)
   dst += 4;
 }
 
-IClipboard::EFormat OSXClipboardBMPConverter::getFormat() const
+IClipboard::Format OSXClipboardBMPConverter::getFormat() const
 {
-  return IClipboard::kBitmap;
+  return IClipboard::Format::Bitmap;
 }
 
 CFStringRef OSXClipboardBMPConverter::getOSXFormat() const

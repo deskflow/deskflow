@@ -17,7 +17,7 @@ public:
   ~OSXClipboardBMPConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   CFStringRef getOSXFormat() const override;
 
   // OSXClipboardAnyBMPConverter overrides

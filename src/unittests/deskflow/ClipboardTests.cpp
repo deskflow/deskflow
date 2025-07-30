@@ -37,26 +37,28 @@ void ClipboardTests::basicFunction()
 
 void ClipboardTests::basicText()
 {
+  using enum IClipboard::Format;
+
   Clipboard clipboard;
   QVERIFY(clipboard.open(0));
-  QVERIFY(!clipboard.has(Clipboard::kText));
-  QCOMPARE(clipboard.get(IClipboard::kText), "");
+  QVERIFY(!clipboard.has(Text));
+  QCOMPARE(clipboard.get(Text), "");
 
-  clipboard.add(Clipboard::kText, kTestString1);
-  QVERIFY(clipboard.has(Clipboard::kText));
-  QCOMPARE(clipboard.get(IClipboard::kText), kTestString1);
+  clipboard.add(Text, kTestString1);
+  QVERIFY(clipboard.has(Text));
+  QCOMPARE(clipboard.get(Text), kTestString1);
 
   std::string actual = clipboard.marshall();
   // string contains other data, but 8th char should be kText.
-  QCOMPARE(IClipboard::kText, actual[7]);
+  QCOMPARE(static_cast<char>(Text), actual.at(7));
   QCOMPARE((int)actual[11], kTestString1.length());
 
   // // marshall closes the clipboard
   QVERIFY(clipboard.open(0));
   QVERIFY(clipboard.empty());
 
-  clipboard.add(Clipboard::kText, kTestString2);
-  QCOMPARE(clipboard.get(IClipboard::kText), kTestString2);
+  clipboard.add(Text, kTestString2);
+  QCOMPARE(clipboard.get(Text), kTestString2);
   clipboard.close();
 }
 
@@ -71,7 +73,7 @@ void ClipboardTests::longerText()
 
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, text);
+  clipboard.add(IClipboard::Format::Text, text);
   clipboard.close();
 
   std::string actual = clipboard.marshall();
@@ -94,21 +96,21 @@ void ClipboardTests::htmlText()
 {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kHTML, kTestString1);
+  clipboard.add(IClipboard::Format::HTML, kTestString1);
   clipboard.close();
 
   std::string actual = clipboard.marshall();
 
   // string contains other data, but 8th char should be kHTML.
-  QCOMPARE(IClipboard::kHTML, (int)actual[7]);
+  QCOMPARE(static_cast<int>(IClipboard::Format::HTML), static_cast<int>(actual.at(7)));
 }
 
 void ClipboardTests::dualText()
 {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, kTestString1);
-  clipboard.add(IClipboard::kHTML, kTestString2);
+  clipboard.add(IClipboard::Format::Text, kTestString1);
+  clipboard.add(IClipboard::Format::HTML, kTestString2);
   clipboard.close();
 
   std::string actual = clipboard.marshall();
@@ -125,7 +127,7 @@ void ClipboardTests::marshalText()
 {
   Clipboard clipboard;
   clipboard.open(0);
-  clipboard.add(IClipboard::kText, kTestString1);
+  clipboard.add(IClipboard::Format::Text, kTestString1);
   clipboard.close();
 
   std::string actual = clipboard.marshall();
@@ -144,7 +146,7 @@ void ClipboardTests::unMarshalText()
   clipboard.unmarshall(data, 0);
   clipboard.open(0);
 
-  QVERIFY(!clipboard.has(IClipboard::kText));
+  QVERIFY(!clipboard.has(IClipboard::Format::Text));
   clipboard.close();
 }
 
@@ -167,7 +169,7 @@ void ClipboardTests::unMarshalLongerText()
   data += (char)0;
   data += (char)0;
   data += (char)0;
-  data += (char)IClipboard::kText;
+  data += (char)IClipboard::Format::Text;
   data += (char)0;  // 287 >> 24 = 287 / (256^3) = 0
   data += (char)0;  // 287 >> 16 = 287 / (256^2) = 0
   data += (char)1;  // 287 >> 8 = 287 / (256^1) = 1(.121)
@@ -176,7 +178,7 @@ void ClipboardTests::unMarshalLongerText()
 
   clipboard.unmarshall(data, 0);
   clipboard.open(0);
-  QCOMPARE(clipboard.get(IClipboard::kText), text);
+  QCOMPARE(clipboard.get(IClipboard::Format::Text), text);
   clipboard.close();
 }
 
@@ -191,7 +193,7 @@ void ClipboardTests::unMarshalTextAndHtml()
   data += (char)0;
   data += (char)0;
   data += (char)0;
-  data += (char)IClipboard::kText;
+  data += (char)IClipboard::Format::Text;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -200,7 +202,7 @@ void ClipboardTests::unMarshalTextAndHtml()
   data += (char)0;
   data += (char)0;
   data += (char)0;
-  data += (char)IClipboard::kHTML;
+  data += (char)IClipboard::Format::HTML;
   data += (char)0;
   data += (char)0;
   data += (char)0;
@@ -209,8 +211,8 @@ void ClipboardTests::unMarshalTextAndHtml()
 
   clipboard.unmarshall(data, 0);
   clipboard.open(0);
-  QCOMPARE(clipboard.get(IClipboard::kText), kTestString1);
-  QCOMPARE(clipboard.get(IClipboard::kHTML), kTestString2);
+  QCOMPARE(clipboard.get(IClipboard::Format::Text), kTestString1);
+  QCOMPARE(clipboard.get(IClipboard::Format::HTML), kTestString2);
   clipboard.close();
 }
 
@@ -218,14 +220,14 @@ void ClipboardTests::equalClipboards()
 {
   Clipboard clipboard1;
   clipboard1.open(0);
-  clipboard1.add(Clipboard::kText, kTestString1);
+  clipboard1.add(IClipboard::Format::Text, kTestString1);
   clipboard1.close();
 
   Clipboard clipboard2;
   Clipboard::copy(&clipboard2, &clipboard1);
 
   clipboard2.open(0);
-  QCOMPARE(clipboard2.get(Clipboard::kText), kTestString1);
+  QCOMPARE(clipboard2.get(IClipboard::Format::Text), kTestString1);
   clipboard2.close();
 }
 

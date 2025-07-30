@@ -17,7 +17,7 @@ public:
   ~MSWindowsClipboardAnyTextConverter() override = default;
 
   // IMSWindowsClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   UINT getWin32Format() const override = 0;
   HANDLE fromIClipboard(const std::string &) const override;
   std::string toIClipboard(HANDLE) const override;

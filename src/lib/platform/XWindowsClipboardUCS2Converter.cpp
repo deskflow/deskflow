@@ -19,9 +19,9 @@ XWindowsClipboardUCS2Converter::XWindowsClipboardUCS2Converter(Display *display,
   // do nothing
 }
 
-IClipboard::EFormat XWindowsClipboardUCS2Converter::getFormat() const
+IClipboard::Format XWindowsClipboardUCS2Converter::getFormat() const
 {
-  return IClipboard::kText;
+  return IClipboard::Format::Text;
 }
 
 Atom XWindowsClipboardUCS2Converter::getAtom() const

@@ -17,7 +17,7 @@ public:
   ~OSXClipboardAnyBitmapConverter() override = default;
 
   // IOSXClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   CFStringRef getOSXFormat() const override = 0;
   std::string fromIClipboard(const std::string &) const override;
   std::string toIClipboard(const std::string &) const override;

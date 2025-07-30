@@ -8,9 +8,9 @@
 #include "platform/OSXClipboardAnyBitmapConverter.h"
 #include <algorithm>
 
-IClipboard::EFormat OSXClipboardAnyBitmapConverter::getFormat() const
+IClipboard::Format OSXClipboardAnyBitmapConverter::getFormat() const
 {
-  return IClipboard::kBitmap;
+  return IClipboard::Format::Bitmap;
 }
 
 std::string OSXClipboardAnyBitmapConverter::fromIClipboard(const std::string &data) const

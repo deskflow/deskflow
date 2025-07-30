@@ -45,9 +45,9 @@ void MSWindowsClipboardTests::emptySingleFormat()
   MSWindowsClipboard clipboard(NULL);
   QVERIFY(clipboard.open(0));
 
-  clipboard.add(MSWindowsClipboard::kText, m_testString);
+  clipboard.add(IClipboard::Format::Text, m_testString);
   QVERIFY(clipboard.empty());
-  QVERIFY(!clipboard.has(MSWindowsClipboard::kText));
+  QVERIFY(!clipboard.has(IClipboard::Format::Text));
 }
 
 void MSWindowsClipboardTests::addValue()
@@ -55,19 +55,21 @@ void MSWindowsClipboardTests::addValue()
   MSWindowsClipboard clipboard(NULL);
   QVERIFY(clipboard.open(0));
 
-  clipboard.add(IClipboard::kText, m_testString);
-  QCOMPARE(clipboard.get(IClipboard::kText), m_testString);
+  clipboard.add(IClipboard::Format::Text, m_testString);
+  QCOMPARE(clipboard.get(IClipboard::Format::Text), m_testString);
 }
 
 void MSWindowsClipboardTests::replaceValue()
 {
+  using enum IClipboard::Format;
+
   MSWindowsClipboard clipboard(NULL);
   QVERIFY(clipboard.open(0));
 
-  clipboard.add(IClipboard::kText, m_testString);
-  clipboard.add(IClipboard::kText, m_testString2);
+  clipboard.add(Text, m_testString);
+  clipboard.add(Text, m_testString2);
 
-  QCOMPARE(clipboard.get(IClipboard::kText), m_testString2);
+  QCOMPARE(clipboard.get(Text), m_testString2);
 }
 
 void MSWindowsClipboardTests::openTimeIsOne()
@@ -106,8 +108,8 @@ void MSWindowsClipboardTests::has_withFormatAdded()
   QVERIFY(clipboard.open(0));
   QVERIFY(clipboard.empty());
 
-  clipboard.add(IClipboard::kText, m_testString);
-  QVERIFY(clipboard.has(IClipboard::kText));
+  clipboard.add(IClipboard::Format::Text, m_testString);
+  QVERIFY(clipboard.has(IClipboard::Format::Text));
 }
 
 void MSWindowsClipboardTests::has_withNoFormatAdded()
@@ -115,7 +117,7 @@ void MSWindowsClipboardTests::has_withNoFormatAdded()
   MSWindowsClipboard clipboard(NULL);
   QVERIFY(clipboard.open(0));
   QVERIFY(clipboard.empty());
-  QCOMPARE(clipboard.get(IClipboard::kText), "");
+  QCOMPARE(clipboard.get(IClipboard::Format::Text), "");
 }
 
 void MSWindowsClipboardTests::getNonEmptyText()
@@ -124,8 +126,8 @@ void MSWindowsClipboardTests::getNonEmptyText()
   QVERIFY(clipboard.open(0));
   QVERIFY(clipboard.empty());
 
-  clipboard.add(IClipboard::kText, m_testString);
-  QCOMPARE(clipboard.get(IClipboard::kText), m_testString);
+  clipboard.add(IClipboard::Format::Text, m_testString);
+  QCOMPARE(clipboard.get(IClipboard::Format::Text), m_testString);
 }
 
 void MSWindowsClipboardTests::isOwnedByDeskflow()

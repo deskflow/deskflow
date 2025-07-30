@@ -13,9 +13,9 @@
 // OSXClipboardAnyTextConverter
 //
 
-IClipboard::EFormat OSXClipboardAnyTextConverter::getFormat() const
+IClipboard::Format OSXClipboardAnyTextConverter::getFormat() const
 {
-  return IClipboard::kText;
+  return IClipboard::Format::Text;
 }
 
 std::string OSXClipboardAnyTextConverter::fromIClipboard(const std::string &data) const

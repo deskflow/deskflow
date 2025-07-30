@@ -26,12 +26,12 @@ public:
 
   // IClipboard overrides
   bool empty() override;
-  void add(EFormat, const std::string &data) override;
+  void add(Format, const std::string &data) override;
   bool open(Time) const override;
   void close() const override;
   Time getTime() const override;
-  bool has(EFormat) const override;
-  std::string get(EFormat) const override;
+  bool has(Format) const override;
+  std::string get(Format) const override;
 
   bool synchronize();
 
@@ -60,7 +60,7 @@ public:
   /*!
   Return the clipboard format this object converts from/to.
   */
-  virtual IClipboard::EFormat getFormat() const = 0;
+  virtual IClipboard::Format getFormat() const = 0;
 
   //! returns the scrap flavor type that this object converts from/to
   virtual CFStringRef getOSXFormat() const = 0;

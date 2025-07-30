@@ -11,9 +11,9 @@
 // MSWindowsClipboardAnyTextConverter
 //
 
-IClipboard::EFormat MSWindowsClipboardAnyTextConverter::getFormat() const
+IClipboard::Format MSWindowsClipboardAnyTextConverter::getFormat() const
 {
-  return IClipboard::kText;
+  return IClipboard::Format::Text;
 }
 
 HANDLE

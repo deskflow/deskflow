@@ -17,7 +17,7 @@ public:
   ~OSXClipboardAnyTextConverter() override = default;
 
   // IOSXClipboardConverter overrides
-  IClipboard::EFormat getFormat() const override;
+  IClipboard::Format getFormat() const override;
   std::string fromIClipboard(const std::string &) const override;
   std::string toIClipboard(const std::string &) const override;
   CFStringRef getOSXFormat() const override = 0;
