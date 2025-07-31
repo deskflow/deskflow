@@ -16,10 +16,6 @@ var namespacedeskflow_1_1gui =
     [ "ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", "classdeskflow_1_1gui_1_1ServerConnection" ],
     [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
     [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ],
-    [ "ServerProtocol", "namespacedeskflow_1_1gui.html#af3938504d72c59323f246b74114e968b", [
-      [ "kSynergy", "namespacedeskflow_1_1gui.html#af3938504d72c59323f246b74114e968ba104f7ca9a20a599f1cc7591b1a3e0a4a", null ],
-      [ "kBarrier", "namespacedeskflow_1_1gui.html#af3938504d72c59323f246b74114e968baffa5976cb7170d234d6b69921bf0f085", null ]
-    ] ],
     [ "dotenv", "namespacedeskflow_1_1gui.html#ab4c997166f1edb383c9a46fb94672d12", null ],
     [ "getPair", "namespacedeskflow_1_1gui.html#a4c76fb6206a264805e66241483d320a1", null ],
     [ "iconMode", "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12", null ],

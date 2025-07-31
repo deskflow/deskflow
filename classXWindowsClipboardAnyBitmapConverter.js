@@ -8,6 +8,6 @@ var classXWindowsClipboardAnyBitmapConverter =
     [ "fromIClipboard", "classXWindowsClipboardAnyBitmapConverter.html#aac9fe8d764570f7ae84af74d5e56e7df", null ],
     [ "getAtom", "classXWindowsClipboardAnyBitmapConverter.html#a29f8e01f107de39a2746d72e3055537a", null ],
     [ "getDataSize", "classXWindowsClipboardAnyBitmapConverter.html#af45c64e3ba6e6cbec66b493ac4d7eb56", null ],
-    [ "getFormat", "classXWindowsClipboardAnyBitmapConverter.html#a599e315b2fc6683c8dc12ab3fb32f525", null ],
+    [ "getFormat", "classXWindowsClipboardAnyBitmapConverter.html#a5c90c488f38d3ed1378a978c4934b2fb", null ],
     [ "toIClipboard", "classXWindowsClipboardAnyBitmapConverter.html#ac8cd155a7a9a6afd9bf126a1a22ba011", null ]
 ];

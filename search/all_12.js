@@ -88,7 +88,7 @@ var searchData=
   ['processstate_85',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
   ['processstatechanged_86',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a075a77c82c3c534e8cfca3384aa9e7fd',1,'deskflow::gui::CoreProcess']]],
   ['processstatetostring_87',['processStateToString',['../namespacedeskflow_1_1gui.html#a21a204364c5d5b80acdb091d3932ea65',1,'deskflow::gui']]],
-  ['protocol_88',['protocol',['../classServerConfig.html#aafbeb267a3ceb552496b6bf2eb4509f0',1,'ServerConfig::protocol()'],['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'protocol:&#160;ArchNetworkWinsock.cpp']]],
+  ['protocol_88',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig::protocol()'],['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'protocol:&#160;ArchNetworkWinsock.cpp']]],
   ['protocol_20architecture_89',['Protocol Architecture',['../protocol_reference.html#autotoc_md14',1,'']]],
   ['protocol_20constants_90',['Protocol Constants',['../group__protocol__constants.html',1,'']]],
   ['protocol_20constraints_91',['Protocol Constraints',['../protocol_reference.html#autotoc_md20',1,'']]],

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -135,8 +135,8 @@ Collaboration diagram for IOSXClipboardConverter:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
-<tr class="memitem:a2472accc86c135569b396c75053c40eb" id="r_a2472accc86c135569b396c75053c40eb"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2472accc86c135569b396c75053c40eb">getFormat</a> () const =0</td></tr>
-<tr class="memdesc:a2472accc86c135569b396c75053c40eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
+<tr class="memitem:a4adc3b10a0bf35530b80ab1fdd286206" id="r_a4adc3b10a0bf35530b80ab1fdd286206"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4adc3b10a0bf35530b80ab1fdd286206">getFormat</a> () const =0</td></tr>
+<tr class="memdesc:a4adc3b10a0bf35530b80ab1fdd286206"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
 <tr class="memitem:a040be5d29b7a271ee128dfdbe35b5ca1" id="r_a040be5d29b7a271ee128dfdbe35b5ca1"><td class="memItemLeft" align="right" valign="top">virtual CFStringRef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a040be5d29b7a271ee128dfdbe35b5ca1">getOSXFormat</a> () const =0</td></tr>
 <tr class="memdesc:a040be5d29b7a271ee128dfdbe35b5ca1"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the scrap flavor type that this object converts from/to  <br /></td></tr>
 <tr class="memitem:abab1bc86237e2025440afba738b6b2f3" id="r_abab1bc86237e2025440afba738b6b2f3"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abab1bc86237e2025440afba738b6b2f3">fromIClipboard</a> (const std::string &amp;) const =0</td></tr>
@@ -175,14 +175,14 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convert from <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format. </p>
-<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the Carbon scrap format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a2472accc86c135569b396c75053c40eb" title="Get clipboard format.">getFormat()</a>. The return data will be in the scrap format returned by <a class="el" href="#a040be5d29b7a271ee128dfdbe35b5ca1" title="returns the scrap flavor type that this object converts from/to">getOSXFormat()</a>. </p>
+<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the Carbon scrap format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a4adc3b10a0bf35530b80ab1fdd286206" title="Get clipboard format.">getFormat()</a>. The return data will be in the scrap format returned by <a class="el" href="#a040be5d29b7a271ee128dfdbe35b5ca1" title="returns the scrap flavor type that this object converts from/to">getOSXFormat()</a>. </p>
 
 <p>Implemented in <a class="el" href="classOSXClipboardAnyBitmapConverter.html#a694242473fa3c0055bc56adcd80947c9">OSXClipboardAnyBitmapConverter</a>, <a class="el" href="classOSXClipboardAnyTextConverter.html#ab89d56cc32ac16b4c1bc5bbc1abb6551">OSXClipboardAnyTextConverter</a>, and <a class="el" href="classOSXClipboardBMPConverter.html#a0433389c42800107700ccf83af00ce21">OSXClipboardBMPConverter</a>.</p>
 
 </div>
 </div>
-<a id="a2472accc86c135569b396c75053c40eb" name="a2472accc86c135569b396c75053c40eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2472accc86c135569b396c75053c40eb">&#9670;&#160;</a></span>getFormat()</h2>
+<a id="a4adc3b10a0bf35530b80ab1fdd286206" name="a4adc3b10a0bf35530b80ab1fdd286206"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4adc3b10a0bf35530b80ab1fdd286206">&#9670;&#160;</a></span>getFormat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -191,7 +191,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a> IOSXClipboardConverter::getFormat </td>
+          <td class="memname">virtual <a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a> IOSXClipboardConverter::getFormat </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -207,7 +207,7 @@ Public Member Functions</h2></td></tr>
 <p>Get clipboard format. </p>
 <p>Return the clipboard format this object converts from/to. </p>
 
-<p>Implemented in <a class="el" href="classOSXClipboardAnyBitmapConverter.html#ae682e85e90b0966994503d087deac0d9">OSXClipboardAnyBitmapConverter</a>, <a class="el" href="classOSXClipboardAnyTextConverter.html#afa96d7c6629c6a9a182d8ecf7de90c94">OSXClipboardAnyTextConverter</a>, <a class="el" href="classOSXClipboardBMPConverter.html#a2180fa8c3b5a07d16aa400f6040baecf">OSXClipboardBMPConverter</a>, and <a class="el" href="classOSXClipboardHTMLConverter.html#af27f7b77e70697148c6369f5227f2242">OSXClipboardHTMLConverter</a>.</p>
+<p>Implemented in <a class="el" href="classOSXClipboardAnyBitmapConverter.html#a652e4dbf90247ee5de433d83de781439">OSXClipboardAnyBitmapConverter</a>, <a class="el" href="classOSXClipboardAnyTextConverter.html#a79a5035682e87fc8f5a37980318fb467">OSXClipboardAnyTextConverter</a>, <a class="el" href="classOSXClipboardBMPConverter.html#a40bc12a01d27bf381409bc1a1ca010c2">OSXClipboardBMPConverter</a>, and <a class="el" href="classOSXClipboardHTMLConverter.html#ae14e65f0c12685e7682a8ef3a7cd8571">OSXClipboardHTMLConverter</a>.</p>
 
 </div>
 </div>

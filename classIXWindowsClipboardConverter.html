@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -133,8 +133,8 @@ Collaboration diagram for IXWindowsClipboardConverter:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
-<tr class="memitem:a7465b18adb1bb7d970862822a7c2b6de" id="r_a7465b18adb1bb7d970862822a7c2b6de"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7465b18adb1bb7d970862822a7c2b6de">getFormat</a> () const =0</td></tr>
-<tr class="memdesc:a7465b18adb1bb7d970862822a7c2b6de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
+<tr class="memitem:a4c480bcd20081e4344c9479d06368c7d" id="r_a4c480bcd20081e4344c9479d06368c7d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c480bcd20081e4344c9479d06368c7d">getFormat</a> () const =0</td></tr>
+<tr class="memdesc:a4c480bcd20081e4344c9479d06368c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
 <tr class="memitem:aee320682444b251e71d3a21bf6dc953d" id="r_aee320682444b251e71d3a21bf6dc953d"><td class="memItemLeft" align="right" valign="top">virtual Atom&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aee320682444b251e71d3a21bf6dc953d">getAtom</a> () const =0</td></tr>
 <tr class="memdesc:aee320682444b251e71d3a21bf6dc953d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get X11 format atom.  <br /></td></tr>
 <tr class="memitem:a5aa707d8fdc7d590579f79928ba75076" id="r_a5aa707d8fdc7d590579f79928ba75076"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5aa707d8fdc7d590579f79928ba75076">getDataSize</a> () const =0</td></tr>
@@ -175,7 +175,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convert from <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format. </p>
-<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the X selection format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a7465b18adb1bb7d970862822a7c2b6de" title="Get clipboard format.">getFormat()</a>. The return data will be in the X selection format returned by <a class="el" href="#aee320682444b251e71d3a21bf6dc953d" title="Get X11 format atom.">getAtom()</a>. </p>
+<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the X selection format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a4c480bcd20081e4344c9479d06368c7d" title="Get clipboard format.">getFormat()</a>. The return data will be in the X selection format returned by <a class="el" href="#aee320682444b251e71d3a21bf6dc953d" title="Get X11 format atom.">getAtom()</a>. </p>
 
 <p>Implemented in <a class="el" href="classXWindowsClipboardAnyBitmapConverter.html#aac9fe8d764570f7ae84af74d5e56e7df">XWindowsClipboardAnyBitmapConverter</a>, <a class="el" href="classXWindowsClipboardBMPConverter.html#a84287c2b905e263940b5a99616ddc970">XWindowsClipboardBMPConverter</a>, <a class="el" href="classXWindowsClipboardHTMLConverter.html#a7039ce01e7c3d40a8ddd0f5c62bd2d3b">XWindowsClipboardHTMLConverter</a>, <a class="el" href="classXWindowsClipboardTextConverter.html#a4feee56f174469ab7f5fee44a3ea8b8a">XWindowsClipboardTextConverter</a>, <a class="el" href="classXWindowsClipboardUCS2Converter.html#ae7b15e22e8c7a8096f96d1ab491be641">XWindowsClipboardUCS2Converter</a>, and <a class="el" href="classXWindowsClipboardUTF8Converter.html#ab062fa86dd7ad9d9adc281fd2054a2d0">XWindowsClipboardUTF8Converter</a>.</p>
 
@@ -241,8 +241,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a7465b18adb1bb7d970862822a7c2b6de" name="a7465b18adb1bb7d970862822a7c2b6de"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7465b18adb1bb7d970862822a7c2b6de">&#9670;&#160;</a></span>getFormat()</h2>
+<a id="a4c480bcd20081e4344c9479d06368c7d" name="a4c480bcd20081e4344c9479d06368c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c480bcd20081e4344c9479d06368c7d">&#9670;&#160;</a></span>getFormat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -251,7 +251,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a> IXWindowsClipboardConverter::getFormat </td>
+          <td class="memname">virtual <a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a> IXWindowsClipboardConverter::getFormat </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -267,7 +267,7 @@ Public Member Functions</h2></td></tr>
 <p>Get clipboard format. </p>
 <p>Return the clipboard format this object converts from/to. </p>
 
-<p>Implemented in <a class="el" href="classXWindowsClipboardAnyBitmapConverter.html#a599e315b2fc6683c8dc12ab3fb32f525">XWindowsClipboardAnyBitmapConverter</a>, <a class="el" href="classXWindowsClipboardBMPConverter.html#ae8e780626f979d59bac9ff12ab677ec8">XWindowsClipboardBMPConverter</a>, <a class="el" href="classXWindowsClipboardHTMLConverter.html#a777e255f3fc66623fcd9171d8a407e33">XWindowsClipboardHTMLConverter</a>, <a class="el" href="classXWindowsClipboardTextConverter.html#a6eb1988ac252ac84ec55888a874ebfd9">XWindowsClipboardTextConverter</a>, <a class="el" href="classXWindowsClipboardUCS2Converter.html#a240e976d17e556eaacbc941d2752b947">XWindowsClipboardUCS2Converter</a>, and <a class="el" href="classXWindowsClipboardUTF8Converter.html#aee10207ea47f356ee993d880b6c8631d">XWindowsClipboardUTF8Converter</a>.</p>
+<p>Implemented in <a class="el" href="classXWindowsClipboardAnyBitmapConverter.html#a5c90c488f38d3ed1378a978c4934b2fb">XWindowsClipboardAnyBitmapConverter</a>, <a class="el" href="classXWindowsClipboardBMPConverter.html#ae2f46b9324c1fabab990538275f70b40">XWindowsClipboardBMPConverter</a>, <a class="el" href="classXWindowsClipboardHTMLConverter.html#af4e3ad2b04d5fe24be5b395e811365d1">XWindowsClipboardHTMLConverter</a>, <a class="el" href="classXWindowsClipboardTextConverter.html#a3d6826653c6b6fd575a9f7ef9a97f775">XWindowsClipboardTextConverter</a>, <a class="el" href="classXWindowsClipboardUCS2Converter.html#aa1d33b83277e186e97eeab88f37da664">XWindowsClipboardUCS2Converter</a>, and <a class="el" href="classXWindowsClipboardUTF8Converter.html#a5ac08cdf3a2cdd760b6bd0cc2a123430">XWindowsClipboardUTF8Converter</a>.</p>
 
 </div>
 </div>

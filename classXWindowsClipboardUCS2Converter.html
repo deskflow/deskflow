@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,8 +126,8 @@ Collaboration diagram for XWindowsClipboardUCS2Converter:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2cf8119ad30402230a3de0cf573e6a5f" id="r_a2cf8119ad30402230a3de0cf573e6a5f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2cf8119ad30402230a3de0cf573e6a5f">XWindowsClipboardUCS2Converter</a> (Display *display, const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
 <tr class="memitem:a65a085b0617720e0e987185b437aad9c" id="r_a65a085b0617720e0e987185b437aad9c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a65a085b0617720e0e987185b437aad9c">~XWindowsClipboardUCS2Converter</a> () override=default</td></tr>
-<tr class="memitem:a240e976d17e556eaacbc941d2752b947" id="r_a240e976d17e556eaacbc941d2752b947"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a240e976d17e556eaacbc941d2752b947">getFormat</a> () const override</td></tr>
-<tr class="memdesc:a240e976d17e556eaacbc941d2752b947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
+<tr class="memitem:aa1d33b83277e186e97eeab88f37da664" id="r_aa1d33b83277e186e97eeab88f37da664"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa1d33b83277e186e97eeab88f37da664">getFormat</a> () const override</td></tr>
+<tr class="memdesc:aa1d33b83277e186e97eeab88f37da664"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
 <tr class="memitem:ac757d9848eafddc9f9583e7ce7cf19c9" id="r_ac757d9848eafddc9f9583e7ce7cf19c9"><td class="memItemLeft" align="right" valign="top">Atom&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac757d9848eafddc9f9583e7ce7cf19c9">getAtom</a> () const override</td></tr>
 <tr class="memdesc:ac757d9848eafddc9f9583e7ce7cf19c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get X11 format atom.  <br /></td></tr>
 <tr class="memitem:a466ca25731f55eaddaf78404a9f0ddc4" id="r_a466ca25731f55eaddaf78404a9f0ddc4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a466ca25731f55eaddaf78404a9f0ddc4">getDataSize</a> () const override</td></tr>
@@ -216,7 +216,7 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convert from <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format. </p>
-<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the X selection format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a240e976d17e556eaacbc941d2752b947" title="Get clipboard format.">getFormat()</a>. The return data will be in the X selection format returned by <a class="el" href="#ac757d9848eafddc9f9583e7ce7cf19c9" title="Get X11 format atom.">getAtom()</a>. </p>
+<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the X selection format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#aa1d33b83277e186e97eeab88f37da664" title="Get clipboard format.">getFormat()</a>. The return data will be in the X selection format returned by <a class="el" href="#ac757d9848eafddc9f9583e7ce7cf19c9" title="Get X11 format atom.">getAtom()</a>. </p>
 
 <p>Implements <a class="el" href="classIXWindowsClipboardConverter.html#a0fb1e71d03b605b176fec5e081cb614f">IXWindowsClipboardConverter</a>.</p>
 
@@ -282,8 +282,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a240e976d17e556eaacbc941d2752b947" name="a240e976d17e556eaacbc941d2752b947"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a240e976d17e556eaacbc941d2752b947">&#9670;&#160;</a></span>getFormat()</h2>
+<a id="aa1d33b83277e186e97eeab88f37da664" name="aa1d33b83277e186e97eeab88f37da664"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1d33b83277e186e97eeab88f37da664">&#9670;&#160;</a></span>getFormat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -292,7 +292,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a> XWindowsClipboardUCS2Converter::getFormat </td>
+          <td class="memname"><a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a> XWindowsClipboardUCS2Converter::getFormat </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -308,7 +308,7 @@ Public Member Functions</h2></td></tr>
 <p>Get clipboard format. </p>
 <p>Return the clipboard format this object converts from/to. </p>
 
-<p>Implements <a class="el" href="classIXWindowsClipboardConverter.html#a7465b18adb1bb7d970862822a7c2b6de">IXWindowsClipboardConverter</a>.</p>
+<p>Implements <a class="el" href="classIXWindowsClipboardConverter.html#a4c480bcd20081e4344c9479d06368c7d">IXWindowsClipboardConverter</a>.</p>
 
 </div>
 </div>

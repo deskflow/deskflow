@@ -49,7 +49,7 @@ var searchData=
   ['processstate_46',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
   ['processstatechanged_47',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a075a77c82c3c534e8cfca3384aa9e7fd',1,'deskflow::gui::CoreProcess']]],
   ['processstatetostring_48',['processStateToString',['../namespacedeskflow_1_1gui.html#a21a204364c5d5b80acdb091d3932ea65',1,'deskflow::gui']]],
-  ['protocol_49',['protocol',['../classServerConfig.html#aafbeb267a3ceb552496b6bf2eb4509f0',1,'ServerConfig']]],
+  ['protocol_49',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig']]],
   ['protocolstring_50',['protocolString',['../classServer.html#a8195b7d8e6d9030d92b66a77e99774bf',1,'Server']]],
   ['proxy_51',['proxy',['../classSettings.html#a6debf0cebe43970f836cd1969ded08e9',1,'Settings']]],
   ['push_52',['push',['../classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39',1,'PriorityQueue']]],

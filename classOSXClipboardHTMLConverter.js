@@ -5,6 +5,6 @@ var classOSXClipboardHTMLConverter =
     [ "convertString", "classOSXClipboardHTMLConverter.html#ab5e2bd04a365268b298adff8261b26e0", null ],
     [ "doFromIClipboard", "classOSXClipboardHTMLConverter.html#ae8f8a6c576858ffd551a6725c97f900e", null ],
     [ "doToIClipboard", "classOSXClipboardHTMLConverter.html#afb0f19774d7da394aad4229fa588f1ef", null ],
-    [ "getFormat", "classOSXClipboardHTMLConverter.html#af27f7b77e70697148c6369f5227f2242", null ],
+    [ "getFormat", "classOSXClipboardHTMLConverter.html#ae14e65f0c12685e7682a8ef3a7cd8571", null ],
     [ "getOSXFormat", "classOSXClipboardHTMLConverter.html#ae15be54853418885da99f8ee12377755", null ]
 ];

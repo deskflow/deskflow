@@ -5,6 +5,6 @@ var classXWindowsClipboardUCS2Converter =
     [ "fromIClipboard", "classXWindowsClipboardUCS2Converter.html#ae7b15e22e8c7a8096f96d1ab491be641", null ],
     [ "getAtom", "classXWindowsClipboardUCS2Converter.html#ac757d9848eafddc9f9583e7ce7cf19c9", null ],
     [ "getDataSize", "classXWindowsClipboardUCS2Converter.html#a466ca25731f55eaddaf78404a9f0ddc4", null ],
-    [ "getFormat", "classXWindowsClipboardUCS2Converter.html#a240e976d17e556eaacbc941d2752b947", null ],
+    [ "getFormat", "classXWindowsClipboardUCS2Converter.html#aa1d33b83277e186e97eeab88f37da664", null ],
     [ "toIClipboard", "classXWindowsClipboardUCS2Converter.html#a68923b38f5c009c137fcd632e132a59b", null ]
 ];

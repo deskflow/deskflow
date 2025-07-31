@@ -22,7 +22,7 @@ var searchData=
   ['handshake_20timeout_19',['Handshake Timeout',['../protocol_reference.html#autotoc_md27',1,'']]],
   ['handshakecomplete_20',['handshakeComplete',['../classClient.html#a2a5184197a4157dc52fd344812c6cd78',1,'Client']]],
   ['hangup_21',['Hangup',['../classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a77bd384c19f071f8d0579398b90df0b6',1,'IArchMultithread']]],
-  ['has_22',['has',['../classClipboard.html#a64a0facaa49e5ac6e54e8db3316ea479',1,'Clipboard::has()'],['../classIClipboard.html#ade396538851f2dbdc519e29c71465c4e',1,'IClipboard::has()'],['../classMSWindowsClipboard.html#a4b3c8bd2cdda2d4f6ebb4109417c47b9',1,'MSWindowsClipboard::has()'],['../classOSXClipboard.html#acce24dd81cd73f31f27383dfb2c6b205',1,'OSXClipboard::has()'],['../classXWindowsClipboard.html#ac817774832233eab53e1aa0b0d85412a',1,'XWindowsClipboard::has()']]],
+  ['has_22',['has',['../classClipboard.html#a5812a2355d6e4818b9217cc18f9d0785',1,'Clipboard::has()'],['../classIClipboard.html#a592a7bd11ebba7e51b21ad3b651b6989',1,'IClipboard::has()'],['../classMSWindowsClipboard.html#a3db53404389feb7f3b2eb490653a249f',1,'MSWindowsClipboard::has()'],['../classOSXClipboard.html#a99298d285dbbbb273645ae744cf7fd19',1,'OSXClipboard::has()'],['../classXWindowsClipboard.html#a2607d95a1eb6152e09ba9cf5a661d5b8',1,'XWindowsClipboard::has()']]],
   ['haschanged_23',['hasChanged',['../classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93',1,'MSWindowsSession']]],
   ['hasheartbeat_24',['hasHeartbeat',['../classServerConfig.html#a03b3f88897a63eda3d7b2a0fc48a5fd5',1,'ServerConfig']]],
   ['haslocktoscreenaction_25',['hasLockToScreenAction',['../classdeskflow_1_1server_1_1Config.html#af224d470299368ce6f10fff62bbef68d',1,'deskflow::server::Config']]],
@@ -49,5 +49,6 @@ var searchData=
   ['hotkeyinfo_46',['HotKeyInfo',['../classIPrimaryScreen_1_1HotKeyInfo.html',1,'IPrimaryScreen']]],
   ['hotkeylist_47',['HotkeyList',['../Hotkey_8h.html#a57a9f8448d931e69feadebf463229218',1,'Hotkey.h']]],
   ['hotkeys_48',['hotkeys',['../classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8',1,'ServerConfig']]],
-  ['how_49',['how',['../ArchNetworkWinsock_8cpp.html#a4c8d98272cffc776bb7dfe1dfbadf6a7',1,'ArchNetworkWinsock.cpp']]]
+  ['how_49',['how',['../ArchNetworkWinsock_8cpp.html#a4c8d98272cffc776bb7dfe1dfbadf6a7',1,'ArchNetworkWinsock.cpp']]],
+  ['html_50',['HTML',['../classIClipboard.html#a1d014188948be557b3a3d88034d7081ea4c4ad5fca2e7a3f74dbb1ced00381aa4',1,'IClipboard']]]
 ];

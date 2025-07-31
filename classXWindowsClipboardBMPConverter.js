@@ -5,6 +5,6 @@ var classXWindowsClipboardBMPConverter =
     [ "fromIClipboard", "classXWindowsClipboardBMPConverter.html#a84287c2b905e263940b5a99616ddc970", null ],
     [ "getAtom", "classXWindowsClipboardBMPConverter.html#a3906766115b02ddc05ed7e963bbadc8d", null ],
     [ "getDataSize", "classXWindowsClipboardBMPConverter.html#a79d3ad3cb6e0ee47eb48ff42e9b81259", null ],
-    [ "getFormat", "classXWindowsClipboardBMPConverter.html#ae8e780626f979d59bac9ff12ab677ec8", null ],
+    [ "getFormat", "classXWindowsClipboardBMPConverter.html#ae2f46b9324c1fabab990538275f70b40", null ],
     [ "toIClipboard", "classXWindowsClipboardBMPConverter.html#ad6bce259737d05910645639820f000f6", null ]
 ];

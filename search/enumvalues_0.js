@@ -12,8 +12,8 @@ var searchData=
   ['alreadyconnected_9',['AlreadyConnected',['../namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34',1,'deskflow::gui::messages']]],
   ['alt_10',['Alt',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf',1,'ScreenConfig']]],
   ['argserror_11',['ArgsError',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057',1,'DaemonApp']]],
-  ['autoaddscreenignore_12',['AutoAddScreenIgnore',['../ServerConfig_8h.html#af6e1240278311e5c6fdff1b97a4679b9ab912d8b0d00f4f05da1dd26cd1c9ff2e',1,'ServerConfig.h']]],
-  ['autoaddscreenmanualclient_13',['AutoAddScreenManualClient',['../ServerConfig_8h.html#af6e1240278311e5c6fdff1b97a4679b9ae4453097668a3401b12a9f8595428a35',1,'ServerConfig.h']]],
-  ['autoaddscreenmanualserver_14',['AutoAddScreenManualServer',['../ServerConfig_8h.html#af6e1240278311e5c6fdff1b97a4679b9a6daf3c0f2f93f552ef823489c02914b8',1,'ServerConfig.h']]],
-  ['autoaddscreenok_15',['AutoAddScreenOk',['../ServerConfig_8h.html#af6e1240278311e5c6fdff1b97a4679b9a4948c3c7a048ff4cf5f5d6c2b19bfe30',1,'ServerConfig.h']]]
+  ['autoaddscreenignore_12',['AutoAddScreenIgnore',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12',1,'ServerConfig.h']]],
+  ['autoaddscreenmanualclient_13',['AutoAddScreenManualClient',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fab5094b611f7672180cafe697a16119f2',1,'ServerConfig.h']]],
+  ['autoaddscreenmanualserver_14',['AutoAddScreenManualServer',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3f49a3be29d699f3be1aef7e363a9773',1,'ServerConfig.h']]],
+  ['autoaddscreenok_15',['AutoAddScreenOk',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3737bb2c0506485a05cf9cde59aa679d',1,'ServerConfig.h']]]
 ];

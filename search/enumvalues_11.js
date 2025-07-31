@@ -25,9 +25,9 @@ var searchData=
   ['socketdisconnected_22',['SocketDisconnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2accb8293e8d767b9891d98fbc10a6894e',1,'deskflow']]],
   ['socketstopretry_23',['SocketStopRetry',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a04f7a055ad9674c92ee642a8823db2c2',1,'deskflow']]],
   ['startdaemon_24',['StartDaemon',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a93d50575e86ae2d0517248aabd42af1d',1,'DaemonApp']]],
-  ['started_25',['Started',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca8428552d86c0d262a542a528af490afa',1,'deskflow::gui::CoreProcess::Started'],['../group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa',1,'Started:&#160;ProtocolTypes.h']]],
+  ['started_25',['Started',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca8428552d86c0d262a542a528af490afa',1,'deskflow::gui::CoreProcess::Started'],['../group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa',1,'Started:&#160;ProtocolTypes.h'],['../ServerApp_8h.html#aeee15ce451435cc7f2fdb211337d0694a8428552d86c0d262a542a528af490afa',1,'Started:&#160;ServerApp.h']]],
   ['startfailed_26',['StartFailed',['../classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467a65004ae0dc2e9512cfa7d0e6dbcdab1e',1,'deskflow::gui::CoreProcess']]],
-  ['starting_27',['Starting',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac2efe4bbd13e6cb0db293e72884273c0',1,'deskflow::gui::CoreProcess']]],
+  ['starting_27',['Starting',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac2efe4bbd13e6cb0db293e72884273c0',1,'deskflow::gui::CoreProcess::Starting'],['../ServerApp_8h.html#aeee15ce451435cc7f2fdb211337d0694ac2efe4bbd13e6cb0db293e72884273c0',1,'Starting:&#160;ServerApp.h']]],
   ['stopped_28',['Stopped',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac23e2b09ebe6bf4cb5e2a9abe85c0be2',1,'deskflow::gui::CoreProcess']]],
   ['stopping_29',['Stopping',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca7b7ecb39b9e110c2a31409a1672bad23',1,'deskflow::gui::CoreProcess']]],
   ['stream_30',['Stream',['../classIArchNetwork.html#a0ca03bdd251faa4394d521cfbe2cf02baeae835e83c0494a376229f254f7d3392',1,'IArchNetwork']]],
@@ -44,5 +44,6 @@ var searchData=
   ['switchright_41',['switchRight',['../classAction.html#a299e0248ee64190b156f01c61833d4daa171c1ef0c261bd00ea2d10c1fbd05954',1,'Action']]],
   ['switchtoscreen_42',['switchToScreen',['../classAction.html#ab1851cee70a9061c928e69d44e6cba0ba46d7f419fb52439679b9453e4b3e4cef',1,'Action']]],
   ['switchup_43',['switchUp',['../classAction.html#a299e0248ee64190b156f01c61833d4daa68dde40dd9f7cec3bf2388af171d9fa8',1,'Action']]],
-  ['system_44',['System',['../classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a',1,'IEventQueueBuffer::System'],['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a',1,'deskflow::System']]]
+  ['synergy_44',['Synergy',['../NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a',1,'NetworkProtocol.h']]],
+  ['system_45',['System',['../classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a',1,'IEventQueueBuffer::System'],['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a',1,'deskflow::System']]]
 ];

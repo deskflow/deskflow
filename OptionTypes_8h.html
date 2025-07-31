@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -93,17 +93,20 @@ $(function(){initNavTree('OptionTypes_8h.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="EventTypes_8h_source.html">base/EventTypes.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="NetworkProtocol_8h_source.html">base/NetworkProtocol.h</a>&quot;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for OptionTypes.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="OptionTypes_8h__incl.png" border="0" usemap="#asrc_2lib_2deskflow_2OptionTypes_8h" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2deskflow_2OptionTypes_8h" id="asrc_2lib_2deskflow_2OptionTypes_8h">
-<area shape="rect" title=" " alt="" coords="30,5,230,30"/>
+<area shape="rect" title=" " alt="" coords="142,5,342,30"/>
 <area shape="rect" href="EventTypes_8h.html" title=" " alt="" coords="5,78,138,103"/>
-<area shape="poly" title=" " alt="" coords="123,32,93,68,89,64,118,29"/>
-<area shape="rect" title=" " alt="" coords="162,78,218,103"/>
-<area shape="poly" title=" " alt="" coords="142,29,173,65,169,68,138,32"/>
+<area shape="poly" title=" " alt="" coords="215,33,115,74,113,69,213,28"/>
+<area shape="rect" href="NetworkProtocol_8h.html" title=" " alt="" coords="162,78,323,103"/>
+<area shape="poly" title=" " alt="" coords="245,31,245,62,240,62,240,31"/>
+<area shape="rect" title=" " alt="" coords="347,78,404,103"/>
+<area shape="poly" title=" " alt="" coords="265,28,341,68,339,73,263,33"/>
 <area shape="rect" title=" " alt="" coords="40,151,103,175"/>
 <area shape="poly" title=" " alt="" coords="74,103,74,135,69,135,69,103"/>
 </map>
@@ -334,36 +337,6 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:a516314192e79c5d057fa63f0243f3155"><td class="mdescLeft">&#160;</td><td class="mdescRight">Option Value.  <br /></td></tr>
 <tr class="memitem:a927a94eb85ccd847f2a716b794777955" id="r_a927a94eb85ccd847f2a716b794777955"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a927a94eb85ccd847f2a716b794777955">OptionsList</a> = std::vector&lt;uint32_t&gt;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr id="enum-members-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Screen switch corner enumeration</div></td></tr>
-<tr class="memitem:a4d955b1367a3e19b622bfa14a697db91" id="r_a4d955b1367a3e19b622bfa14a697db91"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4d955b1367a3e19b622bfa14a697db91">EScreenSwitchCorners</a> { <br />
-&#160;&#160;<a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a048cb811ba72e0e0b9d631b7db5f2ac7">kNoCorner</a>
-, <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a193111a954dec0c3efae0cc83eb09d48">kTopLeft</a>
-, <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a9e626b914e7ed24404f72bffdfb80833">kTopRight</a>
-, <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91aa8529e3d216c6ce5f204241afa9e4234">kBottomLeft</a>
-, <br />
-&#160;&#160;<a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a4fb10e55ef539fc3fbd68e30cd3f99bc">kBottomRight</a>
-, <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a294e874fb092136064c1a0ab5f267218">kFirstCorner</a> = kTopLeft
-, <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91a56d92d1a5a51fef92c97c8b35b536af9">kLastCorner</a> = kBottomRight
-<br />
- }</td></tr>
-<tr id="enum-members-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Screen switch corner masks</div></td></tr>
-<tr class="memitem:acb1b4ede51e933e007f1eb98b49c46ac" id="r_acb1b4ede51e933e007f1eb98b49c46ac"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb1b4ede51e933e007f1eb98b49c46ac">EScreenSwitchCornerMasks</a> { <br />
-&#160;&#160;<a class="el" href="#acb1b4ede51e933e007f1eb98b49c46aca9d2560e9a099d1dc4155b18bb656fa82">kNoCornerMask</a> = 0
-, <a class="el" href="#acb1b4ede51e933e007f1eb98b49c46acac1a05fec72f7f8e55a6426701397ea25">kTopLeftMask</a> = 1 &lt;&lt; (kTopLeft - kFirstCorner)
-, <a class="el" href="#acb1b4ede51e933e007f1eb98b49c46aca49471dcf53d4a838fa1a7e17d747a2af">kTopRightMask</a> = 1 &lt;&lt; (kTopRight - kFirstCorner)
-, <a class="el" href="#acb1b4ede51e933e007f1eb98b49c46aca0736475cb978953ce73830bc72e5ee30">kBottomLeftMask</a> = 1 &lt;&lt; (kBottomLeft - kFirstCorner)
-, <br />
-&#160;&#160;<a class="el" href="#acb1b4ede51e933e007f1eb98b49c46aca6b11631cef1e64fd197a179ac57234eb">kBottomRightMask</a> = 1 &lt;&lt; (kBottomRight - kFirstCorner)
-, <a class="el" href="#acb1b4ede51e933e007f1eb98b49c46aca7049bd1c6ad2d4ab558c6596d942ae0f">kAllCornersMask</a> = kTopLeftMask | kTopRightMask | kBottomLeftMask | kBottomRightMask
-<br />
- }</td></tr>
-<tr id="enum-members-2" class="groupHeader"><td colspan="2"><div class="groupHeader">Network protocol</div></td></tr>
-<tr class="memitem:a918f326f6d28f6363eca4120e5ac6ee5" id="r_a918f326f6d28f6363eca4120e5ac6ee5"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a918f326f6d28f6363eca4120e5ac6ee5">ENetworkProtocol</a> { <a class="el" href="#a918f326f6d28f6363eca4120e5ac6ee5a104f7ca9a20a599f1cc7591b1a3e0a4a">kSynergy</a>
-, <a class="el" href="#a918f326f6d28f6363eca4120e5ac6ee5affa5976cb7170d234d6b69921bf0f085">kBarrier</a>
- }</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr id="var-members-0" class="groupHeader"><td colspan="2"><div class="groupHeader">Option identifiers</div></td></tr>
@@ -392,6 +365,13 @@ Variables</h2></td></tr>
 <tr class="memitem:ae46efda56ea28850f648a985dd8336d5" id="r_ae46efda56ea28850f648a985dd8336d5"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#afd6ae3ad681e4437ba4b4a5f2d3b2ad9">OptionID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae46efda56ea28850f648a985dd8336d5">kOptionDisableLockToScreen</a> = <a class="el" href="#acc4d86d67ae7298359018259a74c93a0">OPTION_CODE</a>(&quot;DLTS&quot;)</td></tr>
 <tr class="memitem:ae3bfc83c4cab0b6ded099668df59009e" id="r_ae3bfc83c4cab0b6ded099668df59009e"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#afd6ae3ad681e4437ba4b4a5f2d3b2ad9">OptionID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae3bfc83c4cab0b6ded099668df59009e">kOptionClipboardSharing</a> = <a class="el" href="#acc4d86d67ae7298359018259a74c93a0">OPTION_CODE</a>(&quot;CLPS&quot;)</td></tr>
 <tr class="memitem:a1daaa88f250b6c3dc6c216ea2d6f9a94" id="r_a1daaa88f250b6c3dc6c216ea2d6f9a94"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="#afd6ae3ad681e4437ba4b4a5f2d3b2ad9">OptionID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1daaa88f250b6c3dc6c216ea2d6f9a94">kOptionClipboardSharingSize</a> = <a class="el" href="#acc4d86d67ae7298359018259a74c93a0">OPTION_CODE</a>(&quot;CLSZ&quot;)</td></tr>
+<tr id="var-members-1" class="groupHeader"><td colspan="2"><div class="groupHeader">Screen switch corner masks</div></td></tr>
+<tr class="memitem:a14bd7ad80509fb730e7aaf5d09b5cca2" id="r_a14bd7ad80509fb730e7aaf5d09b5cca2"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a14bd7ad80509fb730e7aaf5d09b5cca2">s_noCornerMask</a> = 0</td></tr>
+<tr class="memitem:abddd0d2bf83b8b04d31c23d6e33ab7be" id="r_abddd0d2bf83b8b04d31c23d6e33ab7be"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abddd0d2bf83b8b04d31c23d6e33ab7be">s_topLeftCornerMask</a> = 1 &lt;&lt; 0</td></tr>
+<tr class="memitem:aea7f851a63fff1bb5d2961e914b52250" id="r_aea7f851a63fff1bb5d2961e914b52250"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aea7f851a63fff1bb5d2961e914b52250">s_topRightCornerMask</a> = 1 &lt;&lt; 1</td></tr>
+<tr class="memitem:a34aeea7fd5af8c9eba2ad4670b3c7997" id="r_a34aeea7fd5af8c9eba2ad4670b3c7997"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a34aeea7fd5af8c9eba2ad4670b3c7997">s_bottomLeftCornerMask</a> = 1 &lt;&lt; 2</td></tr>
+<tr class="memitem:aba536da3d4ffa3b249ada6daf203118a" id="r_aba536da3d4ffa3b249ada6daf203118a"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aba536da3d4ffa3b249ada6daf203118a">s_bottomRightCornerMask</a> = 1 &lt;&lt; 3</td></tr>
+<tr class="memitem:a3ec42fb32947b842baf9962aeba23419" id="r_a3ec42fb32947b842baf9962aeba23419"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ec42fb32947b842baf9962aeba23419">s_allCornersMask</a> = 1 &lt;&lt; 0 | 1 &lt;&lt; 1 | 1 &lt;&lt; 2 | 1 &lt;&lt; 3</td></tr>
 </table>
 <a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="acc4d86d67ae7298359018259a74c93a0" name="acc4d86d67ae7298359018259a74c93a0"></a>
@@ -461,78 +441,6 @@ Variables</h2></td></tr>
 
 <p>Option Value. </p>
 <p>Type to hold an option value. </p>
-
-</div>
-</div>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
-<a id="a918f326f6d28f6363eca4120e5ac6ee5" name="a918f326f6d28f6363eca4120e5ac6ee5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a918f326f6d28f6363eca4120e5ac6ee5">&#9670;&#160;</a></span>ENetworkProtocol</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#a918f326f6d28f6363eca4120e5ac6ee5">ENetworkProtocol</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a918f326f6d28f6363eca4120e5ac6ee5a104f7ca9a20a599f1cc7591b1a3e0a4a" name="a918f326f6d28f6363eca4120e5ac6ee5a104f7ca9a20a599f1cc7591b1a3e0a4a"></a>kSynergy&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a918f326f6d28f6363eca4120e5ac6ee5affa5976cb7170d234d6b69921bf0f085" name="a918f326f6d28f6363eca4120e5ac6ee5affa5976cb7170d234d6b69921bf0f085"></a>kBarrier&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="acb1b4ede51e933e007f1eb98b49c46ac" name="acb1b4ede51e933e007f1eb98b49c46ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb1b4ede51e933e007f1eb98b49c46ac">&#9670;&#160;</a></span>EScreenSwitchCornerMasks</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#acb1b4ede51e933e007f1eb98b49c46ac">EScreenSwitchCornerMasks</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46aca9d2560e9a099d1dc4155b18bb656fa82" name="acb1b4ede51e933e007f1eb98b49c46aca9d2560e9a099d1dc4155b18bb656fa82"></a>kNoCornerMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46acac1a05fec72f7f8e55a6426701397ea25" name="acb1b4ede51e933e007f1eb98b49c46acac1a05fec72f7f8e55a6426701397ea25"></a>kTopLeftMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46aca49471dcf53d4a838fa1a7e17d747a2af" name="acb1b4ede51e933e007f1eb98b49c46aca49471dcf53d4a838fa1a7e17d747a2af"></a>kTopRightMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46aca0736475cb978953ce73830bc72e5ee30" name="acb1b4ede51e933e007f1eb98b49c46aca0736475cb978953ce73830bc72e5ee30"></a>kBottomLeftMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46aca6b11631cef1e64fd197a179ac57234eb" name="acb1b4ede51e933e007f1eb98b49c46aca6b11631cef1e64fd197a179ac57234eb"></a>kBottomRightMask&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="acb1b4ede51e933e007f1eb98b49c46aca7049bd1c6ad2d4ab558c6596d942ae0f" name="acb1b4ede51e933e007f1eb98b49c46aca7049bd1c6ad2d4ab558c6596d942ae0f"></a>kAllCornersMask&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="a4d955b1367a3e19b622bfa14a697db91" name="a4d955b1367a3e19b622bfa14a697db91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4d955b1367a3e19b622bfa14a697db91">&#9670;&#160;</a></span>EScreenSwitchCorners</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="#a4d955b1367a3e19b622bfa14a697db91">EScreenSwitchCorners</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a048cb811ba72e0e0b9d631b7db5f2ac7" name="a4d955b1367a3e19b622bfa14a697db91a048cb811ba72e0e0b9d631b7db5f2ac7"></a>kNoCorner&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a193111a954dec0c3efae0cc83eb09d48" name="a4d955b1367a3e19b622bfa14a697db91a193111a954dec0c3efae0cc83eb09d48"></a>kTopLeft&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a9e626b914e7ed24404f72bffdfb80833" name="a4d955b1367a3e19b622bfa14a697db91a9e626b914e7ed24404f72bffdfb80833"></a>kTopRight&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91aa8529e3d216c6ce5f204241afa9e4234" name="a4d955b1367a3e19b622bfa14a697db91aa8529e3d216c6ce5f204241afa9e4234"></a>kBottomLeft&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a4fb10e55ef539fc3fbd68e30cd3f99bc" name="a4d955b1367a3e19b622bfa14a697db91a4fb10e55ef539fc3fbd68e30cd3f99bc"></a>kBottomRight&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a294e874fb092136064c1a0ab5f267218" name="a4d955b1367a3e19b622bfa14a697db91a294e874fb092136064c1a0ab5f267218"></a>kFirstCorner&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4d955b1367a3e19b622bfa14a697db91a56d92d1a5a51fef92c97c8b35b536af9" name="a4d955b1367a3e19b622bfa14a697db91a56d92d1a5a51fef92c97c8b35b536af9"></a>kLastCorner&#160;</td><td class="fielddoc"></td></tr>
-</table>
 
 </div>
 </div>
@@ -1081,6 +989,138 @@ Variables</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3ec42fb32947b842baf9962aeba23419" name="a3ec42fb32947b842baf9962aeba23419"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ec42fb32947b842baf9962aeba23419">&#9670;&#160;</a></span>s_allCornersMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_allCornersMask = 1 &lt;&lt; 0 | 1 &lt;&lt; 1 | 1 &lt;&lt; 2 | 1 &lt;&lt; 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a34aeea7fd5af8c9eba2ad4670b3c7997" name="a34aeea7fd5af8c9eba2ad4670b3c7997"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34aeea7fd5af8c9eba2ad4670b3c7997">&#9670;&#160;</a></span>s_bottomLeftCornerMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_bottomLeftCornerMask = 1 &lt;&lt; 2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aba536da3d4ffa3b249ada6daf203118a" name="aba536da3d4ffa3b249ada6daf203118a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba536da3d4ffa3b249ada6daf203118a">&#9670;&#160;</a></span>s_bottomRightCornerMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_bottomRightCornerMask = 1 &lt;&lt; 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a14bd7ad80509fb730e7aaf5d09b5cca2" name="a14bd7ad80509fb730e7aaf5d09b5cca2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14bd7ad80509fb730e7aaf5d09b5cca2">&#9670;&#160;</a></span>s_noCornerMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_noCornerMask = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="abddd0d2bf83b8b04d31c23d6e33ab7be" name="abddd0d2bf83b8b04d31c23d6e33ab7be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abddd0d2bf83b8b04d31c23d6e33ab7be">&#9670;&#160;</a></span>s_topLeftCornerMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_topLeftCornerMask = 1 &lt;&lt; 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aea7f851a63fff1bb5d2961e914b52250" name="aea7f851a63fff1bb5d2961e914b52250"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea7f851a63fff1bb5d2961e914b52250">&#9670;&#160;</a></span>s_topRightCornerMask</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto s_topRightCornerMask = 1 &lt;&lt; 1</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

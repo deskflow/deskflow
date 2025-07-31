@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -128,12 +128,12 @@ Collaboration diagram for IClipboard:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a2e3274bd6166dff0f56f893ca92a01c3" id="r_a2e3274bd6166dff0f56f893ca92a01c3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a> { <a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3aef00d7d4ac6f8c95b58415a40dd06c86">kText</a>
-, <a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3a492d9c52287c09d7451631a5e1ad1b62">kHTML</a>
-, <a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3aba58fec21bf261e21869010ac8f49095">kBitmap</a>
-, <a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3aed167483e9ce4458e95b55a41013246a">kNumFormats</a>
+<tr class="memitem:a1d014188948be557b3a3d88034d7081e" id="r_a1d014188948be557b3a3d88034d7081e"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a> { <a class="el" href="#a1d014188948be557b3a3d88034d7081ea9dffbf69ffba8bc38bc4e01abf4b1675">Text</a>
+, <a class="el" href="#a1d014188948be557b3a3d88034d7081ea4c4ad5fca2e7a3f74dbb1ced00381aa4">HTML</a>
+, <a class="el" href="#a1d014188948be557b3a3d88034d7081ea86ee74baff479d85d18f2cda9f8a9518">Bitmap</a>
+, <a class="el" href="#a1d014188948be557b3a3d88034d7081ea18c18b7e572415539aa8a3aa94ec33fa">TotalFormats</a>
  }</td></tr>
-<tr class="memdesc:a2e3274bd6166dff0f56f893ca92a01c3"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> formats.  <a href="#a2e3274bd6166dff0f56f893ca92a01c3">More...</a><br /></td></tr>
+<tr class="memdesc:a1d014188948be557b3a3d88034d7081e"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> formats.  <a href="#a1d014188948be557b3a3d88034d7081e">More...</a><br /></td></tr>
 <tr class="memitem:a9e15948af1b97562218eb262d3790c29" id="r_a9e15948af1b97562218eb262d3790c29"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9e15948af1b97562218eb262d3790c29">Time</a> = uint32_t</td></tr>
 <tr class="memdesc:a9e15948af1b97562218eb262d3790c29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Timestamp type.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -142,8 +142,8 @@ Public Member Functions</h2></td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:a5eea232f00e11ff558ae97dd4157a151" id="r_a5eea232f00e11ff558ae97dd4157a151"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5eea232f00e11ff558ae97dd4157a151">empty</a> ()=0</td></tr>
 <tr class="memdesc:a5eea232f00e11ff558ae97dd4157a151"><td class="mdescLeft">&#160;</td><td class="mdescRight">Empty clipboard.  <br /></td></tr>
-<tr class="memitem:a815377b3bf329ec0b1e3ba786208c27e" id="r_a815377b3bf329ec0b1e3ba786208c27e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a815377b3bf329ec0b1e3ba786208c27e">add</a> (<a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a>, const std::string &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)=0</td></tr>
-<tr class="memdesc:a815377b3bf329ec0b1e3ba786208c27e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add data.  <br /></td></tr>
+<tr class="memitem:a626df1c5cedfc790e84dcee64edf682f" id="r_a626df1c5cedfc790e84dcee64edf682f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a626df1c5cedfc790e84dcee64edf682f">add</a> (<a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a>, const std::string &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)=0</td></tr>
+<tr class="memdesc:a626df1c5cedfc790e84dcee64edf682f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add data.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
 <tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
 <tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
@@ -156,10 +156,10 @@ accessors</h2></td></tr>
 <tr class="memdesc:ac4baa709cc801acd2bd72a1b2404eceb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close clipboard.  <br /></td></tr>
 <tr class="memitem:adc13e5ad0408d8a157fe099a46fb637c" id="r_adc13e5ad0408d8a157fe099a46fb637c"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="#a9e15948af1b97562218eb262d3790c29">Time</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adc13e5ad0408d8a157fe099a46fb637c">getTime</a> () const =0</td></tr>
 <tr class="memdesc:adc13e5ad0408d8a157fe099a46fb637c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get time.  <br /></td></tr>
-<tr class="memitem:ade396538851f2dbdc519e29c71465c4e" id="r_ade396538851f2dbdc519e29c71465c4e"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ade396538851f2dbdc519e29c71465c4e">has</a> (<a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a>) const =0</td></tr>
-<tr class="memdesc:ade396538851f2dbdc519e29c71465c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for data.  <br /></td></tr>
-<tr class="memitem:ab0cbb2678755a71972eb0b65aaa3825d" id="r_ab0cbb2678755a71972eb0b65aaa3825d"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0cbb2678755a71972eb0b65aaa3825d">get</a> (<a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a>) const =0</td></tr>
-<tr class="memdesc:ab0cbb2678755a71972eb0b65aaa3825d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data.  <br /></td></tr>
+<tr class="memitem:a592a7bd11ebba7e51b21ad3b651b6989" id="r_a592a7bd11ebba7e51b21ad3b651b6989"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a592a7bd11ebba7e51b21ad3b651b6989">has</a> (<a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a>) const =0</td></tr>
+<tr class="memdesc:a592a7bd11ebba7e51b21ad3b651b6989"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for data.  <br /></td></tr>
+<tr class="memitem:a742c618d6056270cf533962ae905a059" id="r_a742c618d6056270cf533962ae905a059"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a742c618d6056270cf533962ae905a059">get</a> (<a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a>) const =0</td></tr>
+<tr class="memdesc:a742c618d6056270cf533962ae905a059"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get data.  <br /></td></tr>
 <tr class="memitem:a952be2b476e25f70c8a2d0d51690f5a0" id="r_a952be2b476e25f70c8a2d0d51690f5a0"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a952be2b476e25f70c8a2d0d51690f5a0">marshall</a> (const <a class="el" href="classIClipboard.html">IClipboard</a> *clipboard)</td></tr>
 <tr class="memdesc:a952be2b476e25f70c8a2d0d51690f5a0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Marshall clipboard data.  <br /></td></tr>
 <tr class="memitem:a7c084944837c68934cb90c3b46dfaee6" id="r_a7c084944837c68934cb90c3b46dfaee6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7c084944837c68934cb90c3b46dfaee6">unmarshall</a> (<a class="el" href="classIClipboard.html">IClipboard</a> *clipboard, const std::string_view &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, <a class="el" href="#a9e15948af1b97562218eb262d3790c29">Time</a> time)</td></tr>
@@ -191,39 +191,47 @@ accessors</h2></td></tr>
 </div>
 </div>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a2e3274bd6166dff0f56f893ca92a01c3" name="a2e3274bd6166dff0f56f893ca92a01c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2e3274bd6166dff0f56f893ca92a01c3">&#9670;&#160;</a></span>EFormat</h2>
+<a id="a1d014188948be557b3a3d88034d7081e" name="a1d014188948be557b3a3d88034d7081e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d014188948be557b3a3d88034d7081e">&#9670;&#160;</a></span>Format</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a></td>
+          <td class="memname">enum class <a class="el" href="#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> formats. </p>
-<p>The list of known clipboard formats. kNumFormats must be last and formats must be sequential starting from zero. <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> data set via <a class="el" href="#a815377b3bf329ec0b1e3ba786208c27e" title="Add data.">add()</a> and retrieved via <a class="el" href="#ab0cbb2678755a71972eb0b65aaa3825d" title="Get data.">get()</a> must be in one of these formats. Platform dependent clipboard subclasses can and should present any suitable formats derivable from these formats.</p>
+<p>The list of known clipboard formats. kNumFormats must be last and formats must be sequential starting from zero. <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> data set via <a class="el" href="#a626df1c5cedfc790e84dcee64edf682f" title="Add data.">add()</a> and retrieved via <a class="el" href="#a742c618d6056270cf533962ae905a059" title="Get data.">get()</a> must be in one of these formats. Platform dependent clipboard subclasses can and should present any suitable formats derivable from these formats.</p>
 <p><code>kText</code> is a text format encoded in UTF-8. Newlines are LF (not CR or LF/CR).</p>
 <p><code>kBitmap</code> is an image format. The data is a BMP file without the 14 byte header (i.e. starting at the INFOHEADER) and with the image data immediately following the 40 byte INFOHEADER.</p>
 <p><code>kHTML</code> is a text format encoded in UTF-8 and containing a valid HTML fragment (but not necessarily a complete HTML document). Newlines are LF. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a2e3274bd6166dff0f56f893ca92a01c3aef00d7d4ac6f8c95b58415a40dd06c86" name="a2e3274bd6166dff0f56f893ca92a01c3aef00d7d4ac6f8c95b58415a40dd06c86"></a>kText&#160;</td><td class="fielddoc"><p>Text format, UTF-8, newline is LF. </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a1d014188948be557b3a3d88034d7081ea9dffbf69ffba8bc38bc4e01abf4b1675" name="a1d014188948be557b3a3d88034d7081ea9dffbf69ffba8bc38bc4e01abf4b1675"></a>Text&#160;</td><td class="fielddoc"><p>Text format, UTF-8, newline is LF. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a2e3274bd6166dff0f56f893ca92a01c3a492d9c52287c09d7451631a5e1ad1b62" name="a2e3274bd6166dff0f56f893ca92a01c3a492d9c52287c09d7451631a5e1ad1b62"></a>kHTML&#160;</td><td class="fielddoc"><p>HTML format, HTML fragment, UTF-8, newline is LF. </p>
+<tr><td class="fieldname"><a id="a1d014188948be557b3a3d88034d7081ea4c4ad5fca2e7a3f74dbb1ced00381aa4" name="a1d014188948be557b3a3d88034d7081ea4c4ad5fca2e7a3f74dbb1ced00381aa4"></a>HTML&#160;</td><td class="fielddoc"><p>HTML format, HTML fragment, UTF-8, newline is LF. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a2e3274bd6166dff0f56f893ca92a01c3aba58fec21bf261e21869010ac8f49095" name="a2e3274bd6166dff0f56f893ca92a01c3aba58fec21bf261e21869010ac8f49095"></a>kBitmap&#160;</td><td class="fielddoc"><p>Bitmap format, BMP 24/32bpp, BI_RGB. </p>
+<tr><td class="fieldname"><a id="a1d014188948be557b3a3d88034d7081ea86ee74baff479d85d18f2cda9f8a9518" name="a1d014188948be557b3a3d88034d7081ea86ee74baff479d85d18f2cda9f8a9518"></a>Bitmap&#160;</td><td class="fielddoc"><p>Bitmap format, BMP 24/32bpp, BI_RGB. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a2e3274bd6166dff0f56f893ca92a01c3aed167483e9ce4458e95b55a41013246a" name="a2e3274bd6166dff0f56f893ca92a01c3aed167483e9ce4458e95b55a41013246a"></a>kNumFormats&#160;</td><td class="fielddoc"><p>The number of clipboard formats. </p>
+<tr><td class="fieldname"><a id="a1d014188948be557b3a3d88034d7081ea18c18b7e572415539aa8a3aa94ec33fa" name="a1d014188948be557b3a3d88034d7081ea18c18b7e572415539aa8a3aa94ec33fa"></a>TotalFormats&#160;</td><td class="fielddoc"><p>The number of clipboard formats supported. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a815377b3bf329ec0b1e3ba786208c27e" name="a815377b3bf329ec0b1e3ba786208c27e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a815377b3bf329ec0b1e3ba786208c27e">&#9670;&#160;</a></span>add()</h2>
+<a id="a626df1c5cedfc790e84dcee64edf682f" name="a626df1c5cedfc790e84dcee64edf682f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a626df1c5cedfc790e84dcee64edf682f">&#9670;&#160;</a></span>add()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -234,7 +242,7 @@ accessors</h2></td></tr>
         <tr>
           <td class="memname">virtual void IClipboard::add </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+          <td class="paramtype"><a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a></td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -252,7 +260,7 @@ accessors</h2></td></tr>
 <p>Add data. </p>
 <p>Add data in the given format to the clipboard. May only be called after a successful <a class="el" href="#a5eea232f00e11ff558ae97dd4157a151" title="Empty clipboard.">empty()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a89f431e5b71a24df61c088b63f911388">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a5dccaedc6e52684338454f9d04276eb9">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#addfd92e5ba1c21dd8529ad6bc84f1867">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#aed02ba01e9ab78adc578d3812b6413b4">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a9e249e84b390532fd48e3d8a49464f32">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a21fa058bc4182ca36851ee5a41f9e224">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a211a60474df04f515594a381262fb026">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ad23b5c1a0a720adf19779c2b9b2c42fc">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -385,8 +393,8 @@ accessors</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0cbb2678755a71972eb0b65aaa3825d" name="ab0cbb2678755a71972eb0b65aaa3825d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0cbb2678755a71972eb0b65aaa3825d">&#9670;&#160;</a></span>get()</h2>
+<a id="a742c618d6056270cf533962ae905a059" name="a742c618d6056270cf533962ae905a059"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a742c618d6056270cf533962ae905a059">&#9670;&#160;</a></span>get()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -397,7 +405,7 @@ accessors</h2></td></tr>
         <tr>
           <td class="memname">virtual std::string IClipboard::get </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -411,7 +419,7 @@ accessors</h2></td></tr>
 <p>Get data. </p>
 <p>Return the data in the given format. Returns the empty string if there is no data in that format. Must be called between a successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> and <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a61897a9f630d9a8743c61f5b78d701d7">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a899caa427535ebe3d3af4822dfe56ae8">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a9fb7b591e8431335fd89cc58d84be726">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a830ece35f3d4214a9cafedb6ff34c3c5">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#acc73e977864a48b2fcee12594b72cd34">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a79268c92d239ce4d9efac3568a8fa856">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a5a3736cb7ed7d14ce9ddce3ccd2a27f5">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a41b2d85b6ea5aa730239c8ec38954283">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -445,8 +453,8 @@ accessors</h2></td></tr>
 
 </div>
 </div>
-<a id="ade396538851f2dbdc519e29c71465c4e" name="ade396538851f2dbdc519e29c71465c4e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade396538851f2dbdc519e29c71465c4e">&#9670;&#160;</a></span>has()</h2>
+<a id="a592a7bd11ebba7e51b21ad3b651b6989" name="a592a7bd11ebba7e51b21ad3b651b6989"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a592a7bd11ebba7e51b21ad3b651b6989">&#9670;&#160;</a></span>has()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -457,7 +465,7 @@ accessors</h2></td></tr>
         <tr>
           <td class="memname">virtual bool IClipboard::has </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a2e3274bd6166dff0f56f893ca92a01c3">EFormat</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="#a1d014188948be557b3a3d88034d7081e">Format</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -471,7 +479,7 @@ accessors</h2></td></tr>
 <p>Check for data. </p>
 <p>Return true iff the clipboard contains data in the given format. Must be called between a successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> and <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a64a0facaa49e5ac6e54e8db3316ea479">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a4b3c8bd2cdda2d4f6ebb4109417c47b9">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#acce24dd81cd73f31f27383dfb2c6b205">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ac817774832233eab53e1aa0b0d85412a">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a5812a2355d6e4818b9217cc18f9d0785">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a3db53404389feb7f3b2eb490653a249f">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a99298d285dbbbb273645ae744cf7fd19">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a2607d95a1eb6152e09ba9cf5a661d5b8">XWindowsClipboard</a>.</p>
 
 </div>
 </div>

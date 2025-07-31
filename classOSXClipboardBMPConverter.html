@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.19</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,8 +126,8 @@ Collaboration diagram for OSXClipboardBMPConverter:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a23a705486e1cb9b804fbf0a946171977" id="r_a23a705486e1cb9b804fbf0a946171977"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a23a705486e1cb9b804fbf0a946171977">OSXClipboardBMPConverter</a> ()=default</td></tr>
 <tr class="memitem:a6c0dd4301c560df5b57b6b1f0b1e2d8c" id="r_a6c0dd4301c560df5b57b6b1f0b1e2d8c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c0dd4301c560df5b57b6b1f0b1e2d8c">~OSXClipboardBMPConverter</a> () override=default</td></tr>
-<tr class="memitem:a2180fa8c3b5a07d16aa400f6040baecf" id="r_a2180fa8c3b5a07d16aa400f6040baecf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2180fa8c3b5a07d16aa400f6040baecf">getFormat</a> () const override</td></tr>
-<tr class="memdesc:a2180fa8c3b5a07d16aa400f6040baecf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
+<tr class="memitem:a40bc12a01d27bf381409bc1a1ca010c2" id="r_a40bc12a01d27bf381409bc1a1ca010c2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40bc12a01d27bf381409bc1a1ca010c2">getFormat</a> () const override</td></tr>
+<tr class="memdesc:a40bc12a01d27bf381409bc1a1ca010c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get clipboard format.  <br /></td></tr>
 <tr class="memitem:a308b69ada7381f5da08656271a5df28f" id="r_a308b69ada7381f5da08656271a5df28f"><td class="memItemLeft" align="right" valign="top">CFStringRef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a308b69ada7381f5da08656271a5df28f">getOSXFormat</a> () const override</td></tr>
 <tr class="memdesc:a308b69ada7381f5da08656271a5df28f"><td class="mdescLeft">&#160;</td><td class="mdescRight">returns the scrap flavor type that this object converts from/to  <br /></td></tr>
 <tr class="memitem:a0433389c42800107700ccf83af00ce21" id="r_a0433389c42800107700ccf83af00ce21"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0433389c42800107700ccf83af00ce21">fromIClipboard</a> (const std::string &amp;) const override</td></tr>
@@ -255,14 +255,14 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Convert from <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format. </p>
-<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the Carbon scrap format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a2180fa8c3b5a07d16aa400f6040baecf" title="Get clipboard format.">getFormat()</a>. The return data will be in the scrap format returned by <a class="el" href="#a308b69ada7381f5da08656271a5df28f" title="returns the scrap flavor type that this object converts from/to">getOSXFormat()</a>. </p>
+<p>Convert from the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format to the Carbon scrap format. The input data must be in the <a class="el" href="classIClipboard.html" title="Clipboard interface.">IClipboard</a> format returned by <a class="el" href="#a40bc12a01d27bf381409bc1a1ca010c2" title="Get clipboard format.">getFormat()</a>. The return data will be in the scrap format returned by <a class="el" href="#a308b69ada7381f5da08656271a5df28f" title="returns the scrap flavor type that this object converts from/to">getOSXFormat()</a>. </p>
 
 <p>Implements <a class="el" href="classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3">IOSXClipboardConverter</a>.</p>
 
 </div>
 </div>
-<a id="a2180fa8c3b5a07d16aa400f6040baecf" name="a2180fa8c3b5a07d16aa400f6040baecf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2180fa8c3b5a07d16aa400f6040baecf">&#9670;&#160;</a></span>getFormat()</h2>
+<a id="a40bc12a01d27bf381409bc1a1ca010c2" name="a40bc12a01d27bf381409bc1a1ca010c2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40bc12a01d27bf381409bc1a1ca010c2">&#9670;&#160;</a></span>getFormat()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +271,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classIClipboard.html#a2e3274bd6166dff0f56f893ca92a01c3">IClipboard::EFormat</a> OSXClipboardBMPConverter::getFormat </td>
+          <td class="memname"><a class="el" href="classIClipboard.html#a1d014188948be557b3a3d88034d7081e">IClipboard::Format</a> OSXClipboardBMPConverter::getFormat </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -287,7 +287,7 @@ Static Public Member Functions</h2></td></tr>
 <p>Get clipboard format. </p>
 <p>Return the clipboard format this object converts from/to. </p>
 
-<p>Implements <a class="el" href="classIOSXClipboardConverter.html#a2472accc86c135569b396c75053c40eb">IOSXClipboardConverter</a>.</p>
+<p>Implements <a class="el" href="classIOSXClipboardConverter.html#a4adc3b10a0bf35530b80ab1fdd286206">IOSXClipboardConverter</a>.</p>
 
 </div>
 </div>

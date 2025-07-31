@@ -4,27 +4,6 @@ var OptionTypes_8h =
     [ "OptionID", "OptionTypes_8h.html#afd6ae3ad681e4437ba4b4a5f2d3b2ad9", null ],
     [ "OptionsList", "OptionTypes_8h.html#a927a94eb85ccd847f2a716b794777955", null ],
     [ "OptionValue", "OptionTypes_8h.html#a516314192e79c5d057fa63f0243f3155", null ],
-    [ "ENetworkProtocol", "OptionTypes_8h.html#a918f326f6d28f6363eca4120e5ac6ee5", [
-      [ "kSynergy", "OptionTypes_8h.html#a918f326f6d28f6363eca4120e5ac6ee5a104f7ca9a20a599f1cc7591b1a3e0a4a", null ],
-      [ "kBarrier", "OptionTypes_8h.html#a918f326f6d28f6363eca4120e5ac6ee5affa5976cb7170d234d6b69921bf0f085", null ]
-    ] ],
-    [ "EScreenSwitchCornerMasks", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46ac", [
-      [ "kNoCornerMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46aca9d2560e9a099d1dc4155b18bb656fa82", null ],
-      [ "kTopLeftMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46acac1a05fec72f7f8e55a6426701397ea25", null ],
-      [ "kTopRightMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46aca49471dcf53d4a838fa1a7e17d747a2af", null ],
-      [ "kBottomLeftMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46aca0736475cb978953ce73830bc72e5ee30", null ],
-      [ "kBottomRightMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46aca6b11631cef1e64fd197a179ac57234eb", null ],
-      [ "kAllCornersMask", "OptionTypes_8h.html#acb1b4ede51e933e007f1eb98b49c46aca7049bd1c6ad2d4ab558c6596d942ae0f", null ]
-    ] ],
-    [ "EScreenSwitchCorners", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91", [
-      [ "kNoCorner", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a048cb811ba72e0e0b9d631b7db5f2ac7", null ],
-      [ "kTopLeft", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a193111a954dec0c3efae0cc83eb09d48", null ],
-      [ "kTopRight", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a9e626b914e7ed24404f72bffdfb80833", null ],
-      [ "kBottomLeft", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91aa8529e3d216c6ce5f204241afa9e4234", null ],
-      [ "kBottomRight", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a4fb10e55ef539fc3fbd68e30cd3f99bc", null ],
-      [ "kFirstCorner", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a294e874fb092136064c1a0ab5f267218", null ],
-      [ "kLastCorner", "OptionTypes_8h.html#a4d955b1367a3e19b622bfa14a697db91a56d92d1a5a51fef92c97c8b35b536af9", null ]
-    ] ],
     [ "kOptionClipboardSharing", "OptionTypes_8h.html#ae3bfc83c4cab0b6ded099668df59009e", null ],
     [ "kOptionClipboardSharingSize", "OptionTypes_8h.html#a1daaa88f250b6c3dc6c216ea2d6f9a94", null ],
     [ "kOptionDisableLockToScreen", "OptionTypes_8h.html#ae46efda56ea28850f648a985dd8336d5", null ],
@@ -49,5 +28,11 @@ var OptionTypes_8h =
     [ "kOptionScreenSwitchNeedsShift", "OptionTypes_8h.html#a10e1d835914dd4c1d8cb2445693cae95", null ],
     [ "kOptionScreenSwitchTwoTap", "OptionTypes_8h.html#a5f81ff4d7ffc9044725d5e965248aa9f", null ],
     [ "kOptionWin32KeepForeground", "OptionTypes_8h.html#a2b31ce0d5e960f7a7195c9b3c9428451", null ],
-    [ "kOptionXTestXineramaUnaware", "OptionTypes_8h.html#a6b120f719415f9863469c7735be13991", null ]
+    [ "kOptionXTestXineramaUnaware", "OptionTypes_8h.html#a6b120f719415f9863469c7735be13991", null ],
+    [ "s_allCornersMask", "OptionTypes_8h.html#a3ec42fb32947b842baf9962aeba23419", null ],
+    [ "s_bottomLeftCornerMask", "OptionTypes_8h.html#a34aeea7fd5af8c9eba2ad4670b3c7997", null ],
+    [ "s_bottomRightCornerMask", "OptionTypes_8h.html#aba536da3d4ffa3b249ada6daf203118a", null ],
+    [ "s_noCornerMask", "OptionTypes_8h.html#a14bd7ad80509fb730e7aaf5d09b5cca2", null ],
+    [ "s_topLeftCornerMask", "OptionTypes_8h.html#abddd0d2bf83b8b04d31c23d6e33ab7be", null ],
+    [ "s_topRightCornerMask", "OptionTypes_8h.html#aea7f851a63fff1bb5d2961e914b52250", null ]
 ];

@@ -5,6 +5,6 @@ var classXWindowsClipboardHTMLConverter =
     [ "fromIClipboard", "classXWindowsClipboardHTMLConverter.html#a7039ce01e7c3d40a8ddd0f5c62bd2d3b", null ],
     [ "getAtom", "classXWindowsClipboardHTMLConverter.html#a53d552505938e1e244dfd583d20f81fa", null ],
     [ "getDataSize", "classXWindowsClipboardHTMLConverter.html#abfbc9335af8d6a4b5169e1c64175e803", null ],
-    [ "getFormat", "classXWindowsClipboardHTMLConverter.html#a777e255f3fc66623fcd9171d8a407e33", null ],
+    [ "getFormat", "classXWindowsClipboardHTMLConverter.html#af4e3ad2b04d5fe24be5b395e811365d1", null ],
     [ "toIClipboard", "classXWindowsClipboardHTMLConverter.html#adb5d0ed6e05e1bbb033d9ebf60e1ee2d", null ]
 ];
