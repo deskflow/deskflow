@@ -275,10 +275,10 @@ void Server::disconnect()
 
 std::string Server::protocolString() const
 {
-  using enum ENetworkProtocol;
-  if (m_protocol == kSynergy) {
+  using enum NetworkProtocol;
+  if (m_protocol == Synergy) {
     return kSynergyProtocolName;
-  } else if (m_protocol == kBarrier) {
+  } else if (m_protocol == Barrier) {
     return kBarrierProtocolName;
   }
   throw XInvalidProtocol();
@@ -1074,12 +1074,12 @@ void Server::processOptions()
     const OptionID id = optionId;
     const OptionValue value = optionValue;
     if (id == kOptionProtocol) {
-      using enum ENetworkProtocol;
-      const auto enumValue = static_cast<ENetworkProtocol>(value);
-      if (enumValue == kSynergy) {
-        m_protocol = kSynergy;
-      } else if (enumValue == kBarrier) {
-        m_protocol = kBarrier;
+      using enum NetworkProtocol;
+      const auto enumValue = static_cast<NetworkProtocol>(value);
+      if (enumValue == Synergy) {
+        m_protocol = Synergy;
+      } else if (enumValue == Barrier) {
+        m_protocol = Barrier;
       } else {
         throw XInvalidProtocol();
       }

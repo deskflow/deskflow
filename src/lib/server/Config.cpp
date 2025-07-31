@@ -1311,11 +1311,11 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     return result;
   }
   if (id == kOptionProtocol) {
-    using enum ENetworkProtocol;
-    const auto enumValue = static_cast<ENetworkProtocol>(value);
-    if (enumValue == kSynergy) {
+    using enum NetworkProtocol;
+    const auto enumValue = static_cast<NetworkProtocol>(value);
+    if (enumValue == Synergy) {
       return kSynergyProtocolOption;
-    } else if (enumValue == kBarrier) {
+    } else if (enumValue == Barrier) {
       return kBarrierProtocolOption;
     } else {
       throw XInvalidProtocol();
@@ -1809,9 +1809,9 @@ OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
 OptionValue ConfigReadContext::parseProtocol(const std::string &args) const
 {
   if (CaselessCmp::equal(args, kSynergyProtocolOption)) {
-    return static_cast<OptionValue>(ENetworkProtocol::kSynergy);
+    return static_cast<OptionValue>(NetworkProtocol::Synergy);
   } else if (CaselessCmp::equal(args, kBarrierProtocolOption)) {
-    return static_cast<OptionValue>(ENetworkProtocol::kBarrier);
+    return static_cast<OptionValue>(NetworkProtocol::Barrier);
   }
   throw XConfigRead(*this, "invalid protocol argument \"%{1}\"", args);
 }
