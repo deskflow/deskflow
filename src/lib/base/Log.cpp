@@ -16,7 +16,10 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
-#include <iostream>
+
+#ifndef __APPLE__
+#include <format>
+#endif
 
 const int kPriorityPrefixLength = 3;
 
@@ -69,10 +72,17 @@ void makeTimeString(std::vector<char> &buffer)
   localtime_r(&t, &tm);
 #endif
 
+#ifndef __APPLE__
+  std::format_to_n(
+      buffer.data(), buffer.size(), "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}", tm.tm_year + yearOffset,
+      tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
+  );
+#else
   snprintf(
       buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i", tm.tm_year + yearOffset, tm.tm_mon + monthOffset,
       tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
   );
+#endif
 }
 
 std::vector<char> makeMessage(const char *filename, int lineNumber, const char *message, LogLevel priority)
@@ -100,14 +110,25 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     bufferSize += filenameLength + lineNumberLength;
 
     std::vector<char> buffer(bufferSize);
+#ifndef __APPLE__
+    std::format_to_n(
+        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeBuffer.data(), g_priority[currentPriority], message,
+        filename, lineNumber
+    );
+#else
     snprintf(
         buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(), g_priority[currentPriority], message,
         filename, lineNumber
     );
+#endif
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
+#ifndef __APPLE__
+    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeBuffer.data(), g_priority[currentPriority], message);
+#else
     snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), g_priority[currentPriority], message);
+#endif
     return buffer;
   }
 }
