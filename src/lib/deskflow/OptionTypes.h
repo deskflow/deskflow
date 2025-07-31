@@ -8,6 +8,7 @@
 #pragma once
 
 #include "base/EventTypes.h"
+#include "base/NetworkProtocol.h"
 
 #include <vector>
 
@@ -70,15 +71,6 @@ inline static const auto s_topRightCornerMask = 1 << 1;
 inline static const auto s_bottomLeftCornerMask = 1 << 2;
 inline static const auto s_bottomRightCornerMask = 1 << 3;
 inline static const auto s_allCornersMask = 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3;
-//@}
-
-//! @name Network protocol
-//@{
-enum class ENetworkProtocol
-{
-  kSynergy,
-  kBarrier
-};
 //@}
 
 #undef OPTION_CODE

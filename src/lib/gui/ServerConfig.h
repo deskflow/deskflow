@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Hotkey.h"
+#include "base/NetworkProtocol.h"
 #include "gui/config/IServerConfig.h"
 #include "gui/config/ScreenConfig.h"
 #include "gui/config/ScreenList.h"
@@ -26,14 +27,8 @@ class MainWindow;
 
 namespace deskflow::gui {
 
-enum class ServerProtocol
-{
-  kSynergy,
-  kBarrier
-};
-
 // The default protocol was decided by a community vote.
-const auto kDefaultProtocol = ServerProtocol::kBarrier;
+const auto kDefaultProtocol = NetworkProtocol::Barrier;
 
 } // namespace deskflow::gui
 
@@ -47,8 +42,6 @@ enum class ScreenAddResults
 
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
-  using ServerProtocol = deskflow::gui::ServerProtocol;
-
   friend class ServerConfigDialog;
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
@@ -85,7 +78,7 @@ public:
   {
     return m_Heartbeat;
   }
-  ServerProtocol protocol() const
+  NetworkProtocol protocol() const
   {
     return m_Protocol;
   }
@@ -197,7 +190,7 @@ private:
   {
     m_Heartbeat = val;
   }
-  void setProtocol(ServerProtocol val)
+  void setProtocol(NetworkProtocol val)
   {
     m_Protocol = val;
   }
@@ -261,7 +254,7 @@ private:
 private:
   bool m_HasHeartbeat = false;
   int m_Heartbeat = 0;
-  ServerProtocol m_Protocol = deskflow::gui::kDefaultProtocol;
+  NetworkProtocol m_Protocol = deskflow::gui::kDefaultProtocol;
   bool m_RelativeMouseMoves = false;
   bool m_Win32KeepForeground = false;
   bool m_HasSwitchDelay = false;

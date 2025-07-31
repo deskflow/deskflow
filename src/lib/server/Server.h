@@ -358,7 +358,7 @@ private:
   };
 
   // used in hello message sent to the client
-  ENetworkProtocol m_protocol;
+  NetworkProtocol m_protocol;
 
   // the primary screen client
   PrimaryClient *m_primaryClient;

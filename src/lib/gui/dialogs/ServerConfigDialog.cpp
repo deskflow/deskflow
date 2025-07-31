@@ -9,6 +9,7 @@
 #include "ServerConfigDialog.h"
 #include "ui_ServerConfigDialog.h"
 
+#include "base/NetworkProtocol.h"
 #include "common/Constants.h"
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
@@ -20,7 +21,7 @@
 #include <QMessageBox>
 
 using enum ScreenConfig::SwitchCorner;
-using ServerProtocol = deskflow::gui::ServerProtocol;
+using enum NetworkProtocol;
 
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
@@ -67,8 +68,8 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
   ui->lineConfigFile->setText(serverConfig().configFile());
 
-  ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == ServerProtocol::kSynergy);
-  ui->rbProtocolBarrier->setChecked(serverConfig().protocol() == ServerProtocol::kBarrier);
+  ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == NetworkProtocol::Synergy);
+  ui->rbProtocolBarrier->setChecked(serverConfig().protocol() == NetworkProtocol::Barrier);
   connect(ui->rbProtocolBarrier, &QRadioButton::toggled, this, &ServerConfigDialog::toggleProtocol);
 
   ui->cbHeartbeat->setChecked(serverConfig().hasHeartbeat());
@@ -359,7 +360,7 @@ void ServerConfigDialog::toggleRelativeMouseMoves(bool enabled)
 
 void ServerConfigDialog::toggleProtocol()
 {
-  ServerProtocol proto = ui->rbProtocolBarrier->isChecked() ? ServerProtocol::kBarrier : ServerProtocol::kSynergy;
+  auto proto = ui->rbProtocolBarrier->isChecked() ? NetworkProtocol::Barrier : NetworkProtocol::Synergy;
   serverConfig().setProtocol(proto);
   onChange();
 }
