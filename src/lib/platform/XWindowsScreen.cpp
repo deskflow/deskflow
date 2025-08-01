@@ -917,7 +917,8 @@ void XWindowsScreen::saveShape()
   // screen instead of the logical screen.
   m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
-  int eventBase, errorBase;
+  int eventBase;
+  int errorBase;
   if (XineramaQueryExtension(m_display, &eventBase, &errorBase) && XineramaIsActive(m_display)) {
     int numScreens;
     XineramaScreenInfo *screens;
@@ -962,7 +963,8 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
   // screen instead of the logical screen.
   m_xinerama = false;
 #if HAVE_X11_EXTENSIONS_XINERAMA_H
-  int eventBase, errorBase;
+  int eventBase;
+  int errorBase;
   if ((XineramaQueryExtension(m_display, &eventBase, &errorBase) != 0) && (XineramaIsActive(m_display) != 0)) {
     int numScreens;
     XineramaScreenInfo *screens;
@@ -990,7 +992,10 @@ Window XWindowsScreen::openWindow() const
   attr.cursor = createBlankCursor();
 
   // adjust attributes and get size and shape
-  int32_t x, y, w, h;
+  int32_t x;
+  int32_t y;
+  int32_t w;
+  int32_t h;
   if (m_isPrimary) {
     // grab window attributes.  this window is used to capture user
     // input when the user is focused on another client.  it covers
