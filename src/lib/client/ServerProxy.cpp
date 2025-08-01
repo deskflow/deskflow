@@ -828,7 +828,7 @@ void ServerProxy::setServerLanguages()
   m_languageManager.setRemoteLanguages(serverLanguages);
 }
 
-void ServerProxy::setActiveServerLanguage(const std::string &language)
+void ServerProxy::setActiveServerLanguage(const std::string_view &language)
 {
   if (!language.empty() && (language.size() > 0)) {
     if (m_serverLanguage != language) {
