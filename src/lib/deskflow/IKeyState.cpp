@@ -127,14 +127,14 @@ void IKeyState::KeyInfo::split(const char *screens, std::set<std::string> &dst)
     return;
   }
   if (screens[0] == '*') {
-    dst.insert("*");
+    dst.emplace("*");
     return;
   }
 
   const char *i = screens + 1;
   while (*i != '\0') {
     const char *j = strchr(i, ':');
-    dst.insert(std::string(i, j - i));
+    dst.emplace(std::string(i, j - i));
     i = j + 1;
   }
 }
