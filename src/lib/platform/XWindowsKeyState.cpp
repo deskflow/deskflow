@@ -338,7 +338,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
 
   // prepare map from X modifier to KeyModifierMask.  certain bits
   // are predefined.
-  std::fill(m_modifierFromX.begin(), m_modifierFromX.end(), 0);
+  std::ranges::fill(m_modifierFromX, 0);
   m_modifierFromX[ShiftMapIndex] = KeyModifierShift;
   m_modifierFromX[LockMapIndex] = KeyModifierCapsLock;
   m_modifierFromX[ControlMapIndex] = KeyModifierControl;
