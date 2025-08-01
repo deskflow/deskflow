@@ -1016,8 +1016,7 @@ bool XWindowsClipboard::sendReply(Reply *reply)
       LOG((CLOG_DEBUG2 "  %s: <can't read property>", name));
     } else {
       // convert to hex if contains non ascii symbols
-      if (std::find_if(data.begin(), data.end(), [](const unsigned char &c) { return c < 32 || c > 126; }) !=
-          data.end()) {
+      if (std::ranges::find_if(data, [](const unsigned char &c) { return c < 32 || c > 126; }) != data.end()) {
         const std::string hex_digits = "0123456789abcdef";
         std::string tmp;
         tmp.reserve(data.length() * 3);

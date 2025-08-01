@@ -156,8 +156,6 @@ void ScreenSetupModel::addScreen(const Screen &newScreen)
 
 bool ScreenSetupModel::isFull() const
 {
-  auto emptyScreen =
-      std::find_if(m_Screens.cbegin(), m_Screens.cend(), [](const Screen &item) { return item.isNull(); });
-
+  auto emptyScreen = std::ranges::find_if(m_Screens, [](const Screen &item) { return item.isNull(); });
   return (emptyScreen == m_Screens.cend());
 }

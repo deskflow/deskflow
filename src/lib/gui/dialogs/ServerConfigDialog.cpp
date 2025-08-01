@@ -152,7 +152,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   ui->screenSetupView->setModel(&m_ScreenSetupModel);
 
   auto &screens = serverConfig().screens();
-  auto server = std::find_if(screens.begin(), screens.end(), [this](const Screen &screen) {
+  auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
     return (screen.name() == serverConfig().getServerName());
   });
 
