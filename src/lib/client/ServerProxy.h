@@ -98,7 +98,7 @@ private:
   void infoAcknowledgment();
   void secureInputNotification();
   void setServerLanguages();
-  void setActiveServerLanguage(const std::string &language);
+  void setActiveServerLanguage(const std::string_view &language);
   void checkMissedLanguages() const;
 
 private:
