@@ -11,7 +11,6 @@
 
 struct Fingerprint
 {
-private:
   Q_GADGET
   inline static QString m_type_sha1 = QStringLiteral("sha1");
   inline static QString m_type_sha256 = QStringLiteral("sha256");
