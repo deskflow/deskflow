@@ -70,12 +70,6 @@ public:
   */
   bool operator==(const NetworkAddress &address) const;
 
-  //! Check address inequality
-  /*!
-  Returns true if this address is not equal to \p address.
-  */
-  bool operator!=(const NetworkAddress &address) const;
-
   //! Check address validity
   /*!
   Returns true if this is not the invalid address.

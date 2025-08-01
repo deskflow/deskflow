@@ -180,13 +180,6 @@ public:
   Returns true if two Thread objects refer to the same thread.
   */
   bool operator==(const Thread &) const;
-
-  //! Compare thread handles
-  /*!
-  Returns true if two Thread objects do not refer to the same thread.
-  */
-  bool operator!=(const Thread &) const;
-
   //@}
 
 private:

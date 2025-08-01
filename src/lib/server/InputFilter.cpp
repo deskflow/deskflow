@@ -873,11 +873,6 @@ bool InputFilter::operator==(const InputFilter &x) const
   return (aList == bList);
 }
 
-bool InputFilter::operator!=(const InputFilter &x) const
-{
-  return !operator==(x);
-}
-
 void InputFilter::handleEvent(const Event &event)
 {
   // copy event and adjust target

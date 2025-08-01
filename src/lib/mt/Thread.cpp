@@ -108,11 +108,6 @@ bool Thread::operator==(const Thread &thread) const
   return ARCH->isSameThread(m_thread, thread.m_thread);
 }
 
-bool Thread::operator!=(const Thread &thread) const
-{
-  return !ARCH->isSameThread(m_thread, thread.m_thread);
-}
-
 void *Thread::threadFunc(void *vjob)
 {
   // get this thread's id for logging

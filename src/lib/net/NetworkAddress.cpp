@@ -176,11 +176,6 @@ bool NetworkAddress::operator==(const NetworkAddress &addr) const
   return m_address == addr.m_address || ARCH->isEqualAddr(m_address, addr.m_address);
 }
 
-bool NetworkAddress::operator!=(const NetworkAddress &addr) const
-{
-  return !operator==(addr);
-}
-
 bool NetworkAddress::isValid() const
 {
   return (m_address != nullptr);
