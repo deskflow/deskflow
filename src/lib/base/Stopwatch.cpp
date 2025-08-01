@@ -75,11 +75,6 @@ double Stopwatch::getTime()
   }
 }
 
-Stopwatch::operator double()
-{
-  return getTime();
-}
-
 bool Stopwatch::isStopped() const
 {
   return m_stopped;
@@ -92,9 +87,4 @@ double Stopwatch::getTime() const
   } else {
     return Arch::time() - m_mark;
   }
-}
-
-Stopwatch::operator double() const
-{
-  return getTime();
 }
