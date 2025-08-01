@@ -1438,11 +1438,6 @@ bool Config::CellEdge::operator==(const CellEdge &x) const
   return (m_side == x.m_side && m_interval == x.m_interval);
 }
 
-bool Config::CellEdge::operator!=(const CellEdge &x) const
-{
-  return !operator==(x);
-}
-
 //
 // Config::Cell
 //
@@ -1564,11 +1559,6 @@ bool Config::Cell::operator==(const Cell &x) const
   }
 
   return true;
-}
-
-bool Config::Cell::operator!=(const Cell &x) const
-{
-  return !operator==(x);
 }
 
 Config::Cell::const_iterator Config::Cell::begin() const

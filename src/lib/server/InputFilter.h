@@ -383,8 +383,6 @@ public:
 
   //! Compare filters
   bool operator==(const InputFilter &) const;
-  //! Compare filters
-  bool operator!=(const InputFilter &) const;
 
 private:
   // event handling

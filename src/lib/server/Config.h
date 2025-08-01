@@ -81,7 +81,6 @@ public:
 
     // compares side and interval
     bool operator==(const CellEdge &) const;
-    bool operator!=(const CellEdge &) const;
 
   private:
     void init(const std::string_view &name, Direction side, const Interval &);
@@ -125,7 +124,6 @@ private:
     bool getLink(Direction side, float position, const CellEdge *&src, const CellEdge *&dst) const;
 
     bool operator==(const Cell &) const;
-    bool operator!=(const Cell &) const;
 
     const_iterator begin() const;
     const_iterator end() const;
@@ -188,10 +186,6 @@ public:
     bool operator==(const const_iterator &i) const
     {
       return (m_i == i.m_i);
-    }
-    bool operator!=(const const_iterator &i) const
-    {
-      return (m_i != i.m_i);
     }
 
   private:
