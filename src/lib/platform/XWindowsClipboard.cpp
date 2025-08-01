@@ -1020,7 +1020,7 @@ bool XWindowsClipboard::sendReply(Reply *reply)
         const std::string hex_digits = "0123456789abcdef";
         std::string tmp;
         tmp.reserve(data.length() * 3);
-        std::for_each(data.begin(), data.end(), [hex_digits, &tmp](const unsigned char &c) {
+        std::ranges::for_each(data, [&hex_digits, &tmp](const unsigned char &c) {
           tmp += hex_digits[c >> 16];
           tmp += hex_digits[c & 15];
           tmp += ' ';
