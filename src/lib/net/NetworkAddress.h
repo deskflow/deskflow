@@ -38,7 +38,7 @@ public:
   is thrown with an error of \c XSocketAddress::kBadPort.  The hostname
   is not resolved by the c'tor;  use \c resolve to do that.
   */
-  NetworkAddress(const std::string &hostname, int port = 0);
+  explicit NetworkAddress(const std::string &hostname, int port = 0);
 
   NetworkAddress(const NetworkAddress &);
 

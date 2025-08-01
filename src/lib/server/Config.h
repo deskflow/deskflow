@@ -488,7 +488,7 @@ class ConfigReadContext
 public:
   using ArgList = std::vector<std::string>;
 
-  ConfigReadContext(std::istream &, int32_t firstLine = 1);
+  explicit ConfigReadContext(std::istream &, int32_t firstLine = 1);
   ~ConfigReadContext() = default;
 
   bool readLine(std::string &);
