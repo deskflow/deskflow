@@ -868,8 +868,8 @@ bool InputFilter::operator==(const InputFilter &x) const
   for (auto i = x.m_ruleList.begin(); i != x.m_ruleList.end(); ++i) {
     bList.push_back(i->format());
   }
-  std::partial_sort(aList.begin(), aList.end(), aList.end());
-  std::partial_sort(bList.begin(), bList.end(), bList.end());
+  std::ranges::partial_sort(aList, aList.end());
+  std::ranges::partial_sort(bList, bList.end());
   return (aList == bList);
 }
 
