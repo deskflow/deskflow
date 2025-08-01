@@ -830,7 +830,7 @@ void ServerProxy::setServerLanguages()
 
 void ServerProxy::setActiveServerLanguage(const std::string &language)
 {
-  if (!language.empty() && std::strlen(language.c_str()) > 0) {
+  if (!language.empty() && (language.size() > 0)) {
     if (m_serverLanguage != language) {
       m_isUserNotifiedAboutLanguageSyncError = false;
       m_serverLanguage = language;
