@@ -15,7 +15,7 @@
 // IKeyState
 //
 
-IKeyState::IKeyState(const IEventQueue *events)
+IKeyState::IKeyState(const IEventQueue *)
 {
   // do nothing
 }
