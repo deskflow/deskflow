@@ -1863,7 +1863,7 @@ void XWindowsScreen::updateButtons()
   }
 
   // allocate button array
-  m_buttons.resize(maxButton);
+  m_buttons.resize(std::max<size_t>(maxButton, numButtons));
 
   // fill in button array values.  m_buttons[i] is the physical
   // button number for logical button i+1.
@@ -1871,7 +1871,9 @@ void XWindowsScreen::updateButtons()
     m_buttons[i] = 0;
   }
   for (uint32_t i = 0; i < numButtons; ++i) {
-    m_buttons[tmpButtons[i] - 1] = i + 1;
+    if (tmpButtons[i] > 0) {
+      m_buttons[tmpButtons[i] - 1] = i + 1;
+    }
   }
 
   // clean up
