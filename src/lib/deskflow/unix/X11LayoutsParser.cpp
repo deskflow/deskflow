@@ -95,7 +95,7 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const s
 void X11LayoutsParser::appendVectorUniq(const std::vector<std::string> &source, std::vector<std::string> &dst)
 {
   for (const auto &elem : source) {
-    if (std::find_if(dst.begin(), dst.end(), [elem](const std::string_view &s) { return s == elem; }) == dst.end()) {
+    if (std::ranges::find_if(dst, [elem](const std::string_view &s) { return s == elem; }) == dst.end()) {
       dst.push_back(elem);
     }
   }
@@ -117,8 +117,7 @@ void X11LayoutsParser::convertLayoutToISO639_2(
       continue;
     }
 
-    auto langIter =
-        std::find_if(allLang.begin(), allLang.end(), [&layoutName](const Lang &l) { return l.name == layoutName; });
+    auto langIter = std::ranges::find_if(allLang, [&layoutName](const Lang &l) { return l.name == layoutName; });
     if (langIter == allLang.end()) {
       LOG((CLOG_WARN "language \"%s\" is unknown", layoutNames[i].c_str()));
       continue;
@@ -131,9 +130,7 @@ void X11LayoutsParser::convertLayoutToISO639_2(
       } else {
         const auto &variantName = layoutVariantNames[i];
         auto langVariantIter =
-            std::find_if(langIter->variants.begin(), langIter->variants.end(), [&variantName](const Lang &l) {
-              return l.name == variantName;
-            });
+            std::ranges::find_if(langIter->variants, [&variantName](const Lang &l) { return l.name == variantName; });
         if (langVariantIter == langIter->variants.end()) {
           LOG(
               (CLOG_WARN "variant \"%s\" of language \"%s\" is unknown", layoutVariantNames[i].c_str(),
@@ -202,10 +199,9 @@ std::vector<std::string> X11LayoutsParser::convertISO639_2ToISO639_1(const std::
 {
   std::vector<std::string> result;
   for (const auto &isoCode : iso639_2Codes) {
-    const auto &tableIter =
-        std::find_if(ISO_Table.begin(), ISO_Table.end(), [&isoCode](const std::pair<std::string, std::string> &c) {
-          return c.first == isoCode;
-        });
+    const auto &tableIter = std::ranges::find_if(ISO_Table, [&isoCode](const std::pair<std::string, std::string> &c) {
+      return c.first == isoCode;
+    });
     if (tableIter == ISO_Table.end()) {
       LOG((CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
       continue;
