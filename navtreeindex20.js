@@ -1,8 +1,5 @@
 var NAVTREEINDEX20 =
 {
-"classdeskflow_1_1gui_1_1CoreProcess.html#aa9f5fda4469cd9cb57613d1b6cd940b2":[6,0,0,2,5,6],
-"classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f":[5,0,0,3,6,10],
-"classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f":[6,0,0,2,5,10],
 "classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8c":[5,0,0,3,6,3],
 "classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8c":[6,0,0,2,5,3],
 "classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8ca7b7ecb39b9e110c2a31409a1672bad23":[5,0,0,3,6,3,2],
@@ -249,5 +246,8 @@ var NAVTREEINDEX20 =
 "classdeskflow_1_1server_1_1Config.html#ab6276586b10d0a441fa773a4e6e2e5d4":[6,0,0,5,0,20],
 "classdeskflow_1_1server_1_1Config.html#ab7c3a5347a74331d625735e66b5a32b1":[5,0,0,6,0,25],
 "classdeskflow_1_1server_1_1Config.html#ab7c3a5347a74331d625735e66b5a32b1":[6,0,0,5,0,25],
-"classdeskflow_1_1server_1_1Config.html#ac6477961cc61bd1cb9510b6496ef661e":[5,0,0,6,0,44]
+"classdeskflow_1_1server_1_1Config.html#ac6477961cc61bd1cb9510b6496ef661e":[5,0,0,6,0,44],
+"classdeskflow_1_1server_1_1Config.html#ac6477961cc61bd1cb9510b6496ef661e":[6,0,0,5,0,44],
+"classdeskflow_1_1server_1_1Config.html#acd0a9b28eecdce845ef2bcdbe20d178f":[5,0,0,6,0,26],
+"classdeskflow_1_1server_1_1Config.html#acd0a9b28eecdce845ef2bcdbe20d178f":[6,0,0,5,0,26]
 };

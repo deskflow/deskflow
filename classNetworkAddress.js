@@ -9,7 +9,6 @@ var classNetworkAddress =
     [ "getHostname", "classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049", null ],
     [ "getPort", "classNetworkAddress.html#a8c469013754643d5b36350985327f141", null ],
     [ "isValid", "classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef", null ],
-    [ "operator!=", "classNetworkAddress.html#a7cc4e7c8c028fbdaa71c68a7b4a4846e", null ],
     [ "operator=", "classNetworkAddress.html#aaea9c3a4c80772a5fba908c0e5f84f4a", null ],
     [ "operator==", "classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6", null ],
     [ "resolve", "classNetworkAddress.html#a3d2fb761935c062467613980e226ca41", null ]

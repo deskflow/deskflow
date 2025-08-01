@@ -1,7 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classQSettingsProxy.html#af5b978dd406daa7a8d7fdcf7a87ec6bc":[6,0,154,1],
-"classScreen.html":[6,0,155],
 "classScreen.html#a01198ad1dac393060d46717622efb011":[6,0,155,28],
 "classScreen.html#a24c810d6d27c2c954bdad39ee23d3b0c":[6,0,155,35],
 "classScreen.html#a252bce8c24249477fcdb16d98dd17e71":[6,0,155,21],
@@ -249,5 +247,7 @@ var NAVTREEINDEX14 =
 "classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27":[6,0,169,19],
 "classServerConfigDialog.html#a8e088fc7f66d30f21fd710916247f9d3":[6,0,169,36],
 "classServerConfigDialog.html#a8efd3a0cfcea2fccd8595d7ed598a723":[6,0,169,6],
-"classServerConfigDialog.html#aa044879ac395019ccc6db813abc16743":[6,0,169,25]
+"classServerConfigDialog.html#aa044879ac395019ccc6db813abc16743":[6,0,169,25],
+"classServerConfigDialog.html#aac994714fff05e566bfb2e8cd3afd274":[6,0,169,4],
+"classServerConfigDialog.html#aaf5d7850718cddda58a9ef737d63816b":[6,0,169,20]
 };

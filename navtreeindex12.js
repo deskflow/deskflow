@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classMSWindowsDebugOutputter.html#a76d1fd00fa57f26d5f322020708b3c30":[6,0,121,2],
 "classMSWindowsDebugOutputter.html#af02cb3f7a494dafeef796ac400d9439f":[6,0,121,0],
 "classMSWindowsDesks.html":[6,0,122],
 "classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d":[6,0,122,0],
@@ -188,14 +187,13 @@ var NAVTREEINDEX12 =
 "classNetworkAddress.html#a14f2e07d4197cc4db64eac8e72ff86a7":[6,0,133,3],
 "classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508":[6,0,133,5],
 "classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef":[6,0,133,8],
-"classNetworkAddress.html#a3d2fb761935c062467613980e226ca41":[6,0,133,12],
+"classNetworkAddress.html#a3d2fb761935c062467613980e226ca41":[6,0,133,11],
 "classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049":[6,0,133,6],
-"classNetworkAddress.html#a7cc4e7c8c028fbdaa71c68a7b4a4846e":[6,0,133,9],
 "classNetworkAddress.html#a8c469013754643d5b36350985327f141":[6,0,133,7],
 "classNetworkAddress.html#a9cc627fcc394fcf2bc11387676fad125":[6,0,133,2],
-"classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6":[6,0,133,11],
+"classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6":[6,0,133,10],
 "classNetworkAddress.html#aae94251a4823eec815d2a827788be917":[6,0,133,1],
-"classNetworkAddress.html#aaea9c3a4c80772a5fba908c0e5f84f4a":[6,0,133,10],
+"classNetworkAddress.html#aaea9c3a4c80772a5fba908c0e5f84f4a":[6,0,133,9],
 "classNetworkAddress.html#ad0223797c9530545f51831b76d139c4d":[6,0,133,4],
 "classNetworkAddress.html#af19e401c7fe780eda72c34870ae36bad":[6,0,133,0],
 "classNewScreenWidget.html":[6,0,134],
@@ -249,5 +247,7 @@ var NAVTREEINDEX12 =
 "classOSXClipboardHTMLConverter.html#afb0f19774d7da394aad4229fa588f1ef":[6,0,139,4],
 "classOSXClipboardTextConverter.html":[6,0,140],
 "classOSXClipboardTextConverter.html#a3013556f220f239432d20d4e7f1c405b":[6,0,140,0],
-"classOSXClipboardTextConverter.html#a46afb5b787b0c89484cc94be6e020871":[6,0,140,5]
+"classOSXClipboardTextConverter.html#a46afb5b787b0c89484cc94be6e020871":[6,0,140,5],
+"classOSXClipboardTextConverter.html#a776116eb4ac694786db145a8d639b1cb":[6,0,140,4],
+"classOSXClipboardTextConverter.html#ad7a4b0929539d665200e2c99590fce01":[6,0,140,1]
 };

@@ -12,5 +12,8 @@ var structFingerprint =
     [ "typeFromString", "structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5", null ],
     [ "typeToString", "structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287", null ],
     [ "data", "structFingerprint.html#ac0a51b5ec53e509b02bb0ff329484340", null ],
+    [ "m_type_invalid", "structFingerprint.html#aa455414a29a07be4e22cebf5db6d5856", null ],
+    [ "m_type_sha1", "structFingerprint.html#ac4467dd44454e8be054a8228a5288903", null ],
+    [ "m_type_sha256", "structFingerprint.html#a6a18c4c916c2bc457d9e3f24e61766d2", null ],
     [ "type", "structFingerprint.html#a030170043d67afd657a30201d0d39d1a", null ]
 ];

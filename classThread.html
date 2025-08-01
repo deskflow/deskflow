@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.20</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.33</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,8 +117,6 @@ accessors</h2></td></tr>
 <tr class="memdesc:a79cab40ed39165e26ed58bd47acb4dda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the thread id.  <br /></td></tr>
 <tr class="memitem:a8739fe294144c846e1ce839c23393a18" id="r_a8739fe294144c846e1ce839c23393a18"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8739fe294144c846e1ce839c23393a18">operator==</a> (const <a class="el" href="classThread.html">Thread</a> &amp;) const</td></tr>
 <tr class="memdesc:a8739fe294144c846e1ce839c23393a18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare thread handles.  <br /></td></tr>
-<tr class="memitem:ac9d29449a465ff97d784321ba521f540" id="r_ac9d29449a465ff97d784321ba521f540"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9d29449a465ff97d784321ba521f540">operator!=</a> (const <a class="el" href="classThread.html">Thread</a> &amp;) const</td></tr>
-<tr class="memdesc:ac9d29449a465ff97d784321ba521f540"><td class="mdescLeft">&#160;</td><td class="mdescRight">Compare thread handles.  <br /></td></tr>
 <tr class="memitem:a7063ad2909bd9828179040dac9b51cfb" id="r_a7063ad2909bd9828179040dac9b51cfb"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classThread.html">Thread</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7063ad2909bd9828179040dac9b51cfb">getCurrentThread</a> ()</td></tr>
 <tr class="memdesc:a7063ad2909bd9828179040dac9b51cfb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get current thread's handle.  <br /></td></tr>
 <tr class="memitem:acfc942d337953f40adaea872f439259d" id="r_acfc942d337953f40adaea872f439259d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acfc942d337953f40adaea872f439259d">testCancel</a> ()</td></tr>
@@ -329,26 +327,6 @@ manipulators</h2></td></tr>
 <p>Get the exit result. </p>
 <p>Returns the exit result. This does an implicit <a class="el" href="#a99dee33fdb74e165bd76a52fd1edfdd1" title="Wait for thread to terminate.">wait()</a>. It returns nullptr immediately if called by a thread on itself or on a thread that was cancelled.</p>
 <p>(cancellation point) </p>
-
-</div>
-</div>
-<a id="ac9d29449a465ff97d784321ba521f540" name="ac9d29449a465ff97d784321ba521f540"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac9d29449a465ff97d784321ba521f540">&#9670;&#160;</a></span>operator!=()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool Thread::operator!= </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classThread.html">Thread</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>thread</em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Compare thread handles. </p>
-<p>Returns true if two <a class="el" href="classThread.html" title="Thread handle.">Thread</a> objects do not refer to the same thread. </p>
 
 </div>
 </div>

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.20</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.33</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,39 +132,35 @@ $(function(){initNavTree('NetworkAddress_8h_source.html','',''); });
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6">operator==</a>(<span class="keyword">const</span> <a class="code hl_function" href="classNetworkAddress.html#af19e401c7fe780eda72c34870ae36bad">NetworkAddress</a> &amp;address) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classNetworkAddress.html#a7cc4e7c8c028fbdaa71c68a7b4a4846e">operator!=</a>(<span class="keyword">const</span> <a class="code hl_function" href="classNetworkAddress.html#af19e401c7fe780eda72c34870ae36bad">NetworkAddress</a> &amp;address) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef">isValid</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
 <div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef">isValid</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a> &amp;<a class="code hl_function" href="classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508">getAddress</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classNetworkAddress.html#a8c469013754643d5b36350985327f141">getPort</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  <span class="keyword">const</span> <a class="code hl_typedef" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a> &amp;<a class="code hl_function" href="classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508">getAddress</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span></div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classNetworkAddress.html#a8c469013754643d5b36350985327f141">getPort</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  std::string <a class="code hl_function" href="classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049">getHostname</a>() <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span></div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span></div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  std::string <a class="code hl_function" href="classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049">getHostname</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">void</span> checkPort() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <a class="code hl_typedef" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a> m_address = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  std::string m_hostname;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keywordtype">int</span> m_port = 0;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>};</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">void</span> checkPort() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <a class="code hl_typedef" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a> m_address = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  std::string m_hostname;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keywordtype">int</span> m_port = 0;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>};</div>
 </div>
 <div class="ttc" id="aEventTypes_8h_html"><div class="ttname"><a href="EventTypes_8h.html">EventTypes.h</a></div></div>
 <div class="ttc" id="aIArchNetwork_8h_html"><div class="ttname"><a href="IArchNetwork_8h.html">IArchNetwork.h</a></div></div>
 <div class="ttc" id="aIArchNetwork_8h_html_a0a7cd467922a99b82a42f12b265b8107"><div class="ttname"><a href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a></div><div class="ttdeci">ArchNetAddressImpl * ArchNetAddress</div><div class="ttdoc">Opaque network address type. An opaque type representing a network address.</div><div class="ttdef"><b>Definition</b> IArchNetwork.h:45</div></div>
-<div class="ttc" id="aclassNetworkAddress_html_a2356304b1b1392be0bdfec73a4f13508"><div class="ttname"><a href="classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508">NetworkAddress::getAddress</a></div><div class="ttdeci">const ArchNetAddress &amp; getAddress() const</div><div class="ttdoc">Get address.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:189</div></div>
-<div class="ttc" id="aclassNetworkAddress_html_a2882138c5f2f36e413d90aee9b5f9bef"><div class="ttname"><a href="classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef">NetworkAddress::isValid</a></div><div class="ttdeci">bool isValid() const</div><div class="ttdoc">Check address validity.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:184</div></div>
+<div class="ttc" id="aclassNetworkAddress_html_a2356304b1b1392be0bdfec73a4f13508"><div class="ttname"><a href="classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508">NetworkAddress::getAddress</a></div><div class="ttdeci">const ArchNetAddress &amp; getAddress() const</div><div class="ttdoc">Get address.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:184</div></div>
+<div class="ttc" id="aclassNetworkAddress_html_a2882138c5f2f36e413d90aee9b5f9bef"><div class="ttname"><a href="classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef">NetworkAddress::isValid</a></div><div class="ttdeci">bool isValid() const</div><div class="ttdoc">Check address validity.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:179</div></div>
 <div class="ttc" id="aclassNetworkAddress_html_a3d2fb761935c062467613980e226ca41"><div class="ttname"><a href="classNetworkAddress.html#a3d2fb761935c062467613980e226ca41">NetworkAddress::resolve</a></div><div class="ttdeci">size_t resolve(size_t index=0)</div><div class="ttdoc">Resolve address.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:115</div></div>
-<div class="ttc" id="aclassNetworkAddress_html_a73e85eedfb5e9bc77d8b56837a1b0049"><div class="ttname"><a href="classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049">NetworkAddress::getHostname</a></div><div class="ttdeci">std::string getHostname() const</div><div class="ttdoc">Get hostname.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:199</div></div>
-<div class="ttc" id="aclassNetworkAddress_html_a7cc4e7c8c028fbdaa71c68a7b4a4846e"><div class="ttname"><a href="classNetworkAddress.html#a7cc4e7c8c028fbdaa71c68a7b4a4846e">NetworkAddress::operator!=</a></div><div class="ttdeci">bool operator!=(const NetworkAddress &amp;address) const</div><div class="ttdoc">Check address inequality.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:179</div></div>
-<div class="ttc" id="aclassNetworkAddress_html_a8c469013754643d5b36350985327f141"><div class="ttname"><a href="classNetworkAddress.html#a8c469013754643d5b36350985327f141">NetworkAddress::getPort</a></div><div class="ttdeci">int getPort() const</div><div class="ttdoc">Get port.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:194</div></div>
+<div class="ttc" id="aclassNetworkAddress_html_a73e85eedfb5e9bc77d8b56837a1b0049"><div class="ttname"><a href="classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049">NetworkAddress::getHostname</a></div><div class="ttdeci">std::string getHostname() const</div><div class="ttdoc">Get hostname.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:194</div></div>
+<div class="ttc" id="aclassNetworkAddress_html_a8c469013754643d5b36350985327f141"><div class="ttname"><a href="classNetworkAddress.html#a8c469013754643d5b36350985327f141">NetworkAddress::getPort</a></div><div class="ttdeci">int getPort() const</div><div class="ttdoc">Get port.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:189</div></div>
 <div class="ttc" id="aclassNetworkAddress_html_aa488d0120f0dc974685ba957591c77f6"><div class="ttname"><a href="classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6">NetworkAddress::operator==</a></div><div class="ttdeci">bool operator==(const NetworkAddress &amp;address) const</div><div class="ttdoc">Check address equality.</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:174</div></div>
 <div class="ttc" id="aclassNetworkAddress_html_aaea9c3a4c80772a5fba908c0e5f84f4a"><div class="ttname"><a href="classNetworkAddress.html#aaea9c3a4c80772a5fba908c0e5f84f4a">NetworkAddress::operator=</a></div><div class="ttdeci">NetworkAddress &amp; operator=(const NetworkAddress &amp;)</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:97</div></div>
 <div class="ttc" id="aclassNetworkAddress_html_ad0223797c9530545f51831b76d139c4d"><div class="ttname"><a href="classNetworkAddress.html#ad0223797c9530545f51831b76d139c4d">NetworkAddress::~NetworkAddress</a></div><div class="ttdeci">~NetworkAddress()</div><div class="ttdef"><b>Definition</b> NetworkAddress.cpp:89</div></div>

@@ -8,7 +8,6 @@ var classThread =
     [ "getCurrentThread", "classThread.html#a7063ad2909bd9828179040dac9b51cfb", null ],
     [ "getID", "classThread.html#a79cab40ed39165e26ed58bd47acb4dda", null ],
     [ "getResult", "classThread.html#ae6fced5fdf9d033c4cc3b3ae009e4b46", null ],
-    [ "operator!=", "classThread.html#ac9d29449a465ff97d784321ba521f540", null ],
     [ "operator=", "classThread.html#ab55c85cdc3cf7d713a84ad6974343a1a", null ],
     [ "operator==", "classThread.html#a8739fe294144c846e1ce839c23393a18", null ],
     [ "setPriority", "classThread.html#aa80287b16669c507a0708ee225abc80a", null ],
