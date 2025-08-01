@@ -21,7 +21,7 @@ subclasses to implement the rest.
 class PlatformScreen : public IPlatformScreen
 {
 public:
-  PlatformScreen(
+  explicit PlatformScreen(
       IEventQueue *events, deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
   );
   ~PlatformScreen() override = default;

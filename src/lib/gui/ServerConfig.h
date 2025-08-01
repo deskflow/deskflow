@@ -46,7 +46,7 @@ class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
   friend QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config);
 
 public:
-  ServerConfig(MainWindow &mainWindow, int columns = kDefaultColumns, int rows = kDefaultRows);
+  explicit ServerConfig(MainWindow &mainWindow, int columns = kDefaultColumns, int rows = kDefaultRows);
   ~ServerConfig() override = default;
 
   bool operator==(const ServerConfig &sc) const;
