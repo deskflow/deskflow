@@ -34,12 +34,12 @@ SecureListenSocket::SecureListenSocket(
 
 std::unique_ptr<IDataSocket> SecureListenSocket::accept()
 {
-  std::unique_ptr<SecureSocket> socket;
+  std::unique_ptr<SecureSocket> secureSocket;
   try {
-    socket = std::make_unique<SecureSocket>(
-        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr), m_securityLevel
+    secureSocket = std::make_unique<SecureSocket>(
+        events(), socketMultiplexer(), ARCH->acceptSocket(socket(), nullptr), m_securityLevel
     );
-    socket->initSsl(true);
+    secureSocket->initSsl(true);
 
     setListeningJob();
 
@@ -51,20 +51,20 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
       certificateFilename = ArgParser::argsBase().m_tlsCertFile;
     }
 
-    if (!socket->loadCertificates(certificateFilename)) {
+    if (!secureSocket->loadCertificates(certificateFilename)) {
       return nullptr;
     }
 
-    socket->secureAccept();
+    secureSocket->secureAccept();
 
-    return socket;
+    return secureSocket;
   } catch (XArchNetwork &) {
-    if (socket) {
+    if (secureSocket) {
       setListeningJob();
     }
     return nullptr;
   } catch (std::exception &ex) {
-    if (socket) {
+    if (secureSocket) {
       setListeningJob();
     }
     throw ex;
