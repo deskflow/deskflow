@@ -156,8 +156,10 @@ deskflow::Screen *ClientApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
   return new deskflow::Screen(
-      new MSWindowsScreen(false, args().m_noHooks, m_events, args().m_enableLangSync, args().m_clientScrollDirection),
-      m_events
+      new MSWindowsScreen(
+          false, args().m_noHooks, getEvents(), args().m_enableLangSync, args().m_clientScrollDirection
+      ),
+      getEvents()
   );
 #endif
 
@@ -165,7 +167,7 @@ deskflow::Screen *ClientApp::createScreen()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
-    return new deskflow::Screen(new deskflow::EiScreen(false, m_events, true), m_events);
+    return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
@@ -175,14 +177,15 @@ deskflow::Screen *ClientApp::createScreen()
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
   return new deskflow::Screen(
-      new XWindowsScreen(args().m_display, false, args().m_yscroll, m_events, args().m_clientScrollDirection), m_events
+      new XWindowsScreen(args().m_display, false, args().m_yscroll, getEvents(), args().m_clientScrollDirection),
+      getEvents()
   );
 
 #endif
 
 #if WINAPI_CARBON
   return new deskflow::Screen(
-      new OSXScreen(m_events, false, args().m_enableLangSync, args().m_clientScrollDirection), m_events
+      new OSXScreen(getEvents(), false, args().m_enableLangSync, args().m_clientScrollDirection), getEvents()
   );
 #endif
 }
@@ -200,13 +203,13 @@ void ClientApp::updateStatus(const std::string_view &) const
 void ClientApp::handleScreenError()
 {
   LOG((CLOG_CRIT "error on screen"));
-  m_events->addEvent(Event(EventTypes::Quit));
+  getEvents()->addEvent(Event(EventTypes::Quit));
 }
 
 deskflow::Screen *ClientApp::openClientScreen()
 {
   deskflow::Screen *screen = createScreen();
-  m_events->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
+  getEvents()->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
     handleScreenError();
   });
   return screen;
@@ -215,7 +218,7 @@ deskflow::Screen *ClientApp::openClientScreen()
 void ClientApp::closeClientScreen(deskflow::Screen *screen)
 {
   if (screen != nullptr) {
-    m_events->removeHandler(EventTypes::ScreenError, screen->getEventTarget());
+    getEvents()->removeHandler(EventTypes::ScreenError, screen->getEventTarget());
     delete screen;
   }
 }
@@ -223,8 +226,8 @@ void ClientApp::closeClientScreen(deskflow::Screen *screen)
 void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 {
   // discard old timer
-  m_events->deleteTimer(timer);
-  m_events->removeHandler(EventTypes::Timer, timer);
+  getEvents()->deleteTimer(timer);
+  getEvents()->removeHandler(EventTypes::Timer, timer);
 
   // reconnect
   startClient();
@@ -234,8 +237,8 @@ void ClientApp::scheduleClientRestart(double retryTime)
 {
   // install a timer and handler to retry later
   LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-  EventQueueTimer *timer = m_events->newOneShotTimer(retryTime, nullptr);
-  m_events->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
+  EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
+  getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
 
 void ClientApp::handleClientConnected() const
@@ -267,7 +270,7 @@ void ClientApp::handleClientRefused(const Event &e)
   updateStatus(std::string("Failed to connect to server: ") + info->m_what);
   if (!args().m_restartable || !info->m_retry) {
     LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
-    m_events->addEvent(Event(EventTypes::Quit));
+    getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
     LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
     if (!m_suspended) {
@@ -280,7 +283,7 @@ void ClientApp::handleClientDisconnected()
 {
   LOG((CLOG_NOTE "disconnected from server"));
   if (!args().m_restartable) {
-    m_events->addEvent(Event(EventTypes::Quit));
+    getEvents()->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
     scheduleClientRestart(s_retryTime);
   }
@@ -289,19 +292,19 @@ void ClientApp::handleClientDisconnected()
 
 Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
 {
-  auto *client = new Client(m_events, name, address, getSocketFactory(), screen, args());
+  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen, args());
 
   try {
-    m_events->addHandler(EventTypes::ClientConnected, client->getEventTarget(), [this](const auto &) {
+    getEvents()->addHandler(EventTypes::ClientConnected, client->getEventTarget(), [this](const auto &) {
       handleClientConnected();
     });
-    m_events->addHandler(EventTypes::ClientConnectionFailed, client->getEventTarget(), [this](const auto &e) {
+    getEvents()->addHandler(EventTypes::ClientConnectionFailed, client->getEventTarget(), [this](const auto &e) {
       handleClientFailed(e);
     });
-    m_events->addHandler(EventTypes::ClientConnectionRefused, client->getEventTarget(), [this](const auto &e) {
+    getEvents()->addHandler(EventTypes::ClientConnectionRefused, client->getEventTarget(), [this](const auto &e) {
       handleClientRefused(e);
     });
-    m_events->addHandler(EventTypes::ClientDisconnected, client->getEventTarget(), [this](const auto &) {
+    getEvents()->addHandler(EventTypes::ClientDisconnected, client->getEventTarget(), [this](const auto &) {
       handleClientDisconnected();
     });
 
@@ -319,10 +322,10 @@ void ClientApp::closeClient(Client *client)
     return;
   }
   using enum EventTypes;
-  m_events->removeHandler(ClientConnected, client);
-  m_events->removeHandler(ClientConnectionFailed, client);
-  m_events->removeHandler(ClientConnectionRefused, client);
-  m_events->removeHandler(ClientDisconnected, client);
+  getEvents()->removeHandler(ClientConnected, client);
+  getEvents()->removeHandler(ClientConnectionFailed, client);
+  getEvents()->removeHandler(ClientConnectionRefused, client);
+  getEvents()->removeHandler(ClientDisconnected, client);
   delete client;
 }
 
@@ -406,7 +409,7 @@ int ClientApp::mainLoop()
 
   runCocoaApp();
 #else
-  m_events->loop();
+  getEvents()->loop();
 #endif
 
   DAEMON_RUNNING(false);
@@ -468,5 +471,5 @@ void ClientApp::startNode()
 
 ISocketFactory *ClientApp::getSocketFactory() const
 {
-  return new TCPSocketFactory(m_events, getSocketMultiplexer());
+  return new TCPSocketFactory(getEvents(), getSocketMultiplexer());
 }

@@ -114,9 +114,8 @@ public:
 protected:
   void runEventsLoop(void *);
 
-  IEventQueue *m_events = nullptr;
-
 private:
+  IEventQueue *m_events = nullptr;
   deskflow::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog = nullptr;

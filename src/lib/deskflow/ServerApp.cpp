@@ -218,17 +218,19 @@ void ServerApp::closeServer(Server *server)
 
   // wait for clients to disconnect for up to timeout seconds
   double timeout = 3.0;
-  EventQueueTimer *timer = m_events->newOneShotTimer(timeout, nullptr);
-  m_events->addHandler(EventTypes::Timer, timer, [this](const auto &) { m_events->addEvent(Event(EventTypes::Quit)); });
-  m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) {
-    m_events->addEvent(Event(EventTypes::Quit));
+  EventQueueTimer *timer = getEvents()->newOneShotTimer(timeout, nullptr);
+  getEvents()->addHandler(EventTypes::Timer, timer, [this](const auto &) {
+    getEvents()->addEvent(Event(EventTypes::Quit));
+  });
+  getEvents()->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) {
+    getEvents()->addEvent(Event(EventTypes::Quit));
   });
 
-  m_events->loop();
+  getEvents()->loop();
 
-  m_events->removeHandler(EventTypes::Timer, timer);
-  m_events->deleteTimer(timer);
-  m_events->removeHandler(EventTypes::ServerDisconnected, server);
+  getEvents()->removeHandler(EventTypes::Timer, timer);
+  getEvents()->deleteTimer(timer);
+  getEvents()->removeHandler(EventTypes::ServerDisconnected, server);
 
   // done with server
   delete server;
@@ -237,8 +239,8 @@ void ServerApp::closeServer(Server *server)
 void ServerApp::stopRetryTimer()
 {
   if (m_timer != nullptr) {
-    m_events->removeHandler(EventTypes::Timer, m_timer);
-    m_events->deleteTimer(m_timer);
+    getEvents()->removeHandler(EventTypes::Timer, m_timer);
+    getEvents()->deleteTimer(m_timer);
     m_timer = nullptr;
   }
 }
@@ -256,7 +258,7 @@ void ServerApp::updateStatus(const std::string_view &msg) const
 void ServerApp::closeClientListener(ClientListener *listen)
 {
   if (listen != nullptr) {
-    m_events->removeHandler(EventTypes::ClientListenerAccepted, listen);
+    getEvents()->removeHandler(EventTypes::ClientListenerAccepted, listen);
     delete listen;
   }
 }
@@ -287,9 +289,9 @@ void ServerApp::closeServerScreen(deskflow::Screen *screen)
 {
   if (screen != nullptr) {
     using enum EventTypes;
-    m_events->removeHandler(ScreenError, screen->getEventTarget());
-    m_events->removeHandler(ScreenSuspend, screen->getEventTarget());
-    m_events->removeHandler(ScreenResume, screen->getEventTarget());
+    getEvents()->removeHandler(ScreenError, screen->getEventTarget());
+    getEvents()->removeHandler(ScreenSuspend, screen->getEventTarget());
+    getEvents()->removeHandler(ScreenResume, screen->getEventTarget());
     delete screen;
   }
 }
@@ -332,7 +334,7 @@ void ServerApp::retryHandler()
     LOG((CLOG_DEBUG1 "retry server initialization"));
     m_serverState = Uninitialized;
     if (!initServer()) {
-      m_events->addEvent(Event(EventTypes::Quit));
+      getEvents()->addEvent(Event(EventTypes::Quit));
     }
     break;
 
@@ -340,11 +342,11 @@ void ServerApp::retryHandler()
     LOG((CLOG_DEBUG1 "retry server initialization"));
     m_serverState = Uninitialized;
     if (!initServer()) {
-      m_events->addEvent(Event(EventTypes::Quit));
+      getEvents()->addEvent(Event(EventTypes::Quit));
     } else if (m_serverState == Initialized) {
       LOG((CLOG_DEBUG1 "starting server"));
       if (!startServer()) {
-        m_events->addEvent(Event(EventTypes::Quit));
+        getEvents()->addEvent(Event(EventTypes::Quit));
       }
     }
     break;
@@ -353,7 +355,7 @@ void ServerApp::retryHandler()
     LOG((CLOG_DEBUG1 "retry starting server"));
     m_serverState = Initialized;
     if (!startServer()) {
-      m_events->addEvent(Event(EventTypes::Quit));
+      getEvents()->addEvent(Event(EventTypes::Quit));
     }
     break;
   }
@@ -401,8 +403,8 @@ bool ServerApp::initServer()
     // install a timer and handler to retry later
     assert(m_timer == nullptr);
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-    m_timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
+    m_timer = getEvents()->newOneShotTimer(retryTime, nullptr);
+    getEvents()->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
     m_serverState = Initializing;
     return true;
   } else {
@@ -414,11 +416,13 @@ bool ServerApp::initServer()
 deskflow::Screen *ServerApp::openServerScreen()
 {
   deskflow::Screen *screen = createScreen();
-  m_events->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
+  getEvents()->addHandler(EventTypes::ScreenError, screen->getEventTarget(), [this](const auto &) {
     handleScreenError();
   });
-  m_events->addHandler(EventTypes::ScreenSuspend, screen->getEventTarget(), [this](const auto &) { handleSuspend(); });
-  m_events->addHandler(EventTypes::ScreenResume, screen->getEventTarget(), [this](const auto &) { handleResume(); });
+  getEvents()->addHandler(EventTypes::ScreenSuspend, screen->getEventTarget(), [this](const auto &) {
+    handleSuspend();
+  });
+  getEvents()->addHandler(EventTypes::ScreenResume, screen->getEventTarget(), [this](const auto &) { handleResume(); });
   return screen;
 }
 
@@ -474,8 +478,8 @@ bool ServerApp::startServer()
     assert(m_timer == nullptr);
     const auto retryTime = 10.0;
     LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
-    m_timer = m_events->newOneShotTimer(retryTime, nullptr);
-    m_events->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
+    m_timer = getEvents()->newOneShotTimer(retryTime, nullptr);
+    getEvents()->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
     m_serverState = Starting;
     return true;
   } else {
@@ -487,14 +491,14 @@ bool ServerApp::startServer()
 deskflow::Screen *ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-  return new deskflow::Screen(new MSWindowsScreen(true, args().m_noHooks, m_events), m_events);
+  return new deskflow::Screen(new MSWindowsScreen(true, args().m_noHooks, getEvents()), getEvents());
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG((CLOG_INFO "using ei screen for wayland"));
-    return new deskflow::Screen(new deskflow::EiScreen(true, m_events, true), m_events);
+    return new deskflow::Screen(new deskflow::EiScreen(true, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
 #endif
@@ -503,9 +507,9 @@ deskflow::Screen *ServerApp::createScreen()
 
 #if WINAPI_XWINDOWS
   LOG((CLOG_INFO "using legacy x windows screen"));
-  return new deskflow::Screen(new XWindowsScreen(args().m_display, true, 0, m_events), m_events);
+  return new deskflow::Screen(new XWindowsScreen(args().m_display, true, 0, getEvents()), getEvents());
 #elif WINAPI_CARBON
-  return new deskflow::Screen(new OSXScreen(m_events, true), m_events);
+  return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #endif
 }
 
@@ -518,7 +522,7 @@ PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::S
 void ServerApp::handleScreenError()
 {
   LOG((CLOG_CRIT "error on screen"));
-  m_events->addEvent(Event(EventTypes::Quit));
+  getEvents()->addEvent(Event(EventTypes::Quit));
 }
 
 void ServerApp::handleSuspend()
@@ -551,9 +555,9 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
     }
   }
 
-  auto *listen = new ClientListener(getAddress(address), getSocketFactory(), m_events, securityLevel);
+  auto *listen = new ClientListener(getAddress(address), getSocketFactory(), getEvents(), securityLevel);
 
-  m_events->addHandler(EventTypes::ClientListenerAccepted, listen, [this, listen](const auto &e) {
+  getEvents()->addHandler(EventTypes::ClientListenerAccepted, listen, [this, listen](const auto &e) {
     handleClientConnected(e, listen);
   });
 
@@ -562,10 +566,10 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 
 Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient)
 {
-  auto *server = new Server(config, primaryClient, m_serverScreen, m_events, args());
+  auto *server = new Server(config, primaryClient, m_serverScreen, getEvents(), args());
   try {
-    m_events->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { updateStatus(); });
-    m_events->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
+    getEvents()->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { updateStatus(); });
+    getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
 
   } catch (std::bad_alloc &ba) {
     delete server;
@@ -582,7 +586,7 @@ void ServerApp::handleScreenSwitched() const
 
 std::unique_ptr<ISocketFactory> ServerApp::getSocketFactory() const
 {
-  return std::make_unique<TCPSocketFactory>(m_events, getSocketMultiplexer());
+  return std::make_unique<TCPSocketFactory>(getEvents(), getSocketMultiplexer());
 }
 
 NetworkAddress ServerApp::getAddress(const NetworkAddress &address) const
@@ -622,19 +626,19 @@ int ServerApp::mainLoop()
 
   // handle hangup signal by reloading the server's configuration
   ARCH->setSignalHandler(Arch::ThreadSignal::Hangup, &reloadSignalHandler, nullptr);
-  m_events->addHandler(EventTypes::ServerAppReloadConfig, m_events->getSystemTarget(), [this](const auto &) {
+  getEvents()->addHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget(), [this](const auto &) {
     reloadConfig();
   });
 
   // handle force reconnect event by disconnecting clients.  they'll
   // reconnect automatically.
-  m_events->addHandler(EventTypes::ServerAppForceReconnect, m_events->getSystemTarget(), [this](const auto &) {
+  getEvents()->addHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget(), [this](const auto &) {
     forceReconnect();
   });
 
   // to work around the sticky meta keys problem, we'll give users
   // the option to reset the state of the server.
-  m_events->addHandler(EventTypes::ServerAppResetServer, m_events->getSystemTarget(), [this](const auto &) {
+  getEvents()->addHandler(EventTypes::ServerAppResetServer, getEvents()->getSystemTarget(), [this](const auto &) {
     resetServer();
   });
 
@@ -653,15 +657,15 @@ int ServerApp::mainLoop()
 
   runCocoaApp();
 #else
-  m_events->loop();
+  getEvents()->loop();
 #endif
 
   DAEMON_RUNNING(false);
 
   // close down
   LOG((CLOG_DEBUG1 "stopping server"));
-  m_events->removeHandler(EventTypes::ServerAppForceReconnect, m_events->getSystemTarget());
-  m_events->removeHandler(EventTypes::ServerAppReloadConfig, m_events->getSystemTarget());
+  getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
+  getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
   updateStatus();
   LOG((CLOG_NOTE "stopped server"));
@@ -681,7 +685,7 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
-  args().m_config = std::make_shared<Config>(m_events);
+  args().m_config = std::make_shared<Config>(getEvents());
   args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   // run
