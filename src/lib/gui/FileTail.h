@@ -18,7 +18,7 @@ class FileTail : public QObject
   Q_OBJECT
 
 public:
-  FileTail(const QString &filePath, QObject *parent = nullptr);
+  explicit FileTail(const QString &filePath, QObject *parent = nullptr);
 
 Q_SIGNALS:
   void newLine(const QString &line);

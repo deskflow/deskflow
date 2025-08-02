@@ -123,7 +123,6 @@ protected:
   void sendEvent(EventTypes);
   void discardWrittenData(int bytesWrote);
 
-  IEventQueue *m_events;
   StreamBuffer m_inputBuffer;
   StreamBuffer m_outputBuffer;
 
@@ -144,6 +143,7 @@ private:
   bool m_connected;
   Mutex m_mutex;
   ArchSocket m_socket;
+  IEventQueue *m_events;
   CondVar<bool> m_flushed;
   SocketMultiplexer *m_socketMultiplexer;
 };

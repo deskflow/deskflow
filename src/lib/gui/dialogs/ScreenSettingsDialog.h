@@ -24,7 +24,7 @@ class ScreenSettingsDialog : public QDialog
   Q_OBJECT
 
 public:
-  ScreenSettingsDialog(QWidget *parent, Screen *pScreen = nullptr, const ScreenList *pScreens = nullptr);
+  explicit ScreenSettingsDialog(QWidget *parent, Screen *pScreen = nullptr, const ScreenList *pScreens = nullptr);
   ~ScreenSettingsDialog() override;
 
 public Q_SLOTS:

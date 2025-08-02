@@ -114,12 +114,11 @@ public:
 protected:
   void runEventsLoop(void *);
 
-  IEventQueue *m_events = nullptr;
-
 private:
   deskflow::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog = nullptr;
+  IEventQueue *m_events = nullptr;
   ARCH_APP_UTIL m_appUtil;
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
 };

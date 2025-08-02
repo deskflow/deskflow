@@ -16,7 +16,7 @@ class KeySequenceWidget : public QPushButton
   Q_OBJECT
 
 public:
-  KeySequenceWidget(QWidget *parent, const KeySequence &seq = KeySequence());
+  explicit KeySequenceWidget(QWidget *parent, const KeySequence &seq = KeySequence());
 
 Q_SIGNALS:
   void keySequenceChanged();
