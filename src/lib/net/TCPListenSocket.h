@@ -44,10 +44,24 @@ public:
 protected:
   void setListeningJob();
 
-  IEventQueue *m_events;
-  ArchSocket m_socket;
-  SocketMultiplexer *m_socketMultiplexer;
+  ArchSocket socket() const
+  {
+    return m_socket;
+  }
+
+  IEventQueue *events() const
+  {
+    return m_events;
+  }
+
+  SocketMultiplexer *socketMultiplexer() const
+  {
+    return m_socketMultiplexer;
+  }
 
 private:
+  ArchSocket m_socket;
+  IEventQueue *m_events;
+  SocketMultiplexer *m_socketMultiplexer;
   std::mutex m_mutex;
 };
