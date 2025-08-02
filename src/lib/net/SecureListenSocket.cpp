@@ -37,7 +37,7 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
   std::unique_ptr<SecureSocket> socket;
   try {
     socket = std::make_unique<SecureSocket>(
-        m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr), m_securityLevel
+        events(), socketMultiplexer(), ARCH->acceptSocket(archSocket(), nullptr), m_securityLevel
     );
     socket->initSsl(true);
 
