@@ -98,7 +98,6 @@ public:
   void retryHandler();
   deskflow::Screen *openServerScreen();
   PrimaryClient *openPrimaryClient(const std::string &name, deskflow::Screen *screen);
-  void handleScreenError();
   void handleSuspend();
   void handleResume();
   ClientListener *openClientListener(const NetworkAddress &address);

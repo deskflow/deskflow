@@ -184,6 +184,12 @@ void App::initApp(int argc, const char **argv)
   loadConfig();
 }
 
+void App::handleScreenError() const
+{
+  LOG((CLOG_CRIT "error on screen"));
+  getEvents()->addEvent(Event(EventTypes::Quit));
+}
+
 void App::runEventsLoop(void *)
 {
   m_events->loop();
