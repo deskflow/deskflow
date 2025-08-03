@@ -203,7 +203,6 @@ void ServerApp::handleClientConnected(const Event &, ClientListener *listener)
   ClientProxy *client = listener->getNextClient();
   if (client != nullptr) {
     m_server->adoptClient(client);
-    updateStatus();
   }
 }
 
@@ -243,16 +242,6 @@ void ServerApp::stopRetryTimer()
     getEvents()->deleteTimer(m_timer);
     m_timer = nullptr;
   }
-}
-
-void ServerApp::updateStatus() const
-{
-  updateStatus("");
-}
-
-void ServerApp::updateStatus(const std::string_view &msg) const
-{
-  // do nothing
 }
 
 void ServerApp::closeClientListener(ClientListener *listen)
@@ -379,13 +368,11 @@ bool ServerApp::initServer()
     m_serverScreen = serverScreen;
     m_primaryClient = primaryClient;
     m_serverState = Initialized;
-    updateStatus();
     return true;
   } catch (XScreenUnavailable &e) {
     LOG((CLOG_WARN "primary screen unavailable: %s", e.what()));
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
-    updateStatus(std::string("primary screen unavailable: ") + e.what());
     retryTime = e.getRetryTime();
   } catch (XScreenOpenFailure &e) {
     LOG((CLOG_CRIT "failed to start server: %s", e.what()));
@@ -455,7 +442,6 @@ bool ServerApp::startServer()
     listener->setServer(m_server);
     m_server->setListener(listener);
     m_listener = listener;
-    updateStatus();
     LOG((CLOG_NOTE "started server, waiting for clients"));
     m_serverState = Started;
     return true;
@@ -466,7 +452,6 @@ bool ServerApp::startServer()
       LOG((CLOG_CRIT "cannot listen for clients: %s", e.what()));
     }
     closeClientListener(listener);
-    updateStatus(std::string("cannot listen for clients: ") + e.what());
   } catch (XBase &e) {
     LOG((CLOG_CRIT "failed to start server: %s", e.what()));
     closeClientListener(listener);
@@ -562,7 +547,6 @@ Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient
 {
   auto *server = new Server(config, primaryClient, m_serverScreen, getEvents(), args());
   try {
-    getEvents()->addHandler(EventTypes::ServerDisconnected, server, [this](const auto &) { updateStatus(); });
     getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
 
   } catch (std::bad_alloc &ba) {
@@ -661,7 +645,6 @@ int ServerApp::mainLoop()
   getEvents()->removeHandler(EventTypes::ServerAppForceReconnect, getEvents()->getSystemTarget());
   getEvents()->removeHandler(EventTypes::ServerAppReloadConfig, getEvents()->getSystemTarget());
   cleanupServer();
-  updateStatus();
   LOG((CLOG_NOTE "stopped server"));
 
   return s_exitSuccess;

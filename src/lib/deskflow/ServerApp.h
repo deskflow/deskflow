@@ -87,8 +87,6 @@ public:
   void handleClientConnected(const Event &e, ClientListener *listener);
   void closeServer(Server *server);
   void stopRetryTimer();
-  void updateStatus() const;
-  void updateStatus(const std::string_view &msg) const;
   void closeClientListener(ClientListener *listen);
   void stopServer();
   void closePrimaryClient(PrimaryClient *primaryClient);
