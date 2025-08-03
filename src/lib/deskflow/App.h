@@ -109,10 +109,9 @@ public:
     return *s_instance;
   }
 
-  void (*m_bye)(int);
-
 protected:
   void runEventsLoop(void *);
+  void (*m_bye)(int);
 
 private:
   IEventQueue *m_events = nullptr;
