@@ -358,7 +358,7 @@ private:
   };
 
   // used in hello message sent to the client
-  NetworkProtocol m_protocol;
+  NetworkProtocol m_protocol = NetworkProtocol::Barrier;
 
   // the primary screen client
   PrimaryClient *m_primaryClient;
