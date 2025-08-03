@@ -519,12 +519,6 @@ PrimaryClient *ServerApp::openPrimaryClient(const std::string &name, deskflow::S
   return new PrimaryClient(name, screen);
 }
 
-void ServerApp::handleScreenError()
-{
-  LOG((CLOG_CRIT "error on screen"));
-  getEvents()->addEvent(Event(EventTypes::Quit));
-}
-
 void ServerApp::handleSuspend()
 {
   if (!m_suspended) {

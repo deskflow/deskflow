@@ -200,12 +200,6 @@ void ClientApp::updateStatus(const std::string_view &) const
   // do nothing
 }
 
-void ClientApp::handleScreenError()
-{
-  LOG((CLOG_CRIT "error on screen"));
-  getEvents()->addEvent(Event(EventTypes::Quit));
-}
-
 deskflow::Screen *ClientApp::openClientScreen()
 {
   deskflow::Screen *screen = createScreen();

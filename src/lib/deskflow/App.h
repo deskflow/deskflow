@@ -109,6 +109,8 @@ public:
     return *s_instance;
   }
 
+  void handleScreenError() const;
+
 protected:
   void runEventsLoop(void *);
   void (*m_bye)(int);
