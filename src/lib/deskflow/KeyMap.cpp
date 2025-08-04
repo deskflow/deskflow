@@ -7,10 +7,9 @@
 
 #include "deskflow/KeyMap.h"
 #include "base/Log.h"
-#include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/KeyTypes.h"
 
+#include <algorithm>
 #include <assert.h>
 #include <cctype>
 #include <cstdlib>
