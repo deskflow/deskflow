@@ -1065,7 +1065,6 @@ void KeyState::fakeKeys(const Keystrokes &keys, uint32_t count)
   }
 
   // generate key events
-  LOG((CLOG_DEBUG1 "keystrokes:"));
   for (auto k = keys.begin(); k != keys.end();) {
     if (k->m_type == Keystroke::KeyType::Button && k->m_data.m_button.m_repeat) {
       // repeat from here up to but not including the next key
