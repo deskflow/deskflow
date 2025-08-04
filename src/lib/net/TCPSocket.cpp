@@ -46,8 +46,8 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, 
 
 TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, ArchSocket socket)
     : IDataSocket(events),
-      m_events(events),
       m_socket(socket),
+      m_events(events),
       m_flushed(&m_mutex, true),
       m_socketMultiplexer(socketMultiplexer)
 {
