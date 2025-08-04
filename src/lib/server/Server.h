@@ -20,6 +20,7 @@
 #include "deskflow/ServerArgs.h"
 #include "server/Config.h"
 
+#include <climits>
 #include <map>
 #include <memory>
 #include <set>

@@ -28,7 +28,6 @@
 #include "net/TCPSocket.h"
 
 #include <algorithm>
-#include <climits>
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
