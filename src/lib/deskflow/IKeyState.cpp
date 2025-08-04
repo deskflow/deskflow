@@ -134,7 +134,7 @@ void IKeyState::KeyInfo::split(const char *screens, std::set<std::string> &dst)
   const char *i = screens + 1;
   while (*i != '\0') {
     const char *j = strchr(i, ':');
-    dst.emplace(std::string(i, j - i));
+    dst.emplace(i, j - i);
     i = j + 1;
   }
 }
