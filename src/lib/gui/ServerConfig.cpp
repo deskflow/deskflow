@@ -247,15 +247,13 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
   outStream << "section: links" << Qt::endl;
 
   for (int i = 0; const auto &screen : config.screens()) {
-    if (screen.isNull()) {
-      i++;
-      continue;
-    }
-    outStream << "\t" << screen.name() << ":\n";
-    for (const auto &neighbour : std::as_const(neighbourDirs)) {
-      int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
-      if (idx != -1 && !config.screens()[idx].isNull())
-        outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
+    if (!screen.isNull()) {
+      outStream << "\t" << screen.name() << ":\n";
+      for (const auto &neighbour : std::as_const(neighbourDirs)) {
+        int idx = config.adjacentScreenIndex(i, neighbour.x, neighbour.y);
+        if (idx != -1 && !config.screens()[idx].isNull())
+          outStream << "\t\t" << neighbour.name << " = " << config.screens()[idx].name() << Qt::endl;
+      }
     }
     i++;
   }
