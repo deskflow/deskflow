@@ -113,9 +113,9 @@ public:
 
 protected:
   void runEventsLoop(void *);
-  void (*m_bye)(int);
 
 private:
+  void (*m_bye)(int);
   IEventQueue *m_events = nullptr;
   deskflow::ArgsBase *m_args;
   static App *s_instance;

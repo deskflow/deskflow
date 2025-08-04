@@ -72,9 +72,9 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
 
   if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
     if (args().m_shouldExitOk) {
-      m_bye(s_exitSuccess);
+      bye(s_exitSuccess);
     } else {
-      m_bye(s_exitArgs);
+      bye(s_exitArgs);
     }
   } else {
     // save server address
@@ -89,7 +89,7 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
         // Priddy.
         if (!args().m_restartable || e.getError() == XSocketAddress::SocketError::BadPort) {
           LOG((CLOG_CRIT "%s: %s" BYE, args().m_pname, e.what(), args().m_pname));
-          m_bye(s_exitFailed);
+          bye(s_exitFailed);
         }
       }
     }
@@ -442,7 +442,7 @@ void ClientApp::startNode()
   // we shouldn't retry.
   LOG((CLOG_DEBUG1 "starting client"));
   if (!startClient()) {
-    m_bye(s_exitFailed);
+    bye(s_exitFailed);
   }
 }
 
