@@ -1,14 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classTCPSocketFactory.html#a61145e5c51760c010928f940519e0ead":[6,0,186,1],
-"classTCPSocketFactory.html#a7fd971d4d22e5a82817d3d2f079db912":[6,0,186,2],
-"classTMethodJob.html":[6,0,189],
-"classTMethodJob.html#aac7955ae85aa6e66f9302538cee3342d":[6,0,189,0],
-"classTMethodJob.html#ae607d23b9c32431acbe493a3cf51c36f":[6,0,189,1],
-"classTMethodJob.html#aff5bbe2da821ee51107c555122a756e1":[6,0,189,2],
-"classTSocketMultiplexerMethodJob.html":[6,0,191],
-"classTSocketMultiplexerMethodJob.html#a1086333f93e3893cd662402268c06f5e":[6,0,191,7],
-"classTSocketMultiplexerMethodJob.html#a42c8bc4a4eef9f374e7030d3dd5a8a2c":[6,0,191,0],
 "classTSocketMultiplexerMethodJob.html#a459e1ef3ac5ef44c2eacfc609a40a09e":[6,0,191,2],
 "classTSocketMultiplexerMethodJob.html#a46df6476615c01e1a9273a04f554f35a":[6,0,191,5],
 "classTSocketMultiplexerMethodJob.html#a716f05145ca757d3f34d1e14cb86f68e":[6,0,191,1],
@@ -249,5 +240,14 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboardHTMLConverter.html#a53d552505938e1e244dfd583d20f81fa":[6,0,253,3],
 "classXWindowsClipboardHTMLConverter.html#a7039ce01e7c3d40a8ddd0f5c62bd2d3b":[6,0,253,2],
 "classXWindowsClipboardHTMLConverter.html#abfbc9335af8d6a4b5169e1c64175e803":[6,0,253,4],
-"classXWindowsClipboardHTMLConverter.html#adb5d0ed6e05e1bbb033d9ebf60e1ee2d":[6,0,253,6]
+"classXWindowsClipboardHTMLConverter.html#adb5d0ed6e05e1bbb033d9ebf60e1ee2d":[6,0,253,6],
+"classXWindowsClipboardHTMLConverter.html#ae6f04aa007d60b8cf2685e64616f9536":[6,0,253,0],
+"classXWindowsClipboardHTMLConverter.html#af4e3ad2b04d5fe24be5b395e811365d1":[6,0,253,5],
+"classXWindowsClipboardTextConverter.html":[6,0,254],
+"classXWindowsClipboardTextConverter.html#a2ba78dc0a7bcdf6b24f18d4909a30ca6":[6,0,254,3],
+"classXWindowsClipboardTextConverter.html#a3d6826653c6b6fd575a9f7ef9a97f775":[6,0,254,5],
+"classXWindowsClipboardTextConverter.html#a45cdaf3e5a53901fb2e710cca51f7882":[6,0,254,0],
+"classXWindowsClipboardTextConverter.html#a4796984c219db958a6b7e171b1ba8b4a":[6,0,254,4],
+"classXWindowsClipboardTextConverter.html#a4feee56f174469ab7f5fee44a3ea8b8a":[6,0,254,2],
+"classXWindowsClipboardTextConverter.html#ac7dce8d0dd81bdbf41bfb599d698d564":[6,0,254,1]
 };

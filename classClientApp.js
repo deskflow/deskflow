@@ -16,7 +16,6 @@ var classClientApp =
     [ "handleClientFailed", "classClientApp.html#aafa40e2e47be311b5b5cfa16d4d2eea2", null ],
     [ "handleClientRefused", "classClientApp.html#a49de08e2beda98b19641d57d26e2a89a", null ],
     [ "handleClientRestart", "classClientApp.html#ae4a765893f132f28e07849ffcc14979b", null ],
-    [ "handleScreenError", "classClientApp.html#a401a5a06cd9fc12c9d3d86c0da974ae6", null ],
     [ "help", "classClientApp.html#a9993ad03a708094a17d4af4b28416643", null ],
     [ "instance", "classClientApp.html#a6e4af3a42cc9ece5c368af5b23c3ffe8", null ],
     [ "loadConfig", "classClientApp.html#aee6830f88444842bc81db990ab9cf8e7", null ],
@@ -30,7 +29,5 @@ var classClientApp =
     [ "standardStartup", "classClientApp.html#aaa242dc99c9e94575add6a0dd8369622", null ],
     [ "startClient", "classClientApp.html#a1854a88ad11e0633cd0a59c83857d042", null ],
     [ "startNode", "classClientApp.html#aa302821af245d6a9772d7c09da3a4e34", null ],
-    [ "stopClient", "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858", null ],
-    [ "updateStatus", "classClientApp.html#a795856c5094ba9d96c25e70da1f66b47", null ],
-    [ "updateStatus", "classClientApp.html#aba0e2634f245bbc71cab445e61c7a68f", null ]
+    [ "stopClient", "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858", null ]
 ];

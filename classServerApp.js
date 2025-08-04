@@ -17,7 +17,6 @@ var classServerApp =
     [ "getServerPtr", "classServerApp.html#ac3650b81430e9bd9fb303eb2fae8fb02", null ],
     [ "handleClientConnected", "classServerApp.html#abd33f314e99b27442d62efd62fb6506a", null ],
     [ "handleResume", "classServerApp.html#a8110cd524de6b5c6094202de8936ddc9", null ],
-    [ "handleScreenError", "classServerApp.html#a521e97d2a4aa042a01f10dc03b7b24a0", null ],
     [ "handleSuspend", "classServerApp.html#a6ee159df04d18450454bf489d3afc769", null ],
     [ "help", "classServerApp.html#a86c978779c2f9361125d5e2e187fcb3c", null ],
     [ "initServer", "classServerApp.html#ae503783ded61fc2ccf91f66a1d334cac", null ],
@@ -39,7 +38,5 @@ var classServerApp =
     [ "startNode", "classServerApp.html#ad480f11b4df42e0dea276cc192757ca9", null ],
     [ "startServer", "classServerApp.html#a8ac77031fc0895e8de65c8361934b631", null ],
     [ "stopRetryTimer", "classServerApp.html#ade5f4b79595cc17a11b0a7b0d48e8a9c", null ],
-    [ "stopServer", "classServerApp.html#ae2fc2243f0cd5f4ed877a33eb07199de", null ],
-    [ "updateStatus", "classServerApp.html#a7e672605b75de41adf9a10923739d30f", null ],
-    [ "updateStatus", "classServerApp.html#a81a909553d3e96c1d288903885139c44", null ]
+    [ "stopServer", "classServerApp.html#ae2fc2243f0cd5f4ed877a33eb07199de", null ]
 ];

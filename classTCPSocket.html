@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.34</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.42</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -121,21 +121,18 @@ Collaboration diagram for TCPSocket:</div>
 <div class="dyncontent">
 <div class="center"><img src="classTCPSocket__coll__graph.png" border="0" usemap="#aTCPSocket_coll__map" loading="lazy" alt="Collaboration graph"/></div>
 <map name="aTCPSocket_coll__map" id="aTCPSocket_coll__map">
-<area shape="rect" title="TCP data socket." alt="" coords="210,291,298,315"/>
-<area shape="rect" href="classIDataSocket.html" title="Data stream socket interface." alt="" coords="112,177,204,201"/>
-<area shape="poly" title=" " alt="" coords="180,212,246,288,242,292,176,215"/>
+<area shape="rect" title="TCP data socket." alt="" coords="111,267,200,292"/>
+<area shape="rect" href="classIDataSocket.html" title="Data stream socket interface." alt="" coords="50,153,143,178"/>
+<area shape="poly" title=" " alt="" coords="112,191,152,265,147,268,108,193"/>
 <area shape="rect" href="classISocket.html" title="Generic socket interface." alt="" coords="5,79,71,104"/>
-<area shape="poly" title=" " alt="" coords="66,112,145,174,142,178,63,116"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="119,5,197,30"/>
-<area shape="poly" title=" " alt="" coords="127,40,59,81,56,77,125,36"/>
+<area shape="poly" title=" " alt="" coords="59,114,89,151,85,155,55,118"/>
+<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="58,5,135,30"/>
+<area shape="poly" title=" " alt="" coords="80,44,49,81,45,77,76,40"/>
 <area shape="rect" href="classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,79,221,104"/>
-<area shape="poly" title=" " alt="" coords="161,45,161,79,155,79,155,45"/>
-<area shape="rect" href="classIEventQueue.html" title="Event queue interface." alt="" coords="208,128,305,153"/>
-<area shape="poly" title=" " alt="" coords="191,37,214,55,235,78,249,103,256,127,251,128,244,105,230,81,210,59,187,41"/>
-<area shape="poly" title=" " alt="" coords="161,120,161,177,155,177,155,120"/>
-<area shape="poly" title=" " alt="" coords="259,168,257,290,252,290,254,168"/>
-<area shape="rect" href="classStreamBuffer.html" title="FIFO of bytes." alt="" coords="343,177,440,201"/>
-<area shape="poly" title=" " alt="" coords="367,214,270,292,267,288,364,209"/>
+<area shape="poly" title=" " alt="" coords="118,40,150,77,146,81,114,43"/>
+<area shape="poly" title=" " alt="" coords="141,117,108,155,104,151,137,114"/>
+<area shape="rect" href="classStreamBuffer.html" title="FIFO of bytes." alt="" coords="167,153,264,178"/>
+<area shape="poly" title=" " alt="" coords="205,193,164,268,159,265,200,190"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -207,7 +204,6 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a572db40f7cc7635a51211dc88578f834" id="r_a572db40f7cc7635a51211dc88578f834"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIEventQueue.html">IEventQueue</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a572db40f7cc7635a51211dc88578f834">m_events</a></td></tr>
 <tr class="memitem:ad4ace4e3c2a6ae812c5bce6f2dd24141" id="r_ad4ace4e3c2a6ae812c5bce6f2dd24141"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classStreamBuffer.html">StreamBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4ace4e3c2a6ae812c5bce6f2dd24141">m_inputBuffer</a></td></tr>
 <tr class="memitem:ad2622b93e42ffab8b885651b98cb675e" id="r_ad2622b93e42ffab8b885651b98cb675e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classStreamBuffer.html">StreamBuffer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2622b93e42ffab8b885651b98cb675e">m_outputBuffer</a></td></tr>
 </table>
@@ -1171,28 +1167,6 @@ Protected Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
-<a id="a572db40f7cc7635a51211dc88578f834" name="a572db40f7cc7635a51211dc88578f834"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a572db40f7cc7635a51211dc88578f834">&#9670;&#160;</a></span>m_events</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classIEventQueue.html">IEventQueue</a>* TCPSocket::m_events</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ad4ace4e3c2a6ae812c5bce6f2dd24141" name="ad4ace4e3c2a6ae812c5bce6f2dd24141"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad4ace4e3c2a6ae812c5bce6f2dd24141">&#9670;&#160;</a></span>m_inputBuffer</h2>
 

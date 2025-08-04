@@ -12,7 +12,7 @@ var searchData=
   ['handlemessage_9',['handleMessage',['../classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213',1,'deskflow::gui::Logger']]],
   ['handlemodifierkeys_10',['handleModifierKeys',['../classOSXKeyState.html#ae8bb682c8b3220e89f602993fcad8c61',1,'OSXKeyState']]],
   ['handleresume_11',['handleResume',['../classServerApp.html#a8110cd524de6b5c6094202de8936ddc9',1,'ServerApp']]],
-  ['handlescreenerror_12',['handleScreenError',['../classClientApp.html#a401a5a06cd9fc12c9d3d86c0da974ae6',1,'ClientApp::handleScreenError()'],['../classServerApp.html#a521e97d2a4aa042a01f10dc03b7b24a0',1,'ServerApp::handleScreenError()']]],
+  ['handlescreenerror_12',['handleScreenError',['../classApp.html#ae59ab33fd366ee0609bd4df8e807fab0',1,'App']]],
   ['handlesuspend_13',['handleSuspend',['../classServerApp.html#a6ee159df04d18450454bf489d3afc769',1,'ServerApp']]],
   ['handlesystemevent_14',['handleSystemEvent',['../classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1',1,'IPlatformScreen::handleSystemEvent()'],['../classPlatformScreen.html#a555dedbff35e03142e5e0220a28c001c',1,'PlatformScreen::handleSystemEvent()'],['../classdeskflow_1_1EiScreen.html#aad28f5140231a3275e1fe696c12f6454',1,'deskflow::EiScreen::handleSystemEvent()'],['../classMSWindowsScreen.html#a32506d299e745880278714833aed4db9',1,'MSWindowsScreen::handleSystemEvent()'],['../classOSXScreen.html#a40563f010746ae747baa9cbaacc42160',1,'OSXScreen::handleSystemEvent()'],['../classXWindowsScreen.html#a0413b95e0050c362e98b926adcca1e79',1,'XWindowsScreen::handleSystemEvent()']]],
   ['handlexevent_15',['handleXEvent',['../classXWindowsScreenSaver.html#a9e33b818e48fdba4cd077b045c33cd04',1,'XWindowsScreenSaver']]],

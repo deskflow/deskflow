@@ -39,7 +39,6 @@ var classTCPSocket =
     [ "shutdownInput", "classTCPSocket.html#a38a986d25f40740058f9fd2356bf1f72", null ],
     [ "shutdownOutput", "classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c", null ],
     [ "write", "classTCPSocket.html#acce0c0590ca9eee2548b18f438dff710", null ],
-    [ "m_events", "classTCPSocket.html#a572db40f7cc7635a51211dc88578f834", null ],
     [ "m_inputBuffer", "classTCPSocket.html#ad4ace4e3c2a6ae812c5bce6f2dd24141", null ],
     [ "m_outputBuffer", "classTCPSocket.html#ad2622b93e42ffab8b885651b98cb675e", null ]
 ];

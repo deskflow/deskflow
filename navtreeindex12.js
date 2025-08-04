@@ -1,8 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classMSWindowsDebugOutputter.html#af02cb3f7a494dafeef796ac400d9439f":[6,0,121,0],
-"classMSWindowsDesks.html":[6,0,122],
-"classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d":[6,0,122,0],
 "classMSWindowsDesks.html#a3378c0c3e7cec291e6fc56690a350e96":[6,0,122,4],
 "classMSWindowsDesks.html#a34a92c3b7b3fa5a6a2fe116e7971a0b9":[6,0,122,6],
 "classMSWindowsDesks.html#a4a6bc7878c59dd81c7585e98b83ca0d7":[6,0,122,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX12 =
 "classOSXClipboardTextConverter.html#a3013556f220f239432d20d4e7f1c405b":[6,0,140,0],
 "classOSXClipboardTextConverter.html#a46afb5b787b0c89484cc94be6e020871":[6,0,140,5],
 "classOSXClipboardTextConverter.html#a776116eb4ac694786db145a8d639b1cb":[6,0,140,4],
-"classOSXClipboardTextConverter.html#ad7a4b0929539d665200e2c99590fce01":[6,0,140,1]
+"classOSXClipboardTextConverter.html#ad7a4b0929539d665200e2c99590fce01":[6,0,140,1],
+"classOSXClipboardTextConverter.html#ada18961272134b01029d4de02520424f":[6,0,140,2],
+"classOSXClipboardTextConverter.html#afb27355f3a0ca020bff04cac4d2ba005":[6,0,140,3],
+"classOSXClipboardUTF16Converter.html":[6,0,141]
 };

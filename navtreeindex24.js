@@ -1,14 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structCBMPHeader.html#affa5707b2cb1ea213497ddd409132bca":[6,0,31,1],
-"structCBMPInfoHeader.html":[6,0,32],
-"structCBMPInfoHeader.html#a0f1f02e5482ff399741e43c0e12cdee2":[6,0,32,0],
-"structCBMPInfoHeader.html#a36bc22e7defdcd14b394a52d10b9b13c":[6,0,32,2],
-"structCBMPInfoHeader.html#a4a19e9822b8f32a5e9558d70cf349618":[6,0,32,8],
-"structCBMPInfoHeader.html#a69649d77280795b307f42fb28bb43783":[6,0,32,6],
-"structCBMPInfoHeader.html#a995e03b7a1c3b514600ea3e0f676fb52":[6,0,32,5],
-"structCBMPInfoHeader.html#aae67b93de47f697d38f8decc15175a5f":[6,0,32,9],
-"structCBMPInfoHeader.html#ab4bd17342a4d6704cec23da8d9c282c9":[6,0,32,10],
 "structCBMPInfoHeader.html#ac2ce465fc837c647b9c50f7437d7317b":[6,0,32,7],
 "structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b":[6,0,32,4],
 "structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef":[6,0,32,3],

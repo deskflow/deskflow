@@ -13,6 +13,7 @@ var classApp =
     [ "daemonMainLoop", "classApp.html#a816a1d7afbf9a655b56a72ac33cafe4c", null ],
     [ "getEvents", "classApp.html#a2999f6b9b1129542847a07bcf5bc7c21", null ],
     [ "getSocketMultiplexer", "classApp.html#a60b51c7e60aa48b222849fbdc68971a0", null ],
+    [ "handleScreenError", "classApp.html#ae59ab33fd366ee0609bd4df8e807fab0", null ],
     [ "help", "classApp.html#aaa32b832bb5c0f4502574ef60c546082", null ],
     [ "initApp", "classApp.html#a92eb8936570ea4604debb4efa74353ca", null ],
     [ "initApp", "classApp.html#a4b67d3558ac51a729728354c0d761113", null ],
@@ -30,6 +31,5 @@ var classApp =
     [ "setSocketMultiplexer", "classApp.html#ad4d9e0526734148f3d7364f2933c6d57", null ],
     [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ],
     [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ],
-    [ "m_bye", "classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc", null ],
-    [ "m_events", "classApp.html#a28da2ed88d81f4e01b7e44d341706279", null ]
+    [ "m_bye", "classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc", null ]
 ];

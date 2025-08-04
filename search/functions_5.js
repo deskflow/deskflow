@@ -32,8 +32,9 @@ var searchData=
   ['event_29',['event',['../classKeySequenceWidget.html#a9a4e36e077c476e1201e0dc90281ae6d',1,'KeySequenceWidget']]],
   ['eventdata_30',['EventData',['../classEventData.html#af3b2887aee6312e35a2df0d621930b75',1,'EventData']]],
   ['eventqueue_31',['EventQueue',['../classEventQueue.html#ab7de5a41befc94aac0f461391e67f14a',1,'EventQueue::EventQueue()'],['../classEventQueue.html#a28691f56ac27312585b11a8711b8188e',1,'EventQueue::EventQueue(EventQueue const &amp;)=delete'],['../classEventQueue.html#a2c2ede9173de1737b96100f1cc95360a',1,'EventQueue::EventQueue(EventQueue &amp;&amp;)=delete']]],
-  ['exit_32',['exit',['../classThread.html#a3bc7f9f6557f62734432d1421525cf68',1,'Thread']]],
-  ['exitapp_33',['exitApp',['../classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca',1,'AppUtil::exitApp()'],['../classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06',1,'AppUtilWindows::exitApp()']]],
-  ['exitappstatic_34',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
-  ['extracted_35',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
+  ['events_32',['events',['../classTCPListenSocket.html#a27a6c9596bda2d60832740ce7d7d984b',1,'TCPListenSocket']]],
+  ['exit_33',['exit',['../classThread.html#a3bc7f9f6557f62734432d1421525cf68',1,'Thread']]],
+  ['exitapp_34',['exitApp',['../classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca',1,'AppUtil::exitApp()'],['../classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06',1,'AppUtilWindows::exitApp()']]],
+  ['exitappstatic_35',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
+  ['extracted_36',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
 ];
