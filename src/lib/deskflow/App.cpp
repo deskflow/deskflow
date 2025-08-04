@@ -64,7 +64,7 @@ void App::version()
   std::vector<char> buffer(kBufferLength);
   std::snprintf(                                                   // NOSONAR
       buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
-      argsBase().m_pname, kVersion, kProtocolMajorVersion, kProtocolMinorVersion, kCopyright
+      argsBase().m_pname, kDisplayVersion, kProtocolMajorVersion, kProtocolMinorVersion, kCopyright
   );
 
   std::cout << std::string(buffer.data()) << std::endl;
