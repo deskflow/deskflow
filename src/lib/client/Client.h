@@ -18,6 +18,7 @@
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
 
+#include <climits>
 #include <memory>
 
 class EventQueueTimer;

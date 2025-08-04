@@ -30,7 +30,6 @@
 #ifdef _WIN32
 #include <array>
 #endif
-#include <climits>
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
