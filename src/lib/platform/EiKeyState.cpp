@@ -119,6 +119,19 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
     if ((xkb_mask & (1 << xkbmod)) == 0)
       continue;
 
+    /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
+#ifndef XKB_VMOD_NAME_ALT
+    static const auto XKB_VMOD_NAME_ALT = "Alt";
+    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
+    static const auto XKB_VMOD_NAME_LEVEL3 = "LevelThree";
+    static const auto XKB_VMOD_NAME_LEVEL5 = "LevelFive";
+    static const auto XKB_VMOD_NAME_META = "Meta";
+    static const auto XKB_VMOD_NAME_NUM = "NumLock";
+    static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
+    static const auto XKB_VMOD_NAME_SUPER = "Super";
+    static const auto XKB_MOD_NAME_MOD5 = "Mod5";
+#endif
+
     const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbmod);
     if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitShift);
@@ -126,10 +139,22 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
       barrier_mask |= (1 << kKeyModifierBitCapsLock);
     else if (strcmp(XKB_MOD_NAME_CTRL, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitControl);
-    else if (strcmp(XKB_MOD_NAME_ALT, name) == 0)
+    else if (strcmp(XKB_MOD_NAME_ALT, name) == 0 || strcmp(XKB_VMOD_NAME_ALT, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitAlt);
-    else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0)
+    else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0 || strcmp(XKB_VMOD_NAME_SUPER, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitSuper);
+    else if (strcmp(XKB_MOD_NAME_MOD5, name) == 0 || strcmp(XKB_VMOD_NAME_LEVEL3, name) == 0)
+      barrier_mask |= (1 << kKeyModifierBitAltGr);
+    else if (strcmp(XKB_VMOD_NAME_LEVEL5, name) == 0)
+      barrier_mask |= (1 << kKeyModifierBitLevel5Lock);
+    else if (strcmp(XKB_VMOD_NAME_META, name) == 0)
+      barrier_mask |= (1 << kKeyModifierBitMeta);
+    else if (strcmp(XKB_VMOD_NAME_NUM, name) == 0)
+      barrier_mask |= (1 << kKeyModifierBitNumLock);
+    else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
+      barrier_mask |= (1 << kKeyModifierBitScrollLock);
+    else
+      LOG_WARN("modifier mask %s not accounted for, this is a bug", name);
   }
 
   return barrier_mask;
