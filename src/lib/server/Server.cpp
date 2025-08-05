@@ -1400,7 +1400,7 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // ignore update if sequence number is old
   if (seqNum < clipboard.m_clipboardSeqNum) {
-    LOG((CLOG_INFO "ignored screen \"%s\" update of clipboard %d (missequenced)", getName(sender).c_str(), id));
+    LOG_INFO("ignored screen \"%s\" update of clipboard %d (mis-sequenced)", getName(sender).c_str(), id);
     return;
   }
 
@@ -1412,24 +1412,21 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   std::string data = clipboard.m_clipboard.marshall();
   if (data.size() > m_maximumClipboardSize * 1024) {
-    LOG(
-        (CLOG_NOTE "not updating clipboard because it's over the size limit "
-                   "(%i KB) configured by the server",
-         m_maximumClipboardSize)
+    LOG_NOTE(
+        "not updating clipboard because it's over the size limit (%i KB) configured by the server",
+        m_maximumClipboardSize
     );
     return;
   }
 
   // ignore if data hasn't changed
   if (data == clipboard.m_clipboardData) {
-    LOG(
-        (CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id)
-    );
+    LOG_DEBUG("ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id);
     return;
   }
 
   // got new data
-  LOG((CLOG_INFO "screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id));
+  LOG_INFO("screen \"%s\" updated clipboard %d", clipboard.m_clipboardOwner.c_str(), id);
   clipboard.m_clipboardData = data;
 
   // tell all clients except the sender that the clipboard is dirty
