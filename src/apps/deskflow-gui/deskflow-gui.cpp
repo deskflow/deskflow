@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
   QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
-  qInfo("%s v%s", kAppName, qPrintable(kVersion));
+  qInfo("%s v%s", kAppName, kDisplayVersion);
 
   dotenv();
   Logger::instance().loadEnvVars();
