@@ -1423,7 +1423,8 @@ void Server::onClipboardChanged(const BaseClientProxy *sender, ClipboardID id, u
 
   // ignore if data hasn't changed
   if (data == clipboard.m_clipboardData) {
-    LOG((CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id)
+    LOG(
+        (CLOG_DEBUG "ignored screen \"%s\" update of clipboard %d (unchanged)", clipboard.m_clipboardOwner.c_str(), id)
     );
     return;
   }
@@ -1670,21 +1671,19 @@ bool Server::onMouseMovePrimary(int32_t x, int32_t y)
 
 void Server::onMouseMoveSecondary(int32_t dx, int32_t dy)
 {
-  LOG((CLOG_DEBUG2 "onMouseMoveSecondary initial %+d,%+d", dx, dy));
-  if (const char *envVal = std::getenv("DESKFLOW_MOUSE_ADJUSTMENT"); envVal) {
+  LOG_DEBUG2("mouse move on secondary: %+d,%+d", dx, dy);
+
+  // TODO: move this to client side and use a qt setting or cli arg instead of env var.
+  const static auto adjustEnv = "DESKFLOW_MOUSE_ADJUSTMENT";
+  if (const char *envVal = std::getenv(adjustEnv); envVal) {
     try {
-      double multiplier = std::stod(envVal);                               // Convert to double
-      auto adjustedDx = static_cast<int32_t>(std::round(dx * multiplier)); // Apply multiplier and round
-      auto adjustedDy = static_cast<int32_t>(std::round(dy * multiplier));
-      LOG((CLOG_DEBUG2 "Adjusted to %+d,%+d using multiplier %.2f", adjustedDx, adjustedDy, multiplier));
-      dx = adjustedDx; // Update dx and dy to adjusted values
-      dy = adjustedDy;
+      double multiplier = std::stod(envVal);
+      dx = static_cast<int32_t>(std::round(dx * multiplier));
+      dy = static_cast<int32_t>(std::round(dy * multiplier));
+      LOG_DEBUG2("adjusted mouse x %.2f: %+d,%+d", multiplier, dx, dy);
     } catch (const std::exception &e) {
-      // Log the error message from the exception
-      LOG((CLOG_ERR "Invalid DESKFLOW_MOUSE_ADJUSTMENT value: %s. Exception: %s", envVal, e.what()));
+      LOG_ERR("invalid %s value: %s", adjustEnv, e.what());
     }
-  } else {
-    LOG((CLOG_DEBUG1 "DESKFLOW_MOUSE_ADJUSTMENT not set, using original values %+d,%+d", dx, dy));
   }
 
   // mouse move on secondary (client's) screen
