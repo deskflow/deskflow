@@ -1110,14 +1110,8 @@ void KeyState::updateModifierKeyState(
   // get the modifier buttons that were pressed or released
   deskflow::KeyMap::ButtonToKeyMap pressed;
   deskflow::KeyMap::ButtonToKeyMap released;
-  std::set_difference(
-      oldKeys.begin(), oldKeys.end(), newKeys.begin(), newKeys.end(), std::inserter(released, released.end()),
-      ButtonToKeyLess()
-  );
-  std::set_difference(
-      newKeys.begin(), newKeys.end(), oldKeys.begin(), oldKeys.end(), std::inserter(pressed, pressed.end()),
-      ButtonToKeyLess()
-  );
+  std::ranges::set_difference(oldKeys, newKeys, std::inserter(released, released.end()), ButtonToKeyLess());
+  std::ranges::set_difference(newKeys, oldKeys, std::inserter(pressed, pressed.end()), ButtonToKeyLess());
 
   // update state
   for (deskflow::KeyMap::ButtonToKeyMap::const_iterator i = released.begin(); i != released.end(); ++i) {
