@@ -541,11 +541,6 @@ bool Config::operator==(const Config &x) const
   return true;
 }
 
-bool Config::operator!=(const Config &x) const
-{
-  return !operator==(x);
-}
-
 void Config::read(ConfigReadContext &context)
 {
   Config tmp(m_events);

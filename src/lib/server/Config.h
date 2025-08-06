@@ -416,8 +416,6 @@ public:
 
   //! Compare configurations
   bool operator==(const Config &) const;
-  //! Compare configurations
-  bool operator!=(const Config &) const;
 
   //! Read configuration
   /*!
