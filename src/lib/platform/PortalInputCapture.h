@@ -27,7 +27,7 @@ public:
   void disable();
   void release();
   void release(double x, double y);
-  bool is_active() const
+  bool isActive() const
   {
     return m_isActive;
   }
