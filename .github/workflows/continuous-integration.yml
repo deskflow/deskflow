@@ -82,7 +82,7 @@ jobs:
       - name: Test summary
         uses: ./.github/actions/test-summary
 
-  reuse-lint:
+  lint-reuse:
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -93,7 +93,7 @@ jobs:
         uses: fsfe/reuse-action@v5
 
   lint-clang:
-    needs: [reuse-lint]
+    needs: [lint-reuse]
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
