@@ -28,7 +28,6 @@ runs:
         # Builds a markdown table from the row artifacts.
 
         header=$(cat <<EOF
-        # Test results
         | OS | Unit tests | Legacy tests |
         | --- | --- | --- |
         EOF
