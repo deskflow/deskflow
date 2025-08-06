@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.63</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.64</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -271,6 +271,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:a555dedbff35e03142e5e0220a28c001c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle system event.  <br /></td></tr>
 <tr class="memitem:a395adf1076033b25c832ff03c0ab0776" id="r_a395adf1076033b25c832ff03c0ab0776"><td class="memItemLeft" align="right" valign="top">virtual int32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a395adf1076033b25c832ff03c0ab0776">mapClientScrollDirection</a> (int32_t) const</td></tr>
 <tr class="memdesc:a395adf1076033b25c832ff03c0ab0776"><td class="mdescLeft">&#160;</td><td class="mdescRight">mapClientScrollDirection Convert scroll according to client scroll directio  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-static-methods" class="groupheader"><a id="pro-static-methods" name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:aad93e758f3167bdfee85a57f5e27d40c" id="r_aad93e758f3167bdfee85a57f5e27d40c"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad93e758f3167bdfee85a57f5e27d40c">sidesMaskToString</a> (uint32_t sides)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -1805,6 +1809,32 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classIPlatformScreen.html#a9436b370f5ff0cdb50083e663e062c52">IPlatformScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a3d804755a4632c7af7064d3fc13684c5">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a8372f83dfd2df3abaad22c49ba4ebc0c">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#abe8e659ae73b4a16f6dbd04c4cbc5c71">XWindowsScreen</a>.</p>
+
+</div>
+</div>
+<a id="aad93e758f3167bdfee85a57f5e27d40c" name="aad93e758f3167bdfee85a57f5e27d40c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad93e758f3167bdfee85a57f5e27d40c">&#9670;&#160;</a></span>sidesMaskToString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::string PlatformScreen::sidesMaskToString </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t</td>          <td class="paramname"><span class="paramname"><em>sides</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Converts a sides mask (e.g. LeftMask | RightMask) to a string representation (e.g. "LR"). </p>
 
 </div>
 </div>

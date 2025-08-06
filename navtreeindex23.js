@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"namespaceSettingsKeys.html#ae19849dae134d7a634582a6e0169447b":[5,0,1,7],
 "namespaceSettingsKeys.html#ae2487530b52af7d18c3a0b7703b9ffd9":[5,0,1,6],
 "namespaceUi.html":[5,0,3],
 "namespacedeskflow.html":[5,0,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structCBMPInfoHeader.html#ac2ce465fc837c647b9c50f7437d7317b":[6,0,32,7],
 "structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b":[6,0,32,4],
 "structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef":[6,0,32,3],
-"structCBMPInfoHeader.html#ae58803ac900f8dca642baa51af9ee522":[6,0,32,1],
-"structChunkType.html":[4,1,0]
+"structCBMPInfoHeader.html#ae58803ac900f8dca642baa51af9ee522":[6,0,32,1]
 };

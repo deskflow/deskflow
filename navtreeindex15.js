@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classServerConfigDialog.html#adb0b6e8f993e0509c7585204eb56508a":[6,0,169,26],
 "classServerConfigDialog.html#adba05715a2b706fb673691045b4d63d0":[6,0,169,12],
 "classServerConfigDialog.html#adcea9be5c7ad2a7e27e728ee92812cdc":[6,0,169,10],
 "classServerConfigDialog.html#adfac50f142bd0fe9ca4e00d7148706d8":[6,0,169,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classTSocketMultiplexerMethodJob.html#a1086333f93e3893cd662402268c06f5e":[6,0,191,7],
 "classTSocketMultiplexerMethodJob.html#a42c8bc4a4eef9f374e7030d3dd5a8a2c":[6,0,191,0],
 "classTSocketMultiplexerMethodJob.html#a459e1ef3ac5ef44c2eacfc609a40a09e":[6,0,191,2],
-"classTSocketMultiplexerMethodJob.html#a46df6476615c01e1a9273a04f554f35a":[6,0,191,5],
-"classTSocketMultiplexerMethodJob.html#a716f05145ca757d3f34d1e14cb86f68e":[6,0,191,1]
+"classTSocketMultiplexerMethodJob.html#a46df6476615c01e1a9273a04f554f35a":[6,0,191,5]
 };

@@ -46,6 +46,7 @@ var classPlatformScreen =
     [ "setHalfDuplexMask", "classPlatformScreen.html#a6b08635a26bb5073159bdebf3eb98d1e", null ],
     [ "setOptions", "classPlatformScreen.html#afe5949bc0115cc31b7f2f707d3b5a2a2", null ],
     [ "setSequenceNumber", "classPlatformScreen.html#a0951699aff03fab5d2d2c3baa50f11e6", null ],
+    [ "sidesMaskToString", "classPlatformScreen.html#aad93e758f3167bdfee85a57f5e27d40c", null ],
     [ "unregisterHotKey", "classPlatformScreen.html#ab916de1c2ae7cfe9e4714d5572bd3ffc", null ],
     [ "updateButtons", "classPlatformScreen.html#ab49aef2db78769f9f000da61275fc66b", null ],
     [ "updateKeyMap", "classPlatformScreen.html#a33f7a5a5569dfe2db604048ad0e4e813", null ],

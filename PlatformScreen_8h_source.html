@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.63</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.64</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -182,10 +182,12 @@ $(function(){initNavTree('PlatformScreen_8h_source.html','',''); });
 <div class="line"><a id="l00100" name="l00100"></a><span class="lineno"><a class="line" href="classPlatformScreen.html#a555dedbff35e03142e5e0220a28c001c">  100</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classPlatformScreen.html#a555dedbff35e03142e5e0220a28c001c">handleSystemEvent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;event) <span class="keyword">override</span> = 0;</div>
 <div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span></div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keyword">virtual</span> int32_t <a class="code hl_function" href="classPlatformScreen.html#a395adf1076033b25c832ff03c0ab0776">mapClientScrollDirection</a>(int32_t) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a> m_clientScrollDirection = <a class="code hl_enumvalue" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>};</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span></div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classPlatformScreen.html#aad93e758f3167bdfee85a57f5e27d40c">sidesMaskToString</a>(uint32_t sides);</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a> m_clientScrollDirection = <a class="code hl_enumvalue" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a>;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>};</div>
 </div>
 <div class="ttc" id="aClientArgs_8h_html"><div class="ttname"><a href="ClientArgs_8h.html">ClientArgs.h</a></div></div>
 <div class="ttc" id="aClipboardTypes_8h_html_a63ca97102023d8f9ba64dcbe102a2647"><div class="ttname"><a href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a></div><div class="ttdeci">uint8_t ClipboardID</div><div class="ttdoc">Clipboard ID.</div><div class="ttdef"><b>Definition</b> ClipboardTypes.h:16</div></div>
@@ -237,6 +239,7 @@ $(function(){initNavTree('PlatformScreen_8h_source.html','',''); });
 <div class="ttc" id="aclassPlatformScreen_html_a9b2db025722e7b61c247aa75b823eef8"><div class="ttname"><a href="classPlatformScreen.html#a9b2db025722e7b61c247aa75b823eef8">PlatformScreen::fakeMouseRelativeMove</a></div><div class="ttdeci">void fakeMouseRelativeMove(int32_t dx, int32_t dy) const override=0</div><div class="ttdoc">Fake mouse move.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_a9fe42c8e215b7393b32da725cf262acb"><div class="ttname"><a href="classPlatformScreen.html#a9fe42c8e215b7393b32da725cf262acb">PlatformScreen::getShape</a></div><div class="ttdeci">void getShape(int32_t &amp;x, int32_t &amp;y, int32_t &amp;width, int32_t &amp;height) const override=0</div><div class="ttdoc">Get screen shape.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_aa1550840e902cf9a29978a7418ddd623"><div class="ttname"><a href="classPlatformScreen.html#aa1550840e902cf9a29978a7418ddd623">PlatformScreen::enter</a></div><div class="ttdeci">void enter() override=0</div><div class="ttdoc">Enter screen.</div></div>
+<div class="ttc" id="aclassPlatformScreen_html_aad93e758f3167bdfee85a57f5e27d40c"><div class="ttname"><a href="classPlatformScreen.html#aad93e758f3167bdfee85a57f5e27d40c">PlatformScreen::sidesMaskToString</a></div><div class="ttdeci">static std::string sidesMaskToString(uint32_t sides)</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:92</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ab49aef2db78769f9f000da61275fc66b"><div class="ttname"><a href="classPlatformScreen.html#ab49aef2db78769f9f000da61275fc66b">PlatformScreen::updateButtons</a></div><div class="ttdeci">virtual void updateButtons()=0</div><div class="ttdoc">Update mouse buttons.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ab8873e332c68b405d8c0a2c0e85336b3"><div class="ttname"><a href="classPlatformScreen.html#ab8873e332c68b405d8c0a2c0e85336b3">PlatformScreen::getEventTarget</a></div><div class="ttdeci">void * getEventTarget() const override=0</div><div class="ttdoc">Get event target.</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_ab916de1c2ae7cfe9e4714d5572bd3ffc"><div class="ttname"><a href="classPlatformScreen.html#ab916de1c2ae7cfe9e4714d5572bd3ffc">PlatformScreen::unregisterHotKey</a></div><div class="ttdeci">void unregisterHotKey(uint32_t id) override=0</div><div class="ttdoc">Unregister a system hotkey.</div></div>

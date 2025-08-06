@@ -1,5 +1,6 @@
 var NAVTREEINDEX16 =
 {
+"classTSocketMultiplexerMethodJob.html#a716f05145ca757d3f34d1e14cb86f68e":[6,0,191,1],
 "classTSocketMultiplexerMethodJob.html#a7a346987d18b4a90fad065eebb6d39ca":[6,0,191,4],
 "classTSocketMultiplexerMethodJob.html#a8e723f9817506555943a80bdfc844e85":[6,0,191,3],
 "classTSocketMultiplexerMethodJob.html#a9741a8ea1368b1be8d870df97d27ff8c":[6,0,191,8],
@@ -248,6 +249,5 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboardTextConverter.html#a4feee56f174469ab7f5fee44a3ea8b8a":[6,0,254,2],
 "classXWindowsClipboardTextConverter.html#ac7dce8d0dd81bdbf41bfb599d698d564":[6,0,254,1],
 "classXWindowsClipboardTextConverter.html#accc335b51431277d59005421f3ef74e8":[6,0,254,6],
-"classXWindowsClipboardUCS2Converter.html":[6,0,255],
-"classXWindowsClipboardUCS2Converter.html#a2cf8119ad30402230a3de0cf573e6a5f":[6,0,255,0]
+"classXWindowsClipboardUCS2Converter.html":[6,0,255]
 };
