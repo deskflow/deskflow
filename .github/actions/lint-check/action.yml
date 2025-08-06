@@ -48,8 +48,10 @@ runs:
       run: |
         code_block="\`\`\`"
 
-        summary=$(cat<<EOF
-        ❌ \`clang-format\`: It looks like your changes don't match our code style.
+        clang_version=$(clang-format --version | sed -n 's/^.*version //p')
+
+        summary=$(cat <<EOF
+        ❌ \`clang-format\` \`v${clang_version}\`: It looks like your changes don't match our code style.
 
         🛠️ Please either run \`clang-format -i\` on the file or apply this patch with \`git apply\`:
 
@@ -57,6 +59,8 @@ runs:
         $code_block diff
         ${{ steps.changes.outputs.diff }}
         $code_block
+
+        Hint: Install the right version of \`clang-format\`, e.g.: \`pipx install --global clang-format==${clang_version}\`
         EOF
         )
         echo "$summary" >> $GITHUB_STEP_SUMMARY
