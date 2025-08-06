@@ -680,7 +680,7 @@ void EiScreen::onMotionEvent(ei_event *event)
   if (m_isOnScreen) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", m_cursorX, m_cursorY);
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
-    if (m_portalInputCapture->is_active()) {
+    if (m_portalInputCapture->isActive()) {
       m_portalInputCapture->release();
     }
   } else {
@@ -776,7 +776,7 @@ void EiScreen::handleSystemEvent(const Event &sysevent)
       if (m_isPrimary) {
         LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
         if (m_portalInputCapture) {
-          if (m_portalInputCapture->is_active()) {
+          if (m_portalInputCapture->isActive()) {
             m_portalInputCapture->release();
           }
           delete m_portalInputCapture;
