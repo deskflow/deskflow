@@ -57,15 +57,25 @@ runs:
         if [ -z "$table" ]; then
           echo "No test results found" | tee $GITHUB_STEP_SUMMARY >&2
           exit 1
-        else
-          echo "$table" > $GITHUB_STEP_SUMMARY
         fi
 
-        count=$(echo "$table" | awk -v RS='' '{gsub(/[^❌]/, ""); print length}')
-        file="ci-summary.md"
+        echo "$table" > $GITHUB_STEP_SUMMARY
 
+        count=$(echo "$table" | awk -v RS='' '{gsub(/[^❌]/, ""); print length}')
+
+        # Keep at this indentation level for heredoc.
+        fail_summary=$(cat <<EOF
+        ### Test result
+        
+        ❌🔬 Tests failed: $count
+        
+        $table
+        EOF
+        )
+
+        file="ci-summary.md"
         if [ $count -gt 0 ]; then
-          echo "❌🔬 Tests failed: $count" | tee $file
+          echo "$fail_summary" | tee $file
           echo "file=$file" >> $GITHUB_OUTPUT
         else
           # For debugging; don't send success to CI summary (reduce noise).
