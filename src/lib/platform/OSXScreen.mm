@@ -246,7 +246,8 @@ void OSXScreen::getCursorPos(int32_t &x, int32_t &y) const
 
 void OSXScreen::reconfigure(uint32_t activeSides)
 {
-  LOG((CLOG_DEBUG "active sides: %x", activeSides));
+  const static auto sidesText = sidesMaskToString(activeSides);
+  LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
   m_activeSides = activeSides;
 }
 

@@ -479,6 +479,8 @@ void XWindowsScreen::getCursorPos(int32_t &x, int32_t &y) const
 
 void XWindowsScreen::reconfigure(uint32_t activeSides)
 {
+  const static auto sidesText = sidesMaskToString(activeSides);
+  LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
   m_activeSides = activeSides;
 }
 

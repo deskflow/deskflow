@@ -507,7 +507,8 @@ void MSWindowsScreen::reconfigure(uint32_t activeSides)
 {
   assert(m_isPrimary);
 
-  LOG((CLOG_DEBUG "active sides: %x", activeSides));
+  const static auto sidesText = sidesMaskToString(activeSides);
+  LOG_DEBUG("active sides: %s (0x%02x)", sidesText.c_str(), activeSides);
   m_hook.setSides(activeSides);
 }
 
