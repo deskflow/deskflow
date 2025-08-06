@@ -105,29 +105,19 @@ void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
 {
   // Use direct connection as this object is on it's own thread,
   // and so is on a different event loop to the main Qt loop.
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::logLevelChanged, this, &DaemonApp::saveLogLevel, //
+  connect(ipcServer, &ipc::DaemonIpcServer::logLevelChanged, this, &DaemonApp::saveLogLevel, Qt::DirectConnection);
+  connect(ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::setElevate, Qt::DirectConnection);
+  connect(ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::setCommand, Qt::DirectConnection);
+  connect(
+      ipcServer, &ipc::DaemonIpcServer::startProcessRequested, this, &DaemonApp::applyWatchdogCommand,
       Qt::DirectConnection
   );
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::elevateModeChanged, this, &DaemonApp::setElevate, //
+  connect(
+      ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, this, &DaemonApp::clearWatchdogCommand,
       Qt::DirectConnection
   );
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::commandChanged, this, &DaemonApp::setCommand, //
-      Qt::DirectConnection
-  );
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::startProcessRequested, this, &DaemonApp::applyWatchdogCommand, //
-      Qt::DirectConnection
-  );
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::stopProcessRequested, this, &DaemonApp::clearWatchdogCommand, //
-      Qt::DirectConnection
-  );
-  QObject::connect(
-      ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, this, &DaemonApp::clearSettings, //
-      Qt::DirectConnection
+  connect(
+      ipcServer, &ipc::DaemonIpcServer::clearSettingsRequested, this, &DaemonApp::clearSettings, Qt::DirectConnection
   );
 }
 
@@ -151,7 +141,7 @@ void DaemonApp::run(QThread &daemonThread)
   // owned by the daemon app, as they will be created on the daemon thread.
   moveToThread(&daemonThread);
 
-  QObject::connect(&daemonThread, &QThread::started, [this, &daemonThread]() {
+  connect(&daemonThread, &QThread::started, this, [this, &daemonThread]() {
     LOG_DEBUG("daemon thread started");
 
     if (m_foreground) {
