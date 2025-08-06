@@ -76,7 +76,7 @@ jobs:
             echo "## CI Summary"
 
             for file in $files; do
-              echo $(cat $file)
+              cat $file
             done
 
             echo
