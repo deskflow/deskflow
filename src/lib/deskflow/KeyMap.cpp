@@ -1211,19 +1211,6 @@ void KeyMap::initKeyNameMaps()
 }
 
 //
-// KeyMap::KeyItem
-//
-
-bool KeyMap::KeyItem::operator==(const KeyItem &x) const
-{
-  return (
-      m_id == x.m_id && m_group == x.m_group && m_button == x.m_button && m_required == x.m_required &&
-      m_sensitive == x.m_sensitive && m_generates == x.m_generates && m_dead == x.m_dead && m_lock == x.m_lock &&
-      m_client == x.m_client
-  );
-}
-
-//
 // KeyMap::Keystroke
 //
 

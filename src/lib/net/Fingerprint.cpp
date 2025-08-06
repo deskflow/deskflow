@@ -24,11 +24,6 @@ bool Fingerprint::isValid() const
   }
 }
 
-bool Fingerprint::operator==(const Fingerprint &other) const
-{
-  return type == other.type && data == other.data;
-}
-
 QString Fingerprint::toDbLine() const
 {
   if (!isValid()) {
