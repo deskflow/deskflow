@@ -21,7 +21,7 @@
 
 #include <filesystem>
 
-AppUtilUnix::AppUtilUnix(const IEventQueue *events)
+AppUtilUnix::AppUtilUnix(const IEventQueue *)
 {
   // do nothing
 }
