@@ -226,7 +226,7 @@ void MSWindowsDesks::fakeInputEnd()
 
 void MSWindowsDesks::getCursorPos(int32_t &x, int32_t &y) const
 {
-  POINT pos;
+  POINT pos{0, 0};
   sendMessage(DESKFLOW_MSG_CURSOR_POS, reinterpret_cast<WPARAM>(&pos), 0);
   x = pos.x;
   y = pos.y;
