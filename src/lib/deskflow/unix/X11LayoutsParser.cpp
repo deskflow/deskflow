@@ -36,7 +36,7 @@ bool X11LayoutsParser::readXMLConfigItemElem(const QDomNode &node, std::vector<L
 {
   auto configItemElem = node.firstChildElement("configItem");
   if (configItemElem.isNull()) {
-    LOG((CLOG_WARN "failed to read \"configItem\" in xml file"));
+    LOG_WARN("failed to read \"configItem\" in xml file");
     return false;
   }
 
@@ -60,7 +60,7 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const s
 
   QFile inFile(QString::fromStdString(pathToEvdevFile));
   if (!inFile.open(QIODevice::ReadOnly)) {
-    LOG((CLOG_WARN "unable to open %s", pathToEvdevFile.c_str()));
+    LOG_WARN("unable to open %s", pathToEvdevFile.c_str());
     return allCodes;
   }
 
@@ -69,13 +69,13 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const s
 
   const auto xkbConfigElem = xmlDoc.firstChildElement("xkbConfigRegistry");
   if (xkbConfigElem.isNull()) {
-    LOG((CLOG_WARN "failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str()));
+    LOG_WARN("failed to read xkbConfigRegistry in %s", pathToEvdevFile.c_str());
     return allCodes;
   }
 
   auto layoutListElem = xkbConfigElem.firstChildElement("layoutList");
   if (layoutListElem.isNull()) {
-    LOG((CLOG_WARN "failed to read layoutList in %s", pathToEvdevFile.c_str()));
+    LOG_WARN("failed to read layoutList in %s", pathToEvdevFile.c_str());
     return allCodes;
   }
 
@@ -113,13 +113,13 @@ void X11LayoutsParser::convertLayoutToISO639_2(
   for (size_t i = 0; i < layoutNames.size(); i++) {
     const auto &layoutName = layoutNames[i];
     if (layoutNames[i].empty()) {
-      LOG((CLOG_DEBUG "skip converting empty layout name"));
+      LOG_DEBUG("skip converting empty layout name");
       continue;
     }
 
     auto langIter = std::ranges::find_if(allLang, [&layoutName](const Lang &l) { return l.name == layoutName; });
     if (langIter == allLang.end()) {
-      LOG((CLOG_WARN "language \"%s\" is unknown", layoutNames[i].c_str()));
+      LOG_WARN("language \"%s\" is unknown", layoutNames[i].c_str());
       continue;
     }
 
@@ -175,20 +175,20 @@ std::string X11LayoutsParser::convertLayotToISO(
 )
 {
   if (layoutLangCode.empty()) {
-    LOG((CLOG_DEBUG1 "skip converting empty layout lang code"));
+    LOG_DEBUG1("skip converting empty layout lang code");
     return "";
   }
 
   std::vector<std::string> iso639_2Codes;
   convertLayoutToISO639_2(pathToEvdevFile, needToReloadFiles, {layoutLangCode}, {""}, iso639_2Codes);
   if (iso639_2Codes.empty()) {
-    LOG((CLOG_WARN "failed to convert layout lang code: \"%s\"", layoutLangCode.c_str()));
+    LOG_WARN("failed to convert layout lang code: \"%s\"", layoutLangCode.c_str());
     return "";
   }
 
   auto iso639_1Codes = convertISO639_2ToISO639_1(iso639_2Codes);
   if (iso639_1Codes.empty()) {
-    LOG((CLOG_WARN "failed to convert ISO639/2 lang code to ISO639/1"));
+    LOG_WARN("failed to convert ISO639/2 lang code to ISO639/1");
     return "";
   }
 
@@ -203,7 +203,7 @@ std::vector<std::string> X11LayoutsParser::convertISO639_2ToISO639_1(const std::
       return c.first == isoCode;
     });
     if (tableIter == ISO_Table.end()) {
-      LOG((CLOG_WARN "the ISO 639-2 code \"%s\" is missed in table", isoCode.c_str()));
+      LOG_WARN("the ISO 639-2 code \"%s\" is missed in table", isoCode.c_str());
       continue;
     }
 

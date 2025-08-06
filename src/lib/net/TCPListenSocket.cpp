@@ -44,7 +44,7 @@ TCPListenSocket::~TCPListenSocket()
     }
   } catch (...) {
     // ignore
-    LOG((CLOG_WARN "error while closing TCP socket"));
+    LOG_WARN("error while closing TCP socket");
   }
 }
 

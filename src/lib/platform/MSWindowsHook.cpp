@@ -53,8 +53,8 @@ void MSWindowsHook::loadLibrary()
 
   // initialize library
   if (init(GetCurrentThreadId()) == 0) {
-    LOG((CLOG_ERR "failed to init %s.dll, another program may be using it", g_name));
-    LOG((CLOG_INFO "restarting your computer may solve this error"));
+    LOG_ERR("failed to init %s.dll, another program may be using it", g_name);
+    LOG_INFO("restarting your computer may solve this error");
     throw XScreenOpenFailure();
   }
 }

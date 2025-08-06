@@ -71,7 +71,7 @@ void ProtocolUtil::writef(deskflow::IStream *stream, const char *fmt, ...)
 {
   assert(stream != nullptr);
   assert(fmt != nullptr);
-  LOG((CLOG_DEBUG2 "writef(%s)", fmt));
+  LOG_DEBUG2("writef(%s)", fmt);
 
   va_list args;
   va_start(args, fmt);
@@ -87,7 +87,7 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
   bool result = false;
 
   if (stream && fmt) {
-    LOG((CLOG_DEBUG2 "readf(%s)", fmt));
+    LOG_DEBUG2("readf(%s)", fmt);
     va_list args;
     va_start(args, fmt);
     try {
@@ -121,9 +121,9 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t 
   try {
     // write buffer
     stream->write(Buffer.data(), size);
-    LOG((CLOG_DEBUG2 "wrote %d bytes", size));
+    LOG_DEBUG2("wrote %d bytes", size);
   } catch (const XBase &exception) {
-    LOG((CLOG_DEBUG2 "exception <%s> during wrote %d bytes into stream", exception.what(), size));
+    LOG_DEBUG2("exception <%s> during wrote %d bytes into stream", exception.what(), size);
     throw;
   }
 }
@@ -157,7 +157,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+          LOG_ERR("read: length to be read is wrong: '%d' should be 1,2, or 4", len);
           assert(false); // assert for debugging
           break;
         }
@@ -181,7 +181,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
           break;
         default:
           // the length is wrong
-          LOG((CLOG_ERR "read: length to be read is wrong: '%d' should be 1,2, or 4", len));
+          LOG_ERR("read: length to be read is wrong: '%d' should be 1,2, or 4", len);
           assert(false); // assert for debugging
           break;
         }
@@ -192,7 +192,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
         std::string *destination = va_arg(args, std::string *);
 
         if (len > PROTOCOL_MAX_STRING_LENGTH) {
-          LOG((CLOG_ERR "read: string length exceeds maximum allowed size: %u", len));
+          LOG_ERR("read: string length exceeds maximum allowed size: %u", len);
           throw XBadClient("Too long message received");
         }
 
@@ -217,7 +217,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
       // verify match
       if (buffer[0] != *fmt) {
-        LOG((CLOG_DEBUG2 "readf: format mismatch: %c vs %c", *fmt, buffer[0]));
+        LOG_DEBUG2("readf: format mismatch: %c vs %c", *fmt, buffer[0]);
         throw XIOReadMismatch();
       }
 
@@ -257,7 +257,7 @@ uint32_t ProtocolUtil::getLength(const char *fmt, va_list args)
           break;
 
         default:
-          LOG((CLOG_ERR "format specifier %%I%d has invalid length", len));
+          LOG_ERR("format specifier %%I%d has invalid length", len);
           break;
         }
         break;
@@ -429,7 +429,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count
 
     // bail if stream has hungup
     if (n == 0) {
-      LOG((CLOG_DEBUG2 "unexpected disconnect in readf(), %d bytes left", count));
+      LOG_DEBUG2("unexpected disconnect in readf(), %d bytes left", count);
       throw XIOEndOfStream();
     }
 
@@ -446,7 +446,7 @@ uint8_t ProtocolUtil::read1ByteInt(deskflow::IStream *stream)
   read(stream, buffer.data(), BufferSize);
 
   uint8_t Result = buffer[0];
-  LOG((CLOG_DEBUG2 "readf: read 1 byte integer: %d (0x%x)", Result, Result));
+  LOG_DEBUG2("readf: read 1 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -458,7 +458,7 @@ uint16_t ProtocolUtil::read2BytesInt(deskflow::IStream *stream)
   read(stream, buffer.data(), BufferSize);
 
   auto Result = static_cast<uint16_t>((static_cast<uint16_t>(buffer[0]) << 8) | static_cast<uint16_t>(buffer[1]));
-  LOG((CLOG_DEBUG2 "readf: read 2 byte integer: %d (0x%x)", Result, Result));
+  LOG_DEBUG2("readf: read 2 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -472,7 +472,7 @@ uint32_t ProtocolUtil::read4BytesInt(deskflow::IStream *stream)
   uint32_t Result = (static_cast<uint32_t>(buffer[0]) << 24) | (static_cast<uint32_t>(buffer[1]) << 16) |
                     (static_cast<uint32_t>(buffer[2]) << 8) | (static_cast<uint32_t>(buffer[3]));
 
-  LOG((CLOG_DEBUG2 "readf: read 4 byte integer: %d (0x%x)", Result, Result));
+  LOG_DEBUG2("readf: read 4 byte integer: %d (0x%x)", Result, Result);
 
   return Result;
 }
@@ -506,7 +506,7 @@ uint32_t ProtocolUtil::readVectorSize(deskflow::IStream *stream)
   auto size = read4BytesInt(stream);
 
   if (size > PROTOCOL_MAX_LIST_LENGTH) {
-    LOG((CLOG_ERR "readVectorSize: vector length exceeds maximum allowed size: %u", size));
+    LOG_ERR("readVectorSize: vector length exceeds maximum allowed size: %u", size);
     throw XBadClient("Too long message received");
   }
 
@@ -534,8 +534,8 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, uint32_t len, std::strin
       sBuffer = new uint8_t[len];
     } catch (std::bad_alloc &exception) {
       // Added try catch due to GHSA-chfm-333q-gfpp
-      LOG((CLOG_ERR "bad alloc, unable to allocate memory %d bytes", len));
-      LOG((CLOG_DEBUG "bad_alloc detected: is there enough memory?"));
+      LOG_ERR("bad alloc, unable to allocate memory %d bytes", len);
+      LOG_DEBUG("bad_alloc detected: is there enough memory?");
       throw exception;
     }
   }
@@ -550,7 +550,7 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, uint32_t len, std::strin
     throw;
   }
 
-  LOG((CLOG_DEBUG2 "readf: read %d byte string", len));
+  LOG_DEBUG2("readf: read %d byte string", len);
 
   // save the data
 

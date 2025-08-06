@@ -88,7 +88,7 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
         // server.  a bad port will never get better.  patch by Brent
         // Priddy.
         if (!args().m_restartable || e.getError() == XSocketAddress::SocketError::BadPort) {
-          LOG((CLOG_CRIT "%s: %s" BYE, args().m_pname, e.what(), args().m_pname));
+          LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
           bye(s_exitFailed);
         }
       }
@@ -130,7 +130,7 @@ void ClientApp::help()
        << "The hostname must be the address or hostname of the server.\n"
        << "The port overrides the default port, " << kDefaultPort << ".\n";
 
-  LOG((CLOG_PRINT "%s", help.str().c_str()));
+  LOG_PRINT("%s", help.str().c_str());
 }
 
 const char *ClientApp::daemonName() const
@@ -166,7 +166,7 @@ deskflow::Screen *ClientApp::createScreen()
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
-    LOG((CLOG_INFO "using ei screen for wayland"));
+    LOG_INFO("using ei screen for wayland");
     return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true), getEvents());
 #else
     throw XNoEiSupport();
@@ -175,7 +175,7 @@ deskflow::Screen *ClientApp::createScreen()
 #endif
 
 #if WINAPI_XWINDOWS
-  LOG((CLOG_INFO "using legacy x windows screen"));
+  LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(args().m_display, false, args().m_yscroll, getEvents(), args().m_clientScrollDirection),
       getEvents()
@@ -220,14 +220,14 @@ void ClientApp::handleClientRestart(const Event &, EventQueueTimer *timer)
 void ClientApp::scheduleClientRestart(double retryTime)
 {
   // install a timer and handler to retry later
-  LOG((CLOG_DEBUG "retry in %.0f seconds", retryTime));
+  LOG_DEBUG("retry in %.0f seconds", retryTime);
   EventQueueTimer *timer = getEvents()->newOneShotTimer(retryTime, nullptr);
   getEvents()->addHandler(EventTypes::Timer, timer, [this, timer](const auto &e) { handleClientRestart(e, timer); });
 }
 
 void ClientApp::handleClientConnected() const
 {
-  LOG((CLOG_NOTE "connected to server"));
+  LOG_NOTE("connected to server");
 }
 
 void ClientApp::handleClientFailed(const Event &e)
@@ -235,7 +235,7 @@ void ClientApp::handleClientFailed(const Event &e)
   if ((++m_lastServerAddressIndex) < m_client->getLastResolvedAddressesCount()) {
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-    LOG((CLOG_WARN "failed to connect to server=%s, trying next address", info->m_what.c_str()));
+    LOG_WARN("failed to connect to server=%s, trying next address", info->m_what.c_str());
     if (!m_suspended) {
       scheduleClientRestart(s_retryTime);
     }
@@ -250,10 +250,10 @@ void ClientApp::handleClientRefused(const Event &e)
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
   if (!args().m_restartable || !info->m_retry) {
-    LOG((CLOG_ERR "failed to connect to server: %s", info->m_what.c_str()));
+    LOG_ERR("failed to connect to server: %s", info->m_what.c_str());
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
-    LOG((CLOG_WARN "failed to connect to server: %s", info->m_what.c_str()));
+    LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
     if (!m_suspended) {
       scheduleClientRestart(s_retryTime);
     }
@@ -262,7 +262,7 @@ void ClientApp::handleClientRefused(const Event &e)
 
 void ClientApp::handleClientDisconnected()
 {
-  LOG((CLOG_NOTE "disconnected from server"));
+  LOG_NOTE("disconnected from server");
   if (!args().m_restartable) {
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
@@ -326,22 +326,22 @@ bool ClientApp::startClient()
       clientScreen = openClientScreen();
       m_client = openClient(args().m_name, *m_serverAddress, clientScreen);
       m_clientScreen = clientScreen;
-      LOG((CLOG_NOTE "started client"));
+      LOG_NOTE("started client");
     }
 
     m_client->connect(m_lastServerAddressIndex);
 
     return true;
   } catch (XScreenUnavailable &e) {
-    LOG((CLOG_WARN "secondary screen unavailable: %s", e.what()));
+    LOG_WARN("secondary screen unavailable: %s", e.what());
     closeClientScreen(clientScreen);
     retryTime = e.getRetryTime();
   } catch (XScreenOpenFailure &e) {
-    LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+    LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;
   } catch (XBase &e) {
-    LOG((CLOG_CRIT "failed to start client: %s", e.what()));
+    LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;
   }
@@ -393,9 +393,9 @@ int ClientApp::mainLoop()
   DAEMON_RUNNING(false);
 
   // close down
-  LOG((CLOG_DEBUG1 "stopping client"));
+  LOG_DEBUG1("stopping client");
   stopClient();
-  LOG((CLOG_NOTE "stopped client"));
+  LOG_NOTE("stopped client");
 
   return s_exitSuccess;
 }
@@ -440,7 +440,7 @@ void ClientApp::startNode()
 {
   // start the client.  if this return false then we've failed and
   // we shouldn't retry.
-  LOG((CLOG_DEBUG1 "starting client"));
+  LOG_DEBUG1("starting client");
   if (!startClient()) {
     bye(s_exitFailed);
   }

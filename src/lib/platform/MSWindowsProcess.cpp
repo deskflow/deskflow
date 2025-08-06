@@ -62,7 +62,7 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 
   LPVOID environment;
   if (!CreateEnvironmentBlock(&environment, userToken, FALSE)) {
-    LOG((CLOG_ERR "could not create environment block"));
+    LOG_ERR("could not create environment block");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 

@@ -22,6 +22,6 @@ ClientProxy1_2::ClientProxy1_2(const std::string &name, deskflow::IStream *strea
 
 void ClientProxy1_2::mouseRelativeMove(int32_t xRel, int32_t yRel)
 {
-  LOG((CLOG_DEBUG2 "send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel));
+  LOG_DEBUG2("send mouse relative move to \"%s\" %d,%d", getName().c_str(), xRel, yRel);
   ProtocolUtil::writef(getStream(), kMsgDMouseRelMove, xRel, yRel);
 }

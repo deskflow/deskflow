@@ -57,5 +57,5 @@ void StreamChunker::sendClipboard(
 
   events->addEvent(Event(EventTypes::ClipboardSending, eventTarget, end));
 
-  LOG((CLOG_DEBUG "sent clipboard size=%d", sentLength));
+  LOG_DEBUG("sent clipboard size=%d", sentLength);
 }

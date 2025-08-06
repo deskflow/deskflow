@@ -75,7 +75,7 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
 
   if (mark == ChunkType::DataStart) {
     s_expectedSize = deskflow::string::stringToSizeType(data);
-    LOG((CLOG_DEBUG "start receiving clipboard data"));
+    LOG_DEBUG("start receiving clipboard data");
     dataCached.clear();
     return Started;
   } else if (mark == ChunkType::DataChunk) {
@@ -86,13 +86,13 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
     if (id >= kClipboardEnd) {
       return Error;
     } else if (s_expectedSize != dataCached.size()) {
-      LOG((CLOG_ERR "corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size()));
+      LOG_ERR("corrupted clipboard data, expected size=%d actual size=%d", s_expectedSize, dataCached.size());
       return Error;
     }
     return Finished;
   }
 
-  LOG((CLOG_ERR "clipboard transmission failed: unknown error"));
+  LOG_ERR("clipboard transmission failed: unknown error");
   return Error;
 }
 
@@ -100,7 +100,7 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 {
   const auto *clipboardData = static_cast<ClipboardChunk *>(data);
 
-  LOG((CLOG_DEBUG1 "sending clipboard chunk"));
+  LOG_DEBUG1("sending clipboard chunk");
 
   const char *chunk = clipboardData->m_chunk;
   ClipboardID id = chunk[0];
@@ -111,15 +111,15 @@ void ClipboardChunk::send(deskflow::IStream *stream, void *data)
 
   switch (mark) {
   case ChunkType::DataStart:
-    LOG((CLOG_DEBUG2 "sending clipboard chunk start: size=%s", dataChunk.c_str()));
+    LOG_DEBUG2("sending clipboard chunk start: size=%s", dataChunk.c_str());
     break;
 
   case ChunkType::DataChunk:
-    LOG((CLOG_DEBUG2 "sending clipboard chunk data: size=%i", dataChunk.size()));
+    LOG_DEBUG2("sending clipboard chunk data: size=%i", dataChunk.size());
     break;
 
   case ChunkType::DataEnd:
-    LOG((CLOG_DEBUG2 "sending clipboard finished"));
+    LOG_DEBUG2("sending clipboard finished");
     break;
 
   default:

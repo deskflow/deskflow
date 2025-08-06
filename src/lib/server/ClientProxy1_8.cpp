@@ -23,10 +23,10 @@ void ClientProxy1_8::synchronizeLanguages() const
   deskflow::languages::LanguageManager languageManager;
   auto localLanguages = languageManager.getSerializedLocalLanguages();
   if (!localLanguages.empty()) {
-    LOG((CLOG_DEBUG1 "send server languages to the client: %s", localLanguages.c_str()));
+    LOG_DEBUG1("send server languages to the client: %s", localLanguages.c_str());
     ProtocolUtil::writef(getStream(), kMsgDLanguageSynchronisation, &localLanguages);
   } else {
-    LOG((CLOG_ERR "failed to read server languages"));
+    LOG_ERR("failed to read server languages");
   }
 }
 

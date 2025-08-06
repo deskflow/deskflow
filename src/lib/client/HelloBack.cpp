@@ -65,10 +65,7 @@ void HelloBack::handleHello(deskflow::IStream *stream, const std::string &client
   }
 
   // say hello back with same protocol name and version
-  LOG_DEBUG(
-      "saying hello back with version %s %d.%d", //
-      protocolName.c_str(), helloBackMajor, helloBackMinor
-  );
+  LOG_DEBUG("saying hello back with version %s %d.%d", protocolName.c_str(), helloBackMajor, helloBackMinor);
 
   // dynamically build write format for hello back since `ProtocolUtil::writef`
   // doesn't support formatting fixed length strings yet.

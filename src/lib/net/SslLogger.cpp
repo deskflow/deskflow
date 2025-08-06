@@ -26,7 +26,7 @@ void showCipherStackDesc(STACK_OF(SSL_CIPHER) * stack)
       msg[pos] = '\0';
     }
 
-    LOG((CLOG_DEBUG1 "%s", msg));
+    LOG_DEBUG1("%s", msg);
   }
 }
 
@@ -35,10 +35,10 @@ void logLocalSecureCipherInfo(const SSL *ssl)
   auto sStack = SSL_get_ciphers(ssl);
 
   if (sStack) {
-    LOG((CLOG_DEBUG1 "available local ciphers:"));
+    LOG_DEBUG1("available local ciphers:");
     showCipherStackDesc(sStack);
   } else {
-    LOG((CLOG_DEBUG1 "local cipher list not available"));
+    LOG_DEBUG1("local cipher list not available");
   }
 }
 
@@ -54,10 +54,10 @@ void logRemoteSecureCipherInfo(const SSL *ssl)
   auto cStack = SSL_get_client_ciphers(ssl);
 #endif
   if (cStack) {
-    LOG((CLOG_DEBUG1 "available remote ciphers:"));
+    LOG_DEBUG1("available remote ciphers:");
     showCipherStackDesc(cStack);
   } else {
-    LOG((CLOG_DEBUG1 "remote cipher list not available"));
+    LOG_DEBUG1("remote cipher list not available");
   }
 }
 
@@ -66,11 +66,11 @@ void logRemoteSecureCipherInfo(const SSL *ssl)
 void SslLogger::logSecureLibInfo()
 {
   if (CLOG->getFilter() >= LogLevel::Debug) {
-    LOG((CLOG_DEBUG "openssl version: %s", SSLeay_version(SSLEAY_VERSION)));
-    LOG((CLOG_DEBUG1 "openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS)));
-    LOG((CLOG_DEBUG1 "openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON)));
-    LOG((CLOG_DEBUG1 "openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM)));
-    LOG((CLOG_DEBUG1 "openssl dir: %s", SSLeay_version(SSLEAY_DIR)));
+    LOG_DEBUG("openssl version: %s", SSLeay_version(SSLEAY_VERSION));
+    LOG_DEBUG1("openssl flags: %s", SSLeay_version(SSLEAY_CFLAGS));
+    LOG_DEBUG1("openssl built on: %s", SSLeay_version(SSLEAY_BUILT_ON));
+    LOG_DEBUG1("openssl platform: %s", SSLeay_version(SSLEAY_PLATFORM));
+    LOG_DEBUG1("openssl dir: %s", SSLeay_version(SSLEAY_DIR));
   }
 }
 
@@ -90,7 +90,7 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl)
     if (cipher) {
       char msg[128] = {0};
       SSL_CIPHER_description(cipher, msg, sizeof(msg));
-      LOG((CLOG_DEBUG "openssl cipher: %s", msg));
+      LOG_DEBUG("openssl cipher: %s", msg);
 
       // For some reason SSL_get_version is return mismatching information to
       // SSL_CIPHER_description
@@ -106,15 +106,15 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl)
       };
       if (parts.size() > 2) {
         // log the section containing the protocol version
-        LOG((CLOG_INFO "network encryption protocol: %s", parts[1].c_str()));
+        LOG_INFO("network encryption protocol: %s", parts[1].c_str());
       } else {
         // log the error in spliting then display the whole description rather
         // then nothing
-        LOG((CLOG_ERR "could not split cipher for protocol"));
-        LOG((CLOG_INFO "network encryption protocol: %s", msg));
+        LOG_ERR("could not split cipher for protocol");
+        LOG_INFO("network encryption protocol: %s", msg);
       }
     } else {
-      LOG((CLOG_ERR "could not get secure socket cipher"));
+      LOG_ERR("could not get secure socket cipher");
     }
   }
 }
@@ -122,14 +122,14 @@ void SslLogger::logSecureConnectInfo(const SSL *ssl)
 void SslLogger::logError(const std::string &reason)
 {
   if (!reason.empty()) {
-    LOG((CLOG_ERR "secure socket error: %s", reason.c_str()));
+    LOG_ERR("secure socket error: %s", reason.c_str());
   }
 
   auto id = ERR_get_error();
   if (id) {
     char error[65535] = {0};
     ERR_error_string_n(id, error, sizeof(error));
-    LOG((CLOG_ERR "openssl error: %s", error));
+    LOG_ERR("openssl error: %s", error);
   }
 }
 
@@ -140,35 +140,35 @@ void SslLogger::logErrorByCode(int code, int retry)
     break;
 
   case SSL_ERROR_ZERO_RETURN:
-    LOG((CLOG_DEBUG "tls connection closed"));
+    LOG_DEBUG("tls connection closed");
     break;
 
   case SSL_ERROR_WANT_READ:
-    LOG((CLOG_DEBUG2 "want to read, error=%d, attempt=%d", code, retry));
+    LOG_DEBUG2("want to read, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_WRITE:
-    LOG((CLOG_DEBUG2 "want to write, error=%d, attempt=%d", code, retry));
+    LOG_DEBUG2("want to write, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_CONNECT:
-    LOG((CLOG_DEBUG2 "want to connect, error=%d, attempt=%d", code, retry));
+    LOG_DEBUG2("want to connect, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_WANT_ACCEPT:
-    LOG((CLOG_DEBUG2 "want to accept, error=%d, attempt=%d", code, retry));
+    LOG_DEBUG2("want to accept, error=%d, attempt=%d", code, retry);
     break;
 
   case SSL_ERROR_SYSCALL:
-    LOG((CLOG_ERR "tls error occurred (system call failure)"));
+    LOG_ERR("tls error occurred (system call failure)");
     break;
 
   case SSL_ERROR_SSL:
-    LOG((CLOG_ERR "tls error occurred (generic failure)"));
+    LOG_ERR("tls error occurred (generic failure)");
     break;
 
   default:
-    LOG((CLOG_ERR "tls error occurred (unknown failure)"));
+    LOG_ERR("tls error occurred (unknown failure)");
     break;
   }
 }

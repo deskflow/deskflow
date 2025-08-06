@@ -96,12 +96,12 @@ void XWindowsKeyState::setAutoRepeat(const XKeyboardState &state)
 
 KeyModifierMask XWindowsKeyState::mapModifiersFromX(unsigned int state) const
 {
-  LOG((CLOG_DEBUG2 "mapping state: %i", state));
+  LOG_DEBUG2("mapping state: %i", state);
   uint32_t offset = 8 * getGroupFromState(state);
   KeyModifierMask mask = 0;
   for (int i = 0; i < 8; ++i) {
     if ((state & (1u << i)) != 0) {
-      LOG((CLOG_DEBUG2 "|= modifier: %i", offset + i));
+      LOG_DEBUG2("|= modifier: %i", offset + i);
       if (offset + i >= m_modifierFromX.size()) {
         LOG(
             (CLOG_ERR "m_modifierFromX is too small (%d) for the "
@@ -180,7 +180,7 @@ int32_t XWindowsKeyState::pollActiveGroup() const
       return state.group;
     }
 
-    LOG((CLOG_WARN "failed to poll active group"));
+    LOG_WARN("failed to poll active group");
   }
 #endif
   return 0;
@@ -233,7 +233,7 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(int32_t group) const
 
   QDBusInterface screenSaverInterface(service, path, service, bus);
   if (!screenSaverInterface.isValid()) {
-    LOG((CLOG_WARN "keyboard layout fail. dbus interface is invalid"));
+    LOG_WARN("keyboard layout fail. dbus interface is invalid");
     return false;
   }
 
@@ -250,12 +250,12 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(int32_t group) const
   }
 
   if (reply.isError()) {
-    LOG((CLOG_WARN "keyboard layout fail. reply contains error"));
+    LOG_WARN("keyboard layout fail. reply contains error");
     return true;
   }
 
   if (!reply.argumentAt<0>() || reply.argumentAt<1>() != QString("")) {
-    LOG((CLOG_WARN "keyboard layout fail. Reply is unexpected!"));
+    LOG_WARN("keyboard layout fail. Reply is unexpected!");
     return true;
   }
 
@@ -272,7 +272,7 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
       int b = 1 << (c & 7);
       if (m_keyboardState.global_auto_repeat == AutoRepeatModeOff ||
           (c != 113 && c != 116 && (m_keyboardState.auto_repeats[i] & b) == 0)) {
-        LOG((CLOG_DEBUG1 "  discard autorepeat"));
+        LOG_DEBUG1("  discard autorepeat");
         break;
       }
     }
@@ -296,12 +296,12 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
 #if HAVE_XKB_EXTENSION
       if (m_xkb != nullptr) {
         if (XkbLockGroup(m_display, XkbUseCoreKbd, keystroke.m_data.m_group.m_group) == False) {
-          LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
+          LOG_DEBUG1("xkb lock group request not sent");
         }
       } else
 #endif
       {
-        LOG((CLOG_DEBUG1 "  ignored"));
+        LOG_DEBUG1("  ignored");
       }
     } else {
 
@@ -315,12 +315,12 @@ void XWindowsKeyState::fakeKey(const Keystroke &keystroke)
         if (XkbLockGroup(
                 m_display, XkbUseCoreKbd, getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group)
             ) == False) {
-          LOG((CLOG_DEBUG1 "xkb lock group request not sent"));
+          LOG_DEBUG1("xkb lock group request not sent");
         }
       } else
 #endif
       {
-        LOG((CLOG_DEBUG1 "  ignored"));
+        LOG_DEBUG1("  ignored");
       }
     }
 
@@ -334,7 +334,7 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
   // there are up to 4 keysyms per keycode
   static const int maxKeysyms = 4;
 
-  LOG((CLOG_DEBUG1 "non-XKB mapping"));
+  LOG_DEBUG1("non-XKB mapping");
 
   // prepare map from X modifier to KeyModifierMask.  certain bits
   // are predefined.
@@ -569,7 +569,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
       }
   };
 
-  LOG((CLOG_DEBUG1 "xkb mapping"));
+  LOG_DEBUG1("xkb mapping");
 
   // find the number of groups
   int maxNumGroups = 0;

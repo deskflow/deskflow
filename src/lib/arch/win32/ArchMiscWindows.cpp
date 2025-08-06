@@ -322,7 +322,7 @@ bool ArchMiscWindows::wasLaunchedAsService()
 {
   std::string name;
   if (!getParentProcessName(name)) {
-    LOG((CLOG_ERR "cannot determine if process was launched as service"));
+    LOG_ERR("cannot determine if process was launched as service");
     return false;
   }
 
@@ -333,7 +333,7 @@ bool ArchMiscWindows::getParentProcessName(std::string &name)
 {
   PROCESSENTRY32 parentEntry;
   if (!getParentProcessEntry(parentEntry)) {
-    LOG((CLOG_ERR "could not get entry for parent process"));
+    LOG_ERR("could not get entry for parent process");
     return false;
   }
 
@@ -364,7 +364,7 @@ BOOL WINAPI ArchMiscWindows::getProcessEntry(PROCESSENTRY32 &entry, DWORD proces
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
   if (snapshot == INVALID_HANDLE_VALUE) {
-    LOG((CLOG_ERR "could not get process snapshot (error: %i)", GetLastError()));
+    LOG_ERR("could not get process snapshot (error: %i)", GetLastError());
     return FALSE;
   }
 
@@ -374,7 +374,7 @@ BOOL WINAPI ArchMiscWindows::getProcessEntry(PROCESSENTRY32 &entry, DWORD proces
   // unlikely we can go any further
   BOOL gotEntry = Process32First(snapshot, &entry);
   if (!gotEntry) {
-    LOG((CLOG_ERR "could not get first process entry (error: %i)", GetLastError()));
+    LOG_ERR("could not get first process entry (error: %i)", GetLastError());
     return FALSE;
   }
 
@@ -409,7 +409,7 @@ std::string ArchMiscWindows::getActiveDesktopName()
 {
   HDESK desk = OpenInputDesktop(0, TRUE, GENERIC_READ);
   if (desk == nullptr) {
-    LOG((CLOG_ERR "could not open input desktop"));
+    LOG_ERR("could not open input desktop");
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 

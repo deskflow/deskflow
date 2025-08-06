@@ -195,14 +195,14 @@ void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor
 
 void ClientProxyUnknown::handleData()
 {
-  LOG((CLOG_DEBUG1 "parsing hello reply"));
+  LOG_DEBUG1("parsing hello reply");
 
   std::string name("<unknown>");
 
   try {
     // limit the maximum length of the hello
     if (uint32_t n = m_stream->getSize(); n > kMaxHelloLength) {
-      LOG((CLOG_DEBUG1 "hello reply too long"));
+      LOG_DEBUG1("hello reply too long");
       throw XBadClient();
     }
 
@@ -227,7 +227,7 @@ void ClientProxyUnknown::handleData()
     initProxy(name, major, minor);
 
     // the proxy is created and now proxy now owns the stream
-    LOG((CLOG_DEBUG1 "created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor));
+    LOG_DEBUG1("created proxy for client \"%s\" version %d.%d", name.c_str(), major, minor);
     m_stream = nullptr;
 
     // wait until the proxy signals that it's ready or has disconnected
@@ -235,33 +235,33 @@ void ClientProxyUnknown::handleData()
     return;
   } catch (XIncompatibleClient &e) {
     // client is incompatible
-    LOG((CLOG_WARN "client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor()));
+    LOG_WARN("client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor());
     ProtocolUtil::writef(m_stream, kMsgEIncompatible, kProtocolMajorVersion, kProtocolMinorVersion);
   } catch (XBadClient &) {
     // client not behaving
-    LOG((CLOG_WARN "protocol error from client \"%s\"", name.c_str()));
+    LOG_WARN("protocol error from client \"%s\"", name.c_str());
     ProtocolUtil::writef(m_stream, kMsgEBad);
   } catch (XBase &e) {
     // misc error
-    LOG((CLOG_WARN "error communicating with client \"%s\": %s", name.c_str(), e.what()));
+    LOG_WARN("error communicating with client \"%s\": %s", name.c_str(), e.what());
   }
   sendFailure();
 }
 
 void ClientProxyUnknown::handleWriteError()
 {
-  LOG((CLOG_NOTE "error communicating with new client"));
+  LOG_NOTE("error communicating with new client");
   sendFailure();
 }
 
 void ClientProxyUnknown::handleTimeout()
 {
-  LOG((CLOG_NOTE "new client is unresponsive"));
+  LOG_NOTE("new client is unresponsive");
   sendFailure();
 }
 
 void ClientProxyUnknown::handleDisconnect()
 {
-  LOG((CLOG_NOTE "new client disconnected"));
+  LOG_NOTE("new client disconnected");
   sendFailure();
 }

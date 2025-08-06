@@ -154,12 +154,12 @@ io_connect_t getEventDriver()
       if (!IOServiceGetMatchingServices(masterPort, dict, &iter)) {
         sEventDrvrRef = getService(iter);
       } else {
-        LOG((CLOG_WARN, "io service not found"));
+        LOG_WARN("io service not found");
       }
 
       IOObjectRelease(iter);
     } else {
-      LOG((CLOG_WARN, "couldn't get io master port"));
+      LOG_WARN("couldn't get io master port");
     }
   }
 
@@ -231,7 +231,7 @@ KeyModifierMask OSXKeyState::mapModifiersFromOSX(uint32_t mask) const
     outMask |= KeyModifierNumLock;
   }
 
-  LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
+  LOG_DEBUG1("mask=%04x outMask=%04x", mask, outMask);
   return outMask;
 }
 
@@ -333,7 +333,7 @@ KeyButton OSXKeyState::mapKeyFromEvent(KeyIDs &ids, KeyModifierMask *maskOut, CG
     // translate key
     UniCharCount count;
     UniChar chars[2];
-    LOG((CLOG_DEBUG2 "modifiers: %08x", modifiers & 0xffu));
+    LOG_DEBUG2("modifiers: %08x", modifiers & 0xffu);
     OSStatus status = UCKeyTranslate(
         layout, vkCode & 0xffu, action, (modifiers >> 8) & 0xffu, LMGetKbdType(), 0, &m_deadKeyState,
         sizeof(chars) / sizeof(chars[0]), &count, chars
@@ -421,7 +421,7 @@ KeyModifierMask OSXKeyState::pollActiveModifiers() const
     outMask |= KeyModifierNumLock;
   }
 
-  LOG((CLOG_DEBUG1 "mask=%04x outMask=%04x", mask, outMask));
+  LOG_DEBUG1("mask=%04x outMask=%04x", mask, outMask);
   return outMask;
 }
 
@@ -435,7 +435,7 @@ int32_t OSXKeyState::pollActiveGroup() const
     return i->second;
   }
 
-  LOG((CLOG_WARN "can't get the active group, use the first group instead"));
+  LOG_WARN("can't get the active group, use the first group instead");
 
   return 0;
 }
@@ -488,13 +488,13 @@ void OSXKeyState::getKeyMap(deskflow::KeyMap &keyMap)
     if (layoutValid) {
       OSXUchrKeyResource uchr(resource, keyboardType);
       if (uchr.isValid()) {
-        LOG((CLOG_DEBUG1 "using uchr resource for group %d", g));
+        LOG_DEBUG1("using uchr resource for group %d", g);
         getKeyMap(keyMap, g, uchr);
         continue;
       }
     }
 
-    LOG((CLOG_DEBUG1 "no keyboard resource for group %d", g));
+    LOG_DEBUG1("no keyboard resource for group %d", g);
   }
 }
 
@@ -553,7 +553,7 @@ void OSXKeyState::setKeyboardModifiers(CGKeyCode virtualKey, bool keyDown)
     m_capsPressed = keyDown;
     break;
   default:
-    LOG((CLOG_DEBUG1 "the key is not a modifier"));
+    LOG_DEBUG1("the key is not a modifier");
     break;
   }
 }
@@ -587,7 +587,7 @@ void OSXKeyState::postKeyboardKey(CGKeyCode virtualKey, bool keyDown)
     CGEventPost(kCGHIDEventTap, event);
     CFRelease(event);
   } else {
-    LOG((CLOG_CRIT "unable to create keyboard event for keystroke"));
+    LOG_CRIT("unable to create keyboard event for keystroke");
   }
 }
 
@@ -600,14 +600,14 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
     KeyButton button = keystroke.m_data.m_button.m_button;
     CGKeyCode virtualKey = mapKeyButtonToVirtualKey(button);
 
-    LOG(
-        (CLOG_DEBUG1 "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x", button, virtualKey,
-         keyDown ? "down" : "up", client)
+    LOG_DEBUG1(
+        "  button=0x%04x virtualKey=0x%04x keyDown=%s client=0x%04x", button, virtualKey, keyDown ? "down" : "up",
+        client
     );
 
     setKeyboardModifiers(virtualKey, keyDown);
     if (postHIDVirtualKey(virtualKey, keyDown) != KERN_SUCCESS) {
-      LOG((CLOG_WARN, "fail to post hid event"));
+      LOG_WARN("fail to post hid event");
       postKeyboardKey(virtualKey, keyDown);
     }
 
@@ -618,15 +618,15 @@ void OSXKeyState::fakeKey(const Keystroke &keystroke)
     int32_t group = keystroke.m_data.m_group.m_group;
     if (!keystroke.m_data.m_group.m_restore) {
       if (keystroke.m_data.m_group.m_absolute) {
-        LOG((CLOG_DEBUG1 "  group %d", group));
+        LOG_DEBUG1("  group %d", group);
         setGroup(group);
       } else {
-        LOG((CLOG_DEBUG1 "  group %+d", group));
+        LOG_DEBUG1("  group %+d", group);
         setGroup(getEffectiveGroup(pollActiveGroup(), group));
       }
 
       if (pollActiveGroup() != group) {
-        LOG((CLOG_WARN "failed to set new keyboard layout"));
+        LOG_WARN("failed to set new keyboard layout");
       }
     }
     break;
@@ -856,7 +856,7 @@ bool OSXKeyState::getGroups(AutoCFArray &groups) const
   if (CFArrayGetCount(kbds.get()) > 0) {
     groups = std::move(kbds);
   } else {
-    LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
+    LOG_DEBUG1("can't get keyboard layouts");
     return false;
   }
 
@@ -867,21 +867,21 @@ void OSXKeyState::setGroup(int32_t group)
 {
   TISInputSourceRef keyboardLayout = (TISInputSourceRef)CFArrayGetValueAtIndex(m_groups.get(), group);
   if (!keyboardLayout) {
-    LOG((CLOG_WARN "nedeed keyboard layout is null"));
+    LOG_WARN("nedeed keyboard layout is null");
     return;
   }
   auto canBeSetted = (CFBooleanRef
   )TISGetInputSourceProperty(TISCopyCurrentKeyboardInputSource(), kTISPropertyInputSourceIsEnableCapable);
   if (!canBeSetted) {
-    LOG((CLOG_WARN "nedeed keyboard layout is disabled for programmatically selection"));
+    LOG_WARN("nedeed keyboard layout is disabled for programmatically selection");
     return;
   }
 
   if (TISSelectInputSource(keyboardLayout) != noErr) {
-    LOG((CLOG_WARN "failed to set nedeed keyboard layout"));
+    LOG_WARN("failed to set nedeed keyboard layout");
   }
 
-  LOG((CLOG_DEBUG1 "keyboard layout change to %d", group));
+  LOG_DEBUG1("keyboard layout change to %d", group);
 
   // A minimal delay is needed after a group change because the
   // keyboard key event often happens immediately after.

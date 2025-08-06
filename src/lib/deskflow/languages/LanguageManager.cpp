@@ -29,7 +29,7 @@ namespace deskflow::languages {
 
 LanguageManager::LanguageManager(const std::vector<std::string> &localLanguages) : m_localLanguages(localLanguages)
 {
-  LOG((CLOG_INFO "local languages: %s", vectorToString(m_localLanguages, ", ").c_str()));
+  LOG_INFO("local languages: %s", vectorToString(m_localLanguages, ", ").c_str());
 }
 
 void LanguageManager::setRemoteLanguages(const std::string_view &remoteLanguages)
@@ -41,7 +41,7 @@ void LanguageManager::setRemoteLanguages(const std::string_view &remoteLanguages
       m_remoteLanguages.emplace_back(rLangs);
     }
   }
-  LOG((CLOG_INFO "remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str()));
+  LOG_INFO("remote languages: %s", vectorToString(m_remoteLanguages, ", ").c_str());
 }
 
 const std::vector<std::string> &LanguageManager::getRemoteLanguages() const

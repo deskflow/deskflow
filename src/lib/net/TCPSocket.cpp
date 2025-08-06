@@ -39,7 +39,7 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, 
     throw XSocketCreate(e.what());
   }
 
-  LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
+  LOG_DEBUG("opening new socket: %08X", m_socket);
 
   init();
 }
@@ -53,7 +53,7 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, 
 {
   assert(m_socket != nullptr);
 
-  LOG((CLOG_DEBUG "opening new socket: %08X", m_socket));
+  LOG_DEBUG("opening new socket: %08X", m_socket);
 
   // socket starts in connected state
   init();
@@ -67,7 +67,7 @@ TCPSocket::~TCPSocket()
     // warning virtual function in destructor is very danger practice
     close();
   } catch (...) {
-    LOG((CLOG_DEBUG "error while TCP socket destruction"));
+    LOG_DEBUG("error while TCP socket destruction");
   }
 }
 
@@ -84,7 +84,7 @@ void TCPSocket::bind(const NetworkAddress &addr)
 
 void TCPSocket::close()
 {
-  LOG((CLOG_DEBUG "closing socket: %08X", m_socket));
+  LOG_DEBUG("closing socket: %08X", m_socket);
 
   // remove ourself from the multiplexer
   setJob(nullptr);
@@ -105,7 +105,7 @@ void TCPSocket::close()
       ARCH->closeSocket(socket);
     } catch (const XArchNetwork &e) {
       // ignore, there's not much we can do
-      LOG((CLOG_WARN "error closing socket: %s", e.what()));
+      LOG_WARN("error closing socket: %s", e.what());
     }
   }
 }
@@ -186,7 +186,7 @@ void TCPSocket::shutdownInput()
       ARCH->closeSocketForRead(m_socket);
     } catch (const XArchNetwork &e) {
       // ignore, there's not much we can do
-      LOG((CLOG_WARN "error closing socket: %s", e.what()));
+      LOG_WARN("error closing socket: %s", e.what());
     }
 
     // shutdown buffer for reading
@@ -212,7 +212,7 @@ void TCPSocket::shutdownOutput()
       ARCH->closeSocketForWrite(m_socket);
     } catch (const XArchNetwork &e) {
       // ignore, there's not much we can do
-      LOG((CLOG_WARN "error closing socket: %s", e.what()));
+      LOG_WARN("error closing socket: %s", e.what());
     }
 
     // shutdown buffer for writing
@@ -236,7 +236,7 @@ bool TCPSocket::isReady() const
 bool TCPSocket::isFatal() const
 {
   // TCP sockets aren't ever left in a fatal state.
-  LOG((CLOG_ERR "isFatal() not valid for non-secure connections"));
+  LOG_ERR("isFatal() not valid for non-secure connections");
   return false;
 }
 
@@ -290,7 +290,7 @@ void TCPSocket::init()
       m_socket = nullptr;
     } catch (const XArchNetwork &e) {
       // ignore, there's not much we can do
-      LOG((CLOG_WARN "error closing socket: %s", e.what()));
+      LOG_WARN("error closing socket: %s", e.what());
     }
     throw XSocketCreate(e.what());
   }
@@ -520,7 +520,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       writeResult = New;
     } catch (XArchNetwork &e) {
       // other write error
-      LOG((CLOG_WARN "error writing socket: %s", e.what()));
+      LOG_WARN("error writing socket: %s", e.what());
       onDisconnected();
       sendEvent(StreamOutputError);
       sendEvent(SocketDisconnected);
@@ -538,7 +538,7 @@ ISocketMultiplexerJob *TCPSocket::serviceConnected(ISocketMultiplexerJob *job, b
       readResult = New;
     } catch (XArchNetwork &e) {
       // ignore other read error
-      LOG((CLOG_WARN "error reading socket: %s", e.what()));
+      LOG_WARN("error reading socket: %s", e.what());
     }
   }
 

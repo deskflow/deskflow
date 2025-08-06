@@ -51,9 +51,9 @@ void EventQueue::loop()
     *m_readyCondVar = true;
     m_readyCondVar->signal();
   }
-  LOG((CLOG_DEBUG "event queue is ready"));
+  LOG_DEBUG("event queue is ready");
   while (!m_pending.empty()) {
-    LOG((CLOG_DEBUG "add pending events to buffer"));
+    LOG_DEBUG("add pending events to buffer");
     const Event &event = m_pending.front();
     addEventToBuffer(event);
     m_pending.pop();
@@ -72,12 +72,12 @@ void EventQueue::adoptBuffer(IEventQueueBuffer *buffer)
 {
   std::scoped_lock lock{m_mutex};
 
-  LOG((CLOG_DEBUG "adopting new buffer"));
+  LOG_DEBUG("adopting new buffer");
 
   if (m_events.size() != 0) {
     // this can come as a nasty surprise to programmers expecting
     // their events to be raised, only to have them deleted.
-    LOG((CLOG_DEBUG "discarding %d event(s)", m_events.size()));
+    LOG_DEBUG("discarding %d event(s)", m_events.size());
   }
 
   // discard old buffer and old events

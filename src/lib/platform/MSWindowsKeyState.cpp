@@ -834,7 +834,7 @@ int32_t MSWindowsKeyState::pollActiveGroup() const
   // get group
   GroupMap::const_iterator i = m_groupMap.find(hkl);
   if (i == m_groupMap.end()) {
-    LOG((CLOG_DEBUG1 "can't find keyboard layout %08x", hkl));
+    LOG_DEBUG1("can't find keyboard layout %08x", hkl);
     return 0;
   }
 
@@ -845,8 +845,8 @@ void MSWindowsKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
 {
   BYTE keyState[256];
   if (!GetKeyboardState(keyState)) {
-    LOG((CLOG_WARN "keyboard state is unexpected"));
-    LOG((CLOG_DEBUG "function 'GetKeyboardState' returned false on 'pollPressedKeys'"));
+    LOG_WARN("keyboard state is unexpected");
+    LOG_DEBUG("function 'GetKeyboardState' returned false on 'pollPressedKeys'");
     return;
   }
   for (KeyButton i = 1; i < 256; ++i) {
@@ -1172,7 +1172,7 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
 
     // windows doesn't send key ups for key repeats
     if (keystroke.m_data.m_button.m_repeat && !keystroke.m_data.m_button.m_press) {
-      LOG((CLOG_DEBUG1 "  discard key repeat release"));
+      LOG_DEBUG1("  discard key repeat release");
       break;
     }
 
@@ -1207,10 +1207,10 @@ void MSWindowsKeyState::fakeKey(const Keystroke &keystroke)
     // key events.
     if (!keystroke.m_data.m_group.m_restore) {
       if (keystroke.m_data.m_group.m_absolute) {
-        LOG((CLOG_DEBUG1 "  group %d", keystroke.m_data.m_group.m_group));
+        LOG_DEBUG1("  group %d", keystroke.m_data.m_group.m_group);
         setWindowGroup(keystroke.m_data.m_group.m_group);
       } else {
-        LOG((CLOG_DEBUG1 "  group %+d", keystroke.m_data.m_group.m_group));
+        LOG_DEBUG1("  group %+d", keystroke.m_data.m_group.m_group);
         setWindowGroup(getEffectiveGroup(pollActiveGroup(), keystroke.m_data.m_group.m_group));
       }
     }
@@ -1232,13 +1232,13 @@ bool MSWindowsKeyState::getGroups(GroupList &groups) const
   // get keyboard layouts
   uint32_t newNumLayouts = GetKeyboardLayoutList(0, nullptr);
   if (newNumLayouts == 0) {
-    LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
+    LOG_DEBUG1("can't get keyboard layouts");
     return false;
   }
   HKL *newLayouts = new HKL[newNumLayouts];
   newNumLayouts = GetKeyboardLayoutList(newNumLayouts, newLayouts);
   if (newNumLayouts == 0) {
-    LOG((CLOG_DEBUG1 "can't get keyboard layouts"));
+    LOG_DEBUG1("can't get keyboard layouts");
     delete[] newLayouts;
     return false;
   }
@@ -1258,7 +1258,7 @@ void MSWindowsKeyState::setWindowGroup(int32_t group)
   // character set.
 
   if (!PostMessage(targetWindow, WM_INPUTLANGCHANGEREQUEST, sysCharSet ? 1 : 0, (LPARAM)m_groups[group])) {
-    LOG((CLOG_WARN "failed to post change language message"));
+    LOG_WARN("failed to post change language message");
   }
 
   // XXX -- use a short delay to let the target window process the message

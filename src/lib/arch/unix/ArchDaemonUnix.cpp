@@ -78,7 +78,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
   // TODO: this is a bit of a hack - can we find a better solution?
   if (int chdirErr = chdir("/"); chdirErr)
     // NB: file logging actually isn't working at this point!
-    LOG((CLOG_ERR "chdir error: %i", chdirErr));
+    LOG_ERR("chdir error: %i", chdirErr);
 #endif
 
   // mask off permissions for any but owner
@@ -96,7 +96,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
 
   if (int dupErr = dup(1); dupErr < 0) {
     // NB: file logging actually isn't working at this point!
-    LOG((CLOG_ERR "dup error: %i", dupErr));
+    LOG_ERR("dup error: %i", dupErr);
   }
 
 #ifdef __APPLE__
