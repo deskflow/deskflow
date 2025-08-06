@@ -1,5 +1,5 @@
-name: "Lint Check"
-description: "Checks for lint errors and posts a helpful comment"
+name: "Lint Clang"
+description: "Checks for Clang lint errors and posts a helpful comment"
 
 runs:
   using: "composite"
