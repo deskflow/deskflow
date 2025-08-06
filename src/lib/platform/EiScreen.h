@@ -58,7 +58,7 @@ public:
   void fakeMouseMove(std::int32_t x, std::int32_t y) override;
   void fakeMouseRelativeMove(std::int32_t dx, std::int32_t dy) const override;
   void fakeMouseWheel(std::int32_t xDelta, std::int32_t yDelta) const override;
-  void fakeKey(std::uint32_t keycode, bool is_down) const;
+  void fakeKey(std::uint32_t keycode, bool isDown) const;
 
   // IPlatformScreen overrides
   void enable() override;
@@ -99,7 +99,7 @@ private:
   void onPointerScrollDiscreteEvent(ei_event *event);
   void onMotionEvent(ei_event *event);
   void onAbsMotionEvent(const ei_event *) const;
-  bool onHotkey(KeyID key, bool is_press, KeyModifierMask mask);
+  bool onHotkey(KeyID key, bool isPressed, KeyModifierMask mask);
   void eiLogEvent(ei_log_priority priority, const char *message) const;
 
   void handleConnectedToEisEvent(const Event &event);
