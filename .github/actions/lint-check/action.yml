@@ -65,8 +65,15 @@ runs:
         )
         echo "$summary" >> $GITHUB_STEP_SUMMARY
 
-        file="ci_summary.md"
-        echo "❌🛠️ \`clang-format\`: Lint errors, fix available." >> $file
+        pr_comment=$(cat <<EOF
+        ### Lint result
+        
+        $summary
+        EOF
+        )
+
+        file="ci-summary.md"
+        echo "$pr_comment" | tee $file
         echo "file=$file" >> $GITHUB_OUTPUT
       shell: bash
 
