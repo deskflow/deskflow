@@ -216,9 +216,9 @@ int DaemonApp::mainLoop()
     LOG_INFO("daemon is running");
     m_events.loop();
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
-    LOG((CLOG_CRIT "daemon error: %s", e.what()));
+    LOG_CRIT("daemon error: %s", e.what());
   } catch (...) { // NOSONAR - Catching remaining exceptions
-    LOG((CLOG_CRIT "daemon unknown error"));
+    LOG_CRIT("daemon unknown error");
   }
 
   LOG_INFO("daemon is stopping");
@@ -228,9 +228,9 @@ int DaemonApp::mainLoop()
     LOG_DEBUG("stopping process watchdog");
     m_pWatchdog->stop();
   } catch (std::exception &e) { // NOSONAR - Catching all exceptions
-    LOG((CLOG_CRIT "daemon stop watchdog error: %s", e.what()));
+    LOG_CRIT("daemon stop watchdog error: %s", e.what());
   } catch (...) { // NOSONAR - Catching remaining exceptions
-    LOG((CLOG_CRIT "daemon stop watchdog unknown error"));
+    LOG_CRIT("daemon stop watchdog unknown error");
   }
 #endif
 

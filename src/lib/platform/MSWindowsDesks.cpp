@@ -183,7 +183,7 @@ void MSWindowsDesks::setOptions(const OptionsList &options)
   for (uint32_t i = 0, n = (uint32_t)options.size(); i < n; i += 2) {
     if (options[i] == kOptionWin32KeepForeground) {
       m_leaveForegroundOption = (options[i + 1] != 0);
-      LOG((CLOG_DEBUG1 "%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab"));
+      LOG_DEBUG1("%s the foreground window", m_leaveForegroundOption ? "don\'t grab" : "grab");
     }
   }
 }
@@ -367,7 +367,7 @@ HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const
       MSWindowsScreen::getWindowInstance(), nullptr
   );
   if (window == nullptr) {
-    LOG((CLOG_ERR "failed to create window: %d", GetLastError()));
+    LOG_ERR("failed to create window: %d", GetLastError());
     throw XScreenOpenFailure();
   }
   return window;
@@ -611,10 +611,10 @@ void MSWindowsDesks::deskThread(void *vdesk)
     // create a window.  we use this window to hide the cursor.
     try {
       desk->m_window = createWindow(m_deskClass, "DeskflowDesk");
-      LOG((CLOG_DEBUG "desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window));
+      LOG_DEBUG("desk %s window is 0x%08x", desk->m_name.c_str(), desk->m_window);
     } catch (...) {
       // ignore
-      LOG((CLOG_DEBUG "can't create desk window for %s", desk->m_name.c_str()));
+      LOG_DEBUG("can't create desk window for %s", desk->m_name.c_str());
     }
   }
 
@@ -802,15 +802,15 @@ void MSWindowsDesks::checkDesk()
     // from an inaccessible desktop so when we switch from an
     // inaccessible desktop to an accessible one we have to
     // update the keyboard state.
-    LOG((CLOG_DEBUG "switched to desk \"%s\"", name.c_str()));
+    LOG_DEBUG("switched to desk \"%s\"", name.c_str());
     bool syncKeys = false;
     bool isAccessible = isDeskAccessible(desk);
     if (isDeskAccessible(m_activeDesk) != isAccessible) {
       if (isAccessible) {
-        LOG((CLOG_DEBUG "desktop is now accessible"));
+        LOG_DEBUG("desktop is now accessible");
         syncKeys = true;
       } else {
-        LOG((CLOG_DEBUG "desktop is now inaccessible"));
+        LOG_DEBUG("desktop is now inaccessible");
       }
     }
 

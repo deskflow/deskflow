@@ -29,7 +29,7 @@ Screen::Screen(IPlatformScreen *platformScreen, IEventQueue *events)
   // reset options
   resetOptions();
 
-  LOG((CLOG_DEBUG "opened display"));
+  LOG_DEBUG("opened display");
 }
 
 Screen::~Screen()
@@ -57,14 +57,14 @@ Screen::~Screen()
          m_entered ? "yes" : "no", m_isPrimary ? "yes" : "no")
     );
     if (m_isPrimary) {
-      LOG((CLOG_WARN "current primary screen is not entered on shutdown"));
+      LOG_WARN("current primary screen is not entered on shutdown");
     } else {
-      LOG((CLOG_WARN "current secondary screen is entered on shutdown"));
+      LOG_WARN("current secondary screen is entered on shutdown");
     }
   }
 
   delete m_screen;
-  LOG((CLOG_DEBUG "closed display"));
+  LOG_DEBUG("closed display");
 }
 
 void Screen::enable()
@@ -106,7 +106,7 @@ void Screen::disable()
 
 void Screen::enter(KeyModifierMask toggleMask)
 {
-  LOG((CLOG_INFO "entering screen"));
+  LOG_INFO("entering screen");
 
   if (m_entered) {
     LOG_WARN("screen already entered");
@@ -125,7 +125,7 @@ void Screen::enter(KeyModifierMask toggleMask)
 
 bool Screen::leave()
 {
-  LOG((CLOG_INFO "leaving screen"));
+  LOG_INFO("leaving screen");
 
   if (!m_entered) {
     LOG_WARN("screen already left");
@@ -183,7 +183,7 @@ void Screen::keyDown(KeyID id, KeyModifierMask mask, KeyButton button, const std
 {
   // check for ctrl+alt+del emulation
   if (id == kKeyDelete && (mask & (KeyModifierControl | KeyModifierAlt)) == (KeyModifierControl | KeyModifierAlt)) {
-    LOG((CLOG_DEBUG "emulating ctrl+alt+del press"));
+    LOG_DEBUG("emulating ctrl+alt+del press");
     if (m_screen->fakeCtrlAltDel()) {
       return;
     }
@@ -249,21 +249,21 @@ void Screen::setOptions(const OptionsList &options)
       } else {
         m_halfDuplex &= ~KeyModifierCapsLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex caps-lock %s", ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off"));
+      LOG_DEBUG1("half-duplex caps-lock %s", ((m_halfDuplex & KeyModifierCapsLock) != 0) ? "on" : "off");
     } else if (options[i] == kOptionHalfDuplexNumLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierNumLock;
       } else {
         m_halfDuplex &= ~KeyModifierNumLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off"));
+      LOG_DEBUG1("half-duplex num-lock %s", ((m_halfDuplex & KeyModifierNumLock) != 0) ? "on" : "off");
     } else if (options[i] == kOptionHalfDuplexScrollLock) {
       if (options[i + 1] != 0) {
         m_halfDuplex |= KeyModifierScrollLock;
       } else {
         m_halfDuplex &= ~KeyModifierScrollLock;
       }
-      LOG((CLOG_DEBUG1 "half-duplex scroll-lock %s", ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off"));
+      LOG_DEBUG1("half-duplex scroll-lock %s", ((m_halfDuplex & KeyModifierScrollLock) != 0) ? "on" : "off");
     }
   }
 
@@ -313,7 +313,7 @@ bool Screen::isOnScreen() const
 bool Screen::isLockedToScreen() const
 {
   if (uint32_t buttonID = 0; m_screen->isAnyMouseButtonDown(buttonID)) {
-    LOG((CLOG_DEBUG "locked by mouse buttonID: %d", buttonID));
+    LOG_DEBUG("locked by mouse buttonID: %d", buttonID);
     return true;
   }
   // not locked

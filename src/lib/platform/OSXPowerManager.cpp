@@ -22,7 +22,7 @@ void OSXPowerManager::disableSleep()
     );
     if (result != kIOReturnSuccess) {
       m_sleepPreventionAssertionID = 0;
-      LOG((CLOG_ERR "failed to disable system idle sleep"));
+      LOG_ERR("failed to disable system idle sleep");
     }
   }
 }

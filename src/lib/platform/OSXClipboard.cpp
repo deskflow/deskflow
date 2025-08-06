@@ -30,15 +30,15 @@ OSXClipboard::OSXClipboard() : m_time(0), m_pboard(nullptr)
 
   OSStatus createErr = PasteboardCreate(kPasteboardClipboard, &m_pboard);
   if (createErr != noErr) {
-    LOG((CLOG_WARN "failed to create clipboard reference: error %i", createErr));
-    LOG((CLOG_ERR "unable to connect to pasteboard, clipboard sharing disabled", createErr));
+    LOG_WARN("failed to create clipboard reference: error %i", createErr);
+    LOG_ERR("unable to connect to pasteboard, clipboard sharing disabled", createErr);
     m_pboard = nullptr;
     return;
   }
 
   OSStatus syncErr = PasteboardSynchronize(m_pboard);
   if (syncErr != noErr) {
-    LOG((CLOG_WARN "failed to syncronize clipboard: error %i", syncErr));
+    LOG_WARN("failed to syncronize clipboard: error %i", syncErr);
   }
 }
 
@@ -49,13 +49,13 @@ OSXClipboard::~OSXClipboard()
 
 bool OSXClipboard::empty()
 {
-  LOG((CLOG_DEBUG "emptying clipboard"));
+  LOG_DEBUG("emptying clipboard");
   if (m_pboard == nullptr)
     return false;
 
   OSStatus err = PasteboardClear(m_pboard);
   if (err != noErr) {
-    LOG((CLOG_WARN "failed to clear clipboard: error %i", err));
+    LOG_WARN("failed to clear clipboard: error %i", err);
     return false;
   }
 
@@ -68,7 +68,7 @@ bool OSXClipboard::synchronize()
     return false;
 
   PasteboardSyncFlags flags = PasteboardSynchronize(m_pboard);
-  LOG((CLOG_DEBUG2 "flags: %x", flags));
+  LOG_DEBUG2("flags: %x", flags);
 
   if (flags & kPasteboardModified) {
     return true;
@@ -81,13 +81,13 @@ void OSXClipboard::add(Format format, const std::string &data)
   if (m_pboard == nullptr)
     return;
 
-  LOG((CLOG_DEBUG "add %d bytes to clipboard format: %d", data.size(), format));
+  LOG_DEBUG("add %d bytes to clipboard format: %d", data.size(), format);
   if (format == IClipboard::Format::Text) {
-    LOG((CLOG_DEBUG "format of data to be added to clipboard was kText"));
+    LOG_DEBUG("format of data to be added to clipboard was kText");
   } else if (format == IClipboard::Format::Bitmap) {
-    LOG((CLOG_DEBUG "format of data to be added to clipboard was kBitmap"));
+    LOG_DEBUG("format of data to be added to clipboard was kBitmap");
   } else if (format == IClipboard::Format::HTML) {
-    LOG((CLOG_DEBUG "format of data to be added to clipboard was kHTML"));
+    LOG_DEBUG("format of data to be added to clipboard was kHTML");
   }
 
   for (ConverterList::const_iterator index = m_converters.begin(); index != m_converters.end(); ++index) {
@@ -105,7 +105,7 @@ void OSXClipboard::add(Format format, const std::string &data)
         PasteboardPutItemFlavor(m_pboard, itemID, flavorType, dataRef, kPasteboardFlavorNoFlags);
 
         CFRelease(dataRef);
-        LOG((CLOG_DEBUG "added %d bytes to clipboard format: %d", data.size(), format));
+        LOG_DEBUG("added %d bytes to clipboard format: %d", data.size(), format);
       }
     }
   }
@@ -116,14 +116,14 @@ bool OSXClipboard::open(Time time) const
   if (m_pboard == nullptr)
     return false;
 
-  LOG((CLOG_DEBUG "opening clipboard"));
+  LOG_DEBUG("opening clipboard");
   m_time = time;
   return true;
 }
 
 void OSXClipboard::close() const
 {
-  LOG((CLOG_DEBUG "closing clipboard"));
+  LOG_DEBUG("closing clipboard");
   /* not needed */
 }
 
@@ -184,7 +184,7 @@ std::string OSXClipboard::get(Format format) const
 
   // if no converter then we don't recognize any formats
   if (converter == nullptr) {
-    LOG((CLOG_DEBUG "unable to find converter for data"));
+    LOG_DEBUG("unable to find converter for data");
     return result;
   }
 
@@ -199,9 +199,9 @@ std::string OSXClipboard::get(Format format) const
 
     result = std::string((char *)CFDataGetBytePtr(buffer), CFDataGetLength(buffer));
   } catch (OSStatus err) {
-    LOG((CLOG_DEBUG "exception thrown in OSXClipboard::get MacError (%d)", err));
+    LOG_DEBUG("exception thrown in OSXClipboard::get MacError (%d)", err);
   } catch (...) {
-    LOG((CLOG_DEBUG "unknown exception in OSXClipboard::get"));
+    LOG_DEBUG("unknown exception in OSXClipboard::get");
     RETHROW_XTHREAD
   }
 

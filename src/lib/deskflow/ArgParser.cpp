@@ -40,7 +40,7 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
       args.m_chkPeerCert = false;
     } else {
-      LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+      LOG_CRIT("%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname);
       return false;
     }
     ++i;
@@ -79,7 +79,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
         return true;
       }
 
-      LOG((CLOG_CRIT "%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname));
+      LOG_CRIT("%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname);
       return false;
     }
     ++i;
@@ -87,7 +87,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
   // exactly one non-option argument (server-address)
   if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
-    LOG((CLOG_CRIT "%s: a server address or name is required" BYE, args.m_pname, args.m_pname));
+    LOG_CRIT("%s: a server address or name is required" BYE, args.m_pname, args.m_pname);
     return false;
   }
 
@@ -181,7 +181,7 @@ bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) c
 
   for (auto &arg : deprecatedArgs) {
     if (isArg(i, argc, argv, nullptr, arg)) {
-      LOG((CLOG_NOTE "%s is deprecated", arg));
+      LOG_NOTE("%s is deprecated", arg);
       i++;
       return true;
     }
@@ -197,7 +197,7 @@ bool ArgParser::isArg(
   if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) || (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
-      LOG((CLOG_PRINT "%s: missing arguments for `%s'" BYE, argsBase().m_pname, argv[argi], argsBase().m_pname));
+      LOG_PRINT("%s: missing arguments for `%s'" BYE, argsBase().m_pname, argv[argi], argsBase().m_pname);
       argsBase().m_shouldExitFail = true;
       return false;
     }

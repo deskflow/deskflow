@@ -37,7 +37,7 @@ void ClientProxy1_6::setClipboard(ClipboardID id, const IClipboard *clipboard)
     std::string data = m_clipboard[id].m_clipboard.marshall();
 
     size_t size = data.size();
-    LOG((CLOG_DEBUG "sending clipboard %d to \"%s\"", id, getName().c_str()));
+    LOG_DEBUG("sending clipboard %d to \"%s\"", id, getName().c_str());
 
     StreamChunker::sendClipboard(data, size, id, 0, m_events, this);
   }
@@ -52,7 +52,7 @@ bool ClientProxy1_6::recvClipboard()
 
   if (auto r = ClipboardChunk::assemble(getStream(), dataCached, id, seq); r == TransferState::Started) {
     size_t size = ClipboardChunk::getExpectedSize();
-    LOG((CLOG_DEBUG "receiving clipboard %d size=%d", id, size));
+    LOG_DEBUG("receiving clipboard %d size=%d", id, size);
   } else if (r == TransferState::Finished) {
     LOG(
         (CLOG_DEBUG "received client \"%s\" clipboard %d seqnum=%d, size=%d", getName().c_str(), id, seq,

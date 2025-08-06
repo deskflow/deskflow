@@ -20,7 +20,7 @@ namespace {
 bool sleepInhibitCall(bool state, XWindowsPowerManager::InhibitScreenServices serviceID)
 {
   if (std::string error; !XWindowsPowerManager::inhibitScreenCall(serviceID, state, error)) {
-    LOG((CLOG_DEBUG "dbus inhibit error %s", error.c_str()));
+    LOG_DEBUG("dbus inhibit error %s", error.c_str());
     return false;
   }
 
@@ -38,7 +38,7 @@ void XWindowsPowerManager::disableSleep() const
 {
   if (!sleepInhibitCall(true, XWindowsPowerManager::InhibitScreenServices::kScreenSaver) &&
       !sleepInhibitCall(true, XWindowsPowerManager::InhibitScreenServices::kSessionManager)) {
-    LOG((CLOG_WARN "failed to prevent system from going to sleep"));
+    LOG_WARN("failed to prevent system from going to sleep");
   }
 }
 
@@ -46,7 +46,7 @@ void XWindowsPowerManager::enableSleep() const
 {
   if (!sleepInhibitCall(false, XWindowsPowerManager::InhibitScreenServices::kScreenSaver) &&
       !sleepInhibitCall(false, XWindowsPowerManager::InhibitScreenServices::kSessionManager)) {
-    LOG((CLOG_WARN "failed to enable system idle sleep"));
+    LOG_WARN("failed to enable system idle sleep");
   }
 }
 

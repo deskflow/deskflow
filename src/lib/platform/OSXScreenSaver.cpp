@@ -90,7 +90,7 @@ void OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 {
   if (isScreenSaverEngine(psn)) {
     m_screenSaverPSN = psn;
-    LOG((CLOG_DEBUG1 "screen saver engine launched, enabled=%d", m_enabled));
+    LOG_DEBUG1("screen saver engine launched, enabled=%d", m_enabled);
     if (m_enabled) {
       m_events->addEvent(Event(EventTypes::PrimaryScreenSaverActivated, m_eventTarget));
     }
@@ -100,7 +100,7 @@ void OSXScreenSaver::processLaunched(ProcessSerialNumber psn)
 void OSXScreenSaver::processTerminated(ProcessSerialNumber psn)
 {
   if (m_screenSaverPSN.highLongOfPSN == psn.highLongOfPSN && m_screenSaverPSN.lowLongOfPSN == psn.lowLongOfPSN) {
-    LOG((CLOG_DEBUG1 "screen saver engine terminated, enabled=%d", m_enabled));
+    LOG_DEBUG1("screen saver engine terminated, enabled=%d", m_enabled);
     if (m_enabled) {
       m_events->addEvent(Event(EventTypes::PrimaryScreenSaverDeactivated, m_eventTarget));
     }

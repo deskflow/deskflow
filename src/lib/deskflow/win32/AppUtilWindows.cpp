@@ -50,7 +50,7 @@ AppUtilWindows::~AppUtilWindows()
 
 BOOL WINAPI AppUtilWindows::consoleHandler(DWORD)
 {
-  LOG((CLOG_INFO "got shutdown signal"));
+  LOG_INFO("got shutdown signal");
   IEventQueue *events = AppUtil::instance().app().getEvents();
   events->addEvent(Event(EventTypes::Quit));
   return TRUE;
@@ -181,7 +181,7 @@ HKL AppUtilWindows::getCurrentKeyboardLayout() const
   if (GetGUIThreadInfo(0, &gti) && gti.hwndActive) {
     layout = GetKeyboardLayout(GetWindowThreadProcessId(gti.hwndActive, nullptr));
   } else {
-    LOG((CLOG_WARN "failed to determine current keyboard layout"));
+    LOG_WARN("failed to determine current keyboard layout");
   }
 
   return layout;

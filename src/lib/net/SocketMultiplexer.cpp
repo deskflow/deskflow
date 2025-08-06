@@ -174,7 +174,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
         status = 0;
       }
     } catch (XArchNetwork &e) {
-      LOG((CLOG_WARN "error in socket multiplexer: %s", e.what()));
+      LOG_WARN("error in socket multiplexer: %s", e.what());
       status = 0;
     }
 

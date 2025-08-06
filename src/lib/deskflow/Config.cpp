@@ -45,32 +45,32 @@ bool Config::load(const std::string &firstArg)
   }
 
   if (!std::filesystem::exists(m_filename)) {
-    LOG((CLOG_ERR "config file not found: %s", m_filename.c_str()));
+    LOG_ERR("config file not found: %s", m_filename.c_str());
     return false;
   }
 
   toml::table configTable;
   try {
-    LOG((CLOG_INFO "loading config file: %s", m_filename.c_str()));
+    LOG_INFO("loading config file: %s", m_filename.c_str());
     configTable = toml::parse_file(m_filename);
 
   } catch (const toml::parse_error &err) {
-    LOG((CLOG_ERR "toml parse error: %s", err.what()));
+    LOG_ERR("toml parse error: %s", err.what());
     throw ParseError();
   } catch (const std::exception &err) {
-    LOG((CLOG_ERR "unknown parse error: %s", err.what()));
+    LOG_ERR("unknown parse error: %s", err.what());
     throw ParseError();
   }
 
   if (!configTable.contains(m_section)) {
-    LOG((CLOG_WARN "no %s section found in config file", m_section.c_str()));
+    LOG_WARN("no %s section found in config file", m_section.c_str());
     return false;
   }
 
   const auto &section = configTable[m_section];
   const auto args = section["args"];
   if (!args.is_table()) {
-    LOG((CLOG_WARN "no args table found in config file"));
+    LOG_WARN("no args table found in config file");
     return false;
   }
 
@@ -96,7 +96,7 @@ bool Config::load(const std::string &firstArg)
   }
 
   if (m_args.empty()) {
-    LOG((CLOG_WARN "no args loaded from config file"));
+    LOG_WARN("no args loaded from config file");
     return false;
   }
 

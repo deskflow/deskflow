@@ -98,17 +98,17 @@ int App::run(int argc, char **argv)
     // using the exit(int) function!
     result = e.getCode();
   } catch (DisplayInvalidException &die) {
-    LOG((CLOG_CRIT "a display invalid exception error occurred: %s\n", die.what()));
+    LOG_CRIT("a display invalid exception error occurred: %s\n", die.what());
     // display invalid exceptions can occur when going to sleep. When this
     // process exits, the UI will restart us instantly. We don't really want
     // that behevior, so we quies for a bit
     Arch::sleep(10);
   } catch (std::runtime_error &re) {
-    LOG((CLOG_CRIT "a runtime error occurred: %s\n", re.what()));
+    LOG_CRIT("a runtime error occurred: %s\n", re.what());
   } catch (std::exception &e) {
-    LOG((CLOG_CRIT "an error occurred: %s\n", e.what()));
+    LOG_CRIT("an error occurred: %s\n", e.what());
   } catch (...) {
-    LOG((CLOG_CRIT "an unknown error occurred\n"));
+    LOG_CRIT("an unknown error occurred\n");
   }
 
   return result;
@@ -129,7 +129,7 @@ void App::setupFileLogging()
   if (argsBase().m_logFile != nullptr) {
     m_fileLog = new FileLogOutputter(argsBase().m_logFile); // NOSONAR - Adopted by `Log`
     CLOG->insert(m_fileLog);
-    LOG((CLOG_DEBUG1 "logging to file (%s) enabled", argsBase().m_logFile));
+    LOG_DEBUG1("logging to file (%s) enabled", argsBase().m_logFile);
   }
 }
 
@@ -186,7 +186,7 @@ void App::initApp(int argc, const char **argv)
 
 void App::handleScreenError() const
 {
-  LOG((CLOG_CRIT "error on screen"));
+  LOG_CRIT("error on screen");
   getEvents()->addEvent(Event(EventTypes::Quit));
 }
 

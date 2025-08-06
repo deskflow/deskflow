@@ -34,7 +34,7 @@ ClientProxy1_3::~ClientProxy1_3()
 
 void ClientProxy1_3::mouseWheel(int32_t xDelta, int32_t yDelta)
 {
-  LOG((CLOG_DEBUG2 "send mouse wheel to \"%s\" %+d,%+d", getName().c_str(), xDelta, yDelta));
+  LOG_DEBUG2("send mouse wheel to \"%s\" %+d,%+d", getName().c_str(), xDelta, yDelta);
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel, xDelta, yDelta);
 }
 
