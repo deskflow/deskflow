@@ -96,14 +96,6 @@ void Action::saveSettings(QSettings &settings) const
   settings.setValue(SettingsKeys::RestartServer, restartServer());
 }
 
-bool Action::operator==(const Action &a) const
-{
-  return m_keySequence == a.m_keySequence && m_type == a.m_type && m_typeScreenNames == a.m_typeScreenNames &&
-         m_switchScreenName == a.m_switchScreenName && m_switchDirection == a.m_switchDirection &&
-         m_lockCursorMode == a.m_lockCursorMode && m_activeOnRelease == a.m_activeOnRelease &&
-         m_hasScreens == a.m_hasScreens && m_restartServer == a.m_restartServer;
-}
-
 QTextStream &operator<<(QTextStream &outStream, const Action &action)
 {
   if (action.activeOnRelease())

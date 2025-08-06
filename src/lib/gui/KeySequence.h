@@ -36,7 +36,7 @@ public:
     return m_Sequence;
   }
 
-  bool operator==(const KeySequence &ks) const;
+  bool operator==(const KeySequence &ks) const = default;
 
 private:
   void setValid(bool b)

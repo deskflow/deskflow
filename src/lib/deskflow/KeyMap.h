@@ -52,7 +52,7 @@ public:
     uint32_t m_client{};           //!< Client data
 
   public:
-    bool operator==(const KeyItem &) const;
+    bool operator==(const KeyItem &) const = default;
   };
 
   //! The KeyButtons needed to synthesize a KeyID

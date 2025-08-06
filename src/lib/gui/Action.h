@@ -105,7 +105,7 @@ public:
     return m_restartServer;
   }
 
-  bool operator==(const Action &a) const;
+  bool operator==(const Action &a) const = default;
 
 protected:
   KeySequence &keySequence()

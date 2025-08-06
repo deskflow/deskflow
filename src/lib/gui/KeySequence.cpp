@@ -218,8 +218,3 @@ QString KeySequence::keyToString(int key)
   // give up, deskflow probably won't handle this
   return "";
 }
-
-bool KeySequence::operator==(const KeySequence &ks) const
-{
-  return m_Sequence == ks.m_Sequence && m_Modifiers == ks.m_Modifiers && m_IsValid == ks.m_IsValid;
-}

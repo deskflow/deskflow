@@ -29,7 +29,7 @@ public:
 
   bool isValid() const;
 
-  bool operator==(const Fingerprint &other) const;
+  bool operator==(const Fingerprint &other) const = default;
   QString toDbLine() const;
   static Fingerprint fromDbLine(const QString &line);
   static QString typeToString(Fingerprint::Type type);
