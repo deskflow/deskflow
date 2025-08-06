@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.50</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.62</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -100,7 +100,7 @@ $(function(){initNavTree('structdeskflow_1_1KeyMap_1_1KeyItem.html','','structde
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a55384b2264cf1d15e03a3c057978199d" id="r_a55384b2264cf1d15e03a3c057978199d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a55384b2264cf1d15e03a3c057978199d">operator==</a> (const <a class="el" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyItem</a> &amp;) const</td></tr>
+<tr class="memitem:ae49a5705b1fff5653efb37ced30d6d58" id="r_ae49a5705b1fff5653efb37ced30d6d58"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae49a5705b1fff5653efb37ced30d6d58">operator==</a> (const <a class="el" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyItem</a> &amp;) const =default</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -127,19 +127,27 @@ Public Attributes</h2></td></tr>
 <div class="textblock"><p><a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> synthesis info. </p>
 <p>This structure contains the information necessary to synthesize a keystroke that generates a <a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb" title="Key ID.">KeyID</a> (stored elsewhere). <code>m_sensitive</code> lists the modifiers that the key is affected by and must therefore be in the correct state, which is listed in <code>m_required</code>. If the key is mapped to a modifier, that modifier is in <code>m_generates</code> and is not in <code>m_sensitive</code>. </p>
 </div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a55384b2264cf1d15e03a3c057978199d" name="a55384b2264cf1d15e03a3c057978199d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a55384b2264cf1d15e03a3c057978199d">&#9670;&#160;</a></span>operator==()</h2>
+<a id="ae49a5705b1fff5653efb37ced30d6d58" name="ae49a5705b1fff5653efb37ced30d6d58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae49a5705b1fff5653efb37ced30d6d58">&#9670;&#160;</a></span>operator==()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">bool deskflow::KeyMap::KeyItem::operator== </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyItem</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>x</em></span></td><td>)</td>
+          <td class="paramtype">const <a class="el" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyItem</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -289,9 +297,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this struct was generated from the following files:<ul>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>src/lib/deskflow/<a class="el" href="KeyMap_8h_source.html">KeyMap.h</a></li>
-<li>src/lib/deskflow/<a class="el" href="KeyMap_8cpp.html">KeyMap.cpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

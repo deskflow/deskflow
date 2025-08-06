@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchMutexImpl.html":[6,0,21],
 "classArchMutexImpl.html#a31690377d2fc263d32a674b044eb0d94":[6,0,21,1],
 "classArchMutexImpl.html#a68d747642998f2882e99deac6251a712":[6,0,21,0],
 "classArchMutexLock.html":[6,0,22],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classClientApp.html#af27e8bef92d4f1cb9d3ea6b4186df6e9":[6,0,36,9],
 "classClientInfo.html":[4,3,0],
 "classClientInfo.html#a0bdb7cd63cd2d0a81d2773e7ed585cbb":[4,3,0,3],
-"classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c":[4,3,0,6]
+"classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c":[4,3,0,6],
+"classClientInfo.html#a2281df54128ca356bab09bf1ad28364e":[4,3,0,1]
 };

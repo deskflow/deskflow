@@ -61,7 +61,7 @@ var searchData=
   ['apppath_58',['appPath',['../structdeskflow_1_1gui_1_1CoreProcess_1_1Deps.html#a91559d1177bbbea96ff692e100decffa',1,'deskflow::gui::CoreProcess::Deps']]],
   ['apputil_59',['AppUtil',['../classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d',1,'AppUtil']]],
   ['apputil_60',['appUtil',['../classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9',1,'App']]],
-  ['apputilunix_61',['AppUtilUnix',['../classAppUtilUnix.html#abcb2e21d82bfa759166688dc3de6d25e',1,'AppUtilUnix']]],
+  ['apputilunix_61',['AppUtilUnix',['../classAppUtilUnix.html#ad494eae903b08c6c6c43cdf01167c067',1,'AppUtilUnix']]],
   ['apputilwindows_62',['AppUtilWindows',['../classAppUtilWindows.html#acd7d036e013de13ec013a8c96279f307',1,'AppUtilWindows']]],
   ['arch_63',['Arch',['../classArch.html#aadb110c65e0419b9ecdbb499d2269ca8',1,'Arch::Arch()'],['../classArch.html#a6f64ff645c6e2b2f5087eb8044119a9b',1,'Arch::Arch(Arch *arch)']]],
   ['archdaemonnone_64',['ArchDaemonNone',['../classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab',1,'ArchDaemonNone']]],

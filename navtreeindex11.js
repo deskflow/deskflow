@@ -1,8 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classInputFilter_1_1KeyboardBroadcastAction.html#ac786073dd2c372e7398dec25bc28f270":[6,0,93,2,7],
-"classInputFilter_1_1KeyboardBroadcastAction.html#acab818e8b72c86bc28b9554c54bb34e8":[6,0,93,2,3],
-"classInputFilter_1_1KeyboardBroadcastAction.html#afdcb51e32b9df745eddf29c89382c12f":[6,0,93,2,2],
 "classInputFilter_1_1KeystrokeAction.html":[6,0,93,3],
 "classInputFilter_1_1KeystrokeAction.html#a09753675ad46eaa1a3d7bd01da5662c3":[6,0,93,3,6],
 "classInputFilter_1_1KeystrokeAction.html#a290467171f860be4b9f203c1d04ca08c":[6,0,93,3,11],
@@ -110,11 +107,11 @@ var NAVTREEINDEX11 =
 "classKeySequence.html#a6c8177d676c9608acfb03b90ef61df31":[6,0,108,0],
 "classKeySequence.html#a7b089f34b9ff2aa00efaba61fe005abd":[6,0,108,4],
 "classKeySequence.html#a7d1b1a0982b1861fa7260f179ad3d6a5":[6,0,108,9],
-"classKeySequence.html#a7e663cc6ec78579e876750e855c0e280":[6,0,108,6],
 "classKeySequence.html#a9e4d6c8d6f760374a6915de65e4955d9":[6,0,108,1],
 "classKeySequence.html#ab176e99409234ea51e741dd86179fa0d":[6,0,108,5],
 "classKeySequence.html#ab368e91591cf1f5a56ca6bc16012cce4":[6,0,108,8],
 "classKeySequence.html#ac1cda9feb0e2e28928b8d6fa8adbd494":[6,0,108,10],
+"classKeySequence.html#afe3d9b549a352bafd7a0bb42098ed801":[6,0,108,6],
 "classKeySequenceWidget.html":[6,0,109],
 "classKeySequenceWidget.html#a09d00daaae91aa9e362410b7e5c99cc1":[6,0,109,4],
 "classKeySequenceWidget.html#a09de9fda99d6ecd3366116879006cdb4":[6,0,109,7],
@@ -249,5 +246,8 @@ var NAVTREEINDEX11 =
 "classMSWindowsDebugOutputter.html#a76d1fd00fa57f26d5f322020708b3c30":[6,0,121,2],
 "classMSWindowsDebugOutputter.html#af02cb3f7a494dafeef796ac400d9439f":[6,0,121,0],
 "classMSWindowsDesks.html":[6,0,122],
-"classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d":[6,0,122,0]
+"classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d":[6,0,122,0],
+"classMSWindowsDesks.html#a3378c0c3e7cec291e6fc56690a350e96":[6,0,122,4],
+"classMSWindowsDesks.html#a34a92c3b7b3fa5a6a2fe116e7971a0b9":[6,0,122,6],
+"classMSWindowsDesks.html#a4a6bc7878c59dd81c7585e98b83ca0d7":[6,0,122,11]
 };

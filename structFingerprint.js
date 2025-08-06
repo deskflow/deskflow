@@ -7,7 +7,7 @@ var structFingerprint =
     ] ],
     [ "fromDbLine", "structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a", null ],
     [ "isValid", "structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc", null ],
-    [ "operator==", "structFingerprint.html#a7aa3895b3c5eecd5ada2cfbe79705756", null ],
+    [ "operator==", "structFingerprint.html#a082356b171885eb6320845bc889227b4", null ],
     [ "toDbLine", "structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a", null ],
     [ "typeFromString", "structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5", null ],
     [ "typeToString", "structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287", null ],

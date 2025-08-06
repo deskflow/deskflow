@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.50</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.62</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -161,13 +161,13 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00062" data-start="{" data-end="}">
 <div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classApp.html#a7007955907d7a63830ee966fc25110da">   62</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a7007955907d7a63830ee966fc25110da">setByeFunc</a>(<span class="keywordtype">void</span> (*<a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>)(<span class="keywordtype">int</span>))<span class="keyword"> override</span></div>
 <div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    <a class="code hl_variable" href="classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc">m_bye</a> = <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>    m_bye = <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>;</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00066" data-start="{" data-end="}">
 <div class="line"><a id="l00066" name="l00066"></a><span class="lineno"><a class="line" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">   66</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>(<span class="keywordtype">int</span> error)<span class="keyword"> override</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    <a class="code hl_variable" href="classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc">m_bye</a>(error);</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>    m_bye(error);</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00070" data-start="{" data-end="}">
@@ -232,12 +232,12 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">protected</span>:</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f">runEventsLoop</a>(<span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc">  116</a></span>  void (*<a class="code hl_variable" href="classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc">m_bye</a>)(<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>);</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span> </div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span> </div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  void (*m_bye)(<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>);</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_class" href="classdeskflow_1_1ArgsBase.html">deskflow::ArgsBase</a> *m_args;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">static</span> <a class="code hl_function" href="classApp.html#a4b4283b097dbb1979c3f3eed66ca5186">App</a> *s_instance;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <span class="keyword">static</span> <a class="code hl_class" href="classApp.html">App</a> *s_instance;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a> *m_fileLog = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  <a class="code hl_define" href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a> m_appUtil;</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  std::unique_ptr&lt;SocketMultiplexer&gt; m_socketMultiplexer;</div>
@@ -313,6 +313,7 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="ttc" id="aLog_8h_html"><div class="ttname"><a href="Log_8h.html">Log.h</a></div></div>
 <div class="ttc" id="aSocketMultiplexer_8h_html"><div class="ttname"><a href="SocketMultiplexer_8h.html">SocketMultiplexer.h</a></div></div>
 <div class="ttc" id="aclassApp_1_1XNoEiSupport_html_a9f6c5560e08e0b46f890960c51e6a45a"><div class="ttname"><a href="classApp_1_1XNoEiSupport.html#a9f6c5560e08e0b46f890960c51e6a45a">App::XNoEiSupport::XNoEiSupport</a></div><div class="ttdeci">XNoEiSupport()</div><div class="ttdef"><b>Definition</b> App.h:40</div></div>
+<div class="ttc" id="aclassApp_html"><div class="ttname"><a href="classApp.html">App</a></div><div class="ttdef"><b>Definition</b> App.h:35</div></div>
 <div class="ttc" id="aclassApp_html_a176d732d8b1d9ffd19947e8726f3257b"><div class="ttname"><a href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">App::loadConfig</a></div><div class="ttdeci">virtual bool loadConfig(const std::string &amp;pathname)=0</div></div>
 <div class="ttc" id="aclassApp_html_a1d472957a8ff9c99a0ea1e1152937718"><div class="ttname"><a href="classApp.html#a1d472957a8ff9c99a0ea1e1152937718">App::parseArgs</a></div><div class="ttdeci">virtual void parseArgs(int argc, const char *const *argv)=0</div></div>
 <div class="ttc" id="aclassApp_html_a1ec19e479fdb20fc13e193d20a09104d"><div class="ttname"><a href="classApp.html#a1ec19e479fdb20fc13e193d20a09104d">App::run</a></div><div class="ttdeci">int run(int argc, char **argv)</div><div class="ttdef"><b>Definition</b> App.cpp:73</div></div>
@@ -335,7 +336,6 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="ttc" id="aclassApp_html_a9ebe7c05d696bb7dddd0bad9b51c94e9"><div class="ttname"><a href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">App::appUtil</a></div><div class="ttdeci">ARCH_APP_UTIL &amp; appUtil()</div><div class="ttdef"><b>Definition</b> App.h:75</div></div>
 <div class="ttc" id="aclassApp_html_aa28cf2e917bbc7fc5afc777587c72e5f"><div class="ttname"><a href="classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f">App::runEventsLoop</a></div><div class="ttdeci">void runEventsLoop(void *)</div><div class="ttdef"><b>Definition</b> App.cpp:193</div></div>
 <div class="ttc" id="aclassApp_html_aaa32b832bb5c0f4502574ef60c546082"><div class="ttname"><a href="classApp.html#aaa32b832bb5c0f4502574ef60c546082">App::help</a></div><div class="ttdeci">virtual void help()=0</div></div>
-<div class="ttc" id="aclassApp_html_aaba52adb34dcdc7339eae642ec4dd9bc"><div class="ttname"><a href="classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc">App::m_bye</a></div><div class="ttdeci">void(* m_bye)(int)</div><div class="ttdef"><b>Definition</b> App.h:116</div></div>
 <div class="ttc" id="aclassApp_html_ab344e828b810e48b90f9c05a2e1c1487"><div class="ttname"><a href="classApp.html#ab344e828b810e48b90f9c05a2e1c1487">App::version</a></div><div class="ttdeci">virtual void version()</div><div class="ttdef"><b>Definition</b> App.cpp:61</div></div>
 <div class="ttc" id="aclassApp_html_ab4f1cdee9e6fa5c0f0fcb34b0beb9048"><div class="ttname"><a href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">App::bye</a></div><div class="ttdeci">void bye(int error) override</div><div class="ttdef"><b>Definition</b> App.h:66</div></div>
 <div class="ttc" id="aclassApp_html_ab51ebb2be69b544372c4ab6a9169264f"><div class="ttname"><a href="classApp.html#ab51ebb2be69b544372c4ab6a9169264f">App::operator=</a></div><div class="ttdeci">App &amp; operator=(App const &amp;)=delete</div></div>

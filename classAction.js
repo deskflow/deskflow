@@ -30,7 +30,7 @@ var classAction =
     [ "keySequence", "classAction.html#adf4a31995a8837045683a376a5f758b0", null ],
     [ "loadSettings", "classAction.html#a73bff7e6ea7bb2c5b3e2da34b1baa295", null ],
     [ "lockCursorMode", "classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79", null ],
-    [ "operator==", "classAction.html#ab397f81f9dfe9c9f63a400ef3c707d4c", null ],
+    [ "operator==", "classAction.html#ac541b1dd6733a0e1b1a6f990348adb37", null ],
     [ "restartServer", "classAction.html#aeee2415954f8158ef9aee75fa0c7426e", null ],
     [ "saveSettings", "classAction.html#a9b6793704109f61ab6ee3cf0305dab4e", null ],
     [ "setActiveOnRelease", "classAction.html#a245b1278652d4b76278082f2116ef18f", null ],

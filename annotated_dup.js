@@ -129,7 +129,7 @@ var annotated_dup =
     [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", "classConsoleLogOutputter" ],
     [ "DaemonApp", "classDaemonApp.html", "classDaemonApp" ],
     [ "DataDownloader", "classDataDownloader.html", "classDataDownloader" ],
-    [ "DisplayInvalidException", "classDisplayInvalidException.html", "classDisplayInvalidException" ],
+    [ "DisplayInvalidException", "classDisplayInvalidException.html", null ],
     [ "Event", "classEvent.html", "classEvent" ],
     [ "EventData", "classEventData.html", "classEventData" ],
     [ "EventQueue", "classEventQueue.html", "classEventQueue" ],

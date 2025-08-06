@@ -1,8 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classTSocketMultiplexerMethodJob.html#a459e1ef3ac5ef44c2eacfc609a40a09e":[6,0,191,2],
-"classTSocketMultiplexerMethodJob.html#a46df6476615c01e1a9273a04f554f35a":[6,0,191,5],
-"classTSocketMultiplexerMethodJob.html#a716f05145ca757d3f34d1e14cb86f68e":[6,0,191,1],
 "classTSocketMultiplexerMethodJob.html#a7a346987d18b4a90fad065eebb6d39ca":[6,0,191,4],
 "classTSocketMultiplexerMethodJob.html#a8e723f9817506555943a80bdfc844e85":[6,0,191,3],
 "classTSocketMultiplexerMethodJob.html#a9741a8ea1368b1be8d870df97d27ff8c":[6,0,191,8],
@@ -249,5 +246,8 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboardTextConverter.html#a45cdaf3e5a53901fb2e710cca51f7882":[6,0,254,0],
 "classXWindowsClipboardTextConverter.html#a4796984c219db958a6b7e171b1ba8b4a":[6,0,254,4],
 "classXWindowsClipboardTextConverter.html#a4feee56f174469ab7f5fee44a3ea8b8a":[6,0,254,2],
-"classXWindowsClipboardTextConverter.html#ac7dce8d0dd81bdbf41bfb599d698d564":[6,0,254,1]
+"classXWindowsClipboardTextConverter.html#ac7dce8d0dd81bdbf41bfb599d698d564":[6,0,254,1],
+"classXWindowsClipboardTextConverter.html#accc335b51431277d59005421f3ef74e8":[6,0,254,6],
+"classXWindowsClipboardUCS2Converter.html":[6,0,255],
+"classXWindowsClipboardUCS2Converter.html#a2cf8119ad30402230a3de0cf573e6a5f":[6,0,255,0]
 };

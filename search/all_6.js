@@ -139,7 +139,7 @@ var searchData=
   ['disconnected_136',['Disconnected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9aef70e46fd3bbc21e3e1f0b6815e750c0',1,'deskflow::gui::CoreProcess']]],
   ['disconnectfromserver_137',['disconnectFromServer',['../classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html#af72f778c6e69a3360edab22bdff66aad',1,'deskflow::gui::ipc::DaemonIpcClient']]],
   ['dispatchevent_138',['dispatchEvent',['../classEventQueue.html#a6934fca3d8c36d6e629c6150808c410e',1,'EventQueue::dispatchEvent()'],['../classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564',1,'IEventQueue::dispatchEvent()']]],
-  ['displayinvalidexception_139',['DisplayInvalidException',['../classDisplayInvalidException.html',1,'DisplayInvalidException'],['../classDisplayInvalidException.html#ad09dc25abfac7faea8c67584d725d670',1,'DisplayInvalidException::DisplayInvalidException(const char *msg)'],['../classDisplayInvalidException.html#ab5e50e9e9c8c6817941b104739b6b37b',1,'DisplayInvalidException::DisplayInvalidException(const std::string &amp;msg)']]],
+  ['displayinvalidexception_139',['DisplayInvalidException',['../classDisplayInvalidException.html',1,'']]],
   ['displayinvalidexception_2eh_140',['DisplayInvalidException.h',['../DisplayInvalidException_8h.html',1,'']]],
   ['dobgrafromiclipboard_141',['doBGRAFromIClipboard',['../classXWindowsClipboardAnyBitmapConverter.html#a07b93bf04e1f9b05e1b8da26b4c29cae',1,'XWindowsClipboardAnyBitmapConverter']]],
   ['dobgrfromiclipboard_142',['doBGRFromIClipboard',['../classXWindowsClipboardAnyBitmapConverter.html#a0dc58dd9cbea2955e8c49eb8cec3f99e',1,'XWindowsClipboardAnyBitmapConverter']]],

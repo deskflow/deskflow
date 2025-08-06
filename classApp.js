@@ -30,6 +30,5 @@ var classApp =
     [ "setEvents", "classApp.html#acbc962ac1eea477e7cf22e97c1c04bed", null ],
     [ "setSocketMultiplexer", "classApp.html#ad4d9e0526734148f3d7364f2933c6d57", null ],
     [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ],
-    [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ],
-    [ "m_bye", "classApp.html#aaba52adb34dcdc7339eae642ec4dd9bc", null ]
+    [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ]
 ];

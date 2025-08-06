@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.50</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.62</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,7 +126,7 @@ $(function(){initNavTree('Fingerprint_8h_source.html','',''); });
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc">isValid</a>() const;</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">bool</span> operator==(const <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;other) const;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structFingerprint.html#a082356b171885eb6320845bc889227b4">   32</a></span>  <span class="keywordtype">bool</span> operator==(const <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;other) const = default;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  QString <a class="code hl_function" href="structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a">toDbLine</a>() const;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  static <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> <a class="code hl_function" href="structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a">fromDbLine</a>(const QString &amp;line);</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  static QString <a class="code hl_function" href="structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287">typeToString</a>(<a class="code hl_struct" href="structFingerprint.html">Fingerprint</a>::<a class="code hl_enumeration" href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Type</a> <a class="code hl_variable" href="structFingerprint.html#a030170043d67afd657a30201d0d39d1a">type</a>);</div>
@@ -135,9 +135,9 @@ $(function(){initNavTree('Fingerprint_8h_source.html','',''); });
 </div>
 <div class="ttc" id="astructFingerprint_html"><div class="ttname"><a href="structFingerprint.html">Fingerprint</a></div><div class="ttdef"><b>Definition</b> Fingerprint.h:13</div></div>
 <div class="ttc" id="astructFingerprint_html_a030170043d67afd657a30201d0d39d1a"><div class="ttname"><a href="structFingerprint.html#a030170043d67afd657a30201d0d39d1a">Fingerprint::type</a></div><div class="ttdeci">Type type</div><div class="ttdef"><b>Definition</b> Fingerprint.h:27</div></div>
-<div class="ttc" id="astructFingerprint_html_a1d2a2af9f741ce07389b0e037239525a"><div class="ttname"><a href="structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a">Fingerprint::toDbLine</a></div><div class="ttdeci">QString toDbLine() const</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:32</div></div>
-<div class="ttc" id="astructFingerprint_html_a36a58f17da7503eec8e5206ea9dfd7e5"><div class="ttname"><a href="structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5">Fingerprint::typeFromString</a></div><div class="ttdeci">static Fingerprint::Type typeFromString(const QString &amp;type)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:70</div></div>
-<div class="ttc" id="astructFingerprint_html_a595cc3e2b1194eea703e69e7a4705287"><div class="ttname"><a href="structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287">Fingerprint::typeToString</a></div><div class="ttdeci">static QString typeToString(Fingerprint::Type type)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:81</div></div>
+<div class="ttc" id="astructFingerprint_html_a1d2a2af9f741ce07389b0e037239525a"><div class="ttname"><a href="structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a">Fingerprint::toDbLine</a></div><div class="ttdeci">QString toDbLine() const</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:27</div></div>
+<div class="ttc" id="astructFingerprint_html_a36a58f17da7503eec8e5206ea9dfd7e5"><div class="ttname"><a href="structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5">Fingerprint::typeFromString</a></div><div class="ttdeci">static Fingerprint::Type typeFromString(const QString &amp;type)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:65</div></div>
+<div class="ttc" id="astructFingerprint_html_a595cc3e2b1194eea703e69e7a4705287"><div class="ttname"><a href="structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287">Fingerprint::typeToString</a></div><div class="ttdeci">static QString typeToString(Fingerprint::Type type)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:76</div></div>
 <div class="ttc" id="astructFingerprint_html_a656f619bb76ccf6905e7a94a128557dc"><div class="ttname"><a href="structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc">Fingerprint::isValid</a></div><div class="ttdeci">bool isValid() const</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:12</div></div>
 <div class="ttc" id="astructFingerprint_html_a6a18c4c916c2bc457d9e3f24e61766d2"><div class="ttname"><a href="structFingerprint.html#a6a18c4c916c2bc457d9e3f24e61766d2">Fingerprint::m_type_sha256</a></div><div class="ttdeci">static QString m_type_sha256</div><div class="ttdef"><b>Definition</b> Fingerprint.h:16</div></div>
 <div class="ttc" id="astructFingerprint_html_a927929ca06f2dc5736267ab4c5d9cd78"><div class="ttname"><a href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a></div><div class="ttdeci">Type</div><div class="ttdef"><b>Definition</b> Fingerprint.h:21</div></div>
@@ -147,7 +147,7 @@ $(function(){initNavTree('Fingerprint_8h_source.html','',''); });
 <div class="ttc" id="astructFingerprint_html_aa455414a29a07be4e22cebf5db6d5856"><div class="ttname"><a href="structFingerprint.html#aa455414a29a07be4e22cebf5db6d5856">Fingerprint::m_type_invalid</a></div><div class="ttdeci">static QString m_type_invalid</div><div class="ttdef"><b>Definition</b> Fingerprint.h:17</div></div>
 <div class="ttc" id="astructFingerprint_html_ac0a51b5ec53e509b02bb0ff329484340"><div class="ttname"><a href="structFingerprint.html#ac0a51b5ec53e509b02bb0ff329484340">Fingerprint::data</a></div><div class="ttdeci">QByteArray data</div><div class="ttdef"><b>Definition</b> Fingerprint.h:28</div></div>
 <div class="ttc" id="astructFingerprint_html_ac4467dd44454e8be054a8228a5288903"><div class="ttname"><a href="structFingerprint.html#ac4467dd44454e8be054a8228a5288903">Fingerprint::m_type_sha1</a></div><div class="ttdeci">static QString m_type_sha1</div><div class="ttdef"><b>Definition</b> Fingerprint.h:15</div></div>
-<div class="ttc" id="astructFingerprint_html_ad054e0fb6bc2f09d0391928d4671c52a"><div class="ttname"><a href="structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a">Fingerprint::fromDbLine</a></div><div class="ttdeci">static Fingerprint fromDbLine(const QString &amp;line)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:41</div></div>
+<div class="ttc" id="astructFingerprint_html_ad054e0fb6bc2f09d0391928d4671c52a"><div class="ttname"><a href="structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a">Fingerprint::fromDbLine</a></div><div class="ttdeci">static Fingerprint fromDbLine(const QString &amp;line)</div><div class="ttdef"><b>Definition</b> Fingerprint.cpp:36</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

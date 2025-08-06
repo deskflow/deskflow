@@ -1,8 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classXWindowsClipboardTextConverter.html#accc335b51431277d59005421f3ef74e8":[6,0,254,6],
-"classXWindowsClipboardUCS2Converter.html":[6,0,255],
-"classXWindowsClipboardUCS2Converter.html#a2cf8119ad30402230a3de0cf573e6a5f":[6,0,255,0],
 "classXWindowsClipboardUCS2Converter.html#a466ca25731f55eaddaf78404a9f0ddc4":[6,0,255,4],
 "classXWindowsClipboardUCS2Converter.html#a65a085b0617720e0e987185b437aad9c":[6,0,255,1],
 "classXWindowsClipboardUCS2Converter.html#a68923b38f5c009c137fcd632e132a59b":[6,0,255,6],
@@ -249,5 +246,8 @@ var NAVTREEINDEX17 =
 "classdeskflow_1_1Config.html#a37f373ff765beeb13e19d1a910495b6b":[6,0,0,9,4],
 "classdeskflow_1_1Config.html#a4afc6ac8523a65f919d9f678c9f46971":[5,0,0,10,5],
 "classdeskflow_1_1Config.html#a4afc6ac8523a65f919d9f678c9f46971":[6,0,0,9,5],
-"classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32":[5,0,0,10,2]
+"classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32":[5,0,0,10,2],
+"classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32":[6,0,0,9,2],
+"classdeskflow_1_1Config_1_1NoConfigFilenameError.html":[5,0,0,10,0],
+"classdeskflow_1_1Config_1_1NoConfigFilenameError.html":[6,0,0,9,0]
 };

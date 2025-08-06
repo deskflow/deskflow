@@ -1,6 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classClientInfo.html#a2281df54128ca356bab09bf1ad28364e":[4,3,0,1],
 "classClientInfo.html#a3f23857bfa3b5fd8b335d56613ea564a":[4,3,0,5],
 "classClientInfo.html#a8ca91b8d74478e7afd0a534d404515f8":[4,3,0,2],
 "classClientInfo.html#ada2109fd27004578f1f93b3e02fb524b":[4,3,0,0],
@@ -234,8 +233,6 @@ var NAVTREEINDEX8 =
 "classDataDownloader.html#ad7f62c4f01409f82181fef4976b3f95c":[6,0,58,0],
 "classDataDownloader.html#ae6eccf7ce19db35c9cfd9edef8c7975a":[6,0,58,5],
 "classDisplayInvalidException.html":[6,0,59],
-"classDisplayInvalidException.html#ab5e50e9e9c8c6817941b104739b6b37b":[6,0,59,1],
-"classDisplayInvalidException.html#ad09dc25abfac7faea8c67584d725d670":[6,0,59,0],
 "classEvent.html":[6,0,60],
 "classEvent.html#a0e11da93de1ef32d11f43c51a3cec656":[6,0,60,1],
 "classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b":[6,0,60,9],
@@ -249,5 +246,8 @@ var NAVTREEINDEX8 =
 "classEvent.html#aeb86033c9840507407a27d132f60df4c":[6,0,60,8],
 "classEvent.html#aee6a4269152dcdb7a11de3e24d90c229":[6,0,60,2],
 "classEventData.html":[6,0,61],
-"classEventData.html#abc776b7a755383c50e618a8b2140174c":[6,0,61,1]
+"classEventData.html#abc776b7a755383c50e618a8b2140174c":[6,0,61,1],
+"classEventData.html#af3b2887aee6312e35a2df0d621930b75":[6,0,61,0],
+"classEventQueue.html":[6,0,62],
+"classEventQueue.html#a07298fa009c56da6460a900612f33c03":[6,0,62,5]
 };

@@ -34,7 +34,6 @@ var classdeskflow_1_1server_1_1Config =
     [ "isCanonicalName", "classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e", null ],
     [ "isScreen", "classdeskflow_1_1server_1_1Config.html#a5d52e050759ad486da4e9f7ea650b51e", null ],
     [ "isValidScreenName", "classdeskflow_1_1server_1_1Config.html#af9e192946df0b469b826fec417cb2dfe", null ],
-    [ "operator!=", "classdeskflow_1_1server_1_1Config.html#a835e32a41dfb193c3d040be2e2c6aabe", null ],
     [ "operator==", "classdeskflow_1_1server_1_1Config.html#adf44f2c5fb7f5b55f46e48512d866f01", null ],
     [ "read", "classdeskflow_1_1server_1_1Config.html#a3d795f37312809bf15e13e2d6f320d5e", null ],
     [ "removeAlias", "classdeskflow_1_1server_1_1Config.html#a981d5963616548b2574a596fb5c7ec44", null ],
