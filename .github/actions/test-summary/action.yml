@@ -29,7 +29,7 @@ runs:
 
         header=$(cat <<EOF
         # Test results
-        | Job name | Unit tests | Integration tests |
+        | OS | Unit tests | Legacy tests |
         | --- | --- | --- |
         EOF
         )
