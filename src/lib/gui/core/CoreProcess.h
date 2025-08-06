@@ -115,10 +115,10 @@ public:
 
 Q_SIGNALS:
   void starting();
-  void error(Error error);
+  void error(deskflow::gui::CoreProcess::Error error);
   void logLine(const QString &line);
-  void connectionStateChanged(ConnectionState state);
-  void processStateChanged(ProcessState state);
+  void connectionStateChanged(deskflow::gui::CoreProcess::ConnectionState state);
+  void processStateChanged(deskflow::gui::CoreProcess::ProcessState state);
   void secureSocket(bool enabled);
   void daemonIpcClientConnectionFailed();
 
