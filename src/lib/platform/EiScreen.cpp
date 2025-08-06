@@ -311,14 +311,14 @@ void EiScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
   ei_device_frame(m_eiPointer, ei_now(m_ei));
 }
 
-void EiScreen::fakeKey(uint32_t keycode, bool is_down) const
+void EiScreen::fakeKey(uint32_t keycode, bool isDown) const
 {
   if (!m_eiKeyboard)
     return;
 
-  auto xkb_keycode = keycode + 8;
-  m_keyState->updateXkbState(xkb_keycode, is_down);
-  ei_device_keyboard_key(m_eiKeyboard, keycode, is_down);
+  auto xkbKeycode = keycode + 8;
+  m_keyState->updateXkbState(xkbKeycode, isDown);
+  ei_device_keyboard_key(m_eiKeyboard, keycode, isDown);
   ei_device_frame(m_eiKeyboard, ei_now(m_ei));
 }
 
@@ -540,7 +540,7 @@ ButtonID EiScreen::mapButtonFromEvdev(ei_event *event) const
   return kButtonNone;
 }
 
-bool EiScreen::onHotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
+bool EiScreen::onHotkey(KeyID keyid, bool isPressed, KeyModifierMask mask)
 {
   auto it = m_hotkeys.find(keyid);
 
@@ -552,7 +552,7 @@ bool EiScreen::onHotkey(KeyID keyid, bool is_pressed, KeyModifierMask mask)
   // but we don't put a limitation on modifiers in the hotkeys. So some
   // key combinations may not work correctly, more effort is needed here.
   if (auto id = it->second.findByMask(mask); id != 0) {
-    EventTypes type = is_pressed ? EventTypes::PrimaryScreenHotkeyDown : EventTypes::PrimaryScreenHotkeyUp;
+    EventTypes type = isPressed ? EventTypes::PrimaryScreenHotkeyDown : EventTypes::PrimaryScreenHotkeyUp;
     sendEvent(type, HotKeyInfo::alloc(id));
     return true;
   }
@@ -606,12 +606,12 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
 {
   // Ratio of 10 pixels == one wheel click because that's what mutter/gtk
   // use (for historical reasons).
-  const int PIXELS_PER_WHEEL_CLICK = 10;
+  static const int s_pixelsPerWheelClick = 10;
   // Our logical wheel clicks are multiples 120, so we
   // convert between the two and keep the remainders because
   // we will very likely get subpixel scroll events.
-  // This means a single pixel is 120/PIXEL_TO_WHEEL_RATIO in wheel values.
-  const int PIXEL_TO_WHEEL_RATIO = 120 / PIXELS_PER_WHEEL_CLICK;
+  // This means a single pixel is 120/s_pixelToWheelRation in wheel values.
+  const int s_pixelToWheelRatio = 120 / s_pixelsPerWheelClick;
 
   assert(m_isPrimary);
 
@@ -644,7 +644,7 @@ void EiScreen::onPointerScrollEvent(ei_event *event)
   if (x != 0 || y != 0)
     sendEvent(
         EventTypes::PrimaryScreenWheel,
-        WheelInfo::alloc((int32_t)-x * PIXEL_TO_WHEEL_RATIO, (int32_t)-y * PIXEL_TO_WHEEL_RATIO)
+        WheelInfo::alloc((int32_t)-x * s_pixelToWheelRatio, (int32_t)-y * s_pixelToWheelRatio)
     );
 
   remainder->x = rx;
@@ -686,13 +686,13 @@ void EiScreen::onMotionEvent(ei_event *event)
   } else {
     m_bufferDX += dx;
     m_bufferDY += dy;
-    auto pixel_dx = static_cast<std::int32_t>(m_bufferDX);
-    auto pixel_dy = static_cast<std::int32_t>(m_bufferDY);
-    if (pixel_dx || pixel_dy) {
-      LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixel_dx, pixel_dy);
-      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(pixel_dx, pixel_dy));
-      m_bufferDX -= pixel_dx;
-      m_bufferDY -= pixel_dy;
+    auto pixelDx = static_cast<std::int32_t>(m_bufferDX);
+    auto pixelDy = static_cast<std::int32_t>(m_bufferDY);
+    if (pixelDx || pixelDy) {
+      LOG_DEBUG1("event: motion on secondary x=%d y=%d", pixelDx, pixelDy);
+      sendEvent(EventTypes::PrimaryScreenMotionOnSecondary, MotionInfo::alloc(pixelDx, pixelDy));
+      m_bufferDX -= pixelDx;
+      m_bufferDY -= pixelDy;
     }
   }
 }
