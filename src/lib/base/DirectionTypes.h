@@ -9,6 +9,7 @@
 #pragma once
 
 #include <cstdint>
+
 /**
  * @brief Screen edge directions for mouse movement
  *

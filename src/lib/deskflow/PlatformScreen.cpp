@@ -6,8 +6,8 @@
  */
 
 #include "deskflow/PlatformScreen.h"
+#include "base/DirectionTypes.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 
 PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirection scrollDirection)
     : IPlatformScreen(events),
@@ -87,4 +87,23 @@ void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
 int32_t PlatformScreen::mapClientScrollDirection(int32_t x) const
 {
   return (x * static_cast<int>(m_clientScrollDirection));
+}
+
+std::string PlatformScreen::sidesMaskToString(uint32_t sides)
+{
+  using enum DirectionMask;
+  std::string sidesText;
+  if ((sides & static_cast<int>(LeftMask)) != 0) {
+    sidesText += "L";
+  }
+  if ((sides & static_cast<int>(RightMask)) != 0) {
+    sidesText += "R";
+  }
+  if ((sides & static_cast<int>(TopMask)) != 0) {
+    sidesText += "T";
+  }
+  if ((sides & static_cast<int>(BottomMask)) != 0) {
+    sidesText += "B";
+  }
+  return sidesText;
 }
