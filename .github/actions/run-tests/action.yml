@@ -16,7 +16,7 @@ runs:
 
   steps:
     - name: Unit Tests
-      id: unittests
+      id: unit-tests
       env:
         QT_QPA_PLATFORM: offscreen
       run: |
@@ -30,7 +30,7 @@ runs:
       continue-on-error: true
 
     - name: Legacy Tests
-      id: legacytests
+      id: legacy-tests
       env:
         QT_QPA_PLATFORM: offscreen
       run: |
@@ -48,12 +48,12 @@ runs:
       run: |
         pass="✅ Pass"
         fail="❌ Fail"
-        unittests_outcome="${{ steps.unittests.outcome }}"
-        legacytests_outcome="${{ steps.legacytests.outcome }}"
-        unittests=$( [ "$unittests_outcome" = "success" ] && echo $pass || echo $fail )
-        legacytests=$( [ "$legacytests_outcome" = "success" ] && echo $pass || echo $fail )
-        echo "unittests=$unittests" >> $GITHUB_OUTPUT
-        echo "legacytests=$legacytests" >> $GITHUB_OUTPUT
+        unit_tests_outcome="${{ steps.unit-tests.outcome }}"
+        legacy_tests_outcome="${{ steps.legacy-tests.outcome }}"
+        unit_tests=$( [ "$unit_tests_outcome" = "success" ] && echo $pass || echo $fail )
+        legacy_tests=$( [ "$legacy_tests_outcome" = "success" ] && echo $pass || echo $fail )
+        echo "unit-tests=$unit_tests" >> $GITHUB_OUTPUT
+        echo "legacy-tests=$legacy_tests" >> $GITHUB_OUTPUT
       shell: bash
 
     - name: Summary row
@@ -63,8 +63,8 @@ runs:
 
         row=""
         row+="| ${{ inputs.job }} "
-        row+="| ${{ steps.results.outputs.unittests }} "
-        row+="| ${{ steps.results.outputs.legacytests }} "
+        row+="| ${{ steps.results.outputs.unit-tests }} "
+        row+="| ${{ steps.results.outputs.legacy-tests }} "
         echo "$row" > $file
 
         echo "file=$file" > $GITHUB_OUTPUT
@@ -77,7 +77,7 @@ runs:
         path: ${{ steps.row.outputs.file }}
 
     - name: Check test outcome
-      if: (steps.unittests.outcome != 'success' || steps.legacytests.outcome != 'success')
+      if: (steps.unit-tests.outcome != 'success' || steps.legacy-tests.outcome != 'success')
       run: |
         echo "Tests failed"
         exit 1
