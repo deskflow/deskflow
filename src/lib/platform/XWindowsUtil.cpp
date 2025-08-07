@@ -1576,7 +1576,7 @@ bool XWindowsUtil::getWindowProperty(
     *type = actualType;
   }
   if (format != nullptr) {
-    *format = static_cast<int32_t>(actualDatumSize);
+    *format = actualDatumSize;
   }
 
   if (okay) {
@@ -1747,7 +1747,7 @@ KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k)
   default: {
     // lookup character in table
     if (KeySymMap::const_iterator index = s_keySymToUCS4.find(k); index != s_keySymToUCS4.end()) {
-      return static_cast<KeyID>(index->second);
+      return index->second;
     }
 
     // unknown character
