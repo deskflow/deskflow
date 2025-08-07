@@ -24,7 +24,9 @@ std::string BadClientException::getWhat() const throw()
 
 std::string InvalidProtocolException::getWhat() const throw()
 {
-  return "InvalidProtocolException";
+  return "InvalidProtocolException; Check the options section of the server "
+         "configuration file has a valid protocol defined.\nProtocol must be barrier (default) or synergy."
+         "\n Ex:\nsection: options\n\tprotocol = barrier\nend\n";
 }
 
 //
