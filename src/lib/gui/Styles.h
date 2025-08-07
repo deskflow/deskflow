@@ -12,7 +12,6 @@ namespace deskflow::gui {
 
 const auto kColorWhite = "#ffffff";
 const auto kColorSecondary = "#4285f4";
-const auto kColorTertiary = "#33b2cc";
 const auto kColorError = "#ec4c47";
 const auto kColorLightGrey = "#666666";
 
