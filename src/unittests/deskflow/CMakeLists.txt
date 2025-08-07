@@ -38,6 +38,14 @@ create_test(
 )
 
 create_test(
+  NAME KeyStateTests
+  DEPENDS app
+  LIBS arch base mt ${extra_libs}
+  SOURCE KeyStateTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
+)
+
+create_test(
   NAME LanguageManagerTests
   DEPENDS app
   LIBS arch base ${extra_libs}
