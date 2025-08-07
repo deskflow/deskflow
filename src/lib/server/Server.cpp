@@ -504,11 +504,11 @@ float Server::mapToFraction(const BaseClientProxy *client, Direction dir, int32_
     using enum Direction;
   case Left:
   case Right:
-    return static_cast<float>(y - sy + 0.5f) / static_cast<float>(sh);
+    return (y - sy + 0.5f) / static_cast<float>(sh);
 
   case Top:
   case Bottom:
-    return static_cast<float>(x - sx + 0.5f) / static_cast<float>(sw);
+    return (x - sx + 0.5f) / static_cast<float>(sw);
 
   case NoDirection:
     assert(0 && "bad direction");

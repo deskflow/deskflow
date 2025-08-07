@@ -217,7 +217,7 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
         deskflow::KeyMap::KeyItem item{};
         xkb_keysym_t keysym = syms[0];
-        KeySym sym = static_cast<KeyID>(keysym);
+        KeySym sym = keysym;
         item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
         item.m_button = static_cast<KeyButton>(keycode) - 8; // X keycode offset
         item.m_group = group;

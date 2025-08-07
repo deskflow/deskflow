@@ -1202,7 +1202,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
 #ifdef HAVE_XI2
   if (m_xi2detected) {
     // Process RawMotion
-    auto *cookie = (XGenericEventCookie *)&xevent->xcookie;
+    auto *cookie = &xevent->xcookie;
     if (XGetEventData(m_display, cookie) && cookie->type == GenericEvent && cookie->extension == xi_opcode) {
       if (cookie->evtype == XI_RawMotion) {
         // Get current pointer's position
@@ -1343,7 +1343,7 @@ void XWindowsScreen::handleSystemEvent(const Event &event)
 
       case XkbStateNotify:
         LOG_INFO("group change: %d", xkbEvent->state.group);
-        m_keyState->setActiveGroup((int32_t)xkbEvent->state.group);
+        m_keyState->setActiveGroup(xkbEvent->state.group);
         return;
 
       default:
