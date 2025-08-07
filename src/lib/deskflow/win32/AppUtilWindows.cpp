@@ -17,8 +17,8 @@
 #include "common/Constants.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/Screen.h"
-#include "deskflow/XDeskflow.h"
 #include "platform/MSWindowsScreen.h"
 
 #include <VersionHelpers.h>
@@ -77,7 +77,7 @@ void AppUtilWindows::exitApp(int code)
     break;
 
   default:
-    throw XExitApp(code);
+    throw ExitAppException(code);
   }
 }
 
