@@ -8,7 +8,7 @@
 #include "net/NetworkAddress.h"
 
 #include "arch/Arch.h"
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "net/SocketException.h"
 
 #include <algorithm>
@@ -155,13 +155,13 @@ size_t NetworkAddress::resolve(size_t index)
         }
       }
     }
-  } catch (XArchNetworkNameUnknown &) {
+  } catch (ArchNetworkNameUnknownException &) {
     throw SocketAddressException(SocketAddressException::SocketError::NotFound, m_hostname, m_port);
-  } catch (XArchNetworkNameNoAddress &) {
+  } catch (ArchNetworkNameNoAddressException &) {
     throw SocketAddressException(SocketAddressException::SocketError::NoAddress, m_hostname, m_port);
-  } catch (XArchNetworkNameUnsupported &) {
+  } catch (ArchNetworkNameUnsupportedException &) {
     throw SocketAddressException(SocketAddressException::SocketError::Unsupported, m_hostname, m_port);
-  } catch (XArchNetworkName &) {
+  } catch (ArchNetworkNameException &) {
     throw SocketAddressException(SocketAddressException::SocketError::Unknown, m_hostname, m_port);
   }
 

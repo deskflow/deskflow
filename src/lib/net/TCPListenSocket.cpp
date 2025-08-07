@@ -8,7 +8,7 @@
 #include "net/TCPListenSocket.h"
 
 #include "arch/Arch.h"
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "io/IOException.h"
@@ -30,7 +30,7 @@ TCPListenSocket::TCPListenSocket(
 {
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::SocketType::Stream);
-  } catch (XArchNetwork &e) {
+  } catch (ArchNetworkException &e) {
     throw SocketCreateException(e.what());
   }
 }
@@ -60,9 +60,9 @@ void TCPListenSocket::bind(const NetworkAddress &addr)
                   this, &TCPListenSocket::serviceListening, m_socket, true, false
               )
     );
-  } catch (XArchNetworkAddressInUse &e) {
+  } catch (ArchNetworkAddressInUseException &e) {
     throw SocketAddressInUseException(e.what());
-  } catch (XArchNetwork &e) {
+  } catch (ArchNetworkException &e) {
     throw SocketBindException(e.what());
   }
 }
@@ -77,7 +77,7 @@ void TCPListenSocket::close()
     m_socketMultiplexer->removeSocket(this);
     ARCH->closeSocket(m_socket);
     m_socket = nullptr;
-  } catch (XArchNetwork &e) {
+  } catch (ArchNetworkException &e) {
     throw SocketIOCloseException(e.what());
   }
 }
@@ -94,7 +94,7 @@ std::unique_ptr<IDataSocket> TCPListenSocket::accept()
     socket = std::make_unique<TCPSocket>(m_events, m_socketMultiplexer, ARCH->acceptSocket(m_socket, nullptr));
     setListeningJob();
     return socket;
-  } catch (XArchNetwork &) {
+  } catch (ArchNetworkException &) {
     if (socket) {
       setListeningJob();
     }

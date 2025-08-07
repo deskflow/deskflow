@@ -7,7 +7,7 @@
 
 #include "deskflow/win32/AppUtilWindows.h"
 
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Event.h"

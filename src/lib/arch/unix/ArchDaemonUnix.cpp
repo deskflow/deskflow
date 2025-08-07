@@ -8,7 +8,7 @@
 
 #include "arch/unix/ArchDaemonUnix.h"
 
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "arch/unix/XArchUnix.h"
 #include "base/Log.h"
 
@@ -58,7 +58,7 @@ int ArchDaemonUnix::daemonize(const char *name, DaemonFunc const &func)
   switch (fork()) {
   case -1:
     // failed
-    throw XArchDaemonFailed(errorToString(errno));
+    throw ArchDaemonFailedException(errorToString(errno));
 
   case 0:
     // child

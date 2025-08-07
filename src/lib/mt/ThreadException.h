@@ -8,15 +8,15 @@
 
 #pragma once
 
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 
 //! Thread exception to exit
 /*!
 Thrown by Thread::exit() to exit a thread.  Clients of Thread
 must not throw this type but must rethrow it if caught (by
-ThreadExitException, XThread, or ...).
+ThreadExitException, ThreadException, or ...).
 */
-class ThreadExitException : public XThread
+class ThreadExitException : public ThreadException
 {
 public:
   //! \c result is the result of the thread

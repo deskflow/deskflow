@@ -8,7 +8,7 @@
 #include "SecureListenSocket.h"
 
 #include "SecureSocket.h"
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "base/String.h"
 #include "common/Settings.h"
 #include "deskflow/ArgParser.h"
@@ -58,7 +58,7 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
     secureSocket->secureAccept();
 
     return secureSocket;
-  } catch (XArchNetwork &) {
+  } catch (ArchNetworkException &) {
     if (secureSocket) {
       setListeningJob();
     }

@@ -8,7 +8,7 @@
 #include "SecureSocket.h"
 #include "SecureUtils.h"
 
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "base/Log.h"
 #include "base/Path.h"
 #include "base/String.h"
@@ -589,7 +589,7 @@ void SecureSocket::checkResult(int status, int &retry)
         // underlying socket I/O reproted an error
         try {
           ARCH->throwErrorOnSocket(getSocket());
-        } catch (XArchNetwork &e) {
+        } catch (ArchNetworkException &e) {
           LOG_ERR("%s", e.what());
         }
       }

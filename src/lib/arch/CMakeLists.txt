@@ -40,13 +40,13 @@ add_library(arch STATIC ${PLATFORM_CODE}
   Arch.h
   ArchDaemonNone.cpp
   ArchDaemonNone.h
+  ArchException.h
   IArchDaemon.h
   IArchLog.h
   IArchMultithread.h
   IArchNetwork.h
   ArchString.cpp
   ArchString.h
-  XArch.h
 )
 
 if(UNIX)
