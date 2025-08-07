@@ -386,7 +386,7 @@ ScreenAddResults ServerConfig::autoAddScreen(const QString name)
   return AutoAddScreenOk;
 }
 
-const QString ServerConfig::getServerName() const
+QString ServerConfig::getServerName() const
 {
   return Settings::value(Settings::Core::ScreenName).toString();
 }
@@ -401,7 +401,7 @@ void ServerConfig::updateServerName()
   }
 }
 
-const QString ServerConfig::configFile() const
+QString ServerConfig::configFile() const
 {
   return Settings::value(Settings::Server::ExternalConfigFile).toString();
 }
