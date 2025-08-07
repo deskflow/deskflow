@@ -150,9 +150,9 @@ public:
   void commit();
   int numScreens() const;
   ScreenAddResults autoAddScreen(const QString name);
-  const QString getServerName() const;
+  QString getServerName() const;
   void updateServerName();
-  const QString configFile() const;
+  QString configFile() const;
   bool useExternalConfig() const;
   void addClient(const QString &clientName);
   QString getClientAddress() const;
