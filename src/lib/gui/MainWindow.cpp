@@ -220,7 +220,8 @@ void MainWindow::setupControls()
   secureSocket(false);
 
   ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
-  ui->lblIpAddresses->setText(tr("This computer's IP addresses: %1").arg(getIPAddresses()));
+
+  updateNetworkInfo();
 
   if (Settings::value(Settings::Core::LastVersion).toString() != kVersion) {
     Settings::setValue(Settings::Core::LastVersion, kVersion);
@@ -567,6 +568,7 @@ void MainWindow::coreModeToggled()
 
 void MainWindow::updateModeControls(bool serverMode)
 {
+  ui->lblIpAddresses->setVisible(serverMode);
   ui->serverOptions->setVisible(serverMode);
   ui->clientOptions->setVisible(!serverMode);
   ui->lblNoMode->setVisible(false);
@@ -604,6 +606,48 @@ void MainWindow::updateSecurityIcon(bool visible)
 
   const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
   m_lblSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
+}
+
+void MainWindow::updateNetworkInfo()
+{
+  static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
+
+  QStringList ipList;
+  QString suggestedAddress;
+
+  bool hinted = false;
+
+  const auto addresses = QNetworkInterface::allAddresses();
+  for (const auto &address : addresses) {
+    if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost) &&
+        !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
+      // usually 192.168.x.x is a useful ip for the user, so indicate
+      // this by coloring it in the "link" color
+      if (!hinted && address.isInSubnet(QHostAddress::parseSubnet("192.168/16"))) {
+        suggestedAddress = address.toString();
+        ipList.append(colorText.arg(palette().link().color().name(), suggestedAddress));
+        hinted = true;
+      } else {
+        ipList.append(address.toString());
+      }
+    }
+  }
+
+  if (ipList.isEmpty()) {
+    ui->lblIpAddresses->setText(colorText.arg(palette().linkVisited().color().name(), tr("No IP Detected")));
+    ui->lblIpAddresses->setToolTip(tr("Unable to detect an IP address. Check your network connection is active."));
+    return;
+  }
+
+  ui->lblIpAddresses->setText(
+      QStringLiteral("Suggested IP: %1").arg(suggestedAddress.isEmpty() ? ipList.first() : suggestedAddress)
+  );
+
+  if (auto toolTipBase = tr("<p>If connecting via the hostname fails, try %1</p>"); ipList.count() < 2) {
+    ui->lblIpAddresses->setToolTip(toolTipBase.arg(tr("the suggested IP.")));
+  } else {
+    ui->lblIpAddresses->setToolTip(toolTipBase.arg(tr("one of the following IPs:<br/>%1").arg(ipList.join("br/>"))));
+  }
 }
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
@@ -994,36 +1038,6 @@ void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
   } else if (isVisible()) {
     showFirstConnectedMessage();
   }
-}
-
-QString MainWindow::getIPAddresses() const
-{
-  QStringList result;
-  bool hinted = false;
-  const auto localnet = QHostAddress::parseSubnet("192.168.0.0/16");
-  const QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
-
-  for (const auto &address : addresses) {
-    if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost) &&
-        !address.isInSubnet(QHostAddress::parseSubnet("169.254.0.0/16"))) {
-
-      // usually 192.168.x.x is a useful ip for the user, so indicate
-      // this by coloring it in the "link" color.
-      if (!hinted && address.isInSubnet(localnet)) {
-        QString format = R"(<span style="color:%1;">%2</span>)";
-        result.append(format.arg(palette().link().color().name(), address.toString()));
-        hinted = true;
-      } else {
-        result.append(address.toString());
-      }
-    }
-  }
-
-  if (result.isEmpty()) {
-    result.append("Unknown");
-  }
-
-  return result.join(", ");
 }
 
 void MainWindow::updateLocalFingerprint()

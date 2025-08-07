@@ -113,6 +113,7 @@ private:
 
   void showMyFingerprint();
   void updateSecurityIcon(bool visible);
+  void updateNetworkInfo();
 
   void coreModeToggled();
   void updateModeControls(bool serverMode);
@@ -126,7 +127,6 @@ private:
   void setIcon();
   void setStatus(const QString &status);
   void updateFromLogLine(const QString &line);
-  [[nodiscard]] QString getIPAddresses() const;
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
   [[nodiscard]] QString getTimeStamp() const;
