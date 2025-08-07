@@ -10,8 +10,8 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
 
 #include <cstring>
@@ -131,7 +131,7 @@ void ClientProxy1_0::handleData()
         while (getStream()->read(nullptr, 4))
           ;
       }
-    } catch (const XBadClient &e) {
+    } catch (const BadClientException &e) {
       LOG_ERR("protocol error from client \"%s\": %s", getName().c_str(), e.what());
       disconnect();
       return;
