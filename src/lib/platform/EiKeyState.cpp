@@ -122,7 +122,6 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
     /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
 #ifndef XKB_VMOD_NAME_ALT
     static const auto XKB_VMOD_NAME_ALT = "Alt";
-    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
     static const auto XKB_VMOD_NAME_LEVEL3 = "LevelThree";
     static const auto XKB_VMOD_NAME_LEVEL5 = "LevelFive";
     static const auto XKB_VMOD_NAME_META = "Meta";
