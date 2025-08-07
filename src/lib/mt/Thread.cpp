@@ -10,7 +10,7 @@
 #include "arch/Arch.h"
 #include "base/IJob.h"
 #include "base/Log.h"
-#include "mt/XMT.h"
+#include "mt/MTException.h"
 #include "mt/XThread.h"
 #include <exception>
 
@@ -24,7 +24,7 @@ Thread::Thread(IJob *job)
   if (m_thread == nullptr) {
     // couldn't create thread
     delete job;
-    throw XMTThreadUnavailable();
+    throw MTThreadUnavailableException();
   }
 }
 
