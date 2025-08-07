@@ -184,7 +184,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
     configStream >> *args().m_config;
     LOG_DEBUG("configuration read successfully");
     return true;
-  } catch (XConfigRead &e) {
+  } catch (ServerConfigReadException &e) {
     // report error in configuration file
     LOG_ERR("cannot read configuration \"%s\": %s", pathname.c_str(), e.what());
   }

@@ -588,18 +588,18 @@ void Config::readSection(ConfigReadContext &s)
 
   // should be a section header
   if (line.find(s_section) != 0) {
-    throw XConfigRead(s, "found data outside section");
+    throw ServerConfigReadException(s, "found data outside section");
   }
 
   // get section name
   std::string::size_type i = line.find_first_not_of(" \t", sizeof(s_section) - 1);
   if (i == std::string::npos) {
-    throw XConfigRead(s, "section name is missing");
+    throw ServerConfigReadException(s, "section name is missing");
   }
   std::string name = line.substr(i);
   i = name.find_first_of(" \t");
   if (i != std::string::npos) {
-    throw XConfigRead(s, "unexpected data after section name");
+    throw ServerConfigReadException(s, "unexpected data after section name");
   }
 
   // read section
@@ -612,7 +612,7 @@ void Config::readSection(ConfigReadContext &s)
   } else if (name == s_aliases) {
     readSectionAliases(s);
   } else {
-    throw XConfigRead(s, "unknown section name \"%{1}\"", name);
+    throw ServerConfigReadException(s, "unknown section name \"%{1}\"", name);
   }
 }
 
@@ -644,7 +644,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
         m_deskflowAddress = NetworkAddress(value, kDefaultPort);
         m_deskflowAddress.resolve();
       } catch (SocketAddressException &e) {
-        throw XConfigRead(s, std::string("invalid address argument ") + e.what());
+        throw ServerConfigReadException(s, std::string("invalid address argument ") + e.what());
       }
     } else if (name == "heartbeat") {
       addOption("", kOptionHeartbeat, s.parseInt(value));
@@ -681,7 +681,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
     if (handled) {
       // make sure handled options aren't followed by more values
       if (i < line.size() && (line[i] == ',' || line[i] == ';')) {
-        throw XConfigRead(s, std::string("too many arguments for: ").append(name));
+        throw ServerConfigReadException(s, std::string("too many arguments for: ").append(name));
       }
     } else {
       // make filter rule
@@ -721,7 +721,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
       m_inputFilter.addFilterRule(rule);
     }
   }
-  throw XConfigRead(s, "unexpected end of options section");
+  throw ServerConfigReadException(s, "unexpected end of options section");
 }
 
 void Config::readSectionScreens(ConfigReadContext &s)
@@ -741,28 +741,28 @@ void Config::readSectionScreens(ConfigReadContext &s)
 
       // verify validity of screen name
       if (!isValidScreenName(screen)) {
-        throw XConfigRead(s, "invalid screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "invalid screen name \"%{1}\"", screen);
       }
 
       // add the screen to the configuration
       if (!addScreen(screen)) {
-        throw XConfigRead(s, "duplicate screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "duplicate screen name \"%{1}\"", screen);
       }
     } else if (screen.empty()) {
-      throw XConfigRead(s, "argument before first screen");
+      throw ServerConfigReadException(s, "argument before first screen");
     } else {
       // parse argument:  `<name>=<value>'
       std::string::size_type i = line.find_first_of(" \t=");
       if (i == 0) {
-        throw XConfigRead(s, "missing argument name");
+        throw ServerConfigReadException(s, "missing argument name");
       }
       if (i == std::string::npos) {
-        throw XConfigRead(s, "missing =");
+        throw ServerConfigReadException(s, "missing =");
       }
       std::string name = line.substr(0, i);
       i = line.find_first_not_of(" \t", i);
       if (i == std::string::npos || line[i] != '=') {
-        throw XConfigRead(s, "missing =");
+        throw ServerConfigReadException(s, "missing =");
       }
       i = line.find_first_not_of(" \t", i + 1);
       std::string value;
@@ -799,11 +799,11 @@ void Config::readSectionScreens(ConfigReadContext &s)
         addOption(screen, kOptionScreenPreserveFocus, s.parseBoolean(value));
       } else {
         // unknown argument
-        throw XConfigRead(s, "unknown argument \"%{1}\"", name);
+        throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
       }
     }
   }
-  throw XConfigRead(s, "unexpected end of screens section");
+  throw ServerConfigReadException(s, "unexpected end of screens section");
 }
 
 void Config::readSectionLinks(ConfigReadContext &s)
@@ -823,13 +823,13 @@ void Config::readSectionLinks(ConfigReadContext &s)
 
       // verify we know about the screen
       if (!isScreen(screen)) {
-        throw XConfigRead(s, "unknown screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
       }
       if (!isCanonicalName(screen)) {
-        throw XConfigRead(s, "cannot use screen name alias here");
+        throw ServerConfigReadException(s, "cannot use screen name alias here");
       }
     } else if (screen.empty()) {
-      throw XConfigRead(s, "argument before first screen");
+      throw ServerConfigReadException(s, "argument before first screen");
     } else {
       // parse argument:  `<name>[(<s0>,<e0>)]=<value>[(<s1>,<e1>)]'
       // the stuff in brackets is optional.  interval values must be
@@ -861,19 +861,19 @@ void Config::readSectionLinks(ConfigReadContext &s)
         dir = Bottom;
       } else {
         // unknown argument
-        throw XConfigRead(s, "unknown side \"%{1}\" in link", side);
+        throw ServerConfigReadException(s, "unknown side \"%{1}\" in link", side);
       }
       if (!isScreen(dstScreen)) {
-        throw XConfigRead(s, "unknown screen name \"%{1}\"", dstScreen);
+        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", dstScreen);
       }
       if (!connect(
               screen, dir, srcInterval.first, srcInterval.second, dstScreen, dstInterval.first, dstInterval.second
           )) {
-        throw XConfigRead(s, "overlapping range");
+        throw ServerConfigReadException(s, "overlapping range");
       }
     }
   }
-  throw XConfigRead(s, "unexpected end of links section");
+  throw ServerConfigReadException(s, "unexpected end of links section");
 }
 
 void Config::readSectionAliases(ConfigReadContext &s)
@@ -893,26 +893,26 @@ void Config::readSectionAliases(ConfigReadContext &s)
 
       // verify we know about the screen
       if (!isScreen(screen)) {
-        throw XConfigRead(s, "unknown screen name \"%{1}\"", screen);
+        throw ServerConfigReadException(s, "unknown screen name \"%{1}\"", screen);
       }
       if (!isCanonicalName(screen)) {
-        throw XConfigRead(s, "cannot use screen name alias here");
+        throw ServerConfigReadException(s, "cannot use screen name alias here");
       }
     } else if (screen.empty()) {
-      throw XConfigRead(s, "argument before first screen");
+      throw ServerConfigReadException(s, "argument before first screen");
     } else {
       // verify validity of screen name
       if (!isValidScreenName(line)) {
-        throw XConfigRead(s, "invalid screen alias \"%{1}\"", line);
+        throw ServerConfigReadException(s, "invalid screen alias \"%{1}\"", line);
       }
 
       // add alias
       if (!addAlias(screen, line)) {
-        throw XConfigRead(s, "alias \"%{1}\" is already used", line);
+        throw ServerConfigReadException(s, "alias \"%{1}\" is already used", line);
       }
     }
   }
-  throw XConfigRead(s, "unexpected end of aliases section");
+  throw ServerConfigReadException(s, "unexpected end of aliases section");
 }
 
 InputFilter::Condition *
@@ -920,7 +920,7 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
 {
   if (name == "keystroke") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for condition: keystroke(modifiers+key)");
+      throw ServerConfigReadException(s, "syntax for condition: keystroke(modifiers+key)");
     }
 
     IPlatformScreen::KeyInfo *keyInfo = s.parseKeystroke(args[0]);
@@ -930,7 +930,7 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
 
   if (name == "mousebutton") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for condition: mousebutton(modifiers+button)");
+      throw ServerConfigReadException(s, "syntax for condition: mousebutton(modifiers+button)");
     }
 
     IPlatformScreen::ButtonInfo *mouseInfo = s.parseMouse(args[0]);
@@ -940,20 +940,20 @@ Config::parseCondition(const ConfigReadContext &s, const std::string &name, cons
 
   if (name == "connect") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for condition: connect([screen])");
+      throw ServerConfigReadException(s, "syntax for condition: connect([screen])");
     }
 
     std::string screen = args[0];
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw XConfigRead(s, "unknown screen name \"%{1}\" in connect", screen);
+      throw ServerConfigReadException(s, "unknown screen name \"%{1}\" in connect", screen);
     }
 
     return new InputFilter::ScreenConnectedCondition(m_events, screen);
   }
 
-  throw XConfigRead(s, "unknown argument \"%{1}\"", name);
+  throw ServerConfigReadException(s, "unknown argument \"%{1}\"", name);
 }
 
 void Config::parseAction(
@@ -965,7 +965,7 @@ void Config::parseAction(
 
   if (name == "keystroke" || name == "keyDown" || name == "keyUp") {
     if (args.size() < 1 || args.size() > 2) {
-      throw XConfigRead(s, "syntax for action: keystroke(modifiers+key[,screens])");
+      throw ServerConfigReadException(s, "syntax for action: keystroke(modifiers+key[,screens])");
     }
 
     IPlatformScreen::KeyInfo *keyInfo;
@@ -992,7 +992,7 @@ void Config::parseAction(
 
   else if (name == "mousebutton" || name == "mouseDown" || name == "mouseUp") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for action: mousebutton(modifiers+button)");
+      throw ServerConfigReadException(s, "syntax for action: mousebutton(modifiers+button)");
     }
 
     IPlatformScreen::ButtonInfo *mouseInfo = s.parseMouse(args[0]);
@@ -1013,7 +1013,7 @@ void Config::parseAction(
   /* XXX -- not supported
           else if (name == "modifier") {
                   if (args.size() != 1) {
-                          throw XConfigRead(s, "syntax for action:
+                          throw ServerConfigReadException(s, "syntax for action:
      modifier(modifiers)");
                   }
 
@@ -1025,14 +1025,14 @@ void Config::parseAction(
 
   else if (name == "switchToScreen") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for action: switchToScreen(name)");
+      throw ServerConfigReadException(s, "syntax for action: switchToScreen(name)");
     }
 
     std::string screen = args[0];
     if (isScreen(screen)) {
       screen = getCanonicalName(screen);
     } else if (!screen.empty()) {
-      throw XConfigRead(s, "unknown screen name in switchToScreen");
+      throw ServerConfigReadException(s, "unknown screen name in switchToScreen");
     }
 
     action = new InputFilter::SwitchToScreenAction(m_events, screen);
@@ -1040,7 +1040,7 @@ void Config::parseAction(
 
   else if (name == "switchInDirection") {
     if (args.size() != 1) {
-      throw XConfigRead(s, "syntax for action: switchInDirection(<left|right|up|down>)");
+      throw ServerConfigReadException(s, "syntax for action: switchInDirection(<left|right|up|down>)");
     }
 
     Direction direction;
@@ -1054,7 +1054,7 @@ void Config::parseAction(
     } else if (args[0] == "down") {
       direction = Bottom;
     } else {
-      throw XConfigRead(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
+      throw ServerConfigReadException(s, "unknown direction \"%{1}\" in switchToScreen", args[0]);
     }
 
     action = new InputFilter::SwitchInDirectionAction(m_events, direction);
@@ -1062,7 +1062,7 @@ void Config::parseAction(
 
   else if (name == "lockCursorToScreen") {
     if (args.size() > 1) {
-      throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
+      throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
     }
 
     InputFilter::LockCursorToScreenAction::Mode mode = InputFilter::LockCursorToScreenAction::kToggle;
@@ -1074,7 +1074,7 @@ void Config::parseAction(
       } else if (args[0] == "toggle") {
         mode = InputFilter::LockCursorToScreenAction::kToggle;
       } else {
-        throw XConfigRead(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
+        throw ServerConfigReadException(s, "syntax for action: lockCursorToScreen([{off|on|toggle}])");
       }
     }
 
@@ -1087,7 +1087,7 @@ void Config::parseAction(
 
   else if (name == "restartServer") {
     if (args.size() > 1) {
-      throw XConfigRead(s, "syntax for action: restartServer([{{restart}}])");
+      throw ServerConfigReadException(s, "syntax for action: restartServer([{{restart}}])");
     }
 
     InputFilter::RestartServer::Mode mode = InputFilter::RestartServer::restart;
@@ -1096,7 +1096,7 @@ void Config::parseAction(
       if (args[0] == "restart") {
         mode = InputFilter::RestartServer::restart;
       } else {
-        throw XConfigRead(s, "syntax for action: restartServer([{restart}])");
+        throw ServerConfigReadException(s, "syntax for action: restartServer([{restart}])");
       }
     }
 
@@ -1105,7 +1105,7 @@ void Config::parseAction(
 
   else if (name == "keyboardBroadcast") {
     if (args.size() > 2) {
-      throw XConfigRead(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
+      throw ServerConfigReadException(s, "syntax for action: keyboardBroadcast([{off|on|toggle}[,screens]])");
     }
 
     InputFilter::KeyboardBroadcastAction::Mode mode = InputFilter::KeyboardBroadcastAction::kToggle;
@@ -1117,7 +1117,7 @@ void Config::parseAction(
       } else if (args[0] == "toggle") {
         mode = InputFilter::KeyboardBroadcastAction::kToggle;
       } else {
-        throw XConfigRead(
+        throw ServerConfigReadException(
             s, "syntax for action: "
                "keyboardBroadcast([{off|on|toggle}[,screens]])"
         );
@@ -1133,7 +1133,7 @@ void Config::parseAction(
   }
 
   else {
-    throw XConfigRead(s, "unknown action argument \"%{1}\"", name);
+    throw ServerConfigReadException(s, "unknown action argument \"%{1}\"", name);
   }
 
   rule.adoptAction(action, activate);
@@ -1164,7 +1164,7 @@ void Config::parseScreens(const ConfigReadContext &c, const std::string_view &s,
     } else if (!rawName.empty()) {
       std::string name = getCanonicalName(rawName);
       if (name.empty()) {
-        throw XConfigRead(c, "unknown screen name \"%{1}\"", rawName);
+        throw ServerConfigReadException(c, "unknown screen name \"%{1}\"", rawName);
       }
       screens.insert(name);
     }
@@ -1688,7 +1688,7 @@ bool ConfigReadContext::readLine(std::string &line)
       // make sure there are no invalid characters
       for (i = 0; i < line.length(); ++i) {
         if (!isgraph(line[i]) && line[i] != ' ' && line[i] != '\t') {
-          throw XConfigRead(*this, "invalid character %{1}", deskflow::string::sprintf("%#2x", line[i]));
+          throw ServerConfigReadException(*this, "invalid character %{1}", deskflow::string::sprintf("%#2x", line[i]));
         }
       }
 
@@ -1719,7 +1719,7 @@ OptionValue ConfigReadContext::parseBoolean(const std::string &arg) const
   if (CaselessCmp::equal(arg, "false")) {
     return static_cast<OptionValue>(false);
   }
-  throw XConfigRead(*this, "invalid boolean argument \"%{1}\"", arg);
+  throw ServerConfigReadException(*this, "invalid boolean argument \"%{1}\"", arg);
 }
 
 OptionValue ConfigReadContext::parseInt(const std::string &arg) const
@@ -1729,12 +1729,12 @@ OptionValue ConfigReadContext::parseInt(const std::string &arg) const
   long tmp = strtol(s, &end, 10);
   if (*end != '\0') {
     // invalid characters
-    throw XConfigRead(*this, "invalid integer argument \"%{1}\"", arg);
+    throw ServerConfigReadException(*this, "invalid integer argument \"%{1}\"", arg);
   }
   auto value = static_cast<OptionValue>(tmp);
   if (value != tmp) {
     // out of range
-    throw XConfigRead(*this, "integer argument \"%{1}\" out of range", arg);
+    throw ServerConfigReadException(*this, "integer argument \"%{1}\" out of range", arg);
   }
   return value;
 }
@@ -1762,7 +1762,7 @@ OptionValue ConfigReadContext::parseModifierKey(const std::string &arg) const
   if (CaselessCmp::equal(arg, "none")) {
     return static_cast<OptionValue>(kKeyModifierIDNull);
   }
-  throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
+  throw ServerConfigReadException(*this, "invalid argument \"%{1}\"", arg);
 }
 
 OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
@@ -1788,7 +1788,7 @@ OptionValue ConfigReadContext::parseCorner(const std::string &arg) const
   } else if (CaselessCmp::equal(arg, "all")) {
     return s_allCornersMask;
   }
-  throw XConfigRead(*this, "invalid argument \"%{1}\"", arg);
+  throw ServerConfigReadException(*this, "invalid argument \"%{1}\"", arg);
 }
 
 OptionValue ConfigReadContext::parseProtocol(const std::string &args) const
@@ -1798,7 +1798,7 @@ OptionValue ConfigReadContext::parseProtocol(const std::string &args) const
   } else if (CaselessCmp::equal(args, kBarrierProtocolOption)) {
     return static_cast<OptionValue>(NetworkProtocol::Barrier);
   }
-  throw XConfigRead(*this, "invalid protocol argument \"%{1}\"", args);
+  throw ServerConfigReadException(*this, "invalid protocol argument \"%{1}\"", args);
 }
 
 OptionValue ConfigReadContext::parseCorners(const std::string &args) const
@@ -1806,7 +1806,7 @@ OptionValue ConfigReadContext::parseCorners(const std::string &args) const
   // find first token
   std::string::size_type i = args.find_first_not_of(" \t", 0);
   if (i == std::string::npos) {
-    throw XConfigRead(*this, "missing corner argument");
+    throw ServerConfigReadException(*this, "missing corner argument");
   }
   std::string::size_type j = args.find_first_of(" \t", i);
 
@@ -1823,14 +1823,14 @@ OptionValue ConfigReadContext::parseCorners(const std::string &args) const
     } else if (args[i] == '+') {
       add = true;
     } else {
-      throw XConfigRead(*this, "invalid corner operator \"%{1}\"", std::string(args.c_str() + i, 1));
+      throw ServerConfigReadException(*this, "invalid corner operator \"%{1}\"", std::string(args.c_str() + i, 1));
     }
 
     // get next corner token
     i = args.find_first_not_of(" \t", i + 1);
     j = args.find_first_of(" \t", i);
     if (i == std::string::npos) {
-      throw XConfigRead(*this, "missing corner argument");
+      throw ServerConfigReadException(*this, "missing corner argument");
     }
 
     // parse next corner token
@@ -1851,21 +1851,21 @@ Config::Interval ConfigReadContext::parseInterval(const ArgList &args) const
     return Config::Interval(0.0f, 1.0f);
   }
   if (args.size() != 2 || args[0].empty() || args[1].empty()) {
-    throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+    throw ServerConfigReadException(*this, "invalid interval \"%{1}\"", concatArgs(args));
   }
 
   char *end;
   double startValue = strtod(args[0].c_str(), &end);
   if (end[0] != '\0') {
-    throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+    throw ServerConfigReadException(*this, "invalid interval \"%{1}\"", concatArgs(args));
   }
   double endValue = strtod(args[1].c_str(), &end);
   if (end[0] != '\0') {
-    throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+    throw ServerConfigReadException(*this, "invalid interval \"%{1}\"", concatArgs(args));
   }
 
   if (startValue < 0 || startValue > 100 || endValue < 0 || endValue > 100 || startValue >= endValue) {
-    throw XConfigRead(*this, "invalid interval \"%{1}\"", concatArgs(args));
+    throw ServerConfigReadException(*this, "invalid interval \"%{1}\"", concatArgs(args));
   }
 
   auto startInterval = static_cast<float>(startValue / 100.0f);
@@ -1881,7 +1881,7 @@ void ConfigReadContext::parseNameWithArgs(
   // skip leading whitespace
   std::string::size_type i = line.find_first_not_of(" \t", index);
   if (i == std::string::npos) {
-    throw XConfigRead(*this, std::string("missing ") + type);
+    throw ServerConfigReadException(*this, std::string("missing ") + type);
   }
 
   // find end of name
@@ -1901,7 +1901,7 @@ void ConfigReadContext::parseNameWithArgs(
   i = line.find_first_not_of(" \t", j);
   if (i == std::string::npos && needDelim) {
     // expected delimiter but didn't find it
-    throw XConfigRead(*this, std::string("missing ") + delim[0]);
+    throw ServerConfigReadException(*this, std::string("missing ") + delim[0]);
   }
   if (i == std::string::npos) {
     // no arguments
@@ -1952,7 +1952,7 @@ void ConfigReadContext::parseNameWithArgs(
   // verify ')'
   if (j == std::string::npos) {
     // expected )
-    throw XConfigRead(*this, "missing )");
+    throw ServerConfigReadException(*this, "missing )");
   }
 
   // eat ')'
@@ -1962,12 +1962,12 @@ void ConfigReadContext::parseNameWithArgs(
   j = line.find_first_not_of(" \t", i);
   if (j == std::string::npos && needDelim) {
     // expected delimiter but didn't find it
-    throw XConfigRead(*this, std::string("missing ") + delim[0]);
+    throw ServerConfigReadException(*this, std::string("missing ") + delim[0]);
   }
 
   // verify delimiter
   if (needDelim && delim.find(line[j]) == std::string::npos) {
-    throw XConfigRead(*this, std::string("expected ") + delim[0]);
+    throw ServerConfigReadException(*this, std::string("expected ") + delim[0]);
   }
 
   if (j == std::string::npos) {
@@ -1990,16 +1990,16 @@ ConfigReadContext::parseKeystroke(const std::string &keystroke, const std::set<s
 
   KeyModifierMask mask;
   if (!deskflow::KeyMap::parseModifiers(s, mask)) {
-    throw XConfigRead(*this, "unable to parse key modifiers");
+    throw ServerConfigReadException(*this, "unable to parse key modifiers");
   }
 
   KeyID key;
   if (!deskflow::KeyMap::parseKey(s, key)) {
-    throw XConfigRead(*this, "unable to parse key");
+    throw ServerConfigReadException(*this, "unable to parse key");
   }
 
   if (key == kKeyNone && mask == 0) {
-    throw XConfigRead(*this, "missing key and/or modifiers in keystroke");
+    throw ServerConfigReadException(*this, "missing key and/or modifiers in keystroke");
   }
 
   return IPlatformScreen::KeyInfo::alloc(key, mask, 0, 0, screens);
@@ -2011,16 +2011,16 @@ IPlatformScreen::ButtonInfo *ConfigReadContext::parseMouse(const std::string &mo
 
   KeyModifierMask mask;
   if (!deskflow::KeyMap::parseModifiers(s, mask)) {
-    throw XConfigRead(*this, "unable to parse button modifiers");
+    throw ServerConfigReadException(*this, "unable to parse button modifiers");
   }
 
   char *end;
   auto button = (ButtonID)strtol(s.c_str(), &end, 10);
   if (*end != '\0') {
-    throw XConfigRead(*this, "unable to parse button");
+    throw ServerConfigReadException(*this, "unable to parse button");
   }
   if (s.empty() || button <= 0) {
-    throw XConfigRead(*this, "invalid button");
+    throw ServerConfigReadException(*this, "invalid button");
   }
 
   return IPlatformScreen::ButtonInfo::alloc(button, mask);
@@ -2032,11 +2032,11 @@ KeyModifierMask ConfigReadContext::parseModifier(const std::string &modifiers) c
 
   KeyModifierMask mask;
   if (!deskflow::KeyMap::parseModifiers(s, mask)) {
-    throw XConfigRead(*this, "unable to parse modifiers");
+    throw ServerConfigReadException(*this, "unable to parse modifiers");
   }
 
   if (mask == 0) {
-    throw XConfigRead(*this, "no modifiers specified");
+    throw ServerConfigReadException(*this, "no modifiers specified");
   }
 
   return mask;
@@ -2059,13 +2059,15 @@ std::string ConfigReadContext::concatArgs(const ArgList &args)
 // Config I/O exceptions
 //
 
-XConfigRead::XConfigRead(const ConfigReadContext &context, const std::string &error)
+ServerConfigReadException::ServerConfigReadException(const ConfigReadContext &context, const std::string &error)
     : m_error(deskflow::string::sprintf("line %d: %s", context.getLineNumber(), error.c_str()))
 {
   // do nothing
 }
 
-XConfigRead::XConfigRead(const ConfigReadContext &context, const char *errorFmt, const std::string &arg)
+ServerConfigReadException::ServerConfigReadException(
+    const ConfigReadContext &context, const char *errorFmt, const std::string &arg
+)
     : m_error(
           deskflow::string::sprintf("line %d: ", context.getLineNumber()) +
           deskflow::string::format(errorFmt, arg.c_str())
@@ -2074,9 +2076,9 @@ XConfigRead::XConfigRead(const ConfigReadContext &context, const char *errorFmt,
   // do nothing
 }
 
-std::string XConfigRead::getWhat() const throw()
+std::string ServerConfigReadException::getWhat() const throw()
 {
-  return format("XConfigRead", "read error: %{1}", m_error.c_str());
+  return format("ServerConfigReadException", "read error: %{1}", m_error.c_str());
 }
 
 } // namespace deskflow::server
