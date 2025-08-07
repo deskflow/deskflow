@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -66,12 +67,14 @@ public:
   explicit Arch(Arch *arch);
   ~Arch() override = default;
 
+#if SYSAPI_WIN32
   //! Call init on other arch classes.
   /*!
   Some arch classes depend on others to exist first. When init is called
   these classes will have ARCH available for use.
   */
   void init() override;
+#endif
 
   //
   // accessors
