@@ -92,7 +92,7 @@ public:
   static void setValue(HKEY key, const TCHAR *name, DWORD value);
 
   //! Read a string value from the registry
-  static std::string readValueString(HKEY, const TCHAR *name);
+  static std::wstring readValueString(HKEY, const TCHAR *name);
 
   //! Read a DWORD value from the registry
   static DWORD readValueInt(HKEY, const TCHAR *name);
@@ -110,7 +110,7 @@ public:
   static bool wasLaunchedAsService();
 
   //! Returns true if we got the parent process name.
-  static bool getParentProcessName(std::string &name);
+  static bool getParentProcessName(std::wstring &name);
 
   //! Prevent hard to troubleshoot errors, e.g. access violations.
   static void guardRuntimeVersion();
@@ -125,7 +125,7 @@ public:
   static void setInstanceWin32(HINSTANCE instance);
 
   //! Get the name of the active input desktop.
-  static std::string getActiveDesktopName();
+  static std::wstring getActiveDesktopName();
 
   //! Returns true if the process is running with elevated privileges (i.e. as admin).
   static bool isProcessElevated();
@@ -138,7 +138,7 @@ private:
   static HKEY openKey(HKEY parent, const TCHAR *const *keyPath, bool create);
 
   //! Read a string value from the registry
-  static std::string readBinaryOrString(HKEY, const TCHAR *name, DWORD type);
+  static std::wstring readBinaryOrString(HKEY, const TCHAR *name, DWORD type);
 
   //! Set thread busy state
   static void setThreadExecutionState(DWORD);

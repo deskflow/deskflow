@@ -100,7 +100,7 @@ ArchNetworkWinsock::~ArchNetworkWinsock()
 
 void ArchNetworkWinsock::init()
 {
-  static const char *s_library[] = {"ws2_32.dll"};
+  static const wchar_t *s_library[] = {L"ws2_32.dll"};
 
   assert(WSACleanup_winsock == nullptr);
   assert(s_networkModule == nullptr);
