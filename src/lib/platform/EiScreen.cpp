@@ -16,7 +16,7 @@
 #include "common/Constants.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"

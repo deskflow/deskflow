@@ -19,7 +19,7 @@
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 #include "platform/XWindowsClipboard.h"
 #include "platform/XWindowsEventQueueBuffer.h"
 #include "platform/XWindowsKeyState.h"
@@ -846,7 +846,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
   LOG_DEBUG3("calling XOpenDisplay(\"%s\")", displayName);
   Display *display = XOpenDisplay(displayName);
   if (display == nullptr) {
-    throw XScreenUnavailable(60.0);
+    throw ScreenUnavailableException(60.0);
   }
 
   // verify the availability of the XTest extension
@@ -857,7 +857,7 @@ Display *XWindowsScreen::openDisplay(const char *displayName)
     if (!XQueryExtension(display, XTestExtensionName, &majorOpcode, &firstEvent, &firstError)) {
       LOG_ERR("the XTest extension is not available");
       XCloseDisplay(display);
-      throw XScreenOpenFailure();
+      throw ScreenOpenFailureException();
     }
   }
 
@@ -1028,7 +1028,7 @@ Window XWindowsScreen::openWindow() const
       CWDontPropagate | CWEventMask | CWOverrideRedirect | CWCursor, &attr
   );
   if (window == None) {
-    throw XScreenOpenFailure();
+    throw ScreenOpenFailureException();
   }
   return window;
 }

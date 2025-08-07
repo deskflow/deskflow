@@ -8,7 +8,7 @@
 #include "platform/MSWindowsHook.h"
 #include "base/Log.h"
 #include "deskflow/ProtocolTypes.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 
 static const char *g_name = "dfwhook";
 
@@ -55,7 +55,7 @@ void MSWindowsHook::loadLibrary()
   if (init(GetCurrentThreadId()) == 0) {
     LOG_ERR("failed to init %s.dll, another program may be using it", g_name);
     LOG_INFO("restarting your computer may solve this error");
-    throw XScreenOpenFailure();
+    throw ScreenOpenFailureException();
   }
 }
 
