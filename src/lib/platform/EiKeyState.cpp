@@ -129,6 +129,8 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
     static const auto XKB_VMOD_NAME_NUM = "NumLock";
     static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
     static const auto XKB_VMOD_NAME_SUPER = "Super";
+    static const auto XKB_MOD_NAME_MOD2 = "Mod2";
+    static const auto XKB_MOD_NAME_MOD3 = "Mod3";
     static const auto XKB_MOD_NAME_MOD5 = "Mod5";
 #endif
 
@@ -153,6 +155,10 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
       barrier_mask |= (1 << kKeyModifierBitNumLock);
     else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
       barrier_mask |= (1 << kKeyModifierBitScrollLock);
+    else if (strcmp(XKB_MOD_NAME_MOD2, name) == 0) // spare, sometimes mapped to num lock.
+      LOG_DEBUG2("modifier mask %s ignored", name);
+    else if (strcmp(XKB_MOD_NAME_MOD3, name) == 0) // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
+      LOG_DEBUG2("modifier mask %s ignored", name);
     else
       LOG_WARN("modifier mask %s not accounted for, this is a bug", name);
   }
