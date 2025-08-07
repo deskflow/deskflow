@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,9 +13,9 @@
 #include "io/XIO.h"
 
 /**
- * @brief XSocket generic socket exception
+ * @brief SocketException generic socket exception
  */
-class XSocket : public XBase
+class SocketException : public XBase
 {
   using XBase::XBase;
 };
@@ -23,7 +24,7 @@ class XSocket : public XBase
 /*!
 Thrown when attempting to create an invalid network address.
 */
-class XSocketAddress : public XSocket
+class SocketAddressException : public SocketException
 {
 public:
   //! Failure codes
@@ -36,8 +37,8 @@ public:
     BadPort      //!< The port is invalid
   };
 
-  XSocketAddress(SocketError, const std::string &hostname, int port) noexcept;
-  ~XSocketAddress() throw() override = default;
+  SocketAddressException(SocketError, const std::string &hostname, int port) noexcept;
+  ~SocketAddressException() throw() override = default;
 
   //! @name accessors
   //@{
@@ -62,20 +63,20 @@ private:
 };
 
 /**
- * @brief XSocketIOClose - Thrown if a stream cannot be closed.
+ * @brief SocketIOCloseException - Thrown if a stream cannot be closed.
  */
-class XSocketIOClose : public XIOClose
+class SocketIOCloseException : public XIOClose
 {
 public:
-  XSocketIOClose() : XIOClose(), m_state(kDone)
+  SocketIOCloseException() : XIOClose(), m_state(kDone)
   {
     // do nothing
   }
-  explicit XSocketIOClose(const std::string &msg) : XIOClose(msg), m_state(kFirst)
+  explicit SocketIOCloseException(const std::string &msg) : XIOClose(msg), m_state(kFirst)
   {
     // do nothing
   }
-  ~XSocketIOClose() throw() override = default;
+  ~SocketIOCloseException() throw() override = default;
 
   const char *what() const throw() override
   {
@@ -106,20 +107,20 @@ private:
 };
 
 /**
- * @brief XSocketWithWhat - generic XSocket Exception with a generic `what` method impl
+ * @brief SocketWithWhatException - generic SocketException Exception with a generic `what` method impl
  */
-class XSocketWithWhat : public XSocket
+class SocketWithWhatException : public SocketException
 {
 public:
-  XSocketWithWhat() : XSocket(), m_state(kDone)
+  SocketWithWhatException() : SocketException(), m_state(kDone)
   {
     // do nothing
   }
-  explicit XSocketWithWhat(const std::string &msg) : XSocket(msg), m_state(kFirst)
+  explicit SocketWithWhatException(const std::string &msg) : SocketException(msg), m_state(kFirst)
   {
     // do nothing
   }
-  ~XSocketWithWhat() throw() override = default;
+  ~SocketWithWhatException() throw() override = default;
 
   const char *what() const throw() override
   {
@@ -131,7 +132,7 @@ public:
     if (m_state == kDone) {
       return m_formatted.c_str();
     } else {
-      return XSocket::what();
+      return SocketException::what();
     }
   }
 
@@ -147,45 +148,45 @@ private:
 };
 
 /**
- * @brief XSocketBind - Thrown when a socket cannot be bound to an address.
+ * @brief SocketBindException - Thrown when a socket cannot be bound to an address.
  */
-class XSocketBind : public XSocketWithWhat
+class SocketBindException : public SocketWithWhatException
 {
-  using XSocketWithWhat::XSocketWithWhat;
+  using SocketWithWhatException::SocketWithWhatException;
 
 protected:
   std::string getWhat() const throw() override;
 };
 
 /**
- * @brief XSocketAddressInUse
+ * @brief SocketAddressInUseException
  * Thrown when a socket cannot be bound to an address because the address is already in use.
  */
-class XSocketAddressInUse : public XSocketWithWhat
+class SocketAddressInUseException : public SocketWithWhatException
 {
-  using XSocketWithWhat::XSocketWithWhat;
+  using SocketWithWhatException::SocketWithWhatException;
 
 protected:
   std::string getWhat() const throw() override;
 };
 
 /**
- * @brief XSocketConnect - Thrown when a socket cannot connect to a remote endpoint.
+ * @brief SocketConnectException - Thrown when a socket cannot connect to a remote endpoint.
  */
-class XSocketConnect : public XSocketWithWhat
+class SocketConnectException : public SocketWithWhatException
 {
-  using XSocketWithWhat::XSocketWithWhat;
+  using SocketWithWhatException::SocketWithWhatException;
 
 protected:
   std::string getWhat() const throw() override;
 };
 
 /**
- * @brief XSocketConnect - Thrown when a socket cannot be created (by the operating system).
+ * @brief SocketCreateException - Thrown when a socket cannot be created (by the operating system).
  */
-class XSocketCreate : public XSocketWithWhat
+class SocketCreateException : public SocketWithWhatException
 {
-  using XSocketWithWhat::XSocketWithWhat;
+  using SocketWithWhatException::SocketWithWhatException;
 
 protected:
   std::string getWhat() const throw() override;

@@ -30,6 +30,8 @@ add_library(net STATIC
   SecurityLevel.h
   SecureSocket.cpp
   SecureSocket.h
+  SocketException.cpp
+  SocketException.h
   SocketMultiplexer.cpp
   SocketMultiplexer.h
   SecureUtils.cpp
@@ -43,8 +45,6 @@ add_library(net STATIC
   TCPSocketFactory.cpp
   TCPSocketFactory.h
   TSocketMultiplexerMethodJob.h
-  XSocket.cpp
-  XSocket.h
 )
 
 target_link_libraries(
