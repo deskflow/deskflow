@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 
 /**
  * @brief The ScreenException class, generic screen exception
  */
-class ScreenException : public XBase
+class ScreenException : public BaseException
 {
-  using XBase::XBase;
+  using BaseException::BaseException;
 };
 
 /**

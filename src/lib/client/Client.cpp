@@ -128,7 +128,7 @@ void Client::connect(size_t addressIndex)
     setupConnecting();
     setupTimer();
     socket->connect(m_serverAddress);
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     cleanupTimer();
     cleanupConnecting();
     cleanupStream();
@@ -639,7 +639,7 @@ void Client::bindNetworkInterface(IDataSocket *socket) const
 
       socket->bind(bindAddress);
     }
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_WARN("%s", e.what());
     LOG_WARN("operating system will select network interface automatically");
   }

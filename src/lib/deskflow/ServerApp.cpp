@@ -379,7 +379,7 @@ bool ServerApp::initServer()
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
     return false;
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
@@ -452,7 +452,7 @@ bool ServerApp::startServer()
       LOG_CRIT("cannot listen for clients: %s", e.what());
     }
     closeClientListener(listener);
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closeClientListener(listener);
     return false;

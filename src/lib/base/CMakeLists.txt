@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: MIT
 
 add_library(base STATIC
+  BaseException.cpp
+  BaseException.h
   DirectionTypes.h
   Event.cpp
   Event.h
@@ -38,8 +40,6 @@ add_library(base STATIC
   TMethodJob.h
   Unicode.cpp
   Unicode.h
-  XBase.cpp
-  XBase.h
 )
 
 target_link_libraries(base PRIVATE arch)

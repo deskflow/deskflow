@@ -8,16 +8,16 @@
 
 #pragma once
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 #include "common/Common.h"
 #include "io/IOException.h"
 
 /**
  * @brief SocketException generic socket exception
  */
-class SocketException : public XBase
+class SocketException : public BaseException
 {
-  using XBase::XBase;
+  using BaseException::BaseException;
 };
 
 //! Socket bad address exception
@@ -53,7 +53,7 @@ public:
   //@}
 
 protected:
-  // XBase overrides
+  // BaseException overrides
   std::string getWhat() const throw() override;
 
 private:

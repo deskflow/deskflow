@@ -8,9 +8,9 @@
 
 #include "client/ServerProxy.h"
 
+#include "base/BaseException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/XBase.h"
 #include "client/Client.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/Clipboard.h"

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -14,14 +15,14 @@
 /*!
 This is the base class of most exception types.
 */
-class XBase : public std::runtime_error
+class BaseException : public std::runtime_error
 {
 public:
   //! Use getWhat() as the result of what()
-  XBase();
+  BaseException();
   //! Use \c msg as the result of what()
-  explicit XBase(const std::string &msg);
-  ~XBase() throw() override = default;
+  explicit BaseException(const std::string &msg);
+  ~BaseException() throw() override = default;
 
   //! Reason for exception
   const char *what() const throw() override;

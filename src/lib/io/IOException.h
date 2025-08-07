@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 
 /**
  * @brief The IOException class Generic i/o exception class
  */
-class IOException : public XBase
+class IOException : public BaseException
 {
-  using XBase::XBase;
+  using BaseException::BaseException;
 };
 
 /**
