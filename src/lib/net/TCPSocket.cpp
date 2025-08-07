@@ -13,9 +13,9 @@
 #include "base/Log.h"
 #include "mt/Lock.h"
 #include "net/NetworkAddress.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TSocketMultiplexerMethodJob.h"
-#include "net/XSocket.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -36,7 +36,7 @@ TCPSocket::TCPSocket(IEventQueue *events, SocketMultiplexer *socketMultiplexer, 
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::SocketType::Stream);
   } catch (const XArchNetwork &e) {
-    throw XSocketCreate(e.what());
+    throw SocketCreateException(e.what());
   }
 
   LOG_DEBUG("opening new socket: %08X", m_socket);
@@ -76,9 +76,9 @@ void TCPSocket::bind(const NetworkAddress &addr)
   try {
     ARCH->bindSocket(m_socket, addr.getAddress());
   } catch (const XArchNetworkAddressInUse &e) {
-    throw XSocketAddressInUse(e.what());
+    throw SocketAddressInUseException(e.what());
   } catch (const XArchNetwork &e) {
-    throw XSocketBind(e.what());
+    throw SocketBindException(e.what());
   }
 }
 
@@ -266,7 +266,7 @@ void TCPSocket::connect(const NetworkAddress &addr)
         m_writable = true;
       }
     } catch (const XArchNetwork &e) {
-      throw XSocketConnect(e.what());
+      throw SocketConnectException(e.what());
     }
   }
   setJob(newJob());
@@ -292,7 +292,7 @@ void TCPSocket::init()
       // ignore, there's not much we can do
       LOG_WARN("error closing socket: %s", e.what());
     }
-    throw XSocketCreate(e.what());
+    throw SocketCreateException(e.what());
   }
 }
 

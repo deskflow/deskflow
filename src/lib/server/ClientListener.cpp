@@ -15,7 +15,7 @@
 #include "net/IDataSocket.h"
 #include "net/IListenSocket.h"
 #include "net/ISocketFactory.h"
-#include "net/XSocket.h"
+#include "net/SocketException.h"
 #include "server/ClientProxy.h"
 #include "server/ClientProxyUnknown.h"
 
@@ -36,7 +36,7 @@ ClientListener::ClientListener(
 
   try {
     start();
-  } catch (XSocketAddressInUse &) {
+  } catch (SocketAddressInUseException &) {
     cleanupListenSocket();
     m_socketFactory.reset();
     throw;

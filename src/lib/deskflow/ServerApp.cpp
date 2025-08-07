@@ -17,9 +17,9 @@
 #include "deskflow/Screen.h"
 #include "deskflow/ServerArgs.h"
 #include "deskflow/XScreen.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
-#include "net/XSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/Config.h"
@@ -89,7 +89,7 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
       try {
         *m_deskflowAddress = NetworkAddress(args().m_deskflowAddress, kDefaultPort);
         m_deskflowAddress->resolve();
-      } catch (XSocketAddress &e) {
+      } catch (SocketAddressException &e) {
         LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
         bye(s_exitArgs);
       }
@@ -445,7 +445,7 @@ bool ServerApp::startServer()
     LOG_NOTE("started server, waiting for clients");
     m_serverState = Started;
     return true;
-  } catch (XSocketAddressInUse &e) {
+  } catch (SocketAddressInUseException &e) {
     if (args().m_restartable) {
       LOG_ERR("cannot listen for clients: %s", e.what());
     } else {

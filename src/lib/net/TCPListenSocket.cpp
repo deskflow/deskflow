@@ -13,10 +13,10 @@
 #include "base/Log.h"
 #include "io/XIO.h"
 #include "net/NetworkAddress.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocket.h"
 #include "net/TSocketMultiplexerMethodJob.h"
-#include "net/XSocket.h"
 
 //
 // TCPListenSocket
@@ -31,7 +31,7 @@ TCPListenSocket::TCPListenSocket(
   try {
     m_socket = ARCH->newSocket(family, IArchNetwork::SocketType::Stream);
   } catch (XArchNetwork &e) {
-    throw XSocketCreate(e.what());
+    throw SocketCreateException(e.what());
   }
 }
 
@@ -61,9 +61,9 @@ void TCPListenSocket::bind(const NetworkAddress &addr)
               )
     );
   } catch (XArchNetworkAddressInUse &e) {
-    throw XSocketAddressInUse(e.what());
+    throw SocketAddressInUseException(e.what());
   } catch (XArchNetwork &e) {
-    throw XSocketBind(e.what());
+    throw SocketBindException(e.what());
   }
 }
 
@@ -78,7 +78,7 @@ void TCPListenSocket::close()
     ARCH->closeSocket(m_socket);
     m_socket = nullptr;
   } catch (XArchNetwork &e) {
-    throw XSocketIOClose(e.what());
+    throw SocketIOCloseException(e.what());
   }
 }
 

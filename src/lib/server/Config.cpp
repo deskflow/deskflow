@@ -12,7 +12,7 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/XDeskflow.h"
-#include "net/XSocket.h"
+#include "net/SocketException.h"
 #include "server/Server.h"
 
 #include <cstdlib>
@@ -643,7 +643,7 @@ void Config::readSectionOptions(ConfigReadContext &s)
       try {
         m_deskflowAddress = NetworkAddress(value, kDefaultPort);
         m_deskflowAddress.resolve();
-      } catch (XSocketAddress &e) {
+      } catch (SocketAddressException &e) {
         throw XConfigRead(s, std::string("invalid address argument ") + e.what());
       }
     } else if (name == "heartbeat") {
