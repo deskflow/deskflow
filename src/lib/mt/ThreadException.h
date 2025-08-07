@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -13,17 +14,17 @@
 /*!
 Thrown by Thread::exit() to exit a thread.  Clients of Thread
 must not throw this type but must rethrow it if caught (by
-XThreadExit, XThread, or ...).
+ThreadExitException, XThread, or ...).
 */
-class XThreadExit : public XThread
+class ThreadExitException : public XThread
 {
 public:
   //! \c result is the result of the thread
-  explicit XThreadExit(void *result) : m_result(result)
+  explicit ThreadExitException(void *result) : m_result(result)
   {
     // do nothing
   }
-  ~XThreadExit() override = default;
+  ~ThreadExitException() override = default;
 
 public:
   void *m_result;
