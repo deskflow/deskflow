@@ -14,13 +14,13 @@
 #include "base/TMethodJob.h"
 #include "client/ServerProxy.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
-#include "deskflow/XDeskflow.h"
 #include "mt/Thread.h"
 #include "net/IDataSocket.h"
 #include "net/ISocketFactory.h"
@@ -68,7 +68,7 @@ Client::Client(
         cleanupConnection();
       },
       [this](int major, int minor) {
-        sendConnectionFailedEvent(XIncompatibleClient(major, minor).what());
+        sendConnectionFailedEvent(IncompatibleClientException(major, minor).what());
         cleanupTimer();
         cleanupConnection();
       }

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,30 +11,30 @@
 #include "base/XBase.h"
 
 /**
- * @brief The XDeskflow class Generic deskflow exception class
+ * @brief The DeskflowException class Generic deskflow exception class
  */
-class XDeskflow : public XBase
+class DeskflowException : public XBase
 {
   using XBase::XBase;
 };
 
 /**
- * @brief XBadClient - Thrown when the client fails to follow the protocol.
+ * @brief BadClientException - Thrown when the client fails to follow the protocol.
  */
-class XBadClient : public XDeskflow
+class BadClientException : public DeskflowException
 {
-  using XDeskflow::XDeskflow;
+  using DeskflowException::DeskflowException;
 
 protected:
   std::string getWhat() const throw() override;
 };
 
 /**
- * @brief XInvalidProtocol - Thrown when the server protocol is unreconized.
+ * @brief InvalidProtocolException - Thrown when the server protocol is unreconized.
  */
-class XInvalidProtocol : public XDeskflow
+class InvalidProtocolException : public DeskflowException
 {
-  using XDeskflow::XDeskflow;
+  using DeskflowException::DeskflowException;
 
 protected:
   std::string getWhat() const throw() override;
@@ -43,10 +44,10 @@ protected:
 /*!
 Thrown when a client attempting to connect has an incompatible version.
 */
-class XIncompatibleClient : public XDeskflow
+class IncompatibleClientException : public DeskflowException
 {
 public:
-  XIncompatibleClient(int major, int minor);
+  IncompatibleClientException(int major, int minor);
 
   //! @name accessors
   //@{
@@ -71,11 +72,11 @@ private:
 Thrown when a client attempting to connect is using the same name as
 a client that is already connected.
 */
-class XDuplicateClient : public XDeskflow
+class DuplicateClientException : public DeskflowException
 {
 public:
-  explicit XDuplicateClient(const std::string &name);
-  ~XDuplicateClient() throw() override = default;
+  explicit DuplicateClientException(const std::string &name);
+  ~DuplicateClientException() throw() override = default;
 
   //! @name accessors
   //@{
@@ -97,11 +98,11 @@ private:
 Thrown when a client attempting to connect is using a name that is
 unknown to the server.
 */
-class XUnknownClient : public XDeskflow
+class UnknownClientException : public DeskflowException
 {
 public:
-  explicit XUnknownClient(const std::string &name);
-  ~XUnknownClient() throw() override = default;
+  explicit UnknownClientException(const std::string &name);
+  ~UnknownClientException() throw() override = default;
 
   //! @name accessors
   //@{
@@ -124,11 +125,11 @@ Thrown when we want to abort, with the opportunity to clean up. This is a
 little bit of a hack, but it's a better way of exiting, than just calling
 exit(int).
 */
-class XExitApp : public XDeskflow
+class ExitAppException : public DeskflowException
 {
 public:
-  explicit XExitApp(int code);
-  ~XExitApp() throw() override = default;
+  explicit ExitAppException(int code);
+  ~ExitAppException() throw() override = default;
 
   //! Get the exit code
   int getCode() const noexcept;

@@ -11,9 +11,9 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
-#include "deskflow/XDeskflow.h"
 #include "io/IOException.h"
 #include "io/IStream.h"
 #include "server/ClientProxy1_0.h"
@@ -189,7 +189,7 @@ void ClientProxyUnknown::initProxy(const std::string &name, int major, int minor
 
   // hangup (with error) if version isn't supported
   if (m_proxy == nullptr) {
-    throw XIncompatibleClient(major, minor);
+    throw IncompatibleClientException(major, minor);
   }
 }
 
@@ -203,19 +203,19 @@ void ClientProxyUnknown::handleData()
     // limit the maximum length of the hello
     if (uint32_t n = m_stream->getSize(); n > kMaxHelloLength) {
       LOG_DEBUG1("hello reply too long");
-      throw XBadClient();
+      throw BadClientException();
     }
 
     // parse the reply to hello
     int16_t major;
     int16_t minor;
     if (std::string protocolName; !ProtocolUtil::readf(m_stream, kMsgHelloBack, &protocolName, &major, &minor, &name)) {
-      throw XBadClient();
+      throw BadClientException();
     }
 
     // disallow invalid version numbers
     if (major <= 0 || minor < 0) {
-      throw XIncompatibleClient(major, minor);
+      throw IncompatibleClientException(major, minor);
     }
 
     // remove stream event handlers.  the proxy we're about to create
@@ -233,11 +233,11 @@ void ClientProxyUnknown::handleData()
     // wait until the proxy signals that it's ready or has disconnected
     addProxyHandlers();
     return;
-  } catch (XIncompatibleClient &e) {
+  } catch (IncompatibleClientException &e) {
     // client is incompatible
     LOG_WARN("client \"%s\" has incompatible version %d.%d)", name.c_str(), e.getMajor(), e.getMinor());
     ProtocolUtil::writef(m_stream, kMsgEIncompatible, kProtocolMajorVersion, kProtocolMinorVersion);
-  } catch (XBadClient &) {
+  } catch (BadClientException &) {
     // client not behaving
     LOG_WARN("protocol error from client \"%s\"", name.c_str());
     ProtocolUtil::writef(m_stream, kMsgEBad);

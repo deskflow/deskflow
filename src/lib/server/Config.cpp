@@ -8,10 +8,10 @@
 #include "server/Config.h"
 
 #include "base/IEventQueue.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
-#include "deskflow/XDeskflow.h"
 #include "net/SocketException.h"
 #include "server/Server.h"
 
@@ -1313,7 +1313,7 @@ std::string Config::getOptionValue(OptionID id, OptionValue value)
     } else if (enumValue == Barrier) {
       return kBarrierProtocolOption;
     } else {
-      throw XInvalidProtocol();
+      throw InvalidProtocolException();
     }
   }
 
