@@ -11,7 +11,7 @@
 #include "arch/XArch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "io/XIO.h"
+#include "io/IOException.h"
 #include "net/NetworkAddress.h"
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
@@ -71,7 +71,7 @@ void TCPListenSocket::close()
 {
   std::scoped_lock lock{m_mutex};
   if (m_socket == nullptr) {
-    throw XIOClosed();
+    throw IOClosedException();
   }
   try {
     m_socketMultiplexer->removeSocket(this);
