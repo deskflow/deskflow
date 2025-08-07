@@ -5,24 +5,24 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "XBaseTests.h"
+#include "BaseExceptionTests.h"
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 
-void XBaseTests::empty()
+void BaseExceptionTests::empty()
 {
-  XBase xbase;
-  const char *result = xbase.what();
+  BaseException BaseException;
+  const char *result = BaseException.what();
 
   QCOMPARE(result, "");
 }
 
-void XBaseTests::nonEmpty()
+void BaseExceptionTests::nonEmpty()
 {
-  XBase xbase("test");
-  const char *result = xbase.what();
+  BaseException BaseException("test");
+  const char *result = BaseException.what();
 
   QCOMPARE(result, "test");
 }
 
-QTEST_MAIN(XBaseTests)
+QTEST_MAIN(BaseExceptionTests)

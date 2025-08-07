@@ -137,7 +137,7 @@ void *Thread::threadFunc(void *vjob)
     // client called exit()
     result = e.m_result;
     LOG_DEBUG1("caught exit on thread 0x%08x, result %p", id, result);
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_ERR("exception on thread 0x%08x: %s", id, e.what());
     delete job;
     throw;

@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 
 /**
  * @brief The DeskflowException class Generic deskflow exception class
  */
-class DeskflowException : public XBase
+class DeskflowException : public BaseException
 {
-  using XBase::XBase;
+  using BaseException::BaseException;
 };
 
 /**

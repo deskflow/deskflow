@@ -8,14 +8,14 @@
 
 #pragma once
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 
 /**
  * @brief MTException generic multithreading exception
  */
-class MTException : public XBase
+class MTException : public BaseException
 {
-  using XBase::XBase;
+  using BaseException::BaseException;
 };
 
 /**

@@ -40,7 +40,7 @@ ClientListener::ClientListener(
     cleanupListenSocket();
     m_socketFactory.reset();
     throw;
-  } catch (XBase &) {
+  } catch (BaseException &) {
     cleanupListenSocket();
     m_socketFactory.reset();
     throw;
