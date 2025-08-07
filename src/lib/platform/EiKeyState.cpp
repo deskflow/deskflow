@@ -122,7 +122,6 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkb_mask) const
     /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
 #ifndef XKB_VMOD_NAME_ALT
     static const auto XKB_VMOD_NAME_ALT = "Alt";
-    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
     static const auto XKB_VMOD_NAME_LEVEL3 = "LevelThree";
     static const auto XKB_VMOD_NAME_LEVEL5 = "LevelFive";
     static const auto XKB_VMOD_NAME_META = "Meta";
@@ -217,7 +216,7 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
         deskflow::KeyMap::KeyItem item{};
         xkb_keysym_t keysym = syms[0];
-        KeySym sym = static_cast<KeyID>(keysym);
+        KeySym sym = keysym;
         item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
         item.m_button = static_cast<KeyButton>(keycode) - 8; // X keycode offset
         item.m_group = group;

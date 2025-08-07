@@ -141,7 +141,7 @@ public:
   using link_const_iterator = Cell::const_iterator;
   using internal_const_iterator = CellMap::const_iterator;
   using all_const_iterator = NameMap::const_iterator;
-  class const_iterator : std::iterator_traits<Config>
+  class const_iterator : public std::iterator_traits<Config>
   {
   public:
     explicit const_iterator() = default;

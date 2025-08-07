@@ -132,9 +132,7 @@ void ScreenSettingsDialog::on_m_pLineEditAlias_textChanged(const QString &text)
 void ScreenSettingsDialog::on_m_pButtonRemoveAlias_clicked()
 {
   QList<QListWidgetItem *> items = ui->m_pListAliases->selectedItems();
-
-  for (int i = 0; i < items.count(); i++)
-    delete items[i];
+  qDeleteAll(items);
 }
 
 void ScreenSettingsDialog::on_m_pListAliases_itemSelectionChanged()

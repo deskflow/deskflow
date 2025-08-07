@@ -29,11 +29,5 @@ public:
 
   //@}
 
-  // IClient overrides
-  void keyDown(KeyID key, KeyModifierMask mask, KeyButton button, const std::string &) override;
-  void keyRepeat(KeyID key, KeyModifierMask mask, int32_t count, KeyButton button, const std::string &lang) override;
-  void keyUp(KeyID key, KeyModifierMask mask, KeyButton button) override;
-  void keepAlive() override;
-
   Server *m_server;
 };

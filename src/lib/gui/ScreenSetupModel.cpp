@@ -157,5 +157,5 @@ void ScreenSetupModel::addScreen(const Screen &newScreen)
 bool ScreenSetupModel::isFull() const
 {
   auto emptyScreen = std::ranges::find_if(m_Screens, [](const Screen &item) { return item.isNull(); });
-  return (emptyScreen == m_Screens.cend());
+  return (static_cast<QList<Screen>::const_iterator>(emptyScreen) == m_Screens.cend());
 }

@@ -504,11 +504,11 @@ float Server::mapToFraction(const BaseClientProxy *client, Direction dir, int32_
     using enum Direction;
   case Left:
   case Right:
-    return static_cast<float>(y - sy + 0.5f) / static_cast<float>(sh);
+    return (y - sy + 0.5f) / static_cast<float>(sh);
 
   case Top:
   case Bottom:
-    return static_cast<float>(x - sx + 0.5f) / static_cast<float>(sw);
+    return (x - sx + 0.5f) / static_cast<float>(sw);
 
   case NoDirection:
     assert(0 && "bad direction");
@@ -800,10 +800,10 @@ bool Server::isSwitchOkay(
   // are we in a locked corner?  first check if screen has the option set
   // and, if not, check the global options.
   const Config::ScreenOptions *options = m_config->getOptions(getName(m_active));
-  if (options == nullptr || options->count(kOptionScreenSwitchCorners) == 0) {
+  if (options == nullptr || !options->contains(kOptionScreenSwitchCorners)) {
     options = m_config->getOptions("");
   }
-  if (options != nullptr && options->count(kOptionScreenSwitchCorners) > 0) {
+  if (options != nullptr && options->contains(kOptionScreenSwitchCorners)) {
     // get corner mask and size
     Config::ScreenOptions::const_iterator i = options->find(kOptionScreenSwitchCorners);
     auto corners = static_cast<uint32_t>(i->second);
@@ -1129,7 +1129,7 @@ void Server::processOptions()
 
 void Server::handleShapeChanged(BaseClientProxy *client)
 {
-  if (m_clientSet.count(client) == 0) {
+  if (!m_clientSet.contains(client)) {
     return;
   }
 
@@ -1164,7 +1164,7 @@ void Server::handleClipboardGrabbed(const Event &event, BaseClientProxy *grabber
   }
 
   // ignore events from unknown clients
-  if (m_clientSet.count(grabber) == 0) {
+  if (!m_clientSet.contains(grabber)) {
     return;
   }
   const auto *info = static_cast<const IScreen::ClipboardInfo *>(event.getData());
@@ -1850,7 +1850,7 @@ void Server::onMouseWheel(int32_t xDelta, int32_t yDelta)
 bool Server::addClient(BaseClientProxy *client)
 {
   std::string name = getName(client);
-  if (m_clients.count(name) != 0) {
+  if (m_clients.contains(name)) {
     return false;
   }
 

@@ -69,7 +69,9 @@ struct codepair
 {
   KeySym keysym;
   uint32_t ucs4;
-} s_keymap[] = {
+};
+
+codepair s_keymap[] = {
     {XK_Aogonek, 0x0104},      /* LATIN CAPITAL LETTER A WITH OGONEK */
     {XK_breve, 0x02d8},        /* BREVE */
     {XK_Lstroke, 0x0141},      /* LATIN CAPITAL LETTER L WITH STROKE */
@@ -1576,7 +1578,7 @@ bool XWindowsUtil::getWindowProperty(
     *type = actualType;
   }
   if (format != nullptr) {
-    *format = static_cast<int32_t>(actualDatumSize);
+    *format = actualDatumSize;
   }
 
   if (okay) {
@@ -1747,7 +1749,7 @@ KeyID XWindowsUtil::mapKeySymToKeyID(KeySym k)
   default: {
     // lookup character in table
     if (KeySymMap::const_iterator index = s_keySymToUCS4.find(k); index != s_keySymToUCS4.end()) {
-      return static_cast<KeyID>(index->second);
+      return index->second;
     }
 
     // unknown character
