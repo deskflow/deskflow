@@ -40,7 +40,7 @@ Config::Config(IEventQueue *events) : m_inputFilter(events), m_events(events)
 bool Config::addScreen(const std::string &name)
 {
   // alias name must not exist
-  if (m_nameToCanonicalName.find(name) != m_nameToCanonicalName.end()) {
+  if (m_nameToCanonicalName.contains(name)) {
     return false;
   }
 
@@ -64,7 +64,7 @@ bool Config::renameScreen(const std::string &oldName, const std::string &newName
 
   // accept if names are equal but replace with new name to maintain
   // case.  otherwise, the new name must not exist.
-  if (!CaselessCmp::equal(oldName, newName) && m_nameToCanonicalName.find(newName) != m_nameToCanonicalName.end()) {
+  if (!CaselessCmp::equal(oldName, newName) && m_nameToCanonicalName.contains(newName)) {
     return false;
   }
 
@@ -132,12 +132,12 @@ void Config::removeAllScreens()
 bool Config::addAlias(const std::string &canonical, const std::string &alias)
 {
   // alias name must not exist
-  if (m_nameToCanonicalName.find(alias) != m_nameToCanonicalName.end()) {
+  if (m_nameToCanonicalName.contains(alias)) {
     return false;
   }
 
   // canonical name must be known
-  if (m_map.find(canonical) == m_map.end()) {
+  if (!m_map.contains(canonical)) {
     return false;
   }
 
@@ -150,7 +150,7 @@ bool Config::addAlias(const std::string &canonical, const std::string &alias)
 bool Config::removeAlias(const std::string &alias)
 {
   // must not be a canonical name
-  if (m_map.find(alias) != m_map.end()) {
+  if (m_map.contains(alias)) {
     return false;
   }
 
@@ -169,7 +169,7 @@ bool Config::removeAlias(const std::string &alias)
 bool Config::removeAliases(const std::string &canonical)
 {
   // must be a canonical name
-  if (m_map.find(canonical) == m_map.end()) {
+  if (!m_map.contains(canonical)) {
     return false;
   }
 
@@ -387,7 +387,7 @@ Config::all_const_iterator Config::endAll() const
 
 bool Config::isScreen(const std::string &name) const
 {
-  return (m_nameToCanonicalName.count(name) > 0);
+  return m_nameToCanonicalName.contains(name);
 }
 
 bool Config::isCanonicalName(const std::string &name) const
