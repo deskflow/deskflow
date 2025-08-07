@@ -101,6 +101,6 @@ match the format.
 class XIOReadMismatch : public IOException
 {
 public:
-  // XBase overrides
+  // BaseException overrides
   std::string getWhat() const throw() override;
 };

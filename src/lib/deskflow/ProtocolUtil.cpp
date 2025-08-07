@@ -122,7 +122,7 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t 
     // write buffer
     stream->write(Buffer.data(), size);
     LOG_DEBUG2("wrote %d bytes", size);
-  } catch (const XBase &exception) {
+  } catch (const BaseException &exception) {
     LOG_DEBUG2("exception <%s> during wrote %d bytes into stream", exception.what(), size);
     throw;
   }

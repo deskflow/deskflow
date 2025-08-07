@@ -241,7 +241,7 @@ void ClientProxyUnknown::handleData()
     // client not behaving
     LOG_WARN("protocol error from client \"%s\"", name.c_str());
     ProtocolUtil::writef(m_stream, kMsgEBad);
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     // misc error
     LOG_WARN("error communicating with client \"%s\": %s", name.c_str(), e.what());
   }

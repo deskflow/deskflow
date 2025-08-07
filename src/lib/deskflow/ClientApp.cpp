@@ -340,7 +340,7 @@ bool ClientApp::startClient()
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;
