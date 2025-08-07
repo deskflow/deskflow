@@ -15,8 +15,8 @@
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
+#include "deskflow/ScreenException.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/XScreen.h"
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -369,12 +369,12 @@ bool ServerApp::initServer()
     m_primaryClient = primaryClient;
     m_serverState = Initialized;
     return true;
-  } catch (XScreenUnavailable &e) {
+  } catch (ScreenUnavailableException &e) {
     LOG_WARN("primary screen unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
     retryTime = e.getRetryTime();
-  } catch (XScreenOpenFailure &e) {
+  } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
