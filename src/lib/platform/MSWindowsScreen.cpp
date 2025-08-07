@@ -21,7 +21,7 @@
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 #include "platform/MSWindowsClipboard.h"
 #include "platform/MSWindowsDesks.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -806,7 +806,7 @@ HWND MSWindowsScreen::createWindow(ATOM windowClass, const char *name) const
   );
   if (window == nullptr) {
     LOG_ERR("failed to create window: %d", GetLastError());
-    throw XScreenOpenFailure();
+    throw ScreenOpenFailureException();
   }
   return window;
 }

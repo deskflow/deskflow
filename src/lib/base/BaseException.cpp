@@ -1,30 +1,31 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "base/XBase.h"
+#include "base/BaseException.h"
 #include "base/String.h"
 
 #include <cstdarg>
 
 //
-// XBase
+// BaseException
 //
 
-XBase::XBase() : std::runtime_error("")
+BaseException::BaseException() : std::runtime_error("")
 {
   // do nothing
 }
 
-XBase::XBase(const std::string &msg) : std::runtime_error(msg)
+BaseException::BaseException(const std::string &msg) : std::runtime_error(msg)
 {
   // do nothing
 }
 
-const char *XBase::what() const throw()
+const char *BaseException::what() const throw()
 {
   if (const char *what = std::runtime_error::what(); what != nullptr && what[0] != '\0') {
     return what;
@@ -34,7 +35,7 @@ const char *XBase::what() const throw()
   return m_what.c_str();
 }
 
-std::string XBase::format(const char * /*id*/, const char *fmt, ...) const noexcept
+std::string BaseException::format(const char * /*id*/, const char *fmt, ...) const noexcept
 {
   // FIXME -- lookup message string using id as an index.  set
   // fmt to that string if it exists.

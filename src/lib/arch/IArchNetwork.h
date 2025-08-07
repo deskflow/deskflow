@@ -213,7 +213,7 @@ public:
   //! Check error on socket
   /*!
   If the socket \c s is in an error state then throws an appropriate
-  XArchNetwork exception.
+  ArchNetworkException exception.
   */
   virtual void throwErrorOnSocket(ArchSocket s) = 0;
 

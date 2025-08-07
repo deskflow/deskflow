@@ -15,11 +15,11 @@
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
+#include "deskflow/ScreenException.h"
 #include "deskflow/ServerArgs.h"
-#include "deskflow/XScreen.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
-#include "net/XSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
 #include "server/Config.h"
@@ -89,7 +89,7 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
       try {
         *m_deskflowAddress = NetworkAddress(args().m_deskflowAddress, kDefaultPort);
         m_deskflowAddress->resolve();
-      } catch (XSocketAddress &e) {
+      } catch (SocketAddressException &e) {
         LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
         bye(s_exitArgs);
       }
@@ -184,7 +184,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
     configStream >> *args().m_config;
     LOG_DEBUG("configuration read successfully");
     return true;
-  } catch (XConfigRead &e) {
+  } catch (ServerConfigReadException &e) {
     // report error in configuration file
     LOG_ERR("cannot read configuration \"%s\": %s", pathname.c_str(), e.what());
   }
@@ -369,17 +369,17 @@ bool ServerApp::initServer()
     m_primaryClient = primaryClient;
     m_serverState = Initialized;
     return true;
-  } catch (XScreenUnavailable &e) {
+  } catch (ScreenUnavailableException &e) {
     LOG_WARN("primary screen unavailable: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
     retryTime = e.getRetryTime();
-  } catch (XScreenOpenFailure &e) {
+  } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
     return false;
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closePrimaryClient(primaryClient);
     closeServerScreen(serverScreen);
@@ -445,14 +445,14 @@ bool ServerApp::startServer()
     LOG_NOTE("started server, waiting for clients");
     m_serverState = Started;
     return true;
-  } catch (XSocketAddressInUse &e) {
+  } catch (SocketAddressInUseException &e) {
     if (args().m_restartable) {
       LOG_ERR("cannot listen for clients: %s", e.what());
     } else {
       LOG_CRIT("cannot listen for clients: %s", e.what());
     }
     closeClientListener(listener);
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
     closeClientListener(listener);
     return false;

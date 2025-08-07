@@ -13,7 +13,7 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "deskflow/IScreenSaver.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 #include "deskflow/win32/AppUtilWindows.h"
 #include "mt/Lock.h"
 #include "mt/Thread.h"
@@ -368,7 +368,7 @@ HWND MSWindowsDesks::createWindow(ATOM windowClass, const char *name) const
   );
   if (window == nullptr) {
     LOG_ERR("failed to create window: %d", GetLastError());
-    throw XScreenOpenFailure();
+    throw ScreenOpenFailureException();
   }
   return window;
 }

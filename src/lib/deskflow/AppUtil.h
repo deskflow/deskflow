@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "deskflow/DeskflowException.h"
 #include "deskflow/IAppUtil.h"
-#include "deskflow/XDeskflow.h"
 
 class AppUtil : public IAppUtil
 {
@@ -20,7 +20,7 @@ public:
   IApp &app() const override;
   virtual void exitApp(int code)
   {
-    throw XExitApp(code);
+    throw ExitAppException(code);
   }
 
   static AppUtil &instance();

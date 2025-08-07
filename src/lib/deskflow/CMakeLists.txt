@@ -85,6 +85,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   Config.h
   DaemonApp.cpp
   DaemonApp.h
+  DeskflowException.cpp
+  DeskflowException.h
   DisplayInvalidException.h
   IApp.h
   IAppUtil.h
@@ -119,16 +121,14 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ProtocolUtil.h
   Screen.cpp
   Screen.h
+  ScreenException.cpp
+  ScreenException.h
   ServerApp.cpp
   ServerApp.h
   ServerArgs.cpp
   ServerArgs.h
   StreamChunker.cpp
   StreamChunker.h
-  XDeskflow.cpp
-  XDeskflow.h
-  XScreen.cpp
-  XScreen.h
   languages/LanguageManager.cpp
   languages/LanguageManager.h
   ipc/DaemonIpcServer.cpp

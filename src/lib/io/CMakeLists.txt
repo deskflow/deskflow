@@ -6,11 +6,11 @@
 add_library(io STATIC
     Filesystem.cpp
     Filesystem.h
+    IOException.cpp
+    IOException.h
     IStream.h
     StreamBuffer.cpp
     StreamBuffer.h
     StreamFilter.cpp
     StreamFilter.h
-    XIO.cpp
-    XIO.h
 )

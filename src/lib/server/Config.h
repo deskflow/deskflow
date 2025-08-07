@@ -7,8 +7,8 @@
 
 #pragma once
 
+#include "base/BaseException.h"
 #include "base/String.h"
-#include "base/XBase.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
@@ -419,14 +419,14 @@ public:
 
   //! Read configuration
   /*!
-  Reads a configuration from a context.  Throws XConfigRead on error
+  Reads a configuration from a context.  Throws ServerConfigReadException on error
   and context is unchanged.
   */
   void read(ConfigReadContext &context);
 
   //! Read configuration
   /*!
-  Reads a configuration from a stream.  Throws XConfigRead on error.
+  Reads a configuration from a stream.  Throws ServerConfigReadException on error.
   */
   friend std::istream &operator>>(std::istream &, Config &);
 
@@ -529,15 +529,15 @@ private:
 /*!
 Thrown when a configuration stream cannot be parsed.
 */
-class XConfigRead : public XBase
+class ServerConfigReadException : public BaseException
 {
 public:
-  XConfigRead(const ConfigReadContext &context, const std::string &);
-  XConfigRead(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
-  ~XConfigRead() throw() override = default;
+  ServerConfigReadException(const ConfigReadContext &context, const std::string &);
+  ServerConfigReadException(const ConfigReadContext &context, const char *errorFmt, const std::string &arg);
+  ~ServerConfigReadException() throw() override = default;
 
 protected:
-  // XBase overrides
+  // BaseException overrides
   std::string getWhat() const throw() override;
 
 private:

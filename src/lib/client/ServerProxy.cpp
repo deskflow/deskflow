@@ -8,18 +8,18 @@
 
 #include "client/ServerProxy.h"
 
+#include "base/BaseException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/XBase.h"
 #include "client/Client.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
-#include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
 
 #include <algorithm>
@@ -111,7 +111,7 @@ void ServerProxy::handleData()
       case Disconnect:
         return;
       }
-    } catch (const XBadClient &e) {
+    } catch (const BadClientException &e) {
       LOG_ERR("protocol error from server: %s", e.what());
       ProtocolUtil::writef(m_stream, kMsgEBad);
       m_client->disconnect("invalid message from server");

@@ -8,7 +8,7 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "io/XIO.h"
+#include "io/IOException.h"
 
 #include <stdarg.h>
 #include <vector>
@@ -98,9 +98,9 @@ private:
 Thrown by ProtocolUtil::readf() when the data being read does not
 match the format.
 */
-class XIOReadMismatch : public XIO
+class XIOReadMismatch : public IOException
 {
 public:
-  // XBase overrides
+  // BaseException overrides
   std::string getWhat() const throw() override;
 };

@@ -15,8 +15,8 @@
 #include "common/Constants.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
-#include "deskflow/XDeskflow.h"
 
 #if SYSAPI_WIN32
 #include "base/IEventQueue.h"
@@ -92,7 +92,7 @@ int App::run(int argc, char **argv)
 
   try {
     result = appUtil().run(argc, argv);
-  } catch (XExitApp &e) {
+  } catch (ExitAppException &e) {
     // instead of showing a nasty error, just exit with the error code.
     // not sure if i like this behaviour, but it's probably better than
     // using the exit(int) function!

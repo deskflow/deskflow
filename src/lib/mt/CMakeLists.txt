@@ -8,13 +8,13 @@ add_library(mt STATIC
   CondVar.h
   Lock.cpp
   Lock.h
+  MTException.cpp
+  MTException.h
   Mutex.cpp
   Mutex.h
   Thread.cpp
   Thread.h
-  XMT.cpp
-  XMT.h
-  XThread.h
+  ThreadException.h
 )
 
 target_link_libraries(mt PUBLIC base)

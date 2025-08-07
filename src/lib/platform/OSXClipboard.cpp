@@ -7,7 +7,7 @@
 
 #include "platform/OSXClipboard.h"
 
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "base/Log.h"
 #include "deskflow/Clipboard.h"
 #include "platform/OSXClipboardBMPConverter.h"
@@ -202,7 +202,7 @@ std::string OSXClipboard::get(Format format) const
     LOG_DEBUG("exception thrown in OSXClipboard::get MacError (%d)", err);
   } catch (...) {
     LOG_DEBUG("unknown exception in OSXClipboard::get");
-    RETHROW_XTHREAD
+    RETHROW_THREADEXCEPTION
   }
 
   if (buffer != nullptr)

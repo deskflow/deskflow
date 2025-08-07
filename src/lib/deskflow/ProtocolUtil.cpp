@@ -7,8 +7,8 @@
 
 #include "deskflow/ProtocolUtil.h"
 #include "base/Log.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
-#include "deskflow/XDeskflow.h"
 #include "io/IStream.h"
 #include <array>
 #include <iterator>
@@ -93,7 +93,7 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
     try {
       vreadf(stream, fmt, args);
       result = true;
-    } catch (XIO &) {
+    } catch (IOException &) {
       result = false;
     } catch (const std::bad_alloc &) {
       result = false;
@@ -122,7 +122,7 @@ void ProtocolUtil::vwritef(deskflow::IStream *stream, const char *fmt, uint32_t 
     // write buffer
     stream->write(Buffer.data(), size);
     LOG_DEBUG2("wrote %d bytes", size);
-  } catch (const XBase &exception) {
+  } catch (const BaseException &exception) {
     LOG_DEBUG2("exception <%s> during wrote %d bytes into stream", exception.what(), size);
     throw;
   }
@@ -193,7 +193,7 @@ void ProtocolUtil::vreadf(deskflow::IStream *stream, const char *fmt, va_list ar
 
         if (len > PROTOCOL_MAX_STRING_LENGTH) {
           LOG_ERR("read: string length exceeds maximum allowed size: %u", len);
-          throw XBadClient("Too long message received");
+          throw BadClientException("Too long message received");
         }
 
         readBytes(stream, len, destination);
@@ -430,7 +430,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count
     // bail if stream has hungup
     if (n == 0) {
       LOG_DEBUG2("unexpected disconnect in readf(), %d bytes left", count);
-      throw XIOEndOfStream();
+      throw IOEndOfStreamException();
     }
 
     // prepare for next read
@@ -507,7 +507,7 @@ uint32_t ProtocolUtil::readVectorSize(deskflow::IStream *stream)
 
   if (size > PROTOCOL_MAX_LIST_LENGTH) {
     LOG_ERR("readVectorSize: vector length exceeds maximum allowed size: %u", size);
-    throw XBadClient("Too long message received");
+    throw BadClientException("Too long message received");
   }
 
   return size;

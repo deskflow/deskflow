@@ -13,13 +13,13 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "deskflow/AppUtil.h"
+#include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
 #include "deskflow/OptionTypes.h"
 #include "deskflow/PacketStreamFilter.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
-#include "deskflow/XDeskflow.h"
 #include "mt/Thread.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
@@ -280,7 +280,7 @@ std::string Server::protocolString() const
   } else if (m_protocol == Barrier) {
     return kBarrierProtocolName;
   }
-  throw XInvalidProtocol();
+  throw InvalidProtocolException();
 }
 
 uint32_t Server::getNumClients() const
@@ -1080,7 +1080,7 @@ void Server::processOptions()
       } else if (enumValue == Barrier) {
         m_protocol = Barrier;
       } else {
-        throw XInvalidProtocol();
+        throw InvalidProtocolException();
       }
     } else if (id == kOptionScreenSwitchDelay) {
       m_switchWaitDelay = 1.0e-3 * static_cast<double>(value);

@@ -18,11 +18,11 @@
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
-#include "deskflow/XScreen.h"
+#include "deskflow/ScreenException.h"
 #include "net/NetworkAddress.h"
+#include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
-#include "net/XSocket.h"
 #include "platform/Wayland.h"
 
 #if SYSAPI_WIN32
@@ -82,12 +82,12 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
       try {
         *m_serverAddress = NetworkAddress(args().m_serverAddress, kDefaultPort);
         m_serverAddress->resolve();
-      } catch (XSocketAddress &e) {
+      } catch (SocketAddressException &e) {
         // allow an address that we can't look up if we're restartable.
         // we'll try to resolve the address each time we connect to the
         // server.  a bad port will never get better.  patch by Brent
         // Priddy.
-        if (!args().m_restartable || e.getError() == XSocketAddress::SocketError::BadPort) {
+        if (!args().m_restartable || e.getError() == SocketAddressException::SocketError::BadPort) {
           LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
           bye(s_exitFailed);
         }
@@ -332,15 +332,15 @@ bool ClientApp::startClient()
     m_client->connect(m_lastServerAddressIndex);
 
     return true;
-  } catch (XScreenUnavailable &e) {
+  } catch (ScreenUnavailableException &e) {
     LOG_WARN("secondary screen unavailable: %s", e.what());
     closeClientScreen(clientScreen);
     retryTime = e.getRetryTime();
-  } catch (XScreenOpenFailure &e) {
+  } catch (ScreenOpenFailureException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;
-  } catch (XBase &e) {
+  } catch (BaseException &e) {
     LOG_CRIT("failed to start client: %s", e.what());
     closeClientScreen(clientScreen);
     return false;

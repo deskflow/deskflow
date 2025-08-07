@@ -6,7 +6,7 @@
 
 #include <QTest>
 
-class XBaseTests : public QObject
+class BaseExceptionTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
