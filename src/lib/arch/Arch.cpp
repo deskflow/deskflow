@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -30,13 +31,13 @@ Arch::Arch(Arch *arch)
   s_instance = arch;
 }
 
+#if SYSAPI_WIN32
 void Arch::init()
 {
   ARCH_NETWORK::init();
-#if SYSAPI_WIN32
   ArchMiscWindows::init();
-#endif
 }
+#endif
 
 Arch *Arch::getInstance()
 {
