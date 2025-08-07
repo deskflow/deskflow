@@ -10,7 +10,7 @@
 
 #include "base/XBase.h"
 #include "common/Common.h"
-#include "io/XIO.h"
+#include "io/IOException.h"
 
 /**
  * @brief SocketException generic socket exception
@@ -65,14 +65,14 @@ private:
 /**
  * @brief SocketIOCloseException - Thrown if a stream cannot be closed.
  */
-class SocketIOCloseException : public XIOClose
+class SocketIOCloseException : public IOCloseException
 {
 public:
-  SocketIOCloseException() : XIOClose(), m_state(kDone)
+  SocketIOCloseException() : IOCloseException(), m_state(kDone)
   {
     // do nothing
   }
-  explicit SocketIOCloseException(const std::string &msg) : XIOClose(msg), m_state(kFirst)
+  explicit SocketIOCloseException(const std::string &msg) : IOCloseException(msg), m_state(kFirst)
   {
     // do nothing
   }
@@ -88,7 +88,7 @@ public:
     if (m_state == kDone) {
       return m_formatted.c_str();
     } else {
-      return XIOClose::what();
+      return IOCloseException::what();
     }
   }
 

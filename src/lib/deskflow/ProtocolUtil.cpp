@@ -93,7 +93,7 @@ bool ProtocolUtil::readf(deskflow::IStream *stream, const char *fmt, ...)
     try {
       vreadf(stream, fmt, args);
       result = true;
-    } catch (XIO &) {
+    } catch (IOException &) {
       result = false;
     } catch (const std::bad_alloc &) {
       result = false;
@@ -430,7 +430,7 @@ void ProtocolUtil::read(deskflow::IStream *stream, void *vbuffer, uint32_t count
     // bail if stream has hungup
     if (n == 0) {
       LOG_DEBUG2("unexpected disconnect in readf(), %d bytes left", count);
-      throw XIOEndOfStream();
+      throw IOEndOfStreamException();
     }
 
     // prepare for next read
