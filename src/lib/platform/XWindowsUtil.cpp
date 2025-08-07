@@ -69,7 +69,9 @@ struct codepair
 {
   KeySym keysym;
   uint32_t ucs4;
-} s_keymap[] = {
+};
+
+codepair s_keymap[] = {
     {XK_Aogonek, 0x0104},      /* LATIN CAPITAL LETTER A WITH OGONEK */
     {XK_breve, 0x02d8},        /* BREVE */
     {XK_Lstroke, 0x0141},      /* LATIN CAPITAL LETTER L WITH STROKE */
