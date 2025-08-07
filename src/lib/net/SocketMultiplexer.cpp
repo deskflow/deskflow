@@ -8,7 +8,7 @@
 #include "net/SocketMultiplexer.h"
 
 #include "arch/Arch.h"
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "mt/CondVar.h"
@@ -173,7 +173,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
       } else {
         status = 0;
       }
-    } catch (XArchNetwork &e) {
+    } catch (ArchNetworkException &e) {
       LOG_WARN("error in socket multiplexer: %s", e.what());
       status = 0;
     }

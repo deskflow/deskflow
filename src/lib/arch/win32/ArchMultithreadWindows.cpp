@@ -11,7 +11,7 @@
 
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/Arch.h"
-#include "arch/XArch.h"
+#include "arch/ArchException.h"
 
 #include <process.h>
 
@@ -577,7 +577,7 @@ void ArchMultithreadWindows::testCancelThreadImpl(ArchThreadImpl *thread)
 
   // unwind thread's stack if cancelling
   if (cancel) {
-    throw XThreadCancel();
+    throw ThreadCancelException();
   }
 }
 
@@ -606,7 +606,7 @@ void ArchMultithreadWindows::doThreadFunc(ArchThread thread)
     result = (*thread->m_func)(thread->m_userData);
   }
 
-  catch (XThreadCancel &) {
+  catch (ThreadCancelException &) {
     // client called cancel()
   } catch (...) {
     // note -- don't catch (...) to avoid masking bugs
