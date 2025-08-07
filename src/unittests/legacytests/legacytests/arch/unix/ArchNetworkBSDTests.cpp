@@ -7,7 +7,7 @@
 #include "arch/IArchNetwork.h"
 #include "lib/arch/unix/ArchNetworkBSD.h"
 
-#include "lib/arch/XArch.h"
+#include "lib/arch/ArchException.h"
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -69,7 +69,7 @@ TEST(ArchNetworkBSDTests, pollSocket_mockAccessError_throws)
 
   const auto f = [&] { networkBSD.pollSocket(entries.data(), static_cast<int>(entries.size()), 1); };
 
-  EXPECT_THROW({ f(); }, XArchNetworkAccess);
+  EXPECT_THROW({ f(); }, ArchNetworkAccessException);
 }
 
 TEST(ArchNetworkBSDTests, pollSocket_pfdHasRevents_copiedToEntries)

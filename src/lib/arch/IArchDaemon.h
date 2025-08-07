@@ -37,7 +37,7 @@ public:
   start when the current user logs in.  If \p dependencies is not nullptr
   then it's a concatenation of NUL terminated other daemon names
   followed by a NUL;  the daemon will be configured to startup after
-  the listed daemons.  Throws an \c XArchDaemon exception on failure.
+  the listed daemons.  Throws an \c ArchDaemonException exception on failure.
   */
   virtual void installDaemon(
       const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
@@ -45,7 +45,7 @@ public:
 
   //! Uninstall daemon
   /*!
-  Uninstall a daemon.  Throws an \c XArchDaemon on failure.
+  Uninstall a daemon.  Throws an \c ArchDaemonException on failure.
   */
   virtual void uninstallDaemon(const char *name) = 0;
 
@@ -63,7 +63,7 @@ public:
 
   //! Daemonize the process
   /*!
-  Daemonize.  Throw XArchDaemonFailed on error.  \c name is the name
+  Daemonize.  Throw ArchDaemonFailedException on error.  \c name is the name
   of the daemon.  Once daemonized, \c func is invoked and daemonize
   returns when and what it does.
 

@@ -76,7 +76,7 @@ public:
   \code
   catch(ThreadExit&) { throw; }
   \endcode
-  or add the \c RETHROW_XTHREAD macro to the \c catch(...) block.
+  or add the \c RETHROW_THREADEXCEPTION macro to the \c catch(...) block.
   */
   [[noreturn]] static void exit(void *);
 
@@ -94,17 +94,17 @@ public:
   Instead, it unwinds the stack and destroys automatic objects, as
   if cancel() threw an exception (which is, in fact, what it does).
   Threads must take care to unlock and clean up any resources they
-  may have, especially mutexes.  They can \c catch(XThreadCancel) to
+  may have, especially mutexes.  They can \c catch(ThreadCancelException) to
   do that then rethrow the exception or they can let it happen
   automatically by doing clean up in the d'tors of automatic
   objects (like Lock).  Clients are strongly encouraged to do the latter.
   During cancellation, further cancel() calls are ignored (i.e.
   a thread cannot be interrupted by a cancel during cancellation).
 
-  Clients that \c catch(XThreadCancel) must always rethrow the
+  Clients that \c catch(ThreadCancelException) must always rethrow the
   exception.  Clients that \c catch(...) must either rethrow the
-  exception or include a \c catch(XThreadCancel) handler that
-  rethrows.  The \c RETHROW_XTHREAD macro may be useful for that.
+  exception or include a \c catch(ThreadCancelException) handler that
+  rethrows.  The \c RETHROW_THREADEXCEPTION macro may be useful for that.
   */
   void cancel();
 

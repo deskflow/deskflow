@@ -104,10 +104,10 @@ private:
   void stop(const char *name);
 
 private:
-  class XArchDaemonRunFailed
+  class ArchDaemonExceptionRunFailed
   {
   public:
-    XArchDaemonRunFailed(int result) : m_result(result)
+    ArchDaemonExceptionRunFailed(int result) : m_result(result)
     {
     }
 

@@ -128,7 +128,7 @@ void *Thread::threadFunc(void *vjob)
     LOG_DEBUG1("thread 0x%08x entry", id);
     job->run();
     LOG_DEBUG1("thread 0x%08x exit", id);
-  } catch (XThreadCancel &) {
+  } catch (ThreadCancelException &) {
     // client called cancel()
     LOG_DEBUG1("caught cancel on thread 0x%08x", id);
     delete job;

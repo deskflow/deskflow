@@ -7,8 +7,8 @@
 
 #include "arch/win32/ArchNetworkWinsock.h"
 #include "arch/Arch.h"
+#include "arch/ArchException.h"
 #include "arch/IArchMultithread.h"
-#include "arch/XArch.h"
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/XArchWindows.h"
 
@@ -65,7 +65,7 @@ static FARPROC netGetProcAddress(HMODULE module, LPCSTR name)
 {
   FARPROC func = ::GetProcAddress(module, name);
   if (!func) {
-    throw XArchNetworkSupport("");
+    throw ArchNetworkSupportException("");
   }
   return func;
 }
@@ -110,19 +110,19 @@ void ArchNetworkWinsock::init()
     try {
       initModule((HMODULE)::LoadLibrary(s_library[i]));
       return;
-    } catch (XArchNetwork &) {
+    } catch (ArchNetworkException &) {
       // ignore
     }
   }
 
   // can't initialize any library
-  throw XArchNetworkSupport("Cannot load winsock library");
+  throw ArchNetworkSupportException("Cannot load winsock library");
 }
 
 void ArchNetworkWinsock::initModule(HMODULE module)
 {
   if (module == nullptr) {
-    throw XArchNetworkSupport("");
+    throw ArchNetworkSupportException("");
   }
 
   // get startup function address
@@ -134,7 +134,7 @@ void ArchNetworkWinsock::initModule(HMODULE module)
   WSADATA data;
   int err = startup(version, &data);
   if (data.wVersion != version) {
-    throw XArchNetworkSupport(winsockErrorToString(err));
+    throw ArchNetworkSupportException(winsockErrorToString(err));
   }
   if (err != 0) {
     // some other initialization error
@@ -844,12 +844,12 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
   switch (err) {
   case WSAEACCES:
-    throw XArchNetworkAccess(winsockErrorToString(err));
+    throw ArchNetworkAccessException(winsockErrorToString(err));
 
   case WSAEMFILE:
   case WSAENOBUFS:
   case WSAENETDOWN:
-    throw XArchNetworkResource(winsockErrorToString(err));
+    throw ArchNetworkResourceException(winsockErrorToString(err));
 
   case WSAEPROTOTYPE:
   case WSAEPROTONOSUPPORT:
@@ -863,50 +863,50 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
   case WSANOTINITIALISED:
   case WSAVERNOTSUPPORTED:
   case WSASYSNOTREADY:
-    throw XArchNetworkSupport(winsockErrorToString(err));
+    throw ArchNetworkSupportException(winsockErrorToString(err));
 
   case WSAEADDRNOTAVAIL:
-    throw XArchNetworkNoAddress(winsockErrorToString(err));
+    throw ArchNetworkNoAddressException(winsockErrorToString(err));
 
   case WSAEADDRINUSE:
-    throw XArchNetworkAddressInUse(winsockErrorToString(err));
+    throw ArchNetworkAddressInUseException(winsockErrorToString(err));
 
   case WSAEHOSTUNREACH:
   case WSAENETUNREACH:
-    throw XArchNetworkNoRoute(winsockErrorToString(err));
+    throw ArchNetworkNoRouteException(winsockErrorToString(err));
 
   case WSAENOTCONN:
-    throw XArchNetworkNotConnected(winsockErrorToString(err));
+    throw ArchNetworkNotConnectedException(winsockErrorToString(err));
 
   case WSAEDISCON:
-    throw XArchNetworkShutdown(winsockErrorToString(err));
+    throw ArchNetworkShutdownException(winsockErrorToString(err));
 
   case WSAENETRESET:
   case WSAECONNABORTED:
   case WSAECONNRESET:
-    throw XArchNetworkDisconnected(winsockErrorToString(err));
+    throw ArchNetworkDisconnectedException(winsockErrorToString(err));
 
   case WSAECONNREFUSED:
-    throw XArchNetworkConnectionRefused(winsockErrorToString(err));
+    throw ArchNetworkConnectionRefusedException(winsockErrorToString(err));
 
   case WSAEHOSTDOWN:
   case WSAETIMEDOUT:
-    throw XArchNetworkTimedOut(winsockErrorToString(err));
+    throw ArchNetworkTimedOutException(winsockErrorToString(err));
 
   case WSAHOST_NOT_FOUND:
-    throw XArchNetworkNameUnknown(winsockErrorToString(err));
+    throw ArchNetworkNameUnknownException(winsockErrorToString(err));
 
   case WSANO_DATA:
-    throw XArchNetworkNameNoAddress(winsockErrorToString(err));
+    throw ArchNetworkNameNoAddressException(winsockErrorToString(err));
 
   case WSANO_RECOVERY:
-    throw XArchNetworkNameFailure(winsockErrorToString(err));
+    throw ArchNetworkNameFailureException(winsockErrorToString(err));
 
   case WSATRY_AGAIN:
-    throw XArchNetworkNameUnavailable(winsockErrorToString(err));
+    throw ArchNetworkNameUnavailableException(winsockErrorToString(err));
 
   default:
-    throw XArchNetwork(winsockErrorToString(err));
+    throw ArchNetworkException(winsockErrorToString(err));
   }
 }
 
@@ -914,18 +914,18 @@ bool ArchNetworkWinsock::isEqualAddr(ArchNetAddress a, ArchNetAddress b)
 {
   switch (err) {
   case WSAHOST_NOT_FOUND:
-    throw XArchNetworkNameUnknown(winsockErrorToString(err));
+    throw ArchNetworkNameUnknownException(winsockErrorToString(err));
 
   case WSANO_DATA:
-    throw XArchNetworkNameNoAddress(winsockErrorToString(err));
+    throw ArchNetworkNameNoAddressException(winsockErrorToString(err));
 
   case WSANO_RECOVERY:
-    throw XArchNetworkNameFailure(winsockErrorToString(err));
+    throw ArchNetworkNameFailureException(winsockErrorToString(err));
 
   case WSATRY_AGAIN:
-    throw XArchNetworkNameUnavailable(winsockErrorToString(err));
+    throw ArchNetworkNameUnavailableException(winsockErrorToString(err));
 
   default:
-    throw XArchNetworkName(winsockErrorToString(err));
+    throw ArchNetworkNameException(winsockErrorToString(err));
   }
 }
