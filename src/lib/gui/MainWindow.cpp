@@ -1106,7 +1106,14 @@ void MainWindow::setHostName()
 
   QString text = ui->lineEditName->text();
   const auto screenName = Settings::value(Settings::Core::ScreenName).toString();
-  bool existingScreen = serverConfig().screenExists(text) && (text != screenName);
+
+  if (text == screenName)
+    return;
+
+  const bool isServer = ui->rbModeServer->isChecked();
+  bool existingScreen = false;
+  if (isServer)
+    existingScreen = serverConfig().screenExists(text);
 
   if (!ui->lineEditName->hasAcceptableInput() || text.isEmpty() || existingScreen) {
     blockSignals(true);
@@ -1131,6 +1138,8 @@ void MainWindow::setHostName()
 
   ui->lblComputerName->setText(ui->lineEditName->text());
   Settings::setValue(Settings::Core::ScreenName, ui->lineEditName->text());
+  if (isServer)
+    serverConfig().updateServerName();
   applyConfig();
 }
 
