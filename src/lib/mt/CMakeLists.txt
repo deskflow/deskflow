@@ -14,7 +14,7 @@ add_library(mt STATIC
   Mutex.h
   Thread.cpp
   Thread.h
-  XThread.h
+  ThreadException.h
 )
 
 target_link_libraries(mt PUBLIC base)
