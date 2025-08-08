@@ -45,7 +45,7 @@ EiEventQueueBuffer::~EiEventQueueBuffer()
   close(m_pipeWrite);
 }
 
-void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
+void EiEventQueueBuffer::waitForEvent(double msTimeout)
 {
   Thread::testCancel();
 
@@ -59,7 +59,7 @@ void EiEventQueueBuffer::waitForEvent(double timeout_in_ms)
   pfds[s_pipeFd].fd = m_pipeRead;
   pfds[s_pipeFd].events = POLLIN;
 
-  int timeout = (timeout_in_ms < 0.0) ? -1 : static_cast<int>(1000.0 * timeout_in_ms);
+  int timeout = (msTimeout < 0.0) ? -1 : static_cast<int>(1000.0 * msTimeout);
 
   if (int retval = poll(pfds, s_pollFdCount, timeout); retval > 0) {
     if (pfds[s_eiFd].revents & POLLIN) {
