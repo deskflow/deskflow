@@ -124,6 +124,11 @@ elseif(UNIX)
     XWindowsUtil.h
   )
 
+  qt6_add_dbus_interface(PLATFORM_SOURCES
+    xdg-portal-specs/org.freedesktop.portal.RemoteDesktop.xml
+    XdgPortalRemoteDesktopInterface
+  )
+
   if(LIBEI_FOUND)
     list(APPEND PLATFORM_SOURCES
       EiEventQueueBuffer.cpp
@@ -132,14 +137,16 @@ elseif(UNIX)
       EiKeyState.h
       EiScreen.cpp
       EiScreen.h
+      PortalRemoteDesktop.cpp
+      PortalRemoteDesktop.h
+      PortalRequest.h
+      PortalRequest.cpp
     )
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
         PortalInputCapture.cpp
         PortalInputCapture.h
-        PortalRemoteDesktop.cpp
-        PortalRemoteDesktop.h
       )
     endif()
   endif()
@@ -154,7 +161,6 @@ include_directories(${inc})
 add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 
 target_link_libraries(platform client ${libs})
-
 macro(link_wayland_libs)
   target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
 
