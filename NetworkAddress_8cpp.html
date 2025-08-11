@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.75</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,8 +94,8 @@ $(function(){initNavTree('NetworkAddress_8cpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="NetworkAddress_8h_source.html">net/NetworkAddress.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Arch_8h_source.html">arch/Arch.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="XArch_8h_source.html">arch/XArch.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="XSocket_8h_source.html">net/XSocket.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ArchException_8h_source.html">arch/ArchException.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SocketException_8h_source.html">net/SocketException.h</a>&quot;</code><br />
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstdlib&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -103,27 +103,27 @@ Include dependency graph for NetworkAddress.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="NetworkAddress_8cpp__incl.png" border="0" usemap="#asrc_2lib_2net_2NetworkAddress_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2net_2NetworkAddress_8cpp" id="asrc_2lib_2net_2NetworkAddress_8cpp">
-<area shape="rect" title=" " alt="" coords="474,5,679,30"/>
+<area shape="rect" title=" " alt="" coords="486,5,691,30"/>
 <area shape="rect" href="NetworkAddress_8h.html" title=" " alt="" coords="343,78,495,103"/>
-<area shape="poly" title=" " alt="" coords="552,33,460,74,458,69,549,28"/>
+<area shape="poly" title=" " alt="" coords="562,33,462,74,460,69,559,28"/>
 <area shape="rect" href="Arch_8h.html" title=" " alt="" coords="91,78,179,103"/>
-<area shape="poly" title=" " alt="" coords="503,33,195,82,194,77,503,28"/>
-<area shape="rect" href="XArch_8h.html" title=" " alt="" coords="570,223,668,248"/>
-<area shape="poly" title=" " alt="" coords="573,31,562,63,559,83,560,102,581,161,606,209,601,211,576,163,555,103,554,83,557,62,568,29"/>
-<area shape="rect" href="XSocket_8h.html" title=" " alt="" coords="569,78,672,103"/>
-<area shape="poly" title=" " alt="" coords="586,29,607,63,603,66,581,32"/>
-<area shape="rect" title=" " alt="" coords="695,78,770,103"/>
-<area shape="poly" title=" " alt="" coords="603,28,694,69,692,74,601,33"/>
-<area shape="rect" title=" " alt="" coords="793,78,853,103"/>
-<area shape="poly" title=" " alt="" coords="618,28,779,74,778,79,616,33"/>
+<area shape="poly" title=" " alt="" coords="513,33,195,82,194,77,513,28"/>
+<area shape="rect" href="ArchException_8h.html" title=" " alt="" coords="570,223,716,248"/>
+<area shape="poly" title=" " alt="" coords="582,32,564,63,559,83,560,102,573,133,589,162,625,210,620,213,585,165,568,135,555,103,554,82,559,62,577,29"/>
+<area shape="rect" href="SocketException_8h.html" title=" " alt="" coords="570,78,721,103"/>
+<area shape="poly" title=" " alt="" coords="600,29,629,64,625,68,596,32"/>
+<area shape="rect" title=" " alt="" coords="746,78,820,103"/>
+<area shape="poly" title=" " alt="" coords="621,28,738,70,736,75,620,33"/>
+<area shape="rect" title=" " alt="" coords="844,78,903,103"/>
+<area shape="poly" title=" " alt="" coords="639,28,830,75,828,80,637,33"/>
 <area shape="rect" href="IArchNetwork_8h.html" title=" " alt="" coords="291,151,432,175"/>
 <area shape="poly" title=" " alt="" coords="412,105,383,140,379,137,408,102"/>
 <area shape="rect" href="EventTypes_8h.html" title=" " alt="" coords="412,296,544,321"/>
 <area shape="poly" title=" " alt="" coords="427,102,447,150,465,220,476,280,471,281,460,221,442,152,422,104"/>
 <area shape="rect" href="IInterface_8h.html" title=" " alt="" coords="172,223,314,248"/>
 <area shape="poly" title=" " alt="" coords="344,178,277,217,274,213,341,174"/>
-<area shape="rect" title=" " alt="" coords="592,296,646,321"/>
-<area shape="poly" title=" " alt="" coords="363,176,363,211,368,230,378,246,405,258,458,272,577,297,576,302,457,277,403,263,375,250,363,232,358,212,358,176"/>
+<area shape="rect" title=" " alt="" coords="616,296,670,321"/>
+<area shape="poly" title=" " alt="" coords="363,176,363,211,368,230,378,246,409,259,469,273,602,298,601,303,467,278,407,264,375,250,363,232,358,212,357,176"/>
 <area shape="rect" title=" " alt="" coords="388,223,445,248"/>
 <area shape="poly" title=" " alt="" coords="373,174,401,210,396,213,369,178"/>
 <area shape="rect" href="Common_8h.html" title=" " alt="" coords="228,296,314,321"/>
@@ -146,18 +146,18 @@ Include dependency graph for NetworkAddress.cpp:</div>
 <area shape="poly" title=" " alt="" coords="138,175,145,210,152,229,162,246,189,270,221,287,218,292,186,274,158,250,147,231,140,211,133,176"/>
 <area shape="rect" title=" " alt="" coords="29,223,97,248"/>
 <area shape="poly" title=" " alt="" coords="125,178,88,214,84,210,121,174"/>
-<area shape="poly" title=" " alt="" coords="571,249,329,298,328,293,569,244"/>
-<area shape="poly" title=" " alt="" coords="622,249,622,280,616,280,616,249"/>
-<area shape="rect" title=" " alt="" coords="687,296,764,321"/>
-<area shape="poly" title=" " alt="" coords="638,246,697,285,694,289,635,251"/>
-<area shape="poly" title=" " alt="" coords="614,105,554,173,508,214,458,250,393,280,329,298,328,293,391,275,455,246,505,210,550,169,610,101"/>
-<area shape="rect" href="XBase_8h.html" title=" " alt="" coords="691,223,795,248"/>
-<area shape="poly" title=" " alt="" coords="631,102,689,174,723,210,719,214,685,177,627,105"/>
-<area shape="rect" href="XIO_8h.html" title=" " alt="" coords="699,151,768,175"/>
-<area shape="poly" title=" " alt="" coords="641,101,703,140,701,144,638,105"/>
-<area shape="poly" title=" " alt="" coords="724,251,654,290,651,286,721,246"/>
-<area shape="poly" title=" " alt="" coords="743,249,735,281,730,280,738,248"/>
-<area shape="poly" title=" " alt="" coords="738,176,742,207,737,208,733,176"/>
+<area shape="poly" title=" " alt="" coords="582,251,329,299,328,294,581,246"/>
+<area shape="poly" title=" " alt="" coords="646,249,646,280,640,280,640,249"/>
+<area shape="rect" title=" " alt="" coords="735,296,812,321"/>
+<area shape="poly" title=" " alt="" coords="666,246,740,286,738,291,663,251"/>
+<area shape="poly" title=" " alt="" coords="637,105,566,173,514,214,458,250,393,278,330,297,328,292,391,273,455,246,511,210,562,169,633,101"/>
+<area shape="rect" href="BaseException_8h.html" title=" " alt="" coords="739,223,891,248"/>
+<area shape="poly" title=" " alt="" coords="657,102,687,135,727,173,784,213,781,217,724,177,684,139,653,105"/>
+<area shape="rect" href="IOException_8h.html" title=" " alt="" coords="738,151,855,175"/>
+<area shape="poly" title=" " alt="" coords="672,101,759,141,757,146,670,106"/>
+<area shape="poly" title=" " alt="" coords="788,251,686,293,683,288,786,246"/>
+<area shape="poly" title=" " alt="" coords="811,250,790,284,786,281,806,247"/>
+<area shape="poly" title=" " alt="" coords="802,175,811,207,806,209,797,177"/>
 </map>
 </div>
 </div></div><!-- contents -->

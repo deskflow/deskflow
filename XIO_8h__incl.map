@@ -1,9 +1,0 @@
-<map id="src/lib/io/XIO.h" name="src/lib/io/XIO.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="34,5,142,30"/>
-<area shape="rect" id="Node000002" href="$XBase_8h.html" title=" " alt="" coords="36,78,140,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,31,91,62,85,62,85,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,83,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,105,61,139,57,136,78,102"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="107,151,160,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="98,102,120,136,115,139,93,105"/>
-</map>

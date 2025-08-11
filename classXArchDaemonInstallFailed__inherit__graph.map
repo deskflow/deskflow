@@ -1,7 +1,0 @@
-<map id="XArchDaemonInstallFailed" name="XArchDaemonInstallFailed">
-<area shape="rect" id="Node000001" title="Could not install daemon." alt="" coords="5,151,181,175"/>
-<area shape="rect" id="Node000002" href="$classXArchDaemon.html" title="Generic daemon exception." alt="" coords="40,78,146,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,118,96,150,90,150,90,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="31,5,155,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,46,96,78,90,78,90,46"/>
-</map>

@@ -1,0 +1,7 @@
+<map id="ArchDaemonUninstallFailedException" name="ArchDaemonUninstallFailedException">
+<area shape="rect" id="Node000001" title="Could not uninstall daemon." alt="" coords="5,151,188,189"/>
+<area shape="rect" id="Node000002" href="$classArchDaemonException.html" title="Generic daemon exception." alt="" coords="20,78,173,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,118,99,150,94,150,94,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="35,5,158,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,46,99,78,94,78,94,46"/>
+</map>

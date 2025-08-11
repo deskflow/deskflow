@@ -1,0 +1,19 @@
+<map id="SocketException" name="SocketException">
+<area shape="rect" id="Node000001" title="SocketException generic socket exception." alt="" coords="333,56,451,81"/>
+<area shape="rect" id="Node000004" href="$classSocketAddressException.html" title="Socket bad address exception." alt="" coords="504,31,671,55"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="466,56,504,51,504,56,467,61"/>
+<area shape="rect" id="Node000005" href="$classSocketWithWhatException.html" title="SocketWithWhatException &#45; generic SocketException Exception with a generic what method impl." alt="" coords="499,80,676,105"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="467,75,499,79,499,84,467,80"/>
+<area shape="rect" id="Node000002" href="$classBaseException.html" title="Exception base class." alt="" coords="177,56,285,81"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,66,333,66,333,71,301,71"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,56,129,81"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,66,176,66,176,71,144,71"/>
+<area shape="rect" id="Node000006" href="$classSocketAddressInUseException.html" title="SocketAddressInUseException Thrown when a socket cannot be bound to an address because the address is..." alt="" coords="724,5,925,30"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="653,72,675,65,723,41,763,28,764,33,725,45,677,69,654,77"/>
+<area shape="rect" id="Node000007" href="$classSocketBindException.html" title="SocketBindException &#45; Thrown when a socket cannot be bound to an address." alt="" coords="752,55,896,79"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="691,79,752,72,752,77,691,84"/>
+<area shape="rect" id="Node000008" href="$classSocketConnectException.html" title="SocketConnectException &#45; Thrown when a socket cannot connect to a remote endpoint." alt="" coords="741,104,908,129"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="691,100,740,105,740,110,691,105"/>
+<area shape="rect" id="Node000009" href="$classSocketCreateException.html" title="SocketCreateException &#45; Thrown when a socket cannot be created (by the operating system)." alt="" coords="746,153,903,178"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="637,108,724,138,769,150,768,155,723,143,636,113"/>
+</map>

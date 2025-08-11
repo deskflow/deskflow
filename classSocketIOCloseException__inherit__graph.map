@@ -1,0 +1,11 @@
+<map id="SocketIOCloseException" name="SocketIOCloseException">
+<area shape="rect" id="Node000001" title="SocketIOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="5,296,172,321"/>
+<area shape="rect" id="Node000002" href="$classIOCloseException.html" title="The IOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="25,223,152,248"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,264,91,296,86,296,86,264"/>
+<area shape="rect" id="Node000003" href="$classIOException.html" title="The IOException class Generic i/o exception class." alt="" coords="42,151,135,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,191,91,223,86,223,86,191"/>
+<area shape="rect" id="Node000004" href="$classBaseException.html" title="Exception base class." alt="" coords="34,78,143,103"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,118,91,150,86,150,86,118"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="27,5,150,30"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="91,46,91,78,86,78,86,46"/>
+</map>

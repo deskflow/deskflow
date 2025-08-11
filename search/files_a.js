@@ -43,6 +43,8 @@ var searchData=
   ['mswindowssession_2eh_40',['MSWindowsSession.h',['../MSWindowsSession_8h.html',1,'']]],
   ['mswindowswatchdog_2ecpp_41',['MSWindowsWatchdog.cpp',['../MSWindowsWatchdog_8cpp.html',1,'']]],
   ['mswindowswatchdog_2eh_42',['MSWindowsWatchdog.h',['../MSWindowsWatchdog_8h.html',1,'']]],
-  ['mutex_2ecpp_43',['Mutex.cpp',['../Mutex_8cpp.html',1,'']]],
-  ['mutex_2eh_44',['Mutex.h',['../Mutex_8h.html',1,'']]]
+  ['mtexception_2ecpp_43',['MTException.cpp',['../MTException_8cpp.html',1,'']]],
+  ['mtexception_2eh_44',['MTException.h',['../MTException_8h.html',1,'']]],
+  ['mutex_2ecpp_45',['Mutex.cpp',['../Mutex_8cpp.html',1,'']]],
+  ['mutex_2eh_46',['Mutex.h',['../Mutex_8h.html',1,'']]]
 ];

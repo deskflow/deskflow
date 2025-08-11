@@ -1,0 +1,9 @@
+<map id="InvalidProtocolException" name="InvalidProtocolException">
+<area shape="rect" id="Node000001" title="InvalidProtocolException &#45; Thrown when the server protocol is unreconized." alt="" coords="5,223,169,248"/>
+<area shape="rect" id="Node000002" href="$classDeskflowException.html" title="The DeskflowException class Generic deskflow exception class." alt="" coords="20,151,154,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,191,90,223,84,223,84,191"/>
+<area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="33,78,141,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,118,90,150,84,150,84,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="25,5,149,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,46,90,78,84,78,84,46"/>
+</map>

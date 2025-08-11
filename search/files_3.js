@@ -13,12 +13,14 @@ var searchData=
   ['deskflow_2ddaemon_2ecpp_10',['deskflow-daemon.cpp',['../deskflow-daemon_8cpp.html',1,'']]],
   ['deskflow_2dgui_2ecpp_11',['deskflow-gui.cpp',['../deskflow-gui_8cpp.html',1,'']]],
   ['deskflow_2dserver_2ecpp_12',['deskflow-server.cpp',['../deskflow-server_8cpp.html',1,'']]],
-  ['deskflowxkbkeyboard_2ecpp_13',['DeskflowXkbKeyboard.cpp',['../DeskflowXkbKeyboard_8cpp.html',1,'']]],
-  ['deskflowxkbkeyboard_2eh_14',['DeskflowXkbKeyboard.h',['../DeskflowXkbKeyboard_8h.html',1,'']]],
-  ['diagnostic_2ecpp_15',['Diagnostic.cpp',['../Diagnostic_8cpp.html',1,'']]],
-  ['diagnostic_2eh_16',['Diagnostic.h',['../Diagnostic_8h.html',1,'']]],
-  ['directiontypes_2eh_17',['DirectionTypes.h',['../DirectionTypes_8h.html',1,'']]],
-  ['displayinvalidexception_2eh_18',['DisplayInvalidException.h',['../DisplayInvalidException_8h.html',1,'']]],
-  ['dotenv_2ecpp_19',['DotEnv.cpp',['../DotEnv_8cpp.html',1,'']]],
-  ['dotenv_2eh_20',['DotEnv.h',['../DotEnv_8h.html',1,'']]]
+  ['deskflowexception_2ecpp_13',['DeskflowException.cpp',['../DeskflowException_8cpp.html',1,'']]],
+  ['deskflowexception_2eh_14',['DeskflowException.h',['../DeskflowException_8h.html',1,'']]],
+  ['deskflowxkbkeyboard_2ecpp_15',['DeskflowXkbKeyboard.cpp',['../DeskflowXkbKeyboard_8cpp.html',1,'']]],
+  ['deskflowxkbkeyboard_2eh_16',['DeskflowXkbKeyboard.h',['../DeskflowXkbKeyboard_8h.html',1,'']]],
+  ['diagnostic_2ecpp_17',['Diagnostic.cpp',['../Diagnostic_8cpp.html',1,'']]],
+  ['diagnostic_2eh_18',['Diagnostic.h',['../Diagnostic_8h.html',1,'']]],
+  ['directiontypes_2eh_19',['DirectionTypes.h',['../DirectionTypes_8h.html',1,'']]],
+  ['displayinvalidexception_2eh_20',['DisplayInvalidException.h',['../DisplayInvalidException_8h.html',1,'']]],
+  ['dotenv_2ecpp_21',['DotEnv.cpp',['../DotEnv_8cpp.html',1,'']]],
+  ['dotenv_2eh_22',['DotEnv.h',['../DotEnv_8h.html',1,'']]]
 ];

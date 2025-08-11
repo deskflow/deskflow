@@ -1,9 +1,0 @@
-<map id="XArchDaemonUninstallNotInstalled" name="XArchDaemonUninstallNotInstalled">
-<area shape="rect" id="Node000001" title="Attempted to uninstall a daemon that was not installed." alt="" coords="5,223,232,248"/>
-<area shape="rect" id="Node000002" href="$classXArchDaemonFailed.html" title="Could not daemonize." alt="" coords="48,151,189,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,191,121,223,116,223,116,191"/>
-<area shape="rect" id="Node000003" href="$classXArchDaemon.html" title="Generic daemon exception." alt="" coords="66,78,171,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,118,121,150,116,150,116,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="57,5,180,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="121,46,121,78,116,78,116,46"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="XArchNetworkNameUnknown" name="XArchNetworkNameUnknown">
-<area shape="rect" id="Node000001" title="The named host is unknown." alt="" coords="5,223,202,248"/>
-<area shape="rect" id="Node000002" href="$classXArchNetworkName.html" title="Generic network name lookup erros." alt="" coords="33,151,174,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,191,106,223,101,223,101,191"/>
-<area shape="rect" id="Node000003" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="50,78,157,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,118,106,150,101,150,101,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="42,5,165,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,46,106,78,101,78,101,46"/>
-</map>

@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['badport_0',['BadPort',['../classXSocketAddress.html#a4164a26f35aef0b36ba951f486c5b219a8eadb6e14dc50f745fdb9a395ad30664',1,'XSocketAddress']]],
+  ['badport_0',['BadPort',['../classSocketAddressException.html#a4489c4f58140c6f638f0675929eb5f14a8eadb6e14dc50f745fdb9a395ad30664',1,'SocketAddressException']]],
   ['barrier_1',['Barrier',['../NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6',1,'NetworkProtocol.h']]],
   ['base_2',['Base',['../classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba095a1b43effec73955e31e790438de49',1,'deskflow::ArgsBase']]],
   ['bitmap_3',['Bitmap',['../classIClipboard.html#a1d014188948be557b3a3d88034d7081ea86ee74baff479d85d18f2cda9f8a9518',1,'IClipboard']]],

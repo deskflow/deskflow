@@ -1,0 +1,19 @@
+<map id="DeskflowException" name="DeskflowException">
+<area shape="rect" id="Node000001" title="The DeskflowException class Generic deskflow exception class." alt="" coords="333,129,466,154"/>
+<area shape="rect" id="Node000004" href="$classBadClientException.html" title="BadClientException &#45; Thrown when the client fails to follow the protocol." alt="" coords="540,5,675,30"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="421,116,461,77,513,41,543,28,545,33,516,45,465,81,424,119"/>
+<area shape="rect" id="Node000005" href="$classDuplicateClientException.html" title="Client already connected exception." alt="" coords="524,55,691,79"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="440,120,513,90,553,77,555,82,515,95,442,125"/>
+<area shape="rect" id="Node000006" href="$classExitAppException.html" title="Generic exit eception." alt="" coords="545,104,670,129"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="481,129,544,121,545,127,482,134"/>
+<area shape="rect" id="Node000007" href="$classIncompatibleClientException.html" title="Incompatible client exception." alt="" coords="514,153,701,178"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="482,148,514,152,514,158,481,154"/>
+<area shape="rect" id="Node000008" href="$classInvalidProtocolException.html" title="InvalidProtocolException &#45; Thrown when the server protocol is unreconized." alt="" coords="526,203,689,227"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="443,158,515,187,556,200,554,205,513,192,441,163"/>
+<area shape="rect" id="Node000009" href="$classUnknownClientException.html" title="Client not in map exception." alt="" coords="524,252,691,277"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="424,164,465,201,516,237,545,249,543,254,513,241,461,205,421,167"/>
+<area shape="rect" id="Node000002" href="$classBaseException.html" title="Exception base class." alt="" coords="177,129,285,154"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,139,333,139,333,144,301,144"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,129,129,154"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,139,176,139,176,144,144,144"/>
+</map>

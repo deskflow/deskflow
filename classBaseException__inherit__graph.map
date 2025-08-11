@@ -1,0 +1,59 @@
+<map id="BaseException" name="BaseException">
+<area shape="rect" id="Node000001" title="Exception base class." alt="" coords="177,573,285,598"/>
+<area shape="rect" id="Node000003" href="$classDeskflowException.html" title="The DeskflowException class Generic deskflow exception class." alt="" coords="348,153,481,178"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,558,405,178,410,180,246,560"/>
+<area shape="rect" id="Node000010" href="$classIOException.html" title="The IOException class Generic i/o exception class." alt="" coords="368,425,460,450"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="258,561,396,448,399,452,261,565"/>
+<area shape="rect" id="Node000017" href="$classMTException.html" title="MTException generic multithreading exception." alt="" coords="366,548,463,573"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="300,574,365,564,365,570,300,579"/>
+<area shape="rect" id="Node000019" href="$classScreenException.html" title="The ScreenException class, generic screen exception." alt="" coords="354,597,474,622"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="301,592,355,599,354,605,300,597"/>
+<area shape="rect" id="Node000022" href="$classSocketException.html" title="SocketException generic socket exception." alt="" coords="355,647,473,671"/>
+<area shape="poly" id="edge21_Node000001_Node000022" title=" " alt="" coords="271,603,334,631,369,644,368,649,332,636,269,608"/>
+<area shape="rect" id="Node000029" href="$classdeskflow_1_1server_1_1ServerConfigReadException.html" title="Configuration stream read exception." alt="" coords="333,696,495,734"/>
+<area shape="poly" id="edge28_Node000001_Node000029" title=" " alt="" coords="254,608,290,645,334,681,356,693,354,697,332,685,286,649,251,612"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,573,129,598"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,583,176,583,176,588,144,588"/>
+<area shape="rect" id="Node000004" href="$classBadClientException.html" title="BadClientException &#45; Thrown when the client fails to follow the protocol." alt="" coords="578,5,713,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="432,139,478,89,509,63,542,41,576,27,578,32,545,45,512,67,482,93,436,143"/>
+<area shape="rect" id="Node000005" href="$classDuplicateClientException.html" title="Client already connected exception." alt="" coords="562,55,729,79"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="445,142,490,115,542,90,581,77,582,82,544,95,493,120,448,147"/>
+<area shape="rect" id="Node000006" href="$classExitAppException.html" title="Generic exit eception." alt="" coords="583,104,708,129"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="490,147,584,127,585,132,491,152"/>
+<area shape="rect" id="Node000007" href="$classIncompatibleClientException.html" title="Incompatible client exception." alt="" coords="552,153,739,178"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="496,163,552,163,552,168,496,168"/>
+<area shape="rect" id="Node000008" href="$classInvalidProtocolException.html" title="InvalidProtocolException &#45; Thrown when the server protocol is unreconized." alt="" coords="564,203,727,227"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="491,179,585,199,584,205,490,184"/>
+<area shape="rect" id="Node000009" href="$classUnknownClientException.html" title="Client not in map exception." alt="" coords="562,252,729,277"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="448,185,493,211,544,237,582,249,581,254,542,241,490,216,445,189"/>
+<area shape="rect" id="Node000011" href="$classIOCloseException.html" title="The IOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="582,301,709,326"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="437,413,484,374,542,337,581,323,583,328,545,341,487,378,441,417"/>
+<area shape="rect" id="Node000013" href="$classIOClosedException.html" title="IOClosedException &#45; Thrown when attempting to close or perform I/O on an already closed." alt="" coords="579,351,712,375"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="459,417,543,386,587,373,588,379,544,391,460,422"/>
+<area shape="rect" id="Node000014" href="$classIOEndOfStreamException.html" title="IOEndOfStreamException &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="560,400,731,425"/>
+<area shape="poly" id="edge13_Node000010_Node000014" title=" " alt="" coords="476,428,559,419,560,424,476,434"/>
+<area shape="rect" id="Node000015" href="$classIOWouldBlockException.html" title="IOWouldBlockException &#45; Thrown if an operation on a stream would block." alt="" coords="565,449,726,474"/>
+<area shape="poly" id="edge14_Node000010_Node000015" title=" " alt="" coords="476,441,565,451,564,456,475,447"/>
+<area shape="rect" id="Node000016" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="580,499,711,523"/>
+<area shape="poly" id="edge15_Node000010_Node000016" title=" " alt="" coords="462,454,544,483,589,495,587,501,543,488,460,459"/>
+<area shape="rect" id="Node000012" href="$classSocketIOCloseException.html" title="SocketIOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="813,301,980,326"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="724,311,813,311,813,316,724,316"/>
+<area shape="rect" id="Node000018" href="$classMTThreadUnavailableException.html" title="MTThreadUnavailableException &#45; Thrown when a thread cannot be created." alt="" coords="543,548,748,573"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="479,558,543,558,543,563,479,563"/>
+<area shape="rect" id="Node000020" href="$classScreenOpenFailureException.html" title="ScreenOpenFailureException &#45; Thrown when a screen cannot be opened or initialized." alt="" coords="551,597,740,622"/>
+<area shape="poly" id="edge19_Node000019_Node000020" title=" " alt="" coords="490,607,550,607,550,612,490,612"/>
+<area shape="rect" id="Node000021" href="$classScreenUnavailableException.html" title="Screen unavailable exception." alt="" coords="803,597,990,622"/>
+<area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="756,607,803,607,803,612,756,612"/>
+<area shape="rect" id="Node000023" href="$classSocketAddressException.html" title="Socket bad address exception." alt="" coords="562,647,729,671"/>
+<area shape="poly" id="edge22_Node000022_Node000023" title=" " alt="" coords="489,656,562,656,562,662,489,662"/>
+<area shape="rect" id="Node000024" href="$classSocketWithWhatException.html" title="SocketWithWhatException &#45; generic SocketException Exception with a generic what method impl." alt="" coords="557,696,734,721"/>
+<area shape="poly" id="edge23_Node000022_Node000024" title=" " alt="" coords="489,672,585,693,583,698,488,677"/>
+<area shape="rect" id="Node000025" href="$classSocketAddressInUseException.html" title="SocketAddressInUseException Thrown when a socket cannot be bound to an address because the address is..." alt="" coords="796,647,997,671"/>
+<area shape="poly" id="edge24_Node000024_Node000025" title=" " alt="" coords="726,690,829,669,830,675,727,695"/>
+<area shape="rect" id="Node000026" href="$classSocketBindException.html" title="SocketBindException &#45; Thrown when a socket cannot be bound to an address." alt="" coords="824,696,968,721"/>
+<area shape="poly" id="edge25_Node000024_Node000026" title=" " alt="" coords="750,706,824,706,824,711,750,711"/>
+<area shape="rect" id="Node000027" href="$classSocketConnectException.html" title="SocketConnectException &#45; Thrown when a socket cannot connect to a remote endpoint." alt="" coords="813,745,980,770"/>
+<area shape="poly" id="edge26_Node000024_Node000027" title=" " alt="" coords="727,722,830,742,829,747,726,727"/>
+<area shape="rect" id="Node000028" href="$classSocketCreateException.html" title="SocketCreateException &#45; Thrown when a socket cannot be created (by the operating system)." alt="" coords="818,795,975,819"/>
+<area shape="poly" id="edge27_Node000024_Node000028" title=" " alt="" coords="684,726,736,753,797,779,837,792,835,797,795,784,734,758,681,731"/>
+</map>

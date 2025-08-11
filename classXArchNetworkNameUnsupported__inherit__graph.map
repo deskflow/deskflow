@@ -1,9 +1,0 @@
-<map id="XArchNetworkNameUnsupported" name="XArchNetworkNameUnsupported">
-<area shape="rect" id="Node000001" title="The named host is known but no supported address." alt="" coords="5,223,222,248"/>
-<area shape="rect" id="Node000002" href="$classXArchNetworkName.html" title="Generic network name lookup erros." alt="" coords="43,151,184,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="116,191,116,223,111,223,111,191"/>
-<area shape="rect" id="Node000003" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="60,78,167,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,118,116,150,111,150,111,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="52,5,175,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="116,46,116,78,111,78,111,46"/>
-</map>

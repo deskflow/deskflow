@@ -26,5 +26,7 @@ var searchData=
   ['mswindowsscreensaver_23',['MSWindowsScreenSaver',['../classMSWindowsScreenSaver.html',1,'']]],
   ['mswindowssession_24',['MSWindowsSession',['../classMSWindowsSession.html',1,'']]],
   ['mswindowswatchdog_25',['MSWindowsWatchdog',['../classMSWindowsWatchdog.html',1,'']]],
-  ['mutex_26',['Mutex',['../classMutex.html',1,'']]]
+  ['mtexception_26',['MTException',['../classMTException.html',1,'']]],
+  ['mtthreadunavailableexception_27',['MTThreadUnavailableException',['../classMTThreadUnavailableException.html',1,'']]],
+  ['mutex_28',['Mutex',['../classMutex.html',1,'']]]
 ];

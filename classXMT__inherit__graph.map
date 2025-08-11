@@ -1,9 +1,0 @@
-<map id="XMT" name="XMT">
-<area shape="rect" id="Node000001" title="XMT generic multithreading exception." alt="" coords="59,151,108,175"/>
-<area shape="rect" id="Node000004" href="$classXMTThreadUnavailable.html" title="XMTThreadUnavailable &#45; Thrown when a thread cannot be created." alt="" coords="5,223,162,248"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="86,191,86,223,81,223,81,191"/>
-<area shape="rect" id="Node000002" href="$classXBase.html" title="Exception base class." alt="" coords="53,78,114,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,118,86,150,81,150,81,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="22,5,145,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,46,86,78,81,78,81,46"/>
-</map>

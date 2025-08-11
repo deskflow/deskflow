@@ -1,0 +1,9 @@
+<map id="ArchNetworkNameNoAddressException" name="ArchNetworkNameNoAddressException">
+<area shape="rect" id="Node000001" title="The named host is known but has no address." alt="" coords="5,223,203,262"/>
+<area shape="rect" id="Node000002" href="$classArchNetworkNameException.html" title="Generic network name lookup erros." alt="" coords="9,151,199,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,191,107,223,101,223,101,191"/>
+<area shape="rect" id="Node000003" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="27,78,181,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,118,107,150,101,150,101,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="42,5,166,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="107,46,107,78,101,78,101,46"/>
+</map>

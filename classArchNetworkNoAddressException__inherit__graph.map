@@ -1,0 +1,7 @@
+<map id="ArchNetworkNoAddressException" name="ArchNetworkNoAddressException">
+<area shape="rect" id="Node000001" title="Network address is unavailable or not local." alt="" coords="5,151,225,175"/>
+<area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="38,78,192,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,118,118,150,112,150,112,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="53,5,177,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,46,118,78,112,78,112,46"/>
+</map>

@@ -1,7 +1,0 @@
-<map id="XArchNetworkSupport" name="XArchNetworkSupport">
-<area shape="rect" id="Node000001" title="No support for requested network resource/service." alt="" coords="5,151,158,175"/>
-<area shape="rect" id="Node000002" href="$classXArchNetwork.html" title="Generic network exception." alt="" coords="28,78,135,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,118,84,150,79,150,79,118"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="20,5,143,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="84,46,84,78,79,78,79,46"/>
-</map>

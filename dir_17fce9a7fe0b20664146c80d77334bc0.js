@@ -19,6 +19,8 @@ var dir_17fce9a7fe0b20664146c80d77334bc0 =
     [ "SecureUtils.cpp", "SecureUtils_8cpp.html", "SecureUtils_8cpp" ],
     [ "SecureUtils.h", "SecureUtils_8h.html", "SecureUtils_8h" ],
     [ "SecurityLevel.h", "SecurityLevel_8h.html", "SecurityLevel_8h" ],
+    [ "SocketException.cpp", "SocketException_8cpp.html", null ],
+    [ "SocketException.h", "SocketException_8h.html", "SocketException_8h" ],
     [ "SocketMultiplexer.cpp", "SocketMultiplexer_8cpp.html", null ],
     [ "SocketMultiplexer.h", "SocketMultiplexer_8h.html", "SocketMultiplexer_8h" ],
     [ "SslLogger.cpp", "SslLogger_8cpp.html", null ],
@@ -29,7 +31,5 @@ var dir_17fce9a7fe0b20664146c80d77334bc0 =
     [ "TCPSocket.h", "TCPSocket_8h.html", "TCPSocket_8h" ],
     [ "TCPSocketFactory.cpp", "TCPSocketFactory_8cpp.html", null ],
     [ "TCPSocketFactory.h", "TCPSocketFactory_8h.html", "TCPSocketFactory_8h" ],
-    [ "TSocketMultiplexerMethodJob.h", "TSocketMultiplexerMethodJob_8h.html", "TSocketMultiplexerMethodJob_8h" ],
-    [ "XSocket.cpp", "XSocket_8cpp.html", null ],
-    [ "XSocket.h", "XSocket_8h.html", "XSocket_8h" ]
+    [ "TSocketMultiplexerMethodJob.h", "TSocketMultiplexerMethodJob_8h.html", "TSocketMultiplexerMethodJob_8h" ]
 ];

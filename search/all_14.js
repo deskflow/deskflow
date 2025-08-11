@@ -80,7 +80,7 @@ var searchData=
   ['restartserver_77',['RestartServer',['../classInputFilter_1_1RestartServer.html',1,'InputFilter::RestartServer'],['../structActionDialog_1_1ActionTypes.html#acec85eeb9a024dc66e36c1859e2636d7',1,'ActionDialog::ActionTypes::RestartServer'],['../classInputFilter_1_1RestartServer.html#a6de5b24010b6b9a9afb04bd18cdbc5f8',1,'InputFilter::RestartServer::RestartServer()'],['../namespaceSettingsKeys.html#a8c94b6e9d9359fea262c8a2ecd6940ca',1,'SettingsKeys::RestartServer']]],
   ['restartserver_78',['restartServer',['../classAction.html#aeee2415954f8158ef9aee75fa0c7426e',1,'Action']]],
   ['restoredefaultsettings_79',['restoreDefaultSettings',['../classSettings.html#aa6e367eea7196300fc008ca44c727a92',1,'Settings']]],
-  ['rethrow_5fxthread_80',['RETHROW_XTHREAD',['../XArch_8h.html#a80d94fdcaf28b486d69cd9117226ecf1',1,'XArch.h']]],
+  ['rethrow_5fthreadexception_80',['RETHROW_THREADEXCEPTION',['../ArchException_8h.html#a704c9a459d14bad47b4bb217387548b0',1,'ArchException.h']]],
   ['retry_81',['Retry',['../classTCPSocket.html#a009d7b0c6ed5723df1423abb57b5856ba6327b4e59f58137083214a1fec358855',1,'TCPSocket']]],
   ['retrydaemon_82',['retryDaemon',['../classdeskflow_1_1gui_1_1CoreProcess.html#a19622d42b3b977bbddec07124ee48b00',1,'deskflow::gui::CoreProcess']]],
   ['retryhandler_83',['retryHandler',['../classServerApp.html#a43f22db9bcb7d101de647162556ca397',1,'ServerApp']]],

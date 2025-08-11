@@ -55,5 +55,6 @@ var searchData=
   ['dragmoveevent_52',['dragMoveEvent',['../classScreenSetupView.html#af8fcff3883694377bb05b8a385934af5',1,'ScreenSetupView']]],
   ['dropevent_53',['dropEvent',['../classTrashScreenWidget.html#ad0e1725ce39323068e535366e87c68a4',1,'TrashScreenWidget']]],
   ['dropmimedata_54',['dropMimeData',['../classScreenSetupModel.html#aa49751d31f444debbbcad8e7ea08ebe6',1,'ScreenSetupModel']]],
-  ['dword_55',['DWORD',['../ArchNetworkWinsock_8cpp.html#a580adfb9e0f9b8b27e8c2c11bcce0bb9',1,'ArchNetworkWinsock.cpp']]]
+  ['duplicateclientexception_55',['DuplicateClientException',['../classDuplicateClientException.html#ad09b896759da051d0f9397e4b10484a4',1,'DuplicateClientException']]],
+  ['dword_56',['DWORD',['../ArchNetworkWinsock_8cpp.html#a580adfb9e0f9b8b27e8c2c11bcce0bb9',1,'ArchNetworkWinsock.cpp']]]
 ];

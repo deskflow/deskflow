@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.75</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -227,8 +227,8 @@ manipulators</h2></td></tr>
 
 <p>Cancel thread. </p>
 <p>Cancel the thread. <a class="el" href="#ab5f1ec60a122d14701747fd96daeff61" title="Cancel thread.">cancel()</a> never waits for the thread to terminate; it just posts the cancel and returns. A thread will terminate when it enters a cancellation point with cancellation enabled. If cancellation is disabled then the cancel is remembered but not acted on until the first call to a cancellation point after cancellation is enabled.</p>
-<p>A cancellation point is a function that can act on cancellation. A cancellation point does not return if there's a cancel pending. Instead, it unwinds the stack and destroys automatic objects, as if <a class="el" href="#ab5f1ec60a122d14701747fd96daeff61" title="Cancel thread.">cancel()</a> threw an exception (which is, in fact, what it does). Threads must take care to unlock and clean up any resources they may have, especially mutexes. They can <code>catch(XThreadCancel)</code> to do that then rethrow the exception or they can let it happen automatically by doing clean up in the d'tors of automatic objects (like <a class="el" href="classLock.html" title="Mutual exclusion lock utility.">Lock</a>). Clients are strongly encouraged to do the latter. During cancellation, further <a class="el" href="#ab5f1ec60a122d14701747fd96daeff61" title="Cancel thread.">cancel()</a> calls are ignored (i.e. a thread cannot be interrupted by a cancel during cancellation).</p>
-<p>Clients that <code>catch(XThreadCancel)</code> must always rethrow the exception. Clients that <code>catch(...)</code> must either rethrow the exception or include a <code>catch(XThreadCancel)</code> handler that rethrows. The <code>RETHROW_XTHREAD</code> macro may be useful for that. </p>
+<p>A cancellation point is a function that can act on cancellation. A cancellation point does not return if there's a cancel pending. Instead, it unwinds the stack and destroys automatic objects, as if <a class="el" href="#ab5f1ec60a122d14701747fd96daeff61" title="Cancel thread.">cancel()</a> threw an exception (which is, in fact, what it does). Threads must take care to unlock and clean up any resources they may have, especially mutexes. They can <code>catch(ThreadCancelException)</code> to do that then rethrow the exception or they can let it happen automatically by doing clean up in the d'tors of automatic objects (like <a class="el" href="classLock.html" title="Mutual exclusion lock utility.">Lock</a>). Clients are strongly encouraged to do the latter. During cancellation, further <a class="el" href="#ab5f1ec60a122d14701747fd96daeff61" title="Cancel thread.">cancel()</a> calls are ignored (i.e. a thread cannot be interrupted by a cancel during cancellation).</p>
+<p>Clients that <code>catch(ThreadCancelException)</code> must always rethrow the exception. Clients that <code>catch(...)</code> must either rethrow the exception or include a <code>catch(ThreadCancelException)</code> handler that rethrows. The <code>RETHROW_THREADEXCEPTION</code> macro may be useful for that. </p>
 
 </div>
 </div>
@@ -257,7 +257,7 @@ manipulators</h2></td></tr>
 
 <p>Terminate the calling thread. </p>
 <p>Terminate the calling thread. This function does not return but the stack is unwound and automatic objects are destroyed, as if <a class="el" href="#a3bc7f9f6557f62734432d1421525cf68" title="Terminate the calling thread.">exit()</a> threw an exception (which is, in fact, what it does). The argument is saved as the result returned by <a class="el" href="#ae6fced5fdf9d033c4cc3b3ae009e4b46" title="Get the exit result.">getResult()</a>. If you have <code>catch(...)</code> blocks then you should add the following before each to avoid catching the exit: </p><div class="fragment"><div class="line"><span class="keywordflow">catch</span>(ThreadExit&amp;) { <span class="keywordflow">throw</span>; }</div>
-</div><!-- fragment --><p> or add the <code>RETHROW_XTHREAD</code> macro to the <code>catch(...)</code> block. </p>
+</div><!-- fragment --><p> or add the <code>RETHROW_THREADEXCEPTION</code> macro to the <code>catch(...)</code> block. </p>
 
 </div>
 </div>

@@ -1,0 +1,9 @@
+<map id="BadClientException" name="BadClientException">
+<area shape="rect" id="Node000001" title="BadClientException &#45; Thrown when the client fails to follow the protocol." alt="" coords="5,223,141,248"/>
+<area shape="rect" id="Node000002" href="$classDeskflowException.html" title="The DeskflowException class Generic deskflow exception class." alt="" coords="6,151,140,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="76,191,76,223,70,223,70,191"/>
+<area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="19,78,127,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="76,118,76,150,70,150,70,118"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="11,5,135,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="76,46,76,78,70,78,70,46"/>
+</map>

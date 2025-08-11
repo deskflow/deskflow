@@ -80,7 +80,7 @@ var searchData=
   ['m_5frequired_77',['m_required',['../structdeskflow_1_1KeyMap_1_1KeyItem.html#a5feea79e45586c40c0a8ed516f202047',1,'deskflow::KeyMap::KeyItem']]],
   ['m_5frestartable_78',['m_restartable',['../classdeskflow_1_1ArgsBase.html#a814bc3ef07b1699ff7083917563168a7',1,'deskflow::ArgsBase']]],
   ['m_5frestore_79',['m_restore',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html#a93239515d0b7cf77d7473c64345b6cee',1,'deskflow::KeyMap::Keystroke::Group']]],
-  ['m_5fresult_80',['m_result',['../classArchThreadImpl.html#acd09acb865fc79b971e62578b0db5725',1,'ArchThreadImpl::m_result'],['../classXThreadExit.html#af6079da6a6d268b8e2afd2e19057dfd7',1,'XThreadExit::m_result']]],
+  ['m_5fresult_80',['m_result',['../classArchThreadImpl.html#acd09acb865fc79b971e62578b0db5725',1,'ArchThreadImpl::m_result'],['../classThreadExitException.html#abe7e14baa4fb2393eb179173408d3d51',1,'ThreadExitException::m_result']]],
   ['m_5fretry_81',['m_retry',['../classClient_1_1FailInfo.html#a72646ec8eb08f7a4b000f9f898325ad7',1,'Client::FailInfo']]],
   ['m_5frevents_82',['m_revents',['../classIArchNetwork_1_1PollEntry.html#a3c9017d950fbdc666f20e48c611766fe',1,'IArchNetwork::PollEntry']]],
   ['m_5fscreen_83',['m_screen',['../classServer_1_1SwitchToScreenInfo.html#a119cf00dc1529d5116d80f9ec2d3e95a',1,'Server::SwitchToScreenInfo::m_screen'],['../classServer_1_1ScreenConnectedInfo.html#a4263279f66994b988a62d759b72c4ad6',1,'Server::ScreenConnectedInfo::m_screen']]],

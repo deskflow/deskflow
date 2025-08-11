@@ -35,6 +35,7 @@ var searchData=
   ['events_32',['events',['../classTCPListenSocket.html#a27a6c9596bda2d60832740ce7d7d984b',1,'TCPListenSocket']]],
   ['exit_33',['exit',['../classThread.html#a3bc7f9f6557f62734432d1421525cf68',1,'Thread']]],
   ['exitapp_34',['exitApp',['../classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca',1,'AppUtil::exitApp()'],['../classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06',1,'AppUtilWindows::exitApp()']]],
-  ['exitappstatic_35',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
-  ['extracted_36',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
+  ['exitappexception_35',['ExitAppException',['../classExitAppException.html#a61c3d2092d07a05c10f8b3b14482e6b6',1,'ExitAppException']]],
+  ['exitappstatic_36',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
+  ['extracted_37',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
 ];

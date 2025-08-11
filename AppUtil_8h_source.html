@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.75</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -101,8 +101,8 @@ $(function(){initNavTree('AppUtil_8h_source.html','',''); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="IAppUtil_8h.html">deskflow/IAppUtil.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="XDeskflow_8h.html">deskflow/XDeskflow.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="DeskflowException_8h.html">deskflow/DeskflowException.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IAppUtil_8h.html">deskflow/IAppUtil.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classAppUtil.html">   13</a></span><span class="keyword">class </span><a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIAppUtil.html">IAppUtil</a></div>
@@ -116,7 +116,7 @@ $(function(){initNavTree('AppUtil_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">   21</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">exitApp</a>(<span class="keywordtype">int</span> code)</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="classXExitApp.html">XExitApp</a>(code);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="classExitAppException.html">ExitAppException</a>(code);</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  }</div>
 </div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
@@ -133,8 +133,8 @@ $(function(){initNavTree('AppUtil_8h_source.html','',''); });
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> <a class="code hl_class" href="classAppUtil.html">AppUtil</a> *s_instance;</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
 </div>
+<div class="ttc" id="aDeskflowException_8h_html"><div class="ttname"><a href="DeskflowException_8h.html">DeskflowException.h</a></div></div>
 <div class="ttc" id="aIAppUtil_8h_html"><div class="ttname"><a href="IAppUtil_8h.html">IAppUtil.h</a></div></div>
-<div class="ttc" id="aXDeskflow_8h_html"><div class="ttname"><a href="XDeskflow_8h.html">XDeskflow.h</a></div></div>
 <div class="ttc" id="aclassAppUtil_html"><div class="ttname"><a href="classAppUtil.html">AppUtil</a></div><div class="ttdef"><b>Definition</b> AppUtil.h:14</div></div>
 <div class="ttc" id="aclassAppUtil_html_a0ab681d361fbb3531870cd624d45e8ca"><div class="ttname"><a href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">AppUtil::exitApp</a></div><div class="ttdeci">virtual void exitApp(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:21</div></div>
 <div class="ttc" id="aclassAppUtil_html_a0f351032cb6cd7251cda1d0526924f8e"><div class="ttname"><a href="classAppUtil.html#a0f351032cb6cd7251cda1d0526924f8e">AppUtil::app</a></div><div class="ttdeci">IApp &amp; app() const override</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:25</div></div>
@@ -143,9 +143,9 @@ $(function(){initNavTree('AppUtil_8h_source.html','',''); });
 <div class="ttc" id="aclassAppUtil_html_ab7c207d8d1f99f7d0429a945473c9784"><div class="ttname"><a href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">AppUtil::instance</a></div><div class="ttdeci">static AppUtil &amp; instance()</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:31</div></div>
 <div class="ttc" id="aclassAppUtil_html_ad6636c6b6ff5453b50e2c7a431560bbf"><div class="ttname"><a href="classAppUtil.html#ad6636c6b6ff5453b50e2c7a431560bbf">AppUtil::~AppUtil</a></div><div class="ttdeci">~AppUtil() override=default</div></div>
 <div class="ttc" id="aclassAppUtil_html_aff79fd6fc709bd41bb9a2d2a84ee9e53"><div class="ttname"><a href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">AppUtil::exitAppStatic</a></div><div class="ttdeci">static void exitAppStatic(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:27</div></div>
+<div class="ttc" id="aclassExitAppException_html"><div class="ttname"><a href="classExitAppException.html">ExitAppException</a></div><div class="ttdoc">Generic exit eception.</div><div class="ttdef"><b>Definition</b> DeskflowException.h:129</div></div>
 <div class="ttc" id="aclassIAppUtil_html"><div class="ttname"><a href="classIAppUtil.html">IAppUtil</a></div><div class="ttdef"><b>Definition</b> IAppUtil.h:17</div></div>
 <div class="ttc" id="aclassIApp_html"><div class="ttname"><a href="classIApp.html">IApp</a></div><div class="ttdef"><b>Definition</b> IApp.h:22</div></div>
-<div class="ttc" id="aclassXExitApp_html"><div class="ttname"><a href="classXExitApp.html">XExitApp</a></div><div class="ttdoc">Generic exit eception.</div><div class="ttdef"><b>Definition</b> XDeskflow.h:128</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

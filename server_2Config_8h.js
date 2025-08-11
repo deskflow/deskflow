@@ -5,5 +5,5 @@ var server_2Config_8h =
     [ "deskflow::server::Config::CellEdge", "classdeskflow_1_1server_1_1Config_1_1CellEdge.html", "classdeskflow_1_1server_1_1Config_1_1CellEdge" ],
     [ "deskflow::server::Config::const_iterator", "classdeskflow_1_1server_1_1Config_1_1const__iterator.html", "classdeskflow_1_1server_1_1Config_1_1const__iterator" ],
     [ "deskflow::server::ConfigReadContext", "classdeskflow_1_1server_1_1ConfigReadContext.html", "classdeskflow_1_1server_1_1ConfigReadContext" ],
-    [ "deskflow::server::XConfigRead", "classdeskflow_1_1server_1_1XConfigRead.html", "classdeskflow_1_1server_1_1XConfigRead" ]
+    [ "deskflow::server::ServerConfigReadException", "classdeskflow_1_1server_1_1ServerConfigReadException.html", "classdeskflow_1_1server_1_1ServerConfigReadException" ]
 ];

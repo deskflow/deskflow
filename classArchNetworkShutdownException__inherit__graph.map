@@ -1,0 +1,7 @@
+<map id="ArchNetworkShutdownException" name="ArchNetworkShutdownException">
+<area shape="rect" id="Node000001" title="Remote read end of socket has closed." alt="" coords="5,151,218,175"/>
+<area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="34,78,189,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,118,114,150,109,150,109,118"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="50,5,173,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,46,114,78,109,78,109,46"/>
+</map>

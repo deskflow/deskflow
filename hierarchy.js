@@ -84,9 +84,9 @@ var hierarchy =
     [ "Event::EventFlags", "structEvent_1_1EventFlags.html", null ],
     [ "EventQueueTimer", "classEventQueueTimer.html", null ],
     [ "std::exception", null, [
-      [ "XThread", "classXThread.html", [
-        [ "XThreadCancel", "classXThreadCancel.html", null ],
-        [ "XThreadExit", "classXThreadExit.html", null ]
+      [ "ThreadException", "classThreadException.html", [
+        [ "ThreadCancelException", "classThreadCancelException.html", null ],
+        [ "ThreadExitException", "classThreadExitException.html", null ]
       ] ]
     ] ],
     [ "Client::FailInfo", "classClient_1_1FailInfo.html", null ],
@@ -391,73 +391,73 @@ var hierarchy =
     [ "InputFilter::Rule", "classInputFilter_1_1Rule.html", null ],
     [ "std::runtime_error", null, [
       [ "App::XNoEiSupport", "classApp_1_1XNoEiSupport.html", null ],
-      [ "DisplayInvalidException", "classDisplayInvalidException.html", null ],
-      [ "XArchDaemon", "classXArchDaemon.html", [
-        [ "XArchDaemonFailed", "classXArchDaemonFailed.html", [
-          [ "XArchDaemonUninstallNotInstalled", "classXArchDaemonUninstallNotInstalled.html", null ]
+      [ "ArchDaemonException", "classArchDaemonException.html", [
+        [ "ArchDaemonFailedException", "classArchDaemonFailedException.html", [
+          [ "ArchDaemonUninstallNotInstalledException", "classArchDaemonUninstallNotInstalledException.html", null ]
         ] ],
-        [ "XArchDaemonInstallFailed", "classXArchDaemonInstallFailed.html", null ],
-        [ "XArchDaemonUninstallFailed", "classXArchDaemonUninstallFailed.html", null ]
+        [ "ArchDaemonInstallException", "classArchDaemonInstallException.html", null ],
+        [ "ArchDaemonUninstallFailedException", "classArchDaemonUninstallFailedException.html", null ]
       ] ],
-      [ "XArchNetwork", "classXArchNetwork.html", [
-        [ "XArchNetworkAccess", "classXArchNetworkAccess.html", null ],
-        [ "XArchNetworkAddressInUse", "classXArchNetworkAddressInUse.html", null ],
-        [ "XArchNetworkConnectionRefused", "classXArchNetworkConnectionRefused.html", null ],
-        [ "XArchNetworkDisconnected", "classXArchNetworkDisconnected.html", null ],
-        [ "XArchNetworkIO", "classXArchNetworkIO.html", null ],
-        [ "XArchNetworkInterrupted", "classXArchNetworkInterrupted.html", null ],
-        [ "XArchNetworkName", "classXArchNetworkName.html", [
-          [ "XArchNetworkNameFailure", "classXArchNetworkNameFailure.html", null ],
-          [ "XArchNetworkNameNoAddress", "classXArchNetworkNameNoAddress.html", null ],
-          [ "XArchNetworkNameUnavailable", "classXArchNetworkNameUnavailable.html", null ],
-          [ "XArchNetworkNameUnknown", "classXArchNetworkNameUnknown.html", null ],
-          [ "XArchNetworkNameUnsupported", "classXArchNetworkNameUnsupported.html", null ]
+      [ "ArchNetworkException", "classArchNetworkException.html", [
+        [ "ArchNetworkAccessException", "classArchNetworkAccessException.html", null ],
+        [ "ArchNetworkAddressInUseException", "classArchNetworkAddressInUseException.html", null ],
+        [ "ArchNetworkConnectionRefusedException", "classArchNetworkConnectionRefusedException.html", null ],
+        [ "ArchNetworkDisconnectedException", "classArchNetworkDisconnectedException.html", null ],
+        [ "ArchNetworkIOException", "classArchNetworkIOException.html", null ],
+        [ "ArchNetworkInterruptedException", "classArchNetworkInterruptedException.html", null ],
+        [ "ArchNetworkNameException", "classArchNetworkNameException.html", [
+          [ "ArchNetworkNameFailureException", "classArchNetworkNameFailureException.html", null ],
+          [ "ArchNetworkNameNoAddressException", "classArchNetworkNameNoAddressException.html", null ],
+          [ "ArchNetworkNameUnavailableException", "classArchNetworkNameUnavailableException.html", null ],
+          [ "ArchNetworkNameUnknownException", "classArchNetworkNameUnknownException.html", null ],
+          [ "ArchNetworkNameUnsupportedException", "classArchNetworkNameUnsupportedException.html", null ]
         ] ],
-        [ "XArchNetworkNoAddress", "classXArchNetworkNoAddress.html", null ],
-        [ "XArchNetworkNoRoute", "classXArchNetworkNoRoute.html", null ],
-        [ "XArchNetworkNotConnected", "classXArchNetworkNotConnected.html", null ],
-        [ "XArchNetworkResource", "classXArchNetworkResource.html", null ],
-        [ "XArchNetworkShutdown", "classXArchNetworkShutdown.html", null ],
-        [ "XArchNetworkSupport", "classXArchNetworkSupport.html", null ],
-        [ "XArchNetworkTimedOut", "classXArchNetworkTimedOut.html", null ]
+        [ "ArchNetworkNoAddressException", "classArchNetworkNoAddressException.html", null ],
+        [ "ArchNetworkNoRouteException", "classArchNetworkNoRouteException.html", null ],
+        [ "ArchNetworkNotConnectedException", "classArchNetworkNotConnectedException.html", null ],
+        [ "ArchNetworkResourceException", "classArchNetworkResourceException.html", null ],
+        [ "ArchNetworkShutdownException", "classArchNetworkShutdownException.html", null ],
+        [ "ArchNetworkSupportException", "classArchNetworkSupportException.html", null ],
+        [ "ArchNetworkTimedOutException", "classArchNetworkTimedOutException.html", null ]
       ] ],
-      [ "XBase", "classXBase.html", [
-        [ "XDeskflow", "classXDeskflow.html", [
-          [ "XBadClient", "classXBadClient.html", null ],
-          [ "XDuplicateClient", "classXDuplicateClient.html", null ],
-          [ "XExitApp", "classXExitApp.html", null ],
-          [ "XIncompatibleClient", "classXIncompatibleClient.html", null ],
-          [ "XInvalidProtocol", "classXInvalidProtocol.html", null ],
-          [ "XUnknownClient", "classXUnknownClient.html", null ]
+      [ "BaseException", "classBaseException.html", [
+        [ "DeskflowException", "classDeskflowException.html", [
+          [ "BadClientException", "classBadClientException.html", null ],
+          [ "DuplicateClientException", "classDuplicateClientException.html", null ],
+          [ "ExitAppException", "classExitAppException.html", null ],
+          [ "IncompatibleClientException", "classIncompatibleClientException.html", null ],
+          [ "InvalidProtocolException", "classInvalidProtocolException.html", null ],
+          [ "UnknownClientException", "classUnknownClientException.html", null ]
         ] ],
-        [ "XIO", "classXIO.html", [
-          [ "XIOClose", "classXIOClose.html", [
-            [ "XSocketIOClose", "classXSocketIOClose.html", null ]
+        [ "IOException", "classIOException.html", [
+          [ "IOCloseException", "classIOCloseException.html", [
+            [ "SocketIOCloseException", "classSocketIOCloseException.html", null ]
           ] ],
-          [ "XIOClosed", "classXIOClosed.html", null ],
-          [ "XIOEndOfStream", "classXIOEndOfStream.html", null ],
-          [ "XIOReadMismatch", "classXIOReadMismatch.html", null ],
-          [ "XIOWouldBlock", "classXIOWouldBlock.html", null ]
+          [ "IOClosedException", "classIOClosedException.html", null ],
+          [ "IOEndOfStreamException", "classIOEndOfStreamException.html", null ],
+          [ "IOWouldBlockException", "classIOWouldBlockException.html", null ],
+          [ "XIOReadMismatch", "classXIOReadMismatch.html", null ]
         ] ],
-        [ "XMT", "classXMT.html", [
-          [ "XMTThreadUnavailable", "classXMTThreadUnavailable.html", null ]
+        [ "MTException", "classMTException.html", [
+          [ "MTThreadUnavailableException", "classMTThreadUnavailableException.html", null ]
         ] ],
-        [ "XScreen", "classXScreen.html", [
-          [ "XScreenOpenFailure", "classXScreenOpenFailure.html", [
-            [ "XScreenUnavailable", "classXScreenUnavailable.html", null ]
+        [ "ScreenException", "classScreenException.html", [
+          [ "ScreenOpenFailureException", "classScreenOpenFailureException.html", [
+            [ "ScreenUnavailableException", "classScreenUnavailableException.html", null ]
           ] ]
         ] ],
-        [ "XSocket", "classXSocket.html", [
-          [ "XSocketAddress", "classXSocketAddress.html", null ],
-          [ "XSocketWithWhat", "classXSocketWithWhat.html", [
-            [ "XSocketAddressInUse", "classXSocketAddressInUse.html", null ],
-            [ "XSocketBind", "classXSocketBind.html", null ],
-            [ "XSocketConnect", "classXSocketConnect.html", null ],
-            [ "XSocketCreate", "classXSocketCreate.html", null ]
+        [ "SocketException", "classSocketException.html", [
+          [ "SocketAddressException", "classSocketAddressException.html", null ],
+          [ "SocketWithWhatException", "classSocketWithWhatException.html", [
+            [ "SocketAddressInUseException", "classSocketAddressInUseException.html", null ],
+            [ "SocketBindException", "classSocketBindException.html", null ],
+            [ "SocketConnectException", "classSocketConnectException.html", null ],
+            [ "SocketCreateException", "classSocketCreateException.html", null ]
           ] ]
         ] ],
-        [ "deskflow::server::XConfigRead", "classdeskflow_1_1server_1_1XConfigRead.html", null ]
+        [ "deskflow::server::ServerConfigReadException", "classdeskflow_1_1server_1_1ServerConfigReadException.html", null ]
       ] ],
+      [ "DisplayInvalidException", "classDisplayInvalidException.html", null ],
       [ "deskflow::Config::NoConfigFilenameError", "classdeskflow_1_1Config_1_1NoConfigFilenameError.html", null ],
       [ "deskflow::Config::ParseError", "classdeskflow_1_1Config_1_1ParseError.html", null ]
     ] ],

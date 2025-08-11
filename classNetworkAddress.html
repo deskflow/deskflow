@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.75</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -205,7 +205,7 @@ accessors</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Construct the network address for the given <code>hostname</code> and <code>port</code>. If <code>hostname</code> can be parsed as a numerical address then that's how it's used, otherwise it's used as a host name. If <code>hostname</code> ends in ":[0-9]+" then that suffix is extracted and used as the port, overridding the port parameter. The resulting port must be a valid port number (zero is not a valid port number) otherwise <code><a class="el" href="classXSocketAddress.html" title="Socket bad address exception.">XSocketAddress</a></code> is thrown with an error of <code>XSocketAddress::kBadPort</code>. The hostname is not resolved by the c'tor; use <code>resolve</code> to do that. </p>
+<p>Construct the network address for the given <code>hostname</code> and <code>port</code>. If <code>hostname</code> can be parsed as a numerical address then that's how it's used, otherwise it's used as a host name. If <code>hostname</code> ends in ":[0-9]+" then that suffix is extracted and used as the port, overridding the port parameter. The resulting port must be a valid port number (zero is not a valid port number) otherwise <code><a class="el" href="classSocketAddressException.html" title="Socket bad address exception.">SocketAddressException</a></code> is thrown with an error of <code>SocketAddressException::kBadPort</code>. The hostname is not resolved by the c'tor; use <code>resolve</code> to do that. </p>
 
 </div>
 </div>
@@ -377,7 +377,7 @@ accessors</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Resolve address. </p>
-<p>Resolves the hostname to an address. This can be done any number of times and is done automatically by the c'tor taking a hostname. Throws <a class="el" href="classXSocketAddress.html" title="Socket bad address exception.">XSocketAddress</a> if resolution is unsuccessful, after which <code>isValid</code> returns false until the next call to this method. index - determine index of IP we would like to use from resolved addresses Returns count of successfully resolved addressed. </p>
+<p>Resolves the hostname to an address. This can be done any number of times and is done automatically by the c'tor taking a hostname. Throws <a class="el" href="classSocketAddressException.html" title="Socket bad address exception.">SocketAddressException</a> if resolution is unsuccessful, after which <code>isValid</code> returns false until the next call to this method. index - determine index of IP we would like to use from resolved addresses Returns count of successfully resolved addressed. </p>
 
 </div>
 </div>

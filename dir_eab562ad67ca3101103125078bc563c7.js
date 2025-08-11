@@ -26,6 +26,8 @@ var dir_eab562ad67ca3101103125078bc563c7 =
     [ "Config.h", "deskflow_2Config_8h.html", "deskflow_2Config_8h" ],
     [ "DaemonApp.cpp", "DaemonApp_8cpp.html", "DaemonApp_8cpp" ],
     [ "DaemonApp.h", "DaemonApp_8h.html", "DaemonApp_8h" ],
+    [ "DeskflowException.cpp", "DeskflowException_8cpp.html", null ],
+    [ "DeskflowException.h", "DeskflowException_8h.html", "DeskflowException_8h" ],
     [ "DisplayInvalidException.h", "DisplayInvalidException_8h.html", "DisplayInvalidException_8h" ],
     [ "IApp.h", "IApp_8h.html", "IApp_8h" ],
     [ "IAppUtil.h", "IAppUtil_8h.html", "IAppUtil_8h" ],
@@ -60,14 +62,12 @@ var dir_eab562ad67ca3101103125078bc563c7 =
     [ "ProtocolUtil.h", "ProtocolUtil_8h.html", "ProtocolUtil_8h" ],
     [ "Screen.cpp", "deskflow_2Screen_8cpp.html", null ],
     [ "Screen.h", "deskflow_2Screen_8h.html", "deskflow_2Screen_8h" ],
+    [ "ScreenException.cpp", "ScreenException_8cpp.html", null ],
+    [ "ScreenException.h", "ScreenException_8h.html", "ScreenException_8h" ],
     [ "ServerApp.cpp", "ServerApp_8cpp.html", "ServerApp_8cpp" ],
     [ "ServerApp.h", "ServerApp_8h.html", "ServerApp_8h" ],
     [ "ServerArgs.cpp", "ServerArgs_8cpp.html", null ],
     [ "ServerArgs.h", "ServerArgs_8h.html", "ServerArgs_8h" ],
     [ "StreamChunker.cpp", "StreamChunker_8cpp.html", "StreamChunker_8cpp" ],
-    [ "StreamChunker.h", "StreamChunker_8h.html", "StreamChunker_8h" ],
-    [ "XDeskflow.cpp", "XDeskflow_8cpp.html", null ],
-    [ "XDeskflow.h", "XDeskflow_8h.html", "XDeskflow_8h" ],
-    [ "XScreen.cpp", "XScreen_8cpp.html", null ],
-    [ "XScreen.h", "XScreen_8h.html", "XScreen_8h" ]
+    [ "StreamChunker.h", "StreamChunker_8h.html", "StreamChunker_8h" ]
 ];

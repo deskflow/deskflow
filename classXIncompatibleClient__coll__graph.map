@@ -1,9 +1,0 @@
-<map id="XIncompatibleClient" name="XIncompatibleClient">
-<area shape="rect" id="Node000001" title="Incompatible client exception." alt="" coords="5,223,144,248"/>
-<area shape="rect" id="Node000002" href="$classXDeskflow.html" title="The XDeskflow class Generic deskflow exception class." alt="" coords="32,151,117,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,191,77,223,72,223,72,191"/>
-<area shape="rect" id="Node000003" href="$classXBase.html" title="Exception base class." alt="" coords="44,78,105,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,118,77,150,72,150,72,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="13,5,136,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="77,46,77,78,72,78,72,46"/>
-</map>

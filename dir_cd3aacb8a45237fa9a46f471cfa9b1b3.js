@@ -1,5 +1,7 @@
 var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
 [
+    [ "BaseException.cpp", "BaseException_8cpp.html", null ],
+    [ "BaseException.h", "BaseException_8h.html", "BaseException_8h" ],
     [ "DirectionTypes.h", "DirectionTypes_8h.html", "DirectionTypes_8h" ],
     [ "Event.cpp", "Event_8cpp.html", null ],
     [ "Event.h", "Event_8h.html", "Event_8h" ],
@@ -33,7 +35,5 @@ var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
     [ "String.h", "String_8h.html", "String_8h" ],
     [ "TMethodJob.h", "TMethodJob_8h.html", "TMethodJob_8h" ],
     [ "Unicode.cpp", "Unicode_8cpp.html", "Unicode_8cpp" ],
-    [ "Unicode.h", "Unicode_8h.html", "Unicode_8h" ],
-    [ "XBase.cpp", "XBase_8cpp.html", null ],
-    [ "XBase.h", "XBase_8h.html", "XBase_8h" ]
+    [ "Unicode.h", "Unicode_8h.html", "Unicode_8h" ]
 ];

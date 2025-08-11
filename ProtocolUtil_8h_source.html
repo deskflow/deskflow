@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.75</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,7 +102,7 @@ $(function(){initNavTree('ProtocolUtil_8h_source.html','',''); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="EventTypes_8h.html">base/EventTypes.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="XIO_8h.html">io/XIO.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IOException_8h.html">io/IOException.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;stdarg.h&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
@@ -146,21 +146,21 @@ $(function(){initNavTree('ProtocolUtil_8h_source.html','',''); });
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
 <div class="foldopen" id="foldopen00101" data-start="{" data-end="};">
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classXIOReadMismatch.html">  101</a></span><span class="keyword">class </span><a class="code hl_class" href="classXIOReadMismatch.html">XIOReadMismatch</a> : <span class="keyword">public</span> <a class="code hl_class" href="classXIO.html">XIO</a></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno"><a class="line" href="classXIOReadMismatch.html">  101</a></span><span class="keyword">class </span><a class="code hl_class" href="classXIOReadMismatch.html">XIOReadMismatch</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIOException.html">IOException</a></div>
 <div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>{</div>
 <div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="comment">// XBase overrides</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <span class="comment">// BaseException overrides</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  std::string <a class="code hl_function" href="classXIOReadMismatch.html#a6872704e7fe3e42c17432ddb535819d5">getWhat</a>() <span class="keyword">const</span> <span class="keywordflow">throw</span>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>};</div>
 </div>
 <div class="ttc" id="aEventTypes_8h_html"><div class="ttname"><a href="EventTypes_8h.html">EventTypes.h</a></div></div>
-<div class="ttc" id="aXIO_8h_html"><div class="ttname"><a href="XIO_8h.html">XIO.h</a></div></div>
+<div class="ttc" id="aIOException_8h_html"><div class="ttname"><a href="IOException_8h.html">IOException.h</a></div></div>
+<div class="ttc" id="aclassIOException_html"><div class="ttname"><a href="classIOException.html">IOException</a></div><div class="ttdoc">The IOException class Generic i/o exception class.</div><div class="ttdef"><b>Definition</b> IOException.h:17</div></div>
 <div class="ttc" id="aclassProtocolUtil_html"><div class="ttname"><a href="classProtocolUtil.html">ProtocolUtil</a></div><div class="ttdoc">Deskflow protocol utilities.</div><div class="ttdef"><b>Definition</b> ProtocolUtil.h:26</div></div>
 <div class="ttc" id="aclassProtocolUtil_html_a51274404a5e17d791c949d60e3b344a0"><div class="ttname"><a href="classProtocolUtil.html#a51274404a5e17d791c949d60e3b344a0">ProtocolUtil::writef</a></div><div class="ttdeci">static void writef(deskflow::IStream *, const char *fmt,...)</div><div class="ttdoc">Write formatted data.</div><div class="ttdef"><b>Definition</b> ProtocolUtil.cpp:70</div></div>
 <div class="ttc" id="aclassProtocolUtil_html_a93a9ad72e30fab19fb8560431ec9522a"><div class="ttname"><a href="classProtocolUtil.html#a93a9ad72e30fab19fb8560431ec9522a">ProtocolUtil::readf</a></div><div class="ttdeci">static bool readf(deskflow::IStream *, const char *fmt,...)</div><div class="ttdoc">Read formatted data.</div><div class="ttdef"><b>Definition</b> ProtocolUtil.cpp:85</div></div>
 <div class="ttc" id="aclassXIOReadMismatch_html"><div class="ttname"><a href="classXIOReadMismatch.html">XIOReadMismatch</a></div><div class="ttdoc">Mismatched read exception.</div><div class="ttdef"><b>Definition</b> ProtocolUtil.h:102</div></div>
 <div class="ttc" id="aclassXIOReadMismatch_html_a6872704e7fe3e42c17432ddb535819d5"><div class="ttname"><a href="classXIOReadMismatch.html#a6872704e7fe3e42c17432ddb535819d5">XIOReadMismatch::getWhat</a></div><div class="ttdeci">std::string getWhat() const override</div><div class="ttdoc">Get a human readable string describing the exception.</div><div class="ttdef"><b>Definition</b> ProtocolUtil.cpp:571</div></div>
-<div class="ttc" id="aclassXIO_html"><div class="ttname"><a href="classXIO.html">XIO</a></div><div class="ttdoc">The XIO class Generic i/o exception class.</div><div class="ttdef"><b>Definition</b> XIO.h:16</div></div>
 <div class="ttc" id="aclassdeskflow_1_1IStream_html"><div class="ttname"><a href="classdeskflow_1_1IStream.html">deskflow::IStream</a></div><div class="ttdoc">Bidirectional stream interface.</div><div class="ttdef"><b>Definition</b> IStream.h:24</div></div>
 <div class="ttc" id="anamespacedeskflow_html"><div class="ttname"><a href="namespacedeskflow.html">deskflow</a></div><div class="ttdef"><b>Definition</b> EventTypes.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
