@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.85</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.100</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -143,8 +143,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aadb110c65e0419b9ecdbb499d2269ca8" id="r_aadb110c65e0419b9ecdbb499d2269ca8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadb110c65e0419b9ecdbb499d2269ca8">Arch</a> ()</td></tr>
 <tr class="memitem:a6f64ff645c6e2b2f5087eb8044119a9b" id="r_a6f64ff645c6e2b2f5087eb8044119a9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f64ff645c6e2b2f5087eb8044119a9b">Arch</a> (<a class="el" href="classArch.html">Arch</a> *arch)</td></tr>
 <tr class="memitem:a6c1f0485f65368f1fde5d07ce345a925" id="r_a6c1f0485f65368f1fde5d07ce345a925"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c1f0485f65368f1fde5d07ce345a925">~Arch</a> () override=default</td></tr>
-<tr class="memitem:a76bf3e02f31eee4c3b4318951d24e7c9" id="r_a76bf3e02f31eee4c3b4318951d24e7c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a76bf3e02f31eee4c3b4318951d24e7c9">init</a> () override</td></tr>
-<tr class="memdesc:a76bf3e02f31eee4c3b4318951d24e7c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call init on other arch classes.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classArchString"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classArchString')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classArchString.html">ArchString</a></td></tr>
 <tr class="memitem:a3e0766dc2ab2e1640218272029538cb7 inherit pub_methods_classArchString" id="r_a3e0766dc2ab2e1640218272029538cb7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArchString.html#a3e0766dc2ab2e1640218272029538cb7">ArchString</a> ()=default</td></tr>
 <tr class="memitem:a9445cfb82678eda30e5deebb44b4eb4a inherit pub_methods_classArchString" id="r_a9445cfb82678eda30e5deebb44b4eb4a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classArchString.html#a9445cfb82678eda30e5deebb44b4eb4a">ArchString</a> (const <a class="el" href="classArchString.html">ArchString</a> &amp;)=delete</td></tr>
@@ -283,34 +281,6 @@ Additional Inherited Members</h2></td></tr>
 
 <p>Return the singleton instance. </p>
 <p>The client must have instantiated exactly once <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> object before calling this function. </p>
-
-</div>
-</div>
-<a id="a76bf3e02f31eee4c3b4318951d24e7c9" name="a76bf3e02f31eee4c3b4318951d24e7c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76bf3e02f31eee4c3b4318951d24e7c9">&#9670;&#160;</a></span>init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Arch::init </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Call init on other arch classes. </p>
-<p>Some arch classes depend on others to exist first. When init is called these classes will have ARCH available for use. </p>
 
 </div>
 </div>

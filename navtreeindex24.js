@@ -1,10 +1,5 @@
 var NAVTREEINDEX24 =
 {
-"structChunkType.html":[4,1,0],
-"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80":[4,1,0,2],
-"structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11":[4,1,0,1],
-"structChunkType.html#afca93ef4079887b13f65cde55cceefd9":[4,1,0,0],
-"structClientProxy1__0_1_1ClientClipboard.html":[6,0,67,0],
 "structClientProxy1__0_1_1ClientClipboard.html#a3d03f65e7df02bed8721600d330bce91":[6,0,67,0,1],
 "structClientProxy1__0_1_1ClientClipboard.html#a7e4b6c67808c8f28b1246bc2d4ab7432":[6,0,67,0,3],
 "structClientProxy1__0_1_1ClientClipboard.html#ad6d2904fd444c4f97b480630f7dc9482":[6,0,67,0,0],

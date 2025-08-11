@@ -86,7 +86,7 @@ var searchData=
   ['processrequest_83',['processRequest',['../classXWindowsClipboard.html#a7f1db99d5f8feebcb2e443717d63a3aa',1,'XWindowsClipboard']]],
   ['processstate_84',['ProcessState',['../classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8c',1,'deskflow::gui::CoreProcess']]],
   ['processstate_85',['processState',['../classdeskflow_1_1gui_1_1CoreProcess.html#a689253f2679161ad8ca04f07a1e67004',1,'deskflow::gui::CoreProcess']]],
-  ['processstatechanged_86',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a075a77c82c3c534e8cfca3384aa9e7fd',1,'deskflow::gui::CoreProcess']]],
+  ['processstatechanged_86',['processStateChanged',['../classdeskflow_1_1gui_1_1CoreProcess.html#a0b7f6621de591092bee640af186c6853',1,'deskflow::gui::CoreProcess']]],
   ['processstatetostring_87',['processStateToString',['../namespacedeskflow_1_1gui.html#a21a204364c5d5b80acdb091d3932ea65',1,'deskflow::gui']]],
   ['protocol_88',['protocol',['../classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956',1,'ServerConfig::protocol()'],['../ArchNetworkWinsock_8cpp.html#a00b6b4ede6be4f05c59f106b34ec4043',1,'protocol:&#160;ArchNetworkWinsock.cpp']]],
   ['protocol_20architecture_89',['Protocol Architecture',['../protocol_reference.html#autotoc_md14',1,'']]],
