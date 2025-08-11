@@ -96,6 +96,7 @@ elseif(APPLE)
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES
+    XDGPortalRegistry.h
     XDGPowerManager.cpp
     XDGPowerManager.h
     XWindowsClipboard.cpp
