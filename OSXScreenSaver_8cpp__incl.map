@@ -1,19 +1,19 @@
 <map id="src/lib/platform/OSXScreenSaver.cpp" name="src/lib/platform/OSXScreenSaver.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="822,5,1002,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="815,5,996,44"/>
 <area shape="rect" id="Node000002" href="$OSXScreenSaver_8h.html" title=" " alt="" coords="487,165,673,189"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="872,47,620,160,618,156,870,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="866,47,620,160,618,155,864,42"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="1148,455,1212,480"/>
-<area shape="poly" id="edge42_Node000001_Node000011" title=" " alt="" coords="1003,33,1126,55,1179,70,1215,90,1232,109,1240,128,1243,176,1243,324,1238,358,1228,391,1199,444,1195,441,1223,388,1233,357,1237,323,1237,176,1235,130,1227,112,1212,94,1177,75,1125,60,1002,38"/>
+<area shape="poly" id="edge42_Node000001_Node000011" title=" " alt="" coords="996,33,1123,54,1178,70,1215,90,1232,109,1240,128,1243,176,1243,324,1238,358,1228,391,1199,444,1195,441,1223,388,1233,357,1237,323,1237,176,1235,130,1227,112,1212,94,1176,75,1122,59,995,38"/>
 <area shape="rect" id="Node000014" href="$IEventQueue_8h.html" title=" " alt="" coords="140,237,279,262"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="822,39,694,60,623,76,554,95,464,127,378,165,244,232,242,227,375,160,462,122,553,89,622,70,693,55,821,34"/>
-<area shape="rect" id="Node000017" href="$Log_8h.html" title=" " alt="" coords="869,92,955,117"/>
-<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="915,45,915,76,909,76,909,45"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="815,39,689,60,620,76,553,95,464,127,377,165,245,232,242,227,375,160,462,122,551,89,619,71,688,55,814,34"/>
+<area shape="rect" id="Node000017" href="$Log_8h.html" title=" " alt="" coords="863,92,948,117"/>
+<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="908,45,908,76,903,76,903,45"/>
 <area shape="rect" id="Node000023" href="$IPrimaryScreen_8h.html" title=" " alt="" coords="328,237,507,262"/>
-<area shape="poly" id="edge32_Node000001_Node000023" title=" " alt="" coords="822,40,742,55,652,80,561,117,517,140,476,167,450,194,431,225,426,222,446,191,473,163,514,135,558,112,651,75,741,50,821,34"/>
+<area shape="poly" id="edge32_Node000001_Node000023" title=" " alt="" coords="815,40,737,56,649,81,559,117,516,140,476,167,450,194,431,225,426,222,446,191,473,163,513,136,557,113,647,76,736,51,814,35"/>
 <area shape="rect" id="Node000026" href="$OSXScreenSaverUtil_8h.html" title=" " alt="" coords="996,92,1201,117"/>
-<area shape="poly" id="edge40_Node000001_Node000026" title=" " alt="" coords="958,42,1058,83,1056,88,956,47"/>
+<area shape="poly" id="edge40_Node000001_Node000026" title=" " alt="" coords="953,42,1057,83,1055,88,951,47"/>
 <area shape="rect" id="Node000027" title=" " alt="" coords="1277,92,1366,117"/>
-<area shape="poly" id="edge43_Node000001_Node000027" title=" " alt="" coords="1003,40,1262,89,1261,94,1002,46"/>
+<area shape="poly" id="edge43_Node000001_Node000027" title=" " alt="" coords="997,40,1262,89,1261,95,996,45"/>
 <area shape="rect" id="Node000003" href="$IScreenSaver_8h.html" title=" " alt="" coords="676,237,842,262"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="610,187,716,229,714,234,609,192"/>
 <area shape="rect" id="Node000013" title=" " alt="" coords="530,237,651,262"/>
@@ -44,13 +44,13 @@
 <area shape="poly" id="edge19_Node000014_Node000015" title=" " alt="" coords="183,265,86,306,84,301,181,260"/>
 <area shape="rect" id="Node000016" title=" " alt="" coords="107,310,160,335"/>
 <area shape="poly" id="edge20_Node000014_Node000016" title=" " alt="" coords="199,265,159,301,155,297,195,261"/>
-<area shape="poly" id="edge30_Node000017_Node000007" title=" " alt="" coords="923,116,938,137,949,164,959,220,960,277,949,368,944,368,954,277,953,221,944,165,933,140,919,118"/>
+<area shape="poly" id="edge30_Node000017_Node000007" title=" " alt="" coords="919,115,935,137,949,164,960,220,961,277,957,328,950,368,945,367,951,327,956,276,955,220,944,166,931,140,915,119"/>
 <area shape="rect" id="Node000018" href="$Arch_8h.html" title=" " alt="" coords="1009,165,1098,189"/>
-<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="937,115,1017,155,1015,160,934,120"/>
+<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="931,115,1016,155,1014,160,929,120"/>
 <area shape="rect" id="Node000021" href="$IArchMultithread_8h.html" title=" " alt="" coords="696,165,853,189"/>
-<area shape="poly" id="edge28_Node000017_Node000021" title=" " alt="" coords="891,120,812,160,810,155,888,115"/>
+<area shape="poly" id="edge28_Node000017_Node000021" title=" " alt="" coords="885,120,811,159,808,155,882,115"/>
 <area shape="rect" id="Node000022" title=" " alt="" coords="877,165,934,189"/>
-<area shape="poly" id="edge31_Node000017_Node000022" title=" " alt="" coords="914,117,911,149,905,149,908,117"/>
+<area shape="poly" id="edge31_Node000017_Node000022" title=" " alt="" coords="908,117,908,149,903,149,903,117"/>
 <area shape="poly" id="edge27_Node000018_Node000007" title=" " alt="" coords="1048,191,1020,239,955,370,950,367,1015,236,1044,189"/>
 <area shape="rect" id="Node000019" href="$ArchString_8h.html" title=" " alt="" coords="1030,237,1152,262"/>
 <area shape="poly" id="edge23_Node000018_Node000019" title=" " alt="" coords="1062,189,1080,222,1075,225,1057,191"/>

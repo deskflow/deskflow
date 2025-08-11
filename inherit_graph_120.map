@@ -64,14 +64,14 @@
 <area shape="poly" id="edge220_Node000028_Node000029" title=" " alt="" coords="302,1005,503,867,506,871,305,1009"/>
 <area shape="rect" id="Node000036" href="$classXIO.html" title="The XIO class Generic i/o exception class." alt="" coords="502,1016,546,1041"/>
 <area shape="poly" id="edge227_Node000028_Node000036" title=" " alt="" coords="317,1026,501,1026,501,1031,317,1031"/>
-<area shape="rect" id="Node000043" href="$classXMT.html" title="XMT generic multithreading exception." alt="" coords="500,1115,549,1139"/>
-<area shape="poly" id="edge234_Node000028_Node000043" title=" " alt="" coords="318,1035,367,1050,441,1081,501,1112,498,1117,439,1086,365,1055,316,1040"/>
-<area shape="rect" id="Node000045" href="$classXScreen.html" title="The XScreen class, generic screen exception." alt="" coords="488,1189,560,1214"/>
-<area shape="poly" id="edge236_Node000028_Node000045" title=" " alt="" coords="318,1029,344,1037,368,1050,387,1075,394,1100,400,1124,416,1149,451,1174,489,1190,487,1195,449,1179,412,1153,395,1127,389,1101,382,1077,364,1054,342,1042,316,1034"/>
-<area shape="rect" id="Node000048" href="$classXSocket.html" title="XSocket generic socket exception." alt="" coords="489,1263,559,1287"/>
-<area shape="poly" id="edge239_Node000028_Node000048" title=" " alt="" coords="318,1028,344,1035,368,1050,385,1072,393,1094,395,1137,395,1180,402,1202,416,1224,432,1239,451,1250,490,1265,488,1270,448,1255,429,1243,412,1227,397,1204,390,1181,389,1137,388,1095,380,1075,364,1054,342,1040,317,1033"/>
-<area shape="rect" id="Node000055" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="424,1312,624,1337"/>
-<area shape="poly" id="edge246_Node000028_Node000055" title=" " alt="" coords="318,1027,344,1035,368,1050,389,1082,398,1114,397,1145,392,1176,388,1207,387,1238,395,1268,416,1297,432,1309,429,1314,412,1301,390,1270,382,1238,382,1207,387,1176,392,1145,392,1114,384,1084,364,1054,342,1040,316,1032"/>
+<area shape="rect" id="Node000043" href="$classXMT.html" title="XMT generic multithreading exception." alt="" coords="500,1089,549,1114"/>
+<area shape="poly" id="edge234_Node000028_Node000043" title=" " alt="" coords="317,1037,367,1050,500,1091,498,1096,365,1055,316,1042"/>
+<area shape="rect" id="Node000045" href="$classXScreen.html" title="The XScreen class, generic screen exception." alt="" coords="488,1188,560,1213"/>
+<area shape="poly" id="edge236_Node000028_Node000045" title=" " alt="" coords="317,1030,343,1037,368,1050,385,1068,394,1086,402,1104,416,1124,459,1159,500,1185,497,1190,456,1164,412,1127,397,1107,389,1088,381,1071,364,1054,341,1042,316,1035"/>
+<area shape="rect" id="Node000048" href="$classXSocket.html" title="XSocket generic socket exception." alt="" coords="489,1251,559,1275"/>
+<area shape="poly" id="edge239_Node000028_Node000048" title=" " alt="" coords="318,1028,344,1035,368,1050,384,1072,392,1094,394,1137,394,1180,401,1201,416,1223,432,1236,450,1245,489,1257,488,1262,448,1250,429,1240,412,1226,396,1204,389,1181,388,1137,387,1095,380,1075,364,1054,342,1040,317,1033"/>
+<area shape="rect" id="Node000055" href="$classdeskflow_1_1server_1_1XConfigRead.html" title="Configuration stream read exception." alt="" coords="424,1300,624,1325"/>
+<area shape="poly" id="edge246_Node000028_Node000055" title=" " alt="" coords="318,1027,344,1035,368,1050,389,1080,397,1110,397,1141,392,1170,388,1200,388,1229,396,1257,416,1285,432,1297,429,1302,412,1289,391,1259,383,1229,383,1199,387,1170,391,1140,391,1111,384,1083,364,1054,342,1040,316,1032"/>
 <area shape="rect" id="Node000030" href="$classXBadClient.html" title="XBadClient &#45; Thrown when the client fails to follow the protocol." alt="" coords="752,621,839,646"/>
 <area shape="poly" id="edge221_Node000029_Node000030" title=" " alt="" coords="581,852,609,844,633,829,648,809,655,788,656,745,656,701,664,679,680,657,696,646,714,638,751,631,752,636,716,643,699,650,684,661,668,681,661,702,661,745,661,789,653,811,636,833,611,849,582,857"/>
 <area shape="rect" id="Node000031" href="$classXDuplicateClient.html" title="Client already connected exception." alt="" coords="736,671,855,695"/>
@@ -93,19 +93,19 @@
 <area shape="rect" id="Node000041" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="730,1065,861,1090"/>
 <area shape="poly" id="edge232_Node000036_Node000041" title=" " alt="" coords="562,1032,730,1063,729,1068,561,1038"/>
 <area shape="rect" id="Node000042" href="$classXIOWouldBlock.html" title="XIOWouldBlock &#45; Thrown if an operation on a stream would block." alt="" coords="739,1115,852,1139"/>
-<area shape="poly" id="edge233_Node000036_Node000042" title=" " alt="" coords="561,1045,618,1073,683,1099,739,1114,738,1119,681,1104,616,1077,559,1050"/>
+<area shape="poly" id="edge233_Node000036_Node000042" title=" " alt="" coords="562,1041,636,1075,659,1088,683,1099,739,1115,738,1120,681,1104,657,1093,633,1080,559,1046"/>
 <area shape="rect" id="Node000038" href="$classXSocketIOClose.html" title="XSocketIOClose &#45; Thrown if a stream cannot be closed." alt="" coords="974,917,1092,942"/>
 <area shape="poly" id="edge229_Node000037_Node000038" title=" " alt="" coords="850,927,974,927,974,932,850,932"/>
 <area shape="rect" id="Node000044" href="$classXMTThreadUnavailable.html" title="XMTThreadUnavailable &#45; Thrown when a thread cannot be created." alt="" coords="717,1164,874,1189"/>
-<area shape="poly" id="edge235_Node000043_Node000044" title=" " alt="" coords="564,1131,724,1161,723,1166,563,1137"/>
+<area shape="poly" id="edge235_Node000043_Node000044" title=" " alt="" coords="564,1112,683,1148,734,1161,732,1166,682,1154,563,1117"/>
 <area shape="rect" id="Node000046" href="$classXScreenOpenFailure.html" title="XScreenOpenFailure &#45; Thrown when a screen cannot be opened or initialized." alt="" coords="725,1213,866,1238"/>
-<area shape="poly" id="edge237_Node000045_Node000046" title=" " alt="" coords="575,1203,725,1217,724,1222,575,1209"/>
+<area shape="poly" id="edge237_Node000045_Node000046" title=" " alt="" coords="575,1202,725,1216,724,1222,575,1208"/>
 <area shape="rect" id="Node000047" href="$classXScreenUnavailable.html" title="Screen unavailable exception." alt="" coords="964,1213,1102,1238"/>
 <area shape="poly" id="edge238_Node000046_Node000047" title=" " alt="" coords="882,1223,964,1223,964,1228,882,1228"/>
 <area shape="rect" id="Node000049" href="$classXSocketAddress.html" title="Socket bad address exception." alt="" coords="736,1263,855,1287"/>
-<area shape="poly" id="edge240_Node000048_Node000049" title=" " alt="" coords="575,1272,736,1272,736,1278,575,1278"/>
+<area shape="poly" id="edge240_Node000048_Node000049" title=" " alt="" coords="575,1263,736,1270,736,1275,574,1268"/>
 <area shape="rect" id="Node000050" href="$classXSocketWithWhat.html" title="XSocketWithWhat &#45; generic XSocket Exception with a generic what method impl." alt="" coords="731,1312,860,1337"/>
-<area shape="poly" id="edge241_Node000048_Node000050" title=" " alt="" coords="575,1281,731,1310,730,1315,574,1287"/>
+<area shape="poly" id="edge241_Node000048_Node000050" title=" " alt="" coords="575,1272,683,1296,737,1309,736,1314,682,1302,574,1277"/>
 <area shape="rect" id="Node000051" href="$classXSocketAddressInUse.html" title="XSocketAddressInUse Thrown when a socket cannot be bound to an address because the address is already..." alt="" coords="957,1263,1110,1287"/>
 <area shape="poly" id="edge242_Node000050_Node000051" title=" " alt="" coords="873,1306,970,1285,971,1291,874,1311"/>
 <area shape="rect" id="Node000052" href="$classXSocketBind.html" title="XSocketBind &#45; Thrown when a socket cannot be bound to an address." alt="" coords="985,1312,1082,1337"/>

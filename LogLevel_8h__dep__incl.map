@@ -1,13 +1,13 @@
 <map id="src/lib/base/LogLevel.h" name="src/lib/base/LogLevel.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1118,5,1272,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1134,5,1288,30"/>
 <area shape="rect" id="Node000002" href="$IArchLog_8h.html" title=" " alt="" coords="194,78,347,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1102,29,347,86,347,81,1102,23"/>
-<area shape="rect" id="Node000007" href="$ILogOutputter_8h.html" title=" " alt="" coords="1038,78,1220,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1176,43,1142,79,1138,76,1172,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1118,29,347,86,347,81,1118,23"/>
+<area shape="rect" id="Node000007" href="$ILogOutputter_8h.html" title=" " alt="" coords="1054,78,1236,103"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1192,43,1158,79,1154,76,1188,40"/>
 <area shape="rect" id="Node000009" href="$Log_8cpp.html" title=" " alt="" coords="1404,244,1542,269"/>
-<area shape="poly" id="edge16_Node000001_Node000009" title=" " alt="" coords="1221,38,1462,242,1458,246,1218,42"/>
+<area shape="poly" id="edge16_Node000001_Node000009" title=" " alt="" coords="1236,38,1463,242,1459,246,1233,42"/>
 <area shape="rect" id="Node000014" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1566,237,1751,276"/>
-<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="1232,35,1623,234,1621,239,1229,40"/>
+<area shape="poly" id="edge17_Node000001_Node000014" title=" " alt="" coords="1247,35,1625,235,1623,239,1244,40"/>
 <area shape="rect" id="Node000003" href="$ArchLogUnix_8h.html" title=" " alt="" coords="9,151,175,189"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,112,136,152,134,148,229,107"/>
 <area shape="rect" id="Node000005" href="$ArchLogWindows_8h.html" title=" " alt="" coords="202,151,340,189"/>
@@ -16,20 +16,20 @@
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="93,205,92,237,86,237,88,205"/>
 <area shape="rect" id="Node000006" href="$ArchLogWindows_8cpp.html" title=" " alt="" coords="194,237,347,276"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="273,205,273,237,268,237,268,205"/>
-<area shape="rect" id="Node000008" href="$LogOutputters_8h.html" title=" " alt="" coords="1036,158,1222,182"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1132,118,1132,157,1127,157,1127,118"/>
+<area shape="rect" id="Node000008" href="$LogOutputters_8h.html" title=" " alt="" coords="1052,158,1238,182"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="1148,118,1148,157,1143,157,1143,118"/>
 <area shape="rect" id="Node000015" href="$MSWindowsDebugOutputter_8h.html" title=" " alt="" coords="574,151,759,189"/>
-<area shape="poly" id="edge14_Node000007_Node000015" title=" " alt="" coords="1045,108,760,156,759,151,1044,103"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1192,184,1426,241,1425,246,1191,189"/>
+<area shape="poly" id="edge14_Node000007_Node000015" title=" " alt="" coords="1059,108,760,156,759,151,1058,103"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="1206,184,1429,241,1427,246,1205,189"/>
 <area shape="rect" id="Node000010" href="$LogOutputters_8cpp.html" title=" " alt="" coords="1180,244,1380,269"/>
-<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="1164,188,1261,242,1258,246,1162,192"/>
+<area shape="poly" id="edge9_Node000008_Node000010" title=" " alt="" coords="1178,188,1263,242,1260,246,1175,193"/>
 <area shape="rect" id="Node000011" href="$App_8cpp.html" title=" " alt="" coords="580,244,745,269"/>
-<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="1047,188,756,240,723,246,722,241,756,235,1046,183"/>
+<area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="1060,188,756,240,722,246,721,241,756,235,1059,183"/>
 <area shape="rect" id="Node000012" href="$DaemonApp_8cpp.html" title=" " alt="" coords="768,244,981,269"/>
-<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="1081,190,911,246,909,241,1080,185"/>
+<area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="1095,190,913,246,911,241,1093,185"/>
 <area shape="rect" id="Node000013" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="1005,237,1155,276"/>
-<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="1117,197,1093,238,1088,236,1113,194"/>
-<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="1222,183,1555,235,1566,237,1565,242,1554,240,1222,188"/>
+<area shape="poly" id="edge12_Node000008_Node000013" title=" " alt="" coords="1129,196,1096,239,1092,235,1125,193"/>
+<area shape="poly" id="edge13_Node000008_Node000014" title=" " alt="" coords="1234,183,1555,235,1566,237,1565,242,1554,240,1233,188"/>
 <area shape="rect" id="Node000016" href="$MSWindowsDebugOutputter_8cpp.html" title=" " alt="" coords="371,237,557,276"/>
 <area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="609,198,510,239,508,234,607,193"/>
 </map>
