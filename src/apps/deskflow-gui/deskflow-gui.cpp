@@ -32,6 +32,10 @@
 #include <QLoggingCategory>
 #endif
 
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+#include "platform/XDGPortalRegistry.h"
+#endif
+
 using namespace deskflow::gui;
 
 #if defined(Q_OS_MAC)
@@ -45,6 +49,10 @@ int main(int argc, char *argv[])
 #if defined(Q_OS_UNIX) && defined(QT_DEBUG)
   // Fixes Fedora bug where qDebug() messages aren't printed.
   QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
+#endif
+
+#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
+  deskflow::platform::setAppId();
 #endif
 
   QCoreApplication::setApplicationName(kAppName);
