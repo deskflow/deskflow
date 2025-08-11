@@ -8,5 +8,5 @@ var classdeskflow_1_1EiEventQueueBuffer =
     [ "init", "classdeskflow_1_1EiEventQueueBuffer.html#ae45fe1cb3272fdd98e5e055bf6ea7988", null ],
     [ "isEmpty", "classdeskflow_1_1EiEventQueueBuffer.html#aef64b7176f04c44ebb85e962add49cb1", null ],
     [ "newTimer", "classdeskflow_1_1EiEventQueueBuffer.html#aaadf65aca634f0e4c3dc2ea810e03c0a", null ],
-    [ "waitForEvent", "classdeskflow_1_1EiEventQueueBuffer.html#a2144f725f031945d00214a982cbaa1bd", null ]
+    [ "waitForEvent", "classdeskflow_1_1EiEventQueueBuffer.html#a4bb2f66c955a57833080601b143bf8d8", null ]
 ];

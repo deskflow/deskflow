@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.100</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.105</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -141,7 +141,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82aefa41210cfe8e2e09e44258232f86" id="r_a82aefa41210cfe8e2e09e44258232f86"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82aefa41210cfe8e2e09e44258232f86">pollPressedKeys</a> (<a class="el" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> &amp;pressedKeys) const override</td></tr>
 <tr class="memdesc:a82aefa41210cfe8e2e09e44258232f86"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the keys currently pressed from OS.  <br /></td></tr>
 <tr class="memitem:a1dfdbaa51a840f892709e6e5d997cca5" id="r_a1dfdbaa51a840f892709e6e5d997cca5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1dfdbaa51a840f892709e6e5d997cca5">mapKeyFromKeyval</a> (std::uint32_t keyval) const</td></tr>
-<tr class="memitem:acb972abc20664d1e214ec13e0c65067e" id="r_acb972abc20664d1e214ec13e0c65067e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb972abc20664d1e214ec13e0c65067e">updateXkbState</a> (std::uint32_t keyval, bool is_pressed)</td></tr>
+<tr class="memitem:a67f40d54f15d772cbe0fe547c1194e0b" id="r_a67f40d54f15d772cbe0fe547c1194e0b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a67f40d54f15d772cbe0fe547c1194e0b">updateXkbState</a> (std::uint32_t keyval, bool isPressed)</td></tr>
 <tr class="inherit_header pub_methods_classKeyState"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classKeyState')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classKeyState.html">KeyState</a></td></tr>
 <tr class="memitem:a4d8b89931dcc952cd0aa240f8e7bca4b inherit pub_methods_classKeyState" id="r_a4d8b89931dcc952cd0aa240f8e7bca4b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classKeyState.html#a4d8b89931dcc952cd0aa240f8e7bca4b">KeyState</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)</td></tr>
 <tr class="memitem:a3ddf50ac7b4c80487c83a5bc0aa37ff5 inherit pub_methods_classKeyState" id="r_a3ddf50ac7b4c80487c83a5bc0aa37ff5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classKeyState.html#a3ddf50ac7b4c80487c83a5bc0aa37ff5">KeyState</a> (<a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="classdeskflow_1_1KeyMap.html">deskflow::KeyMap</a> &amp;keyMap, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)</td></tr>
@@ -487,8 +487,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="acb972abc20664d1e214ec13e0c65067e" name="acb972abc20664d1e214ec13e0c65067e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb972abc20664d1e214ec13e0c65067e">&#9670;&#160;</a></span>updateXkbState()</h2>
+<a id="a67f40d54f15d772cbe0fe547c1194e0b" name="a67f40d54f15d772cbe0fe547c1194e0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67f40d54f15d772cbe0fe547c1194e0b">&#9670;&#160;</a></span>updateXkbState()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -501,7 +501,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>is_pressed</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>isPressed</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

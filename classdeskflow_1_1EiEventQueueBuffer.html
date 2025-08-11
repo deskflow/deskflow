@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.100</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.105</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -128,8 +128,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1db476fa50e35bbe809d0bd9d8d1530b" id="r_a1db476fa50e35bbe809d0bd9d8d1530b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1db476fa50e35bbe809d0bd9d8d1530b">~EiEventQueueBuffer</a> () override</td></tr>
 <tr class="memitem:ae45fe1cb3272fdd98e5e055bf6ea7988" id="r_ae45fe1cb3272fdd98e5e055bf6ea7988"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae45fe1cb3272fdd98e5e055bf6ea7988">init</a> () override</td></tr>
 <tr class="memdesc:ae45fe1cb3272fdd98e5e055bf6ea7988"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize.  <br /></td></tr>
-<tr class="memitem:a2144f725f031945d00214a982cbaa1bd" id="r_a2144f725f031945d00214a982cbaa1bd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2144f725f031945d00214a982cbaa1bd">waitForEvent</a> (double timeout_in_ms) override</td></tr>
-<tr class="memdesc:a2144f725f031945d00214a982cbaa1bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block waiting for an event.  <br /></td></tr>
+<tr class="memitem:a4bb2f66c955a57833080601b143bf8d8" id="r_a4bb2f66c955a57833080601b143bf8d8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4bb2f66c955a57833080601b143bf8d8">waitForEvent</a> (double msTimeout) override</td></tr>
+<tr class="memdesc:a4bb2f66c955a57833080601b143bf8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Block waiting for an event.  <br /></td></tr>
 <tr class="memitem:a18a556d4ef575562da2414a2b77000ae" id="r_a18a556d4ef575562da2414a2b77000ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a18a556d4ef575562da2414a2b77000ae">getEvent</a> (<a class="el" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) override</td></tr>
 <tr class="memdesc:a18a556d4ef575562da2414a2b77000ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next event.  <br /></td></tr>
 <tr class="memitem:a51053c293c169b02af324aac3735a2c1" id="r_a51053c293c169b02af324aac3735a2c1"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51053c293c169b02af324aac3735a2c1">addEvent</a> (uint32_t dataID) override</td></tr>
@@ -232,7 +232,7 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Post an event. </p>
-<p>Add the given event to the end of the queue buffer. This is a user event and <code><a class="el" href="#a18a556d4ef575562da2414a2b77000ae" title="Get the next event.">getEvent()</a></code> must be able to identify it as such and return <code class="param">dataID</code>. This method must cause <code><a class="el" href="#a2144f725f031945d00214a982cbaa1bd" title="Block waiting for an event.">waitForEvent()</a></code> to return at some future time if it's blocked waiting on an event. </p>
+<p>Add the given event to the end of the queue buffer. This is a user event and <code><a class="el" href="#a18a556d4ef575562da2414a2b77000ae" title="Get the next event.">getEvent()</a></code> must be able to identify it as such and return <code class="param">dataID</code>. This method must cause <code><a class="el" href="#a4bb2f66c955a57833080601b143bf8d8" title="Block waiting for an event.">waitForEvent()</a></code> to return at some future time if it's blocked waiting on an event. </p>
 
 <p>Implements <a class="el" href="classIEventQueueBuffer.html#abc249c7752d7273b50fdd4ca090b9a59">IEventQueueBuffer</a>.</p>
 
@@ -396,8 +396,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a2144f725f031945d00214a982cbaa1bd" name="a2144f725f031945d00214a982cbaa1bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2144f725f031945d00214a982cbaa1bd">&#9670;&#160;</a></span>waitForEvent()</h2>
+<a id="a4bb2f66c955a57833080601b143bf8d8" name="a4bb2f66c955a57833080601b143bf8d8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bb2f66c955a57833080601b143bf8d8">&#9670;&#160;</a></span>waitForEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">

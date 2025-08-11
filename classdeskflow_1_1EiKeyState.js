@@ -11,5 +11,5 @@ var classdeskflow_1_1EiKeyState =
     [ "pollActiveGroup", "classdeskflow_1_1EiKeyState.html#a97fb793ad9dfbf7c2376a0b08ab5988d", null ],
     [ "pollActiveModifiers", "classdeskflow_1_1EiKeyState.html#ac918be3b50ff9d292c80e7bedb91a111", null ],
     [ "pollPressedKeys", "classdeskflow_1_1EiKeyState.html#a82aefa41210cfe8e2e09e44258232f86", null ],
-    [ "updateXkbState", "classdeskflow_1_1EiKeyState.html#acb972abc20664d1e214ec13e0c65067e", null ]
+    [ "updateXkbState", "classdeskflow_1_1EiKeyState.html#a67f40d54f15d772cbe0fe547c1194e0b", null ]
 ];

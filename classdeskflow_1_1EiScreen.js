@@ -12,7 +12,7 @@ var classdeskflow_1_1EiScreen =
     [ "enter", "classdeskflow_1_1EiScreen.html#a18d6df51121aa9902b812409fd374d2c", null ],
     [ "fakeInputBegin", "classdeskflow_1_1EiScreen.html#a6342968f6e2bf9618fbc7256c7386f14", null ],
     [ "fakeInputEnd", "classdeskflow_1_1EiScreen.html#a9beae2c611dda740692393cba83dc4d3", null ],
-    [ "fakeKey", "classdeskflow_1_1EiScreen.html#add3ec75f911044e15d0af0e31cdbd2f5", null ],
+    [ "fakeKey", "classdeskflow_1_1EiScreen.html#ae8110ab6c685e635a27ab669706c3fc5", null ],
     [ "fakeMouseButton", "classdeskflow_1_1EiScreen.html#ace046202ecb4e030061be123b274964a", null ],
     [ "fakeMouseMove", "classdeskflow_1_1EiScreen.html#ae534ce4bc0de0ebff278438948284dec", null ],
     [ "fakeMouseRelativeMove", "classdeskflow_1_1EiScreen.html#ac0a27056d17f948aa7557115f2effa12", null ],
