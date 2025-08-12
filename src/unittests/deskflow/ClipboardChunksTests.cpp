@@ -32,11 +32,13 @@ void ClipboardChunksTests::formatDataChunk()
 {
   ClipboardID id = 0;
   uint32_t sequence = 1;
+  uint32_t temp_m_chunk;
   std::string mockData("mock data");
   ClipboardChunk *chunk = ClipboardChunk::data(id, sequence, mockData);
+  memcpy(&temp_m_chunk, &chunk->m_chunk[1], 4);
 
   QCOMPARE(chunk->m_chunk[0], id);
-  QCOMPARE((uint32_t)chunk->m_chunk[1], sequence);
+  QCOMPARE(temp_m_chunk, sequence);
   QCOMPARE(chunk->m_chunk[5], ChunkType::DataChunk);
   QCOMPARE(chunk->m_chunk[6], 'm');
   QCOMPARE(chunk->m_chunk[7], 'o');
@@ -56,10 +58,12 @@ void ClipboardChunksTests::endFormatData()
 {
   ClipboardID id = 1;
   uint32_t sequence = 1;
+  uint32_t temp_m_chunk;
   ClipboardChunk *chunk = ClipboardChunk::end(id, sequence);
+  memcpy(&temp_m_chunk, &chunk->m_chunk[1], 4);
 
   QCOMPARE(chunk->m_chunk[0], id);
-  QCOMPARE((uint32_t)chunk->m_chunk[1], sequence);
+  QCOMPARE(temp_m_chunk, sequence);
   QCOMPARE(chunk->m_chunk[5], ChunkType::DataEnd);
   QCOMPARE(chunk->m_chunk[6], '\0');
 
