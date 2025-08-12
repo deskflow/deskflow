@@ -439,7 +439,9 @@ std::string Unicode::doUTF16ToUTF8(const uint8_t *data, uint32_t n, bool *errors
       break;
     }
   }
-
+#ifdef WORDS_BIGENDIAN
+  byteSwapped = !byteSwapped;
+#endif
   // convert each character
   while (n > 0) {
     if (uint32_t c = decode16(data, byteSwapped); c < 0x0000d800 || c > 0x0000dfff) {
@@ -496,7 +498,9 @@ std::string Unicode::doUTF32ToUTF8(const uint8_t *data, uint32_t n, bool *errors
       break;
     }
   }
-
+#ifdef WORDS_BIGENDIAN
+  byteSwapped = !byteSwapped;
+#endif
   // convert each character
   for (; n > 0; --n) {
     auto c = decode32(data, byteSwapped);

@@ -43,7 +43,11 @@ void UnicodeTests::UCS2ToUTF8_kUCS2()
 #ifdef _WIN32
   QCOMPARE(result, std::string("hello", 5)); // mixed-platform expected result
 #else
+#ifdef WORDS_BIGENDIAN
+  QCOMPARE(result, std::string("\0h\0e\0", 5)); // mixed-platform expected result
+#else
   QCOMPARE(result, std::string("h\0e\0l", 5)); // mixed-platform expected result
+#endif // WORDS_BIGENDIAN
 #endif // _WIN32
 }
 
