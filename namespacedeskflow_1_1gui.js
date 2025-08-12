@@ -31,7 +31,6 @@ var namespacedeskflow_1_1gui =
     [ "kColorError", "namespacedeskflow_1_1gui.html#a898a7c122870d1fac5a4c991baa7ed4a", null ],
     [ "kColorLightGrey", "namespacedeskflow_1_1gui.html#ab7582bb180dce3495dc8032bbf87b20c", null ],
     [ "kColorSecondary", "namespacedeskflow_1_1gui.html#a3dd9bd7f9f3cfb73057ae8421abbcc04", null ],
-    [ "kColorTertiary", "namespacedeskflow_1_1gui.html#a9474bbec09867c13a4121b64f98fd0d9", null ],
     [ "kColorWhite", "namespacedeskflow_1_1gui.html#a826dfcad9ba0503f9cc469774233dbe3", null ],
     [ "kDefaultEnvFilename", "namespacedeskflow_1_1gui.html#a6c2fb127042f3f2e44a6e305a7bb9abf", null ],
     [ "kDefaultProtocol", "namespacedeskflow_1_1gui.html#abcbdcbeeb5309fe706a35d40a3c1c719", null ],
