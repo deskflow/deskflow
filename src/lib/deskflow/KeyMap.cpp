@@ -210,14 +210,13 @@ void KeyMap::finish()
 
 void KeyMap::foreachKey(ForeachKeyCallback cb, void *userData)
 {
-  for (const auto &[keyId, keyGroup] : m_keyIDMap) {
-    const KeyGroupTable &groupTable = keyGroup;
-    for (size_t group = 0; group < groupTable.size(); ++group) {
-      const KeyEntryList &entryList = groupTable.at(group);
+  for (auto &[keyId, keyGroup] : m_keyIDMap) {
+    for (size_t group = 0; group < keyGroup.size(); ++group) {
+      KeyEntryList &entryList = keyGroup.at(group);
       for (auto &entry : entryList) {
-        const KeyItemList &itemList = entry;
-        for (auto item : itemList) {
-          (*cb)(keyId, static_cast<int32_t>(group), item, userData);
+        KeyItemList &itemList = entry;
+        for (size_t k = 0; k < itemList.size(); ++k) {
+          (*cb)(keyId, static_cast<int32_t>(group), itemList.at(k), userData);
         }
       }
     }
