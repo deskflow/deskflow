@@ -15,7 +15,6 @@
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
-#include "deskflow/Config.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 
@@ -143,9 +142,7 @@ void App::loggingFilterWarning() const
 
 void App::initApp(int argc, const char **argv)
 {
-  std::string configFilename;
   CLI::App cliApp{kAppDescription};
-  cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
 
   // Allow legacy args.
   cliApp.allow_extras();
@@ -157,14 +154,7 @@ void App::initApp(int argc, const char **argv)
     cliApp.exit(e);
   }
 
-  if (!configFilename.empty()) {
-    Config config(configFilename, configSection());
-    if (config.load(argv[0])) {
-      parseArgs();
-    }
-  } else {
-    parseArgs();
-  }
+  parseArgs();
 
   // set log filter
   if (const auto logLevel = qPrintable(Settings::logLevelText()); !CLOG->setFilter(logLevel)) {
