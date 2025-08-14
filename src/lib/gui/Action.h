@@ -35,7 +35,7 @@ class Action
   friend QTextStream &operator<<(QTextStream &outStream, const Action &action);
 
 public:
-  enum ActionType
+  enum class Type
   {
     keyDown,
     keyUp,
@@ -151,7 +151,7 @@ protected:
 
 private:
   KeySequence m_keySequence;
-  int m_type = keystroke;
+  int m_type = static_cast<int>(Type::keystroke);
   QStringList m_typeScreenNames = QStringList();
   QString m_switchScreenName = QString();
   int m_switchDirection = switchLeft;
