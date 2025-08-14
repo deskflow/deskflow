@@ -55,11 +55,11 @@ public:
     up,
     down
   };
-  enum LockCursorMode
+  enum class LockCursorMode
   {
-    lockCursorToggle,
-    lockCursonOn,
-    lockCursorOff
+    toggle,
+    on,
+    off
   };
 
 public:
@@ -155,7 +155,7 @@ private:
   QStringList m_typeScreenNames = QStringList();
   QString m_switchScreenName = QString();
   int m_switchDirection = static_cast<int>(SwitchDirection::left);
-  int m_lockCursorMode = lockCursorToggle;
+  int m_lockCursorMode = static_cast<int>(LockCursorMode::toggle);
   bool m_activeOnRelease = false;
   bool m_hasScreens = false;
   bool m_restartServer;
