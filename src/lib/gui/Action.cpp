@@ -14,7 +14,8 @@ QString Action::text() const
 {
   auto text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
 
-  switch (type()) {
+  switch (static_cast<Action::Type>(type())) {
+    using enum Type;
   case keyDown:
   case keyUp:
   case keystroke: {
@@ -36,15 +37,15 @@ QString Action::text() const
     text.append(m_commandTemplate.arg(commandArgs));
   } break;
 
-  case switchToScreen:
+  case Type::switchToScreen:
     text.append(m_commandTemplate.arg(m_switchScreenName));
     break;
 
-  case switchInDirection:
+  case Type::switchInDirection:
     text.append(m_commandTemplate.arg(m_switchDirectionNames.at(m_switchDirection)));
     break;
 
-  case lockCursorToScreen:
+  case Type::lockCursorToScreen:
     text.append(m_commandTemplate.arg(m_lockCursorModeNames.at(m_lockCursorMode)));
     break;
 
@@ -58,7 +59,7 @@ QString Action::text() const
 void Action::loadSettings(QSettings &settings)
 {
   keySequence().loadSettings(settings);
-  setType(settings.value(SettingsKeys::ActionType, keyDown).toInt());
+  setType(settings.value(SettingsKeys::ActionType, static_cast<int>(Type::keyDown)).toInt());
 
   typeScreenNames().clear();
   int numTypeScreens = settings.beginReadArray(SettingsKeys::ScreenNames);
