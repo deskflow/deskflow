@@ -177,6 +177,11 @@ if(UNIX)
     ${libs})
 
   if(NOT APPLE)
+
+    if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
+      target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
+    endif()
+
     target_link_libraries(platform Qt6::DBus)
 
     link_wayland_libs()

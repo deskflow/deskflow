@@ -10,6 +10,8 @@
 #include "deskflow/KeyState.h"
 #include "platform/EiScreen.h"
 
+#include <xkbcommon/xkbcommon.h>
+
 struct xkb_context;
 struct xkb_keymap;
 struct xkb_state;
@@ -40,7 +42,7 @@ protected:
   void fakeKey(const Keystroke &keystroke) override;
 
 private:
-  std::uint32_t convertModMask(std::uint32_t xkbMask) const;
+  std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn) const;
   void assignGeneratedModifiers(std::uint32_t keycode, KeyMap::KeyItem &item);
 
   EiScreen *m_screen = nullptr;
