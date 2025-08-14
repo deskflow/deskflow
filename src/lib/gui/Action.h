@@ -48,12 +48,12 @@ public:
     mouseUp,
     mousebutton,
   };
-  enum SwitchDirection
+  enum class SwitchDirection
   {
-    switchLeft,
-    switchRight,
-    switchUp,
-    switchDown
+    left,
+    right,
+    up,
+    down
   };
   enum LockCursorMode
   {
@@ -154,7 +154,7 @@ private:
   int m_type = static_cast<int>(Type::keystroke);
   QStringList m_typeScreenNames = QStringList();
   QString m_switchScreenName = QString();
-  int m_switchDirection = switchLeft;
+  int m_switchDirection = static_cast<int>(SwitchDirection::left);
   int m_lockCursorMode = lockCursorToggle;
   bool m_activeOnRelease = false;
   bool m_hasScreens = false;

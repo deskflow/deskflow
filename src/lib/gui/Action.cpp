@@ -70,7 +70,7 @@ void Action::loadSettings(QSettings &settings)
   settings.endArray();
 
   setSwitchScreenName(settings.value(SettingsKeys::SwitchToScreen).toString());
-  setSwitchDirection(settings.value(SettingsKeys::SwitchDirection, switchLeft).toInt());
+  setSwitchDirection(settings.value(SettingsKeys::SwitchDirection, static_cast<int>(SwitchDirection::left)).toInt());
   setLockCursorMode(settings.value(SettingsKeys::LockToScreen, lockCursorToggle).toInt());
   setActiveOnRelease(settings.value(SettingsKeys::ActiveOnRelease, false).toBool());
   setHaveScreens(settings.value(SettingsKeys::HasScreens, false).toBool());
