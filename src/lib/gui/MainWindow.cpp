@@ -136,7 +136,7 @@ MainWindow::MainWindow()
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
-  m_guiDupeChecker->removeServer(m_guiSocketName);
+  QLocalServer::removeServer(m_guiSocketName);
   m_guiDupeChecker->listen(m_guiSocketName);
 
   createMenuBar();
