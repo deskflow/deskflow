@@ -13,11 +13,9 @@
 #include "deskflow/ClientApp.h"
 #include "platform/XWindowsUtil.h"
 
-#include <algorithm>
 #include <cstddef>
 #include <memory>
 #include <unistd.h>
-#include <xkbcommon/xkbcommon.h>
 
 namespace deskflow {
 
@@ -97,7 +95,7 @@ bool EiKeyState::fakeCtrlAltDel()
 
 KeyModifierMask EiKeyState::pollActiveModifiers() const
 {
-  std::uint32_t xkbMask = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_EFFECTIVE);
+  const auto xkbMask = xkb_state_serialize_mods(m_xkbState, XKB_STATE_MODS_EFFECTIVE);
   return convertModMask(xkbMask);
 }
 
@@ -112,12 +110,25 @@ void EiKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
   return;
 }
 
-std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
+std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
 {
-  std::uint32_t modMask = 0;
+  // This is our own modifier mask, not xkb's.
+  std::uint32_t modMaskOut = 0;
 
-  for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(m_xkbKeymap); xkbmod++) {
-    if ((xkbMask & (1 << xkbmod)) == 0)
+  for (xkb_mod_index_t xkbModIdx = 0; xkbModIdx < xkb_keymap_num_mods(m_xkbKeymap); xkbModIdx++) {
+    const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbModIdx);
+
+#ifdef HAVE_XKB_KEYMAP_MOD_GET_MASK
+    // Available since xkbcommon v1.10
+    // Note: xkb_keymap_mod_get_mask2 was added in v1.11 which accepts xkb_mod_index_t.
+    const auto xkbModMask = xkb_keymap_mod_get_mask(m_xkbKeymap, name);
+#else
+    // HACK: in older xkbcommon we need to create the mask manually from the index.
+    const xkb_mod_mask_t xkbModMask = (1 << xkbModIdx);
+#endif
+
+    // Skip inactive modifiers.
+    if ((xkbModMaskIn & xkbModMask) == 0)
       continue;
 
     /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
@@ -134,27 +145,26 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
     static const auto XKB_MOD_NAME_MOD5 = "Mod5";
 #endif
 
-    const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbmod);
     if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
-      modMask |= (1 << kKeyModifierBitShift);
+      modMaskOut |= (1 << kKeyModifierBitShift);
     else if (strcmp(XKB_MOD_NAME_CAPS, name) == 0)
-      modMask |= (1 << kKeyModifierBitCapsLock);
+      modMaskOut |= (1 << kKeyModifierBitCapsLock);
     else if (strcmp(XKB_MOD_NAME_CTRL, name) == 0)
-      modMask |= (1 << kKeyModifierBitControl);
+      modMaskOut |= (1 << kKeyModifierBitControl);
     else if (strcmp(XKB_MOD_NAME_ALT, name) == 0 || strcmp(XKB_VMOD_NAME_ALT, name) == 0)
-      modMask |= (1 << kKeyModifierBitAlt);
+      modMaskOut |= (1 << kKeyModifierBitAlt);
     else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0 || strcmp(XKB_VMOD_NAME_SUPER, name) == 0)
-      modMask |= (1 << kKeyModifierBitSuper);
+      modMaskOut |= (1 << kKeyModifierBitSuper);
     else if (strcmp(XKB_MOD_NAME_MOD5, name) == 0 || strcmp(XKB_VMOD_NAME_LEVEL3, name) == 0)
-      modMask |= (1 << kKeyModifierBitAltGr);
+      modMaskOut |= (1 << kKeyModifierBitAltGr);
     else if (strcmp(XKB_VMOD_NAME_LEVEL5, name) == 0)
-      modMask |= (1 << kKeyModifierBitLevel5Lock);
+      modMaskOut |= (1 << kKeyModifierBitLevel5Lock);
     else if (strcmp(XKB_VMOD_NAME_META, name) == 0)
-      modMask |= (1 << kKeyModifierBitMeta);
+      modMaskOut |= (1 << kKeyModifierBitMeta);
     else if (strcmp(XKB_VMOD_NAME_NUM, name) == 0)
-      modMask |= (1 << kKeyModifierBitNumLock);
+      modMaskOut |= (1 << kKeyModifierBitNumLock);
     else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
-      modMask |= (1 << kKeyModifierBitScrollLock);
+      modMaskOut |= (1 << kKeyModifierBitScrollLock);
     else if (strcmp(XKB_MOD_NAME_MOD2, name) == 0) // spare, sometimes mapped to num lock.
       LOG_DEBUG2("modifier mask %s ignored", name);
     else if (strcmp(XKB_MOD_NAME_MOD3, name) == 0) // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
@@ -163,7 +173,7 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
       LOG_WARN("modifier mask %s not accounted for, this is a bug", name);
   }
 
-  return modMask;
+  return modMaskOut;
 }
 
 // Only way to figure out whether a key is a modifier key is to press it,
@@ -171,7 +181,7 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
 // Luckily xkbcommon allows us to do this in a separate state.
 void EiKeyState::assignGeneratedModifiers(std::uint32_t keycode, deskflow::KeyMap::KeyItem &item)
 {
-  std::uint32_t modifiers = 0;
+  xkb_mod_mask_t xkbModMask = 0;
   auto state = xkb_state_new(m_xkbKeymap);
 
   if (enum xkb_state_component changed = xkb_state_update_key(state, keycode, XKB_KEY_DOWN); changed) {
@@ -180,14 +190,14 @@ void EiKeyState::assignGeneratedModifiers(std::uint32_t keycode, deskflow::KeyMa
         item.m_lock = true;
 
       if (xkb_state_mod_index_is_active(state, m, XKB_STATE_MODS_EFFECTIVE)) {
-        modifiers |= (1 << m);
+        xkbModMask |= (1 << m);
       }
     }
   }
   xkb_state_update_key(state, keycode, XKB_KEY_UP);
   xkb_state_unref(state);
 
-  item.m_generates = convertModMask(modifiers);
+  item.m_generates = convertModMask(xkbModMask);
 }
 
 void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
