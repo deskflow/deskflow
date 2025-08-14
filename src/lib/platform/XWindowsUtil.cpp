@@ -71,7 +71,7 @@ struct codepair
   uint32_t ucs4;
 };
 
-codepair s_keymap[] = {
+std::vector<codepair> s_keymap = {
     {XK_Aogonek, 0x0104},      /* LATIN CAPITAL LETTER A WITH OGONEK */
     {XK_breve, 0x02d8},        /* BREVE */
     {XK_Lstroke, 0x0141},      /* LATIN CAPITAL LETTER L WITH STROKE */
@@ -1888,7 +1888,7 @@ void XWindowsUtil::initKeyMaps()
 {
   if (s_keySymToUCS4.empty()) {
     for (size_t i = 0; i < std::size(s_keymap); ++i) {
-      s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
+      s_keySymToUCS4[s_keymap.at(i).keysym] = s_keymap.at(i).ucs4;
     }
   }
 }
