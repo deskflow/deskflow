@@ -27,7 +27,6 @@ path = [
  , "src/apps/res/manpage.txt"
  , "src/apps/res/deskflow.plist.in"
 ]
-precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "MIT"
 
@@ -44,19 +43,16 @@ path = [
  , "src/apps/res/deskflow.ico"
  , "src/apps/res/deskflow.qrc"
 ]
-precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "GPL-2.0-only"
 
 [[annotations]]
 path = "src/apps/res/icons/deskflow-**/**/**/**.svg"
-precedence = "override"
 SPDX-FileCopyrightText = "Kde Breeze Icons"
 SPDX-License-Identifier = "LGPL-2.1-only"
 
 [[annotations]]
 path = "src/apps/res/icons/deskflow-**/index.theme"
-precedence = "override"
 SPDX-FileCopyrightText = "Chris Rizzitello <sithlord48@gmail.com>"
 SPDX-License-Identifier = "LGPL-2.1-only"
 
@@ -65,6 +61,5 @@ path = [
    "src/lib/gui/MainWindow.ui"
  , "src/lib/gui/dialogs/*.ui"
 ]
-precedence = "override"
 SPDX-FileCopyrightText = "Deskflow Developers"
 SPDX-License-Identifier = "GPL-2.0-only WITH LicenseRef-OpenSSL-Exception"
