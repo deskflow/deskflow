@@ -19,6 +19,35 @@
 
 #include <vector>
 
+class CursorMultiplexerJob : public ISocketMultiplexerJob
+{
+public:
+  MultiplexerJobStatus run(bool readable, bool writable, bool error) override
+  {
+    return {false, {}};
+  }
+
+  ArchSocket getSocket() const override
+  {
+    return {};
+  }
+
+  bool isReadable() const override
+  {
+    return false;
+  }
+
+  bool isWritable() const override
+  {
+    return false;
+  }
+
+  bool isCursor() const override
+  {
+    return true;
+  }
+};
+
 //
 // SocketMultiplexer
 //
@@ -29,12 +58,6 @@ SocketMultiplexer::SocketMultiplexer()
       m_jobListLock(new CondVar<bool>(m_mutex, false)),
       m_jobListLockLocked(new CondVar<bool>(m_mutex, false))
 {
-  // this pointer just has to be unique and not nullptr.  it will
-  // never be dereferenced.  it's used to identify cursor nodes
-  // in the jobs list.
-  // TODO: Remove this evilness
-  m_cursorMark = reinterpret_cast<ISocketMultiplexerJob *>(this);
-
   // start thread
   auto tMethodJob = new TMethodJob<SocketMultiplexer>(this, &SocketMultiplexer::serviceThread);
   m_thread = new Thread(tMethodJob);
@@ -52,14 +75,9 @@ SocketMultiplexer::~SocketMultiplexer()
   delete m_jobListLocker;
   delete m_jobListLockLocker;
   delete m_mutex;
-
-  // clean up jobs
-  for (auto i = m_socketJobMap.begin(); i != m_socketJobMap.end(); ++i) {
-    delete *(i->second);
-  }
 }
 
-void SocketMultiplexer::addSocket(ISocket *socket, ISocketMultiplexerJob *job)
+void SocketMultiplexer::addSocket(ISocket *socket, std::unique_ptr<ISocketMultiplexerJob> &&job)
 {
   assert(socket != nullptr);
   assert(job != nullptr);
@@ -78,14 +96,11 @@ void SocketMultiplexer::addSocket(ISocket *socket, ISocketMultiplexerJob *job)
     // we *must* put the job at the end so the order of jobs in
     // the list continue to match the order of jobs in pfds in
     // serviceThread().
-    JobCursor j = m_socketJobs.insert(m_socketJobs.end(), job);
+    JobCursor j = m_socketJobs.insert(m_socketJobs.end(), std::move(job));
     m_update = true;
     m_socketJobMap.insert(std::make_pair(socket, j));
   } else {
-    if (JobCursor j = i->second; *j != job) {
-      delete *j;
-      *j = job;
-    }
+    *(i->second) = std::move(job);
     m_update = true;
   }
 
@@ -109,10 +124,11 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
   // remove job.  rather than removing it from the map we put nullptr
   // in the list instead so the order of jobs in the list continues
   // to match the order of jobs in pfds in serviceThread().
-  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i != m_socketJobMap.end() && (*(i->second) != nullptr)) {
-    delete *(i->second);
-    *(i->second) = nullptr;
-    m_update = true;
+  if (SocketJobMap::iterator i = m_socketJobMap.find(socket); i != m_socketJobMap.end()) {
+    if (*(i->second)) {
+      i->second->reset();
+      m_update = true;
+    }
   }
 
   // unlock the job list
@@ -149,13 +165,13 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
       JobCursor cursor = newCursor();
       JobCursor jobCursor = nextCursor(cursor);
       while (jobCursor != m_socketJobs.end()) {
-        if (const ISocketMultiplexerJob *job = *jobCursor; job) {
-          pfd.m_socket = job->getSocket();
+        if (*jobCursor) {
+          pfd.m_socket = (*jobCursor)->getSocket();
           pfd.m_events = 0;
-          if (job->isReadable()) {
+          if ((*jobCursor)->isReadable()) {
             pfd.m_events |= IArchNetwork::PollEventMask::In;
           }
-          if (job->isWritable()) {
+          if ((*jobCursor)->isWritable()) {
             pfd.m_events |= IArchNetwork::PollEventMask::Out;
           }
           pfds.push_back(pfd);
@@ -194,13 +210,15 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
               ((revents & (int(IArchNetwork::PollEventMask::Error) | int(IArchNetwork::PollEventMask::Invalid))) != 0);
 
           // run job
-          ISocketMultiplexerJob *job = *jobCursor;
+          MultiplexerJobStatus status = (*jobCursor)->run(read, write, error);
 
           // save job, if different
-          if (ISocketMultiplexerJob *newJob = job->run(read, write, error); newJob != job) {
+          if (!status.continueServicing) {
             Lock lock(m_mutex);
-            delete job;
-            *jobCursor = newJob;
+            jobCursor->reset();
+            m_update = true;
+          } else if (status.newJob) {
+            *jobCursor = std::move(status.newJob);
             m_update = true;
           }
           ++i;
@@ -231,7 +249,7 @@ void SocketMultiplexer::removeSocket(ISocket *socket)
 SocketMultiplexer::JobCursor SocketMultiplexer::newCursor()
 {
   Lock lock(m_mutex);
-  return m_socketJobs.insert(m_socketJobs.begin(), m_cursorMark);
+  return m_socketJobs.insert(m_socketJobs.begin(), std::make_unique<CursorMultiplexerJob>());
 }
 
 SocketMultiplexer::JobCursor SocketMultiplexer::nextCursor(JobCursor cursor)
@@ -240,7 +258,7 @@ SocketMultiplexer::JobCursor SocketMultiplexer::nextCursor(JobCursor cursor)
   auto j = m_socketJobs.end();
   JobCursor i = cursor;
   while (++i != m_socketJobs.end()) {
-    if (*i != m_cursorMark) {
+    if (*i && !(*i)->isCursor()) {
       // found a real job (as opposed to a cursor)
       j = i;
 
