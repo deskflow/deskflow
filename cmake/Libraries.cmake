@@ -162,6 +162,16 @@ macro(configure_unix_libs)
       find_library(LIBM m)
       include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
                           ${LIBM_INCLUDE_DIRS})
+      
+      message(STATUS "xkbcommon version: ${LIBXKBCOMMON_VERSION}")
+
+      # Available since xkbcommon v1.10
+      include(CheckSymbolExists)
+      check_symbol_exists(xkb_keymap_mod_get_mask "xkbcommon/xkbcommon.h" HAVE_XKB_KEYMAP_MOD_GET_MASK)
+      message(VERBOSE "xkb_keymap_mod_get_mask: ${HAVE_XKB_KEYMAP_MOD_GET_MASK}")
+      if (HAVE_XKB_KEYMAP_MOD_GET_MASK)
+        add_definitions(-DHAVE_XKB_KEYMAP_MOD_GET_MASK=1)
+      endif()
     else()
       message(WARNING "pkg-config not found, skipping wayland libraries")
     endif()
@@ -267,6 +277,8 @@ macro(configure_xorg_libs)
   if(HAVE_Xi)
     list(APPEND libs Xi)
   endif()
+
+
 
   add_definitions(-DWINAPI_XWINDOWS=1)
 

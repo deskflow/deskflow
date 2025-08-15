@@ -117,8 +117,16 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
   std::uint32_t modMask = 0;
 
   for (xkb_mod_index_t xkbmod = 0; xkbmod < xkb_keymap_num_mods(m_xkbKeymap); xkbmod++) {
+#ifdef HAVE_XKB_KEYMAP_MOD_GET_MASK
+    // Available since xkbcommon v1.10
+    const auto modMask = xkb_keymap_mod_get_mask(m_xkbKeymap, xkbmod);
+    if ((xkbMask & modMask) == 0)
+      continue;
+#else
+    // HACK: <= xkbcommon v1.7 we need to check the mask manually.
     if ((xkbMask & (1 << xkbmod)) == 0)
       continue;
+#endif
 
     /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
 #ifndef XKB_VMOD_NAME_ALT
