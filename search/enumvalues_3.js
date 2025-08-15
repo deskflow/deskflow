@@ -14,5 +14,6 @@ var searchData=
   ['defaultmod_11',['DefaultMod',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814ac4640319a26ddefaa529bd0d954c6b9e',1,'ScreenConfig']]],
   ['desktop_12',['Desktop',['../classSettings.html#aac26728c616513838b3f9efb70a5cdd5a7d2a66d646087713b2c9250f177aa30f',1,'Settings']]],
   ['disconnect_13',['Disconnect',['../classServerProxy.html#a1bc5a0b70c8bbfe20fb415ee40cd9d76a42ae25231906c83927831e0ef7c317ac',1,'ServerProxy']]],
-  ['disconnected_14',['Disconnected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9aef70e46fd3bbc21e3e1f0b6815e750c0',1,'deskflow::gui::CoreProcess']]]
+  ['disconnected_14',['Disconnected',['../classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9aef70e46fd3bbc21e3e1f0b6815e750c0',1,'deskflow::gui::CoreProcess']]],
+  ['down_15',['down',['../classAction.html#a299e0248ee64190b156f01c61833d4daa74e8333ad11685ff3bdae589c8f6e34d',1,'Action']]]
 ];

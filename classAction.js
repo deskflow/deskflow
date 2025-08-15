@@ -1,27 +1,27 @@
 var classAction =
 [
-    [ "ActionType", "classAction.html#ab1851cee70a9061c928e69d44e6cba0b", [
-      [ "keyDown", "classAction.html#ab1851cee70a9061c928e69d44e6cba0bafe980ecdeb35f5b9e60c603b41a2e5f5", null ],
-      [ "keyUp", "classAction.html#ab1851cee70a9061c928e69d44e6cba0bad8a7b716a65d103dc78b8eefbc3221c4", null ],
-      [ "keystroke", "classAction.html#ab1851cee70a9061c928e69d44e6cba0babb36816be91238b4252a781c8bb1a540", null ],
-      [ "switchToScreen", "classAction.html#ab1851cee70a9061c928e69d44e6cba0ba46d7f419fb52439679b9453e4b3e4cef", null ],
-      [ "switchInDirection", "classAction.html#ab1851cee70a9061c928e69d44e6cba0bab9d5b458dd8085480fa963a967299300", null ],
-      [ "lockCursorToScreen", "classAction.html#ab1851cee70a9061c928e69d44e6cba0baf9eb7103fc7e2a15365a1da19e0fb457", null ],
-      [ "restartAllConnections", "classAction.html#ab1851cee70a9061c928e69d44e6cba0ba824ed17d9a610b32ff8d39969c47c6e4", null ],
-      [ "mouseDown", "classAction.html#ab1851cee70a9061c928e69d44e6cba0ba7703ca52db8fcdbd012c71112adccf9c", null ],
-      [ "mouseUp", "classAction.html#ab1851cee70a9061c928e69d44e6cba0bac8c63251cd8461489c916d9d185802b7", null ],
-      [ "mousebutton", "classAction.html#ab1851cee70a9061c928e69d44e6cba0ba53fc8f67a4ead37d2ce8febfc7b8a39a", null ]
-    ] ],
     [ "LockCursorMode", "classAction.html#a21996b8e336065685f74fdfe046f12d5", [
-      [ "lockCursorToggle", "classAction.html#a21996b8e336065685f74fdfe046f12d5a4c4b7a031a5b1682ef0b0b22d583fc40", null ],
-      [ "lockCursonOn", "classAction.html#a21996b8e336065685f74fdfe046f12d5a31247ff8df6ccb8d8d4a477aec565d94", null ],
-      [ "lockCursorOff", "classAction.html#a21996b8e336065685f74fdfe046f12d5a18b84e63d9eb45303be0304dd28adf40", null ]
+      [ "toggle", "classAction.html#a21996b8e336065685f74fdfe046f12d5a41f984bb082af806e510740db289125d", null ],
+      [ "on", "classAction.html#a21996b8e336065685f74fdfe046f12d5aed2b5c0139cec8ad2873829dc1117d50", null ],
+      [ "off", "classAction.html#a21996b8e336065685f74fdfe046f12d5a3262d48df5d75e3452f0f16b313b7808", null ]
     ] ],
     [ "SwitchDirection", "classAction.html#a299e0248ee64190b156f01c61833d4da", [
-      [ "switchLeft", "classAction.html#a299e0248ee64190b156f01c61833d4daad15c9ea82f08ab56c40cd0d32956b867", null ],
-      [ "switchRight", "classAction.html#a299e0248ee64190b156f01c61833d4daa171c1ef0c261bd00ea2d10c1fbd05954", null ],
-      [ "switchUp", "classAction.html#a299e0248ee64190b156f01c61833d4daa68dde40dd9f7cec3bf2388af171d9fa8", null ],
-      [ "switchDown", "classAction.html#a299e0248ee64190b156f01c61833d4daaab319a84cb8935b2709369465b9aca9d", null ]
+      [ "left", "classAction.html#a299e0248ee64190b156f01c61833d4daa811882fecd5c7618d7099ebbd39ea254", null ],
+      [ "right", "classAction.html#a299e0248ee64190b156f01c61833d4daa7c4f29407893c334a6cb7a87bf045c0d", null ],
+      [ "up", "classAction.html#a299e0248ee64190b156f01c61833d4daa46c48bec0d282018b9d167eef7711b2c", null ],
+      [ "down", "classAction.html#a299e0248ee64190b156f01c61833d4daa74e8333ad11685ff3bdae589c8f6e34d", null ]
+    ] ],
+    [ "Type", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3", [
+      [ "keyDown", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a5667d5662d560afa94832ef44521d1bd", null ],
+      [ "keyUp", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3aef6c5fbb63e58b95c09d30a6c2de5b02", null ],
+      [ "keystroke", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3ad9fe3a138000d19978bf69cd8d7528aa", null ],
+      [ "switchToScreen", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a66c1820f8cdce76e860432ef09e9b679", null ],
+      [ "switchInDirection", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a9ea223b29b741b175f8de039006bc684", null ],
+      [ "lockCursorToScreen", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a935d3ffef92fc997178bbde261bbae4c", null ],
+      [ "restartAllConnections", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a29a278d7ee68742c0ab4759a0a5a9a8f", null ],
+      [ "mouseDown", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a83766bbe8b909ee2240776b6fbd27921", null ],
+      [ "mouseUp", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a65c2387a10433967a83345d993ebbf64", null ],
+      [ "mousebutton", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a3fd01e730b7f4c62adc74d14547d61dd", null ]
     ] ],
     [ "Action", "classAction.html#ae56128e86ad3c35aa154954fc3e39dc0", null ],
     [ "activeOnRelease", "classAction.html#a07e996ba604b690c696a39283ea6bf9f", null ],

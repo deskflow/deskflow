@@ -13,7 +13,7 @@ var searchData=
   ['actiondialog_2eh_10',['ActionDialog.h',['../ActionDialog_8h.html',1,'']]],
   ['actionlist_11',['ActionList',['../Action_8h.html#a9964e16605be35bd6273789d4e0adf96',1,'Action.h']]],
   ['actions_12',['actions',['../classHotkey.html#a499f878845ddeaaa9cb0fb565686032a',1,'Hotkey::actions() const'],['../classHotkey.html#af176b9119a5ccad2966cbcf66c291d4b',1,'Hotkey::actions()']]],
-  ['actiontype_13',['ActionType',['../classAction.html#ab1851cee70a9061c928e69d44e6cba0b',1,'Action::ActionType'],['../namespaceSettingsKeys.html#a6ab6ee8b431024a9349b48ab0cac9041',1,'SettingsKeys::ActionType']]],
+  ['actiontype_13',['ActionType',['../namespaceSettingsKeys.html#a6ab6ee8b431024a9349b48ab0cac9041',1,'SettingsKeys']]],
   ['actiontypes_14',['ActionTypes',['../structActionDialog_1_1ActionTypes.html',1,'ActionDialog']]],
   ['activate_15',['Activate',['../classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48edaa13367a8e2a3f3bf4f3409079e3fdf87',1,'InputFilter']]],
   ['activate_16',['activate',['../classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3',1,'IScreenSaver::activate()'],['../classMSWindowsScreenSaver.html#ab2742e1f51f03cbbbab98e1f80692041',1,'MSWindowsScreenSaver::activate()'],['../classOSXScreenSaver.html#af518f4c82f47f805c61275533f702cba',1,'OSXScreenSaver::activate()'],['../classXWindowsScreenSaver.html#a54016bcab0a0f55cc094c4885493d653',1,'XWindowsScreenSaver::activate()']]],
