@@ -16,7 +16,7 @@ MSWindowsSession::MSWindowsSession() : m_activeSessionId(-1)
 {
 }
 
-bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nullptr)
+bool MSWindowsSession::isProcessInSession(const wchar_t *name, PHANDLE process = nullptr)
 {
   // first we need to take a snapshot of the running processes
   HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -37,7 +37,7 @@ bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nu
   }
 
   // used to record process names for debug info
-  std::list<std::string> nameList;
+  std::list<std::wstring> nameList;
 
   // now just iterate until we can find winlogon.exe pid
   DWORD pid = 0;
@@ -64,7 +64,7 @@ bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nu
           // store the names so we can record them for debug
           nameList.push_back(entry.szExeFile);
 
-          if (_stricmp(entry.szExeFile, name) == 0) {
+          if (_wcsicmp(entry.szExeFile, name) == 0) {
             pid = entry.th32ProcessID;
           }
         }
@@ -75,10 +75,10 @@ bool MSWindowsSession::isProcessInSession(const char *name, PHANDLE process = nu
     gotEntry = nextProcessEntry(snapshot, &entry);
   }
 
-  std::string nameListJoin;
-  for (std::list<std::string>::iterator it = nameList.begin(); it != nameList.end(); it++) {
+  std::wstring nameListJoin;
+  for (std::list<std::wstring>::iterator it = nameList.begin(); it != nameList.end(); it++) {
     nameListJoin.append(*it);
-    nameListJoin.append(", ");
+    nameListJoin.append(L", ");
   }
 
   LOG_DEBUG2("processes in session %d: %s", m_activeSessionId, nameListJoin.c_str());

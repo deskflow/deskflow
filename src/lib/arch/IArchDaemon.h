@@ -10,7 +10,6 @@
 #include "common/IInterface.h"
 
 #include <functional>
-#include <string>
 
 //! Interface for architecture dependent daemonizing
 /*!
@@ -40,14 +39,15 @@ public:
   the listed daemons.  Throws an \c ArchDaemonException exception on failure.
   */
   virtual void installDaemon(
-      const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
+      const QString &name, const QString &description, const QString &pathname, const QString &commandLine,
+      const QString &dependencies
   ) = 0;
 
   //! Uninstall daemon
   /*!
   Uninstall a daemon.  Throws an \c ArchDaemonException on failure.
   */
-  virtual void uninstallDaemon(const char *name) = 0;
+  virtual void uninstallDaemon(const QString &name) = 0;
 
   //! Install daemon
   /*!
@@ -88,7 +88,7 @@ public:
     \c ArchMiscWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
-  virtual int daemonize(const char *name, DaemonFunc const &func) = 0;
+  virtual int daemonize(const QString &name, DaemonFunc const &func) = 0;
 
   //! Check if user has permission to install the daemon
   /*!
@@ -98,13 +98,13 @@ public:
   may still fail.  This method ignores whether or not the
   service is already installed.
   */
-  virtual bool canInstallDaemon(const char *name) = 0;
+  virtual bool canInstallDaemon(const QString &name) = 0;
 
   //! Check if the daemon is installed
   /*!
   Returns true iff the daemon is installed.
   */
-  virtual bool isDaemonInstalled(const char *name) = 0;
+  virtual bool isDaemonInstalled(const QString &name) = 0;
 
   //@}
 
@@ -112,7 +112,7 @@ public:
   /*!
   Gets the command line with which the application was started.
   */
-  virtual std::string commandLine() const = 0;
+  virtual QString commandLine() const = 0;
 
   //@}
 };

@@ -22,7 +22,7 @@
 
 namespace deskflow::platform {
 
-MSWindowsProcess::MSWindowsProcess(const std::string &command, HANDLE stdOutput, HANDLE stdError)
+MSWindowsProcess::MSWindowsProcess(const std::wstring &command, HANDLE stdOutput, HANDLE stdError)
     : m_command(command),
       m_stdOutput(stdOutput),
       m_stdError(stdError)
@@ -51,7 +51,7 @@ BOOL MSWindowsProcess::startInForeground()
   si.wShowWindow = SW_MINIMIZE;
 
   m_createProcessResult =
-      CreateProcess(nullptr, LPSTR(m_command.c_str()), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &m_info);
+      CreateProcess(nullptr, LPWSTR(m_command.c_str()), nullptr, nullptr, TRUE, 0, nullptr, nullptr, &si, &m_info);
   return m_createProcessResult;
 }
 
@@ -69,7 +69,8 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
   ZeroMemory(&m_info, sizeof(PROCESS_INFORMATION));
   const DWORD creationFlags = NORMAL_PRIORITY_CLASS | CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT;
   m_createProcessResult = CreateProcessAsUser(
-      userToken, nullptr, LPSTR(m_command.c_str()), sa, nullptr, TRUE, creationFlags, environment, nullptr, &si, &m_info
+      userToken, nullptr, LPWSTR(m_command.c_str()), sa, nullptr, TRUE, creationFlags, environment, nullptr, &si,
+      &m_info
   );
 
   DestroyEnvironmentBlock(environment);
@@ -80,7 +81,7 @@ BOOL MSWindowsProcess::startAsUser(HANDLE userToken, LPSECURITY_ATTRIBUTES sa)
 
 void MSWindowsProcess::setStartupInfo(STARTUPINFO &si)
 {
-  static char g_desktopName[] = "winsta0\\Default"; // NOSONAR -- Idiomatic Win32
+  static wchar_t g_desktopName[] = L"winsta0\\Default"; // NOSONAR -- Idiomatic Win32
 
   ZeroMemory(&si, sizeof(STARTUPINFO));
   si.cb = sizeof(STARTUPINFO);
@@ -136,7 +137,7 @@ void MSWindowsProcess::shutdown(HANDLE handle, DWORD pid, int timeout)
   }
 
   LOG_DEBUG("sending close event to close process gracefully");
-  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, kCloseEventName);
+  HANDLE hCloseEvent = OpenEvent(EVENT_MODIFY_STATE, FALSE, LPCWSTR(kCloseEventName));
   if (hCloseEvent != nullptr) { // NOSONAR -- Readability
     SetEvent(hCloseEvent);
     CloseHandle(hCloseEvent);
@@ -216,20 +217,20 @@ void MSWindowsProcess::createPipes()
   }
 }
 
-std::string MSWindowsProcess::readStdOutput()
+std::wstring MSWindowsProcess::readStdOutput()
 {
   return readOutput(m_outputPipe);
 }
 
-std::string MSWindowsProcess::readStdError()
+std::wstring MSWindowsProcess::readStdError()
 {
   return readOutput(m_errorPipe);
 }
 
-std::string MSWindowsProcess::readOutput(HANDLE handle)
+std::wstring MSWindowsProcess::readOutput(HANDLE handle)
 {
   const auto kOutputBufferSize = 4096;
-  char buffer[kOutputBufferSize]; // NOSONAR -- Idiomatic Win32
+  wchar_t buffer[kOutputBufferSize]; // NOSONAR -- Idiomatic Win32
 
   DWORD bytesRead;
   DWORD totalBytesAvail;
@@ -242,7 +243,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
   }
 
   if (totalBytesAvail == 0) {
-    return "";
+    return {};
   }
 
   if (!ReadFile(handle, buffer, kOutputBufferSize, &bytesRead, nullptr)) {
@@ -250,7 +251,7 @@ std::string MSWindowsProcess::readOutput(HANDLE handle)
     throw std::runtime_error(windowsErrorToString(GetLastError()));
   }
 
-  return std::string(buffer, bytesRead);
+  return std::wstring(buffer, bytesRead);
 }
 
 } // namespace deskflow::platform
