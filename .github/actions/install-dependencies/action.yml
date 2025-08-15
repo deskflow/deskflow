@@ -38,26 +38,25 @@ runs:
                 xorg-dev libx11-dev libxtst-dev libssl-dev \
                 libglib2.0-dev libxkbfile-dev qt6-base-dev qt6-tools-dev \
                 libgtk-3-dev libgtest-dev libgmock-dev \
-                libei-dev libportal-dev libtomlplusplus-dev libcli11-dev \
+                libei-dev libportal-dev libcli11-dev \
                 help2man -y >/dev/null
             elif [ ${{inputs.like}} == "fedora" ]; then
               dnf install -y cmake make ninja-build gcc-c++ \
                 rpm-build openssl-devel glib2-devel \
                 libXtst-devel libxkbfile-devel qt6-qtbase-devel qt6-qttools-devel \
                 gtk3-devel gtest-devel gmock-devel \
-                libei-devel libportal-devel tomlplusplus-devel \
-                cli11-devel help2man
+                libei-devel libportal-devel cli11-devel help2man
             elif [ ${{inputs.like}} == "suse" ]; then
               zypper refresh
               zypper install -y --force-resolution \
                 cmake make ninja gcc-c++ rpm-build libopenssl-devel \
                 glib2-devel libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
                 googletest-devel googlemock-devel libei-devel \
-                libportal-devel tomlplusplus-devel cli11-devel help2man
+                libportal-devel cli11-devel help2man
             elif [ ${{ inputs.like }} == "arch" ]; then
               pacman -Syu --noconfirm base-devel cmake ninja \
                 gcc openssl glib2 libxtst libxkbfile gtest libei libportal \
-                qt6-base qt6-tools qt6-svg gtk3 tomlplusplus cli11 help2man doxygen graphviz rsync
+                qt6-base qt6-tools qt6-svg gtk3 cli11 help2man doxygen graphviz rsync
             else
               echo "Unknown like"
             fi

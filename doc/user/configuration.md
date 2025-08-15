@@ -566,25 +566,6 @@ section: links
 end
 ```
 
-# Example file for `--config-toml` arg
-
-```
-[server.args]
-no-daemon = true
-no-tray = true
-debug = "DEBUG"
-name = "moe"
-address = ":24800"
-
-[client.args]
-no-daemon = true
-no-tray = true
-debug = "DEBUG2"
-name = "larry"
-_last = "moe:24800"
-```
-
-
 # Example  `.env` file
 
 
