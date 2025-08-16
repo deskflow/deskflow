@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "deskflow/App.h" //Include First
+
 #include "platform/XWindowsScreen.h"
 
 #include "arch/Arch.h"
@@ -13,7 +15,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ClientArgs.h"

@@ -37,6 +37,7 @@ public:
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
+    inline static const auto XdgRestoreToken = QStringLiteral("client/xdgRestoreToken");
   };
   struct Core
   {
