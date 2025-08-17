@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,15 +9,16 @@
 #pragma once
 
 #include "base/Event.h"
-#include "common/IInterface.h"
+#include "common/Common.h"
 
 //! Screen saver interface
 /*!
 This interface defines the methods common to all screen savers.
 */
-class IScreenSaver : public IInterface
+class IScreenSaver
 {
 public:
+  virtual ~IScreenSaver() = default;
   // note -- the c'tor/d'tor must *not* enable/disable the screen saver
 
   //! @name manipulators

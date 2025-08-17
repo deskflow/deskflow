@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2003 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,7 +10,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
+#include "common/Common.h"
 #include "deskflow/MouseTypes.h"
 
 //! Secondary screen interface
@@ -17,9 +18,10 @@
 This interface defines the methods common to all platform dependent
 secondary screen implementations.
 */
-class ISecondaryScreen : public IInterface
+class ISecondaryScreen
 {
 public:
+  virtual ~ISecondaryScreen() = default;
   //! @name accessors
   //@{
 

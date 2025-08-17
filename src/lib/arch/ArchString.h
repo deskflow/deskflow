@@ -9,7 +9,6 @@
 #pragma once
 
 #include "common/Common.h"
-#include "common/IInterface.h"
 
 #include <stdarg.h>
 
@@ -18,13 +17,13 @@
 This interface defines the string operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class ArchString : public IInterface
+class ArchString
 {
 public:
   ArchString() = default;
   ArchString(const ArchString &) = delete;
   ArchString(ArchString &&) = delete;
-  ~ArchString() override = default;
+  virtual ~ArchString() = default;
 
   ArchString &operator=(const ArchString &) = delete;
   ArchString &operator=(ArchString &&) = delete;

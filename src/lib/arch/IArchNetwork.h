@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,7 +8,7 @@
 
 #pragma once
 
-#include "common/IInterface.h"
+#include "common/Common.h"
 #include <string>
 
 #include <vector>
@@ -49,9 +50,10 @@ using ArchNetAddress = ArchNetAddressImpl *;
 This interface defines the networking operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchNetwork : public IInterface
+class IArchNetwork
 {
 public:
+  virtual ~IArchNetwork() = default;
   //! Supported address families
   enum class AddressFamily : uint8_t
   {

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -80,9 +81,10 @@ private:
 This interface defines the methods common to all win32 clipboard format
 converters.
 */
-class IMSWindowsClipboardConverter : public IInterface
+class IMSWindowsClipboardConverter
 {
 public:
+  virtual ~IMSWindowsClipboardConverter() = default;
   // accessors
 
   // return the clipboard format this object converts from/to

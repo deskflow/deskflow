@@ -10,7 +10,7 @@
 
 #include "base/Event.h"
 #include "base/EventTypes.h"
-#include "common/IInterface.h"
+#include "common/Common.h"
 
 #include <functional>
 #include <string>
@@ -28,10 +28,12 @@ on any event becoming available at the head of the queue and can place
 new events at the end of the queue.  Clients can also add and remove
 timers which generate events periodically.
 */
-class IEventQueue : public IInterface
+class IEventQueue
 {
 public:
   using EventHandler = std::function<void(const Event &)>;
+
+  virtual ~IEventQueue() = default;
   class TimerEvent
   {
   public:
