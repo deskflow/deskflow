@@ -95,7 +95,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   IClipboard.h
   IKeyState.cpp
   IKeyState.h
-  INode.h
   IPlatformScreen.cpp
   IPlatformScreen.h
   IPrimaryScreen.cpp

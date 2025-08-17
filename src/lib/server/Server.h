@@ -13,7 +13,6 @@
 #include "base/Stopwatch.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
-#include "deskflow/INode.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
@@ -41,7 +40,7 @@ class ClientListener;
 /*!
 This class implements the top-level server algorithms for deskflow.
 */
-class Server : public INode
+class Server
 {
   using ServerConfig = deskflow::server::Config;
 
@@ -127,7 +126,7 @@ public:
   );
   Server(Server const &) = delete;
   Server(Server &&) = delete;
-  ~Server() override;
+  ~Server();
 
   Server &operator=(Server const &) = delete;
   Server &operator=(Server &&) = delete;
