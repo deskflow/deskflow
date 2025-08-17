@@ -89,7 +89,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   DeskflowException.h
   DisplayInvalidException.h
   IApp.h
-  IAppUtil.h
   IClient.h
   IClipboard.cpp
   IClipboard.h
