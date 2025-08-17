@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,15 +9,16 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/IInterface.h"
+#include "common/Common.h"
 
 //! Socket multiplexer job
 /*!
 A socket multiplexer job handles events on a socket.
 */
-class ISocketMultiplexerJob : public IInterface
+class ISocketMultiplexerJob
 {
 public:
+  virtual ~ISocketMultiplexerJob() = default;
   //! @name manipulators
   //@{
 

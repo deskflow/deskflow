@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,7 +11,7 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
-#include "common/IInterface.h"
+#include "common/Common.h"
 
 class IEventQueue;
 
@@ -20,11 +21,11 @@ namespace deskflow {
 /*!
 Defines the interface for all streams.
 */
-class IStream : public IInterface
+class IStream
 {
 public:
   IStream() = default;
-
+  virtual ~IStream() = default;
   //! @name manipulators
   //@{
 

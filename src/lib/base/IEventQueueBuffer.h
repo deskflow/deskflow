@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,6 @@
 #pragma once
 
 #include "common/Common.h"
-#include "common/IInterface.h"
 
 class Event;
 class EventQueueTimer;
@@ -17,9 +17,10 @@ class EventQueueTimer;
 /*!
 An event queue buffer provides a queue of events for an IEventQueue.
 */
-class IEventQueueBuffer : public IInterface
+class IEventQueueBuffer
 {
 public:
+  virtual ~IEventQueueBuffer() = default;
   enum class Type : uint8_t
   {
     Unknown, //!< No event is available

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -7,7 +8,7 @@
 
 #pragma once
 
-#include "common/IInterface.h"
+#include "common/Common.h"
 
 /*!
 \class ArchCondImpl
@@ -57,13 +58,15 @@ using ArchThread = ArchThreadImpl *;
 This interface defines the multithreading operations required by
 deskflow.  Each architecture must implement this interface.
 */
-class IArchMultithread : public IInterface
+class IArchMultithread
 {
 public:
   //! Type of thread entry point
   using ThreadFunc = void *(*)(void *);
   //! Type of thread identifier
   using ThreadID = unsigned int;
+
+  virtual ~IArchMultithread() = default;
   //! Types of signals
   /*!
   Not all platforms support all signals.  Unsupported signals are
