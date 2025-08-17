@@ -14,7 +14,6 @@
 #include "base/EventTypes.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
-#include "deskflow/INode.h"
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
 
@@ -39,7 +38,7 @@ class TCPSocket;
 /*!
 This class implements the top-level client algorithms for deskflow.
 */
-class Client : public IClient, public INode
+class Client : public IClient
 {
 public:
   class FailInfo
