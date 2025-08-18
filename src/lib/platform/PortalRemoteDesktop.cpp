@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +9,7 @@
 #include "platform/PortalRemoteDesktop.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "common/Settings.h"
 
 namespace deskflow {
 
@@ -88,6 +90,9 @@ void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *re
   }
 
   m_sessionRestoreToken = xdp_session_get_restore_token(session);
+  if (m_sessionRestoreToken) {
+    Settings::setValue(Settings::Client::XdpRestoreToken, QString(m_sessionRestoreToken));
+  }
 
   // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same
   // version in the impl.portal), i.e. you'll need an updated compositor on
@@ -144,10 +149,14 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
 
 gboolean PortalRemoteDesktop::initSession()
 {
+  if (auto sessionToken = Settings::value(Settings::Client::XdpRestoreToken).toByteArray(); !sessionToken.isEmpty()) {
+    m_sessionRestoreToken = sessionToken.data();
+  }
+
   LOG_DEBUG("setting up remote desktop session with restore token %s", m_sessionRestoreToken);
   xdp_portal_create_remote_desktop_session_full(
       m_portal, static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD), XDP_OUTPUT_NONE,
-      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_TRANSIENT, m_sessionRestoreToken,
+      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_PERSISTENT, m_sessionRestoreToken,
       nullptr, // cancellable
       [](GObject *obj, GAsyncResult *res, gpointer data) {
         static_cast<PortalRemoteDesktop *>(data)->handleInitSession(obj, res);
