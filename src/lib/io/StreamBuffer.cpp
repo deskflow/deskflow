@@ -6,7 +6,8 @@
  */
 
 #include "io/StreamBuffer.h"
-#include "common/Common.h"
+
+#include <assert.h>
 
 //
 // StreamBuffer

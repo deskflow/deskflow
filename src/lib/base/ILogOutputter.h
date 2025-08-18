@@ -10,7 +10,6 @@
 
 #include "base/Log.h"
 #include "base/LogLevel.h"
-#include "common/Common.h"
 
 //! Outputter interface
 /*!

@@ -6,6 +6,7 @@
  */
 
 #include "deskflow/IKeyState.h"
+#include "common/Common.h"
 
 #include <cstdint>
 #include <cstdlib>

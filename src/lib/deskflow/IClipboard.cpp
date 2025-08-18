@@ -7,6 +7,7 @@
 
 #include "deskflow/IClipboard.h"
 
+#include <assert.h>
 #include <vector>
 
 //

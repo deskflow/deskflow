@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #include <stdarg.h>
+#include <stdint.h>
 
 //! Interface for architecture dependent string operations
 /*!

@@ -8,7 +8,8 @@
 
 #pragma once
 
-#include "common/Common.h"
+#include <assert.h>
+#include <cstdint>
 
 class Event;
 class EventQueueTimer;

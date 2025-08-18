@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 //! Job interface
 /*!
 A job is an interface for executing some function.

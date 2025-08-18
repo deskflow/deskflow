@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "common/Common.h"
+#include <cstdint>
 
 //! Clipboard ID
 /*!

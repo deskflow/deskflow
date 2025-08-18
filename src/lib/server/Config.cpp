@@ -15,6 +15,7 @@
 #include "net/SocketException.h"
 #include "server/Server.h"
 
+#include <assert.h>
 #include <cstdlib>
 #include <istream>
 #include <ostream>

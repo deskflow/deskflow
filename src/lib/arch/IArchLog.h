@@ -9,7 +9,6 @@
 #pragma once
 
 #include "base/LogLevel.h"
-#include "common/Common.h"
 
 //! Interface for architecture dependent logging
 /*!

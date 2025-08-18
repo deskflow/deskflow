@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #include <string>
 
 //! std::string utilities

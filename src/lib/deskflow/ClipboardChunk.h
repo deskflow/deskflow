@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "common/Common.h"
 #include "deskflow/Chunk.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/ProtocolTypes.h"

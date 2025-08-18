@@ -9,8 +9,8 @@
 #pragma once
 
 #include "base/EventTypes.h"
-#include "common/Common.h"
 
+#include <cstdint>
 #include <string>
 
 //! Clipboard interface

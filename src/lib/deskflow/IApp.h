@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 using StartupFunc = int (*)(int, char **);
 
 namespace deskflow {
