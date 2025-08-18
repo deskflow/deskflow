@@ -1,7 +1,5 @@
 <map id="XWindowsClipboard" name="XWindowsClipboard">
-<area shape="rect" id="Node000001" title="X11 clipboard implementation." alt="" coords="5,151,145,175"/>
-<area shape="rect" id="Node000002" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="35,78,115,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,118,78,150,72,150,72,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="36,5,114,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,46,78,78,72,78,72,46"/>
+<area shape="rect" id="Node000001" title="X11 clipboard implementation." alt="" coords="5,78,145,103"/>
+<area shape="rect" id="Node000002" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="35,5,115,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,46,78,78,72,78,72,46"/>
 </map>

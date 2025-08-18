@@ -1,29 +1,27 @@
 <map id="ClientProxy" name="ClientProxy">
-<area shape="rect" id="Node000001" title="Generic proxy for client." alt="" coords="20,296,110,321"/>
-<area shape="rect" id="Node000006" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="10,369,120,393"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="68,336,68,368,62,368,62,336"/>
-<area shape="rect" id="Node000002" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,223,125,248"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,264,68,296,62,296,62,264"/>
-<area shape="rect" id="Node000003" href="$classIClient.html" title="Client interface." alt="" coords="35,151,95,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,191,68,223,62,223,62,191"/>
-<area shape="rect" id="Node000004" href="$classIScreen.html" title="Screen interface." alt="" coords="32,78,98,103"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,118,68,150,62,150,62,118"/>
-<area shape="rect" id="Node000005" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="26,5,104,30"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="68,46,68,78,62,78,62,46"/>
-<area shape="rect" id="Node000007" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="10,441,120,466"/>
+<area shape="rect" id="Node000001" title="Generic proxy for client." alt="" coords="20,223,110,248"/>
+<area shape="rect" id="Node000005" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="10,296,120,321"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="68,264,68,296,62,296,62,264"/>
+<area shape="rect" id="Node000002" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,151,125,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,191,68,223,62,223,62,191"/>
+<area shape="rect" id="Node000003" href="$classIClient.html" title="Client interface." alt="" coords="35,78,95,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,118,68,150,62,150,62,118"/>
+<area shape="rect" id="Node000004" href="$classIScreen.html" title="Screen interface." alt="" coords="32,5,98,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,46,68,78,62,78,62,46"/>
+<area shape="rect" id="Node000006" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="10,369,120,393"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="68,336,68,368,62,368,62,336"/>
+<area shape="rect" id="Node000007" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="10,441,120,466"/>
 <area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="68,409,68,441,62,441,62,409"/>
-<area shape="rect" id="Node000008" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="10,514,120,539"/>
+<area shape="rect" id="Node000008" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="10,514,120,539"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="68,482,68,514,62,514,62,482"/>
-<area shape="rect" id="Node000009" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="10,587,120,611"/>
+<area shape="rect" id="Node000009" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="10,587,120,611"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="68,554,68,586,62,586,62,554"/>
-<area shape="rect" id="Node000010" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="10,659,120,684"/>
+<area shape="rect" id="Node000010" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="10,659,120,684"/>
 <area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="68,627,68,659,62,659,62,627"/>
-<area shape="rect" id="Node000011" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="10,732,120,757"/>
+<area shape="rect" id="Node000011" href="$classClientProxy1__6.html" title="Proxy for client implementing protocol version 1.6." alt="" coords="10,732,120,757"/>
 <area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="68,700,68,732,62,732,62,700"/>
-<area shape="rect" id="Node000012" href="$classClientProxy1__6.html" title="Proxy for client implementing protocol version 1.6." alt="" coords="10,805,120,829"/>
+<area shape="rect" id="Node000012" href="$classClientProxy1__7.html" title="Proxy for client implementing protocol version 1.7." alt="" coords="10,805,120,829"/>
 <area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="68,772,68,804,62,804,62,772"/>
-<area shape="rect" id="Node000013" href="$classClientProxy1__7.html" title="Proxy for client implementing protocol version 1.7." alt="" coords="10,877,120,902"/>
+<area shape="rect" id="Node000013" href="$classClientProxy1__8.html" title=" " alt="" coords="10,877,120,902"/>
 <area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="68,845,68,877,62,877,62,845"/>
-<area shape="rect" id="Node000014" href="$classClientProxy1__8.html" title=" " alt="" coords="10,950,120,975"/>
-<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="68,918,68,950,62,950,62,918"/>
 </map>

@@ -1,37 +1,26 @@
 <map id="src/lib/platform/XWindowsClipboardTextConverter.h" name="src/lib/platform/XWindowsClipboardTextConverter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="405,5,580,44"/>
-<area shape="rect" id="Node000002" href="$XWindowsClipboard_8h.html" title=" " alt="" coords="392,92,593,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="495,45,495,76,490,76,490,45"/>
-<area shape="rect" id="Node000003" href="$ClipboardTypes_8h.html" title=" " alt="" coords="15,237,194,262"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="427,120,345,139,257,167,191,198,136,231,133,226,189,194,255,162,344,134,426,115"/>
-<area shape="rect" id="Node000010" href="$IClipboard_8h.html" title=" " alt="" coords="268,165,415,189"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="469,120,382,160,379,155,466,115"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="440,165,478,189"/>
-<area shape="poly" id="edge15_Node000002_Node000014" title=" " alt="" coords="489,118,473,152,468,150,484,116"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="502,165,549,189"/>
-<area shape="poly" id="edge16_Node000002_Node000015" title=" " alt="" coords="500,116,516,150,511,152,495,118"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="574,165,630,189"/>
-<area shape="poly" id="edge17_Node000002_Node000016" title=" " alt="" coords="512,115,572,154,570,158,509,119"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="654,165,736,189"/>
-<area shape="poly" id="edge18_Node000002_Node000017" title=" " alt="" coords="527,115,648,157,647,162,525,120"/>
-<area shape="rect" id="Node000004" href="$Common_8h.html" title=" " alt="" coords="151,310,290,335"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,260,190,299,187,304,122,265"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,383,73,407"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="191,338,84,379,82,374,189,333"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="97,383,165,407"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="207,337,159,375,155,371,204,333"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="365,383,428,407"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="250,333,354,374,352,379,248,338"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="189,383,252,407"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="223,335,223,367,218,367,218,335"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="276,383,340,407"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="237,333,284,371,280,375,233,337"/>
-<area shape="rect" id="Node000011" href="$EventTypes_8h.html" title=" " alt="" coords="330,310,462,335"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="351,189,373,236,392,294,387,296,369,238,346,191"/>
-<area shape="rect" id="Node000012" href="$IInterface_8h.html" title=" " alt="" coords="217,237,360,262"/>
-<area shape="poly" id="edge12_Node000010_Node000012" title=" " alt="" coords="335,192,308,226,304,223,331,188"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="434,237,487,262"/>
-<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="363,188,429,227,426,231,360,192"/>
-<area shape="poly" id="edge11_Node000011_Node000007" title=" " alt="" coords="399,335,399,367,394,367,394,335"/>
-<area shape="poly" id="edge13_Node000012_Node000004" title=" " alt="" coords="279,264,244,301,240,297,275,261"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="345,5,519,44"/>
+<area shape="rect" id="Node000002" href="$XWindowsClipboard_8h.html" title=" " alt="" coords="331,92,532,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="434,45,434,76,429,76,429,45"/>
+<area shape="rect" id="Node000003" href="$ClipboardTypes_8h.html" title=" " alt="" coords="5,165,184,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,120,166,164,165,158,375,115"/>
+<area shape="rect" id="Node000005" href="$IClipboard_8h.html" title=" " alt="" coords="208,165,355,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="408,120,321,160,319,155,406,115"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="379,165,418,189"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="429,118,413,152,408,150,424,116"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="442,165,488,189"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="440,116,456,150,451,152,435,118"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="513,165,569,189"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="451,115,512,154,509,158,448,119"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="594,165,675,189"/>
+<area shape="poly" id="edge12_Node000002_Node000012" title=" " alt="" coords="466,115,588,157,586,162,464,120"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="98,237,158,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,189,118,222,114,224,98,191"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="257,192,168,233,166,228,255,187"/>
+<area shape="rect" id="Node000006" href="$EventTypes_8h.html" title=" " alt="" coords="198,237,330,262"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="281,191,273,223,268,222,276,189"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="354,237,408,262"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="299,188,354,226,351,230,296,192"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="232,310,296,335"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="266,263,266,294,261,294,261,263"/>
 </map>

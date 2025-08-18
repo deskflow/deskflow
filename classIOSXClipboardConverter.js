@@ -1,5 +1,6 @@
 var classIOSXClipboardConverter =
 [
+    [ "~IOSXClipboardConverter", "classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2", null ],
     [ "fromIClipboard", "classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3", null ],
     [ "getFormat", "classIOSXClipboardConverter.html#a4adc3b10a0bf35530b80ab1fdd286206", null ],
     [ "getOSXFormat", "classIOSXClipboardConverter.html#a040be5d29b7a271ee128dfdbe35b5ca1", null ],

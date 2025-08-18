@@ -1,37 +1,31 @@
 <map id="ClientProxy1_6" name="ClientProxy1_6">
-<area shape="rect" id="Node000001" title="Proxy for client implementing protocol version 1.6." alt="" coords="198,887,308,911"/>
-<area shape="rect" id="Node000002" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="198,813,308,837"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,853,256,886,250,886,250,853"/>
-<area shape="rect" id="Node000003" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="198,739,308,763"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,779,256,812,250,812,250,779"/>
-<area shape="rect" id="Node000004" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="151,665,262,689"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="224,701,248,737,243,740,220,703"/>
-<area shape="rect" id="Node000005" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="148,591,259,615"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="207,630,209,664,203,664,202,631"/>
-<area shape="rect" id="Node000006" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="144,517,255,541"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="204,556,206,590,200,591,198,557"/>
-<area shape="rect" id="Node000007" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="120,422,231,447"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="185,461,199,516,194,517,180,463"/>
-<area shape="rect" id="Node000008" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="23,348,112,373"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="99,379,160,419,157,424,96,384"/>
-<area shape="rect" id="Node000009" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,251,125,275"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="68,291,70,348,65,348,63,291"/>
-<area shape="rect" id="Node000010" href="$classIClient.html" title="Client interface." alt="" coords="49,153,108,178"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="77,194,69,251,64,250,72,193"/>
-<area shape="rect" id="Node000011" href="$classIScreen.html" title="Screen interface." alt="" coords="45,79,112,104"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="81,119,81,153,76,153,76,119"/>
-<area shape="rect" id="Node000012" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="137,5,214,30"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="150,41,95,81,92,77,147,37"/>
-<area shape="rect" id="Node000015" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="136,79,216,104"/>
-<area shape="poly" id="edge15_Node000015_Node000012" title=" " alt="" coords="178,45,178,79,173,79,173,45"/>
-<area shape="rect" id="Node000017" href="$classINode.html" title=" " alt="" coords="246,79,302,104"/>
-<area shape="poly" id="edge18_Node000017_Node000012" title=" " alt="" coords="205,37,260,77,257,81,202,41"/>
-<area shape="rect" id="Node000013" href="$structClientProxy1__0_1_1ClientClipboard.html" title=" " alt="" coords="72,299,279,324"/>
-<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="178,340,178,421,173,421,173,340"/>
-<area shape="rect" id="Node000014" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="138,153,214,178"/>
-<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="178,193,178,299,173,299,173,193"/>
-<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="178,119,178,153,173,153,173,119"/>
-<area shape="rect" id="Node000016" href="$classServer.html" title="Deskflow server." alt="" coords="266,202,325,227"/>
-<area shape="poly" id="edge16_Node000003_Node000016" title=" " alt="" coords="300,242,302,310,302,679,299,697,291,714,269,740,265,736,286,711,294,695,297,678,297,310,295,243"/>
-<area shape="poly" id="edge17_Node000016_Node000017" title=" " alt="" coords="282,119,296,201,291,202,276,120"/>
+<area shape="rect" id="Node000001" title="Proxy for client implementing protocol version 1.6." alt="" coords="150,807,260,832"/>
+<area shape="rect" id="Node000002" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="150,733,260,758"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,773,208,807,202,807,202,773"/>
+<area shape="rect" id="Node000003" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="150,659,260,684"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,699,208,733,202,733,202,699"/>
+<area shape="rect" id="Node000004" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="95,565,206,589"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="167,602,201,658,196,660,163,604"/>
+<area shape="rect" id="Node000005" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="95,491,206,515"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="153,531,153,564,148,564,148,531"/>
+<area shape="rect" id="Node000006" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="95,417,206,441"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="153,457,153,490,148,490,148,457"/>
+<area shape="rect" id="Node000007" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="95,343,206,367"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="153,383,153,416,148,416,148,383"/>
+<area shape="rect" id="Node000008" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="20,248,110,273"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="88,282,142,341,138,344,84,286"/>
+<area shape="rect" id="Node000009" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,153,125,178"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="68,194,68,248,62,248,62,194"/>
+<area shape="rect" id="Node000010" href="$classIClient.html" title="Client interface." alt="" coords="35,79,95,104"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="68,119,68,153,62,153,62,119"/>
+<area shape="rect" id="Node000011" href="$classIScreen.html" title="Screen interface." alt="" coords="32,5,98,30"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="68,45,68,79,62,79,62,45"/>
+<area shape="rect" id="Node000012" href="$structClientProxy1__0_1_1ClientClipboard.html" title=" " alt="" coords="133,248,341,273"/>
+<area shape="poly" id="edge11_Node000007_Node000012" title=" " alt="" coords="218,286,163,344,159,341,214,282"/>
+<area shape="rect" id="Node000013" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="199,153,275,178"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="240,194,240,248,234,248,234,194"/>
+<area shape="rect" id="Node000014" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="197,79,277,104"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="240,119,240,153,234,153,234,119"/>
+<area shape="rect" id="Node000015" href="$classServer.html" title="Deskflow server." alt="" coords="230,565,289,589"/>
+<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="247,604,214,660,209,658,243,602"/>
 </map>

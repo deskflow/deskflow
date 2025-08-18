@@ -1,23 +1,9 @@
 <map id="src/lib/arch/ArchDaemonNone.h" name="src/lib/arch/ArchDaemonNone.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="250,5,457,30"/>
-<area shape="rect" id="Node000002" href="$IArchDaemon_8h.html" title=" " alt="" coords="284,78,424,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="356,31,356,62,351,62,351,31"/>
-<area shape="rect" id="Node000003" href="$IInterface_8h.html" title=" " alt="" coords="149,151,292,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="333,106,257,145,254,141,330,101"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="315,151,392,175"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="356,103,356,135,351,135,351,103"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="416,151,470,175"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="370,101,419,139,415,143,367,105"/>
-<area shape="rect" id="Node000004" href="$Common_8h.html" title=" " alt="" coords="178,223,263,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="223,176,223,208,218,208,218,176"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,296,73,321"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="191,251,84,293,82,288,189,246"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="97,296,165,321"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="207,251,159,289,155,284,204,246"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="189,296,252,321"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="223,249,223,280,218,280,218,249"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="277,296,340,321"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="237,246,284,284,280,288,233,251"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="364,296,428,321"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="250,246,354,287,352,292,248,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,212,30"/>
+<area shape="rect" id="Node000002" href="$IArchDaemon_8h.html" title=" " alt="" coords="38,78,179,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,31,111,62,106,62,106,31"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="26,151,103,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="103,105,82,139,77,136,99,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="127,151,180,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="118,102,140,136,136,139,114,105"/>
 </map>

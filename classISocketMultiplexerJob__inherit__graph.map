@@ -1,7 +1,5 @@
 <map id="ISocketMultiplexerJob" name="ISocketMultiplexerJob">
-<area shape="rect" id="Node000001" title="Socket multiplexer job." alt="" coords="18,78,167,103"/>
-<area shape="rect" id="Node000003" href="$classTSocketMultiplexerMethodJob.html" title="Use a method as a socket multiplexer job." alt="" coords="5,151,180,189"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="95,118,95,150,90,150,90,118"/>
-<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="54,5,131,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,46,95,78,90,78,90,46"/>
+<area shape="rect" id="Node000001" title="Socket multiplexer job." alt="" coords="18,5,167,30"/>
+<area shape="rect" id="Node000002" href="$classTSocketMultiplexerMethodJob.html" title="Use a method as a socket multiplexer job." alt="" coords="5,78,180,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,46,95,77,90,77,90,46"/>
 </map>

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,35 +102,24 @@ Inheritance diagram for deskflow::IStream:</div>
 <div class="dyncontent">
 <div class="center"><img src="classdeskflow_1_1IStream__inherit__graph.png" border="0" usemap="#adeskflow_1_1IStream_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="adeskflow_1_1IStream_inherit__map" id="adeskflow_1_1IStream_inherit__map">
-<area shape="rect" title="Bidirectional stream interface." alt="" coords="60,78,186,103"/>
-<area shape="rect" href="classIDataSocket.html" title="Data stream socket interface." alt="" coords="20,151,112,175"/>
-<area shape="poly" title=" " alt="" coords="106,117,77,152,73,149,102,113"/>
-<area shape="rect" href="classStreamFilter.html" title="A stream filter." alt="" coords="140,151,232,175"/>
-<area shape="poly" title=" " alt="" coords="146,113,178,149,174,152,142,116"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="84,5,162,30"/>
-<area shape="poly" title=" " alt="" coords="126,46,126,78,120,78,120,46"/>
-<area shape="rect" href="classTCPSocket.html" title="TCP data socket." alt="" coords="12,223,101,248"/>
-<area shape="poly" title=" " alt="" coords="65,191,61,223,55,223,60,190"/>
-<area shape="rect" href="classSecureSocket.html" title="Secure socket." alt="" coords="5,296,108,321"/>
-<area shape="poly" title=" " alt="" coords="59,264,59,296,54,296,54,264"/>
-<area shape="rect" href="classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="125,223,257,248"/>
-<area shape="poly" title=" " alt="" coords="191,191,193,223,188,223,185,191"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for deskflow::IStream:</div>
-<div class="dyncontent">
-<div class="center"><img src="classdeskflow_1_1IStream__coll__graph.png" border="0" usemap="#adeskflow_1_1IStream_coll__map" loading="lazy" alt="Collaboration graph"/></div>
-<map name="adeskflow_1_1IStream_coll__map" id="adeskflow_1_1IStream_coll__map">
-<area shape="rect" title="Bidirectional stream interface." alt="" coords="5,78,132,103"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="30,5,107,30"/>
-<area shape="poly" title=" " alt="" coords="71,46,71,78,66,78,66,46"/>
+<area shape="rect" title="Bidirectional stream interface." alt="" coords="60,5,186,30"/>
+<area shape="rect" href="classIDataSocket.html" title="Data stream socket interface." alt="" coords="20,78,112,103"/>
+<area shape="poly" title=" " alt="" coords="106,44,77,79,73,76,102,41"/>
+<area shape="rect" href="classStreamFilter.html" title="A stream filter." alt="" coords="140,78,232,103"/>
+<area shape="poly" title=" " alt="" coords="146,40,178,76,174,79,142,44"/>
+<area shape="rect" href="classTCPSocket.html" title="TCP data socket." alt="" coords="12,151,101,175"/>
+<area shape="poly" title=" " alt="" coords="65,118,61,151,55,150,60,118"/>
+<area shape="rect" href="classSecureSocket.html" title="Secure socket." alt="" coords="5,223,108,248"/>
+<area shape="poly" title=" " alt="" coords="59,191,59,223,54,223,54,191"/>
+<area shape="rect" href="classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="125,151,257,175"/>
+<area shape="poly" title=" " alt="" coords="191,118,193,150,188,151,185,119"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:ae2e80b2768af2f745aeadcbb12ddffaf" id="r_ae2e80b2768af2f745aeadcbb12ddffaf"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae2e80b2768af2f745aeadcbb12ddffaf">IStream</a> ()=default</td></tr>
+<tr class="memitem:a716d1a032650a9b56904e1dd585498e4" id="r_a716d1a032650a9b56904e1dd585498e4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a716d1a032650a9b56904e1dd585498e4">~IStream</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:ae05800b51fe57029fe072ad3c00f6e78" id="r_ae05800b51fe57029fe072ad3c00f6e78"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae05800b51fe57029fe072ad3c00f6e78">close</a> ()=0</td></tr>
 <tr class="memdesc:ae05800b51fe57029fe072ad3c00f6e78"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the stream.  <br /></td></tr>
@@ -151,9 +140,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a66fa894adbd2f636e266482190be77b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if <code><a class="el" href="#a62d845cca05a66438ede7cec206da293" title="Read from stream.">read()</a></code> will succeed.  <br /></td></tr>
 <tr class="memitem:a070ba4635762ef6b6edde8ddf1ac9ffe" id="r_a070ba4635762ef6b6edde8ddf1ac9ffe"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a070ba4635762ef6b6edde8ddf1ac9ffe">getSize</a> () const =0</td></tr>
 <tr class="memdesc:a070ba4635762ef6b6edde8ddf1ac9ffe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get bytes available to read.  <br /></td></tr>
-<tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
-<tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
-<tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Bidirectional stream interface. </p>
@@ -178,6 +164,31 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a716d1a032650a9b56904e1dd585498e4" name="a716d1a032650a9b56904e1dd585498e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a716d1a032650a9b56904e1dd585498e4">&#9670;&#160;</a></span>~IStream()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual deskflow::IStream::~IStream </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">

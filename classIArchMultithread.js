@@ -10,6 +10,7 @@ var classIArchMultithread =
       [ "User", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a8f9bfe9d1345237cb3b2b205864da075", null ],
       [ "MaxSignals", "classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a5be0f76b3f87187577779bbf575e009c", null ]
     ] ],
+    [ "~IArchMultithread", "classIArchMultithread.html#a7ba96022e21a67f734e5724418f4d8da", null ],
     [ "broadcastCondVar", "classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3", null ],
     [ "cancelThread", "classIArchMultithread.html#af273bf7f0b396b59063040613d3b2d3f", null ],
     [ "closeCondVar", "classIArchMultithread.html#a62c93b5ad55ca2a1b5e78046766e43ca", null ],

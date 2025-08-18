@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,58 +94,71 @@ $(function(){initNavTree('AppUtil_8h_source.html','',''); });
 <div class="contents">
 <a href="AppUtil_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="DeskflowException_8h.html">deskflow/DeskflowException.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IAppUtil_8h.html">deskflow/IAppUtil.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classAppUtil.html">   13</a></span><span class="keyword">class </span><a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIAppUtil.html">IAppUtil</a></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a>();</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classAppUtil.html#ad6636c6b6ff5453b50e2c7a431560bbf">   17</a></span>  <a class="code hl_function" href="classAppUtil.html#ad6636c6b6ff5453b50e2c7a431560bbf">~AppUtil</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#a4664afd3d8f8214ee3c2b5a9f0b37a5f">adoptApp</a>(<a class="code hl_class" href="classIApp.html">IApp</a> *<a class="code hl_function" href="classAppUtil.html#a0f351032cb6cd7251cda1d0526924f8e">app</a>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <a class="code hl_class" href="classIApp.html">IApp</a> &amp;<a class="code hl_function" href="classAppUtil.html#a0f351032cb6cd7251cda1d0526924f8e">app</a>() <span class="keyword">const override</span>;</div>
-<div class="foldopen" id="foldopen00021" data-start="{" data-end="}">
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">   21</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">exitApp</a>(<span class="keywordtype">int</span> code)</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  {</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="classExitAppException.html">ExitAppException</a>(code);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  }</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="DeskflowException_8h.html">deskflow/DeskflowException.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="IApp_8h.html">deskflow/IApp.h</a>&quot;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classAppUtil.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a>();</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd">   21</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd">~AppUtil</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#ac93b079bc128e2513fc28862914cb89c">adoptApp</a>(<a class="code hl_class" href="classIApp.html">IApp</a> *<a class="code hl_function" href="classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b">app</a>);</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_class" href="classIApp.html">IApp</a> &amp;<a class="code hl_function" href="classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b">app</a>() <span class="keyword">const</span>;</div>
+<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">   25</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">exitApp</a>(<span class="keywordtype">int</span> code)</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  {</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    <span class="keywordflow">throw</span> <a class="code hl_class" href="classExitAppException.html">ExitAppException</a>(code);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  }</div>
 </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">static</span> <a class="code hl_class" href="classAppUtil.html">AppUtil</a> &amp;<a class="code hl_function" href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">instance</a>();</div>
-<div class="foldopen" id="foldopen00027" data-start="{" data-end="}">
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">   27</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">exitAppStatic</a>(<span class="keywordtype">int</span> code)</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  {</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    <a class="code hl_function" href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">instance</a>().<a class="code hl_function" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">exitApp</a>(code);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  }</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">static</span> <a class="code hl_class" href="classAppUtil.html">AppUtil</a> &amp;<a class="code hl_function" href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">instance</a>();</div>
+<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">   31</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">exitAppStatic</a>(<span class="keywordtype">int</span> code)</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  {</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_function" href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">instance</a>().<a class="code hl_function" href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">exitApp</a>(code);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  }</div>
 </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <a class="code hl_class" href="classIApp.html">IApp</a> *m_app = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> <a class="code hl_class" href="classAppUtil.html">AppUtil</a> *s_instance;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="comment">// Virtual Methods subclasses can impliment</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classAppUtil.html#a5adc8a8af67b90e8d72fa265df7e31c3">   37</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classAppUtil.html#a5adc8a8af67b90e8d72fa265df7e31c3">run</a>(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> **argv) = 0;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classAppUtil.html#ab25364eccf20280b7038ba939096fcc8">   38</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classAppUtil.html#ab25364eccf20280b7038ba939096fcc8">startNode</a>() = 0;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classAppUtil.html#a8766d51fe30577548aec3896464489d6">   39</a></span>  <span class="keyword">virtual</span> std::vector&lt;std::string&gt; <a class="code hl_function" href="classAppUtil.html#a8766d51fe30577548aec3896464489d6">getKeyboardLayoutList</a>() = 0;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classAppUtil.html#ae085a35d29cc924390fc784d865fa3bd">   40</a></span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classAppUtil.html#ae085a35d29cc924390fc784d865fa3bd">getCurrentLanguageCode</a>() = 0;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_class" href="classIApp.html">IApp</a> *m_app = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keyword">static</span> <a class="code hl_function" href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil</a> *s_instance;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
 </div>
 <div class="ttc" id="aDeskflowException_8h_html"><div class="ttname"><a href="DeskflowException_8h.html">DeskflowException.h</a></div></div>
-<div class="ttc" id="aIAppUtil_8h_html"><div class="ttname"><a href="IAppUtil_8h.html">IAppUtil.h</a></div></div>
-<div class="ttc" id="aclassAppUtil_html"><div class="ttname"><a href="classAppUtil.html">AppUtil</a></div><div class="ttdef"><b>Definition</b> AppUtil.h:14</div></div>
-<div class="ttc" id="aclassAppUtil_html_a0ab681d361fbb3531870cd624d45e8ca"><div class="ttname"><a href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">AppUtil::exitApp</a></div><div class="ttdeci">virtual void exitApp(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:21</div></div>
-<div class="ttc" id="aclassAppUtil_html_a0f351032cb6cd7251cda1d0526924f8e"><div class="ttname"><a href="classAppUtil.html#a0f351032cb6cd7251cda1d0526924f8e">AppUtil::app</a></div><div class="ttdeci">IApp &amp; app() const override</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:25</div></div>
-<div class="ttc" id="aclassAppUtil_html_a2a4f7e02e6b8664cfc269339341f7f4d"><div class="ttname"><a href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil::AppUtil</a></div><div class="ttdeci">AppUtil()</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:14</div></div>
-<div class="ttc" id="aclassAppUtil_html_a4664afd3d8f8214ee3c2b5a9f0b37a5f"><div class="ttname"><a href="classAppUtil.html#a4664afd3d8f8214ee3c2b5a9f0b37a5f">AppUtil::adoptApp</a></div><div class="ttdeci">void adoptApp(IApp *app) override</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:19</div></div>
-<div class="ttc" id="aclassAppUtil_html_ab7c207d8d1f99f7d0429a945473c9784"><div class="ttname"><a href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">AppUtil::instance</a></div><div class="ttdeci">static AppUtil &amp; instance()</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:31</div></div>
-<div class="ttc" id="aclassAppUtil_html_ad6636c6b6ff5453b50e2c7a431560bbf"><div class="ttname"><a href="classAppUtil.html#ad6636c6b6ff5453b50e2c7a431560bbf">AppUtil::~AppUtil</a></div><div class="ttdeci">~AppUtil() override=default</div></div>
-<div class="ttc" id="aclassAppUtil_html_aff79fd6fc709bd41bb9a2d2a84ee9e53"><div class="ttname"><a href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">AppUtil::exitAppStatic</a></div><div class="ttdeci">static void exitAppStatic(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:27</div></div>
+<div class="ttc" id="aIApp_8h_html"><div class="ttname"><a href="IApp_8h.html">IApp.h</a></div></div>
+<div class="ttc" id="aclassAppUtil_html"><div class="ttname"><a href="classAppUtil.html">AppUtil</a></div><div class="ttdef"><b>Definition</b> AppUtil.h:18</div></div>
+<div class="ttc" id="aclassAppUtil_html_a0ab681d361fbb3531870cd624d45e8ca"><div class="ttname"><a href="classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca">AppUtil::exitApp</a></div><div class="ttdeci">virtual void exitApp(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:25</div></div>
+<div class="ttc" id="aclassAppUtil_html_a2a4f7e02e6b8664cfc269339341f7f4d"><div class="ttname"><a href="classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d">AppUtil::AppUtil</a></div><div class="ttdeci">AppUtil()</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:15</div></div>
+<div class="ttc" id="aclassAppUtil_html_a5adc8a8af67b90e8d72fa265df7e31c3"><div class="ttname"><a href="classAppUtil.html#a5adc8a8af67b90e8d72fa265df7e31c3">AppUtil::run</a></div><div class="ttdeci">virtual int run(int argc, char **argv)=0</div></div>
+<div class="ttc" id="aclassAppUtil_html_a6daff781fe1904f066d0d56d914a35cd"><div class="ttname"><a href="classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd">AppUtil::~AppUtil</a></div><div class="ttdeci">virtual ~AppUtil()=default</div></div>
+<div class="ttc" id="aclassAppUtil_html_a8766d51fe30577548aec3896464489d6"><div class="ttname"><a href="classAppUtil.html#a8766d51fe30577548aec3896464489d6">AppUtil::getKeyboardLayoutList</a></div><div class="ttdeci">virtual std::vector&lt; std::string &gt; getKeyboardLayoutList()=0</div></div>
+<div class="ttc" id="aclassAppUtil_html_a92e87ecf583104d6c1db090033fdab9b"><div class="ttname"><a href="classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b">AppUtil::app</a></div><div class="ttdeci">IApp &amp; app() const</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:26</div></div>
+<div class="ttc" id="aclassAppUtil_html_ab25364eccf20280b7038ba939096fcc8"><div class="ttname"><a href="classAppUtil.html#ab25364eccf20280b7038ba939096fcc8">AppUtil::startNode</a></div><div class="ttdeci">virtual void startNode()=0</div></div>
+<div class="ttc" id="aclassAppUtil_html_ab7c207d8d1f99f7d0429a945473c9784"><div class="ttname"><a href="classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784">AppUtil::instance</a></div><div class="ttdeci">static AppUtil &amp; instance()</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:32</div></div>
+<div class="ttc" id="aclassAppUtil_html_ac93b079bc128e2513fc28862914cb89c"><div class="ttname"><a href="classAppUtil.html#ac93b079bc128e2513fc28862914cb89c">AppUtil::adoptApp</a></div><div class="ttdeci">void adoptApp(IApp *app)</div><div class="ttdef"><b>Definition</b> AppUtil.cpp:20</div></div>
+<div class="ttc" id="aclassAppUtil_html_ae085a35d29cc924390fc784d865fa3bd"><div class="ttname"><a href="classAppUtil.html#ae085a35d29cc924390fc784d865fa3bd">AppUtil::getCurrentLanguageCode</a></div><div class="ttdeci">virtual std::string getCurrentLanguageCode()=0</div></div>
+<div class="ttc" id="aclassAppUtil_html_aff79fd6fc709bd41bb9a2d2a84ee9e53"><div class="ttname"><a href="classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53">AppUtil::exitAppStatic</a></div><div class="ttdeci">static void exitAppStatic(int code)</div><div class="ttdef"><b>Definition</b> AppUtil.h:31</div></div>
 <div class="ttc" id="aclassExitAppException_html"><div class="ttname"><a href="classExitAppException.html">ExitAppException</a></div><div class="ttdoc">Generic exit eception.</div><div class="ttdef"><b>Definition</b> DeskflowException.h:129</div></div>
-<div class="ttc" id="aclassIAppUtil_html"><div class="ttname"><a href="classIAppUtil.html">IAppUtil</a></div><div class="ttdef"><b>Definition</b> IAppUtil.h:17</div></div>
-<div class="ttc" id="aclassIApp_html"><div class="ttname"><a href="classIApp.html">IApp</a></div><div class="ttdef"><b>Definition</b> IApp.h:22</div></div>
+<div class="ttc" id="aclassIApp_html"><div class="ttname"><a href="classIApp.html">IApp</a></div><div class="ttdef"><b>Definition</b> IApp.h:21</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

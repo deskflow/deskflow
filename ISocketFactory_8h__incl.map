@@ -1,26 +1,13 @@
 <map id="src/lib/net/ISocketFactory.h" name="src/lib/net/ISocketFactory.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="247,5,428,30"/>
-<area shape="rect" id="Node000002" href="$IArchNetwork_8h.html" title=" " alt="" coords="267,78,408,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="340,31,340,62,335,62,335,31"/>
-<area shape="rect" id="Node000003" href="$IInterface_8h.html" title=" " alt="" coords="149,151,292,175"/>
-<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="316,33,286,53,257,80,240,108,229,137,224,135,235,106,253,76,283,48,314,28"/>
-<area shape="rect" id="Node000012" href="$SecurityLevel_8h.html" title=" " alt="" coords="433,78,565,103"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="365,28,459,69,457,74,363,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="320,106,254,145,251,140,317,101"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="315,151,368,175"/>
-<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="341,103,343,135,337,135,336,103"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="392,151,448,175"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="353,101,397,138,394,142,350,105"/>
-<area shape="rect" id="Node000004" href="$Common_8h.html" title=" " alt="" coords="178,223,263,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="223,176,223,208,218,208,218,176"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="5,296,73,321"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="191,251,84,293,82,288,189,246"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="97,296,165,321"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="207,251,159,289,155,284,204,246"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="189,296,252,321"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="223,249,223,280,218,280,218,249"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="277,296,340,321"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="237,246,284,284,280,288,233,251"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="364,296,428,321"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="250,246,354,287,352,292,248,251"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,288,30"/>
+<area shape="rect" id="Node000002" href="$IArchNetwork_8h.html" title=" " alt="" coords="46,78,188,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,33,143,70,139,66,182,29"/>
+<area shape="rect" id="Node000006" href="$SecurityLevel_8h.html" title=" " alt="" coords="212,78,344,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="212,29,255,66,252,70,209,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,66,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,105,62,142,58,138,102,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="90,151,144,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,103,120,135,114,135,114,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="167,151,224,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="132,101,173,138,170,142,128,105"/>
 </map>

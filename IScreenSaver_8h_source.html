@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,53 +94,53 @@ $(function(){initNavTree('IScreenSaver_8h_source.html','',''); });
 <div class="contents">
 <a href="IScreenSaver_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Event_8h.html">base/Event.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IInterface_8h.html">common/IInterface.h</a>&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Event_8h.html">base/Event.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
 <div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classIScreenSaver.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIInterface.html">IInterface</a></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classIScreenSaver.html">   17</a></span><span class="keyword">class </span><a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="comment">// note -- the c&#39;tor/d&#39;tor must *not* enable/disable the screen saver</span></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a70d5635b7e06d5201b1b9b267f7aaa37">   20</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classIScreenSaver.html#a70d5635b7e06d5201b1b9b267f7aaa37">~IScreenSaver</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="comment">// note -- the c&#39;tor/d&#39;tor must *not* enable/disable the screen saver</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a571f1fa12e38885136345a8ea92afd1a">   32</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a571f1fa12e38885136345a8ea92afd1a">enable</a>() = 0;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a4b62dedff584c85c723f3085559dea9b">   39</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a4b62dedff584c85c723f3085559dea9b">disable</a>() = 0;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3">   45</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3">activate</a>() = 0;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a3780bb694faa94c3b73f6b62536051b4">   52</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a3780bb694faa94c3b73f6b62536051b4">deactivate</a>() = 0;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1">   62</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1">isActive</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a571f1fa12e38885136345a8ea92afd1a">   33</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a571f1fa12e38885136345a8ea92afd1a">enable</a>() = 0;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a4b62dedff584c85c723f3085559dea9b">   40</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a4b62dedff584c85c723f3085559dea9b">disable</a>() = 0;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3">   46</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3">activate</a>() = 0;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a3780bb694faa94c3b73f6b62536051b4">   53</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIScreenSaver.html#a3780bb694faa94c3b73f6b62536051b4">deactivate</a>() = 0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1">   63</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1">isActive</a>() <span class="keyword">const</span> = 0;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
 </div>
 <div class="ttc" id="aEvent_8h_html"><div class="ttname"><a href="Event_8h.html">Event.h</a></div></div>
-<div class="ttc" id="aIInterface_8h_html"><div class="ttname"><a href="IInterface_8h.html">IInterface.h</a></div></div>
-<div class="ttc" id="aclassIInterface_html"><div class="ttname"><a href="classIInterface.html">IInterface</a></div><div class="ttdoc">Base class of interfaces.</div><div class="ttdef"><b>Definition</b> IInterface.h:18</div></div>
 <div class="ttc" id="aclassIScreenSaver_html"><div class="ttname"><a href="classIScreenSaver.html">IScreenSaver</a></div><div class="ttdoc">Screen saver interface.</div><div class="ttdef"><b>Definition</b> IScreenSaver.h:18</div></div>
 <div class="ttc" id="aclassIScreenSaver_html_a0f7217d29f57db8a7c159a440d4c9ad1"><div class="ttname"><a href="classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1">IScreenSaver::isActive</a></div><div class="ttdeci">virtual bool isActive() const =0</div><div class="ttdoc">Test if screen saver on.</div></div>
 <div class="ttc" id="aclassIScreenSaver_html_a202e11c76b895a510364fe8630d549e3"><div class="ttname"><a href="classIScreenSaver.html#a202e11c76b895a510364fe8630d549e3">IScreenSaver::activate</a></div><div class="ttdeci">virtual void activate()=0</div><div class="ttdoc">Activate screen saver.</div></div>
 <div class="ttc" id="aclassIScreenSaver_html_a3780bb694faa94c3b73f6b62536051b4"><div class="ttname"><a href="classIScreenSaver.html#a3780bb694faa94c3b73f6b62536051b4">IScreenSaver::deactivate</a></div><div class="ttdeci">virtual void deactivate()=0</div><div class="ttdoc">Deactivate screen saver.</div></div>
 <div class="ttc" id="aclassIScreenSaver_html_a4b62dedff584c85c723f3085559dea9b"><div class="ttname"><a href="classIScreenSaver.html#a4b62dedff584c85c723f3085559dea9b">IScreenSaver::disable</a></div><div class="ttdeci">virtual void disable()=0</div><div class="ttdoc">Disable screen saver.</div></div>
 <div class="ttc" id="aclassIScreenSaver_html_a571f1fa12e38885136345a8ea92afd1a"><div class="ttname"><a href="classIScreenSaver.html#a571f1fa12e38885136345a8ea92afd1a">IScreenSaver::enable</a></div><div class="ttdeci">virtual void enable()=0</div><div class="ttdoc">Enable screen saver.</div></div>
+<div class="ttc" id="aclassIScreenSaver_html_a70d5635b7e06d5201b1b9b267f7aaa37"><div class="ttname"><a href="classIScreenSaver.html#a70d5635b7e06d5201b1b9b267f7aaa37">IScreenSaver::~IScreenSaver</a></div><div class="ttdeci">virtual ~IScreenSaver()=default</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

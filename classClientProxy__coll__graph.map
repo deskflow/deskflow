@@ -1,11 +1,9 @@
 <map id="ClientProxy" name="ClientProxy">
-<area shape="rect" id="Node000001" title="Generic proxy for client." alt="" coords="20,296,110,321"/>
-<area shape="rect" id="Node000002" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,223,125,248"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,264,68,296,62,296,62,264"/>
-<area shape="rect" id="Node000003" href="$classIClient.html" title="Client interface." alt="" coords="35,151,95,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,191,68,223,62,223,62,191"/>
-<area shape="rect" id="Node000004" href="$classIScreen.html" title="Screen interface." alt="" coords="32,78,98,103"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,118,68,150,62,150,62,118"/>
-<area shape="rect" id="Node000005" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="26,5,104,30"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="68,46,68,78,62,78,62,46"/>
+<area shape="rect" id="Node000001" title="Generic proxy for client." alt="" coords="20,223,110,248"/>
+<area shape="rect" id="Node000002" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,151,125,175"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,191,68,223,62,223,62,191"/>
+<area shape="rect" id="Node000003" href="$classIClient.html" title="Client interface." alt="" coords="35,78,95,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,118,68,150,62,150,62,118"/>
+<area shape="rect" id="Node000004" href="$classIScreen.html" title="Screen interface." alt="" coords="32,5,98,30"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,46,68,78,62,78,62,46"/>
 </map>

@@ -5,6 +5,7 @@ var classIPrimaryScreen =
     [ "HotKeyInfo", "classIPrimaryScreen_1_1HotKeyInfo.html", "classIPrimaryScreen_1_1HotKeyInfo" ],
     [ "MotionInfo", "classIPrimaryScreen_1_1MotionInfo.html", "classIPrimaryScreen_1_1MotionInfo" ],
     [ "WheelInfo", "classIPrimaryScreen_1_1WheelInfo.html", "classIPrimaryScreen_1_1WheelInfo" ],
+    [ "~IPrimaryScreen", "classIPrimaryScreen.html#a52a0a5a62240ef5e2ffc9279605cd74d", null ],
     [ "activeSides", "classIPrimaryScreen.html#aee64b865789af789f8f6197245611fdd", null ],
     [ "fakeInputBegin", "classIPrimaryScreen.html#a5da9bf5f6a1b0dc34264c88bac459445", null ],
     [ "fakeInputEnd", "classIPrimaryScreen.html#a6c31b98eac9dfe5d0c2427510ed15d85", null ],

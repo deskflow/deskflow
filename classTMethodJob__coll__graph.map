@@ -1,7 +1,5 @@
 <map id="TMethodJob&lt; T &gt;" name="TMethodJob&lt; T &gt;">
-<area shape="rect" id="Node000001" title="Use a function as a job." alt="" coords="5,151,131,175"/>
-<area shape="rect" id="Node000002" href="$classIJob.html" title="Job interface." alt="" coords="45,78,91,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,118,71,150,65,150,65,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="29,5,107,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="71,46,71,78,65,78,65,46"/>
+<area shape="rect" id="Node000001" title="Use a function as a job." alt="" coords="5,78,131,103"/>
+<area shape="rect" id="Node000002" href="$classIJob.html" title="Job interface." alt="" coords="45,5,91,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,46,71,78,65,78,65,46"/>
 </map>

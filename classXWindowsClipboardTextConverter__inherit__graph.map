@@ -1,7 +1,5 @@
 <map id="XWindowsClipboardTextConverter" name="XWindowsClipboardTextConverter">
-<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="5,151,227,175"/>
-<area shape="rect" id="Node000002" href="$classIXWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="16,78,216,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,118,119,150,113,150,113,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="77,5,155,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,46,119,78,113,78,113,46"/>
+<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="5,78,227,103"/>
+<area shape="rect" id="Node000002" href="$classIXWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="16,5,216,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,46,119,78,113,78,113,46"/>
 </map>

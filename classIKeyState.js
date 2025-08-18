@@ -3,6 +3,7 @@ var classIKeyState =
     [ "KeyInfo", "classIKeyState_1_1KeyInfo.html", "classIKeyState_1_1KeyInfo" ],
     [ "KeyButtonSet", "classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7", null ],
     [ "IKeyState", "classIKeyState.html#a6ccc71dd0844bce866034fdcaf49ccc9", null ],
+    [ "~IKeyState", "classIKeyState.html#ac251585dcf825cf3f6c70b94ff5121c3", null ],
     [ "fakeAllKeysUp", "classIKeyState.html#aa5129d1c9e92ca0b40bc8ab5d2bd8d7c", null ],
     [ "fakeCtrlAltDel", "classIKeyState.html#abca6d885cbb75924a9e8d36b5ba0a829", null ],
     [ "fakeKeyDown", "classIKeyState.html#ab57deebca8d22aecbd819b9bf766774f", null ],

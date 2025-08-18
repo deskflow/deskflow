@@ -1,13 +1,11 @@
 <map id="IClipboard" name="IClipboard">
-<area shape="rect" id="Node000001" title="Clipboard interface." alt="" coords="215,78,296,103"/>
-<area shape="rect" id="Node000003" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="5,151,82,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,110,79,153,78,148,205,105"/>
-<area shape="rect" id="Node000004" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="106,151,256,175"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="234,115,195,152,191,148,230,112"/>
-<area shape="rect" id="Node000005" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="280,151,383,175"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="281,112,321,148,317,152,277,115"/>
-<area shape="rect" id="Node000006" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="407,151,546,175"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,105,441,148,439,153,306,110"/>
-<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="217,5,294,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="258,46,258,78,253,78,253,46"/>
+<area shape="rect" id="Node000001" title="Clipboard interface." alt="" coords="215,5,296,30"/>
+<area shape="rect" id="Node000002" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="5,78,82,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,38,79,80,78,75,205,33"/>
+<area shape="rect" id="Node000003" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="106,78,256,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,43,195,80,191,76,230,39"/>
+<area shape="rect" id="Node000004" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="280,78,383,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="281,39,321,76,317,80,277,43"/>
+<area shape="rect" id="Node000005" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="407,78,546,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,33,441,75,439,80,306,38"/>
 </map>

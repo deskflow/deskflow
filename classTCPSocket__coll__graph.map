@@ -1,14 +1,11 @@
 <map id="TCPSocket" name="TCPSocket">
-<area shape="rect" id="Node000001" title="TCP data socket." alt="" coords="111,267,200,292"/>
-<area shape="rect" id="Node000002" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="50,153,143,178"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,191,152,265,147,268,108,193"/>
-<area shape="rect" id="Node000003" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,79,71,104"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,114,89,151,85,155,55,118"/>
-<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="58,5,135,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,44,49,81,45,77,76,40"/>
-<area shape="rect" id="Node000005" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,79,221,104"/>
-<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="118,40,150,77,146,81,114,43"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="141,117,108,155,104,151,137,114"/>
-<area shape="rect" id="Node000006" href="$classStreamBuffer.html" title="FIFO of bytes." alt="" coords="167,153,264,178"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="205,193,164,268,159,265,200,190"/>
+<area shape="rect" id="Node000001" title="TCP data socket." alt="" coords="112,193,201,218"/>
+<area shape="rect" id="Node000002" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="52,79,144,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,117,153,191,148,194,109,119"/>
+<area shape="rect" id="Node000003" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,5,71,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,40,91,77,86,81,55,43"/>
+<area shape="rect" id="Node000004" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,5,221,30"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="141,43,110,81,105,77,137,40"/>
+<area shape="rect" id="Node000005" href="$classStreamBuffer.html" title="FIFO of bytes." alt="" coords="168,79,265,104"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="206,119,165,194,161,191,201,116"/>
 </map>

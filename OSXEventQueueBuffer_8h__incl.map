@@ -1,28 +1,17 @@
 <map id="src/lib/platform/OSXEventQueueBuffer.h" name="src/lib/platform/OSXEventQueueBuffer.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="461,5,633,44"/>
-<area shape="rect" id="Node000002" href="$IEventQueueBuffer_8h.html" title=" " alt="" coords="134,92,307,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="469,47,285,90,284,85,467,42"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="332,92,456,117"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="511,47,431,87,429,82,509,42"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="480,92,614,117"/>
-<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="550,45,550,76,544,76,544,45"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="638,92,696,117"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="577,42,638,81,635,86,575,47"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="720,92,776,117"/>
-<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="597,42,707,84,705,89,595,47"/>
-<area shape="rect" id="Node000003" href="$Common_8h.html" title=" " alt="" coords="151,237,290,262"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="215,118,199,150,194,169,195,189,208,222,203,224,190,190,189,169,194,148,210,116"/>
-<area shape="rect" id="Node000009" href="$IInterface_8h.html" title=" " alt="" coords="204,165,346,189"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="231,116,259,151,255,154,227,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,310,73,335"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="191,265,84,307,82,302,189,260"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="97,310,165,335"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="207,265,159,303,155,298,204,260"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="189,310,252,335"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="223,263,223,294,218,294,218,263"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="277,310,340,335"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="237,260,284,298,280,302,233,265"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="364,310,428,335"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="250,260,354,301,352,306,248,265"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="268,192,240,227,236,224,264,188"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="332,5,505,44"/>
+<area shape="rect" id="Node000002" href="$IEventQueueBuffer_8h.html" title=" " alt="" coords="5,92,179,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="340,47,157,90,156,85,339,42"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="203,92,328,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="383,47,303,87,301,82,380,42"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="352,92,486,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="421,45,421,76,416,76,416,45"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="510,92,567,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="449,42,510,81,507,86,446,47"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="592,92,648,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="468,42,578,84,576,89,466,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="14,165,82,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,119,65,153,61,150,82,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="106,165,166,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="102,116,123,150,119,153,97,119"/>
 </map>

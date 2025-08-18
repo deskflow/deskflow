@@ -1,9 +1,7 @@
 <map id="PacketStreamFilter" name="PacketStreamFilter">
-<area shape="rect" id="Node000001" title="Packetizing stream filter." alt="" coords="5,223,138,248"/>
-<area shape="rect" id="Node000002" href="$classStreamFilter.html" title="A stream filter." alt="" coords="25,151,118,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,191,74,223,69,223,69,191"/>
-<area shape="rect" id="Node000003" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="8,78,135,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,118,74,150,69,150,69,118"/>
-<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="33,5,110,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="74,46,74,78,69,78,69,46"/>
+<area shape="rect" id="Node000001" title="Packetizing stream filter." alt="" coords="5,151,138,175"/>
+<area shape="rect" id="Node000002" href="$classStreamFilter.html" title="A stream filter." alt="" coords="25,78,118,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,118,74,150,69,150,69,118"/>
+<area shape="rect" id="Node000003" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="8,5,135,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,46,74,78,69,78,69,46"/>
 </map>

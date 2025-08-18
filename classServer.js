@@ -8,7 +8,7 @@ var classServer =
     [ "Server", "classServer.html#a42d982045e63939837656b091cb0624e", null ],
     [ "Server", "classServer.html#ac0a402ca54125d9f8f97d191a5649965", null ],
     [ "Server", "classServer.html#a7350ff05dceefad892dc8213a1e20dc2", null ],
-    [ "~Server", "classServer.html#af575d2e7efe3b7130dcbffc2c163f5e6", null ],
+    [ "~Server", "classServer.html#a4b3aa2579cb1c8cd1d069582c14d0fa6", null ],
     [ "adoptClient", "classServer.html#a68ded4d1c097cede948fca9298d32eea", null ],
     [ "disconnect", "classServer.html#acd0114484495cfd2749816ddb12e4246", null ],
     [ "getClients", "classServer.html#a97612e4d51a2a93d3493d68f8390bc3e", null ],

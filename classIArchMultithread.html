@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,23 +102,11 @@ Inheritance diagram for IArchMultithread:</div>
 <div class="dyncontent">
 <div class="center"><img src="classIArchMultithread__inherit__graph.png" border="0" usemap="#aIArchMultithread_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aIArchMultithread_inherit__map" id="aIArchMultithread_inherit__map">
-<area shape="rect" title="Interface for architecture dependent multithreading." alt="" coords="109,78,226,103"/>
-<area shape="rect" href="classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="5,151,151,175"/>
-<area shape="poly" title=" " alt="" coords="143,115,94,152,91,148,139,110"/>
-<area shape="rect" href="classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="175,151,341,175"/>
-<area shape="poly" title=" " alt="" coords="196,110,245,148,242,152,193,115"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="129,5,206,30"/>
-<area shape="poly" title=" " alt="" coords="170,46,170,78,165,78,165,46"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for IArchMultithread:</div>
-<div class="dyncontent">
-<div class="center"><img src="classIArchMultithread__coll__graph.png" border="0" usemap="#aIArchMultithread_coll__map" loading="lazy" alt="Collaboration graph"/></div>
-<map name="aIArchMultithread_coll__map" id="aIArchMultithread_coll__map">
-<area shape="rect" title="Interface for architecture dependent multithreading." alt="" coords="5,78,122,103"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="25,5,102,30"/>
-<area shape="poly" title=" " alt="" coords="66,46,66,78,61,78,61,46"/>
+<area shape="rect" title="Interface for architecture dependent multithreading." alt="" coords="109,5,226,30"/>
+<area shape="rect" href="classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="5,78,151,103"/>
+<area shape="poly" title=" " alt="" coords="143,42,94,80,91,76,139,38"/>
+<area shape="rect" href="classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="175,78,341,103"/>
+<area shape="poly" title=" " alt="" coords="196,38,245,76,242,80,193,42"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -143,6 +131,7 @@ Public Types</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a7ba96022e21a67f734e5724418f4d8da" id="r_a7ba96022e21a67f734e5724418f4d8da"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ba96022e21a67f734e5724418f4d8da">~IArchMultithread</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:ad74018d028f12fa9b60e2f7f2c79bf60" id="r_ad74018d028f12fa9b60e2f7f2c79bf60"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="IArchMultithread_8h.html#a933450e841ce709f6002dbdde2c2db9f">ArchCond</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad74018d028f12fa9b60e2f7f2c79bf60">newCondVar</a> ()=0</td></tr>
 <tr class="memdesc:ad74018d028f12fa9b60e2f7f2c79bf60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a condition variable.  <br /></td></tr>
@@ -190,9 +179,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a927964ae546f8cca9820651a2ef07085"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the interrupt handler.  <br /></td></tr>
 <tr class="memitem:a7150c55afc59ab6fac5cc83399bb88c7" id="r_a7150c55afc59ab6fac5cc83399bb88c7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7150c55afc59ab6fac5cc83399bb88c7">raiseSignal</a> (<a class="el" href="#ac57c283e8bbc214a527ac279ea3e68f1">ThreadSignal</a> signal)=0</td></tr>
 <tr class="memdesc:a7150c55afc59ab6fac5cc83399bb88c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Invoke the signal handler.  <br /></td></tr>
-<tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
-<tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
-<tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for architecture dependent multithreading. </p>
@@ -281,6 +267,32 @@ Public Member Functions</h2></td></tr>
 <tr><td class="fieldname"><a id="ac57c283e8bbc214a527ac279ea3e68f1a5be0f76b3f87187577779bbf575e009c" name="ac57c283e8bbc214a527ac279ea3e68f1a5be0f76b3f87187577779bbf575e009c"></a>MaxSignals&#160;</td><td class="fielddoc"><p>Number of differnt signals. </p>
 </td></tr>
 </table>
+
+</div>
+</div>
+<a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7ba96022e21a67f734e5724418f4d8da" name="a7ba96022e21a67f734e5724418f4d8da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ba96022e21a67f734e5724418f4d8da">&#9670;&#160;</a></span>~IArchMultithread()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual IArchMultithread::~IArchMultithread </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

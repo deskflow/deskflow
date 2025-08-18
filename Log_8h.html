@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,42 +94,38 @@ $(function(){initNavTree('Log_8h.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="Arch_8h_source.html">arch/Arch.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="IArchMultithread_8h_source.html">arch/IArchMultithread.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="Common_8h_source.html">common/Common.h</a>&quot;</code><br />
 <code>#include &lt;mutex&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for Log.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="Log_8h__incl.png" border="0" usemap="#asrc_2lib_2base_2Log_8h" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2base_2Log_8h" id="asrc_2lib_2base_2Log_8h">
-<area shape="rect" title=" " alt="" coords="237,5,361,30"/>
-<area shape="rect" href="Arch_8h.html" title=" " alt="" coords="215,78,303,103"/>
-<area shape="poly" title=" " alt="" coords="295,32,275,66,271,63,290,29"/>
-<area shape="rect" href="Common_8h.html" title=" " alt="" coords="151,296,290,321"/>
-<area shape="poly" title=" " alt="" coords="265,33,232,51,217,64,205,79,195,105,189,132,189,187,199,240,212,281,207,282,194,241,184,188,184,131,190,103,201,77,213,60,228,47,262,28"/>
-<area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="380,151,536,175"/>
-<area shape="poly" title=" " alt="" coords="309,29,334,63,369,101,424,140,421,145,365,105,329,66,304,32"/>
-<area shape="rect" title=" " alt="" coords="378,78,436,103"/>
-<area shape="poly" title=" " alt="" coords="318,28,378,67,375,72,315,33"/>
-<area shape="rect" href="ArchString_8h.html" title=" " alt="" coords="232,151,355,175"/>
-<area shape="poly" title=" " alt="" coords="267,102,284,135,279,138,262,104"/>
-<area shape="poly" title=" " alt="" coords="251,105,235,126,223,152,216,185,214,220,218,280,213,281,209,220,211,185,218,150,231,123,246,102"/>
-<area shape="poly" title=" " alt="" coords="290,177,236,283,231,281,286,174"/>
-<area shape="rect" href="IInterface_8h.html" title=" " alt="" coords="376,223,518,248"/>
-<area shape="poly" title=" " alt="" coords="320,173,409,214,407,219,318,178"/>
-<area shape="rect" title=" " alt="" coords="284,223,352,248"/>
-<area shape="poly" title=" " alt="" coords="300,175,311,208,306,209,295,177"/>
-<area shape="rect" title=" " alt="" coords="5,369,73,393"/>
-<area shape="poly" title=" " alt="" coords="191,324,84,365,82,360,189,319"/>
-<area shape="rect" title=" " alt="" coords="97,369,165,393"/>
-<area shape="poly" title=" " alt="" coords="207,323,159,361,155,357,204,319"/>
-<area shape="rect" title=" " alt="" coords="189,369,252,393"/>
-<area shape="poly" title=" " alt="" coords="223,321,223,353,218,353,218,321"/>
-<area shape="rect" title=" " alt="" coords="277,369,340,393"/>
-<area shape="poly" title=" " alt="" coords="237,319,284,357,280,361,233,323"/>
-<area shape="rect" title=" " alt="" coords="364,369,428,393"/>
-<area shape="poly" title=" " alt="" coords="250,319,354,360,352,365,248,324"/>
-<area shape="poly" title=" " alt="" coords="410,251,273,293,272,288,409,246"/>
-<area shape="poly" title=" " alt="" coords="459,176,454,209,448,208,453,175"/>
+<area shape="rect" title=" " alt="" coords="369,5,494,30"/>
+<area shape="rect" href="Arch_8h.html" title=" " alt="" coords="241,78,329,103"/>
+<area shape="poly" title=" " alt="" coords="408,33,324,73,322,68,406,28"/>
+<area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="353,78,510,103"/>
+<area shape="poly" title=" " alt="" coords="434,31,434,62,429,62,429,31"/>
+<area shape="rect" title=" " alt="" coords="534,78,591,103"/>
+<area shape="poly" title=" " alt="" coords="454,28,529,68,526,73,452,33"/>
+<area shape="rect" href="ArchString_8h.html" title=" " alt="" coords="68,151,190,175"/>
+<area shape="poly" title=" " alt="" coords="260,106,170,146,167,141,258,101"/>
+<area shape="rect" href="Common_8h.html" title=" " alt="" coords="227,151,366,175"/>
+<area shape="poly" title=" " alt="" coords="289,103,295,135,290,136,284,104"/>
+<area shape="rect" title=" " alt="" coords="5,223,74,248"/>
+<area shape="poly" title=" " alt="" coords="116,178,67,216,64,212,112,174"/>
+<area shape="rect" title=" " alt="" coords="97,223,160,248"/>
+<area shape="poly" title=" " alt="" coords="132,176,132,208,126,208,126,176"/>
+<area shape="poly" title=" " alt="" coords="270,178,172,219,170,214,268,173"/>
+<area shape="rect" title=" " alt="" coords="184,223,252,248"/>
+<area shape="poly" title=" " alt="" coords="286,178,244,215,240,211,282,174"/>
+<area shape="rect" title=" " alt="" coords="276,223,344,248"/>
+<area shape="poly" title=" " alt="" coords="302,175,308,208,303,209,296,176"/>
+<area shape="rect" title=" " alt="" coords="368,223,431,248"/>
+<area shape="poly" title=" " alt="" coords="315,174,372,212,369,217,312,178"/>
+<area shape="rect" title=" " alt="" coords="455,223,520,248"/>
+<area shape="poly" title=" " alt="" coords="329,173,443,215,441,220,327,178"/>
+<area shape="rect" title=" " alt="" coords="401,151,462,175"/>
+<area shape="poly" title=" " alt="" coords="434,103,434,135,429,135,429,103"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -611,9 +607,9 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a05785244b5afab2f72b74f922dfb777b">CLOG</a>-&gt;print _a1</div>
-<div class="ttc" id="aLog_8h_html_a05785244b5afab2f72b74f922dfb777b"><div class="ttname"><a href="#a05785244b5afab2f72b74f922dfb777b">CLOG</a></div><div class="ttdeci">#define CLOG</div><div class="ttdef"><b>Definition</b> Log.h:16</div></div>
+<div class="ttc" id="aLog_8h_html_a05785244b5afab2f72b74f922dfb777b"><div class="ttname"><a href="#a05785244b5afab2f72b74f922dfb777b">CLOG</a></div><div class="ttdeci">#define CLOG</div><div class="ttdef"><b>Definition</b> Log.h:15</div></div>
 </div><!-- fragment --><p>Write to the log. Because macros cannot accept variable arguments, this should be invoked like so: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((CLOG_XXX <span class="stringliteral">&quot;%d and %d are %s&quot;</span>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a> == <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a> ? <span class="stringliteral">&quot;equal&quot;</span> : <span class="stringliteral">&quot;not equal&quot;</span>));</div>
-<div class="ttc" id="aLog_8h_html_a5216b78c92cbb3c416d909eb9f3253d1"><div class="ttname"><a href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a></div><div class="ttdeci">#define LOG(_a1)</div><div class="ttdef"><b>Definition</b> Log.h:189</div></div>
+<div class="ttc" id="aLog_8h_html_a5216b78c92cbb3c416d909eb9f3253d1"><div class="ttname"><a href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a></div><div class="ttdeci">#define LOG(_a1)</div><div class="ttdef"><b>Definition</b> Log.h:188</div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a0a2f84ed7838f07779ae24c5a9086d33"><div class="ttname"><a href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:27</div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a6150e0515f7202e2fb518f7206ed97dc"><div class="ttname"><a href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:26</div></div>
 </div><!-- fragment --><p> In particular, notice the double open and close parentheses. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::LogLevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
@@ -636,7 +632,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#ae540a914cab70d94fb4963a03cd4f363">CLOG_CRIT</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_ae540a914cab70d94fb4963a03cd4f363"><div class="ttname"><a href="#ae540a914cab70d94fb4963a03cd4f363">CLOG_CRIT</a></div><div class="ttdeci">#define CLOG_CRIT</div><div class="ttdef"><b>Definition</b> Log.h:202</div></div>
+<div class="ttc" id="aLog_8h_html_ae540a914cab70d94fb4963a03cd4f363"><div class="ttname"><a href="#ae540a914cab70d94fb4963a03cd4f363">CLOG_CRIT</a></div><div class="ttdeci">#define CLOG_CRIT</div><div class="ttdef"><b>Definition</b> Log.h:201</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -655,7 +651,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a3dc6b9e7273bc09396310d9cdf41f690">CLOG_DEBUG</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a3dc6b9e7273bc09396310d9cdf41f690"><div class="ttname"><a href="#a3dc6b9e7273bc09396310d9cdf41f690">CLOG_DEBUG</a></div><div class="ttdeci">#define CLOG_DEBUG</div><div class="ttdef"><b>Definition</b> Log.h:207</div></div>
+<div class="ttc" id="aLog_8h_html_a3dc6b9e7273bc09396310d9cdf41f690"><div class="ttname"><a href="#a3dc6b9e7273bc09396310d9cdf41f690">CLOG_DEBUG</a></div><div class="ttdeci">#define CLOG_DEBUG</div><div class="ttdef"><b>Definition</b> Log.h:206</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -674,7 +670,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#ac52a509bb9cd20414ba728bb1a0dc373">CLOG_DEBUG1</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_ac52a509bb9cd20414ba728bb1a0dc373"><div class="ttname"><a href="#ac52a509bb9cd20414ba728bb1a0dc373">CLOG_DEBUG1</a></div><div class="ttdeci">#define CLOG_DEBUG1</div><div class="ttdef"><b>Definition</b> Log.h:208</div></div>
+<div class="ttc" id="aLog_8h_html_ac52a509bb9cd20414ba728bb1a0dc373"><div class="ttname"><a href="#ac52a509bb9cd20414ba728bb1a0dc373">CLOG_DEBUG1</a></div><div class="ttdeci">#define CLOG_DEBUG1</div><div class="ttdef"><b>Definition</b> Log.h:207</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -693,7 +689,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a1a6f5d9796ad6b8fcd42f27dd6518b73">CLOG_DEBUG2</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a1a6f5d9796ad6b8fcd42f27dd6518b73"><div class="ttname"><a href="#a1a6f5d9796ad6b8fcd42f27dd6518b73">CLOG_DEBUG2</a></div><div class="ttdeci">#define CLOG_DEBUG2</div><div class="ttdef"><b>Definition</b> Log.h:209</div></div>
+<div class="ttc" id="aLog_8h_html_a1a6f5d9796ad6b8fcd42f27dd6518b73"><div class="ttname"><a href="#a1a6f5d9796ad6b8fcd42f27dd6518b73">CLOG_DEBUG2</a></div><div class="ttdeci">#define CLOG_DEBUG2</div><div class="ttdef"><b>Definition</b> Log.h:208</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -712,7 +708,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a7e5d6128ccfd52b04d5d5611e475c130">CLOG_DEBUG3</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a7e5d6128ccfd52b04d5d5611e475c130"><div class="ttname"><a href="#a7e5d6128ccfd52b04d5d5611e475c130">CLOG_DEBUG3</a></div><div class="ttdeci">#define CLOG_DEBUG3</div><div class="ttdef"><b>Definition</b> Log.h:210</div></div>
+<div class="ttc" id="aLog_8h_html_a7e5d6128ccfd52b04d5d5611e475c130"><div class="ttname"><a href="#a7e5d6128ccfd52b04d5d5611e475c130">CLOG_DEBUG3</a></div><div class="ttdeci">#define CLOG_DEBUG3</div><div class="ttdef"><b>Definition</b> Log.h:209</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -731,7 +727,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#abc93fcff4bb8a7e019ab563245337a45">CLOG_DEBUG4</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_abc93fcff4bb8a7e019ab563245337a45"><div class="ttname"><a href="#abc93fcff4bb8a7e019ab563245337a45">CLOG_DEBUG4</a></div><div class="ttdeci">#define CLOG_DEBUG4</div><div class="ttdef"><b>Definition</b> Log.h:211</div></div>
+<div class="ttc" id="aLog_8h_html_abc93fcff4bb8a7e019ab563245337a45"><div class="ttname"><a href="#abc93fcff4bb8a7e019ab563245337a45">CLOG_DEBUG4</a></div><div class="ttdeci">#define CLOG_DEBUG4</div><div class="ttdef"><b>Definition</b> Log.h:210</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -750,7 +746,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a8a559fd563ef49996a54aa13eeab26bf">CLOG_DEBUG5</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a8a559fd563ef49996a54aa13eeab26bf"><div class="ttname"><a href="#a8a559fd563ef49996a54aa13eeab26bf">CLOG_DEBUG5</a></div><div class="ttdeci">#define CLOG_DEBUG5</div><div class="ttdef"><b>Definition</b> Log.h:212</div></div>
+<div class="ttc" id="aLog_8h_html_a8a559fd563ef49996a54aa13eeab26bf"><div class="ttname"><a href="#a8a559fd563ef49996a54aa13eeab26bf">CLOG_DEBUG5</a></div><div class="ttdeci">#define CLOG_DEBUG5</div><div class="ttdef"><b>Definition</b> Log.h:211</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -769,7 +765,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#ac2c0dbe55ad449a4f4ea00e1f5a93160">CLOG_ERR</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_ac2c0dbe55ad449a4f4ea00e1f5a93160"><div class="ttname"><a href="#ac2c0dbe55ad449a4f4ea00e1f5a93160">CLOG_ERR</a></div><div class="ttdeci">#define CLOG_ERR</div><div class="ttdef"><b>Definition</b> Log.h:203</div></div>
+<div class="ttc" id="aLog_8h_html_ac2c0dbe55ad449a4f4ea00e1f5a93160"><div class="ttname"><a href="#ac2c0dbe55ad449a4f4ea00e1f5a93160">CLOG_ERR</a></div><div class="ttdeci">#define CLOG_ERR</div><div class="ttdef"><b>Definition</b> Log.h:202</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -788,7 +784,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a984c30f63a9501d242fedd0439f1ed11">CLOG_INFO</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a984c30f63a9501d242fedd0439f1ed11"><div class="ttname"><a href="#a984c30f63a9501d242fedd0439f1ed11">CLOG_INFO</a></div><div class="ttdeci">#define CLOG_INFO</div><div class="ttdef"><b>Definition</b> Log.h:206</div></div>
+<div class="ttc" id="aLog_8h_html_a984c30f63a9501d242fedd0439f1ed11"><div class="ttname"><a href="#a984c30f63a9501d242fedd0439f1ed11">CLOG_INFO</a></div><div class="ttdeci">#define CLOG_INFO</div><div class="ttdef"><b>Definition</b> Log.h:205</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -807,7 +803,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#aac036dc6ac96a54a7db0ff29e61c6e86">CLOG_NOTE</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_aac036dc6ac96a54a7db0ff29e61c6e86"><div class="ttname"><a href="#aac036dc6ac96a54a7db0ff29e61c6e86">CLOG_NOTE</a></div><div class="ttdeci">#define CLOG_NOTE</div><div class="ttdef"><b>Definition</b> Log.h:205</div></div>
+<div class="ttc" id="aLog_8h_html_aac036dc6ac96a54a7db0ff29e61c6e86"><div class="ttname"><a href="#aac036dc6ac96a54a7db0ff29e61c6e86">CLOG_NOTE</a></div><div class="ttdeci">#define CLOG_NOTE</div><div class="ttdef"><b>Definition</b> Log.h:204</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -826,7 +822,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#a1cdffb99e278d39c01456433dbd7c55a">CLOG_PRINT</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_a1cdffb99e278d39c01456433dbd7c55a"><div class="ttname"><a href="#a1cdffb99e278d39c01456433dbd7c55a">CLOG_PRINT</a></div><div class="ttdeci">#define CLOG_PRINT</div><div class="ttdef"><b>Definition</b> Log.h:201</div></div>
+<div class="ttc" id="aLog_8h_html_a1cdffb99e278d39c01456433dbd7c55a"><div class="ttname"><a href="#a1cdffb99e278d39c01456433dbd7c55a">CLOG_PRINT</a></div><div class="ttdeci">#define CLOG_PRINT</div><div class="ttdef"><b>Definition</b> Log.h:200</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -845,7 +841,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#a5216b78c92cbb3c416d909eb9f3253d1">LOG</a>((<a class="code hl_define" href="#aa35f4018af5f6bc5a8e9a5da56823b94">CLOG_WARN</a> __VA_ARGS__))</div>
-<div class="ttc" id="aLog_8h_html_aa35f4018af5f6bc5a8e9a5da56823b94"><div class="ttname"><a href="#aa35f4018af5f6bc5a8e9a5da56823b94">CLOG_WARN</a></div><div class="ttdeci">#define CLOG_WARN</div><div class="ttdef"><b>Definition</b> Log.h:204</div></div>
+<div class="ttc" id="aLog_8h_html_aa35f4018af5f6bc5a8e9a5da56823b94"><div class="ttname"><a href="#aa35f4018af5f6bc5a8e9a5da56823b94">CLOG_WARN</a></div><div class="ttdeci">#define CLOG_WARN</div><div class="ttdef"><b>Definition</b> Log.h:203</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -870,7 +866,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">  <span class="keywordflow">if</span> (_a1)                                                                                                             \</div>
 <div class="line">  <a class="code hl_define" href="#a05785244b5afab2f72b74f922dfb777b">CLOG</a>-&gt;print _a2</div>
 </div><!-- fragment --><p>Write to the log if and only if expr is true. Because macros cannot accept variable arguments, this should be invoked like so: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#a8e30ee25bb9b218db18f0805c5063522">LOGC</a>(<a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a> == <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>, (CLOG_XXX <span class="stringliteral">&quot;%d and %d are equal&quot;</span>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a>, <a class="code hl_variable" href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a>));</div>
-<div class="ttc" id="aLog_8h_html_a8e30ee25bb9b218db18f0805c5063522"><div class="ttname"><a href="#a8e30ee25bb9b218db18f0805c5063522">LOGC</a></div><div class="ttdeci">#define LOGC(_a1, _a2)</div><div class="ttdef"><b>Definition</b> Log.h:190</div></div>
+<div class="ttc" id="aLog_8h_html_a8e30ee25bb9b218db18f0805c5063522"><div class="ttname"><a href="#a8e30ee25bb9b218db18f0805c5063522">LOGC</a></div><div class="ttdeci">#define LOGC(_a1, _a2)</div><div class="ttdef"><b>Definition</b> Log.h:189</div></div>
 </div><!-- fragment --><p> In particular, notice the parentheses around everything after the boolean expression. Also note that there is no comma after the <code>CLOG_XXX</code>. The <code>XXX</code> should be replaced by one of enumerants in <code>Log::LogLevel</code> without the leading <code>k</code>. For example, <code>CLOG_INFO</code>. The special <code>CLOG_PRINT</code> level will not be filtered and is never prefixed by the filename and line number.</p>
 <p>If <code>NOLOGGING</code> is defined during the build then this macro expands to nothing. If <code>NDEBUG</code> is not defined during the build then it expands to a call to <a class="el" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf" title="Print a log message.">Log::print</a> that prints the filename and line number, otherwise it expands to a call that doesn't. </p>
 

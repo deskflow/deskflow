@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,6 +96,7 @@ $(function(){initNavTree('String_8cpp.html','',''); });
 <code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;cstdarg&gt;</code><br />
 <code>#include &lt;cstdint&gt;</code><br />
+<code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;sstream&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -103,33 +104,23 @@ Include dependency graph for String.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="String_8cpp__incl.png" border="0" usemap="#asrc_2lib_2base_2String_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2base_2String_8cpp" id="asrc_2lib_2base_2String_8cpp">
-<area shape="rect" title=" " alt="" coords="451,5,603,30"/>
-<area shape="rect" href="String_8h.html" title=" " alt="" coords="231,78,330,103"/>
-<area shape="poly" title=" " alt="" coords="487,33,337,76,335,71,486,28"/>
-<area shape="rect" title=" " alt="" coords="354,78,428,103"/>
-<area shape="poly" title=" " alt="" coords="506,33,428,73,426,68,503,28"/>
-<area shape="rect" title=" " alt="" coords="452,78,516,103"/>
-<area shape="poly" title=" " alt="" coords="522,32,501,66,497,63,518,29"/>
-<area shape="rect" title=" " alt="" coords="541,78,601,103"/>
-<area shape="poly" title=" " alt="" coords="537,29,558,63,554,66,532,32"/>
-<area shape="rect" title=" " alt="" coords="625,78,693,103"/>
-<area shape="poly" title=" " alt="" coords="550,28,625,68,622,73,548,33"/>
-<area shape="rect" title=" " alt="" coords="718,78,774,103"/>
-<area shape="poly" title=" " alt="" coords="564,28,703,73,701,78,562,33"/>
-<area shape="rect" href="Common_8h.html" title=" " alt="" coords="151,151,290,175"/>
-<area shape="poly" title=" " alt="" coords="272,105,242,141,238,137,268,101"/>
-<area shape="rect" title=" " alt="" coords="314,151,367,175"/>
-<area shape="poly" title=" " alt="" coords="292,101,323,137,319,141,288,105"/>
-<area shape="rect" title=" " alt="" coords="5,223,73,248"/>
-<area shape="poly" title=" " alt="" coords="191,178,84,220,82,215,189,173"/>
-<area shape="rect" title=" " alt="" coords="97,223,165,248"/>
-<area shape="poly" title=" " alt="" coords="207,178,159,216,155,212,204,174"/>
-<area shape="rect" title=" " alt="" coords="189,223,252,248"/>
-<area shape="poly" title=" " alt="" coords="223,176,223,208,218,208,218,176"/>
-<area shape="rect" title=" " alt="" coords="277,223,340,248"/>
-<area shape="poly" title=" " alt="" coords="237,174,284,211,280,216,233,178"/>
-<area shape="rect" title=" " alt="" coords="364,223,428,248"/>
-<area shape="poly" title=" " alt="" coords="250,173,354,215,352,220,248,178"/>
+<area shape="rect" title=" " alt="" coords="270,5,421,30"/>
+<area shape="rect" href="String_8h.html" title=" " alt="" coords="5,78,104,103"/>
+<area shape="poly" title=" " alt="" coords="298,33,118,77,117,71,297,28"/>
+<area shape="rect" title=" " alt="" coords="128,78,202,103"/>
+<area shape="poly" title=" " alt="" coords="316,33,210,74,208,69,314,28"/>
+<area shape="rect" title=" " alt="" coords="226,78,291,103"/>
+<area shape="poly" title=" " alt="" coords="333,33,286,70,283,66,329,28"/>
+<area shape="rect" title=" " alt="" coords="315,78,375,103"/>
+<area shape="poly" title=" " alt="" coords="348,31,348,62,342,62,342,31"/>
+<area shape="rect" title=" " alt="" coords="399,78,459,103"/>
+<area shape="poly" title=" " alt="" coords="361,29,406,66,402,70,357,33"/>
+<area shape="rect" title=" " alt="" coords="483,78,551,103"/>
+<area shape="poly" title=" " alt="" coords="375,28,476,69,474,74,373,33"/>
+<area shape="rect" title=" " alt="" coords="576,78,632,103"/>
+<area shape="poly" title=" " alt="" coords="389,28,562,75,560,80,388,33"/>
+<area shape="rect" title=" " alt="" coords="28,151,81,175"/>
+<area shape="poly" title=" " alt="" coords="57,103,57,135,52,135,52,103"/>
 </map>
 </div>
 </div><table class="memberdecls">

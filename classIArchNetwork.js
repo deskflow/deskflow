@@ -11,6 +11,7 @@ var classIArchNetwork =
       [ "DataGram", "classIArchNetwork.html#a0ca03bdd251faa4394d521cfbe2cf02ba12fd2568bd4acd269623647787d923c1", null ],
       [ "Stream", "classIArchNetwork.html#a0ca03bdd251faa4394d521cfbe2cf02baeae835e83c0494a376229f254f7d3392", null ]
     ] ],
+    [ "~IArchNetwork", "classIArchNetwork.html#a915c4f94cf00e92506fb3e6f3777edce", null ],
     [ "acceptSocket", "classIArchNetwork.html#a5d0d8d9ecf2f5f8e55ab5904cc1d0cfd", null ],
     [ "addrToName", "classIArchNetwork.html#a5c332270c7689907e9e635ae18c6ce67", null ],
     [ "addrToString", "classIArchNetwork.html#a9acc63bd87c1e113187d7ed490cfd79d", null ],

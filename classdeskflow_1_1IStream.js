@@ -1,6 +1,7 @@
 var classdeskflow_1_1IStream =
 [
     [ "IStream", "classdeskflow_1_1IStream.html#ae2e80b2768af2f745aeadcbb12ddffaf", null ],
+    [ "~IStream", "classdeskflow_1_1IStream.html#a716d1a032650a9b56904e1dd585498e4", null ],
     [ "close", "classdeskflow_1_1IStream.html#ae05800b51fe57029fe072ad3c00f6e78", null ],
     [ "flush", "classdeskflow_1_1IStream.html#a816405d995b474f225f0bfcb3d38854d", null ],
     [ "getEventTarget", "classdeskflow_1_1IStream.html#a27c0b814bca344b87ca89b28f5b116d6", null ],

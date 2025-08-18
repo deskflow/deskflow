@@ -1,23 +1,20 @@
 <map id="src/lib/arch/Arch.h" name="src/lib/arch/Arch.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="258,5,385,30"/>
-<area shape="rect" id="Node000002" href="$ArchString_8h.html" title=" " alt="" coords="211,78,334,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="316,32,291,67,287,64,311,29"/>
-<area shape="rect" id="Node000003" href="$Common_8h.html" title=" " alt="" coords="151,223,290,248"/>
-<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="337,28,364,56,392,93,403,114,409,135,408,157,399,177,380,197,357,212,306,230,304,225,354,207,376,193,394,174,403,155,403,136,398,116,388,96,360,59,333,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="212,105,171,123,154,136,140,152,136,169,144,185,160,200,181,213,178,218,157,205,140,188,131,170,135,149,150,132,169,118,210,100"/>
-<area shape="rect" id="Node000009" href="$IInterface_8h.html" title=" " alt="" coords="149,151,292,175"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="266,105,240,140,236,137,262,102"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="316,151,384,175"/>
-<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="287,101,328,138,324,142,283,105"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,296,73,321"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="191,251,84,293,82,288,189,246"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="97,296,165,321"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="207,251,159,289,155,284,204,246"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="189,296,252,321"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="223,249,223,280,218,280,218,249"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="277,296,340,321"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="237,246,284,284,280,288,233,251"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="364,296,428,321"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="250,246,354,287,352,292,248,251"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="223,176,223,208,218,208,218,176"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="142,5,270,30"/>
+<area shape="rect" id="Node000002" href="$ArchString_8h.html" title=" " alt="" coords="68,78,190,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,33,154,69,151,65,192,29"/>
+<area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="227,78,366,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="223,28,272,66,269,71,220,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,74,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,105,67,143,64,139,112,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="97,151,160,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="132,103,132,135,126,135,126,103"/>
+<area shape="poly" id="edge7_Node000005_Node000004" title=" " alt="" coords="270,106,172,147,170,142,268,101"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="184,151,252,175"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="286,105,244,142,240,138,282,101"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="276,151,344,175"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="302,103,308,135,303,136,296,104"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="368,151,431,175"/>
+<area shape="poly" id="edge8_Node000005_Node000008" title=" " alt="" coords="315,101,372,139,369,144,312,105"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="455,151,520,175"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="329,101,443,142,441,147,327,106"/>
 </map>

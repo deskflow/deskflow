@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classdeskflow_1_1ArgsBase.html" title="This is the base Argument class that will store the generic arguments passed into the applications th..." alt="" coords="5,31,143,55"/>
-<area shape="rect" id="Node000001" href="$classdeskflow_1_1ClientArgs.html" title=" " alt="" coords="193,5,334,30"/>
-<area shape="poly" id="edge134_Node000000_Node000001" title=" " alt="" coords="158,29,192,24,193,30,159,34"/>
-<area shape="rect" id="Node000002" href="$classdeskflow_1_1ServerArgs.html" title=" " alt="" coords="191,55,336,79"/>
-<area shape="poly" id="edge135_Node000000_Node000002" title=" " alt="" coords="158,51,190,55,190,60,158,56"/>
+<area shape="rect" id="Node000000" href="$classCondVarBase.html" title="Generic condition variable." alt="" coords="5,31,107,55"/>
+<area shape="rect" id="Node000001" href="$classCondVar.html" title=" " alt="" coords="155,5,274,30"/>
+<area shape="poly" id="edge8_Node000000_Node000001" title=" " alt="" coords="122,30,154,25,154,30,123,35"/>
+<area shape="rect" id="Node000002" href="$classCondVar.html" title="Condition variable." alt="" coords="163,55,266,79"/>
+<area shape="poly" id="edge9_Node000000_Node000002" title=" " alt="" coords="122,50,163,57,162,62,121,56"/>
 </map>

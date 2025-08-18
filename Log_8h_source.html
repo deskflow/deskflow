@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,158 +103,156 @@ $(function(){initNavTree('Log_8h_source.html','',''); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Arch_8h.html">arch/Arch.h</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IArchMultithread_8h.html">arch/IArchMultithread.h</a>&quot;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="Common_8h.html">common/Common.h</a>&quot;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="Log_8h.html#a05785244b5afab2f72b74f922dfb777b">   16</a></span><span class="preprocessor">#define CLOG (Log::getInstance())</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="Log_8h.html#a3d91eaf9be1bd362e3779b2667768051">   17</a></span><span class="preprocessor">#define BYE &quot;\nTry `%s --help&#39; for more information.&quot;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">class </span><a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">class </span><a class="code hl_class" href="classThread.html">Thread</a>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
-<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="classLog.html">   29</a></span><span class="keyword">class </span><a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>{</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a>(<span class="keywordtype">bool</span> singleton = <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> *src);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classLog.html#acf321111c34203cfae64f324f2406919">   34</a></span>  <a class="code hl_function" href="classLog.html#acf321111c34203cfae64f324f2406919">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a">   35</a></span>  <a class="code hl_function" href="classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_function" href="classLog.html#a0fbfda88fbee5027c89f6eb121059360">~Log</a>();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a">   38</a></span>  <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;<a class="code hl_function" href="classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a">operator=</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142">   39</a></span>  <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;<a class="code hl_function" href="classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142">operator=</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="Log_8h.html#a05785244b5afab2f72b74f922dfb777b">   15</a></span><span class="preprocessor">#define CLOG (Log::getInstance())</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="Log_8h.html#a3d91eaf9be1bd362e3779b2667768051">   16</a></span><span class="preprocessor">#define BYE &quot;\nTry `%s --help&#39; for more information.&quot;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">class </span><a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">class </span><a class="code hl_class" href="classThread.html">Thread</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classLog.html">   28</a></span><span class="keyword">class </span><a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a>(<span class="keywordtype">bool</span> singleton = <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> *src);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classLog.html#acf321111c34203cfae64f324f2406919">   33</a></span>  <a class="code hl_function" href="classLog.html#acf321111c34203cfae64f324f2406919">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a">   34</a></span>  <a class="code hl_function" href="classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a">Log</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="classLog.html#a0fbfda88fbee5027c89f6eb121059360">~Log</a>();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno"><a class="line" href="classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a">   37</a></span>  <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;<a class="code hl_function" href="classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a">operator=</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142">   38</a></span>  <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;<a class="code hl_function" href="classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142">operator=</a>(<a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a6c175d8f7e551245fe983ef74aafb333">insert</a>(<a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a> *adoptedOutputter, <span class="keywordtype">bool</span> alwaysAtHead = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#aebe9467118266e13cb73b43bf3f0e680">remove</a>(<a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a> *orphaned);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#ab9af6b40d5af0231f01bd5288d7f8fe3">pop_front</a>(<span class="keywordtype">bool</span> alwaysAtHead = <span class="keyword">false</span>);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classLog.html#a1fe958673083e5fa23690668d39a3553">setFilter</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>);</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a1fe958673083e5fa23690668d39a3553">setFilter</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf">print</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_function" href="classLog.html#a56f3862171ae2049c43dbf6db132e997">getFilter</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classLog.html#aded3e07f99a313623841dfd4d7469112">getFilterName</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classLog.html#aded3e07f99a313623841dfd4d7469112">getFilterName</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span></div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keyword">static</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> *<a class="code hl_function" href="classLog.html#a987f3ff401eea783d0e80daaea1d7aca">getInstance</a>();</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span></div>
-<div class="foldopen" id="foldopen00118" data-start="{" data-end="}">
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">  118</a></span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_function" href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">getConsoleMaxLevel</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d">LogLevel::Debug2</a>;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  }</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a6c175d8f7e551245fe983ef74aafb333">insert</a>(<a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a> *adoptedOutputter, <span class="keywordtype">bool</span> alwaysAtHead = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#aebe9467118266e13cb73b43bf3f0e680">remove</a>(<a class="code hl_class" href="classILogOutputter.html">ILogOutputter</a> *orphaned);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span></div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#ab9af6b40d5af0231f01bd5288d7f8fe3">pop_front</a>(<span class="keywordtype">bool</span> alwaysAtHead = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classLog.html#a1fe958673083e5fa23690668d39a3553">setFilter</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>);</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a1fe958673083e5fa23690668d39a3553">setFilter</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span></div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf">print</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *file, <span class="keywordtype">int</span> line, <span class="keyword">const</span> <span class="keywordtype">char</span> *format, ...);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_function" href="classLog.html#a56f3862171ae2049c43dbf6db132e997">getFilter</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span></div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classLog.html#aded3e07f99a313623841dfd4d7469112">getFilterName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span></div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>  <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classLog.html#aded3e07f99a313623841dfd4d7469112">getFilterName</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keyword">static</span> <a class="code hl_function" href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log</a> *<a class="code hl_function" href="classLog.html#a987f3ff401eea783d0e80daaea1d7aca">getInstance</a>();</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span></div>
+<div class="foldopen" id="foldopen00117" data-start="{" data-end="}">
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno"><a class="line" href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">  117</a></span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_function" href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">getConsoleMaxLevel</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>    <span class="keywordflow">return</span> <a class="code hl_enumvalue" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d">LogLevel::Debug2</a>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  }</div>
 </div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span></div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span> </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>  <span class="keywordtype">void</span> output(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> priority, <span class="keyword">const</span> <span class="keywordtype">char</span> *msg);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span> </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>  <span class="keyword">using </span>OutputterList = std::list&lt;ILogOutputter *&gt;;</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span> </div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="keyword">static</span> <a class="code hl_class" href="classLog.html">Log</a> *s_log;</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keyword">mutable</span> std::mutex m_mutex;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  OutputterList m_outputters;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  OutputterList m_alwaysOutputters;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> m_maxPriority;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>};</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  <span class="keywordtype">void</span> output(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> priority, <span class="keyword">const</span> <span class="keywordtype">char</span> *msg);</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span> </div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keyword">using </span>OutputterList = std::list&lt;ILogOutputter *&gt;;</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="keyword">static</span> <a class="code hl_class" href="classLog.html">Log</a> *s_log;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="keyword">mutable</span> std::mutex m_mutex;</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  OutputterList m_outputters;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  OutputterList m_alwaysOutputters;</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> m_maxPriority;</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>};</div>
 </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">#if defined(NOLOGGING)</span></div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">#define LOG(_a1)</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="preprocessor">#define LOGC(_a1, _a2)</span></div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#define CLOG_TRACE</span></div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="preprocessor">#elif defined(NDEBUG)</span></div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="preprocessor">#define LOG(_a1) CLOG-&gt;print _a1</span></div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="preprocessor">#define LOGC(_a1, _a2)                                                                                                 \</span></div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="preprocessor">  if (_a1)                                                                                                             \</span></div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="preprocessor">  CLOG-&gt;print _a2</span></div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="preprocessor">#define CLOG_TRACE nullptr, 0,</span></div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="Log_8h.html#a5216b78c92cbb3c416d909eb9f3253d1">  189</a></span><span class="preprocessor">#define LOG(_a1) CLOG-&gt;print _a1</span></div>
-<div class="foldopen" id="foldopen00190" data-start="" data-end="">
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="Log_8h.html#a8e30ee25bb9b218db18f0805c5063522">  190</a></span><span class="preprocessor">#define LOGC(_a1, _a2)                                                                                                 \</span></div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="preprocessor">  if (_a1)                                                                                                             \</span></div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="preprocessor">  CLOG-&gt;print _a2</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span><span class="preprocessor">#if defined(NOLOGGING)</span></div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span><span class="preprocessor">#define LOG(_a1)</span></div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">#define LOGC(_a1, _a2)</span></div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span><span class="preprocessor">#define CLOG_TRACE</span></div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#elif defined(NDEBUG)</span></div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span><span class="preprocessor">#define LOG(_a1) CLOG-&gt;print _a1</span></div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span><span class="preprocessor">#define LOGC(_a1, _a2)                                                                                                 \</span></div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span><span class="preprocessor">  if (_a1)                                                                                                             \</span></div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span><span class="preprocessor">  CLOG-&gt;print _a2</span></div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span><span class="preprocessor">#define CLOG_TRACE nullptr, 0,</span></div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="Log_8h.html#a5216b78c92cbb3c416d909eb9f3253d1">  188</a></span><span class="preprocessor">#define LOG(_a1) CLOG-&gt;print _a1</span></div>
+<div class="foldopen" id="foldopen00189" data-start="" data-end="">
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="Log_8h.html#a8e30ee25bb9b218db18f0805c5063522">  189</a></span><span class="preprocessor">#define LOGC(_a1, _a2)                                                                                                 \</span></div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span><span class="preprocessor">  if (_a1)                                                                                                             \</span></div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="preprocessor">  CLOG-&gt;print _a2</span></div>
 </div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno"><a class="line" href="Log_8h.html#ade00c678de791b27ba8ee5ee4ca6b697">  193</a></span><span class="preprocessor">#define CLOG_TRACE __FILE__, __LINE__,</span></div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="comment">// the CLOG_* defines are line and file plus %z and an octal number (060=0,</span></div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="comment">// 071=9), but the limitation is that once we run out of numbers at either</span></div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="comment">// end, then we resort to using non-numerical chars. this still works (since</span></div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span><span class="comment">// to deduce the number we subtract octal \060, so &#39;/&#39; is -1, and &#39;:&#39; is 10</span></div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="Log_8h.html#a1cdffb99e278d39c01456433dbd7c55a">  201</a></span><span class="preprocessor">#define CLOG_PRINT CLOG_TRACE &quot;%z\057&quot; </span><span class="comment">// char is &#39;/&#39;</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="Log_8h.html#ae540a914cab70d94fb4963a03cd4f363">  202</a></span><span class="preprocessor">#define CLOG_CRIT CLOG_TRACE &quot;%z\060&quot;  </span><span class="comment">// char is &#39;0&#39;</span></div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="Log_8h.html#ac2c0dbe55ad449a4f4ea00e1f5a93160">  203</a></span><span class="preprocessor">#define CLOG_ERR CLOG_TRACE &quot;%z\061&quot;</span></div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="Log_8h.html#aa35f4018af5f6bc5a8e9a5da56823b94">  204</a></span><span class="preprocessor">#define CLOG_WARN CLOG_TRACE &quot;%z\062&quot;</span></div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="Log_8h.html#aac036dc6ac96a54a7db0ff29e61c6e86">  205</a></span><span class="preprocessor">#define CLOG_NOTE CLOG_TRACE &quot;%z\063&quot;</span></div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="Log_8h.html#a984c30f63a9501d242fedd0439f1ed11">  206</a></span><span class="preprocessor">#define CLOG_INFO CLOG_TRACE &quot;%z\064&quot;</span></div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="Log_8h.html#a3dc6b9e7273bc09396310d9cdf41f690">  207</a></span><span class="preprocessor">#define CLOG_DEBUG CLOG_TRACE &quot;%z\065&quot;</span></div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="Log_8h.html#ac52a509bb9cd20414ba728bb1a0dc373">  208</a></span><span class="preprocessor">#define CLOG_DEBUG1 CLOG_TRACE &quot;%z\066&quot;</span></div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="Log_8h.html#a1a6f5d9796ad6b8fcd42f27dd6518b73">  209</a></span><span class="preprocessor">#define CLOG_DEBUG2 CLOG_TRACE &quot;%z\067&quot;</span></div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="Log_8h.html#a7e5d6128ccfd52b04d5d5611e475c130">  210</a></span><span class="preprocessor">#define CLOG_DEBUG3 CLOG_TRACE &quot;%z\070&quot;</span></div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="Log_8h.html#abc93fcff4bb8a7e019ab563245337a45">  211</a></span><span class="preprocessor">#define CLOG_DEBUG4 CLOG_TRACE &quot;%z\071&quot; </span><span class="comment">// char is &#39;9&#39;</span></div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno"><a class="line" href="Log_8h.html#a8a559fd563ef49996a54aa13eeab26bf">  212</a></span><span class="preprocessor">#define CLOG_DEBUG5 CLOG_TRACE &quot;%z\072&quot; </span><span class="comment">// char is &#39;:&#39;</span></div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span> </div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="Log_8h.html#aaf3a42324e3a3a4e3ca3a7a974f21167">  214</a></span><span class="preprocessor">#define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="Log_8h.html#a0929e7b2b643a94ddeea4863983c499d">  215</a></span><span class="preprocessor">#define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))</span></div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="Log_8h.html#ad6db28c61c838c1f7316417e1e4847f2">  216</a></span><span class="preprocessor">#define LOG_ERR(...) LOG((CLOG_ERR __VA_ARGS__))</span></div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="Log_8h.html#add82efa459e0af380b68522c29b9fd44">  217</a></span><span class="preprocessor">#define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))</span></div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="Log_8h.html#ae438ca6a3afbac24d1468bebe035269d">  218</a></span><span class="preprocessor">#define LOG_NOTE(...) LOG((CLOG_NOTE __VA_ARGS__))</span></div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="Log_8h.html#a378e28bfcb78d17285210d6bbb70a083">  219</a></span><span class="preprocessor">#define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))</span></div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="Log_8h.html#a754b3d074e0af4ad3c7b918dd77ecb2d">  220</a></span><span class="preprocessor">#define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))</span></div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="Log_8h.html#a3bab8b308e4a3f5a8b55d51d52163f69">  221</a></span><span class="preprocessor">#define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))</span></div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="Log_8h.html#a4b7036b56a49dc7084681c4c0385fbc6">  222</a></span><span class="preprocessor">#define LOG_DEBUG2(...) LOG((CLOG_DEBUG2 __VA_ARGS__))</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5">  223</a></span><span class="preprocessor">#define LOG_DEBUG3(...) LOG((CLOG_DEBUG3 __VA_ARGS__))</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="Log_8h.html#ac4a3864f711614ad43110dd4677161c2">  224</a></span><span class="preprocessor">#define LOG_DEBUG4(...) LOG((CLOG_DEBUG4 __VA_ARGS__))</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno"><a class="line" href="Log_8h.html#a508b15d0ab0e65490854f8f176b93ebb">  225</a></span><span class="preprocessor">#define LOG_DEBUG5(...) LOG((CLOG_DEBUG5 __VA_ARGS__))</span></div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno"><a class="line" href="Log_8h.html#ade00c678de791b27ba8ee5ee4ca6b697">  192</a></span><span class="preprocessor">#define CLOG_TRACE __FILE__, __LINE__,</span></div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span><span class="comment">// the CLOG_* defines are line and file plus %z and an octal number (060=0,</span></div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span><span class="comment">// 071=9), but the limitation is that once we run out of numbers at either</span></div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span><span class="comment">// end, then we resort to using non-numerical chars. this still works (since</span></div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span><span class="comment">// to deduce the number we subtract octal \060, so &#39;/&#39; is -1, and &#39;:&#39; is 10</span></div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno"><a class="line" href="Log_8h.html#a1cdffb99e278d39c01456433dbd7c55a">  200</a></span><span class="preprocessor">#define CLOG_PRINT CLOG_TRACE &quot;%z\057&quot; </span><span class="comment">// char is &#39;/&#39;</span></div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="Log_8h.html#ae540a914cab70d94fb4963a03cd4f363">  201</a></span><span class="preprocessor">#define CLOG_CRIT CLOG_TRACE &quot;%z\060&quot;  </span><span class="comment">// char is &#39;0&#39;</span></div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno"><a class="line" href="Log_8h.html#ac2c0dbe55ad449a4f4ea00e1f5a93160">  202</a></span><span class="preprocessor">#define CLOG_ERR CLOG_TRACE &quot;%z\061&quot;</span></div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="Log_8h.html#aa35f4018af5f6bc5a8e9a5da56823b94">  203</a></span><span class="preprocessor">#define CLOG_WARN CLOG_TRACE &quot;%z\062&quot;</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno"><a class="line" href="Log_8h.html#aac036dc6ac96a54a7db0ff29e61c6e86">  204</a></span><span class="preprocessor">#define CLOG_NOTE CLOG_TRACE &quot;%z\063&quot;</span></div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno"><a class="line" href="Log_8h.html#a984c30f63a9501d242fedd0439f1ed11">  205</a></span><span class="preprocessor">#define CLOG_INFO CLOG_TRACE &quot;%z\064&quot;</span></div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno"><a class="line" href="Log_8h.html#a3dc6b9e7273bc09396310d9cdf41f690">  206</a></span><span class="preprocessor">#define CLOG_DEBUG CLOG_TRACE &quot;%z\065&quot;</span></div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno"><a class="line" href="Log_8h.html#ac52a509bb9cd20414ba728bb1a0dc373">  207</a></span><span class="preprocessor">#define CLOG_DEBUG1 CLOG_TRACE &quot;%z\066&quot;</span></div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno"><a class="line" href="Log_8h.html#a1a6f5d9796ad6b8fcd42f27dd6518b73">  208</a></span><span class="preprocessor">#define CLOG_DEBUG2 CLOG_TRACE &quot;%z\067&quot;</span></div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno"><a class="line" href="Log_8h.html#a7e5d6128ccfd52b04d5d5611e475c130">  209</a></span><span class="preprocessor">#define CLOG_DEBUG3 CLOG_TRACE &quot;%z\070&quot;</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno"><a class="line" href="Log_8h.html#abc93fcff4bb8a7e019ab563245337a45">  210</a></span><span class="preprocessor">#define CLOG_DEBUG4 CLOG_TRACE &quot;%z\071&quot; </span><span class="comment">// char is &#39;9&#39;</span></div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno"><a class="line" href="Log_8h.html#a8a559fd563ef49996a54aa13eeab26bf">  211</a></span><span class="preprocessor">#define CLOG_DEBUG5 CLOG_TRACE &quot;%z\072&quot; </span><span class="comment">// char is &#39;:&#39;</span></div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span> </div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno"><a class="line" href="Log_8h.html#aaf3a42324e3a3a4e3ca3a7a974f21167">  213</a></span><span class="preprocessor">#define LOG_PRINT(...) LOG((CLOG_PRINT __VA_ARGS__))</span></div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno"><a class="line" href="Log_8h.html#a0929e7b2b643a94ddeea4863983c499d">  214</a></span><span class="preprocessor">#define LOG_CRIT(...) LOG((CLOG_CRIT __VA_ARGS__))</span></div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="Log_8h.html#ad6db28c61c838c1f7316417e1e4847f2">  215</a></span><span class="preprocessor">#define LOG_ERR(...) LOG((CLOG_ERR __VA_ARGS__))</span></div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="Log_8h.html#add82efa459e0af380b68522c29b9fd44">  216</a></span><span class="preprocessor">#define LOG_WARN(...) LOG((CLOG_WARN __VA_ARGS__))</span></div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno"><a class="line" href="Log_8h.html#ae438ca6a3afbac24d1468bebe035269d">  217</a></span><span class="preprocessor">#define LOG_NOTE(...) LOG((CLOG_NOTE __VA_ARGS__))</span></div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="Log_8h.html#a378e28bfcb78d17285210d6bbb70a083">  218</a></span><span class="preprocessor">#define LOG_INFO(...) LOG((CLOG_INFO __VA_ARGS__))</span></div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno"><a class="line" href="Log_8h.html#a754b3d074e0af4ad3c7b918dd77ecb2d">  219</a></span><span class="preprocessor">#define LOG_DEBUG(...) LOG((CLOG_DEBUG __VA_ARGS__))</span></div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno"><a class="line" href="Log_8h.html#a3bab8b308e4a3f5a8b55d51d52163f69">  220</a></span><span class="preprocessor">#define LOG_DEBUG1(...) LOG((CLOG_DEBUG1 __VA_ARGS__))</span></div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno"><a class="line" href="Log_8h.html#a4b7036b56a49dc7084681c4c0385fbc6">  221</a></span><span class="preprocessor">#define LOG_DEBUG2(...) LOG((CLOG_DEBUG2 __VA_ARGS__))</span></div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno"><a class="line" href="Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5">  222</a></span><span class="preprocessor">#define LOG_DEBUG3(...) LOG((CLOG_DEBUG3 __VA_ARGS__))</span></div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno"><a class="line" href="Log_8h.html#ac4a3864f711614ad43110dd4677161c2">  223</a></span><span class="preprocessor">#define LOG_DEBUG4(...) LOG((CLOG_DEBUG4 __VA_ARGS__))</span></div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno"><a class="line" href="Log_8h.html#a508b15d0ab0e65490854f8f176b93ebb">  224</a></span><span class="preprocessor">#define LOG_DEBUG5(...) LOG((CLOG_DEBUG5 __VA_ARGS__))</span></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a16b9a398646d8d46205fb34769946458"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a></div><div class="ttdeci">static int level</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:30</div></div>
 <div class="ttc" id="aArch_8h_html"><div class="ttname"><a href="Arch_8h.html">Arch.h</a></div></div>
-<div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
 <div class="ttc" id="aIArchMultithread_8h_html"><div class="ttname"><a href="IArchMultithread_8h.html">IArchMultithread.h</a></div></div>
 <div class="ttc" id="aLogLevel_8h_html_aca1fd1d8935433e6ba2e3918214e07f9"><div class="ttname"><a href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a></div><div class="ttdeci">LogLevel</div><div class="ttdoc">Log levels.</div><div class="ttdef"><b>Definition</b> LogLevel.h:15</div></div>
 <div class="ttc" id="aLogLevel_8h_html_aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d"><div class="ttname"><a href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d">LogLevel::Debug2</a></div><div class="ttdeci">@ Debug2</div><div class="ttdoc">For verbosity +2 debugging messages.</div><div class="ttdef"><b>Definition</b> LogLevel.h:24</div></div>
 <div class="ttc" id="aclassILogOutputter_html"><div class="ttname"><a href="classILogOutputter.html">ILogOutputter</a></div><div class="ttdoc">Outputter interface.</div><div class="ttdef"><b>Definition</b> ILogOutputter.h:21</div></div>
-<div class="ttc" id="aclassLog_html"><div class="ttname"><a href="classLog.html">Log</a></div><div class="ttdoc">Logging facility.</div><div class="ttdef"><b>Definition</b> Log.h:30</div></div>
-<div class="ttc" id="aclassLog_html_a0fbfda88fbee5027c89f6eb121059360"><div class="ttname"><a href="classLog.html#a0fbfda88fbee5027c89f6eb121059360">Log::~Log</a></div><div class="ttdeci">~Log()</div><div class="ttdef"><b>Definition</b> Log.cpp:163</div></div>
-<div class="ttc" id="aclassLog_html_a1fe958673083e5fa23690668d39a3553"><div class="ttname"><a href="classLog.html#a1fe958673083e5fa23690668d39a3553">Log::setFilter</a></div><div class="ttdeci">bool setFilter(const char *name)</div><div class="ttdoc">Set the minimum priority filter.</div><div class="ttdef"><b>Definition</b> Log.cpp:262</div></div>
-<div class="ttc" id="aclassLog_html_a243b6feb9f64bccfa82a6c3afffd7fcf"><div class="ttname"><a href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf">Log::print</a></div><div class="ttdeci">void print(const char *file, int line, const char *format,...)</div><div class="ttdoc">Print a log message.</div><div class="ttdef"><b>Definition</b> Log.cpp:194</div></div>
-<div class="ttc" id="aclassLog_html_a4cbf6fbb7fea954ef3a864a9dc3c25b6"><div class="ttname"><a href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">Log::getConsoleMaxLevel</a></div><div class="ttdeci">LogLevel getConsoleMaxLevel() const</div><div class="ttdef"><b>Definition</b> Log.h:118</div></div>
-<div class="ttc" id="aclassLog_html_a56f3862171ae2049c43dbf6db132e997"><div class="ttname"><a href="classLog.html#a56f3862171ae2049c43dbf6db132e997">Log::getFilter</a></div><div class="ttdeci">LogLevel getFilter() const</div><div class="ttdoc">Get the minimum priority level.</div><div class="ttdef"><b>Definition</b> Log.cpp:282</div></div>
-<div class="ttc" id="aclassLog_html_a6c175d8f7e551245fe983ef74aafb333"><div class="ttname"><a href="classLog.html#a6c175d8f7e551245fe983ef74aafb333">Log::insert</a></div><div class="ttdeci">void insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead=false)</div><div class="ttdoc">Add an outputter to the head of the list and adopts it.</div><div class="ttdef"><b>Definition</b> Log.cpp:231</div></div>
+<div class="ttc" id="aclassLog_html"><div class="ttname"><a href="classLog.html">Log</a></div><div class="ttdoc">Logging facility.</div><div class="ttdef"><b>Definition</b> Log.h:29</div></div>
+<div class="ttc" id="aclassLog_html_a0fbfda88fbee5027c89f6eb121059360"><div class="ttname"><a href="classLog.html#a0fbfda88fbee5027c89f6eb121059360">Log::~Log</a></div><div class="ttdeci">~Log()</div><div class="ttdef"><b>Definition</b> Log.cpp:164</div></div>
+<div class="ttc" id="aclassLog_html_a1fe958673083e5fa23690668d39a3553"><div class="ttname"><a href="classLog.html#a1fe958673083e5fa23690668d39a3553">Log::setFilter</a></div><div class="ttdeci">bool setFilter(const char *name)</div><div class="ttdoc">Set the minimum priority filter.</div><div class="ttdef"><b>Definition</b> Log.cpp:263</div></div>
+<div class="ttc" id="aclassLog_html_a243b6feb9f64bccfa82a6c3afffd7fcf"><div class="ttname"><a href="classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf">Log::print</a></div><div class="ttdeci">void print(const char *file, int line, const char *format,...)</div><div class="ttdoc">Print a log message.</div><div class="ttdef"><b>Definition</b> Log.cpp:195</div></div>
+<div class="ttc" id="aclassLog_html_a4cbf6fbb7fea954ef3a864a9dc3c25b6"><div class="ttname"><a href="classLog.html#a4cbf6fbb7fea954ef3a864a9dc3c25b6">Log::getConsoleMaxLevel</a></div><div class="ttdeci">LogLevel getConsoleMaxLevel() const</div><div class="ttdef"><b>Definition</b> Log.h:117</div></div>
+<div class="ttc" id="aclassLog_html_a56f3862171ae2049c43dbf6db132e997"><div class="ttname"><a href="classLog.html#a56f3862171ae2049c43dbf6db132e997">Log::getFilter</a></div><div class="ttdeci">LogLevel getFilter() const</div><div class="ttdoc">Get the minimum priority level.</div><div class="ttdef"><b>Definition</b> Log.cpp:283</div></div>
+<div class="ttc" id="aclassLog_html_a6c175d8f7e551245fe983ef74aafb333"><div class="ttname"><a href="classLog.html#a6c175d8f7e551245fe983ef74aafb333">Log::insert</a></div><div class="ttdeci">void insert(ILogOutputter *adoptedOutputter, bool alwaysAtHead=false)</div><div class="ttdoc">Add an outputter to the head of the list and adopts it.</div><div class="ttdef"><b>Definition</b> Log.cpp:232</div></div>
 <div class="ttc" id="aclassLog_html_a7e23ad189250d8c51b34bb5b4b1fef4a"><div class="ttname"><a href="classLog.html#a7e23ad189250d8c51b34bb5b4b1fef4a">Log::Log</a></div><div class="ttdeci">Log(Log &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassLog_html_a987f3ff401eea783d0e80daaea1d7aca"><div class="ttname"><a href="classLog.html#a987f3ff401eea783d0e80daaea1d7aca">Log::getInstance</a></div><div class="ttdeci">static Log * getInstance()</div><div class="ttdoc">Get the singleton instance of the log.</div><div class="ttdef"><b>Definition</b> Log.cpp:174</div></div>
+<div class="ttc" id="aclassLog_html_a987f3ff401eea783d0e80daaea1d7aca"><div class="ttname"><a href="classLog.html#a987f3ff401eea783d0e80daaea1d7aca">Log::getInstance</a></div><div class="ttdeci">static Log * getInstance()</div><div class="ttdoc">Get the singleton instance of the log.</div><div class="ttdef"><b>Definition</b> Log.cpp:175</div></div>
 <div class="ttc" id="aclassLog_html_a9c78cd019057eb5d3121d2ef5e706e2a"><div class="ttname"><a href="classLog.html#a9c78cd019057eb5d3121d2ef5e706e2a">Log::operator=</a></div><div class="ttdeci">Log &amp; operator=(Log const &amp;)=delete</div></div>
 <div class="ttc" id="aclassLog_html_a9f29fd7fcc4c1e71cd61c0cd25174142"><div class="ttname"><a href="classLog.html#a9f29fd7fcc4c1e71cd61c0cd25174142">Log::operator=</a></div><div class="ttdeci">Log &amp; operator=(Log &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassLog_html_ab13cc6f09f9876ca665d5ef680859058"><div class="ttname"><a href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log::Log</a></div><div class="ttdeci">Log(bool singleton=true)</div><div class="ttdef"><b>Definition</b> Log.cpp:143</div></div>
-<div class="ttc" id="aclassLog_html_ab9af6b40d5af0231f01bd5288d7f8fe3"><div class="ttname"><a href="classLog.html#ab9af6b40d5af0231f01bd5288d7f8fe3">Log::pop_front</a></div><div class="ttdeci">void pop_front(bool alwaysAtHead=false)</div><div class="ttdoc">Remove the outputter from the head of the list.</div><div class="ttdef"><b>Definition</b> Log.cpp:252</div></div>
+<div class="ttc" id="aclassLog_html_ab13cc6f09f9876ca665d5ef680859058"><div class="ttname"><a href="classLog.html#ab13cc6f09f9876ca665d5ef680859058">Log::Log</a></div><div class="ttdeci">Log(bool singleton=true)</div><div class="ttdef"><b>Definition</b> Log.cpp:144</div></div>
+<div class="ttc" id="aclassLog_html_ab9af6b40d5af0231f01bd5288d7f8fe3"><div class="ttname"><a href="classLog.html#ab9af6b40d5af0231f01bd5288d7f8fe3">Log::pop_front</a></div><div class="ttdeci">void pop_front(bool alwaysAtHead=false)</div><div class="ttdoc">Remove the outputter from the head of the list.</div><div class="ttdef"><b>Definition</b> Log.cpp:253</div></div>
 <div class="ttc" id="aclassLog_html_acf321111c34203cfae64f324f2406919"><div class="ttname"><a href="classLog.html#acf321111c34203cfae64f324f2406919">Log::Log</a></div><div class="ttdeci">Log(Log const &amp;)=delete</div></div>
-<div class="ttc" id="aclassLog_html_aded3e07f99a313623841dfd4d7469112"><div class="ttname"><a href="classLog.html#aded3e07f99a313623841dfd4d7469112">Log::getFilterName</a></div><div class="ttdeci">const char * getFilterName() const</div><div class="ttdoc">Get the filter name of the current filter level.</div><div class="ttdef"><b>Definition</b> Log.cpp:180</div></div>
-<div class="ttc" id="aclassLog_html_aebe9467118266e13cb73b43bf3f0e680"><div class="ttname"><a href="classLog.html#aebe9467118266e13cb73b43bf3f0e680">Log::remove</a></div><div class="ttdeci">void remove(ILogOutputter *orphaned)</div><div class="ttdoc">Remove an outputter from the list.</div><div class="ttdef"><b>Definition</b> Log.cpp:245</div></div>
+<div class="ttc" id="aclassLog_html_aded3e07f99a313623841dfd4d7469112"><div class="ttname"><a href="classLog.html#aded3e07f99a313623841dfd4d7469112">Log::getFilterName</a></div><div class="ttdeci">const char * getFilterName() const</div><div class="ttdoc">Get the filter name of the current filter level.</div><div class="ttdef"><b>Definition</b> Log.cpp:181</div></div>
+<div class="ttc" id="aclassLog_html_aebe9467118266e13cb73b43bf3f0e680"><div class="ttname"><a href="classLog.html#aebe9467118266e13cb73b43bf3f0e680">Log::remove</a></div><div class="ttdeci">void remove(ILogOutputter *orphaned)</div><div class="ttdoc">Remove an outputter from the list.</div><div class="ttdef"><b>Definition</b> Log.cpp:246</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

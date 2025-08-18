@@ -1,7 +1,5 @@
 <map id="TCPSocketFactory" name="TCPSocketFactory">
-<area shape="rect" id="Node000001" title="Socket factory for TCP sockets." alt="" coords="5,151,139,175"/>
-<area shape="rect" id="Node000002" href="$classISocketFactory.html" title="Socket factory." alt="" coords="17,78,127,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,118,75,150,69,150,69,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="33,5,111,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,46,75,78,69,78,69,46"/>
+<area shape="rect" id="Node000001" title="Socket factory for TCP sockets." alt="" coords="5,78,139,103"/>
+<area shape="rect" id="Node000002" href="$classISocketFactory.html" title="Socket factory." alt="" coords="17,5,127,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,46,75,78,69,78,69,46"/>
 </map>

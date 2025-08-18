@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -101,31 +101,28 @@ $(function(){initNavTree('Lock_8h_source.html','',''); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Common_8h.html">common/Common.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">class </span><a class="code hl_class" href="classMutex.html">Mutex</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">class </span><a class="code hl_class" href="classCondVarBase.html">CondVarBase</a>;</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="keyword">class </span><a class="code hl_class" href="classMutex.html">Mutex</a>;</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">class </span><a class="code hl_class" href="classCondVarBase.html">CondVarBase</a>;</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="foldopen" id="foldopen00022" data-start="{" data-end="};">
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classLock.html">   22</a></span><span class="keyword">class </span><a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_class" href="classMutex.html">Mutex</a> *mutex);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_class" href="classCondVarBase.html">CondVarBase</a> *cv);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <a class="code hl_function" href="classLock.html#a7ab6d9485c8665bb3643710432882971">~Lock</a>();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="comment">// not implemented</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;operator=(<span class="keyword">const</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">const</span> <a class="code hl_class" href="classMutex.html">Mutex</a> *m_mutex;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
+<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classLock.html">   20</a></span><span class="keyword">class </span><a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_class" href="classMutex.html">Mutex</a> *mutex);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_class" href="classCondVarBase.html">CondVarBase</a> *cv);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <a class="code hl_function" href="classLock.html#a7ab6d9485c8665bb3643710432882971">~Lock</a>();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="comment">// not implemented</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a>(<span class="keyword">const</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;);</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;operator=(<span class="keyword">const</span> <a class="code hl_function" href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock</a> &amp;);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">const</span> <a class="code hl_class" href="classMutex.html">Mutex</a> *m_mutex;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
 </div>
-<div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
-<div class="ttc" id="aclassCondVarBase_html"><div class="ttname"><a href="classCondVarBase.html">CondVarBase</a></div><div class="ttdoc">Generic condition variable.</div><div class="ttdef"><b>Definition</b> CondVar.h:23</div></div>
+<div class="ttc" id="aclassCondVarBase_html"><div class="ttname"><a href="classCondVarBase.html">CondVarBase</a></div><div class="ttdoc">Generic condition variable.</div><div class="ttdef"><b>Definition</b> CondVar.h:22</div></div>
 <div class="ttc" id="aclassLock_html_a7ab6d9485c8665bb3643710432882971"><div class="ttname"><a href="classLock.html#a7ab6d9485c8665bb3643710432882971">Lock::~Lock</a></div><div class="ttdeci">~Lock()</div><div class="ttdoc">Unlock the mutex or condition variable.</div><div class="ttdef"><b>Definition</b> Lock.cpp:26</div></div>
 <div class="ttc" id="aclassLock_html_ac6ca7095f52eaddd38f09eb40ced7793"><div class="ttname"><a href="classLock.html#ac6ca7095f52eaddd38f09eb40ced7793">Lock::Lock</a></div><div class="ttdeci">Lock(const Mutex *mutex)</div><div class="ttdoc">Lock the mutex mutex.</div><div class="ttdef"><b>Definition</b> Lock.cpp:16</div></div>
 <div class="ttc" id="aclassMutex_html"><div class="ttname"><a href="classMutex.html">Mutex</a></div><div class="ttdoc">Mutual exclusion.</div><div class="ttdef"><b>Definition</b> Mutex.h:22</div></div>

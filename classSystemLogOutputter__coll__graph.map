@@ -1,7 +1,5 @@
 <map id="SystemLogOutputter" name="SystemLogOutputter">
-<area shape="rect" id="Node000001" title="Write log to system log." alt="" coords="5,151,146,175"/>
-<area shape="rect" id="Node000002" href="$classILogOutputter.html" title="Outputter interface." alt="" coords="25,78,126,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,118,78,150,73,150,73,118"/>
-<area shape="rect" id="Node000003" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="37,5,114,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,46,78,78,73,78,73,46"/>
+<area shape="rect" id="Node000001" title="Write log to system log." alt="" coords="5,78,146,103"/>
+<area shape="rect" id="Node000002" href="$classILogOutputter.html" title="Outputter interface." alt="" coords="25,5,126,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,46,78,78,73,78,73,46"/>
 </map>

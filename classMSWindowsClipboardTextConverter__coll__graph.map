@@ -1,9 +1,7 @@
 <map id="MSWindowsClipboardTextConverter" name="MSWindowsClipboardTextConverter">
-<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="5,237,238,262"/>
-<area shape="rect" id="Node000002" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="22,151,221,189"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,205,124,237,119,237,119,205"/>
-<area shape="rect" id="Node000003" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="16,78,227,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,118,124,150,119,150,119,118"/>
-<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="83,5,160,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="124,46,124,78,119,78,119,46"/>
+<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="5,165,238,189"/>
+<area shape="rect" id="Node000002" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="22,78,221,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,133,124,164,119,164,119,133"/>
+<area shape="rect" id="Node000003" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="16,5,227,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="124,46,124,77,119,77,119,46"/>
 </map>

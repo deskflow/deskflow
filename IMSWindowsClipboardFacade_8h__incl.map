@@ -1,19 +1,5 @@
 <map id="src/lib/platform/IMSWindowsClipboardFacade.h" name="src/lib/platform/IMSWindowsClipboardFacade.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="195,5,384,44"/>
-<area shape="rect" id="Node000002" href="$IInterface_8h.html" title=" " alt="" coords="149,92,292,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="275,46,243,82,239,78,271,43"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="316,92,402,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="308,43,341,78,337,82,304,46"/>
-<area shape="rect" id="Node000003" href="$Common_8h.html" title=" " alt="" coords="178,165,263,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="223,117,223,149,218,149,218,117"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,237,73,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="191,192,84,234,82,229,189,187"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="97,237,165,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="207,192,159,230,155,226,204,188"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="189,237,252,262"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="223,190,223,222,218,222,218,190"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="277,237,340,262"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="237,188,284,225,280,230,233,192"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="364,237,428,262"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="250,187,354,229,352,234,248,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,195,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="57,92,143,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,45,103,76,97,76,97,45"/>
 </map>

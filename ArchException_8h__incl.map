@@ -1,19 +1,5 @@
 <map id="src/lib/arch/ArchException.h" name="src/lib/arch/ArchException.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="260,5,444,30"/>
-<area shape="rect" id="Node000002" href="$Common_8h.html" title=" " alt="" coords="151,78,290,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="332,33,257,73,254,68,329,28"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="314,78,391,103"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="355,31,355,62,350,62,350,31"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="415,78,468,103"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="369,28,417,66,414,71,365,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,73,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="191,106,84,147,82,142,189,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="97,151,165,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="207,105,159,143,155,139,204,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="189,151,252,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="223,103,223,135,218,135,218,103"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="277,151,340,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="237,101,284,139,280,143,233,105"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="364,151,428,175"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="250,101,354,142,352,147,248,106"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,190,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="59,78,136,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,31,100,62,95,62,95,31"/>
 </map>

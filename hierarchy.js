@@ -12,6 +12,10 @@ var hierarchy =
     ] ],
     [ "ActionDialog::ActionTypes", "structActionDialog_1_1ActionTypes.html", null ],
     [ "KeyState::AddActiveModifierContext", "structKeyState_1_1AddActiveModifierContext.html", null ],
+    [ "AppUtil", "classAppUtil.html", [
+      [ "AppUtilUnix", "classAppUtilUnix.html", null ],
+      [ "AppUtilWindows", "classAppUtilWindows.html", null ]
+    ] ],
     [ "ARCH_DAEMON", null, [
       [ "Arch", "classArch.html", null ]
     ] ],
@@ -30,6 +34,9 @@ var hierarchy =
     [ "ArchMutexLock", "classArchMutexLock.html", null ],
     [ "ArchNetAddressImpl", "classArchNetAddressImpl.html", null ],
     [ "ArchSocketImpl", "classArchSocketImpl.html", null ],
+    [ "ArchString", "classArchString.html", [
+      [ "Arch", "classArch.html", null ]
+    ] ],
     [ "ArchThreadImpl", "classArchThreadImpl.html", null ],
     [ "ArgParser", "classArgParser.html", null ],
     [ "deskflow::ArgsBase", "classdeskflow_1_1ArgsBase.html", [
@@ -93,136 +100,120 @@ var hierarchy =
     [ "deskflow::FinalAction< Callable >", "classdeskflow_1_1FinalAction.html", null ],
     [ "Fingerprint", "structFingerprint.html", null ],
     [ "FingerprintDatabase", "classFingerprintDatabase.html", null ],
+    [ "FunctionEventJob", "classFunctionEventJob.html", null ],
     [ "deskflow::KeyMap::Keystroke::Group", "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Group.html", null ],
     [ "Settings::Gui", "structSettings_1_1Gui.html", null ],
     [ "deskflow::client::HelloBack", "classdeskflow_1_1client_1_1HelloBack.html", null ],
     [ "Hotkey", "classHotkey.html", null ],
     [ "IPrimaryScreen::HotKeyInfo", "classIPrimaryScreen_1_1HotKeyInfo.html", null ],
-    [ "IInterface", "classIInterface.html", [
-      [ "ArchString", "classArchString.html", [
-        [ "Arch", "classArch.html", null ]
+    [ "IApp", "classIApp.html", [
+      [ "App", "classApp.html", [
+        [ "ClientApp", "classClientApp.html", null ],
+        [ "ServerApp", "classServerApp.html", null ]
+      ] ]
+    ] ],
+    [ "IArchDaemon", "classIArchDaemon.html", [
+      [ "ArchDaemonNone", "classArchDaemonNone.html", [
+        [ "ArchDaemonUnix", "classArchDaemonUnix.html", null ]
       ] ],
-      [ "IApp", "classIApp.html", [
-        [ "App", "classApp.html", [
-          [ "ClientApp", "classClientApp.html", null ],
-          [ "ServerApp", "classServerApp.html", null ]
+      [ "ArchDaemonWindows", "classArchDaemonWindows.html", null ]
+    ] ],
+    [ "IArchLog", "classIArchLog.html", [
+      [ "ArchLogUnix", "classArchLogUnix.html", null ],
+      [ "ArchLogWindows", "classArchLogWindows.html", null ]
+    ] ],
+    [ "IArchMultithread", "classIArchMultithread.html", [
+      [ "ArchMultithreadPosix", "classArchMultithreadPosix.html", null ],
+      [ "ArchMultithreadWindows", "classArchMultithreadWindows.html", null ]
+    ] ],
+    [ "IArchNetwork", "classIArchNetwork.html", [
+      [ "ArchNetworkBSD", "classArchNetworkBSD.html", null ],
+      [ "ArchNetworkWinsock", "classArchNetworkWinsock.html", null ]
+    ] ],
+    [ "IClipboard", "classIClipboard.html", [
+      [ "Clipboard", "classClipboard.html", null ],
+      [ "MSWindowsClipboard", "classMSWindowsClipboard.html", null ],
+      [ "OSXClipboard", "classOSXClipboard.html", null ],
+      [ "XWindowsClipboard", "classXWindowsClipboard.html", null ]
+    ] ],
+    [ "IEventQueue", "classIEventQueue.html", [
+      [ "EventQueue", "classEventQueue.html", null ]
+    ] ],
+    [ "IEventQueueBuffer", "classIEventQueueBuffer.html", [
+      [ "MSWindowsEventQueueBuffer", "classMSWindowsEventQueueBuffer.html", null ],
+      [ "OSXEventQueueBuffer", "classOSXEventQueueBuffer.html", null ],
+      [ "SimpleEventQueueBuffer", "classSimpleEventQueueBuffer.html", null ],
+      [ "XWindowsEventQueueBuffer", "classXWindowsEventQueueBuffer.html", null ],
+      [ "deskflow::EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", null ]
+    ] ],
+    [ "IJob", "classIJob.html", [
+      [ "FunctionJob", "classFunctionJob.html", null ],
+      [ "TMethodJob< T >", "classTMethodJob.html", null ]
+    ] ],
+    [ "IKeyState", "classIKeyState.html", [
+      [ "IPlatformScreen", "classIPlatformScreen.html", [
+        [ "PlatformScreen", "classPlatformScreen.html", [
+          [ "MSWindowsScreen", "classMSWindowsScreen.html", null ],
+          [ "OSXScreen", "classOSXScreen.html", null ],
+          [ "XWindowsScreen", "classXWindowsScreen.html", null ],
+          [ "deskflow::EiScreen", "classdeskflow_1_1EiScreen.html", null ]
         ] ]
       ] ],
-      [ "IAppUtil", "classIAppUtil.html", [
-        [ "AppUtil", "classAppUtil.html", [
-          [ "AppUtilUnix", "classAppUtilUnix.html", null ],
-          [ "AppUtilWindows", "classAppUtilWindows.html", null ]
-        ] ]
+      [ "KeyState", "classKeyState.html", [
+        [ "MSWindowsKeyState", "classMSWindowsKeyState.html", null ],
+        [ "OSXKeyState", "classOSXKeyState.html", null ],
+        [ "XWindowsKeyState", "classXWindowsKeyState.html", null ],
+        [ "deskflow::EiKeyState", "classdeskflow_1_1EiKeyState.html", null ]
+      ] ]
+    ] ],
+    [ "ILogOutputter", "classILogOutputter.html", [
+      [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", null ],
+      [ "FileLogOutputter", "classFileLogOutputter.html", null ],
+      [ "MSWindowsDebugOutputter", "classMSWindowsDebugOutputter.html", null ],
+      [ "StopLogOutputter", "classStopLogOutputter.html", null ],
+      [ "SystemLogOutputter", "classSystemLogOutputter.html", null ]
+    ] ],
+    [ "IMSWindowsClipboardConverter", "classIMSWindowsClipboardConverter.html", [
+      [ "MSWindowsClipboardAnyTextConverter", "classMSWindowsClipboardAnyTextConverter.html", [
+        [ "MSWindowsClipboardHTMLConverter", "classMSWindowsClipboardHTMLConverter.html", null ],
+        [ "MSWindowsClipboardTextConverter", "classMSWindowsClipboardTextConverter.html", null ],
+        [ "MSWindowsClipboardUTF16Converter", "classMSWindowsClipboardUTF16Converter.html", null ]
       ] ],
-      [ "IArchDaemon", "classIArchDaemon.html", [
-        [ "ArchDaemonNone", "classArchDaemonNone.html", [
-          [ "ArchDaemonUnix", "classArchDaemonUnix.html", null ]
-        ] ],
-        [ "ArchDaemonWindows", "classArchDaemonWindows.html", null ]
+      [ "MSWindowsClipboardBitmapConverter", "classMSWindowsClipboardBitmapConverter.html", null ]
+    ] ],
+    [ "IMSWindowsClipboardFacade", "classIMSWindowsClipboardFacade.html", [
+      [ "MSWindowsClipboardFacade", "classMSWindowsClipboardFacade.html", null ]
+    ] ],
+    [ "InputFilter", "classInputFilter.html", null ],
+    [ "IOSXClipboardConverter", "classIOSXClipboardConverter.html", [
+      [ "OSXClipboardAnyBitmapConverter", "classOSXClipboardAnyBitmapConverter.html", null ],
+      [ "OSXClipboardAnyTextConverter", "classOSXClipboardAnyTextConverter.html", [
+        [ "OSXClipboardHTMLConverter", "classOSXClipboardHTMLConverter.html", null ],
+        [ "OSXClipboardTextConverter", "classOSXClipboardTextConverter.html", null ],
+        [ "OSXClipboardUTF16Converter", "classOSXClipboardUTF16Converter.html", null ],
+        [ "OSXClipboardUTF8Converter", "classOSXClipboardUTF8Converter.html", null ]
       ] ],
-      [ "IArchLog", "classIArchLog.html", [
-        [ "ArchLogUnix", "classArchLogUnix.html", null ],
-        [ "ArchLogWindows", "classArchLogWindows.html", null ]
-      ] ],
-      [ "IArchMultithread", "classIArchMultithread.html", [
-        [ "ArchMultithreadPosix", "classArchMultithreadPosix.html", null ],
-        [ "ArchMultithreadWindows", "classArchMultithreadWindows.html", null ]
-      ] ],
-      [ "IArchNetwork", "classIArchNetwork.html", [
-        [ "ArchNetworkBSD", "classArchNetworkBSD.html", null ],
-        [ "ArchNetworkWinsock", "classArchNetworkWinsock.html", null ]
-      ] ],
-      [ "IClipboard", "classIClipboard.html", [
-        [ "Clipboard", "classClipboard.html", null ],
-        [ "MSWindowsClipboard", "classMSWindowsClipboard.html", null ],
-        [ "OSXClipboard", "classOSXClipboard.html", null ],
-        [ "XWindowsClipboard", "classXWindowsClipboard.html", null ]
-      ] ],
-      [ "IEventJob", "classIEventJob.html", [
-        [ "FunctionEventJob", "classFunctionEventJob.html", null ]
-      ] ],
-      [ "IEventQueue", "classIEventQueue.html", [
-        [ "EventQueue", "classEventQueue.html", null ]
-      ] ],
-      [ "IEventQueueBuffer", "classIEventQueueBuffer.html", [
-        [ "MSWindowsEventQueueBuffer", "classMSWindowsEventQueueBuffer.html", null ],
-        [ "OSXEventQueueBuffer", "classOSXEventQueueBuffer.html", null ],
-        [ "SimpleEventQueueBuffer", "classSimpleEventQueueBuffer.html", null ],
-        [ "XWindowsEventQueueBuffer", "classXWindowsEventQueueBuffer.html", null ],
-        [ "deskflow::EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", null ]
-      ] ],
-      [ "IJob", "classIJob.html", [
-        [ "FunctionJob", "classFunctionJob.html", null ],
-        [ "TMethodJob< T >", "classTMethodJob.html", null ]
-      ] ],
-      [ "IKeyState", "classIKeyState.html", [
-        [ "IPlatformScreen", "classIPlatformScreen.html", [
-          [ "PlatformScreen", "classPlatformScreen.html", [
-            [ "MSWindowsScreen", "classMSWindowsScreen.html", null ],
-            [ "OSXScreen", "classOSXScreen.html", null ],
-            [ "XWindowsScreen", "classXWindowsScreen.html", null ],
-            [ "deskflow::EiScreen", "classdeskflow_1_1EiScreen.html", null ]
-          ] ]
-        ] ],
-        [ "KeyState", "classKeyState.html", [
-          [ "MSWindowsKeyState", "classMSWindowsKeyState.html", null ],
-          [ "OSXKeyState", "classOSXKeyState.html", null ],
-          [ "XWindowsKeyState", "classXWindowsKeyState.html", null ],
-          [ "deskflow::EiKeyState", "classdeskflow_1_1EiKeyState.html", null ]
-        ] ]
-      ] ],
-      [ "ILogOutputter", "classILogOutputter.html", [
-        [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", null ],
-        [ "FileLogOutputter", "classFileLogOutputter.html", null ],
-        [ "MSWindowsDebugOutputter", "classMSWindowsDebugOutputter.html", null ],
-        [ "StopLogOutputter", "classStopLogOutputter.html", null ],
-        [ "SystemLogOutputter", "classSystemLogOutputter.html", null ]
-      ] ],
-      [ "IMSWindowsClipboardConverter", "classIMSWindowsClipboardConverter.html", [
-        [ "MSWindowsClipboardAnyTextConverter", "classMSWindowsClipboardAnyTextConverter.html", [
-          [ "MSWindowsClipboardHTMLConverter", "classMSWindowsClipboardHTMLConverter.html", null ],
-          [ "MSWindowsClipboardTextConverter", "classMSWindowsClipboardTextConverter.html", null ],
-          [ "MSWindowsClipboardUTF16Converter", "classMSWindowsClipboardUTF16Converter.html", null ]
-        ] ],
-        [ "MSWindowsClipboardBitmapConverter", "classMSWindowsClipboardBitmapConverter.html", null ]
-      ] ],
-      [ "IMSWindowsClipboardFacade", "classIMSWindowsClipboardFacade.html", [
-        [ "MSWindowsClipboardFacade", "classMSWindowsClipboardFacade.html", null ]
-      ] ],
-      [ "INode", "classINode.html", [
-        [ "Client", "classClient.html", null ],
-        [ "Server", "classServer.html", null ]
-      ] ],
-      [ "IOSXClipboardConverter", "classIOSXClipboardConverter.html", [
-        [ "OSXClipboardAnyBitmapConverter", "classOSXClipboardAnyBitmapConverter.html", null ],
-        [ "OSXClipboardAnyTextConverter", "classOSXClipboardAnyTextConverter.html", [
-          [ "OSXClipboardHTMLConverter", "classOSXClipboardHTMLConverter.html", null ],
-          [ "OSXClipboardTextConverter", "classOSXClipboardTextConverter.html", null ],
-          [ "OSXClipboardUTF16Converter", "classOSXClipboardUTF16Converter.html", null ],
-          [ "OSXClipboardUTF8Converter", "classOSXClipboardUTF8Converter.html", null ]
-        ] ],
-        [ "OSXClipboardBMPConverter", "classOSXClipboardBMPConverter.html", null ]
-      ] ],
-      [ "IOSXKeyResource", "classIOSXKeyResource.html", [
-        [ "OSXUchrKeyResource", "classOSXUchrKeyResource.html", null ]
-      ] ],
-      [ "IPrimaryScreen", "classIPrimaryScreen.html", [
-        [ "IPlatformScreen", "classIPlatformScreen.html", null ]
-      ] ],
-      [ "IScreen", "classIScreen.html", [
-        [ "IClient", "classIClient.html", [
-          [ "BaseClientProxy", "classBaseClientProxy.html", [
-            [ "ClientProxy", "classClientProxy.html", [
-              [ "ClientProxy1_0", "classClientProxy1__0.html", [
-                [ "ClientProxy1_1", "classClientProxy1__1.html", [
-                  [ "ClientProxy1_2", "classClientProxy1__2.html", [
-                    [ "ClientProxy1_3", "classClientProxy1__3.html", [
-                      [ "ClientProxy1_4", "classClientProxy1__4.html", [
-                        [ "ClientProxy1_5", "classClientProxy1__5.html", [
-                          [ "ClientProxy1_6", "classClientProxy1__6.html", [
-                            [ "ClientProxy1_7", "classClientProxy1__7.html", [
-                              [ "ClientProxy1_8", "classClientProxy1__8.html", null ]
-                            ] ]
+      [ "OSXClipboardBMPConverter", "classOSXClipboardBMPConverter.html", null ]
+    ] ],
+    [ "IOSXKeyResource", "classIOSXKeyResource.html", [
+      [ "OSXUchrKeyResource", "classOSXUchrKeyResource.html", null ]
+    ] ],
+    [ "IPrimaryScreen", "classIPrimaryScreen.html", [
+      [ "IPlatformScreen", "classIPlatformScreen.html", null ]
+    ] ],
+    [ "IScreen", "classIScreen.html", [
+      [ "IClient", "classIClient.html", [
+        [ "BaseClientProxy", "classBaseClientProxy.html", [
+          [ "ClientProxy", "classClientProxy.html", [
+            [ "ClientProxy1_0", "classClientProxy1__0.html", [
+              [ "ClientProxy1_1", "classClientProxy1__1.html", [
+                [ "ClientProxy1_2", "classClientProxy1__2.html", [
+                  [ "ClientProxy1_3", "classClientProxy1__3.html", [
+                    [ "ClientProxy1_4", "classClientProxy1__4.html", [
+                      [ "ClientProxy1_5", "classClientProxy1__5.html", [
+                        [ "ClientProxy1_6", "classClientProxy1__6.html", [
+                          [ "ClientProxy1_7", "classClientProxy1__7.html", [
+                            [ "ClientProxy1_8", "classClientProxy1__8.html", null ]
                           ] ]
                         ] ]
                       ] ]
@@ -230,58 +221,49 @@ var hierarchy =
                   ] ]
                 ] ]
               ] ]
-            ] ],
-            [ "PrimaryClient", "classPrimaryClient.html", null ]
+            ] ]
           ] ],
-          [ "Client", "classClient.html", null ]
+          [ "PrimaryClient", "classPrimaryClient.html", null ]
         ] ],
-        [ "IPlatformScreen", "classIPlatformScreen.html", null ],
-        [ "deskflow::Screen", "classdeskflow_1_1Screen.html", null ]
+        [ "Client", "classClient.html", null ]
       ] ],
-      [ "IScreenSaver", "classIScreenSaver.html", [
-        [ "MSWindowsScreenSaver", "classMSWindowsScreenSaver.html", null ],
-        [ "OSXScreenSaver", "classOSXScreenSaver.html", null ],
-        [ "XWindowsScreenSaver", "classXWindowsScreenSaver.html", null ]
-      ] ],
-      [ "ISecondaryScreen", "classISecondaryScreen.html", [
-        [ "IPlatformScreen", "classIPlatformScreen.html", null ]
-      ] ],
-      [ "ISocket", "classISocket.html", [
-        [ "IDataSocket", "classIDataSocket.html", [
-          [ "TCPSocket", "classTCPSocket.html", [
-            [ "SecureSocket", "classSecureSocket.html", null ]
-          ] ]
-        ] ],
-        [ "IListenSocket", "classIListenSocket.html", [
-          [ "TCPListenSocket", "classTCPListenSocket.html", [
-            [ "SecureListenSocket", "classSecureListenSocket.html", null ]
-          ] ]
+      [ "IPlatformScreen", "classIPlatformScreen.html", null ],
+      [ "deskflow::Screen", "classdeskflow_1_1Screen.html", null ]
+    ] ],
+    [ "IScreenSaver", "classIScreenSaver.html", [
+      [ "MSWindowsScreenSaver", "classMSWindowsScreenSaver.html", null ],
+      [ "OSXScreenSaver", "classOSXScreenSaver.html", null ],
+      [ "XWindowsScreenSaver", "classXWindowsScreenSaver.html", null ]
+    ] ],
+    [ "ISecondaryScreen", "classISecondaryScreen.html", [
+      [ "IPlatformScreen", "classIPlatformScreen.html", null ]
+    ] ],
+    [ "deskflow::gui::IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", [
+      [ "ServerConfig", "classServerConfig.html", null ]
+    ] ],
+    [ "ISocket", "classISocket.html", [
+      [ "IDataSocket", "classIDataSocket.html", [
+        [ "TCPSocket", "classTCPSocket.html", [
+          [ "SecureSocket", "classSecureSocket.html", null ]
         ] ]
       ] ],
-      [ "ISocketFactory", "classISocketFactory.html", [
-        [ "TCPSocketFactory", "classTCPSocketFactory.html", null ]
-      ] ],
-      [ "ISocketMultiplexerJob", "classISocketMultiplexerJob.html", [
-        [ "TSocketMultiplexerMethodJob< T >", "classTSocketMultiplexerMethodJob.html", null ]
-      ] ],
-      [ "IXWindowsClipboardConverter", "classIXWindowsClipboardConverter.html", [
-        [ "XWindowsClipboardAnyBitmapConverter", "classXWindowsClipboardAnyBitmapConverter.html", null ],
-        [ "XWindowsClipboardBMPConverter", "classXWindowsClipboardBMPConverter.html", null ],
-        [ "XWindowsClipboardHTMLConverter", "classXWindowsClipboardHTMLConverter.html", null ],
-        [ "XWindowsClipboardTextConverter", "classXWindowsClipboardTextConverter.html", null ],
-        [ "XWindowsClipboardUCS2Converter", "classXWindowsClipboardUCS2Converter.html", null ],
-        [ "XWindowsClipboardUTF8Converter", "classXWindowsClipboardUTF8Converter.html", null ]
-      ] ],
-      [ "deskflow::IStream", "classdeskflow_1_1IStream.html", [
-        [ "IDataSocket", "classIDataSocket.html", null ],
-        [ "StreamFilter", "classStreamFilter.html", [
-          [ "PacketStreamFilter", "classPacketStreamFilter.html", null ]
+      [ "IListenSocket", "classIListenSocket.html", [
+        [ "TCPListenSocket", "classTCPListenSocket.html", [
+          [ "SecureListenSocket", "classSecureListenSocket.html", null ]
         ] ]
       ] ]
     ] ],
-    [ "InputFilter", "classInputFilter.html", null ],
-    [ "deskflow::gui::IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", [
-      [ "ServerConfig", "classServerConfig.html", null ]
+    [ "ISocketFactory", "classISocketFactory.html", [
+      [ "TCPSocketFactory", "classTCPSocketFactory.html", null ]
+    ] ],
+    [ "ISocketMultiplexerJob", "classISocketMultiplexerJob.html", [
+      [ "TSocketMultiplexerMethodJob< T >", "classTSocketMultiplexerMethodJob.html", null ]
+    ] ],
+    [ "deskflow::IStream", "classdeskflow_1_1IStream.html", [
+      [ "IDataSocket", "classIDataSocket.html", null ],
+      [ "StreamFilter", "classStreamFilter.html", [
+        [ "PacketStreamFilter", "classPacketStreamFilter.html", null ]
+      ] ]
     ] ],
     [ "validators::IStringValidator", "classvalidators_1_1IStringValidator.html", [
       [ "validators::ComputerNameValidator", "classvalidators_1_1ComputerNameValidator.html", null ],
@@ -293,6 +275,14 @@ var hierarchy =
       [ "deskflow::server::Config::const_iterator", "classdeskflow_1_1server_1_1Config_1_1const__iterator.html", null ]
     ] ],
     [ "std::iterator_traits< deskflow::server::Config >", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", null ],
+    [ "IXWindowsClipboardConverter", "classIXWindowsClipboardConverter.html", [
+      [ "XWindowsClipboardAnyBitmapConverter", "classXWindowsClipboardAnyBitmapConverter.html", null ],
+      [ "XWindowsClipboardBMPConverter", "classXWindowsClipboardBMPConverter.html", null ],
+      [ "XWindowsClipboardHTMLConverter", "classXWindowsClipboardHTMLConverter.html", null ],
+      [ "XWindowsClipboardTextConverter", "classXWindowsClipboardTextConverter.html", null ],
+      [ "XWindowsClipboardUCS2Converter", "classXWindowsClipboardUCS2Converter.html", null ],
+      [ "XWindowsClipboardUTF8Converter", "classXWindowsClipboardUTF8Converter.html", null ]
+    ] ],
     [ "Server::KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html", null ],
     [ "KeyEntry", "structKeyEntry.html", null ],
     [ "IKeyState::KeyInfo", "classIKeyState_1_1KeyInfo.html", null ],
@@ -471,6 +461,7 @@ var hierarchy =
     ] ],
     [ "ScrollRemainder", "structScrollRemainder.html", null ],
     [ "Settings::Security", "structSettings_1_1Security.html", null ],
+    [ "Server", "classServer.html", null ],
     [ "Settings::Server", "structSettings_1_1Server.html", null ],
     [ "deskflow::gui::ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", null ],
     [ "ServerProxy", "classServerProxy.html", null ],

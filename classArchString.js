@@ -10,7 +10,7 @@ var classArchString =
     [ "ArchString", "classArchString.html#a3e0766dc2ab2e1640218272029538cb7", null ],
     [ "ArchString", "classArchString.html#a9445cfb82678eda30e5deebb44b4eb4a", null ],
     [ "ArchString", "classArchString.html#aa210e8f32783725fa6f14f655d5ed09b", null ],
-    [ "~ArchString", "classArchString.html#a9d8d03a0180bdeeefbd45f85fc3b76f1", null ],
+    [ "~ArchString", "classArchString.html#aae3ab5f7b26116a8d8e5835ce07925ef", null ],
     [ "convStringMBToWC", "classArchString.html#ae8be657f8798d1787694fbaf5722dd7f", null ],
     [ "convStringWCToMB", "classArchString.html#a09111180855818f49a903173ce9afea9", null ],
     [ "getWideCharEncoding", "classArchString.html#a9a5db322759271dfe7bbe33ac8536028", null ],

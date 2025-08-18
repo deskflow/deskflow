@@ -5,6 +5,7 @@ var classIEventQueueBuffer =
       [ "System", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a", null ],
       [ "User", "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a8f9bfe9d1345237cb3b2b205864da075", null ]
     ] ],
+    [ "~IEventQueueBuffer", "classIEventQueueBuffer.html#a8d1079bc10103312d26d3c41b59a5dfb", null ],
     [ "addEvent", "classIEventQueueBuffer.html#abc249c7752d7273b50fdd4ca090b9a59", null ],
     [ "deleteTimer", "classIEventQueueBuffer.html#a2da8721379cbf34b44b5064423efda0a", null ],
     [ "getEvent", "classIEventQueueBuffer.html#a672cba4fd9f2317f6a144d655aecbd60", null ],

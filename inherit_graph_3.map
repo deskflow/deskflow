@@ -1,3 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classArchCondImpl.html" title="Internal condition variable data. An architecture dependent type holding the necessary data for a con..." alt="" coords="5,5,110,30"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="23,5,146,30"/>
+<area shape="rect" id="Node000001" href="$classArch.html" title="Delegating implementation of architecture dependent interfaces." alt="" coords="212,104,260,129"/>
+<area shape="poly" id="edge3_Node000000_Node000001" title=" " alt="" coords="153,34,165,41,202,71,227,102,223,105,198,75,162,45,150,39"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="38,55,131,79"/>
+<area shape="poly" id="edge4_Node000002_Node000001" title=" " alt="" coords="141,82,165,90,212,106,211,111,163,95,139,87"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,104,164,129"/>
+<area shape="poly" id="edge5_Node000003_Node000001" title=" " alt="" coords="179,114,211,114,211,119,179,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="18,153,151,178"/>
+<area shape="poly" id="edge6_Node000004_Node000001" title=" " alt="" coords="139,146,163,138,211,122,212,127,165,143,141,151"/>
+<area shape="rect" id="Node000005" href="$classArchString.html" title="Interface for architecture dependent string operations." alt="" coords="43,203,126,227"/>
+<area shape="poly" id="edge7_Node000005_Node000001" title=" " alt="" coords="139,199,162,187,198,157,223,127,227,131,202,161,165,192,142,203"/>
 </map>

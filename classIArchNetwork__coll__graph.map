@@ -1,5 +1,0 @@
-<map id="IArchNetwork" name="IArchNetwork">
-<area shape="rect" id="Node000001" title="Interface for architecture dependent networking." alt="" coords="5,78,107,103"/>
-<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="17,5,95,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,46,59,78,53,78,53,46"/>
-</map>

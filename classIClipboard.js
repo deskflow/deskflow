@@ -7,6 +7,7 @@ var classIClipboard =
       [ "Bitmap", "classIClipboard.html#a1d014188948be557b3a3d88034d7081ea86ee74baff479d85d18f2cda9f8a9518", null ],
       [ "TotalFormats", "classIClipboard.html#a1d014188948be557b3a3d88034d7081ea18c18b7e572415539aa8a3aa94ec33fa", null ]
     ] ],
+    [ "~IClipboard", "classIClipboard.html#a9784594c6b850815a125023f98224f7e", null ],
     [ "add", "classIClipboard.html#a626df1c5cedfc790e84dcee64edf682f", null ],
     [ "close", "classIClipboard.html#ac4baa709cc801acd2bd72a1b2404eceb", null ],
     [ "copy", "classIClipboard.html#a36863b148ae50b8df7bed6b9b52e5a6b", null ],

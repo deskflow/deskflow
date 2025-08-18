@@ -1,9 +1,7 @@
 <map id="OSXClipboardTextConverter" name="OSXClipboardTextConverter">
-<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="17,223,202,248"/>
-<area shape="rect" id="Node000002" href="$classOSXClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="5,151,214,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,191,112,223,107,223,107,191"/>
-<area shape="rect" id="Node000003" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="27,78,192,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,118,112,150,107,150,107,118"/>
-<area shape="rect" id="Node000004" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="71,5,148,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="112,46,112,78,107,78,107,46"/>
+<area shape="rect" id="Node000001" title="Convert to/from locale text encoding." alt="" coords="17,151,202,175"/>
+<area shape="rect" id="Node000002" href="$classOSXClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="5,78,214,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,118,112,150,107,150,107,118"/>
+<area shape="rect" id="Node000003" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="27,5,192,30"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,46,112,78,107,78,107,46"/>
 </map>

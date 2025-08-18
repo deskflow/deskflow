@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structdeskflow_1_1gui_1_1messages_1_1Errors.html" title=" " alt="" coords="5,5,171,44"/>
+<area shape="rect" id="Node000000" href="$classdeskflow_1_1gui_1_1IServerConfig.html" title=" " alt="" coords="5,5,191,30"/>
+<area shape="rect" id="Node000001" href="$classServerConfig.html" title=" " alt="" coords="239,5,336,30"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="206,15,238,15,238,20,206,20"/>
+<area shape="rect" id="Node000002" href="$classScreenConfig.html" title="Screen configuration base class." alt="" coords="48,55,148,79"/>
+<area shape="poly" id="edge14_Node000002_Node000001" title=" " alt="" coords="162,48,238,28,239,33,164,53"/>
+<area shape="rect" id="Node000003" href="$classScreen.html" title=" " alt="" coords="256,55,318,79"/>
+<area shape="poly" id="edge13_Node000002_Node000003" title=" " alt="" coords="163,64,256,64,256,70,163,70"/>
 </map>

@@ -1,9 +1,7 @@
 <map id="IArchLog" name="IArchLog">
-<area shape="rect" id="Node000001" title="Interface for architecture dependent logging." alt="" coords="84,78,157,103"/>
-<area shape="rect" id="Node000003" href="$classArchLogUnix.html" title="Unix implementation of IArchLog." alt="" coords="5,151,102,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,116,66,152,62,148,97,112"/>
-<area shape="rect" id="Node000004" href="$classArchLogWindows.html" title="Win32 implementation of IArchLog." alt="" coords="125,151,248,175"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,112,178,148,174,152,140,116"/>
-<area shape="rect" id="Node000002" href="$classIInterface.html" title="Base class of interfaces." alt="" coords="82,5,159,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,46,123,78,118,78,118,46"/>
+<area shape="rect" id="Node000001" title="Interface for architecture dependent logging." alt="" coords="84,5,157,30"/>
+<area shape="rect" id="Node000002" href="$classArchLogUnix.html" title="Unix implementation of IArchLog." alt="" coords="5,78,102,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,43,66,79,62,76,97,40"/>
+<area shape="rect" id="Node000003" href="$classArchLogWindows.html" title="Win32 implementation of IArchLog." alt="" coords="125,78,248,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,40,178,76,174,79,140,43"/>
 </map>

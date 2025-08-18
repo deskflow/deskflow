@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,39 +102,51 @@ Inheritance diagram for ISocketFactory:</div>
 <div class="dyncontent">
 <div class="center"><img src="classISocketFactory__inherit__graph.png" border="0" usemap="#aISocketFactory_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aISocketFactory_inherit__map" id="aISocketFactory_inherit__map">
-<area shape="rect" title="Socket factory." alt="" coords="17,78,127,103"/>
-<area shape="rect" href="classTCPSocketFactory.html" title="Socket factory for TCP sockets." alt="" coords="5,151,139,175"/>
-<area shape="poly" title=" " alt="" coords="75,118,75,150,69,150,69,118"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="33,5,111,30"/>
+<area shape="rect" title="Socket factory." alt="" coords="17,5,127,30"/>
+<area shape="rect" href="classTCPSocketFactory.html" title="Socket factory for TCP sockets." alt="" coords="5,78,139,103"/>
 <area shape="poly" title=" " alt="" coords="75,46,75,78,69,78,69,46"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for ISocketFactory:</div>
-<div class="dyncontent">
-<div class="center"><img src="classISocketFactory__coll__graph.png" border="0" usemap="#aISocketFactory_coll__map" loading="lazy" alt="Collaboration graph"/></div>
-<map name="aISocketFactory_coll__map" id="aISocketFactory_coll__map">
-<area shape="rect" title="Socket factory." alt="" coords="5,78,116,103"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="22,5,99,30"/>
-<area shape="poly" title=" " alt="" coords="63,46,63,78,58,78,58,46"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae765295a38847d9724ba0c5482a484ac" id="r_ae765295a38847d9724ba0c5482a484ac"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae765295a38847d9724ba0c5482a484ac">~ISocketFactory</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
 <tr class="memitem:a9d07355ed1013458802de9d05a7b764f" id="r_a9d07355ed1013458802de9d05a7b764f"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIDataSocket.html">IDataSocket</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9d07355ed1013458802de9d05a7b764f">create</a> (<a class="el" href="classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445">IArchNetwork::AddressFamily</a> family=<a class="el" href="classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445a3a9e9b275504f7b6e6753d3aaa65e703">IArchNetwork::AddressFamily::INet</a>, <a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400">SecurityLevel</a> securityLevel=<a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400ab7ebbf7f254ef646928dd58f62383a85">SecurityLevel::PlainText</a>) const =0</td></tr>
 <tr class="memdesc:a9d07355ed1013458802de9d05a7b764f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create data socket.  <br /></td></tr>
 <tr class="memitem:ad108134ea372ff0667b0fe773f79a67b" id="r_ad108134ea372ff0667b0fe773f79a67b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classIListenSocket.html">IListenSocket</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad108134ea372ff0667b0fe773f79a67b">createListen</a> (<a class="el" href="classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445">IArchNetwork::AddressFamily</a> family=<a class="el" href="classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445a3a9e9b275504f7b6e6753d3aaa65e703">IArchNetwork::AddressFamily::INet</a>, <a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400">SecurityLevel</a> securityLevel=<a class="el" href="SecurityLevel_8h.html#a305a47fdf66061f3e4cf0c2ad316f400ab7ebbf7f254ef646928dd58f62383a85">SecurityLevel::PlainText</a>) const =0</td></tr>
 <tr class="memdesc:ad108134ea372ff0667b0fe773f79a67b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create listen socket.  <br /></td></tr>
-<tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
-<tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
-<tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Socket factory. </p>
 <p>This interface defines the methods common to all factories used to create sockets. </p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae765295a38847d9724ba0c5482a484ac" name="ae765295a38847d9724ba0c5482a484ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae765295a38847d9724ba0c5482a484ac">&#9670;&#160;</a></span>~ISocketFactory()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ISocketFactory::~ISocketFactory </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a9d07355ed1013458802de9d05a7b764f" name="a9d07355ed1013458802de9d05a7b764f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9d07355ed1013458802de9d05a7b764f">&#9670;&#160;</a></span>create()</h2>
 

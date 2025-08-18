@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.122</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,26 +102,15 @@ Inheritance diagram for ISocketMultiplexerJob:</div>
 <div class="dyncontent">
 <div class="center"><img src="classISocketMultiplexerJob__inherit__graph.png" border="0" usemap="#aISocketMultiplexerJob_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aISocketMultiplexerJob_inherit__map" id="aISocketMultiplexerJob_inherit__map">
-<area shape="rect" title="Socket multiplexer job." alt="" coords="18,78,167,103"/>
-<area shape="rect" href="classTSocketMultiplexerMethodJob.html" title="Use a method as a socket multiplexer job." alt="" coords="5,151,180,189"/>
-<area shape="poly" title=" " alt="" coords="95,118,95,150,90,150,90,118"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="54,5,131,30"/>
-<area shape="poly" title=" " alt="" coords="95,46,95,78,90,78,90,46"/>
-</map>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<div class="dynheader">
-Collaboration diagram for ISocketMultiplexerJob:</div>
-<div class="dyncontent">
-<div class="center"><img src="classISocketMultiplexerJob__coll__graph.png" border="0" usemap="#aISocketMultiplexerJob_coll__map" loading="lazy" alt="Collaboration graph"/></div>
-<map name="aISocketMultiplexerJob_coll__map" id="aISocketMultiplexerJob_coll__map">
-<area shape="rect" title="Socket multiplexer job." alt="" coords="5,78,154,103"/>
-<area shape="rect" href="classIInterface.html" title="Base class of interfaces." alt="" coords="41,5,118,30"/>
-<area shape="poly" title=" " alt="" coords="82,46,82,78,77,78,77,46"/>
+<area shape="rect" title="Socket multiplexer job." alt="" coords="18,5,167,30"/>
+<area shape="rect" href="classTSocketMultiplexerMethodJob.html" title="Use a method as a socket multiplexer job." alt="" coords="5,78,180,117"/>
+<area shape="poly" title=" " alt="" coords="95,46,95,77,90,77,90,46"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:ae8abc8d3a758149be586ffd33c12c26b" id="r_ae8abc8d3a758149be586ffd33c12c26b"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae8abc8d3a758149be586ffd33c12c26b">~ISocketMultiplexerJob</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:aca121acba7b163e22262d8dd674db2f6" id="r_aca121acba7b163e22262d8dd674db2f6"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classISocketMultiplexerJob.html">ISocketMultiplexerJob</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca121acba7b163e22262d8dd674db2f6">run</a> (bool readable, bool writable, bool error)=0</td></tr>
 <tr class="memdesc:aca121acba7b163e22262d8dd674db2f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle socket event.  <br /></td></tr>
@@ -132,14 +121,37 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ad2f667584e0ccd6ca153fa4c60dc0c5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for interest in readability.  <br /></td></tr>
 <tr class="memitem:adea7e7721312a1bb7147e12922ee1be5" id="r_adea7e7721312a1bb7147e12922ee1be5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adea7e7721312a1bb7147e12922ee1be5">isWritable</a> () const =0</td></tr>
 <tr class="memdesc:adea7e7721312a1bb7147e12922ee1be5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for interest in writability.  <br /></td></tr>
-<tr class="inherit_header pub_methods_classIInterface"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIInterface')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIInterface.html">IInterface</a></td></tr>
-<tr class="memitem:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface" id="r_ac7d616e24d032dead0aac7279f53a837"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIInterface.html#ac7d616e24d032dead0aac7279f53a837">~IInterface</a> ()=default</td></tr>
-<tr class="memdesc:ac7d616e24d032dead0aac7279f53a837 inherit pub_methods_classIInterface"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface destructor does nothing.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Socket multiplexer job. </p>
 <p>A socket multiplexer job handles events on a socket. </p>
-</div><a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae8abc8d3a758149be586ffd33c12c26b" name="ae8abc8d3a758149be586ffd33c12c26b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8abc8d3a758149be586ffd33c12c26b">&#9670;&#160;</a></span>~ISocketMultiplexerJob()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual ISocketMultiplexerJob::~ISocketMultiplexerJob </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel virtual">virtual</span><span class="mlabel default">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="aa573bd5e38e7b4053c8cf07ae45b9e67" name="aa573bd5e38e7b4053c8cf07ae45b9e67"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa573bd5e38e7b4053c8cf07ae45b9e67">&#9670;&#160;</a></span>getSocket()</h2>
 

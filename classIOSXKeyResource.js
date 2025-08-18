@@ -1,5 +1,6 @@
 var classIOSXKeyResource =
 [
+    [ "~IOSXKeyResource", "classIOSXKeyResource.html#ae1eafdf487463708c08a86c0cc81e30d", null ],
     [ "getKey", "classIOSXKeyResource.html#a38d017ad4d21d216804d09e8825d8ca8", null ],
     [ "getKeyID", "classIOSXKeyResource.html#a4942449fa6caf48769110e7457a97cd5", null ],
     [ "getNumButtons", "classIOSXKeyResource.html#ac8efdfd7369cecb765daa83ae5504d8b", null ],
