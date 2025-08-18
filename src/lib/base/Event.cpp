@@ -7,6 +7,9 @@
 
 #include "base/Event.h"
 
+#include <assert.h>
+#include <cstdlib>
+
 //
 // Event
 //

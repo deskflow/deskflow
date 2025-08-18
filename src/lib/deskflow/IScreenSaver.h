@@ -9,7 +9,6 @@
 #pragma once
 
 #include "base/Event.h"
-#include "common/Common.h"
 
 //! Screen saver interface
 /*!

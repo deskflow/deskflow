@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include "common/Common.h"
+#include <cstdint>
 #include <string>
-
 #include <vector>
 
 class ArchThreadImpl;

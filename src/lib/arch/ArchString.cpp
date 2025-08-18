@@ -6,9 +6,9 @@
  */
 
 #include "arch/ArchString.h"
+#include "common/Common.h"
 
 #include <climits>
-#include <cstdlib>
 #include <cstring>
 #include <mutex>
 

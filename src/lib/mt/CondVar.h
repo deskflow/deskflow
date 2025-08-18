@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "common/Common.h"
 #include "mt/Mutex.h"
 
 class Stopwatch;

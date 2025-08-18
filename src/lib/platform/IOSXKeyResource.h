@@ -9,6 +9,8 @@
 
 #include "deskflow/KeyState.h"
 
+#include <CoreServices/CoreServices.h>
+
 class IOSXKeyResource
 {
 public:

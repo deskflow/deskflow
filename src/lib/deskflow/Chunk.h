@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include "common/Common.h"
 #include <base/Event.h>
+
+#include <cstring>
 
 class Chunk : public EventData
 {

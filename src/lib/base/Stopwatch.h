@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 //! A timer class
 /*!
 This class measures time intervals.  All time interval measurement

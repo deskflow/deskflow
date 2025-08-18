@@ -11,7 +11,6 @@
 #include "base/Event.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
-#include "common/Common.h"
 
 class IEventQueue;
 

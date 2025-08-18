@@ -9,7 +9,6 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "common/Common.h"
 
 //! Socket multiplexer job
 /*!

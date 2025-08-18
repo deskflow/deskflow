@@ -8,10 +8,7 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #include <stdexcept>
-#include <string>
 
 //! Generic thread exception
 /*!

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #if defined(__cplusplus)
 extern "C"
 {

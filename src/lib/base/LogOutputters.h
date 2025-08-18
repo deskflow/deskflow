@@ -9,7 +9,6 @@
 #pragma once
 
 #include "base/ILogOutputter.h"
-#include "common/Common.h"
 #include "mt/Thread.h"
 
 //! Stop traversing log chain outputter

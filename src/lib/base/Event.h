@@ -8,7 +8,6 @@
 #pragma once
 
 #include "EventTypes.h"
-#include "common/Common.h"
 
 using deskflow::EventTypes;
 

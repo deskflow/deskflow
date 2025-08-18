@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "common/Common.h"
-
+#include <stdint.h>
 //! Key ID
 /*!
 Type to hold a key symbol identifier.  The encoding is UTF-32, using

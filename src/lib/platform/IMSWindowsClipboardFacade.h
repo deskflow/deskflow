@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 

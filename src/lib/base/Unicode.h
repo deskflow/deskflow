@@ -8,7 +8,7 @@
 #pragma once
 
 #include "arch/ArchString.h"
-#include "common/Common.h"
+
 #include <string>
 
 //! Unicode utility functions
