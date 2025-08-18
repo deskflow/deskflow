@@ -17,6 +17,7 @@
 #include <QCoreApplication>
 #endif
 
+#include <QSharedMemory>
 #include <iostream>
 
 void showHelp()
@@ -32,6 +33,15 @@ void showHelp()
   cApp.help();
 }
 
+bool isHelp(int argc, char **argv)
+{
+  for (int i = 0; i < argc; ++i) {
+    if (argv[i] == std::string("--help") || argv[i] == std::string("-h"))
+      return true;
+  }
+  return false;
+}
+
 bool isServer(int argc, char **argv)
 {
   return (argc > 1 && argv[1] == std::string("server"));
@@ -44,6 +54,30 @@ bool isClient(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+  Arch arch;
+  arch.init();
+
+  Log log;
+
+  if (isHelp(argc, argv)) {
+    showHelp();
+    return 0;
+  }
+
+  // Create a shared memory segment with a unique key
+  // This is to prevent a new instance from running if one is already running
+  QSharedMemory sharedMemory("deskflow-core");
+
+  // Attempt to attach first and detach in order to clean up stale shm chunks
+  // This can happen if the previous instance was killed or crashed
+  if (sharedMemory.attach())
+    sharedMemory.detach();
+
+  // If we can create 1 byte of SHM we are the only instance
+  if (!sharedMemory.create(1)) {
+    LOG_WARN("an instance of deskflow core (server or client) is already running");
+    return 0;
+  }
 #if SYSAPI_WIN32
   // HACK to make sure settings gets the correct qApp path
   QCoreApplication m(argc, argv);
@@ -52,10 +86,6 @@ int main(int argc, char **argv)
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 
-  Arch arch;
-  arch.init();
-
-  Log log;
   EventQueue events;
 
   if (isServer(argc, argv)) {
