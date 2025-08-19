@@ -20,12 +20,9 @@
     <RemoveFile Id="RmOldLog" On="install" Name="deskflow-daemon.log"/>
   </CPackWiXFragment>
 
-  <CPackWiXFragment Id="CM_CP_deskflow_server.exe">
-    <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-server.exe" Scope="any"/>
-  </CPackWiXFragment>
-
-  <CPackWiXFragment Id="CM_CP_deskflow_client.exe">
-    <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-client.exe" Scope="any"/>
+  <CPackWiXFragment Id="CM_CP_deskflow_core.exe">
+    <firewall:FirewallException Id="ServerFirewallException" Name="Deskflow Server" Program="[INSTALL_ROOT]deskflow-core.exe" Scope="any"/>
+    <firewall:FirewallException Id="ClientFirewallException" Name="Deskflow Client" Program="[INSTALL_ROOT]deskflow-core.exe" Scope="any"/>
   </CPackWiXFragment>
 
   <CPackWiXFragment Id="#PRODUCT">

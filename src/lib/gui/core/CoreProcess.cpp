@@ -376,15 +376,13 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     return;
   }
 
-  if (app.endsWith("core") || app.endsWith("core.exe")) {
-    if (mode() == Server) {
-      args.prepend("server");
-    } else if (mode() == Client) {
-      args.prepend("client");
-    } else {
-      qFatal("core started without mode");
-      return;
-    }
+  if (mode() == Server) {
+    args.prepend("server");
+  } else if (mode() == Client) {
+    args.prepend("client");
+  } else {
+    qFatal("core started without mode");
+    return;
   }
 
   qDebug().noquote() << "log level:" << Settings::logLevelText();

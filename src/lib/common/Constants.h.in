@@ -22,8 +22,7 @@ const auto kCopyright = //
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
 
-const auto kClientBinName = "@CLIENT_BINARY@";
-const auto kServerBinName = "@SERVER_BINARY@";
+const auto kCoreBinName = "@CORE_BINARY@";
 
 #ifndef NDEBUG
 const auto kDebugBuild = true;
