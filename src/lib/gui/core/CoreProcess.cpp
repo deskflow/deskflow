@@ -330,6 +330,8 @@ void CoreProcess::handleLogLines(const QString &text)
 
 void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
+  using enum Settings::CoreMode;
+
   QMutexLocker locker(&m_processMutex);
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
@@ -363,14 +365,26 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   QString app;
   QStringList args;
+
   addGenericArgs(args, processMode);
 
-  if (mode() == Settings::CoreMode::Server && !addServerArgs(args, app)) {
+  if (mode() == Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
     return;
-  } else if (mode() == Settings::CoreMode::Client && !addClientArgs(args, app)) {
+  } else if (mode() == Client && !addClientArgs(args, app)) {
     qWarning("failed to add client args for core process, aborting start");
     return;
+  }
+
+  if (app.endsWith("core") || app.endsWith("core.exe")) {
+    if (mode() == Server) {
+      args.prepend("server");
+    } else if (mode() == Client) {
+      args.prepend("client");
+    } else {
+      qFatal("core started without mode");
+      return;
+    }
   }
 
   qDebug().noquote() << "log level:" << Settings::logLevelText();

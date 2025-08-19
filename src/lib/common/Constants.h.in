@@ -21,6 +21,10 @@ const auto kCopyright = //
     "Copyright (C) 2009-2012 Nick Bolton\n"
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
+
+const auto kClientBinName = "@CLIENT_BINARY@";
+const auto kServerBinName = "@SERVER_BINARY@";
+
 #ifndef NDEBUG
 const auto kDebugBuild = true;
 #else
@@ -44,13 +48,7 @@ const auto kWindowsRegistryKey = "SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 const auto kCloseEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
 const auto kSendSasEventName = "Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
 
-const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client.exe";
-const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server.exe";
-
-#else
-
-const auto kClientBinName = "@CMAKE_PROJECT_NAME@-client";
-const auto kServerBinName = "@CMAKE_PROJECT_NAME@-server";
-
 #endif
+
+
 
