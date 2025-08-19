@@ -9,6 +9,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
 
@@ -61,7 +62,7 @@ int main(int argc, char **argv)
 
   if (isHelp(argc, argv)) {
     showHelp();
-    return 0;
+    return s_exitSuccess;
   }
 
   // Create a shared memory segment with a unique key
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
   // If we can create 1 byte of SHM we are the only instance
   if (!sharedMemory.create(1)) {
     LOG_WARN("an instance of deskflow core (server or client) is already running");
-    return 0;
+    return s_exitDuplicate;
   }
 #if SYSAPI_WIN32
   // HACK to make sure settings gets the correct qApp path
@@ -98,5 +99,5 @@ int main(int argc, char **argv)
     showHelp();
   }
 
-  return 0;
+  return s_exitSuccess;
 }

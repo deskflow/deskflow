@@ -14,6 +14,7 @@
 #include "base/Log.h"
 #include "client/Client.h"
 #include "common/Constants.h"
+#include "common/ExitCodes.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ProtocolTypes.h"
