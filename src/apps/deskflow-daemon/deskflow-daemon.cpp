@@ -9,6 +9,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "deskflow/DaemonApp.h"
 #include "deskflow/ipc/DaemonIpcServer.h"

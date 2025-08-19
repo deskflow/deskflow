@@ -8,6 +8,7 @@
 
 #include "VersionInfo.h"
 #include "common/Constants.h"
+#include "common/ExitCodes.h"
 #include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"
@@ -68,18 +69,18 @@ int main(int argc, char *argv[])
 
   if (!parser.errorText().isEmpty()) {
     qCritical().noquote() << parser.errorText() << "\nUse --help for more information.";
-    return 1;
+    return s_exitArgs;
   }
 
   if (parser.isSet(helpOption)) {
     QTextStream(stdout) << kHeader << QStringLiteral("  %1\n\n").arg(kAppDescription)
                         << parser.helpText().replace(QApplication::applicationFilePath(), kAppId);
-    return 0;
+    return s_exitSuccess;
   }
 
   if (parser.isSet(versionOption)) {
     QTextStream(stdout) << kHeader << kCopyright << Qt::endl;
-    return 0;
+    return s_exitSuccess;
   }
 
   // Create a shared memory segment with a unique key
@@ -102,7 +103,7 @@ int main(int argc, char *argv[])
       QMessageBox::information(nullptr, QObject::tr("Deskflow"), QObject::tr("Deskflow is already running"));
     }
     socket.disconnectFromServer();
-    return 0;
+    return s_exitDuplicate;
   }
 
 #if !defined(Q_OS_MAC)

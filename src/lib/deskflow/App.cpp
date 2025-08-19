@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
+#include "common/ExitCodes.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/DeskflowException.h"
