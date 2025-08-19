@@ -100,8 +100,8 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
 void ServerApp::help()
 {
   std::stringstream help;
-  help << "Usage: " << args().m_pname
-
+  help << "\n\nServer Mode:\n\n"
+       << "Usage: " << kAppId << "-core server"
        << " --config <pathname>"
        << " [--address <address>]"
 
@@ -110,9 +110,6 @@ void ServerApp::help()
 #endif
 
        << s_helpSysArgs << s_helpCommonArgs << "\n"
-       << "\n"
-       << "Start the " << kAppName << " mouse/keyboard sharing server.\n"
-       << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  path of the configuration file\n"
        << s_helpGeneralArgs

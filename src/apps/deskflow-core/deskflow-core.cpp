@@ -24,7 +24,12 @@ void showHelp()
   std::cout << "Usage: deskflow-core <server | client> [...options]" << std::endl;
   std::cout << "server - start as a server (deskflow-server)" << std::endl;
   std::cout << "client - start as a client (deskflow-client)" << std::endl;
-  std::cout << "use deskflow-core <server|client> --help for more information." << std::endl;
+
+  ServerApp sApp(nullptr);
+  sApp.help();
+
+  ClientApp cApp(nullptr);
+  cApp.help();
 }
 
 bool isServer(int argc, char **argv)

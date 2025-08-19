@@ -99,7 +99,9 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
 void ClientApp::help()
 {
   std::stringstream help;
-  help << "Usage: " << args().m_pname << " [--address <address>]"
+  help << "\n\nClient Mode:\n\n"
+       << "Usage: " << kAppId << "-core client"
+       << " [--address <address>]"
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
