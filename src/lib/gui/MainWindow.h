@@ -117,7 +117,7 @@ private:
 
   void coreModeToggled();
   void updateModeControls(bool serverMode);
-
+  void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;
 
   void updateSize();

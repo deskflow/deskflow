@@ -340,9 +340,8 @@ void MainWindow::connectSlots()
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
-  connect(ui->btnConnect, &QPushButton::clicked, this, &MainWindow::resetCore);
 
-  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnConnect, &QPushButton::click);
+  connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
   connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
@@ -561,7 +560,6 @@ void MainWindow::coreModeToggled()
 
   const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
   Settings::setValue(Settings::Core::CoreMode, coreMode);
-
   Settings::save();
   updateModeControls(serverMode);
 }
@@ -588,8 +586,45 @@ void MainWindow::updateModeControls(bool serverMode)
       m_coreProcess.start();
     }
   }
+  updateModeControlLabels();
 
   toggleCanRunCore((!serverMode && !ui->lineHostname->text().isEmpty()) || serverMode);
+}
+
+void MainWindow::updateModeControlLabels()
+{
+  const bool isServer = m_coreProcess.mode() == CoreMode::Server;
+  const bool isStarted = m_coreProcess.isStarted();
+
+  QString startText;
+  QString stopText;
+  QIcon startIcon;
+  QIcon stopIcon;
+
+  if (isServer) {
+    startText = tr("Start");
+    stopText = tr("Stop");
+    startIcon = QIcon::fromTheme(QStringLiteral("system-run"));
+    stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop);
+  } else {
+    startText = tr("Connect");
+    stopText = tr("Disconnect");
+    startIcon = QIcon::fromTheme(QIcon::ThemeIcon::CallStart);
+    stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::CallStop);
+  }
+
+  m_actionStartCore->setText(startText);
+  m_actionStartCore->setIcon(startIcon);
+  m_actionStopCore->setText(stopText);
+  m_actionStopCore->setIcon(stopIcon);
+
+  if (isStarted) {
+    ui->btnToggleCore->setText(stopText);
+    ui->btnToggleCore->setIcon(stopIcon);
+  } else {
+    ui->btnToggleCore->setText(startText);
+    ui->btnToggleCore->setIcon(startIcon);
+  }
 }
 
 void MainWindow::updateSecurityIcon(bool visible)
@@ -1002,9 +1037,6 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->btnToggleCore->setText(tr("&Stop"));
-    ui->btnToggleCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
-
     ui->btnRestartCore->setEnabled(true);
     m_actionStartCore->setVisible(false);
     m_actionRestartCore->setVisible(true);
@@ -1014,14 +1046,12 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);
     connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
 
-    ui->btnToggleCore->setText(tr("&Start"));
-    ui->btnToggleCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
-
     ui->btnRestartCore->setEnabled(false);
     m_actionStartCore->setVisible(true);
     m_actionRestartCore->setVisible(false);
     m_actionStopCore->setEnabled(false);
   }
+  updateModeControlLabels();
 }
 
 void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
@@ -1219,7 +1249,6 @@ void MainWindow::daemonIpcClientConnectionFailed()
 void MainWindow::toggleCanRunCore(bool enableButtons)
 {
   ui->btnToggleCore->setEnabled(enableButtons);
-  ui->btnConnect->setEnabled(enableButtons);
   ui->btnRestartCore->setEnabled(enableButtons && m_coreProcess.isStarted());
   m_actionStartCore->setEnabled(enableButtons);
   m_actionStopCore->setEnabled(enableButtons);
