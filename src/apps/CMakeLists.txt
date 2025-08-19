@@ -28,13 +28,7 @@ function(generate_app_man TARGET NAME)
   endif()
 endfunction()
 
-option(BUILD_UNIFIED "Build unified binary" OFF)
-if(BUILD_UNIFIED)
-  add_subdirectory(deskflow-core)
-else()
-  add_subdirectory(deskflow-client)
-  add_subdirectory(deskflow-server)
-endif(BUILD_UNIFIED)
+add_subdirectory(deskflow-core)
 
 ## Only used on windows
 add_subdirectory(deskflow-daemon)

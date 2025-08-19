@@ -1,17 +1,9 @@
 # SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
-if(BUILD_UNIFIED)
-  set(CLIENT_BINARY "${CMAKE_PROJECT_NAME}-core")
-  set(SERVER_BINARY "${CMAKE_PROJECT_NAME}-core")
-else()
-  set(CLIENT_BINARY "${CMAKE_PROJECT_NAME}-client")
-  set(SERVER_BINARY "${CMAKE_PROJECT_NAME}-server")
-endif()
-
+  set(CORE_BINARY "${CMAKE_PROJECT_NAME}-core")
 if(WIN32)
-  string(APPEND CLIENT_BINARY ".exe")
-  string(APPEND SERVER_BINARY ".exe")
+  string(APPEND CORE_BINARY ".exe")
 endif()
 
 configure_file(Constants.h.in Constants.h @ONLY)

@@ -14,8 +14,7 @@ To build Deskflow you will a minimum of:
 
 By default a build of Deskflow will: 
      - The GUI application deskflow
-     - The Client application deskflow-client
-     - The Server application deskflow-server
+     - The Core application deskflow-core
      - Documentation if [doxygen] was found on your system
      - Tests that will be run as part of the build process.
 
@@ -30,7 +29,6 @@ CMake options:
 | BUILD_DEV_DOCS           | Build development documentation         | OFF                | `Doxygen` |
 | BUILD_INSTALLER          | Build installers/packages               | ON                 | |
 | BUILD_TESTS              | Build unit tests and legacy tests       | ON                 | `gtest`|
-| BUILD_UNIFIED            | Build unified binary (client+server)    | OFF                | |
 | ENABLE_COVERAGE          | Enable test coverage                    | OFF                | `gcov` |
 | SKIP_BUILD_TESTS         | Skip running of tests at build time     | OFF                | |
 | VCPKG_QT                 | Build Qt w/ vcpkg (windows only)        | OFF                | |

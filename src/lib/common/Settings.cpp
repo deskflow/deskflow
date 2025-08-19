@@ -104,10 +104,10 @@ QVariant Settings::defaultValue(const QString &key)
     return 0;
 
   if (key == Client::Binary)
-    return kClientBinName;
+    return kCoreBinName;
 
   if (key == Server::Binary)
-    return kServerBinName;
+    return kCoreBinName;
 
   if (key == Daemon::Elevate)
     return Settings::isNativeMode();
