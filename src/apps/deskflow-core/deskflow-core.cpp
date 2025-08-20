@@ -26,6 +26,7 @@ const static auto kHeader = QStringLiteral("%1-core: %2\n").arg(kAppId, kDisplay
 
 void showHelp()
 {
+  std::cout << qPrintable(kHeader) << qPrintable(kAppDescription) << "\n\n";
   std::cout << "Usage: deskflow-core <server | client> [...options]" << std::endl;
   std::cout << "server - start as a server (deskflow-server)" << std::endl;
   std::cout << "client - start as a client (deskflow-client)" << std::endl;
