@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "VersionInfo.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
@@ -20,6 +21,8 @@
 
 #include <QSharedMemory>
 #include <iostream>
+
+const static auto kHeader = QStringLiteral("%1-core: %2\n").arg(kAppId, kDisplayVersion);
 
 void showHelp()
 {
@@ -38,6 +41,20 @@ bool isHelp(int argc, char **argv)
 {
   for (int i = 0; i < argc; ++i) {
     if (argv[i] == std::string("--help") || argv[i] == std::string("-h"))
+      return true;
+  }
+  return false;
+}
+
+void showVersion()
+{
+  std::cout << qPrintable(kHeader) << qPrintable(kCopyright) << std::endl;
+}
+
+bool isVersion(int argc, char **argv)
+{
+  for (int i = 0; i < argc; ++i) {
+    if (argv[i] == std::string("--version") || argv[i] == std::string("-v"))
       return true;
   }
   return false;
@@ -62,6 +79,11 @@ int main(int argc, char **argv)
 
   if (isHelp(argc, argv)) {
     showHelp();
+    return s_exitSuccess;
+  }
+
+  if (isVersion(argc, argv)) {
+    showVersion();
     return s_exitSuccess;
   }
 
