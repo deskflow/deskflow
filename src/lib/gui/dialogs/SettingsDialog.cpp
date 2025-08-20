@@ -191,19 +191,14 @@ void SettingsDialog::updateTlsControls()
   ui->comboTlsKeyLength->setCurrentText(Settings::value(Settings::Security::KeySize).toString());
 
   const auto tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
-  const auto writable = Settings::isWritable();
-  const auto enabled = writable && tlsEnabled;
 
   ui->lineTlsCertPath->setText(certificate);
   ui->cbRequireClientCert->setChecked(Settings::value(Settings::Security::CheckPeers).toBool());
   ui->groupSecurity->setChecked(tlsEnabled);
 
-  ui->groupSecurity->setEnabled(writable);
-  ui->comboTlsKeyLength->setEnabled(enabled);
-  ui->widgetTlsCert->setEnabled(enabled);
-  ui->lblTlsKeyLength->setEnabled(enabled);
-  ui->btnTlsRegenCert->setEnabled(enabled);
-  ui->cbRequireClientCert->setEnabled(enabled);
+  ui->groupSecurity->setEnabled(Settings::isWritable());
+
+  updateTlsControlsEnabled();
 }
 
 void SettingsDialog::updateTlsControlsEnabled()
