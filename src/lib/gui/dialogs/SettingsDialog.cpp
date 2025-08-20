@@ -264,8 +264,7 @@ void SettingsDialog::updateControls()
     ui->groupService->setVisible(false);
   }
 
-  ui->cbLanguageSync->setEnabled(writable && isClientMode());
-  ui->cbScrollDirection->setEnabled(writable && isClientMode());
+  ui->groupClientOptions->setEnabled(writable && isClientMode());
 
   ui->widgetLogFilename->setEnabled(writable && logToFile);
 

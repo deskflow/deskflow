@@ -37,7 +37,7 @@
         <number>15</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBasics">
+        <widget class="QGroupBox" name="groupClientOptions">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
            <horstretch>0</horstretch>
@@ -45,27 +45,20 @@
           </sizepolicy>
          </property>
          <property name="title">
-          <string>Basics</string>
+          <string>Client mode</string>
          </property>
          <layout class="QVBoxLayout" name="_10">
           <item>
-           <widget class="QCheckBox" name="cbPreventSleep">
-            <property name="text">
-             <string>Prevent this computer from going to sleep</string>
-            </property>
-           </widget>
-          </item>
-          <item>
            <widget class="QCheckBox" name="cbLanguageSync">
             <property name="text">
-             <string>Use server's keyboard language on this computer (client mode)</string>
+             <string>Use server's keyboard language on this computer</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="cbScrollDirection">
             <property name="text">
-             <string>Invert scroll direction on this computer (client mode)</string>
+             <string>Invert scroll direction on this computer</string>
             </property>
            </widget>
           </item>
@@ -92,16 +85,23 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbCloseToTray">
+           <widget class="QCheckBox" name="cbAutoHide">
             <property name="text">
-             <string>Leave app running in notification area when the window is closed</string>
+             <string>Hide the window when the app starts</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cbAutoHide">
+           <widget class="QCheckBox" name="cbPreventSleep">
             <property name="text">
-             <string>Hide the window when the app starts</string>
+             <string>Prevent this computer from going to sleep</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbCloseToTray">
+            <property name="text">
+             <string>Leave app running in notification area when the window is closed</string>
             </property>
            </widget>
           </item>
@@ -609,12 +609,10 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>cbPreventSleep</tabstop>
   <tabstop>cbLanguageSync</tabstop>
   <tabstop>cbScrollDirection</tabstop>
   <tabstop>cbAutoUpdate</tabstop>
   <tabstop>cbCloseToTray</tabstop>
-  <tabstop>cbAutoHide</tabstop>
   <tabstop>rbIconColorful</tabstop>
   <tabstop>rbIconMono</tabstop>
   <tabstop>groupSecurity</tabstop>
