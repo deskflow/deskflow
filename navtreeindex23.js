@@ -1,11 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"namespaceSettingsKeys.html#a6ab6ee8b431024a9349b48ab0cac9041":[5,0,1,0],
-"namespaceSettingsKeys.html#a8c94b6e9d9359fea262c8a2ecd6940ca":[5,0,1,4],
-"namespaceSettingsKeys.html#ad9fb8de23203a3e91677f2d71116073c":[5,0,1,5],
-"namespaceSettingsKeys.html#ae19849dae134d7a634582a6e0169447b":[5,0,1,7],
-"namespaceSettingsKeys.html#ae2487530b52af7d18c3a0b7703b9ffd9":[5,0,1,6],
-"namespaceUi.html":[5,0,3],
 "namespacedeskflow.html":[5,0,0],
 "namespacedeskflow.html#a108d2978bd73d96786e7e28c9960c501":[5,0,0,24],
 "namespacedeskflow.html#a11eb20b6da710465dee0dc54ca1de21e":[5,0,0,31],
@@ -249,5 +243,11 @@ var NAVTREEINDEX23 =
 "structCBMPInfoHeader.html#aae67b93de47f697d38f8decc15175a5f":[6,0,59,9],
 "structCBMPInfoHeader.html#ab4bd17342a4d6704cec23da8d9c282c9":[6,0,59,10],
 "structCBMPInfoHeader.html#ac2ce465fc837c647b9c50f7437d7317b":[6,0,59,7],
-"structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b":[6,0,59,4]
+"structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b":[6,0,59,4],
+"structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef":[6,0,59,3],
+"structCBMPInfoHeader.html#ae58803ac900f8dca642baa51af9ee522":[6,0,59,1],
+"structChunkType.html":[4,1,0],
+"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80":[4,1,0,2],
+"structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11":[4,1,0,1],
+"structChunkType.html#afca93ef4079887b13f65cde55cceefd9":[4,1,0,0]
 };

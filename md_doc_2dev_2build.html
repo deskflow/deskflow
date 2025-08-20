@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.123</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.126</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -108,8 +108,7 @@ $(function(){initNavTree('md_doc_2dev_2build.html','',''); });
 </blockquote>
 <p>By default a build of Deskflow will:</p><ul>
 <li>The GUI application deskflow</li>
-<li>The <a class="el" href="classClient.html" title="Deskflow client.">Client</a> application deskflow-client</li>
-<li>The <a class="el" href="classServer.html" title="Deskflow server.">Server</a> application deskflow-server</li>
+<li>The Core application deskflow-core</li>
 <li>Documentation if <a href="http://www.stack.nl/~dimitri/doxygen/">doxygen</a> was found on your system</li>
 <li>Tests that will be run as part of the build process.</li>
 </ul>
@@ -130,12 +129,10 @@ Configuration</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">BUILD_TESTS  </td><td class="markdownTableBodyCenter">Build unit tests and legacy tests  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">gtest</span>  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">BUILD_UNIFIED  </td><td class="markdownTableBodyCenter">Build unified binary (client+server)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
-<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">ENABLE_COVERAGE  </td><td class="markdownTableBodyCenter">Enable test coverage  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"><span class="tt">gcov</span>  </td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">SKIP_BUILD_TESTS  </td><td class="markdownTableBodyCenter">Skip running of tests at build time  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">SKIP_BUILD_TESTS  </td><td class="markdownTableBodyCenter">Skip running of tests at build time  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 </table>
 <p>Example cmake configuration. <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>
