@@ -203,17 +203,15 @@ void SettingsDialog::updateTlsControls()
 void SettingsDialog::updateTlsControlsEnabled()
 {
   const auto writable = Settings::isWritable();
-  const auto clientMode =
-      Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>() == Settings::CoreMode::Client;
   const auto tlsChecked = ui->groupSecurity->isChecked();
 
-  auto enabled = writable && tlsChecked && !clientMode;
+  auto enabled = writable && tlsChecked;
   ui->lblTlsKeyLength->setEnabled(enabled);
   ui->comboTlsKeyLength->setEnabled(enabled);
   ui->lblTlsCert->setEnabled(enabled);
   ui->widgetTlsCert->setEnabled(enabled);
   ui->btnTlsRegenCert->setEnabled(enabled);
-  ui->cbRequireClientCert->setEnabled(enabled);
+  ui->cbRequireClientCert->setEnabled(enabled && !isClientMode());
 }
 
 bool SettingsDialog::isClientMode() const
