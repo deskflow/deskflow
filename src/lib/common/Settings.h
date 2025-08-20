@@ -158,6 +158,7 @@ private:
     , Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
+    , Settings::Client::XdpRestoreToken
     , Settings::Core::CoreMode
     , Settings::Core::Interface
     , Settings::Core::LastVersion
