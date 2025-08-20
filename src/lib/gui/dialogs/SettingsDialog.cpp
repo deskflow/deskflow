@@ -43,7 +43,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->tabWidget->setCurrentIndex(0);
 
   loadFromConfig();
-  updateControls();
 
   adjustSize();
   QApplication::processEvents();
@@ -178,7 +177,7 @@ void SettingsDialog::loadFromConfig()
     ui->rbIconColorful->setChecked(true);
 
   qDebug() << "load from config done";
-  updateTlsControls();
+  updateControls();
 }
 
 void SettingsDialog::updateTlsControls()
