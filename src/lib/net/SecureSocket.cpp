@@ -13,6 +13,7 @@
 #include "base/Path.h"
 #include "base/String.h"
 #include "common/Settings.h"
+#include "io/Filesystem.h"
 #include "mt/Lock.h"
 #include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
