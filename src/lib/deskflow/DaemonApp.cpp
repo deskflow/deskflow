@@ -250,7 +250,7 @@ void DaemonApp::initLogging()
   }
 #endif
 
-  m_pFileLogOutputter = new FileLogOutputter(logFilename().toStdString().c_str()); // NOSONAR - Adopted by `Log`
+  m_pFileLogOutputter = new FileLogOutputter(qPrintable(logFilename())); // NOSONAR - Adopted by `Log`
   CLOG->insert(m_pFileLogOutputter);
 }
 

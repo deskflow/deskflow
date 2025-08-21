@@ -636,7 +636,7 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
     return false;
 
   // Gui Must Parse this line, DO NOT CHANGE
-  LOG_NOTE("peer fingerprint: %s", deskflow::formatSSLFingerprint(sha256.data, false).toStdString().c_str());
+  LOG_NOTE("peer fingerprint: %s", qPrintable(deskflow::formatSSLFingerprint(sha256.data, false)));
 
   QFile file(FingerprintDatabasePath);
 
@@ -646,12 +646,12 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
 
   const auto &path = FingerprintDatabasePath;
   if (file.exists() && emptyDB) {
-    LOG_ERR("failed to open trusted fingerprints file: %s", path.toStdString().c_str());
+    LOG_ERR("failed to open trusted fingerprints file: %s", qPrintable(path));
     return false;
   }
 
   if (!emptyDB) {
-    LOG_DEBUG("read %d fingerprint(s) from file: %s", db.fingerprints().size(), path.toStdString().c_str());
+    LOG_DEBUG("read %d fingerprint(s) from file: %s", db.fingerprints().size(), qPrintable(path));
   }
 
   if (!db.isTrusted(sha256)) {
