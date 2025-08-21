@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "io/Filesystem.h"
 #include "net/SecurityLevel.h"
 #include "net/SocketException.h"
 #include "net/TCPSocket.h"
