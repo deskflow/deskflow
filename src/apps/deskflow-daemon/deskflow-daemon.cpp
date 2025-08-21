@@ -79,7 +79,7 @@ int main(int argc, char **argv)
   // useful for troubleshooting Windows services.
   // It's important to write the version number to the log file so we can be certain the old daemon
   // was uninstalled, since sometimes Windows services can get stuck and fail to be removed.
-  LOG_PRINT("%s v%s", QCoreApplication::applicationName().toStdString().c_str(), kDisplayVersion);
+  LOG_PRINT("%s v%s", qPrintable(QCoreApplication::applicationName()), kDisplayVersion);
 
   // Default log level to system setting (found in Registry).
   auto logLevel = Settings::value(Settings::Daemon::LogLevel).toString().toStdString();
@@ -105,8 +105,7 @@ int main(int argc, char **argv)
       return s_exitSuccess;
     }
 
-    const auto ipcServer =
-        new ipc::DaemonIpcServer(&app, DaemonApp::logFilename().toStdString().c_str()); // NOSONAR - Qt managed
+    const auto ipcServer = new ipc::DaemonIpcServer(&app, qPrintable(DaemonApp::logFilename())); // NOSONAR - Qt managed
     ipcServer->listen();
     daemon.connectIpcServer(ipcServer);
 
