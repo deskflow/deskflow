@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
+"OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
 "OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,66],
 "OSXHelpers_8h.html":[7,0,1,1,5,28],
 "OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,28,5],
@@ -163,11 +166,11 @@ var NAVTREEINDEX4 =
 "QProcessProxy_8cpp.html":[7,0,1,1,5,4,0],
 "QProcessProxy_8h.html":[7,0,1,1,5,4,1],
 "QProcessProxy_8h_source.html":[7,0,1,1,5,4,1],
-"QSettingsProxy_8cpp.html":[7,0,1,1,3,1],
-"QSettingsProxy_8cpp.html#aa88b7fdd261cfc5bb279b3993620e796":[7,0,1,1,3,1,0],
-"QSettingsProxy_8h.html":[7,0,1,1,3,2],
-"QSettingsProxy_8h.html#a1247048dd32496fc210afb1fe69883b5":[7,0,1,1,3,2,1],
-"QSettingsProxy_8h_source.html":[7,0,1,1,3,2],
+"QSettingsProxy_8cpp.html":[7,0,1,1,3,2],
+"QSettingsProxy_8cpp.html#aa88b7fdd261cfc5bb279b3993620e796":[7,0,1,1,3,2,0],
+"QSettingsProxy_8h.html":[7,0,1,1,3,3],
+"QSettingsProxy_8h.html#a1247048dd32496fc210afb1fe69883b5":[7,0,1,1,3,3,1],
+"QSettingsProxy_8h_source.html":[7,0,1,1,3,3],
 "ScreenConfig_8cpp.html":[7,0,1,1,5,0,3],
 "ScreenConfig_8h.html":[7,0,1,1,5,0,4],
 "ScreenConfig_8h_source.html":[7,0,1,1,5,0,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090f":[7,0,1,1,5,33,1],
 "ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3737bb2c0506485a05cf9cde59aa679d":[7,0,1,1,5,33,1,0],
 "ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3f49a3be29d699f3be1aef7e363a9773":[7,0,1,1,5,33,1,1],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12":[7,0,1,1,5,33,1,3],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fab5094b611f7672180cafe697a16119f2":[7,0,1,1,5,33,1,2],
-"ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,33,2],
-"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,33,5]
+"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12":[7,0,1,1,5,33,1,3]
 };

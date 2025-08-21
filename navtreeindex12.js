@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"classMSWindowsClipboard.html":[6,0,147],
+"classMSWindowsClipboard.html#a05e7bf2345789064f00ca591aa25a5da":[6,0,147,0],
+"classMSWindowsClipboard.html#a1bc83f8deef69d8032ffeebb86da5754":[6,0,147,6],
 "classMSWindowsClipboard.html#a21fa058bc4182ca36851ee5a41f9e224":[6,0,147,3],
 "classMSWindowsClipboard.html#a3cd9c06c3e66cf4ac0c65964598b5161":[6,0,147,5],
 "classMSWindowsClipboard.html#a3db53404389feb7f3b2eb490653a249f":[6,0,147,9],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "classNetworkAddress.html#a2356304b1b1392be0bdfec73a4f13508":[6,0,168,5],
 "classNetworkAddress.html#a2882138c5f2f36e413d90aee9b5f9bef":[6,0,168,8],
 "classNetworkAddress.html#a3d2fb761935c062467613980e226ca41":[6,0,168,11],
-"classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049":[6,0,168,6],
-"classNetworkAddress.html#a8c469013754643d5b36350985327f141":[6,0,168,7],
-"classNetworkAddress.html#a9cc627fcc394fcf2bc11387676fad125":[6,0,168,2],
-"classNetworkAddress.html#aa488d0120f0dc974685ba957591c77f6":[6,0,168,10]
+"classNetworkAddress.html#a73e85eedfb5e9bc77d8b56837a1b0049":[6,0,168,6]
 };

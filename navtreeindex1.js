@@ -1,11 +1,6 @@
 var NAVTREEINDEX1 =
 {
 "Common_8h.html":[7,0,1,1,3,0],
-"Common_8h.html#a292cb1602c9b1758e4d7a241f76861f6":[7,0,1,1,3,0,1],
-"Common_8h.html#a6941779d515a2cd9f45a5625fd22e2fe":[7,0,1,1,3,0,3],
-"Common_8h.html#a8795acc6a145eb4cb10b482a4a788c58":[7,0,1,1,3,0,4],
-"Common_8h.html#abc3037d337e57a480ddbe03fd43441e1":[7,0,1,1,3,0,2],
-"Common_8h.html#afaf06b7d2c9f3042ad6703225adfaa1d":[7,0,1,1,3,0,0],
 "Common_8h_source.html":[7,0,1,1,3,0],
 "ComputerNameValidator_8cpp.html":[7,0,1,1,5,6,2],
 "ComputerNameValidator_8h.html":[7,0,1,1,5,6,3],
@@ -83,6 +78,14 @@ var NAVTREEINDEX1 =
 "Event_8h.html":[7,0,1,1,1,4],
 "Event_8h.html#a34787a880fd439e02383f336665d7bc2":[7,0,1,1,1,4,3],
 "Event_8h_source.html":[7,0,1,1,1,4],
+"ExitCodes_8h.html":[7,0,1,1,3,1],
+"ExitCodes_8h.html#a09b1160d454c1b1d0e45d82bc45637d6":[7,0,1,1,3,1,2],
+"ExitCodes_8h.html#a292cb1602c9b1758e4d7a241f76861f6":[7,0,1,1,3,1,1],
+"ExitCodes_8h.html#a6941779d515a2cd9f45a5625fd22e2fe":[7,0,1,1,3,1,4],
+"ExitCodes_8h.html#a8795acc6a145eb4cb10b482a4a788c58":[7,0,1,1,3,1,5],
+"ExitCodes_8h.html#abc3037d337e57a480ddbe03fd43441e1":[7,0,1,1,3,1,3],
+"ExitCodes_8h.html#afaf06b7d2c9f3042ad6703225adfaa1d":[7,0,1,1,3,1,0],
+"ExitCodes_8h_source.html":[7,0,1,1,3,1],
 "FileTail_8cpp.html":[7,0,1,1,5,16],
 "FileTail_8h.html":[7,0,1,1,5,17],
 "FileTail_8h_source.html":[7,0,1,1,5,17],
@@ -246,8 +249,5 @@ var NAVTREEINDEX1 =
 "KeyTypes_8h.html#a13a2e92050a500f1ce88c480e5ab9828":[7,0,1,1,4,47,200],
 "KeyTypes_8h.html#a15e3e6186e22fc04952a51e685ede07d":[7,0,1,1,4,47,201],
 "KeyTypes_8h.html#a197d8d06f6fee7887996ca35b68c0871":[7,0,1,1,4,47,39],
-"KeyTypes_8h.html#a1b56aed99d3ea655e971c3e76291d196":[7,0,1,1,4,47,129],
-"KeyTypes_8h.html#a1f9155be8f3558cf0c9ce660c562c48b":[7,0,1,1,4,47,130],
-"KeyTypes_8h.html#a1ffc722f02c096d2843dc628c43e613f":[7,0,1,1,4,47,174],
-"KeyTypes_8h.html#a20101ac1082849738a8c52567789a4b1":[7,0,1,1,4,47,162]
+"KeyTypes_8h.html#a1b56aed99d3ea655e971c3e76291d196":[7,0,1,1,4,47,129]
 };

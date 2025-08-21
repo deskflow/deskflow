@@ -12,5 +12,6 @@ var searchData=
   ['event_2eh_9',['Event.h',['../Event_8h.html',1,'']]],
   ['eventqueue_2ecpp_10',['EventQueue.cpp',['../EventQueue_8cpp.html',1,'']]],
   ['eventqueue_2eh_11',['EventQueue.h',['../EventQueue_8h.html',1,'']]],
-  ['eventtypes_2eh_12',['EventTypes.h',['../EventTypes_8h.html',1,'']]]
+  ['eventtypes_2eh_12',['EventTypes.h',['../EventTypes_8h.html',1,'']]],
+  ['exitcodes_2eh_13',['ExitCodes.h',['../ExitCodes_8h.html',1,'']]]
 ];

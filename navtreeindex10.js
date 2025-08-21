@@ -1,5 +1,8 @@
 var NAVTREEINDEX10 =
 {
+"classIClipboard.html#a626df1c5cedfc790e84dcee64edf682f":[6,0,109,3],
+"classIClipboard.html#a742c618d6056270cf533962ae905a059":[6,0,109,8],
+"classIClipboard.html#a7c084944837c68934cb90c3b46dfaee6":[6,0,109,13],
 "classIClipboard.html#a943ac453b759e3bf174ee99114243d5e":[6,0,109,12],
 "classIClipboard.html#a952be2b476e25f70c8a2d0d51690f5a0":[6,0,109,11],
 "classIClipboard.html#a9784594c6b850815a125023f98224f7e":[6,0,109,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX10 =
 "classISocket.html#af33566df32e8275637ee58c01952c4c1":[6,0,134,1],
 "classISocketFactory.html":[6,0,135],
 "classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f":[6,0,135,1],
-"classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b":[6,0,135,2],
-"classISocketFactory.html#ae765295a38847d9724ba0c5482a484ac":[6,0,135,0],
-"classISocketMultiplexerJob.html":[6,0,136],
-"classISocketMultiplexerJob.html#aa573bd5e38e7b4053c8cf07ae45b9e67":[6,0,136,1]
+"classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b":[6,0,135,2]
 };

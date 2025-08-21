@@ -109,7 +109,7 @@ var searchData=
   ['khasei_106',['kHasEi',['../namespacedeskflow_1_1platform.html#a00a431493279983eca2a9b202da18fa7',1,'deskflow::platform']]],
   ['khasportal_107',['kHasPortal',['../namespacedeskflow_1_1platform.html#aa96efd2752debf66210108f912520ea0',1,'deskflow::platform']]],
   ['khasportalinputcapture_108',['kHasPortalInputCapture',['../namespacedeskflow_1_1platform.html#a2c3ffe35a1ea3e8f4eea5919ce3c5a27',1,'deskflow::platform']]],
-  ['kheader_109',['kHeader',['../deskflow-gui_8cpp.html#aa7933fe78cc39eb00c1a3ca341a4f8a8',1,'deskflow-gui.cpp']]],
+  ['kheader_109',['kHeader',['../deskflow-core_8cpp.html#aa7933fe78cc39eb00c1a3ca341a4f8a8',1,'kHeader:&#160;deskflow-core.cpp'],['../deskflow-gui_8cpp.html#aa7933fe78cc39eb00c1a3ca341a4f8a8',1,'kHeader:&#160;deskflow-gui.cpp']]],
   ['kheartbeatsuntildeath_110',['kHeartBeatsUntilDeath',['../group__protocol__constants.html#gaf71713baa0aee7c370fa81755dcd518c',1,'ProtocolTypes.h']]],
   ['kheartrate_111',['kHeartRate',['../group__protocol__constants.html#gac6862c2c4ace969eaa5986166c5435b4',1,'ProtocolTypes.h']]],
   ['khook_5fdisable_112',['kHOOK_DISABLE',['../MSWindowsHook_8h.html#adc552c846784b9c3ce110b859ce2b2e2a621e587f0fbe1402b99a4850c5d67882',1,'MSWindowsHook.h']]],

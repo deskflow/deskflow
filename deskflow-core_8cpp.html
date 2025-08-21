@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.131</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.135</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -92,30 +92,39 @@ $(function(){initNavTree('deskflow-core_8cpp.html','',''); });
   <div class="headertitle"><div class="title">deskflow-core.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="Arch_8h_source.html">arch/Arch.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;VersionInfo.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="Arch_8h_source.html">arch/Arch.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="EventQueue_8h_source.html">base/EventQueue.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Log_8h_source.html">base/Log.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ExitCodes_8h_source.html">common/ExitCodes.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ClientApp_8h_source.html">deskflow/ClientApp.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ServerApp_8h_source.html">deskflow/ServerApp.h</a>&quot;</code><br />
+<code>#include &lt;QSharedMemory&gt;</code><br />
 <code>#include &lt;iostream&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for deskflow-core.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="deskflow-core_8cpp__incl.png" border="0" usemap="#asrc_2apps_2deskflow-core_2deskflow-core_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2apps_2deskflow-core_2deskflow-core_8cpp" id="asrc_2apps_2deskflow-core_2deskflow-core_8cpp">
-<area shape="rect" title=" " alt="" coords="625,5,782,44"/>
+<area shape="rect" title=" " alt="" coords="609,5,766,44"/>
+<area shape="rect" title=" " alt="" coords="29,92,127,117"/>
+<area shape="poly" title=" " alt="" coords="609,37,400,62,147,95,143,95,142,90,146,89,399,56,609,32"/>
 <area shape="rect" href="Arch_8h.html" title=" " alt="" coords="118,310,206,335"/>
-<area shape="poly" title=" " alt="" coords="626,43,532,68,421,107,364,133,308,163,256,199,208,239,187,267,173,297,168,295,182,264,204,236,252,194,305,159,362,128,419,102,530,63,624,38"/>
-<area shape="rect" href="EventQueue_8h.html" title=" " alt="" coords="733,237,868,262"/>
-<area shape="poly" title=" " alt="" coords="714,44,792,222,787,224,709,46"/>
+<area shape="poly" title=" " alt="" coords="610,43,526,64,438,94,367,125,312,152,263,186,208,239,188,268,174,297,169,295,183,265,204,236,260,182,309,147,364,120,436,90,524,59,609,38"/>
+<area shape="rect" href="EventQueue_8h.html" title=" " alt="" coords="674,237,810,262"/>
+<area shape="poly" title=" " alt="" coords="695,44,738,222,733,223,689,45"/>
 <area shape="rect" href="Log_8h.html" title=" " alt="" coords="254,237,340,262"/>
-<area shape="poly" title=" " alt="" coords="655,47,549,94,424,167,327,231,324,226,421,163,546,90,653,42"/>
-<area shape="rect" href="ClientApp_8h.html" title=" " alt="" coords="559,92,704,117"/>
-<area shape="poly" title=" " alt="" coords="688,46,655,82,651,78,684,43"/>
-<area shape="rect" href="ServerApp_8h.html" title=" " alt="" coords="960,92,1109,117"/>
-<area shape="poly" title=" " alt="" coords="783,42,970,85,969,91,782,47"/>
-<area shape="rect" title=" " alt="" coords="1133,92,1204,117"/>
-<area shape="poly" title=" " alt="" coords="783,34,934,57,1118,89,1117,94,933,62,782,39"/>
+<area shape="poly" title=" " alt="" coords="610,45,544,65,478,94,430,126,386,162,319,228,315,224,382,158,427,121,476,90,542,60,608,40"/>
+<area shape="rect" href="ExitCodes_8h.html" title=" " alt="" coords="898,92,1045,117"/>
+<area shape="poly" title=" " alt="" coords="757,42,915,85,913,90,756,47"/>
+<area shape="rect" href="ClientApp_8h.html" title=" " alt="" coords="488,92,634,117"/>
+<area shape="poly" title=" " alt="" coords="658,47,594,86,591,82,655,42"/>
+<area shape="rect" href="ServerApp_8h.html" title=" " alt="" coords="725,92,874,117"/>
+<area shape="poly" title=" " alt="" coords="716,42,772,81,769,85,713,47"/>
+<area shape="rect" title=" " alt="" coords="1069,92,1189,117"/>
+<area shape="poly" title=" " alt="" coords="766,37,1054,87,1053,92,765,42"/>
+<area shape="rect" title=" " alt="" coords="1213,92,1284,117"/>
+<area shape="poly" title=" " alt="" coords="766,31,959,53,1198,89,1197,94,958,59,766,36"/>
 <area shape="rect" href="ArchString_8h.html" title=" " alt="" coords="50,383,173,407"/>
 <area shape="poly" title=" " alt="" coords="156,337,131,372,126,369,152,334"/>
 <area shape="rect" href="Common_8h.html" title=" " alt="" coords="250,383,389,407"/>
@@ -134,25 +143,25 @@ Include dependency graph for deskflow-core.cpp:</div>
 <area shape="rect" title=" " alt="" coords="287,455,352,480"/>
 <area shape="poly" title=" " alt="" coords="322,408,322,440,317,440,317,408"/>
 <area shape="rect" href="EventTypes_8h.html" title=" " alt="" coords="2057,601,2190,625"/>
-<area shape="poly" title=" " alt="" coords="733,260,624,278,577,293,560,302,548,312,544,322,549,333,564,357,585,380,641,421,713,458,799,489,896,516,1003,538,1117,557,1235,572,1474,594,1701,605,1897,610,2042,610,2042,615,1897,615,1701,611,1473,599,1234,578,1116,562,1002,544,895,521,797,494,711,462,638,426,582,384,560,361,544,336,539,322,544,308,557,298,575,288,622,273,732,255"/>
+<area shape="poly" title=" " alt="" coords="675,255,640,260,606,270,574,287,548,312,531,329,510,341,468,352,432,352,418,348,484,367,593,407,766,478,856,511,929,528,1101,550,1370,579,1637,596,1870,605,2042,609,2042,614,1870,611,1636,602,1370,584,1101,555,928,534,855,516,764,482,591,412,483,372,413,347,433,347,467,347,508,336,528,325,544,308,571,283,604,265,639,255,674,249"/>
 <area shape="rect" href="IEventQueue_8h.html" title=" " alt="" coords="1698,455,1837,480"/>
-<area shape="poly" title=" " alt="" coords="869,257,1013,277,1181,307,1439,373,1712,448,1711,453,1437,378,1180,313,1012,282,868,262"/>
+<area shape="poly" title=" " alt="" coords="811,255,980,275,1181,307,1439,372,1713,448,1711,453,1438,377,1180,313,979,280,810,260"/>
 <area shape="rect" href="PriorityQueue_8h.html" title=" " alt="" coords="1025,310,1168,335"/>
-<area shape="poly" title=" " alt="" coords="851,260,1033,303,1032,308,849,265"/>
+<area shape="poly" title=" " alt="" coords="802,260,1023,304,1022,309,801,265"/>
 <area shape="rect" href="Stopwatch_8h.html" title=" " alt="" coords="638,310,764,335"/>
-<area shape="poly" title=" " alt="" coords="786,265,731,303,728,298,783,260"/>
+<area shape="poly" title=" " alt="" coords="738,264,717,298,713,295,733,261"/>
 <area shape="rect" href="CondVar_8h.html" title=" " alt="" coords="788,310,889,335"/>
-<area shape="poly" title=" " alt="" coords="809,261,827,295,823,298,805,264"/>
+<area shape="poly" title=" " alt="" coords="760,260,812,299,809,303,756,265"/>
 <area shape="rect" title=" " alt="" coords="1446,310,1492,335"/>
-<area shape="poly" title=" " alt="" coords="869,256,901,259,1430,314,1430,320,901,265,869,261"/>
+<area shape="poly" title=" " alt="" coords="810,255,1430,315,1430,320,810,260"/>
 <area shape="rect" title=" " alt="" coords="414,310,484,335"/>
-<area shape="poly" title=" " alt="" coords="742,265,503,313,499,313,498,308,502,307,741,260"/>
+<area shape="poly" title=" " alt="" coords="694,265,499,312,498,306,693,260"/>
 <area shape="rect" title=" " alt="" coords="282,310,339,335"/>
-<area shape="poly" title=" " alt="" coords="733,263,354,317,354,312,732,258"/>
+<area shape="poly" title=" " alt="" coords="675,265,354,317,354,311,674,259"/>
 <area shape="rect" title=" " alt="" coords="558,310,614,335"/>
-<area shape="poly" title=" " alt="" coords="766,265,630,310,628,304,765,260"/>
+<area shape="poly" title=" " alt="" coords="717,265,627,306,625,301,715,260"/>
 <area shape="rect" title=" " alt="" coords="1962,455,2002,480"/>
-<area shape="poly" title=" " alt="" coords="869,257,1251,307,1507,342,1764,380,1867,414,1950,448,1948,453,1865,419,1763,385,1507,348,1250,313,869,262"/>
+<area shape="poly" title=" " alt="" coords="811,256,1251,307,1781,380,1874,412,1950,447,1948,452,1872,417,1780,385,1250,313,810,261"/>
 <area shape="poly" title=" " alt="" coords="2057,622,1190,684,1189,678,2057,616"/>
 <area shape="poly" title=" " alt="" coords="1778,478,1810,514,1832,534,1857,550,1902,570,1950,585,2042,603,2041,608,1949,590,1900,575,1854,555,1829,538,1806,518,1774,482"/>
 <area shape="rect" href="Event_8h.html" title=" " alt="" coords="2229,528,2325,553"/>
@@ -175,50 +184,50 @@ Include dependency graph for deskflow-core.cpp:</div>
 <area shape="poly" title=" " alt="" coords="276,265,199,305,197,300,273,260"/>
 <area shape="poly" title=" " alt="" coords="289,264,269,298,265,316,271,333,290,342,334,355,473,387,780,449,779,454,471,392,333,360,288,347,267,336,260,317,264,296,285,261"/>
 <area shape="poly" title=" " alt="" coords="302,262,308,294,303,295,296,263"/>
-<area shape="rect" href="App_8h.html" title=" " alt="" coords="546,165,658,189"/>
-<area shape="poly" title=" " alt="" coords="629,118,615,151,610,149,624,116"/>
-<area shape="poly" title=" " alt="" coords="547,192,493,211,440,240,406,270,376,305,335,370,330,367,372,302,402,266,437,235,491,206,545,187"/>
-<area shape="poly" title=" " alt="" coords="636,187,755,229,753,234,634,192"/>
-<area shape="poly" title=" " alt="" coords="604,190,598,225,591,245,579,264,561,280,541,293,500,311,498,306,539,288,558,276,575,260,586,243,593,224,599,189"/>
-<area shape="poly" title=" " alt="" coords="552,193,355,238,354,232,551,187"/>
-<area shape="rect" href="IApp_8h.html" title=" " alt="" coords="450,237,565,262"/>
-<area shape="poly" title=" " alt="" coords="588,192,536,230,533,226,585,188"/>
-<area shape="rect" href="SocketMultiplexer_8h.html" title=" " alt="" coords="913,237,1070,262"/>
-<area shape="poly" title=" " alt="" coords="659,186,912,231,911,237,658,191"/>
+<area shape="rect" href="App_8h.html" title=" " alt="" coords="488,165,599,189"/>
+<area shape="poly" title=" " alt="" coords="561,118,553,150,547,149,555,117"/>
+<area shape="poly" title=" " alt="" coords="495,192,448,211,425,223,404,239,385,262,374,283,367,307,354,336,335,370,331,368,349,334,362,305,369,281,380,259,400,235,422,219,445,206,493,187"/>
+<area shape="poly" title=" " alt="" coords="577,187,696,229,694,234,575,192"/>
+<area shape="poly" title=" " alt="" coords="549,189,552,223,550,244,543,263,522,288,496,305,493,301,519,284,539,261,545,243,547,223,544,190"/>
+<area shape="poly" title=" " alt="" coords="503,192,353,235,352,230,502,187"/>
+<area shape="rect" href="IApp_8h.html" title=" " alt="" coords="414,237,529,262"/>
+<area shape="poly" title=" " alt="" coords="533,192,496,228,492,224,530,188"/>
+<area shape="rect" href="SocketMultiplexer_8h.html" title=" " alt="" coords="884,237,1040,262"/>
+<area shape="poly" title=" " alt="" coords="600,185,878,232,877,237,599,190"/>
 <area shape="rect" title=" " alt="" coords="1516,310,1593,335"/>
-<area shape="poly" title=" " alt="" coords="658,176,776,179,935,188,1116,206,1299,235,1416,267,1513,301,1511,306,1415,272,1298,240,1116,211,935,194,775,185,658,181"/>
-<area shape="poly" title=" " alt="" coords="1071,260,1430,313,1430,318,1070,265"/>
+<area shape="poly" title=" " alt="" coords="600,179,936,201,1123,218,1259,235,1395,267,1508,302,1506,307,1394,272,1258,240,1122,223,936,207,599,184"/>
+<area shape="poly" title=" " alt="" coords="1041,259,1431,313,1430,318,1040,265"/>
 <area shape="rect" href="IArchNetwork_8h.html" title=" " alt="" coords="1226,383,1368,407"/>
-<area shape="poly" title=" " alt="" coords="1045,260,1112,279,1182,308,1233,339,1274,371,1271,375,1230,343,1180,312,1110,284,1044,265"/>
+<area shape="poly" title=" " alt="" coords="1030,260,1104,279,1182,308,1233,338,1275,371,1272,375,1230,343,1180,312,1103,284,1029,265"/>
 <area shape="rect" title=" " alt="" coords="912,310,951,335"/>
-<area shape="poly" title=" " alt="" coords="984,264,953,300,949,297,980,261"/>
+<area shape="poly" title=" " alt="" coords="960,264,945,297,940,295,955,261"/>
 <area shape="poly" title=" " alt="" coords="1309,406,1413,515,1409,518,1306,409"/>
 <area shape="poly" title=" " alt="" coords="1281,410,1222,449,1219,444,1278,406"/>
 <area shape="poly" title=" " alt="" coords="1296,408,1291,440,1290,480,1297,512,1292,513,1285,480,1285,440,1291,407"/>
-<area shape="poly" title=" " alt="" coords="959,114,791,130,582,156,477,173,382,192,302,215,244,240,208,268,181,299,177,296,204,264,241,235,300,210,380,187,476,168,581,151,791,125,959,109"/>
-<area shape="poly" title=" " alt="" coords="1110,113,1121,114,1329,132,1491,141,1861,162,2093,161,2480,159,2676,166,2843,180,2910,191,2961,206,2994,224,3003,236,3006,248,3006,469,3003,494,2993,512,2978,524,2959,533,2913,543,2861,555,2805,568,2731,580,2550,596,2360,607,2205,612,2205,607,2360,602,2549,591,2730,574,2804,563,2860,550,2912,538,2958,528,2975,520,2989,508,2998,492,3001,469,3001,249,2998,238,2990,229,2959,211,2908,197,2842,185,2675,171,2480,165,2093,166,1861,167,1490,147,1328,137,1121,119,1109,118"/>
-<area shape="poly" title=" " alt="" coords="1108,115,1183,133,1220,146,1254,163,1282,182,1301,205,1308,232,1301,263,1272,309,1234,347,1190,378,1142,404,1092,424,1042,440,950,459,949,454,1041,435,1090,419,1140,399,1188,374,1231,343,1267,305,1296,261,1303,232,1296,208,1278,186,1251,167,1218,151,1181,138,1107,120"/>
-<area shape="poly" title=" " alt="" coords="1004,120,496,307,494,302,1002,115"/>
-<area shape="poly" title=" " alt="" coords="963,120,674,167,673,162,962,115"/>
+<area shape="poly" title=" " alt="" coords="725,120,605,141,464,169,334,203,282,221,244,240,209,268,181,299,177,296,205,264,241,235,280,216,332,198,463,164,604,136,724,115"/>
+<area shape="poly" title=" " alt="" coords="875,113,886,114,1160,134,1373,142,1587,149,1861,162,2093,160,2480,159,2676,165,2843,180,2910,191,2961,206,2994,224,3003,236,3006,248,3006,469,3003,494,2993,512,2978,524,2959,533,2913,543,2861,555,2805,568,2731,580,2550,596,2360,607,2205,612,2205,607,2360,602,2549,591,2730,574,2804,563,2860,550,2912,538,2958,528,2975,520,2989,508,2998,492,3001,469,3001,249,2998,238,2990,229,2959,211,2908,197,2842,185,2675,171,2480,164,2093,166,1861,167,1587,154,1373,148,1160,139,886,119,874,118"/>
+<area shape="poly" title=" " alt="" coords="875,114,978,132,1094,158,1148,174,1196,193,1235,213,1260,236,1274,258,1279,280,1278,300,1270,319,1257,337,1239,353,1191,382,1132,407,1068,427,945,455,944,449,1067,422,1130,402,1188,377,1235,349,1253,333,1266,317,1273,299,1274,280,1269,260,1256,239,1232,217,1194,198,1147,179,1093,163,977,137,874,119"/>
+<area shape="poly" title=" " alt="" coords="785,119,693,183,565,264,487,305,485,301,562,260,690,179,782,115"/>
+<area shape="poly" title=" " alt="" coords="758,120,601,163,600,158,757,115"/>
 <area shape="rect" href="String_8h.html" title=" " alt="" coords="1482,237,1581,262"/>
-<area shape="poly" title=" " alt="" coords="1110,114,1250,137,1363,162,1438,194,1501,227,1498,232,1436,198,1361,167,1249,142,1109,119"/>
-<area shape="rect" title=" " alt="" coords="1072,165,1218,189"/>
-<area shape="poly" title=" " alt="" coords="1054,115,1115,154,1112,158,1051,119"/>
-<area shape="rect" href="NetworkAddress_8h.html" title=" " alt="" coords="1134,237,1286,262"/>
-<area shape="poly" title=" " alt="" coords="1037,116,1043,151,1050,171,1061,188,1094,213,1132,230,1130,235,1091,217,1058,191,1045,173,1038,153,1032,117"/>
+<area shape="poly" title=" " alt="" coords="875,113,886,114,1021,123,1127,125,1232,133,1292,144,1363,162,1440,193,1502,227,1500,231,1437,197,1361,167,1291,149,1231,138,1127,130,1021,129,886,119,874,118"/>
+<area shape="rect" title=" " alt="" coords="837,165,983,189"/>
+<area shape="poly" title=" " alt="" coords="819,115,881,154,878,158,816,119"/>
+<area shape="rect" href="NetworkAddress_8h.html" title=" " alt="" coords="1094,237,1246,262"/>
+<area shape="poly" title=" " alt="" coords="802,116,807,152,814,171,826,187,860,200,924,213,1079,235,1079,240,923,218,858,205,823,191,810,174,802,154,797,117"/>
 <area shape="rect" href="server_2Config_8h.html" title=" " alt="" coords="1739,165,1849,189"/>
-<area shape="poly" title=" " alt="" coords="1110,113,1121,114,1459,146,1724,168,1723,173,1458,152,1121,119,1109,118"/>
-<area shape="poly" title=" " alt="" coords="1556,260,1578,274,1598,291,1610,312,1611,324,1607,336,1593,355,1578,365,1560,373,1540,385,1509,403,1484,415,1462,430,1442,457,1433,484,1432,513,1427,513,1428,484,1437,454,1458,426,1481,411,1507,399,1537,380,1557,368,1575,360,1590,351,1602,333,1605,323,1605,314,1594,295,1575,278,1553,265"/>
-<area shape="poly" title=" " alt="" coords="1134,259,1103,266,1071,276,1041,291,1015,312,1000,331,992,348,990,394,990,469,992,478,998,486,1023,503,1063,518,1116,532,1253,556,1417,574,1593,588,1767,598,2041,607,2041,613,1767,603,1593,593,1416,580,1252,561,1115,538,1062,523,1021,508,995,490,987,480,985,469,985,394,987,347,995,328,1011,308,1038,287,1069,271,1102,261,1133,254"/>
-<area shape="poly" title=" " alt="" coords="1219,261,1284,368,1280,370,1215,264"/>
+<area shape="poly" title=" " alt="" coords="875,113,886,114,1127,134,1365,151,1724,170,1724,175,1364,156,1127,140,886,119,874,118"/>
+<area shape="poly" title=" " alt="" coords="1556,260,1578,274,1598,291,1610,312,1611,324,1607,336,1524,397,1442,457,1433,484,1432,513,1427,513,1428,484,1437,454,1521,393,1603,333,1605,323,1605,314,1593,295,1574,278,1553,265"/>
+<area shape="poly" title=" " alt="" coords="1102,265,1055,283,1034,296,1015,312,1000,331,993,348,990,394,990,469,992,478,998,486,1023,503,1063,518,1116,532,1253,556,1417,574,1593,588,1767,598,2041,607,2041,613,1767,603,1593,593,1416,580,1252,561,1115,538,1062,523,1021,508,995,490,987,480,985,469,985,394,988,347,995,328,1011,308,1030,291,1053,278,1100,260"/>
+<area shape="poly" title=" " alt="" coords="1183,261,1227,308,1279,369,1275,372,1223,312,1179,264"/>
 <area shape="poly" title=" " alt="" coords="1739,183,1666,188,1586,198,1515,215,1489,226,1472,239,1465,251,1462,265,1464,295,1459,295,1457,265,1460,249,1468,236,1487,221,1514,210,1585,193,1666,183,1738,178"/>
 <area shape="poly" title=" " alt="" coords="1850,180,1908,187,1970,198,2024,214,2045,224,2059,236,2073,262,2077,290,2074,319,2065,349,2035,403,2004,445,2000,442,2031,400,2060,347,2069,318,2072,290,2068,263,2055,239,2042,228,2023,219,1969,203,1908,192,1850,185"/>
 <area shape="poly" title=" " alt="" coords="1751,192,1590,235,1589,230,1750,187"/>
-<area shape="poly" title=" " alt="" coords="1739,188,1302,240,1301,235,1738,182"/>
+<area shape="poly" title=" " alt="" coords="1739,187,1262,241,1261,235,1738,182"/>
 <area shape="rect" href="BaseException_8h.html" title=" " alt="" coords="1605,237,1756,262"/>
 <area shape="poly" title=" " alt="" coords="1777,192,1714,231,1711,226,1774,188"/>
-<area shape="rect" href="IPlatformScreen_8h.html" title=" " alt="" coords="2130,310,2312,335"/>
-<area shape="poly" title=" " alt="" coords="1850,179,1968,196,2036,212,2102,235,2156,265,2199,298,2196,302,2153,270,2100,240,2035,217,1967,201,1850,185"/>
+<area shape="rect" href="IPlatformScreen_8h.html" title=" " alt="" coords="2128,310,2311,335"/>
+<area shape="poly" title=" " alt="" coords="1850,179,1968,196,2036,212,2102,235,2155,265,2198,298,2195,302,2152,269,2100,240,2035,217,1967,201,1850,185"/>
 <area shape="rect" href="OptionTypes_8h.html" title=" " alt="" coords="2585,383,2745,407"/>
 <area shape="poly" title=" " alt="" coords="1850,183,1983,204,2141,235,2278,270,2412,309,2618,375,2617,380,2411,314,2277,275,2140,240,1983,209,1849,188"/>
 <area shape="rect" href="ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="1718,310,1889,335"/>
@@ -227,19 +236,19 @@ Include dependency graph for deskflow-core.cpp:</div>
 <area shape="poly" title=" " alt="" coords="1826,187,1936,229,1934,234,1824,192"/>
 <area shape="rect" title=" " alt="" coords="1831,237,1890,262"/>
 <area shape="poly" title=" " alt="" coords="1807,188,1841,224,1838,228,1803,192"/>
-<area shape="poly" title=" " alt="" coords="1677,264,1656,298,1627,336,1597,364,1556,397,1515,430,1486,457,1464,486,1448,515,1443,513,1460,483,1481,454,1511,426,1552,393,1593,360,1623,333,1652,295,1672,261"/>
+<area shape="poly" title=" " alt="" coords="1677,264,1656,298,1627,336,1586,375,1542,409,1513,432,1485,457,1464,486,1448,515,1443,513,1460,483,1482,454,1509,428,1539,405,1583,371,1623,333,1652,295,1672,261"/>
 <area shape="poly" title=" " alt="" coords="1661,265,1590,304,1587,300,1659,260"/>
 <area shape="rect" href="ClipboardTypes_8h.html" title=" " alt="" coords="1496,455,1674,480"/>
-<area shape="poly" title=" " alt="" coords="2170,338,1652,454,1651,449,2169,333"/>
+<area shape="poly" title=" " alt="" coords="2169,338,1652,454,1651,449,2168,333"/>
 <area shape="rect" href="IKeyState_8h.html" title=" " alt="" coords="2323,383,2468,407"/>
-<area shape="poly" title=" " alt="" coords="2251,333,2354,374,2352,379,2249,338"/>
+<area shape="poly" title=" " alt="" coords="2250,333,2353,374,2351,379,2248,338"/>
 <area shape="rect" href="IPrimaryScreen_8h.html" title=" " alt="" coords="2347,455,2526,480"/>
-<area shape="poly" title=" " alt="" coords="2313,330,2414,348,2456,363,2483,381,2489,398,2486,415,2464,446,2460,443,2481,413,2484,398,2479,384,2454,367,2413,353,2312,335"/>
+<area shape="poly" title=" " alt="" coords="2312,330,2414,348,2456,362,2483,381,2489,398,2486,415,2464,446,2460,443,2481,413,2484,398,2479,384,2454,367,2412,353,2311,335"/>
 <area shape="rect" href="IScreen_8h.html" title=" " alt="" coords="2165,383,2298,407"/>
-<area shape="poly" title=" " alt="" coords="2225,335,2230,367,2225,368,2220,336"/>
+<area shape="poly" title=" " alt="" coords="2224,335,2230,367,2224,368,2219,336"/>
 <area shape="rect" href="ISecondaryScreen_8h.html" title=" " alt="" coords="2025,455,2222,480"/>
-<area shape="poly" title=" " alt="" coords="2205,337,2179,358,2155,384,2141,413,2131,441,2126,440,2136,411,2151,381,2175,354,2201,333"/>
-<area shape="poly" title=" " alt="" coords="2295,333,2576,377,2575,382,2294,338"/>
+<area shape="poly" title=" " alt="" coords="2204,337,2179,358,2155,384,2141,412,2132,441,2127,439,2136,410,2151,381,2175,354,2200,333"/>
+<area shape="poly" title=" " alt="" coords="2294,333,2576,377,2575,382,2293,338"/>
 <area shape="poly" title=" " alt="" coords="1539,483,1349,530,1348,525,1538,478"/>
 <area shape="poly" title=" " alt="" coords="2469,403,2510,413,2544,429,2557,439,2565,451,2567,465,2562,481,2540,512,2516,530,2451,555,2353,576,2206,601,2205,596,2352,571,2449,550,2514,525,2536,508,2557,479,2562,465,2560,453,2553,443,2541,433,2508,418,2468,408"/>
 <area shape="poly" title=" " alt="" coords="2323,408,2310,410,1853,460,1853,455,2310,405,2322,403"/>
@@ -265,12 +274,12 @@ Include dependency graph for deskflow-core.cpp:</div>
 <area shape="rect" href="NetworkProtocol_8h.html" title=" " alt="" coords="2754,455,2915,480"/>
 <area shape="poly" title=" " alt="" coords="2694,405,2793,447,2791,451,2692,410"/>
 <area shape="poly" title=" " alt="" coords="1814,334,1863,397,1935,478,1976,517,2022,550,2089,591,2086,595,2019,555,1973,521,1931,482,1859,401,1810,337"/>
-<area shape="rect" href="DirectionTypes_8h.html" title=" " alt="" coords="1602,383,1752,407"/>
-<area shape="poly" title=" " alt="" coords="1784,338,1712,377,1710,372,1781,333"/>
-<area shape="poly" title=" " alt="" coords="1633,411,1563,431,1484,458,1407,491,1341,523,1338,518,1405,486,1483,453,1561,426,1632,405"/>
+<area shape="rect" href="DirectionTypes_8h.html" title=" " alt="" coords="1619,383,1769,407"/>
+<area shape="poly" title=" " alt="" coords="1787,337,1726,376,1723,372,1784,333"/>
+<area shape="poly" title=" " alt="" coords="1645,411,1569,431,1484,458,1406,491,1340,523,1337,518,1404,486,1483,453,1567,426,1643,405"/>
 <area shape="poly" title=" " alt="" coords="1914,263,1902,265,1792,276,1705,283,1618,292,1508,312,1507,307,1618,287,1705,278,1792,271,1902,259,1913,258"/>
 <area shape="poly" title=" " alt="" coords="1985,262,1995,324,1998,365,1997,408,1991,440,1986,440,1992,407,1993,365,1990,325,1979,263"/>
-<area shape="poly" title=" " alt="" coords="2020,260,2167,303,2166,308,2019,265"/>
+<area shape="poly" title=" " alt="" coords="2020,260,2166,303,2165,308,2018,265"/>
 <area shape="poly" title=" " alt="" coords="2045,251,2253,266,2386,280,2524,300,2658,326,2777,360,2828,380,2871,402,2905,427,2930,454,2936,467,2935,479,2930,490,2921,500,2894,515,2860,526,2858,521,2891,510,2918,496,2926,487,2930,478,2930,468,2925,457,2902,431,2868,407,2825,385,2775,365,2657,331,2523,305,2385,285,2253,271,2045,256"/>
 <area shape="poly" title=" " alt="" coords="1975,263,1957,303,1938,359,1933,390,1933,421,1939,451,1952,478,1967,495,1986,508,2028,526,2026,530,1983,513,1964,499,1948,482,1934,453,1927,422,1928,390,1933,358,1952,301,1971,261"/>
 <area shape="poly" title=" " alt="" coords="1951,265,1848,306,1846,301,1949,260"/>
@@ -280,9 +289,16 @@ Include dependency graph for deskflow-core.cpp:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aec315d77f5c38417289a0e311d2a9d31" id="r_aec315d77f5c38417289a0e311d2a9d31"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aec315d77f5c38417289a0e311d2a9d31">showHelp</a> ()</td></tr>
+<tr class="memitem:ab5fdaecc2301a741b3368d233968de10" id="r_ab5fdaecc2301a741b3368d233968de10"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5fdaecc2301a741b3368d233968de10">isHelp</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
+<tr class="memitem:a2de507730a8ffeaa8ef728c753eecbfb" id="r_a2de507730a8ffeaa8ef728c753eecbfb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2de507730a8ffeaa8ef728c753eecbfb">showVersion</a> ()</td></tr>
+<tr class="memitem:ac9b0e5680cb83d79705a49c556b9b3fa" id="r_ac9b0e5680cb83d79705a49c556b9b3fa"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac9b0e5680cb83d79705a49c556b9b3fa">isVersion</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
 <tr class="memitem:aac3c56baa33e3ed9c825ac059f3c30fc" id="r_aac3c56baa33e3ed9c825ac059f3c30fc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac3c56baa33e3ed9c825ac059f3c30fc">isServer</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
 <tr class="memitem:a679aa2460504615f4d8aad8ccd9b3301" id="r_a679aa2460504615f4d8aad8ccd9b3301"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a679aa2460504615f4d8aad8ccd9b3301">isClient</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
 <tr class="memitem:a3c04138a5bfe5d72780bb7e82a18e627" id="r_a3c04138a5bfe5d72780bb7e82a18e627"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c04138a5bfe5d72780bb7e82a18e627">main</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:aa7933fe78cc39eb00c1a3ca341a4f8a8" id="r_aa7933fe78cc39eb00c1a3ca341a4f8a8"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa7933fe78cc39eb00c1a3ca341a4f8a8">kHeader</a> = QStringLiteral(&quot;%1-core: %2\n&quot;).arg(kAppId, kDisplayVersion)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="a679aa2460504615f4d8aad8ccd9b3301" name="a679aa2460504615f4d8aad8ccd9b3301"></a>
@@ -306,6 +322,27 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="ab5fdaecc2301a741b3368d233968de10" name="ab5fdaecc2301a741b3368d233968de10"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5fdaecc2301a741b3368d233968de10">&#9670;&#160;</a></span>isHelp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isHelp </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aac3c56baa33e3ed9c825ac059f3c30fc" name="aac3c56baa33e3ed9c825ac059f3c30fc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aac3c56baa33e3ed9c825ac059f3c30fc">&#9670;&#160;</a></span>isServer()</h2>
 
@@ -314,6 +351,27 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">bool isServer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char **</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ac9b0e5680cb83d79705a49c556b9b3fa" name="ac9b0e5680cb83d79705a49c556b9b3fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9b0e5680cb83d79705a49c556b9b3fa">&#9670;&#160;</a></span>isVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isVersion </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
         </tr>
@@ -361,6 +419,46 @@ Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2de507730a8ffeaa8ef728c753eecbfb" name="a2de507730a8ffeaa8ef728c753eecbfb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2de507730a8ffeaa8ef728c753eecbfb">&#9670;&#160;</a></span>showVersion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void showVersion </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a name="doc-var-members" id="doc-var-members"></a><h2 id="header-doc-var-members" class="groupheader">Variable Documentation</h2>
+<a id="aa7933fe78cc39eb00c1a3ca341a4f8a8" name="aa7933fe78cc39eb00c1a3ca341a4f8a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7933fe78cc39eb00c1a3ca341a4f8a8">&#9670;&#160;</a></span>kHeader</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto kHeader = QStringLiteral(&quot;%1-core: %2\n&quot;).arg(kAppId, kDisplayVersion)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

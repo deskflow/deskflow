@@ -73,7 +73,8 @@ var searchData=
   ['exitapp_70',['exitApp',['../classAppUtil.html#a0ab681d361fbb3531870cd624d45e8ca',1,'AppUtil::exitApp()'],['../classAppUtilWindows.html#aa3e682db043261faf827019df0cfbf06',1,'AppUtilWindows::exitApp()']]],
   ['exitappexception_71',['ExitAppException',['../classExitAppException.html',1,'ExitAppException'],['../classExitAppException.html#a61c3d2092d07a05c10f8b3b14482e6b6',1,'ExitAppException::ExitAppException()']]],
   ['exitappstatic_72',['exitAppStatic',['../classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53',1,'AppUtil']]],
-  ['externalconfig_73',['ExternalConfig',['../structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2',1,'Settings::Server']]],
-  ['externalconfigfile_74',['ExternalConfigFile',['../structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d',1,'Settings::Server']]],
-  ['extracted_75',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
+  ['exitcodes_2eh_73',['ExitCodes.h',['../ExitCodes_8h.html',1,'']]],
+  ['externalconfig_74',['ExternalConfig',['../structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2',1,'Settings::Server']]],
+  ['externalconfigfile_75',['ExternalConfigFile',['../structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d',1,'Settings::Server']]],
+  ['extracted_76',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
 ];
