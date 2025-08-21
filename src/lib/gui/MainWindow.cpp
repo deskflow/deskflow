@@ -95,6 +95,7 @@ MainWindow::MainWindow()
   f.setPixelSize(12);
   ui->textLog->setFont(f);
 #endif
+  ui->logDock->setTitleBarWidget(new QWidget(ui->logDock));
 
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
@@ -151,8 +152,6 @@ MainWindow::MainWindow()
 
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
-  updateSize();
-
   // Force generation of SHA256 for the localhost
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     if (Settings::value(Settings::Security::KeySize).toInt() < 2048) {
@@ -183,34 +182,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-  const auto windowGeometry = Settings::value(Settings::Gui::WindowGeometry).toRect();
+  auto windowGeometry = Settings::value(Settings::Gui::WindowGeometry).toRect();
+  const auto totalGeometry = QGuiApplication::primaryScreen()->availableGeometry();
+
   if (!windowGeometry.isValid()) {
-    // center main window in middle of screen
-    const auto screen = QGuiApplication::primaryScreen();
-    QRect screenGeometry = screen->geometry();
+    adjustSize();
+    windowGeometry = geometry();
+  } else {
+    setGeometry(windowGeometry);
+  }
+
+  if (!totalGeometry.contains(windowGeometry)) {
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.center() - rect().center());
-    return;
   }
 
-  m_expandedSize = windowGeometry.size();
-
-  int x = 0;
-  int y = 0;
-  int w = 0;
-  int h = 0;
-  const auto screens = QGuiApplication::screens();
-  for (auto screen : screens) {
-    auto geo = screen->geometry();
-    x = std::min(geo.x(), x);
-    y = std::min(geo.y(), y);
-    w = std::max(geo.x() + geo.width(), w);
-    h = std::max(geo.y() + geo.height(), h);
-  }
-  const QRect screensGeometry(x, y, w, h);
-  if (screensGeometry.contains(windowGeometry)) {
-    qDebug() << "restoring main window position";
-    move(windowGeometry.topLeft());
-  }
+  if (!Settings::value(Settings::Gui::LogExpanded).toBool())
+    setFixedSize(width(), height());
 }
 
 void MainWindow::setupControls()
@@ -231,10 +219,10 @@ void MainWindow::setupControls()
   ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
   if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    ui->textLog->setVisible(true);
+    ui->logDock->setVisible(true);
     ui->btnToggleLog->click();
   } else {
-    ui->textLog->setVisible(false);
+    ui->logDock->setVisible(false);
   }
 
   ui->serverOptions->setVisible(false);
@@ -365,16 +353,15 @@ void MainWindow::connectSlots()
 
 void MainWindow::toggleLogVisible(bool visible)
 {
-  if (visible) {
-    ui->btnToggleLog->setArrowType(Qt::DownArrow);
-  } else {
-    ui->btnToggleLog->setArrowType(Qt::RightArrow);
-    m_expandedSize = size();
-  }
-  ui->textLog->setVisible(visible);
+  setFixedSize(16777215, 16777215);
+  setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+  ui->btnToggleLog->setArrowType(visible ? Qt::DownArrow : Qt::RightArrow);
+  ui->logDock->setVisible(visible);
   Settings::setValue(Settings::Gui::LogExpanded, visible);
-  // 15 ms delay is to make sure we have left the function before calling updateSize
-  QTimer::singleShot(15, this, &MainWindow::updateSize);
+  adjustSize();
+  Settings::setValue(Settings::Gui::WindowGeometry, geometry());
+  if (!visible)
+    setFixedSize(width(), height());
 }
 
 void MainWindow::settingsChanged(const QString &key)
@@ -509,18 +496,6 @@ void MainWindow::resetCore()
 {
   m_clientConnection.setShowMessage();
   m_coreProcess.restart();
-}
-
-void MainWindow::updateSize()
-{
-  if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
-    setMaximumSize(16777215, 16777215);
-    resize(m_expandedSize);
-  } else {
-    adjustSize();
-    // Prevent Resize with log collapsed
-    setMaximumSize(width(), height());
-  }
 }
 
 void MainWindow::showMyFingerprint()

@@ -120,7 +120,6 @@ private:
   void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;
 
-  void updateSize();
   void createMenuBar();
   void setupTrayIcon();
   void applyConfig();
@@ -173,7 +172,6 @@ private:
   deskflow::gui::ServerConnection m_serverConnection;
   deskflow::gui::ClientConnection m_clientConnection;
   deskflow::gui::TlsUtility m_tlsUtility;
-  QSize m_expandedSize = QSize();
   QStringList m_checkedClients;
   QStringList m_checkedServers;
   QSystemTrayIcon *m_trayIcon = nullptr;
