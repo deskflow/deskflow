@@ -11,5 +11,5 @@ class ServerAppTests : public QObject
   Q_OBJECT
 private Q_SLOTS:
   // Test are run in order top to bottom
-  void version();
+  void section();
 };

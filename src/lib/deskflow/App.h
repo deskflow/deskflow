@@ -58,7 +58,6 @@ public:
   virtual const char *daemonInfo() const = 0;
   virtual std::string configSection() const = 0;
 
-  virtual void version();
   void setByeFunc(void (*bye)(int)) override
   {
     m_bye = bye;
@@ -142,8 +141,7 @@ constexpr static auto s_helpGeneralArgs = //
     "      --tls-cert           specify the path to the TLS certificate file.\n";
 
 constexpr static auto s_helpVersionArgs = //
-    "  -h, --help               display this help and exit.\n"
-    "      --version            display version information and exit.\n";
+    "  -h, --help               display this help and exit.\n";
 
 constexpr static auto s_helpCommonArgs = //
     " [--name <screen-name>]"
