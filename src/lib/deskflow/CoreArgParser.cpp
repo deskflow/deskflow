@@ -10,8 +10,10 @@
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
+#include "deskflow/ProtocolTypes.h"
 
-const QString CoreArgParser::s_headerText = QStringLiteral("%1-core: %2\n").arg(kAppId, kDisplayVersion);
+const QString CoreArgParser::s_appName = QStringLiteral("%1-core").arg(kAppId);
+const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(s_appName, kDisplayVersion);
 
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
@@ -61,7 +63,11 @@ QString CoreArgParser::helpText() const
 
 QString CoreArgParser::versionText() const
 {
-  return QStringLiteral("%1%2\n").arg(s_headerText, kCopyright);
+  const static auto vString = QStringLiteral("%1 v%2, protocol v%3.%4\n%5\n");
+  return vString.arg(
+      s_appName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion),
+      kCopyright
+  );
 }
 
 QString CoreArgParser::errorText() const

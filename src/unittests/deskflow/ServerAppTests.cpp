@@ -10,31 +10,11 @@
 #include "deskflow/ServerApp.h"
 #include "deskflow/ServerArgs.h"
 
-#include <iostream>
-
-class MockServerApp : public ServerApp
+void ServerAppTests::section()
 {
-public:
-  MockServerApp() : ServerApp(nullptr)
-  {
-  }
-};
-
-void ServerAppTests::version()
-{
-  MockServerApp app;
+  ServerApp app(nullptr);
   QVERIFY(!app.args().m_config);
-
-  std::stringstream buffer;
-  std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
-
-  app.version();
-
-  std::cout.rdbuf(old);
-
-  static QRegularExpression yearReg(".*[0-9]{4}-[0-9]{4} Deskflow Devs.*");
-  auto result = yearReg.match(QString::fromLatin1(buffer.str()));
-  QVERIFY(result.hasMatch());
+  QCOMPARE(app.configSection(), "server");
 }
 
 QTEST_MAIN(ServerAppTests)

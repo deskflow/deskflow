@@ -40,5 +40,6 @@ private:
   QString m_helpText;
   bool m_clientMode = false;
   bool m_serverMode = false;
+  static const QString s_appName;
   static const QString s_headerText;
 };

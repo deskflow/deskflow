@@ -66,18 +66,6 @@ App::~App()
   delete m_args;
 }
 
-void App::version()
-{
-  const auto kBufferLength = 1024;
-  std::vector<char> buffer(kBufferLength);
-  std::snprintf(                                                   // NOSONAR
-      buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
-      argsBase().m_pname, kDisplayVersion, kProtocolMajorVersion, kProtocolMinorVersion, kCopyright
-  );
-
-  std::cout << std::string(buffer.data()) << std::endl;
-}
-
 int App::run(int argc, char **argv)
 {
 #if MAC_OS_X_VERSION_10_7
