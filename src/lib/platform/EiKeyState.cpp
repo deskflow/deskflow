@@ -159,12 +159,12 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
       modMaskOut |= (1 << kKeyModifierBitAltGr);
     else if (strcmp(XKB_VMOD_NAME_LEVEL5, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitLevel5Lock);
-    else if (strcmp(XKB_VMOD_NAME_META, name) == 0)
-      modMaskOut |= (1 << kKeyModifierBitMeta);
     else if (strcmp(XKB_VMOD_NAME_NUM, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitNumLock);
     else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitScrollLock);
+    else if (strcmp(XKB_VMOD_NAME_META, name) == 0) // possibly the old meta (not the new meta/super/logo key)
+      LOG_DEBUG2("modifier mask %s ignored", name);
     else if (strcmp(XKB_MOD_NAME_MOD2, name) == 0) // spare, sometimes mapped to num lock.
       LOG_DEBUG2("modifier mask %s ignored", name);
     else if (strcmp(XKB_MOD_NAME_MOD3, name) == 0) // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
