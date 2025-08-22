@@ -140,10 +140,15 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
     static const auto XKB_VMOD_NAME_NUM = "NumLock";
     static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
     static const auto XKB_VMOD_NAME_SUPER = "Super";
+    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
     static const auto XKB_MOD_NAME_MOD2 = "Mod2";
     static const auto XKB_MOD_NAME_MOD3 = "Mod3";
     static const auto XKB_MOD_NAME_MOD5 = "Mod5";
 #endif
+
+    // From wismill (xkbcommon maintainer):
+    // Meta is usually encoded like Alt, i.e. to Mod1. In that case, both share the same state.
+    // Added to that, if KDE interprets Meta as Super (the logo key), then it might explain the mess.
 
     if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitShift);
@@ -153,7 +158,9 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
       modMaskOut |= (1 << kKeyModifierBitControl);
     else if (strcmp(XKB_MOD_NAME_ALT, name) == 0 || strcmp(XKB_VMOD_NAME_ALT, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitAlt);
-    else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0 || strcmp(XKB_VMOD_NAME_SUPER, name) == 0)
+    else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0 ||   // aka windows/command key
+             strcmp(XKB_VMOD_NAME_SUPER, name) == 0 || // virtual; usually mapped to logo key
+             strcmp(XKB_VMOD_NAME_HYPER, name) == 0)   // virtual; often mapped to caps lock key
       modMaskOut |= (1 << kKeyModifierBitSuper);
     else if (strcmp(XKB_MOD_NAME_MOD5, name) == 0 || strcmp(XKB_VMOD_NAME_LEVEL3, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitAltGr);
@@ -163,7 +170,7 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
       modMaskOut |= (1 << kKeyModifierBitNumLock);
     else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
       modMaskOut |= (1 << kKeyModifierBitScrollLock);
-    else if ((strcmp(XKB_VMOD_NAME_META, name) == 0) || // possibly the old meta (not the new meta/super/logo key)
+    else if ((strcmp(XKB_VMOD_NAME_META, name) == 0) || // virtual; the old meta (not the new meta/super/logo key)
              (strcmp(XKB_MOD_NAME_MOD2, name) == 0) ||  // spare, sometimes mapped to num lock.
              (strcmp(XKB_MOD_NAME_MOD3, name) == 0)     // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
     )
