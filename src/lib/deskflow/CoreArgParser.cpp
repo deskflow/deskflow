@@ -12,7 +12,8 @@
 #include "common/Settings.h"
 #include "deskflow/ProtocolTypes.h"
 
-inline static const auto kHeader = QStringLiteral("%1-core: %2\n").arg(kAppId, kDisplayVersion);
+inline static const auto kName = QStringLiteral("%1-core").arg(kAppId);
+inline static const auto kHeader = QStringLiteral("%1: %2\n").arg(kName, kDisplayVersion);
 
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
@@ -25,7 +26,7 @@ CoreArgParser::CoreArgParser(const QStringList &args)
   m_parser.parse(args);
   m_parser.setApplicationDescription(kAppDescription);
 
-  m_helpText = m_parser.helpText().replace("<executable_name>", QString("%1-core").arg(kAppId));
+  m_helpText = m_parser.helpText().replace("<executable_name>", kName);
 }
 
 void CoreArgParser::parse()
@@ -48,6 +49,14 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::configOption)) {
     Settings::setSettingFile(m_parser.value(CoreArgs::configOption));
   }
+
+  if (m_parser.isSet(CoreArgs::interfaceOption)) {
+    Settings::setValue(Settings::Core::Interface, m_parser.value(CoreArgs::interfaceOption));
+  }
+
+  if (m_parser.isSet(CoreArgs::portOption)) {
+    Settings::setValue(Settings::Core::Port, m_parser.value(CoreArgs::portOption));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const
@@ -65,7 +74,7 @@ QString CoreArgParser::versionText() const
 {
   const static auto vString = QStringLiteral("%1 v%2, protocol v%3.%4\n%5\n");
   return vString.arg(
-    kName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion), kCopyright
+      kName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion), kCopyright
   );
 }
 
