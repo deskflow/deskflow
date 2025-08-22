@@ -6,6 +6,7 @@
 
 #include "CoreProcess.h"
 
+#include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "tls/TlsUtility.h"
@@ -196,23 +197,24 @@ void CoreProcess::daemonIpcClientConnected()
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 {
-  const auto wasStarted = m_processState == ProcessState::Started;
-
   setConnectionState(ConnectionState::Disconnected);
 
-  if (exitCode == 0) {
-    qDebug("desktop process exited normally");
-  } else {
-    qWarning("desktop process exited with error code: %d", exitCode);
+  if (m_retryTimer.isActive()) {
+    m_retryTimer.stop();
   }
 
-  if (wasStarted) {
+  if (exitCode == s_exitSuccess) {
+    qDebug("desktop process exited normally");
+  } else if (exitCode != s_exitDuplicate) {
+    qWarning("desktop process exited with error code: %d", exitCode);
+  } else {
+    setProcessState(ProcessState::Stopped);
+    qWarning("desktop process is already running");
+    return;
+  }
+
+  if (const auto wasStarted = m_processState == ProcessState::Started; wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
-
-    if (m_retryTimer.isActive()) {
-      m_retryTimer.stop();
-    }
-
     setProcessState(ProcessState::RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
