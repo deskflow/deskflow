@@ -129,38 +129,39 @@ std::uint32_t EiKeyState::convertModMask(std::uint32_t xkbMask) const
     static const auto XKB_VMOD_NAME_NUM = "NumLock";
     static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
     static const auto XKB_VMOD_NAME_SUPER = "Super";
+    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
     static const auto XKB_MOD_NAME_MOD2 = "Mod2";
     static const auto XKB_MOD_NAME_MOD3 = "Mod3";
     static const auto XKB_MOD_NAME_MOD5 = "Mod5";
 #endif
 
-    const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbmod);
-    if (strcmp(XKB_MOD_NAME_SHIFT, name) == 0)
+    std::string name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbmod);
+    if (name == XKB_MOD_NAME_SHIFT)
       modMask |= (1 << kKeyModifierBitShift);
-    else if (strcmp(XKB_MOD_NAME_CAPS, name) == 0)
+    else if (name == XKB_MOD_NAME_CAPS)
       modMask |= (1 << kKeyModifierBitCapsLock);
-    else if (strcmp(XKB_MOD_NAME_CTRL, name) == 0)
+    else if (name == XKB_MOD_NAME_CTRL)
       modMask |= (1 << kKeyModifierBitControl);
-    else if (strcmp(XKB_MOD_NAME_ALT, name) == 0 || strcmp(XKB_VMOD_NAME_ALT, name) == 0)
+    else if (name == XKB_MOD_NAME_ALT || name == XKB_VMOD_NAME_ALT)
       modMask |= (1 << kKeyModifierBitAlt);
-    else if (strcmp(XKB_MOD_NAME_LOGO, name) == 0 || strcmp(XKB_VMOD_NAME_SUPER, name) == 0)
+    else if (name == XKB_MOD_NAME_LOGO || name == XKB_VMOD_NAME_SUPER || name == XKB_VMOD_NAME_HYPER)
       modMask |= (1 << kKeyModifierBitSuper);
-    else if (strcmp(XKB_MOD_NAME_MOD5, name) == 0 || strcmp(XKB_VMOD_NAME_LEVEL3, name) == 0)
+    else if (name == XKB_MOD_NAME_MOD5 || name == XKB_VMOD_NAME_LEVEL3)
       modMask |= (1 << kKeyModifierBitAltGr);
-    else if (strcmp(XKB_VMOD_NAME_LEVEL5, name) == 0)
+    else if (name == XKB_VMOD_NAME_LEVEL5)
       modMask |= (1 << kKeyModifierBitLevel5Lock);
-    else if (strcmp(XKB_VMOD_NAME_META, name) == 0)
+    else if (name == XKB_VMOD_NAME_META)
       modMask |= (1 << kKeyModifierBitMeta);
-    else if (strcmp(XKB_VMOD_NAME_NUM, name) == 0)
+    else if (name == XKB_VMOD_NAME_NUM)
       modMask |= (1 << kKeyModifierBitNumLock);
-    else if (strcmp(XKB_VMOD_NAME_SCROLL, name) == 0)
+    else if (name == XKB_VMOD_NAME_SCROLL)
       modMask |= (1 << kKeyModifierBitScrollLock);
-    else if (strcmp(XKB_MOD_NAME_MOD2, name) == 0) // spare, sometimes mapped to num lock.
-      LOG_DEBUG2("modifier mask %s ignored", name);
-    else if (strcmp(XKB_MOD_NAME_MOD3, name) == 0) // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
-      LOG_DEBUG2("modifier mask %s ignored", name);
+    else if (name == XKB_MOD_NAME_MOD2) // spare, sometimes mapped to num lock.
+      LOG_DEBUG2("modifier mask %s ignored", name.c_str());
+    else if (name == XKB_MOD_NAME_MOD3) // spare, could be mapped to alt_r, caps lock, scroll lock, etc.
+      LOG_DEBUG2("modifier mask %s ignored", name.c_str());
     else
-      LOG_WARN("modifier mask %s not accounted for, this is a bug", name);
+      LOG_WARN("modifier mask %s not accounted for, this is a bug", name.c_str());
   }
 
   return modMask;
