@@ -1,9 +1,11 @@
 <map id="src/lib/platform/EiKeyState.h" name="src/lib/platform/EiKeyState.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="93,5,280,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="389,5,576,30"/>
 <area shape="rect" id="Node000002" href="$KeyState_8h.html" title=" " alt="" coords="196,223,337,248"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,30,259,207,254,209,188,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="466,33,404,80,337,151,286,213,282,209,333,147,401,76,463,28"/>
 <area shape="rect" id="Node000016" href="$EiScreen_8h.html" title=" " alt="" coords="414,78,551,103"/>
-<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="236,28,419,71,418,76,235,33"/>
+<area shape="poly" id="edge22_Node000001_Node000016" title=" " alt="" coords="485,31,485,62,480,62,480,31"/>
+<area shape="rect" id="Node000033" title=" " alt="" coords="575,78,753,103"/>
+<area shape="poly" id="edge56_Node000001_Node000033" title=" " alt="" coords="513,28,621,70,619,75,511,33"/>
 <area shape="rect" id="Node000003" href="$IKeyState_8h.html" title=" " alt="" coords="454,296,599,321"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="310,246,470,289,468,294,309,251"/>
 <area shape="rect" id="Node000012" href="$KeyMap_8h.html" title=" " alt="" coords="199,296,334,321"/>
@@ -39,7 +41,7 @@
 <area shape="poly" id="edge17_Node000013_Node000009" title=" " alt="" coords="152,394,152,426,146,426,146,394"/>
 <area shape="poly" id="edge54_Node000016_Node000011" title=" " alt="" coords="458,106,428,125,402,152,379,204,367,260,363,312,363,353,358,353,357,312,362,259,374,202,398,149,424,121,455,101"/>
 <area shape="poly" id="edge23_Node000016_Node000012" title=" " alt="" coords="414,103,308,121,186,147,129,163,78,182,38,203,13,225,8,236,12,246,38,264,81,278,184,296,183,302,79,283,36,269,8,250,3,236,8,222,35,198,76,177,127,158,185,142,307,115,413,98"/>
-<area shape="poly" id="edge55_Node000016_Node000015" title=" " alt="" coords="551,90,634,93,726,103,807,120,838,133,859,149,874,176,877,205,870,235,856,264,816,319,776,360,772,356,812,315,852,261,865,233,872,204,869,177,855,152,835,138,806,125,726,108,634,99,551,95"/>
+<area shape="poly" id="edge55_Node000016_Node000015" title=" " alt="" coords="551,99,743,127,859,149,874,176,877,205,870,235,856,264,816,319,776,360,772,356,812,315,852,261,865,233,872,204,869,177,856,153,742,132,550,104"/>
 <area shape="rect" id="Node000017" href="$PlatformScreen_8h.html" title=" " alt="" coords="667,151,845,175"/>
 <area shape="poly" id="edge24_Node000016_Node000017" title=" " alt="" coords="528,101,697,144,696,149,527,106"/>
 <area shape="rect" id="Node000030" title=" " alt="" coords="412,151,467,175"/>
