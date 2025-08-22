@@ -609,8 +609,8 @@ void MainWindow::updateModeControlLabels()
   } else {
     startText = tr("Connect");
     stopText = tr("Disconnect");
-    startIcon = QIcon::fromTheme(QIcon::ThemeIcon::CallStart);
-    stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::CallStop);
+    startIcon = QIcon::fromTheme(QStringLiteral("network-connect"));
+    stopIcon = QIcon::fromTheme(QStringLiteral("network-disconnect"));
   }
 
   m_actionStartCore->setText(startText);
