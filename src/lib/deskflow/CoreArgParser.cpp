@@ -24,7 +24,7 @@ CoreArgParser::CoreArgParser(const QStringList &args)
   m_parser.parse(args);
   m_parser.setApplicationDescription(kAppDescription);
 
-  m_helpText = m_parser.helpText().replace("<executable_name>", QString("%1-core").arg(kAppId));
+  m_helpText = m_parser.helpText().replace("<executable_name>", s_appName);
   m_helpText.replace("[options] coremode", "coremode [options]");
 }
 
@@ -47,6 +47,14 @@ void CoreArgParser::parse()
 
   if (m_parser.isSet(CoreArgs::configOption)) {
     Settings::setSettingFile(m_parser.value(CoreArgs::configOption));
+  }
+
+  if (m_parser.isSet(CoreArgs::interfaceOption)) {
+    Settings::setValue(Settings::Core::Interface, m_parser.value(CoreArgs::interfaceOption));
+  }
+
+  if (m_parser.isSet(CoreArgs::portOption)) {
+    Settings::setValue(Settings::Core::Port, m_parser.value(CoreArgs::portOption));
   }
 }
 
