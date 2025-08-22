@@ -88,8 +88,6 @@ add_library(${target} STATIC
   dialogs/SettingsDialog.ui
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
-  proxy/QProcessProxy.cpp
-  proxy/QProcessProxy.h
   tls/TlsCertificate.cpp
   tls/TlsCertificate.h
   tls/TlsUtility.cpp
