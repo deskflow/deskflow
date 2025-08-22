@@ -99,7 +99,7 @@ int main(int argc, char **argv)
 
   // If we can create 1 byte of SHM we are the only instance
   if (!sharedMemory.create(1)) {
-    LOG_WARN("an instance of deskflow core (server or client) is already running");
+    LOG_WARN("an instance of deskflow core is already running");
     return s_exitDuplicate;
   }
 #if SYSAPI_WIN32
