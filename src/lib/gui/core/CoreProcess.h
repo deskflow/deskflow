@@ -126,7 +126,6 @@ private:
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
   void handleLogLines(const QString &text);
-  QString correctedInterface() const;
   QString correctedAddress() const;
   QString requestDaemonLogPath();
   void persistLogDir() const;

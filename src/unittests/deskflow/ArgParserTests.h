@@ -22,7 +22,6 @@ private Q_SLOTS:
   void getArgv();
   void assembleCommand();
   void serverArgs();
-  void server_setAddress();
   void server_setConfigFile();
   void server_unexpectedParam();
   void clientArgs();

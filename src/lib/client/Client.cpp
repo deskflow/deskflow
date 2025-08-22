@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "client/ServerProxy.h"
+#include "common/Settings.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
@@ -631,10 +632,10 @@ void Client::handleResume()
 void Client::bindNetworkInterface(IDataSocket *socket) const
 {
   try {
-    if (!m_args.m_deskflowAddress.empty()) {
-      LOG_DEBUG1("bind to network interface: %s", m_args.m_deskflowAddress.c_str());
+    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+      LOG_DEBUG1("bind to network interface: %s", qPrintable(address));
 
-      NetworkAddress bindAddress(m_args.m_deskflowAddress);
+      NetworkAddress bindAddress(address.toStdString());
       bindAddress.resolve();
 
       socket->bind(bindAddress);

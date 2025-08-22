@@ -162,17 +162,6 @@ void ArgParserTests::assembleCommand()
   QCOMPARE(command, "\"stub1 space\" stub2 \"stub3 space\"");
 }
 
-void ArgParserTests::server_setAddress()
-{
-  deskflow::ServerArgs serverArgs;
-  const int argc = 3;
-  const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
-
-  m_parser.parseServerArgs(serverArgs, argc, kAddressCmd);
-
-  QCOMPARE(serverArgs.m_deskflowAddress, "mock_address");
-}
-
 void ArgParserTests::server_setConfigFile()
 {
   deskflow::ServerArgs serverArgs;

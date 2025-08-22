@@ -488,12 +488,6 @@ bool CoreProcess::addServerArgs(QStringList &args)
     return false;
   }
 
-  // the address arg is dual purpose; when in listening mode, it's the address
-  // that the server listens on. when tcp sockets are inverted, it connects to
-  // that address. this is a bit confusing, and there should be probably be
-  // different args for different purposes.
-  args << "--address" << correctedInterface();
-
   args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
   // bizarrely, the tls cert path arg was being given to the core client.
@@ -649,13 +643,6 @@ void CoreProcess::checkOSXNotification(const QString &line)
   }
 }
 #endif
-
-QString CoreProcess::correctedInterface() const
-{
-  const QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
-  const auto port = Settings::value(Settings::Core::Port).toString();
-  return QStringLiteral("%1:%2").arg(interface, port);
-}
 
 QString CoreProcess::correctedAddress() const
 {

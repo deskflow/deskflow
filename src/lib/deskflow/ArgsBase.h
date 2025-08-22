@@ -59,9 +59,6 @@ public:
   /// @brief Will cause the application to exit with fail code when set to true
   bool m_shouldExitFail = false;
 
-  /// @brief Bind to this address
-  std::string m_deskflowAddress;
-
   /// @brief Should the connections be TLS encrypted
   bool m_enableCrypto = false;
 
