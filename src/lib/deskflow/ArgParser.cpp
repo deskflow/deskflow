@@ -122,9 +122,7 @@ bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc,
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, "-a", "--address", 1)) {
-    argsBase().m_deskflowAddress = argv[++i];
-  } else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
+  if (isArg(i, argc, argv, "-d", "--debug", 1)) {
     // change logging level
     argsBase().m_logFilter = argv[++i];
   } else if (isArg(i, argc, argv, "-l", "--log", 1)) {

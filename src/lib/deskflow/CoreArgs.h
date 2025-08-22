@@ -18,5 +18,13 @@ struct CoreArgs
   inline static const auto configOption = QCommandLineOption(
       {"s", "settings"}, "override configuration file to use", "configFile"
   ); // use -c later, now avoid breaking the serverApp args.
-  inline static const auto options = {helpOption, versionOption, configOption};
+  inline static const auto interfaceOption = QCommandLineOption(
+      {"i", "interface"},
+      "Use a specific interface for the connection. Instead of any address in client mode or listening on all "
+      "addresses in server mode address.\n address must be the IP address or hostname of an interface on the system.",
+      "address"
+  );
+  inline static const auto portOption =
+      QCommandLineOption({"p", "port"}, "Port to use in place of default port", "port");
+  inline static const auto options = {helpOption, versionOption, configOption, interfaceOption, portOption};
 };
