@@ -20,6 +20,7 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QMutexLocker>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTimer>
@@ -116,43 +117,23 @@ QString wrapIpv6(const QString &address)
   return address;
 }
 
-//
-// CoreProcess::Deps
-//
-
-QString CoreProcess::Deps::appPath(const QString &name) const
+QString getAppFilePath(const QString &name)
 {
   QDir dir(QCoreApplication::applicationDirPath());
   return dir.filePath(name);
-}
-
-bool CoreProcess::Deps::fileExists(const QString &path) const
-{
-  return QFile::exists(path);
 }
 
 //
 // CoreProcess
 //
 
-CoreProcess::CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
+CoreProcess::CoreProcess(const IServerConfig &serverConfig)
     : m_serverConfig(serverConfig),
-      m_pDeps(deps),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
   connect(
       m_daemonIpcClient, &ipc::DaemonIpcClient::connectionFailed, this, &CoreProcess::daemonIpcClientConnectionFailed
-  );
-
-  connect(&m_pDeps->process(), &QProcessProxy::finished, this, &CoreProcess::onProcessFinished);
-
-  connect(
-      &m_pDeps->process(), &QProcessProxy::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput
-  );
-
-  connect(
-      &m_pDeps->process(), &QProcessProxy::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError
   );
 
   connect(&m_retryTimer, &QTimer::timeout, this, [this] {
@@ -166,15 +147,15 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps
 
 void CoreProcess::onProcessReadyReadStandardOutput()
 {
-  if (m_pDeps->process()) {
-    handleLogLines(m_pDeps->process().readAllStandardOutput());
+  if (m_pProcess) {
+    handleLogLines(m_pProcess->readAllStandardOutput());
   }
 }
 
 void CoreProcess::onProcessReadyReadStandardError()
 {
-  if (m_pDeps->process()) {
-    handleLogLines(m_pDeps->process().readAllStandardError());
+  if (m_pProcess) {
+    handleLogLines(m_pProcess->readAllStandardError());
   }
 }
 
@@ -250,9 +231,9 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
   const auto quoted = makeQuotedArgs(app, args);
   qInfo("running command: %s", qPrintable(quoted));
 
-  m_pDeps->process().start(app, args);
+  m_pProcess->start(app, args);
 
-  if (m_pDeps->process().waitForStarted()) {
+  if (m_pProcess->waitForStarted()) {
     setProcessState(Started);
   } else {
     setProcessState(Stopped);
@@ -284,15 +265,15 @@ void CoreProcess::stopForegroundProcess() const
     qFatal("core process must be in stopping state");
   }
 
-  if (!m_pDeps->process()) {
+  if (!m_pProcess) {
     qFatal("process not set, cannot stop");
   }
 
   qInfo("stopping core desktop process");
 
-  if (m_pDeps->process().state() == QProcess::ProcessState::Running) {
+  if (m_pProcess->state() == QProcess::ProcessState::Running) {
     qDebug("process is running, closing");
-    m_pDeps->process().close();
+    m_pProcess->close();
   } else {
     qDebug("process is not running, skipping terminate");
   }
@@ -365,7 +346,16 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   setConnectionState(ConnectionState::Connecting);
 
   if (processMode == ProcessMode::Desktop) {
-    m_pDeps->process().create();
+    m_pProcess = new QProcess(this);
+    connect(m_pProcess, &QProcess::finished, this, &CoreProcess::onProcessFinished, Qt::UniqueConnection);
+    connect(
+        m_pProcess, &QProcess::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput,
+        Qt::UniqueConnection
+    );
+    connect(
+        m_pProcess, &QProcess::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError,
+        Qt::UniqueConnection
+    );
   }
 
   QString app;
@@ -489,9 +479,9 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(Settings::value(Settings::Server::Binary).toString());
+  app = getAppFilePath(Settings::value(Settings::Server::Binary).toString());
 
-  if (!m_pDeps->fileExists(app)) {
+  if (!QFile::exists(app)) {
     qFatal("core server binary does not exist");
     return false;
   }
@@ -535,9 +525,9 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 
 bool CoreProcess::addClientArgs(QStringList &args, QString &app)
 {
-  app = m_pDeps->appPath(Settings::value(Settings::Client::Binary).toString());
+  app = getAppFilePath(Settings::value(Settings::Client::Binary).toString());
 
-  if (!m_pDeps->fileExists(app)) {
+  if (!QFile::exists(app)) {
     qFatal("core client binary does not exist");
     return false;
   }
