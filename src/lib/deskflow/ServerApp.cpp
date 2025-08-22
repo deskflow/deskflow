@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -86,9 +87,9 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
       bye(s_exitArgs);
     }
   } else {
-    if (!args().m_deskflowAddress.empty()) {
+    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
       try {
-        *m_deskflowAddress = NetworkAddress(args().m_deskflowAddress, kDefaultPort);
+        *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
         m_deskflowAddress->resolve();
       } catch (SocketAddressException &e) {
         LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
@@ -104,14 +105,12 @@ void ServerApp::help()
   help << "\n\nServer Mode:\n\n"
        << "Usage: " << kAppId << "-core server"
        << " --config <pathname>"
-       << " [--address <address>]"
 
 #if WINAPI_XWINDOWS
        << " [--display <display>]"
 #endif
 
        << s_helpCommonArgs << "\n"
-       << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  path of the configuration file\n"
        << s_helpGeneralArgs
        << "      --disable-client-cert-check disable client SSL certificate \n"
@@ -125,15 +124,7 @@ void ServerApp::help()
 
        << "* marks defaults.\n"
 
-       << s_helpNoWayland
-
-       << "\n"
-       << "The argument for --address is of the form: [<hostname>][:<port>].  "
-          "The\n"
-       << "hostname must be the address or hostname of an interface on the "
-       << "system.\n"
-       << "The default is to listen on all interfaces.  The port overrides the\n"
-       << "default port, " << kDefaultPort << ".\n";
+       << s_helpNoWayland;
 
   LOG_PRINT("%s", help.str().c_str());
 }

@@ -102,7 +102,6 @@ void ClientApp::help()
   std::stringstream help;
   help << "\n\nClient Mode:\n\n"
        << "Usage: " << kAppId << "-core client"
-       << " [--address <address>]"
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
@@ -113,7 +112,6 @@ void ClientApp::help()
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
-       << "  -a, --address <address>  local network interface address.\n"
        << s_helpGeneralArgs << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
        << "      --sync-language      enable language synchronization.\n"
