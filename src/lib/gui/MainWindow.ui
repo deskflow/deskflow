@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>758</width>
-    <height>466</height>
+    <height>259</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -523,25 +523,6 @@
          </item>
         </layout>
        </item>
-       <item>
-        <widget class="QPlainTextEdit" name="textLog">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="lineWrapMode">
-          <enum>QPlainTextEdit::LineWrapMode::NoWrap</enum>
-         </property>
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="maximumBlockCount">
-          <number>10000</number>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
     </item>
@@ -551,7 +532,6 @@
  </widget>
  <tabstops>
   <tabstop>btnToggleLog</tabstop>
-  <tabstop>textLog</tabstop>
  </tabstops>
  <resources/>
  <connections/>

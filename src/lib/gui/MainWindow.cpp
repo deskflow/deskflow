@@ -21,11 +21,11 @@
 #include "base/String.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
-#include "gui/Logger.h"
 #include "gui/Messages.h"
 #include "gui/Styles.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
+#include "gui/widgets/LogWidget.h"
 #include "net/FingerprintDatabase.h"
 #include "platform/Wayland.h"
 
@@ -33,6 +33,7 @@
 #include "Config.h"
 #endif
 
+#include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFileDialog>
 #include <QLocalServer>
@@ -45,6 +46,7 @@
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
+#include <QScreen>
 #include <QScrollBar>
 
 #include <memory>
@@ -68,6 +70,7 @@ MainWindow::MainWindow()
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
+      m_logWidget{new LogWidget(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
       m_btnFingerprint{new QToolButton(this)},
@@ -88,13 +91,7 @@ MainWindow::MainWindow()
 
   setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 
-  // setup the log font
-  ui->textLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-#ifdef Q_OS_MAC
-  auto f = ui->textLog->font();
-  f.setPixelSize(12);
-  ui->textLog->setFont(f);
-#endif
+  ui->frameLog->layout()->addWidget(m_logWidget);
 
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
@@ -231,10 +228,10 @@ void MainWindow::setupControls()
   ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
   if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
     ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    ui->textLog->setVisible(true);
+    m_logWidget->setVisible(true);
     ui->btnToggleLog->click();
   } else {
-    ui->textLog->setVisible(false);
+    m_logWidget->setVisible(false);
   }
 
   ui->serverOptions->setVisible(false);
@@ -294,8 +291,6 @@ void MainWindow::setupControls()
 // signal is emitted from the thread that owns the receiver's object.
 void MainWindow::connectSlots()
 {
-  connect(&Logger::instance(), &Logger::newLine, this, &MainWindow::handleLogLine);
-
   connect(Settings::instance(), &Settings::serverSettingsChanged, this, &MainWindow::serverConfigSaving);
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
@@ -371,7 +366,7 @@ void MainWindow::toggleLogVisible(bool visible)
     ui->btnToggleLog->setArrowType(Qt::RightArrow);
     m_expandedSize = size();
   }
-  ui->textLog->setVisible(visible);
+  m_logWidget->setVisible(visible);
   Settings::setValue(Settings::Gui::LogExpanded, visible);
   // 15 ms delay is to make sure we have left the function before calling updateSize
   QTimer::singleShot(15, this, &MainWindow::updateSize);
@@ -810,21 +805,7 @@ void MainWindow::setIcon()
 
 void MainWindow::handleLogLine(const QString &line)
 {
-  const int kScrollBottomThreshold = 2;
-
-  QScrollBar *verticalScroll = ui->textLog->verticalScrollBar();
-  int currentScroll = verticalScroll->value();
-  int maxScroll = verticalScroll->maximum();
-  const auto scrollAtBottom = qAbs(currentScroll - maxScroll) <= kScrollBottomThreshold;
-
-  // Never trim the log line; doing so would hide underlying bugs where newlines and space is added unintentionally.
-  ui->textLog->appendPlainText(line);
-
-  if (scrollAtBottom) {
-    verticalScroll->setValue(verticalScroll->maximum());
-    ui->textLog->horizontalScrollBar()->setValue(0);
-  }
-
+  m_logWidget->appendLine(line);
   updateFromLogLine(line);
 }
 
