@@ -145,11 +145,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
       m_app->help();
     }
     argsBase().m_shouldExitOk = true;
-  } else if (isArg(i, argc, argv, nullptr, "--version")) {
-    if (m_app) {
-      m_app->version();
-    }
-    argsBase().m_shouldExitOk = true;
   } else if (isArg(i, argc, argv, nullptr, "--server")) {
     // HACK: stop error happening when using portable (deskflowp)
   } else if (isArg(i, argc, argv, nullptr, "--client")) {
