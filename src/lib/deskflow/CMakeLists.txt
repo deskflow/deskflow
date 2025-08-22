@@ -83,6 +83,9 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ClipboardChunk.h
   Config.cpp
   Config.h
+  CoreArgParser.cpp
+  CoreArgParser.h
+  CoreArgs.h
   DaemonApp.cpp
   DaemonApp.h
   DeskflowException.cpp

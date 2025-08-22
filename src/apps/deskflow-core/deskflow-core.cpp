@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "VersionInfo.h"
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
+#include "deskflow/CoreArgParser.h"
 #include "deskflow/ServerApp.h"
 
 #if SYSAPI_WIN32
@@ -20,55 +20,17 @@
 #endif
 
 #include <QSharedMemory>
+#include <QTextStream>
 #include <iostream>
 
-const static auto kHeader = QStringLiteral("%1-core: %2\n").arg(kAppId, kDisplayVersion);
-
-void showHelp()
+void showHelp(const CoreArgParser &parser)
 {
-  std::cout << qPrintable(kHeader) << qPrintable(kAppDescription) << "\n\n";
-  std::cout << "Usage: deskflow-core <server | client> [...options]" << std::endl;
-  std::cout << "server - start as a server (deskflow-server)" << std::endl;
-  std::cout << "client - start as a client (deskflow-client)" << std::endl;
-
+  QTextStream(stdout) << parser.helpText() << "\n";
   ServerApp sApp(nullptr);
   sApp.help();
 
   ClientApp cApp(nullptr);
   cApp.help();
-}
-
-bool isHelp(int argc, char **argv)
-{
-  for (int i = 0; i < argc; ++i) {
-    if (argv[i] == std::string("--help") || argv[i] == std::string("-h"))
-      return true;
-  }
-  return false;
-}
-
-void showVersion()
-{
-  std::cout << qPrintable(kHeader) << qPrintable(kCopyright) << std::endl;
-}
-
-bool isVersion(int argc, char **argv)
-{
-  for (int i = 0; i < argc; ++i) {
-    if (argv[i] == std::string("--version") || argv[i] == std::string("-v"))
-      return true;
-  }
-  return false;
-}
-
-bool isServer(int argc, char **argv)
-{
-  return (argc > 1 && argv[1] == std::string("server"));
-}
-
-bool isClient(int argc, char **argv)
-{
-  return (argc > 1 && argv[1] == std::string("client"));
 }
 
 int main(int argc, char **argv)
@@ -78,16 +40,29 @@ int main(int argc, char **argv)
 
   Log log;
 
-  if (isHelp(argc, argv)) {
-    showHelp();
+  QStringList args;
+  for (int i = 0; i < argc; i++)
+    args.append(argv[i]);
+
+  CoreArgParser parser(args);
+
+  // Comment below until we are ready use only this parser
+  // if (!parser.errorText().isEmpty()) {
+  //   QTextStream(stdout) << parser.errorText() << "\nUse --help for more information.";
+  //   return s_exitFailed;
+  // }
+
+  if (parser.help()) {
+    showHelp(parser);
     return s_exitSuccess;
   }
 
-  if (isVersion(argc, argv)) {
-    showVersion();
+  if (parser.version()) {
+    QTextStream(stdout) << parser.versionText();
     return s_exitSuccess;
   }
 
+  // Before we check any more args we need to check for a duplicate process.
   // Create a shared memory segment with a unique key
   // This is to prevent a new instance from running if one is already running
   QSharedMemory sharedMemory("deskflow-core");
@@ -102,6 +77,9 @@ int main(int argc, char **argv)
     LOG_WARN("an instance of deskflow core is already running");
     return s_exitDuplicate;
   }
+
+  parser.parse();
+
 #if SYSAPI_WIN32
   // HACK to make sure settings gets the correct qApp path
   QCoreApplication m(argc, argv);
@@ -112,14 +90,12 @@ int main(int argc, char **argv)
 
   EventQueue events;
 
-  if (isServer(argc, argv)) {
+  if (parser.serverMode()) {
     ServerApp app(&events);
     return app.run(argc, argv);
-  } else if (isClient(argc, argv)) {
+  } else if (parser.clientMode()) {
     ClientApp app(&events);
     return app.run(argc, argv);
-  } else {
-    showHelp();
   }
 
   return s_exitSuccess;
