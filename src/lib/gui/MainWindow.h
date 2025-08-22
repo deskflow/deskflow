@@ -45,6 +45,7 @@ class QAbstractButton;
 class QLocalServer;
 
 class DeskflowApplication;
+class LogWidget;
 
 namespace Ui {
 class MainWindow;
@@ -180,6 +181,7 @@ private:
   QLocalServer *m_guiDupeChecker = nullptr;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
 
+  LogWidget *m_logWidget = nullptr;
   QLabel *m_lblSecurityStatus = nullptr;
   QLabel *m_lblStatus = nullptr;
   QToolButton *m_btnFingerprint = nullptr;
