@@ -123,19 +123,22 @@ int App::daemonMainLoop(int, const char **)
 
 void App::setupFileLogging()
 {
-  if (argsBase().m_logFile != nullptr) {
-    m_fileLog = new FileLogOutputter(argsBase().m_logFile); // NOSONAR - Adopted by `Log`
-    CLOG->insert(m_fileLog);
-    LOG_DEBUG1("logging to file (%s) enabled", argsBase().m_logFile);
+  if (Settings::value(Settings::Log::ToFile).toBool()) {
+    if (const auto file = Settings::value(Settings::Log::File).toString(); !file.isEmpty()) {
+      const auto logFile = qPrintable(file);
+      m_fileLog = new FileLogOutputter(logFile); // NOSONAR - Adopted by `Log`
+      CLOG->insert(m_fileLog);
+      LOG_DEBUG1("logging to file (%s) enabled", logFile);
+    }
   }
 }
 
 void App::loggingFilterWarning() const
 {
-  if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (argsBase().m_logFile == nullptr)) {
-    LOG(
-        (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
-         CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
+  if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (Settings::value(Settings::Log::ToFile).toBool())) {
+    LOG_WARN(
+        "log messages above %s are NOT sent to console (use file logging)",
+        CLOG->getFilterName(CLOG->getConsoleMaxLevel())
     );
   }
 }
