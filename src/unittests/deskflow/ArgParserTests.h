@@ -31,7 +31,6 @@ private Q_SLOTS:
   void client_setAddress();
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
-  void deprecatedArg_crypoPass_false();
   void generic_foreground();
   void generic_daemon();
   void generic_noRestart();
