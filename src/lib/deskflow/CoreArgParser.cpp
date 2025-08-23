@@ -17,14 +17,15 @@ inline static const auto kHeader = QStringLiteral("%1: %2\n").arg(kName, kDispla
 
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
+  m_parser.setApplicationDescription(kAppDescription);
   m_parser.addPositionalArgument(
       "coremode", "The mode to start in either: server or client", "[server | client] [mode args]"
   );
 
   m_parser.addOptions(CoreArgs::options);
   m_parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
+  m_parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsOptions);
   m_parser.parse(args);
-  m_parser.setApplicationDescription(kAppDescription);
 
   m_helpText = m_parser.helpText().replace("<executable_name>", kName);
 }
@@ -56,6 +57,10 @@ void CoreArgParser::parse()
 
   if (m_parser.isSet(CoreArgs::portOption)) {
     Settings::setValue(Settings::Core::Port, m_parser.value(CoreArgs::portOption));
+  }
+
+  if (m_parser.isSet(CoreArgs::nameOption)) {
+    Settings::setValue(Settings::Core::ScreenName, m_parser.value(CoreArgs::nameOption));
   }
 }
 

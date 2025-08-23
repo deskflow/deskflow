@@ -53,9 +53,6 @@ public:
   /// @brief Contains the X-Server display to use
   const char *m_display = nullptr;
 
-  /// @brief The name of the current computer
-  std::string m_name;
-
   /// @brief Should the app add a tray icon
   bool m_disableTray = false;
 

@@ -26,5 +26,8 @@ struct CoreArgs
   );
   inline static const auto portOption =
       QCommandLineOption({"p", "port"}, "Port to use in place of default port", "port");
-  inline static const auto options = {helpOption, versionOption, configOption, interfaceOption, portOption};
+  inline static const auto nameOption =
+      QCommandLineOption({"n", "name"}, "use screen-name instead the hostname to identify this screen", "screen-name");
+
+  inline static const auto options = {helpOption, versionOption, configOption, interfaceOption, portOption, nameOption};
 };

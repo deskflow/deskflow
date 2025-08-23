@@ -132,9 +132,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
   } else if (isArg(i, argc, argv, nullptr, "--daemon")) {
     // daemonize
     argsBase().m_daemon = true;
-  } else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-    // save screen name
-    argsBase().m_name = argv[++i];
   } else if (isArg(i, argc, argv, "-1", "--no-restart")) {
     // don't try to restart
     argsBase().m_restartable = false;
@@ -325,7 +322,6 @@ std::string ArgParser::assembleCommand(
 
 void ArgParser::updateCommonArgs(const char *const *argv) const
 {
-  argsBase().m_name = ARCH->getHostName();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
