@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
@@ -70,6 +71,7 @@ using namespace deskflow::server;
 
 ServerApp::ServerApp(IEventQueue *events) : App(events, new deskflow::ServerArgs())
 {
+  m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing
 }
 
@@ -86,9 +88,9 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
       bye(s_exitArgs);
     }
   } else {
-    if (!args().m_deskflowAddress.empty()) {
+    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
       try {
-        *m_deskflowAddress = NetworkAddress(args().m_deskflowAddress, kDefaultPort);
+        *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
         m_deskflowAddress->resolve();
       } catch (SocketAddressException &e) {
         LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
@@ -104,14 +106,12 @@ void ServerApp::help()
   help << "\n\nServer Mode:\n\n"
        << "Usage: " << kAppId << "-core server"
        << " --config <pathname>"
-       << " [--address <address>]"
 
 #if WINAPI_XWINDOWS
        << " [--display <display>]"
 #endif
 
        << s_helpSysArgs << s_helpCommonArgs << "\n"
-       << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  path of the configuration file\n"
        << s_helpGeneralArgs
        << "      --disable-client-cert-check disable client SSL certificate \n"
@@ -125,15 +125,7 @@ void ServerApp::help()
 
        << "* marks defaults.\n"
 
-       << s_helpNoWayland
-
-       << "\n"
-       << "The argument for --address is of the form: [<hostname>][:<port>].  "
-          "The\n"
-       << "hostname must be the address or hostname of an interface on the "
-       << "system.\n"
-       << "The default is to listen on all interfaces.  The port overrides the\n"
-       << "default port, " << kDefaultPort << ".\n";
+       << s_helpNoWayland;
 
   LOG_PRINT("%s", help.str().c_str());
 }
@@ -360,7 +352,7 @@ bool ServerApp::initServer()
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
-    std::string name = args().m_config->getCanonicalName(args().m_name);
+    std::string name = args().m_config->getCanonicalName(m_name);
     serverScreen = openServerScreen();
     primaryClient = openPrimaryClient(name, serverScreen);
     m_serverScreen = serverScreen;
@@ -524,7 +516,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
   using enum SecurityLevel;
   auto securityLevel = PlainText;
-  if (args().m_enableCrypto) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     if (args().m_chkPeerCert) {
       securityLevel = PeerAuth;
     } else {
@@ -579,7 +571,7 @@ int ServerApp::mainLoop()
   // if configuration has no screens then add this system
   // as the default
   if (args().m_config->begin() == args().m_config->end()) {
-    args().m_config->addScreen(args().m_name);
+    args().m_config->addScreen(m_name);
   }
 
   // set the contact address, if provided, in the config.
@@ -592,8 +584,8 @@ int ServerApp::mainLoop()
   }
 
   // canonicalize the primary screen name
-  if (std::string primaryName = args().m_config->getCanonicalName(args().m_name); primaryName.empty()) {
-    LOG_CRIT("unknown screen name `%s'", args().m_name.c_str());
+  if (std::string primaryName = args().m_config->getCanonicalName(m_name); primaryName.empty()) {
+    LOG_CRIT("unknown screen name `%s'", m_name.c_str());
     return s_exitFailed;
   }
 

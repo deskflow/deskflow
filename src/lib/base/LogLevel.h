@@ -13,6 +13,7 @@ The logging priority levels in order of highest to lowest priority.
 */
 enum class LogLevel
 {
+  IPC = -2,   //!< For IPC Messages the gui must see, remove when IPC works proper
   Print = -1, //!< For print only (no file or time)
   Fatal,      //!< For fatal errors
   Error,      //!< For serious errors

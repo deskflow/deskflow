@@ -420,6 +420,26 @@
            <widget class="QComboBox" name="comboLogLevel">
             <item>
              <property name="text">
+              <string>Fatal</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Error</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Warning</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>Note</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
               <string>Info</string>
              </property>
             </item>

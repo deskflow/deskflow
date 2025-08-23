@@ -121,22 +121,12 @@ bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc,
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, "-a", "--address", 1)) {
-    argsBase().m_deskflowAddress = argv[++i];
-  } else if (isArg(i, argc, argv, "-d", "--debug", 1)) {
-    // change logging level
-    argsBase().m_logFilter = argv[++i];
-  } else if (isArg(i, argc, argv, "-l", "--log", 1)) {
-    argsBase().m_logFile = argv[++i];
-  } else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
+  if (isArg(i, argc, argv, "-f", "--no-daemon")) {
     // not a daemon
     argsBase().m_daemon = false;
   } else if (isArg(i, argc, argv, nullptr, "--daemon")) {
     // daemonize
     argsBase().m_daemon = true;
-  } else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-    // save screen name
-    argsBase().m_name = argv[++i];
   } else if (isArg(i, argc, argv, "-1", "--no-restart")) {
     // don't try to restart
     argsBase().m_restartable = false;
@@ -150,21 +140,10 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
       m_app->help();
     }
     argsBase().m_shouldExitOk = true;
-  } else if (isArg(i, argc, argv, nullptr, "--version")) {
-    if (m_app) {
-      m_app->version();
-    }
-    argsBase().m_shouldExitOk = true;
   } else if (isArg(i, argc, argv, nullptr, "--server")) {
     // HACK: stop error happening when using portable (deskflowp)
   } else if (isArg(i, argc, argv, nullptr, "--client")) {
     // HACK: stop error happening when using portable (deskflowp)
-  } else if (isArg(i, argc, argv, nullptr, "--enable-crypto")) {
-    argsBase().m_enableCrypto = true;
-  } else if (isArg(i, argc, argv, nullptr, "--tls-cert", 1)) {
-    argsBase().m_tlsCertFile = argv[++i];
-  } else if (isArg(i, argc, argv, nullptr, "--prevent-sleep")) {
-    argsBase().m_preventSleep = true;
   } else {
     // option not supported here
     return false;
@@ -332,7 +311,6 @@ std::string ArgParser::assembleCommand(
 
 void ArgParser::updateCommonArgs(const char *const *argv) const
 {
-  argsBase().m_name = ARCH->getHostName();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 

@@ -129,6 +129,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+  static int logLevelToInt(const QString &level = "INFO");
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
@@ -147,7 +148,11 @@ private:
 
   // clang-format off
   inline static const QStringList m_logLevels = {
-     QStringLiteral("INFO")
+      QStringLiteral("FATAL")
+    , QStringLiteral("ERROR")
+    , QStringLiteral("WARNING")
+    , QStringLiteral("NOTE")
+    , QStringLiteral("INFO")
     , QStringLiteral("DEBUG")
     , QStringLiteral("DEBUG1")
     , QStringLiteral("DEBUG2")
