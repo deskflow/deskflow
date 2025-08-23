@@ -360,8 +360,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   QStringList args;
 
-  addGenericArgs(args);
-
   if (mode() == Server) {
     args.prepend(QStringLiteral("server"));
     if (!addServerArgs(args))
@@ -452,15 +450,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-}
-
-bool CoreProcess::addGenericArgs(QStringList &args) const
-{
-  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
-    args << "--prevent-sleep";
-  }
-
-  return true;
 }
 
 bool CoreProcess::addServerArgs(QStringList &args)

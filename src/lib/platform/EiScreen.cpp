@@ -14,6 +14,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "common/Constants.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
@@ -76,7 +77,7 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, deskflow
   }
 
   // disable sleep if the flag is set
-  if (App::instance().argsBase().m_preventSleep) {
+  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     m_powerManager.disableSleep();
   }
 }

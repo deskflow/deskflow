@@ -115,7 +115,6 @@ private:
   void startProcessFromDaemon(const QStringList &args);
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
-  bool addGenericArgs(QStringList &args) const;
   bool addServerArgs(QStringList &args);
   bool addClientArgs(QStringList &args);
   QString persistServerConfig() const;
