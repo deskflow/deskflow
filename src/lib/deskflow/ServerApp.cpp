@@ -516,7 +516,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
   using enum SecurityLevel;
   auto securityLevel = PlainText;
-  if (args().m_enableCrypto) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     if (args().m_chkPeerCert) {
       securityLevel = PeerAuth;
     } else {

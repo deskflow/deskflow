@@ -38,6 +38,8 @@ struct CoreArgs
 
   inline static const auto logFileOption = QCommandLineOption({"l", "log"}, "Write messages to file", "file");
 
-  inline static const auto options = {helpOption, versionOption, configOption,   interfaceOption,
-                                      portOption, nameOption,    logLevelOption, logFileOption};
+  inline static const auto insecureOption = QCommandLineOption("insecure", "Disable TLS encryption");
+
+  inline static const auto options = {helpOption, versionOption,  configOption,  interfaceOption, portOption,
+                                      nameOption, logLevelOption, logFileOption, insecureOption};
 };
