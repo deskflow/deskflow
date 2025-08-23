@@ -127,9 +127,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
     argsBase().m_logFilter = argv[++i];
   } else if (isArg(i, argc, argv, "-l", "--log", 1)) {
     argsBase().m_logFile = argv[++i];
-  } else if (isArg(i, argc, argv, "-n", "--name", 1)) {
-    // save screen name
-    argsBase().m_name = argv[++i];
   } else if (isArg(i, argc, argv, "-1", "--no-restart")) {
     // don't try to restart
     argsBase().m_restartable = false;
@@ -320,7 +317,6 @@ std::string ArgParser::assembleCommand(
 
 void ArgParser::updateCommonArgs(const char *const *argv) const
 {
-  argsBase().m_name = QSysInfo::machineHostName().toStdString();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
