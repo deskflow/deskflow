@@ -61,6 +61,10 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::nameOption)) {
     Settings::setValue(Settings::Core::ScreenName, m_parser.value(CoreArgs::nameOption));
   }
+
+  if (m_parser.isSet(CoreArgs::logLevelOption)) {
+    Settings::setValue(Settings::Log::Level, Settings::logLevelToInt(m_parser.value(CoreArgs::logLevelOption)));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

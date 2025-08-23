@@ -20,6 +20,7 @@ private Q_SLOTS:
   void portShort();
   void nameLong();
   void nameShort();
+  void logLevel();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");

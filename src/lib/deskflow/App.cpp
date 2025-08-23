@@ -14,6 +14,7 @@
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/DeskflowException.h"
@@ -165,10 +166,8 @@ void App::initApp(int argc, const char **argv)
   }
 
   // set log filter
-  if (!CLOG->setFilter(argsBase().m_logFilter)) {
-    LOG((
-        CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname
-    ));
+  if (const auto logLevel = qPrintable(Settings::logLevelText()); !CLOG->setFilter(logLevel)) {
+    LOG_CRIT("%s: unrecognized log level `%s'" BYE, argsBase().m_pname, logLevel, argsBase().m_pname);
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();

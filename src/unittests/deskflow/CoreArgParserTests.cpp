@@ -80,4 +80,14 @@ void CoreArgParserTests::nameShort()
   QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), "ShortName");
 }
 
+void CoreArgParserTests::logLevel()
+{
+  QStringList args = {"stub", "client", "--log-level", "DEBUG1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Log::Level).toInt(), 6);
+}
+
 QTEST_MAIN(CoreArgParserTests)

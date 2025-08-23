@@ -290,18 +290,6 @@ void ArgParserTests::deprecatedArg_crypoPass_false()
   QCOMPARE(i, 1);
 }
 
-void ArgParserTests::generic_logLevel()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogLevelCmd[argc] = {"stub", "--debug", "DEBUG"};
-
-  m_parser.parseGenericArgs(argc, kLogLevelCmd, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFilter, "DEBUG");
-  QCOMPARE(i, 2);
-}
-
 void ArgParserTests::generic_logFile()
 {
   int i = 1;
