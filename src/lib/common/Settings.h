@@ -128,6 +128,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+  static int logLevelToInt(const QString &level = "INFO");
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
