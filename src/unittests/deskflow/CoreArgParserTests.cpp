@@ -110,4 +110,44 @@ void CoreArgParserTests::logFileWithSpace()
   QCOMPARE(Settings::value(Settings::Log::File).toString(), "mock filename");
 }
 
+void CoreArgParserTests::secure_false()
+{
+  QStringList args = {"stub", "client", "--secure", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Security::TlsEnabled).toBool());
+}
+
+void CoreArgParserTests::secure_true()
+{
+  QStringList args = {"stub", "client", "--secure", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Security::TlsEnabled).toBool());
+}
+
+void CoreArgParserTests::secure_0()
+{
+  QStringList args = {"stub", "client", "--secure", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Security::TlsEnabled).toBool());
+}
+
+void CoreArgParserTests::secure_1()
+{
+  QStringList args = {"stub", "client", "--secure", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Security::TlsEnabled).toBool());
+}
+
 QTEST_MAIN(CoreArgParserTests)
