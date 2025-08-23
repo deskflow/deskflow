@@ -60,4 +60,24 @@ void CoreArgParserTests::portShort()
   QCOMPARE(Settings::value(Settings::Core::Port).toInt(), 18768);
 }
 
+void CoreArgParserTests::nameLong()
+{
+  QStringList args = {"stub", "client", "--name", "FancyName"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), "FancyName");
+}
+
+void CoreArgParserTests::nameShort()
+{
+  QStringList args = {"stub", "client", "-n", "ShortName"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), "ShortName");
+}
+
 QTEST_MAIN(CoreArgParserTests)

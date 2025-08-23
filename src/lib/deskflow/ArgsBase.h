@@ -50,9 +50,6 @@ public:
   /// @brief Contains the X-Server display to use
   const char *m_display = nullptr;
 
-  /// @brief The name of the current computer
-  std::string m_name;
-
   /// @brief Will cause the application to exit with OK code when set to true
   bool m_shouldExitOk = false;
 

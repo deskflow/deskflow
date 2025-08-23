@@ -326,22 +326,6 @@ void ArgParserTests::generic_logFileWithSpace()
   QCOMPARE(i, 2);
 }
 
-void ArgParserTests::generic_name()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kNameCmd[argc] = {"stub", "--name", "mock"};
-  // Somehow cause a dump if not made here.
-  ArgParser parser(nullptr);
-  static deskflow::ArgsBase base;
-
-  parser.setArgsBase(base);
-  parser.parseGenericArgs(argc, kNameCmd, i);
-
-  QCOMPARE(base.m_name, "mock");
-  QCOMPARE(i, 2);
-}
-
 void ArgParserTests::generic_noRestart()
 {
   int i = 1;
