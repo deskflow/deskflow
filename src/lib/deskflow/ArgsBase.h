@@ -50,9 +50,6 @@ public:
   /// @brief Will cause the application to exit with fail code when set to true
   bool m_shouldExitFail = false;
 
-  /// @brief Contains the location of the TLS certificate file
-  std::string m_tlsCertFile;
-
   /// @brief Stop this computer from sleeping
   bool m_preventSleep = false;
 
