@@ -41,9 +41,6 @@ public:
   /// @brief The filename of the running process
   const char *m_pname = nullptr;
 
-  /// @brief The full path to the logfile
-  const char *m_logFile = nullptr;
-
   /// @brief Contains the X-Server display to use
   const char *m_display = nullptr;
 

@@ -21,6 +21,8 @@ private Q_SLOTS:
   void nameLong();
   void nameShort();
   void logLevel();
+  void logFile();
+  void logFileWithSpace();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");

@@ -36,6 +36,8 @@ struct CoreArgs
       "level"
   );
 
-  inline static const auto options = {helpOption, versionOption, configOption,  interfaceOption,
-                                      portOption, nameOption,    logLevelOption};
+  inline static const auto logFileOption = QCommandLineOption({"l", "log"}, "Write messages to file", "file");
+
+  inline static const auto options = {helpOption, versionOption, configOption,   interfaceOption,
+                                      portOption, nameOption,    logLevelOption, logFileOption};
 };

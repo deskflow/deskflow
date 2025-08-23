@@ -122,9 +122,7 @@ bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc,
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, "-l", "--log", 1)) {
-    argsBase().m_logFile = argv[++i];
-  } else if (isArg(i, argc, argv, "-1", "--no-restart")) {
+  if (isArg(i, argc, argv, "-1", "--no-restart")) {
     // don't try to restart
     argsBase().m_restartable = false;
   } else if (isArg(i, argc, argv, nullptr, "--restart")) {
@@ -157,9 +155,8 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
 
 bool ArgParser::parseDeprecatedArgs(int argc, const char *const *argv, int &i) const
 {
-  static const std::vector<const char *> deprecatedArgs = {
-      "--crypto-pass", "--res-w", "--res-h", "--prm-wc", "--prm-hc"
-  };
+  static const std::vector<const char *> deprecatedArgs = {"--crypto-pass", "--res-w",  "--res-h",
+                                                           "--prm-wc",      "--prm-hc", "--log"};
 
   for (auto &arg : deprecatedArgs) {
     if (isArg(i, argc, argv, nullptr, arg)) {
