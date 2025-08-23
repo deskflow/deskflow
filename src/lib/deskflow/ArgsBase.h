@@ -41,9 +41,6 @@ public:
   /// @brief The filename of the running process
   const char *m_pname = nullptr;
 
-  /// @brief The logging level of the application
-  const char *m_logFilter = nullptr;
-
   /// @brief The full path to the logfile
   const char *m_logFile = nullptr;
 

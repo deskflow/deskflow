@@ -29,5 +29,13 @@ struct CoreArgs
   inline static const auto nameOption =
       QCommandLineOption({"n", "name"}, "use screen-name instead the hostname to identify this screen", "screen-name");
 
-  inline static const auto options = {helpOption, versionOption, configOption, interfaceOption, portOption, nameOption};
+  inline static const auto logLevelOption = QCommandLineOption(
+      "log-level",
+      "filter out log messages with priority below level.\nlevel may be:\nFATAL, ERROR, WARNING, NOTE, "
+      "INFO, DEBUG, DEBUG1, DEBUG2.",
+      "level"
+  );
+
+  inline static const auto options = {helpOption, versionOption, configOption,  interfaceOption,
+                                      portOption, nameOption,    logLevelOption};
 };

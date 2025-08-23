@@ -129,9 +129,6 @@ private:
 #define DAEMON_RUNNING(running_)
 #endif
 constexpr static auto s_helpGeneralArgs = //
-    "  -d, --debug <level>      filter out log messages with priority below level.\n"
-    "                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-    "                             DEBUG, DEBUG1, DEBUG2.\n"
     "  -1, --no-restart         do not try to restart on failure.\n"
     "*     --restart            restart the server automatically if it fails.\n"
     "  -l  --log <file>         write log messages to file.\n"
@@ -141,9 +138,7 @@ constexpr static auto s_helpGeneralArgs = //
 constexpr static auto s_helpVersionArgs = //
     "  -h, --help               display this help and exit.\n";
 
-constexpr static auto s_helpCommonArgs = //
-    " [--restart|--no-restart]"
-    " [--debug <level>]";
+constexpr static auto s_helpCommonArgs = " [--restart|--no-restart]";
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
 constexpr static auto s_helpNoWayland = //
