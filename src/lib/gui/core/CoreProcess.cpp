@@ -485,14 +485,6 @@ bool CoreProcess::addServerArgs(QStringList &args)
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    if (TlsUtility tlsUtility(this); !tlsUtility.persistCertificate()) {
-      qCritical("failed to persist tls certificate");
-      return false;
-    }
-    args << "--tls-cert" << Settings::value(Settings::Security::Certificate).toString();
-  }
-
   return true;
 }
 

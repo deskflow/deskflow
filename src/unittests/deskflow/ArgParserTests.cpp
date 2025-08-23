@@ -238,13 +238,12 @@ void ArgParserTests::client_commonArgs()
 {
   deskflow::ClientArgs clientArgs;
   clientArgs.m_enableLangSync = false;
-  const int argc = 4;
-  std::array<const char *, argc> kLangCmd = {"stub", "--tls-cert", "tlsCertPath", "--prevent-sleep"};
+  const int argc = 2;
+  std::array<const char *, argc> kLangCmd = {"stub", "--prevent-sleep"};
 
   m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
 
   QVERIFY(clientArgs.m_preventSleep);
-  QCOMPARE(clientArgs.m_tlsCertFile, "tlsCertPath");
 }
 
 void ArgParserTests::client_setAddress()

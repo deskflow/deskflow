@@ -139,8 +139,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
     // HACK: stop error happening when using portable (deskflowp)
   } else if (isArg(i, argc, argv, nullptr, "--client")) {
     // HACK: stop error happening when using portable (deskflowp)
-  } else if (isArg(i, argc, argv, nullptr, "--tls-cert", 1)) {
-    argsBase().m_tlsCertFile = argv[++i];
   } else if (isArg(i, argc, argv, nullptr, "--prevent-sleep")) {
     argsBase().m_preventSleep = true;
   } else {
