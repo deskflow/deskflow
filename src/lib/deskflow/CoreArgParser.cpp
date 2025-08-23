@@ -75,6 +75,10 @@ void CoreArgParser::parse()
   }
 
   Settings::setValue(Settings::Security::TlsEnabled, !m_parser.isSet(CoreArgs::insecureOption));
+
+  if (m_parser.isSet(CoreArgs::tlsCertOption)) {
+    Settings::setValue(Settings::Security::Certificate, m_parser.value(CoreArgs::tlsCertOption));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

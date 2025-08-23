@@ -40,6 +40,9 @@ struct CoreArgs
 
   inline static const auto insecureOption = QCommandLineOption("insecure", "Disable TLS encryption");
 
+  inline static const auto tlsCertOption =
+      QCommandLineOption("tls-cert", "Use file in place of default TLS certificate path", "file");
+
   inline static const auto options = {helpOption, versionOption,  configOption,  interfaceOption, portOption,
-                                      nameOption, logLevelOption, logFileOption, insecureOption};
+                                      nameOption, logLevelOption, logFileOption, insecureOption,  tlsCertOption};
 };

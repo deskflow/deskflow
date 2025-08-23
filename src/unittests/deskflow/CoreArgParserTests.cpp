@@ -120,4 +120,14 @@ void CoreArgParserTests::insecure()
   QVERIFY(!Settings::value(Settings::Security::TlsEnabled).toBool());
 }
 
+void CoreArgParserTests::tlsCert()
+{
+  QStringList args = {"stub", "client", "--tls-cert", "certFile"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Security::Certificate).toString(), "certFile");
+}
+
 QTEST_MAIN(CoreArgParserTests)
