@@ -246,7 +246,7 @@ void Server::adoptClient(BaseClientProxy *client)
     closeClient(client, kMsgEBusy);
     return;
   }
-  LOG_NOTE("client \"%s\" has connected", getName(client).c_str());
+  LOG_IPC("client \"%s\" has connected", getName(client).c_str());
 
   // send configuration options to client
   sendOptions(client);

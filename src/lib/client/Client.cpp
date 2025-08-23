@@ -110,9 +110,9 @@ void Client::connect(size_t addressIndex)
     // m_serverAddress will be null if the hostname address is not reolved
     if (m_serverAddress.getAddress() != nullptr) {
       // to help users troubleshoot, show server host name (issue: 60)
-      LOG(
-          (CLOG_NOTE "connecting to '%s': %s:%i", m_serverAddress.getHostname().c_str(),
-           ARCH->addrToString(m_serverAddress.getAddress()).c_str(), m_serverAddress.getPort())
+      LOG_IPC(
+          "connecting to '%s': %s:%i", m_serverAddress.getHostname().c_str(),
+          ARCH->addrToString(m_serverAddress.getAddress()).c_str(), m_serverAddress.getPort()
       );
     }
 

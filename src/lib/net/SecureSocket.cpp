@@ -637,7 +637,7 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
     return false;
 
   // Gui Must Parse this line, DO NOT CHANGE
-  LOG_NOTE("peer fingerprint: %s", qPrintable(deskflow::formatSSLFingerprint(sha256.data, false)));
+  LOG_IPC("peer fingerprint: %s", qPrintable(deskflow::formatSSLFingerprint(sha256.data, false)));
 
   QFile file(FingerprintDatabasePath);
 

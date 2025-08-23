@@ -185,7 +185,7 @@ bool ClientProxy1_0::parseMessage(const uint8_t *code)
 
 void ClientProxy1_0::handleDisconnect()
 {
-  LOG_NOTE("client \"%s\" has disconnected", getName().c_str());
+  LOG_IPC("client \"%s\" has disconnected", getName().c_str());
   disconnect();
 }
 
@@ -198,7 +198,7 @@ void ClientProxy1_0::handleWriteError()
 void ClientProxy1_0::handleFlatline()
 {
   // didn't get a heartbeat fast enough.  assume client is dead.
-  LOG_NOTE("client \"%s\" is dead", getName().c_str());
+  LOG_IPC("client \"%s\" is dead", getName().c_str());
   disconnect();
 }
 
