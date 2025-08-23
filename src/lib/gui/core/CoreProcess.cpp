@@ -470,10 +470,6 @@ bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMod
 {
   args << "-f";
 
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    args << "--enable-crypto";
-  }
-
   if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     args << "--prevent-sleep";
   }

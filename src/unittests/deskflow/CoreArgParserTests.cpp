@@ -110,4 +110,14 @@ void CoreArgParserTests::logFileWithSpace()
   QCOMPARE(Settings::value(Settings::Log::File).toString(), "mock filename");
 }
 
+void CoreArgParserTests::insecure()
+{
+  QStringList args = {"stub", "client", "--insecure"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Security::TlsEnabled).toBool());
+}
+
 QTEST_MAIN(CoreArgParserTests)
