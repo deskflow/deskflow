@@ -24,6 +24,7 @@ private Q_SLOTS:
   void logFile();
   void logFileWithSpace();
   void insecure();
+  void tlsCert();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
