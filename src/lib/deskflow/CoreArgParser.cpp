@@ -83,6 +83,13 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::tlsCertOption)) {
     Settings::setValue(Settings::Security::Certificate, m_parser.value(CoreArgs::tlsCertOption));
   }
+
+  if (m_parser.isSet(CoreArgs::preventSleepOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::preventSleepOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::preventSleepOption) == "1"));
+    Settings::setValue(Settings::Core::PreventSleep, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

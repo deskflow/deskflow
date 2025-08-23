@@ -160,4 +160,44 @@ void CoreArgParserTests::tlsCert()
   QCOMPARE(Settings::value(Settings::Security::Certificate).toString(), "certFile");
 }
 
+void CoreArgParserTests::preventSleep_false()
+{
+  QStringList args = {"stub", "client", "--prevent-sleep", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::PreventSleep).toBool());
+}
+
+void CoreArgParserTests::preventSleep_1()
+{
+  QStringList args = {"stub", "client", "--prevent-sleep", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::PreventSleep).toBool());
+}
+
+void CoreArgParserTests::preventSleep_0()
+{
+  QStringList args = {"stub", "client", "--prevent-sleep", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::PreventSleep).toBool());
+}
+
+void CoreArgParserTests::preventSleep_true()
+{
+  QStringList args = {"stub", "client", "--prevent-sleep", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::PreventSleep).toBool());
+}
+
 QTEST_MAIN(CoreArgParserTests)

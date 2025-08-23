@@ -361,8 +361,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QString app;
   QStringList args;
 
-  addGenericArgs(args);
-
   if (mode() == Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
     return;
@@ -457,15 +455,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-}
-
-bool CoreProcess::addGenericArgs(QStringList &args) const
-{
-  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
-    args << "--prevent-sleep";
-  }
-
-  return true;
 }
 
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)

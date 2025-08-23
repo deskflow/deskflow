@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "common/Settings.h" // must include first
+
 #include "platform/XWindowsScreen.h"
 
 #include "arch/Arch.h"
@@ -141,7 +143,7 @@ XWindowsScreen::XWindowsScreen(
   }
 
   // disable sleep if the flag is set
-  if (App::instance().argsBase().m_preventSleep) {
+  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     m_powerManager.disableSleep();
   }
 

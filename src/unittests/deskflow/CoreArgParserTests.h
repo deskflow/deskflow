@@ -28,6 +28,10 @@ private Q_SLOTS:
   void secure_0();
   void secure_1();
   void tlsCert();
+  void preventSleep_true();
+  void preventSleep_false();
+  void preventSleep_1();
+  void preventSleep_0();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");

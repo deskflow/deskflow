@@ -44,6 +44,11 @@ struct CoreArgs
   inline static const auto tlsCertOption =
       QCommandLineOption("tls-cert", "Use file in place of default TLS certificate path", "file");
 
-  inline static const auto options = {helpOption, versionOption,  configOption,  interfaceOption, portOption,
-                                      nameOption, logLevelOption, logFileOption, secureOption,  tlsCertOption};
+  inline static const auto preventSleepOption = QCommandLineOption(
+      "prevent-sleep", "When true the machine will be prevented from sleeping while the program is running", "value"
+  );
+
+  inline static const auto options = {helpOption,     versionOption, configOption,      interfaceOption,
+                                      portOption,     nameOption,    logLevelOption,    logFileOption,
+                                      secureOption, tlsCertOption, preventSleepOption};
 };
