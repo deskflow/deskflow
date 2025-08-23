@@ -290,30 +290,6 @@ void ArgParserTests::deprecatedArg_crypoPass_false()
   QCOMPARE(i, 1);
 }
 
-void ArgParserTests::generic_logFile()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogFileCmd[argc] = {"stub", "--log", "mock_filename"};
-
-  m_parser.parseGenericArgs(argc, kLogFileCmd, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFile, "mock_filename");
-  QCOMPARE(i, 2);
-}
-
-void ArgParserTests::generic_logFileWithSpace()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogFileCmdWithSpace[argc] = {"stub", "--log", "mo ck_filename"};
-
-  m_parser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFile, "mo ck_filename");
-  QCOMPARE(i, 2);
-}
-
 void ArgParserTests::generic_noRestart()
 {
   int i = 1;

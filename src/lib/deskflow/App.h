@@ -131,7 +131,6 @@ private:
 constexpr static auto s_helpGeneralArgs = //
     "  -1, --no-restart         do not try to restart on failure.\n"
     "*     --restart            restart the server automatically if it fails.\n"
-    "  -l  --log <file>         write log messages to file.\n"
     "      --enable-crypto      enable TLS encryption.\n"
     "      --tls-cert           specify the path to the TLS certificate file.\n";
 
