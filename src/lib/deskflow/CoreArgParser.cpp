@@ -65,6 +65,13 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::logLevelOption)) {
     Settings::setValue(Settings::Log::Level, Settings::logLevelToInt(m_parser.value(CoreArgs::logLevelOption)));
   }
+
+  if (m_parser.isSet(CoreArgs::logFileOption)) {
+    Settings::setValue(Settings::Log::File, m_parser.value(CoreArgs::logFileOption));
+    Settings::setValue(Settings::Log::ToFile, true);
+  } else {
+    Settings::setValue(Settings::Log::ToFile, false);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const
