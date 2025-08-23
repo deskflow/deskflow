@@ -90,4 +90,24 @@ void CoreArgParserTests::logLevel()
   QCOMPARE(Settings::value(Settings::Log::Level).toInt(), 6);
 }
 
+void CoreArgParserTests::logFile()
+{
+  QStringList args = {"stub", "client", "--log", "mock_filename"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Log::File).toString(), "mock_filename");
+}
+
+void CoreArgParserTests::logFileWithSpace()
+{
+  QStringList args = {"stub", "client", "--log", "mock filename"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(Settings::value(Settings::Log::File).toString(), "mock filename");
+}
+
 QTEST_MAIN(CoreArgParserTests)

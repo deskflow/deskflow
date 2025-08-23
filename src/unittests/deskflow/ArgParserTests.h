@@ -33,8 +33,6 @@ private Q_SLOTS:
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();
-  void generic_logFile();
-  void generic_logFileWithSpace();
   void generic_foreground();
   void generic_daemon();
   void generic_noRestart();

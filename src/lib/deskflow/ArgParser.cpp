@@ -121,9 +121,7 @@ bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc,
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, "-l", "--log", 1)) {
-    argsBase().m_logFile = argv[++i];
-  } else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
+  if (isArg(i, argc, argv, "-f", "--no-daemon")) {
     // not a daemon
     argsBase().m_daemon = false;
   } else if (isArg(i, argc, argv, nullptr, "--daemon")) {
