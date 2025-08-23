@@ -27,6 +27,7 @@ private Q_SLOTS:
   void secure_true();
   void secure_0();
   void secure_1();
+  void tlsCert();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");

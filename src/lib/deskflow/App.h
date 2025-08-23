@@ -130,8 +130,7 @@ private:
 #endif
 constexpr static auto s_helpGeneralArgs = //
     "  -1, --no-restart         do not try to restart on failure.\n"
-    "*     --restart            restart the server automatically if it fails.\n"
-    "      --tls-cert           specify the path to the TLS certificate file.\n";
+    "*     --restart            restart the server automatically if it fails.\n";
 
 constexpr static auto s_helpVersionArgs = //
     "  -h, --help               display this help and exit.\n";
