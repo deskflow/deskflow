@@ -73,6 +73,8 @@ void CoreArgParser::parse()
   } else {
     Settings::setValue(Settings::Log::ToFile, false);
   }
+
+  Settings::setValue(Settings::Security::TlsEnabled, !m_parser.isSet(CoreArgs::insecureOption));
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const
