@@ -52,7 +52,7 @@ Client::Client(
       m_socketFactory(socketFactory),
       m_screen(screen),
       m_events(events),
-      m_useSecureNetwork(args.m_enableCrypto),
+      m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool()),
       m_args(args)
 {
   assert(m_socketFactory != nullptr);
@@ -388,7 +388,7 @@ void Client::setupConnecting()
 {
   assert(m_stream != nullptr);
 
-  if (m_args.m_enableCrypto) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     m_events->addHandler(EventTypes::DataSocketSecureConnected, m_stream->getEventTarget(), [this](const auto &) {
       handleConnected();
     });

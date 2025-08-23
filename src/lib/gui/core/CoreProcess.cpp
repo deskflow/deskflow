@@ -456,10 +456,6 @@ void CoreProcess::cleanup()
 
 bool CoreProcess::addGenericArgs(QStringList &args) const
 {
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    args << "--enable-crypto";
-  }
-
   if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     args << "--prevent-sleep";
   }
