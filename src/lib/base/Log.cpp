@@ -100,7 +100,13 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
   makeTimeString(timeBuffer);
 
   size_t timestampLength = strnlen(timeBuffer.data(), timeBufferSize);
-  size_t priorityLength = strnlen(g_priority[currentPriority], priorityMaxSize);
+
+  auto sectionName = "IPC";
+  if (priority != LogLevel::IPC) {
+    sectionName = g_priority[currentPriority];
+  }
+
+  size_t priorityLength = strnlen(sectionName, priorityMaxSize);
   size_t messageLength = strnlen(message, SIZE_MAX);
   size_t bufferSize = baseSize + timestampLength + priorityLength + messageLength;
 
@@ -113,22 +119,20 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     std::vector<char> buffer(bufferSize);
 #ifndef __APPLE__
     std::format_to_n(
-        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeBuffer.data(), g_priority[currentPriority], message,
-        filename, lineNumber
+        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeBuffer.data(), sectionName, message, filename, lineNumber
     );
 #else
     snprintf(
-        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(), g_priority[currentPriority], message,
-        filename, lineNumber
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(), sectionName, message, filename, lineNumber
     );
 #endif
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
 #ifndef __APPLE__
-    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeBuffer.data(), g_priority[currentPriority], message);
+    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeBuffer.data(), sectionName, message);
 #else
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), g_priority[currentPriority], message);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), sectionName, message);
 #endif
     return buffer;
   }
@@ -288,7 +292,7 @@ LogLevel Log::getFilter() const
 
 void Log::output(LogLevel priority, const char *msg)
 {
-  assert(static_cast<int>(priority) >= -1 && static_cast<int>(priority) < g_numPriority);
+  assert(static_cast<int>(priority) >= -2 && static_cast<int>(priority) < g_numPriority);
   assert(msg != nullptr);
   if (!msg)
     return;
