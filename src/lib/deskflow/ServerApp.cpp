@@ -71,6 +71,7 @@ using namespace deskflow::server;
 
 ServerApp::ServerApp(IEventQueue *events) : App(events, new deskflow::ServerArgs())
 {
+  m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing
 }
 
@@ -351,7 +352,7 @@ bool ServerApp::initServer()
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
-    std::string name = args().m_config->getCanonicalName(args().m_name);
+    std::string name = args().m_config->getCanonicalName(m_name);
     serverScreen = openServerScreen();
     primaryClient = openPrimaryClient(name, serverScreen);
     m_serverScreen = serverScreen;
@@ -570,7 +571,7 @@ int ServerApp::mainLoop()
   // if configuration has no screens then add this system
   // as the default
   if (args().m_config->begin() == args().m_config->end()) {
-    args().m_config->addScreen(args().m_name);
+    args().m_config->addScreen(m_name);
   }
 
   // set the contact address, if provided, in the config.
@@ -583,8 +584,8 @@ int ServerApp::mainLoop()
   }
 
   // canonicalize the primary screen name
-  if (std::string primaryName = args().m_config->getCanonicalName(args().m_name); primaryName.empty()) {
-    LOG_CRIT("unknown screen name `%s'", args().m_name.c_str());
+  if (std::string primaryName = args().m_config->getCanonicalName(m_name); primaryName.empty()) {
+    LOG_CRIT("unknown screen name `%s'", m_name.c_str());
     return s_exitFailed;
   }
 

@@ -15,6 +15,7 @@
 #include "client/Client.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ProtocolTypes.h"
@@ -325,7 +326,9 @@ bool ClientApp::startClient()
   try {
     if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
-      m_client = openClient(args().m_name, *m_serverAddress, clientScreen);
+      m_client = openClient(
+          Settings::value(Settings::Core::ScreenName).toString().toStdString(), *m_serverAddress, clientScreen
+      );
       m_clientScreen = clientScreen;
       LOG_NOTE("started client");
     }
