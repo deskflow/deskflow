@@ -458,8 +458,6 @@ bool CoreProcess::addGenericArgs(QStringList &args) const
 {
   args << "--debug" << Settings::logLevelText();
 
-  args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
-
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
   }
