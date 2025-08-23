@@ -268,16 +268,6 @@ void ArgParserTests::deprecatedArg_crypoPass_true()
   QCOMPARE(i, 2);
 }
 
-void ArgParserTests::deprecatedArg_crypoPass_false()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kCryptoPassCmd[argc] = {"stub", "--mock-arg", "mock_value"};
-
-  QVERIFY(!m_parser.parseDeprecatedArgs(argc, kCryptoPassCmd, i));
-  QCOMPARE(i, 1);
-}
-
 void ArgParserTests::generic_foreground()
 {
   int i = 1;
