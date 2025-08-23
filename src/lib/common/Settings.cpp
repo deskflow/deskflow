@@ -72,6 +72,44 @@ void Settings::cleanSettings()
   }
 }
 
+int Settings::logLevelToInt(const QString &level)
+{
+  // Can do this better later ?
+  if (level.toUpper() == "FATAL") {
+    return 0;
+  }
+
+  if (level.toUpper() == "ERROR") {
+    return 1;
+  }
+
+  if (level.toUpper() == "WARNING") {
+    return 2;
+  }
+
+  if (level.toUpper() == "NOTE") {
+    return 3;
+  }
+
+  if (level.toUpper() == "INFO") {
+    return 4;
+  }
+
+  if (level.toUpper() == "DEBUG") {
+    return 5;
+  }
+
+  if (level.toUpper() == "DEBUG1") {
+    return 6;
+  }
+
+  if (level.toUpper() == "DEBUG2") {
+    return 7;
+  }
+
+  return 4; // If all else fail return info
+}
+
 QVariant Settings::defaultValue(const QString &key)
 {
   if ((key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
