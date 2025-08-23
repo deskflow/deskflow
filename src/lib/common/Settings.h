@@ -147,7 +147,11 @@ private:
 
   // clang-format off
   inline static const QStringList m_logLevels = {
-     QStringLiteral("INFO")
+      QStringLiteral("FATAL")
+    , QStringLiteral("ERROR")
+    , QStringLiteral("WARNING")
+    , QStringLiteral("NOTE")
+    , QStringLiteral("INFO")
     , QStringLiteral("DEBUG")
     , QStringLiteral("DEBUG1")
     , QStringLiteral("DEBUG2")
