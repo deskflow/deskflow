@@ -30,6 +30,14 @@ create_test(
 )
 
 create_test(
+  NAME LogTests
+  DEPENDS base
+  LIBS arch ${extra_libs}
+  SOURCE LogTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/base"
+)
+
+create_test(
   NAME BaseExceptionTests
   DEPENDS base
   LIBS arch
