@@ -23,6 +23,10 @@ private Q_SLOTS:
   void logLevel();
   void logFile();
   void logFileWithSpace();
+  void secure_false();
+  void secure_true();
+  void secure_0();
+  void secure_1();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
