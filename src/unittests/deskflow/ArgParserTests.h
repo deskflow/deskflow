@@ -28,7 +28,6 @@ private Q_SLOTS:
   void client_yScroll();
   void client_setLangSync();
   void client_setInvertScroll();
-  void client_commonArgs();
   void client_setAddress();
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
