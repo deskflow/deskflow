@@ -134,4 +134,5 @@ private:
   ClientListener *m_listener = nullptr;
   EventQueueTimer *m_timer = nullptr;
   NetworkAddress *m_deskflowAddress = nullptr;
+  std::string m_name;
 };
