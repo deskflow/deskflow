@@ -468,8 +468,7 @@ void CoreProcess::cleanup()
 
 bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
 {
-  args << "-f"
-       << "--debug" << Settings::logLevelText();
+  args << "-f";
 
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
     args << "--enable-crypto";
