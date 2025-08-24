@@ -525,28 +525,7 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  if (!QFile::exists(Settings::tlsLocalDb())) {
-    if (regenerateLocalFingerprints())
-      showMyFingerprint();
-    return;
-  }
-
-  FingerprintDatabase db;
-  db.read(Settings::tlsLocalDb());
-  if (db.fingerprints().isEmpty()) {
-    if (regenerateLocalFingerprints())
-      showMyFingerprint();
-    return;
-  }
-
-  Fingerprint sha256Print;
-  for (const auto &f : std::as_const(db.fingerprints())) {
-    if (f.type == Fingerprint::Type::SHA256) {
-      sha256Print = f;
-      break;
-    }
-  }
-
+  Fingerprint sha256Print = localFingerprint();
   FingerprintDialog fingerprintDialog(this, sha256Print);
   fingerprintDialog.exec();
 }
@@ -1206,6 +1185,30 @@ bool MainWindow::regenerateLocalFingerprints()
 
   updateLocalFingerprint();
   return true;
+}
+
+Fingerprint MainWindow::localFingerprint()
+{
+  if (!QFile::exists(Settings::tlsLocalDb())) {
+    if (regenerateLocalFingerprints())
+      return localFingerprint();
+  }
+
+  FingerprintDatabase db;
+  db.read(Settings::tlsLocalDb());
+  if (db.fingerprints().isEmpty()) {
+    if (regenerateLocalFingerprints())
+      return localFingerprint();
+  }
+
+  Fingerprint sha256Print;
+  for (const auto &f : std::as_const(db.fingerprints())) {
+    if (f.type == Fingerprint::Type::SHA256) {
+      sha256Print = f;
+      break;
+    }
+  }
+  return sha256Print;
 }
 
 void MainWindow::serverClientsChanged(const QStringList &clients)

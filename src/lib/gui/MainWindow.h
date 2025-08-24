@@ -23,6 +23,7 @@
 #include "gui/core/ServerConnection.h"
 #include "gui/core/WaylandWarnings.h"
 #include "gui/tls/TlsUtility.h"
+#include "net/Fingerprint.h"
 
 #ifdef Q_OS_MAC
 #include "gui/OSXHelpers.h"
@@ -158,6 +159,8 @@ private:
   // Generate prints if they are missing
   // Returns true if successful
   bool regenerateLocalFingerprints();
+
+  Fingerprint localFingerprint();
 
   void serverClientsChanged(const QStringList &clients);
 
