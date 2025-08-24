@@ -12,16 +12,28 @@
 
 #include <net/SecureUtils.h>
 
-FingerprintPreview::FingerprintPreview(QWidget *parent, const Fingerprint &fingerprint) : QFrame(parent)
+FingerprintPreview::FingerprintPreview(
+    QWidget *parent, const Fingerprint &fingerprint, const QString &titleText, bool hashMode
+)
+    : QFrame(parent)
 {
   setFrameShape(QFrame::StyledPanel);
   setFrameStyle(QFrame::Sunken);
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  setLayout(fingerprint.type == Fingerprint::Type::SHA256 ? sha256Layout(fingerprint) : emptyLayout());
-
+  setLayout(
+      fingerprint.type == Fingerprint::Type::SHA256 ? sha256Layout(fingerprint, titleText, hashMode) : emptyLayout()
+  );
   adjustSize();
   setFixedSize(size());
+}
+
+void FingerprintPreview::toggleMode(bool hashMode)
+{
+  if (m_lblHash)
+    m_lblHash->setVisible(hashMode);
+  if (m_lblArt)
+    m_lblArt->setVisible(!hashMode);
 }
 
 QLayout *FingerprintPreview::emptyLayout()
@@ -32,32 +44,42 @@ QLayout *FingerprintPreview::emptyLayout()
   return layout;
 }
 
-QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint)
+QLayout *FingerprintPreview::sha256Layout(const Fingerprint &fingerprint, const QString &titleText, bool hashMode)
 {
-  auto labelSha256 = new QLabel(QStringLiteral("SHA256:"), this);
-  labelSha256->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  auto labelTitle = new QLabel(titleText, this);
+  auto f = font();
+  f.setBold(true);
+  f.setItalic(true);
+  labelTitle->setFont(f);
+  labelTitle->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
+  labelTitle->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
+  labelTitle->setVisible(!titleText.isEmpty());
 
-  auto lblSha256String = new QLabel(deskflow::formatSSLFingerprintColumns(fingerprint.data), this);
-  lblSha256String->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-  lblSha256String->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_lblHash = new QLabel(deskflow::formatSSLFingerprintColumns(fingerprint.data), this);
+  m_lblHash->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+  m_lblHash->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_lblHash->setVisible(hashMode);
 
-  auto lblSha256Art = new QLabel(deskflow::generateFingerprintArt(fingerprint.data), this);
-  lblSha256Art->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-  lblSha256Art->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_lblArt = new QLabel(deskflow::generateFingerprintArt(fingerprint.data), this);
+  m_lblArt->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+  m_lblArt->setTextInteractionFlags(Qt::TextSelectableByMouse);
+  m_lblArt->setVisible(!hashMode);
 
-  QFont f = font();
+  f = font();
   f.setFamilies({"Hack", "Liberation Mono", "Monospace", "Andale Mono"});
   f.setStyleHint(QFont::Monospace);
-  lblSha256Art->setFont(f);
+  m_lblArt->setFont(f);
 
   auto innersha256Layout = new QHBoxLayout();
   innersha256Layout->setContentsMargins(0, 0, 0, 0);
-  innersha256Layout->addWidget(lblSha256String);
-  innersha256Layout->addWidget(lblSha256Art);
+  innersha256Layout->addWidget(m_lblHash);
+  innersha256Layout->addWidget(m_lblArt);
 
   auto sha256Layout = new QVBoxLayout();
-  sha256Layout->addWidget(labelSha256);
+  sha256Layout->setContentsMargins(0, 0, 0, 0);
+  sha256Layout->addWidget(labelTitle);
   sha256Layout->addLayout(innersha256Layout);
+  sha256Layout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Preferred, QSizePolicy::Expanding));
 
   auto frameSha256 = new QFrame(this);
   frameSha256->setFrameShape(QFrame::StyledPanel);
