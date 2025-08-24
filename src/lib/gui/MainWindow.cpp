@@ -525,29 +525,7 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  if (!QFile::exists(Settings::tlsLocalDb())) {
-    if (regenerateLocalFingerprints())
-      showMyFingerprint();
-    return;
-  }
-
-  FingerprintDatabase db;
-  db.read(Settings::tlsLocalDb());
-  if (db.fingerprints().isEmpty()) {
-    if (regenerateLocalFingerprints())
-      showMyFingerprint();
-    return;
-  }
-
-  Fingerprint sha256Print;
-  for (const auto &f : std::as_const(db.fingerprints())) {
-    if (f.type == Fingerprint::Type::SHA256) {
-      sha256Print = f;
-      break;
-    }
-  }
-
-  FingerprintDialog fingerprintDialog(this, sha256Print);
+  FingerprintDialog fingerprintDialog(this, localFingerprint());
   fingerprintDialog.exec();
 }
 
@@ -899,10 +877,8 @@ void MainWindow::checkFingerprint(const QString &line)
     m_checkedClients.append(sha256Text);
   }
 
-  auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
-
-  FingerprintDialog fingerprintDialog(this, sha256, dialogMode);
-  connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
+  auto mode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
+  FingerprintDialog fingerprintDialog(this, localFingerprint(), mode, sha256);
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);
@@ -1206,6 +1182,30 @@ bool MainWindow::regenerateLocalFingerprints()
 
   updateLocalFingerprint();
   return true;
+}
+
+Fingerprint MainWindow::localFingerprint()
+{
+  if (!QFile::exists(Settings::tlsLocalDb())) {
+    if (regenerateLocalFingerprints())
+      return localFingerprint();
+  }
+
+  FingerprintDatabase db;
+  db.read(Settings::tlsLocalDb());
+  if (db.fingerprints().isEmpty()) {
+    if (regenerateLocalFingerprints())
+      return localFingerprint();
+  }
+
+  Fingerprint sha256Print;
+  for (const auto &f : std::as_const(db.fingerprints())) {
+    if (f.type == Fingerprint::Type::SHA256) {
+      sha256Print = f;
+      break;
+    }
+  }
+  return sha256Print;
 }
 
 void MainWindow::serverClientsChanged(const QStringList &clients)
