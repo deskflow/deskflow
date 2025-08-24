@@ -38,6 +38,7 @@ FingerprintDialog::FingerprintDialog(QWidget *parent, const Fingerprint &fingerp
   if (mode == FingerprintDialogMode::Local) {
     setWindowTitle(tr("Local Fingerprints"));
     m_lblHeader->setText(tr("Local computer's fingerprints"));
+    m_lblHeader->setWordWrap(false);
     m_lblFooter->setVisible(false);
     m_buttonBox->setStandardButtons(QDialogButtonBox::Ok);
     connect(m_buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &QDialog::accept);
