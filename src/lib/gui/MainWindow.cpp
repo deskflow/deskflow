@@ -525,8 +525,7 @@ void MainWindow::updateSize()
 
 void MainWindow::showMyFingerprint()
 {
-  Fingerprint sha256Print = localFingerprint();
-  FingerprintDialog fingerprintDialog(this, sha256Print);
+  FingerprintDialog fingerprintDialog(this, localFingerprint());
   fingerprintDialog.exec();
 }
 
@@ -878,10 +877,8 @@ void MainWindow::checkFingerprint(const QString &line)
     m_checkedClients.append(sha256Text);
   }
 
-  auto dialogMode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
-
-  FingerprintDialog fingerprintDialog(this, sha256, dialogMode);
-  connect(&fingerprintDialog, &FingerprintDialog::requestLocalPrintsDialog, this, &MainWindow::showMyFingerprint);
+  auto mode = isClient ? FingerprintDialogMode::Client : FingerprintDialogMode::Server;
+  FingerprintDialog fingerprintDialog(this, localFingerprint(), mode, sha256);
 
   if (fingerprintDialog.exec() == QDialog::Accepted) {
     db.addTrusted(sha256);

@@ -13,65 +13,120 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
-FingerprintDialog::FingerprintDialog(QWidget *parent, const Fingerprint &fingerprint, FingerprintDialogMode mode)
+FingerprintDialog::FingerprintDialog(
+    QWidget *parent, const Fingerprint &localFingerprint, FingerprintDialogMode mode,
+    const Fingerprint &remoteFingerprint
+)
     : QDialog(parent),
       m_lblHeader{new QLabel(this)},
       m_lblFooter{new QLabel(this)},
-      m_fingerprintPreview{new FingerprintPreview(this, fingerprint)},
-      m_buttonBox{new QDialogButtonBox(this)}
+      m_buttonBox{new QDialogButtonBox(QDialogButtonBox::Help, this)}
 {
-  setWindowIcon(QIcon::fromTheme("fingerprint"));
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+  m_lblHeader->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
-  m_lblHeader->setWordWrap(true);
-  m_lblFooter->setWordWrap(true);
-  m_lblFooter->setAlignment(Qt::AlignHCenter);
+  const bool localMode = mode == FingerprintDialogMode::Local;
+  const bool isServer = mode == FingerprintDialogMode::Server;
 
   auto layout = new QVBoxLayout();
   layout->addWidget(m_lblHeader);
   layout->addSpacerItem(new QSpacerItem(0, 10, QSizePolicy::Fixed, QSizePolicy::Fixed));
-  layout->addWidget(m_fingerprintPreview, 0, Qt::AlignTop | Qt::AlignHCenter);
+  layout->addLayout(
+      localMode ? makeLocalLayout(localFingerprint) : makeCompareLayout(localFingerprint, isServer, remoteFingerprint)
+  );
   layout->addWidget(m_lblFooter);
   layout->addWidget(m_buttonBox);
   setLayout(layout);
 
-  if (mode == FingerprintDialogMode::Local) {
+  if (localMode) {
     setWindowTitle(tr("Local Fingerprints"));
-    m_lblHeader->setText(tr("Local computer's fingerprints"));
-    m_lblHeader->setWordWrap(false);
-    m_lblFooter->setVisible(false);
-    m_buttonBox->setStandardButtons(QDialogButtonBox::Ok);
+    setWindowIcon(QIcon::fromTheme("fingerprint"));
+
+    m_lblHeader->setText(tr("Local computer's fingerprint"));
+
+    m_buttonBox->addButton(QDialogButtonBox::Ok);
     connect(m_buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &QDialog::accept);
+
   } else {
-    setWindowTitle(tr("Security Question"));
+    setWindowIcon(QIcon::fromTheme("question"));
+    m_lblHeader->setAlignment(Qt::AlignHCenter);
+    m_lblFooter->setAlignment(Qt::AlignHCenter);
+
     auto body =
         tr("Compare the fingerprints in this dialog to those on the %1.\n"
            "Only connect if they match!");
 
-    if (mode == FingerprintDialogMode::Server) {
-      m_lblHeader->setText(tr("A new client is connecting.\n%1").arg(body.arg(tr("client"))));
+    if (isServer) {
+      setWindowTitle(tr("New client connecting"));
+      m_lblHeader->setText(body.arg(tr("client")));
       m_lblFooter->setText(tr("\nDo you want connect to and trust the client?\n"));
     } else {
-      m_lblHeader->setText(tr("You are connecting to a new server.\n%1").arg(body.arg(tr("server"))));
+      setWindowTitle(tr("Connecting to a new server"));
+      m_lblHeader->setText(body.arg(tr("server")));
       m_lblFooter->setText(tr("\nDo you want connect to the server?\n"));
     }
 
-    m_buttonBox->setStandardButtons(QDialogButtonBox::Help | QDialogButtonBox::Yes | QDialogButtonBox::No);
-
-    // Use help to request a dialog with the host prints
-    // Help is used because its always to the furthest from the other buttons.
-    m_buttonBox->button(QDialogButtonBox::Help)->setText(tr("View local fingerprints"));
-    m_buttonBox->button(QDialogButtonBox::Help)->setIcon(QIcon::fromTheme("fingerprint"));
-    m_buttonBox->button(QDialogButtonBox::Help)->setToolTip(tr("Show the local machines fingerprints"));
-    connect(
-        m_buttonBox->button(QDialogButtonBox::Help), &QPushButton::clicked, this,
-        &FingerprintDialog::requestLocalPrintsDialog
-    );
-
+    m_buttonBox->addButton(QDialogButtonBox::Yes);
+    m_buttonBox->addButton(QDialogButtonBox::No);
     m_buttonBox->button(QDialogButtonBox::No)->setFocus();
     connect(m_buttonBox->button(QDialogButtonBox::No), &QPushButton::clicked, this, &QDialog::reject);
     connect(m_buttonBox->button(QDialogButtonBox::Yes), &QPushButton::clicked, this, &QDialog::accept);
   }
+
+  updateModeButton(false);
+  m_buttonBox->button(QDialogButtonBox::Help)->setCheckable(true);
+  m_buttonBox->button(QDialogButtonBox::Help)->setIcon(QIcon());
+  connect(
+      m_buttonBox->button(QDialogButtonBox::Help), &QPushButton::toggled, this, &FingerprintDialog::togglePreviewMode
+  );
+
   adjustSize();
   setFixedSize(size());
+}
+
+QLayout *FingerprintDialog::makeLocalLayout(const Fingerprint &localFingerprint)
+{
+  m_localPreview = new FingerprintPreview(this, localFingerprint);
+
+  auto layout = new QVBoxLayout();
+  layout->addWidget(m_localPreview, 0, Qt::AlignTop | Qt::AlignHCenter);
+  return layout;
+}
+
+QLayout *FingerprintDialog::makeCompareLayout(
+    const Fingerprint &localFingerprint, bool isServer, const Fingerprint &remoteFingerprint
+)
+{
+  const auto serverText = tr("Server Fingerprint");
+  const auto clientText = tr("Client Fingerprint");
+
+  m_localPreview = new FingerprintPreview(this, localFingerprint, isServer ? serverText : clientText, false);
+  m_remotePreview = new FingerprintPreview(this, remoteFingerprint, isServer ? clientText : serverText, false);
+
+  auto fpLayout = new QHBoxLayout();
+  fpLayout->setAlignment(Qt::AlignTop);
+  if (isServer) {
+    fpLayout->addWidget(m_localPreview, 0, Qt::AlignHCenter);
+    fpLayout->addWidget(m_remotePreview, 0, Qt::AlignHCenter);
+  } else {
+    fpLayout->addWidget(m_remotePreview, 0, Qt::AlignHCenter);
+    fpLayout->addWidget(m_localPreview, 0, Qt::AlignHCenter);
+  }
+  return fpLayout;
+}
+
+void FingerprintDialog::togglePreviewMode(bool hashMode)
+{
+  m_localPreview->toggleMode(hashMode);
+  if (m_remotePreview)
+    m_remotePreview->toggleMode(hashMode);
+  updateModeButton(hashMode);
+}
+
+void FingerprintDialog::updateModeButton(bool hashMode) const
+{
+  const auto text = tr("Show %1").arg(hashMode ? "Image" : "Hash");
+  const auto toolTip = tr("Display the fingerprint as %1").arg(hashMode ? "an image" : "a hash");
+  m_buttonBox->button(QDialogButtonBox::Help)->setText(text);
+  m_buttonBox->button(QDialogButtonBox::Help)->setToolTip(toolTip);
 }
