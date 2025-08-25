@@ -30,14 +30,6 @@ bool TlsUtility::generateCertificate() const
       "all clients must trust the new fingerprint"
   );
 
-  if (!isEnabled()) {
-    qCritical(
-        "unable to generate tls certificate, "
-        "tls is either not available or not enabled"
-    );
-    return false;
-  }
-
   auto length = Settings::value(Settings::Security::KeySize).toInt();
 
   if (length < 2048) {
