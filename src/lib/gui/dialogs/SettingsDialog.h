@@ -58,6 +58,9 @@ private:
   /// @brief updates the setting vaule for key size.
   void updateRequestedKeySize() const;
 
+  /// @brief update if the log level warning is shown
+  void logLevelChanged();
+
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
   const CoreProcess &m_coreProcess;
