@@ -31,6 +31,16 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 
   ui->setupUi(this);
 
+  // Set Tooltip for the logLevel Items
+  ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(1, tr("Non-fatal errors"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(3, tr("Notable events"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(4, tr("General events [Default]"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
+
   ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
   ui->lblTlsCertInfo->setFixedSize(28, 28);

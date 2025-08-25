@@ -101,7 +101,7 @@ QVariant Settings::defaultValue(const QString &key)
     return QStringLiteral("%1/%2").arg(QDir::homePath(), kDefaultLogFile);
 
   if (key == Log::Level)
-    return 0;
+    return 4; // INFO
 
   if (key == Client::Binary)
     return kCoreBinName;

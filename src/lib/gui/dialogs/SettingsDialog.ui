@@ -409,51 +409,7 @@
             </property>
            </spacer>
           </item>
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="cbLogToFile">
-            <property name="text">
-             <string>Log to file</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QComboBox" name="comboLogLevel">
-            <item>
-             <property name="text">
-              <string>Info</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Debug</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Debug1</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string>Debug2</string>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="lblLogLevel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Level</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0" colspan="4">
+          <item row="1" column="0" colspan="3">
            <widget class="QWidget" name="widgetLogFilename" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -536,6 +492,85 @@
                <property name="flat">
                 <bool>true</bool>
                </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="cbLogToFile">
+            <property name="text">
+             <string>Log to file</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QWidget" name="widgetLevelControls" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; text-decoration: underline;&quot;&gt;Warning&lt;/span&gt;&lt;/p&gt;&lt;p&gt;The Debug levels may affect performance. Only change the log level to one below Info if you are attempting to debug an issue or are gathering logs to submit with a bug report.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QLabel" name="lblLogLevel">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Level</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="comboLogLevel">
+               <item>
+                <property name="text">
+                 <string>Fatal</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Error</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Warning</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Note</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Info</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Debug</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Debug1</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Debug2</string>
+                </property>
+               </item>
               </widget>
              </item>
             </layout>
@@ -624,7 +659,6 @@
   <tabstop>sbPort</tabstop>
   <tabstop>lineInterface</tabstop>
   <tabstop>cbLogToFile</tabstop>
-  <tabstop>comboLogLevel</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>
  </tabstops>
