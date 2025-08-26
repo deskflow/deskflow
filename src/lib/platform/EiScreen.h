@@ -32,7 +32,10 @@ class PortalInputCapture;
 class EiScreen : public PlatformScreen
 {
 public:
-  EiScreen(bool isPrimary, IEventQueue *events, bool usePortal);
+  EiScreen(
+      bool isPrimary, IEventQueue *events, bool usePortal,
+      deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
+  );
   ~EiScreen() override;
 
   // IScreen overrides
