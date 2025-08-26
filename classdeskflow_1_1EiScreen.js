@@ -1,6 +1,6 @@
 var classdeskflow_1_1EiScreen =
 [
-    [ "EiScreen", "classdeskflow_1_1EiScreen.html#a80b44d237c1496c82a80ef6719765dbe", null ],
+    [ "EiScreen", "classdeskflow_1_1EiScreen.html#a4df79ed0039ee56623f2f46df78c73e9", null ],
     [ "~EiScreen", "classdeskflow_1_1EiScreen.html#a0e22758b3879a012f161aec0a84a5d4f", null ],
     [ "activeSides", "classdeskflow_1_1EiScreen.html#a49ec5fcf0eea67fe831518f428d61447", null ],
     [ "addDevice", "classdeskflow_1_1EiScreen.html#a54dc324f4e1c9f1e60366a5586c9ce05", null ],

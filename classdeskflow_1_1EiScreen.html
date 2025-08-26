@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.148</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.149</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -140,7 +140,7 @@ Collaboration diagram for deskflow::EiScreen:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a80b44d237c1496c82a80ef6719765dbe" id="r_a80b44d237c1496c82a80ef6719765dbe"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80b44d237c1496c82a80ef6719765dbe">EiScreen</a> (bool <a class="el" href="#adaef3af320aea81b7646253b95800f2e">isPrimary</a>, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, bool usePortal)</td></tr>
+<tr class="memitem:a4df79ed0039ee56623f2f46df78c73e9" id="r_a4df79ed0039ee56623f2f46df78c73e9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4df79ed0039ee56623f2f46df78c73e9">EiScreen</a> (bool <a class="el" href="#adaef3af320aea81b7646253b95800f2e">isPrimary</a>, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, bool usePortal, <a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a> scrollDirection=<a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a>)</td></tr>
 <tr class="memitem:a0e22758b3879a012f161aec0a84a5d4f" id="r_a0e22758b3879a012f161aec0a84a5d4f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0e22758b3879a012f161aec0a84a5d4f">~EiScreen</a> () override</td></tr>
 <tr class="memitem:a3dcda7daa9c790c2d396fe6e576f1290" id="r_a3dcda7daa9c790c2d396fe6e576f1290"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3dcda7daa9c790c2d396fe6e576f1290">getEventTarget</a> () const final</td></tr>
 <tr class="memdesc:a3dcda7daa9c790c2d396fe6e576f1290"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event target.  <br /></td></tr>
@@ -290,8 +290,8 @@ Additional Inherited Members</h2></td></tr>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of <a class="el" href="classIPlatformScreen.html" title="Screen interface.">IPlatformScreen</a> for X11. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a80b44d237c1496c82a80ef6719765dbe" name="a80b44d237c1496c82a80ef6719765dbe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a80b44d237c1496c82a80ef6719765dbe">&#9670;&#160;</a></span>EiScreen()</h2>
+<a id="a4df79ed0039ee56623f2f46df78c73e9" name="a4df79ed0039ee56623f2f46df78c73e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4df79ed0039ee56623f2f46df78c73e9">&#9670;&#160;</a></span>EiScreen()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -309,7 +309,12 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>usePortal</em></span>&#160;)</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>usePortal</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76">deskflow::ClientScrollDirection</a></td>          <td class="paramname"><span class="paramname"><em>scrollDirection</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0">deskflow::ClientScrollDirection::Normal</a></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
