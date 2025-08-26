@@ -170,7 +170,9 @@ deskflow::Screen *ClientApp::createScreen()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
-    return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true), getEvents());
+    return new deskflow::Screen(
+        new deskflow::EiScreen(false, getEvents(), true, args().m_clientScrollDirection), getEvents()
+    );
 #else
     throw XNoEiSupport();
 #endif
