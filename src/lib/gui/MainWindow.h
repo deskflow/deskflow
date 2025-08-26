@@ -156,8 +156,10 @@ private:
    */
   QString trustedFingerprintDatabase() const;
 
-  // Generate prints if they are missing
-  // Returns true if successful
+  /**
+   * @brief regenerateLocalFingerprints Generate fingerprints if they are missing
+   * @return true when successful
+   */
   bool regenerateLocalFingerprints();
 
   Fingerprint localFingerprint();
