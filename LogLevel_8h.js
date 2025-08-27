@@ -1,6 +1,7 @@
 var LogLevel_8h =
 [
     [ "LogLevel", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9", [
+      [ "IPC", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df", null ],
       [ "Print", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d", null ],
       [ "Fatal", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a882384ec38ce8d9582b57e70861730e4", null ],
       [ "Error", "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a902b0d55fddef6f8d651fe1035b7d4bd", null ],

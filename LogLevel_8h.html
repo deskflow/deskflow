@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.155</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.158</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -138,20 +138,22 @@ This graph shows which files directly or indirectly include this file:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:aca1fd1d8935433e6ba2e3918214e07f9" id="r_aca1fd1d8935433e6ba2e3918214e07f9"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> { <br />
-&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d">Print</a> = -1
+&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df">IPC</a> = -2
+, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d">Print</a> = -1
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a882384ec38ce8d9582b57e70861730e4">Fatal</a>
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a902b0d55fddef6f8d651fe1035b7d4bd">Error</a>
-, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a0eaadb4fcb48a0a0ed7bc9868be9fbaa">Warning</a>
 , <br />
-&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a3b0649c72650c313a357338dcdfb64ec">Note</a>
+&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a0eaadb4fcb48a0a0ed7bc9868be9fbaa">Warning</a>
+, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a3b0649c72650c313a357338dcdfb64ec">Note</a>
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a4059b0251f66a18cb56f544728796875">Info</a>
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9aa603905470e2a5b8c13e96b579ef0dba">Debug</a>
-, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a0f2feee123c861d4961c33fb507120cd">Debug1</a>
 , <br />
-&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d">Debug2</a>
+&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a0f2feee123c861d4961c33fb507120cd">Debug1</a>
+, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a2e66a0a3543d4b032aba30b88855709d">Debug2</a>
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a2b5ade85865041f059e709ff4bd8b46f">Debug3</a>
 , <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a728da6dfe31960c897c80e0d00d4a856">Debug4</a>
-, <a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a1690cf637bcc872f10227c935b928d58">Debug5</a>
+, <br />
+&#160;&#160;<a class="el" href="#aca1fd1d8935433e6ba2e3918214e07f9a1690cf637bcc872f10227c935b928d58">Debug5</a>
 <br />
  }</td></tr>
 <tr class="memdesc:aca1fd1d8935433e6ba2e3918214e07f9"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classLog.html" title="Logging facility.">Log</a> levels.  <a href="#aca1fd1d8935433e6ba2e3918214e07f9">More...</a><br /></td></tr>
@@ -180,7 +182,9 @@ Enumerations</h2></td></tr>
 <p><a class="el" href="classLog.html" title="Logging facility.">Log</a> levels. </p>
 <p>The logging priority levels in order of highest to lowest priority. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d" name="aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d"></a>Print&#160;</td><td class="fielddoc"><p>For print only (no file or time) </p>
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df" name="aca1fd1d8935433e6ba2e3918214e07f9ac8660c6d72e7323867ec800d6bb953df"></a>IPC&#160;</td><td class="fielddoc"><p>For IPC Messages the gui must see, remove when IPC works proper. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d" name="aca1fd1d8935433e6ba2e3918214e07f9a13dba24862cf9128167a59100e154c8d"></a>Print&#160;</td><td class="fielddoc"><p>For print only (no file or time) </p>
 </td></tr>
 <tr><td class="fieldname"><a id="aca1fd1d8935433e6ba2e3918214e07f9a882384ec38ce8d9582b57e70861730e4" name="aca1fd1d8935433e6ba2e3918214e07f9a882384ec38ce8d9582b57e70861730e4"></a>Fatal&#160;</td><td class="fielddoc"><p>For fatal errors. </p>
 </td></tr>

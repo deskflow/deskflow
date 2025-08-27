@@ -1,5 +1,8 @@
 var NAVTREEINDEX18 =
 {
+"classdeskflow_1_1Config.html#a37f373ff765beeb13e19d1a910495b6b":[5,0,0,10,4],
+"classdeskflow_1_1Config.html#a37f373ff765beeb13e19d1a910495b6b":[6,0,0,9,4],
+"classdeskflow_1_1Config.html#a4afc6ac8523a65f919d9f678c9f46971":[5,0,0,10,5],
 "classdeskflow_1_1Config.html#a4afc6ac8523a65f919d9f678c9f46971":[6,0,0,9,5],
 "classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32":[5,0,0,10,2],
 "classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32":[6,0,0,9,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX18 =
 "classdeskflow_1_1KeyMap.html#addf21f3314981192b3bc70cdb697e930":[5,0,0,16,24],
 "classdeskflow_1_1KeyMap.html#addf21f3314981192b3bc70cdb697e930":[6,0,0,15,24],
 "classdeskflow_1_1KeyMap.html#ae62de81a471437aedbdb97f9ff11ab68":[5,0,0,16,17],
-"classdeskflow_1_1KeyMap.html#ae62de81a471437aedbdb97f9ff11ab68":[6,0,0,15,17],
-"classdeskflow_1_1KeyMap.html#aef496d7565922670d636e590040eedef":[5,0,0,16,23],
-"classdeskflow_1_1KeyMap.html#aef496d7565922670d636e590040eedef":[6,0,0,15,23],
-"classdeskflow_1_1KeyMap_1_1Keystroke.html":[5,0,0,16,1]
+"classdeskflow_1_1KeyMap.html#ae62de81a471437aedbdb97f9ff11ab68":[6,0,0,15,17]
 };

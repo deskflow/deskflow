@@ -1,5 +1,8 @@
 var NAVTREEINDEX23 =
 {
+"namespaceSettingsKeys.html#a4c28db236ee7f731255c5e06ff597580":[5,0,1,8],
+"namespaceSettingsKeys.html#a4d65d852907e82b8c58b1e5219c02e85":[5,0,1,2],
+"namespaceSettingsKeys.html#a5d2b0ad4c3074b0ac54b1a4bb406512e":[5,0,1,1],
 "namespaceSettingsKeys.html#a68af0f7b43a00a62f03a9c80142e1545":[5,0,1,3],
 "namespaceSettingsKeys.html#a6ab6ee8b431024a9349b48ab0cac9041":[5,0,1,0],
 "namespaceSettingsKeys.html#a8c94b6e9d9359fea262c8a2ecd6940ca":[5,0,1,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX23 =
 "structCBMPInfoHeader.html#a36bc22e7defdcd14b394a52d10b9b13c":[6,0,59,2],
 "structCBMPInfoHeader.html#a4a19e9822b8f32a5e9558d70cf349618":[6,0,59,8],
 "structCBMPInfoHeader.html#a69649d77280795b307f42fb28bb43783":[6,0,59,6],
-"structCBMPInfoHeader.html#a995e03b7a1c3b514600ea3e0f676fb52":[6,0,59,5],
-"structCBMPInfoHeader.html#aae67b93de47f697d38f8decc15175a5f":[6,0,59,9],
-"structCBMPInfoHeader.html#ab4bd17342a4d6704cec23da8d9c282c9":[6,0,59,10],
-"structCBMPInfoHeader.html#ac2ce465fc837c647b9c50f7437d7317b":[6,0,59,7]
+"structCBMPInfoHeader.html#a995e03b7a1c3b514600ea3e0f676fb52":[6,0,59,5]
 };

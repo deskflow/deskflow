@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"OSXCocoaApp_8m.html":[7,0,1,1,9,64],
+"OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1],
+"OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0],
 "OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
 "OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
 "OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,32,1],
 "ServerConfig_8cpp.html#ad93a94bd88fe624000405f7b84c40334":[7,0,1,1,5,32,6],
 "ServerConfig_8h.html":[7,0,1,1,5,33],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090f":[7,0,1,1,5,33,1],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3737bb2c0506485a05cf9cde59aa679d":[7,0,1,1,5,33,1,0],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3f49a3be29d699f3be1aef7e363a9773":[7,0,1,1,5,33,1,1],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12":[7,0,1,1,5,33,1,3]
+"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090f":[7,0,1,1,5,33,1]
 };

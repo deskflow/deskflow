@@ -1,5 +1,8 @@
 var NAVTREEINDEX24 =
 {
+"structCBMPInfoHeader.html#aae67b93de47f697d38f8decc15175a5f":[6,0,59,9],
+"structCBMPInfoHeader.html#ab4bd17342a4d6704cec23da8d9c282c9":[6,0,59,10],
+"structCBMPInfoHeader.html#ac2ce465fc837c647b9c50f7437d7317b":[6,0,59,7],
 "structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b":[6,0,59,4],
 "structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef":[6,0,59,3],
 "structCBMPInfoHeader.html#ae58803ac900f8dca642baa51af9ee522":[6,0,59,1],
