@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.151</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.155</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,22 +103,30 @@ $(function(){initNavTree('FingerprintPreview_8h_source.html','',''); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QFrame&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;<a class="code" href="Fingerprint_8h.html">net/Fingerprint.h</a>&gt;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="foldopen" id="foldopen00012" data-start="{" data-end="};">
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classFingerprintPreview.html">   12</a></span><span class="keyword">class </span><a class="code hl_function" href="classFingerprintPreview.html#a74f0f523577a151c942a450854e228ee">FingerprintPreview</a> : <span class="keyword">public</span> QFrame</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>{</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>  Q_OBJECT</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classFingerprintPreview.html#a74f0f523577a151c942a450854e228ee">FingerprintPreview</a>(QWidget *parent, <span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;fingerprint = {});</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classFingerprintPreview.html#a3d31e6ecd6e5a85c20201f13d7f35fff">   17</a></span>  <a class="code hl_function" href="classFingerprintPreview.html#a3d31e6ecd6e5a85c20201f13d7f35fff">~FingerprintPreview</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  QLayout *emptyLayout();</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  QLayout *sha256Layout(<span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;fingerprint = {});</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>};</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">class </span>QLabel;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classFingerprintPreview.html">   14</a></span><span class="keyword">class </span><a class="code hl_function" href="classFingerprintPreview.html#a89faeaec9798380efefae29e9e5e26aa">FingerprintPreview</a> : <span class="keyword">public</span> QFrame</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>  Q_OBJECT</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classFingerprintPreview.html#a89faeaec9798380efefae29e9e5e26aa">FingerprintPreview</a>(</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>      QWidget *parent, <span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;fingerprint = {}, <span class="keyword">const</span> QString &amp;titleText = {}, <span class="keywordtype">bool</span> hashMode = false</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  );</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classFingerprintPreview.html#a3d31e6ecd6e5a85c20201f13d7f35fff">   21</a></span>  <a class="code hl_function" href="classFingerprintPreview.html#a3d31e6ecd6e5a85c20201f13d7f35fff">~FingerprintPreview</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classFingerprintPreview.html#ac5d86965ea349122495cefbe634108ab">toggleMode</a>(<span class="keywordtype">bool</span> hashMode);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  QLayout *emptyLayout();</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  QLayout *sha256Layout(<span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;fingerprint = {}, <span class="keyword">const</span> QString &amp;titleText = {}, <span class="keywordtype">bool</span> hashMode = <span class="keyword">false</span>);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  QLabel *m_lblHash = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  QLabel *m_lblArt = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
 <div class="ttc" id="aFingerprint_8h_html"><div class="ttname"><a href="Fingerprint_8h.html">Fingerprint.h</a></div></div>
 <div class="ttc" id="aclassFingerprintPreview_html_a3d31e6ecd6e5a85c20201f13d7f35fff"><div class="ttname"><a href="classFingerprintPreview.html#a3d31e6ecd6e5a85c20201f13d7f35fff">FingerprintPreview::~FingerprintPreview</a></div><div class="ttdeci">~FingerprintPreview() override=default</div></div>
-<div class="ttc" id="aclassFingerprintPreview_html_a74f0f523577a151c942a450854e228ee"><div class="ttname"><a href="classFingerprintPreview.html#a74f0f523577a151c942a450854e228ee">FingerprintPreview::FingerprintPreview</a></div><div class="ttdeci">FingerprintPreview(QWidget *parent, const Fingerprint &amp;fingerprint={})</div><div class="ttdef"><b>Definition</b> FingerprintPreview.cpp:15</div></div>
+<div class="ttc" id="aclassFingerprintPreview_html_a89faeaec9798380efefae29e9e5e26aa"><div class="ttname"><a href="classFingerprintPreview.html#a89faeaec9798380efefae29e9e5e26aa">FingerprintPreview::FingerprintPreview</a></div><div class="ttdeci">FingerprintPreview(QWidget *parent, const Fingerprint &amp;fingerprint={}, const QString &amp;titleText={}, bool hashMode=false)</div><div class="ttdef"><b>Definition</b> FingerprintPreview.cpp:15</div></div>
+<div class="ttc" id="aclassFingerprintPreview_html_ac5d86965ea349122495cefbe634108ab"><div class="ttname"><a href="classFingerprintPreview.html#ac5d86965ea349122495cefbe634108ab">FingerprintPreview::toggleMode</a></div><div class="ttdeci">void toggleMode(bool hashMode)</div><div class="ttdef"><b>Definition</b> FingerprintPreview.cpp:31</div></div>
 <div class="ttc" id="astructFingerprint_html"><div class="ttname"><a href="structFingerprint.html">Fingerprint</a></div><div class="ttdef"><b>Definition</b> Fingerprint.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

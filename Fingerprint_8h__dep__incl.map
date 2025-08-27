@@ -1,33 +1,40 @@
 <map id="src/lib/net/Fingerprint.h" name="src/lib/net/Fingerprint.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="703,5,857,30"/>
-<area shape="rect" id="Node000002" href="$FingerprintDialog_8h.html" title=" " alt="" coords="202,78,337,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="688,35,388,81,338,88,337,83,388,75,687,30"/>
-<area shape="rect" id="Node000005" href="$TlsCertificate_8cpp.html" title=" " alt="" coords="1226,172,1430,196"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="873,19,940,25,1015,35,1094,52,1170,76,1215,97,1257,123,1317,169,1313,173,1253,127,1212,101,1168,80,1093,57,1014,40,939,30,872,25"/>
-<area shape="rect" id="Node000006" href="$FingerprintPreview_8h.html" title=" " alt="" coords="400,78,544,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="719,37,545,80,544,75,718,32"/>
-<area shape="rect" id="Node000008" href="$Fingerprint_8cpp.html" title=" " alt="" coords="802,85,971,110"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="809,37,872,82,869,87,806,41"/>
-<area shape="rect" id="Node000009" href="$FingerprintDatabase_8h.html" title=" " alt="" coords="568,85,778,110"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="754,41,691,87,688,82,751,37"/>
-<area shape="rect" id="Node000012" href="$SecureUtils_8h.html" title=" " alt="" coords="995,85,1157,110"/>
-<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="840,32,1032,82,1031,87,838,37"/>
-<area shape="rect" id="Node000003" href="$MainWindow_8cpp.html" title=" " alt="" coords="179,172,360,196"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="272,132,272,171,267,171,267,132"/>
-<area shape="rect" id="Node000004" href="$FingerprintDialog_8cpp.html" title=" " alt="" coords="5,165,155,203"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="215,126,123,167,121,162,212,121"/>
-<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="385,120,156,169,155,164,384,115"/>
-<area shape="rect" id="Node000007" href="$FingerprintPreview_8cpp.html" title=" " alt="" coords="633,165,791,203"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="540,120,660,162,658,167,538,125"/>
-<area shape="poly" id="edge10_Node000009_Node000003" title=" " alt="" coords="603,116,326,174,325,168,602,111"/>
-<area shape="poly" id="edge11_Node000009_Node000005" title=" " alt="" coords="761,110,791,114,1003,138,1215,162,1258,168,1258,174,1214,167,1002,143,790,119,761,115"/>
-<area shape="rect" id="Node000010" href="$FingerprintDatabase_8cpp.html" title=" " alt="" coords="384,172,608,196"/>
-<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="636,119,522,173,519,169,634,114"/>
-<area shape="rect" id="Node000011" href="$SecureSocket_8cpp.html" title=" " alt="" coords="816,172,1003,196"/>
-<area shape="poly" id="edge13_Node000009_Node000011" title=" " alt="" coords="721,113,878,169,876,174,719,118"/>
-<area shape="poly" id="edge15_Node000012_Node000005" title=" " alt="" coords="1126,112,1294,169,1292,174,1124,118"/>
-<area shape="poly" id="edge16_Node000012_Node000007" title=" " alt="" coords="1011,116,792,167,791,162,1010,111"/>
-<area shape="poly" id="edge17_Node000012_Node000011" title=" " alt="" coords="1041,119,934,173,931,169,1039,115"/>
-<area shape="rect" id="Node000013" href="$SecureUtils_8cpp.html" title=" " alt="" coords="1027,172,1202,196"/>
-<area shape="poly" id="edge18_Node000012_Node000013" title=" " alt="" coords="1090,123,1112,170,1107,173,1085,125"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1002,5,1156,30"/>
+<area shape="rect" id="Node000002" href="$MainWindow_8h.html" title=" " alt="" coords="297,85,464,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="987,32,464,89,464,84,986,27"/>
+<area shape="rect" id="Node000006" href="$FingerprintDialog_8h.html" title=" " alt="" coords="597,78,732,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1002,36,733,86,732,81,1001,31"/>
+<area shape="rect" id="Node000008" href="$TlsCertificate_8cpp.html" title=" " alt="" coords="1407,172,1610,196"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="1172,22,1275,40,1330,55,1383,76,1434,115,1497,169,1494,173,1431,119,1381,80,1329,60,1274,45,1171,28"/>
+<area shape="rect" id="Node000009" href="$FingerprintPreview_8h.html" title=" " alt="" coords="806,78,950,117"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="1036,38,928,80,926,75,1034,33"/>
+<area shape="rect" id="Node000011" href="$Fingerprint_8cpp.html" title=" " alt="" coords="1444,85,1613,110"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="1164,31,1426,75,1463,82,1462,87,1425,81,1163,36"/>
+<area shape="rect" id="Node000012" href="$FingerprintDatabase_8h.html" title=" " alt="" coords="974,85,1184,110"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="1082,46,1082,85,1076,85,1076,46"/>
+<area shape="rect" id="Node000015" href="$SecureUtils_8h.html" title=" " alt="" coords="1208,85,1369,110"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="1126,33,1258,82,1256,87,1124,38"/>
+<area shape="rect" id="Node000003" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="211,165,360,203"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,122,308,166,305,162,355,118"/>
+<area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="385,172,565,196"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="406,118,464,170,461,174,403,122"/>
+<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="5,172,188,196"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="328,117,137,174,135,168,326,112"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="610,126,502,173,500,169,608,121"/>
+<area shape="rect" id="Node000007" href="$FingerprintDialog_8cpp.html" title=" " alt="" coords="590,165,739,203"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="667,133,667,164,662,164,662,133"/>
+<area shape="poly" id="edge10_Node000009_Node000007" title=" " alt="" coords="817,125,713,167,711,162,815,120"/>
+<area shape="rect" id="Node000010" href="$FingerprintPreview_8cpp.html" title=" " alt="" coords="1012,165,1170,203"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="940,120,1045,162,1043,167,938,125"/>
+<area shape="poly" id="edge14_Node000012_Node000004" title=" " alt="" coords="991,115,962,119,770,143,578,167,539,174,538,168,577,162,769,137,961,114,990,110"/>
+<area shape="poly" id="edge15_Node000012_Node000008" title=" " alt="" coords="1154,111,1450,168,1449,174,1153,116"/>
+<area shape="rect" id="Node000013" href="$FingerprintDatabase_8cpp.html" title=" " alt="" coords="763,172,987,196"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="1038,118,904,173,902,169,1036,113"/>
+<area shape="rect" id="Node000014" href="$SecureSocket_8cpp.html" title=" " alt="" coords="1195,172,1382,196"/>
+<area shape="poly" id="edge17_Node000012_Node000014" title=" " alt="" coords="1123,113,1260,169,1259,174,1121,118"/>
+<area shape="poly" id="edge19_Node000015_Node000008" title=" " alt="" coords="1334,113,1479,169,1477,174,1332,118"/>
+<area shape="poly" id="edge20_Node000015_Node000010" title=" " alt="" coords="1248,119,1136,167,1134,162,1246,114"/>
+<area shape="poly" id="edge21_Node000015_Node000014" title=" " alt="" coords="1291,125,1291,172,1286,172,1286,125"/>
+<area shape="rect" id="Node000016" href="$SecureUtils_8cpp.html" title=" " alt="" coords="1634,172,1810,196"/>
+<area shape="poly" id="edge22_Node000015_Node000016" title=" " alt="" coords="1363,110,1662,168,1661,174,1362,116"/>
 </map>

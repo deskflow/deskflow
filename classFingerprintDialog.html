@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.151</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.155</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -115,18 +115,14 @@ Collaboration diagram for FingerprintDialog:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-signals" class="groupheader"><a id="signals" name="signals"></a>
-Signals</h2></td></tr>
-<tr class="memitem:af1d99de0eecf9ef078a434f665dfb4f1" id="r_af1d99de0eecf9ef078a434f665dfb4f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1d99de0eecf9ef078a434f665dfb4f1">requestLocalPrintsDialog</a> ()</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5b422dcd4f32bd0a4d84674d137627af" id="r_a5b422dcd4f32bd0a4d84674d137627af"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5b422dcd4f32bd0a4d84674d137627af">FingerprintDialog</a> (QWidget *parent=nullptr, const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;fingerprint={}, <a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99">FingerprintDialogMode</a> mode=<a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4">FingerprintDialogMode::Local</a>)</td></tr>
+<tr class="memitem:a01b60a7f7716d842bd268d400e5f1c78" id="r_a01b60a7f7716d842bd268d400e5f1c78"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a01b60a7f7716d842bd268d400e5f1c78">FingerprintDialog</a> (QWidget *parent=nullptr, const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;localFingerprint={}, <a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99">FingerprintDialogMode</a> mode=<a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4">FingerprintDialogMode::Local</a>, const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;remoteFingerprint={})</td></tr>
 <tr class="memitem:adcf7b7eadc6efe8103cadd81968f0f6f" id="r_adcf7b7eadc6efe8103cadd81968f0f6f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#adcf7b7eadc6efe8103cadd81968f0f6f">~FingerprintDialog</a> () override=default</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a5b422dcd4f32bd0a4d84674d137627af" name="a5b422dcd4f32bd0a4d84674d137627af"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b422dcd4f32bd0a4d84674d137627af">&#9670;&#160;</a></span>FingerprintDialog()</h2>
+<a id="a01b60a7f7716d842bd268d400e5f1c78" name="a01b60a7f7716d842bd268d400e5f1c78"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01b60a7f7716d842bd268d400e5f1c78">&#9670;&#160;</a></span>FingerprintDialog()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -142,12 +138,17 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>fingerprint</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
+          <td class="paramtype">const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>localFingerprint</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99">FingerprintDialogMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4">FingerprintDialogMode::Local</a></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99">FingerprintDialogMode</a></td>          <td class="paramname"><span class="paramname"><em>mode</em></span><span class="paramdefsep"> = </span><span class="paramdefval"><a class="el" href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4">FingerprintDialogMode::Local</a></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structFingerprint.html">Fingerprint</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>remoteFingerprint</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -178,32 +179,6 @@ Public Member Functions</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel override">override</span><span class="mlabel default">default</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="af1d99de0eecf9ef078a434f665dfb4f1" name="af1d99de0eecf9ef078a434f665dfb4f1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1d99de0eecf9ef078a434f665dfb4f1">&#9670;&#160;</a></span>requestLocalPrintsDialog</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void FingerprintDialog::requestLocalPrintsDialog </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
