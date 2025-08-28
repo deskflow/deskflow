@@ -15,7 +15,8 @@
 #include <tchar.h>
 
 #include <functional>
-#include <string>
+
+#include <QString>
 
 #define ARCH_DAEMON ArchDaemonWindows
 
@@ -68,15 +69,16 @@ public:
 
   // IArchDaemon overrides
   void installDaemon(
-      const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
+      const QString &name, const QString &description, const QString &pathname, const QString &commandLine,
+      const QString &dependencies
   ) override;
-  void uninstallDaemon(const char *name) override;
+  void uninstallDaemon(const QString &name) override;
   void installDaemon() override;
   void uninstallDaemon() override;
-  int daemonize(const char *name, DaemonFunc const &func) override;
-  bool canInstallDaemon(const char *name) override;
-  bool isDaemonInstalled(const char *name) override;
-  std::string commandLine() const override
+  int daemonize(const QString &name, DaemonFunc const &func) override;
+  bool canInstallDaemon(const QString &name) override;
+  bool isDaemonInstalled(const QString &name) override;
+  QString commandLine() const override
   {
     return m_commandLine;
   }
@@ -100,8 +102,8 @@ private:
   void serviceHandler(DWORD ctrl);
   static void WINAPI serviceHandlerEntry(DWORD ctrl);
 
-  void start(const char *name);
-  void stop(const char *name);
+  void start(const QString &name);
+  void stop(const QString &name);
 
 private:
   class ArchDaemonRunException
@@ -132,7 +134,7 @@ private:
 
   UINT m_quitMessage;
 
-  std::string m_commandLine;
+  QString m_commandLine;
 };
 
 #define DEFAULT_DAEMON_INFO _T("Runs the Core process on secure desktops (UAC prompts, login screen, etc).")

@@ -6,11 +6,12 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "base/Log.h" // include first Qt...
+
 #include "platform/XWindowsScreenSaver.h"
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
-#include "base/Log.h"
 #include "deskflow/IPlatformScreen.h"
 #include "platform/XWindowsUtil.h"
 
