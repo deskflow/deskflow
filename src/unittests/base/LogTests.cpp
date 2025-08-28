@@ -7,8 +7,6 @@
 
 #include "LogTests.h"
 
-#include <QTextStream>
-
 #include <iostream>
 #include <sstream>
 
@@ -39,8 +37,8 @@ void LogTests::printWithErrorValidOutput()
 
   log.print(nullptr, 0, LEVEL_ERR "test message");
 
-  std::cerr.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cerr.rdbuf(old);
 
   QCOMPARE(string, "ERROR: test message");
 }
@@ -54,8 +52,8 @@ void LogTests::printTestPrintLevel()
 
   log.print(nullptr, 0, LEVEL_PRINT "test message");
 
-  std::cout.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cout.rdbuf(old);
 
   QCOMPARE(string, "test message");
 }
@@ -69,8 +67,8 @@ void LogTests::printTestWithArgs()
 
   log.print(nullptr, 0, LEVEL_INFO "test %d %.2f %s", 1, 1.234, "test arg");
 
-  std::cout.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cout.rdbuf(old);
 
   QCOMPARE(string, "INFO: test 1 1.23 test arg");
 }
@@ -85,8 +83,8 @@ void LogTests::printTestLogString()
   auto longString = QString(10000, 'a');
   log.print(nullptr, 0, LEVEL_INFO "%s", qPrintable(longString));
 
-  std::cout.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cout.rdbuf(old);
 
   QCOMPARE(string, QString("INFO: %1").arg(longString));
 }
@@ -100,8 +98,8 @@ void LogTests::printLevelToHigh()
 
   log.print(CLOG_DEBUG5 "test message");
 
-  std::cout.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cout.rdbuf(old);
 
   QCOMPARE(string, QString{});
 }
@@ -115,8 +113,8 @@ void LogTests::printInfoWithFileAndLine()
 
   log.print("test file", 123, LEVEL_INFO "test message");
 
-  std::cout.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cout.rdbuf(old);
 
   QCOMPARE(string, "INFO: test message test file:123");
 }
@@ -130,8 +128,8 @@ void LogTests::printErrWithFileAndLine()
 
   log.print("test file", 123, LEVEL_ERR "test message");
 
-  std::cerr.rdbuf(old);
   auto string = sanitizeBuffer(buffer);
+  std::cerr.rdbuf(old);
 
   QCOMPARE(string, "ERROR: test message test file:123");
 }
