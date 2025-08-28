@@ -14,5 +14,5 @@ add_library(client STATIC
 )
 
 if(UNIX)
-  target_link_libraries(client app io)
+  target_link_libraries(client app io common)
 endif()

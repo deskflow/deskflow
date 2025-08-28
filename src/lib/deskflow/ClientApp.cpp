@@ -15,6 +15,7 @@
 #include "client/Client.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/ArgParser.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/ProtocolTypes.h"
@@ -102,7 +103,6 @@ void ClientApp::help()
   std::stringstream help;
   help << "\n\nClient Mode:\n\n"
        << "Usage: " << kAppId << "-core client"
-       << " [--address <address>]"
        << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
@@ -113,7 +113,6 @@ void ClientApp::help()
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
-       << "  -a, --address <address>  local network interface address.\n"
        << s_helpGeneralArgs << s_helpSysInfo << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
        << "      --sync-language      enable language synchronization.\n"
@@ -329,7 +328,9 @@ bool ClientApp::startClient()
   try {
     if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
-      m_client = openClient(args().m_name, *m_serverAddress, clientScreen);
+      m_client = openClient(
+          Settings::value(Settings::Core::ScreenName).toString().toStdString(), *m_serverAddress, clientScreen
+      );
       m_clientScreen = clientScreen;
       LOG_NOTE("started client");
     }
