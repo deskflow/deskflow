@@ -30,12 +30,10 @@ void LogTests::initTestCase()
 
 void LogTests::printWithErrorValidOutput()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cerr.rdbuf(buffer.rdbuf());
 
-  log.print(nullptr, 0, LEVEL_ERR "test message");
+  m_log.print(nullptr, 0, LEVEL_ERR "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cerr.rdbuf(old);
@@ -45,12 +43,10 @@ void LogTests::printWithErrorValidOutput()
 
 void LogTests::printTestPrintLevel()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  log.print(nullptr, 0, LEVEL_PRINT "test message");
+  m_log.print(nullptr, 0, LEVEL_PRINT "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
@@ -60,12 +56,10 @@ void LogTests::printTestPrintLevel()
 
 void LogTests::printTestWithArgs()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  log.print(nullptr, 0, LEVEL_INFO "test %d %.2f %s", 1, 1.234, "test arg");
+  m_log.print(nullptr, 0, LEVEL_INFO "test %d %.2f %s", 1, 1.234, "test arg");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
@@ -75,13 +69,11 @@ void LogTests::printTestWithArgs()
 
 void LogTests::printTestLogString()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
   auto longString = QString(10000, 'a');
-  log.print(nullptr, 0, LEVEL_INFO "%s", qPrintable(longString));
+  m_log.print(nullptr, 0, LEVEL_INFO "%s", qPrintable(longString));
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
@@ -91,12 +83,10 @@ void LogTests::printTestLogString()
 
 void LogTests::printLevelToHigh()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  log.print(CLOG_DEBUG5 "test message");
+  m_log.print(CLOG_DEBUG5 "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
@@ -106,12 +96,10 @@ void LogTests::printLevelToHigh()
 
 void LogTests::printInfoWithFileAndLine()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  log.print("test file", 123, LEVEL_INFO "test message");
+  m_log.print("test file", 123, LEVEL_INFO "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
@@ -121,12 +109,10 @@ void LogTests::printInfoWithFileAndLine()
 
 void LogTests::printErrWithFileAndLine()
 {
-  Log log(false);
-
   std::stringstream buffer;
   std::streambuf *old = std::cerr.rdbuf(buffer.rdbuf());
 
-  log.print("test file", 123, LEVEL_ERR "test message");
+  m_log.print("test file", 123, LEVEL_ERR "test message");
 
   auto string = sanitizeBuffer(buffer);
   std::cerr.rdbuf(old);
