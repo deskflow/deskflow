@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "../../lib/arch/ArchString.h"
-#include "base/Log.h"
 #include <QTest>
+
+#include "base/Log.h"
 
 class LogTests : public QObject
 {
