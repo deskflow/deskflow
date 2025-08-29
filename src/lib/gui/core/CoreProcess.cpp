@@ -198,6 +198,7 @@ void CoreProcess::daemonIpcClientConnected()
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 {
+  using enum ProcessState;
   setConnectionState(ConnectionState::Disconnected);
 
   if (m_retryTimer.isActive()) {
@@ -205,20 +206,20 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
   }
 
   if (exitCode == s_exitDuplicate) {
-    setProcessState(ProcessState::Stopped);
+    setProcessState(Stopped);
     qWarning("desktop process is already running");
     return;
   }
 
   LOG_IPC("desktop process exited with code: %d", exitCode);
 
-  if (const auto wasStarted = m_processState == ProcessState::Started; wasStarted) {
+  if (const auto wasStarted = m_processState == Started; wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
-    setProcessState(ProcessState::RetryPending);
+    setProcessState(RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
   } else {
-    setProcessState(ProcessState::Stopped);
+    setProcessState(Stopped);
   }
 }
 
