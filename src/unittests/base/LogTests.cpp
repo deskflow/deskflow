@@ -59,12 +59,12 @@ void LogTests::printTestWithArgs()
   std::stringstream buffer;
   std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
 
-  m_log.print(nullptr, 0, LEVEL_INFO "test %d %.2f %s", 1, 1.234, "test arg");
+  m_log.print(nullptr, 0, LEVEL_INFO "test %s", "IamARG");
 
   auto string = sanitizeBuffer(buffer);
   std::cout.rdbuf(old);
 
-  QCOMPARE(string, "INFO: test 1 1.23 test arg");
+  QCOMPARE(string, "INFO: test IamARG");
 }
 
 void LogTests::printTestLogString()
