@@ -12,7 +12,7 @@
 
 QString Action::text() const
 {
-  auto text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
+  auto text = QString(m_actionTypeNames.at(type()));
 
   switch (static_cast<Action::Type>(type())) {
     using enum Type;
