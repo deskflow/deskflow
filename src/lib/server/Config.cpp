@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -1059,6 +1060,14 @@ void Config::parseAction(
     }
 
     action = new InputFilter::SwitchInDirectionAction(m_events, direction);
+  }
+
+  else if (name == "switchToNextScreen") {
+    if (args.size() != 0) {
+      throw ServerConfigReadException(s, "syntax for action: switchToNextScreen");
+    }
+
+    action = new InputFilter::SwitchToNextScreenAction(m_events);
   }
 
   else if (name == "lockCursorToScreen") {

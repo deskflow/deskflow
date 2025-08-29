@@ -65,6 +65,11 @@
        </item>
        <item>
         <property name="text">
+         <string>Switch to next computer</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Modify the cursor lock</string>
         </property>
        </item>

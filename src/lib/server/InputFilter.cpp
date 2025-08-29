@@ -336,6 +336,28 @@ void InputFilter::SwitchInDirectionAction::perform(const Event &event)
   );
 }
 
+InputFilter::SwitchToNextScreenAction::SwitchToNextScreenAction(IEventQueue *events) : m_events(events)
+{
+  // do nothing
+}
+
+InputFilter::Action *InputFilter::SwitchToNextScreenAction::clone() const
+{
+  return new SwitchToNextScreenAction(*this);
+}
+
+std::string InputFilter::SwitchToNextScreenAction::format() const
+{
+  return "switchToNextScreen()";
+}
+
+void InputFilter::SwitchToNextScreenAction::perform(const Event &event)
+{
+  m_events->addEvent(
+      Event(EventTypes::ServerToggleScreen, event.getTarget(), nullptr, Event::EventFlags::DeliverImmediately)
+  );
+}
+
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue *events, Mode mode)
     : m_mode(mode),
       m_events(events)
