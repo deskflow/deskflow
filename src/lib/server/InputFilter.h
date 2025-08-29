@@ -211,6 +211,21 @@ public:
     IEventQueue *m_events;
   };
 
+  // SwitchToNextScreenAction
+  class SwitchToNextScreenAction : public Action
+  {
+  public:
+    explicit SwitchToNextScreenAction(IEventQueue *events);
+
+    // Action overrides
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
+
+  private:
+    IEventQueue *m_events;
+  };
+
   // KeyboardBroadcastAction
   class KeyboardBroadcastAction : public Action
   {

@@ -28,6 +28,7 @@
 #include "server/PrimaryClient.h"
 
 #ifdef _WIN32
+#include <algorithm>
 #include <array>
 #endif
 #include <cmath>
@@ -109,6 +110,9 @@ Server::Server(
   });
   m_events->addHandler(EventTypes::ServerSwitchInDirection, m_inputFilter, [this](const auto &e) {
     handleSwitchInDirectionEvent(e);
+  });
+  m_events->addHandler(EventTypes::ServerToggleScreen, m_inputFilter, [this](const auto &e) {
+    handleToggleScreenEvent(e);
   });
   m_events->addHandler(EventTypes::ServerKeyboardBroadcast, m_inputFilter, [this](const auto &e) {
     handleKeyboardBroadcastEvent(e);
@@ -1328,6 +1332,41 @@ void Server::handleSwitchInDirectionEvent(const Event &event)
   } else {
     jumpToScreen(newScreen);
   }
+}
+
+void Server::handleToggleScreenEvent(const Event &event)
+{
+  // Get the list of connected screens in config order
+  std::vector<std::string> screens;
+  getClients(screens);
+
+  if (screens.size() < 2) {
+    LOG_ERR("not enough screens to toggle");
+    return;
+  }
+
+  // Find the current active screen
+  std::string currentScreen = getName(m_active);
+  auto it = std::ranges::find(screens, currentScreen);
+  if (it == screens.end()) {
+    LOG_ERR("current screen not found in list");
+    return;
+  }
+
+  // Find the next screen
+  auto nextIt = it + 1;
+  if (nextIt == screens.end()) {
+    nextIt = screens.begin();
+  }
+
+  // Find the client for the next screen
+  ClientList::const_iterator clientIt = m_clients.find(*nextIt);
+  if (clientIt == m_clients.end()) {
+    LOG_ERR("next screen not active");
+    return;
+  }
+
+  jumpToScreen(clientIt->second);
 }
 
 void Server::handleKeyboardBroadcastEvent(const Event &event)

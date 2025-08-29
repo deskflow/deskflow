@@ -432,6 +432,9 @@ Actions are two lists of individual actions separated by commas. The two lists a
 * `switchInDirection(dir)`
 : Switch to the screen in the direction ''dir'', which may be one of ''left'', ''right'', ''up'' or ''down''.
 
+* `switchToNextScreen()`
+: Cycle to the next screen in the configuration order. If at the last screen, cycles back to the first screen.
+
 ##### Keynames
 Valid key names are:
 
