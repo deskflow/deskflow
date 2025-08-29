@@ -81,7 +81,7 @@ QVariant Settings::defaultValue(const QString &key)
 
   if ((key == Gui::CloseToTray) || (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon) ||
       (key == Gui::CloseReminder) || (key == Security::TlsEnabled) || (key == Security::CheckPeers) ||
-      (key == Client::LanguageSync)) {
+      (key == Client::LanguageSync) || (key == Gui::ShowGenericClientFailureDialog)) {
     return true;
   }
 

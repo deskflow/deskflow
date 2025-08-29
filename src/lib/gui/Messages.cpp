@@ -13,6 +13,7 @@
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 
+#include <QCheckBox>
 #include <QMessageBox>
 #include <QPushButton>
 #include <memory>
@@ -213,7 +214,29 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
 
   auto title = QObject::tr("%1 Connection Error").arg(kAppName);
 
-  QMessageBox::warning(parent, title, message);
+  if (error != ClientError::HostnameError) {
+    QMessageBox::warning(parent, title, message);
+    return;
+  }
+
+  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool())
+    return;
+
+  auto dialog = QMessageBox(parent);
+  dialog.setWindowTitle(title);
+  dialog.setText(message);
+  dialog.setWindowModality(Qt::ApplicationModal);
+  dialog.setIcon(QMessageBox::Information);
+
+  auto cbNoShowAgain = new QCheckBox(QObject::tr("Do not show this message again"));
+
+  QObject::connect(cbNoShowAgain, &QCheckBox::toggled, [&](bool enabled) {
+    Settings::setValue(Settings::Gui::ShowGenericClientFailureDialog, !enabled);
+  });
+
+  dialog.setCheckBox(cbNoShowAgain);
+  dialog.setDefaultButton(QMessageBox::Ok);
+  dialog.exec();
 }
 
 NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
