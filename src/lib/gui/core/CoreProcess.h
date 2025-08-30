@@ -9,13 +9,11 @@
 #include "common/Settings.h"
 #include "gui/FileTail.h"
 #include "gui/config/IServerConfig.h"
-#include "gui/proxy/QProcessProxy.h"
-
-#include <memory>
 
 #include <QFileSystemWatcher>
 #include <QMutex>
 #include <QObject>
+#include <QProcess>
 #include <QString>
 #include <QStringList>
 #include <QTimer>
@@ -30,25 +28,10 @@ class CoreProcess : public QObject
 {
   using ProcessMode = Settings::ProcessMode;
   using IServerConfig = deskflow::gui::IServerConfig;
-  using QProcessProxy = deskflow::gui::proxy::QProcessProxy;
 
   Q_OBJECT
 
 public:
-  struct Deps
-  {
-    virtual ~Deps() = default;
-    virtual QProcessProxy &process()
-    {
-      return m_process;
-    }
-    virtual QString appPath(const QString &name) const;
-    virtual bool fileExists(const QString &path) const;
-
-  private:
-    QProcessProxy m_process;
-  };
-
   enum class Error
   {
     AddressMissing,
@@ -70,7 +53,7 @@ public:
     Listening
   };
 
-  explicit CoreProcess(const IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>());
+  explicit CoreProcess(const IServerConfig &serverConfig);
 
   void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
@@ -154,18 +137,19 @@ private:
 #endif
 
   const IServerConfig &m_serverConfig;
-  std::shared_ptr<Deps> m_pDeps;
   QString m_address;
   ProcessState m_processState = ProcessState::Stopped;
   ConnectionState m_connectionState = ConnectionState::Disconnected;
   Settings::CoreMode m_mode = Settings::CoreMode::None;
   QMutex m_processMutex;
-  QString m_secureSocketVersion = "";
+  QString m_secureSocketVersion;
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
   QTimer m_retryTimer;
   int m_connections = 0;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
   FileTail *m_daemonFileTail = nullptr;
+  QProcess *m_pProcess = nullptr;
+  QString m_appPath;
 };
 
 } // namespace deskflow::gui
