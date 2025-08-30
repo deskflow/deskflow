@@ -440,7 +440,7 @@ bool ServerApp::startServer()
     listener->setServer(m_server);
     m_server->setListener(listener);
     m_listener = listener;
-    LOG_NOTE("started server, waiting for clients");
+    LOG_IPC("started server, waiting for clients");
     m_serverState = Started;
     return true;
   } catch (SocketAddressInUseException &e) {

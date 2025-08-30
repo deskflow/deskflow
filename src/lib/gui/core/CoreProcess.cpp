@@ -6,6 +6,7 @@
 
 #include "CoreProcess.h"
 
+#include "base/Log.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "gui/ipc/DaemonIpcClient.h"
@@ -197,29 +198,28 @@ void CoreProcess::daemonIpcClientConnected()
 
 void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
 {
+  using enum ProcessState;
   setConnectionState(ConnectionState::Disconnected);
 
   if (m_retryTimer.isActive()) {
     m_retryTimer.stop();
   }
 
-  if (exitCode == s_exitSuccess) {
-    qDebug("desktop process exited normally");
-  } else if (exitCode != s_exitDuplicate) {
-    qWarning("desktop process exited with error code: %d", exitCode);
-  } else {
-    setProcessState(ProcessState::Stopped);
+  if (exitCode == s_exitDuplicate) {
+    setProcessState(Stopped);
     qWarning("desktop process is already running");
     return;
   }
 
-  if (const auto wasStarted = m_processState == ProcessState::Started; wasStarted) {
+  LOG_IPC("desktop process exited with code: %d", exitCode);
+
+  if (const auto wasStarted = m_processState == Started; wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
-    setProcessState(ProcessState::RetryPending);
+    setProcessState(RetryPending);
     m_retryTimer.setSingleShot(true);
     m_retryTimer.start(kRetryDelay);
   } else {
-    setProcessState(ProcessState::Stopped);
+    setProcessState(Stopped);
   }
 }
 

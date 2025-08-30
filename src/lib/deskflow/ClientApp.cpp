@@ -232,7 +232,7 @@ void ClientApp::scheduleClientRestart(double retryTime)
 
 void ClientApp::handleClientConnected() const
 {
-  LOG_NOTE("connected to server");
+  LOG_IPC("connected to server");
 }
 
 void ClientApp::handleClientFailed(const Event &e)
@@ -267,7 +267,7 @@ void ClientApp::handleClientRefused(const Event &e)
 
 void ClientApp::handleClientDisconnected()
 {
-  LOG_NOTE("disconnected from server");
+  LOG_IPC("disconnected from server");
   if (!args().m_restartable) {
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
