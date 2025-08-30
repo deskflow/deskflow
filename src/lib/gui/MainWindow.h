@@ -122,7 +122,6 @@ private:
   void updateModeControlLabels();
   std::unique_ptr<Ui::MainWindow> ui;
 
-  void updateSize();
   void createMenuBar();
   void setupTrayIcon();
   void applyConfig();

@@ -48,6 +48,7 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
+#include <QToolButton>
 
 #include <memory>
 
@@ -91,7 +92,9 @@ MainWindow::MainWindow()
 
   setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 
-  ui->frameLog->layout()->addWidget(m_logWidget);
+  auto dockLayout = new QVBoxLayout();
+  dockLayout->addWidget(m_logWidget);
+  ui->dockLogContents->setLayout(dockLayout);
 
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
@@ -127,10 +130,6 @@ MainWindow::MainWindow()
 
   m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
 
-#ifdef Q_OS_MAC
-  ui->btnToggleLog->setFixedHeight(ui->lblLog->height() * 0.6);
-#endif
-
   // Setup the Instance Checking
   // In case of a previous crash remove first
   QLocalServer::removeServer(m_guiSocketName);
@@ -147,8 +146,6 @@ MainWindow::MainWindow()
   restoreWindow();
 
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
-
-  updateSize();
 
   // Force generation of SHA256 for the localhost
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
@@ -180,34 +177,23 @@ MainWindow::~MainWindow()
 
 void MainWindow::restoreWindow()
 {
-  const auto windowGeometry = Settings::value(Settings::Gui::WindowGeometry).toRect();
+  auto windowGeometry = Settings::value(Settings::Gui::WindowGeometry).toRect();
+  const auto totalGeometry = QGuiApplication::primaryScreen()->availableGeometry();
   if (!windowGeometry.isValid()) {
-    // center main window in middle of screen
-    const auto screen = QGuiApplication::primaryScreen();
-    QRect screenGeometry = screen->geometry();
+    adjustSize();
+    windowGeometry = geometry();
+  } else {
+    setGeometry(windowGeometry);
+  }
+  m_expandedSize = geometry().size();
+
+  if (!totalGeometry.contains(windowGeometry)) {
+    QRect screenGeometry = QGuiApplication::primaryScreen()->geometry();
     move(screenGeometry.center() - rect().center());
-    return;
   }
 
-  m_expandedSize = windowGeometry.size();
-
-  int x = 0;
-  int y = 0;
-  int w = 0;
-  int h = 0;
-  const auto screens = QGuiApplication::screens();
-  for (auto screen : screens) {
-    auto geo = screen->geometry();
-    x = std::min(geo.x(), x);
-    y = std::min(geo.y(), y);
-    w = std::max(geo.x() + geo.width(), w);
-    h = std::max(geo.y() + geo.height(), h);
-  }
-  const QRect screensGeometry(x, y, w, h);
-  if (screensGeometry.contains(windowGeometry)) {
-    qDebug() << "restoring main window position";
-    move(windowGeometry.topLeft());
-  }
+  if (!Settings::value(Settings::Gui::LogExpanded).toBool())
+    setFixedSize(size());
 }
 
 void MainWindow::setupControls()
@@ -224,14 +210,8 @@ void MainWindow::setupControls()
     Settings::setValue(Settings::Core::LastVersion, kVersion);
   }
 
-  // Setup the log toggle, set its initial state to closed
-  ui->btnToggleLog->setStyleSheet(kStyleFlatButton);
-  if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
-    ui->btnToggleLog->setArrowType(Qt::DownArrow);
-    m_logWidget->setVisible(true);
-    ui->btnToggleLog->click();
-  } else {
-    m_logWidget->setVisible(false);
+  if (!Settings::value(Settings::Gui::LogExpanded).toBool()) {
+    ui->dockLog->hide();
   }
 
   ui->serverOptions->setVisible(false);
@@ -347,7 +327,7 @@ void MainWindow::connectSlots()
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
-  connect(ui->btnToggleLog, &QAbstractButton::toggled, this, &MainWindow::toggleLogVisible);
+  connect(ui->dockLog->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
 
   connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
 
@@ -360,16 +340,17 @@ void MainWindow::connectSlots()
 
 void MainWindow::toggleLogVisible(bool visible)
 {
-  if (visible) {
-    ui->btnToggleLog->setArrowType(Qt::DownArrow);
-  } else {
-    ui->btnToggleLog->setArrowType(Qt::RightArrow);
-    m_expandedSize = size();
-  }
-  m_logWidget->setVisible(visible);
+  setFixedSize(16777215, 16777215);
   Settings::setValue(Settings::Gui::LogExpanded, visible);
-  // 15 ms delay is to make sure we have left the function before calling updateSize
-  QTimer::singleShot(15, this, &MainWindow::updateSize);
+  if (visible) {
+    setGeometry(x(), y(), m_expandedSize.width(), m_expandedSize.height());
+  } else {
+    m_expandedSize = geometry().size();
+    ui->dockLog->hide();
+    adjustSize();
+    setFixedSize(size());
+  }
+  Settings::setValue(Settings::Gui::WindowGeometry, geometry());
 }
 
 void MainWindow::settingsChanged(const QString &key)
@@ -504,18 +485,6 @@ void MainWindow::resetCore()
 {
   m_clientConnection.setShowMessage();
   m_coreProcess.restart();
-}
-
-void MainWindow::updateSize()
-{
-  if (Settings::value(Settings::Gui::LogExpanded).toBool()) {
-    setMaximumSize(16777215, 16777215);
-    resize(m_expandedSize);
-  } else {
-    adjustSize();
-    // Prevent Resize with log collapsed
-    setMaximumSize(width(), height());
-  }
 }
 
 void MainWindow::showMyFingerprint()
@@ -728,6 +697,9 @@ void MainWindow::createMenuBar()
   auto menuEdit = new QMenu(tr("&Edit"), this);
   menuEdit->addAction(m_actionSettings);
 
+  auto menuView = new QMenu(tr("&View"), this);
+  menuView->addAction(ui->dockLog->toggleViewAction());
+
   auto menuHelp = new QMenu(tr("&Help"), this);
   menuHelp->addAction(m_actionAbout);
   menuHelp->addAction(m_actionReportBug);
@@ -737,6 +709,7 @@ void MainWindow::createMenuBar()
   auto menuBar = new QMenuBar(this);
   menuBar->addMenu(menuFile);
   menuBar->addMenu(menuEdit);
+  menuBar->addMenu(menuView);
   menuBar->addMenu(menuHelp);
 
   setMenuBar(menuBar);
@@ -899,6 +872,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
     Settings::setValue(Settings::Gui::WindowGeometry, geometry());
   }
   qDebug() << "quitting application";
+
+  // any connected dock view acitons will be triggered
+  // disconnect them before accepting the event
+  disconnect(ui->dockLog->toggleViewAction(), &QAction::toggled, nullptr, nullptr);
+
   event->accept();
   QApplication::quit();
 }
