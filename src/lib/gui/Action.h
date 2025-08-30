@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -42,6 +43,7 @@ public:
     keystroke,
     switchToScreen,
     switchInDirection,
+    switchToNextScreen,
     lockCursorToScreen,
     restartAllConnections,
     mouseDown,
@@ -164,9 +166,10 @@ private:
   inline static const QStringList m_actionTypeNames{
       QStringLiteral("keyDown"),           QStringLiteral("keyUp"),
       QStringLiteral("keystroke"),         QStringLiteral("switchToScreen"),
-      QStringLiteral("switchInDirection"), QStringLiteral("lockCursorToScreen"),
-      QStringLiteral("restartServer"),     QStringLiteral("mouseDown"),
-      QStringLiteral("mouseUp"),           QStringLiteral("mousebutton")
+      QStringLiteral("switchInDirection"), QStringLiteral("switchToNextScreen"),
+      QStringLiteral("lockCursorToScreen"), QStringLiteral("restartServer"),
+      QStringLiteral("mouseDown"),         QStringLiteral("mouseUp"),
+      QStringLiteral("mousebutton")
   };
 
   inline static const QStringList m_switchDirectionNames{

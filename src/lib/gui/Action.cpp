@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,7 +13,7 @@
 
 QString Action::text() const
 {
-  auto text = QString(m_actionTypeNames.at(keySequence().isMouseButton() ? type() + 6 : type()));
+  auto text = QString(m_actionTypeNames.at(type()));
 
   switch (static_cast<Action::Type>(type())) {
     using enum Type;
