@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>758</width>
-    <height>259</height>
+    <height>305</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-    <horstretch>0</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Deskflow</string>
   </property>
   <widget class="QWidget" name="topLevelWidget">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
    <layout class="QVBoxLayout" name="_2">
     <property name="spacing">
      <number>3</number>
@@ -465,74 +465,25 @@
       </layout>
      </widget>
     </item>
-    <item>
-     <widget class="QFrame" name="frameLog">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="frameShape">
-       <enum>QFrame::Shape::NoFrame</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Shadow::Plain</enum>
-      </property>
-      <layout class="QVBoxLayout" name="_3">
-       <item>
-        <layout class="QHBoxLayout" name="_4">
-         <property name="sizeConstraint">
-          <enum>QLayout::SizeConstraint::SetMinAndMaxSize</enum>
-         </property>
-         <item>
-          <widget class="QToolButton" name="btnToggleLog">
-           <property name="checkable">
-            <bool>true</bool>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::ArrowType::RightArrow</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="lblLog">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="text">
-            <string>Log</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="spacer">
-           <property name="orientation">
-            <enum>Qt::Orientation::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </widget>
-    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="dockLog">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFeature::DockWidgetClosable</set>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::DockWidgetArea::BottomDockWidgetArea</set>
+   </property>
+   <property name="windowTitle">
+    <string>Log</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>8</number>
+   </attribute>
+   <widget class="QWidget" name="dockLogContents"/>
+  </widget>
  </widget>
- <tabstops>
-  <tabstop>btnToggleLog</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
