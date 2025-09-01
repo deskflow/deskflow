@@ -10,6 +10,7 @@ var InputFilter_8h =
     [ "InputFilter::RestartServer", "classInputFilter_1_1RestartServer.html", "classInputFilter_1_1RestartServer" ],
     [ "InputFilter::SwitchToScreenAction", "classInputFilter_1_1SwitchToScreenAction.html", "classInputFilter_1_1SwitchToScreenAction" ],
     [ "InputFilter::SwitchInDirectionAction", "classInputFilter_1_1SwitchInDirectionAction.html", "classInputFilter_1_1SwitchInDirectionAction" ],
+    [ "InputFilter::SwitchToNextScreenAction", "classInputFilter_1_1SwitchToNextScreenAction.html", "classInputFilter_1_1SwitchToNextScreenAction" ],
     [ "InputFilter::KeyboardBroadcastAction", "classInputFilter_1_1KeyboardBroadcastAction.html", "classInputFilter_1_1KeyboardBroadcastAction" ],
     [ "InputFilter::KeystrokeAction", "classInputFilter_1_1KeystrokeAction.html", "classInputFilter_1_1KeystrokeAction" ],
     [ "InputFilter::MouseButtonAction", "classInputFilter_1_1MouseButtonAction.html", "classInputFilter_1_1MouseButtonAction" ],

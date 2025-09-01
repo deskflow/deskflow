@@ -12,6 +12,7 @@ var classInputFilter =
     [ "Rule", "classInputFilter_1_1Rule.html", "classInputFilter_1_1Rule" ],
     [ "ScreenConnectedCondition", "classInputFilter_1_1ScreenConnectedCondition.html", "classInputFilter_1_1ScreenConnectedCondition" ],
     [ "SwitchInDirectionAction", "classInputFilter_1_1SwitchInDirectionAction.html", "classInputFilter_1_1SwitchInDirectionAction" ],
+    [ "SwitchToNextScreenAction", "classInputFilter_1_1SwitchToNextScreenAction.html", "classInputFilter_1_1SwitchToNextScreenAction" ],
     [ "SwitchToScreenAction", "classInputFilter_1_1SwitchToScreenAction.html", "classInputFilter_1_1SwitchToScreenAction" ],
     [ "RuleList", "classInputFilter.html#aad2d5a65753cf46b14ba313a90b07461", null ],
     [ "FilterStatus", "classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48ed", [

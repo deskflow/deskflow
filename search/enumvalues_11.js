@@ -39,7 +39,8 @@ var searchData=
   ['streamoutputshutdown_36',['StreamOutputShutdown',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a857586459050f8d2bc9dba9e99f0a41f',1,'deskflow']]],
   ['super_37',['Super',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814a0ce3266d4eb71ad50f7a90aee6d21dcd',1,'ScreenConfig']]],
   ['switchindirection_38',['switchInDirection',['../classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a9ea223b29b741b175f8de039006bc684',1,'Action']]],
-  ['switchtoscreen_39',['switchToScreen',['../classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a66c1820f8cdce76e860432ef09e9b679',1,'Action']]],
-  ['synergy_40',['Synergy',['../NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a',1,'NetworkProtocol.h']]],
-  ['system_41',['System',['../classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a',1,'IEventQueueBuffer::System'],['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a',1,'deskflow::System']]]
+  ['switchtonextscreen_39',['switchToNextScreen',['../classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a1d5b9295cfe68c690f28613a6e70b1ba',1,'Action']]],
+  ['switchtoscreen_40',['switchToScreen',['../classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a66c1820f8cdce76e860432ef09e9b679',1,'Action']]],
+  ['synergy_41',['Synergy',['../NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a',1,'NetworkProtocol.h']]],
+  ['system_42',['System',['../classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674aa45da96d0bf6575970f2d27af22be28a',1,'IEventQueueBuffer::System'],['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a',1,'deskflow::System']]]
 ];

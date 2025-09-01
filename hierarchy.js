@@ -8,6 +8,7 @@ var hierarchy =
       [ "InputFilter::MouseButtonAction", "classInputFilter_1_1MouseButtonAction.html", null ],
       [ "InputFilter::RestartServer", "classInputFilter_1_1RestartServer.html", null ],
       [ "InputFilter::SwitchInDirectionAction", "classInputFilter_1_1SwitchInDirectionAction.html", null ],
+      [ "InputFilter::SwitchToNextScreenAction", "classInputFilter_1_1SwitchToNextScreenAction.html", null ],
       [ "InputFilter::SwitchToScreenAction", "classInputFilter_1_1SwitchToScreenAction.html", null ]
     ] ],
     [ "ActionDialog::ActionTypes", "structActionDialog_1_1ActionTypes.html", null ],

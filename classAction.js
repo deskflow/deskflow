@@ -17,6 +17,7 @@ var classAction =
       [ "keystroke", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3ad9fe3a138000d19978bf69cd8d7528aa", null ],
       [ "switchToScreen", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a66c1820f8cdce76e860432ef09e9b679", null ],
       [ "switchInDirection", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a9ea223b29b741b175f8de039006bc684", null ],
+      [ "switchToNextScreen", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a1d5b9295cfe68c690f28613a6e70b1ba", null ],
       [ "lockCursorToScreen", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a935d3ffef92fc997178bbde261bbae4c", null ],
       [ "restartAllConnections", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a29a278d7ee68742c0ab4759a0a5a9a8f", null ],
       [ "mouseDown", "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a83766bbe8b909ee2240776b6fbd27921", null ],

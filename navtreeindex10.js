@@ -1,5 +1,6 @@
 var NAVTREEINDEX10 =
 {
+"classIClipboard.html#a5eea232f00e11ff558ae97dd4157a151":[6,0,109,7],
 "classIClipboard.html#a626df1c5cedfc790e84dcee64edf682f":[6,0,109,3],
 "classIClipboard.html#a742c618d6056270cf533962ae905a059":[6,0,109,8],
 "classIClipboard.html#a7c084944837c68934cb90c3b46dfaee6":[6,0,109,13],
@@ -248,6 +249,5 @@ var NAVTREEINDEX10 =
 "classISocket.html#aa8fcc401c9bc4083c6b133996040dfd1":[6,0,134,3],
 "classISocket.html#af33566df32e8275637ee58c01952c4c1":[6,0,134,1],
 "classISocketFactory.html":[6,0,135],
-"classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f":[6,0,135,1],
-"classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b":[6,0,135,2]
+"classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f":[6,0,135,1]
 };

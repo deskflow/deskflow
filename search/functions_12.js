@@ -247,9 +247,10 @@ var searchData=
   ['switchdoubletap_244',['switchDoubleTap',['../classServerConfig.html#ac6b5e0ff511f9d7738bfe10f52dd62a9',1,'ServerConfig']]],
   ['switchindirectionaction_245',['SwitchInDirectionAction',['../classInputFilter_1_1SwitchInDirectionAction.html#a5445df0e7f478d6e78480ddc81fd997e',1,'InputFilter::SwitchInDirectionAction']]],
   ['switchscreenname_246',['switchScreenName',['../classAction.html#a7eca6e55b81a112ac170ea9169474854',1,'Action']]],
-  ['switchtoscreenaction_247',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html#a50a3bc5cbd1fd41164ada3311a437b48',1,'InputFilter::SwitchToScreenAction']]],
-  ['sync_248',['sync',['../classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7',1,'QSettingsProxy']]],
-  ['synchronize_249',['synchronize',['../classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c',1,'OSXClipboard']]],
-  ['systemlogger_250',['SystemLogger',['../classSystemLogger.html#a5ba9e82ca72eaacb04ae9d7c2143b5f4',1,'SystemLogger::SystemLogger(const char *title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
-  ['systemlogoutputter_251',['SystemLogOutputter',['../classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1',1,'SystemLogOutputter']]]
+  ['switchtonextscreenaction_247',['SwitchToNextScreenAction',['../classInputFilter_1_1SwitchToNextScreenAction.html#a2cf2112cbc5c0f759ac2e9e865256a9c',1,'InputFilter::SwitchToNextScreenAction']]],
+  ['switchtoscreenaction_248',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html#a50a3bc5cbd1fd41164ada3311a437b48',1,'InputFilter::SwitchToScreenAction']]],
+  ['sync_249',['sync',['../classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7',1,'QSettingsProxy']]],
+  ['synchronize_250',['synchronize',['../classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c',1,'OSXClipboard']]],
+  ['systemlogger_251',['SystemLogger',['../classSystemLogger.html#a5ba9e82ca72eaacb04ae9d7c2143b5f4',1,'SystemLogger::SystemLogger(const char *title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
+  ['systemlogoutputter_252',['SystemLogOutputter',['../classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1',1,'SystemLogOutputter']]]
 ];

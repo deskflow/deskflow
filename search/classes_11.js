@@ -50,8 +50,9 @@ var searchData=
   ['streamfilter_47',['StreamFilter',['../classStreamFilter.html',1,'']]],
   ['switchindirectionaction_48',['SwitchInDirectionAction',['../classInputFilter_1_1SwitchInDirectionAction.html',1,'InputFilter']]],
   ['switchindirectioninfo_49',['SwitchInDirectionInfo',['../classServer_1_1SwitchInDirectionInfo.html',1,'Server']]],
-  ['switchtoscreenaction_50',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html',1,'InputFilter']]],
-  ['switchtoscreeninfo_51',['SwitchToScreenInfo',['../classServer_1_1SwitchToScreenInfo.html',1,'Server']]],
-  ['systemlogger_52',['SystemLogger',['../classSystemLogger.html',1,'']]],
-  ['systemlogoutputter_53',['SystemLogOutputter',['../classSystemLogOutputter.html',1,'']]]
+  ['switchtonextscreenaction_50',['SwitchToNextScreenAction',['../classInputFilter_1_1SwitchToNextScreenAction.html',1,'InputFilter']]],
+  ['switchtoscreenaction_51',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html',1,'InputFilter']]],
+  ['switchtoscreeninfo_52',['SwitchToScreenInfo',['../classServer_1_1SwitchToScreenInfo.html',1,'Server']]],
+  ['systemlogger_53',['SystemLogger',['../classSystemLogger.html',1,'']]],
+  ['systemlogoutputter_54',['SystemLogOutputter',['../classSystemLogOutputter.html',1,'']]]
 ];
