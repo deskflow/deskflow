@@ -33,7 +33,7 @@ public Q_SLOTS:
   void reject() override;
   void message(const QString &message)
   {
-    m_Message = message;
+    m_message = message;
   }
 
 protected Q_SLOTS:
@@ -82,25 +82,25 @@ protected:
 
   ServerConfig &serverConfig()
   {
-    return m_ServerConfig;
+    return m_serverConfig;
   }
   void setOriginalServerConfig(const ServerConfig &s)
   {
-    m_OriginalServerConfig = s;
+    m_originalServerConfig = s;
   }
   ScreenSetupModel &model()
   {
-    return m_ScreenSetupModel;
+    return m_screenSetupModel;
   }
 
 private:
   std::unique_ptr<Ui::ServerConfigDialog> ui;
-  QString m_Message = "";
-  ServerConfig &m_OriginalServerConfig;
-  bool m_OriginalServerConfigIsExternal;
-  QString m_OriginalServerConfigUsesExternalFile;
-  ScreenSetupModel m_ScreenSetupModel;
-  ServerConfig m_ServerConfig;
+  QString m_message = "";
+  ServerConfig &m_originalServerConfig;
+  bool m_originalServerConfigIsExternal;
+  QString m_originalServerConfigUsesExternalFile;
+  ScreenSetupModel m_screenSetupModel;
+  ServerConfig m_serverConfig;
 
 private Q_SLOTS:
   void onChange();
