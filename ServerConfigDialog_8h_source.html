@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.170</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.175</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -129,7 +129,7 @@ $(function(){initNavTree('ServerConfigDialog_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classServerConfigDialog.html#a650a1ab5b793f3d000c8f2e285279b3a">   34</a></span>  <span class="keywordtype">void</span> <a class="code hl_slot" href="classServerConfigDialog.html#a650a1ab5b793f3d000c8f2e285279b3a">message</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_slot" href="classServerConfigDialog.html#a650a1ab5b793f3d000c8f2e285279b3a">message</a>)</div>
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  {</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    m_Message = <a class="code hl_slot" href="classServerConfigDialog.html#a650a1ab5b793f3d000c8f2e285279b3a">message</a>;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    m_message = <a class="code hl_slot" href="classServerConfigDialog.html#a650a1ab5b793f3d000c8f2e285279b3a">message</a>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  }</div>
 </div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
@@ -180,30 +180,30 @@ $(function(){initNavTree('ServerConfigDialog_8h_source.html','',''); });
 <div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27">   83</a></span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;<a class="code hl_function" href="classServerConfigDialog.html#a8bb7866a8f9ecd02fda0785191f01c27">serverConfig</a>()</div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  {</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">return</span> m_ServerConfig;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">return</span> m_serverConfig;</div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classServerConfigDialog.html#a34a9360b445c532c0b868fa876f2f137">   87</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfigDialog.html#a34a9360b445c532c0b868fa876f2f137">setOriginalServerConfig</a>(<span class="keyword">const</span> <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;s)</div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  {</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    m_OriginalServerConfig = s;</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    m_originalServerConfig = s;</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00091" data-start="{" data-end="}">
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno"><a class="line" href="classServerConfigDialog.html#ae0f530692c591e459c9bebf95706eebc">   91</a></span>  <a class="code hl_class" href="classScreenSetupModel.html">ScreenSetupModel</a> &amp;<a class="code hl_function" href="classServerConfigDialog.html#ae0f530692c591e459c9bebf95706eebc">model</a>()</div>
 <div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  {</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">return</span> m_ScreenSetupModel;</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>    <span class="keywordflow">return</span> m_screenSetupModel;</div>
 <div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  }</div>
 </div>
 <div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span> </div>
 <div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  std::unique_ptr&lt;Ui::ServerConfigDialog&gt; ui;</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;m_OriginalServerConfig;</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> m_ServerConfig;</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">bool</span> m_OriginalServerConfigIsExternal;</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  QString m_OriginalServerConfigUsesExternalFile;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <a class="code hl_class" href="classScreenSetupModel.html">ScreenSetupModel</a> m_ScreenSetupModel;</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  QString m_Message = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  QString m_message = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;m_originalServerConfig;</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="keywordtype">bool</span> m_originalServerConfigIsExternal;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  QString m_originalServerConfigUsesExternalFile;</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <a class="code hl_class" href="classScreenSetupModel.html">ScreenSetupModel</a> m_screenSetupModel;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> m_serverConfig;</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">private</span> Q_SLOTS:</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keywordtype">void</span> onChange();</div>
