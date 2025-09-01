@@ -376,6 +376,9 @@ var hierarchy =
         [ "validators::ScreenNameValidator", "classvalidators_1_1ScreenNameValidator.html", null ]
       ] ]
     ] ],
+    [ "QWidget", null, [
+      [ "LogWidget", "classLogWidget.html", null ]
+    ] ],
     [ "XWindowsClipboard::Reply", "classXWindowsClipboard_1_1Reply.html", null ],
     [ "InputFilter::Rule", "classInputFilter_1_1Rule.html", null ],
     [ "std::runtime_error", null, [

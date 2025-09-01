@@ -210,6 +210,9 @@ var NAVTREEINDEX2 =
 "LogOutputters_8cpp.html#a15697d1f132f2d1f48fea64bedd940d1":[7,0,1,1,1,20,0],
 "LogOutputters_8h.html":[7,0,1,1,1,21],
 "LogOutputters_8h_source.html":[7,0,1,1,1,21],
+"LogWidget_8cpp.html":[7,0,1,1,5,6,4],
+"LogWidget_8h.html":[7,0,1,1,5,6,5],
+"LogWidget_8h_source.html":[7,0,1,1,5,6,5],
 "Log_8cpp.html":[7,0,1,1,1,17],
 "Log_8cpp.html#a0379550eed4ae294ec0dbf74d1a250f4":[7,0,1,1,1,17,0],
 "Log_8cpp.html#ac6bcd569a9db29fdbbed423d73e79176":[7,0,1,1,1,17,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX2 =
 "Log_8h.html#ade00c678de791b27ba8ee5ee4ca6b697":[7,0,1,1,1,18,15],
 "Log_8h.html#ae438ca6a3afbac24d1468bebe035269d":[7,0,1,1,1,18,28],
 "Log_8h.html#ae540a914cab70d94fb4963a03cd4f363":[7,0,1,1,1,18,3],
-"Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5":[7,0,1,1,1,18,22],
-"Log_8h_source.html":[7,0,1,1,1,18],
-"Logger_8cpp.html":[7,0,1,1,5,21],
-"Logger_8h.html":[7,0,1,1,5,22]
+"Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5":[7,0,1,1,1,18,22]
 };

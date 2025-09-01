@@ -12,5 +12,7 @@ var searchData=
   ['logger_2eh_9',['Logger.h',['../Logger_8h.html',1,'']]],
   ['loglevel_2eh_10',['LogLevel.h',['../LogLevel_8h.html',1,'']]],
   ['logoutputters_2ecpp_11',['LogOutputters.cpp',['../LogOutputters_8cpp.html',1,'']]],
-  ['logoutputters_2eh_12',['LogOutputters.h',['../LogOutputters_8h.html',1,'']]]
+  ['logoutputters_2eh_12',['LogOutputters.h',['../LogOutputters_8h.html',1,'']]],
+  ['logwidget_2ecpp_13',['LogWidget.cpp',['../LogWidget_8cpp.html',1,'']]],
+  ['logwidget_2eh_14',['LogWidget.h',['../LogWidget_8h.html',1,'']]]
 ];

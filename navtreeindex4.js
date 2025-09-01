@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"OSXCocoaApp_8h.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,63,1],
+"OSXCocoaApp_8h.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,63,0],
+"OSXCocoaApp_8h_source.html":[7,0,1,1,9,63],
 "OSXCocoaApp_8m.html":[7,0,1,1,9,64],
 "OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1],
 "OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0],
@@ -195,9 +198,9 @@ var NAVTREEINDEX4 =
 "ScreenSetupModel_8cpp.html":[7,0,1,1,5,29],
 "ScreenSetupModel_8h.html":[7,0,1,1,5,30],
 "ScreenSetupModel_8h_source.html":[7,0,1,1,5,30],
-"ScreenSetupView_8cpp.html":[7,0,1,1,5,6,6],
-"ScreenSetupView_8h.html":[7,0,1,1,5,6,7],
-"ScreenSetupView_8h_source.html":[7,0,1,1,5,6,7],
+"ScreenSetupView_8cpp.html":[7,0,1,1,5,6,8],
+"ScreenSetupView_8h.html":[7,0,1,1,5,6,9],
+"ScreenSetupView_8h_source.html":[7,0,1,1,5,6,9],
 "SecureListenSocket_8cpp.html":[7,0,1,1,8,12],
 "SecureListenSocket_8h.html":[7,0,1,1,8,13],
 "SecureListenSocket_8h_source.html":[7,0,1,1,8,13],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,31,1],
 "ServerConfig_8cpp.html#ad93a94bd88fe624000405f7b84c40334":[7,0,1,1,5,31,6],
 "ServerConfig_8h.html":[7,0,1,1,5,32],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090f":[7,0,1,1,5,32,1],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3737bb2c0506485a05cf9cde59aa679d":[7,0,1,1,5,32,1,0],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3f49a3be29d699f3be1aef7e363a9773":[7,0,1,1,5,32,1,1],
-"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12":[7,0,1,1,5,32,1,3]
+"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090f":[7,0,1,1,5,32,1]
 };

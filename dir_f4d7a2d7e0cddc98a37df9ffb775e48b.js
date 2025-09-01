@@ -4,6 +4,8 @@ var dir_f4d7a2d7e0cddc98a37df9ffb775e48b =
     [ "FingerprintPreview.h", "FingerprintPreview_8h.html", "FingerprintPreview_8h" ],
     [ "KeySequenceWidget.cpp", "KeySequenceWidget_8cpp.html", null ],
     [ "KeySequenceWidget.h", "KeySequenceWidget_8h.html", "KeySequenceWidget_8h" ],
+    [ "LogWidget.cpp", "LogWidget_8cpp.html", null ],
+    [ "LogWidget.h", "LogWidget_8h.html", "LogWidget_8h" ],
     [ "NewScreenWidget.cpp", "NewScreenWidget_8cpp.html", null ],
     [ "NewScreenWidget.h", "NewScreenWidget_8h.html", "NewScreenWidget_8h" ],
     [ "ScreenSetupView.cpp", "ScreenSetupView_8cpp.html", null ],

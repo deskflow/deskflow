@@ -1,5 +1,8 @@
 var NAVTREEINDEX3 =
 {
+"Log_8h_source.html":[7,0,1,1,1,18],
+"Logger_8cpp.html":[7,0,1,1,5,21],
+"Logger_8h.html":[7,0,1,1,5,22],
 "Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
 "Logger_8h_source.html":[7,0,1,1,5,22],
 "MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
@@ -211,9 +214,9 @@ var NAVTREEINDEX3 =
 "NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6":[7,0,1,1,1,22,0,1],
 "NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628eab657a86dd93f1cc3153d34c28b3f330a":[7,0,1,1,1,22,0,0],
 "NetworkProtocol_8h_source.html":[7,0,1,1,1,22],
-"NewScreenWidget_8cpp.html":[7,0,1,1,5,6,4],
-"NewScreenWidget_8h.html":[7,0,1,1,5,6,5],
-"NewScreenWidget_8h_source.html":[7,0,1,1,5,6,5],
+"NewScreenWidget_8cpp.html":[7,0,1,1,5,6,6],
+"NewScreenWidget_8h.html":[7,0,1,1,5,6,7],
+"NewScreenWidget_8h_source.html":[7,0,1,1,5,6,7],
 "OSXAutoTypes_8h.html":[7,0,1,1,9,46],
 "OSXAutoTypes_8h_source.html":[7,0,1,1,9,46],
 "OSXClipboardAnyBitmapConverter_8cpp.html":[7,0,1,1,9,49],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "OSXClipboard_8cpp.html":[7,0,1,1,9,47],
 "OSXClipboard_8h.html":[7,0,1,1,9,48],
 "OSXClipboard_8h_source.html":[7,0,1,1,9,48],
-"OSXCocoaApp_8h.html":[7,0,1,1,9,63],
-"OSXCocoaApp_8h.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,63,1],
-"OSXCocoaApp_8h.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,63,0],
-"OSXCocoaApp_8h_source.html":[7,0,1,1,9,63]
+"OSXCocoaApp_8h.html":[7,0,1,1,9,63]
 };
