@@ -148,7 +148,7 @@ private:
   int m_connections = 0;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
   FileTail *m_daemonFileTail = nullptr;
-  QProcess *m_pProcess = nullptr;
+  QProcess *m_process = nullptr;
   QString m_appPath;
 };
 

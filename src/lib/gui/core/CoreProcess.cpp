@@ -147,15 +147,15 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig)
 
 void CoreProcess::onProcessReadyReadStandardOutput()
 {
-  if (m_pProcess) {
-    handleLogLines(m_pProcess->readAllStandardOutput());
+  if (m_process) {
+    handleLogLines(m_process->readAllStandardOutput());
   }
 }
 
 void CoreProcess::onProcessReadyReadStandardError()
 {
-  if (m_pProcess) {
-    handleLogLines(m_pProcess->readAllStandardError());
+  if (m_process) {
+    handleLogLines(m_process->readAllStandardError());
   }
 }
 
@@ -231,9 +231,9 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
   const auto quoted = makeQuotedArgs(app, args);
   qInfo("running command: %s", qPrintable(quoted));
 
-  m_pProcess->start(app, args);
+  m_process->start(app, args);
 
-  if (m_pProcess->waitForStarted()) {
+  if (m_process->waitForStarted()) {
     setProcessState(Started);
   } else {
     setProcessState(Stopped);
@@ -265,15 +265,15 @@ void CoreProcess::stopForegroundProcess() const
     qFatal("core process must be in stopping state");
   }
 
-  if (!m_pProcess) {
+  if (!m_process) {
     qFatal("process not set, cannot stop");
   }
 
   qInfo("stopping core desktop process");
 
-  if (m_pProcess->state() == QProcess::ProcessState::Running) {
+  if (m_process->state() == QProcess::ProcessState::Running) {
     qDebug("process is running, closing");
-    m_pProcess->close();
+    m_process->close();
   } else {
     qDebug("process is not running, skipping terminate");
   }
@@ -346,14 +346,14 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   setConnectionState(ConnectionState::Connecting);
 
   if (processMode == ProcessMode::Desktop) {
-    m_pProcess = new QProcess(this);
-    connect(m_pProcess, &QProcess::finished, this, &CoreProcess::onProcessFinished, Qt::UniqueConnection);
+    m_process = new QProcess(this);
+    connect(m_process, &QProcess::finished, this, &CoreProcess::onProcessFinished, Qt::UniqueConnection);
     connect(
-        m_pProcess, &QProcess::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput,
+        m_process, &QProcess::readyReadStandardOutput, this, &CoreProcess::onProcessReadyReadStandardOutput,
         Qt::UniqueConnection
     );
     connect(
-        m_pProcess, &QProcess::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError,
+        m_process, &QProcess::readyReadStandardError, this, &CoreProcess::onProcessReadyReadStandardError,
         Qt::UniqueConnection
     );
   }
