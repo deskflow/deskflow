@@ -48,14 +48,10 @@ XWindowsClipboard::XWindowsClipboard(Display *display, Window window, ClipboardI
   m_atomGDKSelection = XInternAtom(m_display, "GDK_SELECTION", False);
 
   // set selection atom based on clipboard id
-  switch (id) {
-  case kClipboardClipboard:
+  if (id == kClipboardClipboard) {
     m_selection = XInternAtom(m_display, "CLIPBOARD", False);
-    break;
-
-  default:
+  } else {
     m_selection = XA_PRIMARY;
-    break;
   }
 
   // add converters, most desired first
