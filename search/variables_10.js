@@ -51,13 +51,14 @@ var searchData=
   ['screenname_48',['ScreenName',['../structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508',1,'Settings::Core::ScreenName'],['../namespaceSettingsKeys.html#ad9fb8de23203a3e91677f2d71116073c',1,'SettingsKeys::ScreenName']]],
   ['screennames_49',['ScreenNames',['../namespaceSettingsKeys.html#ae2487530b52af7d18c3a0b7703b9ffd9',1,'SettingsKeys']]],
   ['serverdefaultindex_50',['serverDefaultIndex',['../ServerConfig_8cpp.html#ad93a94bd88fe624000405f7b84c40334',1,'ServerConfig.cpp']]],
-  ['size_51',['size',['../structCBMPHeader.html#a61bf24d86141bd4d9293da64a2861275',1,'CBMPHeader']]],
-  ['startedbefore_52',['StartedBefore',['../structSettings_1_1Core.html#a8e5d24f3689064d508522eaedef45012',1,'Settings::Core']]],
-  ['switchdirection_53',['SwitchDirection',['../namespaceSettingsKeys.html#ae19849dae134d7a634582a6e0169447b',1,'SettingsKeys']]],
-  ['switchindirection_54',['SwitchInDirection',['../structActionDialog_1_1ActionTypes.html#aa62e7b4497bbca7239d649f16c1f21a6',1,'ActionDialog::ActionTypes']]],
-  ['switchto_55',['SwitchTo',['../structActionDialog_1_1ActionTypes.html#a04be6ed89bf97b029fb0ed2065e98864',1,'ActionDialog::ActionTypes']]],
-  ['switchtoscreen_56',['SwitchToScreen',['../namespaceSettingsKeys.html#a4c28db236ee7f731255c5e06ff597580',1,'SettingsKeys']]],
-  ['symbolictrayicon_57',['SymbolicTrayIcon',['../structSettings_1_1Gui.html#a697d0b950a680594d68211a366bd2405',1,'Settings::Gui']]],
-  ['systemdir_58',['SystemDir',['../classSettings.html#ad3ba2f3025c98073226c0d896158ad17',1,'Settings']]],
-  ['systemsettingfile_59',['SystemSettingFile',['../classSettings.html#a0ea737fa0ddeffdf053e7d9522ef4a0d',1,'Settings']]]
+  ['showgenericclientfailuredialog_51',['ShowGenericClientFailureDialog',['../structSettings_1_1Gui.html#a9bdc01411a38ecff09aab7d22056ce8d',1,'Settings::Gui']]],
+  ['size_52',['size',['../structCBMPHeader.html#a61bf24d86141bd4d9293da64a2861275',1,'CBMPHeader']]],
+  ['startedbefore_53',['StartedBefore',['../structSettings_1_1Core.html#a8e5d24f3689064d508522eaedef45012',1,'Settings::Core']]],
+  ['switchdirection_54',['SwitchDirection',['../namespaceSettingsKeys.html#ae19849dae134d7a634582a6e0169447b',1,'SettingsKeys']]],
+  ['switchindirection_55',['SwitchInDirection',['../structActionDialog_1_1ActionTypes.html#aa62e7b4497bbca7239d649f16c1f21a6',1,'ActionDialog::ActionTypes']]],
+  ['switchto_56',['SwitchTo',['../structActionDialog_1_1ActionTypes.html#a04be6ed89bf97b029fb0ed2065e98864',1,'ActionDialog::ActionTypes']]],
+  ['switchtoscreen_57',['SwitchToScreen',['../namespaceSettingsKeys.html#a4c28db236ee7f731255c5e06ff597580',1,'SettingsKeys']]],
+  ['symbolictrayicon_58',['SymbolicTrayIcon',['../structSettings_1_1Gui.html#a697d0b950a680594d68211a366bd2405',1,'Settings::Gui']]],
+  ['systemdir_59',['SystemDir',['../classSettings.html#ad3ba2f3025c98073226c0d896158ad17',1,'Settings']]],
+  ['systemsettingfile_60',['SystemSettingFile',['../classSettings.html#a0ea737fa0ddeffdf053e7d9522ef4a0d',1,'Settings']]]
 ];
