@@ -30,6 +30,7 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
 {
 
   ui->setupUi(this);
+  ui->m_pButtonBox->button(QDialogButtonBox::Cancel)->setFocus();
 
   ui->m_pLabelAliasError->setStyleSheet(kStyleErrorActiveLabel);
   ui->m_pLabelNameError->setStyleSheet(kStyleErrorActiveLabel);
@@ -39,7 +40,6 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *pScreen, con
   const auto valNameError = new validators::ValidationError(this, ui->m_pLabelNameError);
   const auto valName = new validators::ScreenNameValidator(ui->m_pLineEditName, valNameError, pScreens);
   ui->m_pLineEditName->setValidator(valName);
-  ui->m_pLineEditName->selectAll();
 
   const auto valAliasError = new validators::ValidationError(this, ui->m_pLabelAliasError);
   const auto valAlias = new validators::AliasValidator(ui->m_pLineEditAlias, valAliasError);
