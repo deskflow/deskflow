@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="_2">
    <item>
-    <widget class="QGroupBox" name="groupBox_6">
+    <widget class="QGroupBox" name="groupComputerName">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
        <horstretch>0</horstretch>
@@ -40,12 +40,12 @@
            <string>Name</string>
           </property>
           <property name="buddy">
-           <cstring>m_pLineEditName</cstring>
+           <cstring>lineNameEdit</cstring>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="m_pLineEditName">
+         <widget class="QLineEdit" name="lineNameEdit">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -60,7 +60,7 @@
        </layout>
       </item>
       <item>
-       <widget class="QLabel" name="m_pLabelNameError">
+       <widget class="QLabel" name="lblNameError">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -74,7 +74,7 @@
          </size>
         </property>
         <property name="text">
-         <string>m_pLabelNameError</string>
+         <string>lblNameError</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -85,11 +85,11 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
+    <layout class="QHBoxLayout" name="layoutOptions">
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
+      <layout class="QVBoxLayout" name="layoutLeftSide">
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupModifers">
          <property name="title">
           <string>Modifier Keys</string>
          </property>
@@ -106,7 +106,7 @@
              <string>M&amp;eta</string>
             </property>
             <property name="buddy">
-             <cstring>m_pComboBoxMeta</cstring>
+             <cstring>comboMeta</cstring>
             </property>
            </widget>
           </item>
@@ -116,7 +116,7 @@
              <string>&amp;Ctrl</string>
             </property>
             <property name="buddy">
-             <cstring>m_pComboBoxCtrl</cstring>
+             <cstring>comboCtrl</cstring>
             </property>
            </widget>
           </item>
@@ -126,7 +126,7 @@
              <string>S&amp;uper</string>
             </property>
             <property name="buddy">
-             <cstring>m_pComboBoxSuper</cstring>
+             <cstring>comboSuper</cstring>
             </property>
            </widget>
           </item>
@@ -136,12 +136,12 @@
              <string>Al&amp;t</string>
             </property>
             <property name="buddy">
-             <cstring>m_pComboBoxAlt</cstring>
+             <cstring>comboAlt</cstring>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
-           <widget class="QComboBox" name="m_pComboBoxMeta">
+           <widget class="QComboBox" name="comboMeta">
             <property name="currentIndex">
              <number>3</number>
             </property>
@@ -178,7 +178,7 @@
            </widget>
           </item>
           <item row="2" column="1">
-           <widget class="QComboBox" name="m_pComboBoxShift">
+           <widget class="QComboBox" name="comboShift">
             <item>
              <property name="text">
               <string>Shift</string>
@@ -223,12 +223,12 @@
              <string>&amp;Shift</string>
             </property>
             <property name="buddy">
-             <cstring>m_pComboBoxShift</cstring>
+             <cstring>comboShift</cstring>
             </property>
            </widget>
           </item>
           <item row="9" column="1">
-           <widget class="QComboBox" name="m_pComboBoxAlt">
+           <widget class="QComboBox" name="comboAlt">
             <property name="currentIndex">
              <number>2</number>
             </property>
@@ -265,7 +265,7 @@
            </widget>
           </item>
           <item row="6" column="1">
-           <widget class="QComboBox" name="m_pComboBoxSuper">
+           <widget class="QComboBox" name="comboSuper">
             <property name="currentIndex">
              <number>4</number>
             </property>
@@ -302,7 +302,7 @@
            </widget>
           </item>
           <item row="4" column="1">
-           <widget class="QComboBox" name="m_pComboBoxCtrl">
+           <widget class="QComboBox" name="comboCtrl">
             <property name="currentIndex">
              <number>1</number>
             </property>
@@ -342,15 +342,15 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupDeadCorners">
          <property name="title">
           <string>Dead Corners</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <layout class="QHBoxLayout" name="layoutDeadCornersTop">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxCornerTopRight">
+             <widget class="QCheckBox" name="chkDeadTopLeft">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -366,7 +366,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxCornerTopLeft">
+             <widget class="QCheckBox" name="chkDeadTopRight">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -397,7 +397,7 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="layoutCornerSize">
             <item>
              <widget class="QLabel" name="label">
               <property name="sizePolicy">
@@ -410,12 +410,12 @@
                <string>Corner si&amp;ze</string>
               </property>
               <property name="buddy">
-               <cstring>m_pSpinBoxSwitchCornerSize</cstring>
+               <cstring>sbSwitchCornerSize</cstring>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="m_pSpinBoxSwitchCornerSize">
+             <widget class="QSpinBox" name="sbSwitchCornerSize">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -446,9 +446,9 @@
            </spacer>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <layout class="QHBoxLayout" name="layoutDeadCornersBottom">
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomLeft">
+             <widget class="QCheckBox" name="chkDeadBottomLeft">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -461,7 +461,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="m_pCheckBoxCornerBottomRight">
+             <widget class="QCheckBox" name="chkDeadBottomRight">
               <property name="minimumSize">
                <size>
                 <width>0</width>
@@ -484,15 +484,15 @@
       </layout>
      </item>
      <item>
-      <layout class="QVBoxLayout" name="verticalLayout_6">
+      <layout class="QVBoxLayout" name="layoutRightSide">
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="groupFixes">
          <property name="title">
           <string>Fixes</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxScrollLock">
+           <widget class="QCheckBox" name="chkFixScrollLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -505,7 +505,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxCapsLock">
+           <widget class="QCheckBox" name="chkFixCapsLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -518,7 +518,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxNumLock">
+           <widget class="QCheckBox" name="chkFixNumLock">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -531,7 +531,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="m_pCheckBoxXTest">
+           <widget class="QCheckBox" name="chkFixXTest">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
               <horstretch>0</horstretch>
@@ -550,7 +550,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="groupAliases">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
            <horstretch>0</horstretch>
@@ -564,7 +564,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout">
             <item>
-             <widget class="QLineEdit" name="m_pLineEditAlias">
+             <widget class="QLineEdit" name="lineAddAlias">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -583,7 +583,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="m_pButtonAddAlias">
+             <widget class="QPushButton" name="btnAddAlias">
               <property name="enabled">
                <bool>true</bool>
               </property>
@@ -595,7 +595,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QLabel" name="m_pLabelAliasError">
+           <widget class="QLabel" name="lblAliasError">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -615,7 +615,7 @@
              </size>
             </property>
             <property name="text">
-             <string>m_pLabelNameError</string>
+             <string>lblAliasError</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -623,7 +623,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QListWidget" name="m_pListAliases">
+           <widget class="QListWidget" name="listAliases">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -648,7 +648,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="m_pButtonRemoveAlias">
+           <widget class="QPushButton" name="btnRemoveAlias">
             <property name="enabled">
              <bool>false</bool>
             </property>
@@ -665,7 +665,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="m_pButtonBox">
+    <widget class="QDialogButtonBox" name="buttonBox">
      <property name="minimumSize">
       <size>
        <width>0</width>
@@ -683,30 +683,30 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>m_pLineEditName</tabstop>
-  <tabstop>m_pComboBoxMeta</tabstop>
-  <tabstop>m_pComboBoxShift</tabstop>
-  <tabstop>m_pComboBoxCtrl</tabstop>
-  <tabstop>m_pComboBoxSuper</tabstop>
-  <tabstop>m_pComboBoxAlt</tabstop>
-  <tabstop>m_pCheckBoxCornerTopRight</tabstop>
-  <tabstop>m_pCheckBoxCornerTopLeft</tabstop>
-  <tabstop>m_pSpinBoxSwitchCornerSize</tabstop>
-  <tabstop>m_pCheckBoxCornerBottomLeft</tabstop>
-  <tabstop>m_pCheckBoxCornerBottomRight</tabstop>
-  <tabstop>m_pCheckBoxScrollLock</tabstop>
-  <tabstop>m_pCheckBoxCapsLock</tabstop>
-  <tabstop>m_pCheckBoxNumLock</tabstop>
-  <tabstop>m_pCheckBoxXTest</tabstop>
-  <tabstop>m_pLineEditAlias</tabstop>
-  <tabstop>m_pButtonAddAlias</tabstop>
-  <tabstop>m_pListAliases</tabstop>
-  <tabstop>m_pButtonRemoveAlias</tabstop>
+  <tabstop>lineNameEdit</tabstop>
+  <tabstop>comboMeta</tabstop>
+  <tabstop>comboShift</tabstop>
+  <tabstop>comboCtrl</tabstop>
+  <tabstop>comboSuper</tabstop>
+  <tabstop>comboAlt</tabstop>
+  <tabstop>chkDeadTopLeft</tabstop>
+  <tabstop>chkDeadTopRight</tabstop>
+  <tabstop>sbSwitchCornerSize</tabstop>
+  <tabstop>chkDeadBottomLeft</tabstop>
+  <tabstop>chkDeadBottomRight</tabstop>
+  <tabstop>chkFixScrollLock</tabstop>
+  <tabstop>chkFixCapsLock</tabstop>
+  <tabstop>chkFixNumLock</tabstop>
+  <tabstop>chkFixXTest</tabstop>
+  <tabstop>lineAddAlias</tabstop>
+  <tabstop>btnAddAlias</tabstop>
+  <tabstop>listAliases</tabstop>
+  <tabstop>btnRemoveAlias</tabstop>
  </tabstops>
  <resources/>
  <connections>
   <connection>
-   <sender>m_pButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>accepted()</signal>
    <receiver>ScreenSettingsDialog</receiver>
    <slot>accept()</slot>
@@ -722,7 +722,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>m_pButtonBox</sender>
+   <sender>buttonBox</sender>
    <signal>rejected()</signal>
    <receiver>ScreenSettingsDialog</receiver>
    <slot>reject()</slot>
