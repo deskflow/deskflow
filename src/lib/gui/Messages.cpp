@@ -230,7 +230,7 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
 
   auto cbNoShowAgain = new QCheckBox(QObject::tr("Do not show this message again"));
 
-  QObject::connect(cbNoShowAgain, &QCheckBox::toggled, [&](bool enabled) {
+  QObject::connect(cbNoShowAgain, &QCheckBox::toggled, [](bool enabled) {
     Settings::setValue(Settings::Gui::ShowGenericClientFailureDialog, !enabled);
   });
 
