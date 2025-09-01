@@ -95,12 +95,12 @@ protected:
 
 private:
   std::unique_ptr<Ui::ServerConfigDialog> ui;
+  QString m_Message = "";
   ServerConfig &m_OriginalServerConfig;
-  ServerConfig m_ServerConfig;
   bool m_OriginalServerConfigIsExternal;
   QString m_OriginalServerConfigUsesExternalFile;
   ScreenSetupModel m_ScreenSetupModel;
-  QString m_Message = "";
+  ServerConfig m_ServerConfig;
 
 private Q_SLOTS:
   void onChange();
