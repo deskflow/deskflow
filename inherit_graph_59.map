@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classIArchLog.html" title="Interface for architecture dependent logging." alt="" coords="5,31,79,55"/>
-<area shape="rect" id="Node000001" href="$classArchLogUnix.html" title="Unix implementation of IArchLog." alt="" coords="140,5,236,30"/>
-<area shape="poly" id="edge23_Node000000_Node000001" title=" " alt="" coords="94,31,139,23,140,29,95,37"/>
-<area shape="rect" id="Node000002" href="$classArchLogWindows.html" title="Win32 implementation of IArchLog." alt="" coords="127,55,250,79"/>
-<area shape="poly" id="edge24_Node000000_Node000002" title=" " alt="" coords="94,49,127,54,126,60,94,54"/>
+<area shape="rect" id="Node000000" href="$classIArchMultithread.html" title="Interface for architecture dependent multithreading." alt="" coords="5,31,122,55"/>
+<area shape="rect" id="Node000001" href="$classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="180,5,326,30"/>
+<area shape="poly" id="edge25_Node000000_Node000001" title=" " alt="" coords="136,31,179,25,180,30,137,36"/>
+<area shape="rect" id="Node000002" href="$classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="170,55,336,79"/>
+<area shape="poly" id="edge26_Node000000_Node000002" title=" " alt="" coords="137,50,169,54,169,59,137,55"/>
 </map>

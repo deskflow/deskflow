@@ -77,7 +77,6 @@ var hierarchy =
     [ "ArchNetworkBSD::Deps", "structArchNetworkBSD_1_1Deps.html", null ],
     [ "deskflow::client::HelloBack::Deps", "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html", null ],
     [ "deskflow::gui::ClientConnection::Deps", "structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html", null ],
-    [ "deskflow::gui::CoreProcess::Deps", "structdeskflow_1_1gui_1_1CoreProcess_1_1Deps.html", null ],
     [ "deskflow::gui::ServerConnection::Deps", "structdeskflow_1_1gui_1_1ServerConnection_1_1Deps.html", null ],
     [ "IPrimaryScreen::EiConnectInfo", "classIPrimaryScreen_1_1EiConnectInfo.html", null ],
     [ "XWindowsUtil::ErrorLock", "classXWindowsUtil_1_1ErrorLock.html", null ],
@@ -361,7 +360,6 @@ var hierarchy =
       [ "deskflow::gui::ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", null ],
       [ "deskflow::gui::TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", null ],
       [ "deskflow::gui::ipc::DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", null ],
-      [ "deskflow::gui::proxy::QProcessProxy", "classdeskflow_1_1gui_1_1proxy_1_1QProcessProxy.html", null ],
       [ "validators::ValidationError", "classvalidators_1_1ValidationError.html", null ]
     ] ],
     [ "QPushButton", null, [

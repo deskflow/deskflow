@@ -1,6 +1,5 @@
 var classdeskflow_1_1gui_1_1CoreProcess =
 [
-    [ "Deps", "structdeskflow_1_1gui_1_1CoreProcess_1_1Deps.html", "structdeskflow_1_1gui_1_1CoreProcess_1_1Deps" ],
     [ "ConnectionState", "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9", [
       [ "Disconnected", "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9aef70e46fd3bbc21e3e1f0b6815e750c0", null ],
       [ "Connecting", "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9ae321c53b354930ba96f0243e652df458", null ],
@@ -18,7 +17,7 @@ var classdeskflow_1_1gui_1_1CoreProcess =
       [ "Stopped", "classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8cac23e2b09ebe6bf4cb5e2a9abe85c0be2", null ],
       [ "RetryPending", "classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8caa87736d05100d75e068bb9a1fb6aaf6f", null ]
     ] ],
-    [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html#a9249bbaf293be9d74b7f977d529634cc", null ],
+    [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html#a92bad0d010df1a623308db157ffb5ca3", null ],
     [ "applyLogLevel", "classdeskflow_1_1gui_1_1CoreProcess.html#a956743f8c6dccdab5787b6f8cc110dff", null ],
     [ "cleanup", "classdeskflow_1_1gui_1_1CoreProcess.html#aa9f5fda4469cd9cb57613d1b6cd940b2", null ],
     [ "clearSettings", "classdeskflow_1_1gui_1_1CoreProcess.html#a2bd697f4ca8d32e594ddbd35a6e07484", null ],

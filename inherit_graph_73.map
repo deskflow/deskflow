@@ -1,13 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="5,87,217,111"/>
-<area shape="rect" id="Node000001" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="265,48,463,86"/>
-<area shape="poly" id="edge75_Node000000_Node000001" title=" " alt="" coords="228,81,264,77,265,82,229,87"/>
-<area shape="rect" id="Node000005" href="$classMSWindowsClipboardBitmapConverter.html" title="Convert to/from some text encoding." alt="" coords="268,110,460,149"/>
-<area shape="poly" id="edge79_Node000000_Node000005" title=" " alt="" coords="232,111,268,115,268,121,232,116"/>
-<area shape="rect" id="Node000002" href="$classMSWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="513,5,755,30"/>
-<area shape="poly" id="edge76_Node000001_Node000002" title=" " alt="" coords="478,44,562,28,563,33,479,49"/>
-<area shape="rect" id="Node000003" href="$classMSWindowsClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="518,55,750,79"/>
-<area shape="poly" id="edge77_Node000001_Node000003" title=" " alt="" coords="478,64,517,64,517,70,478,70"/>
-<area shape="rect" id="Node000004" href="$classMSWindowsClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="511,104,757,129"/>
-<area shape="poly" id="edge78_Node000001_Node000004" title=" " alt="" coords="479,85,563,101,562,106,478,90"/>
+<area shape="rect" id="Node000000" href="$classIMSWindowsClipboardFacade.html" title=" " alt="" coords="5,5,203,30"/>
+<area shape="rect" id="Node000001" href="$classMSWindowsClipboardFacade.html" title=" " alt="" coords="251,5,444,30"/>
+<area shape="poly" id="edge80_Node000000_Node000001" title=" " alt="" coords="218,15,250,15,250,20,218,20"/>
 </map>

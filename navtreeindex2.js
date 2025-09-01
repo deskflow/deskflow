@@ -184,9 +184,9 @@ var NAVTREEINDEX2 =
 "LanguageManager_8cpp.html":[7,0,1,1,4,1,0],
 "LanguageManager_8h.html":[7,0,1,1,4,1,1],
 "LanguageManager_8h_source.html":[7,0,1,1,4,1,1],
-"LineEditValidator_8cpp.html":[7,0,1,1,5,6,8],
-"LineEditValidator_8h.html":[7,0,1,1,5,6,9],
-"LineEditValidator_8h_source.html":[7,0,1,1,5,6,9],
+"LineEditValidator_8cpp.html":[7,0,1,1,5,5,8],
+"LineEditValidator_8h.html":[7,0,1,1,5,5,9],
+"LineEditValidator_8h_source.html":[7,0,1,1,5,5,9],
 "Lock_8cpp.html":[7,0,1,1,7,2],
 "Lock_8h.html":[7,0,1,1,7,3],
 "Lock_8h_source.html":[7,0,1,1,7,3],
@@ -248,6 +248,6 @@ var NAVTREEINDEX2 =
 "Log_8h.html#ae540a914cab70d94fb4963a03cd4f363":[7,0,1,1,1,18,3],
 "Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5":[7,0,1,1,1,18,22],
 "Log_8h_source.html":[7,0,1,1,1,18],
-"Logger_8cpp.html":[7,0,1,1,5,22],
-"Logger_8h.html":[7,0,1,1,5,23]
+"Logger_8cpp.html":[7,0,1,1,5,21],
+"Logger_8h.html":[7,0,1,1,5,22]
 };

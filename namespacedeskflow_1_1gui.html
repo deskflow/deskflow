@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.166</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.168</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -99,7 +99,6 @@ Namespaces</h2></td></tr>
 <tr class="memitem:diagnostic" id="r_diagnostic"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1diagnostic.html">diagnostic</a></td></tr>
 <tr class="memitem:ipc" id="r_ipc"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1ipc.html">ipc</a></td></tr>
 <tr class="memitem:messages" id="r_messages"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1messages.html">messages</a></td></tr>
-<tr class="memitem:proxy" id="r_proxy"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1proxy.html">proxy</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -120,6 +119,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:a7398bc69c7d5ee2a69459843b27372a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wraps options that contain spaces in quotes.  <br /></td></tr>
 <tr class="memitem:a7a0d85d8ad8f6adc5acb2418f6b01adf" id="r_a7a0d85d8ad8f6adc5acb2418f6b01adf"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a0d85d8ad8f6adc5acb2418f6b01adf">wrapIpv6</a> (const QString &amp;address)</td></tr>
 <tr class="memdesc:a7a0d85d8ad8f6adc5acb2418f6b01adf"><td class="mdescLeft">&#160;</td><td class="mdescRight">If IPv6, ensures the IP is surround in square brackets.  <br /></td></tr>
+<tr class="memitem:a1d9b86ab109a098c01c80371b3d6fc67" id="r_a1d9b86ab109a098c01c80371b3d6fc67"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d9b86ab109a098c01c80371b3d6fc67">getAppFilePath</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
 <tr class="memitem:a4c76fb6206a264805e66241483d320a1" id="r_a4c76fb6206a264805e66241483d320a1"><td class="memItemLeft" align="right" valign="top">QPair&lt; QString, QString &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4c76fb6206a264805e66241483d320a1">getPair</a> (const QString &amp;line)</td></tr>
 <tr class="memitem:a92f1e078e7ff8ddbc8db8a142f481f47" id="r_a92f1e078e7ff8ddbc8db8a142f481f47"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a92f1e078e7ff8ddbc8db8a142f481f47">open</a> (QFile &amp;file, const QString &amp;filePath)</td></tr>
 <tr class="memitem:ab4c997166f1edb383c9a46fb94672d12" id="r_ab4c997166f1edb383c9a46fb94672d12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4c997166f1edb383c9a46fb94672d12">dotenv</a> (const QString &amp;filename)</td></tr>
@@ -172,6 +172,23 @@ Variables</h2></td></tr>
 <p>This function re-invents the wheel to save adding a library dependency. It does not support many things that a proper .env parser would, such as trailing comments, escaping characters, multiline values, etc.</p>
 <p>If this function is not sufficient, replace it with a library such as: <a href="https://github.com/adeharo9/cpp-dotenv">https://github.com/adeharo9/cpp-dotenv</a></p>
 <p>First checks current dir for .env, then looks in the app dir. </p>
+
+</div>
+</div>
+<a id="a1d9b86ab109a098c01c80371b3d6fc67" name="a1d9b86ab109a098c01c80371b3d6fc67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d9b86ab109a098c01c80371b3d6fc67">&#9670;&#160;</a></span>getAppFilePath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString deskflow::gui::getAppFilePath </td>
+          <td>(</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

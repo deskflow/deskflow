@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classHotkey.html" title=" " alt="" coords="5,5,68,30"/>
+<area shape="rect" id="Node000000" href="$classIApp.html" title=" " alt="" coords="5,31,54,55"/>
+<area shape="rect" id="Node000001" href="$classApp.html" title=" " alt="" coords="102,31,146,55"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="69,40,102,40,102,46,69,46"/>
+<area shape="rect" id="Node000002" href="$classClientApp.html" title=" " alt="" coords="196,5,274,30"/>
+<area shape="poly" id="edge18_Node000001_Node000002" title=" " alt="" coords="161,32,195,24,196,29,162,37"/>
+<area shape="rect" id="Node000003" href="$classServerApp.html" title=" " alt="" coords="194,55,276,79"/>
+<area shape="poly" id="edge19_Node000001_Node000003" title=" " alt="" coords="162,48,194,55,193,61,161,54"/>
 </map>
