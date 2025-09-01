@@ -277,17 +277,14 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
 void EiKeyState::fakeKey(const Keystroke &keystroke)
 {
-  switch (keystroke.m_type) {
-  case Keystroke::KeyType::Button:
-    LOG_DEBUG1(
-        "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
-        keystroke.m_data.m_button.m_press ? "down" : "up"
-    );
-    m_screen->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
-    break;
-  default:
-    break;
-  }
+  if (keystroke.m_type != Keystroke::KeyType::Button)
+    return;
+
+  LOG_DEBUG1(
+      "fake key: %03x (%08x) %s", keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_client,
+      keystroke.m_data.m_button.m_press ? "down" : "up"
+  );
+  m_screen->fakeKey(keystroke.m_data.m_button.m_button, keystroke.m_data.m_button.m_press);
 }
 
 KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
