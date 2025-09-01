@@ -26,11 +26,11 @@ using enum NetworkProtocol;
 ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint),
       ui{std::make_unique<Ui::ServerConfigDialog>()},
-      m_OriginalServerConfig(config),
-      m_OriginalServerConfigIsExternal(config.useExternalConfig()),
-      m_OriginalServerConfigUsesExternalFile(config.configFile()),
-      m_ScreenSetupModel(config.screens(), config.numColumns(), config.numRows()),
-      m_ServerConfig(config)
+      m_originalServerConfig(config),
+      m_originalServerConfigIsExternal(config.useExternalConfig()),
+      m_originalServerConfigUsesExternalFile(config.configFile()),
+      m_screenSetupModel(config.screens(), config.numColumns(), config.numRows()),
+      m_serverConfig(config)
 {
   ui->setupUi(this);
 
@@ -149,7 +149,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   for (const Hotkey &hotkey : std::as_const(serverConfig().hotkeys()))
     ui->listHotkeys->addItem(hotkey.text());
 
-  ui->screenSetupView->setModel(&m_ScreenSetupModel);
+  ui->screenSetupView->setModel(&m_screenSetupModel);
 
   auto &screens = serverConfig().screens();
   auto server = std::ranges::find_if(screens, [this](const Screen &screen) {
@@ -167,7 +167,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   onChange();
 
   // computers
-  connect(&m_ScreenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
 }
 
 ServerConfigDialog::~ServerConfigDialog() = default;
@@ -199,8 +199,8 @@ void ServerConfigDialog::accept()
 
 void ServerConfigDialog::reject()
 {
-  serverConfig().setUseExternalConfig(m_OriginalServerConfigIsExternal);
-  serverConfig().setConfigFile(m_OriginalServerConfigUsesExternalFile);
+  serverConfig().setUseExternalConfig(m_originalServerConfigIsExternal);
+  serverConfig().setConfigFile(m_originalServerConfigUsesExternalFile);
 
   QDialog::reject();
 }
@@ -500,8 +500,8 @@ bool ServerConfigDialog::addComputer(const QString &clientName, bool doSilent)
 
 void ServerConfigDialog::onChange()
 {
-  bool isAppConfigDataEqual = m_OriginalServerConfigIsExternal == serverConfig().useExternalConfig() &&
-                              m_OriginalServerConfigUsesExternalFile == serverConfig().configFile();
+  bool isAppConfigDataEqual = m_originalServerConfigIsExternal == serverConfig().useExternalConfig() &&
+                              m_originalServerConfigUsesExternalFile == serverConfig().configFile();
   ui->buttonBox->button(QDialogButtonBox::Ok)
-      ->setEnabled(!isAppConfigDataEqual || !(m_OriginalServerConfig == m_ServerConfig));
+      ->setEnabled(!isAppConfigDataEqual || !(m_originalServerConfig == m_serverConfig));
 }
