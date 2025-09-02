@@ -31,10 +31,10 @@ public Q_SLOTS:
   void accept() override;
 
 private Q_SLOTS:
-  void on_btnAddAlias_clicked();
-  void on_btnRemoveAlias_clicked();
-  void on_lineAddAlias_textChanged(const QString &text);
-  void on_listAliases_itemSelectionChanged();
+  void addAlias();
+  void removeAlias();
+  void checkNewAliasName(const QString &text);
+  void aliasSelected();
 
 private:
   std::unique_ptr<Ui::ScreenSettingsDialog> ui;
