@@ -64,6 +64,13 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkFixNumLock->setChecked(m_screen->fix(NumLock));
   ui->chkFixScrollLock->setChecked(m_screen->fix(ScrollLock));
   ui->chkFixXTest->setChecked(m_screen->fix(XTest));
+
+  connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ScreenSettingsDialog::accept);
+  connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ScreenSettingsDialog::reject);
+  connect(ui->btnAddAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::addAlias);
+  connect(ui->btnRemoveAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::removeAlias);
+  connect(ui->lineAddAlias, &QLineEdit::textChanged, this, &ScreenSettingsDialog::checkNewAliasName);
+  connect(ui->listAliases, &QListWidget::itemSelectionChanged, this, &ScreenSettingsDialog::aliasSelected);
 }
 
 void ScreenSettingsDialog::accept()
@@ -115,7 +122,7 @@ void ScreenSettingsDialog::accept()
   QDialog::accept();
 }
 
-void ScreenSettingsDialog::on_btnAddAlias_clicked()
+void ScreenSettingsDialog::addAlias()
 {
   if (!ui->lineAddAlias->text().isEmpty() &&
       ui->listAliases->findItems(ui->lineAddAlias->text(), Qt::MatchFixedString).isEmpty()) {
@@ -124,18 +131,18 @@ void ScreenSettingsDialog::on_btnAddAlias_clicked()
   }
 }
 
-void ScreenSettingsDialog::on_lineAddAlias_textChanged(const QString &text)
-{
-  ui->btnAddAlias->setEnabled(!text.isEmpty() && ui->lblAliasError->text().isEmpty());
-}
-
-void ScreenSettingsDialog::on_btnRemoveAlias_clicked()
+void ScreenSettingsDialog::removeAlias()
 {
   QList<QListWidgetItem *> items = ui->listAliases->selectedItems();
   qDeleteAll(items);
 }
 
-void ScreenSettingsDialog::on_listAliases_itemSelectionChanged()
+void ScreenSettingsDialog::checkNewAliasName(const QString &text)
+{
+  ui->btnAddAlias->setEnabled(!text.isEmpty() && ui->lblAliasError->text().isEmpty());
+}
+
+void ScreenSettingsDialog::aliasSelected()
 {
   ui->btnRemoveAlias->setEnabled(!ui->listAliases->selectedItems().isEmpty());
 }
