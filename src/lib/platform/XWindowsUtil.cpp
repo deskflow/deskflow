@@ -5,12 +5,12 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "platform/XWindowsUtil.h"
+#include "base/Log.h" //Include First
 
-#include "base/Log.h"
 #include "base/String.h"
 #include "deskflow/KeyTypes.h"
 #include "mt/Thread.h"
+#include "platform/XWindowsUtil.h"
 
 #include <X11/Xatom.h>
 #define XK_APL

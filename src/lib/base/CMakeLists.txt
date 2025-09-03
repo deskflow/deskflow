@@ -41,7 +41,7 @@ add_library(base STATIC
   Unicode.h
 )
 
-target_link_libraries(base PRIVATE arch)
+target_link_libraries(base PUBLIC arch)
 if (CMAKE_CXX_BYTE_ORDER STREQUAL "BIG_ENDIAN")
   target_compile_definitions(base PUBLIC WORDS_BIGENDIAN=1)
 endif()
