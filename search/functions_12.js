@@ -31,7 +31,7 @@ var searchData=
   ['screensaverutilreleasecontroller_28',['screenSaverUtilReleaseController',['../OSXScreenSaverUtil_8h.html#a734443b6af82d5422830a4d13269acc7',1,'screenSaverUtilReleaseController(void *):&#160;OSXScreenSaverUtil.m'],['../OSXScreenSaverUtil_8m.html#ae3211862ca818aba27777e125285d872',1,'screenSaverUtilReleaseController(void *controller):&#160;OSXScreenSaverUtil.m']]],
   ['screensaverutilreleasepool_29',['screenSaverUtilReleasePool',['../OSXScreenSaverUtil_8h.html#ab16e5cc740893b8c80f59577536ef4cf',1,'screenSaverUtilReleasePool(void *):&#160;OSXScreenSaverUtil.m'],['../OSXScreenSaverUtil_8m.html#a1f1890f8a40b9f69e9e2e955532e4603',1,'screenSaverUtilReleasePool(void *pool):&#160;OSXScreenSaverUtil.m']]],
   ['screenschanged_30',['screensChanged',['../classScreenSetupModel.html#a552871041ae601b0b193940333382f78',1,'ScreenSetupModel']]],
-  ['screensettingsdialog_31',['ScreenSettingsDialog',['../classScreenSettingsDialog.html#ac7d81508ab31be6b2685d367b728a543',1,'ScreenSettingsDialog']]],
+  ['screensettingsdialog_31',['ScreenSettingsDialog',['../classScreenSettingsDialog.html#a6b915ef947b9a9497c4e549d8d8128c9',1,'ScreenSettingsDialog']]],
   ['screensetupmodel_32',['ScreenSetupModel',['../classScreenSetupModel.html#a6a5b61f67e1c21f61f677a76cfdf9fe1',1,'ScreenSetupModel']]],
   ['screensetupview_33',['ScreenSetupView',['../classScreenSetupView.html#af5d42bf8ff4f1efb2b3b41f8fb8025a4',1,'ScreenSetupView']]],
   ['screenssection_34',['screensSection',['../classScreen.html#a8399e3a0197115ccfa802774dd1d4c9c',1,'Screen']]],

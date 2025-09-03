@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['name_0',['name',['../classScreen.html#a58d94046f134acc56b5777039bf42d10',1,'Screen::name()'],['../ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6',1,'name:&#160;ArchNetworkWinsock.cpp'],['../KeySequence_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;KeySequence.cpp'],['../ServerConfig_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;ServerConfig.cpp']]],
+  ['name_0',['name',['../classScreen.html#a58d94046f134acc56b5777039bf42d10',1,'Screen::name()'],['../ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6',1,'name:&#160;ArchNetworkWinsock.cpp'],['../ServerConfig_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;ServerConfig.cpp'],['../KeySequence_8cpp.html#a8f8f80d37794cde9472343e4487ba3eb',1,'name:&#160;KeySequence.cpp']]],
   ['namelen_1',['namelen',['../ArchNetworkWinsock_8cpp.html#ac3eb3b32c1f0502b5d34ad31824bac85',1,'ArchNetworkWinsock.cpp']]],
   ['nametoaddr_2',['nameToAddr',['../classIArchNetwork.html#a006b80ac975e611bbb39e59834bba1c8',1,'IArchNetwork::nameToAddr()'],['../classArchNetworkBSD.html#aa64614c7c21b2d7286789722d0e368fd',1,'ArchNetworkBSD::nameToAddr()'],['../classArchNetworkWinsock.html#a472739fba2f981b1839b01c2fff1003b',1,'ArchNetworkWinsock::nameToAddr()']]],
-  ['neighbourdirs_3',['neighbourDirs',['../ServerConfig_8cpp.html#a1149f5038b5ae9cce1d024a9ecf31716',1,'ServerConfig.cpp']]],
+  ['neighbourdirs_3',['neighbourDirs',['../ServerConfig_8cpp.html#a98ec681e18705cb5b8ae32a0f5302697',1,'ServerConfig.cpp']]],
   ['netgetprocaddress_4',['netGetProcAddress',['../ArchNetworkWinsock_8cpp.html#af1ed7e0d553745f5cfd4d948ad7ccc7c',1,'ArchNetworkWinsock.cpp']]],
   ['networkaddress_5',['NetworkAddress',['../classNetworkAddress.html',1,'NetworkAddress'],['../classNetworkAddress.html#af19e401c7fe780eda72c34870ae36bad',1,'NetworkAddress::NetworkAddress()=default'],['../classNetworkAddress.html#aae94251a4823eec815d2a827788be917',1,'NetworkAddress::NetworkAddress(int port)'],['../classNetworkAddress.html#a9cc627fcc394fcf2bc11387676fad125',1,'NetworkAddress::NetworkAddress(const std::string &amp;hostname, int port=0)'],['../classNetworkAddress.html#a14f2e07d4197cc4db64eac8e72ff86a7',1,'NetworkAddress::NetworkAddress(const NetworkAddress &amp;)']]],
   ['networkaddress_2ecpp_6',['NetworkAddress.cpp',['../NetworkAddress_8cpp.html',1,'']]],

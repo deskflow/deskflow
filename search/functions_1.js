@@ -14,7 +14,7 @@ var searchData=
   ['addactivemodifiercontext_11',['AddActiveModifierContext',['../structKeyState_1_1AddActiveModifierContext.html#a5c424f098c8c85fca4e5a05a196d3f7c',1,'KeyState::AddActiveModifierContext']]],
   ['addalias_12',['addAlias',['../classScreen.html#addedd96466ee2b211448ad3087d11292',1,'Screen::addAlias()'],['../classdeskflow_1_1server_1_1Config.html#a8ad1988b58739baf7de06fc8e48bc10d',1,'deskflow::server::Config::addAlias()']]],
   ['addbusystate_13',['addBusyState',['../classArchMiscWindows.html#a33b732aca7bfd321314e36cef5d93603',1,'ArchMiscWindows']]],
-  ['addclient_14',['addClient',['../classServerConfigDialog.html#ac31174b2254bf101c6f6ffece0e1f4f1',1,'ServerConfigDialog::addClient(const QString &amp;clientName)'],['../classServerConfigDialog.html#aac994714fff05e566bfb2e8cd3afd274',1,'ServerConfigDialog::addClient()'],['../classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33',1,'ServerConfig::addClient()']]],
+  ['addclient_14',['addClient',['../classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33',1,'ServerConfig::addClient()'],['../classServerConfigDialog.html#ac31174b2254bf101c6f6ffece0e1f4f1',1,'ServerConfigDialog::addClient(const QString &amp;clientName)'],['../classServerConfigDialog.html#aac994714fff05e566bfb2e8cd3afd274',1,'ServerConfigDialog::addClient()']]],
   ['addclientdialog_15',['AddClientDialog',['../classAddClientDialog.html#a51cc22ba3e20603b3486848c6572a917',1,'AddClientDialog']]],
   ['addcomputer_16',['addComputer',['../classServerConfigDialog.html#a8efd3a0cfcea2fccd8595d7ed598a723',1,'ServerConfigDialog']]],
   ['adddevice_17',['addDevice',['../classdeskflow_1_1EiScreen.html#a54dc324f4e1c9f1e60366a5586c9ce05',1,'deskflow::EiScreen']]],
@@ -87,7 +87,7 @@ var searchData=
   ['assemblecommand_84',['assembleCommand',['../classArgParser.html#ab47acb91d8b8e406267506e65ea768f8',1,'ArgParser']]],
   ['atomstostring_85',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
   ['atomtostring_86',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
-  ['autoaddscreen_87',['autoAddScreen',['../classMainWindow.html#ad6b0c960b64b7094fbfd5ce7d2589e90',1,'MainWindow::autoAddScreen()'],['../classServerConfig.html#a6b2256af3656e1f99ee0904a39c1fe20',1,'ServerConfig::autoAddScreen()']]],
+  ['autoaddscreen_87',['autoAddScreen',['../classServerConfig.html#a6b2256af3656e1f99ee0904a39c1fe20',1,'ServerConfig::autoAddScreen()'],['../classMainWindow.html#ad6b0c960b64b7094fbfd5ce7d2589e90',1,'MainWindow::autoAddScreen()']]],
   ['avoidhesitatingcursor_88',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
   ['avoidsupression_89',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
 ];

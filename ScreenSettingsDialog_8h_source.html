@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.178</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.184</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,32 +114,32 @@ $(function(){initNavTree('ScreenSettingsDialog_8h_source.html','',''); });
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>}</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="foldopen" id="foldopen00022" data-start="{" data-end="};">
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classScreenSettingsDialog.html">   22</a></span><span class="keyword">class </span><a class="code hl_function" href="classScreenSettingsDialog.html#ac7d81508ab31be6b2685d367b728a543">ScreenSettingsDialog</a> : <span class="keyword">public</span> QDialog</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classScreenSettingsDialog.html">   22</a></span><span class="keyword">class </span><a class="code hl_function" href="classScreenSettingsDialog.html#a6b915ef947b9a9497c4e549d8d8128c9">ScreenSettingsDialog</a> : <span class="keyword">public</span> QDialog</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>{</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  Q_OBJECT</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classScreenSettingsDialog.html#ac7d81508ab31be6b2685d367b728a543">ScreenSettingsDialog</a>(QWidget *parent, <a class="code hl_class" href="classScreen.html">Screen</a> *pScreen = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="classScreenList.html">ScreenList</a> *pScreens = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classScreenSettingsDialog.html#a6b915ef947b9a9497c4e549d8d8128c9">ScreenSettingsDialog</a>(QWidget *parent, <a class="code hl_class" href="classScreen.html">Screen</a> *screen = <span class="keyword">nullptr</span>, <span class="keyword">const</span> <a class="code hl_class" href="classScreenList.html">ScreenList</a> *screens = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classScreenSettingsDialog.html#a754d303d09ed82ae8c3159c1ae9ea74d">   28</a></span>  <a class="code hl_function" href="classScreenSettingsDialog.html#a754d303d09ed82ae8c3159c1ae9ea74d">~ScreenSettingsDialog</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span> Q_SLOTS:</div>
 <div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> <a class="code hl_slot" href="classScreenSettingsDialog.html#a16b546c662cc7484583b65d616b63b0c">accept</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">private</span> Q_SLOTS:</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> on_m_pButtonAddAlias_clicked();</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> on_m_pButtonRemoveAlias_clicked();</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">void</span> on_m_pLineEditAlias_textChanged(<span class="keyword">const</span> QString &amp;text);</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> on_m_pListAliases_itemSelectionChanged();</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">void</span> addAlias();</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> removeAlias();</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keywordtype">void</span> checkNewAliasName(<span class="keyword">const</span> QString &amp;text);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> aliasSelected();</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  std::unique_ptr&lt;Ui::ScreenSettingsDialog&gt; ui;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_class" href="classScreen.html">Screen</a> *m_pScreen;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_class" href="classScreen.html">Screen</a> *m_screen;</div>
 <div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
 </div>
 <div class="ttc" id="aclassScreenList_html"><div class="ttname"><a href="classScreenList.html">ScreenList</a></div><div class="ttdef"><b>Definition</b> ScreenList.h:12</div></div>
-<div class="ttc" id="aclassScreenSettingsDialog_html_a16b546c662cc7484583b65d616b63b0c"><div class="ttname"><a href="classScreenSettingsDialog.html#a16b546c662cc7484583b65d616b63b0c">ScreenSettingsDialog::accept</a></div><div class="ttdeci">void accept() override</div><div class="ttdef"><b>Definition</b> ScreenSettingsDialog.cpp:69</div></div>
+<div class="ttc" id="aclassScreenSettingsDialog_html_a16b546c662cc7484583b65d616b63b0c"><div class="ttname"><a href="classScreenSettingsDialog.html#a16b546c662cc7484583b65d616b63b0c">ScreenSettingsDialog::accept</a></div><div class="ttdeci">void accept() override</div><div class="ttdef"><b>Definition</b> ScreenSettingsDialog.cpp:76</div></div>
+<div class="ttc" id="aclassScreenSettingsDialog_html_a6b915ef947b9a9497c4e549d8d8128c9"><div class="ttname"><a href="classScreenSettingsDialog.html#a6b915ef947b9a9497c4e549d8d8128c9">ScreenSettingsDialog::ScreenSettingsDialog</a></div><div class="ttdeci">ScreenSettingsDialog(QWidget *parent, Screen *screen=nullptr, const ScreenList *screens=nullptr)</div><div class="ttdef"><b>Definition</b> ScreenSettingsDialog.cpp:26</div></div>
 <div class="ttc" id="aclassScreenSettingsDialog_html_a754d303d09ed82ae8c3159c1ae9ea74d"><div class="ttname"><a href="classScreenSettingsDialog.html#a754d303d09ed82ae8c3159c1ae9ea74d">ScreenSettingsDialog::~ScreenSettingsDialog</a></div><div class="ttdeci">~ScreenSettingsDialog() override</div></div>
-<div class="ttc" id="aclassScreenSettingsDialog_html_ac7d81508ab31be6b2685d367b728a543"><div class="ttname"><a href="classScreenSettingsDialog.html#ac7d81508ab31be6b2685d367b728a543">ScreenSettingsDialog::ScreenSettingsDialog</a></div><div class="ttdeci">ScreenSettingsDialog(QWidget *parent, Screen *pScreen=nullptr, const ScreenList *pScreens=nullptr)</div><div class="ttdef"><b>Definition</b> ScreenSettingsDialog.cpp:26</div></div>
 <div class="ttc" id="aclassScreen_html"><div class="ttname"><a href="classScreen.html">Screen</a></div><div class="ttdef"><b>Definition</b> Screen.h:26</div></div>
 <div class="ttc" id="anamespaceUi_html"><div class="ttname"><a href="namespaceUi.html">Ui</a></div><div class="ttdef"><b>Definition</b> AboutDialog.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->

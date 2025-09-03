@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Deskflow: src/lib/gui/ServerConfig.h Source File</title>
+<title>Deskflow: src/lib/gui/config/ServerConfig.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.178</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.184</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -101,8 +101,8 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Hotkey_8h.html">Hotkey.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="NetworkProtocol_8h.html">base/NetworkProtocol.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="NetworkProtocol_8h.html">base/NetworkProtocol.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="Hotkey_8h.html">gui/Hotkey.h</a>&quot;</span></div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="IServerConfig_8h.html">gui/config/IServerConfig.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="ScreenConfig_8h.html">gui/config/ScreenConfig.h</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="ScreenList_8h.html">gui/config/ScreenList.h</a>&quot;</span></div>
@@ -473,7 +473,7 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <div class="ttc" id="aclassServerConfig_html_af4415eb8b591c65fe85e83efed83ce68"><div class="ttname"><a href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">ServerConfig::configFile</a></div><div class="ttdeci">QString configFile() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:404</div></div>
 <div class="ttc" id="aclassServerConfig_html_af7b4b97c9d720ee4ffe088e97df5616c"><div class="ttname"><a href="classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c">ServerConfig::commit</a></div><div class="ttdeci">void commit()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:105</div></div>
 <div class="ttc" id="aclassServerConfig_html_afe2a6dfcba324a343229cf583c515e02"><div class="ttname"><a href="classServerConfig.html#afe2a6dfcba324a343229cf583c515e02">ServerConfig::numRows</a></div><div class="ttdeci">int numRows() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:69</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1IServerConfig_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1IServerConfig.html">deskflow::gui::IServerConfig</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:17</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1IServerConfig_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1IServerConfig.html">deskflow::gui::IServerConfig</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:18</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html_abcbdcbeeb5309fe706a35d40a3c1c719"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#abcbdcbeeb5309fe706a35d40a3c1c719">deskflow::gui::kDefaultProtocol</a></div><div class="ttdeci">const auto kDefaultProtocol</div><div class="ttdef"><b>Definition</b> ServerConfig.h:31</div></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -482,7 +482,7 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_1e2980927ba7513c665ee0bc67e39bcf.html">gui</a></li><li class="navelem"><a href="ServerConfig_8h.html">ServerConfig.h</a></li>
+    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_1e2980927ba7513c665ee0bc67e39bcf.html">gui</a></li><li class="navelem"><a href="dir_da58851cf6af1fd60b06cfef734271e0.html">config</a></li><li class="navelem"><a href="ServerConfig_8h.html">ServerConfig.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
   </ul>
 </div>

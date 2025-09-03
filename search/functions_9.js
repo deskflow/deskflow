@@ -60,7 +60,7 @@ var searchData=
   ['isexitmessage_57',['isExitMessage',['../classdeskflow_1_1gui_1_1ServerMessage.html#a1c02e4267ea2689a52ef0116e44c5ee1',1,'deskflow::gui::ServerMessage']]],
   ['isfatal_58',['isFatal',['../classIDataSocket.html#a77ea843cecb22b22fe1325d0968f25e0',1,'IDataSocket::isFatal()'],['../classSecureSocket.html#ad76517790ccd0c4d60c51707d0b2d203',1,'SecureSocket::isFatal() const override'],['../classSecureSocket.html#ad8eedc0ffb5efe13f53168317d6515d3',1,'SecureSocket::isFatal(bool b)'],['../classTCPSocket.html#a3f788c4d14634e96a557fafebb6d4b98',1,'TCPSocket::isFatal()']]],
   ['isfinished_59',['isFinished',['../classDataDownloader.html#a5ab2b7477bea00dd60e9c3d697145b72',1,'DataDownloader']]],
-  ['isfull_60',['isFull',['../classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44',1,'deskflow::gui::IServerConfig::isFull()'],['../classScreenSetupModel.html#ac0f529cae821155e8a40d252f498a8b3',1,'ScreenSetupModel::isFull()'],['../classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43',1,'ServerConfig::isFull()']]],
+  ['isfull_60',['isFull',['../classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44',1,'deskflow::gui::IServerConfig::isFull()'],['../classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43',1,'ServerConfig::isFull()'],['../classScreenSetupModel.html#ac0f529cae821155e8a40d252f498a8b3',1,'ScreenSetupModel::isFull()']]],
   ['ishalfduplex_61',['isHalfDuplex',['../classdeskflow_1_1KeyMap.html#ad397b285e702dc5029875fad224a48ae',1,'deskflow::KeyMap']]],
   ['ishelp_62',['isHelp',['../deskflow-core_8cpp.html#ab5fdaecc2301a741b3368d233968de10',1,'deskflow-core.cpp']]],
   ['isignoredkey_63',['isIgnoredKey',['../classKeyState.html#a988e02ff614f27a5d085f41084b8d45e',1,'KeyState']]],
