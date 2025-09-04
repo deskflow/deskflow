@@ -590,10 +590,13 @@ std::string ArchNetworkBSD::addrToString(ArchNetAddress addr)
 
   switch (getAddrFamily(addr)) {
   case INet: {
+    char strAddr[INET_ADDRSTRLEN];
     const auto *ipAddr = TYPED_ADDR(struct sockaddr_in, addr);
-    std::scoped_lock lock{m_mutex};
-    std::string s = inet_ntoa(ipAddr->sin_addr);
-    return s;
+    {
+      std::scoped_lock lock{m_mutex};
+      inet_ntop(AF_INET, &ipAddr->sin_addr, strAddr, INET_ADDRSTRLEN);
+    }
+    return strAddr;
   }
 
   case INet6: {
