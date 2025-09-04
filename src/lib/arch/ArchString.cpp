@@ -12,7 +12,7 @@
 #include <cstring>
 #include <mutex>
 
-std::mutex s_mutex;
+static std::mutex s_mutex;
 
 //
 // use C library non-reentrant multibyte conversion with mutex
