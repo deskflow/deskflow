@@ -2,14 +2,6 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>758</width>
-    <height>305</height>
-   </rect>
-  </property>
   <property name="windowTitle">
    <string>Deskflow</string>
   </property>
@@ -468,21 +460,6 @@
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <widget class="QDockWidget" name="dockLog">
-   <property name="features">
-    <set>QDockWidget::DockWidgetFeature::DockWidgetClosable</set>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::DockWidgetArea::BottomDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Log</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockLogContents"/>
-  </widget>
  </widget>
  <resources/>
  <connections/>
