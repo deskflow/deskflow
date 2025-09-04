@@ -99,6 +99,9 @@ MainWindow::MainWindow()
   m_actionAbout->setMenuRole(QAction::AboutRole);
   m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
 
+  m_actionMinimize->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
+  m_actionRestore->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
+
 #ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
   m_actionTrayQuit->setShortcut(QKeySequence::Quit);
