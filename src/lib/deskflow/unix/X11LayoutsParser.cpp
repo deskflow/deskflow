@@ -86,8 +86,8 @@ std::vector<X11LayoutsParser::Lang> X11LayoutsParser::getAllLanguageData(const s
       continue;
 
     auto variantListElem = item.namedItem("variantList").childNodes();
-    for (int i = 0; i < variantListElem.count(); i++)
-      readXMLConfigItemElem(variantListElem.at(i), allCodes.back().variants);
+    for (int j = 0; j < variantListElem.count(); j++)
+      readXMLConfigItemElem(variantListElem.at(j), allCodes.back().variants);
   }
   return allCodes;
 }
