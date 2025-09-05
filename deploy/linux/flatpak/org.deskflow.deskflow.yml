@@ -72,13 +72,6 @@ modules:
         url: https://github.com/CLIUtils/CLI11
         tag: v2.5.0
         commit: 4160d259d961cd393fd8d67590a8c7d210207348
-  - name: tomlplusplus
-    buildsystem: cmake-ninja
-    sources:
-      - type: git
-        url: https://github.com/marzer/tomlplusplus
-        tag: v3.4.0
-        commit: 30172438cee64926dc41fdd9c11fb3ba5b2ba9de
   - name: gtest
     buildsystem: cmake-ninja
     sources:
