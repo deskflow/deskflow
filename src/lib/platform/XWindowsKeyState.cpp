@@ -779,7 +779,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 }
 #endif
 
-void XWindowsKeyState::remapKeyModifiers(KeyID id, int32_t group, deskflow::KeyMap::KeyItem &item, void *vself)
+void XWindowsKeyState::remapKeyModifiers(KeyID, int32_t group, deskflow::KeyMap::KeyItem &item, void *vself)
 {
   const auto *self = static_cast<XWindowsKeyState *>(vself);
   item.m_required = self->mapModifiersFromX(XkbBuildCoreState(item.m_required, group));
