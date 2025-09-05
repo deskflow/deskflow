@@ -2,7 +2,7 @@ var searchData=
 [
   ['editaction_0',['editAction',['../classServerConfigDialog.html#ae7a1371afc8ee02b2607e6f808683f70',1,'ServerConfigDialog']]],
   ['edithotkey_1',['editHotkey',['../classServerConfigDialog.html#adcea9be5c7ad2a7e27e728ee92812cdc',1,'ServerConfigDialog']]],
-  ['eieventqueuebuffer_2',['EiEventQueueBuffer',['../classdeskflow_1_1EiEventQueueBuffer.html#a0045e645461699cf400d0f8d901802d3',1,'deskflow::EiEventQueueBuffer']]],
+  ['eieventqueuebuffer_2',['EiEventQueueBuffer',['../classdeskflow_1_1EiEventQueueBuffer.html#a5ffc398d22037a3188b15ce4027dbe3a',1,'deskflow::EiEventQueueBuffer']]],
   ['eikeystate_3',['EiKeyState',['../classdeskflow_1_1EiKeyState.html#a096b4c669242628cfcd40acab3634682',1,'deskflow::EiKeyState']]],
   ['eiscreen_4',['EiScreen',['../classdeskflow_1_1EiScreen.html#a4df79ed0039ee56623f2f46df78c73e9',1,'deskflow::EiScreen']]],
   ['elevatemodechanged_5',['elevateModeChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#af652c5beb12e0277cf61b37693497605',1,'deskflow::core::ipc::DaemonIpcServer']]],
