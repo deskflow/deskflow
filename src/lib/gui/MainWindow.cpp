@@ -25,7 +25,7 @@
 #include "gui/Styles.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
-#include "gui/widgets/LogWidget.h"
+#include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
 #include "platform/Wayland.h"
 
@@ -71,7 +71,7 @@ MainWindow::MainWindow()
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
-      m_logWidget{new LogWidget(this)},
+      m_logDock{new LogDock(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
       m_btnFingerprint{new QToolButton(this)},
@@ -92,14 +92,15 @@ MainWindow::MainWindow()
 
   setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
 
-  auto dockLayout = new QVBoxLayout();
-  dockLayout->addWidget(m_logWidget);
-  ui->dockLogContents->setLayout(dockLayout);
+  addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
   // Setup Actions
   m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
   m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
+
+  m_actionMinimize->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
+  m_actionRestore->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
 
 #ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
@@ -211,7 +212,7 @@ void MainWindow::setupControls()
   }
 
   if (!Settings::value(Settings::Gui::LogExpanded).toBool()) {
-    ui->dockLog->hide();
+    m_logDock->hide();
   }
 
   ui->serverOptions->setVisible(false);
@@ -327,7 +328,7 @@ void MainWindow::connectSlots()
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
 
-  connect(ui->dockLog->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
+  connect(m_logDock->toggleViewAction(), &QAction::toggled, this, &MainWindow::toggleLogVisible);
 
   connect(m_btnUpdate, &QPushButton::clicked, this, &MainWindow::openGetNewVersionUrl);
 
@@ -343,11 +344,20 @@ void MainWindow::toggleLogVisible(bool visible)
   setFixedSize(16777215, 16777215);
   Settings::setValue(Settings::Gui::LogExpanded, visible);
   if (visible) {
-    setGeometry(x(), y(), m_expandedSize.width(), m_expandedSize.height());
+    if (m_logDock->isFloating()) {
+      adjustSize();
+      setFixedSize(size());
+    } else {
+      QTimer::singleShot(15, this, [&] { resize(m_expandedSize); });
+    }
   } else {
-    m_expandedSize = geometry().size();
-    ui->dockLog->hide();
-    adjustSize();
+    if (!m_logDock->isFloating()) {
+      m_expandedSize = geometry().size();
+    }
+    m_logDock->hide();
+    if (!m_logDock->isFloating()) {
+      adjustSize();
+    }
     setFixedSize(size());
   }
   Settings::setValue(Settings::Gui::WindowGeometry, geometry());
@@ -698,7 +708,7 @@ void MainWindow::createMenuBar()
   menuEdit->addAction(m_actionSettings);
 
   auto menuView = new QMenu(tr("&View"), this);
-  menuView->addAction(ui->dockLog->toggleViewAction());
+  menuView->addAction(m_logDock->toggleViewAction());
 
   auto menuHelp = new QMenu(tr("&Help"), this);
   menuHelp->addAction(m_actionAbout);
@@ -778,7 +788,7 @@ void MainWindow::setIcon()
 
 void MainWindow::handleLogLine(const QString &line)
 {
-  m_logWidget->appendLine(line);
+  m_logDock->appendLine(line);
   updateFromLogLine(line);
 }
 
@@ -875,7 +885,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
   // any connected dock view acitons will be triggered
   // disconnect them before accepting the event
-  disconnect(ui->dockLog->toggleViewAction(), &QAction::toggled, nullptr, nullptr);
+  disconnect(m_logDock->toggleViewAction(), &QAction::toggled, nullptr, nullptr);
 
   event->accept();
   QApplication::quit();
