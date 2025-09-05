@@ -19,8 +19,6 @@ public:
   explicit LogWidget(QWidget *parent = nullptr);
   void appendLine(const QString &msg);
 
-Q_SIGNALS:
-
 private:
   QPlainTextEdit *m_textLog = nullptr;
 };
