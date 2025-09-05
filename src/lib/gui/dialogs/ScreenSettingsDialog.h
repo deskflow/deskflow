@@ -32,7 +32,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
   void addAlias();
-  void removeAlias();
+  void removeAlias() const;
   void checkNewAliasName(const QString &text);
   void aliasSelected();
 
