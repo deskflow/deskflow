@@ -123,7 +123,7 @@ void EiScreen::initEi()
 
   // install the platform event queue
   m_events->adoptBuffer(nullptr);
-  m_events->adoptBuffer(new EiEventQueueBuffer(this, m_ei, m_events));
+  m_events->adoptBuffer(new EiEventQueueBuffer(m_ei, m_events));
 }
 
 void EiScreen::cleanupEi()
