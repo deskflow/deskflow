@@ -1063,7 +1063,7 @@ void Config::parseAction(
   }
 
   else if (name == "switchToNextScreen") {
-    if (args.size() != 0) {
+    if (!args.empty()) {
       throw ServerConfigReadException(s, "syntax for action: switchToNextScreen");
     }
 
