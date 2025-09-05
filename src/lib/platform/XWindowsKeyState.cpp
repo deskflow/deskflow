@@ -39,7 +39,7 @@ XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *e
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize)
 {
-  init(display, useXKB);
+  init(useXKB);
 }
 
 XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap)
@@ -49,7 +49,7 @@ XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *e
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize)
 {
-  init(display, useXKB);
+  init(useXKB);
 }
 
 XWindowsKeyState::~XWindowsKeyState()
@@ -61,7 +61,7 @@ XWindowsKeyState::~XWindowsKeyState()
 #endif
 }
 
-void XWindowsKeyState::init(const Display *display, bool useXKB)
+void XWindowsKeyState::init(bool useXKB)
 {
   XGetKeyboardControl(m_display, &m_keyboardState);
 #if HAVE_XKB_EXTENSION
