@@ -46,12 +46,12 @@ protected:
   void addHotkey();
   void editHotkey();
   void removeHotkey();
-  void listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+  void listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected [[maybe_unused]]);
 
   void addAction();
   void editAction();
   void removeAction();
-  void listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+  void listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected [[maybe_unused]]);
 
   void toggleSwitchDoubleTap(bool enable);
   void setSwitchDoubleTap(int within);
