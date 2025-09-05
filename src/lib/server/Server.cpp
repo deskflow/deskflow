@@ -1334,7 +1334,7 @@ void Server::handleSwitchInDirectionEvent(const Event &event)
   }
 }
 
-void Server::handleToggleScreenEvent(const Event &event)
+void Server::handleToggleScreenEvent(const Event &)
 {
   // Get the list of connected screens in config order
   std::vector<std::string> screens;
