@@ -162,17 +162,6 @@ void ArgParserTests::assembleCommand()
   QCOMPARE(command, "\"stub1 space\" stub2 \"stub3 space\"");
 }
 
-void ArgParserTests::server_setAddress()
-{
-  deskflow::ServerArgs serverArgs;
-  const int argc = 3;
-  const char *kAddressCmd[argc] = {"stub", "--address", "mock_address"};
-
-  m_parser.parseServerArgs(serverArgs, argc, kAddressCmd);
-
-  QCOMPARE(serverArgs.m_deskflowAddress, "mock_address");
-}
-
 void ArgParserTests::server_setConfigFile()
 {
   deskflow::ServerArgs serverArgs;
@@ -247,20 +236,6 @@ void ArgParserTests::client_setInvertScroll()
   QCOMPARE(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::Inverted);
 }
 
-void ArgParserTests::client_commonArgs()
-{
-  deskflow::ClientArgs clientArgs;
-  clientArgs.m_enableLangSync = false;
-  const int argc = 5;
-  std::array<const char *, argc> kLangCmd = {"stub", "--enable-crypto", "--tls-cert", "tlsCertPath", "--prevent-sleep"};
-
-  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
-
-  QVERIFY(clientArgs.m_enableCrypto);
-  QVERIFY(clientArgs.m_preventSleep);
-  QCOMPARE(clientArgs.m_tlsCertFile, "tlsCertPath");
-}
-
 void ArgParserTests::client_setAddress()
 {
   deskflow::ClientArgs clientArgs;
@@ -293,52 +268,6 @@ void ArgParserTests::deprecatedArg_crypoPass_true()
   QCOMPARE(i, 2);
 }
 
-void ArgParserTests::deprecatedArg_crypoPass_false()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kCryptoPassCmd[argc] = {"stub", "--mock-arg", "mock_value"};
-
-  QVERIFY(!m_parser.parseDeprecatedArgs(argc, kCryptoPassCmd, i));
-  QCOMPARE(i, 1);
-}
-
-void ArgParserTests::generic_logLevel()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogLevelCmd[argc] = {"stub", "--debug", "DEBUG"};
-
-  m_parser.parseGenericArgs(argc, kLogLevelCmd, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFilter, "DEBUG");
-  QCOMPARE(i, 2);
-}
-
-void ArgParserTests::generic_logFile()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogFileCmd[argc] = {"stub", "--log", "mock_filename"};
-
-  m_parser.parseGenericArgs(argc, kLogFileCmd, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFile, "mock_filename");
-  QCOMPARE(i, 2);
-}
-
-void ArgParserTests::generic_logFileWithSpace()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kLogFileCmdWithSpace[argc] = {"stub", "--log", "mo ck_filename"};
-
-  m_parser.parseGenericArgs(argc, kLogFileCmdWithSpace, i);
-
-  QCOMPARE(m_parser.argsBase().m_logFile, "mo ck_filename");
-  QCOMPARE(i, 2);
-}
-
 void ArgParserTests::generic_foreground()
 {
   int i = 1;
@@ -361,22 +290,6 @@ void ArgParserTests::generic_daemon()
 
   QVERIFY(m_parser.argsBase().m_daemon);
   QCOMPARE(i, 1);
-}
-
-void ArgParserTests::generic_name()
-{
-  int i = 1;
-  const int argc = 3;
-  const char *kNameCmd[argc] = {"stub", "--name", "mock"};
-  // Somehow cause a dump if not made here.
-  ArgParser parser(nullptr);
-  deskflow::ArgsBase base;
-
-  parser.setArgsBase(base);
-  parser.parseGenericArgs(argc, kNameCmd, i);
-
-  QCOMPARE(base.m_name, "mock");
-  QCOMPARE(i, 2);
 }
 
 void ArgParserTests::generic_noRestart()

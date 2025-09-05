@@ -461,18 +461,7 @@ void CoreProcess::cleanup()
 
 bool CoreProcess::addGenericArgs(QStringList &args) const
 {
-  args << "-f"
-       << "--debug" << Settings::logLevelText();
-
-  args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
-
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    args << "--enable-crypto";
-  }
-
-  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
-    args << "--prevent-sleep";
-  }
+  args << "-f";
 
   return true;
 }
@@ -501,25 +490,11 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     return false;
   }
 
-  // the address arg is dual purpose; when in listening mode, it's the address
-  // that the server listens on. when tcp sockets are inverted, it connects to
-  // that address. this is a bit confusing, and there should be probably be
-  // different args for different purposes.
-  args << "--address" << correctedInterface();
-
   args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    if (TlsUtility tlsUtility(this); !tlsUtility.persistCertificate()) {
-      qCritical("failed to persist tls certificate");
-      return false;
-    }
-    args << "--tls-cert" << Settings::value(Settings::Security::Certificate).toString();
-  }
-
   return true;
 }
 
@@ -669,13 +644,6 @@ void CoreProcess::checkOSXNotification(const QString &line)
   }
 }
 #endif
-
-QString CoreProcess::correctedInterface() const
-{
-  const QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
-  const auto port = Settings::value(Settings::Core::Port).toString();
-  return QStringLiteral("%1:%2").arg(interface, port);
-}
 
 QString CoreProcess::correctedAddress() const
 {
