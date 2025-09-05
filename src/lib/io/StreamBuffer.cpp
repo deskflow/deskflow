@@ -91,7 +91,7 @@ void StreamBuffer::write(const void *vdata, uint32_t n)
     }
   }
   if (scan == m_chunks.end()) {
-    scan = m_chunks.insert(scan, Chunk());
+    scan = m_chunks.emplace(scan, Chunk());
   }
 
   // append data in chunks
@@ -110,7 +110,7 @@ void StreamBuffer::write(const void *vdata, uint32_t n)
     // append another empty chunk if we're not done yet
     if (n > 0) {
       ++scan;
-      scan = m_chunks.insert(scan, Chunk());
+      scan = m_chunks.emplace(scan, Chunk());
     }
   }
 }
