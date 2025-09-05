@@ -361,7 +361,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QString app;
   QStringList args;
 
-  addGenericArgs(args, processMode);
+  addGenericArgs(args);
 
   if (mode() == Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
@@ -459,7 +459,7 @@ void CoreProcess::cleanup()
   }
 }
 
-bool CoreProcess::addGenericArgs(QStringList &args, const ProcessMode processMode) const
+bool CoreProcess::addGenericArgs(QStringList &args) const
 {
   args << "-f"
        << "--debug" << Settings::logLevelText();
