@@ -664,7 +664,7 @@ bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath)
   return true;
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, bool, bool write, bool error)
+ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *, bool, bool, bool)
 {
   Lock lock(&getMutex());
 
@@ -692,7 +692,7 @@ ISocketMultiplexerJob *SecureSocket::serviceConnect(ISocketMultiplexerJob *job, 
   );
 }
 
-ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *job, bool, bool write, bool error)
+ISocketMultiplexerJob *SecureSocket::serviceAccept(ISocketMultiplexerJob *, bool, bool, bool)
 {
   Lock lock(&getMutex());
 
