@@ -324,7 +324,7 @@ void ServerConfigDialog::toggleClipboard(bool enabled)
 {
   ui->sbClipboardSizeLimit->setEnabled(enabled);
   if (enabled && !ui->sbClipboardSizeLimit->value()) {
-    auto size = static_cast<int>((serverConfig().defaultClipboardSharingSize() + 512) / 1024);
+    auto size = static_cast<int>((ServerConfig::defaultClipboardSharingSize() + 512) / 1024);
     ui->sbClipboardSizeLimit->setValue(size ? size : 1);
   }
   serverConfig().setClipboardSharing(enabled);
