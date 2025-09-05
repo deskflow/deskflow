@@ -296,7 +296,7 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "switchCorners = none ";
   for (int i = 0; i < config.switchCorners().size(); i++)
     if (config.switchCorners()[i])
-      outStream << "+" << config.switchCornerName(i) << " ";
+      outStream << "+" << ServerConfig::switchCornerName(i) << " ";
   outStream << Qt::endl;
 
   outStream << "\t"
