@@ -131,7 +131,7 @@ void ScreenSettingsDialog::addAlias()
   }
 }
 
-void ScreenSettingsDialog::removeAlias()
+void ScreenSettingsDialog::removeAlias() const
 {
   QList<QListWidgetItem *> items = ui->listAliases->selectedItems();
   qDeleteAll(items);
