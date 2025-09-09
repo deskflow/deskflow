@@ -99,8 +99,8 @@ private:
   ServerConfig &m_originalServerConfig;
   bool m_originalServerConfigIsExternal;
   QString m_originalServerConfigUsesExternalFile;
-  ScreenSetupModel m_screenSetupModel;
   ServerConfig m_serverConfig;
+  ScreenSetupModel m_screenSetupModel;
 
 private Q_SLOTS:
   void onChange();
