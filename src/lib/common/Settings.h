@@ -87,7 +87,6 @@ public:
   };
   struct Server
   {
-    inline static const auto ConfigVisible = QStringLiteral("server/configVisible");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
   };
@@ -197,7 +196,6 @@ private:
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
-    , Settings::Server::ConfigVisible
     , Settings::Server::ExternalConfig
     , Settings::Server::ExternalConfigFile
   };
