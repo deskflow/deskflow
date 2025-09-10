@@ -232,9 +232,6 @@ public:
   */
   virtual bool setReuseAddrOnSocket(ArchSocket, bool reuse) = 0;
 
-  //! Return local host's name
-  virtual std::string getHostName() = 0;
-
   //! Create an "any" network address
   virtual ArchNetAddress newAnyAddr(AddressFamily) = 0;
 

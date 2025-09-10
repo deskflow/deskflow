@@ -457,17 +457,6 @@ bool ArchNetworkBSD::setReuseAddrOnSocket(ArchSocket s, bool reuse)
   return (oflag != 0);
 }
 
-std::string ArchNetworkBSD::getHostName()
-{
-  char name[256];
-  if (gethostname(name, sizeof(name)) == -1) {
-    name[0] = '\0';
-  } else {
-    name[sizeof(name) - 1] = '\0';
-  }
-  return name;
-}
-
 ArchNetAddress ArchNetworkBSD::newAnyAddr(AddressFamily family)
 {
   using enum AddressFamily;
