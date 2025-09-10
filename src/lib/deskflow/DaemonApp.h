@@ -48,8 +48,6 @@ public:
   ~DaemonApp() override;
 
   InitResult init(int argc, char **argv);
-  void install() const;
-  void uninstall() const;
   void run(QThread &daemonThread);
   void setForeground();
   void initLogging();
