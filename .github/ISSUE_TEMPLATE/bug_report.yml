@@ -4,24 +4,24 @@ type: "Triage [bug]"
 body:
   - type: markdown
     attributes:
-      value: Thanks for taking the time to help us improve Deskflow.
+      value: |
+        Thanks for taking the time to help us improve Deskflow.
 
-  - type: dropdown
-    id: project
+  - type: checkboxes
+    id: sanity-checks
     attributes:
-      label: Project
-      description: Are you using Deskflow or a fork/derivative?
+      label: Sanity checks
+      description: |
+        Before reporting a bug, please first:
+        1. Try the latest [continuous build](https://github.com/deskflow/deskflow/releases).
+        2. Wayland users, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499).
+        3. macOS users, if the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac).
       options:
-        # Empty option to force selection
-        -
-        - Deskflow
-        - Barrier
-        - Input Leap
-        - Synergy
-      default: 0
+        - label: I have done the sanity checks, and my issue persists
+        - label: These sanity checks are not relevant to the bug
     validations:
       required: true
-
+      
   - type: textarea
     id: version
     attributes:
@@ -66,60 +66,21 @@ body:
     validations:
       required: true
 
-  - type: checkboxes
-    id: linux-wayland
-    attributes:
-      label: Wayland on Linux
-      description: If using Wayland on Linux, please review the [known issues](https://github.com/deskflow/deskflow/discussions/7499) before reporting.
-      options:
-        - label: I have reviewed the Wayland [known issues](https://github.com/deskflow/deskflow/discussions/7499) and my issue is new
-        - label: I am not using Wayland on Linux
-
-  - type: checkboxes
-    id: mac-signing
-    attributes:
-      label: Signing on macOS
-      description: If using macOS and the app crashes, try [Apple's solution](https://support.apple.com/guide/mac-help/open-a-mac-app-from-an-unknown-developer-mh40616/mac) before reporting.
-      options:
-        - label: I have authorized the app to run on my Mac
-        - label: I am not using macOS
-
-  - type: checkboxes
-    id: continuous-build
-    attributes:
-      label: Continuous build
-      description: Please try the latest [continuous build](https://github.com/deskflow/deskflow/releases) of Deskflow. It may have a fix for your issue.
-      options:
-        - label: I have tried the latest continuous build and the issue persists
-        - label: I am unable to try the latest continuous build
-
-  - type: textarea
-    id: os-version
-    attributes:
-      label: OS versions/distros
-      description: |
-        Please provide the version number of your operating system (OS).
-        If you're using Linux, please provide the name of the distribution.
-      placeholder: |
-        - Windows 11
-        - macOS 15
-        - Ubuntu 24.04
-        - FreeBSD 14.0
-    validations:
-      required: true
-
   - type: textarea
     id: config
     attributes:
       label: Deskflow configuration
       description: |
         Please provide a very brief description of your configuration.
-        Let us know what OS your server and client are running.
+        Let us know what OS your server and client are running, including all OS versions.
+        If you're using Linux, please provide the name of the distribution.
       placeholder: |
         - Windows 11 server, macOS 15 client
         - Each computer has a single monitor
         - Windows is on the left, macOS is on the right
-
+    validations:
+      required: true
+      
   - type: textarea
     id: repro-steps
     attributes:
