@@ -104,6 +104,12 @@ public:
    */
   static double time();
 
+  /**
+   * @brief hostName
+   * @return Return local host's name
+   */
+  static QString hostName();
+
 private:
   static Arch *s_instance;
 };

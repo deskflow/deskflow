@@ -625,17 +625,6 @@ bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
   return (oflag != 0);
 }
 
-std::string ArchNetworkWinsock::getHostName()
-{
-  char name[256];
-  if (gethostname_winsock(name, sizeof(name)) == -1) {
-    name[0] = '\0';
-  } else {
-    name[sizeof(name) - 1] = '\0';
-  }
-  return name;
-}
-
 ArchNetAddress ArchNetworkWinsock::newAnyAddr(AddressFamily family)
 {
   ArchNetAddressImpl *addr = nullptr;

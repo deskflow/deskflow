@@ -332,7 +332,7 @@ std::string ArgParser::assembleCommand(
 
 void ArgParser::updateCommonArgs(const char *const *argv) const
 {
-  argsBase().m_name = ARCH->getHostName();
+  argsBase().m_name = ARCH->hostName().toStdString();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
