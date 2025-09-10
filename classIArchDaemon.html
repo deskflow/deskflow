@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.203</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.204</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -120,20 +120,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abcf9e90b08623256d2e5df0efe9060e1" id="r_abcf9e90b08623256d2e5df0efe9060e1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcf9e90b08623256d2e5df0efe9060e1">~IArchDaemon</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
-<tr class="memitem:a54ed26cf60e85b4f890e309d4d53133d" id="r_a54ed26cf60e85b4f890e309d4d53133d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a54ed26cf60e85b4f890e309d4d53133d">installDaemon</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, const char *description, const char *pathname, const char *<a class="el" href="#aebfdfe84beaae52f31237219a0660ccb">commandLine</a>, const char *dependencies)=0</td></tr>
-<tr class="memdesc:a54ed26cf60e85b4f890e309d4d53133d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install daemon.  <br /></td></tr>
-<tr class="memitem:a3c952852044a8b5dd7c49058c80f3a9f" id="r_a3c952852044a8b5dd7c49058c80f3a9f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3c952852044a8b5dd7c49058c80f3a9f">uninstallDaemon</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)=0</td></tr>
-<tr class="memdesc:a3c952852044a8b5dd7c49058c80f3a9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uninstall daemon.  <br /></td></tr>
-<tr class="memitem:ac00cf5ed77474d537e63237712c4390c" id="r_ac00cf5ed77474d537e63237712c4390c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac00cf5ed77474d537e63237712c4390c">installDaemon</a> ()=0</td></tr>
-<tr class="memdesc:ac00cf5ed77474d537e63237712c4390c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Install daemon.  <br /></td></tr>
-<tr class="memitem:afa67443bdf096716c755427f5455d44a" id="r_afa67443bdf096716c755427f5455d44a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa67443bdf096716c755427f5455d44a">uninstallDaemon</a> ()=0</td></tr>
-<tr class="memdesc:afa67443bdf096716c755427f5455d44a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uninstall daemon.  <br /></td></tr>
 <tr class="memitem:a3452709b8176240807b4568a166f079a" id="r_a3452709b8176240807b4568a166f079a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3452709b8176240807b4568a166f079a">daemonize</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func)=0</td></tr>
 <tr class="memdesc:a3452709b8176240807b4568a166f079a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
-<tr class="memitem:a3590038260f2a4bd6fa22e47de995814" id="r_a3590038260f2a4bd6fa22e47de995814"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3590038260f2a4bd6fa22e47de995814">canInstallDaemon</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)=0</td></tr>
-<tr class="memdesc:a3590038260f2a4bd6fa22e47de995814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if user has permission to install the daemon.  <br /></td></tr>
-<tr class="memitem:a5cefd4c1b67d1be95843d1b402a4dac5" id="r_a5cefd4c1b67d1be95843d1b402a4dac5"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5cefd4c1b67d1be95843d1b402a4dac5">isDaemonInstalled</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)=0</td></tr>
-<tr class="memdesc:a5cefd4c1b67d1be95843d1b402a4dac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the daemon is installed.  <br /></td></tr>
 <tr class="memitem:aebfdfe84beaae52f31237219a0660ccb" id="r_aebfdfe84beaae52f31237219a0660ccb"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aebfdfe84beaae52f31237219a0660ccb">commandLine</a> () const =0</td></tr>
 <tr class="memdesc:aebfdfe84beaae52f31237219a0660ccb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command line.  <br /></td></tr>
 </table>
@@ -182,36 +170,6 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a3590038260f2a4bd6fa22e47de995814" name="a3590038260f2a4bd6fa22e47de995814"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3590038260f2a4bd6fa22e47de995814">&#9670;&#160;</a></span>canInstallDaemon()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool IArchDaemon::canInstallDaemon </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check if user has permission to install the daemon. </p>
-<p>Returns true iff the caller has permission to install or uninstall the daemon. Note that even if this method returns true it's possible that installing/uninstalling the service may still fail. This method ignores whether or not the service is already installed. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a498d4936310c98705d3b0d866384203c">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a0e4252ee989715acb0cc85079292f349">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
 <a id="aebfdfe84beaae52f31237219a0660ccb" name="aebfdfe84beaae52f31237219a0660ccb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aebfdfe84beaae52f31237219a0660ccb">&#9670;&#160;</a></span>commandLine()</h2>
 
@@ -279,175 +237,6 @@ win32: Becomes a service. Argument 0 is the name of the service and the rest are
 </ul>
 
 <p>Implemented in <a class="el" href="classArchDaemonNone.html#adaaedb73390a69ad0f12437aefb4dd65">ArchDaemonNone</a>, <a class="el" href="classArchDaemonUnix.html#af4c801c46bb83754cbbb88c5bcd3246e">ArchDaemonUnix</a>, and <a class="el" href="classArchDaemonWindows.html#ace21e7fab466ab58b1f0d3990ceb6e5b">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
-<a id="ac00cf5ed77474d537e63237712c4390c" name="ac00cf5ed77474d537e63237712c4390c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac00cf5ed77474d537e63237712c4390c">&#9670;&#160;</a></span>installDaemon() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IArchDaemon::installDaemon </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Install daemon. </p>
-<p>Installs the default daemon. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a2f9e3c041bb5403cf7412270e8801875">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a1290cf19630a6696ade535902012d78c">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
-<a id="a54ed26cf60e85b4f890e309d4d53133d" name="a54ed26cf60e85b4f890e309d4d53133d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54ed26cf60e85b4f890e309d4d53133d">&#9670;&#160;</a></span>installDaemon() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IArchDaemon::installDaemon </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>description</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>pathname</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>commandLine</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>dependencies</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Install daemon. </p>
-<p>Install a daemon. <code>name</code> is the name of the daemon passed to the system and <code>description</code> is a short human readable description of the daemon. <code>pathname</code> is the path to the daemon executable. <code>commandLine</code> should <b>not</b> include the name of program as the first argument. If <code>allUsers</code> is true then the daemon will be installed to start at boot time, otherwise it will be installed to start when the current user logs in. If <code class="param">dependencies</code> is not nullptr then it's a concatenation of NUL terminated other daemon names followed by a NUL; the daemon will be configured to startup after the listed daemons. Throws an <code><a class="el" href="classArchDaemonException.html" title="Generic daemon exception.">ArchDaemonException</a></code> exception on failure. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a36b10d9b07bb51d9fbddec655abe7e49">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a8a8dbd69987c5b7d8f74e32fc0288c83">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
-<a id="a5cefd4c1b67d1be95843d1b402a4dac5" name="a5cefd4c1b67d1be95843d1b402a4dac5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cefd4c1b67d1be95843d1b402a4dac5">&#9670;&#160;</a></span>isDaemonInstalled()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool IArchDaemon::isDaemonInstalled </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Check if the daemon is installed. </p>
-<p>Returns true iff the daemon is installed. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#ae678d2f55d5090cbbda49dcecf22c1bd">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a58c34e983232ff90e54d8ac7c985aa05">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
-<a id="afa67443bdf096716c755427f5455d44a" name="afa67443bdf096716c755427f5455d44a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afa67443bdf096716c755427f5455d44a">&#9670;&#160;</a></span>uninstallDaemon() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IArchDaemon::uninstallDaemon </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Uninstall daemon. </p>
-<p>Uninstalls the default daemon. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a476470b78677fedd9d88f822e66f44a9">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a05586285b7792117c600a393fb8b3bcb">ArchDaemonWindows</a>.</p>
-
-</div>
-</div>
-<a id="a3c952852044a8b5dd7c49058c80f3a9f" name="a3c952852044a8b5dd7c49058c80f3a9f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c952852044a8b5dd7c49058c80f3a9f">&#9670;&#160;</a></span>uninstallDaemon() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IArchDaemon::uninstallDaemon </td>
-          <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Uninstall daemon. </p>
-<p>Uninstall a daemon. Throws an <code><a class="el" href="classArchDaemonException.html" title="Generic daemon exception.">ArchDaemonException</a></code> on failure. </p>
-
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#a231fe6ec4d802f81dec881f6ef7f8a62">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a9fa44aaedfbefec91100e77ba862327c">ArchDaemonWindows</a>.</p>
 
 </div>
 </div>

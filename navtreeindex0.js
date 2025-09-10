@@ -62,13 +62,9 @@ var NAVTREEINDEX0 =
 "ArchDaemonUnix_8h.html#a99414cdb74167761d0f444afd670538f":[7,0,1,1,0,0,1,1],
 "ArchDaemonUnix_8h_source.html":[7,0,1,1,0,0,1],
 "ArchDaemonWindows_8cpp.html":[7,0,1,1,0,1,0],
-"ArchDaemonWindows_8cpp.html#aa3e0946a845dd85a06c587740a9e2a67":[7,0,1,1,0,1,0,0],
 "ArchDaemonWindows_8h.html":[7,0,1,1,0,1,1],
-"ArchDaemonWindows_8h.html#a1c715c8a946e494243046e4a0ddff06f":[7,0,1,1,0,1,1,4],
-"ArchDaemonWindows_8h.html#a5f5c0ad9e180758e94dc58402375a1ac":[7,0,1,1,0,1,1,2],
 "ArchDaemonWindows_8h.html#a99414cdb74167761d0f444afd670538f":[7,0,1,1,0,1,1,1],
-"ArchDaemonWindows_8h.html#ab8232800a094ca5686bf36f5be537bbf":[7,0,1,1,0,1,1,3],
-"ArchDaemonWindows_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,0,1,1,5],
+"ArchDaemonWindows_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,0,1,1,2],
 "ArchDaemonWindows_8h_source.html":[7,0,1,1,0,1,1],
 "ArchException_8h.html":[7,0,1,1,0,6],
 "ArchException_8h.html#a704c9a459d14bad47b4bb217387548b0":[7,0,1,1,0,6,27],
@@ -249,5 +245,9 @@ var NAVTREEINDEX0 =
 "Clipboard_8h_source.html":[7,0,1,1,4,18],
 "CommandProcess_8cpp.html":[7,0,1,1,5,1,2],
 "CommandProcess_8h.html":[7,0,1,1,5,1,3],
-"CommandProcess_8h_source.html":[7,0,1,1,5,1,3]
+"CommandProcess_8h_source.html":[7,0,1,1,5,1,3],
+"Common_8h.html":[7,0,1,1,3,0],
+"Common_8h_source.html":[7,0,1,1,3,0],
+"ComputerNameValidator_8cpp.html":[7,0,1,1,5,5,2],
+"ComputerNameValidator_8h.html":[7,0,1,1,5,5,3]
 };

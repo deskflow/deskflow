@@ -13,9 +13,7 @@ var classDaemonApp =
     [ "connectIpcServer", "classDaemonApp.html#aaf47731bdcae76444e97bd72a11a0e84", null ],
     [ "init", "classDaemonApp.html#a8c1c0b43c6b01e1a27cb0c4de5fed7a0", null ],
     [ "initLogging", "classDaemonApp.html#a17e867bf0353d9e0321d547b9234b5bf", null ],
-    [ "install", "classDaemonApp.html#a329089c6a39aa3853ce64cd904d642f5", null ],
     [ "logFilename", "classDaemonApp.html#a11bd3b2ec38da293a9a0dfebf873e62f", null ],
     [ "run", "classDaemonApp.html#aa4818fa610be8f37215cbc98f9eeb097", null ],
-    [ "setForeground", "classDaemonApp.html#a9760570352c929772dcd53a3acfff527", null ],
-    [ "uninstall", "classDaemonApp.html#a885941599103953d8bff8ad7e432b954", null ]
+    [ "setForeground", "classDaemonApp.html#a9760570352c929772dcd53a3acfff527", null ]
 ];
