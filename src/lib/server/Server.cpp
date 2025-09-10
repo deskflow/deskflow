@@ -238,7 +238,7 @@ void Server::adoptClient(BaseClientProxy *client)
 
   // name must be in our configuration
   if (!m_config->isScreen(client->getName())) {
-    LOG_WARN("unrecognised client name \"%s\", check server config", client->getName().c_str());
+    LOG_IPC("unrecognised client name \"%s\", check server config", client->getName().c_str());
     closeClient(client, kMsgEUnknown);
     return;
   }
