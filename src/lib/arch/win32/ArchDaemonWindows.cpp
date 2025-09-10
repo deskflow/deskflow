@@ -12,9 +12,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
-#include "common/Constants.h"
 
-inline static const auto kDefaultDaemonName = _T(kAppName);
 //
 // ArchDaemonWindows
 //
@@ -54,142 +52,6 @@ void ArchDaemonWindows::daemonFailed(int result)
   throw ArchDaemonRunException(result);
 }
 
-void ArchDaemonWindows::installDaemon(
-    const char *name, const char *description, const char *pathname, const char *commandLine, const char *dependencies
-)
-{
-  LOG_DEBUG("installing windows service: %s", name);
-
-  // open service manager
-  SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
-  if (mgr == nullptr) {
-    // can't open service manager
-    throw ArchDaemonInstallException(windowsErrorToString(GetLastError()));
-  }
-
-  // create the service
-  SC_HANDLE service = CreateService(
-      mgr, name, name, 0, SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS, SERVICE_AUTO_START,
-      SERVICE_ERROR_NORMAL, pathname, nullptr, nullptr, dependencies, nullptr, nullptr
-  );
-
-  if (service == nullptr) {
-    // can't create service
-    DWORD err = GetLastError();
-    if (err != ERROR_SERVICE_EXISTS) {
-      CloseServiceHandle(mgr);
-      throw ArchDaemonInstallException(windowsErrorToString(err));
-    }
-  } else {
-    // done with service (but only try to close if not null)
-    CloseServiceHandle(service);
-  }
-
-  // done with manager
-  CloseServiceHandle(mgr);
-
-  // open the registry key for this service
-  HKEY key = openNTServicesKey();
-  key = ArchMiscWindows::addKey(key, name);
-  if (key == nullptr) {
-    // can't open key
-    DWORD err = GetLastError();
-    try {
-      uninstallDaemon(name);
-    } catch (...) {
-      // ignore
-    }
-    throw ArchDaemonInstallException(windowsErrorToString(err));
-  }
-
-  // set the description
-  ArchMiscWindows::setValue(key, _T("Description"), description);
-
-  // set command line
-  key = ArchMiscWindows::addKey(key, _T("Parameters"));
-  if (key == nullptr) {
-    // can't open key
-    DWORD err = GetLastError();
-    ArchMiscWindows::closeKey(key);
-    try {
-      uninstallDaemon(name);
-    } catch (...) {
-      // ignore
-    }
-    throw ArchDaemonInstallException(windowsErrorToString(err));
-  }
-  ArchMiscWindows::setValue(key, _T("CommandLine"), commandLine);
-
-  // done with registry
-  ArchMiscWindows::closeKey(key);
-}
-
-void ArchDaemonWindows::uninstallDaemon(const char *name)
-{
-  LOG_DEBUG("uninstalling windows service: %s", name);
-
-  // remove parameters for this service.  ignore failures.
-  HKEY key = openNTServicesKey();
-  key = ArchMiscWindows::openKey(key, name);
-  if (key != nullptr) {
-    ArchMiscWindows::deleteKey(key, _T("Parameters"));
-    ArchMiscWindows::closeKey(key);
-  }
-
-  // open service manager
-  SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
-  if (mgr == nullptr) {
-    // can't open service manager
-    throw ArchDaemonUninstallFailedException(windowsErrorToString(GetLastError()));
-  }
-
-  // open the service.  oddly, you must open a service to delete it.
-  SC_HANDLE service = OpenService(mgr, name, DELETE | SERVICE_STOP);
-  if (service == nullptr) {
-    DWORD err = GetLastError();
-    CloseServiceHandle(mgr);
-    if (err != ERROR_SERVICE_DOES_NOT_EXIST) {
-      throw ArchDaemonUninstallFailedException(windowsErrorToString(err));
-    }
-    throw ArchDaemonUninstallNotInstalledException(windowsErrorToString(err));
-  }
-
-  // stop the service.  we don't care if we fail.
-  SERVICE_STATUS status;
-  ControlService(service, SERVICE_CONTROL_STOP, &status);
-
-  // delete the service
-  const bool okay = (DeleteService(service) == 0);
-  const DWORD err = GetLastError();
-
-  // clean up
-  CloseServiceHandle(service);
-  CloseServiceHandle(mgr);
-
-  // give windows a chance to remove the service before we check if it still exists.
-  // 100ms should be plenty of time.
-  LOG_DEBUG("waiting for service to be removed");
-  Arch::sleep(0.1);
-
-  // handle failure.  ignore error if service isn't installed anymore.
-  if (!okay && isDaemonInstalled(name)) {
-    if (err == ERROR_SUCCESS) {
-      // this seems to occur even though the uninstall was successful.
-      // it could be a timing issue, i.e., isDaemonInstalled is
-      // called too soon. i've added a sleep to try and stop this.
-      return;
-    }
-    if (err == ERROR_IO_PENDING) {
-      // this seems to be a spurious error
-      return;
-    }
-    if (err != ERROR_SERVICE_MARKED_FOR_DELETE) {
-      throw ArchDaemonUninstallFailedException(windowsErrorToString(err));
-    }
-    throw ArchDaemonUninstallNotInstalledException(windowsErrorToString(err));
-  }
-}
-
 int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
 {
   assert(name != nullptr);
@@ -216,42 +78,6 @@ int ArchDaemonWindows::daemonize(const char *name, DaemonFunc const &func)
 
   s_daemon = nullptr;
   return m_daemonResult;
-}
-
-bool ArchDaemonWindows::canInstallDaemon(const char * /*name*/)
-{
-  // check if we can open service manager for write
-  SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_WRITE);
-  if (mgr == nullptr) {
-    return false;
-  }
-  CloseServiceHandle(mgr);
-
-  // check if we can open the registry key
-  HKEY key = openNTServicesKey();
-  ArchMiscWindows::closeKey(key);
-
-  return (key != nullptr);
-}
-
-bool ArchDaemonWindows::isDaemonInstalled(const char *name)
-{
-  // open service manager
-  SC_HANDLE mgr = OpenSCManager(nullptr, nullptr, GENERIC_READ);
-  if (mgr == nullptr) {
-    return false;
-  }
-
-  // open the service
-  SC_HANDLE service = OpenService(mgr, name, GENERIC_READ);
-
-  // clean up
-  if (service != nullptr) {
-    CloseServiceHandle(service);
-  }
-  CloseServiceHandle(mgr);
-
-  return (service != nullptr);
 }
 
 HKEY ArchDaemonWindows::openNTServicesKey()
@@ -600,37 +426,5 @@ void ArchDaemonWindows::stop(const char *name)
     if (dwErrCode != ERROR_SERVICE_NOT_ACTIVE) {
       throw ArchDaemonFailedException(windowsErrorToString(GetLastError()));
     }
-  }
-}
-
-void ArchDaemonWindows::installDaemon()
-{
-  // install default daemon if not already installed.
-  if (!isDaemonInstalled(kDefaultDaemonName)) {
-    char binPath[MAX_PATH];
-    GetModuleFileName(ArchMiscWindows::instanceWin32(), binPath, MAX_PATH);
-
-    // wrap in quotes so a malicious user can't start \Program.exe as admin.
-    const auto command = "\"" + std::string(binPath) + "\"";
-
-    installDaemon(kDefaultDaemonName, DEFAULT_DAEMON_INFO, command.c_str(), "", "");
-  }
-
-  start(kDefaultDaemonName);
-}
-
-void ArchDaemonWindows::uninstallDaemon()
-{
-  // remove legacy services if installed.
-  if (isDaemonInstalled(LEGACY_SERVER_DAEMON_NAME)) {
-    uninstallDaemon(LEGACY_SERVER_DAEMON_NAME);
-  }
-  if (isDaemonInstalled(LEGACY_CLIENT_DAEMON_NAME)) {
-    uninstallDaemon(LEGACY_CLIENT_DAEMON_NAME);
-  }
-
-  // remove new service if installed.
-  if (isDaemonInstalled(kDefaultDaemonName)) {
-    uninstallDaemon(kDefaultDaemonName);
   }
 }

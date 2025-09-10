@@ -122,18 +122,6 @@ void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const
   );
 }
 
-void DaemonApp::install() const
-{
-  LOG_NOTE("installing windows daemon");
-  ARCH->installDaemon();
-}
-
-void DaemonApp::uninstall() const
-{
-  LOG_NOTE("uninstalling windows daemon");
-  ARCH->uninstallDaemon();
-}
-
 void DaemonApp::run(QThread &daemonThread)
 {
   LOG_NOTE("starting daemon");
