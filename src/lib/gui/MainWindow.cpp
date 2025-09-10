@@ -645,12 +645,12 @@ void MainWindow::updateNetworkInfo()
 
 void MainWindow::serverConnectionConfigureClient(const QString &clientName)
 {
-  Settings::setValue(Settings::Server::ConfigVisible, true);
+  m_serverConnection.serverConfigDialogVisible(true);
   ServerConfigDialog dialog(this, m_serverConfig);
   if (dialog.addClient(clientName) && dialog.exec() == QDialog::Accepted) {
     m_coreProcess.restart();
   }
-  Settings::setValue(Settings::Server::ConfigVisible, false);
+  m_serverConnection.serverConfigDialogVisible(false);
 }
 
 //////////////////////////////////////////////////////////////////////////////
