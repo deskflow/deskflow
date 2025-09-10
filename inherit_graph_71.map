@@ -1,13 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classILogOutputter.html" title="Outputter interface." alt="" coords="5,104,106,129"/>
 <area shape="rect" id="Node000001" href="$classConsoleLogOutputter.html" title="Write log to console." alt="" coords="175,5,320,30"/>
-<area shape="poly" id="edge70_Node000000_Node000001" title=" " alt="" coords="79,92,113,65,152,41,185,28,187,33,155,45,116,69,83,96"/>
+<area shape="poly" id="edge69_Node000000_Node000001" title=" " alt="" coords="79,92,113,65,152,41,185,28,187,33,155,45,116,69,83,96"/>
 <area shape="rect" id="Node000002" href="$classFileLogOutputter.html" title="Write log to file." alt="" coords="189,55,306,79"/>
-<area shape="poly" id="edge71_Node000000_Node000002" title=" " alt="" coords="120,97,196,77,197,83,121,102"/>
+<area shape="poly" id="edge70_Node000000_Node000002" title=" " alt="" coords="120,97,196,77,197,83,121,102"/>
 <area shape="rect" id="Node000003" href="$classMSWindowsDebugOutputter.html" title="Write log to debugger." alt="" coords="154,104,341,129"/>
-<area shape="poly" id="edge72_Node000000_Node000003" title=" " alt="" coords="121,114,153,114,153,119,121,119"/>
+<area shape="poly" id="edge71_Node000000_Node000003" title=" " alt="" coords="121,114,153,114,153,119,121,119"/>
 <area shape="rect" id="Node000004" href="$classStopLogOutputter.html" title="Stop traversing log chain outputter." alt="" coords="186,153,309,178"/>
-<area shape="poly" id="edge73_Node000000_Node000004" title=" " alt="" coords="121,130,197,150,196,155,120,136"/>
+<area shape="poly" id="edge72_Node000000_Node000004" title=" " alt="" coords="121,130,197,150,196,155,120,136"/>
 <area shape="rect" id="Node000005" href="$classSystemLogOutputter.html" title="Write log to system log." alt="" coords="177,203,318,227"/>
-<area shape="poly" id="edge74_Node000000_Node000005" title=" " alt="" coords="83,137,116,163,155,187,187,200,185,205,152,192,113,168,79,141"/>
+<area shape="poly" id="edge73_Node000000_Node000005" title=" " alt="" coords="83,137,116,163,155,187,187,200,185,205,152,192,113,168,79,141"/>
 </map>

@@ -5,6 +5,6 @@ var classMSWindowsSession =
     [ "getActiveSessionId", "classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af", null ],
     [ "getUserToken", "classMSWindowsSession.html#a64d4c3c908a824af95f7ee89ad812bd5", null ],
     [ "hasChanged", "classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93", null ],
-    [ "isProcessInSession", "classMSWindowsSession.html#a167b8e55e22be6f883dee03547d4d5a3", null ],
+    [ "isProcessInSession", "classMSWindowsSession.html#a776ff6962411e3df86466bb78439efd4", null ],
     [ "updateActiveSession", "classMSWindowsSession.html#aced4296fe2ff4fd48870b66aa7a5dd6c", null ]
 ];

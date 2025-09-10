@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,15 +114,15 @@ $(function(){initNavTree('ArchDaemonUnix_8h_source.html','',''); });
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classArchDaemonUnix.html#a7f7c093327d34dca9b1800dab57149bd">   20</a></span>  <a class="code hl_function" href="classArchDaemonUnix.html#a7f7c093327d34dca9b1800dab57149bd">~ArchDaemonUnix</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="comment">// IArchDaemon overrides</span></div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonUnix.html#af4c801c46bb83754cbbb88c5bcd3246e">daemonize</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonUnix.html#a796e27748a6ad0752fce1a9bf494a39d">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
 </div>
 <div class="ttc" id="aArchDaemonNone_8h_html"><div class="ttname"><a href="ArchDaemonNone_8h.html">ArchDaemonNone.h</a></div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aclassArchDaemonNone_html_a106e9c63288251f6494e4cdbb8f255ab"><div class="ttname"><a href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone::ArchDaemonNone</a></div><div class="ttdeci">ArchDaemonNone()=default</div></div>
 <div class="ttc" id="aclassArchDaemonUnix_html_a2db3a9d35ff14fe6260c301528c3af8b"><div class="ttname"><a href="classArchDaemonUnix.html#a2db3a9d35ff14fe6260c301528c3af8b">ArchDaemonUnix::ArchDaemonUnix</a></div><div class="ttdeci">ArchDaemonUnix()=default</div></div>
+<div class="ttc" id="aclassArchDaemonUnix_html_a796e27748a6ad0752fce1a9bf494a39d"><div class="ttname"><a href="classArchDaemonUnix.html#a796e27748a6ad0752fce1a9bf494a39d">ArchDaemonUnix::daemonize</a></div><div class="ttdeci">int daemonize(const QString &amp;name, DaemonFunc const &amp;func) override</div><div class="ttdoc">Daemonize the process.</div><div class="ttdef"><b>Definition</b> ArchDaemonUnix.cpp:50</div></div>
 <div class="ttc" id="aclassArchDaemonUnix_html_a7f7c093327d34dca9b1800dab57149bd"><div class="ttname"><a href="classArchDaemonUnix.html#a7f7c093327d34dca9b1800dab57149bd">ArchDaemonUnix::~ArchDaemonUnix</a></div><div class="ttdeci">~ArchDaemonUnix() override=default</div></div>
-<div class="ttc" id="aclassArchDaemonUnix_html_af4c801c46bb83754cbbb88c5bcd3246e"><div class="ttname"><a href="classArchDaemonUnix.html#af4c801c46bb83754cbbb88c5bcd3246e">ArchDaemonUnix::daemonize</a></div><div class="ttdeci">int daemonize(const char *name, DaemonFunc const &amp;func) override</div><div class="ttdoc">Daemonize the process.</div><div class="ttdef"><b>Definition</b> ArchDaemonUnix.cpp:49</div></div>
 <div class="ttc" id="aclassIArchDaemon_html_a442974912ac1dbb3cd2ff4c70800fa39"><div class="ttname"><a href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int(int, const char **)&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

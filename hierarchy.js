@@ -35,9 +35,6 @@ var hierarchy =
     [ "ArchMutexLock", "classArchMutexLock.html", null ],
     [ "ArchNetAddressImpl", "classArchNetAddressImpl.html", null ],
     [ "ArchSocketImpl", "classArchSocketImpl.html", null ],
-    [ "ArchString", "classArchString.html", [
-      [ "Arch", "classArch.html", null ]
-    ] ],
     [ "ArchThreadImpl", "classArchThreadImpl.html", null ],
     [ "ArgParser", "classArgParser.html", null ],
     [ "deskflow::ArgsBase", "classdeskflow_1_1ArgsBase.html", [

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -145,8 +145,8 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6677555883629f679673992f3430a94f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a string value in the registry.  <br /></td></tr>
 <tr class="memitem:a3b06b69ed1c54802af28f10435860983" id="r_a3b06b69ed1c54802af28f10435860983"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3b06b69ed1c54802af28f10435860983">setValue</a> (HKEY <a class="el" href="KeySequence_8cpp.html#a35af0be900467fedbb610bd6ea65ed78">key</a>, const TCHAR *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> value)</td></tr>
 <tr class="memdesc:a3b06b69ed1c54802af28f10435860983"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set a DWORD value in the registry.  <br /></td></tr>
-<tr class="memitem:abada7a3b7b512bf674cd08aa2a267d6f" id="r_abada7a3b7b512bf674cd08aa2a267d6f"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abada7a3b7b512bf674cd08aa2a267d6f">readValueString</a> (HKEY, const TCHAR *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
-<tr class="memdesc:abada7a3b7b512bf674cd08aa2a267d6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a string value from the registry.  <br /></td></tr>
+<tr class="memitem:a15c0192d41ccadf6cf65bb9319bc4834" id="r_a15c0192d41ccadf6cf65bb9319bc4834"><td class="memItemLeft" align="right" valign="top">static std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a15c0192d41ccadf6cf65bb9319bc4834">readValueString</a> (HKEY, const TCHAR *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
+<tr class="memdesc:a15c0192d41ccadf6cf65bb9319bc4834"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a string value from the registry.  <br /></td></tr>
 <tr class="memitem:a5f37ce0559b29a5fd7b7af18364182f2" id="r_a5f37ce0559b29a5fd7b7af18364182f2"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5f37ce0559b29a5fd7b7af18364182f2">readValueInt</a> (HKEY, const TCHAR *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
 <tr class="memdesc:a5f37ce0559b29a5fd7b7af18364182f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a DWORD value from the registry.  <br /></td></tr>
 <tr class="memitem:a33b732aca7bfd321314e36cef5d93603" id="r_a33b732aca7bfd321314e36cef5d93603"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33b732aca7bfd321314e36cef5d93603">addBusyState</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> busyModes)</td></tr>
@@ -157,16 +157,16 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a42e8874844025237a54a91a8920b09e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Briefly interrupt power saving.  <br /></td></tr>
 <tr class="memitem:abfa597a607ef86b942bae3dc15294c45" id="r_abfa597a607ef86b942bae3dc15294c45"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abfa597a607ef86b942bae3dc15294c45">wasLaunchedAsService</a> ()</td></tr>
 <tr class="memdesc:abfa597a607ef86b942bae3dc15294c45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this process was launched via NT service host.  <br /></td></tr>
-<tr class="memitem:ad130917aa986117c787274813383b855" id="r_ad130917aa986117c787274813383b855"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad130917aa986117c787274813383b855">getParentProcessName</a> (std::string &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
-<tr class="memdesc:ad130917aa986117c787274813383b855"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if we got the parent process name.  <br /></td></tr>
+<tr class="memitem:a6666c54a8ce6bf017ad327d22d8c451c" id="r_a6666c54a8ce6bf017ad327d22d8c451c"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6666c54a8ce6bf017ad327d22d8c451c">getParentProcessName</a> (std::wstring &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
+<tr class="memdesc:a6666c54a8ce6bf017ad327d22d8c451c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if we got the parent process name.  <br /></td></tr>
 <tr class="memitem:a6a0f920c122e781c4a3bcbae40a82a0e" id="r_a6a0f920c122e781c4a3bcbae40a82a0e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a0f920c122e781c4a3bcbae40a82a0e">guardRuntimeVersion</a> ()</td></tr>
 <tr class="memdesc:a6a0f920c122e781c4a3bcbae40a82a0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prevent hard to troubleshoot errors, e.g. access violations.  <br /></td></tr>
 <tr class="memitem:a688c5f22c8e1552a8f39897cb24610fd" id="r_a688c5f22c8e1552a8f39897cb24610fd"><td class="memItemLeft" align="right" valign="top">static HINSTANCE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a688c5f22c8e1552a8f39897cb24610fd">instanceWin32</a> ()</td></tr>
 <tr class="memdesc:a688c5f22c8e1552a8f39897cb24610fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the window instance saved at program start.  <br /></td></tr>
 <tr class="memitem:a8ac709b408c4e04873f130b129849b81" id="r_a8ac709b408c4e04873f130b129849b81"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ac709b408c4e04873f130b129849b81">setInstanceWin32</a> (HINSTANCE instance)</td></tr>
 <tr class="memdesc:a8ac709b408c4e04873f130b129849b81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Saves the window instance for later use.  <br /></td></tr>
-<tr class="memitem:ab0731f6fec38e42282c4a020411600c2" id="r_ab0731f6fec38e42282c4a020411600c2"><td class="memItemLeft" align="right" valign="top">static std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab0731f6fec38e42282c4a020411600c2">getActiveDesktopName</a> ()</td></tr>
-<tr class="memdesc:ab0731f6fec38e42282c4a020411600c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the active input desktop.  <br /></td></tr>
+<tr class="memitem:a078cdd8e880af3cb356061ac79610845" id="r_a078cdd8e880af3cb356061ac79610845"><td class="memItemLeft" align="right" valign="top">static std::wstring&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a078cdd8e880af3cb356061ac79610845">getActiveDesktopName</a> ()</td></tr>
+<tr class="memdesc:a078cdd8e880af3cb356061ac79610845"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the name of the active input desktop.  <br /></td></tr>
 <tr class="memitem:ad59b0d5542731855a07ab50c2de29296" id="r_ad59b0d5542731855a07ab50c2de29296"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad59b0d5542731855a07ab50c2de29296">isProcessElevated</a> ()</td></tr>
 <tr class="memdesc:ad59b0d5542731855a07ab50c2de29296"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the process is running with elevated privileges (i.e. as admin).  <br /></td></tr>
 </table>
@@ -432,8 +432,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab0731f6fec38e42282c4a020411600c2" name="ab0731f6fec38e42282c4a020411600c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab0731f6fec38e42282c4a020411600c2">&#9670;&#160;</a></span>getActiveDesktopName()</h2>
+<a id="a078cdd8e880af3cb356061ac79610845" name="a078cdd8e880af3cb356061ac79610845"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a078cdd8e880af3cb356061ac79610845">&#9670;&#160;</a></span>getActiveDesktopName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -442,7 +442,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string ArchMiscWindows::getActiveDesktopName </td>
+          <td class="memname">std::wstring ArchMiscWindows::getActiveDesktopName </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td></td>
@@ -487,8 +487,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad130917aa986117c787274813383b855" name="ad130917aa986117c787274813383b855"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad130917aa986117c787274813383b855">&#9670;&#160;</a></span>getParentProcessName()</h2>
+<a id="a6666c54a8ce6bf017ad327d22d8c451c" name="a6666c54a8ce6bf017ad327d22d8c451c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6666c54a8ce6bf017ad327d22d8c451c">&#9670;&#160;</a></span>getParentProcessName()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -499,7 +499,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool ArchMiscWindows::getParentProcessName </td>
           <td>(</td>
-          <td class="paramtype">std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">std::wstring &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -716,8 +716,8 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abada7a3b7b512bf674cd08aa2a267d6f" name="abada7a3b7b512bf674cd08aa2a267d6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abada7a3b7b512bf674cd08aa2a267d6f">&#9670;&#160;</a></span>readValueString()</h2>
+<a id="a15c0192d41ccadf6cf65bb9319bc4834" name="a15c0192d41ccadf6cf65bb9319bc4834"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a15c0192d41ccadf6cf65bb9319bc4834">&#9670;&#160;</a></span>readValueString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -726,7 +726,7 @@ Static Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::string ArchMiscWindows::readValueString </td>
+          <td class="memname">std::wstring ArchMiscWindows::readValueString </td>
           <td>(</td>
           <td class="paramtype">HKEY</td>          <td class="paramname"><span class="paramname"><em>key</em></span>, </td>
         </tr>

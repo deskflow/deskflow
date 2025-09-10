@@ -1,10 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,0,8,2],
-"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,5],
-"ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,3],
-"ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
-"ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
 "ServerConnection_8h.html":[7,0,1,1,5,1,7],
 "ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
 "ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
@@ -86,11 +81,10 @@ var NAVTREEINDEX5 =
 "TrashScreenWidget_8h.html":[7,0,1,1,5,6,11],
 "TrashScreenWidget_8h_source.html":[7,0,1,1,5,6,11],
 "Unicode_8cpp.html":[7,0,1,1,1,33],
-"Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58":[7,0,1,1,1,33,2],
-"Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,33,3],
-"Unicode_8cpp.html#a897b68fd0735ca07afd158894305e9cb":[7,0,1,1,1,33,1],
-"Unicode_8cpp.html#a983e09e142a0af1f2ea3a46112235f24":[7,0,1,1,1,33,0],
-"Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b":[7,0,1,1,1,33,4],
+"Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58":[7,0,1,1,1,33,1],
+"Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,33,2],
+"Unicode_8cpp.html#a897b68fd0735ca07afd158894305e9cb":[7,0,1,1,1,33,0],
+"Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b":[7,0,1,1,1,33,3],
 "Unicode_8h.html":[7,0,1,1,1,34],
 "Unicode_8h_source.html":[7,0,1,1,1,34],
 "UrlConstants_8h.html":[7,0,1,1,3,6],
@@ -249,5 +243,11 @@ var NAVTREEINDEX5 =
 "classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[6,0,4,16],
 "classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[6,0,4,25],
 "classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22],
-"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27]
+"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27],
+"classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79":[6,0,4,9],
+"classAction.html#a8cadcfee2828374b55277314eb841ed9":[6,0,4,20],
+"classAction.html#a92f2a9af79230b153062ce7bfb21bf32":[6,0,4,15],
+"classAction.html#a9612c5cfc3c596380d3ecc07d81574b6":[6,0,4,6],
+"classAction.html#a9b6793704109f61ab6ee3cf0305dab4e":[6,0,4,12],
+"classAction.html#aa6a6765e3441eafca75acd43fd0f4e31":[6,0,4,21]
 };

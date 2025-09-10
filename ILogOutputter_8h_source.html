@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -115,7 +115,7 @@ $(function(){initNavTree('ILogOutputter_8h_source.html','',''); });
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classILogOutputter.html#a862e2ebf4c107581db64da8e5b306f07">   33</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classILogOutputter.html#a862e2ebf4c107581db64da8e5b306f07">open</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *title) = 0;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="classILogOutputter.html#a270bde79491303617d509a60800ec07e">   33</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classILogOutputter.html#a270bde79491303617d509a60800ec07e">open</a>(<span class="keyword">const</span> QString &amp;title) = 0;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classILogOutputter.html#a1a25270747c3028b2977f74f57cd20f5">   40</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classILogOutputter.html#a1a25270747c3028b2977f74f57cd20f5">close</a>() = 0;</div>
@@ -124,7 +124,7 @@ $(function(){initNavTree('ILogOutputter_8h_source.html','',''); });
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno"><a class="line" href="classILogOutputter.html#acfe18b140c97de70052ee281da764485">   49</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classILogOutputter.html#acfe18b140c97de70052ee281da764485">show</a>(<span class="keywordtype">bool</span> showIfEmpty) = 0;</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classILogOutputter.html#a194848b9f0a317c40c6348b32b8a547b">   58</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classILogOutputter.html#a194848b9f0a317c40c6348b32b8a547b">write</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, <span class="keyword">const</span> <span class="keywordtype">char</span> *message) = 0;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classILogOutputter.html#a066005e1eb18339e9cc7a2ee66374719">   58</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classILogOutputter.html#a066005e1eb18339e9cc7a2ee66374719">write</a>(<a class="code hl_enumeration" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, <span class="keyword">const</span> QString &amp;message) = 0;</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>};</div>
 </div>
@@ -133,9 +133,9 @@ $(function(){initNavTree('ILogOutputter_8h_source.html','',''); });
 <div class="ttc" id="aLogLevel_8h_html_aca1fd1d8935433e6ba2e3918214e07f9"><div class="ttname"><a href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a></div><div class="ttdeci">LogLevel</div><div class="ttdoc">Log levels.</div><div class="ttdef"><b>Definition</b> LogLevel.h:15</div></div>
 <div class="ttc" id="aLog_8h_html"><div class="ttname"><a href="Log_8h.html">Log.h</a></div></div>
 <div class="ttc" id="aclassILogOutputter_html"><div class="ttname"><a href="classILogOutputter.html">ILogOutputter</a></div><div class="ttdoc">Outputter interface.</div><div class="ttdef"><b>Definition</b> ILogOutputter.h:21</div></div>
-<div class="ttc" id="aclassILogOutputter_html_a194848b9f0a317c40c6348b32b8a547b"><div class="ttname"><a href="classILogOutputter.html#a194848b9f0a317c40c6348b32b8a547b">ILogOutputter::write</a></div><div class="ttdeci">virtual bool write(LogLevel level, const char *message)=0</div><div class="ttdoc">Write a message with level.</div></div>
+<div class="ttc" id="aclassILogOutputter_html_a066005e1eb18339e9cc7a2ee66374719"><div class="ttname"><a href="classILogOutputter.html#a066005e1eb18339e9cc7a2ee66374719">ILogOutputter::write</a></div><div class="ttdeci">virtual bool write(LogLevel level, const QString &amp;message)=0</div><div class="ttdoc">Write a message with level.</div></div>
 <div class="ttc" id="aclassILogOutputter_html_a1a25270747c3028b2977f74f57cd20f5"><div class="ttname"><a href="classILogOutputter.html#a1a25270747c3028b2977f74f57cd20f5">ILogOutputter::close</a></div><div class="ttdeci">virtual void close()=0</div><div class="ttdoc">Close the outputter.</div></div>
-<div class="ttc" id="aclassILogOutputter_html_a862e2ebf4c107581db64da8e5b306f07"><div class="ttname"><a href="classILogOutputter.html#a862e2ebf4c107581db64da8e5b306f07">ILogOutputter::open</a></div><div class="ttdeci">virtual void open(const char *title)=0</div><div class="ttdoc">Open the outputter.</div></div>
+<div class="ttc" id="aclassILogOutputter_html_a270bde79491303617d509a60800ec07e"><div class="ttname"><a href="classILogOutputter.html#a270bde79491303617d509a60800ec07e">ILogOutputter::open</a></div><div class="ttdeci">virtual void open(const QString &amp;title)=0</div><div class="ttdoc">Open the outputter.</div></div>
 <div class="ttc" id="aclassILogOutputter_html_abc39f78d7b6046b8ca349f88098a09bc"><div class="ttname"><a href="classILogOutputter.html#abc39f78d7b6046b8ca349f88098a09bc">ILogOutputter::~ILogOutputter</a></div><div class="ttdeci">virtual ~ILogOutputter()=default</div></div>
 <div class="ttc" id="aclassILogOutputter_html_acfe18b140c97de70052ee281da764485"><div class="ttname"><a href="classILogOutputter.html#acfe18b140c97de70052ee281da764485">ILogOutputter::show</a></div><div class="ttdeci">virtual void show(bool showIfEmpty)=0</div><div class="ttdoc">Show the outputter.</div></div>
 </div><!-- fragment --></div><!-- contents -->

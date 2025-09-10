@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,14 +114,14 @@ Inheritance diagram for IArchLog:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a4b732d3a35d4281d45ab9a741cc83523" id="r_a4b732d3a35d4281d45ab9a741cc83523"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b732d3a35d4281d45ab9a741cc83523">~IArchLog</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
-<tr class="memitem:a250e4fe3c13edcb77a2901594d218ec7" id="r_a250e4fe3c13edcb77a2901594d218ec7"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a250e4fe3c13edcb77a2901594d218ec7">openLog</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)=0</td></tr>
-<tr class="memdesc:a250e4fe3c13edcb77a2901594d218ec7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the log.  <br /></td></tr>
+<tr class="memitem:a77e8f13d15ac2567439812c37b1eab2d" id="r_a77e8f13d15ac2567439812c37b1eab2d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a77e8f13d15ac2567439812c37b1eab2d">openLog</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)=0</td></tr>
+<tr class="memdesc:a77e8f13d15ac2567439812c37b1eab2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the log.  <br /></td></tr>
 <tr class="memitem:a7a39ffa255cfa024345341338b492723" id="r_a7a39ffa255cfa024345341338b492723"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a39ffa255cfa024345341338b492723">closeLog</a> ()=0</td></tr>
 <tr class="memdesc:a7a39ffa255cfa024345341338b492723"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the log.  <br /></td></tr>
 <tr class="memitem:abbdad52046c27adf36a665d85f642d62" id="r_abbdad52046c27adf36a665d85f642d62"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbdad52046c27adf36a665d85f642d62">showLog</a> (bool showIfEmpty)=0</td></tr>
 <tr class="memdesc:abbdad52046c27adf36a665d85f642d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the log.  <br /></td></tr>
-<tr class="memitem:a8a387ab8d46d925bfed72716c60b76b6" id="r_a8a387ab8d46d925bfed72716c60b76b6"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8a387ab8d46d925bfed72716c60b76b6">writeLog</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>, const char *)=0</td></tr>
-<tr class="memdesc:a8a387ab8d46d925bfed72716c60b76b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to the log.  <br /></td></tr>
+<tr class="memitem:a419dbbe5623dbdc36fd34b62a78fcf56" id="r_a419dbbe5623dbdc36fd34b62a78fcf56"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a419dbbe5623dbdc36fd34b62a78fcf56">writeLog</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>, const QString &amp;)=0</td></tr>
+<tr class="memdesc:a419dbbe5623dbdc36fd34b62a78fcf56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to the log.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Interface for architecture dependent logging. </p>
@@ -183,8 +183,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a250e4fe3c13edcb77a2901594d218ec7" name="a250e4fe3c13edcb77a2901594d218ec7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a250e4fe3c13edcb77a2901594d218ec7">&#9670;&#160;</a></span>openLog()</h2>
+<a id="a77e8f13d15ac2567439812c37b1eab2d" name="a77e8f13d15ac2567439812c37b1eab2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a77e8f13d15ac2567439812c37b1eab2d">&#9670;&#160;</a></span>openLog()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +195,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void IArchLog::openLog </td>
           <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -209,7 +209,7 @@ Public Member Functions</h2></td></tr>
 <p>Open the log. </p>
 <p>Opens the log for writing. The log must be opened before being written to. </p>
 
-<p>Implemented in <a class="el" href="classArchLogUnix.html#a3370948d7e36f5d17ee557bff3676671">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#a5f5ba5f05aa762626cfb6778b72af50e">ArchLogWindows</a>.</p>
+<p>Implemented in <a class="el" href="classArchLogUnix.html#aa79edb16e113e0792432048208c900c6">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#a7bd88da31967ab5176a993159e5c607b">ArchLogWindows</a>.</p>
 
 </div>
 </div>
@@ -243,8 +243,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8a387ab8d46d925bfed72716c60b76b6" name="a8a387ab8d46d925bfed72716c60b76b6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a387ab8d46d925bfed72716c60b76b6">&#9670;&#160;</a></span>writeLog()</h2>
+<a id="a419dbbe5623dbdc36fd34b62a78fcf56" name="a419dbbe5623dbdc36fd34b62a78fcf56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a419dbbe5623dbdc36fd34b62a78fcf56">&#9670;&#160;</a></span>writeLog()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -260,7 +260,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -273,7 +273,7 @@ Public Member Functions</h2></td></tr>
 <p>Write to the log. </p>
 <p>Writes the given string to the log with the given level. </p>
 
-<p>Implemented in <a class="el" href="classArchLogUnix.html#abe4295c24bc341017531116cc9190d3c">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#aef2db411caed3e6ccd97655b781ab178">ArchLogWindows</a>.</p>
+<p>Implemented in <a class="el" href="classArchLogUnix.html#a350c06d29a73d44632e3623991aa645a">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#a2d0190b322f3f69c0a9ff4fb84f413f0">ArchLogWindows</a>.</p>
 
 </div>
 </div>

@@ -1,9 +1,7 @@
 <map id="src/lib/platform/MSWindowsSession.h" name="src/lib/platform/MSWindowsSession.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="33,5,218,44"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,59,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,47,59,84,56,80,101,43"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="82,92,168,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,45,128,76,123,76,123,45"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="193,92,274,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,42,206,81,203,85,150,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,194,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,92,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,46,67,81,63,78,87,43"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="116,92,197,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="117,43,142,78,137,81,113,46"/>
 </map>

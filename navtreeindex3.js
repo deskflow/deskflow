@@ -1,9 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"Logger_8h_source.html":[7,0,1,1,5,22],
-"MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
-"MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
-"MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
 "MSWindowsClipboardBitmapConverter_8cpp.html":[7,0,1,1,9,13],
 "MSWindowsClipboardBitmapConverter_8h.html":[7,0,1,1,9,14],
 "MSWindowsClipboardBitmapConverter_8h_source.html":[7,0,1,1,9,14],
@@ -169,7 +165,6 @@ var NAVTREEINDEX3 =
 "MSWindowsSession_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,43,1],
 "MSWindowsSession_8h_source.html":[7,0,1,1,9,43],
 "MSWindowsWatchdog_8cpp.html":[7,0,1,1,9,44],
-"MSWindowsWatchdog_8cpp.html#a9493d52fdabe3630510f009672d52ca8":[7,0,1,1,9,44,2],
 "MSWindowsWatchdog_8cpp.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,44,0],
 "MSWindowsWatchdog_8cpp.html#ada2802a5ad0b9ce1c4d2357475415cf2":[7,0,1,1,9,44,1],
 "MSWindowsWatchdog_8h.html":[7,0,1,1,9,45],
@@ -249,5 +244,10 @@ var NAVTREEINDEX3 =
 "OSXCocoaApp_8h.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,63,1],
 "OSXCocoaApp_8h.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,63,0],
 "OSXCocoaApp_8h_source.html":[7,0,1,1,9,63],
-"OSXCocoaApp_8m.html":[7,0,1,1,9,64]
+"OSXCocoaApp_8m.html":[7,0,1,1,9,64],
+"OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1],
+"OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0],
+"OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
+"OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66]
 };

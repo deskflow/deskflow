@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -100,7 +100,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8d0d82d2aae42e8c580e4e3ea36ccfc9" id="r_a8d0d82d2aae42e8c580e4e3ea36ccfc9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession</a> ()</td></tr>
 <tr class="memitem:a32bf5e2c7512bd93274cfb2ed46ab55e" id="r_a32bf5e2c7512bd93274cfb2ed46ab55e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a32bf5e2c7512bd93274cfb2ed46ab55e">~MSWindowsSession</a> ()=default</td></tr>
 <tr class="memitem:ab4668cad4eb47612434a73ebdd19da93" id="r_ab4668cad4eb47612434a73ebdd19da93"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4668cad4eb47612434a73ebdd19da93">hasChanged</a> ()</td></tr>
-<tr class="memitem:a167b8e55e22be6f883dee03547d4d5a3" id="r_a167b8e55e22be6f883dee03547d4d5a3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a167b8e55e22be6f883dee03547d4d5a3">isProcessInSession</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, PHANDLE process)</td></tr>
+<tr class="memitem:a776ff6962411e3df86466bb78439efd4" id="r_a776ff6962411e3df86466bb78439efd4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a776ff6962411e3df86466bb78439efd4">isProcessInSession</a> (const wchar_t *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, PHANDLE process)</td></tr>
 <tr class="memitem:a64d4c3c908a824af95f7ee89ad812bd5" id="r_a64d4c3c908a824af95f7ee89ad812bd5"><td class="memItemLeft" align="right" valign="top">HANDLE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64d4c3c908a824af95f7ee89ad812bd5">getUserToken</a> (LPSECURITY_ATTRIBUTES security)</td></tr>
 <tr class="memitem:aced4296fe2ff4fd48870b66aa7a5dd6c" id="r_aced4296fe2ff4fd48870b66aa7a5dd6c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aced4296fe2ff4fd48870b66aa7a5dd6c">updateActiveSession</a> ()</td></tr>
 <tr class="memitem:aadae55d1d8a2a488688bfe25f972a4af" id="r_aadae55d1d8a2a488688bfe25f972a4af"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadae55d1d8a2a488688bfe25f972a4af">getActiveSessionId</a> ()</td></tr>
@@ -209,8 +209,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a167b8e55e22be6f883dee03547d4d5a3" name="a167b8e55e22be6f883dee03547d4d5a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a167b8e55e22be6f883dee03547d4d5a3">&#9670;&#160;</a></span>isProcessInSession()</h2>
+<a id="a776ff6962411e3df86466bb78439efd4" name="a776ff6962411e3df86466bb78439efd4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a776ff6962411e3df86466bb78439efd4">&#9670;&#160;</a></span>isProcessInSession()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -218,7 +218,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">bool MSWindowsSession::isProcessInSession </td>
           <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+          <td class="paramtype">const wchar_t *</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

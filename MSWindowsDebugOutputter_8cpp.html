@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,50 +94,45 @@ $(function(){initNavTree('MSWindowsDebugOutputter_8cpp.html','',''); });
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="MSWindowsDebugOutputter_8h_source.html">platform/MSWindowsDebugOutputter.h</a>&quot;</code><br />
 <code>#include &lt;Windows.h&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
+<code>#include &lt;QString&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for MSWindowsDebugOutputter.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="MSWindowsDebugOutputter_8cpp__incl.png" border="0" usemap="#asrc_2lib_2platform_2MSWindowsDebugOutputter_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2platform_2MSWindowsDebugOutputter_8cpp" id="asrc_2lib_2platform_2MSWindowsDebugOutputter_8cpp">
-<area shape="rect" title=" " alt="" coords="592,5,778,44"/>
-<area shape="rect" href="MSWindowsDebugOutputter_8h.html" title=" " alt="" coords="368,92,618,117"/>
-<area shape="poly" title=" " alt="" coords="639,47,537,88,535,83,637,42"/>
-<area shape="rect" title=" " alt="" coords="642,92,728,117"/>
-<area shape="poly" title=" " alt="" coords="688,45,688,76,682,76,682,45"/>
-<area shape="rect" title=" " alt="" coords="752,92,805,117"/>
-<area shape="poly" title=" " alt="" coords="709,43,754,80,751,84,706,47"/>
-<area shape="rect" href="ILogOutputter_8h.html" title=" " alt="" coords="421,165,564,189"/>
-<area shape="poly" title=" " alt="" coords="496,117,496,149,490,149,490,117"/>
-<area shape="rect" href="Log_8h.html" title=" " alt="" coords="389,237,474,262"/>
-<area shape="poly" title=" " alt="" coords="485,192,453,227,449,224,481,188"/>
-<area shape="rect" href="LogLevel_8h.html" title=" " alt="" coords="498,237,613,262"/>
-<area shape="poly" title=" " alt="" coords="505,188,537,224,533,227,501,192"/>
-<area shape="rect" href="Arch_8h.html" title=" " alt="" coords="241,310,329,335"/>
-<area shape="poly" title=" " alt="" coords="408,265,324,305,322,300,406,260"/>
-<area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="353,310,510,335"/>
-<area shape="poly" title=" " alt="" coords="434,263,434,294,429,294,429,263"/>
-<area shape="rect" title=" " alt="" coords="534,310,591,335"/>
-<area shape="poly" title=" " alt="" coords="454,260,529,300,526,305,452,265"/>
-<area shape="rect" href="ArchString_8h.html" title=" " alt="" coords="68,383,190,407"/>
-<area shape="poly" title=" " alt="" coords="260,338,170,378,167,373,258,333"/>
-<area shape="rect" href="Common_8h.html" title=" " alt="" coords="227,383,366,407"/>
-<area shape="poly" title=" " alt="" coords="289,335,295,367,290,368,284,336"/>
-<area shape="rect" title=" " alt="" coords="5,455,74,480"/>
-<area shape="poly" title=" " alt="" coords="116,410,67,448,64,444,112,406"/>
-<area shape="rect" title=" " alt="" coords="97,455,160,480"/>
-<area shape="poly" title=" " alt="" coords="132,408,132,440,126,440,126,408"/>
-<area shape="poly" title=" " alt="" coords="270,410,172,451,170,446,268,405"/>
-<area shape="rect" title=" " alt="" coords="184,455,252,480"/>
-<area shape="poly" title=" " alt="" coords="286,410,244,447,240,443,282,406"/>
-<area shape="rect" title=" " alt="" coords="276,455,344,480"/>
-<area shape="poly" title=" " alt="" coords="302,407,308,440,303,441,296,408"/>
-<area shape="rect" title=" " alt="" coords="368,455,431,480"/>
-<area shape="poly" title=" " alt="" coords="315,406,372,444,369,449,312,410"/>
-<area shape="rect" title=" " alt="" coords="455,455,520,480"/>
-<area shape="poly" title=" " alt="" coords="329,405,443,447,441,452,327,410"/>
-<area shape="rect" title=" " alt="" coords="401,383,462,407"/>
-<area shape="poly" title=" " alt="" coords="434,335,434,367,429,367,429,335"/>
+<area shape="rect" title=" " alt="" coords="528,5,713,44"/>
+<area shape="rect" href="MSWindowsDebugOutputter_8h.html" title=" " alt="" coords="304,92,553,117"/>
+<area shape="poly" title=" " alt="" coords="575,47,472,88,470,83,573,42"/>
+<area shape="rect" title=" " alt="" coords="577,92,664,117"/>
+<area shape="poly" title=" " alt="" coords="623,45,623,76,618,76,618,45"/>
+<area shape="rect" title=" " alt="" coords="688,92,753,117"/>
+<area shape="poly" title=" " alt="" coords="646,43,695,80,692,85,643,47"/>
+<area shape="rect" href="ILogOutputter_8h.html" title=" " alt="" coords="357,165,500,189"/>
+<area shape="poly" title=" " alt="" coords="431,117,431,149,426,149,426,117"/>
+<area shape="rect" href="Log_8h.html" title=" " alt="" coords="324,237,410,262"/>
+<area shape="poly" title=" " alt="" coords="420,192,389,227,385,224,416,188"/>
+<area shape="rect" href="LogLevel_8h.html" title=" " alt="" coords="433,237,549,262"/>
+<area shape="poly" title=" " alt="" coords="441,188,473,224,469,227,437,192"/>
+<area shape="rect" href="Arch_8h.html" title=" " alt="" coords="176,310,264,335"/>
+<area shape="poly" title=" " alt="" coords="344,265,260,305,257,300,342,260"/>
+<area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="289,310,445,335"/>
+<area shape="poly" title=" " alt="" coords="370,263,370,294,364,294,364,263"/>
+<area shape="rect" title=" " alt="" coords="469,310,526,335"/>
+<area shape="poly" title=" " alt="" coords="390,260,464,300,462,305,387,265"/>
+<area shape="rect" href="Common_8h.html" title=" " alt="" coords="151,383,290,407"/>
+<area shape="poly" title=" " alt="" coords="223,335,223,367,218,367,218,335"/>
+<area shape="rect" title=" " alt="" coords="5,455,73,480"/>
+<area shape="poly" title=" " alt="" coords="191,410,84,452,82,447,189,405"/>
+<area shape="rect" title=" " alt="" coords="97,455,165,480"/>
+<area shape="poly" title=" " alt="" coords="207,410,159,448,155,444,204,406"/>
+<area shape="rect" title=" " alt="" coords="189,455,252,480"/>
+<area shape="poly" title=" " alt="" coords="223,408,223,440,218,440,218,408"/>
+<area shape="rect" title=" " alt="" coords="277,455,340,480"/>
+<area shape="poly" title=" " alt="" coords="237,406,284,443,280,448,233,410"/>
+<area shape="rect" title=" " alt="" coords="364,455,428,480"/>
+<area shape="poly" title=" " alt="" coords="250,405,354,447,352,452,248,410"/>
+<area shape="rect" title=" " alt="" coords="337,383,397,407"/>
+<area shape="poly" title=" " alt="" coords="370,335,370,367,364,367,364,335"/>
 </map>
 </div>
 </div><table class="memberdecls">

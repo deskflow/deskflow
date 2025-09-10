@@ -1,11 +1,14 @@
 <map id="src/lib/arch/unix/ArchLogUnix.cpp" name="src/lib/arch/unix/ArchLogUnix.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="74,5,239,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="123,5,288,44"/>
 <area shape="rect" id="Node000002" href="$ArchLogUnix_8h.html" title=" " alt="" coords="5,92,169,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,46,109,82,105,78,138,43"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="193,92,261,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="175,43,208,78,204,82,171,46"/>
-<area shape="rect" id="Node000003" href="$IArchLog_8h.html" title=" " alt="" coords="30,165,144,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,117,90,149,84,149,84,117"/>
-<area shape="rect" id="Node000004" href="$LogLevel_8h.html" title=" " alt="" coords="29,237,145,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,190,90,222,84,222,84,190"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,47,119,86,116,81,175,42"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="172,237,237,262"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="208,45,207,222,202,222,203,45"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="244,92,312,117"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="225,43,258,78,254,82,221,46"/>
+<area shape="rect" id="Node000003" href="$IArchLog_8h.html" title=" " alt="" coords="32,165,145,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,117,90,149,85,149,85,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="109,188,174,227,171,231,106,192"/>
+<area shape="rect" id="Node000005" href="$LogLevel_8h.html" title=" " alt="" coords="31,237,146,262"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="91,190,91,222,86,222,86,190"/>
 </map>

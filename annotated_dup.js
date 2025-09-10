@@ -119,7 +119,6 @@ var annotated_dup =
     [ "ArchNetworkTimedOutException", "classArchNetworkTimedOutException.html", null ],
     [ "ArchNetworkWinsock", "classArchNetworkWinsock.html", "classArchNetworkWinsock" ],
     [ "ArchSocketImpl", "classArchSocketImpl.html", "classArchSocketImpl" ],
-    [ "ArchString", "classArchString.html", "classArchString" ],
     [ "ArchThreadImpl", "classArchThreadImpl.html", "classArchThreadImpl" ],
     [ "ArgParser", "classArgParser.html", "classArgParser" ],
     [ "BadClientException", "classBadClientException.html", "classBadClientException" ],

@@ -1,6 +1,6 @@
 var classSystemLogger =
 [
-    [ "SystemLogger", "classSystemLogger.html#a5ba9e82ca72eaacb04ae9d7c2143b5f4", null ],
+    [ "SystemLogger", "classSystemLogger.html#abe78f79167fed819300ffc45ab50775c", null ],
     [ "SystemLogger", "classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6", null ],
     [ "SystemLogger", "classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b", null ],
     [ "~SystemLogger", "classSystemLogger.html#abf5fa72429af6ef6af87d58ac54a5bc9", null ],

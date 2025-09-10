@@ -254,7 +254,7 @@ var searchData=
   ['mswindowspowermanager_251',['MSWindowsPowerManager',['../classMSWindowsPowerManager.html',1,'']]],
   ['mswindowspowermanager_2ecpp_252',['MSWindowsPowerManager.cpp',['../MSWindowsPowerManager_8cpp.html',1,'']]],
   ['mswindowspowermanager_2eh_253',['MSWindowsPowerManager.h',['../MSWindowsPowerManager_8h.html',1,'']]],
-  ['mswindowsprocess_254',['MSWindowsProcess',['../classdeskflow_1_1platform_1_1MSWindowsProcess.html',1,'deskflow::platform::MSWindowsProcess'],['../classdeskflow_1_1platform_1_1MSWindowsProcess.html#ac58b3723c1685fc026428c926d8cadfc',1,'deskflow::platform::MSWindowsProcess::MSWindowsProcess()']]],
+  ['mswindowsprocess_254',['MSWindowsProcess',['../classdeskflow_1_1platform_1_1MSWindowsProcess.html',1,'deskflow::platform::MSWindowsProcess'],['../classdeskflow_1_1platform_1_1MSWindowsProcess.html#a083ad3252a2a6cda1544e76209ebd2d7',1,'deskflow::platform::MSWindowsProcess::MSWindowsProcess()']]],
   ['mswindowsprocess_2ecpp_255',['MSWindowsProcess.cpp',['../MSWindowsProcess_8cpp.html',1,'']]],
   ['mswindowsprocess_2eh_256',['MSWindowsProcess.h',['../MSWindowsProcess_8h.html',1,'']]],
   ['mswindowsscreen_257',['MSWindowsScreen',['../classMSWindowsScreen.html',1,'MSWindowsScreen'],['../classMSWindowsScreen.html#aa83a05206f765f2b2cf243afb71dc1c8',1,'MSWindowsScreen::MSWindowsScreen()']]],

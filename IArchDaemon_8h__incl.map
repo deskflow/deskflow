@@ -1,7 +1,7 @@
 <map id="src/lib/arch/IArchDaemon.h" name="src/lib/arch/IArchDaemon.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,185,30"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="12,78,90,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,32,68,66,64,63,85,29"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="114,78,167,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,29,127,63,122,66,100,32"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="14,78,80,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,32,66,67,61,64,85,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="104,78,182,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="105,29,129,64,124,67,101,32"/>
 </map>

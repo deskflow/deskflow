@@ -116,7 +116,7 @@ var searchData=
   ['setlistener_113',['setListener',['../classServer.html#aa285a51da766b95457fbf3785caa0fbc',1,'Server']]],
   ['setlisteningjob_114',['setListeningJob',['../classTCPListenSocket.html#a2542c76b3edff5784463f2071b14650e',1,'TCPListenSocket']]],
   ['setlockcursormode_115',['setLockCursorMode',['../classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16',1,'Action']]],
-  ['setlogfilename_116',['setLogFilename',['../classFileLogOutputter.html#ae2212a2807c2acee4ac2a7f0718ee68b',1,'FileLogOutputter']]],
+  ['setlogfilename_116',['setLogFilename',['../classFileLogOutputter.html#add967e06763409bcfc6695eb4e03f4f8',1,'FileLogOutputter']]],
   ['setmessage_117',['setMessage',['../classvalidators_1_1ValidationError.html#a1c3626c8d4f652564fe26d575a313cef',1,'validators::ValidationError']]],
   ['setmode_118',['setMode',['../classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a',1,'deskflow::gui::CoreProcess::setMode()'],['../classMSWindowsHook.html#a03550dcfb3a7e830f627c19724070b0d',1,'MSWindowsHook::setMode()']]],
   ['setmodel_119',['setModel',['../classScreenSetupView.html#aaf0b0780e68a78c2df24551f02c2bd5f',1,'ScreenSetupView']]],
@@ -251,6 +251,6 @@ var searchData=
   ['switchtoscreenaction_248',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html#a50a3bc5cbd1fd41164ada3311a437b48',1,'InputFilter::SwitchToScreenAction']]],
   ['sync_249',['sync',['../classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7',1,'QSettingsProxy']]],
   ['synchronize_250',['synchronize',['../classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c',1,'OSXClipboard']]],
-  ['systemlogger_251',['SystemLogger',['../classSystemLogger.html#a5ba9e82ca72eaacb04ae9d7c2143b5f4',1,'SystemLogger::SystemLogger(const char *title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
+  ['systemlogger_251',['SystemLogger',['../classSystemLogger.html#abe78f79167fed819300ffc45ab50775c',1,'SystemLogger::SystemLogger(const QString &amp;title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
   ['systemlogoutputter_252',['SystemLogOutputter',['../classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1',1,'SystemLogOutputter']]]
 ];

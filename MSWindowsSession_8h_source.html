@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.206</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.207</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -100,48 +100,46 @@ $(function(){initNavTree('MSWindowsSession_8h_source.html','',''); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="MSWindowsSession_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">   11</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="MSWindowsSession_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">    9</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;Tlhelp32.h&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;Tlhelp32.h&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html">   16</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession</a></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <a class="code hl_function" href="classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession</a>();</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html#a32bf5e2c7512bd93274cfb2ed46ab55e">   20</a></span>  <a class="code hl_function" href="classMSWindowsSession.html#a32bf5e2c7512bd93274cfb2ed46ab55e">~MSWindowsSession</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> <a class="code hl_function" href="classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93">hasChanged</a>();</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsSession.html#a167b8e55e22be6f883dee03547d4d5a3">isProcessInSession</a>(<span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, PHANDLE process);</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  HANDLE <a class="code hl_function" href="classMSWindowsSession.html#a64d4c3c908a824af95f7ee89ad812bd5">getUserToken</a>(LPSECURITY_ATTRIBUTES security);</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsSession.html#aced4296fe2ff4fd48870b66aa7a5dd6c">updateActiveSession</a>();</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="foldopen" id="foldopen00032" data-start="{" data-end="}">
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">   32</a></span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> <a class="code hl_function" href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">getActiveSessionId</a>()</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  {</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordflow">return</span> m_activeSessionId;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  }</div>
+<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html">   14</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession</a></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  <a class="code hl_function" href="classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession</a>();</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html#a32bf5e2c7512bd93274cfb2ed46ab55e">   18</a></span>  <a class="code hl_function" href="classMSWindowsSession.html#a32bf5e2c7512bd93274cfb2ed46ab55e">~MSWindowsSession</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> <a class="code hl_function" href="classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93">hasChanged</a>();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsSession.html#a776ff6962411e3df86466bb78439efd4">isProcessInSession</a>(<span class="keyword">const</span> <span class="keywordtype">wchar_t</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, PHANDLE process);</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  HANDLE <a class="code hl_function" href="classMSWindowsSession.html#a64d4c3c908a824af95f7ee89ad812bd5">getUserToken</a>(LPSECURITY_ATTRIBUTES security);</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsSession.html#aced4296fe2ff4fd48870b66aa7a5dd6c">updateActiveSession</a>();</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="foldopen" id="foldopen00030" data-start="{" data-end="}">
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno"><a class="line" href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">   30</a></span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> <a class="code hl_function" href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">getActiveSessionId</a>()</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  {</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">return</span> m_activeSessionId;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  }</div>
 </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_activeSessionId;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> nextProcessEntry(HANDLE snapshot, LPPROCESSENTRY32 entry);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_activeSessionId;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:27</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a268ed61838e67a46467dcebfee0dcbe7"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></div><div class="ttdeci">static const WSAEVENT FAR DWORD</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:54</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a36a00ba9910ecdadcef4246d090b3e1f"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a></div><div class="ttdeci">static const WSAEVENT FAR BOOL</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:54</div></div>
-<div class="ttc" id="aclassMSWindowsSession_html_a167b8e55e22be6f883dee03547d4d5a3"><div class="ttname"><a href="classMSWindowsSession.html#a167b8e55e22be6f883dee03547d4d5a3">MSWindowsSession::isProcessInSession</a></div><div class="ttdeci">bool isProcessInSession(const char *name, PHANDLE process)</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:19</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html_a32bf5e2c7512bd93274cfb2ed46ab55e"><div class="ttname"><a href="classMSWindowsSession.html#a32bf5e2c7512bd93274cfb2ed46ab55e">MSWindowsSession::~MSWindowsSession</a></div><div class="ttdeci">~MSWindowsSession()=default</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html_a64d4c3c908a824af95f7ee89ad812bd5"><div class="ttname"><a href="classMSWindowsSession.html#a64d4c3c908a824af95f7ee89ad812bd5">MSWindowsSession::getUserToken</a></div><div class="ttdeci">HANDLE getUserToken(LPSECURITY_ATTRIBUTES security)</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:102</div></div>
+<div class="ttc" id="aclassMSWindowsSession_html_a776ff6962411e3df86466bb78439efd4"><div class="ttname"><a href="classMSWindowsSession.html#a776ff6962411e3df86466bb78439efd4">MSWindowsSession::isProcessInSession</a></div><div class="ttdeci">bool isProcessInSession(const wchar_t *name, PHANDLE process)</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:19</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html_a8d0d82d2aae42e8c580e4e3ea36ccfc9"><div class="ttname"><a href="classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9">MSWindowsSession::MSWindowsSession</a></div><div class="ttdeci">MSWindowsSession()</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:15</div></div>
-<div class="ttc" id="aclassMSWindowsSession_html_aadae55d1d8a2a488688bfe25f972a4af"><div class="ttname"><a href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">MSWindowsSession::getActiveSessionId</a></div><div class="ttdeci">DWORD getActiveSessionId()</div><div class="ttdef"><b>Definition</b> MSWindowsSession.h:32</div></div>
+<div class="ttc" id="aclassMSWindowsSession_html_aadae55d1d8a2a488688bfe25f972a4af"><div class="ttname"><a href="classMSWindowsSession.html#aadae55d1d8a2a488688bfe25f972a4af">MSWindowsSession::getActiveSessionId</a></div><div class="ttdeci">DWORD getActiveSessionId()</div><div class="ttdef"><b>Definition</b> MSWindowsSession.h:30</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html_ab4668cad4eb47612434a73ebdd19da93"><div class="ttname"><a href="classMSWindowsSession.html#ab4668cad4eb47612434a73ebdd19da93">MSWindowsSession::hasChanged</a></div><div class="ttdeci">BOOL hasChanged()</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:123</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html_aced4296fe2ff4fd48870b66aa7a5dd6c"><div class="ttname"><a href="classMSWindowsSession.html#aced4296fe2ff4fd48870b66aa7a5dd6c">MSWindowsSession::updateActiveSession</a></div><div class="ttdeci">void updateActiveSession()</div><div class="ttdef"><b>Definition</b> MSWindowsSession.cpp:128</div></div>
 </div><!-- fragment --></div><!-- contents -->

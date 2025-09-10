@@ -1,6 +1,5 @@
 var Unicode_8cpp =
 [
-    [ "EWideCharEncoding", "Unicode_8cpp.html#a983e09e142a0af1f2ea3a46112235f24", null ],
     [ "decode16", "Unicode_8cpp.html#a897b68fd0735ca07afd158894305e9cb", null ],
     [ "decode32", "Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58", null ],
     [ "resetError", "Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60", null ],
