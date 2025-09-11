@@ -56,7 +56,7 @@ var searchData=
   ['event_2ecpp_53',['Event.cpp',['../Event_8cpp.html',1,'']]],
   ['event_2eh_54',['Event.h',['../Event_8h.html',1,'']]],
   ['eventdata_55',['EventData',['../classEventData.html',1,'EventData'],['../classEventData.html#af3b2887aee6312e35a2df0d621930b75',1,'EventData::EventData()']]],
-  ['eventfilter_56',['eventFilter',['../classLogDock.html#a8e3ddcd5968dd048ebb47af9448cbe3c',1,'LogDock']]],
+  ['eventfilter_56',['eventFilter',['../classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb',1,'LogDock']]],
   ['eventflags_57',['EventFlags',['../structEvent_1_1EventFlags.html',1,'Event']]],
   ['eventhandler_58',['EventHandler',['../classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8',1,'IEventQueue']]],
   ['eventqueue_59',['EventQueue',['../classEventQueue.html',1,'EventQueue'],['../classEventQueue.html#ab7de5a41befc94aac0f461391e67f14a',1,'EventQueue::EventQueue()'],['../classEventQueue.html#a28691f56ac27312585b11a8711b8188e',1,'EventQueue::EventQueue(EventQueue const &amp;)=delete'],['../classEventQueue.html#a2c2ede9173de1737b96100f1cc95360a',1,'EventQueue::EventQueue(EventQueue &amp;&amp;)=delete']]],

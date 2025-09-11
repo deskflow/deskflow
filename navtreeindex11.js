@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classInputFilter_1_1Action.html#ad88967d0e2dc34a24c7c390033bcc10d":[6,0,119,0,3],
 "classInputFilter_1_1Condition.html":[6,0,119,1],
 "classInputFilter_1_1Condition.html#a023ce5cc43fae21f5966e1b39ddf89f2":[6,0,119,1,2],
 "classInputFilter_1_1Condition.html#a0fe285adc97ec40405e9bc9edd37fc51":[6,0,119,1,4],
@@ -216,7 +215,7 @@ var NAVTREEINDEX11 =
 "classLog.html#aebe9467118266e13cb73b43bf3f0e680":[6,0,144,15],
 "classLogDock.html":[6,0,145],
 "classLogDock.html#a7956f1ab9644484afbc97cb5baf7e3cc":[6,0,145,1],
-"classLogDock.html#a8e3ddcd5968dd048ebb47af9448cbe3c":[6,0,145,2],
+"classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb":[6,0,145,2],
 "classLogDock.html#ae195a05f4d0679325b19489c8e120d17":[6,0,145,0],
 "classLogDock.html#afc732c157993b0f116694ae2a020deb6":[6,0,145,3],
 "classLogWidget.html":[6,0,146],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "classMSWindowsClipboardBitmapConverter.html#a396106d6707a6fa540568c35b0150e09":[6,0,150,0],
 "classMSWindowsClipboardBitmapConverter.html#a716f99f86af5ac1afcf4995424c2e2a6":[6,0,150,2],
 "classMSWindowsClipboardBitmapConverter.html#a9421936afd859d6d0df698e28cb2aceb":[6,0,150,3],
-"classMSWindowsClipboardBitmapConverter.html#ac217a4d907ab68422ddafc11778e1fa7":[6,0,150,4]
+"classMSWindowsClipboardBitmapConverter.html#ac217a4d907ab68422ddafc11778e1fa7":[6,0,150,4],
+"classMSWindowsClipboardBitmapConverter.html#acb7d49d9cd47fcd034382b2aced6b408":[6,0,150,1]
 };

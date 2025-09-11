@@ -1,6 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1":[6,0,230,0],
 "classSystemLogOutputter.html#ae39da8a4f980852a8d370b5d33261496":[6,0,230,3],
 "classSystemLogger.html":[6,0,229],
 "classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b":[6,0,229,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboard_1_1MotifClipFormat.html#a15c0393e4b6fa9753a4e33a38fa23d31":[6,0,247,1,3],
 "classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9":[6,0,247,1,7],
 "classXWindowsClipboard_1_1MotifClipFormat.html#a8044d65999364e1461417290a318d657":[6,0,247,1,1],
-"classXWindowsClipboard_1_1MotifClipFormat.html#aa8d18b3c8956e6655673a0efeb22d74b":[6,0,247,1,6]
+"classXWindowsClipboard_1_1MotifClipFormat.html#aa8d18b3c8956e6655673a0efeb22d74b":[6,0,247,1,6],
+"classXWindowsClipboard_1_1MotifClipFormat.html#ada9f2e459dbe6387c71ea0f0cba8113e":[6,0,247,1,5]
 };

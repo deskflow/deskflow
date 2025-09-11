@@ -1,6 +1,5 @@
 var NAVTREEINDEX12 =
 {
-"classMSWindowsClipboardBitmapConverter.html#acb7d49d9cd47fcd034382b2aced6b408":[6,0,150,1],
 "classMSWindowsClipboardBitmapConverter.html#aec6b5b4b017638c31204cb3c96d01078":[6,0,150,5],
 "classMSWindowsClipboardFacade.html":[6,0,151],
 "classMSWindowsClipboardFacade.html#a4c4c3a02aa675d082c7781fd448d8119":[6,0,151,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX12 =
 "classOSXClipboardAnyBitmapConverter.html#a0a95b008355d70c80ecc6c66ec57b3ab":[6,0,172,0],
 "classOSXClipboardAnyBitmapConverter.html#a2bc56b1dbd1b13397cc788c29b60c5ed":[6,0,172,3],
 "classOSXClipboardAnyBitmapConverter.html#a2f616e62a38856d25973878c712ffe53":[6,0,172,1],
-"classOSXClipboardAnyBitmapConverter.html#a652e4dbf90247ee5de433d83de781439":[6,0,172,5]
+"classOSXClipboardAnyBitmapConverter.html#a652e4dbf90247ee5de433d83de781439":[6,0,172,5],
+"classOSXClipboardAnyBitmapConverter.html#a694242473fa3c0055bc56adcd80947c9":[6,0,172,4]
 };

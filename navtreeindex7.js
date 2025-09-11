@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetAddressImpl.html#ab6a91f46d0dd176581a6e6dff794cea7":[6,0,28,0],
 "classArchNetAddressImpl.html#adb3b01e0357fecd83610be15ac17ceba":[6,0,28,1],
 "classArchNetAddressImpl.html#ae72075a93c492ed605e4e22d356df97d":[6,0,28,3],
 "classArchNetAddressImpl.html#aebf85682500df71ecef74196840c7ebb":[6,0,28,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classClientInfo.html":[4,3,0],
 "classClientInfo.html#a0bdb7cd63cd2d0a81d2773e7ed585cbb":[4,3,0,3],
 "classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c":[4,3,0,6],
-"classClientInfo.html#a2281df54128ca356bab09bf1ad28364e":[4,3,0,1]
+"classClientInfo.html#a2281df54128ca356bab09bf1ad28364e":[4,3,0,1],
+"classClientInfo.html#a3f23857bfa3b5fd8b335d56613ea564a":[4,3,0,5]
 };

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.211</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.213</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -170,39 +170,37 @@ $(function(){initNavTree('Arch_8h_source.html','',''); });
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classArch.html#afd43ed3a5c2fda8d0620966fb1785040">sleep</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span></div>
 <div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keyword">static</span> <span class="keywordtype">double</span> <a class="code hl_function" href="classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d">time</a>();</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keyword">static</span> QString <a class="code hl_function" href="classArch.html#a332f3a8b8d45c6481633fc823d58aeb5">hostName</a>();</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keyword">static</span> <a class="code hl_class" href="classArch.html">Arch</a> *s_instance;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>};</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keyword">static</span> <a class="code hl_class" href="classArch.html">Arch</a> *s_instance;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>};</div>
 </div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span></div>
-<div class="foldopen" id="foldopen00118" data-start="{" data-end="};">
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno"><a class="line" href="classArchMutexLock.html">  118</a></span><span class="keyword">class </span><a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a></div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>{</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
+<div class="foldopen" id="foldopen00112" data-start="{" data-end="};">
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="classArchMutexLock.html">  112</a></span><span class="keyword">class </span><a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a></div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>{</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00115" data-start="{" data-end="}">
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">  115</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a>(<a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> mutex) : m_mutex(mutex)</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  {</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    <a class="code hl_define" href="Arch_8h.html#a63e66b419dba650abc74240836e8447a">ARCH</a>-&gt;lockMutex(m_mutex);</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  }</div>
+</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a7ca97b6e270726c86d237e9b350ec1da">  119</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a7ca97b6e270726c86d237e9b350ec1da">ArchMutexLock</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a520b99b095820643914ec36e04f2a421">  120</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a520b99b095820643914ec36e04f2a421">ArchMutexLock</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
 <div class="foldopen" id="foldopen00121" data-start="{" data-end="}">
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">  121</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a>(<a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> mutex) : m_mutex(mutex)</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">  121</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">~ArchMutexLock</a>()</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  {</div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_define" href="Arch_8h.html#a63e66b419dba650abc74240836e8447a">ARCH</a>-&gt;lockMutex(m_mutex);</div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>    <a class="code hl_define" href="Arch_8h.html#a63e66b419dba650abc74240836e8447a">ARCH</a>-&gt;unlockMutex(m_mutex);</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  }</div>
 </div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a7ca97b6e270726c86d237e9b350ec1da">  125</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a7ca97b6e270726c86d237e9b350ec1da">ArchMutexLock</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a520b99b095820643914ec36e04f2a421">  126</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a520b99b095820643914ec36e04f2a421">ArchMutexLock</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="foldopen" id="foldopen00127" data-start="{" data-end="}">
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">  127</a></span>  <a class="code hl_function" href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">~ArchMutexLock</a>()</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  {</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>    <a class="code hl_define" href="Arch_8h.html#a63e66b419dba650abc74240836e8447a">ARCH</a>-&gt;unlockMutex(m_mutex);</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  }</div>
-</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a350c1fad0a664766f7b3ff210932ffee">  132</a></span>  <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;<a class="code hl_function" href="classArchMutexLock.html#a350c1fad0a664766f7b3ff210932ffee">operator=</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a412bde41412f75b8b2936b9b16e2865c">  133</a></span>  <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;<a class="code hl_function" href="classArchMutexLock.html#a412bde41412f75b8b2936b9b16e2865c">operator=</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> m_mutex;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>};</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span> </div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a350c1fad0a664766f7b3ff210932ffee">  126</a></span>  <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;<a class="code hl_function" href="classArchMutexLock.html#a350c1fad0a664766f7b3ff210932ffee">operator=</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> <span class="keyword">const</span> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="classArchMutexLock.html#a412bde41412f75b8b2936b9b16e2865c">  127</a></span>  <a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;<a class="code hl_function" href="classArchMutexLock.html#a412bde41412f75b8b2936b9b16e2865c">operator=</a>(<a class="code hl_function" href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock</a> &amp;&amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <a class="code hl_typedef" href="IArchMultithread_8h.html#a921954f8b2f982e48ac4560610018210">ArchMutex</a> m_mutex;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>};</div>
 </div>
 <div class="ttc" id="aArchDaemonNone_8h_html_a99414cdb74167761d0f444afd670538f"><div class="ttname"><a href="ArchDaemonNone_8h.html#a99414cdb74167761d0f444afd670538f">ARCH_DAEMON</a></div><div class="ttdeci">#define ARCH_DAEMON</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.h:12</div></div>
 <div class="ttc" id="aArchDaemonUnix_8h_html"><div class="ttname"><a href="ArchDaemonUnix_8h.html">ArchDaemonUnix.h</a></div></div>
@@ -223,17 +221,16 @@ $(function(){initNavTree('Arch_8h_source.html','',''); });
 <div class="ttc" id="aclassArchMutexLock_html_a350c1fad0a664766f7b3ff210932ffee"><div class="ttname"><a href="classArchMutexLock.html#a350c1fad0a664766f7b3ff210932ffee">ArchMutexLock::operator=</a></div><div class="ttdeci">ArchMutexLock &amp; operator=(ArchMutexLock const &amp;)=delete</div></div>
 <div class="ttc" id="aclassArchMutexLock_html_a412bde41412f75b8b2936b9b16e2865c"><div class="ttname"><a href="classArchMutexLock.html#a412bde41412f75b8b2936b9b16e2865c">ArchMutexLock::operator=</a></div><div class="ttdeci">ArchMutexLock &amp; operator=(ArchMutexLock &amp;&amp;)=delete</div></div>
 <div class="ttc" id="aclassArchMutexLock_html_a520b99b095820643914ec36e04f2a421"><div class="ttname"><a href="classArchMutexLock.html#a520b99b095820643914ec36e04f2a421">ArchMutexLock::ArchMutexLock</a></div><div class="ttdeci">ArchMutexLock(ArchMutexLock &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassArchMutexLock_html_a601937bc208d683b1705e669f667d63e"><div class="ttname"><a href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">ArchMutexLock::~ArchMutexLock</a></div><div class="ttdeci">~ArchMutexLock()</div><div class="ttdef"><b>Definition</b> Arch.h:127</div></div>
+<div class="ttc" id="aclassArchMutexLock_html_a601937bc208d683b1705e669f667d63e"><div class="ttname"><a href="classArchMutexLock.html#a601937bc208d683b1705e669f667d63e">ArchMutexLock::~ArchMutexLock</a></div><div class="ttdeci">~ArchMutexLock()</div><div class="ttdef"><b>Definition</b> Arch.h:121</div></div>
 <div class="ttc" id="aclassArchMutexLock_html_a7ca97b6e270726c86d237e9b350ec1da"><div class="ttname"><a href="classArchMutexLock.html#a7ca97b6e270726c86d237e9b350ec1da">ArchMutexLock::ArchMutexLock</a></div><div class="ttdeci">ArchMutexLock(ArchMutexLock const &amp;)=delete</div></div>
-<div class="ttc" id="aclassArchMutexLock_html_ac9fa17f4aa25779b6f70d574a865391d"><div class="ttname"><a href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock::ArchMutexLock</a></div><div class="ttdeci">ArchMutexLock(ArchMutex mutex)</div><div class="ttdef"><b>Definition</b> Arch.h:121</div></div>
+<div class="ttc" id="aclassArchMutexLock_html_ac9fa17f4aa25779b6f70d574a865391d"><div class="ttname"><a href="classArchMutexLock.html#ac9fa17f4aa25779b6f70d574a865391d">ArchMutexLock::ArchMutexLock</a></div><div class="ttdeci">ArchMutexLock(ArchMutex mutex)</div><div class="ttdef"><b>Definition</b> Arch.h:115</div></div>
 <div class="ttc" id="aclassArch_html"><div class="ttname"><a href="classArch.html">Arch</a></div><div class="ttdoc">Delegating implementation of architecture dependent interfaces.</div><div class="ttdef"><b>Definition</b> Arch.h:63</div></div>
 <div class="ttc" id="aclassArch_html_a2c1e7cb0b88aa7bd993368de5668cf39"><div class="ttname"><a href="classArch.html#a2c1e7cb0b88aa7bd993368de5668cf39">Arch::setInstance</a></div><div class="ttdeci">static void setInstance(Arch *s)</div><div class="ttdef"><b>Definition</b> Arch.h:89</div></div>
-<div class="ttc" id="aclassArch_html_a332f3a8b8d45c6481633fc823d58aeb5"><div class="ttname"><a href="classArch.html#a332f3a8b8d45c6481633fc823d58aeb5">Arch::hostName</a></div><div class="ttdeci">static QString hostName()</div><div class="ttdoc">hostName</div><div class="ttdef"><b>Definition</b> Arch.cpp:66</div></div>
-<div class="ttc" id="aclassArch_html_a462fd5dd1a3cbb017ad8e92617b2614d"><div class="ttname"><a href="classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d">Arch::time</a></div><div class="ttdeci">static double time()</div><div class="ttdoc">time</div><div class="ttdef"><b>Definition</b> Arch.cpp:59</div></div>
-<div class="ttc" id="aclassArch_html_a490c7518c0fa8f364eb701d46c7011cd"><div class="ttname"><a href="classArch.html#a490c7518c0fa8f364eb701d46c7011cd">Arch::getInstance</a></div><div class="ttdeci">static Arch * getInstance()</div><div class="ttdoc">Return the singleton instance.</div><div class="ttdef"><b>Definition</b> Arch.cpp:44</div></div>
+<div class="ttc" id="aclassArch_html_a462fd5dd1a3cbb017ad8e92617b2614d"><div class="ttname"><a href="classArch.html#a462fd5dd1a3cbb017ad8e92617b2614d">Arch::time</a></div><div class="ttdeci">static double time()</div><div class="ttdoc">time</div><div class="ttdef"><b>Definition</b> Arch.cpp:57</div></div>
+<div class="ttc" id="aclassArch_html_a490c7518c0fa8f364eb701d46c7011cd"><div class="ttname"><a href="classArch.html#a490c7518c0fa8f364eb701d46c7011cd">Arch::getInstance</a></div><div class="ttdeci">static Arch * getInstance()</div><div class="ttdoc">Return the singleton instance.</div><div class="ttdef"><b>Definition</b> Arch.cpp:42</div></div>
 <div class="ttc" id="aclassArch_html_a6c1f0485f65368f1fde5d07ce345a925"><div class="ttname"><a href="classArch.html#a6c1f0485f65368f1fde5d07ce345a925">Arch::~Arch</a></div><div class="ttdeci">~Arch() override=default</div></div>
-<div class="ttc" id="aclassArch_html_aadb110c65e0419b9ecdbb499d2269ca8"><div class="ttname"><a href="classArch.html#aadb110c65e0419b9ecdbb499d2269ca8">Arch::Arch</a></div><div class="ttdeci">Arch()</div><div class="ttdef"><b>Definition</b> Arch.cpp:25</div></div>
-<div class="ttc" id="aclassArch_html_afd43ed3a5c2fda8d0620966fb1785040"><div class="ttname"><a href="classArch.html#afd43ed3a5c2fda8d0620966fb1785040">Arch::sleep</a></div><div class="ttdeci">static void sleep(double timeout)</div><div class="ttdoc">blocks calling thread for timout seconds</div><div class="ttdef"><b>Definition</b> Arch.cpp:50</div></div>
+<div class="ttc" id="aclassArch_html_aadb110c65e0419b9ecdbb499d2269ca8"><div class="ttname"><a href="classArch.html#aadb110c65e0419b9ecdbb499d2269ca8">Arch::Arch</a></div><div class="ttdeci">Arch()</div><div class="ttdef"><b>Definition</b> Arch.cpp:23</div></div>
+<div class="ttc" id="aclassArch_html_afd43ed3a5c2fda8d0620966fb1785040"><div class="ttname"><a href="classArch.html#afd43ed3a5c2fda8d0620966fb1785040">Arch::sleep</a></div><div class="ttdeci">static void sleep(double timeout)</div><div class="ttdoc">blocks calling thread for timout seconds</div><div class="ttdef"><b>Definition</b> Arch.cpp:48</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
