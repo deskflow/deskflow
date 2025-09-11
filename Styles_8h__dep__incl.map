@@ -1,13 +1,15 @@
 <map id="src/lib/gui/Styles.h" name="src/lib/gui/Styles.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="424,5,554,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="516,5,646,30"/>
 <area shape="rect" id="Node000002" href="$MainWindow_8cpp.html" title=" " alt="" coords="5,85,186,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,36,155,87,154,82,414,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="501,33,199,81,161,87,160,82,198,75,500,28"/>
 <area shape="rect" id="Node000003" href="$Messages_8cpp.html" title=" " alt="" coords="210,85,376,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="446,39,323,87,321,82,445,34"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="524,37,337,87,336,82,522,32"/>
 <area shape="rect" id="Node000004" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="401,78,577,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="492,46,492,77,486,77,486,46"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="557,42,513,79,509,75,554,38"/>
 <area shape="rect" id="Node000005" href="$LineEditValidator_8cpp.html" title=" " alt="" coords="600,78,748,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="532,34,630,75,628,80,530,39"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="608,38,653,75,650,79,604,42"/>
 <area shape="rect" id="Node000006" href="$ValidationError_8cpp.html" title=" " alt="" coords="772,78,910,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="558,31,760,75,772,78,771,83,759,81,556,36"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="635,32,779,75,777,80,634,37"/>
+<area shape="rect" id="Node000007" href="$LogDock_8cpp.html" title=" " alt="" coords="934,78,1060,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="661,29,923,75,934,78,933,83,922,81,661,34"/>
 </map>

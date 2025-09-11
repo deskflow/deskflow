@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,3],
+"ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
+"ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
 "ServerConnection_8h.html":[7,0,1,1,5,1,7],
 "ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
 "ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
@@ -77,9 +80,9 @@ var NAVTREEINDEX5 =
 "TlsUtility_8cpp.html":[7,0,1,1,5,4,2],
 "TlsUtility_8h.html":[7,0,1,1,5,4,3],
 "TlsUtility_8h_source.html":[7,0,1,1,5,4,3],
-"TrashScreenWidget_8cpp.html":[7,0,1,1,5,6,10],
-"TrashScreenWidget_8h.html":[7,0,1,1,5,6,11],
-"TrashScreenWidget_8h_source.html":[7,0,1,1,5,6,11],
+"TrashScreenWidget_8cpp.html":[7,0,1,1,5,6,12],
+"TrashScreenWidget_8h.html":[7,0,1,1,5,6,13],
+"TrashScreenWidget_8h_source.html":[7,0,1,1,5,6,13],
 "Unicode_8cpp.html":[7,0,1,1,1,33],
 "Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58":[7,0,1,1,1,33,1],
 "Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,33,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27],
 "classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79":[6,0,4,9],
 "classAction.html#a8cadcfee2828374b55277314eb841ed9":[6,0,4,20],
-"classAction.html#a92f2a9af79230b153062ce7bfb21bf32":[6,0,4,15],
-"classAction.html#a9612c5cfc3c596380d3ecc07d81574b6":[6,0,4,6],
-"classAction.html#a9b6793704109f61ab6ee3cf0305dab4e":[6,0,4,12],
-"classAction.html#aa6a6765e3441eafca75acd43fd0f4e31":[6,0,4,21]
+"classAction.html#a92f2a9af79230b153062ce7bfb21bf32":[6,0,4,15]
 };

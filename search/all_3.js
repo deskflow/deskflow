@@ -96,7 +96,7 @@ var searchData=
   ['app_2eh_93',['App.h',['../App_8h.html',1,'']]],
   ['appendatomdata_94',['appendAtomData',['../classXWindowsUtil.html#a9abcaf0404f31a6ba9cf9ba93709583a',1,'XWindowsUtil']]],
   ['appendkey_95',['appendKey',['../classKeySequence.html#a9e4d6c8d6f760374a6915de65e4955d9',1,'KeySequence']]],
-  ['appendline_96',['appendLine',['../classLogWidget.html#a46782c113d9636b91dec16c178cd40ea',1,'LogWidget']]],
+  ['appendline_96',['appendLine',['../classLogDock.html#a7956f1ab9644484afbc97cb5baf7e3cc',1,'LogDock::appendLine()'],['../classLogWidget.html#a46782c113d9636b91dec16c178cd40ea',1,'LogWidget::appendLine()']]],
   ['appendmousebutton_97',['appendMouseButton',['../classKeySequence.html#a263d2491392ab81d826abdfbd43c6004',1,'KeySequence']]],
   ['appendtimedata_98',['appendTimeData',['../classXWindowsUtil.html#a09c34924bbd6eb39f555210a31f2369b',1,'XWindowsUtil']]],
   ['appendtosequence_99',['appendToSequence',['../classKeySequenceWidget.html#ae869ae26c7a6523cf2dd31f9bede1ec3',1,'KeySequenceWidget']]],

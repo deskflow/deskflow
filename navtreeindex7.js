@@ -1,5 +1,8 @@
 var NAVTREEINDEX7 =
 {
+"classArchNetAddressImpl.html#adb3b01e0357fecd83610be15ac17ceba":[6,0,28,1],
+"classArchNetAddressImpl.html#ae72075a93c492ed605e4e22d356df97d":[6,0,28,3],
+"classArchNetAddressImpl.html#aebf85682500df71ecef74196840c7ebb":[6,0,28,4],
 "classArchNetworkAccessException.html":[6,0,29],
 "classArchNetworkAddressInUseException.html":[6,0,30],
 "classArchNetworkBSD.html":[6,0,31],
@@ -246,8 +249,5 @@ var NAVTREEINDEX7 =
 "classClientApp.html#af27e8bef92d4f1cb9d3ea6b4186df6e9":[6,0,62,9],
 "classClientInfo.html":[4,3,0],
 "classClientInfo.html#a0bdb7cd63cd2d0a81d2773e7ed585cbb":[4,3,0,3],
-"classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c":[4,3,0,6],
-"classClientInfo.html#a2281df54128ca356bab09bf1ad28364e":[4,3,0,1],
-"classClientInfo.html#a3f23857bfa3b5fd8b335d56613ea564a":[4,3,0,5],
-"classClientInfo.html#a8ca91b8d74478e7afd0a534d404515f8":[4,3,0,2]
+"classClientInfo.html#a1b47ae70627f9b9c31be58ae5c36ec1c":[4,3,0,6]
 };

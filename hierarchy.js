@@ -330,6 +330,9 @@ var hierarchy =
       [ "ServerConfigDialog", "classServerConfigDialog.html", null ],
       [ "SettingsDialog", "classSettingsDialog.html", null ]
     ] ],
+    [ "QDockWidget", null, [
+      [ "LogDock", "classLogDock.html", null ]
+    ] ],
     [ "QFrame", null, [
       [ "FingerprintPreview", "classFingerprintPreview.html", null ]
     ] ],

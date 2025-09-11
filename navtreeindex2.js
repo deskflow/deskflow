@@ -182,6 +182,9 @@ var NAVTREEINDEX2 =
 "Lock_8cpp.html":[7,0,1,1,7,2],
 "Lock_8h.html":[7,0,1,1,7,3],
 "Lock_8h_source.html":[7,0,1,1,7,3],
+"LogDock_8cpp.html":[7,0,1,1,5,6,4],
+"LogDock_8h.html":[7,0,1,1,5,6,5],
+"LogDock_8h_source.html":[7,0,1,1,5,6,5],
 "LogLevel_8h.html":[7,0,1,1,1,19],
 "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9":[7,0,1,1,1,19,0],
 "LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9a0eaadb4fcb48a0a0ed7bc9868be9fbaa":[7,0,1,1,1,19,0,4],
@@ -202,9 +205,9 @@ var NAVTREEINDEX2 =
 "LogOutputters_8cpp.html#a15697d1f132f2d1f48fea64bedd940d1":[7,0,1,1,1,20,0],
 "LogOutputters_8h.html":[7,0,1,1,1,21],
 "LogOutputters_8h_source.html":[7,0,1,1,1,21],
-"LogWidget_8cpp.html":[7,0,1,1,5,6,4],
-"LogWidget_8h.html":[7,0,1,1,5,6,5],
-"LogWidget_8h_source.html":[7,0,1,1,5,6,5],
+"LogWidget_8cpp.html":[7,0,1,1,5,6,6],
+"LogWidget_8h.html":[7,0,1,1,5,6,7],
+"LogWidget_8h_source.html":[7,0,1,1,5,6,7],
 "Log_8cpp.html":[7,0,1,1,1,17],
 "Log_8cpp.html#a0379550eed4ae294ec0dbf74d1a250f4":[7,0,1,1,1,17,0],
 "Log_8cpp.html#ac6bcd569a9db29fdbbed423d73e79176":[7,0,1,1,1,17,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX2 =
 "Logger_8cpp.html":[7,0,1,1,5,21],
 "Logger_8h.html":[7,0,1,1,5,22],
 "Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
-"Logger_8h_source.html":[7,0,1,1,5,22],
-"MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
-"MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
-"MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12]
+"Logger_8h_source.html":[7,0,1,1,5,22]
 };

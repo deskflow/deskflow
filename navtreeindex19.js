@@ -1,5 +1,13 @@
 var NAVTREEINDEX19 =
 {
+"classdeskflow_1_1PortalInputCapture.html#afbf97d974161b3a9c5479ac2eaa51897":[6,0,0,16,5],
+"classdeskflow_1_1PortalInputCapture.html#afd330b3aedf58c18bd286e997954efe0":[5,0,0,17,2],
+"classdeskflow_1_1PortalInputCapture.html#afd330b3aedf58c18bd286e997954efe0":[6,0,0,16,2],
+"classdeskflow_1_1PortalRemoteDesktop.html":[5,0,0,18],
+"classdeskflow_1_1PortalRemoteDesktop.html":[6,0,0,17],
+"classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e":[5,0,0,18,0],
+"classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e":[6,0,0,17,0],
+"classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942":[5,0,0,18,1],
 "classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942":[6,0,0,17,1],
 "classdeskflow_1_1Screen.html":[5,0,0,19],
 "classdeskflow_1_1Screen.html":[6,0,0,18],
@@ -241,13 +249,5 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1FileTail.html#a35e2143f45482810c79a6d1944e6a9d3":[6,0,0,2,5,0],
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[5,0,0,3,6,1],
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[6,0,0,2,5,1],
-"classdeskflow_1_1gui_1_1IServerConfig.html":[5,0,0,3,7],
-"classdeskflow_1_1gui_1_1IServerConfig.html":[6,0,0,2,6],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44":[5,0,0,3,7,1],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44":[6,0,0,2,6,1],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a37484997dcded7c1fa4b09fd9dc6b6ed":[5,0,0,3,7,0],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a37484997dcded7c1fa4b09fd9dc6b6ed":[6,0,0,2,6,0],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a41228bccf79d4b257aee0da0475755a8":[5,0,0,3,7,3],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a41228bccf79d4b257aee0da0475755a8":[6,0,0,2,6,3],
-"classdeskflow_1_1gui_1_1IServerConfig.html#a5f43cdad01aa6ae2013c127063ebf2a7":[5,0,0,3,7,5]
+"classdeskflow_1_1gui_1_1IServerConfig.html":[5,0,0,3,7]
 };

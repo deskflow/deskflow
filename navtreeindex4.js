@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
+"OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
 "OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,66],
 "OSXHelpers_8h.html":[7,0,1,1,5,27],
 "OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,27,5],
@@ -189,9 +192,9 @@ var NAVTREEINDEX4 =
 "ScreenSetupModel_8cpp.html":[7,0,1,1,5,29],
 "ScreenSetupModel_8h.html":[7,0,1,1,5,30],
 "ScreenSetupModel_8h_source.html":[7,0,1,1,5,30],
-"ScreenSetupView_8cpp.html":[7,0,1,1,5,6,8],
-"ScreenSetupView_8h.html":[7,0,1,1,5,6,9],
-"ScreenSetupView_8h_source.html":[7,0,1,1,5,6,9],
+"ScreenSetupView_8cpp.html":[7,0,1,1,5,6,10],
+"ScreenSetupView_8h.html":[7,0,1,1,5,6,11],
+"ScreenSetupView_8h_source.html":[7,0,1,1,5,6,11],
 "SecureListenSocket_8cpp.html":[7,0,1,1,8,12],
 "SecureListenSocket_8h.html":[7,0,1,1,8,13],
 "SecureListenSocket_8h_source.html":[7,0,1,1,8,13],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12":[7,0,1,1,5,0,8,1,3],
 "ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fab5094b611f7672180cafe697a16119f2":[7,0,1,1,5,0,8,1,2],
 "ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,0,8,2],
-"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,5],
-"ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,3],
-"ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
-"ServerConnection_8cpp.html":[7,0,1,1,5,1,6]
+"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,5]
 };
