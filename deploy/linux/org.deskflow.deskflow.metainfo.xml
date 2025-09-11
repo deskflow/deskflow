@@ -22,12 +22,28 @@
 	<url type="contribute">https://github.com/deskflow/deskflow/wiki/Contributing</url>
 	<screenshots>
 		<screenshot type="default">
-			<image>https://deskflow.org/screenshots/deskflow.png</image>
-			<caption>Deskflow's mainwindow on KDE</caption>
+			<image>https://deskflow.org/screenshots/deskflow-client.png</image>
+			<caption>Deskflow in client mode on KDE</caption>
 		</screenshot>
 		<screenshot>
-			<image>https://deskflow.org/screenshots/deskflow-dark.png</image>
-			<caption>Deskflow's mainwindow on KDE (dark mode)</caption>
+			<image>https://deskflow.org/screenshots/deskflow-server.png</image>
+			<caption>Deskflow in server mode on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-log.png</image>
+			<caption>Deskflow with the log visible on KDE</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-client-dark.png</image>
+			<caption>Deskflow in client mode on KDE (dark mode)</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-server-dark.png</image>
+			<caption>Deskflow in server mode on KDE (dark mode)</caption>
+		</screenshot>
+		<screenshot>
+			<image>https://deskflow.org/screenshots/deskflow-log-dark.png</image>
+			<caption>Deskflow with the log visible on KDE (dark mode)</caption>
 		</screenshot>
 	</screenshots>
 	<provides> <id>org.deskflow.deskflow.desktop</id> </provides>
@@ -46,6 +62,28 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.24.0" date="2025-09-11" urgency="high">
+			<description>
+				<p>This stable release fixes issues found in the previous version and adds a few new features. This release also uses more C++20 features. For the full changelog, see the release page.</p>
+				<ul>
+					<li>Fix: Less confusing fingerprint comparision dialog.</li>
+					<li>Fix: AltGr and other modifiers are generally detected better.</li>
+					<li>Fix: Big Endian test failures</li>
+					<li>Fix: Client scroll direction being ignored on wayland clients.</li>
+					<li>Feat: Unify deskflow-client and deskflow-server into one binary deskflow-core.</li>
+					<li>Feat: Prevent more than one instance of deskflow-core starting.</li>
+					<li>Feat: Remove defunct --no-xinitthreads option.</li>
+					<li>Feat: Ability to persist remote desktop access</li>
+					<li>Feat: Gui can show all log levels, upgrading users will want to reset their log level as the values have changed</li>
+					<li>Feat: Log can be detached or docked in the window</li>
+					<li>Refactor: Use more icons in places</li>
+					<li>Refactor: Update the Server Config Dialog's GUI</li>
+					<li>Chore: Continue to update codebase to use C++20 features.</li>
+					<li>Chore: Clean more sonar smells</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.24.0</url>
+		</release>
 		<release version="1.23.0" date="2025-07-23" urgency="high">
 			<description>
 				<p>This stable release fixes issues found in the previous version and adds a few new features. This release also uses more C++20 features. For the full changelog, see the release page.</p>
