@@ -17,6 +17,7 @@
 #endif
 
 #include <QFileInfo>
+#include <QSysInfo>
 
 deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
@@ -332,7 +333,7 @@ std::string ArgParser::assembleCommand(
 
 void ArgParser::updateCommonArgs(const char *const *argv) const
 {
-  argsBase().m_name = ARCH->hostName().toStdString();
+  argsBase().m_name = QSysInfo::machineHostName().toStdString();
   argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
