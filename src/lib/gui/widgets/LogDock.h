@@ -21,7 +21,7 @@ public:
   void setFloating(bool floating);
 
 protected:
-  bool eventFilter(QObject *watched, QEvent *event);
+  bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
   LogWidget *m_textLog = nullptr;
