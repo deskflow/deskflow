@@ -25,7 +25,6 @@ var classIArchNetwork =
     [ "copySocket", "classIArchNetwork.html#af74b9dfde7514fb9d0ab2b851883915c", null ],
     [ "getAddrFamily", "classIArchNetwork.html#a10786dc90ecc61a386a187b00596db2a", null ],
     [ "getAddrPort", "classIArchNetwork.html#ae157916b332cd9dc008cac16509b07bc", null ],
-    [ "getHostName", "classIArchNetwork.html#ab5c268249df45d8c02f4e40ed4e42923", null ],
     [ "init", "classIArchNetwork.html#af97952e216641094d03bcf6028fe408f", null ],
     [ "isAnyAddr", "classIArchNetwork.html#a5e54a431b16755934c1ae7a7ff564d20", null ],
     [ "isEqualAddr", "classIArchNetwork.html#a64acf06d65a1042d9a0c47bf830d8546", null ],

@@ -1,7 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classSystemLogOutputter.html#a8981c29b91ba8a48a1ebc722eb1b3352":[6,0,230,1],
-"classSystemLogOutputter.html#ab3d558d26f564ac05bb970f2be03a601":[6,0,230,4],
 "classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1":[6,0,230,0],
 "classSystemLogOutputter.html#ae39da8a4f980852a8d370b5d33261496":[6,0,230,3],
 "classSystemLogger.html":[6,0,229],
@@ -249,5 +247,7 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboard_1_1MotifClipFormat.html":[6,0,247,1],
 "classXWindowsClipboard_1_1MotifClipFormat.html#a0409794eaf54d1d8340196c2743bd921":[6,0,247,1,2],
 "classXWindowsClipboard_1_1MotifClipFormat.html#a15c0393e4b6fa9753a4e33a38fa23d31":[6,0,247,1,3],
-"classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9":[6,0,247,1,7]
+"classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9":[6,0,247,1,7],
+"classXWindowsClipboard_1_1MotifClipFormat.html#a8044d65999364e1461417290a318d657":[6,0,247,1,1],
+"classXWindowsClipboard_1_1MotifClipFormat.html#aa8d18b3c8956e6655673a0efeb22d74b":[6,0,247,1,6]
 };

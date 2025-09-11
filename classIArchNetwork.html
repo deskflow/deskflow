@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.210</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.23.0.211</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -167,8 +167,6 @@ manipulators</h2></td></tr>
 <tr class="memdesc:a325a04dcaa93d702b9a57b54918c0f64"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn Nagle algorithm on or off on socket.  <br /></td></tr>
 <tr class="memitem:a83636eea30639869fa7d6bd80ee38f0b" id="r_a83636eea30639869fa7d6bd80ee38f0b"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83636eea30639869fa7d6bd80ee38f0b">setReuseAddrOnSocket</a> (<a class="el" href="IArchNetwork_8h.html#ac6520f1d27f9ca5d41935dda6b7ea635">ArchSocket</a>, bool reuse)=0</td></tr>
 <tr class="memdesc:a83636eea30639869fa7d6bd80ee38f0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Turn address reuse on or off on socket.  <br /></td></tr>
-<tr class="memitem:ab5c268249df45d8c02f4e40ed4e42923" id="r_ab5c268249df45d8c02f4e40ed4e42923"><td class="memItemLeft" align="right" valign="top">virtual std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab5c268249df45d8c02f4e40ed4e42923">getHostName</a> ()=0</td></tr>
-<tr class="memdesc:ab5c268249df45d8c02f4e40ed4e42923"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return local host's name.  <br /></td></tr>
 <tr class="memitem:a957551badfc645696559fe392a9f10bf" id="r_a957551badfc645696559fe392a9f10bf"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a957551badfc645696559fe392a9f10bf">newAnyAddr</a> (<a class="el" href="#a8c69824f3bd9925f1e5fc7216ba0d445">AddressFamily</a>)=0</td></tr>
 <tr class="memdesc:a957551badfc645696559fe392a9f10bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an "any" network address.  <br /></td></tr>
 <tr class="memitem:aae4e2953aca03e4710f5444953b192dd" id="r_aae4e2953aca03e4710f5444953b192dd"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aae4e2953aca03e4710f5444953b192dd">copyAddr</a> (<a class="el" href="IArchNetwork_8h.html#a0a7cd467922a99b82a42f12b265b8107">ArchNetAddress</a>)=0</td></tr>
@@ -674,35 +672,6 @@ manipulators</h2></td></tr>
 <p>Get the port of an address. </p>
 
 <p>Implemented in <a class="el" href="classArchNetworkBSD.html#ae5b6539f07671dc47f25d446871d7e6f">ArchNetworkBSD</a>, and <a class="el" href="classArchNetworkWinsock.html#a953e1d9ef4c182a17b976a460a36dede">ArchNetworkWinsock</a>.</p>
-
-</div>
-</div>
-<a id="ab5c268249df45d8c02f4e40ed4e42923" name="ab5c268249df45d8c02f4e40ed4e42923"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5c268249df45d8c02f4e40ed4e42923">&#9670;&#160;</a></span>getHostName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual std::string IArchNetwork::getHostName </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return local host's name. </p>
-
-<p>Implemented in <a class="el" href="classArchNetworkBSD.html#a082304969f7d5168184fa40cf8bf3a9a">ArchNetworkBSD</a>, and <a class="el" href="classArchNetworkWinsock.html#a00bb45d1cae11c736665211d27f5a24f">ArchNetworkWinsock</a>.</p>
 
 </div>
 </div>

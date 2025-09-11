@@ -18,7 +18,6 @@ var classArchNetworkBSD =
     [ "copySocket", "classArchNetworkBSD.html#ab2eea214fcfd6566f0d419cbd286e4b9", null ],
     [ "getAddrFamily", "classArchNetworkBSD.html#ac6feef801dce42d818f7510b3c193278", null ],
     [ "getAddrPort", "classArchNetworkBSD.html#ae5b6539f07671dc47f25d446871d7e6f", null ],
-    [ "getHostName", "classArchNetworkBSD.html#a082304969f7d5168184fa40cf8bf3a9a", null ],
     [ "init", "classArchNetworkBSD.html#ac0b77b26ef9ca023c373763b1010b3d7", null ],
     [ "isAnyAddr", "classArchNetworkBSD.html#af82016a992cdb1ce14d4d603b5223f85", null ],
     [ "isEqualAddr", "classArchNetworkBSD.html#a6dc5e1d34668476fe6b17de3ebe82b56", null ],

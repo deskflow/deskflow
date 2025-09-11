@@ -1,7 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classOSXClipboardAnyBitmapConverter.html#a2f616e62a38856d25973878c712ffe53":[6,0,172,1],
-"classOSXClipboardAnyBitmapConverter.html#a652e4dbf90247ee5de433d83de781439":[6,0,172,5],
 "classOSXClipboardAnyBitmapConverter.html#a694242473fa3c0055bc56adcd80947c9":[6,0,172,4],
 "classOSXClipboardAnyBitmapConverter.html#a96ea12792ffef9fa5e8c0a8872a3004d":[6,0,172,7],
 "classOSXClipboardAnyBitmapConverter.html#af6940f966ad083dee2167bdf6e263858":[6,0,172,2],
@@ -249,5 +247,7 @@ var NAVTREEINDEX13 =
 "classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39":[6,0,188,15],
 "classPriorityQueue.html#a5bafced7aaea079a6df66c54068fa5f6":[6,0,188,2],
 "classPriorityQueue.html#a6c19925c8f10e3fb5478c1069d1c44bd":[6,0,188,16],
-"classPriorityQueue.html#a6d8a051ec280be31e78685a47300b1df":[6,0,188,11]
+"classPriorityQueue.html#a6d8a051ec280be31e78685a47300b1df":[6,0,188,11],
+"classPriorityQueue.html#a81d00195f2d618b0db204e4cae6ec365":[6,0,188,0],
+"classPriorityQueue.html#a8347bd60239be35e37757e9bb506b6dd":[6,0,188,1]
 };

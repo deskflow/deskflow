@@ -15,7 +15,6 @@ var classArchNetworkWinsock =
     [ "copySocket", "classArchNetworkWinsock.html#aff34317e98cd93a51b1ee691b7365008", null ],
     [ "getAddrFamily", "classArchNetworkWinsock.html#a64c60c16a779115f93885e8334d37211", null ],
     [ "getAddrPort", "classArchNetworkWinsock.html#a953e1d9ef4c182a17b976a460a36dede", null ],
-    [ "getHostName", "classArchNetworkWinsock.html#a00bb45d1cae11c736665211d27f5a24f", null ],
     [ "init", "classArchNetworkWinsock.html#a0fab2de7056932426fd107606d3c8ab2", null ],
     [ "isAnyAddr", "classArchNetworkWinsock.html#a56655c50a0541f69f1e2b49f5a1c9496", null ],
     [ "isEqualAddr", "classArchNetworkWinsock.html#acf6c45308c8671cce0e67dad406d8adb", null ],
