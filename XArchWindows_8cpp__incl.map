@@ -1,12 +1,12 @@
 <map id="src/lib/arch/win32/XArchWindows.cpp" name="src/lib/arch/win32/XArchWindows.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="68,5,209,44"/>
-<area shape="rect" id="Node000002" href="$XArchWindows_8h.html" title=" " alt="" coords="128,92,317,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,43,201,79,197,83,157,47"/>
-<area shape="rect" id="Node000005" href="$String_8h.html" title=" " alt="" coords="5,92,104,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="120,47,80,83,76,79,116,43"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="65,165,118,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="202,120,128,159,125,155,200,115"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="179,165,266,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="225,117,225,149,220,149,220,117"/>
-<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="63,116,81,150,76,152,58,118"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,150,44"/>
+<area shape="rect" id="Node000002" href="$XArchWindows_8h.html" title=" " alt="" coords="51,92,241,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,43,128,78,124,82,93,46"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,165,71,189"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="67,46,53,68,42,93,37,121,38,149,32,149,32,121,37,91,48,65,62,43"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,119,70,158,67,154,127,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="107,165,161,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="147,118,141,150,136,149,141,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="184,165,270,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="161,115,204,152,201,156,158,119"/>
 </map>

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.1</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.3</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -93,31 +93,50 @@ $(function(){initNavTree('XArchWindows_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="XArchWindows_8h_source.html">arch/win32/XArchWindows.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="String_8h_source.html">base/String.h</a>&quot;</code><br />
+<code>#include &lt;QString&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for XArchWindows.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="XArchWindows_8cpp__incl.png" border="0" usemap="#asrc_2lib_2arch_2win32_2XArchWindows_8cpp" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2arch_2win32_2XArchWindows_8cpp" id="asrc_2lib_2arch_2win32_2XArchWindows_8cpp">
-<area shape="rect" title=" " alt="" coords="68,5,209,44"/>
-<area shape="rect" href="XArchWindows_8h.html" title=" " alt="" coords="128,92,317,117"/>
-<area shape="poly" title=" " alt="" coords="161,43,201,79,197,83,157,47"/>
-<area shape="rect" href="String_8h.html" title=" " alt="" coords="5,92,104,117"/>
-<area shape="poly" title=" " alt="" coords="120,47,80,83,76,79,116,43"/>
-<area shape="rect" title=" " alt="" coords="65,165,118,189"/>
-<area shape="poly" title=" " alt="" coords="202,120,128,159,125,155,200,115"/>
-<area shape="rect" title=" " alt="" coords="179,165,266,189"/>
-<area shape="poly" title=" " alt="" coords="225,117,225,149,220,149,220,117"/>
-<area shape="poly" title=" " alt="" coords="63,116,81,150,76,152,58,118"/>
+<area shape="rect" title=" " alt="" coords="9,5,150,44"/>
+<area shape="rect" href="XArchWindows_8h.html" title=" " alt="" coords="51,92,241,117"/>
+<area shape="poly" title=" " alt="" coords="97,43,128,78,124,82,93,46"/>
+<area shape="rect" title=" " alt="" coords="5,165,71,189"/>
+<area shape="poly" title=" " alt="" coords="67,46,53,68,42,93,37,121,38,149,32,149,32,121,37,91,48,65,62,43"/>
+<area shape="poly" title=" " alt="" coords="130,119,70,158,67,154,127,115"/>
+<area shape="rect" title=" " alt="" coords="107,165,161,189"/>
+<area shape="poly" title=" " alt="" coords="147,118,141,150,136,149,141,117"/>
+<area shape="rect" title=" " alt="" coords="184,165,270,189"/>
+<area shape="poly" title=" " alt="" coords="161,115,204,152,201,156,158,119"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a078ff948d8315a78de358d84f20bed1a" id="r_a078ff948d8315a78de358d84f20bed1a"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a078ff948d8315a78de358d84f20bed1a">windowsErrorToQString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> error)</td></tr>
+<tr class="memitem:aa138dd031cbf5ff24100e9692c356be5" id="r_aa138dd031cbf5ff24100e9692c356be5"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa138dd031cbf5ff24100e9692c356be5">winsockErrorToQString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> error)</td></tr>
 <tr class="memitem:a2b35d1b9337a4df470bcd38d27177da8" id="r_a2b35d1b9337a4df470bcd38d27177da8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b35d1b9337a4df470bcd38d27177da8">windowsErrorToString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> error)</td></tr>
 <tr class="memitem:aa8bc1ba0d5344a265d4093aef962dcab" id="r_aa8bc1ba0d5344a265d4093aef962dcab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8bc1ba0d5344a265d4093aef962dcab">winsockErrorToString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> error)</td></tr>
 </table>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a078ff948d8315a78de358d84f20bed1a" name="a078ff948d8315a78de358d84f20bed1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a078ff948d8315a78de358d84f20bed1a">&#9670;&#160;</a></span>windowsErrorToQString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString windowsErrorToQString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2b35d1b9337a4df470bcd38d27177da8" name="a2b35d1b9337a4df470bcd38d27177da8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b35d1b9337a4df470bcd38d27177da8">&#9670;&#160;</a></span>windowsErrorToString()</h2>
 
@@ -128,6 +147,23 @@ Functions</h2></td></tr>
           <td class="memname">std::string windowsErrorToString </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa138dd031cbf5ff24100e9692c356be5" name="aa138dd031cbf5ff24100e9692c356be5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa138dd031cbf5ff24100e9692c356be5">&#9670;&#160;</a></span>winsockErrorToQString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString winsockErrorToQString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>

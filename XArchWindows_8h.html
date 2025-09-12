@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.1</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.3</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -92,18 +92,21 @@ $(function(){initNavTree('XArchWindows_8h.html','',''); });
   <div class="headertitle"><div class="title">XArchWindows.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;string&gt;</code><br />
+<div class="textblock"><code>#include &lt;QString&gt;</code><br />
+<code>#include &lt;string&gt;</code><br />
 <code>#include &lt;Windows.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for XArchWindows.h:</div>
 <div class="dyncontent">
 <div class="center"><img src="XArchWindows_8h__incl.png" border="0" usemap="#asrc_2lib_2arch_2win32_2XArchWindows_8h" loading="lazy" alt=""/></div>
 <map name="asrc_2lib_2arch_2win32_2XArchWindows_8h" id="asrc_2lib_2arch_2win32_2XArchWindows_8h">
-<area shape="rect" title=" " alt="" coords="16,5,142,44"/>
-<area shape="rect" title=" " alt="" coords="5,92,59,117"/>
-<area shape="poly" title=" " alt="" coords="70,46,49,80,45,77,65,43"/>
-<area shape="rect" title=" " alt="" coords="82,92,168,117"/>
-<area shape="poly" title=" " alt="" coords="92,43,113,77,108,80,88,46"/>
+<area shape="rect" title=" " alt="" coords="59,5,185,44"/>
+<area shape="rect" title=" " alt="" coords="5,92,71,117"/>
+<area shape="poly" title=" " alt="" coords="103,47,63,83,60,79,100,43"/>
+<area shape="rect" title=" " alt="" coords="95,92,149,117"/>
+<area shape="poly" title=" " alt="" coords="125,45,125,76,119,76,119,45"/>
+<area shape="rect" title=" " alt="" coords="172,92,258,117"/>
+<area shape="poly" title=" " alt="" coords="146,43,192,80,188,84,143,47"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
@@ -143,6 +146,8 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:aa138dd031cbf5ff24100e9692c356be5" id="r_aa138dd031cbf5ff24100e9692c356be5"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa138dd031cbf5ff24100e9692c356be5">winsockErrorToQString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> error)</td></tr>
+<tr class="memitem:a078ff948d8315a78de358d84f20bed1a" id="r_a078ff948d8315a78de358d84f20bed1a"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a078ff948d8315a78de358d84f20bed1a">windowsErrorToQString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> error)</td></tr>
 <tr class="memitem:aa8bc1ba0d5344a265d4093aef962dcab" id="r_aa8bc1ba0d5344a265d4093aef962dcab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa8bc1ba0d5344a265d4093aef962dcab">winsockErrorToString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> error)</td></tr>
 <tr class="memitem:a2b35d1b9337a4df470bcd38d27177da8" id="r_a2b35d1b9337a4df470bcd38d27177da8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2b35d1b9337a4df470bcd38d27177da8">windowsErrorToString</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> error)</td></tr>
 </table>
@@ -162,6 +167,23 @@ Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a078ff948d8315a78de358d84f20bed1a" name="a078ff948d8315a78de358d84f20bed1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a078ff948d8315a78de358d84f20bed1a">&#9670;&#160;</a></span>windowsErrorToQString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString windowsErrorToQString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2b35d1b9337a4df470bcd38d27177da8" name="a2b35d1b9337a4df470bcd38d27177da8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b35d1b9337a4df470bcd38d27177da8">&#9670;&#160;</a></span>windowsErrorToString()</h2>
 
@@ -172,6 +194,23 @@ Functions</h2></td></tr>
           <td class="memname">std::string windowsErrorToString </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa138dd031cbf5ff24100e9692c356be5" name="aa138dd031cbf5ff24100e9692c356be5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa138dd031cbf5ff24100e9692c356be5">&#9670;&#160;</a></span>winsockErrorToQString()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">QString winsockErrorToQString </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
