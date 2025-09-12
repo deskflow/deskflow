@@ -1,9 +1,33 @@
 <map id="src/lib/platform/XWindowsPowerManager.h" name="src/lib/platform/XWindowsPowerManager.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="104,5,278,44"/>
-<area shape="rect" id="Node000002" href="$XWindowsPowerManager_8cpp.html" title=" " alt="" coords="5,92,180,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,56,116,93,113,89,156,52"/>
-<area shape="rect" id="Node000003" href="$XWindowsScreen_8h.html" title=" " alt="" coords="204,92,378,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,52,271,89,267,93,223,56"/>
-<area shape="rect" id="Node000004" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="204,179,378,217"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="294,147,294,178,288,178,288,147"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="708,5,883,44"/>
+<area shape="rect" id="Node000002" href="$EiScreen_8h.html" title=" " alt="" coords="473,99,649,124"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="731,52,594,101,593,96,729,47"/>
+<area shape="rect" id="Node000012" href="$XWindowsPowerManager_8cpp.html" title=" " alt="" coords="708,92,883,131"/>
+<area shape="poly" id="edge15_Node000001_Node000012" title=" " alt="" coords="798,60,798,91,793,91,793,60"/>
+<area shape="rect" id="Node000013" href="$XWindowsScreen_8h.html" title=" " alt="" coords="924,92,1099,131"/>
+<area shape="poly" id="edge16_Node000001_Node000013" title=" " alt="" coords="859,48,965,89,963,94,857,53"/>
+<area shape="rect" id="Node000003" href="$EiEventQueueBuffer_8h.html" title=" " alt="" coords="302,179,458,217"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="524,133,421,180,419,176,521,128"/>
+<area shape="rect" id="Node000005" href="$EiScreen_8cpp.html" title=" " alt="" coords="401,272,590,297"/>
+<area shape="poly" id="edge8_Node000002_Node000005" title=" " alt="" coords="546,138,523,180,508,231,500,272,495,271,503,230,519,178,542,136"/>
+<area shape="rect" id="Node000006" href="$EiKeyState_8h.html" title=" " alt="" coords="533,186,720,210"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="581,134,620,184,616,187,577,137"/>
+<area shape="rect" id="Node000008" href="$PortalInputCapture_8h.html" title=" " alt="" coords="744,179,919,217"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="613,126,773,176,771,181,612,131"/>
+<area shape="rect" id="Node000010" href="$PortalRemoteDesktop_8h.html" title=" " alt="" coords="87,179,278,217"/>
+<area shape="poly" id="edge12_Node000002_Node000010" title=" " alt="" coords="495,130,267,181,266,175,494,125"/>
+<area shape="rect" id="Node000004" href="$EiEventQueueBuffer_8cpp.html" title=" " alt="" coords="220,265,376,304"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="353,231,318,267,314,263,349,227"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="419,224,481,270,478,274,416,229"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="597,221,515,274,512,270,595,217"/>
+<area shape="rect" id="Node000007" href="$EiKeyState_8cpp.html" title=" " alt="" coords="615,272,816,297"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="651,219,706,270,702,274,647,223"/>
+<area shape="poly" id="edge10_Node000008_Node000005" title=" " alt="" coords="743,224,543,274,541,269,742,219"/>
+<area shape="rect" id="Node000009" href="$PortalInputCapture_8cpp.html" title=" " alt="" coords="840,265,1015,304"/>
+<area shape="poly" id="edge11_Node000008_Node000009" title=" " alt="" coords="866,226,908,263,905,267,862,230"/>
+<area shape="poly" id="edge13_Node000010_Node000005" title=" " alt="" coords="267,219,453,269,452,274,266,225"/>
+<area shape="rect" id="Node000011" href="$PortalRemoteDesktop_8cpp.html" title=" " alt="" coords="5,265,197,304"/>
+<area shape="poly" id="edge14_Node000010_Node000011" title=" " alt="" coords="156,231,121,267,117,263,152,227"/>
+<area shape="rect" id="Node000014" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="943,179,1118,217"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="1022,146,1029,177,1024,179,1017,147"/>
 </map>
