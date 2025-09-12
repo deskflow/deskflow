@@ -15,14 +15,6 @@ on:
       - reopened
       - synchronize
       - ready_for_review
-    paths-ignore:
-      - '**/*.md'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.editorconfig'
-      - '.env-example'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'cspell.json'
 
 env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
