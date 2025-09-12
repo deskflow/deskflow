@@ -9,11 +9,11 @@
 
 #include <string>
 
-class XWindowsPowerManager
+class XDGPowerManager
 {
 public:
-  XWindowsPowerManager() = default;
-  ~XWindowsPowerManager();
+  XDGPowerManager() = default;
+  ~XDGPowerManager();
 
   /**
    * @brief Prevent the system from sleep
@@ -25,8 +25,8 @@ public:
    */
   void enableSleep() const;
 
-  XWindowsPowerManager(const XWindowsPowerManager &) = delete;
-  XWindowsPowerManager &operator=(const XWindowsPowerManager &) = delete;
+  XDGPowerManager(const XDGPowerManager &) = delete;
+  XDGPowerManager &operator=(const XDGPowerManager &) = delete;
 
   enum class InhibitScreenServices
   {
