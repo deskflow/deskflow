@@ -73,7 +73,6 @@ This section contains general options it will begin with `[core]`
 | preventSleep  | `true` or `false` | Prevent sleep when Deskflow is active [default: false] |
 | processMode   | `1` or `0`        | The mode we use to start the process Service or Desktop |
 | screenName    | string            | Name used to identify the screen [default: machine's hostname] |
-| updateUrl     | URL               | The URL to use when checking for a new version number, it should return a version [default: https://api.deskflow.org/version]|
 | useHooks      | `true` or `false` | If Windows uses hooks or not [default: true] |
 | language      | 639 language      | The language to display the GUI in [default: en] |
 | wlClipboard   | `true` or `false` | When true the wl-clipboard backend will be enabled [default: false] |
@@ -106,6 +105,7 @@ This section contains options used by the GUI it will begin with `[gui]`
 | shownFirstConnectedMessage     | `true` or `false` | When `true` GUI has shown the user the message for connecting the first time [default: false] |
 | shownServerFirstStartMessage   | `true` or `false` | When `true` GUI has shown the user the Deskflow server is now running message [default: false] |
 | startCoreWithGui               | `true` or `false` | When true the Core will be started with the GUI. It is set to the Core's state on exit. |
+| updateCheckUrl                 | URL               | The URL to use when checking for a new version number, it should return a version [default: https://api.deskflow.org/version]|
 
 ### Log
 

@@ -24,7 +24,7 @@ VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new
 
 void VersionChecker::checkLatest() const
 {
-  const QString url = Settings::value(Settings::Core::UpdateUrl).toString();
+  const QString url = Settings::value(Settings::Gui::UpdateCheckUrl).toString();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
   auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());
