@@ -1311,6 +1311,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Automatic</source>
         <translation type="unfinished">Automatica</translation>
     </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Partecipare al concorso di popolarità (inviare dati aggiuntivi dello user-agent)</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

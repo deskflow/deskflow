@@ -1316,6 +1316,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Automatic</source>
         <translation type="unfinished">Автоматический</translation>
     </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Участвовать в конкурсе популярности (отправлять дополнительные данные user-agent)</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

@@ -1311,6 +1311,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Automatic</source>
         <translation type="unfinished">Automática</translation>
     </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Participar en el concurso de popularidad (enviar datos adicionales del user-agent)</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

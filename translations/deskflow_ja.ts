@@ -1312,6 +1312,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Automatic</source>
         <translation type="unfinished">自動</translation>
     </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">人気投票に参加する（追加のユー-agent データを送信）</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

@@ -15,11 +15,15 @@ class QNetworkReply;
 class VersionChecker : public QObject
 {
   Q_OBJECT
+
 public:
   explicit VersionChecker(QObject *parent = nullptr);
   void checkLatest() const;
+  static QString getUserAgent(bool popularityContestEnabled = false);
+
 public Q_SLOTS:
   void replyFinished(QNetworkReply *reply);
+
 Q_SIGNALS:
   void updateFound(const QString &version);
 
