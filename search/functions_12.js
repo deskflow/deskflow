@@ -147,7 +147,7 @@ var searchData=
   ['setsides_144',['setSides',['../classMSWindowsHook.html#a7ebb15bc43c197254cff7459f2090d5d',1,'MSWindowsHook']]],
   ['setsignalhandler_145',['setSignalHandler',['../classIArchMultithread.html#a927964ae546f8cca9820651a2ef07085',1,'IArchMultithread::setSignalHandler()'],['../classArchMultithreadPosix.html#aff444b437e38d6bae6a0f8f9fb8c0a40',1,'ArchMultithreadPosix::setSignalHandler()'],['../classArchMultithreadWindows.html#a097391319cc1a6951d915a83de65005f',1,'ArchMultithreadWindows::setSignalHandler()']]],
   ['setsignalset_146',['setSignalSet',['../ArchMultithreadPosix_8cpp.html#ac2a933a5d8a0941c9be39fed3319e3d8',1,'ArchMultithreadPosix.cpp']]],
-  ['setsocketmultiplexer_147',['setSocketMultiplexer',['../classApp.html#a5a20ff185b1d2c44f5a49ba759870737',1,'App']]],
+  ['setsocketmultiplexer_147',['setSocketMultiplexer',['../classApp.html#ad4d9e0526734148f3d7364f2933c6d57',1,'App']]],
   ['setswapped_148',['setSwapped',['../classScreen.html#a5cc3efc73c61b0721257ade4852181bd',1,'Screen']]],
   ['setswitchcorner_149',['setSwitchCorner',['../classScreen.html#a47f313b08bc1fd7f66d568ca85dd006e',1,'Screen']]],
   ['setswitchcornersize_150',['setSwitchCornerSize',['../classScreen.html#a3981799aa7c2f9c773b6fcca879292b8',1,'Screen::setSwitchCornerSize()'],['../classServerConfigDialog.html#afac0a7bc4d0d13b2ca26d5ea3d5ba9c6',1,'ServerConfigDialog::setSwitchCornerSize(int size)']]],
