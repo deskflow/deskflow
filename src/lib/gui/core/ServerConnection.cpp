@@ -6,11 +6,9 @@
 
 #include "ServerConnection.h"
 
-#include "ServerMessage.h"
-
-#include "common/Settings.h"
-
 #include "Messages.h"
+#include "ServerMessage.h"
+#include "common/Settings.h"
 
 #include <QMessageBox>
 #include <QPushButton>
@@ -65,7 +63,7 @@ void ServerConnection::handleLogLine(const QString &logLine)
     return;
   }
 
-  if (Settings::value(Settings::Server::ConfigVisible).toBool()) {
+  if (m_serverConfigDialogVisible) {
     qDebug("server config dialog visible, skipping new client prompt");
     return;
   }
