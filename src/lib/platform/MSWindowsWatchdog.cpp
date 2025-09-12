@@ -337,24 +337,15 @@ void MSWindowsWatchdog::outputLoop(void *)
   while (m_running) {
     const BOOL ok = ::ReadFile(m_outputReadPipe, raw, kBufSize, &bytesRead, nullptr);
 
-    if (!ok) {
+    if (!ok || bytesRead == 0) {
       const DWORD err = ::GetLastError();
-      if (err == ERROR_BROKEN_PIPE) {
-        // It doesn't make sense to keep reading the pipe if the process has exited and closed its end of the pipe.
-        LOG_DEBUG("output pipe closed, exiting output loop");
-        break;
+      if (err != NO_ERROR && err != ERROR_NO_DATA) {
+        LOG_WARN("could not read from output pipe, error: %s", windowsErrorToString(err).c_str());
       }
 
-      // Retry immediately when we get a transient error like ERROR_NO_DATA (pipe is non-blocking).
-      continue;
-    }
-
-    if (bytesRead == 0) {
-      // Sleep for short moment so we're not busy looping while the Core is quiet (which is the case most of the time).
-      // Important: Keep the sleep short so the service can shut down fast.
+      // Retry immediately when nothing to read or we get a transient error like ERROR_NO_DATA (pipe is non-blocking).
       Arch::sleep(0.1);
-      LOG_DEBUG("no more data to read from output pipe");
-      break;
+      continue;
     }
 
     const QString decoded =
