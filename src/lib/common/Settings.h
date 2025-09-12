@@ -67,6 +67,7 @@ public:
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
     inline static const auto UpdateCheckUrl = QStringLiteral("gui/updateCheckUrl");
+    inline static const auto JoinPopularityContest = QStringLiteral("gui/joinPopularityContest");
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
@@ -205,6 +206,7 @@ private:
     , Settings::Gui::Autohide
     , Settings::Gui::AutoUpdateCheck
     , Settings::Gui::UpdateCheckUrl
+    , Settings::Gui::JoinPopularityContest
     , Settings::Gui::CloseReminder
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded

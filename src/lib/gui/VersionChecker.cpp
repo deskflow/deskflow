@@ -22,15 +22,27 @@ VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new
   connect(m_network, &QNetworkAccessManager::finished, this, &VersionChecker::replyFinished, Qt::UniqueConnection);
 }
 
+QString VersionChecker::getUserAgent(bool popularityContestEnabled)
+{
+  if (!popularityContestEnabled) {
+    return QStringLiteral("%1/%2").arg(kAppName, kVersion);
+  }
+
+  const static auto arch = QSysInfo::currentCpuArchitecture();
+  const static auto os = QSysInfo::prettyProductName();
+  const static auto osFamily = QSysInfo::kernelType();
+  const static auto language = QLocale::system().name();
+  return QStringLiteral("%1/%2 (%3; %4; %5; %6)").arg(kAppName, kVersion, os, osFamily, arch, language);
+}
+
 void VersionChecker::checkLatest() const
 {
-  const QString url = Settings::value(Settings::Gui::UpdateCheckUrl).toString();
+  const auto userAgent = getUserAgent(Settings::value(Settings::Gui::JoinPopularityContest).toBool());
+  const auto url = Settings::value(Settings::Gui::UpdateCheckUrl).toString();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
-  auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());
+  qDebug() << "user agent header:" << userAgent;
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
-  request.setRawHeader("X-Deskflow-Version", kVersion);
-  request.setRawHeader("X-Deskflow-Language", qPrintable(QLocale::system().name()));
   m_network->get(request);
 }
 
