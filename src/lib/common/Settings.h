@@ -50,7 +50,6 @@ public:
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
-    inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
     inline static const auto Display = QStringLiteral("core/display");
     inline static const auto UseHooks = QStringLiteral("core/useHooks");
     inline static const auto Language = QStringLiteral("core/language");
@@ -67,6 +66,7 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
+    inline static const auto UpdateCheckUrl = QStringLiteral("gui/updateCheckUrl");
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
@@ -191,7 +191,6 @@ private:
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
-    , Settings::Core::UpdateUrl
     , Settings::Core::Display
     , Settings::Core::UseHooks
     , Settings::Core::UseWlClipboard
@@ -205,6 +204,7 @@ private:
     , Settings::Log::GuiDebug
     , Settings::Gui::Autohide
     , Settings::Gui::AutoUpdateCheck
+    , Settings::Gui::UpdateCheckUrl
     , Settings::Gui::CloseReminder
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded

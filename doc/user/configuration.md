@@ -73,7 +73,6 @@ This section contains general options it will begin with `[core]`
 | processMode   | `1` or `0`        | The mode we use to start the process Service or Desktop |
 | screenName    | string            | Name used to identify the screen [default: machine's hostname] |
 | startedBefore | `true` or `false `| Have we started client or server before. Used in logic when deciding to show some dialogs.
-| updateUrl     | URL               | The URL to use when checking for a new version number, it should return a version [default: https://api.deskflow.org/version]|
 
 ### Daemon
 
@@ -98,6 +97,7 @@ This section contains options used by the GUI it will begin with `[gui]`
 | logExpanded       | `true` or `false` | Should the log section of the GUI be opened [default: false] |
 | symbolicTrayIcon  | `true` or `false` | When true use the monocolor (symbolic) icon false uses a colorful icon for the tray |
 | windowGeometry    | QRect             | Geometry of the window used to restore the window geometry after exiting the app |
+| updateCheckUrl    | URL               | The URL to use when checking for a new version number, it should return a version [default: https://api.deskflow.org/version]|
 
 ### Log
 
