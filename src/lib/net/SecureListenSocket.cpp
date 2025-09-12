@@ -44,14 +44,8 @@ std::unique_ptr<IDataSocket> SecureListenSocket::accept()
     setListeningJob();
 
     // default location of the TLS cert file in users dir
-    std::string certificateFilename = Settings::value(Settings::Security::Certificate).toString().toStdString();
-
-    // if the tls cert option is set use that for the certificate file
-    if (!ArgParser::argsBase().m_tlsCertFile.empty()) {
-      certificateFilename = ArgParser::argsBase().m_tlsCertFile;
-    }
-
-    if (!secureSocket->loadCertificates(certificateFilename)) {
+    if (const auto certificateFilename = Settings::value(Settings::Security::Certificate).toString().toStdString();
+        !secureSocket->loadCertificates(certificateFilename)) {
       return nullptr;
     }
 
