@@ -16,7 +16,27 @@
 #include <QProcess>
 #include <QRegularExpression>
 #include <climits>
-#include <memory>
+
+//
+// Free functions
+//
+
+QString getUserAgent()
+{
+  if (!Settings::value(Settings::Gui::JoinPopularityContest).toBool()) {
+    return QString("%1/%2").arg(kAppName, kVersion);
+  }
+
+  const static auto arch = QSysInfo::currentCpuArchitecture();
+  const static auto os = QSysInfo::prettyProductName();
+  const static auto osFamily = QSysInfo::productType();
+  const static auto language = QLocale::system().name();
+  return QString("%1/%2 (%3; %4; %5; %6)").arg(kAppName, kVersion, os, osFamily, arch, language);
+}
+
+//
+// VersionChecker
+//
 
 VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new QNetworkAccessManager(this)}
 {
@@ -25,13 +45,12 @@ VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new
 
 void VersionChecker::checkLatest() const
 {
-  const QString url = Settings::value(Settings::Core::UpdateUrl).toString();
+  const auto userAgent = getUserAgent();
+  const QString url = Settings::value(Settings::Gui::UpdateCheckUrl).toString();
   qDebug("checking for updates at: %s", qPrintable(url));
   auto request = QNetworkRequest(url);
-  auto userAgent = QString("%1 %2 on %3").arg(kAppName, kVersion, QSysInfo::prettyProductName());
+  qDebug() << "user agent header:" << userAgent;
   request.setHeader(QNetworkRequest::UserAgentHeader, userAgent);
-  request.setRawHeader("X-Deskflow-Version", kVersion);
-  request.setRawHeader("X-Deskflow-Language", qPrintable(QLocale::system().name()));
   m_network->get(request);
 }
 
@@ -40,6 +59,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
   const auto httpStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
   if (reply->error() != QNetworkReply::NoError) {
     qWarning("version check server error: %s", qPrintable(reply->errorString()));
+    qWarning("version check server response: %s", qPrintable(QString(reply->readAll())));
     qWarning("error checking for updates, http status: %d", httpStatus);
     return;
   }

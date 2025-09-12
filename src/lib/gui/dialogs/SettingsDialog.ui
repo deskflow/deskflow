@@ -85,6 +85,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbPopularityContest">
+            <property name="text">
+             <string>Participate in popularity contest (send extra user-agent data)</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbAutoHide">
             <property name="text">
              <string>Hide the window when the app starts</string>
@@ -642,6 +649,9 @@
   <tabstop>cbLanguageSync</tabstop>
   <tabstop>cbScrollDirection</tabstop>
   <tabstop>cbAutoUpdate</tabstop>
+  <tabstop>cbPopularityContest</tabstop>
+  <tabstop>cbAutoHide</tabstop>
+  <tabstop>cbPreventSleep</tabstop>
   <tabstop>cbCloseToTray</tabstop>
   <tabstop>rbIconColorful</tabstop>
   <tabstop>rbIconMono</tabstop>
@@ -654,8 +664,11 @@
   <tabstop>sbPort</tabstop>
   <tabstop>lineInterface</tabstop>
   <tabstop>cbLogToFile</tabstop>
+  <tabstop>comboLogLevel</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>
+  <tabstop>groupService</tabstop>
+  <tabstop>cbElevateDaemon</tabstop>
  </tabstops>
  <resources/>
  <connections/>
