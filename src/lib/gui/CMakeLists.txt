@@ -110,6 +110,8 @@ add_library(${target} STATIC
   validators/SpacesValidator.h
   validators/ValidationError.cpp
   validators/ValidationError.h
+  validators/IpAddressValidator.cpp
+  validators/IpAddressValidator.h
   widgets/FingerprintPreview.cpp
   widgets/FingerprintPreview.h
   widgets/KeySequenceWidget.cpp
