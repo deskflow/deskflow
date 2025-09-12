@@ -372,7 +372,8 @@ int ClientApp::mainLoop()
 {
   // create socket multiplexer.  this must happen after daemonization
   // on unix because threads evaporate across a fork().
-  setSocketMultiplexer(std::make_unique<SocketMultiplexer>());
+  SocketMultiplexer multiplexer;
+  setSocketMultiplexer(&multiplexer);
 
   // start client, etc
   appUtil().startNode();

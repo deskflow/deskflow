@@ -11,7 +11,6 @@
 #include "base/Log.h"
 #include "common/Common.h"
 #include "deskflow/IApp.h"
-#include "net/SocketMultiplexer.h"
 
 #if SYSAPI_WIN32
 #include "deskflow/win32/AppUtilWindows.h"
@@ -19,7 +18,6 @@
 #include "deskflow/unix/AppUtilUnix.h"
 #endif
 
-#include <memory>
 #include <stdexcept>
 
 namespace deskflow {
@@ -93,14 +91,14 @@ public:
   {
     m_events = &events;
   }
-  void setSocketMultiplexer(std::unique_ptr<SocketMultiplexer> &&sm)
+  void setSocketMultiplexer(SocketMultiplexer *sm)
   {
-    m_socketMultiplexer = std::move(sm);
+    m_socketMultiplexer = sm;
   }
 
   SocketMultiplexer *getSocketMultiplexer() const
   {
-    return m_socketMultiplexer.get();
+    return m_socketMultiplexer;
   }
 
   static App &instance()
@@ -121,7 +119,7 @@ private:
   static App *s_instance;
   FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;
-  std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
+  SocketMultiplexer *m_socketMultiplexer = nullptr;
 };
 
 #if WINAPI_MSWINDOWS
