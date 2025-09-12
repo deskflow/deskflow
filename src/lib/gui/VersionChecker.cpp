@@ -39,6 +39,7 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
   const auto httpStatus = reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
   if (reply->error() != QNetworkReply::NoError) {
     qWarning("version check server error: %s", qPrintable(reply->errorString()));
+    qWarning("version check server response: %s", qPrintable(QString(reply->readAll())));
     qWarning("error checking for updates, http status: %d", httpStatus);
     return;
   }
