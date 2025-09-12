@@ -14,6 +14,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "common/Constants.h"
+#include "deskflow/App.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/ScreenException.h"
@@ -72,6 +73,11 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, deskflow
       LOG_ERR("ei init error: %s", strerror(-rc));
       throw std::runtime_error("failed to init ei context");
     }
+  }
+
+  // disable sleep if the flag is set
+  if (App::instance().argsBase().m_preventSleep) {
+    m_powerManager.disableSleep();
   }
 }
 
