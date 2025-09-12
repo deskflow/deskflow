@@ -5,7 +5,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "XWindowsPowerManager.h"
+#include "XDGPowerManager.h"
 #include "arch/Arch.h"
 #include "base/Log.h"
 #include "common/Constants.h"
@@ -17,9 +17,9 @@
 
 namespace {
 
-bool sleepInhibitCall(bool state, XWindowsPowerManager::InhibitScreenServices serviceID)
+bool sleepInhibitCall(bool state, XDGPowerManager::InhibitScreenServices serviceID)
 {
-  if (std::string error; !XWindowsPowerManager::inhibitScreenCall(serviceID, state, error)) {
+  if (std::string error; !XDGPowerManager::inhibitScreenCall(serviceID, state, error)) {
     LOG_DEBUG("dbus inhibit error %s", error.c_str());
     return false;
   }
@@ -29,28 +29,28 @@ bool sleepInhibitCall(bool state, XWindowsPowerManager::InhibitScreenServices se
 
 } // namespace
 
-XWindowsPowerManager::~XWindowsPowerManager()
+XDGPowerManager::~XDGPowerManager()
 {
   enableSleep();
 }
 
-void XWindowsPowerManager::disableSleep() const
+void XDGPowerManager::disableSleep() const
 {
-  if (!sleepInhibitCall(true, XWindowsPowerManager::InhibitScreenServices::kScreenSaver) &&
-      !sleepInhibitCall(true, XWindowsPowerManager::InhibitScreenServices::kSessionManager)) {
+  if (!sleepInhibitCall(true, XDGPowerManager::InhibitScreenServices::kScreenSaver) &&
+      !sleepInhibitCall(true, XDGPowerManager::InhibitScreenServices::kSessionManager)) {
     LOG_WARN("failed to prevent system from going to sleep");
   }
 }
 
-void XWindowsPowerManager::enableSleep() const
+void XDGPowerManager::enableSleep() const
 {
-  if (!sleepInhibitCall(false, XWindowsPowerManager::InhibitScreenServices::kScreenSaver) &&
-      !sleepInhibitCall(false, XWindowsPowerManager::InhibitScreenServices::kSessionManager)) {
+  if (!sleepInhibitCall(false, XDGPowerManager::InhibitScreenServices::kScreenSaver) &&
+      !sleepInhibitCall(false, XDGPowerManager::InhibitScreenServices::kSessionManager)) {
     LOG_WARN("failed to enable system idle sleep");
   }
 }
 
-bool XWindowsPowerManager::inhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error)
+bool XDGPowerManager::inhibitScreenCall(InhibitScreenServices serviceID, bool state, std::string &error)
 {
   error = "";
   static const std::array<QString, 2> services = {"org.freedesktop.ScreenSaver", "org.gnome.SessionManager"};

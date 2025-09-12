@@ -96,6 +96,8 @@ elseif(APPLE)
   )
 elseif(UNIX)
   set(PLATFORM_SOURCES
+    XDGPowerManager.cpp
+    XDGPowerManager.h
     XWindowsClipboard.cpp
     XWindowsClipboard.h
     XWindowsClipboardAnyBitmapConverter.cpp
@@ -114,8 +116,6 @@ elseif(UNIX)
     XWindowsEventQueueBuffer.h
     XWindowsKeyState.cpp
     XWindowsKeyState.h
-    XWindowsPowerManager.cpp
-    XWindowsPowerManager.h
     XWindowsScreen.cpp
     XWindowsScreen.h
     XWindowsScreenSaver.cpp
