@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fab5094b611f7672180cafe697a16119f2":[7,0,1,1,5,0,8,1,2],
+"ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,0,8,2],
+"ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,5],
 "ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,3],
 "ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
 "ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
@@ -29,9 +32,9 @@ var NAVTREEINDEX5 =
 "SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
-"SpacesValidator_8cpp.html":[7,0,1,1,5,5,14],
-"SpacesValidator_8h.html":[7,0,1,1,5,5,15],
-"SpacesValidator_8h_source.html":[7,0,1,1,5,5,15],
+"SpacesValidator_8cpp.html":[7,0,1,1,5,5,16],
+"SpacesValidator_8h.html":[7,0,1,1,5,5,17],
+"SpacesValidator_8h_source.html":[7,0,1,1,5,5,17],
 "SslLogger_8cpp.html":[7,0,1,1,8,23],
 "SslLogger_8h.html":[7,0,1,1,8,24],
 "SslLogger_8h_source.html":[7,0,1,1,8,24],
@@ -98,9 +101,9 @@ var NAVTREEINDEX5 =
 "UrlConstants_8h.html#a757bc52675c18003a865c822080929e4":[7,0,1,1,3,6,5],
 "UrlConstants_8h.html#aed48f3211d1eaf22ec9a0ee3b345efa3":[7,0,1,1,3,6,3],
 "UrlConstants_8h_source.html":[7,0,1,1,3,6],
-"ValidationError_8cpp.html":[7,0,1,1,5,5,16],
-"ValidationError_8h.html":[7,0,1,1,5,5,17],
-"ValidationError_8h_source.html":[7,0,1,1,5,5,17],
+"ValidationError_8cpp.html":[7,0,1,1,5,5,18],
+"ValidationError_8h.html":[7,0,1,1,5,5,19],
+"ValidationError_8h_source.html":[7,0,1,1,5,5,19],
 "VersionChecker_8cpp.html":[7,0,1,1,5,33],
 "VersionChecker_8h.html":[7,0,1,1,5,34],
 "VersionChecker_8h_source.html":[7,0,1,1,5,34],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a935d3ffef92fc997178bbde261bbae4c":[6,0,4,2,6],
 "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a9ea223b29b741b175f8de039006bc684":[6,0,4,2,4],
 "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3ad9fe3a138000d19978bf69cd8d7528aa":[6,0,4,2,2],
-"classAction.html#a73c42ca584c76fc84ab95f260b7a30c3aef6c5fbb63e58b95c09d30a6c2de5b02":[6,0,4,2,1],
-"classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[6,0,4,16],
-"classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[6,0,4,25],
-"classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22]
+"classAction.html#a73c42ca584c76fc84ab95f260b7a30c3aef6c5fbb63e58b95c09d30a6c2de5b02":[6,0,4,2,1]
 };

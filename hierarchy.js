@@ -265,6 +265,7 @@ var hierarchy =
     [ "validators::IStringValidator", "classvalidators_1_1IStringValidator.html", [
       [ "validators::ComputerNameValidator", "classvalidators_1_1ComputerNameValidator.html", null ],
       [ "validators::EmptyStringValidator", "classvalidators_1_1EmptyStringValidator.html", null ],
+      [ "validators::IpAddressValidator", "classvalidators_1_1IpAddressValidator.html", null ],
       [ "validators::ScreenDuplicationsValidator", "classvalidators_1_1ScreenDuplicationsValidator.html", null ],
       [ "validators::SpacesValidator", "classvalidators_1_1SpacesValidator.html", null ]
     ] ],

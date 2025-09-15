@@ -1,5 +1,8 @@
 var NAVTREEINDEX12 =
 {
+"classMSWindowsClipboardAnyTextConverter.html#af24dce85797aa6ebe28f7b414006ff2b":[6,0,149,0],
+"classMSWindowsClipboardBitmapConverter.html":[6,0,150],
+"classMSWindowsClipboardBitmapConverter.html#a396106d6707a6fa540568c35b0150e09":[6,0,150,0],
 "classMSWindowsClipboardBitmapConverter.html#a716f99f86af5ac1afcf4995424c2e2a6":[6,0,150,2],
 "classMSWindowsClipboardBitmapConverter.html#a9421936afd859d6d0df698e28cb2aceb":[6,0,150,3],
 "classMSWindowsClipboardBitmapConverter.html#ac217a4d907ab68422ddafc11778e1fa7":[6,0,150,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX12 =
 "classOSXClipboard.html#a99298d285dbbbb273645ae744cf7fd19":[6,0,171,7],
 "classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c":[6,0,171,10],
 "classOSXClipboard.html#ac0e091e51bd2ade87822a039eda853c2":[6,0,171,3],
-"classOSXClipboard.html#ace77204585d7f138c202fa5b8ecf1235":[6,0,171,8],
-"classOSXClipboardAnyBitmapConverter.html":[6,0,172],
-"classOSXClipboardAnyBitmapConverter.html#a03fca3cb8e44fc73c2317bc4d83e7e3b":[6,0,172,6],
-"classOSXClipboardAnyBitmapConverter.html#a0a95b008355d70c80ecc6c66ec57b3ab":[6,0,172,0]
+"classOSXClipboard.html#ace77204585d7f138c202fa5b8ecf1235":[6,0,171,8]
 };

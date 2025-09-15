@@ -1,5 +1,8 @@
 var NAVTREEINDEX2 =
 {
+"KeyTypes_8h.html#a23d5b4a41b7764285314aa5704c67e68":[7,0,1,1,4,47,84],
+"KeyTypes_8h.html#a24fb479b7ac284f7af675309a0432f48":[7,0,1,1,4,47,168],
+"KeyTypes_8h.html#a2627ad4bc147d34a22cdb5d10537f7a4":[7,0,1,1,4,47,204],
 "KeyTypes_8h.html#a2a2baf9a875f8f55efa11c968c5f1bb5":[7,0,1,1,4,47,173],
 "KeyTypes_8h.html#a2b44c684aa113801db981f0c0ddb0d98":[7,0,1,1,4,47,143],
 "KeyTypes_8h.html#a2b80888186754ee55f3edc7c83428b31":[7,0,1,1,4,47,72],
@@ -176,9 +179,9 @@ var NAVTREEINDEX2 =
 "LanguageManager_8cpp.html":[7,0,1,1,4,1,0],
 "LanguageManager_8h.html":[7,0,1,1,4,1,1],
 "LanguageManager_8h_source.html":[7,0,1,1,4,1,1],
-"LineEditValidator_8cpp.html":[7,0,1,1,5,5,8],
-"LineEditValidator_8h.html":[7,0,1,1,5,5,9],
-"LineEditValidator_8h_source.html":[7,0,1,1,5,5,9],
+"LineEditValidator_8cpp.html":[7,0,1,1,5,5,10],
+"LineEditValidator_8h.html":[7,0,1,1,5,5,11],
+"LineEditValidator_8h_source.html":[7,0,1,1,5,5,11],
 "Lock_8cpp.html":[7,0,1,1,7,2],
 "Lock_8h.html":[7,0,1,1,7,3],
 "Lock_8h_source.html":[7,0,1,1,7,3],
@@ -246,8 +249,5 @@ var NAVTREEINDEX2 =
 "Log_8h.html#ae540a914cab70d94fb4963a03cd4f363":[7,0,1,1,1,18,3],
 "Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5":[7,0,1,1,1,18,22],
 "Log_8h_source.html":[7,0,1,1,1,18],
-"Logger_8cpp.html":[7,0,1,1,5,21],
-"Logger_8h.html":[7,0,1,1,5,22],
-"Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
-"Logger_8h_source.html":[7,0,1,1,5,22]
+"Logger_8cpp.html":[7,0,1,1,5,21]
 };

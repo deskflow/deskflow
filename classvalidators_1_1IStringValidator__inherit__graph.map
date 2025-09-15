@@ -1,11 +1,13 @@
 <map id="validators::IStringValidator" name="validators::IStringValidator">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,96,179,121"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,118,179,142"/>
 <area shape="rect" id="Node000002" href="$classvalidators_1_1ComputerNameValidator.html" title=" " alt="" coords="242,5,419,44"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,88,226,54,262,42,264,47,228,59,140,93"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,107,172,80,226,54,258,42,260,47,228,59,174,85,128,112"/>
 <area shape="rect" id="Node000003" href="$classvalidators_1_1EmptyStringValidator.html" title=" " alt="" coords="227,68,434,93"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,94,226,90,226,96,195,99"/>
-<area shape="rect" id="Node000004" href="$classvalidators_1_1ScreenDuplicationsValidator.html" title=" " alt="" coords="231,117,430,156"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,118,231,122,230,128,194,123"/>
-<area shape="rect" id="Node000005" href="$classvalidators_1_1SpacesValidator.html" title=" " alt="" coords="241,180,420,205"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="133,126,228,165,270,177,269,182,226,170,131,130"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="170,111,267,91,268,96,171,117"/>
+<area shape="rect" id="Node000004" href="$classvalidators_1_1IpAddressValidator.html" title=" " alt="" coords="233,118,428,142"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,127,233,127,233,133,194,133"/>
+<area shape="rect" id="Node000005" href="$classvalidators_1_1ScreenDuplicationsValidator.html" title=" " alt="" coords="231,167,430,205"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="163,144,246,163,244,169,162,149"/>
+<area shape="rect" id="Node000006" href="$classvalidators_1_1SpacesValidator.html" title=" " alt="" coords="241,230,420,254"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="122,150,170,183,228,214,264,227,262,232,226,219,167,188,119,154"/>
 </map>
