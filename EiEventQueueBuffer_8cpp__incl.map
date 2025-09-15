@@ -60,8 +60,8 @@
 <area shape="poly" id="edge62_Node000013_Node000020" title=" " alt="" coords="1556,187,1591,206,1632,233,1672,267,1705,309,1721,342,1734,378,1748,439,1743,441,1729,379,1717,344,1700,311,1668,271,1629,237,1588,211,1554,192"/>
 <area shape="rect" id="Node000021" href="$PlatformScreen_8h.html" title=" " alt="" coords="1440,237,1618,262"/>
 <area shape="poly" id="edge24_Node000013_Node000021" title=" " alt="" coords="1532,190,1532,222,1527,222,1527,190"/>
-<area shape="rect" id="Node000034" href="$XWindowsPowerManager_8h.html" title=" " alt="" coords="2121,310,2354,335"/>
-<area shape="poly" id="edge56_Node000013_Node000034" title=" " alt="" coords="1599,187,1694,207,1798,235,1827,248,1855,259,1983,288,2106,306,2105,312,1982,294,1854,265,1825,252,1796,240,1693,212,1597,192"/>
+<area shape="rect" id="Node000034" href="$XDGPowerManager_8h.html" title=" " alt="" coords="2129,310,2327,335"/>
+<area shape="poly" id="edge56_Node000013_Node000034" title=" " alt="" coords="1599,187,1694,207,1798,235,1827,248,1855,259,1988,289,2114,308,2113,313,1987,295,1854,265,1825,252,1796,240,1693,212,1597,192"/>
 <area shape="poly" id="edge58_Node000013_Node000035" title=" " alt="" coords="1486,192,1306,240,1305,234,1485,187"/>
 <area shape="poly" id="edge59_Node000013_Node000036" title=" " alt="" coords="1595,187,1849,235,1852,235,1851,241,1847,240,1594,193"/>
 <area shape="poly" id="edge60_Node000013_Node000037" title=" " alt="" coords="1461,187,818,247,818,242,1460,182"/>
@@ -118,7 +118,7 @@
 <area shape="poly" id="edge54_Node000031_Node000020" title=" " alt="" coords="1321,405,1706,458,1705,463,1320,410"/>
 <area shape="rect" id="Node000032" href="$NetworkProtocol_8h.html" title=" " alt="" coords="1181,455,1342,480"/>
 <area shape="poly" id="edge53_Node000031_Node000032" title=" " alt="" coords="1246,407,1256,440,1251,441,1241,409"/>
-<area shape="poly" id="edge57_Node000034_Node000016" title=" " alt="" coords="2247,334,2262,360,2278,396,2288,438,2288,460,2284,481,2275,500,2264,517,2260,514,2271,498,2279,479,2283,459,2282,439,2273,398,2258,362,2243,336"/>
+<area shape="poly" id="edge57_Node000034_Node000016" title=" " alt="" coords="2237,334,2261,385,2274,419,2284,455,2286,468,2284,481,2275,500,2264,517,2260,514,2271,498,2279,479,2281,468,2279,456,2269,421,2257,387,2232,336"/>
 <area shape="poly" id="edge78_Node000039_Node000012" title=" " alt="" coords="515,190,515,222,509,222,509,190"/>
 <area shape="poly" id="edge79_Node000039_Node000037" title=" " alt="" coords="556,187,730,234,729,239,554,192"/>
 <area shape="rect" id="Node000040" href="$Arch_8h.html" title=" " alt="" coords="268,237,356,262"/>

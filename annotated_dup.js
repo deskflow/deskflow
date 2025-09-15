@@ -313,6 +313,7 @@ var annotated_dup =
     [ "UnknownClientException", "classUnknownClientException.html", "classUnknownClientException" ],
     [ "VersionChecker", "classVersionChecker.html", "classVersionChecker" ],
     [ "Win32Modifiers", "structWin32Modifiers.html", "structWin32Modifiers" ],
+    [ "XDGPowerManager", "classXDGPowerManager.html", "classXDGPowerManager" ],
     [ "XIOReadMismatch", "classXIOReadMismatch.html", "classXIOReadMismatch" ],
     [ "XWindowsClipboard", "classXWindowsClipboard.html", "classXWindowsClipboard" ],
     [ "XWindowsClipboardAnyBitmapConverter", "classXWindowsClipboardAnyBitmapConverter.html", "classXWindowsClipboardAnyBitmapConverter" ],
@@ -323,7 +324,6 @@ var annotated_dup =
     [ "XWindowsClipboardUTF8Converter", "classXWindowsClipboardUTF8Converter.html", "classXWindowsClipboardUTF8Converter" ],
     [ "XWindowsEventQueueBuffer", "classXWindowsEventQueueBuffer.html", "classXWindowsEventQueueBuffer" ],
     [ "XWindowsKeyState", "classXWindowsKeyState.html", "classXWindowsKeyState" ],
-    [ "XWindowsPowerManager", "classXWindowsPowerManager.html", "classXWindowsPowerManager" ],
     [ "XWindowsScreen", "classXWindowsScreen.html", "classXWindowsScreen" ],
     [ "XWindowsScreenSaver", "classXWindowsScreenSaver.html", "classXWindowsScreenSaver" ],
     [ "XWindowsUtil", "classXWindowsUtil.html", "classXWindowsUtil" ]

@@ -142,7 +142,7 @@ var NAVTREEINDEX =
 "classPriorityQueue.html#a6d8a051ec280be31e78685a47300b1df",
 "classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358",
 "classSystemLogOutputter.html#a5e5339ffb0650f7b9f7958717d94f613",
-"classXWindowsClipboard_1_1MotifClipFormat.html#a3b087c8b0b8e365844e683ad4dcd36f9",
+"classXWindowsClipboardUTF8Converter.html#ab062fa86dd7ad9d9adc281fd2054a2d0",
 "classdeskflow_1_1EiEventQueueBuffer.html#ae45fe1cb3272fdd98e5e055bf6ea7988",
 "classdeskflow_1_1PortalInputCapture.html#afbf97d974161b3a9c5479ac2eaa51897",
 "classdeskflow_1_1gui_1_1IServerConfig.html",

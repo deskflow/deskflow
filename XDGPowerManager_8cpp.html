@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.14.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Deskflow: src/lib/platform/XWindowsPowerManager.cpp File Reference</title>
+<title>Deskflow: src/lib/platform/XDGPowerManager.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.6</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.7</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -63,7 +63,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('XWindowsPowerManager_8cpp.html','',''); });
+$(function(){initNavTree('XDGPowerManager_8cpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -89,10 +89,10 @@ $(function(){initNavTree('XWindowsPowerManager_8cpp.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">XWindowsPowerManager.cpp File Reference</div></div>
+  <div class="headertitle"><div class="title">XDGPowerManager.cpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &quot;<a class="el" href="XWindowsPowerManager_8h_source.html">XWindowsPowerManager.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="XDGPowerManager_8h_source.html">XDGPowerManager.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Arch_8h_source.html">arch/Arch.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Log_8h_source.html">base/Log.h</a>&quot;</code><br />
 <code>#include &quot;common/Constants.h&quot;</code><br />
@@ -101,29 +101,29 @@ $(function(){initNavTree('XWindowsPowerManager_8cpp.html','',''); });
 <code>#include &lt;QDBusInterface&gt;</code><br />
 <code>#include &lt;QDBusReply&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
-Include dependency graph for XWindowsPowerManager.cpp:</div>
+Include dependency graph for XDGPowerManager.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="XWindowsPowerManager_8cpp__incl.png" border="0" usemap="#asrc_2lib_2platform_2XWindowsPowerManager_8cpp" loading="lazy" alt=""/></div>
-<map name="asrc_2lib_2platform_2XWindowsPowerManager_8cpp" id="asrc_2lib_2platform_2XWindowsPowerManager_8cpp">
-<area shape="rect" title=" " alt="" coords="452,5,626,44"/>
-<area shape="rect" href="XWindowsPowerManager_8h.html" title=" " alt="" coords="19,92,200,117"/>
-<area shape="poly" title=" " alt="" coords="452,44,190,91,189,86,451,39"/>
+<div class="center"><img src="XDGPowerManager_8cpp__incl.png" border="0" usemap="#asrc_2lib_2platform_2XDGPowerManager_8cpp" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2platform_2XDGPowerManager_8cpp" id="asrc_2lib_2platform_2XDGPowerManager_8cpp">
+<area shape="rect" title=" " alt="" coords="442,5,618,44"/>
+<area shape="rect" href="XDGPowerManager_8h.html" title=" " alt="" coords="44,92,191,117"/>
+<area shape="poly" title=" " alt="" coords="442,45,195,91,194,86,441,40"/>
 <area shape="rect" href="Arch_8h.html" title=" " alt="" coords="176,165,264,189"/>
-<area shape="poly" title=" " alt="" coords="452,31,405,37,356,49,308,68,265,94,243,121,230,151,225,149,238,118,261,90,305,63,354,44,404,32,451,26"/>
-<area shape="rect" href="Log_8h.html" title=" " alt="" coords="275,92,360,117"/>
-<area shape="poly" title=" " alt="" coords="486,47,366,89,364,84,485,42"/>
-<area shape="rect" title=" " alt="" coords="384,92,531,117"/>
-<area shape="poly" title=" " alt="" coords="521,47,483,83,479,79,517,43"/>
-<area shape="rect" title=" " alt="" coords="555,92,686,117"/>
-<area shape="poly" title=" " alt="" coords="561,43,599,79,595,83,557,47"/>
-<area shape="rect" title=" " alt="" coords="710,92,802,117"/>
-<area shape="poly" title=" " alt="" coords="593,42,711,84,709,89,591,47"/>
-<area shape="rect" title=" " alt="" coords="826,92,942,117"/>
-<area shape="poly" title=" " alt="" coords="623,42,818,85,817,91,622,47"/>
-<area shape="rect" title=" " alt="" coords="966,92,1064,117"/>
-<area shape="poly" title=" " alt="" coords="627,37,951,89,951,94,626,42"/>
-<area shape="rect" title=" " alt="" coords="83,165,136,189"/>
-<area shape="poly" title=" " alt="" coords="112,117,112,149,107,149,107,117"/>
+<area shape="poly" title=" " alt="" coords="441,41,332,63,286,77,255,94,237,120,227,150,222,149,232,118,252,90,284,73,331,58,440,36"/>
+<area shape="rect" href="Log_8h.html" title=" " alt="" coords="266,92,351,117"/>
+<area shape="poly" title=" " alt="" coords="477,47,357,89,355,84,475,42"/>
+<area shape="rect" title=" " alt="" coords="375,92,522,117"/>
+<area shape="poly" title=" " alt="" coords="512,47,473,83,470,79,508,43"/>
+<area shape="rect" title=" " alt="" coords="546,92,676,117"/>
+<area shape="poly" title=" " alt="" coords="551,43,590,79,586,83,548,47"/>
+<area shape="rect" title=" " alt="" coords="701,92,793,117"/>
+<area shape="poly" title=" " alt="" coords="583,42,701,84,700,89,581,47"/>
+<area shape="rect" title=" " alt="" coords="817,92,933,117"/>
+<area shape="poly" title=" " alt="" coords="614,42,809,85,808,91,613,47"/>
+<area shape="rect" title=" " alt="" coords="957,92,1054,117"/>
+<area shape="poly" title=" " alt="" coords="619,37,942,89,941,94,618,42"/>
+<area shape="rect" title=" " alt="" coords="91,165,144,189"/>
+<area shape="poly" title=" " alt="" coords="120,117,120,149,115,149,115,117"/>
 <area shape="rect" href="Common_8h.html" title=" " alt="" coords="151,237,290,262"/>
 <area shape="poly" title=" " alt="" coords="223,190,223,222,218,222,218,190"/>
 <area shape="rect" title=" " alt="" coords="5,310,73,335"/>
@@ -136,11 +136,11 @@ Include dependency graph for XWindowsPowerManager.cpp:</div>
 <area shape="poly" title=" " alt="" coords="237,260,284,298,280,302,233,265"/>
 <area shape="rect" title=" " alt="" coords="364,310,428,335"/>
 <area shape="poly" title=" " alt="" coords="250,260,354,301,352,306,248,265"/>
-<area shape="poly" title=" " alt="" coords="303,119,250,158,247,153,300,115"/>
+<area shape="poly" title=" " alt="" coords="295,119,248,157,245,153,292,115"/>
 <area shape="rect" href="IArchMultithread_8h.html" title=" " alt="" coords="289,165,445,189"/>
-<area shape="poly" title=" " alt="" coords="328,116,352,150,348,153,324,119"/>
+<area shape="poly" title=" " alt="" coords="320,116,350,151,346,154,316,119"/>
 <area shape="rect" title=" " alt="" coords="469,165,526,189"/>
-<area shape="poly" title=" " alt="" coords="348,115,455,156,453,161,346,120"/>
+<area shape="poly" title=" " alt="" coords="341,115,456,157,454,162,339,120"/>
 <area shape="rect" title=" " alt="" coords="337,237,397,262"/>
 <area shape="poly" title=" " alt="" coords="370,190,370,222,364,222,364,190"/>
 </map>
@@ -158,7 +158,7 @@ Include dependency graph for XWindowsPowerManager.cpp:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_9d41f2d9dd9f152ba43e738700883d1e.html">platform</a></li><li class="navelem"><a href="XWindowsPowerManager_8cpp.html">XWindowsPowerManager.cpp</a></li>
+    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_9d41f2d9dd9f152ba43e738700883d1e.html">platform</a></li><li class="navelem"><a href="XDGPowerManager_8cpp.html">XDGPowerManager.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.14.0 </li>
   </ul>
 </div>

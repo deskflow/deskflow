@@ -482,6 +482,6 @@ var hierarchy =
     [ "deskflow::gui::core::WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", null ],
     [ "IPrimaryScreen::WheelInfo", "classIPrimaryScreen_1_1WheelInfo.html", null ],
     [ "Win32Modifiers", "structWin32Modifiers.html", null ],
-    [ "XWindowsPowerManager", "classXWindowsPowerManager.html", null ],
+    [ "XDGPowerManager", "classXDGPowerManager.html", null ],
     [ "XWindowsUtil", "classXWindowsUtil.html", null ]
 ];

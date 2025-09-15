@@ -8,8 +8,8 @@
 <area shape="poly" id="edge53_Node000001_Node000009" title=" " alt="" coords="1498,32,1378,283,1373,281,1493,29"/>
 <area shape="rect" id="Node000010" href="$PlatformScreen_8h.html" title=" " alt="" coords="1097,78,1276,103"/>
 <area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1449,33,1254,77,1253,71,1448,28"/>
-<area shape="rect" id="Node000028" href="$XWindowsPowerManager_8h.html" title=" " alt="" coords="1572,151,1804,175"/>
-<area shape="poly" id="edge47_Node000001_Node000028" title=" " alt="" coords="1508,29,1525,64,1538,84,1554,101,1590,125,1630,143,1628,148,1588,130,1550,105,1534,87,1520,67,1503,31"/>
+<area shape="rect" id="Node000028" href="$XDGPowerManager_8h.html" title=" " alt="" coords="1579,151,1778,175"/>
+<area shape="poly" id="edge47_Node000001_Node000028" title=" " alt="" coords="1508,29,1525,64,1538,83,1554,101,1588,125,1626,142,1624,147,1586,129,1550,105,1534,87,1520,67,1503,31"/>
 <area shape="rect" id="Node000029" title=" " alt="" coords="1564,78,1620,103"/>
 <area shape="poly" id="edge49_Node000001_Node000029" title=" " alt="" coords="1518,28,1567,66,1564,71,1515,33"/>
 <area shape="rect" id="Node000030" title=" " alt="" coords="1644,78,1713,103"/>
@@ -82,5 +82,5 @@
 <area shape="poly" id="edge43_Node000025_Node000018" title=" " alt="" coords="630,251,597,269,583,282,572,297,567,320,570,348,579,374,590,391,619,408,664,422,769,442,768,447,663,427,617,413,586,395,574,376,565,349,561,320,567,295,579,278,594,265,628,246"/>
 <area shape="rect" id="Node000026" href="$NetworkProtocol_8h.html" title=" " alt="" coords="582,296,743,321"/>
 <area shape="poly" id="edge44_Node000025_Node000026" title=" " alt="" coords="665,249,665,280,660,280,660,249"/>
-<area shape="poly" id="edge48_Node000028_Node000004" title=" " alt="" coords="1697,175,1710,203,1723,241,1727,283,1722,303,1713,322,1684,349,1649,367,1611,377,1577,381,1576,376,1610,372,1647,362,1681,345,1708,319,1717,302,1721,283,1718,242,1706,205,1692,177"/>
+<area shape="poly" id="edge48_Node000028_Node000004" title=" " alt="" coords="1689,174,1705,203,1720,241,1726,283,1722,303,1713,322,1684,349,1649,367,1611,377,1577,381,1576,376,1610,372,1647,362,1681,345,1708,319,1717,302,1720,283,1715,242,1700,205,1684,177"/>
 </map>

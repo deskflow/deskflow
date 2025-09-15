@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.6</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.7</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -106,7 +106,7 @@ $(function(){initNavTree('XWindowsScreen_8h_source.html','',''); });
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &quot;<a class="code" href="ClientArgs_8h.html">deskflow/ClientArgs.h</a>&quot;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &quot;<a class="code" href="KeyMap_8h.html">deskflow/KeyMap.h</a>&quot;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &quot;<a class="code" href="PlatformScreen_8h.html">deskflow/PlatformScreen.h</a>&quot;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="XWindowsPowerManager_8h.html">platform/XWindowsPowerManager.h</a>&quot;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &quot;<a class="code" href="XDGPowerManager_8h.html">platform/XDGPowerManager.h</a>&quot;</span></div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;set&gt;</span></div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
@@ -343,7 +343,7 @@ $(function(){initNavTree('XWindowsScreen_8h_source.html','',''); });
 <div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  <span class="comment">// pointer to (singleton) screen.  this is only needed by</span></div>
 <div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  <span class="comment">// ioErrorHandler().</span></div>
 <div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  <span class="keyword">static</span> <a class="code hl_function" href="classXWindowsScreen.html#a4dd741637a8f3e54ae19a5cd258db38d">XWindowsScreen</a> *s_screen;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <a class="code hl_class" href="classXWindowsPowerManager.html">XWindowsPowerManager</a> m_powerManager;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <a class="code hl_class" href="classXDGPowerManager.html">XDGPowerManager</a> m_powerManager;</div>
 <div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>};</div>
 </div>
 <div class="ttc" id="aArch_8h_html"><div class="ttname"><a href="Arch_8h.html">Arch.h</a></div></div>
@@ -359,15 +359,15 @@ $(function(){initNavTree('XWindowsScreen_8h_source.html','',''); });
 <div class="ttc" id="aPlatformScreen_8h_html"><div class="ttname"><a href="PlatformScreen_8h.html">PlatformScreen.h</a></div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a0a2f84ed7838f07779ae24c5a9086d33"><div class="ttname"><a href="ServerConfig_8cpp.html#a0a2f84ed7838f07779ae24c5a9086d33">y</a></div><div class="ttdeci">int y</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:27</div></div>
 <div class="ttc" id="aServerConfig_8cpp_html_a6150e0515f7202e2fb518f7206ed97dc"><div class="ttname"><a href="ServerConfig_8cpp.html#a6150e0515f7202e2fb518f7206ed97dc">x</a></div><div class="ttdeci">int x</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:26</div></div>
-<div class="ttc" id="aXWindowsPowerManager_8h_html"><div class="ttname"><a href="XWindowsPowerManager_8h.html">XWindowsPowerManager.h</a></div></div>
+<div class="ttc" id="aXDGPowerManager_8h_html"><div class="ttname"><a href="XDGPowerManager_8h.html">XDGPowerManager.h</a></div></div>
 <div class="ttc" id="aclassEvent_html"><div class="ttname"><a href="classEvent.html">Event</a></div><div class="ttdoc">Event.</div><div class="ttdef"><b>Definition</b> Event.h:26</div></div>
 <div class="ttc" id="aclassIClipboard_html"><div class="ttname"><a href="classIClipboard.html">IClipboard</a></div><div class="ttdoc">Clipboard interface.</div><div class="ttdef"><b>Definition</b> IClipboard.h:21</div></div>
 <div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:31</div></div>
 <div class="ttc" id="aclassIKeyState_html_a6ccc71dd0844bce866034fdcaf49ccc9"><div class="ttname"><a href="classIKeyState.html#a6ccc71dd0844bce866034fdcaf49ccc9">IKeyState::IKeyState</a></div><div class="ttdeci">IKeyState(const IEventQueue *events)</div><div class="ttdef"><b>Definition</b> IKeyState.cpp:19</div></div>
 <div class="ttc" id="aclassPlatformScreen_html_abe740ec47ce4b572adcfcfb5fa07df49"><div class="ttname"><a href="classPlatformScreen.html#abe740ec47ce4b572adcfcfb5fa07df49">PlatformScreen::PlatformScreen</a></div><div class="ttdeci">PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirection scrollDirection=deskflow::ClientScrollDirection::Normal)</div><div class="ttdef"><b>Definition</b> PlatformScreen.cpp:12</div></div>
+<div class="ttc" id="aclassXDGPowerManager_html"><div class="ttname"><a href="classXDGPowerManager.html">XDGPowerManager</a></div><div class="ttdef"><b>Definition</b> XDGPowerManager.h:13</div></div>
 <div class="ttc" id="aclassXWindowsClipboard_html"><div class="ttname"><a href="classXWindowsClipboard.html">XWindowsClipboard</a></div><div class="ttdoc">X11 clipboard implementation.</div><div class="ttdef"><b>Definition</b> XWindowsClipboard.h:26</div></div>
 <div class="ttc" id="aclassXWindowsKeyState_html"><div class="ttname"><a href="classXWindowsKeyState.html">XWindowsKeyState</a></div><div class="ttdoc">X Windows key state.</div><div class="ttdef"><b>Definition</b> XWindowsKeyState.h:33</div></div>
-<div class="ttc" id="aclassXWindowsPowerManager_html"><div class="ttname"><a href="classXWindowsPowerManager.html">XWindowsPowerManager</a></div><div class="ttdef"><b>Definition</b> XWindowsPowerManager.h:13</div></div>
 <div class="ttc" id="aclassXWindowsScreenSaver_html"><div class="ttname"><a href="classXWindowsScreenSaver.html">XWindowsScreenSaver</a></div><div class="ttdoc">X11 screen saver implementation.</div><div class="ttdef"><b>Definition</b> XWindowsScreenSaver.h:23</div></div>
 <div class="ttc" id="aclassXWindowsScreen_html_a018fe832435193bd16a2090b0847acac"><div class="ttname"><a href="classXWindowsScreen.html#a018fe832435193bd16a2090b0847acac">XWindowsScreen::warpCursor</a></div><div class="ttdeci">void warpCursor(int32_t x, int32_t y) override</div><div class="ttdoc">Warp cursor.</div><div class="ttdef"><b>Definition</b> XWindowsScreen.cpp:492</div></div>
 <div class="ttc" id="aclassXWindowsScreen_html_a0413b95e0050c362e98b926adcca1e79"><div class="ttname"><a href="classXWindowsScreen.html#a0413b95e0050c362e98b926adcca1e79">XWindowsScreen::handleSystemEvent</a></div><div class="ttdeci">void handleSystemEvent(const Event &amp;event) override</div><div class="ttdoc">Handle system event.</div><div class="ttdef"><b>Definition</b> XWindowsScreen.cpp:1125</div></div>
