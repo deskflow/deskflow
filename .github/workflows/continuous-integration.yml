@@ -191,7 +191,7 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "opensuse-x86_84"
+          - name: "opensuse-x86_64"
             runs-on: ubuntu-latest
             container: opensuse/tumbleweed:latest
             like: "suse"
@@ -205,7 +205,7 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "archlinux-x86_84"
+          - name: "archlinux-x86_64"
             runs-on: ubuntu-latest
             container: archlinux:latest
             like: "arch"
