@@ -30,6 +30,10 @@ public:
       QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>()
   );
   void handleLogLine(const QString &logLine);
+  void serverConfigDialogVisible(bool visible)
+  {
+    m_serverConfigDialogVisible = visible;
+  }
 
 Q_SIGNALS:
   void messageShowing();
@@ -45,6 +49,7 @@ private:
   std::shared_ptr<Deps> m_pDeps;
   QSet<QString> m_connectedClients;
   bool m_messageShowing = false;
+  bool m_serverConfigDialogVisible = false;
 };
 
 } // namespace deskflow::gui
