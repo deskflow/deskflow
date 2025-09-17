@@ -318,10 +318,19 @@ bool showUpdateCheckOption(QWidget *parent)
       QObject::tr(
           "<p>Would you like to check for updates when %1 starts?</p>"
           "<p>Checking for updates requires an Internet connection.</p>"
-          "<p>URL: <pre>%2</pre></p>"
+          "<p><b>URL:</b>&nbsp;&nbsp;<code>%2</code></p>"
+          "<p>Optional: Participating in the popularity contest sends your %1 version, "
+          "language, and OS name to the %1 API which helps us prioritize bug fixes.</p>"
       )
-          .arg(kAppName, Settings::value(Settings::Core::UpdateUrl).toString())
+          .arg(kAppName, Settings::value(Settings::Gui::UpdateCheckUrl).toString())
   );
+
+  auto popularityContest = new QCheckBox(QObject::tr("Participate in popularity contest"));
+  QObject::connect(popularityContest, &QCheckBox::toggled, [&](bool enabled) {
+    Settings::setValue(Settings::Gui::JoinPopularityContest, enabled);
+  });
+
+  message.setCheckBox(popularityContest);
 
   message.exec();
   return message.clickedButton() == checkButton;
