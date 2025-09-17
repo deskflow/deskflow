@@ -906,7 +906,7 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
   m_w = width;
   m_h = height;
 
-  // get center of default screen
+  // get center of screen
   m_xCenter = m_x + (m_w >> 1);
   m_yCenter = m_y + (m_h >> 1);
 
@@ -934,13 +934,21 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
     if (screens != nullptr) {
       if (numScreens > 1) {
         m_xinerama = true;
-        m_xCenter = screens[0].x_org + (screens[0].width >> 1);
-        m_yCenter = screens[0].y_org + (screens[0].height >> 1);
+        for (int n = 0; n < numScreens; n++) {
+          LOG_DEBUG(
+              "xinerama screen: %d origin: %d,%d size: %dx%d", n, screens[n].x_org, screens[n].y_org, screens[n].width,
+              screens[n].height
+          );
+          m_xCenter = std::max(m_xCenter, (screens[n].x_org + screens[n].width) >> 1);
+          m_yCenter = std::max(m_yCenter, (screens[n].y_org + screens[n].height) >> 1);
+        }
       }
       XFree(screens);
     }
   }
 #endif
+
+  LOG_DEBUG("center: %d,%d", m_xCenter, m_yCenter);
 }
 
 Window XWindowsScreen::openWindow() const
