@@ -328,7 +328,10 @@ void XWindowsScreen::leave()
   if (m_isPrimary) {
     warpCursor(m_xCenter, m_yCenter);
   } else {
-    fakeMouseMove(m_xCenter, m_yCenter);
+    // WARN: not using fakeMouseMove() intentionally
+    // forcibly ignore any xinerama quirks, so that `xrandr --panning ... --tracking ...` works
+    XTestFakeMotionEvent(m_display, DefaultScreen(m_display), m_xCenter, m_yCenter, CurrentTime);
+    XFlush(m_display);
   }
 
   // set input context focus to our window
