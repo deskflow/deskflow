@@ -45,15 +45,14 @@ using namespace deskflow::client;
 
 Client::Client(
     IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
-    deskflow::Screen *screen, deskflow::ClientArgs const &args
+    deskflow::Screen *screen
 )
     : m_name(name),
       m_serverAddress(address),
       m_socketFactory(socketFactory),
       m_screen(screen),
       m_events(events),
-      m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool()),
-      m_args(args)
+      m_useSecureNetwork(Settings::value(Settings::Security::TlsEnabled).toBool())
 {
   assert(m_socketFactory != nullptr);
   assert(m_screen != nullptr);
@@ -422,7 +421,7 @@ void Client::setupConnection()
     handleDisconnected();
   });
   m_events->addHandler(EventTypes::SocketStopRetry, m_stream->getEventTarget(), [this](const auto &) {
-    m_args.m_restartable = false;
+    Settings::setValue(Settings::Core::RestartOnFailure, false);
   });
 }
 

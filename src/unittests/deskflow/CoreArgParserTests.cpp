@@ -190,6 +190,86 @@ void CoreArgParserTests::preventSleep_0()
   QVERIFY(!Settings::value(Settings::Core::PreventSleep).toBool());
 }
 
+void CoreArgParserTests::restartLongOption_0()
+{
+  QStringList args = {"stub", "client", "--restartOnFailure", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartLongOption_1()
+{
+  QStringList args = {"stub", "client", "--restartOnFailure", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartLongOption_false()
+{
+  QStringList args = {"stub", "client", "--restartOnFailure", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartLongOption_true()
+{
+  QStringList args = {"stub", "client", "--restartOnFailure", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartShortOption_0()
+{
+  QStringList args = {"stub", "client", "-r", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartShortOption_1()
+{
+  QStringList args = {"stub", "client", "-r", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartShortOption_false()
+{
+  QStringList args = {"stub", "client", "-r", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
+void CoreArgParserTests::restartShortOption_true()
+{
+  QStringList args = {"stub", "client", "-r", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::RestartOnFailure).toBool());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

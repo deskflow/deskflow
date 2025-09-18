@@ -104,16 +104,8 @@ void ServerApp::help()
 {
   std::stringstream help;
   help << "\n\nServer Mode:\n\n"
-       << "Usage: " << kAppId << "-core server"
-       << " --config <pathname>"
-
-#if WINAPI_XWINDOWS
-       << " [--display <display>]"
-#endif
-
-       << s_helpCommonArgs << "\n"
+       << "Usage: " << kAppId << "-core server \n"
        << "  -c, --config <pathname>  path of the configuration file\n"
-       << s_helpGeneralArgs
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
        << s_helpVersionArgs << "\n"
@@ -368,7 +360,7 @@ bool ServerApp::initServer()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     // install a timer and handler to retry later
     assert(m_timer == nullptr);
     LOG_DEBUG("retry in %.0f seconds", retryTime);
@@ -428,7 +420,7 @@ bool ServerApp::startServer()
     m_serverState = Started;
     return true;
   } catch (SocketAddressInUseException &e) {
-    if (args().m_restartable) {
+    if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
       LOG_ERR("cannot listen for clients: %s", e.what());
     } else {
       LOG_CRIT("cannot listen for clients: %s", e.what());
@@ -440,7 +432,7 @@ bool ServerApp::startServer()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     // install a timer and handler to retry later
     assert(m_timer == nullptr);
     const auto retryTime = 10.0;
