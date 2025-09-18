@@ -85,6 +85,13 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::preventSleepOption) == "1"));
     Settings::setValue(Settings::Core::PreventSleep, value);
   }
+
+  if (m_parser.isSet(CoreArgs::restartOnFailureOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::restartOnFailureOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::restartOnFailureOption) == "1"));
+    Settings::setValue(Settings::Core::RestartOnFailure, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

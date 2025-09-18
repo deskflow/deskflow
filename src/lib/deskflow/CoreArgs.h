@@ -51,6 +51,10 @@ struct CoreArgs
       "prevent-sleep", "When true the machine will be prevented from sleeping while the program is running", "value"
   );
 
+  inline static const auto restartOnFailureOption = QCommandLineOption(
+      {"r", "restartOnFailure"}, "Set if the core should automatically restart if it fails", "value"
+  );
+
   inline static const auto options = {
       helpOption,
       versionOption,
@@ -62,7 +66,8 @@ struct CoreArgs
       logFileOption,
       insecureOption,
       tlsCertOption,
-      preventSleepOption
+      preventSleepOption,
+      restartOnFailureOption
 #if WINAPI_XWINDOWS
       ,
       displayOption

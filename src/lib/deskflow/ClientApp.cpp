@@ -89,7 +89,8 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
         // we'll try to resolve the address each time we connect to the
         // server.  a bad port will never get better.  patch by Brent
         // Priddy.
-        if (!args().m_restartable || e.getError() == SocketAddressException::SocketError::BadPort) {
+        if (!Settings::value(Settings::Core::RestartOnFailure).toBool() ||
+            e.getError() == SocketAddressException::SocketError::BadPort) {
           LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
           bye(s_exitFailed);
         }
@@ -109,11 +110,11 @@ void ClientApp::help()
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
 #endif
-       << s_helpSysArgs << s_helpCommonArgs << " <server-address>"
+       << s_helpSysArgs << " <server-address>"
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
-       << s_helpGeneralArgs << s_helpSysInfo << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
+       << s_helpSysInfo << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
        << "                             which is 120 by default.\n"
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
@@ -249,7 +250,7 @@ void ClientApp::handleClientRefused(const Event &e)
 {
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-  if (!args().m_restartable || !info->m_retry) {
+  if (!Settings::value(Settings::Core::RestartOnFailure).toBool() || !info->m_retry) {
     LOG_ERR("failed to connect to server: %s", info->m_what.c_str());
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
@@ -263,7 +264,7 @@ void ClientApp::handleClientRefused(const Event &e)
 void ClientApp::handleClientDisconnected()
 {
   LOG_IPC("disconnected from server");
-  if (!args().m_restartable) {
+  if (!Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
     scheduleClientRestart(s_retryTime);
@@ -272,7 +273,7 @@ void ClientApp::handleClientDisconnected()
 
 Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
 {
-  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen, args());
+  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen);
 
   try {
     getEvents()->addHandler(EventTypes::ClientConnected, client->getEventTarget(), [this](const auto &) {
@@ -348,7 +349,7 @@ bool ClientApp::startClient()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     scheduleClientRestart(retryTime);
     return true;
   } else {

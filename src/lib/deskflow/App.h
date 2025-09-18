@@ -141,14 +141,9 @@ private:
 #else
 #define DAEMON_RUNNING(running_)
 #endif
-constexpr static auto s_helpGeneralArgs = //
-    "  -1, --no-restart         do not try to restart on failure.\n"
-    "*     --restart            restart the server automatically if it fails.\n";
 
 constexpr static auto s_helpVersionArgs = //
     "  -h, --help               display this help and exit.\n";
-
-constexpr static auto s_helpCommonArgs = " [--restart|--no-restart]";
 
 // system args (windows/unix)
 #if SYSAPI_UNIX
