@@ -95,6 +95,13 @@ void CoreArgParser::parse()
     auto value = m_parser.value(CoreArgs::displayOption);
     Settings::setValue(Settings::Core::Display, value);
   }
+
+  if (m_parser.isSet(CoreArgs::restartOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::restartOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::restartOption) == "1"));
+    Settings::setValue(Settings::Core::RestartOnFailure, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

@@ -12,7 +12,6 @@
 
 #include "HelloBack.h"
 #include "base/EventTypes.h"
-#include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
 #include "mt/CondVar.h"
 #include "net/NetworkAddress.h"
@@ -60,7 +59,7 @@ public:
   */
   Client(
       IEventQueue *events, const std::string &name, const NetworkAddress &address, ISocketFactory *socketFactory,
-      deskflow::Screen *screen, deskflow::ClientArgs const &args
+      deskflow::Screen *screen
   );
   Client(Client const &) = delete;
   Client(Client &&) = delete;
@@ -202,7 +201,6 @@ private:
   bool m_useSecureNetwork = false;
   bool m_enableClipboard = true;
   size_t m_maximumClipboardSize = INT_MAX;
-  deskflow::ClientArgs m_args;
   size_t m_resolvedAddressesCount = 0;
   std::unique_ptr<deskflow::client::HelloBack> m_pHelloBack;
 };

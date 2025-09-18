@@ -101,13 +101,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, "-1", "--no-restart")) {
-    // don't try to restart
-    argsBase().m_restartable = false;
-  } else if (isArg(i, argc, argv, nullptr, "--restart")) {
-    // try to restart
-    argsBase().m_restartable = true;
-  } else if (isArg(i, argc, argv, nullptr, "--no-hooks")) {
+  if (isArg(i, argc, argv, nullptr, "--no-hooks")) {
     argsBase().m_noHooks = true;
   } else if (isArg(i, argc, argv, "-h", "--help")) {
     if (m_app) {

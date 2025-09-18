@@ -32,6 +32,14 @@ private Q_SLOTS:
   void preventSleep_false();
   void preventSleep_1();
   void preventSleep_0();
+  void restartLongOption_0();
+  void restartLongOption_1();
+  void restartLongOption_false();
+  void restartLongOption_true();
+  void restartShortOption_0();
+  void restartShortOption_1();
+  void restartShortOption_false();
+  void restartShortOption_true();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
