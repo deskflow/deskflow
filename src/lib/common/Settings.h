@@ -50,6 +50,7 @@ public:
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
     inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
     inline static const auto Display = QStringLiteral("core/display");
+    inline static const auto RestartOnFailure = QStringLiteral("core/restartOnFailure");
   };
   struct Daemon
   {
@@ -173,6 +174,7 @@ private:
     , Settings::Core::StartedBefore
     , Settings::Core::UpdateUrl
     , Settings::Core::Display
+    , Settings::Core::RestartOnFailure
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile

@@ -276,30 +276,6 @@ void ArgParserTests::deprecatedArg_crypoPass_false()
   QCOMPARE(i, 1);
 }
 
-void ArgParserTests::generic_noRestart()
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kNoRestartCmd[argc] = {"stub", "--no-restart"};
-
-  m_parser.parseGenericArgs(argc, kNoRestartCmd, i);
-
-  QVERIFY(!m_parser.argsBase().m_restartable);
-  QCOMPARE(i, 1);
-}
-
-void ArgParserTests::generic_restart()
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kRestartCmd[argc] = {"stub", "--restart"};
-
-  m_parser.parseGenericArgs(argc, kRestartCmd, i);
-
-  QVERIFY(m_parser.argsBase().m_restartable);
-  QCOMPARE(i, 1);
-}
-
 void ArgParserTests::generic_unknown()
 {
   int i = 1;
