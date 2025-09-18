@@ -49,6 +49,7 @@ public:
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
     inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
+    inline static const auto Display = QStringLiteral("core/display");
   };
   struct Daemon
   {
@@ -171,6 +172,7 @@ private:
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
     , Settings::Core::UpdateUrl
+    , Settings::Core::Display
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile
