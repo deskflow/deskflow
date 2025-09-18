@@ -110,6 +110,18 @@ public:
 
   void handleScreenError() const;
 
+  void setDisplay(const char *display)
+  {
+    if (m_display == display)
+      return;
+    m_display = display;
+  }
+
+  const char *display() const
+  {
+    return m_display;
+  }
+
 protected:
   void runEventsLoop(void *);
 
@@ -121,6 +133,7 @@ private:
   FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
+  const char *m_display = nullptr;
 };
 
 #if WINAPI_MSWINDOWS

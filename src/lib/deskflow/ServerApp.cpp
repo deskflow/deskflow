@@ -117,14 +117,6 @@ void ServerApp::help()
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
        << s_helpSysInfo << s_helpVersionArgs << "\n"
-
-#if WINAPI_XWINDOWS
-       << "      --display <display>  when in X mode, connect to the X server\n"
-       << "                             at <display>.\n"
-#endif
-
-       << "* marks defaults.\n"
-
        << s_helpNoWayland;
 
   LOG_PRINT("%s", help.str().c_str());

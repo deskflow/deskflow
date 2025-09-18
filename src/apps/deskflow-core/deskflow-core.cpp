@@ -92,9 +92,11 @@ int main(int argc, char **argv)
 
   if (parser.serverMode()) {
     ServerApp app(&events);
+    app.setDisplay(parser.display());
     return app.run(argc, argv);
   } else if (parser.clientMode()) {
     ClientApp app(&events);
+    app.setDisplay(parser.display());
     return app.run(argc, argv);
   }
 

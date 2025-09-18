@@ -33,6 +33,7 @@ public:
   bool version() const;
   bool serverMode() const;
   bool clientMode() const;
+  const char *display() const;
 
 private:
   [[noreturn]] void showHelpText() const;

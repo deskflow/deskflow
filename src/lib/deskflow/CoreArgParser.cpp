@@ -131,3 +131,12 @@ bool CoreArgParser::clientMode() const
 {
   return m_clientMode;
 }
+
+const char *CoreArgParser::display() const
+{
+#if WINAPI_XWINDOWS
+  return qPrintable(m_parser.value(CoreArgs::displayOption));
+#else
+  return nullptr;
+#endif
+}
