@@ -31,8 +31,8 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
   updateCommonArgs(argv);
   int i = 1;
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i) || parseGenericArgs(argc, argv, i) ||
-        parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "server")) {
+    if (parseGenericArgs(argc, argv, i) || parseDeprecatedArgs(argc, argv, i) ||
+        isArg(i, argc, argv, nullptr, "server")) {
       ++i;
       continue;
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
@@ -61,8 +61,8 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
   int i{1};
   while (i < argc) {
-    if (parsePlatformArgs(args, argc, argv, i) || parseGenericArgs(argc, argv, i) ||
-        parseDeprecatedArgs(argc, argv, i) || isArg(i, argc, argv, nullptr, "client")) {
+    if (parseGenericArgs(argc, argv, i) || parseDeprecatedArgs(argc, argv, i) ||
+        isArg(i, argc, argv, nullptr, "client")) {
       ++i;
       continue;
     } else if (isArg(i, argc, argv, nullptr, "--camp") || isArg(i, argc, argv, nullptr, "--no-camp")) {
@@ -97,27 +97,6 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
   }
 
   return true;
-}
-
-bool ArgParser::parsePlatformArgs(deskflow::ArgsBase &argsBase, const int &argc, const char *const *argv, int &i) const
-{
-#if !WINAPI_XWINDOWS
-  // no options for carbon or windows
-  return false;
-#else
-
-  if (isArg(i, argc, argv, "-display", "--display", 1)) {
-    // use alternative display
-    argsBase.m_display = argv[++i];
-  }
-
-  else {
-    // option not supported here
-    return false;
-  }
-
-  return true;
-#endif
 }
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const

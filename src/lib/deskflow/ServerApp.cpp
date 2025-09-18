@@ -117,14 +117,6 @@ void ServerApp::help()
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
        << s_helpVersionArgs << "\n"
-
-#if WINAPI_XWINDOWS
-       << "      --display <display>  when in X mode, connect to the X server\n"
-       << "                             at <display>.\n"
-#endif
-
-       << "* marks defaults.\n"
-
        << s_helpNoWayland;
 
   LOG_PRINT("%s", help.str().c_str());
@@ -482,7 +474,10 @@ deskflow::Screen *ServerApp::createScreen()
 
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
-  return new deskflow::Screen(new XWindowsScreen(args().m_display, true, 0, getEvents()), getEvents());
+  return new deskflow::Screen(
+      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, 0, getEvents()),
+      getEvents()
+  );
 #elif WINAPI_CARBON
   return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #endif

@@ -41,9 +41,6 @@ public:
   /// @brief The filename of the running process
   const char *m_pname = nullptr;
 
-  /// @brief Contains the X-Server display to use
-  const char *m_display = nullptr;
-
   /// @brief Will cause the application to exit with OK code when set to true
   bool m_shouldExitOk = false;
 

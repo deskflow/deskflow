@@ -13,6 +13,9 @@
  */
 struct CoreArgs
 {
+  inline static const auto displayOption =
+      QCommandLineOption("display", "When in X mode, connect to the X server at <display>", "display");
+
   inline static const auto helpOption = QCommandLineOption({"h", "help"}, "Display Help on the command line");
   inline static const auto versionOption = QCommandLineOption({"v", "version"}, "Display version information");
   inline static const auto configOption = QCommandLineOption(
@@ -48,7 +51,7 @@ struct CoreArgs
       "prevent-sleep", "When true the machine will be prevented from sleeping while the program is running", "value"
   );
 
-  inline static const auto options = {helpOption,     versionOption, configOption,      interfaceOption,
-                                      portOption,     nameOption,    logLevelOption,    logFileOption,
-                                      secureOption, tlsCertOption, preventSleepOption};
+  inline static const auto options = {helpOption,     versionOption, configOption,       interfaceOption,
+                                      portOption,     nameOption,    logLevelOption,     logFileOption,
+                                      secureOption, tlsCertOption, preventSleepOption, displayOption};
 };

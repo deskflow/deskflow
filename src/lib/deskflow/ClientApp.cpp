@@ -118,10 +118,6 @@ void ClientApp::help()
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
        << "                             computer.\n"
-#if WINAPI_XWINDOWS
-       << "      --display <display>  when in X mode, connect to the X server\n"
-       << "                             at <display>.\n"
-#endif
        << s_helpVersionArgs << "\n"
        << "* marks defaults.\n"
 
@@ -181,7 +177,10 @@ deskflow::Screen *ClientApp::createScreen()
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
-      new XWindowsScreen(args().m_display, false, args().m_yscroll, getEvents(), args().m_clientScrollDirection),
+      new XWindowsScreen(
+          qPrintable(Settings::value(Settings::Core::Display).toString()), false, args().m_yscroll, getEvents(),
+          args().m_clientScrollDirection
+      ),
       getEvents()
   );
 
