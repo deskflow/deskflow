@@ -90,6 +90,11 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::preventSleepOption) == "1"));
     Settings::setValue(Settings::Core::PreventSleep, value);
   }
+
+  if (m_parser.isSet(CoreArgs::displayOption)) {
+    auto value = m_parser.value(CoreArgs::displayOption);
+    Settings::setValue(Settings::Core::Display, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const
@@ -135,4 +140,13 @@ bool CoreArgParser::serverMode() const
 bool CoreArgParser::clientMode() const
 {
   return m_clientMode;
+}
+
+const char *CoreArgParser::display() const
+{
+#if WINAPI_XWINDOWS
+  return qPrintable(m_parser.value(CoreArgs::displayOption));
+#else
+  return nullptr;
+#endif
 }
