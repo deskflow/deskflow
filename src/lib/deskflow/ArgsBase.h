@@ -44,17 +44,8 @@ public:
   /// @brief The filename of the running process
   const char *m_pname = nullptr;
 
-  /// @brief The logging level of the application
-  const char *m_logFilter = nullptr;
-
-  /// @brief The full path to the logfile
-  const char *m_logFile = nullptr;
-
   /// @brief Contains the X-Server display to use
   const char *m_display = nullptr;
-
-  /// @brief The name of the current computer
-  std::string m_name;
 
   /// @brief Should the app add a tray icon
   bool m_disableTray = false;
@@ -64,18 +55,6 @@ public:
 
   /// @brief Will cause the application to exit with fail code when set to true
   bool m_shouldExitFail = false;
-
-  /// @brief Bind to this address
-  std::string m_deskflowAddress;
-
-  /// @brief Should the connections be TLS encrypted
-  bool m_enableCrypto = false;
-
-  /// @brief Contains the location of the TLS certificate file
-  std::string m_tlsCertFile;
-
-  /// @brief Stop this computer from sleeping
-  bool m_preventSleep = false;
 
 protected:
   /// @brief deletes pointers and sets the value to null

@@ -50,6 +50,7 @@ public:
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
     inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
+    inline static const auto RestartOnFailure = QStringLiteral("core/restartOnFailure");
   };
   struct Daemon
   {
@@ -130,6 +131,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+  static int logLevelToInt(const QString &level = "INFO");
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
@@ -173,6 +175,7 @@ private:
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
     , Settings::Core::UpdateUrl
+    , Settings::Core::RestartOnFailure
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile

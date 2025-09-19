@@ -83,6 +83,9 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ClipboardChunk.h
   Config.cpp
   Config.h
+  CoreArgParser.cpp
+  CoreArgParser.h
+  CoreArgs.h
   DaemonApp.cpp
   DaemonApp.h
   DeskflowException.cpp
@@ -133,7 +136,7 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ipc/DaemonIpcServer.h
 )
 
-target_link_libraries(${lib_name} PUBLIC Qt6::Core Qt6::Network)
+target_link_libraries(${lib_name} PUBLIC common Qt6::Core Qt6::Network)
 
 if(WIN32)
     target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib})

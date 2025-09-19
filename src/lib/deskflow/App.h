@@ -58,7 +58,6 @@ public:
   virtual const char *daemonInfo() const = 0;
   virtual std::string configSection() const = 0;
 
-  virtual void version();
   void setByeFunc(void (*bye)(int)) override
   {
     m_bye = bye;
@@ -111,6 +110,18 @@ public:
 
   void handleScreenError() const;
 
+  void setDisplay(const char *display)
+  {
+    if (m_display == display)
+      return;
+    m_display = display;
+  }
+
+  const char *display() const
+  {
+    return m_display;
+  }
+
 protected:
   void runEventsLoop(void *);
 
@@ -122,6 +133,7 @@ private:
   FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
+  const char *m_display = nullptr;
 };
 
 #if WINAPI_MSWINDOWS
@@ -129,26 +141,9 @@ private:
 #else
 #define DAEMON_RUNNING(running_)
 #endif
-constexpr static auto s_helpGeneralArgs = //
-    "  -d, --debug <level>      filter out log messages with priority below level.\n"
-    "                             level may be: FATAL, ERROR, WARNING, NOTE, INFO,\n"
-    "                             DEBUG, DEBUG1, DEBUG2.\n"
-    "  -n, --name <screen-name> use screen-name instead the hostname to identify\n"
-    "                             this screen in the configuration.\n"
-    "  -1, --no-restart         do not try to restart on failure.\n"
-    "*     --restart            restart the server automatically if it fails.\n"
-    "  -l  --log <file>         write log messages to file.\n"
-    "      --enable-crypto      enable TLS encryption.\n"
-    "      --tls-cert           specify the path to the TLS certificate file.\n";
 
 constexpr static auto s_helpVersionArgs = //
-    "  -h, --help               display this help and exit.\n"
-    "      --version            display version information and exit.\n";
-
-constexpr static auto s_helpCommonArgs = //
-    " [--name <screen-name>]"
-    " [--restart|--no-restart]"
-    " [--debug <level>]";
+    "  -h, --help               display this help and exit.\n";
 
 // system args (windows/unix)
 #if SYSAPI_UNIX
