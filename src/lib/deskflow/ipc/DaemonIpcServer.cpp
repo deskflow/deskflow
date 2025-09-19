@@ -136,7 +136,7 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
     clientSocket->write(kAckMessage);
   } else if (command == "logPath") {
     LOG_DEBUG("ipc server got log path request");
-    clientSocket->write("logPath=" + m_logFilename.toUtf8());
+    clientSocket->write("logPath=" + m_logFilename.toUtf8() + "\n");
   } else if (command == "clearSettings") {
     LOG_DEBUG("ipc server got clear settings message");
     Q_EMIT clearSettingsRequested();
