@@ -344,7 +344,7 @@ void ArgParserTests::generic_name()
   const char *kNameCmd[argc] = {"stub", "--name", "mock"};
   // Somehow cause a dump if not made here.
   ArgParser parser(nullptr);
-  deskflow::ArgsBase base;
+  static deskflow::ArgsBase base;
 
   parser.setArgsBase(base);
   parser.parseGenericArgs(argc, kNameCmd, i);
