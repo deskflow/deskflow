@@ -32,9 +32,6 @@ public:
   /// @brief Stores what type of object this is
   ClassType m_classType = ClassType::Base;
 
-  /// @brief Should run as a daemon
-  bool m_daemon = true;
-
   /// @brief Should the app restart automatically
   bool m_restartable = true;
 

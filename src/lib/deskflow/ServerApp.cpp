@@ -678,20 +678,6 @@ int daemonMainLoopStatic(int argc, const char **argv)
 int ServerApp::standardStartup(int argc, char **argv)
 {
   initApp(argc, argv);
-
-  // daemonize if requested
-  if (args().m_daemon) {
-    return ARCH->daemonize(daemonName(), daemonMainLoopStatic);
-  } else {
-    return mainLoop();
-  }
-}
-
-int ServerApp::foregroundStartup(int argc, char **argv)
-{
-  initApp(argc, argv);
-
-  // never daemonize
   return mainLoop();
 }
 

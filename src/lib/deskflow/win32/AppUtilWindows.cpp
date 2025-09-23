@@ -100,7 +100,7 @@ static int daemonNTStartupStatic(int argc, char **argv)
 
 static int foregroundStartupStatic(int argc, char **argv)
 {
-  return AppUtil::instance().app().foregroundStartup(argc, argv);
+  return AppUtil::instance().app().standardStartup(argc, argv);
 }
 
 int AppUtilWindows::run(int argc, char **argv)
@@ -120,7 +120,6 @@ int AppUtilWindows::run(int argc, char **argv)
     startup = &daemonNTStartupStatic;
   } else {
     startup = &foregroundStartupStatic;
-    app().argsBase().m_daemon = false;
   }
 
   return app().runInner(argc, argv, startup);

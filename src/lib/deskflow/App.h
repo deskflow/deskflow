@@ -153,11 +153,9 @@ constexpr static auto s_helpCommonArgs = //
 // system args (windows/unix)
 #if SYSAPI_UNIX
 
-// unix daemon mode args
-constexpr static auto s_helpSysArgs = " [--daemon|--no-daemon]";
-constexpr static auto s_helpSysInfo = //
-    "  -f, --no-daemon          run in the foreground.\n"
-    "*     --daemon             run as a daemon.\n";
+// unix has no system args
+constexpr static auto s_helpSysArgs = "";
+constexpr static auto s_helpSysInfo = "";
 
 #elif SYSAPI_WIN32
 

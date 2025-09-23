@@ -109,7 +109,7 @@ void ClientApp::help()
 #ifdef WINAPI_XWINDOWS
        << " [--display <display>]"
 #endif
-       << s_helpSysArgs << s_helpCommonArgs << " <server-address>"
+       << s_helpCommonArgs << " <server-address>"
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
        << "\n"
@@ -314,14 +314,6 @@ void ClientApp::closeClient(Client *client)
   delete client;
 }
 
-int ClientApp::foregroundStartup(int argc, char **argv)
-{
-  initApp(argc, argv);
-
-  // never daemonize
-  return mainLoop();
-}
-
 bool ClientApp::startClient()
 {
   double retryTime;
@@ -413,13 +405,7 @@ static int daemonMainLoopStatic(int argc, const char **argv)
 int ClientApp::standardStartup(int argc, char **argv)
 {
   initApp(argc, argv);
-
-  // daemonize if requested
-  if (args().m_daemon) {
-    return ARCH->daemonize(daemonName(), &daemonMainLoopStatic);
-  } else {
-    return mainLoop();
-  }
+  return mainLoop();
 }
 
 int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
