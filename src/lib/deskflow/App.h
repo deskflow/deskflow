@@ -150,24 +150,6 @@ constexpr static auto s_helpCommonArgs = //
     " [--restart|--no-restart]"
     " [--debug <level>]";
 
-// system args (windows/unix)
-#if SYSAPI_UNIX
-
-// unix has no system args
-constexpr static auto s_helpSysArgs = "";
-constexpr static auto s_helpSysInfo = "";
-
-#elif SYSAPI_WIN32
-
-// windows args
-constexpr static auto s_helpSysArgs = " [--service <action>] [--relaunch]";
-constexpr static auto s_helpSysInfo = //
-    "      --service <action>   manage the windows service, valid options are:\n"
-    "                             install/uninstall/start/stop\n"
-    "      --relaunch           persistently relaunches process in current user \n"
-    "                             session (useful for vista and upward).\n";
-#endif
-
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
 constexpr static auto s_helpNoWayland = //
     "\nYour Linux distribution does not support Wayland EI (emulated input)\n"
