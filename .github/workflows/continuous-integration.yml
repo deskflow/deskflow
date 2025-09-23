@@ -138,13 +138,13 @@ jobs:
             arch: "arm64"
 
           - name: "macos-14-arm64"
-            runs-on: "macos-14"
+            runs-on: macos-14
             timeout: 10
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
             qt-version: 6.9.1
 
-          - name: "macos-13-x64"
-            runs-on: macos-13
+          - name: "macos-14-x64"
+            runs-on: macos-14-large
             timeout: 20
             config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
             qt-version: 6.9.1
