@@ -37,8 +37,6 @@ private Q_SLOTS:
   void generic_logLevel();
   void generic_logFile();
   void generic_logFileWithSpace();
-  void generic_foreground();
-  void generic_daemon();
   void generic_name();
   void generic_noRestart();
   void generic_restart();

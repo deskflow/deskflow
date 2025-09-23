@@ -30,7 +30,6 @@ public:
   virtual int mainLoop() = 0;
   virtual void initApp(int argc, const char **argv) = 0;
   virtual const char *daemonName() const = 0;
-  virtual int foregroundStartup(int argc, char **argv) = 0;
   virtual deskflow::Screen *createScreen() = 0;
   virtual IEventQueue *getEvents() const = 0;
 };

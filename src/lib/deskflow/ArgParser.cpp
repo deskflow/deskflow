@@ -129,12 +129,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
     argsBase().m_logFilter = argv[++i];
   } else if (isArg(i, argc, argv, "-l", "--log", 1)) {
     argsBase().m_logFile = argv[++i];
-  } else if (isArg(i, argc, argv, "-f", "--no-daemon")) {
-    // not a daemon
-    argsBase().m_daemon = false;
-  } else if (isArg(i, argc, argv, nullptr, "--daemon")) {
-    // daemonize
-    argsBase().m_daemon = true;
   } else if (isArg(i, argc, argv, "-n", "--name", 1)) {
     // save screen name
     argsBase().m_name = argv[++i];
@@ -339,19 +333,5 @@ void ArgParser::updateCommonArgs(const char *const *argv) const
 
 bool ArgParser::checkUnexpectedArgs() const
 {
-#if SYSAPI_WIN32
-  // suggest that user installs as a windows service. when launched as
-  // service, process should automatically detect that it should run in
-  // daemon mode.
-  if (argsBase().m_daemon) {
-    LOG(
-        (CLOG_ERR "the --daemon argument is not supported on windows. "
-                  "instead, install %s as a service (--service install)",
-         argsBase().m_pname)
-    );
-    return true;
-  }
-#endif
-
   return false;
 }
