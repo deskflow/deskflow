@@ -110,13 +110,13 @@ void ServerApp::help()
        << " [--display <display>]"
 #endif
 
-       << s_helpSysArgs << s_helpCommonArgs << "\n"
+       << s_helpCommonArgs << "\n"
        << "  -a, --address <address>  listen for clients on the given address.\n"
        << "  -c, --config <pathname>  path of the configuration file\n"
        << s_helpGeneralArgs
        << "      --disable-client-cert-check disable client SSL certificate \n"
           "                                     checking (deprecated)\n"
-       << s_helpSysInfo << s_helpVersionArgs << "\n"
+       << s_helpVersionArgs << "\n"
 
 #if WINAPI_XWINDOWS
        << "      --display <display>  when in X mode, connect to the X server\n"
