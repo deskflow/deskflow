@@ -64,7 +64,7 @@ public:
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   int runInner(int argc, char **argv, StartupFunc startup) override;
-  int standardStartup(int argc, char **argv) override;
+  int start(int argc, char **argv) override;
   void startNode() override;
 
   //
