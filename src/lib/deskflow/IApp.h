@@ -23,7 +23,7 @@ public:
   virtual ~IApp() = default;
   virtual void setByeFunc(void (*bye)(int)) = 0;
   virtual deskflow::ArgsBase &argsBase() const = 0;
-  virtual int standardStartup(int argc, char **argv) = 0;
+  virtual int start(int argc, char **argv) = 0;
   virtual int runInner(int argc, char **argv, StartupFunc startup) = 0;
   virtual void startNode() = 0;
   virtual void bye(int error) = 0;
