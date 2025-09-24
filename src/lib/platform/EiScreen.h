@@ -189,7 +189,7 @@ private:
   using HotKeyMap = std::map<KeyID, HotKeySet>;
 
   HotKeyMap m_hotkeys;
-  XDGPowerManager m_powerManager;
+  [[no_unique_address]] XDGPowerManager m_powerManager;
 };
 
 } // namespace deskflow
