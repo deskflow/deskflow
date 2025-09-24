@@ -53,9 +53,6 @@ public:
   /// @brief The name of the current computer
   std::string m_name;
 
-  /// @brief Should the app add a tray icon
-  bool m_disableTray = false;
-
   /// @brief Will cause the application to exit with OK code when set to true
   bool m_shouldExitOk = false;
 
