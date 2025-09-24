@@ -80,9 +80,9 @@ private:
   void disconnect();
   bool verifyCertFingerprint(const QString &FingerprintDatabasePath) const;
 
-  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceConnect(ISocketMultiplexerJob *const socket, bool, bool, bool);
 
-  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *, bool, bool, bool);
+  ISocketMultiplexerJob *serviceAccept(ISocketMultiplexerJob *const socket, bool, bool, bool);
 
   void handleTCPConnected(const Event &event);
 
