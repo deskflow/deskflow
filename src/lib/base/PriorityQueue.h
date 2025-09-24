@@ -126,5 +126,5 @@ public:
 
 private:
   Container c;
-  Compare comp;
+  [[no_unique_address]] Compare comp;
 };
