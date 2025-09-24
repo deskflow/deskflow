@@ -153,7 +153,7 @@ bool FileLogOutputter::write(LogLevel level, const QString &message)
   if (file.size() > s_logFileSizeLimit) {
     const auto oldFile = QStringLiteral("%1.1").arg(m_fileName);
     QFile::remove(m_fileName);
-    file.rename(m_fileName, oldFile);
+    QFile::rename(m_fileName, oldFile);
   }
 
   return true;
