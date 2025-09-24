@@ -15,8 +15,7 @@
 //
 
 ClientProxy1_7::ClientProxy1_7(const std::string &name, deskflow::IStream *stream, Server *server, IEventQueue *events)
-    : ClientProxy1_6(name, stream, server, events),
-      m_events(events)
+    : ClientProxy1_6(name, stream, server, events)
 {
   // do nothing
 }
