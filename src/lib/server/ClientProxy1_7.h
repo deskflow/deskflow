@@ -16,7 +16,4 @@ public:
   ~ClientProxy1_7() override = default;
 
   void secureInputNotification(const std::string &app) const override;
-
-private:
-  IEventQueue *m_events;
 };
