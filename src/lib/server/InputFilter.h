@@ -161,7 +161,7 @@ public:
       restart
     };
 
-    explicit RestartServer(IEventQueue *events, Mode = restart);
+    explicit RestartServer(Mode = restart);
 
     Mode getMode() const;
 
@@ -172,7 +172,6 @@ public:
 
   private:
     Mode m_mode;
-    IEventQueue *m_events;
   };
 
   // SwitchToScreenAction
