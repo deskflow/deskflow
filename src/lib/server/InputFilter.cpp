@@ -237,7 +237,7 @@ void InputFilter::LockCursorToScreenAction::perform(const Event &event)
   );
 }
 
-InputFilter::RestartServer::RestartServer(IEventQueue *events, Mode mode) : m_mode(mode), m_events(events)
+InputFilter::RestartServer::RestartServer(Mode mode) : m_mode(mode)
 {
   // do nothing
 }

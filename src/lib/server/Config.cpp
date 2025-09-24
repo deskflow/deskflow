@@ -1110,7 +1110,7 @@ void Config::parseAction(
       }
     }
 
-    action = new InputFilter::RestartServer(m_events, mode);
+    action = new InputFilter::RestartServer(mode);
   }
 
   else if (name == "keyboardBroadcast") {
