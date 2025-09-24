@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.17</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -270,40 +270,20 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>    <span class="stringliteral">&quot; [--restart|--no-restart]&quot;</span></div>
 <div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    <span class="stringliteral">&quot; [--debug &lt;level&gt;]&quot;</span>;</div>
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="comment">// system args (windows/unix)</span></div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="preprocessor">#if SYSAPI_UNIX</span></div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span> </div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span><span class="comment">// unix daemon mode args</span></div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> s_helpSysArgs = <span class="stringliteral">&quot; [--daemon|--no-daemon]&quot;</span>;</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> s_helpSysInfo = <span class="comment">//</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="stringliteral">&quot;  -f, --no-daemon          run in the foreground.\n&quot;</span></div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>    <span class="stringliteral">&quot;*     --daemon             run as a daemon.\n&quot;</span>;</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span> </div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="preprocessor">#elif SYSAPI_WIN32</span></div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="comment">// windows args</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> s_helpSysArgs = <span class="stringliteral">&quot; [--service &lt;action&gt;] [--relaunch]&quot;</span>;</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> s_helpSysInfo = <span class="comment">//</span></div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    <span class="stringliteral">&quot;      --service &lt;action&gt;   manage the windows service, valid options are:\n&quot;</span></div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    <span class="stringliteral">&quot;                             install/uninstall/start/stop\n&quot;</span></div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>    <span class="stringliteral">&quot;      --relaunch           persistently relaunches process in current user \n&quot;</span></div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    <span class="stringliteral">&quot;                             session (useful for vista and upward).\n&quot;</span>;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span><span class="preprocessor">#if !defined(WINAPI_LIBEI) &amp;&amp; WINAPI_XWINDOWS</span></div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="comment">//</span></div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    <span class="stringliteral">&quot;\nYour Linux distribution does not support Wayland EI (emulated input)\n&quot;</span></div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    <span class="stringliteral">&quot;which is required for Wayland support.  Please use a Linux distribution\n&quot;</span></div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="stringliteral">&quot;that supports Wayland EI.\n&quot;</span>;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span> </div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno"><a class="line" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">  180</a></span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="preprocessor">#if !defined(WINAPI_LIBEI) &amp;&amp; WINAPI_XWINDOWS</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="comment">//</span></div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="stringliteral">&quot;\nYour Linux distribution does not support Wayland EI (emulated input)\n&quot;</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>    <span class="stringliteral">&quot;which is required for Wayland support.  Please use a Linux distribution\n&quot;</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>    <span class="stringliteral">&quot;that supports Wayland EI.\n&quot;</span>;</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span> </div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno"><a class="line" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">  160</a></span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aAppUtilUnix_8h_html"><div class="ttname"><a href="AppUtilUnix_8h.html">AppUtilUnix.h</a></div></div>
 <div class="ttc" id="aAppUtilUnix_8h_html_a9788f594d1b0cad50d71a869ae282146"><div class="ttname"><a href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a></div><div class="ttdeci">#define ARCH_APP_UTIL</div><div class="ttdef"><b>Definition</b> AppUtilUnix.h:12</div></div>
 <div class="ttc" id="aAppUtilWindows_8h_html"><div class="ttname"><a href="AppUtilWindows_8h.html">AppUtilWindows.h</a></div></div>
 <div class="ttc" id="aApp_8h_html_a049d335c837b9bc401247316f3789613"><div class="ttname"><a href="App_8h.html#a049d335c837b9bc401247316f3789613">s_helpCommonArgs</a></div><div class="ttdeci">static constexpr auto s_helpCommonArgs</div><div class="ttdef"><b>Definition</b> App.h:148</div></div>
-<div class="ttc" id="aApp_8h_html_a6fd0eb88c0fcb4cae9f3880bbf63df44"><div class="ttname"><a href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a></div><div class="ttdeci">static constexpr auto s_helpNoWayland</div><div class="ttdef"><b>Definition</b> App.h:180</div></div>
+<div class="ttc" id="aApp_8h_html_a6fd0eb88c0fcb4cae9f3880bbf63df44"><div class="ttname"><a href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a></div><div class="ttdeci">static constexpr auto s_helpNoWayland</div><div class="ttdef"><b>Definition</b> App.h:160</div></div>
 <div class="ttc" id="aApp_8h_html_a9c584fbbd5af9ba69c85bc737bb7d532"><div class="ttname"><a href="App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532">s_helpVersionArgs</a></div><div class="ttdeci">static constexpr auto s_helpVersionArgs</div><div class="ttdef"><b>Definition</b> App.h:144</div></div>
 <div class="ttc" id="aApp_8h_html_ac5654df7f0374f9a3da48ff9ef57b6cc"><div class="ttname"><a href="App_8h.html#ac5654df7f0374f9a3da48ff9ef57b6cc">s_helpGeneralArgs</a></div><div class="ttdeci">static constexpr auto s_helpGeneralArgs</div><div class="ttdef"><b>Definition</b> App.h:132</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>

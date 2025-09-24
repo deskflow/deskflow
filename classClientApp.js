@@ -9,7 +9,6 @@ var classClientApp =
     [ "createScreen", "classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00", null ],
     [ "daemonInfo", "classClientApp.html#a45de5fff69e8fab95653e2ffce2e6237", null ],
     [ "daemonName", "classClientApp.html#a6fd5bc186ce674f67a1f644f5f6679a1", null ],
-    [ "foregroundStartup", "classClientApp.html#af27e8bef92d4f1cb9d3ea6b4186df6e9", null ],
     [ "getClientPtr", "classClientApp.html#ada018e5652bfcbbc0648dc50d8bbe5c5", null ],
     [ "handleClientConnected", "classClientApp.html#a207e31c7d2165d89817fe9901d745ff1", null ],
     [ "handleClientDisconnected", "classClientApp.html#a573297fb43edfe71eec4156c6b535de8", null ],
@@ -26,7 +25,7 @@ var classClientApp =
     [ "parseArgs", "classClientApp.html#a0ec3e8578a0730e0470e6a0009c53e84", null ],
     [ "runInner", "classClientApp.html#a77e5b4b3d6d4ad3a3a64f31c6f0cfef5", null ],
     [ "scheduleClientRestart", "classClientApp.html#a56e7e4a870873b46f02f801f77f7ce1c", null ],
-    [ "standardStartup", "classClientApp.html#aaa242dc99c9e94575add6a0dd8369622", null ],
+    [ "start", "classClientApp.html#a534ba048c317059674b2b41171cb774c", null ],
     [ "startClient", "classClientApp.html#a1854a88ad11e0633cd0a59c83857d042", null ],
     [ "startNode", "classClientApp.html#aa302821af245d6a9772d7c09da3a4e34", null ],
     [ "stopClient", "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858", null ]

@@ -1,8 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classStreamFilter.html#ae86a0f9f3c10944abd8b10a9e90009e7":[6,0,228,7],
-"classSystemLogOutputter.html":[6,0,230],
-"classSystemLogOutputter.html#a27d8d412ebc0a7e7d116710245d4bae4":[6,0,230,2],
 "classSystemLogOutputter.html#a5e5339ffb0650f7b9f7958717d94f613":[6,0,230,5],
 "classSystemLogOutputter.html#a8981c29b91ba8a48a1ebc722eb1b3352":[6,0,230,1],
 "classSystemLogOutputter.html#ab3d558d26f564ac05bb970f2be03a601":[6,0,230,4],
@@ -249,5 +246,8 @@ var NAVTREEINDEX16 =
 "classXWindowsClipboardUCS2Converter.html#ac757d9848eafddc9f9583e7ce7cf19c9":[6,0,253,3],
 "classXWindowsClipboardUCS2Converter.html#ae7b15e22e8c7a8096f96d1ab491be641":[6,0,253,2],
 "classXWindowsClipboardUTF8Converter.html":[6,0,254],
-"classXWindowsClipboardUTF8Converter.html#a5ac08cdf3a2cdd760b6bd0cc2a123430":[6,0,254,5]
+"classXWindowsClipboardUTF8Converter.html#a5ac08cdf3a2cdd760b6bd0cc2a123430":[6,0,254,5],
+"classXWindowsClipboardUTF8Converter.html#a64df7178290d87d56694f50d28408631":[6,0,254,3],
+"classXWindowsClipboardUTF8Converter.html#a7410fac5e089a21a8751a01eec1dbfee":[6,0,254,4],
+"classXWindowsClipboardUTF8Converter.html#aaed9f0184eda96d982ff7a56706e45b0":[6,0,254,0]
 };

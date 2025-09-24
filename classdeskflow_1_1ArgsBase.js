@@ -9,7 +9,6 @@ var classdeskflow_1_1ArgsBase =
     [ "~ArgsBase", "classdeskflow_1_1ArgsBase.html#add0a667fab9435c0ac8c39c840e69358", null ],
     [ "destroy", "classdeskflow_1_1ArgsBase.html#a04a05b26e128de2e7a6d25f3dfacf90b", null ],
     [ "m_classType", "classdeskflow_1_1ArgsBase.html#a93384cd90ea434feabaac36d32d2ff2d", null ],
-    [ "m_daemon", "classdeskflow_1_1ArgsBase.html#aa3b9777e21b2862d1467f61a48d2b30e", null ],
     [ "m_deskflowAddress", "classdeskflow_1_1ArgsBase.html#a9c0adfe6a91817c033c8e3e199723778", null ],
     [ "m_disableTray", "classdeskflow_1_1ArgsBase.html#a23aca01b6520227010bb64a62ca42381", null ],
     [ "m_display", "classdeskflow_1_1ArgsBase.html#a3a61214324af84d98a67935a00578371", null ],

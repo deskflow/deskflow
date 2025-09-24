@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classEvent.html#aee6a4269152dcdb7a11de3e24d90c229":[6,0,88,2],
 "classEventData.html":[6,0,89],
 "classEventData.html#abc776b7a755383c50e618a8b2140174c":[6,0,89,1],
 "classEventData.html#af3b2887aee6312e35a2df0d621930b75":[6,0,89,0],
@@ -85,18 +84,17 @@ var NAVTREEINDEX9 =
 "classHotkeyDialog.html#ae95ebac862e1337db4a8634206793557":[6,0,101,1],
 "classHotkeyDialog.html#af7bfd1146080aa63ea6190a93065543a":[6,0,101,5],
 "classIApp.html":[6,0,102],
-"classIApp.html#a008018d8408f75fbf1f4e1825287011a":[6,0,102,8],
+"classIApp.html#a008018d8408f75fbf1f4e1825287011a":[6,0,102,7],
 "classIApp.html#a165504789fa07702277cb59a237c928c":[6,0,102,4],
-"classIApp.html#a3cbebd403525f13bc83387aab36c4010":[6,0,102,12],
-"classIApp.html#a52a36b15e525a7b8e85e9040ee96b76e":[6,0,102,9],
+"classIApp.html#a3cbebd403525f13bc83387aab36c4010":[6,0,102,11],
+"classIApp.html#a52a36b15e525a7b8e85e9040ee96b76e":[6,0,102,8],
 "classIApp.html#a588a9031a85b960b66bf477249466a35":[6,0,102,1],
 "classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7":[6,0,102,2],
-"classIApp.html#a6a7146a44b78dd2934520a79708302d1":[6,0,102,6],
-"classIApp.html#a73c4ef3c78e4f3afb8a048fa2adc168e":[6,0,102,11],
+"classIApp.html#a6a7146a44b78dd2934520a79708302d1":[6,0,102,5],
 "classIApp.html#a7712f4b015fc1460746949580ecc759a":[6,0,102,0],
-"classIApp.html#a87150f8a26d67940b1914cdc80c2f550":[6,0,102,7],
-"classIApp.html#a8dac90a5d9adf11c6dc2c96b8e4a9bc1":[6,0,102,5],
-"classIApp.html#acfdd1728bc61794ba022dcb74d4cc730":[6,0,102,10],
+"classIApp.html#a87150f8a26d67940b1914cdc80c2f550":[6,0,102,6],
+"classIApp.html#aab9ddd301faabeabd30964d3a27a5663":[6,0,102,10],
+"classIApp.html#acfdd1728bc61794ba022dcb74d4cc730":[6,0,102,9],
 "classIApp.html#ad8b76d3777672aa8d28cd9c847f87729":[6,0,102,3],
 "classIArchDaemon.html":[6,0,103],
 "classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39":[6,0,103,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX9 =
 "classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8":[6,0,110,1],
 "classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66":[6,0,110,8],
 "classIEventQueue.html#a3551f61e6739a7a981e532d2ee1a92c2":[6,0,110,10],
-"classIEventQueue.html#a3ff4e1913c2a794be3b4314948ec4e5c":[6,0,110,14]
+"classIEventQueue.html#a3ff4e1913c2a794be3b4314948ec4e5c":[6,0,110,14],
+"classIEventQueue.html#a51529b3c2b81c013b4106802958510ad":[6,0,110,3],
+"classIEventQueue.html#a63a4943cd0625b03ec3bcb38fc79d4a4":[6,0,110,2]
 };

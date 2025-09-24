@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.13</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.17</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,8 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa35aa3f57d370b20f4fdc31d535c7864" id="r_aa35aa3f57d370b20f4fdc31d535c7864"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classdeskflow_1_1Screen.html">deskflow::Screen</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa35aa3f57d370b20f4fdc31d535c7864">createScreen</a> () override</td></tr>
 <tr class="memitem:a632aaac3fac40b8e5f7aa534f2040c17" id="r_a632aaac3fac40b8e5f7aa534f2040c17"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a632aaac3fac40b8e5f7aa534f2040c17">mainLoop</a> () override</td></tr>
 <tr class="memitem:a33e69daea4ac0cc73df154857a3b9714" id="r_a33e69daea4ac0cc73df154857a3b9714"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a33e69daea4ac0cc73df154857a3b9714">runInner</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv, <a class="el" href="IApp_8h.html#a22c7e9a2550bd61f61dbcbbdbb936a24">StartupFunc</a> startup) override</td></tr>
-<tr class="memitem:a6eeb11eb70645815e09564d92214907e" id="r_a6eeb11eb70645815e09564d92214907e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6eeb11eb70645815e09564d92214907e">standardStartup</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv) override</td></tr>
-<tr class="memitem:a82e3f5debf5abd556eb3dd9923a57b42" id="r_a82e3f5debf5abd556eb3dd9923a57b42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a82e3f5debf5abd556eb3dd9923a57b42">foregroundStartup</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv) override</td></tr>
+<tr class="memitem:a089038eb9023d2186a292768d79fdb1c" id="r_a089038eb9023d2186a292768d79fdb1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a089038eb9023d2186a292768d79fdb1c">start</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> argc, char **argv) override</td></tr>
 <tr class="memitem:ad480f11b4df42e0dea276cc192757ca9" id="r_ad480f11b4df42e0dea276cc192757ca9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad480f11b4df42e0dea276cc192757ca9">startNode</a> () override</td></tr>
 <tr class="memitem:a25ed6657950da895e5c51e2ec0e148d8" id="r_a25ed6657950da895e5c51e2ec0e148d8"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a25ed6657950da895e5c51e2ec0e148d8">configSection</a> () const override</td></tr>
 <tr class="memitem:af1b85054ef546d40e4e2e6a4ff58cc87" id="r_af1b85054ef546d40e4e2e6a4ff58cc87"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1b85054ef546d40e4e2e6a4ff58cc87">reloadConfig</a> ()</td></tr>
@@ -480,37 +479,6 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a82e3f5debf5abd556eb3dd9923a57b42" name="a82e3f5debf5abd556eb3dd9923a57b42"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a82e3f5debf5abd556eb3dd9923a57b42">&#9670;&#160;</a></span>foregroundStartup()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ServerApp::foregroundStartup </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">char **</td>          <td class="paramname"><span class="paramname"><em>argv</em></span>&#160;)</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Implements <a class="el" href="classIApp.html#a8dac90a5d9adf11c6dc2c96b8e4a9bc1">IApp</a>.</p>
 
 </div>
 </div>
@@ -967,8 +935,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a6eeb11eb70645815e09564d92214907e" name="a6eeb11eb70645815e09564d92214907e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6eeb11eb70645815e09564d92214907e">&#9670;&#160;</a></span>standardStartup()</h2>
+<a id="a089038eb9023d2186a292768d79fdb1c" name="a089038eb9023d2186a292768d79fdb1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a089038eb9023d2186a292768d79fdb1c">&#9670;&#160;</a></span>start()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -977,7 +945,7 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ServerApp::standardStartup </td>
+          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ServerApp::start </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>argc</em></span>, </td>
         </tr>
@@ -994,7 +962,7 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implements <a class="el" href="classIApp.html#a73c4ef3c78e4f3afb8a048fa2adc168e">IApp</a>.</p>
+<p>Implements <a class="el" href="classIApp.html#aab9ddd301faabeabd30964d3a27a5663">IApp</a>.</p>
 
 </div>
 </div>
