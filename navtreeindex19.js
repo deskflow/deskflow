@@ -1,7 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classdeskflow_1_1PortalInputCapture.html#afd330b3aedf58c18bd286e997954efe0":[5,0,0,17,2],
-"classdeskflow_1_1PortalInputCapture.html#afd330b3aedf58c18bd286e997954efe0":[6,0,0,16,2],
 "classdeskflow_1_1PortalRemoteDesktop.html":[5,0,0,18],
 "classdeskflow_1_1PortalRemoteDesktop.html":[6,0,0,17],
 "classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e":[5,0,0,18,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[5,0,0,3,6,1],
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[6,0,0,2,5,1],
 "classdeskflow_1_1gui_1_1IServerConfig.html":[5,0,0,3,7],
-"classdeskflow_1_1gui_1_1IServerConfig.html":[6,0,0,2,6]
+"classdeskflow_1_1gui_1_1IServerConfig.html":[6,0,0,2,6],
+"classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44":[5,0,0,3,7,1],
+"classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44":[6,0,0,2,6,1]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"functions_i.html":[6,3,0,9],
-"functions_j.html":[6,3,0,10],
 "functions_k.html":[6,3,0,11],
 "functions_l.html":[6,3,0,12],
 "functions_m.html":[6,3,0,13],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a87779aca6f652e7b1edb7a999ede22f3":[5,0,0,22,35],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e":[5,0,0,22,0],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a8ffc85a288b645aeb6e5d104f397215f":[5,0,0,22,47],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a911ba363fd1483b5b36fda7b0149cf76":[5,0,0,22,26]
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a911ba363fd1483b5b36fda7b0149cf76":[5,0,0,22,26],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db":[5,0,0,22,56],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a9b3e510654adce623b3c8c2149dacba7":[5,0,0,22,7]
 };

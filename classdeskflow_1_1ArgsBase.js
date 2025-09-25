@@ -10,7 +10,6 @@ var classdeskflow_1_1ArgsBase =
     [ "destroy", "classdeskflow_1_1ArgsBase.html#a04a05b26e128de2e7a6d25f3dfacf90b", null ],
     [ "m_classType", "classdeskflow_1_1ArgsBase.html#a93384cd90ea434feabaac36d32d2ff2d", null ],
     [ "m_deskflowAddress", "classdeskflow_1_1ArgsBase.html#a9c0adfe6a91817c033c8e3e199723778", null ],
-    [ "m_disableTray", "classdeskflow_1_1ArgsBase.html#a23aca01b6520227010bb64a62ca42381", null ],
     [ "m_display", "classdeskflow_1_1ArgsBase.html#a3a61214324af84d98a67935a00578371", null ],
     [ "m_enableCrypto", "classdeskflow_1_1ArgsBase.html#a7a92b4d769cdd8b90fa80e9f056299dc", null ],
     [ "m_logFile", "classdeskflow_1_1ArgsBase.html#a7c99f723be64cd739a7f0983122dcdcb", null ],
