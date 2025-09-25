@@ -285,16 +285,4 @@ void ArgParserTests::generic_unknown()
   QVERIFY(!m_parser.parseGenericArgs(argc, kBackendCmd, i));
 }
 
-void ArgParserTests::generic_noHook()
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kNoHookCmd[argc] = {"stub", "--no-hooks"};
-
-  m_parser.parseGenericArgs(argc, kNoHookCmd, i);
-
-  QVERIFY(m_parser.argsBase().m_noHooks);
-  QCOMPARE(i, 1);
-}
-
 QTEST_MAIN(ArgParserTests)

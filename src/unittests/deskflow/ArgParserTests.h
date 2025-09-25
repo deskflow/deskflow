@@ -33,7 +33,6 @@ private Q_SLOTS:
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();
   void generic_unknown();
-  void generic_noHook();
 
 private:
   Arch m_arch;

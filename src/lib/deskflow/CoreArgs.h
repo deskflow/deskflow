@@ -55,6 +55,9 @@ struct CoreArgs
       {"r", "restartOnFailure"}, "Set if the core should automatically restart if it fails", "value"
   );
 
+  inline static const auto useHooksOption =
+      QCommandLineOption("useHooks", "Sets if hooks are used for windows desks", "value");
+
   inline static const auto options = {
     helpOption,
     versionOption,
@@ -68,6 +71,7 @@ struct CoreArgs
     tlsCertOption,
     preventSleepOption,
     restartOption,
-    displayOption
+    displayOption,
+    useHooksOption
   };
 };

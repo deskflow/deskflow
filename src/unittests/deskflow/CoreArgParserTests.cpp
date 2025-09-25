@@ -270,6 +270,26 @@ void CoreArgParserTests::restartShortOption_true()
   QVERIFY(Settings::value(Settings::Core::RestartOnFailure).toBool());
 }
 
+void CoreArgParserTests::hookOptions_false()
+{
+  QStringList args = {"stub", "client", "--useHooks", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Core::UseHooks).toBool());
+}
+
+void CoreArgParserTests::hookOptions_true()
+{
+  QStringList args = {"stub", "client", "--useHooks", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Core::UseHooks).toBool());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

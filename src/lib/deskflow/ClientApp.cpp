@@ -151,7 +151,8 @@ deskflow::Screen *ClientApp::createScreen()
 #if WINAPI_MSWINDOWS
   return new deskflow::Screen(
       new MSWindowsScreen(
-          false, args().m_noHooks, getEvents(), args().m_enableLangSync, args().m_clientScrollDirection
+          false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(), args().m_enableLangSync,
+          args().m_clientScrollDirection
       ),
       getEvents()
   );
