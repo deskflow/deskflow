@@ -21,8 +21,6 @@ private Q_SLOTS:
   void splitCommand();
   void getArgv();
   void assembleCommand();
-  void serverArgs();
-  void server_setConfigFile();
   void clientArgs();
   void client_yScroll();
   void client_setLangSync();

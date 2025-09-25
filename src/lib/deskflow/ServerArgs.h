@@ -27,7 +27,6 @@ public:
   ServerArgs &operator=(ServerArgs &&) = default;
 
 public:
-  std::string m_configFile = "";
   std::shared_ptr<Config> m_config;
 };
 

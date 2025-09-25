@@ -162,26 +162,6 @@ void ArgParserTests::assembleCommand()
   QCOMPARE(command, "\"stub1 space\" stub2 \"stub3 space\"");
 }
 
-void ArgParserTests::server_setConfigFile()
-{
-  deskflow::ServerArgs serverArgs;
-  const int argc = 3;
-  const char *kConfigCmd[argc] = {"stub", "--config", "mock_configFile"};
-
-  m_parser.parseServerArgs(serverArgs, argc, kConfigCmd);
-
-  QCOMPARE(serverArgs.m_configFile, "mock_configFile");
-}
-
-void ArgParserTests::serverArgs()
-{
-  deskflow::ServerArgs args;
-  char const *argv[] = {"deskflow", "--help", "--res-w", "888"};
-
-  QVERIFY(m_parser.parseServerArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
-  QVERIFY(args.m_shouldExitOk);
-}
-
 void ArgParserTests::clientArgs()
 {
   deskflow::ClientArgs args;

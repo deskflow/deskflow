@@ -310,6 +310,16 @@ void CoreArgParserTests::server_peerCheck_true()
   QVERIFY(Settings::value(Settings::Security::CheckPeers).toBool());
 }
 
+void CoreArgParserTests::server_setConfig()
+{
+  QStringList args = {"stub", "server", "--serverConfig", "afile.conf"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE("afile.conf", Settings::value(Settings::Server::ExternalConfigFile).toString());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};
