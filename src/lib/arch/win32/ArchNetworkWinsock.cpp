@@ -11,6 +11,7 @@
 #include "arch/IArchMultithread.h"
 #include "arch/win32/ArchMultithreadWindows.h"
 #include "arch/win32/XArchWindows.h"
+#include "base/Log.h"
 
 #include <malloc.h>
 
@@ -284,7 +285,7 @@ void ArchNetworkWinsock::bindSocket(ArchSocket s, ArchNetAddress addr)
   assert(s != nullptr);
   assert(addr != nullptr);
 
-  if (bind_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) == SOCKET_ERROR) {
+  if (bind_winsock(s->m_socket, TYPED_ADDR(struct sockaddr, addr), addr->m_len) != ERROR_SUCCESS) {
     throwError(getsockerror_winsock());
   }
 }
@@ -294,7 +295,7 @@ void ArchNetworkWinsock::listenOnSocket(ArchSocket s)
   assert(s != nullptr);
 
   // hardcoding backlog
-  if (listen_winsock(s->m_socket, 3) == SOCKET_ERROR) {
+  if (listen_winsock(s->m_socket, 3) != ERROR_SUCCESS) {
     throwError(getsockerror_winsock());
   }
 }
@@ -606,23 +607,8 @@ bool ArchNetworkWinsock::setNoDelayOnSocket(ArchSocket s, bool noDelay)
 
 bool ArchNetworkWinsock::setReuseAddrOnSocket(ArchSocket s, bool reuse)
 {
-  assert(s != nullptr);
-
-  // get old state
-  BOOL oflag;
-  int size = sizeof(oflag);
-  if (getsockopt_winsock(s->m_socket, SOL_SOCKET, SO_REUSEADDR, &oflag, &size) == SOCKET_ERROR) {
-    throwError(getsockerror_winsock());
-  }
-
-  // set new state
-  BOOL flag = reuse ? 1 : 0;
-  size = sizeof(flag);
-  if (setsockopt_winsock(s->m_socket, SOL_SOCKET, SO_REUSEADDR, &flag, size) == SOCKET_ERROR) {
-    throwError(getsockerror_winsock());
-  }
-
-  return (oflag != 0);
+  LOG_ERR("socket re-use not supported on windows");
+  return false;
 }
 
 ArchNetAddress ArchNetworkWinsock::newAnyAddr(AddressFamily family)
