@@ -25,32 +25,6 @@ ArgParser::ArgParser(App *app) : m_app(app)
 {
 }
 
-bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv) const
-{
-  setArgsBase(args);
-  int i = 1;
-  while (i < argc) {
-    if (parseGenericArgs(argc, argv, i) || parseDeprecatedArgs(argc, argv, i) ||
-        isArg(i, argc, argv, nullptr, "server")) {
-      ++i;
-      continue;
-    } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
-      // save configuration file path
-      args.m_configFile = argv[++i];
-    } else {
-      LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
-      return false;
-    }
-    ++i;
-  }
-
-  if (checkUnexpectedArgs()) {
-    return false;
-  }
-
-  return true;
-}
-
 bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv) const
 {
   setArgsBase(args);

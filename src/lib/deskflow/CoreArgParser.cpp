@@ -116,6 +116,10 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::peerCheckOption) == "1"));
     Settings::setValue(Settings::Security::CheckPeers, value);
   }
+
+  if (m_parser.isSet(CoreArgs::serverConfigOption)) {
+    Settings::setValue(Settings::Server::ExternalConfigFile, m_parser.value(CoreArgs::serverConfigOption));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const
