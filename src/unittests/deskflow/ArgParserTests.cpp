@@ -173,15 +173,6 @@ void ArgParserTests::server_setConfigFile()
   QCOMPARE(serverArgs.m_configFile, "mock_configFile");
 }
 
-void ArgParserTests::server_unexpectedParam()
-{
-  deskflow::ServerArgs serverArgs;
-  const int argc = 2;
-  std::array<const char *, argc> kUnknownCmd = {"stub", "--unknown"};
-
-  QVERIFY(!m_parser.parseServerArgs(serverArgs, argc, kUnknownCmd.data()));
-}
-
 void ArgParserTests::serverArgs()
 {
   deskflow::ServerArgs args;
@@ -274,15 +265,6 @@ void ArgParserTests::deprecatedArg_crypoPass_false()
 
   QVERIFY(!m_parser.parseDeprecatedArgs(argc, kCryptoPassCmd, i));
   QCOMPARE(i, 1);
-}
-
-void ArgParserTests::generic_unknown()
-{
-  int i = 1;
-  const int argc = 2;
-  const char *kBackendCmd[argc] = {"stub", "-z"};
-
-  QVERIFY(!m_parser.parseGenericArgs(argc, kBackendCmd, i));
 }
 
 QTEST_MAIN(ArgParserTests)

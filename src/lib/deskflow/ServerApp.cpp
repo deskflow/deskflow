@@ -69,7 +69,8 @@ using namespace deskflow::server;
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events) : App(events, new deskflow::ServerArgs())
+ServerApp::ServerApp(IEventQueue *events, const QString &processName)
+    : App(events, processName, new deskflow::ServerArgs())
 {
   m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing
@@ -93,7 +94,7 @@ void ServerApp::parseArgs(int argc, const char *const *argv)
         *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
         m_deskflowAddress->resolve();
       } catch (SocketAddressException &e) {
-        LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
+        LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
         bye(s_exitArgs);
       }
     }
@@ -140,7 +141,7 @@ void ServerApp::loadConfig()
   }
 
   if (!loadConfig(path)) {
-    LOG_CRIT("%s: failed to load config: %s", args().m_pname, path.c_str());
+    LOG_CRIT("%s: failed to load config: %s", qPrintable(processName()), path.c_str());
     bye(s_exitConfig);
   }
 }
@@ -642,7 +643,6 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
   // general initialization
   m_deskflowAddress = new NetworkAddress;
   args().m_config = std::make_shared<Config>(getEvents());
-  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   // run
   int result = startup(argc, argv);

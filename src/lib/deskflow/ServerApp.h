@@ -48,7 +48,7 @@ class ServerApp : public App
   using ServerConfig = deskflow::server::Config;
 
 public:
-  explicit ServerApp(IEventQueue *events);
+  explicit ServerApp(IEventQueue *events, const QString &processName = QString());
   ~ServerApp() override = default;
 
   //

@@ -24,7 +24,7 @@ class ISocketFactory;
 class ClientApp : public App
 {
 public:
-  explicit ClientApp(IEventQueue *events);
+  explicit ClientApp(IEventQueue *events, const QString &processName = QString());
   ~ClientApp() override = default;
 
   //

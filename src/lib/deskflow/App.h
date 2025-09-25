@@ -43,7 +43,7 @@ public:
     }
   };
 
-  App(IEventQueue *events, deskflow::ArgsBase *args);
+  App(IEventQueue *events, const QString &processName, deskflow::ArgsBase *args);
   App(App const &) = delete;
   App(App &&) = delete;
   ~App() override;
@@ -108,6 +108,11 @@ public:
     return *s_instance;
   }
 
+  QString processName() const
+  {
+    return m_pname;
+  }
+
   void handleScreenError() const;
 
 protected:
@@ -121,6 +126,7 @@ private:
   FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
+  QString m_pname;
 };
 
 #if WINAPI_MSWINDOWS

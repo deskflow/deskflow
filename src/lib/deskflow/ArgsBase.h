@@ -32,9 +32,6 @@ public:
   /// @brief Stores what type of object this is
   ClassType m_classType = ClassType::Base;
 
-  /// @brief The filename of the running process
-  const char *m_pname = nullptr;
-
   /// @brief Will cause the application to exit with OK code when set to true
   bool m_shouldExitOk = false;
 
