@@ -42,6 +42,8 @@ private Q_SLOTS:
   void restartShortOption_true();
   void hookOptions_false();
   void hookOptions_true();
+  void server_peerCheck_false();
+  void server_peerCheck_true();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
