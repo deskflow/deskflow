@@ -17,7 +17,7 @@ class X11LayoutsParser
 {
 public:
   static std::vector<std::string> getX11LanguageList(const std::string &pathToEvdevFile);
-  static std::string convertLayotToISO(
+  static std::string convertLayoutToISO(
       const std::string &pathToEvdevFile, const std::string &layoutLangCode, bool needToReloadFiles = false
   );
 

@@ -134,7 +134,7 @@ std::string AppUtilUnix::getCurrentLanguageCode()
   XFree(kbdDescr);
   XCloseDisplay(display);
 
-  result = X11LayoutsParser::convertLayotToISO(m_evdev, result);
+  result = X11LayoutsParser::convertLayoutToISO(m_evdev, result);
 
 #elif WINAPI_CARBON
   auto layoutLanguages =
