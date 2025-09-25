@@ -62,7 +62,8 @@
 
 constexpr static auto s_retryTime = 1.0;
 
-ClientApp::ClientApp(IEventQueue *events) : App(events, new deskflow::ClientArgs())
+ClientApp::ClientApp(IEventQueue *events, const QString &processName)
+    : App(events, processName, new deskflow::ClientArgs())
 {
   // do nothing
 }
@@ -91,7 +92,7 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
         // Priddy.
         if (!Settings::value(Settings::Core::RestartOnFailure).toBool() ||
             e.getError() == SocketAddressException::SocketError::BadPort) {
-          LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
+          LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
           bye(s_exitFailed);
         }
       }
@@ -409,7 +410,6 @@ int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
-  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   int result;
   try {

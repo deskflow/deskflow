@@ -28,7 +28,6 @@ ArgParser::ArgParser(App *app) : m_app(app)
 bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char *const *argv) const
 {
   setArgsBase(args);
-  updateCommonArgs(argv);
   int i = 1;
   while (i < argc) {
     if (parseGenericArgs(argc, argv, i) || parseDeprecatedArgs(argc, argv, i) ||
@@ -41,7 +40,7 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
       args.m_chkPeerCert = false;
     } else {
-      LOG_CRIT("%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname);
+      LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
       return false;
     }
     ++i;
@@ -57,7 +56,6 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
 bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv) const
 {
   setArgsBase(args);
-  updateCommonArgs(argv);
 
   int i{1};
   while (i < argc) {
@@ -80,7 +78,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
         return true;
       }
 
-      LOG_CRIT("%s: unrecognized option `%s'" BYE, args.m_pname, argv[i], args.m_pname);
+      LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
       return false;
     }
     ++i;
@@ -88,7 +86,7 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
   // exactly one non-option argument (server-address)
   if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
-    LOG_CRIT("%s: a server address or name is required" BYE, args.m_pname, args.m_pname);
+    LOG_CRIT("%s: a server address or name is required" BYE, "deskflow-core", "deskflow-core");
     return false;
   }
 
@@ -137,7 +135,7 @@ bool ArgParser::isArg(
   if ((name1 != nullptr && strcmp(argv[argi], name1) == 0) || (name2 != nullptr && strcmp(argv[argi], name2) == 0)) {
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
-      LOG_PRINT("%s: missing arguments for `%s'" BYE, argsBase().m_pname, argv[argi], argsBase().m_pname);
+      LOG_PRINT("%s: missing arguments for `%s'" BYE, "deskflow-core", argv[argi], "deskflow-core");
       argsBase().m_shouldExitFail = true;
       return false;
     }
@@ -268,11 +266,6 @@ std::string ArgParser::assembleCommand(
   }
 
   return result;
-}
-
-void ArgParser::updateCommonArgs(const char *const *argv) const
-{
-  argsBase().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 }
 
 bool ArgParser::checkUnexpectedArgs() const

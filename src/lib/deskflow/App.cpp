@@ -48,11 +48,12 @@ App *App::s_instance = nullptr;
 // App
 //
 
-App::App(IEventQueue *events, deskflow::ArgsBase *args)
+App::App(IEventQueue *events, const QString &processName, deskflow::ArgsBase *args)
     : m_bye(&exit),
       m_events(events),
       m_args(args),
-      m_appUtil(events)
+      m_appUtil(events),
+      m_pname(processName)
 {
   assert(s_instance == nullptr);
   s_instance = this;
@@ -170,7 +171,7 @@ void App::initApp(int argc, const char **argv)
 
   // set log filter
   if (const auto logLevel = qPrintable(Settings::logLevelText()); !CLOG->setFilter(logLevel)) {
-    LOG_CRIT("%s: unrecognized log level `%s'" BYE, argsBase().m_pname, logLevel, argsBase().m_pname);
+    LOG_CRIT("%s: unrecognized log level `%s'" BYE, qPrintable(processName()), logLevel, qPrintable(processName()));
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();

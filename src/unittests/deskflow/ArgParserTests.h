@@ -23,7 +23,6 @@ private Q_SLOTS:
   void assembleCommand();
   void serverArgs();
   void server_setConfigFile();
-  void server_unexpectedParam();
   void clientArgs();
   void client_yScroll();
   void client_setLangSync();
@@ -32,7 +31,6 @@ private Q_SLOTS:
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();
-  void generic_unknown();
 
 private:
   Arch m_arch;
