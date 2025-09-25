@@ -290,6 +290,26 @@ void CoreArgParserTests::hookOptions_true()
   QVERIFY(Settings::value(Settings::Core::UseHooks).toBool());
 }
 
+void CoreArgParserTests::server_peerCheck_false()
+{
+  QStringList args = {"stub", "server", "--peerCertCheck", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Security::CheckPeers).toBool());
+}
+
+void CoreArgParserTests::server_peerCheck_true()
+{
+  QStringList args = {"stub", "server", "--peerCertCheck", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Security::CheckPeers).toBool());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

@@ -37,8 +37,6 @@ bool ArgParser::parseServerArgs(deskflow::ServerArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, "-c", "--config", 1)) {
       // save configuration file path
       args.m_configFile = argv[++i];
-    } else if (isArg(i, argc, argv, nullptr, "--disable-client-cert-check")) {
-      args.m_chkPeerCert = false;
     } else {
       LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
       return false;

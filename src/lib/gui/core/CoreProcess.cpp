@@ -471,10 +471,6 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
 
-  if (!Settings::value(Settings::Security::CheckPeers).toBool()) {
-    args << "--disable-client-cert-check";
-  }
-
   QString configFilename = persistServerConfig();
   if (configFilename.isEmpty()) {
     qFatal("config file name empty for server args");
