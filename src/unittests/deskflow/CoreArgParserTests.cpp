@@ -330,6 +330,46 @@ void CoreArgParserTests::client_yscroll()
   QCOMPARE(15, Settings::value(Settings::Client::ScrollSpeed).toInt());
 }
 
+void CoreArgParserTests::client_languageSync_true()
+{
+  QStringList args = {"stub", "client", "--languageSync", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Client::LanguageSync).toBool());
+}
+
+void CoreArgParserTests::client_languageSync_false()
+{
+  QStringList args = {"stub", "client", "--languageSync", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Client::LanguageSync).toBool());
+}
+
+void CoreArgParserTests::client_languageSync_1()
+{
+  QStringList args = {"stub", "client", "--languageSync", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Client::LanguageSync).toBool());
+}
+
+void CoreArgParserTests::client_languageSync_0()
+{
+  QStringList args = {"stub", "client", "--languageSync", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Client::LanguageSync).toBool());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

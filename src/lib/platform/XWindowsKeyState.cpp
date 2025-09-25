@@ -12,12 +12,12 @@
 #include <QDBusPendingReply>
 #endif
 
+#include "common/Settings.h" // Must Include before XWindowsKeyState due to its use of Xorg headers
+
 #include "platform/XWindowsKeyState.h"
 
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
-#include "deskflow/ClientApp.h"
-#include "deskflow/ClientArgs.h"
 #include "platform/XWindowsUtil.h"
 
 #include <X11/X.h>
@@ -35,7 +35,9 @@
 static const size_t ModifiersFromXDefaultSize = 32;
 
 XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *events)
-    : KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
+    : KeyState(
+          events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
+      ),
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize)
 {
@@ -44,7 +46,8 @@ XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *e
 
 XWindowsKeyState::XWindowsKeyState(Display *display, bool useXKB, IEventQueue *events, deskflow::KeyMap &keyMap)
     : KeyState(
-          events, keyMap, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync
+          events, keyMap, AppUtil::instance().getKeyboardLayoutList(),
+          Settings::value(Settings::Client::LanguageSync).toBool()
       ),
       m_display(display),
       m_modifierFromX(ModifiersFromXDefaultSize)

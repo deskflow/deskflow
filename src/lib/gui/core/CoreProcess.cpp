@@ -479,10 +479,6 @@ bool CoreProcess::addClientArgs(QStringList &args)
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
 
-  if (Settings::value(Settings::Client::LanguageSync).toBool()) {
-    args << "--sync-language";
-  }
-
   if (Settings::value(Settings::Client::InvertScrollDirection).toBool()) {
     args << "--invert-scroll";
   }

@@ -70,9 +70,12 @@ struct CoreArgs
   inline static const auto yscrollOption =
       QCommandLineOption("yscroll", "Client Mode: Vertical scrolling delta (default: 120)", "value");
 
-  inline static const auto options = {helpOption,     versionOption,  configOption,       interfaceOption,
-                                      portOption,     nameOption,     logLevelOption,     logFileOption,
-                                      secureOption,   tlsCertOption,  preventSleepOption, restartOption,
-                                      displayOption,  useHooksOption, peerCheckOption,    serverConfigOption,
-                                      yscrollOption};
+  inline static const auto languageSyncOption =
+      QCommandLineOption("languageSync", "Client Mode: Sync language with client (default: false)", "value");
+
+  inline static const auto options = {helpOption,     versionOption,     configOption,       interfaceOption,
+                                      portOption,     nameOption,        logLevelOption,     logFileOption,
+                                      secureOption,   tlsCertOption,     preventSleepOption, restartOption,
+                                      displayOption,  useHooksOption,    peerCheckOption,    serverConfigOption,
+                                      yscrollOption,  languageSyncOption};
 };
