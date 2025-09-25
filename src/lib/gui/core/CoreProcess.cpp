@@ -477,7 +477,6 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     return false;
   }
 
-  args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now

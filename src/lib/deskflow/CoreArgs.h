@@ -63,8 +63,11 @@ struct CoreArgs
       "peerCertCheck", "Server Mode: Enable client SSL certificate checking (default: true)", "value"
   );
 
+  inline static const auto serverConfigOption =
+      QCommandLineOption("serverConfig", "Server Mode: File to load as server config", "path");
+
   inline static const auto options = {helpOption,     versionOption,  configOption,       interfaceOption,
                                       portOption,     nameOption,     logLevelOption,     logFileOption,
                                       secureOption, tlsCertOption,  preventSleepOption, restartOption,
-                                      displayOption,  useHooksOption, peerCheckOption};
+                                      displayOption,  useHooksOption, peerCheckOption,    serverConfigOption};
 };

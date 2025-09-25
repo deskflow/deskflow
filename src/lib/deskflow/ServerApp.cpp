@@ -78,39 +78,20 @@ ServerApp::ServerApp(IEventQueue *events, const QString &processName)
 
 void ServerApp::parseArgs(int argc, const char *const *argv)
 {
-
-  ArgParser argParser(this);
-  bool result = argParser.parseServerArgs(args(), argc, argv);
-
-  if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
-    if (args().m_shouldExitOk) {
-      bye(s_exitSuccess);
-    } else {
+  if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+    try {
+      *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
+      m_deskflowAddress->resolve();
+    } catch (SocketAddressException &e) {
+      LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
       bye(s_exitArgs);
-    }
-  } else {
-    if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
-      try {
-        *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
-        m_deskflowAddress->resolve();
-      } catch (SocketAddressException &e) {
-        LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
-        bye(s_exitArgs);
-      }
     }
   }
 }
 
 void ServerApp::help()
 {
-  std::stringstream help;
-  help << "\n\nServer Mode:\n\n"
-       << "Usage: " << kAppId << "-core server \n"
-       << "  -c, --config <pathname>  path of the configuration file\n"
-       << s_helpVersionArgs << "\n"
-       << s_helpNoWayland;
-
-  LOG_PRINT("%s", help.str().c_str());
+  // do-nothing
 }
 
 void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
@@ -122,7 +103,7 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
 void ServerApp::reloadConfig()
 {
   LOG_DEBUG("reload configuration");
-  if (loadConfig(args().m_configFile)) {
+  if (loadConfig(Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString())) {
     if (m_server != nullptr) {
       m_server->setConfig(*args().m_config);
     }
@@ -132,7 +113,7 @@ void ServerApp::reloadConfig()
 
 void ServerApp::loadConfig()
 {
-  const auto path = args().m_configFile;
+  const auto path = Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString();
   if (path.empty()) {
     LOG_CRIT("no configuration path provided");
     bye(s_exitConfig);
