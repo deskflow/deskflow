@@ -101,17 +101,11 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const
 {
-  if (isArg(i, argc, argv, nullptr, "--no-hooks")) {
-    argsBase().m_noHooks = true;
-  } else if (isArg(i, argc, argv, "-h", "--help")) {
+  if (isArg(i, argc, argv, "-h", "--help")) {
     if (m_app) {
       m_app->help();
     }
     argsBase().m_shouldExitOk = true;
-  } else if (isArg(i, argc, argv, nullptr, "--server")) {
-    // HACK: stop error happening when using portable (deskflowp)
-  } else if (isArg(i, argc, argv, nullptr, "--client")) {
-    // HACK: stop error happening when using portable (deskflowp)
   } else {
     // option not supported here
     return false;

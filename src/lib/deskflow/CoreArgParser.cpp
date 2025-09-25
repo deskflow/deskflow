@@ -102,6 +102,13 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::restartOption) == "1"));
     Settings::setValue(Settings::Core::RestartOnFailure, value);
   }
+
+  if (m_parser.isSet(CoreArgs::useHooksOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::useHooksOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::useHooksOption) == "1"));
+    Settings::setValue(Settings::Core::UseHooks, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

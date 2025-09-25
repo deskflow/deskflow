@@ -32,9 +32,6 @@ public:
   /// @brief Stores what type of object this is
   ClassType m_classType = ClassType::Base;
 
-  /// @brief Should the app use hooks
-  bool m_noHooks = false;
-
   /// @brief The filename of the running process
   const char *m_pname = nullptr;
 
