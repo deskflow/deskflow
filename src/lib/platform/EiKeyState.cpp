@@ -9,8 +9,8 @@
 #include "platform/EiKeyState.h"
 
 #include "base/Log.h"
+#include "common/Settings.h"
 #include "deskflow/AppUtil.h"
-#include "deskflow/ClientApp.h"
 #include "platform/XWindowsUtil.h"
 
 #include <cstddef>
@@ -20,7 +20,9 @@
 namespace deskflow {
 
 EiKeyState::EiKeyState(EiScreen *screen, IEventQueue *events)
-    : KeyState(events, AppUtil::instance().getKeyboardLayoutList(), ClientApp::instance().args().m_enableLangSync),
+    : KeyState(
+          events, AppUtil::instance().getKeyboardLayoutList(), Settings::value(Settings::Client::LanguageSync).toBool()
+      ),
       m_screen{screen}
 {
   m_xkb = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
