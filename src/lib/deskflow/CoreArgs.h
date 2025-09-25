@@ -66,8 +66,13 @@ struct CoreArgs
   inline static const auto serverConfigOption =
       QCommandLineOption("serverConfig", "Server Mode: File to load as server config", "path");
 
+  // Client Options
+  inline static const auto yscrollOption =
+      QCommandLineOption("yscroll", "Client Mode: Vertical scrolling delta (default: 120)", "value");
+
   inline static const auto options = {helpOption,     versionOption,  configOption,       interfaceOption,
                                       portOption,     nameOption,     logLevelOption,     logFileOption,
-                                      secureOption, tlsCertOption,  preventSleepOption, restartOption,
-                                      displayOption,  useHooksOption, peerCheckOption,    serverConfigOption};
+                                      secureOption,   tlsCertOption,  preventSleepOption, restartOption,
+                                      displayOption,  useHooksOption, peerCheckOption,    serverConfigOption,
+                                      yscrollOption};
 };

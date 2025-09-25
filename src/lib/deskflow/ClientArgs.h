@@ -25,7 +25,6 @@ public:
   ~ClientArgs() override = default;
 
 public:
-  int m_yscroll = 0;
   bool m_enableLangSync = false; /// @brief Should keyboard input be in same language as on server
 
   /**

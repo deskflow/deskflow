@@ -170,17 +170,6 @@ void ArgParserTests::clientArgs()
   QVERIFY(args.m_shouldExitOk);
 }
 
-void ArgParserTests::client_yScroll()
-{
-  deskflow::ClientArgs clientArgs;
-  const int argc = 3;
-  const char *kYScrollCmd[argc] = {"stub", "--yscroll", "1"};
-
-  m_parser.parseClientArgs(clientArgs, argc, kYScrollCmd);
-
-  QCOMPARE(clientArgs.m_yscroll, 1);
-}
-
 void ArgParserTests::client_setLangSync()
 {
   deskflow::ClientArgs clientArgs;
