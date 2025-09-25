@@ -105,14 +105,11 @@ void ClientApp::help()
   std::stringstream help;
   help << "\n\nClient Mode:\n\n"
        << "Usage: " << kAppId << "-core client"
-       << " [--yscroll <delta>]"
        << " [--sync-language]"
        << " [--invert-scroll]"
        << " <server-address>"
        << "\n\n"
        << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
-       << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
-       << "                             which is 120 by default.\n"
        << "      --sync-language      enable language synchronization.\n"
        << "      --invert-scroll      invert scroll direction on this\n"
        << "                             computer.\n"
@@ -176,8 +173,8 @@ deskflow::Screen *ClientApp::createScreen()
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
       new XWindowsScreen(
-          qPrintable(Settings::value(Settings::Core::Display).toString()), false, args().m_yscroll, getEvents(),
-          args().m_clientScrollDirection
+          qPrintable(Settings::value(Settings::Core::Display).toString()), false,
+          Settings::value(Settings::Client::ScrollSpeed).toInt(), getEvents(), args().m_clientScrollDirection
       ),
       getEvents()
   );

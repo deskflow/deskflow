@@ -120,6 +120,10 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::serverConfigOption)) {
     Settings::setValue(Settings::Server::ExternalConfigFile, m_parser.value(CoreArgs::serverConfigOption));
   }
+
+  if (m_parser.isSet(CoreArgs::yscrollOption)) {
+    Settings::setValue(Settings::Client::ScrollSpeed, m_parser.value(CoreArgs::yscrollOption));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

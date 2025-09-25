@@ -320,6 +320,16 @@ void CoreArgParserTests::server_setConfig()
   QCOMPARE("afile.conf", Settings::value(Settings::Server::ExternalConfigFile).toString());
 }
 
+void CoreArgParserTests::client_yscroll()
+{
+  QStringList args = {"stub", "client", "--yscroll", "15"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE(15, Settings::value(Settings::Client::ScrollSpeed).toInt());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

@@ -45,6 +45,7 @@ private Q_SLOTS:
   void server_peerCheck_false();
   void server_peerCheck_true();
   void server_setConfig();
+  void client_yscroll();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
