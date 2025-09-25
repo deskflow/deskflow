@@ -109,6 +109,13 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::useHooksOption) == "1"));
     Settings::setValue(Settings::Core::UseHooks, value);
   }
+
+  if (m_parser.isSet(CoreArgs::peerCheckOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::peerCheckOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::peerCheckOption) == "1"));
+    Settings::setValue(Settings::Security::CheckPeers, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

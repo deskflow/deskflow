@@ -107,8 +107,6 @@ void ServerApp::help()
   help << "\n\nServer Mode:\n\n"
        << "Usage: " << kAppId << "-core server \n"
        << "  -c, --config <pathname>  path of the configuration file\n"
-       << "      --disable-client-cert-check disable client SSL certificate \n"
-          "                                     checking (deprecated)\n"
        << s_helpVersionArgs << "\n"
        << s_helpNoWayland;
 
@@ -507,7 +505,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
   using enum SecurityLevel;
   auto securityLevel = PlainText;
   if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    if (args().m_chkPeerCert) {
+    if (Settings::value(Settings::Security::CheckPeers).toBool()) {
       securityLevel = PeerAuth;
     } else {
       securityLevel = Encrypted;

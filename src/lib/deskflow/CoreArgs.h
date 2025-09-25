@@ -58,20 +58,13 @@ struct CoreArgs
   inline static const auto useHooksOption =
       QCommandLineOption("useHooks", "Sets if hooks are used for windows desks", "value");
 
-  inline static const auto options = {
-    helpOption,
-    versionOption,
-    configOption,
-    interfaceOption,
-    portOption,
-    nameOption,
-    logLevelOption,
-    logFileOption,
-    secureOption,
-    tlsCertOption,
-    preventSleepOption,
-    restartOption,
-    displayOption,
-    useHooksOption
-  };
+  // Server Options
+  inline static const auto peerCheckOption = QCommandLineOption(
+      "peerCertCheck", "Server Mode: Enable client SSL certificate checking (default: true)", "value"
+  );
+
+  inline static const auto options = {helpOption,     versionOption,  configOption,       interfaceOption,
+                                      portOption,     nameOption,     logLevelOption,     logFileOption,
+                                      secureOption, tlsCertOption,  preventSleepOption, restartOption,
+                                      displayOption,  useHooksOption, peerCheckOption};
 };
