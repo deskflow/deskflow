@@ -170,7 +170,7 @@ std::vector<std::string> X11LayoutsParser::getX11LanguageList(const std::string 
   return convertISO639_2ToISO639_1(iso639_2Codes);
 }
 
-std::string X11LayoutsParser::convertLayotToISO(
+std::string X11LayoutsParser::convertLayoutToISO(
     const std::string &pathToEvdevFile, const std::string &layoutLangCode, bool needToReloadFiles
 )
 {

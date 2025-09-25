@@ -77,9 +77,9 @@ void X11LayoutParserTests::xmlParse()
 
 void X11LayoutParserTests::convertLayouts()
 {
-  QCOMPARE(X11LayoutsParser::convertLayotToISO(kTestCorrectFile.toStdString(), "us", true), "en");
-  QCOMPARE(X11LayoutsParser::convertLayotToISO(kTestBadFile1.toStdString(), "us", true), "");
-  QCOMPARE(X11LayoutsParser::convertLayotToISO(kTestFutureFile.toStdString(), "us", true), "");
+  QCOMPARE(X11LayoutsParser::convertLayoutToISO(kTestCorrectFile.toStdString(), "us", true), "en");
+  QCOMPARE(X11LayoutsParser::convertLayoutToISO(kTestBadFile1.toStdString(), "us", true), "");
+  QCOMPARE(X11LayoutsParser::convertLayoutToISO(kTestFutureFile.toStdString(), "us", true), "");
 }
 
 QTEST_MAIN(X11LayoutParserTests)
