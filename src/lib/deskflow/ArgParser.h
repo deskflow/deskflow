@@ -50,7 +50,6 @@ public:
   }
 
 private:
-  void updateCommonArgs(const char *const *argv) const;
   bool checkUnexpectedArgs() const;
 
 private:

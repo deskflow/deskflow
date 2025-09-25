@@ -19,6 +19,7 @@
 #include <QCoreApplication>
 #endif
 
+#include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
 #include <iostream>
@@ -89,12 +90,13 @@ int main(int argc, char **argv)
 #endif
 
   EventQueue events;
+  const auto processName = QFileInfo(argv[0]).fileName();
 
   if (parser.serverMode()) {
-    ServerApp app(&events);
+    ServerApp app(&events, processName);
     return app.run(argc, argv);
   } else if (parser.clientMode()) {
-    ClientApp app(&events);
+    ClientApp app(&events, processName);
     return app.run(argc, argv);
   }
 
