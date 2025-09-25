@@ -22,7 +22,6 @@ private Q_SLOTS:
   void getArgv();
   void assembleCommand();
   void clientArgs();
-  void client_yScroll();
   void client_setLangSync();
   void client_setInvertScroll();
   void client_setAddress();
