@@ -124,6 +124,13 @@ void CoreArgParser::parse()
   if (m_parser.isSet(CoreArgs::yscrollOption)) {
     Settings::setValue(Settings::Client::ScrollSpeed, m_parser.value(CoreArgs::yscrollOption));
   }
+
+  if (m_parser.isSet(CoreArgs::languageSyncOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::languageSyncOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::languageSyncOption) == "1"));
+    Settings::setValue(Settings::Client::LanguageSync, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

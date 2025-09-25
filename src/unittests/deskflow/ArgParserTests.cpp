@@ -170,18 +170,6 @@ void ArgParserTests::clientArgs()
   QVERIFY(args.m_shouldExitOk);
 }
 
-void ArgParserTests::client_setLangSync()
-{
-  deskflow::ClientArgs clientArgs;
-  clientArgs.m_enableLangSync = false;
-  const int argc = 2;
-  std::array<const char *, argc> kLangCmd = {"stub", "--sync-language"};
-
-  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
-
-  QVERIFY(clientArgs.m_enableLangSync);
-}
-
 void ArgParserTests::client_setInvertScroll()
 {
   deskflow::ClientArgs clientArgs;

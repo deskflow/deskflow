@@ -25,8 +25,6 @@ public:
   ~ClientArgs() override = default;
 
 public:
-  bool m_enableLangSync = false; /// @brief Should keyboard input be in same language as on server
-
   /**
    * @brief m_clientScrollDirection
    * This option is responcible for scroll direction on client side.
