@@ -450,7 +450,9 @@ bool ServerApp::startServer()
 deskflow::Screen *ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-  return new deskflow::Screen(new MSWindowsScreen(true, args().m_noHooks, getEvents()), getEvents());
+  return new deskflow::Screen(
+      new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
+  );
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)

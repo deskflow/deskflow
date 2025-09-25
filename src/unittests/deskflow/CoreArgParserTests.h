@@ -40,6 +40,8 @@ private Q_SLOTS:
   void restartShortOption_1();
   void restartShortOption_false();
   void restartShortOption_true();
+  void hookOptions_false();
+  void hookOptions_true();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
