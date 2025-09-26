@@ -1,27 +1,8 @@
-# SPDX-FileCopyrightText: 2024 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-FileCopyrightText: 2012 - 2025 Symless Ltd
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
-find_package(CLI11 QUIET)
-if(CLI11_FOUND)
-  message(STATUS "CLI11 [System] Version: ${CLI11_VERSION}")
-  set(cli11_lib CLI11::CLI11)
-else()
-  #Be sure to update the version and MD5 together
-  set(CLI11_VERSION 2.5.0)
-  set(CLI11_MD5 0d3d6898febe3b82fc47b3d608b1ae95)
-  file(
-    DOWNLOAD "https://github.com/CLIUtils/CLI11/releases/download/v${CLI11_VERSION}/CLI11.hpp"
-    "${CMAKE_BINARY_DIR}/include/CLI/CLI.hpp"
-    EXPECTED_MD5 ${CLI11_MD5}
-  )
-  set(cli11_inc_dir "${CMAKE_BINARY_DIR}/include")
-  message(STATUS "CLI11 [Downloaded] Version: ${CLI11_VERSION}")
-  message(STATUS "CLI11 INC_DIR: ${cli11_inc_dir}")
-endif()
-
-####################Start Making Library#########################
 set(lib_name app)
 
 # arch
@@ -109,16 +90,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
 
 target_link_libraries(${lib_name} PUBLIC common Qt6::Core Qt6::Network)
 
-if(WIN32)
-    target_link_libraries(${lib_name} PRIVATE ${cli11_lib})
-endif()
-
-target_include_directories(
-  ${lib_name}
-    PRIVATE
-      ${cli11_inc_dir}
-)
-
 if(UNIX)
   target_link_libraries(
     ${lib_name}
@@ -130,7 +101,6 @@ if(UNIX)
     platform
     mt
     server
-    ${cli11_lib}
   )
 
   if(NOT APPLE)

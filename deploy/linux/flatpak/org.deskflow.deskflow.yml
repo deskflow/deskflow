@@ -62,15 +62,6 @@ modules:
         commit: 8f5dc8d192f6e31dafe69e35219e3b707bde71ce
       - type: patch
         path: libportal-qt69.patch
-  - name: cli11
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DCLI11_BUILD_TESTS=OFF
-    sources:
-      - type: git
-        url: https://github.com/CLIUtils/CLI11
-        tag: v2.5.0
-        commit: 4160d259d961cd393fd8d67590a8c7d210207348
   - name: gtest
     buildsystem: cmake-ninja
     sources:
