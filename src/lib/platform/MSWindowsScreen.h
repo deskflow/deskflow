@@ -31,8 +31,7 @@ class MSWindowsScreen : public PlatformScreen
 {
 public:
   MSWindowsScreen(
-      bool isPrimary, bool noHooks, IEventQueue *events, bool enableLangSync = false,
-      deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
+      bool isPrimary, bool noHooks, IEventQueue *events, bool enableLangSync = false, bool invetScrolling = false
   );
   ~MSWindowsScreen() override;
 

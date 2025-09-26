@@ -84,10 +84,9 @@ static int xi_opcode;
 XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
 XWindowsScreen::XWindowsScreen(
-    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events,
-    deskflow::ClientScrollDirection scrollDirection
+    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events, bool invertScrolling
 )
-    : PlatformScreen(events, scrollDirection),
+    : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
       m_mouseScrollDelta(mouseScrollDelta),
       m_isOnScreen(m_isPrimary),

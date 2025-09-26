@@ -146,11 +146,12 @@ const char *ClientApp::daemonInfo() const
 
 deskflow::Screen *ClientApp::createScreen()
 {
+  const bool invertScrolling = Settings::value(Settings::Client::InvertScrollDirection).toBool();
 #if WINAPI_MSWINDOWS
   return new deskflow::Screen(
       new MSWindowsScreen(
           false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(),
-          Settings::value(Settings::Client::LanguageSync).toBool(), args().m_clientScrollDirection
+          Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling
       ),
       getEvents()
   );
@@ -160,9 +161,7 @@ deskflow::Screen *ClientApp::createScreen()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
-    return new deskflow::Screen(
-        new deskflow::EiScreen(false, getEvents(), true, args().m_clientScrollDirection), getEvents()
-    );
+    return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true, invertScrolling), getEvents());
 #else
     throw XNoEiSupport();
 #endif
@@ -174,7 +173,7 @@ deskflow::Screen *ClientApp::createScreen()
   return new deskflow::Screen(
       new XWindowsScreen(
           qPrintable(Settings::value(Settings::Core::Display).toString()), false,
-          Settings::value(Settings::Client::ScrollSpeed).toInt(), getEvents(), args().m_clientScrollDirection
+          Settings::value(Settings::Client::ScrollSpeed).toInt(), getEvents(), invertScrolling
       ),
       getEvents()
   );
@@ -183,9 +182,7 @@ deskflow::Screen *ClientApp::createScreen()
 
 #if WINAPI_CARBON
   return new deskflow::Screen(
-      new OSXScreen(
-          getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool(), args().m_clientScrollDirection
-      ),
+      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling),
       getEvents()
   );
 #endif
