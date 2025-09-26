@@ -170,17 +170,6 @@ void ArgParserTests::clientArgs()
   QVERIFY(args.m_shouldExitOk);
 }
 
-void ArgParserTests::client_setInvertScroll()
-{
-  deskflow::ClientArgs clientArgs;
-  const int argc = 2;
-  std::array<const char *, argc> kLangCmd = {"stub", "--invert-scroll"};
-
-  m_parser.parseClientArgs(clientArgs, argc, kLangCmd.data());
-
-  QCOMPARE(clientArgs.m_clientScrollDirection, deskflow::ClientScrollDirection::Inverted);
-}
-
 void ArgParserTests::client_setAddress()
 {
   deskflow::ClientArgs clientArgs;

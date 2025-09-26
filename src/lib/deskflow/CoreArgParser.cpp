@@ -131,6 +131,13 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::languageSyncOption) == "1"));
     Settings::setValue(Settings::Client::LanguageSync, value);
   }
+
+  if (m_parser.isSet(CoreArgs::invertScrollOption)) {
+    bool value =
+        ((m_parser.value(CoreArgs::invertScrollOption).toLower() == "true") ||
+         (m_parser.value(CoreArgs::invertScrollOption) == "1"));
+    Settings::setValue(Settings::Client::InvertScrollDirection, value);
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

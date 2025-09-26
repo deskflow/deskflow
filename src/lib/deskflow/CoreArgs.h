@@ -73,9 +73,13 @@ struct CoreArgs
   inline static const auto languageSyncOption =
       QCommandLineOption("languageSync", "Client Mode: Sync language with client (default: false)", "value");
 
-  inline static const auto options = {helpOption,     versionOption,     configOption,       interfaceOption,
-                                      portOption,     nameOption,        logLevelOption,     logFileOption,
-                                      secureOption,   tlsCertOption,     preventSleepOption, restartOption,
-                                      displayOption,  useHooksOption,    peerCheckOption,    serverConfigOption,
-                                      yscrollOption,  languageSyncOption};
+  inline static const auto invertScrollOption = QCommandLineOption(
+      "invertScrollDirection", "Client Mode: Set scroll direciton to be inverted (default: false)", "value"
+  );
+
+  inline static const auto options = {helpOption,    versionOption,      configOption,       interfaceOption,
+                                      portOption,    nameOption,         logLevelOption,     logFileOption,
+                                      secureOption,  tlsCertOption,      preventSleepOption, restartOption,
+                                      displayOption, useHooksOption,     peerCheckOption,    serverConfigOption,
+                                      yscrollOption, languageSyncOption, invertScrollOption};
 };

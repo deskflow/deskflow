@@ -50,6 +50,10 @@ private Q_SLOTS:
   void client_languageSync_false();
   void client_languageSync_1();
   void client_languageSync_0();
+  void client_invertScrolling_true();
+  void client_invertScrolling_false();
+  void client_invertScrolling_1();
+  void client_invertScrolling_0();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
