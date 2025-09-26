@@ -65,7 +65,7 @@ ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(even
   // do nothing
 }
 
-void ClientApp::parseArgs(int, const char *const *)
+void ClientApp::parseArgs()
 {
   // save server address
   if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
@@ -85,31 +85,6 @@ void ClientApp::parseArgs(int, const char *const *)
       }
     }
   }
-}
-
-void ClientApp::help()
-{
-  std::stringstream help;
-  help << "\n\nClient Mode:\n\n"
-       << "Usage: " << kAppId << "-core client"
-       << " [--sync-language]"
-       << " [--invert-scroll]"
-       << " <server-address>"
-       << "\n\n"
-       << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
-       << "      --sync-language      enable language synchronization.\n"
-       << "      --invert-scroll      invert scroll direction on this\n"
-       << "                             computer.\n"
-       << s_helpVersionArgs << "\n"
-
-       << s_helpNoWayland
-
-       << "\n"
-       << "The server address is of the form: [<hostname>][:<port>].\n"
-       << "The hostname must be the address or hostname of the server.\n"
-       << "The port overrides the default port, " << kDefaultPort << ".\n";
-
-  LOG_PRINT("%s", help.str().c_str());
 }
 
 const char *ClientApp::daemonName() const

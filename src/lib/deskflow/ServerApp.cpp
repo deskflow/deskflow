@@ -73,7 +73,7 @@ ServerApp::ServerApp(IEventQueue *events, const QString &processName) : App(even
   // do nothing
 }
 
-void ServerApp::parseArgs(int, const char *const *)
+void ServerApp::parseArgs()
 {
   if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
     try {
@@ -84,11 +84,6 @@ void ServerApp::parseArgs(int, const char *const *)
       bye(s_exitArgs);
     }
   }
-}
-
-void ServerApp::help()
-{
-  // do-nothing
 }
 
 void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)

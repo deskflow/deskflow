@@ -160,10 +160,10 @@ void App::initApp(int argc, const char **argv)
   if (!configFilename.empty()) {
     Config config(configFilename, configSection());
     if (config.load(argv[0])) {
-      parseArgs(config.argc(), config.argv());
+      parseArgs();
     }
   } else {
-    parseArgs(argc, argv);
+    parseArgs();
   }
 
   // set log filter
