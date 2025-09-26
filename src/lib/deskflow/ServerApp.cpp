@@ -15,7 +15,6 @@
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
 #include "net/SocketException.h"

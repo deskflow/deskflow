@@ -67,8 +67,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   App.h
   AppUtil.cpp
   AppUtil.h
-  ArgParser.cpp
-  ArgParser.h
   Chunk.cpp
   Chunk.h
   ClientApp.cpp
