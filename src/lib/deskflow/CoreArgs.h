@@ -77,9 +77,12 @@ struct CoreArgs
       "invertScrollDirection", "Client Mode: Set scroll direciton to be inverted (default: false)", "value"
   );
 
+  inline static const auto remoteHostOption =
+      QCommandLineOption("remoteHost", "Client Mode: Sets the remote host in the settings file", "hostname");
+
   inline static const auto options = {helpOption,    versionOption,      configOption,       interfaceOption,
                                       portOption,    nameOption,         logLevelOption,     logFileOption,
                                       secureOption,  tlsCertOption,      preventSleepOption, restartOption,
                                       displayOption, useHooksOption,     peerCheckOption,    serverConfigOption,
-                                      yscrollOption, languageSyncOption, invertScrollOption};
+                                      yscrollOption, languageSyncOption, invertScrollOption, remoteHostOption};
 };

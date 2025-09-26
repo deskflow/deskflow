@@ -54,6 +54,7 @@ private Q_SLOTS:
   void client_invertScrolling_false();
   void client_invertScrolling_1();
   void client_invertScrolling_0();
+  void client_remoteHost();
 
 private:
   inline static const QString m_settingsPath = QStringLiteral("tmp/test");
