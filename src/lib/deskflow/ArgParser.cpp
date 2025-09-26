@@ -9,7 +9,6 @@
 #include "base/Log.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
-#include "deskflow/ClientArgs.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -22,38 +21,6 @@ deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App *app) : m_app(app)
 {
-}
-
-bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv) const
-{
-  setArgsBase(args);
-
-  int i{1};
-  while (i < argc) {
-    if (parseGenericArgs(argc, argv, i) || parseDeprecatedArgs(argc, argv, i) ||
-        isArg(i, argc, argv, nullptr, "client")) {
-      ++i;
-      continue;
-    } else if (isArg(i, argc, argv, nullptr, "--camp") || isArg(i, argc, argv, nullptr, "--no-camp")) {
-      // ignore -- included for backwards compatibility
-    } else {
-      LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
-      return false;
-    }
-    ++i;
-  }
-
-  // exactly one non-option argument (server-address)
-  if (i == argc && !args.m_shouldExitFail && !args.m_shouldExitOk) {
-    LOG_CRIT("%s: a server address or name is required" BYE, "deskflow-core", "deskflow-core");
-    return false;
-  }
-
-  if (checkUnexpectedArgs()) {
-    return false;
-  }
-
-  return true;
 }
 
 bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) const

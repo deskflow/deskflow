@@ -7,8 +7,6 @@
 
 #include "deskflow/KeyState.h"
 #include "base/Log.h"
-#include "deskflow/ClientApp.h"
-#include "deskflow/ClientArgs.h"
 
 #include <algorithm>
 #include <cstring>

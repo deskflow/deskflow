@@ -8,7 +8,6 @@
 #pragma once
 
 #include "common/Settings.h"
-#include "deskflow/ClientArgs.h"
 #include "deskflow/IPlatformScreen.h"
 
 #include <stdexcept>
