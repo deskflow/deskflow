@@ -17,11 +17,5 @@ public:
   ClientArgs();
 
   ~ClientArgs() override = default;
-
-public:
-  /**
-   * @brief m_serverAddress stores deskflow server address
-   */
-  std::string m_serverAddress;
 };
 } // namespace deskflow

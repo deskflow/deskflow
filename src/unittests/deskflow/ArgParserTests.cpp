@@ -164,20 +164,10 @@ void ArgParserTests::assembleCommand()
 void ArgParserTests::clientArgs()
 {
   deskflow::ClientArgs args;
-  char const *argv[] = {kAppId, "--help", "--res-w", "888", "127.0.0.1"};
+  char const *argv[] = {kAppId, "--help", "--res-w", "888"};
 
   QVERIFY(m_parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
   QVERIFY(args.m_shouldExitOk);
-}
-
-void ArgParserTests::client_setAddress()
-{
-  deskflow::ClientArgs clientArgs;
-  const int argc = 2;
-  const char *kAddressCmd[argc] = {"stub", "mock_address"};
-
-  QVERIFY(m_parser.parseClientArgs(clientArgs, argc, kAddressCmd));
-  QCOMPARE(clientArgs.m_serverAddress, "mock_address");
 }
 
 void ArgParserTests::client_badArgs()

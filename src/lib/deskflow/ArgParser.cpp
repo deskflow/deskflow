@@ -37,11 +37,6 @@ bool ArgParser::parseClientArgs(deskflow::ClientArgs &args, int argc, const char
     } else if (isArg(i, argc, argv, nullptr, "--camp") || isArg(i, argc, argv, nullptr, "--no-camp")) {
       // ignore -- included for backwards compatibility
     } else {
-      if (i + 1 == argc) {
-        args.m_serverAddress = argv[i];
-        return true;
-      }
-
       LOG_CRIT("%s: unrecognized option `%s'" BYE, "deskflow-core", argv[i], "deskflow-core");
       return false;
     }

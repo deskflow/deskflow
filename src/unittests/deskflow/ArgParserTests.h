@@ -22,7 +22,6 @@ private Q_SLOTS:
   void getArgv();
   void assembleCommand();
   void clientArgs();
-  void client_setAddress();
   void client_badArgs();
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();

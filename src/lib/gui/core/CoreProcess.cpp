@@ -479,14 +479,6 @@ bool CoreProcess::addClientArgs(QStringList &args)
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
 
-  if (correctedAddress().isEmpty()) {
-    Q_EMIT error(Error::AddressMissing);
-    qDebug("address is missing for client args");
-    return false;
-  }
-
-  args << correctedAddress() + ":" + Settings::value(Settings::Core::Port).toString();
-
   return true;
 }
 
