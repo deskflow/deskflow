@@ -370,6 +370,46 @@ void CoreArgParserTests::client_languageSync_0()
   QVERIFY(!Settings::value(Settings::Client::LanguageSync).toBool());
 }
 
+void CoreArgParserTests::client_invertScrolling_true()
+{
+  QStringList args = {"stub", "client", "--invertScrollDirection", "true"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Client::InvertScrollDirection).toBool());
+}
+
+void CoreArgParserTests::client_invertScrolling_false()
+{
+  QStringList args = {"stub", "client", "--invertScrollDirection", "false"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Client::InvertScrollDirection).toBool());
+}
+
+void CoreArgParserTests::client_invertScrolling_1()
+{
+  QStringList args = {"stub", "client", "--invertScrollDirection", "1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(Settings::value(Settings::Client::InvertScrollDirection).toBool());
+}
+
+void CoreArgParserTests::client_invertScrolling_0()
+{
+  QStringList args = {"stub", "client", "--invertScrollDirection", "0"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QVERIFY(!Settings::value(Settings::Client::InvertScrollDirection).toBool());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};

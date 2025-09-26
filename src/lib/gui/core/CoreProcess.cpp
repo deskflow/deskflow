@@ -479,10 +479,6 @@ bool CoreProcess::addClientArgs(QStringList &args)
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
 
-  if (Settings::value(Settings::Client::InvertScrollDirection).toBool()) {
-    args << "--invert-scroll";
-  }
-
   if (correctedAddress().isEmpty()) {
     Q_EMIT error(Error::AddressMissing);
     qDebug("address is missing for client args");
