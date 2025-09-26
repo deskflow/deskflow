@@ -7,8 +7,6 @@
 
 #include "ArgParserTests.h"
 
-#include "deskflow/ArgsBase.h"
-
 // This file is generated at build time
 #include <common/Constants.h>
 
@@ -16,8 +14,6 @@ void ArgParserTests::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(LogLevel::Debug2);
-  static deskflow::ArgsBase base;
-  m_parser.setArgsBase(base);
 }
 
 void ArgParserTests::isArg()
@@ -36,12 +32,8 @@ void ArgParserTests::missingArg()
   int i = 1;
   const int argc = 2;
   const char *argv[argc] = {"stub", "-t"};
-  static deskflow::ArgsBase argsBase;
-
-  m_parser.setArgsBase(argsBase);
 
   QVERIFY(!ArgParser::isArg(i, argc, argv, "-t", NULL, 1));
-  QVERIFY(argsBase.m_shouldExitFail);
 }
 
 void ArgParserTests::withQuotes()

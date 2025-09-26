@@ -43,7 +43,7 @@ public:
     }
   };
 
-  App(IEventQueue *events, const QString &processName, deskflow::ArgsBase *args);
+  App(IEventQueue *events, const QString &processName);
   App(App const &) = delete;
   App(App &&) = delete;
   ~App() override;
@@ -75,10 +75,7 @@ public:
   {
     return m_appUtil;
   }
-  deskflow::ArgsBase &argsBase() const override
-  {
-    return *m_args;
-  }
+
   int run(int argc, char **argv);
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
@@ -121,7 +118,6 @@ protected:
 private:
   void (*m_bye)(int);
   IEventQueue *m_events = nullptr;
-  deskflow::ArgsBase *m_args;
   static App *s_instance;
   FileLogOutputter *m_fileLog = nullptr;
   ARCH_APP_UTIL m_appUtil;

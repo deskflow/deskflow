@@ -8,7 +8,6 @@
 
 #include "base/Log.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>
@@ -16,8 +15,6 @@
 
 #include <QFileInfo>
 #include <QSysInfo>
-
-deskflow::ArgsBase *ArgParser::m_argsBase = nullptr;
 
 ArgParser::ArgParser(App *app) : m_app(app)
 {
@@ -29,7 +26,6 @@ bool ArgParser::parseGenericArgs(int argc, const char *const *argv, int &i) cons
     if (m_app) {
       m_app->help();
     }
-    argsBase().m_shouldExitOk = true;
   } else {
     // option not supported here
     return false;
@@ -62,7 +58,6 @@ bool ArgParser::isArg(
     // match.  check args left.
     if (argi + minRequiredParameters >= argc) {
       LOG_PRINT("%s: missing arguments for `%s'" BYE, "deskflow-core", argv[argi], "deskflow-core");
-      argsBase().m_shouldExitFail = true;
       return false;
     }
     return true;
