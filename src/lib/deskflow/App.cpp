@@ -14,8 +14,7 @@
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
-#include "deskflow/ArgsBase.h"
-#include "deskflow/Config.h"
+#include "common/Settings.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 
@@ -43,11 +42,11 @@ App *App::s_instance = nullptr;
 // App
 //
 
-App::App(IEventQueue *events, deskflow::ArgsBase *args)
+App::App(IEventQueue *events, const QString &processName)
     : m_bye(&exit),
       m_events(events),
-      m_args(args),
-      m_appUtil(events)
+      m_appUtil(events),
+      m_pname(processName)
 {
   assert(s_instance == nullptr);
   s_instance = this;
@@ -56,19 +55,6 @@ App::App(IEventQueue *events, deskflow::ArgsBase *args)
 App::~App()
 {
   s_instance = nullptr;
-  delete m_args;
-}
-
-void App::version()
-{
-  const auto kBufferLength = 1024;
-  std::vector<char> buffer(kBufferLength);
-  std::snprintf(                                                   // NOSONAR
-      buffer.data(), kBufferLength, "%s v%s, protocol v%d.%d\n%s", //
-      argsBase().m_pname, kDisplayVersion, kProtocolMajorVersion, kProtocolMinorVersion, kCopyright
-  );
-
-  std::cout << std::string(buffer.data()) << std::endl;
 }
 
 int App::run(int argc, char **argv)
@@ -127,28 +113,29 @@ int App::daemonMainLoop(int, const char **)
 
 void App::setupFileLogging()
 {
-  if (argsBase().m_logFile != nullptr) {
-    m_fileLog = new FileLogOutputter(argsBase().m_logFile); // NOSONAR - Adopted by `Log`
-    CLOG->insert(m_fileLog);
-    LOG_DEBUG1("logging to file (%s) enabled", argsBase().m_logFile);
+  if (Settings::value(Settings::Log::ToFile).toBool()) {
+    if (const auto file = Settings::value(Settings::Log::File).toString(); !file.isEmpty()) {
+      const auto logFile = qPrintable(file);
+      m_fileLog = new FileLogOutputter(logFile); // NOSONAR - Adopted by `Log`
+      CLOG->insert(m_fileLog);
+      LOG_DEBUG1("logging to file (%s) enabled", logFile);
+    }
   }
 }
 
 void App::loggingFilterWarning() const
 {
-  if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (argsBase().m_logFile == nullptr)) {
-    LOG(
-        (CLOG_WARN "log messages above %s are NOT sent to console (use file logging)",
-         CLOG->getFilterName(CLOG->getConsoleMaxLevel()))
+  if ((CLOG->getFilter() > CLOG->getConsoleMaxLevel()) && (Settings::value(Settings::Log::ToFile).toBool())) {
+    LOG_WARN(
+        "log messages above %s are NOT sent to console (use file logging)",
+        CLOG->getFilterName(CLOG->getConsoleMaxLevel())
     );
   }
 }
 
 void App::initApp(int argc, const char **argv)
 {
-  std::string configFilename;
   CLI::App cliApp{kAppDescription};
-  cliApp.add_option("--config-toml", configFilename, "Use TOML configuration file");
 
   // Allow legacy args.
   cliApp.allow_extras();
@@ -160,20 +147,11 @@ void App::initApp(int argc, const char **argv)
     cliApp.exit(e);
   }
 
-  if (!configFilename.empty()) {
-    Config config(configFilename, configSection());
-    if (config.load(argv[0])) {
-      parseArgs(config.argc(), config.argv());
-    }
-  } else {
-    parseArgs(argc, argv);
-  }
+  parseArgs();
 
   // set log filter
-  if (!CLOG->setFilter(argsBase().m_logFilter)) {
-    LOG((
-        CLOG_CRIT "%s: unrecognized log level `%s'" BYE, argsBase().m_pname, argsBase().m_logFilter, argsBase().m_pname
-    ));
+  if (const auto logLevel = qPrintable(Settings::logLevelText()); !CLOG->setFilter(logLevel)) {
+    LOG_CRIT("%s: unrecognized log level `%s'" BYE, qPrintable(processName()), logLevel, qPrintable(processName()));
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();

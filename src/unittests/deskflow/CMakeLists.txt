@@ -6,10 +6,10 @@ if(WIN32)
 endif()
 
 create_test(
-  NAME ArgParserTests
+  NAME CoreArgParserTests
   DEPENDS app
-  LIBS arch base ${extra_libs}
-  SOURCE ArgParserTests.cpp
+  LIBS ${extra_libs}
+  SOURCE CoreArgParserTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
@@ -26,14 +26,6 @@ create_test(
   DEPENDS app
   LIBS arch base io ${extra_libs}
   SOURCE ClipboardChunksTests.cpp
-  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
-)
-
-create_test(
-  NAME ConfigTests
-  DEPENDS app
-  LIBS arch base ${extra_libs}
-  SOURCE ConfigTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 

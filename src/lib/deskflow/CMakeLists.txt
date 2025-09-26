@@ -21,26 +21,6 @@ else()
   message(STATUS "CLI11 INC_DIR: ${cli11_inc_dir}")
 endif()
 
-find_package(tomlplusplus QUIET)
-if(tomlplusplus_FOUND)
-  message(STATUS "tomlplusplus [System] Version: ${tomlplusplus_VERSION}")
-  set(tomlPP_lib tomlplusplus::tomlplusplus)
-else()
-  # Be sure to update the version and MD5 together
-  # Save our copy with .h not .hpp for compatibliy with system version < 3.4
-  set(TOMLPP_VERSION 3.4.0)
-  set(TOMLPP_MD5 caefb3b60119731fb4b4d24b6339e7fb)
-  file(
-    DOWNLOAD "https://raw.githubusercontent.com/marzer/tomlplusplus/refs/tags/v${TOMLPP_VERSION}/toml.hpp"
-    "${CMAKE_BINARY_DIR}/include/toml++/toml.h"
-    SHOW_PROGRESS
-    EXPECTED_MD5 ${TOMLPP_MD5}
-  )
-  set(tomlPP_inc_dir "${CMAKE_BINARY_DIR}/include")
-  message(STATUS "tomlplusplus [Downloaded] Version: 3.4.0")
-  message(STATUS "tomlplusplus INC DIR: ${tomlPP_inc_dir}")
-endif()
-
 ####################Start Making Library#########################
 set(lib_name app)
 
@@ -67,22 +47,18 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   App.h
   AppUtil.cpp
   AppUtil.h
-  ArgParser.cpp
-  ArgParser.h
-  ArgsBase.h
   Chunk.cpp
   Chunk.h
   ClientApp.cpp
   ClientApp.h
-  ClientArgs.cpp
-  ClientArgs.h
   ClipboardTypes.h
   Clipboard.cpp
   Clipboard.h
   ClipboardChunk.cpp
   ClipboardChunk.h
-  Config.cpp
-  Config.h
+  CoreArgParser.cpp
+  CoreArgParser.h
+  CoreArgs.h
   DaemonApp.cpp
   DaemonApp.h
   DeskflowException.cpp
@@ -123,8 +99,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ScreenException.h
   ServerApp.cpp
   ServerApp.h
-  ServerArgs.cpp
-  ServerArgs.h
   StreamChunker.cpp
   StreamChunker.h
   languages/LanguageManager.cpp
@@ -133,17 +107,16 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ipc/DaemonIpcServer.h
 )
 
-target_link_libraries(${lib_name} PUBLIC Qt6::Core Qt6::Network)
+target_link_libraries(${lib_name} PUBLIC common Qt6::Core Qt6::Network)
 
 if(WIN32)
-    target_link_libraries(${lib_name} PRIVATE ${cli11_lib} ${tomlPP_lib})
+    target_link_libraries(${lib_name} PRIVATE ${cli11_lib})
 endif()
 
 target_include_directories(
   ${lib_name}
     PRIVATE
       ${cli11_inc_dir}
-      ${tomlPP_inc_dir}
 )
 
 if(UNIX)
@@ -158,7 +131,6 @@ if(UNIX)
     mt
     server
     ${cli11_lib}
-    ${tomlPP_lib}
   )
 
   if(NOT APPLE)

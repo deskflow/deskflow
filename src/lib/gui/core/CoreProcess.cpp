@@ -361,8 +361,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   QString app;
   QStringList args;
 
-  addGenericArgs(args);
-
   if (mode() == Server && !addServerArgs(args, app)) {
     qWarning("failed to add server args for core process, aborting start");
     return;
@@ -459,23 +457,6 @@ void CoreProcess::cleanup()
   }
 }
 
-bool CoreProcess::addGenericArgs(QStringList &args) const
-{
-  args << "--debug" << Settings::logLevelText();
-
-  args << "--name" << Settings::value(Settings::Core::ScreenName).toString();
-
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    args << "--enable-crypto";
-  }
-
-  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
-    args << "--prevent-sleep";
-  }
-
-  return true;
-}
-
 bool CoreProcess::addServerArgs(QStringList &args, QString &app)
 {
   app = getAppFilePath(Settings::value(Settings::Server::Binary).toString());
@@ -490,35 +471,16 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
 
-  if (!Settings::value(Settings::Security::CheckPeers).toBool()) {
-    args << "--disable-client-cert-check";
-  }
-
   QString configFilename = persistServerConfig();
   if (configFilename.isEmpty()) {
     qFatal("config file name empty for server args");
     return false;
   }
 
-  // the address arg is dual purpose; when in listening mode, it's the address
-  // that the server listens on. when tcp sockets are inverted, it connects to
-  // that address. this is a bit confusing, and there should be probably be
-  // different args for different purposes.
-  args << "--address" << correctedInterface();
-
-  args << "-c" << configFilename;
   qInfo("core config file: %s", qPrintable(configFilename));
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
-    if (TlsUtility tlsUtility(this); !tlsUtility.persistCertificate()) {
-      qCritical("failed to persist tls certificate");
-      return false;
-    }
-    args << "--tls-cert" << Settings::value(Settings::Security::Certificate).toString();
-  }
-
   return true;
 }
 
@@ -535,22 +497,6 @@ bool CoreProcess::addClientArgs(QStringList &args, QString &app)
     persistLogDir();
     args << "--log" << Settings::value(Settings::Log::File).toString();
   }
-
-  if (Settings::value(Settings::Client::LanguageSync).toBool()) {
-    args << "--sync-language";
-  }
-
-  if (Settings::value(Settings::Client::InvertScrollDirection).toBool()) {
-    args << "--invert-scroll";
-  }
-
-  if (correctedAddress().isEmpty()) {
-    Q_EMIT error(Error::AddressMissing);
-    qDebug("address is missing for client args");
-    return false;
-  }
-
-  args << correctedAddress() + ":" + Settings::value(Settings::Core::Port).toString();
 
   return true;
 }
@@ -668,13 +614,6 @@ void CoreProcess::checkOSXNotification(const QString &line)
   }
 }
 #endif
-
-QString CoreProcess::correctedInterface() const
-{
-  const QString interface = wrapIpv6(Settings::value(Settings::Core::Interface).toString());
-  const auto port = Settings::value(Settings::Core::Port).toString();
-  return QStringLiteral("%1:%2").arg(interface, port);
-}
 
 QString CoreProcess::correctedAddress() const
 {
