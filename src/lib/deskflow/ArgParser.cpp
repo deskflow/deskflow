@@ -10,7 +10,6 @@
 #include "deskflow/App.h"
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
-#include "deskflow/ServerArgs.h"
 
 #ifdef WINAPI_MSWINDOWS
 #include <VersionHelpers.h>

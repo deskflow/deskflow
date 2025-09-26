@@ -16,7 +16,6 @@
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
 #include "deskflow/OptionTypes.h"
-#include "deskflow/ServerArgs.h"
 #include "server/Config.h"
 
 #include <climits>
@@ -120,10 +119,7 @@ public:
   client (local screen) \p primaryClient.  The client retains
   ownership of \p primaryClient.
   */
-  Server(
-      ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events,
-      deskflow::ServerArgs const &args
-  );
+  Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events);
   Server(Server const &) = delete;
   Server(Server &&) = delete;
   ~Server();
@@ -401,8 +397,6 @@ private:
   // all old connections that we're waiting to hangup
   using OldClients = std::map<BaseClientProxy *, EventQueueTimer *>;
   OldClients m_oldClients;
-
-  deskflow::ServerArgs m_args;
 
   // clipboard cache
   ClipboardInfo m_clipboards[kClipboardEnd];

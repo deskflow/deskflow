@@ -43,17 +43,13 @@ using namespace deskflow::server;
 // Server
 //
 
-Server::Server(
-    ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events,
-    deskflow::ServerArgs const &args
-)
+Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Screen *screen, IEventQueue *events)
     : m_primaryClient(primaryClient),
       m_active(primaryClient),
       m_config(&config),
       m_inputFilter(config.getInputFilter()),
       m_screen(screen),
-      m_events(events),
-      m_args(args)
+      m_events(events)
 {
   // must have a primary client and it must have a canonical name
   assert(m_primaryClient != nullptr);
