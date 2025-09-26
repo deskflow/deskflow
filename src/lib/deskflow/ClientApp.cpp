@@ -17,7 +17,7 @@
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "deskflow/ArgParser.h"
-#include "deskflow/ClientArgs.h"
+#include "deskflow/ArgsBase.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
@@ -63,39 +63,28 @@
 constexpr static auto s_retryTime = 1.0;
 
 ClientApp::ClientApp(IEventQueue *events, const QString &processName)
-    : App(events, processName, new deskflow::ClientArgs())
+    : App(events, processName, new deskflow::ArgsBase())
 {
   // do nothing
 }
 
-void ClientApp::parseArgs(int argc, const char *const *argv)
+void ClientApp::parseArgs(int, const char *const *)
 {
-  ArgParser argParser(this);
-  bool result = argParser.parseClientArgs(args(), argc, argv);
-
-  if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
-    if (args().m_shouldExitOk) {
-      bye(s_exitSuccess);
-    } else {
-      bye(s_exitArgs);
-    }
-  } else {
-    // save server address
-    if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
-      try {
-        *m_serverAddress =
-            NetworkAddress(Settings::value(Settings::Client::RemoteHost).toString().toStdString(), kDefaultPort);
-        m_serverAddress->resolve();
-      } catch (SocketAddressException &e) {
-        // allow an address that we can't look up if we're restartable.
-        // we'll try to resolve the address each time we connect to the
-        // server.  a bad port will never get better.  patch by Brent
-        // Priddy.
-        if (!Settings::value(Settings::Core::RestartOnFailure).toBool() ||
-            e.getError() == SocketAddressException::SocketError::BadPort) {
-          LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
-          bye(s_exitFailed);
-        }
+  // save server address
+  if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
+    try {
+      *m_serverAddress =
+          NetworkAddress(Settings::value(Settings::Client::RemoteHost).toString().toStdString(), kDefaultPort);
+      m_serverAddress->resolve();
+    } catch (SocketAddressException &e) {
+      // allow an address that we can't look up if we're restartable.
+      // we'll try to resolve the address each time we connect to the
+      // server.  a bad port will never get better.  patch by Brent
+      // Priddy.
+      if (!Settings::value(Settings::Core::RestartOnFailure).toBool() ||
+          e.getError() == SocketAddressException::SocketError::BadPort) {
+        LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
+        bye(s_exitFailed);
       }
     }
   }

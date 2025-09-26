@@ -74,8 +74,6 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   Chunk.h
   ClientApp.cpp
   ClientApp.h
-  ClientArgs.cpp
-  ClientArgs.h
   ClipboardTypes.h
   Clipboard.cpp
   Clipboard.h

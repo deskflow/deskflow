@@ -21,8 +21,6 @@ private Q_SLOTS:
   void splitCommand();
   void getArgv();
   void assembleCommand();
-  void clientArgs();
-  void client_badArgs();
   void deprecatedArg_crypoPass_true();
   void deprecatedArg_crypoPass_false();
 

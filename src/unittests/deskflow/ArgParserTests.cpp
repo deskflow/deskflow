@@ -8,7 +8,6 @@
 #include "ArgParserTests.h"
 
 #include "deskflow/ArgsBase.h"
-#include "deskflow/ClientArgs.h"
 
 // This file is generated at build time
 #include <common/Constants.h>
@@ -159,27 +158,6 @@ void ArgParserTests::assembleCommand()
   command = ArgParser::assembleCommand(argArray);
 
   QCOMPARE(command, "\"stub1 space\" stub2 \"stub3 space\"");
-}
-
-void ArgParserTests::clientArgs()
-{
-  deskflow::ClientArgs args;
-  char const *argv[] = {kAppId, "--help", "--res-w", "888"};
-
-  QVERIFY(m_parser.parseClientArgs(args, sizeof(argv) / sizeof(argv[0]), argv));
-  QVERIFY(args.m_shouldExitOk);
-}
-
-void ArgParserTests::client_badArgs()
-{
-  deskflow::ClientArgs clientArgs;
-  const int argc = 1;
-  const char *kNoAddressCmd[argc] = {"stub"};
-  QVERIFY(!m_parser.parseClientArgs(clientArgs, argc, kNoAddressCmd));
-
-  const int argc2 = 3;
-  const char *kUnrecognizedCmd[argc2] = {"stub", "mock_arg", "mock_address"};
-  QVERIFY(!m_parser.parseClientArgs(clientArgs, argc2, kUnrecognizedCmd));
 }
 
 void ArgParserTests::deprecatedArg_crypoPass_true()
