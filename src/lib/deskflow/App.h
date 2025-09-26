@@ -51,8 +51,7 @@ public:
   App &operator=(App const &) = delete;
   App &operator=(App &&) = delete;
 
-  virtual void help() = 0;
-  virtual void parseArgs(int argc, const char *const *argv) = 0;
+  virtual void parseArgs() = 0;
   virtual void loadConfig() = 0;
   virtual bool loadConfig(const std::string &pathname) = 0;
   virtual const char *daemonInfo() const = 0;
