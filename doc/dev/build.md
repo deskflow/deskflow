@@ -7,7 +7,6 @@ To build Deskflow you will a minimum of:
     - [libportal] 0.8+ (linux, bsd)
     - [libei] 1.3+ (linux, bsd)
     - [google_test] ^
-    - [cli11] ^
 
 > ^ Will be fetched if not found on the host system.
 
@@ -75,6 +74,5 @@ After configuring you should be able to run make to build all targets.
 [cmake]:https://cmake.org/
 [openssl]:https://www.openssl.org/
 [google_test]:https://github.com/google/googletest
-[cli11]:https://github.com/CLIUtils/CLI11
 [libei]:https://gitlab.freedesktop.org/libinput/libei
 [libportal]:https://github.com/flatpak/libportal
