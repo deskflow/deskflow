@@ -12,7 +12,6 @@
 namespace deskflow {
 class ArgsBase;
 class ServerArgs;
-class ClientArgs;
 } // namespace deskflow
 
 class App;
@@ -23,7 +22,6 @@ class ArgParser
 public:
   explicit ArgParser(App *app);
 
-  bool parseClientArgs(deskflow::ClientArgs &args, int argc, const char *const *argv) const;
   bool parseGenericArgs(int argc, const char *const *argv, int &i) const;
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i) const;
   void setArgsBase(deskflow::ArgsBase &argsBase) const

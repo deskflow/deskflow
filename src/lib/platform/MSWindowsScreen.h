@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "deskflow/ClientArgs.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/MSWindowsHook.h"
 #include "platform/MSWindowsPowerManager.h"

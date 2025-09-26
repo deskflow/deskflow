@@ -31,7 +31,7 @@ public:
   // IApp overrides
   //
 
-  void parseArgs(int argc, const char *const *argv) override;
+  void parseArgs(int, const char *const *) override;
   void help() override;
   const char *daemonName() const override;
   const char *daemonInfo() const override;
@@ -76,11 +76,6 @@ public:
   Client *getClientPtr()
   {
     return m_client;
-  }
-
-  deskflow::ClientArgs &args() const
-  {
-    return (deskflow::ClientArgs &)argsBase();
   }
 
   //
