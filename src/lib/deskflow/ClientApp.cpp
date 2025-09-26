@@ -17,7 +17,6 @@
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
 #include "deskflow/ArgParser.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
@@ -62,8 +61,7 @@
 
 constexpr static auto s_retryTime = 1.0;
 
-ClientApp::ClientApp(IEventQueue *events, const QString &processName)
-    : App(events, processName, new deskflow::ArgsBase())
+ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
   // do nothing
 }

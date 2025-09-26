@@ -18,7 +18,6 @@
 #include "common/Constants.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"

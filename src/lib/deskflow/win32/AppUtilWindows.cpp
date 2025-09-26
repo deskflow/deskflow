@@ -16,7 +16,6 @@
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsScreen.h"

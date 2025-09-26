@@ -10,7 +10,6 @@
 #include <vector>
 
 namespace deskflow {
-class ArgsBase;
 class ServerArgs;
 } // namespace deskflow
 
@@ -24,10 +23,6 @@ public:
 
   bool parseGenericArgs(int argc, const char *const *argv, int &i) const;
   bool parseDeprecatedArgs(int argc, const char *const *argv, int &i) const;
-  void setArgsBase(deskflow::ArgsBase &argsBase) const
-  {
-    m_argsBase = &argsBase;
-  }
 
   static bool isArg(
       int argi, int argc, const char *const *argv, const char *name1, const char *name2, int minRequiredParameters = 0
@@ -41,16 +36,9 @@ public:
       int parametersRequired = 0
   );
 
-  static deskflow::ArgsBase &argsBase()
-  {
-    return *m_argsBase;
-  }
-
 private:
   bool checkUnexpectedArgs() const;
 
 private:
   App *m_app;
-
-  static deskflow::ArgsBase *m_argsBase;
 };

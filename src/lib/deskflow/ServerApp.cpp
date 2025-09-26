@@ -16,7 +16,6 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/ArgParser.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
 #include "net/SocketException.h"
@@ -69,8 +68,7 @@ using namespace deskflow::server;
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events, const QString &processName)
-    : App(events, processName, new deskflow::ArgsBase())
+ServerApp::ServerApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
   m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing

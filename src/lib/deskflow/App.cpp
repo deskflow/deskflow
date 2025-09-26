@@ -15,7 +15,6 @@
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/Config.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
@@ -44,10 +43,9 @@ App *App::s_instance = nullptr;
 // App
 //
 
-App::App(IEventQueue *events, const QString &processName, deskflow::ArgsBase *args)
+App::App(IEventQueue *events, const QString &processName)
     : m_bye(&exit),
       m_events(events),
-      m_args(args),
       m_appUtil(events),
       m_pname(processName)
 {
@@ -58,7 +56,6 @@ App::App(IEventQueue *events, const QString &processName, deskflow::ArgsBase *ar
 App::~App()
 {
   s_instance = nullptr;
-  delete m_args;
 }
 
 int App::run(int argc, char **argv)
