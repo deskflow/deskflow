@@ -8,12 +8,10 @@
 #include "ServerAppTests.h"
 
 #include "deskflow/ServerApp.h"
-#include "deskflow/ServerArgs.h"
 
 void ServerAppTests::section()
 {
   ServerApp app(nullptr);
-  QVERIFY(!app.args().m_config);
   QCOMPARE(app.configSection(), "server");
 }
 

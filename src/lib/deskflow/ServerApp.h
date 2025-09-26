@@ -55,7 +55,7 @@ public:
   // IApp overrides
   //
 
-  void parseArgs(int argc, const char *const *argv) override;
+  void parseArgs(int, const char *const *) override;
   void help() override;
   const char *daemonName() const override;
   const char *daemonInfo() const override;
@@ -105,11 +105,6 @@ public:
     return m_server;
   }
 
-  deskflow::ServerArgs &args() const
-  {
-    return (deskflow::ServerArgs &)argsBase();
-  }
-
   //
   // Static functions
   //
@@ -134,4 +129,5 @@ private:
   EventQueueTimer *m_timer = nullptr;
   NetworkAddress *m_deskflowAddress = nullptr;
   std::string m_name;
+  std::shared_ptr<deskflow::server::Config> m_config;
 };

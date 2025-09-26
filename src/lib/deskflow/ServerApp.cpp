@@ -18,7 +18,6 @@
 #include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
-#include "deskflow/ServerArgs.h"
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -70,13 +69,13 @@ using namespace deskflow::server;
 //
 
 ServerApp::ServerApp(IEventQueue *events, const QString &processName)
-    : App(events, processName, new deskflow::ServerArgs())
+    : App(events, processName, new deskflow::ArgsBase())
 {
   m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing
 }
 
-void ServerApp::parseArgs(int argc, const char *const *argv)
+void ServerApp::parseArgs(int, const char *const *)
 {
   if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
     try {
@@ -105,7 +104,7 @@ void ServerApp::reloadConfig()
   LOG_DEBUG("reload configuration");
   if (loadConfig(Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString())) {
     if (m_server != nullptr) {
-      m_server->setConfig(*args().m_config);
+      m_server->setConfig(*m_config);
     }
     LOG_NOTE("reloaded configuration");
   }
@@ -135,7 +134,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
       LOG_ERR("cannot open configuration \"%s\"", pathname.c_str());
       return false;
     }
-    configStream >> *args().m_config;
+    configStream >> *m_config;
     LOG_DEBUG("configuration read successfully");
     return true;
   } catch (ServerConfigReadException &e) {
@@ -316,7 +315,7 @@ bool ServerApp::initServer()
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
-    std::string name = args().m_config->getCanonicalName(m_name);
+    std::string name = m_config->getCanonicalName(m_name);
     serverScreen = openServerScreen();
     primaryClient = openPrimaryClient(name, serverScreen);
     m_serverScreen = serverScreen;
@@ -391,8 +390,8 @@ bool ServerApp::startServer()
 
   ClientListener *listener = nullptr;
   try {
-    listener = openClientListener(args().m_config->getDeskflowAddress());
-    m_server = openServer(*args().m_config, m_primaryClient);
+    listener = openClientListener(m_config->getDeskflowAddress());
+    m_server = openServer(*m_config, m_primaryClient);
     listener->setServer(m_server);
     m_server->setListener(listener);
     m_listener = listener;
@@ -504,7 +503,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 
 Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient)
 {
-  auto *server = new Server(config, primaryClient, m_serverScreen, getEvents(), args());
+  auto *server = new Server(config, primaryClient, m_serverScreen, getEvents());
   try {
     getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
 
@@ -539,21 +538,21 @@ int ServerApp::mainLoop()
 
   // if configuration has no screens then add this system
   // as the default
-  if (args().m_config->begin() == args().m_config->end()) {
-    args().m_config->addScreen(m_name);
+  if (m_config->begin() == m_config->end()) {
+    m_config->addScreen(m_name);
   }
 
   // set the contact address, if provided, in the config.
   // otherwise, if the config doesn't have an address, use
   // the default.
   if (m_deskflowAddress->isValid()) {
-    args().m_config->setDeskflowAddress(*m_deskflowAddress);
-  } else if (!args().m_config->getDeskflowAddress().isValid()) {
-    args().m_config->setDeskflowAddress(NetworkAddress(kDefaultPort));
+    m_config->setDeskflowAddress(*m_deskflowAddress);
+  } else if (!m_config->getDeskflowAddress().isValid()) {
+    m_config->setDeskflowAddress(NetworkAddress(kDefaultPort));
   }
 
   // canonicalize the primary screen name
-  if (std::string primaryName = args().m_config->getCanonicalName(m_name); primaryName.empty()) {
+  if (std::string primaryName = m_config->getCanonicalName(m_name); primaryName.empty()) {
     LOG_CRIT("unknown screen name `%s'", m_name.c_str());
     return s_exitFailed;
   }
@@ -621,7 +620,7 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
-  args().m_config = std::make_shared<Config>(getEvents());
+  m_config = std::make_shared<Config>(getEvents());
 
   // run
   int result = startup(argc, argv);
