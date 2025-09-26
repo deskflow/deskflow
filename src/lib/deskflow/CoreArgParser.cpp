@@ -138,6 +138,10 @@ void CoreArgParser::parse()
          (m_parser.value(CoreArgs::invertScrollOption) == "1"));
     Settings::setValue(Settings::Client::InvertScrollDirection, value);
   }
+
+  if (m_parser.isSet(CoreArgs::remoteHostOption)) {
+    Settings::setValue(Settings::Client::RemoteHost, m_parser.value(CoreArgs::remoteHostOption));
+  }
 }
 
 [[noreturn]] void CoreArgParser::showHelpText() const

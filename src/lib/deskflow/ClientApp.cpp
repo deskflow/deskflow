@@ -81,9 +81,10 @@ void ClientApp::parseArgs(int argc, const char *const *argv)
     }
   } else {
     // save server address
-    if (!args().m_serverAddress.empty()) {
+    if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
       try {
-        *m_serverAddress = NetworkAddress(args().m_serverAddress, kDefaultPort);
+        *m_serverAddress =
+            NetworkAddress(Settings::value(Settings::Client::RemoteHost).toString().toStdString(), kDefaultPort);
         m_serverAddress->resolve();
       } catch (SocketAddressException &e) {
         // allow an address that we can't look up if we're restartable.

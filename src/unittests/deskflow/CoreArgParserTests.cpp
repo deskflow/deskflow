@@ -410,6 +410,16 @@ void CoreArgParserTests::client_invertScrolling_0()
   QVERIFY(!Settings::value(Settings::Client::InvertScrollDirection).toBool());
 }
 
+void CoreArgParserTests::client_remoteHost()
+{
+  QStringList args = {"stub", "client", "--remoteHost", "127.0.0.1"};
+
+  CoreArgParser parser(args);
+  parser.parse();
+
+  QCOMPARE("127.0.0.1", Settings::value(Settings::Client::RemoteHost).toString());
+}
+
 void CoreArgParserTests::preventSleep_true()
 {
   QStringList args = {"stub", "client", "--prevent-sleep", "true"};
