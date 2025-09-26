@@ -40,8 +40,8 @@ struct ScrollRemainder
 
 namespace deskflow {
 
-EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, deskflow::ClientScrollDirection scrollDirection)
-    : PlatformScreen{events, scrollDirection},
+EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool invertScrolling)
+    : PlatformScreen{events, invertScrolling},
       m_isPrimary{isPrimary},
       m_events{events},
       m_w{1},

@@ -73,10 +73,8 @@ void avoidHesitatingCursor();
 bool OSXScreen::s_testedForGHOM = false;
 bool OSXScreen::s_hasGHOM = false;
 
-OSXScreen::OSXScreen(
-    IEventQueue *events, bool isPrimary, bool enableLangSync, deskflow::ClientScrollDirection scrollDirection
-)
-    : PlatformScreen(events, scrollDirection),
+OSXScreen::OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync, bool invertScrolling)
+    : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
       m_isOnScreen(m_isPrimary),
       m_cursorPosValid(false),

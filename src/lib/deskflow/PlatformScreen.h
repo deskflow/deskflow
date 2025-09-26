@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "common/Settings.h"
 #include "deskflow/ClientArgs.h"
 #include "deskflow/IPlatformScreen.h"
 
@@ -21,9 +22,7 @@ subclasses to implement the rest.
 class PlatformScreen : public IPlatformScreen
 {
 public:
-  explicit PlatformScreen(
-      IEventQueue *events, deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
-  );
+  explicit PlatformScreen(IEventQueue *events, bool invertScrollDirection);
   ~PlatformScreen() override = default;
 
   // IScreen overrides
@@ -117,5 +116,5 @@ private:
    * This member contains client scroll direction.
    * This member is used only on client side.
    */
-  deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::Normal;
+  bool m_invertScrollDirection = false;
 };
