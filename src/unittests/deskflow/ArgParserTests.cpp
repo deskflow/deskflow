@@ -9,7 +9,6 @@
 
 #include "deskflow/ArgsBase.h"
 #include "deskflow/ClientArgs.h"
-#include "deskflow/ServerArgs.h"
 
 // This file is generated at build time
 #include <common/Constants.h>
