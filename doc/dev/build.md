@@ -75,6 +75,5 @@ After configuring you should be able to run make to build all targets.
 [cmake]:https://cmake.org/
 [openssl]:https://www.openssl.org/
 [google_test]:https://github.com/google/googletest
-[cli11]:https://github.com/CLIUtils/CLI11
 [libei]:https://gitlab.freedesktop.org/libinput/libei
 [libportal]:https://github.com/flatpak/libportal

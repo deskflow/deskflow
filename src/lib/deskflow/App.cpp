@@ -32,8 +32,6 @@
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
-#include <CLI/CLI.hpp>
-
 using namespace deskflow;
 
 App *App::s_instance = nullptr;
@@ -135,18 +133,6 @@ void App::loggingFilterWarning() const
 
 void App::initApp(int argc, const char **argv)
 {
-  CLI::App cliApp{kAppDescription};
-
-  // Allow legacy args.
-  cliApp.allow_extras();
-
-  // Having the help argument crashes without try / catch around it
-  try {
-    cliApp.parse(argc, argv);
-  } catch (const CLI::Error &e) {
-    cliApp.exit(e);
-  }
-
   parseArgs();
 
   // set log filter
