@@ -31,8 +31,7 @@ public:
   // IApp overrides
   //
 
-  void parseArgs(int, const char *const *) override;
-  void help() override;
+  void parseArgs() override;
   const char *daemonName() const override;
   const char *daemonInfo() const override;
   void loadConfig() override

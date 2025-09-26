@@ -26,12 +26,7 @@
 
 void showHelp(const CoreArgParser &parser)
 {
-  QTextStream(stdout) << parser.helpText() << "\n";
-  ServerApp sApp(nullptr);
-  sApp.help();
-
-  ClientApp cApp(nullptr);
-  cApp.help();
+  QTextStream(stdout) << parser.helpText();
 }
 
 int main(int argc, char **argv)
