@@ -15,8 +15,7 @@
 #include "client/Client.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
-#include "deskflow/ArgParser.h"
-#include "deskflow/ClientArgs.h"
+#include "common/Settings.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
@@ -61,79 +60,31 @@
 
 constexpr static auto s_retryTime = 1.0;
 
-ClientApp::ClientApp(IEventQueue *events) : App(events, new deskflow::ClientArgs())
+ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
   // do nothing
 }
 
-void ClientApp::parseArgs(int argc, const char *const *argv)
+void ClientApp::parseArgs()
 {
-  ArgParser argParser(this);
-  bool result = argParser.parseClientArgs(args(), argc, argv);
-
-  if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
-    if (args().m_shouldExitOk) {
-      bye(s_exitSuccess);
-    } else {
-      bye(s_exitArgs);
-    }
-  } else {
-    // save server address
-    if (!args().m_serverAddress.empty()) {
-      try {
-        *m_serverAddress = NetworkAddress(args().m_serverAddress, kDefaultPort);
-        m_serverAddress->resolve();
-      } catch (SocketAddressException &e) {
-        // allow an address that we can't look up if we're restartable.
-        // we'll try to resolve the address each time we connect to the
-        // server.  a bad port will never get better.  patch by Brent
-        // Priddy.
-        if (!args().m_restartable || e.getError() == SocketAddressException::SocketError::BadPort) {
-          LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
-          bye(s_exitFailed);
-        }
+  // save server address
+  if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
+    try {
+      *m_serverAddress =
+          NetworkAddress(Settings::value(Settings::Client::RemoteHost).toString().toStdString(), kDefaultPort);
+      m_serverAddress->resolve();
+    } catch (SocketAddressException &e) {
+      // allow an address that we can't look up if we're restartable.
+      // we'll try to resolve the address each time we connect to the
+      // server.  a bad port will never get better.  patch by Brent
+      // Priddy.
+      if (!Settings::value(Settings::Core::RestartOnFailure).toBool() ||
+          e.getError() == SocketAddressException::SocketError::BadPort) {
+        LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
+        bye(s_exitFailed);
       }
     }
   }
-}
-
-void ClientApp::help()
-{
-  std::stringstream help;
-  help << "\n\nClient Mode:\n\n"
-       << "Usage: " << kAppId << "-core client"
-       << " [--address <address>]"
-       << " [--yscroll <delta>]"
-       << " [--sync-language]"
-       << " [--invert-scroll]"
-#ifdef WINAPI_XWINDOWS
-       << " [--display <display>]"
-#endif
-       << s_helpCommonArgs << " <server-address>"
-       << "\n\n"
-       << "Connect to a " << kAppName << " mouse/keyboard sharing server.\n"
-       << "\n"
-       << "  -a, --address <address>  local network interface address.\n"
-       << s_helpGeneralArgs << "      --yscroll <delta>    defines the vertical scrolling delta,\n"
-       << "                             which is 120 by default.\n"
-       << "      --sync-language      enable language synchronization.\n"
-       << "      --invert-scroll      invert scroll direction on this\n"
-       << "                             computer.\n"
-#if WINAPI_XWINDOWS
-       << "      --display <display>  when in X mode, connect to the X server\n"
-       << "                             at <display>.\n"
-#endif
-       << s_helpVersionArgs << "\n"
-       << "* marks defaults.\n"
-
-       << s_helpNoWayland
-
-       << "\n"
-       << "The server address is of the form: [<hostname>][:<port>].\n"
-       << "The hostname must be the address or hostname of the server.\n"
-       << "The port overrides the default port, " << kDefaultPort << ".\n";
-
-  LOG_PRINT("%s", help.str().c_str());
 }
 
 const char *ClientApp::daemonName() const
@@ -157,10 +108,12 @@ const char *ClientApp::daemonInfo() const
 
 deskflow::Screen *ClientApp::createScreen()
 {
+  const bool invertScrolling = Settings::value(Settings::Client::InvertScrollDirection).toBool();
 #if WINAPI_MSWINDOWS
   return new deskflow::Screen(
       new MSWindowsScreen(
-          false, args().m_noHooks, getEvents(), args().m_enableLangSync, args().m_clientScrollDirection
+          false, Settings::value(Settings::Core::UseHooks).toBool(), getEvents(),
+          Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling
       ),
       getEvents()
   );
@@ -170,9 +123,7 @@ deskflow::Screen *ClientApp::createScreen()
   if (deskflow::platform::isWayland()) {
 #if WINAPI_LIBEI
     LOG_INFO("using ei screen for wayland");
-    return new deskflow::Screen(
-        new deskflow::EiScreen(false, getEvents(), true, args().m_clientScrollDirection), getEvents()
-    );
+    return new deskflow::Screen(new deskflow::EiScreen(false, getEvents(), true, invertScrolling), getEvents());
 #else
     throw XNoEiSupport();
 #endif
@@ -182,7 +133,10 @@ deskflow::Screen *ClientApp::createScreen()
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
   return new deskflow::Screen(
-      new XWindowsScreen(args().m_display, false, args().m_yscroll, getEvents(), args().m_clientScrollDirection),
+      new XWindowsScreen(
+          qPrintable(Settings::value(Settings::Core::Display).toString()), false,
+          Settings::value(Settings::Client::ScrollSpeed).toInt(), getEvents(), invertScrolling
+      ),
       getEvents()
   );
 
@@ -190,7 +144,8 @@ deskflow::Screen *ClientApp::createScreen()
 
 #if WINAPI_CARBON
   return new deskflow::Screen(
-      new OSXScreen(getEvents(), false, args().m_enableLangSync, args().m_clientScrollDirection), getEvents()
+      new OSXScreen(getEvents(), false, Settings::value(Settings::Client::LanguageSync).toBool(), invertScrolling),
+      getEvents()
   );
 #endif
 }
@@ -254,7 +209,7 @@ void ClientApp::handleClientRefused(const Event &e)
 {
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-  if (!args().m_restartable || !info->m_retry) {
+  if (!Settings::value(Settings::Core::RestartOnFailure).toBool() || !info->m_retry) {
     LOG_ERR("failed to connect to server: %s", info->m_what.c_str());
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
@@ -268,7 +223,7 @@ void ClientApp::handleClientRefused(const Event &e)
 void ClientApp::handleClientDisconnected()
 {
   LOG_IPC("disconnected from server");
-  if (!args().m_restartable) {
+  if (!Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else if (!m_suspended) {
     scheduleClientRestart(s_retryTime);
@@ -277,7 +232,7 @@ void ClientApp::handleClientDisconnected()
 
 Client *ClientApp::openClient(const std::string &name, const NetworkAddress &address, deskflow::Screen *screen)
 {
-  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen, args());
+  auto *client = new Client(getEvents(), name, address, getSocketFactory(), screen);
 
   try {
     getEvents()->addHandler(EventTypes::ClientConnected, client->getEventTarget(), [this](const auto &) {
@@ -321,7 +276,9 @@ bool ClientApp::startClient()
   try {
     if (m_clientScreen == nullptr) {
       clientScreen = openClientScreen();
-      m_client = openClient(args().m_name, *m_serverAddress, clientScreen);
+      m_client = openClient(
+          Settings::value(Settings::Core::ScreenName).toString().toStdString(), *m_serverAddress, clientScreen
+      );
       m_clientScreen = clientScreen;
       LOG_NOTE("started client");
     }
@@ -343,7 +300,7 @@ bool ClientApp::startClient()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     scheduleClientRestart(retryTime);
     return true;
   } else {
@@ -412,7 +369,6 @@ int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
-  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
 
   int result;
   try {

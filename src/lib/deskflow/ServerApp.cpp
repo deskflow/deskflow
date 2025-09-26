@@ -13,11 +13,10 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "common/ExitCodes.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgParser.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
-#include "deskflow/ServerArgs.h"
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
@@ -68,74 +67,23 @@ using namespace deskflow::server;
 // ServerApp
 //
 
-ServerApp::ServerApp(IEventQueue *events) : App(events, new deskflow::ServerArgs())
+ServerApp::ServerApp(IEventQueue *events, const QString &processName) : App(events, processName)
 {
+  m_name = Settings::value(Settings::Core::ScreenName).toString().toStdString();
   // do nothing
 }
 
-void ServerApp::parseArgs(int argc, const char *const *argv)
+void ServerApp::parseArgs()
 {
-
-  ArgParser argParser(this);
-  bool result = argParser.parseServerArgs(args(), argc, argv);
-
-  if (!result || args().m_shouldExitOk || args().m_shouldExitFail) {
-    if (args().m_shouldExitOk) {
-      bye(s_exitSuccess);
-    } else {
+  if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
+    try {
+      *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
+      m_deskflowAddress->resolve();
+    } catch (SocketAddressException &e) {
+      LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
       bye(s_exitArgs);
     }
-  } else {
-    if (!args().m_deskflowAddress.empty()) {
-      try {
-        *m_deskflowAddress = NetworkAddress(args().m_deskflowAddress, kDefaultPort);
-        m_deskflowAddress->resolve();
-      } catch (SocketAddressException &e) {
-        LOG_CRIT("%s: %s" BYE, args().m_pname, e.what(), args().m_pname);
-        bye(s_exitArgs);
-      }
-    }
   }
-}
-
-void ServerApp::help()
-{
-  std::stringstream help;
-  help << "\n\nServer Mode:\n\n"
-       << "Usage: " << kAppId << "-core server"
-       << " --config <pathname>"
-       << " [--address <address>]"
-
-#if WINAPI_XWINDOWS
-       << " [--display <display>]"
-#endif
-
-       << s_helpCommonArgs << "\n"
-       << "  -a, --address <address>  listen for clients on the given address.\n"
-       << "  -c, --config <pathname>  path of the configuration file\n"
-       << s_helpGeneralArgs
-       << "      --disable-client-cert-check disable client SSL certificate \n"
-          "                                     checking (deprecated)\n"
-       << s_helpVersionArgs << "\n"
-
-#if WINAPI_XWINDOWS
-       << "      --display <display>  when in X mode, connect to the X server\n"
-       << "                             at <display>.\n"
-#endif
-
-       << "* marks defaults.\n"
-
-       << s_helpNoWayland
-
-       << "\n"
-       << "The argument for --address is of the form: [<hostname>][:<port>].  "
-          "The\n"
-       << "hostname must be the address or hostname of an interface on the "
-       << "system.\n"
-       << "The default is to listen on all interfaces.  The port overrides the\n"
-       << "default port, " << kDefaultPort << ".\n";
-
-  LOG_PRINT("%s", help.str().c_str());
 }
 
 void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
@@ -147,9 +95,9 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
 void ServerApp::reloadConfig()
 {
   LOG_DEBUG("reload configuration");
-  if (loadConfig(args().m_configFile)) {
+  if (loadConfig(Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString())) {
     if (m_server != nullptr) {
-      m_server->setConfig(*args().m_config);
+      m_server->setConfig(*m_config);
     }
     LOG_NOTE("reloaded configuration");
   }
@@ -157,14 +105,14 @@ void ServerApp::reloadConfig()
 
 void ServerApp::loadConfig()
 {
-  const auto path = args().m_configFile;
+  const auto path = Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString();
   if (path.empty()) {
     LOG_CRIT("no configuration path provided");
     bye(s_exitConfig);
   }
 
   if (!loadConfig(path)) {
-    LOG_CRIT("%s: failed to load config: %s", args().m_pname, path.c_str());
+    LOG_CRIT("%s: failed to load config: %s", qPrintable(processName()), path.c_str());
     bye(s_exitConfig);
   }
 }
@@ -179,7 +127,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
       LOG_ERR("cannot open configuration \"%s\"", pathname.c_str());
       return false;
     }
-    configStream >> *args().m_config;
+    configStream >> *m_config;
     LOG_DEBUG("configuration read successfully");
     return true;
   } catch (ServerConfigReadException &e) {
@@ -360,7 +308,7 @@ bool ServerApp::initServer()
   deskflow::Screen *serverScreen = nullptr;
   PrimaryClient *primaryClient = nullptr;
   try {
-    std::string name = args().m_config->getCanonicalName(args().m_name);
+    std::string name = m_config->getCanonicalName(m_name);
     serverScreen = openServerScreen();
     primaryClient = openPrimaryClient(name, serverScreen);
     m_serverScreen = serverScreen;
@@ -384,7 +332,7 @@ bool ServerApp::initServer()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     // install a timer and handler to retry later
     assert(m_timer == nullptr);
     LOG_DEBUG("retry in %.0f seconds", retryTime);
@@ -435,8 +383,8 @@ bool ServerApp::startServer()
 
   ClientListener *listener = nullptr;
   try {
-    listener = openClientListener(args().m_config->getDeskflowAddress());
-    m_server = openServer(*args().m_config, m_primaryClient);
+    listener = openClientListener(m_config->getDeskflowAddress());
+    m_server = openServer(*m_config, m_primaryClient);
     listener->setServer(m_server);
     m_server->setListener(listener);
     m_listener = listener;
@@ -444,7 +392,7 @@ bool ServerApp::startServer()
     m_serverState = Started;
     return true;
   } catch (SocketAddressInUseException &e) {
-    if (args().m_restartable) {
+    if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
       LOG_ERR("cannot listen for clients: %s", e.what());
     } else {
       LOG_CRIT("cannot listen for clients: %s", e.what());
@@ -456,7 +404,7 @@ bool ServerApp::startServer()
     return false;
   }
 
-  if (args().m_restartable) {
+  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
     // install a timer and handler to retry later
     assert(m_timer == nullptr);
     const auto retryTime = 10.0;
@@ -474,7 +422,9 @@ bool ServerApp::startServer()
 deskflow::Screen *ServerApp::createScreen()
 {
 #if WINAPI_MSWINDOWS
-  return new deskflow::Screen(new MSWindowsScreen(true, args().m_noHooks, getEvents()), getEvents());
+  return new deskflow::Screen(
+      new MSWindowsScreen(true, Settings::value(Settings::Core::UseHooks).toBool(), getEvents()), getEvents()
+  );
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
@@ -490,7 +440,10 @@ deskflow::Screen *ServerApp::createScreen()
 
 #if WINAPI_XWINDOWS
   LOG_INFO("using legacy x windows screen");
-  return new deskflow::Screen(new XWindowsScreen(args().m_display, true, 0, getEvents()), getEvents());
+  return new deskflow::Screen(
+      new XWindowsScreen(qPrintable(Settings::value(Settings::Core::Display).toString()), true, 0, getEvents()),
+      getEvents()
+  );
 #elif WINAPI_CARBON
   return new deskflow::Screen(new OSXScreen(getEvents(), true), getEvents());
 #endif
@@ -524,8 +477,8 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 {
   using enum SecurityLevel;
   auto securityLevel = PlainText;
-  if (args().m_enableCrypto) {
-    if (args().m_chkPeerCert) {
+  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
+    if (Settings::value(Settings::Security::CheckPeers).toBool()) {
       securityLevel = PeerAuth;
     } else {
       securityLevel = Encrypted;
@@ -543,7 +496,7 @@ ClientListener *ServerApp::openClientListener(const NetworkAddress &address)
 
 Server *ServerApp::openServer(ServerConfig &config, PrimaryClient *primaryClient)
 {
-  auto *server = new Server(config, primaryClient, m_serverScreen, getEvents(), args());
+  auto *server = new Server(config, primaryClient, m_serverScreen, getEvents());
   try {
     getEvents()->addHandler(EventTypes::ServerScreenSwitched, server, [this](const auto &) { handleScreenSwitched(); });
 
@@ -578,22 +531,22 @@ int ServerApp::mainLoop()
 
   // if configuration has no screens then add this system
   // as the default
-  if (args().m_config->begin() == args().m_config->end()) {
-    args().m_config->addScreen(args().m_name);
+  if (m_config->begin() == m_config->end()) {
+    m_config->addScreen(m_name);
   }
 
   // set the contact address, if provided, in the config.
   // otherwise, if the config doesn't have an address, use
   // the default.
   if (m_deskflowAddress->isValid()) {
-    args().m_config->setDeskflowAddress(*m_deskflowAddress);
-  } else if (!args().m_config->getDeskflowAddress().isValid()) {
-    args().m_config->setDeskflowAddress(NetworkAddress(kDefaultPort));
+    m_config->setDeskflowAddress(*m_deskflowAddress);
+  } else if (!m_config->getDeskflowAddress().isValid()) {
+    m_config->setDeskflowAddress(NetworkAddress(kDefaultPort));
   }
 
   // canonicalize the primary screen name
-  if (std::string primaryName = args().m_config->getCanonicalName(args().m_name); primaryName.empty()) {
-    LOG_CRIT("unknown screen name `%s'", args().m_name.c_str());
+  if (std::string primaryName = m_config->getCanonicalName(m_name); primaryName.empty()) {
+    LOG_CRIT("unknown screen name `%s'", m_name.c_str());
     return s_exitFailed;
   }
 
@@ -660,8 +613,7 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
-  args().m_config = std::make_shared<Config>(getEvents());
-  args().m_pname = QFileInfo(argv[0]).fileName().toLocal8Bit().constData();
+  m_config = std::make_shared<Config>(getEvents());
 
   // run
   int result = startup(argc, argv);

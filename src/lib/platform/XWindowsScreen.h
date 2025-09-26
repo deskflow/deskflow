@@ -9,7 +9,6 @@
 #pragma once
 
 #include "arch/Arch.h"
-#include "deskflow/ClientArgs.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
@@ -30,8 +29,7 @@ class XWindowsScreen : public PlatformScreen
 {
 public:
   XWindowsScreen(
-      const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events,
-      deskflow::ClientScrollDirection m_clientScrollDirection = deskflow::ClientScrollDirection::Normal
+      const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events, bool invertScrolling = false
   );
   ~XWindowsScreen() override;
 
