@@ -358,23 +358,24 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     );
   }
 
-  QString app;
+  const auto app = getAppFilePath(kCoreBinName);
+  if (!QFile::exists(app)) {
+    qFatal("core server binary does not exist");
+    return;
+  }
+
   QStringList args;
 
   addGenericArgs(args);
 
-  if (mode() == Server && !addServerArgs(args, app)) {
-    qWarning("failed to add server args for core process, aborting start");
-    return;
-  } else if (mode() == Client && !addClientArgs(args, app)) {
-    qWarning("failed to add client args for core process, aborting start");
-    return;
-  }
-
   if (mode() == Server) {
-    args.prepend("server");
+    args.prepend(QStringLiteral("server"));
+    if (!addServerArgs(args))
+      qWarning("failed to add server args for core process, aborting start");
   } else if (mode() == Client) {
-    args.prepend("client");
+    args.prepend(QStringLiteral("client"));
+    if (!addClientArgs(args))
+      qWarning("failed to add client args for core process, aborting start");
   } else {
     qFatal("core started without mode");
     return;
@@ -476,15 +477,8 @@ bool CoreProcess::addGenericArgs(QStringList &args) const
   return true;
 }
 
-bool CoreProcess::addServerArgs(QStringList &args, QString &app)
+bool CoreProcess::addServerArgs(QStringList &args)
 {
-  app = getAppFilePath(Settings::value(Settings::Server::Binary).toString());
-
-  if (!QFile::exists(app)) {
-    qFatal("core server binary does not exist");
-    return false;
-  }
-
   if (Settings::value(Settings::Log::ToFile).toBool()) {
     persistLogDir();
     args << "--log" << Settings::value(Settings::Log::File).toString();
@@ -522,15 +516,8 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   return true;
 }
 
-bool CoreProcess::addClientArgs(QStringList &args, QString &app)
+bool CoreProcess::addClientArgs(QStringList &args)
 {
-  app = getAppFilePath(Settings::value(Settings::Client::Binary).toString());
-
-  if (!QFile::exists(app)) {
-    qFatal("core client binary does not exist");
-    return false;
-  }
-
   if (Settings::value(Settings::Log::ToFile).toBool()) {
     persistLogDir();
     args << "--log" << Settings::value(Settings::Log::File).toString();

@@ -33,7 +33,6 @@ public:
 
   struct Client
   {
-    inline static const auto Binary = QStringLiteral("client/binary");
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
@@ -84,7 +83,6 @@ public:
   };
   struct Server
   {
-    inline static const auto Binary = QStringLiteral("server/binary");
     inline static const auto ConfigVisible = QStringLiteral("server/configVisible");
     inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
     inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
@@ -159,8 +157,7 @@ private:
   };
 
   inline static const QStringList m_validKeys = {
-      Settings::Client::Binary
-    , Settings::Client::InvertScrollDirection
+      Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
     , Settings::Client::XdpRestoreToken
@@ -191,7 +188,6 @@ private:
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
     , Settings::Security::TlsEnabled
-    , Settings::Server::Binary
     , Settings::Server::ConfigVisible
     , Settings::Server::ExternalConfig
     , Settings::Server::ExternalConfigFile
