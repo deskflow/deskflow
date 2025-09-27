@@ -103,12 +103,6 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Log::Level)
     return 4; // INFO
 
-  if (key == Client::Binary)
-    return kCoreBinName;
-
-  if (key == Server::Binary)
-    return kCoreBinName;
-
   if (key == Daemon::Elevate)
     return Settings::isNativeMode();
 
