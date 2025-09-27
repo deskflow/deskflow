@@ -55,7 +55,6 @@ public:
 
   explicit CoreProcess(const IServerConfig &serverConfig);
 
-  void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
   void restart();
