@@ -111,8 +111,8 @@ private Q_SLOTS:
   void daemonIpcClientConnected();
 
 private:
-  void startForegroundProcess(const QString &app, const QStringList &args);
-  void startProcessFromDaemon(const QString &app, const QStringList &args);
+  void startForegroundProcess(const QStringList &args);
+  void startProcessFromDaemon(const QStringList &args);
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
   bool addGenericArgs(QStringList &args) const;
