@@ -55,7 +55,6 @@ public:
 
   explicit CoreProcess(const IServerConfig &serverConfig);
 
-  void extracted(QString &app, QStringList &args);
   void start(std::optional<ProcessMode> processMode = std::nullopt);
   void stop(std::optional<ProcessMode> processMode = std::nullopt);
   void restart();
@@ -112,13 +111,13 @@ private Q_SLOTS:
   void daemonIpcClientConnected();
 
 private:
-  void startForegroundProcess(const QString &app, const QStringList &args);
-  void startProcessFromDaemon(const QString &app, const QStringList &args);
+  void startForegroundProcess(const QStringList &args);
+  void startProcessFromDaemon(const QStringList &args);
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
   bool addGenericArgs(QStringList &args) const;
-  bool addServerArgs(QStringList &args, QString &app);
-  bool addClientArgs(QStringList &args, QString &app);
+  bool addServerArgs(QStringList &args);
+  bool addClientArgs(QStringList &args);
   QString persistServerConfig() const;
   QString modeString() const;
   QString processModeString() const;

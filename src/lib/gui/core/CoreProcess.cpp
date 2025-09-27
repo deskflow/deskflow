@@ -117,12 +117,6 @@ QString wrapIpv6(const QString &address)
   return address;
 }
 
-QString getAppFilePath(const QString &name)
-{
-  QDir dir(QCoreApplication::applicationDirPath());
-  return dir.filePath(name);
-}
-
 //
 // CoreProcess
 //
@@ -131,6 +125,12 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig)
     : m_serverConfig(serverConfig),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
+  m_appPath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
+  if (!QFile::exists(m_appPath)) {
+    qFatal("core server binary does not exist");
+    return;
+  }
+
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
   connect(
       m_daemonIpcClient, &ipc::DaemonIpcClient::connectionFailed, this, &CoreProcess::daemonIpcClientConnectionFailed
@@ -218,7 +218,7 @@ void CoreProcess::applyLogLevel()
   }
 }
 
-void CoreProcess::startForegroundProcess(const QString &app, const QStringList &args)
+void CoreProcess::startForegroundProcess(const QStringList &args)
 {
   using enum ProcessState;
 
@@ -228,10 +228,10 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
 
   // only make quoted args for printing the command for convenience; so that the
   // core command can be easily copy/pasted to the terminal for testing.
-  const auto quoted = makeQuotedArgs(app, args);
+  const auto quoted = makeQuotedArgs(m_appPath, args);
   qInfo("running command: %s", qPrintable(quoted));
 
-  m_process->start(app, args);
+  m_process->start(m_appPath, args);
 
   if (m_process->waitForStarted()) {
     setProcessState(Started);
@@ -241,13 +241,13 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
   }
 }
 
-void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &args)
+void CoreProcess::startProcessFromDaemon(const QStringList &args)
 {
   if (m_processState != ProcessState::Starting) {
     qFatal("core process must be in starting state");
   }
 
-  QString commandQuoted = makeQuotedArgs(app, args);
+  QString commandQuoted = makeQuotedArgs(m_appPath, args);
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
@@ -358,23 +358,18 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     );
   }
 
-  QString app;
   QStringList args;
 
   addGenericArgs(args);
 
-  if (mode() == Server && !addServerArgs(args, app)) {
-    qWarning("failed to add server args for core process, aborting start");
-    return;
-  } else if (mode() == Client && !addClientArgs(args, app)) {
-    qWarning("failed to add client args for core process, aborting start");
-    return;
-  }
-
   if (mode() == Server) {
-    args.prepend("server");
+    args.prepend(QStringLiteral("server"));
+    if (!addServerArgs(args))
+      qWarning("failed to add server args for core process, aborting start");
   } else if (mode() == Client) {
-    args.prepend("client");
+    args.prepend(QStringLiteral("client"));
+    if (!addClientArgs(args))
+      qWarning("failed to add client args for core process, aborting start");
   } else {
     qFatal("core started without mode");
     return;
@@ -386,9 +381,9 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     qInfo().noquote() << "log file:" << Settings::value(Settings::Log::File).toString();
 
   if (processMode == ProcessMode::Desktop) {
-    startForegroundProcess(app, args);
+    startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
-    startProcessFromDaemon(app, args);
+    startProcessFromDaemon(args);
   }
 
   m_lastProcessMode = processMode;
@@ -476,15 +471,8 @@ bool CoreProcess::addGenericArgs(QStringList &args) const
   return true;
 }
 
-bool CoreProcess::addServerArgs(QStringList &args, QString &app)
+bool CoreProcess::addServerArgs(QStringList &args)
 {
-  app = getAppFilePath(Settings::value(Settings::Server::Binary).toString());
-
-  if (!QFile::exists(app)) {
-    qFatal("core server binary does not exist");
-    return false;
-  }
-
   if (Settings::value(Settings::Log::ToFile).toBool()) {
     persistLogDir();
     args << "--log" << Settings::value(Settings::Log::File).toString();
@@ -522,15 +510,8 @@ bool CoreProcess::addServerArgs(QStringList &args, QString &app)
   return true;
 }
 
-bool CoreProcess::addClientArgs(QStringList &args, QString &app)
+bool CoreProcess::addClientArgs(QStringList &args)
 {
-  app = getAppFilePath(Settings::value(Settings::Client::Binary).toString());
-
-  if (!QFile::exists(app)) {
-    qFatal("core client binary does not exist");
-    return false;
-  }
-
   if (Settings::value(Settings::Log::ToFile).toBool()) {
     persistLogDir();
     args << "--log" << Settings::value(Settings::Log::File).toString();
