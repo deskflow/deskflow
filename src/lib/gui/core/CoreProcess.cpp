@@ -117,12 +117,6 @@ QString wrapIpv6(const QString &address)
   return address;
 }
 
-QString getAppFilePath(const QString &name)
-{
-  QDir dir(QCoreApplication::applicationDirPath());
-  return dir.filePath(name);
-}
-
 //
 // CoreProcess
 //
@@ -131,6 +125,12 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig)
     : m_serverConfig(serverConfig),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
+  m_appPath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
+  if (!QFile::exists(m_appPath)) {
+    qFatal("core server binary does not exist");
+    return;
+  }
+
   connect(m_daemonIpcClient, &ipc::DaemonIpcClient::connected, this, &CoreProcess::daemonIpcClientConnected);
   connect(
       m_daemonIpcClient, &ipc::DaemonIpcClient::connectionFailed, this, &CoreProcess::daemonIpcClientConnectionFailed
@@ -218,7 +218,7 @@ void CoreProcess::applyLogLevel()
   }
 }
 
-void CoreProcess::startForegroundProcess(const QString &app, const QStringList &args)
+void CoreProcess::startForegroundProcess(const QStringList &args)
 {
   using enum ProcessState;
 
@@ -228,10 +228,10 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
 
   // only make quoted args for printing the command for convenience; so that the
   // core command can be easily copy/pasted to the terminal for testing.
-  const auto quoted = makeQuotedArgs(app, args);
+  const auto quoted = makeQuotedArgs(m_appPath, args);
   qInfo("running command: %s", qPrintable(quoted));
 
-  m_process->start(app, args);
+  m_process->start(m_appPath, args);
 
   if (m_process->waitForStarted()) {
     setProcessState(Started);
@@ -241,13 +241,13 @@ void CoreProcess::startForegroundProcess(const QString &app, const QStringList &
   }
 }
 
-void CoreProcess::startProcessFromDaemon(const QString &app, const QStringList &args)
+void CoreProcess::startProcessFromDaemon(const QStringList &args)
 {
   if (m_processState != ProcessState::Starting) {
     qFatal("core process must be in starting state");
   }
 
-  QString commandQuoted = makeQuotedArgs(app, args);
+  QString commandQuoted = makeQuotedArgs(m_appPath, args);
 
   qInfo("running command: %s", qPrintable(commandQuoted));
 
@@ -358,12 +358,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     );
   }
 
-  const auto app = getAppFilePath(kCoreBinName);
-  if (!QFile::exists(app)) {
-    qFatal("core server binary does not exist");
-    return;
-  }
-
   QStringList args;
 
   addGenericArgs(args);
@@ -387,9 +381,9 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     qInfo().noquote() << "log file:" << Settings::value(Settings::Log::File).toString();
 
   if (processMode == ProcessMode::Desktop) {
-    startForegroundProcess(app, args);
+    startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
-    startProcessFromDaemon(app, args);
+    startProcessFromDaemon(args);
   }
 
   m_lastProcessMode = processMode;
