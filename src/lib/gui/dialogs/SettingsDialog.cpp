@@ -40,7 +40,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
   ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
-  ui->lblDebugWarning->setVisible(false);
 
   ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
@@ -187,6 +186,8 @@ void SettingsDialog::loadFromConfig()
     ui->rbIconMono->setChecked(true);
   else
     ui->rbIconColorful->setChecked(true);
+
+  ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 4);
 
   qDebug() << "load from config done";
   updateControls();
