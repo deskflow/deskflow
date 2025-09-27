@@ -44,10 +44,7 @@ class Mutex;
 class OSXScreen : public PlatformScreen
 {
 public:
-  OSXScreen(
-      IEventQueue *events, bool isPrimary, bool enableLangSync = false,
-      deskflow::ClientScrollDirection scrollDirection = deskflow::ClientScrollDirection::Normal
-  );
+  OSXScreen(IEventQueue *events, bool isPrimary, bool enableLangSync = false, bool invertScrolling = false);
 
   virtual ~OSXScreen();
 

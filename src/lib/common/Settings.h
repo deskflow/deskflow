@@ -35,6 +35,7 @@ public:
   {
     inline static const auto Binary = QStringLiteral("client/binary");
     inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
+    inline static const auto ScrollSpeed = QStringLiteral("client/yscroll");
     inline static const auto LanguageSync = QStringLiteral("client/languageSync");
     inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
     inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
@@ -50,6 +51,9 @@ public:
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
     inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
+    inline static const auto Display = QStringLiteral("core/display");
+    inline static const auto RestartOnFailure = QStringLiteral("core/restartOnFailure");
+    inline static const auto UseHooks = QStringLiteral("core/useHooks");
   };
   struct Daemon
   {
@@ -130,6 +134,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
+  static int logLevelToInt(const QString &level = "INFO");
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
@@ -163,6 +168,7 @@ private:
     , Settings::Client::InvertScrollDirection
     , Settings::Client::LanguageSync
     , Settings::Client::RemoteHost
+    , Settings::Client::ScrollSpeed
     , Settings::Client::XdpRestoreToken
     , Settings::Core::CoreMode
     , Settings::Core::Interface
@@ -173,6 +179,9 @@ private:
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
     , Settings::Core::UpdateUrl
+    , Settings::Core::Display
+    , Settings::Core::RestartOnFailure
+    , Settings::Core::UseHooks
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile

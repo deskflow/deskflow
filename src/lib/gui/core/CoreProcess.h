@@ -116,7 +116,6 @@ private:
   void startProcessFromDaemon(const QString &app, const QStringList &args);
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
-  bool addGenericArgs(QStringList &args) const;
   bool addServerArgs(QStringList &args, QString &app);
   bool addClientArgs(QStringList &args, QString &app);
   QString persistServerConfig() const;
@@ -127,7 +126,6 @@ private:
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
   void handleLogLines(const QString &text);
-  QString correctedInterface() const;
   QString correctedAddress() const;
   QString requestDaemonLogPath();
   void persistLogDir() const;

@@ -6,10 +6,10 @@ if(WIN32)
 endif()
 
 create_test(
-  NAME ArgParserTests
+  NAME CoreArgParserTests
   DEPENDS app
-  LIBS arch base ${extra_libs}
-  SOURCE ArgParserTests.cpp
+  LIBS ${extra_libs}
+  SOURCE CoreArgParserTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 

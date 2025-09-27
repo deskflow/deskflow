@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "common/Settings.h" // must include first
+
 #include "platform/XWindowsScreen.h"
 
 #include "arch/Arch.h"
@@ -14,9 +16,7 @@
 #include "base/Log.h"
 #include "base/Stopwatch.h"
 #include "deskflow/App.h"
-#include "deskflow/ArgsBase.h"
 #include "deskflow/ClientApp.h"
-#include "deskflow/ClientArgs.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/ScreenException.h"
@@ -82,10 +82,9 @@ static int xi_opcode;
 XWindowsScreen *XWindowsScreen::s_screen = nullptr;
 
 XWindowsScreen::XWindowsScreen(
-    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events,
-    deskflow::ClientScrollDirection scrollDirection
+    const char *displayName, bool isPrimary, int mouseScrollDelta, IEventQueue *events, bool invertScrolling
 )
-    : PlatformScreen(events, scrollDirection),
+    : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
       m_mouseScrollDelta(mouseScrollDelta),
       m_isOnScreen(m_isPrimary),
@@ -141,7 +140,7 @@ XWindowsScreen::XWindowsScreen(
   }
 
   // disable sleep if the flag is set
-  if (App::instance().argsBase().m_preventSleep) {
+  if (Settings::value(Settings::Core::PreventSleep).toBool()) {
     m_powerManager.disableSleep();
   }
 

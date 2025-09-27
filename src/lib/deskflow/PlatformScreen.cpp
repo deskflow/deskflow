@@ -7,11 +7,12 @@
 
 #include "deskflow/PlatformScreen.h"
 #include "base/DirectionTypes.h"
+#include "common/Settings.h"
 #include "deskflow/App.h"
 
-PlatformScreen::PlatformScreen(IEventQueue *events, deskflow::ClientScrollDirection scrollDirection)
+PlatformScreen::PlatformScreen(IEventQueue *events, bool invertScrolling)
     : IPlatformScreen(events),
-      m_clientScrollDirection(scrollDirection)
+      m_invertScrollDirection(invertScrolling)
 {
   // do nothing
 }
@@ -86,7 +87,7 @@ void PlatformScreen::pollPressedKeys(KeyButtonSet &pressedKeys) const
 
 int32_t PlatformScreen::mapClientScrollDirection(int32_t x) const
 {
-  return (x * static_cast<int>(m_clientScrollDirection));
+  return (m_invertScrollDirection ? -x : x);
 }
 
 std::string PlatformScreen::sidesMaskToString(uint32_t sides)
