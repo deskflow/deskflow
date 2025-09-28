@@ -1,7 +1,7 @@
 <map id="src/lib/gui/core/ServerConnection.h" name="src/lib/gui/core/ServerConnection.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,231,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="259,369,324,393"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,33,76,53,51,80,26,118,20,137,18,162,18,237,24,271,42,299,68,321,101,339,137,353,175,363,244,374,243,379,174,368,136,358,99,344,65,326,38,302,19,273,13,237,13,162,15,136,21,116,47,76,72,49,98,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,33,76,53,51,80,26,118,20,137,18,161,171,332,210,378,222,401,206,396,167,367,17,239,24,271,42,299,68,321,101,339,137,353,175,363,244,374,243,379,174,368,136,358,99,344,65,326,38,302,19,273,14,235,171,363,209,392,218,398,205,381,167,336,13,163,15,136,21,116,47,76,72,49,98,29"/>
 <area shape="rect" id="Node000003" href="$Messages_8h.html" title=" " alt="" coords="61,78,175,103"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,31,121,62,115,62,115,31"/>
 <area shape="rect" id="Node000005" href="$IServerConfig_8h.html" title=" " alt="" coords="238,78,411,103"/>
