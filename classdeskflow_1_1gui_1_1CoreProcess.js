@@ -25,7 +25,6 @@ var classdeskflow_1_1gui_1_1CoreProcess =
     [ "connectionStateChanged", "classdeskflow_1_1gui_1_1CoreProcess.html#ad7712b9cc9037d67853c3b4da8fe7bdb", null ],
     [ "daemonIpcClientConnectionFailed", "classdeskflow_1_1gui_1_1CoreProcess.html#ab305459e98593bc76e894c883f70cb9f", null ],
     [ "error", "classdeskflow_1_1gui_1_1CoreProcess.html#aa6b3faa1c42637f07adb9a6bef2e7065", null ],
-    [ "extracted", "classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369", null ],
     [ "isStarted", "classdeskflow_1_1gui_1_1CoreProcess.html#a7e71f9782c34b927045af276d0e3f11f", null ],
     [ "logLine", "classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80", null ],
     [ "mode", "classdeskflow_1_1gui_1_1CoreProcess.html#a6d40732c891af7bad2c7087be0768db1", null ],

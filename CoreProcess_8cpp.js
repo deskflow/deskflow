@@ -1,6 +1,5 @@
 var CoreProcess_8cpp =
 [
-    [ "deskflow::gui::getAppFilePath", "namespacedeskflow_1_1gui.html#a1d9b86ab109a098c01c80371b3d6fc67", null ],
     [ "deskflow::gui::makeQuotedArgs", "namespacedeskflow_1_1gui.html#a7398bc69c7d5ee2a69459843b27372a3", null ],
     [ "deskflow::gui::processModeToString", "namespacedeskflow_1_1gui.html#a26acd26a06180a0a2e94803c29b373aa", null ],
     [ "deskflow::gui::processStateToString", "namespacedeskflow_1_1gui.html#a21a204364c5d5b80acdb091d3932ea65", null ],

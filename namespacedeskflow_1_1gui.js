@@ -16,7 +16,6 @@ var namespacedeskflow_1_1gui =
     [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
     [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ],
     [ "dotenv", "namespacedeskflow_1_1gui.html#ab4c997166f1edb383c9a46fb94672d12", null ],
-    [ "getAppFilePath", "namespacedeskflow_1_1gui.html#a1d9b86ab109a098c01c80371b3d6fc67", null ],
     [ "getPair", "namespacedeskflow_1_1gui.html#a4c76fb6206a264805e66241483d320a1", null ],
     [ "iconMode", "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12", null ],
     [ "isDarkMode", "namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918", null ],

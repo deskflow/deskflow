@@ -76,5 +76,5 @@ var searchData=
   ['exitcodes_2eh_73',['ExitCodes.h',['../ExitCodes_8h.html',1,'']]],
   ['externalconfig_74',['ExternalConfig',['../structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2',1,'Settings::Server']]],
   ['externalconfigfile_75',['ExternalConfigFile',['../structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d',1,'Settings::Server']]],
-  ['extracted_76',['extracted',['../classdeskflow_1_1gui_1_1CoreProcess.html#a126cc1ab7d87b6f2e7dac8c63e25e369',1,'deskflow::gui::CoreProcess::extracted()'],['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog::extracted()']]]
+  ['extracted_76',['extracted',['../classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e',1,'SettingsDialog']]]
 ];
