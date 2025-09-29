@@ -7,7 +7,7 @@ set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 # Install our desktop file
 install(
-  FILES ${MY_DIR}/org.deskflow.deskflow.desktop
+  FILES ${MY_DIR}/${CMAKE_PROJECT_REV_FQDN}.desktop
   DESTINATION share/applications
 )
 
@@ -15,12 +15,12 @@ install(
 install(
   FILES ${MY_DIR}/deskflow.png
   DESTINATION share/icons/hicolor/512x512/apps/
-  RENAME org.deskflow.deskflow.png
+  RENAME ${CMAKE_PROJECT_REV_FQDN}.png
 )
 
 # Install our metainfo
 install(
-  FILES ${MY_DIR}/org.deskflow.deskflow.metainfo.xml
+  FILES ${MY_DIR}/${CMAKE_PROJECT_REV_FQDN}.metainfo.xml
   DESTINATION share/metainfo/
 )
 

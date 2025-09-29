@@ -10,6 +10,7 @@
 #include <QDBusInterface>
 #include <QDBusReply>
 
+#include "common/Constants.h"
 #include "platform/Wayland.h"
 
 namespace deskflow::platform {
@@ -35,7 +36,7 @@ inline void setAppId()
     return;
   }
 
-  std::ignore = i->call("Register", "org.deskflow.deskflow", QVariantMap{});
+  std::ignore = i->call("Register", kRevFqdnName, QVariantMap{});
 }
 
 } // namespace deskflow::platform
