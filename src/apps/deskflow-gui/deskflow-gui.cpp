@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setOrganizationName(kAppName);
   QCoreApplication::setApplicationVersion(kVersion);
   QCoreApplication::setOrganizationDomain(kOrgDomain); // used in prefix, can't be a url
-  QGuiApplication::setDesktopFileName(QStringLiteral("org.deskflow.deskflow"));
+  QGuiApplication::setDesktopFileName(kRevFqdnName);
 
   QApplication app(argc, argv);
 
