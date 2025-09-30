@@ -10,8 +10,6 @@ var namespacedeskflow =
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],
     [ "server", "namespacedeskflow_1_1server.html", "namespacedeskflow_1_1server" ],
     [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
-    [ "ArgsBase", "classdeskflow_1_1ArgsBase.html", "classdeskflow_1_1ArgsBase" ],
-    [ "ClientArgs", "classdeskflow_1_1ClientArgs.html", "classdeskflow_1_1ClientArgs" ],
     [ "Config", "classdeskflow_1_1Config.html", "classdeskflow_1_1Config" ],
     [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
     [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
@@ -22,11 +20,6 @@ var namespacedeskflow =
     [ "PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", "classdeskflow_1_1PortalInputCapture" ],
     [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ],
     [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
-    [ "ServerArgs", "classdeskflow_1_1ServerArgs.html", "classdeskflow_1_1ServerArgs" ],
-    [ "ClientScrollDirection", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76", [
-      [ "Normal", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76a960b44c579bc2f6818d2daaf9e4c16f0", null ],
-      [ "Inverted", "namespacedeskflow.html#a1d386d431506559251758fd2bb0b7d76acf4c2a4bf7c328c4e51f902350475343", null ]
-    ] ],
     [ "EventTypes", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2", [
       [ "Unknown", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
       [ "Quit", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6", null ],

@@ -1,7 +1,6 @@
 var classIApp =
 [
     [ "~IApp", "classIApp.html#a7712f4b015fc1460746949580ecc759a", null ],
-    [ "argsBase", "classIApp.html#a588a9031a85b960b66bf477249466a35", null ],
     [ "bye", "classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7", null ],
     [ "createScreen", "classIApp.html#ad8b76d3777672aa8d28cd9c847f87729", null ],
     [ "daemonName", "classIApp.html#a165504789fa07702277cb59a237c928c", null ],

@@ -27,10 +27,11 @@ var searchData=
   ['havescreens_24',['haveScreens',['../classAction.html#a00196def802cadd57256eff068ae163e',1,'Action']]],
   ['heartbeat_25',['heartbeat',['../classServerConfig.html#ad3b599bd08a258a8b7cb960ce00e8c87',1,'ServerConfig']]],
   ['helloback_26',['HelloBack',['../classdeskflow_1_1client_1_1HelloBack.html#ad8133b3000faeb75c90f090d0400cded',1,'deskflow::client::HelloBack']]],
-  ['help_27',['help',['../classApp.html#aaa32b832bb5c0f4502574ef60c546082',1,'App::help()'],['../classClientApp.html#a9993ad03a708094a17d4af4b28416643',1,'ClientApp::help()'],['../classServerApp.html#a86c978779c2f9361125d5e2e187fcb3c',1,'ServerApp::help()']]],
-  ['hide_28',['hide',['../classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9',1,'MainWindow']]],
-  ['hotkey_29',['Hotkey',['../classHotkey.html#abe326f7aa81e9e39d2e9a36a91dab84c',1,'Hotkey']]],
-  ['hotkey_30',['hotkey',['../classHotkeyDialog.html#a6b6efc14d6a365207f9f15fb9fd5fad0',1,'HotkeyDialog::hotkey() const'],['../classHotkeyDialog.html#ad5374fed612267e9313fc138a20b29d2',1,'HotkeyDialog::hotkey()']]],
-  ['hotkeydialog_31',['HotkeyDialog',['../classHotkeyDialog.html#a33f2892f4ab72ff7de0afb4c439b5125',1,'HotkeyDialog']]],
-  ['hotkeys_32',['hotkeys',['../classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8',1,'ServerConfig']]]
+  ['help_27',['help',['../classCoreArgParser.html#aeea629c5cb12497501a151275327f65b',1,'CoreArgParser']]],
+  ['helptext_28',['helpText',['../classCoreArgParser.html#a63cb88b7b66c588a6e040502583bec12',1,'CoreArgParser']]],
+  ['hide_29',['hide',['../classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9',1,'MainWindow']]],
+  ['hotkey_30',['Hotkey',['../classHotkey.html#abe326f7aa81e9e39d2e9a36a91dab84c',1,'Hotkey']]],
+  ['hotkey_31',['hotkey',['../classHotkeyDialog.html#a6b6efc14d6a365207f9f15fb9fd5fad0',1,'HotkeyDialog::hotkey() const'],['../classHotkeyDialog.html#ad5374fed612267e9313fc138a20b29d2',1,'HotkeyDialog::hotkey()']]],
+  ['hotkeydialog_32',['HotkeyDialog',['../classHotkeyDialog.html#a33f2892f4ab72ff7de0afb4c439b5125',1,'HotkeyDialog']]],
+  ['hotkeys_33',['hotkeys',['../classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8',1,'ServerConfig']]]
 ];

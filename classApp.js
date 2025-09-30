@@ -1,12 +1,11 @@
 var classApp =
 [
     [ "XNoEiSupport", "classApp_1_1XNoEiSupport.html", "classApp_1_1XNoEiSupport" ],
-    [ "App", "classApp.html#a4b4283b097dbb1979c3f3eed66ca5186", null ],
+    [ "App", "classApp.html#a6e71fe1043dc15637ded72799b92df0d", null ],
     [ "App", "classApp.html#a5ecbaa8022d8e3a787779f2549b33379", null ],
     [ "App", "classApp.html#a9bd1531cdd8af54c9c14b3931512410a", null ],
     [ "~App", "classApp.html#acde03ff6767ca35828915a6f327d4b5c", null ],
     [ "appUtil", "classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9", null ],
-    [ "argsBase", "classApp.html#ade4b755cc2c61f370a389ae0f5502dc7", null ],
     [ "bye", "classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048", null ],
     [ "configSection", "classApp.html#a6951a25cab46358ed52e5ff97d3bd0c4", null ],
     [ "daemonInfo", "classApp.html#a4af9e4bbb719ae9fce079bd11d263878", null ],
@@ -14,7 +13,6 @@ var classApp =
     [ "getEvents", "classApp.html#a2999f6b9b1129542847a07bcf5bc7c21", null ],
     [ "getSocketMultiplexer", "classApp.html#a60b51c7e60aa48b222849fbdc68971a0", null ],
     [ "handleScreenError", "classApp.html#ae59ab33fd366ee0609bd4df8e807fab0", null ],
-    [ "help", "classApp.html#aaa32b832bb5c0f4502574ef60c546082", null ],
     [ "initApp", "classApp.html#a92eb8936570ea4604debb4efa74353ca", null ],
     [ "initApp", "classApp.html#a4b67d3558ac51a729728354c0d761113", null ],
     [ "instance", "classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e", null ],
@@ -23,12 +21,12 @@ var classApp =
     [ "loggingFilterWarning", "classApp.html#a699f3588a184a543d55effeaac0e49c1", null ],
     [ "operator=", "classApp.html#a662e265aad8fec31f4b4e85368478c51", null ],
     [ "operator=", "classApp.html#ab51ebb2be69b544372c4ab6a9169264f", null ],
-    [ "parseArgs", "classApp.html#a1d472957a8ff9c99a0ea1e1152937718", null ],
+    [ "parseArgs", "classApp.html#ab25cb14c8734dd3d83f96240f3b25740", null ],
+    [ "processName", "classApp.html#a975d935098b0a08ef69b1af32d85a499", null ],
     [ "run", "classApp.html#a1ec19e479fdb20fc13e193d20a09104d", null ],
     [ "runEventsLoop", "classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f", null ],
     [ "setByeFunc", "classApp.html#a7007955907d7a63830ee966fc25110da", null ],
     [ "setEvents", "classApp.html#acbc962ac1eea477e7cf22e97c1c04bed", null ],
     [ "setSocketMultiplexer", "classApp.html#ad4d9e0526734148f3d7364f2933c6d57", null ],
-    [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ],
-    [ "version", "classApp.html#ab344e828b810e48b90f9c05a2e1c1487", null ]
+    [ "setupFileLogging", "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc", null ]
 ];

@@ -21,6 +21,7 @@ var classSettings =
     [ "isNativeMode", "classSettings.html#a3bfa2ecc81e7aceb39abc8176c0b4002", null ],
     [ "isWritable", "classSettings.html#acc77a634afaed3905e6545630c71d5f2", null ],
     [ "logLevelText", "classSettings.html#ae9e80e06caddd4c619dc286848b1f187", null ],
+    [ "logLevelToInt", "classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8", null ],
     [ "proxy", "classSettings.html#a6debf0cebe43970f836cd1969ded08e9", null ],
     [ "restoreDefaultSettings", "classSettings.html#aa6e367eea7196300fc008ca44c727a92", null ],
     [ "save", "classSettings.html#ae251f1cdec2bce2dbbf133c18550888c", null ],

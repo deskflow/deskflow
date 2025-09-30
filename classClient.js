@@ -1,7 +1,7 @@
 var classClient =
 [
     [ "FailInfo", "classClient_1_1FailInfo.html", "classClient_1_1FailInfo" ],
-    [ "Client", "classClient.html#a5d7587047960248af191ab71767e1952", null ],
+    [ "Client", "classClient.html#a3449f7c52f9e9c5a134e995d93d99e96", null ],
     [ "Client", "classClient.html#a86a4ccf827b32dcf13df6500e345f1c8", null ],
     [ "Client", "classClient.html#a3382008b6d45830beb868b6f6ed70dd3", null ],
     [ "~Client", "classClient.html#af96d672ca01fa070cc9489614dab4194", null ],

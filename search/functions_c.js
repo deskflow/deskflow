@@ -30,13 +30,14 @@ var searchData=
   ['loggingfilterwarning_27',['loggingFilterWarning',['../classApp.html#a699f3588a184a543d55effeaac0e49c1',1,'App']]],
   ['loglevelchanged_28',['logLevelChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a1f2f52740caf1549da28d5769506df41',1,'deskflow::core::ipc::DaemonIpcServer']]],
   ['logleveltext_29',['logLevelText',['../classSettings.html#ae9e80e06caddd4c619dc286848b1f187',1,'Settings']]],
-  ['logline_30',['logLine',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80',1,'deskflow::gui::CoreProcess']]],
-  ['logsecurecipherinfo_31',['logSecureCipherInfo',['../classSslLogger.html#a7c7865b270c39016211299627aa4e7d5',1,'SslLogger']]],
-  ['logsecureconnectinfo_32',['logSecureConnectInfo',['../classSslLogger.html#a8fde3eab2bafe94aa1cc11314027a306',1,'SslLogger']]],
-  ['logsecurelibinfo_33',['logSecureLibInfo',['../classSslLogger.html#a709952f5eed5de3f977cceacc5481084',1,'SslLogger']]],
-  ['logverbose_34',['logVerbose',['../classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787',1,'deskflow::gui::Logger::logVerbose()'],['../namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac',1,'deskflow::gui::logVerbose()']]],
-  ['logwidget_35',['LogWidget',['../classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e',1,'LogWidget']]],
-  ['long_36',['long',['../ArchNetworkWinsock_8cpp.html#a2b70d06c0aace9c8693696cc736f3a31',1,'ArchNetworkWinsock.cpp']]],
-  ['loop_37',['loop',['../classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1',1,'EventQueue::loop()'],['../classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4',1,'IEventQueue::loop()']]],
-  ['lost_38',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]]
+  ['logleveltoint_30',['logLevelToInt',['../classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8',1,'Settings']]],
+  ['logline_31',['logLine',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80',1,'deskflow::gui::CoreProcess']]],
+  ['logsecurecipherinfo_32',['logSecureCipherInfo',['../classSslLogger.html#a7c7865b270c39016211299627aa4e7d5',1,'SslLogger']]],
+  ['logsecureconnectinfo_33',['logSecureConnectInfo',['../classSslLogger.html#a8fde3eab2bafe94aa1cc11314027a306',1,'SslLogger']]],
+  ['logsecurelibinfo_34',['logSecureLibInfo',['../classSslLogger.html#a709952f5eed5de3f977cceacc5481084',1,'SslLogger']]],
+  ['logverbose_35',['logVerbose',['../classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787',1,'deskflow::gui::Logger::logVerbose()'],['../namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac',1,'deskflow::gui::logVerbose()']]],
+  ['logwidget_36',['LogWidget',['../classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e',1,'LogWidget']]],
+  ['long_37',['long',['../ArchNetworkWinsock_8cpp.html#a2b70d06c0aace9c8693696cc736f3a31',1,'ArchNetworkWinsock.cpp']]],
+  ['loop_38',['loop',['../classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1',1,'EventQueue::loop()'],['../classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4',1,'IEventQueue::loop()']]],
+  ['lost_39',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]]
 ];

@@ -13,14 +13,16 @@ var searchData=
   ['value_5ftype_10',['value_type',['../classPriorityQueue.html#a92d3158db78424bcdde42f1d4f59d07e',1,'PriorityQueue::value_type'],['../structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#aa1e651042a8c7e2fc30a748afd95f496',1,'std::iterator_traits&lt; deskflow::server::Config &gt;::value_type']]],
   ['vcpkg_20managed_20qt_11',['Vcpkg managed Qt',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
   ['verifyignorecertcallback_12',['verifyIgnoreCertCallback',['../SecureSocket_8cpp.html#a8644521a3d8e3e7cd9821f7ce9d30294',1,'SecureSocket.cpp']]],
-  ['version_13',['version',['../classApp.html#ab344e828b810e48b90f9c05a2e1c1487',1,'App']]],
+  ['version_13',['version',['../classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d',1,'CoreArgParser']]],
   ['version_20compatibility_14',['Version Compatibility',['../protocol_reference.html#autotoc_md28',1,'']]],
   ['version_20migration_20guide_15',['Version Migration Guide',['../protocol_reference.html#autotoc_md29',1,'']]],
   ['versionchecker_16',['VersionChecker',['../classVersionChecker.html',1,'VersionChecker'],['../classVersionChecker.html#a39ccb925a6aab949adc6248bda078293',1,'VersionChecker::VersionChecker()']]],
   ['versionchecker_2ecpp_17',['VersionChecker.cpp',['../VersionChecker_8cpp.html',1,'']]],
   ['versionchecker_2eh_18',['VersionChecker.h',['../VersionChecker_8h.html',1,'']]],
-  ['vformat_19',['vformat',['../namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf',1,'deskflow::string']]],
-  ['virtualkeytobutton_20',['virtualKeyToButton',['../classMSWindowsKeyState.html#a7c26d769be861c5c331392887ebcca14',1,'MSWindowsKeyState']]],
-  ['vk_5fxbutton1_21',['VK_XBUTTON1',['../MSWindowsDesks_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsScreen.cpp']]],
-  ['vk_5fxbutton2_22',['VK_XBUTTON2',['../MSWindowsDesks_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsScreen.cpp']]]
+  ['versionoption_19',['versionOption',['../structCoreArgs.html#ada973b89e10429ac0eab7618024c2e38',1,'CoreArgs']]],
+  ['versiontext_20',['versionText',['../classCoreArgParser.html#abe71a56b153f1c0fb3e1ebd646cc963e',1,'CoreArgParser']]],
+  ['vformat_21',['vformat',['../namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf',1,'deskflow::string']]],
+  ['virtualkeytobutton_22',['virtualKeyToButton',['../classMSWindowsKeyState.html#a7c26d769be861c5c331392887ebcca14',1,'MSWindowsKeyState']]],
+  ['vk_5fxbutton1_23',['VK_XBUTTON1',['../MSWindowsDesks_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#af26fd79d537df6913d4860a5f3beeb0a',1,'VK_XBUTTON1:&#160;MSWindowsScreen.cpp']]],
+  ['vk_5fxbutton2_24',['VK_XBUTTON2',['../MSWindowsDesks_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsDesks.cpp'],['../MSWindowsKeyState_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsKeyState.cpp'],['../MSWindowsScreen_8cpp.html#ad1e42cbf98d5d175358e22dfb4f343f4',1,'VK_XBUTTON2:&#160;MSWindowsScreen.cpp']]]
 ];

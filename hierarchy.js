@@ -36,11 +36,6 @@ var hierarchy =
     [ "ArchNetAddressImpl", "classArchNetAddressImpl.html", null ],
     [ "ArchSocketImpl", "classArchSocketImpl.html", null ],
     [ "ArchThreadImpl", "classArchThreadImpl.html", null ],
-    [ "ArgParser", "classArgParser.html", null ],
-    [ "deskflow::ArgsBase", "classdeskflow_1_1ArgsBase.html", [
-      [ "deskflow::ClientArgs", "classdeskflow_1_1ClientArgs.html", null ],
-      [ "deskflow::ServerArgs", "classdeskflow_1_1ServerArgs.html", null ]
-    ] ],
     [ "deskflow::KeyMap::Keystroke::Button", "structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html", null ],
     [ "IPrimaryScreen::ButtonInfo", "classIPrimaryScreen_1_1ButtonInfo.html", null ],
     [ "deskflow::string::CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", null ],
@@ -70,6 +65,8 @@ var hierarchy =
     [ "deskflow::server::ConfigReadContext", "classdeskflow_1_1server_1_1ConfigReadContext.html", null ],
     [ "IDataSocket::ConnectionFailedInfo", "classIDataSocket_1_1ConnectionFailedInfo.html", null ],
     [ "Settings::Core", "structSettings_1_1Core.html", null ],
+    [ "CoreArgParser", "classCoreArgParser.html", null ],
+    [ "CoreArgs", "structCoreArgs.html", null ],
     [ "Settings::Daemon", "structSettings_1_1Daemon.html", null ],
     [ "deskflow::KeyMap::Keystroke::Data", "uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html", null ],
     [ "ArchNetworkBSD::Deps", "structArchNetworkBSD_1_1Deps.html", null ],

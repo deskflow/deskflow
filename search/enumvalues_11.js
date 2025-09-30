@@ -5,7 +5,7 @@ var searchData=
   ['screenshapechanged_2',['ScreenShapeChanged',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a2fd1c9ec9c4f15dce5cc792d7d7b1795',1,'deskflow']]],
   ['screensuspend_3',['ScreenSuspend',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aeb718c3a217f7d99ed6f049169ba554d',1,'deskflow']]],
   ['scrolllock_4',['ScrollLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a7d7902d5e2998e4fb2b8694a2de4ff65',1,'ScreenConfig']]],
-  ['server_5',['Server',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfa6b6019dd967f997968559c24c362ae47',1,'Settings::Server'],['../classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba9aa1b03934893d7134a660af4204f2a9',1,'deskflow::ArgsBase::Server'],['../FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a9aa1b03934893d7134a660af4204f2a9',1,'Server:&#160;FingerprintDialog.h']]],
+  ['server_5',['Server',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfa6b6019dd967f997968559c24c362ae47',1,'Settings::Server'],['../FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a9aa1b03934893d7134a660af4204f2a9',1,'Server:&#160;FingerprintDialog.h']]],
   ['serverappforcereconnect_6',['ServerAppForceReconnect',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a87779aca6f652e7b1edb7a999ede22f3',1,'deskflow']]],
   ['serverappreloadconfig_7',['ServerAppReloadConfig',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0ae6e170e568c20bb7238c4c97737050',1,'deskflow']]],
   ['serverappresetserver_8',['ServerAppResetServer',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aafcedfec63fc7f07f162450b4955ebdc',1,'deskflow']]],

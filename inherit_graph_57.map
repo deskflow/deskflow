@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classIArchDaemon.html" title="Interface for architecture dependent daemonizing." alt="" coords="5,31,106,55"/>
 <area shape="rect" id="Node000001" href="$classArchDaemonNone.html" title="Dummy implementation of IArchDaemon." alt="" coords="165,5,292,30"/>
-<area shape="poly" id="edge19_Node000000_Node000001" title=" " alt="" coords="121,31,164,24,165,30,122,36"/>
+<area shape="poly" id="edge17_Node000000_Node000001" title=" " alt="" coords="121,31,164,24,165,30,122,36"/>
 <area shape="rect" id="Node000003" href="$classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="154,55,304,79"/>
-<area shape="poly" id="edge21_Node000000_Node000003" title=" " alt="" coords="122,49,154,54,153,59,121,55"/>
+<area shape="poly" id="edge19_Node000000_Node000003" title=" " alt="" coords="122,49,154,54,153,59,121,55"/>
 <area shape="rect" id="Node000002" href="$classArchDaemonUnix.html" title="Unix implementation of IArchDaemon." alt="" coords="352,5,475,30"/>
-<area shape="poly" id="edge20_Node000001_Node000002" title=" " alt="" coords="308,15,351,15,351,20,308,20"/>
+<area shape="poly" id="edge18_Node000001_Node000002" title=" " alt="" coords="308,15,351,15,351,20,308,20"/>
 </map>

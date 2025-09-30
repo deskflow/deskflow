@@ -1,8 +1,7 @@
 var classServerApp =
 [
-    [ "ServerApp", "classServerApp.html#a597d3ab521193110ea6b9904c540ea8e", null ],
+    [ "ServerApp", "classServerApp.html#a7f5d62dfd98d076059e1bd1f479cbda8", null ],
     [ "~ServerApp", "classServerApp.html#a02270e0dbd7f9740fe19c8df54f5d466", null ],
-    [ "args", "classServerApp.html#a86ba7f2397212acd762f2a75e49e111f", null ],
     [ "cleanupServer", "classServerApp.html#a9abb6e6b661616a53a5804a57f49f97e", null ],
     [ "closeClientListener", "classServerApp.html#ae186e45e6af2e0a2acd50f5e53270e4b", null ],
     [ "closePrimaryClient", "classServerApp.html#a325cddd404e96b4768475a95bc69c01e", null ],
@@ -17,7 +16,6 @@ var classServerApp =
     [ "handleClientConnected", "classServerApp.html#abd33f314e99b27442d62efd62fb6506a", null ],
     [ "handleResume", "classServerApp.html#a8110cd524de6b5c6094202de8936ddc9", null ],
     [ "handleSuspend", "classServerApp.html#a6ee159df04d18450454bf489d3afc769", null ],
-    [ "help", "classServerApp.html#a86c978779c2f9361125d5e2e187fcb3c", null ],
     [ "initServer", "classServerApp.html#ae503783ded61fc2ccf91f66a1d334cac", null ],
     [ "instance", "classServerApp.html#a8559270c84a6ab7b0726b1a227e232a1", null ],
     [ "loadConfig", "classServerApp.html#abb45813fdd5bc56aecd870675c7677f2", null ],
@@ -27,7 +25,7 @@ var classServerApp =
     [ "openPrimaryClient", "classServerApp.html#a793f0f9e3f8b059994b51f5eaa5f0d7b", null ],
     [ "openServer", "classServerApp.html#a5629d46ad51317e17a2c2389cad5a392", null ],
     [ "openServerScreen", "classServerApp.html#a4d1c3356a7f09af674f02b4770ed9be5", null ],
-    [ "parseArgs", "classServerApp.html#af9b9d4fff5499771a77ed9fefe3da261", null ],
+    [ "parseArgs", "classServerApp.html#ad9af83a73fef43b357e9f14f4f147aba", null ],
     [ "reloadConfig", "classServerApp.html#af1b85054ef546d40e4e2e6a4ff58cc87", null ],
     [ "reloadSignalHandler", "classServerApp.html#a1a8ffff2b31271913d8d0a34d122262a", null ],
     [ "resetServer", "classServerApp.html#a1753d0644d3123f4188db10b6b591e98", null ],

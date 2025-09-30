@@ -1,7 +1,0 @@
-<map id="deskflow::ArgsBase" name="deskflow::ArgsBase">
-<area shape="rect" id="Node000001" title="This is the base Argument class that will store the generic arguments passed into the applications th..." alt="" coords="91,5,229,30"/>
-<area shape="rect" id="Node000002" href="$classdeskflow_1_1ClientArgs.html" title=" " alt="" coords="5,78,147,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,42,91,80,88,76,133,38"/>
-<area shape="rect" id="Node000003" href="$classdeskflow_1_1ServerArgs.html" title=" " alt="" coords="171,78,317,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,38,232,76,229,80,184,42"/>
-</map>

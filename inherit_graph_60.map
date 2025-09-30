@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classIArchNetwork.html" title="Interface for architecture dependent networking." alt="" coords="5,31,107,55"/>
 <area shape="rect" id="Node000001" href="$classArchNetworkBSD.html" title="Berkeley (BSD) sockets implementation of IArchNetwork." alt="" coords="166,5,292,30"/>
-<area shape="poly" id="edge26_Node000000_Node000001" title=" " alt="" coords="121,31,166,24,166,29,122,36"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="121,31,166,24,166,29,122,36"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkWinsock.html" title="Win32 implementation of IArchNetwork." alt="" coords="155,55,303,79"/>
-<area shape="poly" id="edge27_Node000000_Node000002" title=" " alt="" coords="122,49,154,54,154,59,122,55"/>
+<area shape="poly" id="edge25_Node000000_Node000002" title=" " alt="" coords="122,49,154,54,154,59,122,55"/>
 </map>

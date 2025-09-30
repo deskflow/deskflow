@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.35</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.61</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -132,7 +132,7 @@ $(function(){initNavTree('FingerprintDialog_8h_source.html','',''); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  QLayout *makeLocalLayout(<span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;localFingerprint = {});</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  QLayout *makeCompareLayout(</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      <span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;localFingerprint = {}, <span class="keywordtype">bool</span> <a class="code hl_function" href="deskflow-core_8cpp.html#aac3c56baa33e3ed9c825ac059f3c30fc">isServer</a> = <span class="keyword">true</span>, <span class="keyword">const</span> Fingerprint &amp;remoteFingerprint = {}</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>      <span class="keyword">const</span> <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> &amp;localFingerprint = {}, <span class="keywordtype">bool</span> isServer = <span class="keyword">true</span>, <span class="keyword">const</span> Fingerprint &amp;remoteFingerprint = {}</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  );</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">void</span> togglePreviewMode(<span class="keywordtype">bool</span> hashMode);</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> updateModeButton(<span class="keywordtype">bool</span> hashMode) <span class="keyword">const</span>;</div>
@@ -146,12 +146,11 @@ $(function(){initNavTree('FingerprintDialog_8h_source.html','',''); });
 <div class="ttc" id="aFingerprintDialog_8h_html_ac1e109f3903cfa4101b842c1d4e41e99"><div class="ttname"><a href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99">FingerprintDialogMode</a></div><div class="ttdeci">FingerprintDialogMode</div><div class="ttdef"><b>Definition</b> FingerprintDialog.h:18</div></div>
 <div class="ttc" id="aFingerprintDialog_8h_html_ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4"><div class="ttname"><a href="FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a509820290d57f333403f490dde7316f4">FingerprintDialogMode::Local</a></div><div class="ttdeci">@ Local</div><div class="ttdef"><b>Definition</b> FingerprintDialog.h:19</div></div>
 <div class="ttc" id="aFingerprint_8h_html"><div class="ttname"><a href="Fingerprint_8h.html">Fingerprint.h</a></div></div>
-<div class="ttc" id="aclassClient_html"><div class="ttname"><a href="classClient.html">Client</a></div><div class="ttdoc">Deskflow client.</div><div class="ttdef"><b>Definition</b> Client.h:42</div></div>
+<div class="ttc" id="aclassClient_html"><div class="ttname"><a href="classClient.html">Client</a></div><div class="ttdoc">Deskflow client.</div><div class="ttdef"><b>Definition</b> Client.h:41</div></div>
 <div class="ttc" id="aclassFingerprintDialog_html_a01b60a7f7716d842bd268d400e5f1c78"><div class="ttname"><a href="classFingerprintDialog.html#a01b60a7f7716d842bd268d400e5f1c78">FingerprintDialog::FingerprintDialog</a></div><div class="ttdeci">FingerprintDialog(QWidget *parent=nullptr, const Fingerprint &amp;localFingerprint={}, FingerprintDialogMode mode=FingerprintDialogMode::Local, const Fingerprint &amp;remoteFingerprint={})</div><div class="ttdef"><b>Definition</b> FingerprintDialog.cpp:16</div></div>
 <div class="ttc" id="aclassFingerprintDialog_html_adcf7b7eadc6efe8103cadd81968f0f6f"><div class="ttname"><a href="classFingerprintDialog.html#adcf7b7eadc6efe8103cadd81968f0f6f">FingerprintDialog::~FingerprintDialog</a></div><div class="ttdeci">~FingerprintDialog() override=default</div></div>
 <div class="ttc" id="aclassFingerprintPreview_html"><div class="ttname"><a href="classFingerprintPreview.html">FingerprintPreview</a></div><div class="ttdef"><b>Definition</b> FingerprintPreview.h:15</div></div>
-<div class="ttc" id="aclassServer_html"><div class="ttname"><a href="classServer.html">Server</a></div><div class="ttdoc">Deskflow server.</div><div class="ttdef"><b>Definition</b> Server.h:44</div></div>
-<div class="ttc" id="adeskflow-core_8cpp_html_aac3c56baa33e3ed9c825ac059f3c30fc"><div class="ttname"><a href="deskflow-core_8cpp.html#aac3c56baa33e3ed9c825ac059f3c30fc">isServer</a></div><div class="ttdeci">bool isServer(int argc, char **argv)</div><div class="ttdef"><b>Definition</b> deskflow-core.cpp:64</div></div>
+<div class="ttc" id="aclassServer_html"><div class="ttname"><a href="classServer.html">Server</a></div><div class="ttdoc">Deskflow server.</div><div class="ttdef"><b>Definition</b> Server.h:43</div></div>
 <div class="ttc" id="astructFingerprint_html"><div class="ttname"><a href="structFingerprint.html">Fingerprint</a></div><div class="ttdef"><b>Definition</b> Fingerprint.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

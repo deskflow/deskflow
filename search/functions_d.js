@@ -68,7 +68,7 @@ var searchData=
   ['mswindowshook_65',['MSWindowsHook',['../classMSWindowsHook.html#ade234fc9664f017fa66dc32791309ba8',1,'MSWindowsHook']]],
   ['mswindowskeystate_66',['MSWindowsKeyState',['../classMSWindowsKeyState.html#a3a1aa0cbfeb20c38dd0cd7236a797556',1,'MSWindowsKeyState::MSWindowsKeyState(MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)'],['../classMSWindowsKeyState.html#a80f6ee28bdfe3f90f432371896fb87c8',1,'MSWindowsKeyState::MSWindowsKeyState(MSWindowsDesks *desks, void *eventTarget, IEventQueue *events, deskflow::KeyMap &amp;keyMap, std::vector&lt; std::string &gt; layouts, bool isLangSyncEnabled)']]],
   ['mswindowsprocess_67',['MSWindowsProcess',['../classdeskflow_1_1platform_1_1MSWindowsProcess.html#a083ad3252a2a6cda1544e76209ebd2d7',1,'deskflow::platform::MSWindowsProcess']]],
-  ['mswindowsscreen_68',['MSWindowsScreen',['../classMSWindowsScreen.html#aa83a05206f765f2b2cf243afb71dc1c8',1,'MSWindowsScreen']]],
+  ['mswindowsscreen_68',['MSWindowsScreen',['../classMSWindowsScreen.html#a801e4b1c57a65c907fd17aed8792b646',1,'MSWindowsScreen']]],
   ['mswindowsscreensaver_69',['MSWindowsScreenSaver',['../classMSWindowsScreenSaver.html#ab21081fde743bd08c987a65a642128ab',1,'MSWindowsScreenSaver']]],
   ['mswindowssession_70',['MSWindowsSession',['../classMSWindowsSession.html#a8d0d82d2aae42e8c580e4e3ea36ccfc9',1,'MSWindowsSession']]],
   ['mswindowswatchdog_71',['MSWindowsWatchdog',['../classMSWindowsWatchdog.html#a6493798fd62f1b3bb9800caaef5b578e',1,'MSWindowsWatchdog']]],

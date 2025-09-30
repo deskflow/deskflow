@@ -42,8 +42,6 @@ var annotated_dup =
       [ "string", "namespacedeskflow_1_1string.html", [
         [ "CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", "classdeskflow_1_1string_1_1CaselessCmp" ]
       ] ],
-      [ "ArgsBase", "classdeskflow_1_1ArgsBase.html", "classdeskflow_1_1ArgsBase" ],
-      [ "ClientArgs", "classdeskflow_1_1ClientArgs.html", "classdeskflow_1_1ClientArgs" ],
       [ "Config", "classdeskflow_1_1Config.html", "classdeskflow_1_1Config" ],
       [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
       [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
@@ -53,8 +51,7 @@ var annotated_dup =
       [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
       [ "PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", "classdeskflow_1_1PortalInputCapture" ],
       [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ],
-      [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
-      [ "ServerArgs", "classdeskflow_1_1ServerArgs.html", "classdeskflow_1_1ServerArgs" ]
+      [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ]
     ] ],
     [ "std", "namespacestd.html", [
       [ "iterator_traits< deskflow::server::Config >", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4" ]
@@ -121,7 +118,6 @@ var annotated_dup =
     [ "ArchNetworkWinsock", "classArchNetworkWinsock.html", "classArchNetworkWinsock" ],
     [ "ArchSocketImpl", "classArchSocketImpl.html", "classArchSocketImpl" ],
     [ "ArchThreadImpl", "classArchThreadImpl.html", "classArchThreadImpl" ],
-    [ "ArgParser", "classArgParser.html", "classArgParser" ],
     [ "BadClientException", "classBadClientException.html", "classBadClientException" ],
     [ "BaseClientProxy", "classBaseClientProxy.html", "classBaseClientProxy" ],
     [ "BaseException", "classBaseException.html", "classBaseException" ],
@@ -151,6 +147,8 @@ var annotated_dup =
     [ "CondVar", "classCondVar.html", "classCondVar" ],
     [ "CondVarBase", "classCondVarBase.html", "classCondVarBase" ],
     [ "ConsoleLogOutputter", "classConsoleLogOutputter.html", "classConsoleLogOutputter" ],
+    [ "CoreArgParser", "classCoreArgParser.html", "classCoreArgParser" ],
+    [ "CoreArgs", "structCoreArgs.html", "structCoreArgs" ],
     [ "DaemonApp", "classDaemonApp.html", "classDaemonApp" ],
     [ "DataDownloader", "classDataDownloader.html", "classDataDownloader" ],
     [ "DeskflowException", "classDeskflowException.html", null ],

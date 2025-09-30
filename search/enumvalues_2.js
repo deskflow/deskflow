@@ -1,7 +1,7 @@
 var searchData=
 [
   ['capslock_0',['CapsLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a8d0f4171170104d094d8b6d4f8bf49e6',1,'ScreenConfig']]],
-  ['client_1',['Client',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfac9b7a86f41949562eed74c335af65640',1,'Settings::Client'],['../classdeskflow_1_1ArgsBase.html#a3cf576ce39039dc1dded52186a108c4ba577d7068826de925ea2aec01dbadf5e4',1,'deskflow::ArgsBase::Client'],['../FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a577d7068826de925ea2aec01dbadf5e4',1,'Client:&#160;FingerprintDialog.h']]],
+  ['client_1',['Client',['../classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bfac9b7a86f41949562eed74c335af65640',1,'Settings::Client'],['../FingerprintDialog_8h.html#ac1e109f3903cfa4101b842c1d4e41e99a577d7068826de925ea2aec01dbadf5e4',1,'Client:&#160;FingerprintDialog.h']]],
   ['clientconnected_2',['ClientConnected',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2abeb2c179916e917c350d2dd1a8406291',1,'deskflow']]],
   ['clientconnectionfailed_3',['ClientConnectionFailed',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a5c10b238cd32de63b15d003b782b081e',1,'deskflow']]],
   ['clientconnectionrefused_4',['ClientConnectionRefused',['../namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab6da58f2ed9f88ddbc4842fb5c1e7fcc',1,'deskflow']]],

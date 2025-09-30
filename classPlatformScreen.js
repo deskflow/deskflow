@@ -1,6 +1,6 @@
 var classPlatformScreen =
 [
-    [ "PlatformScreen", "classPlatformScreen.html#abe740ec47ce4b572adcfcfb5fa07df49", null ],
+    [ "PlatformScreen", "classPlatformScreen.html#aba9e75f26033c13529997ae310eef840", null ],
     [ "~PlatformScreen", "classPlatformScreen.html#a2f288569bd4751fa8c75b08ffc237b85", null ],
     [ "activeSides", "classPlatformScreen.html#a863946bd385fdb48f4613ab1c0f34ba3", null ],
     [ "canLeave", "classPlatformScreen.html#af1f24d0dd3a6351567e323a99e94340c", null ],

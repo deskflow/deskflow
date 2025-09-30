@@ -6,8 +6,9 @@ var searchData=
   ['validkeys_3',['validKeys',['../classSettings.html#a7f9698fa8a82c0b3b9afe6f560ade6a6',1,'Settings']]],
   ['value_4',['value',['../classQSettingsProxy.html#aaaed336c8c079b3d6f8af2f5b2e2ce76',1,'QSettingsProxy::value(const QString &amp;key) const'],['../classQSettingsProxy.html#a84f6cb4a45e167601573b99517815b13',1,'QSettingsProxy::value(const QString &amp;key, const QVariant &amp;defaultValue) const'],['../classSettings.html#a4442c59d0afdc1ef9e697d2cbf429148',1,'Settings::value()']]],
   ['verifyignorecertcallback_5',['verifyIgnoreCertCallback',['../SecureSocket_8cpp.html#a8644521a3d8e3e7cd9821f7ce9d30294',1,'SecureSocket.cpp']]],
-  ['version_6',['version',['../classApp.html#ab344e828b810e48b90f9c05a2e1c1487',1,'App']]],
+  ['version_6',['version',['../classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d',1,'CoreArgParser']]],
   ['versionchecker_7',['VersionChecker',['../classVersionChecker.html#a39ccb925a6aab949adc6248bda078293',1,'VersionChecker']]],
-  ['vformat_8',['vformat',['../namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf',1,'deskflow::string']]],
-  ['virtualkeytobutton_9',['virtualKeyToButton',['../classMSWindowsKeyState.html#a7c26d769be861c5c331392887ebcca14',1,'MSWindowsKeyState']]]
+  ['versiontext_8',['versionText',['../classCoreArgParser.html#abe71a56b153f1c0fb3e1ebd646cc963e',1,'CoreArgParser']]],
+  ['vformat_9',['vformat',['../namespacedeskflow_1_1string.html#a38d8f9480b99abd72865fddeafc2c5cf',1,'deskflow::string']]],
+  ['virtualkeytobutton_10',['virtualKeyToButton',['../classMSWindowsKeyState.html#a7c26d769be861c5c331392887ebcca14',1,'MSWindowsKeyState']]]
 ];

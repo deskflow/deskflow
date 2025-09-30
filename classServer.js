@@ -5,7 +5,7 @@ var classServer =
     [ "ScreenConnectedInfo", "classServer_1_1ScreenConnectedInfo.html", "classServer_1_1ScreenConnectedInfo" ],
     [ "SwitchInDirectionInfo", "classServer_1_1SwitchInDirectionInfo.html", "classServer_1_1SwitchInDirectionInfo" ],
     [ "SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html", "classServer_1_1SwitchToScreenInfo" ],
-    [ "Server", "classServer.html#a42d982045e63939837656b091cb0624e", null ],
+    [ "Server", "classServer.html#a34e2068b4a374bfc327b8aa3a426756f", null ],
     [ "Server", "classServer.html#ac0a402ca54125d9f8f97d191a5649965", null ],
     [ "Server", "classServer.html#a7350ff05dceefad892dc8213a1e20dc2", null ],
     [ "~Server", "classServer.html#a4b3aa2579cb1c8cd1d069582c14d0fa6", null ],
