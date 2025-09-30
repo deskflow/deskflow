@@ -7,7 +7,6 @@ if(UNIX AND NOT APPLE)
   pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
   message(STATUS "libei version: ${LIBEI_VERSION}")
 
-  pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
 endif()
 
@@ -154,10 +153,10 @@ include_directories(${inc})
 # wayland.h is included to check for wayland support
 add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 
-target_link_libraries(platform client ${libs})
+target_link_libraries(platform client ${libs} Qt6::DBus)
 
 macro(link_wayland_libs)
-  target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+  target_compile_definitions(platform PUBLIC WINAPI_LIBEI  HAVE_LIBPORTAL_INPUTCAPTURE)
 
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
                         ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
@@ -183,7 +182,7 @@ if(UNIX)
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
 
-    target_link_libraries(platform Qt6::DBus)
+    target_link_libraries(platform Qt6::DBus Qt6::DBus)
 
     link_wayland_libs()
   endif()
@@ -191,7 +190,7 @@ endif()
 
 if(APPLE)
   find_library(COCOA_LIBRARY Cocoa)
-  target_link_libraries(platform ${COCOA_LIBRARY})
+  target_link_libraries(platform ${COCOA_LIBRARY} Qt6::DBus)
 endif()
 
 target_sources(platform PRIVATE linux/portal/ClipboardPortal.cpp)
