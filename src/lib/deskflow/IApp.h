@@ -26,7 +26,7 @@ public:
   virtual void startNode() = 0;
   virtual void bye(int error) = 0;
   virtual int mainLoop() = 0;
-  virtual void initApp(int argc, const char **argv) = 0;
+  virtual void initApp() = 0;
   virtual const char *daemonName() const = 0;
   virtual deskflow::Screen *createScreen() = 0;
   virtual IEventQueue *getEvents() const = 0;

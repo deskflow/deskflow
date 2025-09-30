@@ -629,7 +629,7 @@ int daemonMainLoopStatic(int argc, const char **argv)
 
 int ServerApp::start(int argc, char **argv)
 {
-  initApp(argc, argv);
+  initApp();
   return mainLoop();
 }
 

@@ -138,7 +138,7 @@ void App::loggingFilterWarning() const
   }
 }
 
-void App::initApp(int argc, const char **argv)
+void App::initApp()
 {
   parseArgs();
 
