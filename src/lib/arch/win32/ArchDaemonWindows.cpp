@@ -297,7 +297,7 @@ void ArchDaemonWindows::serviceMain(DWORD argc, LPTSTR *argvIn)
 
   try {
     // invoke daemon function
-    m_daemonResult = m_daemonFunc(static_cast<int>(argc), reinterpret_cast<const char **>(argv));
+    m_daemonResult = m_daemonFunc();
   } catch (ArchDaemonRunException &e) {
     setStatusError(e.m_result);
     m_daemonResult = -1;
