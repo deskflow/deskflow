@@ -62,7 +62,7 @@ App::~App()
   s_instance = nullptr;
 }
 
-int App::run(int argc, char **argv)
+int App::run()
 {
 #if MAC_OS_X_VERSION_10_7
   // dock hide only supported on lion :(
@@ -83,7 +83,7 @@ int App::run(int argc, char **argv)
   int result = s_exitFailed;
 
   try {
-    result = appUtil().run(argc, argv);
+    result = appUtil().run();
   } catch (ExitAppException &e) {
     // instead of showing a nasty error, just exit with the error code.
     // not sure if i like this behaviour, but it's probably better than
