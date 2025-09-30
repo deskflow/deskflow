@@ -46,3 +46,6 @@ CMakeFiles/*
 # local freedesktop deps (do not commit)
 /libei/
 /libportal/
+
+/libei/
+/libportal/
