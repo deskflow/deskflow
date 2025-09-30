@@ -106,7 +106,7 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Daemon::Elevate)
     return Settings::isNativeMode();
 
-  if (key == Core::UpdateUrl)
+  if (key == Gui::UpdateCheckUrl)
     return kUrlUpdateCheck;
 
   if (key == Server::ExternalConfigFile)

@@ -48,7 +48,6 @@ public:
     inline static const auto ProcessMode = QStringLiteral("core/processMode");
     inline static const auto ScreenName = QStringLiteral("core/screenName");
     inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
-    inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
   };
   struct Daemon
   {
@@ -61,6 +60,8 @@ public:
   {
     inline static const auto Autohide = QStringLiteral("gui/autoHide");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
+    inline static const auto UpdateCheckUrl = QStringLiteral("gui/updateCheckUrl");
+    inline static const auto JoinPopularityContest = QStringLiteral("gui/joinPopularityContest");
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
@@ -169,7 +170,6 @@ private:
     , Settings::Core::ProcessMode
     , Settings::Core::ScreenName
     , Settings::Core::StartedBefore
-    , Settings::Core::UpdateUrl
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile
@@ -178,6 +178,8 @@ private:
     , Settings::Log::ToFile
     , Settings::Gui::Autohide
     , Settings::Gui::AutoUpdateCheck
+    , Settings::Gui::UpdateCheckUrl
+    , Settings::Gui::JoinPopularityContest
     , Settings::Gui::CloseReminder
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded
