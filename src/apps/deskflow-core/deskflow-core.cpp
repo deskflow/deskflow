@@ -89,10 +89,10 @@ int main(int argc, char **argv)
 
   if (parser.serverMode()) {
     ServerApp app(&events, processName);
-    return app.run(argc, argv);
+    return app.run();
   } else if (parser.clientMode()) {
     ClientApp app(&events, processName);
-    return app.run(argc, argv);
+    return app.run();
   }
 
   return s_exitSuccess;
