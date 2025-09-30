@@ -33,7 +33,7 @@ int startStatic()
 
 int AppUtilUnix::run(int argc, char **argv)
 {
-  return app().runInner(argc, argv, &startStatic);
+  return app().runInner(&startStatic);
 }
 
 void AppUtilUnix::startNode()

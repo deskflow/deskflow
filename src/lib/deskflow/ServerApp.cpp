@@ -609,7 +609,7 @@ void ServerApp::resetServer()
   startServer();
 }
 
-int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
+int ServerApp::runInner(StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;

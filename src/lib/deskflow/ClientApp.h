@@ -43,7 +43,7 @@ public:
     return false;
   }
   int start() override;
-  int runInner(int argc, char **argv, StartupFunc startup) override;
+  int runInner(StartupFunc startup) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
   void startNode() override;
