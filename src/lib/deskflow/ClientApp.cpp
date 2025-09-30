@@ -365,7 +365,7 @@ int ClientApp::start()
   return mainLoop();
 }
 
-int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
+int ClientApp::runInner(StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
