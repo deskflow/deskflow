@@ -26,7 +26,7 @@ AppUtilUnix::AppUtilUnix(const IEventQueue *)
   // do nothing
 }
 
-int startStatic(int argc, char **argv)
+int startStatic()
 {
   return AppUtil::instance().app().start();
 }
