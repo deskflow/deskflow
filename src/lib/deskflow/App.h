@@ -75,9 +75,8 @@ public:
     return m_appUtil;
   }
 
-  int run(int argc, char **argv);
+  int run();
   int daemonMainLoop(int, const char **);
-
   void setupFileLogging();
   void loggingFilterWarning() const;
   void initApp() override;

@@ -31,7 +31,7 @@ int startStatic()
   return AppUtil::instance().app().start();
 }
 
-int AppUtilUnix::run(int argc, char **argv)
+int AppUtilUnix::run()
 {
   return app().runInner(&startStatic);
 }

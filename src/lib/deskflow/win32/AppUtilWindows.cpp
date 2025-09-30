@@ -102,7 +102,7 @@ static int foregroundStartupStatic(int argc, char **argv)
   return AppUtil::instance().app().start();
 }
 
-int AppUtilWindows::run(int argc, char **argv)
+int AppUtilWindows::run()
 {
   if (!IsWindowsXPSP3OrGreater()) {
     throw std::runtime_error("unsupported os version, xp sp3 or greater required");
@@ -121,7 +121,7 @@ int AppUtilWindows::run(int argc, char **argv)
     startup = &foregroundStartupStatic;
   }
 
-  return app().runInner(argc, argv, startup);
+  return app().runInner(startup);
 }
 
 AppUtilWindows &AppUtilWindows::instance()

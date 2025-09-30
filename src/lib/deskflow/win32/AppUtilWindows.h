@@ -36,7 +36,7 @@ public:
 
   int daemonNTStartup();
   int daemonNTMainLoop();
-  int run(int argc, char **argv) override;
+  int run() override;
   void exitApp(int code) override;
   void startNode() override;
   std::vector<std::string> getKeyboardLayoutList() override;

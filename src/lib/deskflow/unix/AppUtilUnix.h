@@ -19,7 +19,7 @@ public:
   explicit AppUtilUnix(const IEventQueue *);
   ~AppUtilUnix() override = default;
 
-  int run(int argc, char **argv) override;
+  int run() override;
   void startNode() override;
   std::vector<std::string> getKeyboardLayoutList() override;
   std::string getCurrentLanguageCode() override;
