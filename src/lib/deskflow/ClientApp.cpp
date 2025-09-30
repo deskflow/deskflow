@@ -359,7 +359,7 @@ static int daemonMainLoopStatic(int argc, const char **argv)
   return ClientApp::instance().daemonMainLoop(argc, argv);
 }
 
-int ClientApp::start(int argc, char **argv)
+int ClientApp::start()
 {
   initApp();
   return mainLoop();

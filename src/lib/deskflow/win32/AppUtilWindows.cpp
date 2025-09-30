@@ -99,7 +99,7 @@ static int daemonNTStartupStatic(int argc, char **argv)
 
 static int foregroundStartupStatic(int argc, char **argv)
 {
-  return AppUtil::instance().app().start(argc, argv);
+  return AppUtil::instance().app().start();
 }
 
 int AppUtilWindows::run(int argc, char **argv)
