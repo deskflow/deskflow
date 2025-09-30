@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"classOSXClipboardAnyBitmapConverter.html":[6,0,172],
+"classOSXClipboardAnyBitmapConverter.html#a03fca3cb8e44fc73c2317bc4d83e7e3b":[6,0,172,6],
 "classOSXClipboardAnyBitmapConverter.html#a0a95b008355d70c80ecc6c66ec57b3ab":[6,0,172,0],
 "classOSXClipboardAnyBitmapConverter.html#a2bc56b1dbd1b13397cc788c29b60c5ed":[6,0,172,3],
 "classOSXClipboardAnyBitmapConverter.html#a2f616e62a38856d25973878c712ffe53":[6,0,172,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "classPriorityQueue.html":[6,0,188],
 "classPriorityQueue.html#a2e331d8b71e8b59fc565ec31f2694c3d":[6,0,188,19],
 "classPriorityQueue.html#a45750406820a70eb4fed0138f9ac9be7":[6,0,188,14],
-"classPriorityQueue.html#a4cfe23172d15aa3f99081387dde511a9":[6,0,188,3],
-"classPriorityQueue.html#a573bf5d25bdaa79dd5612cd272f96e39":[6,0,188,15],
-"classPriorityQueue.html#a5bafced7aaea079a6df66c54068fa5f6":[6,0,188,2]
+"classPriorityQueue.html#a4cfe23172d15aa3f99081387dde511a9":[6,0,188,3]
 };

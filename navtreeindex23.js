@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa3a542765a6211cbe16fdf6722655963":[5,0,0,22,48],
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a":[5,0,0,22,2],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aafcedfec63fc7f07f162450b4955ebdc":[5,0,0,22,36],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab0376836c1f8904ca702481e63f756d8":[5,0,0,22,8],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121":[5,0,0,22,55],
@@ -97,10 +99,14 @@ var NAVTREEINDEX23 =
 "namespacedeskflow_1_1gui_1_1messages.html#aefd2a689c47cf3fefb5d844fd8ed327f":[5,0,0,3,3,8],
 "namespacedeskflow_1_1languages.html":[5,0,0,4],
 "namespacedeskflow_1_1platform.html":[5,0,0,5],
-"namespacedeskflow_1_1platform.html#a00a431493279983eca2a9b202da18fa7":[5,0,0,5,2],
-"namespacedeskflow_1_1platform.html#a2c3ffe35a1ea3e8f4eea5919ce3c5a27":[5,0,0,5,4],
-"namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362":[5,0,0,5,1],
-"namespacedeskflow_1_1platform.html#aa96efd2752debf66210108f912520ea0":[5,0,0,5,3],
+"namespacedeskflow_1_1platform.html#a00a431493279983eca2a9b202da18fa7":[5,0,0,5,6],
+"namespacedeskflow_1_1platform.html#a0fd9248045d0ead223bf07e1fbcaae19":[5,0,0,5,2],
+"namespacedeskflow_1_1platform.html#a2c3ffe35a1ea3e8f4eea5919ce3c5a27":[5,0,0,5,8],
+"namespacedeskflow_1_1platform.html#a44b5e5c25e3dd828bd40bca3b58d9fb8":[5,0,0,5,3],
+"namespacedeskflow_1_1platform.html#a64afaecdaaca4e078c86ef30093d746e":[5,0,0,5,5],
+"namespacedeskflow_1_1platform.html#a6cc5995e010e4add146caf44c544d362":[5,0,0,5,4],
+"namespacedeskflow_1_1platform.html#aa96efd2752debf66210108f912520ea0":[5,0,0,5,7],
+"namespacedeskflow_1_1platform.html#ae8bad1da1154bae1eac87184d3e13eeb":[5,0,0,5,1],
 "namespacedeskflow_1_1server.html":[5,0,0,6],
 "namespacedeskflow_1_1server.html#a0386497f2a0ceae5d8f0895f172cd49d":[5,0,0,6,3],
 "namespacedeskflow_1_1server.html#a22056a718b59607a46ff33f10f1d6f6d":[5,0,0,6,4],
@@ -243,11 +249,5 @@ var NAVTREEINDEX23 =
 "structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,138,1],
 "structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,138,0],
 "structKeyNameMapEntry.html":[6,0,139],
-"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e":[6,0,139,1],
-"structKeyNameMapEntry.html#ad73cf6b1ded24dbc17ff9d24f331bacc":[6,0,139,0],
-"structKeyState_1_1AddActiveModifierContext.html":[6,0,142,0],
-"structKeyState_1_1AddActiveModifierContext.html#a2a14649169b1ad6d69a75e978a3026e3":[6,0,142,0,1],
-"structKeyState_1_1AddActiveModifierContext.html#a58a84fd4d96b220c586fb469110e8cc2":[6,0,142,0,2],
-"structKeyState_1_1AddActiveModifierContext.html#a590cb1c49c6269c1cf1f7975e6b11505":[6,0,142,0,3],
-"structKeyState_1_1AddActiveModifierContext.html#a5c424f098c8c85fca4e5a05a196d3f7c":[6,0,142,0,0]
+"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e":[6,0,139,1]
 };
