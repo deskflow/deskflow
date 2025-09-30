@@ -20,7 +20,7 @@ implement this interface.
 class IArchDaemon
 {
 public:
-  using DaemonFunc = std::function<int(int, const char **)>;
+  using DaemonFunc = std::function<int()>;
 
   virtual ~IArchDaemon() = default;
   //! @name manipulators

@@ -53,7 +53,7 @@ int ArchDaemonUnix::daemonize(const QString &name, DaemonFunc const &func)
   if (alreadyDaemonized()) {
     auto t = name.toStdString();
     const char *n = t.c_str();
-    return func(1, &n);
+    return func();
   }
 #endif
 
@@ -111,5 +111,5 @@ int ArchDaemonUnix::daemonize(const QString &name, DaemonFunc const &func)
 
   auto t = name.toStdString();
   const char *n = t.c_str();
-  return func(1, &n);
+  return func();
 }

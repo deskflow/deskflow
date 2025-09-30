@@ -97,7 +97,7 @@ static int daemonNTStartupStatic()
   return AppUtilWindows::instance().daemonNTStartup();
 }
 
-static int foregroundStartupStatic(int argc, char **argv)
+static int foregroundStartupStatic()
 {
   return AppUtil::instance().app().start();
 }
