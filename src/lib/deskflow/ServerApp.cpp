@@ -616,15 +616,15 @@ int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
   m_config = std::make_shared<Config>(getEvents());
 
   // run
-  int result = startup(argc, argv);
+  int result = startup();
 
   delete m_deskflowAddress;
   return result;
 }
 
-int daemonMainLoopStatic(int argc, const char **argv)
+int daemonMainLoopStatic()
 {
-  return ServerApp::instance().daemonMainLoop(argc, argv);
+  return ServerApp::instance().daemonMainLoop(0, nullptr);
 }
 
 int ServerApp::start()

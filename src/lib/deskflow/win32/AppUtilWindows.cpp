@@ -60,7 +60,7 @@ static int mainLoopStatic()
   return AppUtil::instance().app().mainLoop();
 }
 
-int AppUtilWindows::daemonNTMainLoop(int argc, const char **argv)
+int AppUtilWindows::daemonNTMainLoop()
 {
   app().initApp();
 
@@ -80,21 +80,21 @@ void AppUtilWindows::exitApp(int code)
   }
 }
 
-int daemonNTMainLoopStatic(int argc, const char **argv)
+int daemonNTMainLoopStatic()
 {
-  return AppUtilWindows::instance().daemonNTMainLoop(argc, argv);
+  return AppUtilWindows::instance().daemonNTMainLoop();
 }
 
-int AppUtilWindows::daemonNTStartup(int, char **)
+int AppUtilWindows::daemonNTStartup()
 {
   SystemLogger sysLogger(app().daemonName(), false);
   m_exitMode = kExitModeDaemon;
   return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
 }
 
-static int daemonNTStartupStatic(int argc, char **argv)
+static int daemonNTStartupStatic()
 {
-  return AppUtilWindows::instance().daemonNTStartup(argc, argv);
+  return AppUtilWindows::instance().daemonNTStartup();
 }
 
 static int foregroundStartupStatic(int argc, char **argv)

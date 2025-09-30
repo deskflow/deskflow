@@ -34,8 +34,8 @@ public:
 
   static AppUtilWindows &instance();
 
-  int daemonNTStartup(int, char **);
-  int daemonNTMainLoop(int argc, const char **argv);
+  int daemonNTStartup();
+  int daemonNTMainLoop();
   int run(int argc, char **argv) override;
   void exitApp(int code) override;
   void startNode() override;

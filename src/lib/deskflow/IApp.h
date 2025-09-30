@@ -8,7 +8,7 @@
 
 #pragma once
 
-using StartupFunc = int (*)(int, char **);
+using StartupFunc = int (*)();
 
 namespace deskflow {
 class Screen;
