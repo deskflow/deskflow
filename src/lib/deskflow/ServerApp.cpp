@@ -627,7 +627,7 @@ int daemonMainLoopStatic(int argc, const char **argv)
   return ServerApp::instance().daemonMainLoop(argc, argv);
 }
 
-int ServerApp::start(int argc, char **argv)
+int ServerApp::start()
 {
   initApp();
   return mainLoop();
