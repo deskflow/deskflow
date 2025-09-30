@@ -79,11 +79,8 @@ public:
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
   void loggingFilterWarning() const;
-  void initApp(int argc, const char **argv) override;
-  void initApp(int argc, char **argv)
-  {
-    initApp(argc, (const char **)argv);
-  }
+  void initApp() override;
+
   void setEvents(EventQueue &events)
   {
     m_events = &events;

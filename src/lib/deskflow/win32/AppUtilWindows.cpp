@@ -62,7 +62,7 @@ static int mainLoopStatic()
 
 int AppUtilWindows::daemonNTMainLoop(int argc, const char **argv)
 {
-  app().initApp(argc, argv);
+  app().initApp();
 
   return ArchMiscWindows::runDaemon(mainLoopStatic);
 }

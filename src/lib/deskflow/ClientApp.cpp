@@ -361,7 +361,7 @@ static int daemonMainLoopStatic(int argc, const char **argv)
 
 int ClientApp::start(int argc, char **argv)
 {
-  initApp(argc, argv);
+  initApp();
   return mainLoop();
 }
 
