@@ -18,7 +18,7 @@ int ArchDaemonNone::daemonize(const QString &name, DaemonFunc const &func)
   // do any daemonizing.
   auto t = name.toStdString();
   const char *n = t.c_str();
-  return func(1, &n);
+  return func();
 }
 
 QString ArchDaemonNone::commandLine() const
