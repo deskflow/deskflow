@@ -193,3 +193,5 @@ if(APPLE)
   find_library(COCOA_LIBRARY Cocoa)
   target_link_libraries(platform ${COCOA_LIBRARY})
 endif()
+
+target_sources(platform PRIVATE linux/portal/ClipboardPortal.cpp)

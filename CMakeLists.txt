@@ -193,3 +193,5 @@ option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()
+
+find_package(Qt6 6.7 REQUIRED COMPONENTS DBus)

@@ -1,3 +1,4 @@
+#include "linux/portal/ClipboardPortal.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
