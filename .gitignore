@@ -42,3 +42,7 @@ CMakeFiles/*
 
 # scripts folder
 /scripts
+
+# local freedesktop deps (do not commit)
+/libei/
+/libportal/
