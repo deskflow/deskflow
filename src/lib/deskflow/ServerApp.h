@@ -62,7 +62,7 @@ public:
   bool loadConfig(const std::string &pathname) override;
   deskflow::Screen *createScreen() override;
   int mainLoop() override;
-  int runInner(int argc, char **argv, StartupFunc startup) override;
+  int runInner(StartupFunc startup) override;
   int start() override;
   void startNode() override;
 
