@@ -19,14 +19,14 @@ ClipboardPortal::ClipboardPortal(const QDBusObjectPath& session, QObject* parent
     [this](const QVariantMap &m){
       const QStringList list = m.value("mime_types").toStringList();
       const bool owner = m.value("session_is_owner").toBool();
-      emit selectionOwnerChanged(list, owner);
+      Q_EMIT selectionOwnerChanged(list, owner);
     });
 
   QDBusConnection::sessionBus().connect(
     kBus, kPath, kIface, "SelectionTransfer",
     this,
     [this](const QString &mime, uint32_t serial){
-      emit selectionTransfer(mime, serial);
+      Q_EMIT selectionTransfer(mime, serial);
     });
 }
 

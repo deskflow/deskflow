@@ -15,7 +15,7 @@ public:
   QDBusUnixFileDescriptor selectionWrite(uint32_t serial);
   void selectionWriteDone(uint32_t serial, bool success);
 
-signals:
+Q_SIGNALS:
   void selectionOwnerChanged(QStringList mimeTypes, bool sessionIsOwner);
   void selectionTransfer(QString mimeType, uint32_t serial);
 
