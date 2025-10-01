@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
+"ServerConnection_8h.html":[7,0,1,1,5,1,7],
+"ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
 "ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
 "ServerMessage_8h.html":[7,0,1,1,5,1,9],
 "ServerMessage_8h_source.html":[7,0,1,1,5,1,9],
@@ -36,10 +39,10 @@ var NAVTREEINDEX5 =
 "StreamBuffer_8cpp.html":[7,0,1,1,6,5],
 "StreamBuffer_8h.html":[7,0,1,1,6,6],
 "StreamBuffer_8h_source.html":[7,0,1,1,6,6],
-"StreamChunker_8cpp.html":[7,0,1,1,4,62],
-"StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,62,0],
-"StreamChunker_8h.html":[7,0,1,1,4,63],
-"StreamChunker_8h_source.html":[7,0,1,1,4,63],
+"StreamChunker_8cpp.html":[7,0,1,1,4,60],
+"StreamChunker_8cpp.html#a28ecf7b369e37cba9023d9594d1cfbed":[7,0,1,1,4,60,0],
+"StreamChunker_8h.html":[7,0,1,1,4,61],
+"StreamChunker_8h_source.html":[7,0,1,1,4,61],
 "StreamFilter_8cpp.html":[7,0,1,1,6,7],
 "StreamFilter_8h.html":[7,0,1,1,6,8],
 "StreamFilter_8h_source.html":[7,0,1,1,6,8],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "classAction.html#a73c42ca584c76fc84ab95f260b7a30c3aef6c5fbb63e58b95c09d30a6c2de5b02":[6,0,4,2,1],
 "classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[6,0,4,16],
 "classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[6,0,4,25],
-"classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22],
-"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27],
-"classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79":[6,0,4,9],
-"classAction.html#a8cadcfee2828374b55277314eb841ed9":[6,0,4,20]
+"classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22]
 };

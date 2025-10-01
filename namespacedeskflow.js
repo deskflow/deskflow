@@ -10,7 +10,6 @@ var namespacedeskflow =
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],
     [ "server", "namespacedeskflow_1_1server.html", "namespacedeskflow_1_1server" ],
     [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
-    [ "Config", "classdeskflow_1_1Config.html", "classdeskflow_1_1Config" ],
     [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
     [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
     [ "EiScreen", "classdeskflow_1_1EiScreen.html", "classdeskflow_1_1EiScreen" ],

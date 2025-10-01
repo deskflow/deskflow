@@ -60,7 +60,6 @@ var hierarchy =
       [ "CondVar< bool >", "classCondVar.html", null ],
       [ "CondVar< T >", "classCondVar.html", null ]
     ] ],
-    [ "deskflow::Config", "classdeskflow_1_1Config.html", null ],
     [ "deskflow::server::Config", "classdeskflow_1_1server_1_1Config.html", null ],
     [ "deskflow::server::ConfigReadContext", "classdeskflow_1_1server_1_1ConfigReadContext.html", null ],
     [ "IDataSocket::ConnectionFailedInfo", "classIDataSocket_1_1ConnectionFailedInfo.html", null ],
@@ -447,9 +446,7 @@ var hierarchy =
         ] ],
         [ "deskflow::server::ServerConfigReadException", "classdeskflow_1_1server_1_1ServerConfigReadException.html", null ]
       ] ],
-      [ "DisplayInvalidException", "classDisplayInvalidException.html", null ],
-      [ "deskflow::Config::NoConfigFilenameError", "classdeskflow_1_1Config_1_1NoConfigFilenameError.html", null ],
-      [ "deskflow::Config::ParseError", "classdeskflow_1_1Config_1_1ParseError.html", null ]
+      [ "DisplayInvalidException", "classDisplayInvalidException.html", null ]
     ] ],
     [ "ScreenConfig", "classScreenConfig.html", [
       [ "Screen", "classScreen.html", null ],

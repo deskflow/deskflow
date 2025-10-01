@@ -68,7 +68,7 @@ var searchData=
   ['condition_65',['Condition',['../classInputFilter_1_1Condition.html#a67de710f5c2fd30fba5c795267c9ff28',1,'InputFilter::Condition']]],
   ['condvar_66',['CondVar',['../classCondVar.html#afe48fe5b3a5b2c8ff1ce2674a2ca1639',1,'CondVar::CondVar(Mutex *mutex, const T &amp;value)'],['../classCondVar.html#ad13f0cfb9695e38f57a42381bae8000a',1,'CondVar::CondVar(const CondVar &amp;)']]],
   ['condvarbase_67',['CondVarBase',['../classCondVarBase.html#a96d56b48ac2917cb841432d27f8ca803',1,'CondVarBase']]],
-  ['config_68',['Config',['../classdeskflow_1_1Config.html#afe71cc3c19bcf43a3714e42d959adb32',1,'deskflow::Config::Config()'],['../classdeskflow_1_1server_1_1Config.html#ad6a5177e22cb3570994b7b686bf36b33',1,'deskflow::server::Config::Config()']]],
+  ['config_68',['Config',['../classdeskflow_1_1server_1_1Config.html#ad6a5177e22cb3570994b7b686bf36b33',1,'deskflow::server::Config']]],
   ['configfile_69',['configFile',['../classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68',1,'ServerConfig']]],
   ['configreadcontext_70',['ConfigReadContext',['../classdeskflow_1_1server_1_1ConfigReadContext.html#a897709a97dc5bbb323591d9fb3ad263a',1,'deskflow::server::ConfigReadContext']]],
   ['configsection_71',['configSection',['../classApp.html#a6951a25cab46358ed52e5ff97d3bd0c4',1,'App::configSection()'],['../classClientApp.html#a0371b0c2b3af2dd47b3a761d4f54dc57',1,'ClientApp::configSection()'],['../classServerApp.html#a25ed6657950da895e5c51e2ec0e148d8',1,'ServerApp::configSection()']]],

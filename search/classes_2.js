@@ -34,7 +34,7 @@ var searchData=
   ['condvar_31',['CondVar',['../classCondVar.html',1,'']]],
   ['condvar_3c_20bool_20_3e_32',['CondVar&lt; bool &gt;',['../classCondVar.html',1,'']]],
   ['condvarbase_33',['CondVarBase',['../classCondVarBase.html',1,'']]],
-  ['config_34',['Config',['../classdeskflow_1_1Config.html',1,'deskflow::Config'],['../classdeskflow_1_1server_1_1Config.html',1,'deskflow::server::Config']]],
+  ['config_34',['Config',['../classdeskflow_1_1server_1_1Config.html',1,'deskflow::server']]],
   ['configreadcontext_35',['ConfigReadContext',['../classdeskflow_1_1server_1_1ConfigReadContext.html',1,'deskflow::server']]],
   ['connectionfailedinfo_36',['ConnectionFailedInfo',['../classIDataSocket_1_1ConnectionFailedInfo.html',1,'IDataSocket']]],
   ['consolelogoutputter_37',['ConsoleLogOutputter',['../classConsoleLogOutputter.html',1,'']]],

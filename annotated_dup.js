@@ -42,7 +42,6 @@ var annotated_dup =
       [ "string", "namespacedeskflow_1_1string.html", [
         [ "CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", "classdeskflow_1_1string_1_1CaselessCmp" ]
       ] ],
-      [ "Config", "classdeskflow_1_1Config.html", "classdeskflow_1_1Config" ],
       [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
       [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
       [ "EiScreen", "classdeskflow_1_1EiScreen.html", "classdeskflow_1_1EiScreen" ],

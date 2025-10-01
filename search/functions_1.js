@@ -76,12 +76,10 @@ var searchData=
   ['archnetworkbsd_73',['ArchNetworkBSD',['../classArchNetworkBSD.html#a365423023cf159c0373b6864406244cb',1,'ArchNetworkBSD::ArchNetworkBSD(std::shared_ptr&lt; Deps &gt; deps=std::make_shared&lt; Deps &gt;())'],['../classArchNetworkBSD.html#ab5769aa8c185dfccbb7e58b4d1dfb709',1,'ArchNetworkBSD::ArchNetworkBSD(ArchNetworkBSD const &amp;)=delete'],['../classArchNetworkBSD.html#a0b7e77f82ef7c64464b7696e1bbe5f7c',1,'ArchNetworkBSD::ArchNetworkBSD(ArchNetworkBSD &amp;&amp;)=delete']]],
   ['archnetworkwinsock_74',['ArchNetworkWinsock',['../classArchNetworkWinsock.html#ade569f4d7712dc6cb02d4a866a769afb',1,'ArchNetworkWinsock']]],
   ['archthreadimpl_75',['ArchThreadImpl',['../classArchThreadImpl.html#a27d30fcd7174707acacfa7bc64c29830',1,'ArchThreadImpl::ArchThreadImpl()=default'],['../classArchThreadImpl.html#a6bcfaf73a23d8de6240672f07c48d689',1,'ArchThreadImpl::ArchThreadImpl()']]],
-  ['argc_76',['argc',['../classdeskflow_1_1Config.html#a23cb6d44d089199adfb0e904b6ca3ab9',1,'deskflow::Config']]],
-  ['argv_77',['argv',['../classdeskflow_1_1Config.html#a37f373ff765beeb13e19d1a910495b6b',1,'deskflow::Config']]],
-  ['assemble_78',['assemble',['../classClipboardChunk.html#aeac1042cc7887f085ad51f79fb126ea3',1,'ClipboardChunk']]],
-  ['atomstostring_79',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
-  ['atomtostring_80',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
-  ['autoaddscreen_81',['autoAddScreen',['../classServerConfig.html#a6b2256af3656e1f99ee0904a39c1fe20',1,'ServerConfig::autoAddScreen()'],['../classMainWindow.html#ad6b0c960b64b7094fbfd5ce7d2589e90',1,'MainWindow::autoAddScreen()']]],
-  ['avoidhesitatingcursor_82',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
-  ['avoidsupression_83',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
+  ['assemble_76',['assemble',['../classClipboardChunk.html#aeac1042cc7887f085ad51f79fb126ea3',1,'ClipboardChunk']]],
+  ['atomstostring_77',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
+  ['atomtostring_78',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
+  ['autoaddscreen_79',['autoAddScreen',['../classServerConfig.html#a6b2256af3656e1f99ee0904a39c1fe20',1,'ServerConfig::autoAddScreen()'],['../classMainWindow.html#ad6b0c960b64b7094fbfd5ce7d2589e90',1,'MainWindow::autoAddScreen()']]],
+  ['avoidhesitatingcursor_80',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
+  ['avoidsupression_81',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
 ];

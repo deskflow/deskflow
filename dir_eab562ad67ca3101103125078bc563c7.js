@@ -17,8 +17,6 @@ var dir_eab562ad67ca3101103125078bc563c7 =
     [ "ClipboardChunk.cpp", "ClipboardChunk_8cpp.html", null ],
     [ "ClipboardChunk.h", "ClipboardChunk_8h.html", "ClipboardChunk_8h" ],
     [ "ClipboardTypes.h", "ClipboardTypes_8h.html", "ClipboardTypes_8h" ],
-    [ "Config.cpp", "deskflow_2Config_8cpp.html", null ],
-    [ "Config.h", "deskflow_2Config_8h.html", "deskflow_2Config_8h" ],
     [ "CoreArgParser.cpp", "CoreArgParser_8cpp.html", null ],
     [ "CoreArgParser.h", "CoreArgParser_8h.html", "CoreArgParser_8h" ],
     [ "CoreArgs.h", "CoreArgs_8h.html", "CoreArgs_8h" ],

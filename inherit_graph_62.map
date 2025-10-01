@@ -1,3 +1,11 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$structIArchNetwork_1_1PollEventMask.html" title="Events for poll()" alt="" coords="5,5,201,30"/>
+<area shape="rect" id="Node000000" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="5,80,86,105"/>
+<area shape="rect" id="Node000001" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="171,5,247,30"/>
+<area shape="poly" id="edge26_Node000000_Node000001" title=" " alt="" coords="79,69,133,41,169,26,171,31,135,45,81,74"/>
+<area shape="rect" id="Node000002" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="134,55,284,79"/>
+<area shape="poly" id="edge27_Node000000_Node000002" title=" " alt="" coords="101,81,133,76,134,81,102,86"/>
+<area shape="rect" id="Node000003" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="157,104,260,129"/>
+<area shape="poly" id="edge28_Node000000_Node000003" title=" " alt="" coords="101,98,157,106,157,111,100,103"/>
+<area shape="rect" id="Node000004" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="139,153,278,178"/>
+<area shape="poly" id="edge29_Node000000_Node000004" title=" " alt="" coords="82,110,135,138,167,150,165,155,133,143,79,115"/>
 </map>

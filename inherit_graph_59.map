@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classIArchMultithread.html" title="Interface for architecture dependent multithreading." alt="" coords="5,31,122,55"/>
-<area shape="rect" id="Node000001" href="$classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="180,5,326,30"/>
-<area shape="poly" id="edge22_Node000000_Node000001" title=" " alt="" coords="136,31,179,25,180,30,137,36"/>
-<area shape="rect" id="Node000002" href="$classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="170,55,336,79"/>
-<area shape="poly" id="edge23_Node000000_Node000002" title=" " alt="" coords="137,50,169,54,169,59,137,55"/>
+<area shape="rect" id="Node000000" href="$classIArchNetwork.html" title="Interface for architecture dependent networking." alt="" coords="5,31,107,55"/>
+<area shape="rect" id="Node000001" href="$classArchNetworkBSD.html" title="Berkeley (BSD) sockets implementation of IArchNetwork." alt="" coords="166,5,292,30"/>
+<area shape="poly" id="edge24_Node000000_Node000001" title=" " alt="" coords="121,31,166,24,166,29,122,36"/>
+<area shape="rect" id="Node000002" href="$classArchNetworkWinsock.html" title="Win32 implementation of IArchNetwork." alt="" coords="155,55,303,79"/>
+<area shape="poly" id="edge25_Node000000_Node000002" title=" " alt="" coords="122,49,154,54,154,59,122,55"/>
 </map>

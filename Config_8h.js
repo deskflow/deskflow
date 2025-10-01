@@ -1,4 +1,4 @@
-var server_2Config_8h =
+var Config_8h =
 [
     [ "std::iterator_traits< deskflow::server::Config >", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4" ],
     [ "deskflow::server::Config", "classdeskflow_1_1server_1_1Config.html", "classdeskflow_1_1server_1_1Config" ],
