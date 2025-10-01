@@ -609,27 +609,27 @@ void ServerApp::resetServer()
   startServer();
 }
 
-int ServerApp::runInner(int argc, char **argv, StartupFunc startup)
+int ServerApp::runInner(StartupFunc startup)
 {
   // general initialization
   m_deskflowAddress = new NetworkAddress;
   m_config = std::make_shared<Config>(getEvents());
 
   // run
-  int result = startup(argc, argv);
+  int result = startup();
 
   delete m_deskflowAddress;
   return result;
 }
 
-int daemonMainLoopStatic(int argc, const char **argv)
+int daemonMainLoopStatic()
 {
-  return ServerApp::instance().daemonMainLoop(argc, argv);
+  return ServerApp::instance().daemonMainLoop(0, nullptr);
 }
 
-int ServerApp::start(int argc, char **argv)
+int ServerApp::start()
 {
-  initApp(argc, argv);
+  initApp();
   return mainLoop();
 }
 

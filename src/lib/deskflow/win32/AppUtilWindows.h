@@ -34,9 +34,9 @@ public:
 
   static AppUtilWindows &instance();
 
-  int daemonNTStartup(int, char **);
-  int daemonNTMainLoop(int argc, const char **argv);
-  int run(int argc, char **argv) override;
+  int daemonNTStartup();
+  int daemonNTMainLoop();
+  int run() override;
   void exitApp(int code) override;
   void startNode() override;
   std::vector<std::string> getKeyboardLayoutList() override;

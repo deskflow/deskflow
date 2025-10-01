@@ -138,7 +138,7 @@ void DaemonApp::run(QThread &daemonThread)
       mainLoop();
     } else {
       LOG_DEBUG("running daemon in background (daemonizing)");
-      ARCH->daemonize(kAppName, [this](int, const char **) { return daemonLoop(); });
+      ARCH->daemonize(kAppName, [this] { return daemonLoop(); });
     }
 
     daemonThread.quit();

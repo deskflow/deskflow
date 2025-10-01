@@ -26,14 +26,14 @@ AppUtilUnix::AppUtilUnix(const IEventQueue *)
   // do nothing
 }
 
-int startStatic(int argc, char **argv)
+int startStatic()
 {
-  return AppUtil::instance().app().start(argc, argv);
+  return AppUtil::instance().app().start();
 }
 
-int AppUtilUnix::run(int argc, char **argv)
+int AppUtilUnix::run()
 {
-  return app().runInner(argc, argv, &startStatic);
+  return app().runInner(&startStatic);
 }
 
 void AppUtilUnix::startNode()

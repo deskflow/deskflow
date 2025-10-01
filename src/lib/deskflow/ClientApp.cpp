@@ -354,18 +354,18 @@ int ClientApp::mainLoop()
   return s_exitSuccess;
 }
 
-static int daemonMainLoopStatic(int argc, const char **argv)
+static int daemonMainLoopStatic()
 {
-  return ClientApp::instance().daemonMainLoop(argc, argv);
+  return ClientApp::instance().daemonMainLoop(0, nullptr);
 }
 
-int ClientApp::start(int argc, char **argv)
+int ClientApp::start()
 {
-  initApp(argc, argv);
+  initApp();
   return mainLoop();
 }
 
-int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
+int ClientApp::runInner(StartupFunc startup)
 {
   // general initialization
   m_serverAddress = new NetworkAddress;
@@ -373,7 +373,7 @@ int ClientApp::runInner(int argc, char **argv, StartupFunc startup)
   int result;
   try {
     // run
-    result = startup(argc, argv);
+    result = startup();
   } catch (...) {
     delete m_serverAddress;
 
