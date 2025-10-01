@@ -127,12 +127,16 @@ elseif(UNIX)
 
   if(LIBEI_FOUND)
     list(APPEND PLATFORM_SOURCES
+      EiClipboard.cpp
+      EiClipboard.h
       EiEventQueueBuffer.cpp
       EiEventQueueBuffer.h
       EiKeyState.cpp
       EiKeyState.h
       EiScreen.cpp
       EiScreen.h
+      WaylandClipboard.cpp
+      WaylandClipboard.h
     )
     # The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
