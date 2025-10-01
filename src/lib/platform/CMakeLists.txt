@@ -156,7 +156,6 @@ add_library(platform STATIC ${PLATFORM_SOURCES} Wayland.h)
 target_link_libraries(platform client ${libs} Qt6::DBus)
 
 macro(link_wayland_libs)
-  target_compile_definitions(platform PUBLIC WINAPI_LIBEI  HAVE_LIBPORTAL_INPUTCAPTURE)
 
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
                         ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
