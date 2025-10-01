@@ -1,3 +1,4 @@
+#include "common/Settings.h" // must include first
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
@@ -5,8 +6,6 @@
  */
 
 #include "DotEnv.h"
-
-#include "common/Settings.h"
 
 #include <QCoreApplication>
 #include <QDebug>

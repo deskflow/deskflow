@@ -1,3 +1,4 @@
+#include "common/Settings.h" // must include first
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
@@ -7,7 +8,6 @@
 #include "VersionChecker.h"
 
 #include "VersionInfo.h"
-#include "common/Settings.h"
 
 #include <QLocale>
 #include <QNetworkAccessManager>
