@@ -1,3 +1,4 @@
+#include "common/Settings.h" // must include first
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
@@ -10,7 +11,6 @@
 #include "Styles.h"
 #include "VersionInfo.h"
 
-#include "common/Settings.h"
 #include "common/UrlConstants.h"
 
 #include <QCheckBox>
