@@ -264,18 +264,19 @@ void Log::pop_front(bool alwaysAtHead)
   }
 }
 
-bool Log::setFilter(const char *maxPriority)
+bool Log::setFilter(const QString &maxPriority)
 {
-  if (maxPriority != nullptr) {
-    for (int i = 0; i < g_numPriority; ++i) {
-      if (strcmp(maxPriority, g_priority[i]) == 0) {
-        setFilter(static_cast<LogLevel>(i));
-        return true;
-      }
-    }
+  if (maxPriority.isEmpty()) {
     return false;
   }
-  return true;
+
+  for (int i = 0; i < g_numPriority; ++i) {
+    if (maxPriority == QString(g_priority[i])) {
+      setFilter(static_cast<LogLevel>(i));
+      return true;
+    }
+  }
+  return false;
 }
 
 void Log::setFilter(LogLevel maxPriority)

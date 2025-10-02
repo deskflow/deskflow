@@ -143,8 +143,11 @@ void App::initApp(int argc, const char **argv)
   parseArgs();
 
   // set log filter
-  if (const auto logLevel = qPrintable(Settings::logLevelText()); !CLOG->setFilter(logLevel)) {
-    LOG_CRIT("%s: unrecognized log level `%s'" BYE, qPrintable(processName()), logLevel, qPrintable(processName()));
+  if (const auto logLevel = Settings::logLevelText(); !CLOG->setFilter(logLevel)) {
+    LOG_CRIT(
+        "%s: unrecognized log level `%s'" BYE, qPrintable(processName()), qPrintable(logLevel),
+        qPrintable(processName())
+    );
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();

@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <QString>
+
 #include "arch/Arch.h"
 #include "arch/IArchMultithread.h"
 
@@ -83,7 +85,7 @@ public:
   true if the priority \c name was recognized;  if \c name is nullptr
   then it simply returns true.
   */
-  bool setFilter(const char *name);
+  bool setFilter(const QString &name);
 
   //! Set the minimum priority filter (by ordinal).
   void setFilter(LogLevel);
