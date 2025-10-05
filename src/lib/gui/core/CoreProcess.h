@@ -128,6 +128,7 @@ private:
   QString correctedAddress() const;
   QString requestDaemonLogPath();
   void persistLogDir() const;
+  static QString makeQuotedArgs(const QString &app, const QStringList &args);
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);

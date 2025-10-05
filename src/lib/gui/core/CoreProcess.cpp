@@ -77,7 +77,7 @@ QString processStateToString(CoreProcess::ProcessState state)
  * Can also be used to create a representation of a command that can be pasted
  * into a terminal.
  */
-QString makeQuotedArgs(const QString &app, const QStringList &args)
+QString CoreProcess::makeQuotedArgs(const QString &app, const QStringList &args)
 {
   QStringList command;
   command << app;
