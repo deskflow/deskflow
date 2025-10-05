@@ -79,20 +79,21 @@ QString processStateToString(CoreProcess::ProcessState state)
  */
 QString CoreProcess::makeQuotedArgs(const QString &app, const QStringList &args)
 {
-  QStringList command;
-  command << app;
-  command << args;
+  QStringList command = {app};
+  command.append(args);
 
+  static const auto quote = QStringLiteral("\"");
+  static const auto space = QStringLiteral(" ");
   QStringList quoted;
-  for (const auto &arg : std::as_const(command)) {
-    if (arg.contains(' ')) {
-      quoted << QString("\"%1\"").arg(arg);
-    } else {
-      quoted << arg;
+  for (const auto &item : std::as_const(command)) {
+    auto temp = item.simplified();
+    if (const auto wrapped = (temp.startsWith(quote) && temp.endsWith(quote)); temp.contains(space) && !wrapped) {
+      temp = QStringLiteral("%1%2%1").arg(quote, temp);
     }
+    quoted.append(temp);
   }
 
-  return quoted.join(" ");
+  return quoted.join(space);
 }
 
 /**
