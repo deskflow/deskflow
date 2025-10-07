@@ -89,7 +89,7 @@ int AppUtilWindows::daemonNTStartup()
 {
   SystemLogger sysLogger(app().daemonName(), false);
   m_exitMode = kExitModeDaemon;
-  return ARCH->daemonize(app().daemonName(), daemonNTMainLoopStatic);
+  return ARCH->daemonize(daemonNTMainLoopStatic);
 }
 
 static int daemonNTStartupStatic()

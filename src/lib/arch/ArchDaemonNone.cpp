@@ -12,12 +12,10 @@
 // ArchDaemonNone
 //
 
-int ArchDaemonNone::daemonize(const QString &name, DaemonFunc const &func)
+int ArchDaemonNone::daemonize(DaemonFunc const &func)
 {
   // simply forward the call to func.  obviously, this doesn't
   // do any daemonizing.
-  auto t = name.toStdString();
-  const char *n = t.c_str();
   return func();
 }
 

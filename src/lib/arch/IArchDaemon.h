@@ -53,7 +53,7 @@ public:
     \c ArchMiscWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
-  virtual int daemonize(const QString &name, DaemonFunc const &func) = 0;
+  virtual int daemonize(DaemonFunc const &func) = 0;
 
   //@}
 

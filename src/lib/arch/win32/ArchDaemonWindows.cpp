@@ -12,6 +12,7 @@
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
+#include "common/Constants.h"
 
 //
 // ArchDaemonWindows
@@ -52,7 +53,7 @@ void ArchDaemonWindows::daemonFailed(int result)
   throw ArchDaemonRunException(result);
 }
 
-int ArchDaemonWindows::daemonize(const QString &name, DaemonFunc const &func)
+int ArchDaemonWindows::daemonize(DaemonFunc const &func)
 {
   assert(name != nullptr);
   assert(func != nullptr);
@@ -62,7 +63,7 @@ int ArchDaemonWindows::daemonize(const QString &name, DaemonFunc const &func)
 
   // construct the service entry
   SERVICE_TABLE_ENTRY entry[2];
-  entry[0].lpServiceName = const_cast<wchar_t *>(name.toStdWString().c_str());
+  entry[0].lpServiceName = const_cast<wchar_t *>(QString(kAppName).toStdWString().c_str());
   entry[0].lpServiceProc = &ArchDaemonWindows::serviceMainEntry;
   entry[1].lpServiceName = nullptr;
   entry[1].lpServiceProc = nullptr;
