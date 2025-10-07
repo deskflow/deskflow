@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.64</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,8 +114,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aebe9467118266e13cb73b43bf3f0e680"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove an outputter from the list.  <br /></td></tr>
 <tr class="memitem:ab9af6b40d5af0231f01bd5288d7f8fe3" id="r_ab9af6b40d5af0231f01bd5288d7f8fe3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab9af6b40d5af0231f01bd5288d7f8fe3">pop_front</a> (bool alwaysAtHead=false)</td></tr>
 <tr class="memdesc:ab9af6b40d5af0231f01bd5288d7f8fe3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove the outputter from the head of the list.  <br /></td></tr>
-<tr class="memitem:a1fe958673083e5fa23690668d39a3553" id="r_a1fe958673083e5fa23690668d39a3553"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1fe958673083e5fa23690668d39a3553">setFilter</a> (const char *<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
-<tr class="memdesc:a1fe958673083e5fa23690668d39a3553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum priority filter.  <br /></td></tr>
+<tr class="memitem:ac5c6d2107bb051d5809a9a2d4445cd8c" id="r_ac5c6d2107bb051d5809a9a2d4445cd8c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5c6d2107bb051d5809a9a2d4445cd8c">setFilter</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>)</td></tr>
+<tr class="memdesc:ac5c6d2107bb051d5809a9a2d4445cd8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum priority filter.  <br /></td></tr>
 <tr class="memitem:a09384c18e959332a4c7cf3a12a827208" id="r_a09384c18e959332a4c7cf3a12a827208"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a09384c18e959332a4c7cf3a12a827208">setFilter</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>)</td></tr>
 <tr class="memdesc:a09384c18e959332a4c7cf3a12a827208"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimum priority filter (by ordinal).  <br /></td></tr>
 </table><table class="memberdecls">
@@ -515,8 +515,8 @@ accessors</h2></td></tr>
 
 </div>
 </div>
-<a id="a1fe958673083e5fa23690668d39a3553" name="a1fe958673083e5fa23690668d39a3553"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1fe958673083e5fa23690668d39a3553">&#9670;&#160;</a></span>setFilter() <span class="overload">[1/2]</span></h2>
+<a id="ac5c6d2107bb051d5809a9a2d4445cd8c" name="ac5c6d2107bb051d5809a9a2d4445cd8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5c6d2107bb051d5809a9a2d4445cd8c">&#9670;&#160;</a></span>setFilter() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -524,14 +524,14 @@ accessors</h2></td></tr>
         <tr>
           <td class="memname">bool Log::setFilter </td>
           <td>(</td>
-          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Set the minimum priority filter. </p>
-<p>Set the filter. Messages below this priority are discarded. The default priority is 4 (INFO) (unless built without NDEBUG in which case it's 5 (DEBUG)). <a class="el" href="#a1fe958673083e5fa23690668d39a3553" title="Set the minimum priority filter.">setFilter(const char*)</a> returns true if the priority <code>name</code> was recognized; if <code>name</code> is nullptr then it simply returns true. </p>
+<p>Set the filter. Messages below this priority are discarded. The default priority is 4 (INFO) (unless built without NDEBUG in which case it's 5 (DEBUG)). setFilter(const char*) returns true if the priority <code>name</code> was recognized; if <code>name</code> is nullptr then it simply returns true. </p>
 
 </div>
 </div>

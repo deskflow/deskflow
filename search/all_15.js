@@ -216,7 +216,7 @@ var searchData=
   ['seterror_213',['setError',['../Unicode_8cpp.html#ac6efb9c52a683d569e68f04fc64cd90b',1,'Unicode.cpp']]],
   ['setevents_214',['setEvents',['../classApp.html#acbc962ac1eea477e7cf22e97c1c04bed',1,'App']]],
   ['setfacade_215',['setFacade',['../classMSWindowsClipboard.html#ada89d0e664afdf37f71ccdc29fbaaa72',1,'MSWindowsClipboard']]],
-  ['setfilter_216',['setFilter',['../classLog.html#a1fe958673083e5fa23690668d39a3553',1,'Log::setFilter(const char *name)'],['../classLog.html#a09384c18e959332a4c7cf3a12a827208',1,'Log::setFilter(LogLevel)']]],
+  ['setfilter_216',['setFilter',['../classLog.html#ac5c6d2107bb051d5809a9a2d4445cd8c',1,'Log::setFilter(const QString &amp;name)'],['../classLog.html#a09384c18e959332a4c7cf3a12a827208',1,'Log::setFilter(LogLevel)']]],
   ['setfix_217',['setFix',['../classScreen.html#af3d2ed7bfdfd67e9ba76dde8e831df73',1,'Screen']]],
   ['setfloating_218',['setFloating',['../classLogDock.html#afc732c157993b0f116694ae2a020deb6',1,'LogDock']]],
   ['setforeground_219',['setForeground',['../classDaemonApp.html#a9760570352c929772dcd53a3acfff527',1,'DaemonApp']]],

@@ -16,6 +16,6 @@ var classLog =
     [ "pop_front", "classLog.html#ab9af6b40d5af0231f01bd5288d7f8fe3", null ],
     [ "print", "classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf", null ],
     [ "remove", "classLog.html#aebe9467118266e13cb73b43bf3f0e680", null ],
-    [ "setFilter", "classLog.html#a1fe958673083e5fa23690668d39a3553", null ],
+    [ "setFilter", "classLog.html#ac5c6d2107bb051d5809a9a2d4445cd8c", null ],
     [ "setFilter", "classLog.html#a09384c18e959332a4c7cf3a12a827208", null ]
 ];
