@@ -185,17 +185,16 @@ void CoreProcess::onProcessFinished(int exitCode, QProcess::ExitStatus)
     m_retryTimer.stop();
   }
 
-  if (exitCode == s_exitDuplicate) {
+  if (exitCode != s_exitSuccess) {
     setProcessState(Stopped);
-    qWarning("desktop process is already running");
+    if (exitCode == s_exitDuplicate)
+      qWarning("desktop process is already running");
+    else
+      qWarning("desktop process exited with code: %d", exitCode);
     return;
   }
 
-  if (exitCode != s_exitSuccess) {
-    qWarning("desktop process exited with code: %d", exitCode);
-  } else {
-    qDebug("desktop process exited normally");
-  }
+  qDebug("desktop process exited normally");
 
   if (const auto wasStarted = m_processState == Started; wasStarted) {
     qDebug("desktop process was running, retrying in %d ms", kRetryDelay);
