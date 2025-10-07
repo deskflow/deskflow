@@ -20,5 +20,5 @@ public:
   ~ArchDaemonUnix() override = default;
 
   // IArchDaemon overrides
-  int daemonize(const QString &name, DaemonFunc const &func) override;
+  int daemonize(DaemonFunc const &func) override;
 };

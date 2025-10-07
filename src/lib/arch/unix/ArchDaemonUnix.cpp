@@ -47,12 +47,10 @@ bool alreadyDaemonized()
 
 #endif
 
-int ArchDaemonUnix::daemonize(const QString &name, DaemonFunc const &func)
+int ArchDaemonUnix::daemonize(DaemonFunc const &func)
 {
 #ifdef __APPLE__
   if (alreadyDaemonized()) {
-    auto t = name.toStdString();
-    const char *n = t.c_str();
     return func();
   }
 #endif
@@ -108,8 +106,5 @@ int ArchDaemonUnix::daemonize(const QString &name, DaemonFunc const &func)
 #endif
 
   // invoke function
-
-  auto t = name.toStdString();
-  const char *n = t.c_str();
   return func();
 }

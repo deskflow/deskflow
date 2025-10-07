@@ -68,7 +68,7 @@ public:
   static UINT getDaemonQuitMessage();
 
   // IArchDaemon overrides
-  int daemonize(const QString &name, DaemonFunc const &func) override;
+  int daemonize(DaemonFunc const &func) override;
   QString commandLine() const override
   {
     return m_commandLine;
