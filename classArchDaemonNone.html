@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.71</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,7 +124,7 @@ Collaboration diagram for ArchDaemonNone:</div>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a106e9c63288251f6494e4cdbb8f255ab" id="r_a106e9c63288251f6494e4cdbb8f255ab"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone</a> ()=default</td></tr>
 <tr class="memitem:a809f29cef8e3077ccb366048fcd156a2" id="r_a809f29cef8e3077ccb366048fcd156a2"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a809f29cef8e3077ccb366048fcd156a2">~ArchDaemonNone</a> () override=default</td></tr>
-<tr class="memitem:a6d20e7f3fa6e9791ead1ca1790d0e7ee" id="r_a6d20e7f3fa6e9791ead1ca1790d0e7ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d20e7f3fa6e9791ead1ca1790d0e7ee">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func) override</td></tr>
+<tr class="memitem:a6d20e7f3fa6e9791ead1ca1790d0e7ee" id="r_a6d20e7f3fa6e9791ead1ca1790d0e7ee"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6d20e7f3fa6e9791ead1ca1790d0e7ee">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;func) override</td></tr>
 <tr class="memdesc:a6d20e7f3fa6e9791ead1ca1790d0e7ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
 <tr class="memitem:a702ff979fe075a5b1fa15db68644c270" id="r_a702ff979fe075a5b1fa15db68644c270"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a702ff979fe075a5b1fa15db68644c270">commandLine</a> () const override</td></tr>
 <tr class="memdesc:a702ff979fe075a5b1fa15db68644c270"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command line.  <br /></td></tr>
@@ -134,7 +134,7 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_classIArchDaemon"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_classIArchDaemon')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="classIArchDaemon.html">IArchDaemon</a></td></tr>
-<tr class="memitem:a442974912ac1dbb3cd2ff4c70800fa39 inherit pub_types_classIArchDaemon" id="r_a442974912ac1dbb3cd2ff4c70800fa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, const char **)&gt;</td></tr>
+<tr class="memitem:a4b8d40757bd2c4c5996998e445e317ab inherit pub_types_classIArchDaemon" id="r_a4b8d40757bd2c4c5996998e445e317ab"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Dummy implementation of <a class="el" href="classIArchDaemon.html" title="Interface for architecture dependent daemonizing.">IArchDaemon</a>. </p>
@@ -238,7 +238,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

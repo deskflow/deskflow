@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.71</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,7 +114,7 @@ $(function(){initNavTree('ArchDaemonNone_8h_source.html','',''); });
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">   24</a></span>  <a class="code hl_function" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">~ArchDaemonNone</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="comment">// IArchDaemon overrides</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonNone.html#a6d20e7f3fa6e9791ead1ca1790d0e7ee">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonNone.html#a6d20e7f3fa6e9791ead1ca1790d0e7ee">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  QString <a class="code hl_function" href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">commandLine</a>() <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 </div>
@@ -125,7 +125,7 @@ $(function(){initNavTree('ArchDaemonNone_8h_source.html','',''); });
 <div class="ttc" id="aclassArchDaemonNone_html_a702ff979fe075a5b1fa15db68644c270"><div class="ttname"><a href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">ArchDaemonNone::commandLine</a></div><div class="ttdeci">QString commandLine() const override</div><div class="ttdoc">Get the command line.</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.cpp:24</div></div>
 <div class="ttc" id="aclassArchDaemonNone_html_a809f29cef8e3077ccb366048fcd156a2"><div class="ttname"><a href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">ArchDaemonNone::~ArchDaemonNone</a></div><div class="ttdeci">~ArchDaemonNone() override=default</div></div>
 <div class="ttc" id="aclassIArchDaemon_html"><div class="ttname"><a href="classIArchDaemon.html">IArchDaemon</a></div><div class="ttdoc">Interface for architecture dependent daemonizing.</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:21</div></div>
-<div class="ttc" id="aclassIArchDaemon_html_a442974912ac1dbb3cd2ff4c70800fa39"><div class="ttname"><a href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int(int, const char **)&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
+<div class="ttc" id="aclassIArchDaemon_html_a4b8d40757bd2c4c5996998e445e317ab"><div class="ttname"><a href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int()&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

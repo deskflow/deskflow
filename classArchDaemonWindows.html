@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.71</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,13 +122,13 @@ Collaboration diagram for ArchDaemonWindows:</div>
 Public Types</h2></td></tr>
 <tr class="memitem:a5999e8da6d1f79715e2a373175b5abad" id="r_a5999e8da6d1f79715e2a373175b5abad"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5999e8da6d1f79715e2a373175b5abad">RunFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;</td></tr>
 <tr class="inherit_header pub_types_classIArchDaemon"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_classIArchDaemon')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="classIArchDaemon.html">IArchDaemon</a></td></tr>
-<tr class="memitem:a442974912ac1dbb3cd2ff4c70800fa39 inherit pub_types_classIArchDaemon" id="r_a442974912ac1dbb3cd2ff4c70800fa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, const char **)&gt;</td></tr>
+<tr class="memitem:a4b8d40757bd2c4c5996998e445e317ab inherit pub_types_classIArchDaemon" id="r_a4b8d40757bd2c4c5996998e445e317ab"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af043ae17d505e8d937bfccca868355b5" id="r_af043ae17d505e8d937bfccca868355b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af043ae17d505e8d937bfccca868355b5">ArchDaemonWindows</a> ()</td></tr>
 <tr class="memitem:a08591b7b1d78b90feb396b7ae3a0e546" id="r_a08591b7b1d78b90feb396b7ae3a0e546"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08591b7b1d78b90feb396b7ae3a0e546">~ArchDaemonWindows</a> () override=default</td></tr>
-<tr class="memitem:a29cba3fe4cfcdd24778f16a0eef3d633" id="r_a29cba3fe4cfcdd24778f16a0eef3d633"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func) override</td></tr>
+<tr class="memitem:a29cba3fe4cfcdd24778f16a0eef3d633" id="r_a29cba3fe4cfcdd24778f16a0eef3d633"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;func) override</td></tr>
 <tr class="memdesc:a29cba3fe4cfcdd24778f16a0eef3d633"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
 <tr class="memitem:a64cc33f4ac486e3133e23184f1b96c9e" id="r_a64cc33f4ac486e3133e23184f1b96c9e"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64cc33f4ac486e3133e23184f1b96c9e">commandLine</a> () const override</td></tr>
 <tr class="memdesc:a64cc33f4ac486e3133e23184f1b96c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command line.  <br /></td></tr>
@@ -282,7 +282,7 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -385,7 +385,7 @@ win32: Becomes a service. Argument 0 is the name of the service and the rest are
 </div><div class="memdoc">
 
 <p>Run the daemon. </p>
-<p>When the client calls <code><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633" title="Daemonize the process.">daemonize()</a></code>, the <code><a class="el" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a></code> should call this function after initialization and argument parsing to perform the daemon processing. The <code>runFunc</code> should perform the daemon's main loop, calling <code>daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>daemonRunning(false)</code> when it leaves the main loop. The <code>runFunc</code> is called in a new thread and when the daemon must exit the main loop due to some external control the <a class="el" href="#a1b097be660ce145794e78322aed8ce98" title="Get daemon quit message.">getDaemonQuitMessage()</a> is posted to the thread. This function returns what <code>runFunc</code> returns. <code>runFunc</code> should call <code><a class="el" href="#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">daemonFailed()</a></code> if the daemon fails. </p>
+<p>When the client calls <code><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633" title="Daemonize the process.">daemonize()</a></code>, the <code><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a></code> should call this function after initialization and argument parsing to perform the daemon processing. The <code>runFunc</code> should perform the daemon's main loop, calling <code>daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>daemonRunning(false)</code> when it leaves the main loop. The <code>runFunc</code> is called in a new thread and when the daemon must exit the main loop due to some external control the <a class="el" href="#a1b097be660ce145794e78322aed8ce98" title="Get daemon quit message.">getDaemonQuitMessage()</a> is posted to the thread. This function returns what <code>runFunc</code> returns. <code>runFunc</code> should call <code><a class="el" href="#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">daemonFailed()</a></code> if the daemon fails. </p>
 
 </div>
 </div>

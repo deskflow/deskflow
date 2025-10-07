@@ -21,9 +21,9 @@ var classClientApp =
     [ "openClient", "classClientApp.html#a6dfda12b44ef2eab7224c01a0b478f77", null ],
     [ "openClientScreen", "classClientApp.html#a6768423d58b530429cc0142151813b85", null ],
     [ "parseArgs", "classClientApp.html#a3ba4f1476522b8cd8f142fb033fab1a0", null ],
-    [ "runInner", "classClientApp.html#a77e5b4b3d6d4ad3a3a64f31c6f0cfef5", null ],
+    [ "runInner", "classClientApp.html#ab6cc4042d3c2a8c3a0ac026ea716f0dd", null ],
     [ "scheduleClientRestart", "classClientApp.html#a56e7e4a870873b46f02f801f77f7ce1c", null ],
-    [ "start", "classClientApp.html#a534ba048c317059674b2b41171cb774c", null ],
+    [ "start", "classClientApp.html#a5e338f2124edc1032798306522d7467e", null ],
     [ "startClient", "classClientApp.html#a1854a88ad11e0633cd0a59c83857d042", null ],
     [ "startNode", "classClientApp.html#aa302821af245d6a9772d7c09da3a4e34", null ],
     [ "stopClient", "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858", null ]

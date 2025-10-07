@@ -1,6 +1,5 @@
 var NAVTREEINDEX17 =
 {
-"classXWindowsClipboard_1_1MotifClipFormat.html#aa8d18b3c8956e6655673a0efeb22d74b":[6,0,249,1,6],
 "classXWindowsClipboard_1_1MotifClipFormat.html#ada9f2e459dbe6387c71ea0f0cba8113e":[6,0,249,1,5],
 "classXWindowsClipboard_1_1MotifClipFormat.html#adaee47f3af694e76837a09145b8adc62":[6,0,249,1,0],
 "classXWindowsClipboard_1_1MotifClipFormat.html#af2a6eb61a2ca98cf1c8232137a70e989":[6,0,249,1,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX17 =
 "classdeskflow_1_1EiScreen.html#ab52c25fbce6bb6b8ff8794e5a264f81a":[6,0,0,9,4],
 "classdeskflow_1_1EiScreen.html#ab755096023c150fc99d7455bb9c05205":[5,0,0,10,8],
 "classdeskflow_1_1EiScreen.html#ab755096023c150fc99d7455bb9c05205":[6,0,0,9,8],
-"classdeskflow_1_1EiScreen.html#ac0a27056d17f948aa7557115f2effa12":[5,0,0,10,15]
+"classdeskflow_1_1EiScreen.html#ac0a27056d17f948aa7557115f2effa12":[5,0,0,10,15],
+"classdeskflow_1_1EiScreen.html#ac0a27056d17f948aa7557115f2effa12":[6,0,0,9,15]
 };

@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.71</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,7 +136,7 @@ $(function(){initNavTree('ArchDaemonWindows_8h_source.html','',''); });
 <div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">static</span> UINT <a class="code hl_function" href="classArchDaemonWindows.html#a1b097be660ce145794e78322aed8ce98">getDaemonQuitMessage</a>();</div>
 <div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span> </div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="comment">// IArchDaemon overrides</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonWindows.html#a29cba3fe4cfcdd24778f16a0eef3d633">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonWindows.html#a29cba3fe4cfcdd24778f16a0eef3d633">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
 <div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e">   72</a></span>  QString <a class="code hl_function" href="classArchDaemonWindows.html#a64cc33f4ac486e3133e23184f1b96c9e">commandLine</a>()<span class="keyword"> const override</span></div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">  </span>{</div>
@@ -188,7 +188,7 @@ $(function(){initNavTree('ArchDaemonWindows_8h_source.html','',''); });
 <div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <span class="keywordtype">bool</span> m_serviceRunning;</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span> </div>
 <div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_daemonThreadID;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_typedef" href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> m_daemonFunc;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  <a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> m_daemonFunc;</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>  <span class="keywordtype">int</span> m_daemonResult;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>  SERVICE_STATUS_HANDLE m_statusHandle;</div>
@@ -215,7 +215,7 @@ $(function(){initNavTree('ArchDaemonWindows_8h_source.html','',''); });
 <div class="ttc" id="aclassArchDaemonWindows_html_a961f61cd2833ef65128fcb4574ef04eb"><div class="ttname"><a href="classArchDaemonWindows.html#a961f61cd2833ef65128fcb4574ef04eb">ArchDaemonWindows::runDaemon</a></div><div class="ttdeci">static int runDaemon(RunFunc runFunc)</div><div class="ttdoc">Run the daemon.</div><div class="ttdef"><b>Definition</b> ArchDaemonWindows.cpp:27</div></div>
 <div class="ttc" id="aclassArchDaemonWindows_html_af043ae17d505e8d937bfccca868355b5"><div class="ttname"><a href="classArchDaemonWindows.html#af043ae17d505e8d937bfccca868355b5">ArchDaemonWindows::ArchDaemonWindows</a></div><div class="ttdeci">ArchDaemonWindows()</div><div class="ttdef"><b>Definition</b> ArchDaemonWindows.cpp:22</div></div>
 <div class="ttc" id="aclassIArchDaemon_html"><div class="ttname"><a href="classIArchDaemon.html">IArchDaemon</a></div><div class="ttdoc">Interface for architecture dependent daemonizing.</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:21</div></div>
-<div class="ttc" id="aclassIArchDaemon_html_a442974912ac1dbb3cd2ff4c70800fa39"><div class="ttname"><a href="classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int(int, const char **)&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
+<div class="ttc" id="aclassIArchDaemon_html_a4b8d40757bd2c4c5996998e445e317ab"><div class="ttname"><a href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int()&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

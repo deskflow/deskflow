@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa":[4,1,1,0],
 "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b":[4,1,1,2],
 "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd":[4,1,1,3],
 "group__protocol__errors.html":[4,2,4],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "namespacedeskflow_1_1string.html#aaf08864e3398b76761c6626b623b9a27":[5,0,0,7,3],
 "namespacemembers.html":[5,1,0],
 "namespacemembers_enum.html":[5,1,3],
-"namespacemembers_func.html":[5,1,1]
+"namespacemembers_func.html":[5,1,1],
+"namespacemembers_vars.html":[5,1,2]
 };

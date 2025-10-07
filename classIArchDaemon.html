@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.65</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.71</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -114,13 +114,13 @@ Inheritance diagram for IArchDaemon:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a442974912ac1dbb3cd2ff4c70800fa39" id="r_a442974912ac1dbb3cd2ff4c70800fa39"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, const char **)&gt;</td></tr>
+<tr class="memitem:a4b8d40757bd2c4c5996998e445e317ab" id="r_a4b8d40757bd2c4c5996998e445e317ab"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abcf9e90b08623256d2e5df0efe9060e1" id="r_abcf9e90b08623256d2e5df0efe9060e1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abcf9e90b08623256d2e5df0efe9060e1">~IArchDaemon</a> ()=default</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
-<tr class="memitem:a80695c221d16801e0bde81a7ab871b6a" id="r_a80695c221d16801e0bde81a7ab871b6a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80695c221d16801e0bde81a7ab871b6a">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;func)=0</td></tr>
+<tr class="memitem:a80695c221d16801e0bde81a7ab871b6a" id="r_a80695c221d16801e0bde81a7ab871b6a"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a80695c221d16801e0bde81a7ab871b6a">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;func)=0</td></tr>
 <tr class="memdesc:a80695c221d16801e0bde81a7ab871b6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
 <tr class="memitem:aad014dbecf0641b2873dc9f6fd86c93b" id="r_aad014dbecf0641b2873dc9f6fd86c93b"><td class="memItemLeft" align="right" valign="top">virtual QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aad014dbecf0641b2873dc9f6fd86c93b">commandLine</a> () const =0</td></tr>
 <tr class="memdesc:aad014dbecf0641b2873dc9f6fd86c93b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command line.  <br /></td></tr>
@@ -129,14 +129,14 @@ Public Member Functions</h2></td></tr>
 <div class="textblock"><p>Interface for architecture dependent daemonizing. </p>
 <p>This interface defines the operations required by deskflow for installing uninstalling daeamons and daemonizing a process. Each architecture must implement this interface. </p>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a442974912ac1dbb3cd2ff4c70800fa39" name="a442974912ac1dbb3cd2ff4c70800fa39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a442974912ac1dbb3cd2ff4c70800fa39">&#9670;&#160;</a></span>DaemonFunc</h2>
+<a id="a4b8d40757bd2c4c5996998e445e317ab" name="a4b8d40757bd2c4c5996998e445e317ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4b8d40757bd2c4c5996998e445e317ab">&#9670;&#160;</a></span>DaemonFunc</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="#a442974912ac1dbb3cd2ff4c70800fa39">IArchDaemon::DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>(<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>, const char **)&gt;</td>
+          <td class="memname">using <a class="el" href="#a4b8d40757bd2c4c5996998e445e317ab">IArchDaemon::DaemonFunc</a> = std::function&lt;<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>()&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -217,7 +217,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a442974912ac1dbb3cd2ff4c70800fa39">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

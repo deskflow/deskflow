@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1":[6,0,91,12],
 "classEventQueue.html#a4ca51efde4b04ae90a8b9c8420a7f5d6":[6,0,91,7],
 "classEventQueue.html#a5094ef2feb59bc232b24b145dbd789f1":[6,0,91,18],
 "classEventQueue.html#a626d3de0f708e20e674204adfd0e1acf":[6,0,91,14],
@@ -76,16 +75,16 @@ var NAVTREEINDEX9 =
 "classIApp.html#a008018d8408f75fbf1f4e1825287011a":[6,0,103,6],
 "classIApp.html#a165504789fa07702277cb59a237c928c":[6,0,103,3],
 "classIApp.html#a3cbebd403525f13bc83387aab36c4010":[6,0,103,10],
-"classIApp.html#a52a36b15e525a7b8e85e9040ee96b76e":[6,0,103,7],
 "classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7":[6,0,103,1],
+"classIApp.html#a6297786c4ddfd86affa9a8368b42e473":[6,0,103,5],
 "classIApp.html#a6a7146a44b78dd2934520a79708302d1":[6,0,103,4],
 "classIApp.html#a7712f4b015fc1460746949580ecc759a":[6,0,103,0],
-"classIApp.html#a87150f8a26d67940b1914cdc80c2f550":[6,0,103,5],
-"classIApp.html#aab9ddd301faabeabd30964d3a27a5663":[6,0,103,9],
+"classIApp.html#aaac0ce74c46da68906f954a34b0aca71":[6,0,103,9],
 "classIApp.html#acfdd1728bc61794ba022dcb74d4cc730":[6,0,103,8],
+"classIApp.html#ad75de88185104d122174728115fef2ee":[6,0,103,7],
 "classIApp.html#ad8b76d3777672aa8d28cd9c847f87729":[6,0,103,2],
 "classIArchDaemon.html":[6,0,104],
-"classIArchDaemon.html#a442974912ac1dbb3cd2ff4c70800fa39":[6,0,104,0],
+"classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab":[6,0,104,0],
 "classIArchDaemon.html#a80695c221d16801e0bde81a7ab871b6a":[6,0,104,3],
 "classIArchDaemon.html#aad014dbecf0641b2873dc9f6fd86c93b":[6,0,104,2],
 "classIArchDaemon.html#abcf9e90b08623256d2e5df0efe9060e1":[6,0,104,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX9 =
 "classIEventQueueBuffer.html#a2da8721379cbf34b44b5064423efda0a":[6,0,112,3],
 "classIEventQueueBuffer.html#a672cba4fd9f2317f6a144d655aecbd60":[6,0,112,4],
 "classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674":[6,0,112,0],
-"classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a88183b946cc5f0e8c96b2e66e1c74a7e":[6,0,112,0,0]
+"classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a88183b946cc5f0e8c96b2e66e1c74a7e":[6,0,112,0,0],
+"classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674a8f9bfe9d1345237cb3b2b205864da075":[6,0,112,0,2]
 };

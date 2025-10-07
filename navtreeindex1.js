@@ -119,7 +119,7 @@ var NAVTREEINDEX1 =
 "Hotkey_8h.html#a57a9f8448d931e69feadebf463229218":[7,0,1,1,5,18,1],
 "Hotkey_8h_source.html":[7,0,1,1,5,18],
 "IApp_8h.html":[7,0,1,1,4,25],
-"IApp_8h.html#a22c7e9a2550bd61f61dbcbbdbb936a24":[7,0,1,1,4,25,1],
+"IApp_8h.html#a8970a5647365514a40cb9dcb51aa2d7a":[7,0,1,1,4,25,1],
 "IApp_8h_source.html":[7,0,1,1,4,25],
 "IArchDaemon_8h.html":[7,0,1,1,0,7],
 "IArchDaemon_8h_source.html":[7,0,1,1,0,7],
