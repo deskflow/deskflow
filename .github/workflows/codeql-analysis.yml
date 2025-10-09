@@ -13,13 +13,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
-      - '**/*.md'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.editorconfig'
-      - '.env-example'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'cspell.json'
+      - "**/*.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".editorconfig"
+      - ".env-example"
+      - ".gitignore"
+      - ".gitattributes"
+      - "cspell.json"
   push:
     branches: [master]
 
