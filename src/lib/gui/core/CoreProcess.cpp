@@ -322,8 +322,8 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
 
-  qInfo().noquote(
-  ) << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
+  qInfo().noquote()
+      << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
 
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
@@ -380,6 +380,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
+    args << "--settings" << Settings::settingsFile();
     startProcessFromDaemon(args);
   }
 
