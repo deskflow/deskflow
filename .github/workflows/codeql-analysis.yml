@@ -21,7 +21,6 @@ jobs:
   analyze:
     if: ${{ !github.event.pull_request.draft }}
 
-    name: Analyze
     runs-on: ubuntu-latest
     container: debian:trixie-slim
     timeout-minutes: 20
