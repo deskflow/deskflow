@@ -55,7 +55,6 @@ void ArchDaemonWindows::daemonFailed(int result)
 
 int ArchDaemonWindows::daemonize(DaemonFunc const &func)
 {
-  assert(name != nullptr);
   assert(func != nullptr);
 
   // save daemon function
