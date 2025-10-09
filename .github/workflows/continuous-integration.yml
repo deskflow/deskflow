@@ -8,7 +8,7 @@ on:
   push:
     branches: [master]
     tags:
-      - 'v*'
+      - "v*"
   pull_request:
     types:
       - opened
@@ -140,13 +140,13 @@ jobs:
           - name: "macos-14-arm64"
             runs-on: macos-14
             timeout: 10
-            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"arm64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
             qt-version: 6.9.1
 
           - name: "macos-14-x64"
             runs-on: macos-14-large
             timeout: 20
-            config-args: "-DCMAKE_OSX_ARCHITECTURES=\"x86_64\" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+            config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
             qt-version: 6.9.1
 
           - name: "debian-13-x86_64"
@@ -231,19 +231,19 @@ jobs:
       - name: Install Git on Container
         if: ${{ matrix.target.container }}
         shell: bash
-        run : |
-           if [ "${{matrix.target.like}}" == "debian" ]; then
-             apt update -qqq > /dev/null && apt install -qqq git devscripts > /dev/null
-           elif [ "${{matrix.target.like}}" == "fedora" ]; then
-             dnf install -y git
-           elif [ "${{matrix.target.like}}" == "suse" ]; then
-             zypper refresh
-             zypper install -y --force-resolution git
-           elif [ "${{matrix.target.like}}" == "arch" ]; then
-             pacman -Syu --noconfirm git
-           else
-             echo "Unknown: ${{matrix.target.like}}"
-           fi
+        run: |
+          if [ "${{matrix.target.like}}" == "debian" ]; then
+            apt update -qqq > /dev/null && apt install -qqq git devscripts > /dev/null
+          elif [ "${{matrix.target.like}}" == "fedora" ]; then
+            dnf install -y git
+          elif [ "${{matrix.target.like}}" == "suse" ]; then
+            zypper refresh
+            zypper install -y --force-resolution git
+          elif [ "${{matrix.target.like}}" == "arch" ]; then
+            pacman -Syu --noconfirm git
+          else
+            echo "Unknown: ${{matrix.target.like}}"
+          fi
       # Fancy checkout gets all the tags
       # it also makes sure we can use git --describe correctly
       - name: Fancy Checkout
@@ -256,7 +256,6 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: ${{matrix.target.arch}}
-
 
       - name: Install dependencies
         id: get-deps
@@ -421,7 +420,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
           prerelease: true
-          title: 'Continuous Build'
+          title: "Continuous Build"
           files: |
             deskflow-*
             sums.txt
@@ -435,7 +434,7 @@ jobs:
           files: |
             deskflow-*
             sums.txt
-            
+
   winget-publish:
     needs: release
     if: contains(github.ref, 'tags/v')
