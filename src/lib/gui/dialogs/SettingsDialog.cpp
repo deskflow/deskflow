@@ -270,17 +270,9 @@ void SettingsDialog::updateControls()
   ui->lineTlsCertPath->setEnabled(writable);
   ui->comboTlsKeyLength->setEnabled(writable);
   ui->cbCloseToTray->setEnabled(writable);
-
-  // Handle enable and disable of service items
-  if (Settings::isNativeMode()) {
-    ui->groupService->setEnabled(writable);
-    ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
-  } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
-    ui->groupService->setVisible(false);
-  }
-
+  ui->groupService->setEnabled(writable);
+  ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
   ui->groupClientOptions->setEnabled(writable && isClientMode());
-
   ui->widgetLogFilename->setEnabled(writable && logToFile);
 
   updateTlsControls();

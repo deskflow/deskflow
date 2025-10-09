@@ -121,7 +121,7 @@ public:
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
-  static bool isNativeMode();
+  static bool isPortableMode();
   static QString settingsFile();
   static QString settingsPath();
   static QString tlsDir();
@@ -148,6 +148,7 @@ private:
   QSettings *m_settings = nullptr;
   QString m_portableSettingsFile = QStringLiteral("%1/settings/%2.conf");
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
+  bool m_isPortableMode = false;
 
   // clang-format off
   inline static const QStringList m_logLevels = {

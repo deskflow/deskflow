@@ -29,6 +29,7 @@ void Settings::setSettingFile(const QString &settingsFile)
   if (instance()->m_settings)
     instance()->m_settings->deleteLater();
   instance()->m_settings = new QSettings(instance()->m_portableSettingsFile, QSettings::IniFormat);
+  instance()->m_isPortableMode = true;
   instance()->m_settingsProxy->load(instance()->m_portableSettingsFile);
   qInfo().noquote() << "settings file:" << instance()->m_settings->fileName();
 }
@@ -41,8 +42,9 @@ Settings::Settings(QObject *parent) : QObject(parent)
   if (QFile(m_portableSettingsFile).exists()) {
     fileToLoad = m_portableSettingsFile;
     m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
+    m_isPortableMode = true;
   } else {
-    m_settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
+    m_settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, kAppName, kAppName);
   }
 #else
   if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
@@ -143,7 +145,7 @@ QVariant Settings::defaultValue(const QString &key)
     return 4; // INFO
 
   if (key == Daemon::Elevate)
-    return Settings::isNativeMode();
+    return !Settings::isPortableMode();
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
@@ -155,7 +157,7 @@ QVariant Settings::defaultValue(const QString &key)
     return 24800;
 
   if (key == Core::ProcessMode) {
-    if (Settings::isNativeMode())
+    if (!Settings::isPortableMode())
       return Settings::ProcessMode::Service;
     else
       return Settings::ProcessMode::Desktop;
@@ -196,14 +198,14 @@ QStringList Settings::validKeys()
 
 bool Settings::isWritable()
 {
-  if (Settings::isNativeMode())
+  if (!Settings::isPortableMode())
     return true;
   return instance()->m_settings->isWritable();
 }
 
-bool Settings::isNativeMode()
+bool Settings::isPortableMode()
 {
-  return instance()->m_settings->format() == QSettings::NativeFormat;
+  return instance()->m_isPortableMode;
 }
 
 QString Settings::settingsFile()
@@ -213,9 +215,10 @@ QString Settings::settingsFile()
 
 QString Settings::settingsPath()
 {
-  if (instance()->isNativeMode())
-    return SystemDir;
-  return QFileInfo(instance()->m_settings->fileName()).absolutePath();
+  if (isPortableMode())
+    return QFileInfo(instance()->m_settings->fileName()).absolutePath();
+
+  return SystemDir;
 }
 
 QString Settings::tlsDir()
