@@ -1,11 +1,21 @@
 name: "SonarCloud Analysis"
 
+# This is best run as a standalone workflow, not as part of another workflow like CI
+# because of how GitHub understands the code scanning workflows in it's UI.
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      SONAR_TOKEN:
-        required: true
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - "**/*.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".editorconfig"
+      - ".env-example"
+      - ".gitignore"
+      - ".gitattributes"
+      - "cspell.json"
+  push:
+    branches: [master]
 
 jobs:
   sonarcloud-analysis:
