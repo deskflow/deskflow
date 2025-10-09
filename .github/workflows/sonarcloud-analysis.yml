@@ -1,25 +1,32 @@
 name: "SonarCloud Analysis"
 
+# This is best run as a standalone workflow, not as part of another workflow like CI
+# because of how GitHub understands the code scanning workflows in it's UI.
 on:
   workflow_dispatch:
-  workflow_call:
-    secrets:
-      SONAR_TOKEN:
-        required: true
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths-ignore:
+      - "**/*.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".editorconfig"
+      - ".env-example"
+      - ".gitignore"
+      - ".gitattributes"
+      - "cspell.json"
+  push:
+    branches: [master]
 
 jobs:
-  sonarcloud-analysis:
-    if: ${{ vars.SONAR_SCANNER_ENABLED }}
+  analyze:
+    if: ${{ !github.event.pull_request.draft && vars.SONAR_SCANNER_ENABLED }}
 
     runs-on: ubuntu-latest
     container: debian:trixie-slim
     timeout-minutes: 20
 
     env:
-      SONAR_SCANNER_VERSION: 6.1.0.4477
-      SONAR_SCANNER_OPTS: -server
-      SONAR_SCANNER_URL_BASE: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli
-      CPU_CORE_COUNT: ${{ vars.SONAR_SCANNER_CPU_COUNT || 4 }}
+      CPU_CORE_COUNT: 4
 
     steps:
       - name: Install container dependencies
@@ -35,8 +42,8 @@ jobs:
         with:
           like: "debian"
 
-      - name: Install sonar-scanner and build-wrapper
-        uses: sonarsource/sonarcloud-github-c-cpp@v3
+      - name: Install Build Wrapper
+        uses: SonarSource/sonarqube-scan-action/install-build-wrapper@v6
 
       - name: Configure
         run: |
@@ -71,11 +78,11 @@ jobs:
           fi
           echo "csv=$paths" >> $GITHUB_OUTPUT
 
-      - name: Run SonarScanner
-        run: |
-          export PATH=$HOME/.sonar/sonar-scanner-$SONAR_SCANNER_VERSION-linux-x64/bin:$PATH
-          sonar-scanner \
-            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }} \
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          args: >
+            -Dsonar.coverageReportPaths=${{ steps.coverage-paths.outputs.csv }}
             -Dsonar.cfamily.threads=${{ env.CPU_CORE_COUNT }}
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

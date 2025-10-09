@@ -1,25 +1,19 @@
 name: "CodeQL Analysis"
 
-# According to the docs, the CodeQL workflow should be triggered directly by push to master
-# and by pull requests (we only run this on open PRs as it's very slow). We also use the
-# `workflow_dispatch` event is also enabled to allow manual triggering of the workflow for testing.
-#
-# We should not trigger this workflow with `workflow_call` as this causes the error:
-#   "1 configuration present on `master` was not found"
-#
-# Sadly, this means we can't roll it into our monolithic CI workflow.
+# This is best run as a standalone workflow, not as part of another workflow like CI
+# because of how GitHub understands the code scanning workflows in it's UI.
 on:
   workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
-      - '**/*.md'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.editorconfig'
-      - '.env-example'
-      - '.gitignore'
-      - '.gitattributes'
-      - 'cspell.json'
+      - "**/*.md"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".editorconfig"
+      - ".env-example"
+      - ".gitignore"
+      - ".gitattributes"
+      - "cspell.json"
   push:
     branches: [master]
 
@@ -27,15 +21,9 @@ jobs:
   analyze:
     if: ${{ !github.event.pull_request.draft }}
 
-    name: Analyze
     runs-on: ubuntu-latest
     container: debian:trixie-slim
     timeout-minutes: 20
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["cpp"]
 
     steps:
       - name: Install container dependencies
@@ -54,7 +42,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: cpp
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
