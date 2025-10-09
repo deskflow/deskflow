@@ -349,6 +349,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
+    args.append({QStringLiteral("--settings"), Settings::settingsFile()});
     startProcessFromDaemon(args);
   }
 

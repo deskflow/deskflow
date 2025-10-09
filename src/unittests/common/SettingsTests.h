@@ -14,7 +14,7 @@ class SettingsTests : public QObject
 private Q_SLOTS:
   void initTestCase();
   // Test are run in order top to bottom
-  void setSettingsFile();
+  void setSettingFile();
   void settingsFile();
   void settingsPath();
   void tlsDir();
@@ -24,9 +24,18 @@ private Q_SLOTS:
   void checkValidSettings();
 
 private:
-  inline static const QString m_settingsPath = QStringLiteral("tmp/test");
-  inline static const QString m_settingsFile = QStringLiteral("%1/Deskflow.conf").arg(m_settingsPath);
-  inline static const QString m_expectedTlsDir = QStringLiteral("tmp/test/%1").arg(kTlsDirName);
+  inline static const QString m_settingsPathTemp = QStringLiteral("tmp/test");
+  inline static const QString m_settingsFile = QStringLiteral("%1/Deskflow.conf").arg(m_settingsPathTemp);
+
+// Gotcha: On Windows non-portable mode, additional config files such as TLS config are saved
+// in 'Program Data' and are not stored in the same place as the settings file.
+#ifdef Q_OS_WIN
+  inline static const QString m_settingsPath = Settings::SystemDir;
+#else
+  inline static const QString m_settingsPath = m_settingsPathTemp;
+#endif
+
+  inline static const QString m_expectedTlsDir = QStringLiteral("%1/%2").arg(m_settingsPath, kTlsDirName);
   inline static const QString m_expectedTlsLocalDB =
       QStringLiteral("%1/%2").arg(m_expectedTlsDir, kTlsFingerprintLocalFilename);
   inline static const QString m_expectedTlsServerDB =

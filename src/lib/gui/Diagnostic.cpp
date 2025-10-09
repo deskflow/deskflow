@@ -44,7 +44,7 @@ void clearSettings(bool enableRestart)
   profileDir.removeRecursively();
 
 #ifdef Q_OS_WIN
-  if (!Settings::isNativeMode()) {
+  if (Settings::isPortableMode()) {
     // make a new empty portable settings file
     if (profileDir.mkpath(Settings::settingsPath())) {
       QFile file(Settings::settingsFile());

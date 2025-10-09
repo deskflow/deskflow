@@ -19,7 +19,7 @@ class Settings : public QObject
   Q_OBJECT
 public:
 #if defined(Q_OS_WIN)
-  inline const static auto UserDir = QStringLiteral("%1/AppData/Local/%2").arg(QDir::homePath(), kAppName);
+  inline const static auto UserDir = QStringLiteral("%1/AppData/Roaming/%2").arg(QDir::homePath(), kAppName);
   inline const static auto SystemDir = QStringLiteral("%1ProgramData/%2").arg(QDir::rootPath(), kAppName);
 #elif defined(Q_OS_MAC)
   inline const static auto UserDir = QStringLiteral("%1/Library/%2").arg(QDir::homePath(), kAppName);
@@ -28,6 +28,7 @@ public:
   inline const static auto UserDir = QStringLiteral("%1/.config/%2").arg(QDir::homePath(), kAppName);
   inline const static auto SystemDir = QStringLiteral("/etc/%1").arg(kAppName);
 #endif
+
   inline const static auto UserSettingFile = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
   inline const static auto SystemSettingFile = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
 
@@ -120,7 +121,7 @@ public:
   static void restoreDefaultSettings();
   static QVariant defaultValue(const QString &key);
   static bool isWritable();
-  static bool isNativeMode();
+  static bool isPortableMode();
   static QString settingsFile();
   static QString settingsPath();
   static QString tlsDir();
@@ -132,6 +133,7 @@ public:
   static void save(bool emitSaving = true);
   static QStringList validKeys();
   static int logLevelToInt(const QString &level = "INFO");
+  static QString portableSettingsFile();
 
 Q_SIGNALS:
   void settingsChanged(const QString key);
@@ -145,7 +147,6 @@ private:
   void cleanSettings();
 
   QSettings *m_settings = nullptr;
-  QString m_portableSettingsFile = QStringLiteral("%1/settings/%2.conf");
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
