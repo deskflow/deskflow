@@ -42,7 +42,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
     fileToLoad = m_portableSettingsFile;
     m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
   } else {
-    m_settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
+    m_settings = new QSettings(QSettings::IniFormat, QSettings::UserScope, kAppName, kAppName);
   }
 #else
   if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
