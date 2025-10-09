@@ -26,11 +26,6 @@ jobs:
     container: debian:trixie-slim
     timeout-minutes: 20
 
-    strategy:
-      fail-fast: false
-      matrix:
-        language: ["cpp"]
-
     steps:
       - name: Install container dependencies
         run: |
@@ -48,7 +43,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.language }}
+          languages: cpp
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
