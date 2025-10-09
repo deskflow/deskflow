@@ -271,8 +271,9 @@ void SettingsDialog::updateControls()
   ui->comboTlsKeyLength->setEnabled(writable);
   ui->cbCloseToTray->setEnabled(writable);
 
-  // Handle enable and disable of service items
-  if (Settings::isNativeMode()) {
+  // Portable mode only ever applies to Windows.
+  // Daemon options should only be available on Windows when *not* in portable mode.
+  if (!Settings::isPortableMode()) {
     ui->groupService->setEnabled(writable);
     ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {

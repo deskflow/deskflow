@@ -20,45 +20,42 @@ Settings *Settings::instance()
 
 void Settings::setSettingFile(const QString &settingsFile)
 {
-  if (instance()->m_portableSettingsFile == settingsFile) {
-    qDebug().noquote() << "settings file already in use";
+  if (instance()->settingsFile() == settingsFile) {
+    qDebug("settings file already set, skipping");
     return;
   }
 
-  instance()->m_portableSettingsFile = settingsFile;
   if (instance()->m_settings)
     instance()->m_settings->deleteLater();
-  instance()->m_settings = new QSettings(instance()->m_portableSettingsFile, QSettings::IniFormat);
-  instance()->m_settingsProxy->load(instance()->m_portableSettingsFile);
-  qInfo().noquote() << "settings file:" << instance()->m_settings->fileName();
+
+  instance()->m_settings = new QSettings(settingsFile, QSettings::IniFormat);
+  instance()->m_settingsProxy->load(settingsFile);
+  qInfo().noquote() << "settings file changed:" << instance()->m_settings->fileName();
 }
 
 Settings::Settings(QObject *parent) : QObject(parent)
 {
   QString fileToLoad;
 #ifdef Q_OS_WIN
-  m_portableSettingsFile = m_portableSettingsFile.arg(QCoreApplication::applicationDirPath(), kAppName);
-  if (QFile(m_portableSettingsFile).exists()) {
-    fileToLoad = m_portableSettingsFile;
-    m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
-  } else {
-    m_settings = new QSettings(QSettings::NativeFormat, QSettings::UserScope, kAppName, kAppName);
-  }
+  const auto portableFile = portableSettingsFile();
+  qDebug().noquote() << "checking for portable settings file at:" << portableFile;
+  if (QFile(portableFile).exists())
+    fileToLoad = portableFile;
 #else
   if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
     fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(qEnvironmentVariable("XDG_CONFIG_HOME"), kAppName);
+#endif
   else if (QFile(UserSettingFile).exists())
     fileToLoad = UserSettingFile;
   else if (QFile(SystemSettingFile).exists())
     fileToLoad = SystemSettingFile;
   else
     fileToLoad = UserSettingFile;
-  m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
-#endif
 
+  m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
   m_settingsProxy = std::make_shared<QSettingsProxy>();
   m_settingsProxy->load(fileToLoad);
-  qInfo().noquote() << "settings file:" << m_settings->fileName();
+  qInfo().noquote() << "initial settings file:" << m_settings->fileName();
 }
 
 void Settings::cleanSettings()
@@ -143,7 +140,7 @@ QVariant Settings::defaultValue(const QString &key)
     return 4; // INFO
 
   if (key == Daemon::Elevate)
-    return Settings::isNativeMode();
+    return !Settings::isPortableMode();
 
   if (key == Core::UpdateUrl)
     return kUrlUpdateCheck;
@@ -155,10 +152,12 @@ QVariant Settings::defaultValue(const QString &key)
     return 24800;
 
   if (key == Core::ProcessMode) {
-    if (Settings::isNativeMode())
+#ifdef Q_OS_WIN
+    if (!Settings::isPortableMode())
       return Settings::ProcessMode::Service;
-    else
-      return Settings::ProcessMode::Desktop;
+#endif
+
+    return Settings::ProcessMode::Desktop;
   }
 
   if (key == Daemon::LogFile) {
@@ -196,14 +195,13 @@ QStringList Settings::validKeys()
 
 bool Settings::isWritable()
 {
-  if (Settings::isNativeMode())
-    return true;
   return instance()->m_settings->isWritable();
 }
 
-bool Settings::isNativeMode()
+bool Settings::isPortableMode()
 {
-  return instance()->m_settings->format() == QSettings::NativeFormat;
+  // Enable portable mode only if the portable settings file exists in the expected location.
+  return QFile(portableSettingsFile()).exists();
 }
 
 QString Settings::settingsFile()
@@ -213,8 +211,11 @@ QString Settings::settingsFile()
 
 QString Settings::settingsPath()
 {
-  if (instance()->isNativeMode())
+#ifdef Q_OS_WIN
+  if (!isPortableMode())
     return SystemDir;
+#endif
+
   return QFileInfo(instance()->m_settings->fileName()).absolutePath();
 }
 
@@ -262,4 +263,11 @@ void Settings::restoreDefaultSettings()
   for (const auto &key : m_validKeys) {
     instance()->setValue(key, defaultValue(key));
   }
+}
+
+QString Settings::portableSettingsFile()
+{
+  static const auto filename =
+      QStringLiteral("%1/settings/%2.conf").arg(QCoreApplication::applicationDirPath(), kAppName);
+  return filename;
 }

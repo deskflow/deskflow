@@ -16,7 +16,7 @@ void SettingsTests::initTestCase()
     oldSettings.remove();
 }
 
-void SettingsTests::setSettingsFile()
+void SettingsTests::setSettingFile()
 {
   Settings::setSettingFile(m_settingsFile);
 }
