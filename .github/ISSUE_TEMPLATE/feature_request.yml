@@ -20,7 +20,8 @@ body:
     attributes:
       label: Voting Instructions
       description: Do not modify these instructions
-      value: React with :+1: or :-1: to vote on this request
+      value: |
+        React with :+1: or :-1: to vote on this request
     validations:
       required: true
 
