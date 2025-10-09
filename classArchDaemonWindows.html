@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.73</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.74</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -128,8 +128,8 @@ Public Types</h2></td></tr>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:af043ae17d505e8d937bfccca868355b5" id="r_af043ae17d505e8d937bfccca868355b5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af043ae17d505e8d937bfccca868355b5">ArchDaemonWindows</a> ()</td></tr>
 <tr class="memitem:a08591b7b1d78b90feb396b7ae3a0e546" id="r_a08591b7b1d78b90feb396b7ae3a0e546"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a08591b7b1d78b90feb396b7ae3a0e546">~ArchDaemonWindows</a> () override=default</td></tr>
-<tr class="memitem:a29cba3fe4cfcdd24778f16a0eef3d633" id="r_a29cba3fe4cfcdd24778f16a0eef3d633"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633">daemonize</a> (const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;func) override</td></tr>
-<tr class="memdesc:a29cba3fe4cfcdd24778f16a0eef3d633"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
+<tr class="memitem:a50550ba8629f785ca34143d7ef0f14cf" id="r_a50550ba8629f785ca34143d7ef0f14cf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50550ba8629f785ca34143d7ef0f14cf">daemonize</a> (<a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;func) override</td></tr>
+<tr class="memdesc:a50550ba8629f785ca34143d7ef0f14cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Daemonize the process.  <br /></td></tr>
 <tr class="memitem:a64cc33f4ac486e3133e23184f1b96c9e" id="r_a64cc33f4ac486e3133e23184f1b96c9e"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a64cc33f4ac486e3133e23184f1b96c9e">commandLine</a> () const override</td></tr>
 <tr class="memdesc:a64cc33f4ac486e3133e23184f1b96c9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the command line.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIArchDaemon"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIArchDaemon')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIArchDaemon.html">IArchDaemon</a></td></tr>
@@ -261,12 +261,12 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Indicate failure of running daemon. </p>
-<p>The <code>runFunc</code> passed to <code><a class="el" href="#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">runDaemon()</a></code> should call this function to indicate failure. <code>result</code> is returned by <code><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633" title="Daemonize the process.">daemonize()</a></code>. </p>
+<p>The <code>runFunc</code> passed to <code><a class="el" href="#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">runDaemon()</a></code> should call this function to indicate failure. <code>result</code> is returned by <code><a class="el" href="#a50550ba8629f785ca34143d7ef0f14cf" title="Daemonize the process.">daemonize()</a></code>. </p>
 
 </div>
 </div>
-<a id="a29cba3fe4cfcdd24778f16a0eef3d633" name="a29cba3fe4cfcdd24778f16a0eef3d633"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a29cba3fe4cfcdd24778f16a0eef3d633">&#9670;&#160;</a></span>daemonize()</h2>
+<a id="a50550ba8629f785ca34143d7ef0f14cf" name="a50550ba8629f785ca34143d7ef0f14cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50550ba8629f785ca34143d7ef0f14cf">&#9670;&#160;</a></span>daemonize()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,12 +277,8 @@ Static Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchDaemonWindows::daemonize </td>
           <td>(</td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> const &amp;</td>          <td class="paramname"><span class="paramname"><em>func</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -296,12 +292,12 @@ Static Public Member Functions</h2></td></tr>
 <p>Daemonize. Throw <a class="el" href="classArchDaemonFailedException.html" title="Could not daemonize.">ArchDaemonFailedException</a> on error. <code>name</code> is the name of the daemon. Once daemonized, <code>func</code> is invoked and daemonize returns when and what it does.</p>
 <p>Exactly what happens when daemonizing depends on the platform. </p><ul>
 <li>
-unix: Detaches from terminal. <code>func</code> gets passed one argument, the name passed to <a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633" title="Daemonize the process.">daemonize()</a>. </li>
+unix: Detaches from terminal. <code>func</code> gets passed one argument, the name passed to <a class="el" href="#a50550ba8629f785ca34143d7ef0f14cf" title="Daemonize the process.">daemonize()</a>. </li>
 <li>
 win32: Becomes a service. Argument 0 is the name of the service and the rest are the arguments passed to StartService(). <code>func</code> is only called when the service is actually started. <code>func</code> must call <code><a class="el" href="classArchMiscWindows.html#af1c7cebddb8f59ed0b6b1fbf05476350" title="Run the daemon.">ArchMiscWindows::runDaemon()</a></code> to finally becoming a service. The <code>runFunc</code> function passed to <code><a class="el" href="#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">runDaemon()</a></code> must call <code>ArchMiscWindows::daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>ArchMiscWindows::daemonRunning(false)</code> when it leaves the main loop. The <code>stopFunc</code> function passed to <code><a class="el" href="#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">runDaemon()</a></code> is called when the daemon must exit the main loop and it must cause <code>runFunc</code> to return. <code>func</code> should return what <code><a class="el" href="#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">runDaemon()</a></code> returns. <code>func</code> or <code>runFunc</code> can call <code><a class="el" href="classArchMiscWindows.html#a360732a6f21a223a0595c1a75354dbd0" title="Indicate failure of running daemon.">ArchMiscWindows::daemonFailed()</a></code> to indicate startup failure. </li>
 </ul>
 
-<p>Implements <a class="el" href="classIArchDaemon.html#a80695c221d16801e0bde81a7ab871b6a">IArchDaemon</a>.</p>
+<p>Implements <a class="el" href="classIArchDaemon.html#a6644e694fd49213342d4008cba60a516">IArchDaemon</a>.</p>
 
 </div>
 </div>
@@ -385,7 +381,7 @@ win32: Becomes a service. Argument 0 is the name of the service and the rest are
 </div><div class="memdoc">
 
 <p>Run the daemon. </p>
-<p>When the client calls <code><a class="el" href="#a29cba3fe4cfcdd24778f16a0eef3d633" title="Daemonize the process.">daemonize()</a></code>, the <code><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a></code> should call this function after initialization and argument parsing to perform the daemon processing. The <code>runFunc</code> should perform the daemon's main loop, calling <code>daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>daemonRunning(false)</code> when it leaves the main loop. The <code>runFunc</code> is called in a new thread and when the daemon must exit the main loop due to some external control the <a class="el" href="#a1b097be660ce145794e78322aed8ce98" title="Get daemon quit message.">getDaemonQuitMessage()</a> is posted to the thread. This function returns what <code>runFunc</code> returns. <code>runFunc</code> should call <code><a class="el" href="#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">daemonFailed()</a></code> if the daemon fails. </p>
+<p>When the client calls <code><a class="el" href="#a50550ba8629f785ca34143d7ef0f14cf" title="Daemonize the process.">daemonize()</a></code>, the <code><a class="el" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a></code> should call this function after initialization and argument parsing to perform the daemon processing. The <code>runFunc</code> should perform the daemon's main loop, calling <code>daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>daemonRunning(false)</code> when it leaves the main loop. The <code>runFunc</code> is called in a new thread and when the daemon must exit the main loop due to some external control the <a class="el" href="#a1b097be660ce145794e78322aed8ce98" title="Get daemon quit message.">getDaemonQuitMessage()</a> is posted to the thread. This function returns what <code>runFunc</code> returns. <code>runFunc</code> should call <code><a class="el" href="#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">daemonFailed()</a></code> if the daemon fails. </p>
 
 </div>
 </div>

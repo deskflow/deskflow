@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.73</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.74</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -116,7 +116,7 @@ $(function(){initNavTree('IArchDaemon_8h_source.html','',''); });
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classIArchDaemon.html#a80695c221d16801e0bde81a7ab871b6a">   56</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classIArchDaemon.html#a80695c221d16801e0bde81a7ab871b6a">daemonize</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func) = 0;</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classIArchDaemon.html#a6644e694fd49213342d4008cba60a516">   56</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">int</span> <a class="code hl_function" href="classIArchDaemon.html#a6644e694fd49213342d4008cba60a516">daemonize</a>(<a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func) = 0;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
@@ -124,11 +124,10 @@ $(function(){initNavTree('IArchDaemon_8h_source.html','',''); });
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>};</div>
 </div>
-<div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:28</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>
 <div class="ttc" id="aclassIArchDaemon_html"><div class="ttname"><a href="classIArchDaemon.html">IArchDaemon</a></div><div class="ttdoc">Interface for architecture dependent daemonizing.</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:21</div></div>
 <div class="ttc" id="aclassIArchDaemon_html_a4b8d40757bd2c4c5996998e445e317ab"><div class="ttname"><a href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int()&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
-<div class="ttc" id="aclassIArchDaemon_html_a80695c221d16801e0bde81a7ab871b6a"><div class="ttname"><a href="classIArchDaemon.html#a80695c221d16801e0bde81a7ab871b6a">IArchDaemon::daemonize</a></div><div class="ttdeci">virtual int daemonize(const QString &amp;name, DaemonFunc const &amp;func)=0</div><div class="ttdoc">Daemonize the process.</div></div>
+<div class="ttc" id="aclassIArchDaemon_html_a6644e694fd49213342d4008cba60a516"><div class="ttname"><a href="classIArchDaemon.html#a6644e694fd49213342d4008cba60a516">IArchDaemon::daemonize</a></div><div class="ttdeci">virtual int daemonize(DaemonFunc const &amp;func)=0</div><div class="ttdoc">Daemonize the process.</div></div>
 <div class="ttc" id="aclassIArchDaemon_html_aad014dbecf0641b2873dc9f6fd86c93b"><div class="ttname"><a href="classIArchDaemon.html#aad014dbecf0641b2873dc9f6fd86c93b">IArchDaemon::commandLine</a></div><div class="ttdeci">virtual QString commandLine() const =0</div><div class="ttdoc">Get the command line.</div></div>
 <div class="ttc" id="aclassIArchDaemon_html_abcf9e90b08623256d2e5df0efe9060e1"><div class="ttname"><a href="classIArchDaemon.html#abcf9e90b08623256d2e5df0efe9060e1">IArchDaemon::~IArchDaemon</a></div><div class="ttdeci">virtual ~IArchDaemon()=default</div></div>
 </div><!-- fragment --></div><!-- contents -->
