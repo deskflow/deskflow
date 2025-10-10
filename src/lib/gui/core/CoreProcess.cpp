@@ -361,12 +361,10 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   if (mode() == Server) {
     args.prepend(QStringLiteral("server"));
-    if (!addServerArgs(args))
+    if (!addServerArgs())
       qWarning("failed to add server args for core process, aborting start");
   } else if (mode() == Client) {
     args.prepend(QStringLiteral("client"));
-    if (!addClientArgs(args))
-      qWarning("failed to add client args for core process, aborting start");
   } else {
     qFatal("core started without mode");
     return;
@@ -374,8 +372,12 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   qDebug().noquote() << "log level:" << Settings::logLevelText();
 
-  if (Settings::value(Settings::Log::ToFile).toBool())
-    qInfo().noquote() << "log file:" << Settings::value(Settings::Log::File).toString();
+  if (Settings::value(Settings::Log::ToFile).toBool()) {
+    persistLogDir();
+    const auto logFile = Settings::value(Settings::Log::File).toString();
+    args.append({QStringLiteral("--log"), logFile});
+    qInfo().noquote() << "log file:" << logFile;
+  }
 
   if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(args);
@@ -451,13 +453,8 @@ void CoreProcess::cleanup()
   }
 }
 
-bool CoreProcess::addServerArgs(QStringList &args)
+bool CoreProcess::addServerArgs()
 {
-  if (Settings::value(Settings::Log::ToFile).toBool()) {
-    persistLogDir();
-    args << "--log" << Settings::value(Settings::Log::File).toString();
-  }
-
   QString configFilename = persistServerConfig();
   if (configFilename.isEmpty()) {
     qFatal("config file name empty for server args");
@@ -468,16 +465,6 @@ bool CoreProcess::addServerArgs(QStringList &args)
   // bizarrely, the tls cert path arg was being given to the core client.
   // since it's not clear why (it is only needed for the server), this has now
   // been moved to server args.
-  return true;
-}
-
-bool CoreProcess::addClientArgs(QStringList &args)
-{
-  if (Settings::value(Settings::Log::ToFile).toBool()) {
-    persistLogDir();
-    args << "--log" << Settings::value(Settings::Log::File).toString();
-  }
-
   return true;
 }
 
