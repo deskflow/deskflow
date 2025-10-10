@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -347,8 +348,8 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   qDebug().noquote() << "log level:" << Settings::logLevelText();
 
   if (Settings::value(Settings::Log::ToFile).toBool()) {
-    persistLogDir();
     const auto logFile = Settings::value(Settings::Log::File).toString();
+    QDir(QFileInfo(logFile).absolutePath()).mkpath(".");
     args.append({QStringLiteral("--log"), logFile});
     qInfo().noquote() << "log file:" << logFile;
   }
@@ -548,11 +549,6 @@ QString CoreProcess::requestDaemonLogPath()
   }
 
   return logPath;
-}
-
-void CoreProcess::persistLogDir() const
-{
-  QDir(QFileInfo(Settings::value(Settings::Log::File).toString()).absolutePath()).mkpath(".");
 }
 
 void CoreProcess::clearSettings()
