@@ -31,34 +31,14 @@ const int kRetryDelay = 1000;
 const auto kServerConfigFilename = QStringLiteral("%1-server.conf").arg(kAppId);
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
-//
-// free functions
-//
-
 QString CoreProcess::processModeToString(const Settings::ProcessMode mode)
 {
   return QVariant::fromValue(mode).toString().toLower();
 }
 
-QString processStateToString(CoreProcess::ProcessState state)
+QString CoreProcess::processStateToString(const CoreProcess::ProcessState state)
 {
-  using enum CoreProcess::ProcessState;
-
-  switch (state) {
-  case Starting:
-    return "starting";
-  case Started:
-    return "started";
-  case Stopping:
-    return "stopping";
-  case Stopped:
-    return "stopped";
-  case RetryPending:
-    return "retry pending";
-  default:
-    qFatal("invalid process state");
-    abort();
-  }
+  return QVariant::fromValue(state).toString().toLower();
 }
 
 /**

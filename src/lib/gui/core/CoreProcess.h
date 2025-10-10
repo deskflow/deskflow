@@ -45,6 +45,8 @@ public:
     Stopped,
     RetryPending
   };
+  Q_ENUM(ProcessState)
+
   enum class ConnectionState
   {
     Disconnected,
@@ -126,6 +128,7 @@ private:
   void persistLogDir() const;
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
   static QString processModeToString(const Settings::ProcessMode mode);
+  static QString processStateToString(const CoreProcess::ProcessState state);
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
