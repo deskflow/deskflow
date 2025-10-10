@@ -35,17 +35,9 @@ const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 // free functions
 //
 
-QString processModeToString(Settings::ProcessMode mode)
+QString CoreProcess::processModeToString(const Settings::ProcessMode mode)
 {
-  switch (mode) {
-  case Settings::ProcessMode::Desktop:
-    return "desktop";
-  case Settings::ProcessMode::Service:
-    return "service";
-  default:
-    qFatal("invalid process mode");
-    abort();
-  }
+  return QVariant::fromValue(mode).toString().toLower();
 }
 
 QString processStateToString(CoreProcess::ProcessState state)
