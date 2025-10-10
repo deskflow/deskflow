@@ -332,9 +332,9 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
+  const auto coreMode = m_mode == Server ? QStringLiteral("server") : QStringLiteral("client");
 
-  qInfo().noquote(
-  ) << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
+  qInfo().noquote() << QString("starting %1 process (%2 mode)").arg(coreMode, processModeToString(processMode));
 
   // allow external listeners to abort the start process (e.g. licensing issue).
   setProcessState(ProcessState::Starting);
@@ -475,19 +475,6 @@ QString CoreProcess::persistServerConfig() const
   m_serverConfig.save(configFile);
   configFile.close();
   return configFile.fileName();
-}
-
-QString CoreProcess::modeString() const
-{
-  switch (m_mode) {
-  case Settings::CoreMode::Server:
-    return "server";
-  case Settings::CoreMode::Client:
-    return "client";
-  default:
-    qFatal("invalid core mode");
-    return "";
-  }
 }
 
 void CoreProcess::setConnectionState(ConnectionState state)
