@@ -96,7 +96,6 @@ public:
   }
 
 Q_SIGNALS:
-  void starting();
   void error(deskflow::gui::CoreProcess::Error error);
   void logLine(const QString &line);
   void connectionStateChanged(deskflow::gui::CoreProcess::ConnectionState state);
