@@ -8,7 +8,6 @@
 #include "CoreProcess.h"
 
 #include "common/ExitCodes.h"
-#include "common/Settings.h"
 #include "gui/ipc/DaemonIpcClient.h"
 #include "tls/TlsUtility.h"
 
@@ -19,12 +18,8 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
-#include <QMessageBox>
 #include <QMutexLocker>
-#include <QProcess>
 #include <QRegularExpression>
-#include <QStandardPaths>
-#include <QTimer>
 
 namespace deskflow::gui {
 
