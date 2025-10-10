@@ -11,12 +11,9 @@
 #include "gui/FileTail.h"
 #include "gui/config/IServerConfig.h"
 
-#include <QFileSystemWatcher>
 #include <QMutex>
 #include <QObject>
 #include <QProcess>
-#include <QString>
-#include <QStringList>
 #include <QTimer>
 
 namespace deskflow::gui {
