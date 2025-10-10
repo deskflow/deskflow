@@ -361,8 +361,12 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   if (mode() == Server) {
     args.prepend(QStringLiteral("server"));
-    if (!addServerArgs())
-      qWarning("failed to add server args for core process, aborting start");
+    const auto configFilename = persistServerConfig();
+    if (configFilename.isEmpty()) {
+      qFatal("config file name empty for server args");
+      return;
+    }
+    qInfo("core config file: %s", qPrintable(configFilename));
   } else if (mode() == Client) {
     args.prepend(QStringLiteral("client"));
   } else {
@@ -451,21 +455,6 @@ void CoreProcess::cleanup()
   if (isDesktop && isRunning) {
     stop();
   }
-}
-
-bool CoreProcess::addServerArgs()
-{
-  QString configFilename = persistServerConfig();
-  if (configFilename.isEmpty()) {
-    qFatal("config file name empty for server args");
-    return false;
-  }
-
-  qInfo("core config file: %s", qPrintable(configFilename));
-  // bizarrely, the tls cert path arg was being given to the core client.
-  // since it's not clear why (it is only needed for the server), this has now
-  // been moved to server args.
-  return true;
 }
 
 QString CoreProcess::persistServerConfig() const
