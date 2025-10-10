@@ -125,6 +125,7 @@ private:
   QString requestDaemonLogPath();
   void persistLogDir() const;
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
+  static QString processModeToString(const Settings::ProcessMode mode);
 
 #ifdef Q_OS_MAC
   void checkOSXNotification(const QString &line);
