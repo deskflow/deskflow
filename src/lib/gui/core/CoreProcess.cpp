@@ -322,6 +322,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     return;
   }
 
+  if (m_mode == Settings::CoreMode::None) {
+    qFatal("set core mode before starting");
+    return;
+  }
+
   QMutexLocker locker(&m_processMutex);
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
@@ -367,9 +372,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     args.prepend(QStringLiteral("client"));
     if (!addClientArgs(args))
       qWarning("failed to add client args for core process, aborting start");
-  } else {
-    qFatal("core started without mode");
-    return;
   }
 
   qDebug().noquote() << "log level:" << Settings::logLevelText();
