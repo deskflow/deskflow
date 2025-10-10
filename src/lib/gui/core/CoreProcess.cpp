@@ -317,6 +317,11 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
   using enum Settings::CoreMode;
 
+  if (m_processState == ProcessState::Started) {
+    qCritical("core process already started");
+    return;
+  }
+
   QMutexLocker locker(&m_processMutex);
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
@@ -324,11 +329,6 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   qInfo().noquote(
   ) << QString("starting core %1 process (%2 mode)").arg(modeString(), processModeToString(processMode));
-
-  if (m_processState == ProcessState::Started) {
-    qCritical("core process already started");
-    return;
-  }
 
   // allow external listeners to abort the start process (e.g. licensing issue).
   setProcessState(ProcessState::Starting);
