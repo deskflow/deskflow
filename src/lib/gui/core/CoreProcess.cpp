@@ -386,16 +386,12 @@ void CoreProcess::restart()
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
 
-  if (m_lastProcessMode != processMode) {
-    if (processMode == ProcessMode::Desktop) {
-      qDebug("process mode changed to desktop, stopping service process");
-      stop(ProcessMode::Service);
-    } else if (processMode == ProcessMode::Service) {
-      qDebug("process mode changed to service, stopping desktop process");
-      stop(ProcessMode::Desktop);
-    } else {
-      qFatal("invalid process mode");
-    }
+  if (m_lastProcessMode != std::nullopt && m_lastProcessMode != processMode) {
+    const auto debugMessage =
+        QStringLiteral("process mode changed to %1, stopping %2 process")
+            .arg(processModeToString(processMode), processModeToString(m_lastProcessMode.value()));
+    qDebug().noquote() << debugMessage;
+    stop(m_lastProcessMode);
   } else {
     // in service mode: though there is technically no need to stop the service
     // before restarting it, it does make for cleaner process state tracking,
