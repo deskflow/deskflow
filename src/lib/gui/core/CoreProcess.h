@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -125,7 +126,6 @@ private:
   void handleLogLines(const QString &text);
   QString correctedAddress() const;
   QString requestDaemonLogPath();
-  void persistLogDir() const;
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
   static QString processModeToString(const Settings::ProcessMode mode);
   static QString processStateToString(const CoreProcess::ProcessState state);
