@@ -688,14 +688,6 @@ void MainWindow::open()
   }
 }
 
-void MainWindow::coreProcessStarting()
-{
-  if (deskflow::platform::isWayland()) {
-    m_waylandWarnings.showOnce(this);
-  }
-  saveSettings();
-}
-
 void MainWindow::setStatus(const QString &status)
 {
   m_lblStatus->setText(status);
@@ -994,7 +986,10 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     m_actionStopCore->setEnabled(true);
 
     if (state == CoreProcessState::Starting) {
-      coreProcessStarting();
+      if (deskflow::platform::isWayland()) {
+        m_waylandWarnings.showOnce(this);
+      }
+      saveSettings();
     }
 
   } else {
