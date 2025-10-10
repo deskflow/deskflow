@@ -116,7 +116,6 @@ private:
   void stopForegroundProcess() const;
   void stopProcessFromDaemon();
   QString persistServerConfig() const;
-  QString processModeString() const;
   void setConnectionState(ConnectionState state);
   void setProcessState(ProcessState state);
   void checkLogLine(const QString &line);
