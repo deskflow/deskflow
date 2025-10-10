@@ -275,7 +275,6 @@ void MainWindow::connectSlots()
   connect(Settings::instance(), &Settings::serverSettingsChanged, this, &MainWindow::serverConfigSaving);
   connect(Settings::instance(), &Settings::settingsChanged, this, &MainWindow::settingsChanged);
 
-  connect(&m_coreProcess, &CoreProcess::starting, this, &MainWindow::coreProcessStarting, Qt::DirectConnection);
   connect(&m_coreProcess, &CoreProcess::error, this, &MainWindow::coreProcessError);
   connect(&m_coreProcess, &CoreProcess::logLine, this, &MainWindow::handleLogLine);
   connect(
@@ -993,6 +992,10 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
     m_actionStartCore->setVisible(false);
     m_actionRestartCore->setVisible(true);
     m_actionStopCore->setEnabled(true);
+
+    if (state == CoreProcessState::Starting) {
+      coreProcessStarting();
+    }
 
   } else {
     disconnect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger);

@@ -302,13 +302,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   qInfo().noquote() << QString("starting %1 process (%2 mode)").arg(coreMode, processModeToString(processMode));
 
-  // allow external listeners to abort the start process (e.g. licensing issue).
   setProcessState(ProcessState::Starting);
-  Q_EMIT starting();
-  if (m_processState == ProcessState::Stopped) {
-    qDebug("core process start was cancelled by listener");
-    return;
-  }
 
 #ifdef Q_OS_MAC
   requestOSXNotificationPermission();
