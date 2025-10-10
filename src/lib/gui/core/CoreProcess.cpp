@@ -316,8 +316,6 @@ void CoreProcess::handleLogLines(const QString &text)
 
 void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 {
-  using enum Settings::CoreMode;
-
   if (m_processState == ProcessState::Started) {
     qCritical("core process already started");
     return;
@@ -332,7 +330,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
 
   const auto currentMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
   const auto processMode = processModeOption.value_or(currentMode);
-  const auto coreMode = m_mode == Server ? QStringLiteral("server") : QStringLiteral("client");
+  const auto coreMode = QVariant::fromValue(m_mode).toString().toLower();
 
   qInfo().noquote() << QString("starting %1 process (%2 mode)").arg(coreMode, processModeToString(processMode));
 
@@ -363,18 +361,15 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     );
   }
 
-  QStringList args;
+  QStringList args = {coreMode};
 
-  if (mode() == Server) {
-    args.prepend(QStringLiteral("server"));
+  if (m_mode == Settings::CoreMode::Server) {
     const auto configFilename = persistServerConfig();
     if (configFilename.isEmpty()) {
       qFatal("config file name empty for server args");
       return;
     }
     qInfo("core config file: %s", qPrintable(configFilename));
-  } else if (mode() == Client) {
-    args.prepend(QStringLiteral("client"));
   }
 
   qDebug().noquote() << "log level:" << Settings::logLevelText();
