@@ -517,9 +517,9 @@ void CoreProcess::checkOSXNotification(const QString &line)
 }
 #endif
 
-QString CoreProcess::correctedAddress() const
+QString CoreProcess::correctedAddress(const QString &address) const
 {
-  return wrapIpv6(m_address);
+  return wrapIpv6(address.simplified());
 }
 
 QString CoreProcess::requestDaemonLogPath()
