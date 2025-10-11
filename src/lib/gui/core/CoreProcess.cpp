@@ -66,23 +66,27 @@ QString CoreProcess::makeQuotedArgs(const QString &app, const QStringList &args)
 /**
  * @brief If IPv6, ensures the IP is surround in square brackets.
  */
-QString wrapIpv6(const QString &address)
+QString CoreProcess::wrapIpv6(const QString &address)
 {
-  if (!address.contains(':') || address.isEmpty()) {
+  static const auto colon = QStringLiteral(":");
+  static const auto openBracket = QStringLiteral("[");
+  static const auto closeBracket = QStringLiteral("]");
+
+  if (!address.contains(colon) || address.isEmpty()) {
     return address;
   }
 
   QString wrapped = address;
 
-  if (address[0] != '[') {
-    wrapped.insert(0, '[');
+  if (!address.startsWith(openBracket)) {
+    wrapped.prepend(openBracket);
   }
 
-  if (address[address.size() - 1] != ']') {
-    wrapped.push_back(']');
+  if (!address.endsWith(closeBracket)) {
+    wrapped.append(closeBracket);
   }
 
-  return address;
+  return wrapped;
 }
 
 //
