@@ -24,7 +24,6 @@
 namespace deskflow::gui {
 
 const int kRetryDelay = 1000;
-const auto kServerConfigFilename = QStringLiteral("%1-server.conf").arg(kAppId);
 const auto kLineSplitRegex = QRegularExpression("\r|\n|\r\n");
 
 QString CoreProcess::processModeToString(const Settings::ProcessMode mode)
@@ -419,7 +418,7 @@ QString CoreProcess::persistServerConfig() const
     return Settings::value(Settings::Server::ExternalConfigFile).toString();
   }
 
-  const auto configFilePath = QStringLiteral("%1/%2").arg(Settings::settingsPath(), kServerConfigFilename);
+  const auto configFilePath = Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
   QFile configFile(configFilePath);
   if (!configFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
     qFatal("failed to open core config file for write: %s", qPrintable(configFile.fileName()));
