@@ -95,7 +95,6 @@ private:
 
   void settingsChanged(const QString &key = QString());
   void serverConfigSaving();
-  void coreProcessStarting();
   void coreProcessError(CoreProcess::Error error);
   void coreConnectionStateChanged(CoreProcess::ConnectionState state);
   void coreProcessStateChanged(CoreProcess::ProcessState state);
