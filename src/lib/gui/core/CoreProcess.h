@@ -88,7 +88,7 @@ public:
   // setters
   void setAddress(const QString &address)
   {
-    m_address = address.trimmed();
+    m_address = correctedAddress(address);
   }
   void setMode(Settings::CoreMode mode)
   {
@@ -120,7 +120,7 @@ private:
   void checkLogLine(const QString &line);
   bool checkSecureSocket(const QString &line);
   void handleLogLines(const QString &text);
-  QString correctedAddress() const;
+  QString correctedAddress(const QString &address) const;
   QString requestDaemonLogPath();
   static QString makeQuotedArgs(const QString &app, const QStringList &args);
   static QString processModeToString(const Settings::ProcessMode mode);
