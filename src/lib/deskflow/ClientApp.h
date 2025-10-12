@@ -49,15 +49,6 @@ public:
   void startNode() override;
 
   //
-  // App overrides
-  //
-
-  std::string configSection() const override
-  {
-    return "client";
-  }
-
-  //
   // Regular functions
   //
   deskflow::Screen *openClientScreen();
