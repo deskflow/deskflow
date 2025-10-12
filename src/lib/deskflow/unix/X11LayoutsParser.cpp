@@ -99,7 +99,7 @@ void X11LayoutsParser::appendVectorUniq(const std::vector<std::string> &source, 
       dst.push_back(elem);
     }
   }
-};
+}
 
 void X11LayoutsParser::convertLayoutToISO639_2(
     const std::string &pathToEvdevFile, bool needToReloadEvdev, const std::vector<std::string> &layoutNames,
