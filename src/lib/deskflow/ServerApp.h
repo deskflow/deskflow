@@ -67,15 +67,6 @@ public:
   void startNode() override;
 
   //
-  // App overrides
-  //
-
-  std::string configSection() const override
-  {
-    return "server";
-  }
-
-  //
   // Regular functions
   //
 
