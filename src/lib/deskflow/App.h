@@ -127,8 +127,6 @@ private:
 #define DAEMON_RUNNING(running_)
 #endif
 
-constexpr static auto s_helpVersionArgs = "  -h, --help               display this help and exit.\n";
-
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
 constexpr static auto s_helpNoWayland = //
     "\nYour Linux distribution does not support Wayland EI (emulated input)\n"
