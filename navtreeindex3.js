@@ -1,6 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"Logger_8h_source.html":[7,0,1,1,5,22],
 "MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
 "MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
 "MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
@@ -249,5 +248,6 @@ var NAVTREEINDEX3 =
 "OSXCocoaApp_8h.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,63,0],
 "OSXCocoaApp_8h_source.html":[7,0,1,1,9,63],
 "OSXCocoaApp_8m.html":[7,0,1,1,9,64],
-"OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1]
+"OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1],
+"OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0]
 };

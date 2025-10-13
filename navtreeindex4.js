@@ -1,6 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0],
 "OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
 "OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
 "OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
@@ -249,5 +248,6 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2":[7,0,1,1,5,0,8,2],
 "ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f":[7,0,1,1,5,0,8,5],
 "ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa":[7,0,1,1,5,0,8,3],
-"ServerConfig_8h_source.html":[7,0,1,1,5,0,8]
+"ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
+"ServerConnection_8cpp.html":[7,0,1,1,5,1,6]
 };

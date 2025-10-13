@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.76</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.79</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -154,113 +154,109 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">   55</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">loadConfig</a>() = 0;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">   56</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">loadConfig</a>(<span class="keyword">const</span> std::string &amp;pathname) = 0;</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno"><a class="line" href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">   57</a></span>  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">daemonInfo</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno"><a class="line" href="classApp.html#a6951a25cab46358ed52e5ff97d3bd0c4">   58</a></span>  <span class="keyword">virtual</span> std::string <a class="code hl_function" href="classApp.html#a6951a25cab46358ed52e5ff97d3bd0c4">configSection</a>() <span class="keyword">const</span> = 0;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="foldopen" id="foldopen00060" data-start="{" data-end="}">
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="classApp.html#a7007955907d7a63830ee966fc25110da">   60</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a7007955907d7a63830ee966fc25110da">setByeFunc</a>(<span class="keywordtype">void</span> (*<a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>)(<span class="keywordtype">int</span>))<span class="keyword"> override</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    m_bye = <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  }</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="foldopen" id="foldopen00059" data-start="{" data-end="}">
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno"><a class="line" href="classApp.html#a7007955907d7a63830ee966fc25110da">   59</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a7007955907d7a63830ee966fc25110da">setByeFunc</a>(<span class="keywordtype">void</span> (*<a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>)(<span class="keywordtype">int</span>))<span class="keyword"> override</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    m_bye = <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  }</div>
 </div>
-<div class="foldopen" id="foldopen00064" data-start="{" data-end="}">
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">   64</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>(<span class="keywordtype">int</span> error)<span class="keyword"> override</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>    m_bye(error);</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  }</div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">   63</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">bye</a>(<span class="keywordtype">int</span> error)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    m_bye(error);</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  }</div>
 </div>
-<div class="foldopen" id="foldopen00068" data-start="{" data-end="}">
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">   68</a></span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *<a class="code hl_function" href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">getEvents</a>()<span class="keyword"> const override</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    <span class="keywordflow">return</span> m_events;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  }</div>
+<div class="foldopen" id="foldopen00067" data-start="{" data-end="}">
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno"><a class="line" href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">   67</a></span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *<a class="code hl_function" href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">getEvents</a>()<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    <span class="keywordflow">return</span> m_events;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  }</div>
 </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
-<div class="foldopen" id="foldopen00073" data-start="{" data-end="}">
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">   73</a></span>  <a class="code hl_define" href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a> &amp;<a class="code hl_function" href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">appUtil</a>()</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  {</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>    <span class="keywordflow">return</span> m_appUtil;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  }</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span> </div>
+<div class="foldopen" id="foldopen00072" data-start="{" data-end="}">
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno"><a class="line" href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">   72</a></span>  <a class="code hl_define" href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a> &amp;<a class="code hl_function" href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">appUtil</a>()</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>  {</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>    <span class="keywordflow">return</span> m_appUtil;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  }</div>
 </div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classApp.html#a8d27eeb51b813760dc39425d7a9a37e2">run</a>();</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classApp.html#a816a1d7afbf9a655b56a72ac33cafe4c">daemonMainLoop</a>(<span class="keywordtype">int</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> **);</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc">setupFileLogging</a>();</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a699f3588a184a543d55effeaac0e49c1">loggingFilterWarning</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a724365d623e53560cf6a9f7246081ad9">initApp</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="foldopen" id="foldopen00084" data-start="{" data-end="}">
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno"><a class="line" href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">   84</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">setEvents</a>(<a class="code hl_class" href="classEventQueue.html">EventQueue</a> &amp;events)</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  {</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>    m_events = &amp;events;</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  }</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classApp.html#a8d27eeb51b813760dc39425d7a9a37e2">run</a>();</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classApp.html#a816a1d7afbf9a655b56a72ac33cafe4c">daemonMainLoop</a>(<span class="keywordtype">int</span>, <span class="keyword">const</span> <span class="keywordtype">char</span> **);</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc">setupFileLogging</a>();</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a699f3588a184a543d55effeaac0e49c1">loggingFilterWarning</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a724365d623e53560cf6a9f7246081ad9">initApp</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
+<div class="foldopen" id="foldopen00083" data-start="{" data-end="}">
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno"><a class="line" href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">   83</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">setEvents</a>(<a class="code hl_class" href="classEventQueue.html">EventQueue</a> &amp;events)</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  {</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    m_events = &amp;events;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  }</div>
 </div>
-<div class="foldopen" id="foldopen00088" data-start="{" data-end="}">
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno"><a class="line" href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">   88</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">setSocketMultiplexer</a>(std::unique_ptr&lt;SocketMultiplexer&gt; &amp;&amp;sm)</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  {</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>    m_socketMultiplexer = std::move(sm);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  }</div>
+<div class="foldopen" id="foldopen00087" data-start="{" data-end="}">
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno"><a class="line" href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">   87</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">setSocketMultiplexer</a>(std::unique_ptr&lt;SocketMultiplexer&gt; &amp;&amp;sm)</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    m_socketMultiplexer = std::move(sm);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  }</div>
 </div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
-<div class="foldopen" id="foldopen00093" data-start="{" data-end="}">
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno"><a class="line" href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">   93</a></span>  <a class="code hl_class" href="classSocketMultiplexer.html">SocketMultiplexer</a> *<a class="code hl_function" href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">getSocketMultiplexer</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>    <span class="keywordflow">return</span> m_socketMultiplexer.get();</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  }</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
+<div class="foldopen" id="foldopen00092" data-start="{" data-end="}">
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno"><a class="line" href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">   92</a></span>  <a class="code hl_class" href="classSocketMultiplexer.html">SocketMultiplexer</a> *<a class="code hl_function" href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">getSocketMultiplexer</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    <span class="keywordflow">return</span> m_socketMultiplexer.get();</div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  }</div>
 </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span> </div>
-<div class="foldopen" id="foldopen00098" data-start="{" data-end="}">
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">   98</a></span>  <span class="keyword">static</span> <a class="code hl_function" href="classApp.html#a6e71fe1043dc15637ded72799b92df0d">App</a> &amp;<a class="code hl_function" href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">instance</a>()</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  {</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    assert(s_instance != <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    <span class="keywordflow">return</span> *s_instance;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  }</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="foldopen" id="foldopen00097" data-start="{" data-end="}">
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">   97</a></span>  <span class="keyword">static</span> <a class="code hl_function" href="classApp.html#a6e71fe1043dc15637ded72799b92df0d">App</a> &amp;<a class="code hl_function" href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">instance</a>()</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    assert(s_instance != <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>    <span class="keywordflow">return</span> *s_instance;</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  }</div>
 </div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
-<div class="foldopen" id="foldopen00104" data-start="{" data-end="}">
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno"><a class="line" href="classApp.html#a975d935098b0a08ef69b1af32d85a499">  104</a></span>  QString <a class="code hl_function" href="classApp.html#a975d935098b0a08ef69b1af32d85a499">processName</a>()<span class="keyword"> const</span></div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>    <span class="keywordflow">return</span> m_pname;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  }</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span> </div>
+<div class="foldopen" id="foldopen00103" data-start="{" data-end="}">
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno"><a class="line" href="classApp.html#a975d935098b0a08ef69b1af32d85a499">  103</a></span>  QString <a class="code hl_function" href="classApp.html#a975d935098b0a08ef69b1af32d85a499">processName</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    <span class="keywordflow">return</span> m_pname;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  }</div>
 </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ae59ab33fd366ee0609bd4df8e807fab0">handleScreenError</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f">runEventsLoop</a>(<span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  void (*m_bye)(<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>);</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <span class="keyword">static</span> <a class="code hl_class" href="classApp.html">App</a> *s_instance;</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a> *m_fileLog = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  <a class="code hl_define" href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a> m_appUtil;</div>
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  std::unique_ptr&lt;SocketMultiplexer&gt; m_socketMultiplexer;</div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>  QString m_pname;</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>};</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ae59ab33fd366ee0609bd4df8e807fab0">handleScreenError</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span> </div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f">runEventsLoop</a>(<span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  void (*m_bye)(<a class="code hl_function" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <span class="keyword">static</span> <a class="code hl_class" href="classApp.html">App</a> *s_instance;</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>  <a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a> *m_fileLog = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>  <a class="code hl_define" href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a> m_appUtil;</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  std::unique_ptr&lt;SocketMultiplexer&gt; m_socketMultiplexer;</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span>  QString m_pname;</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>};</div>
 </div>
-<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#if WINAPI_MSWINDOWS</span></div>
-<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)</span></div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno"><a class="line" href="App_8h.html#a250989ede9f9b4639597b6ab4109743c">  127</a></span><span class="preprocessor">#define DAEMON_RUNNING(running_)</span></div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno"><a class="line" href="App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532">  130</a></span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532">s_helpVersionArgs</a> = <span class="stringliteral">&quot;  -h, --help               display this help and exit.\n&quot;</span>;</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span> </div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="preprocessor">#if !defined(WINAPI_LIBEI) &amp;&amp; WINAPI_XWINDOWS</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="comment">//</span></div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>    <span class="stringliteral">&quot;\nYour Linux distribution does not support Wayland EI (emulated input)\n&quot;</span></div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>    <span class="stringliteral">&quot;which is required for Wayland support.  Please use a Linux distribution\n&quot;</span></div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>    <span class="stringliteral">&quot;that supports Wayland EI.\n&quot;</span>;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno"><a class="line" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">  139</a></span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="preprocessor">#if WINAPI_MSWINDOWS</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span><span class="preprocessor">#define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)</span></div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno"><a class="line" href="App_8h.html#a250989ede9f9b4639597b6ab4109743c">  126</a></span><span class="preprocessor">#define DAEMON_RUNNING(running_)</span></div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="preprocessor">#if !defined(WINAPI_LIBEI) &amp;&amp; WINAPI_XWINDOWS</span></div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="comment">//</span></div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>    <span class="stringliteral">&quot;\nYour Linux distribution does not support Wayland EI (emulated input)\n&quot;</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    <span class="stringliteral">&quot;which is required for Wayland support.  Please use a Linux distribution\n&quot;</span></div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="stringliteral">&quot;that supports Wayland EI.\n&quot;</span>;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno"><a class="line" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">  136</a></span><span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">auto</span> <a class="code hl_variable" href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a> = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aAppUtilUnix_8h_html"><div class="ttname"><a href="AppUtilUnix_8h.html">AppUtilUnix.h</a></div></div>
 <div class="ttc" id="aAppUtilUnix_8h_html_a9788f594d1b0cad50d71a869ae282146"><div class="ttname"><a href="AppUtilUnix_8h.html#a9788f594d1b0cad50d71a869ae282146">ARCH_APP_UTIL</a></div><div class="ttdeci">#define ARCH_APP_UTIL</div><div class="ttdef"><b>Definition</b> AppUtilUnix.h:12</div></div>
 <div class="ttc" id="aAppUtilWindows_8h_html"><div class="ttname"><a href="AppUtilWindows_8h.html">AppUtilWindows.h</a></div></div>
-<div class="ttc" id="aApp_8h_html_a6fd0eb88c0fcb4cae9f3880bbf63df44"><div class="ttname"><a href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a></div><div class="ttdeci">static constexpr auto s_helpNoWayland</div><div class="ttdef"><b>Definition</b> App.h:139</div></div>
-<div class="ttc" id="aApp_8h_html_a9c584fbbd5af9ba69c85bc737bb7d532"><div class="ttname"><a href="App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532">s_helpVersionArgs</a></div><div class="ttdeci">static constexpr auto s_helpVersionArgs</div><div class="ttdef"><b>Definition</b> App.h:130</div></div>
+<div class="ttc" id="aApp_8h_html_a6fd0eb88c0fcb4cae9f3880bbf63df44"><div class="ttname"><a href="App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44">s_helpNoWayland</a></div><div class="ttdeci">static constexpr auto s_helpNoWayland</div><div class="ttdef"><b>Definition</b> App.h:136</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ad2573eea84512de995e58415e5512fec"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></div><div class="ttdeci">static int(PASCAL FAR *bind_winsock)(SOCKET s</div></div>
 <div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
 <div class="ttc" id="aEventQueue_8h_html"><div class="ttname"><a href="EventQueue_8h.html">EventQueue.h</a></div></div>
@@ -270,31 +266,30 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="ttc" id="aclassApp_1_1XNoEiSupport_html_a9f6c5560e08e0b46f890960c51e6a45a"><div class="ttname"><a href="classApp_1_1XNoEiSupport.html#a9f6c5560e08e0b46f890960c51e6a45a">App::XNoEiSupport::XNoEiSupport</a></div><div class="ttdeci">XNoEiSupport()</div><div class="ttdef"><b>Definition</b> App.h:40</div></div>
 <div class="ttc" id="aclassApp_html"><div class="ttname"><a href="classApp.html">App</a></div><div class="ttdef"><b>Definition</b> App.h:35</div></div>
 <div class="ttc" id="aclassApp_html_a176d732d8b1d9ffd19947e8726f3257b"><div class="ttname"><a href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">App::loadConfig</a></div><div class="ttdeci">virtual bool loadConfig(const std::string &amp;pathname)=0</div></div>
-<div class="ttc" id="aclassApp_html_a2999f6b9b1129542847a07bcf5bc7c21"><div class="ttname"><a href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">App::getEvents</a></div><div class="ttdeci">IEventQueue * getEvents() const override</div><div class="ttdef"><b>Definition</b> App.h:68</div></div>
+<div class="ttc" id="aclassApp_html_a2999f6b9b1129542847a07bcf5bc7c21"><div class="ttname"><a href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">App::getEvents</a></div><div class="ttdeci">IEventQueue * getEvents() const override</div><div class="ttdef"><b>Definition</b> App.h:67</div></div>
 <div class="ttc" id="aclassApp_html_a3de184a2f5202d1e0458223d11e871fd"><div class="ttname"><a href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">App::loadConfig</a></div><div class="ttdeci">virtual void loadConfig()=0</div></div>
-<div class="ttc" id="aclassApp_html_a42f44f9b4dc89ed5daaf0cbdb455c10e"><div class="ttname"><a href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">App::instance</a></div><div class="ttdeci">static App &amp; instance()</div><div class="ttdef"><b>Definition</b> App.h:98</div></div>
+<div class="ttc" id="aclassApp_html_a42f44f9b4dc89ed5daaf0cbdb455c10e"><div class="ttname"><a href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">App::instance</a></div><div class="ttdeci">static App &amp; instance()</div><div class="ttdef"><b>Definition</b> App.h:97</div></div>
 <div class="ttc" id="aclassApp_html_a4af9e4bbb719ae9fce079bd11d263878"><div class="ttname"><a href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">App::daemonInfo</a></div><div class="ttdeci">virtual const char * daemonInfo() const =0</div></div>
 <div class="ttc" id="aclassApp_html_a5ecbaa8022d8e3a787779f2549b33379"><div class="ttname"><a href="classApp.html#a5ecbaa8022d8e3a787779f2549b33379">App::App</a></div><div class="ttdeci">App(App const &amp;)=delete</div></div>
-<div class="ttc" id="aclassApp_html_a60b51c7e60aa48b222849fbdc68971a0"><div class="ttname"><a href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">App::getSocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer * getSocketMultiplexer() const</div><div class="ttdef"><b>Definition</b> App.h:93</div></div>
+<div class="ttc" id="aclassApp_html_a60b51c7e60aa48b222849fbdc68971a0"><div class="ttname"><a href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">App::getSocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer * getSocketMultiplexer() const</div><div class="ttdef"><b>Definition</b> App.h:92</div></div>
 <div class="ttc" id="aclassApp_html_a662e265aad8fec31f4b4e85368478c51"><div class="ttname"><a href="classApp.html#a662e265aad8fec31f4b4e85368478c51">App::operator=</a></div><div class="ttdeci">App &amp; operator=(App &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassApp_html_a6951a25cab46358ed52e5ff97d3bd0c4"><div class="ttname"><a href="classApp.html#a6951a25cab46358ed52e5ff97d3bd0c4">App::configSection</a></div><div class="ttdeci">virtual std::string configSection() const =0</div></div>
 <div class="ttc" id="aclassApp_html_a699f3588a184a543d55effeaac0e49c1"><div class="ttname"><a href="classApp.html#a699f3588a184a543d55effeaac0e49c1">App::loggingFilterWarning</a></div><div class="ttdeci">void loggingFilterWarning() const</div><div class="ttdef"><b>Definition</b> App.cpp:131</div></div>
 <div class="ttc" id="aclassApp_html_a6e71fe1043dc15637ded72799b92df0d"><div class="ttname"><a href="classApp.html#a6e71fe1043dc15637ded72799b92df0d">App::App</a></div><div class="ttdeci">App(IEventQueue *events, const QString &amp;processName)</div><div class="ttdef"><b>Definition</b> App.cpp:47</div></div>
 <div class="ttc" id="aclassApp_html_a6ee3b458bbf3a3b42bc7b51af7e9f1bc"><div class="ttname"><a href="classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc">App::setupFileLogging</a></div><div class="ttdeci">void setupFileLogging()</div><div class="ttdef"><b>Definition</b> App.cpp:119</div></div>
-<div class="ttc" id="aclassApp_html_a7007955907d7a63830ee966fc25110da"><div class="ttname"><a href="classApp.html#a7007955907d7a63830ee966fc25110da">App::setByeFunc</a></div><div class="ttdeci">void setByeFunc(void(*bye)(int)) override</div><div class="ttdef"><b>Definition</b> App.h:60</div></div>
+<div class="ttc" id="aclassApp_html_a7007955907d7a63830ee966fc25110da"><div class="ttname"><a href="classApp.html#a7007955907d7a63830ee966fc25110da">App::setByeFunc</a></div><div class="ttdeci">void setByeFunc(void(*bye)(int)) override</div><div class="ttdef"><b>Definition</b> App.h:59</div></div>
 <div class="ttc" id="aclassApp_html_a724365d623e53560cf6a9f7246081ad9"><div class="ttname"><a href="classApp.html#a724365d623e53560cf6a9f7246081ad9">App::initApp</a></div><div class="ttdeci">void initApp() override</div><div class="ttdef"><b>Definition</b> App.cpp:141</div></div>
 <div class="ttc" id="aclassApp_html_a816a1d7afbf9a655b56a72ac33cafe4c"><div class="ttname"><a href="classApp.html#a816a1d7afbf9a655b56a72ac33cafe4c">App::daemonMainLoop</a></div><div class="ttdeci">int daemonMainLoop(int, const char **)</div><div class="ttdef"><b>Definition</b> App.cpp:109</div></div>
 <div class="ttc" id="aclassApp_html_a8d27eeb51b813760dc39425d7a9a37e2"><div class="ttname"><a href="classApp.html#a8d27eeb51b813760dc39425d7a9a37e2">App::run</a></div><div class="ttdeci">int run()</div><div class="ttdef"><b>Definition</b> App.cpp:65</div></div>
-<div class="ttc" id="aclassApp_html_a975d935098b0a08ef69b1af32d85a499"><div class="ttname"><a href="classApp.html#a975d935098b0a08ef69b1af32d85a499">App::processName</a></div><div class="ttdeci">QString processName() const</div><div class="ttdef"><b>Definition</b> App.h:104</div></div>
+<div class="ttc" id="aclassApp_html_a975d935098b0a08ef69b1af32d85a499"><div class="ttname"><a href="classApp.html#a975d935098b0a08ef69b1af32d85a499">App::processName</a></div><div class="ttdeci">QString processName() const</div><div class="ttdef"><b>Definition</b> App.h:103</div></div>
 <div class="ttc" id="aclassApp_html_a9bd1531cdd8af54c9c14b3931512410a"><div class="ttname"><a href="classApp.html#a9bd1531cdd8af54c9c14b3931512410a">App::App</a></div><div class="ttdeci">App(App &amp;&amp;)=delete</div></div>
-<div class="ttc" id="aclassApp_html_a9ebe7c05d696bb7dddd0bad9b51c94e9"><div class="ttname"><a href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">App::appUtil</a></div><div class="ttdeci">ARCH_APP_UTIL &amp; appUtil()</div><div class="ttdef"><b>Definition</b> App.h:73</div></div>
+<div class="ttc" id="aclassApp_html_a9ebe7c05d696bb7dddd0bad9b51c94e9"><div class="ttname"><a href="classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9">App::appUtil</a></div><div class="ttdeci">ARCH_APP_UTIL &amp; appUtil()</div><div class="ttdef"><b>Definition</b> App.h:72</div></div>
 <div class="ttc" id="aclassApp_html_aa28cf2e917bbc7fc5afc777587c72e5f"><div class="ttname"><a href="classApp.html#aa28cf2e917bbc7fc5afc777587c72e5f">App::runEventsLoop</a></div><div class="ttdeci">void runEventsLoop(void *)</div><div class="ttdef"><b>Definition</b> App.cpp:168</div></div>
 <div class="ttc" id="aclassApp_html_ab25cb14c8734dd3d83f96240f3b25740"><div class="ttname"><a href="classApp.html#ab25cb14c8734dd3d83f96240f3b25740">App::parseArgs</a></div><div class="ttdeci">virtual void parseArgs()=0</div></div>
-<div class="ttc" id="aclassApp_html_ab4f1cdee9e6fa5c0f0fcb34b0beb9048"><div class="ttname"><a href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">App::bye</a></div><div class="ttdeci">void bye(int error) override</div><div class="ttdef"><b>Definition</b> App.h:64</div></div>
+<div class="ttc" id="aclassApp_html_ab4f1cdee9e6fa5c0f0fcb34b0beb9048"><div class="ttname"><a href="classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048">App::bye</a></div><div class="ttdeci">void bye(int error) override</div><div class="ttdef"><b>Definition</b> App.h:63</div></div>
 <div class="ttc" id="aclassApp_html_ab51ebb2be69b544372c4ab6a9169264f"><div class="ttname"><a href="classApp.html#ab51ebb2be69b544372c4ab6a9169264f">App::operator=</a></div><div class="ttdeci">App &amp; operator=(App const &amp;)=delete</div></div>
-<div class="ttc" id="aclassApp_html_acbc962ac1eea477e7cf22e97c1c04bed"><div class="ttname"><a href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">App::setEvents</a></div><div class="ttdeci">void setEvents(EventQueue &amp;events)</div><div class="ttdef"><b>Definition</b> App.h:84</div></div>
+<div class="ttc" id="aclassApp_html_acbc962ac1eea477e7cf22e97c1c04bed"><div class="ttname"><a href="classApp.html#acbc962ac1eea477e7cf22e97c1c04bed">App::setEvents</a></div><div class="ttdeci">void setEvents(EventQueue &amp;events)</div><div class="ttdef"><b>Definition</b> App.h:83</div></div>
 <div class="ttc" id="aclassApp_html_acde03ff6767ca35828915a6f327d4b5c"><div class="ttname"><a href="classApp.html#acde03ff6767ca35828915a6f327d4b5c">App::~App</a></div><div class="ttdeci">~App() override</div><div class="ttdef"><b>Definition</b> App.cpp:60</div></div>
-<div class="ttc" id="aclassApp_html_ad4d9e0526734148f3d7364f2933c6d57"><div class="ttname"><a href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">App::setSocketMultiplexer</a></div><div class="ttdeci">void setSocketMultiplexer(std::unique_ptr&lt; SocketMultiplexer &gt; &amp;&amp;sm)</div><div class="ttdef"><b>Definition</b> App.h:88</div></div>
+<div class="ttc" id="aclassApp_html_ad4d9e0526734148f3d7364f2933c6d57"><div class="ttname"><a href="classApp.html#ad4d9e0526734148f3d7364f2933c6d57">App::setSocketMultiplexer</a></div><div class="ttdeci">void setSocketMultiplexer(std::unique_ptr&lt; SocketMultiplexer &gt; &amp;&amp;sm)</div><div class="ttdef"><b>Definition</b> App.h:87</div></div>
 <div class="ttc" id="aclassApp_html_ae59ab33fd366ee0609bd4df8e807fab0"><div class="ttname"><a href="classApp.html#ae59ab33fd366ee0609bd4df8e807fab0">App::handleScreenError</a></div><div class="ttdeci">void handleScreenError() const</div><div class="ttdef"><b>Definition</b> App.cpp:162</div></div>
 <div class="ttc" id="aclassEventQueue_html"><div class="ttname"><a href="classEventQueue.html">EventQueue</a></div><div class="ttdoc">Event queue.</div><div class="ttdef"><b>Definition</b> EventQueue.h:29</div></div>
 <div class="ttc" id="aclassFileLogOutputter_html"><div class="ttname"><a href="classFileLogOutputter.html">FileLogOutputter</a></div><div class="ttdoc">Write log to file.</div><div class="ttdef"><b>Definition</b> LogOutputters.h:60</div></div>

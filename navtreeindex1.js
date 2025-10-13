@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"CoreProcess_8h_source.html":[7,0,1,1,5,1,5],
 "DaemonApp_8cpp.html":[7,0,1,1,4,20],
 "DaemonApp_8cpp.html#a1038c7e9c69c9b35b686cafe290b7598":[7,0,1,1,4,20,0],
 "DaemonApp_8h.html":[7,0,1,1,4,21],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "KeyTypes_8h.html#a21b3e48425b775744e166ea25f03b00b":[7,0,1,1,4,43,182],
 "KeyTypes_8h.html#a2242997c896d5b1c34c5efce088b85bd":[7,0,1,1,4,43,198],
 "KeyTypes_8h.html#a23d5b4a41b7764285314aa5704c67e68":[7,0,1,1,4,43,84],
-"KeyTypes_8h.html#a24fb479b7ac284f7af675309a0432f48":[7,0,1,1,4,43,168]
+"KeyTypes_8h.html#a24fb479b7ac284f7af675309a0432f48":[7,0,1,1,4,43,168],
+"KeyTypes_8h.html#a2627ad4bc147d34a22cdb5d10537f7a4":[7,0,1,1,4,43,204]
 };

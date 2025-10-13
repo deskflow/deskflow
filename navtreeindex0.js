@@ -49,7 +49,6 @@ var NAVTREEINDEX0 =
 "App_8h.html":[7,0,1,1,4,5],
 "App_8h.html#a250989ede9f9b4639597b6ab4109743c":[7,0,1,1,4,5,2],
 "App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44":[7,0,1,1,4,5,3],
-"App_8h.html#a9c584fbbd5af9ba69c85bc737bb7d532":[7,0,1,1,4,5,4],
 "App_8h_source.html":[7,0,1,1,4,5],
 "ArchDaemonNone_8cpp.html":[7,0,1,1,0,4],
 "ArchDaemonNone_8h.html":[7,0,1,1,0,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "CoreArgs_8h.html":[7,0,1,1,4,19],
 "CoreArgs_8h_source.html":[7,0,1,1,4,19],
 "CoreProcess_8cpp.html":[7,0,1,1,5,1,4],
-"CoreProcess_8h.html":[7,0,1,1,5,1,5]
+"CoreProcess_8h.html":[7,0,1,1,5,1,5],
+"CoreProcess_8h_source.html":[7,0,1,1,5,1,5]
 };

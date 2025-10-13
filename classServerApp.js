@@ -7,7 +7,6 @@ var classServerApp =
     [ "closePrimaryClient", "classServerApp.html#a325cddd404e96b4768475a95bc69c01e", null ],
     [ "closeServer", "classServerApp.html#a3d6e426ddbea2a7dee7840b23c542597", null ],
     [ "closeServerScreen", "classServerApp.html#ad417146e268424d9641ccd1b7909419c", null ],
-    [ "configSection", "classServerApp.html#a25ed6657950da895e5c51e2ec0e148d8", null ],
     [ "createScreen", "classServerApp.html#aa35aa3f57d370b20f4fdc31d535c7864", null ],
     [ "daemonInfo", "classServerApp.html#a3ff70177a2829a499722abb688e7e55b", null ],
     [ "daemonName", "classServerApp.html#a24ce330e84e2ec6c0a4725dcd2e636b7", null ],
