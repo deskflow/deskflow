@@ -158,6 +158,8 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1ServerConnection.html":[6,0,0,2,8],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a1ee48784cb1e77a1143c7c96cedaa8d8":[5,0,0,3,9,4],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a1ee48784cb1e77a1143c7c96cedaa8d8":[6,0,0,2,8,4],
+"classdeskflow_1_1gui_1_1ServerConnection.html#a2b36cee789c77201f126da1f0d1fb962":[5,0,0,3,9,6],
+"classdeskflow_1_1gui_1_1ServerConnection.html#a2b36cee789c77201f126da1f0d1fb962":[6,0,0,2,8,6],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a420b4d8bb63c4f81f85e3de84f01a622":[5,0,0,3,9,1],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a420b4d8bb63c4f81f85e3de84f01a622":[6,0,0,2,8,1],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478":[5,0,0,3,9,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a3aaecfd023dbd70093d3b1f2d9630f7f":[5,0,0,5,0,4],
 "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a3aaecfd023dbd70093d3b1f2d9630f7f":[6,0,0,4,0,4],
 "classdeskflow_1_1platform_1_1MSWindowsProcess.html#a425586420123c408f3e44936ad6d5d35":[5,0,0,5,0,9],
-"classdeskflow_1_1platform_1_1MSWindowsProcess.html#a425586420123c408f3e44936ad6d5d35":[6,0,0,4,0,9],
-"classdeskflow_1_1platform_1_1MSWindowsProcess.html#a4cae0ccf5636bc438a7a05721d7bf5b1":[5,0,0,5,0,2],
-"classdeskflow_1_1platform_1_1MSWindowsProcess.html#a4cae0ccf5636bc438a7a05721d7bf5b1":[6,0,0,4,0,2]
+"classdeskflow_1_1platform_1_1MSWindowsProcess.html#a425586420123c408f3e44936ad6d5d35":[6,0,0,4,0,9]
 };

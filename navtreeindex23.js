@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"protocolScreenSaverControl-p.html#a7512bdda9dc70c2d96a718c959f79b42":[6,0,197,0],
+"protocolScreenSaverControl-p.html#a860e29c74d78e6dbf77e24c236c17eec":[6,0,197,1],
 "protocolScreenSaverControl-p.html#aad1777ac8a538ea6b223208d6dc85c91":[6,0,197,5],
 "protocolScreenSaverControl-p.html#af66906a410f69ee7dd6b5c717d402633":[6,0,197,4],
 "protocol_reference.html":[2],
@@ -188,9 +190,8 @@ var NAVTREEINDEX23 =
 "structSettings_1_1Security.html#a7db6b92bdbeb96ae4e9e0606c077e20a":[6,0,211,5,2],
 "structSettings_1_1Security.html#ae5ece8411e9242bfabba2000d76127db":[6,0,211,5,3],
 "structSettings_1_1Server.html":[6,0,211,6],
-"structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d":[6,0,211,6,2],
-"structSettings_1_1Server.html#a4878120f7affad88deef5a30d71493b2":[6,0,211,6,0],
-"structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2":[6,0,211,6,1],
+"structSettings_1_1Server.html#a25a7367e2f17cf0864220cc913d5245d":[6,0,211,6,1],
+"structSettings_1_1Server.html#ae54c06a2036b14062071d2ea36fb09e2":[6,0,211,6,0],
 "structSsl.html":[6,0,223],
 "structSsl.html#a11be0a322639482fa6a22fbde1282e7f":[6,0,223,1],
 "structSsl.html#a9d45258a458d3f8a08c32c4da0dd6a72":[6,0,223,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX23 =
 "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a28afb3dccfc9ea4bf5d26a8d01fd1703":[6,0,0,0,0,0,4],
 "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a2a8ef245067686204fe75a9ea95d9295":[5,0,0,0,0,0,2],
 "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a2a8ef245067686204fe75a9ea95d9295":[6,0,0,0,0,0,2],
-"structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#aaabb2a7780b6e5ceecf70c5772a5fafa":[5,0,0,0,0,0,1],
-"structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#aaabb2a7780b6e5ceecf70c5772a5fafa":[6,0,0,0,0,0,1]
+"structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#aaabb2a7780b6e5ceecf70c5772a5fafa":[5,0,0,0,0,0,1]
 };

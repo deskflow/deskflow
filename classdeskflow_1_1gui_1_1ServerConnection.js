@@ -5,5 +5,6 @@ var classdeskflow_1_1gui_1_1ServerConnection =
     [ "clientsChanged", "classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114", null ],
     [ "configureClient", "classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478", null ],
     [ "handleLogLine", "classdeskflow_1_1gui_1_1ServerConnection.html#a1ee48784cb1e77a1143c7c96cedaa8d8", null ],
-    [ "messageShowing", "classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f", null ]
+    [ "messageShowing", "classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f", null ],
+    [ "serverConfigDialogVisible", "classdeskflow_1_1gui_1_1ServerConnection.html#a2b36cee789c77201f126da1f0d1fb962", null ]
 ];
