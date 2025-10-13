@@ -173,7 +173,7 @@ private:
     KeyID keyid() const
     {
       return m_id;
-    };
+    }
     bool removeById(std::uint32_t id);
     void addItem(HotKeyItem item);
     std::uint32_t findByMask(std::uint32_t mask) const;

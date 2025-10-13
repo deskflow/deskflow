@@ -35,7 +35,7 @@ template <> struct iterator_traits<deskflow::server::Config>
   using pointer = std::string *;
   using reference = std::string &;
 };
-}; // namespace std
+} // namespace std
 
 namespace deskflow::server {
 

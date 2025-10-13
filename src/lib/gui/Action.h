@@ -28,7 +28,7 @@ inline static const QString LockToScreen = QStringLiteral("lockCursorToScreen");
 inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
 inline static const QString HasScreens = QStringLiteral("hasScreens");
 inline static const QString RestartServer = QStringLiteral("restartServer");
-}; // namespace SettingsKeys
+} // namespace SettingsKeys
 
 class Action
 {

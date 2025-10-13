@@ -16,7 +16,7 @@ constexpr static auto s_clipboardChunkMetaSize = 7;
 
 namespace deskflow {
 class IStream;
-};
+}
 
 class ClipboardChunk : public Chunk
 {
