@@ -80,6 +80,7 @@ runs:
         extra-args: --classic --host-triplet=${{inputs.vcpkg-triplet}}
         triplet: ${{inputs.vcpkg-triplet}}
         token: ${{ github.token }}
+        revision: master
 
     - name: Install Wix
       if: ${{ runner.os == 'Windows' }}
