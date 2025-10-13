@@ -67,10 +67,14 @@ void CoreArgParser::parse()
   }
 
   if (m_parser.isSet(CoreArgs::logFileOption)) {
-    Settings::setValue(Settings::Log::File, m_parser.value(CoreArgs::logFileOption));
-    Settings::setValue(Settings::Log::ToFile, true);
-  } else {
-    Settings::setValue(Settings::Log::ToFile, false);
+    const auto value = m_parser.value(CoreArgs::logFileOption);
+    if (value == QStringLiteral("internal")) {
+      Settings::setValue(Settings::Log::File, QVariant());
+      Settings::setValue(Settings::Log::ToFile, false);
+    } else {
+      Settings::setValue(Settings::Log::File, value);
+      Settings::setValue(Settings::Log::ToFile, true);
+    }
   }
 
   if (m_parser.isSet(CoreArgs::secureOption)) {

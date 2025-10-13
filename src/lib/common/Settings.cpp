@@ -136,9 +136,6 @@ QVariant Settings::defaultValue(const QString &key)
   if (key == Security::KeySize)
     return 2048;
 
-  if (key == Log::File)
-    return QStringLiteral("%1/%2").arg(QDir::homePath(), kDefaultLogFile);
-
   if (key == Log::Level)
     return 4; // INFO
 

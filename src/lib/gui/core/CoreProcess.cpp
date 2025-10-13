@@ -340,10 +340,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   qDebug().noquote() << "log level:" << Settings::logLevelText();
 
   if (Settings::value(Settings::Log::ToFile).toBool()) {
-    const auto logFile = Settings::value(Settings::Log::File).toString();
-    QDir(QFileInfo(logFile).absolutePath()).mkpath(".");
-    args.append({QStringLiteral("--log"), logFile});
-    qInfo().noquote() << "log file:" << logFile;
+    qInfo().noquote() << "log file:" << Settings::value(Settings::Log::File).toString();
   }
 
   if (processMode == ProcessMode::Desktop) {

@@ -39,7 +39,9 @@ struct CoreArgs
       "level"
   );
 
-  inline static const auto logFileOption = QCommandLineOption({"l", "log"}, "Write messages to file", "file");
+  inline static const auto logFileOption = QCommandLineOption(
+      {"l", "log"}, "Where to log messages: A file path or internal (default: internal)", "location"
+  );
 
   inline static const auto secureOption =
       QCommandLineOption("secure", "Enable TLS encryption (default: true)", "value");
