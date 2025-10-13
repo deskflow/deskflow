@@ -48,7 +48,7 @@ void clearSettings(bool enableRestart)
     // make a new empty portable settings file
     if (profileDir.mkpath(Settings::settingsPath())) {
       QFile file(Settings::settingsFile());
-      file.open(QIODevice::WriteOnly);
+      std::ignore = file.open(QIODevice::WriteOnly);
       file.write(" ", 1);
       file.close();
     }
