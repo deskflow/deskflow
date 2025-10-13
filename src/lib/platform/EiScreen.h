@@ -156,10 +156,10 @@ private:
   {
   public:
     HotKeyItem(std::uint32_t mask, std::uint32_t id);
-    bool operator<(const HotKeyItem &other) const
+    auto operator<=>(const HotKeyItem &other) const
     {
-      return mask < other.mask;
-    };
+      return mask <=> other.mask;
+    }
 
   public:
     std::uint32_t mask = 0;
