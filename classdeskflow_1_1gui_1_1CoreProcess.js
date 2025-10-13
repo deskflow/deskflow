@@ -37,6 +37,5 @@ var classdeskflow_1_1gui_1_1CoreProcess =
     [ "setAddress", "classdeskflow_1_1gui_1_1CoreProcess.html#af349d08668435ae71d5e87f68eb3e1d4", null ],
     [ "setMode", "classdeskflow_1_1gui_1_1CoreProcess.html#acab885490826c34af4e1414ef061f87a", null ],
     [ "start", "classdeskflow_1_1gui_1_1CoreProcess.html#a85a0f905b812d6285e39cb9149a93b9a", null ],
-    [ "starting", "classdeskflow_1_1gui_1_1CoreProcess.html#a4e57df8dafab4e865f1bcec2efe0a8b8", null ],
     [ "stop", "classdeskflow_1_1gui_1_1CoreProcess.html#a0a6b6dc9aa924805e81b27fa9a437391", null ]
 ];
