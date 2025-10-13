@@ -91,7 +91,6 @@ jobs:
             runs-on: "windows-2022"
             timeout: 30
             config-args: "-G Ninja"
-            qt-version: 6.9.0
             vcpkg-triplet: x64-windows-release
             arch: "amd64"
 
@@ -99,7 +98,6 @@ jobs:
             runs-on: "windows-11-arm"
             timeout: 30
             config-args: "-G Ninja"
-            qt-version: 6.9.1
             vcpkg-triplet: arm64-windows
             arch: "arm64"
 
@@ -107,13 +105,11 @@ jobs:
             runs-on: macos-14
             timeout: 10
             config-args: '-DCMAKE_OSX_ARCHITECTURES="arm64" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
-            qt-version: 6.9.1
 
           - name: "macos-14-x64"
             runs-on: macos-14-large
             timeout: 20
             config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_SYSROOT=/Applications/Xcode_15.0.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
-            qt-version: 6.9.1
 
           - name: "debian-13-x86_64"
             runs-on: ubuntu-latest
@@ -227,7 +223,7 @@ jobs:
         id: get-deps
         uses: ./.github/actions/install-dependencies
         with:
-          qt-version: ${{ matrix.target.qt-version }}
+          qt-version: 6.10.0
           vcpkg-triplet: ${{matrix.target.vcpkg-triplet}}
           like: ${{ matrix.target.like }}
 
