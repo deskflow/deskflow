@@ -51,11 +51,10 @@ int main(int argc, char **argv)
 
   CoreArgParser parser(args);
 
-  // Comment below until we are ready use only this parser
-  // if (!parser.errorText().isEmpty()) {
-  //   QTextStream(stdout) << parser.errorText() << "\nUse --help for more information.";
-  //   return s_exitFailed;
-  // }
+  // Print any parser errors
+  if (!parser.errorText().isEmpty()) {
+    QTextStream(stdout) << parser.errorText() << "\n";
+  }
 
   if (parser.help()) {
     showHelp(parser);
