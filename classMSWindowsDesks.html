@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.108</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -100,8 +100,8 @@ $(function(){initNavTree('classMSWindowsDesks.html','','classMSWindowsDesks-memb
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a080fa679023eafa47604f761d12f5e1d" id="r_a080fa679023eafa47604f761d12f5e1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a080fa679023eafa47604f761d12f5e1d">MSWindowsDesks</a> (bool isPrimary, bool noHooks, const <a class="el" href="classIScreenSaver.html">IScreenSaver</a> *screensaver, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="classIJob.html">IJob</a> *<a class="el" href="#a93eb3b27c3c55a7434b656f083b9cad0">updateKeys</a>)</td></tr>
-<tr class="memdesc:a080fa679023eafa47604f761d12f5e1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
+<tr class="memitem:a50ba26901c283286adfc6bd11529c835" id="r_a50ba26901c283286adfc6bd11529c835"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50ba26901c283286adfc6bd11529c835">MSWindowsDesks</a> (bool isPrimary, bool useHooks, const <a class="el" href="classIScreenSaver.html">IScreenSaver</a> *screensaver, <a class="el" href="classIEventQueue.html">IEventQueue</a> *events, <a class="el" href="classIJob.html">IJob</a> *<a class="el" href="#a93eb3b27c3c55a7434b656f083b9cad0">updateKeys</a>)</td></tr>
+<tr class="memdesc:a50ba26901c283286adfc6bd11529c835"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor.  <br /></td></tr>
 <tr class="memitem:ad2301c3e811efd5e8760ce1a64ef6fad" id="r_ad2301c3e811efd5e8760ce1a64ef6fad"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad2301c3e811efd5e8760ce1a64ef6fad">~MSWindowsDesks</a> ()</td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:a8f5ccf474c6102b90a4846268f6c2fa7" id="r_a8f5ccf474c6102b90a4846268f6c2fa7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8f5ccf474c6102b90a4846268f6c2fa7">enable</a> ()</td></tr>
@@ -147,8 +147,8 @@ accessors</h2></td></tr>
 <p>Desks in Microsoft Windows are only remotely like desktops on X11 systems. A desk is another virtual surface for windows but desks impose serious restrictions: a thread can interact with only one desk at a time, you can't switch desks if the thread has any hooks installed or owns any windows, windows cannot exist on multiple desks at once, etc. Basically, they're useless except for running the login window or the screensaver, which is what they're used for. Deskflow must deal with them mainly because of the login window and screensaver but users can create their own desks and deskflow should work on those too.</p>
 <p>This class encapsulates all the desk nastiness. Clients of this object don't have to know anything about desks. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a080fa679023eafa47604f761d12f5e1d" name="a080fa679023eafa47604f761d12f5e1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a080fa679023eafa47604f761d12f5e1d">&#9670;&#160;</a></span>MSWindowsDesks()</h2>
+<a id="a50ba26901c283286adfc6bd11529c835" name="a50ba26901c283286adfc6bd11529c835"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50ba26901c283286adfc6bd11529c835">&#9670;&#160;</a></span>MSWindowsDesks()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -161,7 +161,7 @@ accessors</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>noHooks</em></span>, </td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>useHooks</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

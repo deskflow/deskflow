@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.108</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.109</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,11 +122,11 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
 <div class="foldopen" id="foldopen00045" data-start="{" data-end="};">
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classMSWindowsDesks.html">   45</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d">MSWindowsDesks</a></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classMSWindowsDesks.html">   45</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsDesks.html#a50ba26901c283286adfc6bd11529c835">MSWindowsDesks</a></div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>{</div>
 <div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_function" href="classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d">MSWindowsDesks</a>(<span class="keywordtype">bool</span> isPrimary, <span class="keywordtype">bool</span> noHooks, <span class="keyword">const</span> <a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a> *screensaver, <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events, <a class="code hl_class" href="classIJob.html">IJob</a> *<a class="code hl_function" href="classMSWindowsDesks.html#a93eb3b27c3c55a7434b656f083b9cad0">updateKeys</a>);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  <a class="code hl_function" href="classMSWindowsDesks.html#a50ba26901c283286adfc6bd11529c835">MSWindowsDesks</a>(<span class="keywordtype">bool</span> isPrimary, <span class="keywordtype">bool</span> useHooks, <span class="keyword">const</span> <a class="code hl_class" href="classIScreenSaver.html">IScreenSaver</a> *screensaver, <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events, <a class="code hl_class" href="classIJob.html">IJob</a> *<a class="code hl_function" href="classMSWindowsDesks.html#a93eb3b27c3c55a7434b656f083b9cad0">updateKeys</a>);</div>
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  <a class="code hl_function" href="classMSWindowsDesks.html#ad2301c3e811efd5e8760ce1a64ef6fad">~MSWindowsDesks</a>();</div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
 <div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
@@ -242,8 +242,8 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <span class="comment">// true if screen is being used as a primary screen, false otherwise</span></div>
 <div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keywordtype">bool</span> m_isPrimary;</div>
 <div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span> </div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="comment">// true if hooks are not to be installed (useful for debugging)</span></div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="keywordtype">bool</span> m_noHooks;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="comment">// true if hooks are to be installed (when debugging, it can be useful to disable hooks)</span></div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="keywordtype">bool</span> m_useHooks;</div>
 <div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span> </div>
 <div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  <span class="comment">// true if mouse has entered the screen</span></div>
 <div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  <span class="keywordtype">bool</span> m_isOnScreen;</div>
@@ -307,10 +307,10 @@ $(function(){initNavTree('MSWindowsDesks_8h_source.html','',''); });
 <div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:31</div></div>
 <div class="ttc" id="aclassIJob_html"><div class="ttname"><a href="classIJob.html">IJob</a></div><div class="ttdoc">Job interface.</div><div class="ttdef"><b>Definition</b> IJob.h:16</div></div>
 <div class="ttc" id="aclassIScreenSaver_html"><div class="ttname"><a href="classIScreenSaver.html">IScreenSaver</a></div><div class="ttdoc">Screen saver interface.</div><div class="ttdef"><b>Definition</b> IScreenSaver.h:18</div></div>
-<div class="ttc" id="aclassMSWindowsDesks_html_a080fa679023eafa47604f761d12f5e1d"><div class="ttname"><a href="classMSWindowsDesks.html#a080fa679023eafa47604f761d12f5e1d">MSWindowsDesks::MSWindowsDesks</a></div><div class="ttdeci">MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:108</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a3378c0c3e7cec291e6fc56690a350e96"><div class="ttname"><a href="classMSWindowsDesks.html#a3378c0c3e7cec291e6fc56690a350e96">MSWindowsDesks::enter</a></div><div class="ttdeci">void enter()</div><div class="ttdoc">Notify of entering a desk.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:166</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a34a92c3b7b3fa5a6a2fe116e7971a0b9"><div class="ttname"><a href="classMSWindowsDesks.html#a34a92c3b7b3fa5a6a2fe116e7971a0b9">MSWindowsDesks::fakeInputEnd</a></div><div class="ttdeci">void fakeInputEnd()</div><div class="ttdoc">Stop ignoring user input.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:222</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a4a6bc7878c59dd81c7585e98b83ca0d7"><div class="ttname"><a href="classMSWindowsDesks.html#a4a6bc7878c59dd81c7585e98b83ca0d7">MSWindowsDesks::fakeMouseWheel</a></div><div class="ttdeci">void fakeMouseWheel(int32_t xDelta, int32_t yDelta) const</div><div class="ttdoc">Fake mouse wheel.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:302</div></div>
+<div class="ttc" id="aclassMSWindowsDesks_html_a50ba26901c283286adfc6bd11529c835"><div class="ttname"><a href="classMSWindowsDesks.html#a50ba26901c283286adfc6bd11529c835">MSWindowsDesks::MSWindowsDesks</a></div><div class="ttdeci">MSWindowsDesks(bool isPrimary, bool useHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys)</div><div class="ttdoc">Constructor.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:108</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a57a9163936a37a68dbc64ee272301729"><div class="ttname"><a href="classMSWindowsDesks.html#a57a9163936a37a68dbc64ee272301729">MSWindowsDesks::leave</a></div><div class="ttdeci">void leave(HKL keyLayout)</div><div class="ttdoc">Notify of leaving a desk.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:171</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a69250cbc821eb9d51e1a3f73a903187f"><div class="ttname"><a href="classMSWindowsDesks.html#a69250cbc821eb9d51e1a3f73a903187f">MSWindowsDesks::disable</a></div><div class="ttdeci">void disable()</div><div class="ttdoc">Disable desk tracking.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:151</div></div>
 <div class="ttc" id="aclassMSWindowsDesks_html_a6cefc3140066e5a68189bdd0c5ac636c"><div class="ttname"><a href="classMSWindowsDesks.html#a6cefc3140066e5a68189bdd0c5ac636c">MSWindowsDesks::fakeMouseButton</a></div><div class="ttdeci">void fakeMouseButton(ButtonID id, bool press)</div><div class="ttdoc">Fake mouse press/release.</div><div class="ttdef"><b>Definition</b> MSWindowsDesks.cpp:240</div></div>
