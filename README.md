@@ -22,6 +22,11 @@ TLS encryption is enabled by default. Wayland is supported. Clipboard sharing is
 
 [![Downloads: Stable Release](https://img.shields.io/github/downloads/deskflow/deskflow/latest/total?style=for-the-badge&logo=github&label=Download%20Stable)](https://github.com/deskflow/deskflow/releases/latest)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Downloads: Continuous Build](https://img.shields.io/github/downloads/deskflow/deskflow/continuous/total?style=for-the-badge&logo=github&label=Download%20Continuous)](https://github.com/deskflow/deskflow/releases/continuous)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[![Download From Flathub](https://img.shields.io/flathub/downloads/org.deskflow.deskflow?style=for-the-badge&logo=flathub&label=Download%20from%20flathub)](https://flathub.org/apps/org.deskflow.deskflow)
 
+> [!NOTE]
+> On Windows, you will need to install the
+> [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).  
+> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe) [`vc_redist.arm64.exe`](https://aka.ms/vs/17/release/vc_redist.arm64.exe)
+
 > [!TIP]
 > For macOS users, the easiest way to install and stay up to date is to use [Homebrew](https://brew.sh) with our [homebrew-tap](https://github.com/deskflow/homebrew-tap).
 
@@ -58,11 +63,6 @@ For instructions on building Deskflow, use the wiki page: [Building](https://git
 ## Operating Systems
 
 We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
-
-> [!NOTE]
-> On Windows, you will need to install the
-> [Microsoft Visual C++ Redistributable](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-microsoft-visual-c-redistributable-version).  
-> Download latest: [`vc_redist.x64.exe`](https://aka.ms/vs/17/release/vc_redist.x64.exe) [`vc_redist.arm64.exe`](https://aka.ms/vs/17/release/vc_redist.arm64.exe)
 
 Windows 10 or higher is required.
 
