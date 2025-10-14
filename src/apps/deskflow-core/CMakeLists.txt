@@ -5,7 +5,13 @@
 
 set(target ${CMAKE_PROJECT_NAME}-core)
 
-add_executable(${target} "${target}.cpp")
+add_executable(${target}
+  "${target}.cpp"
+  CoreArgs.h
+  CoreArgParser.h
+  CoreArgParser.cpp
+)
+
 if(WIN32)
   # Generate rc file
   set(EXE_DESCRIPTION "${CMAKE_PROJECT_PROPER_NAME} combined server and client application")

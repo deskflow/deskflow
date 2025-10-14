@@ -6,12 +6,13 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
+#include "CoreArgParser.h"
+
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
-#include "deskflow/CoreArgParser.h"
 #include "deskflow/ServerApp.h"
 
 #if SYSAPI_WIN32
