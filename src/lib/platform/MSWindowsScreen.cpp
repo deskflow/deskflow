@@ -80,11 +80,11 @@ HINSTANCE MSWindowsScreen::s_windowInstance = nullptr;
 MSWindowsScreen *MSWindowsScreen::s_screen = nullptr;
 
 MSWindowsScreen::MSWindowsScreen(
-    bool isPrimary, bool noHooks, IEventQueue *events, bool enableLangSync, bool invertScrolling
+    bool isPrimary, bool useHooks, IEventQueue *events, bool enableLangSync, bool invertScrolling
 )
     : PlatformScreen(events, invertScrolling),
       m_isPrimary(isPrimary),
-      m_noHooks(noHooks),
+      m_useHooks(useHooks),
       m_isOnScreen(m_isPrimary),
       m_hasMouse(GetSystemMetrics(SM_MOUSEPRESENT) != 0),
       m_events(events)
@@ -96,13 +96,13 @@ MSWindowsScreen::MSWindowsScreen(
 
   s_screen = this;
   try {
-    if (m_isPrimary && !m_noHooks) {
+    if (m_isPrimary && m_useHooks) {
       m_hook.loadLibrary();
     }
 
     m_screensaver = new MSWindowsScreenSaver();
     m_desks = new MSWindowsDesks(
-        m_isPrimary, m_noHooks, m_screensaver, m_events,
+        m_isPrimary, m_useHooks, m_screensaver, m_events,
         new TMethodJob<MSWindowsScreen>(this, &MSWindowsScreen::updateKeysCB)
     );
     m_keyState = new MSWindowsKeyState(

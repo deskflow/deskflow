@@ -106,10 +106,10 @@ static void send_mouse_input(DWORD dwFlags, DWORD dx, DWORD dy, DWORD dwData)
 //
 
 MSWindowsDesks::MSWindowsDesks(
-    bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys
+    bool isPrimary, bool useHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys
 )
     : m_isPrimary(isPrimary),
-      m_noHooks(noHooks),
+      m_useHooks(useHooks),
       m_isOnScreen(m_isPrimary),
       m_screensaver(screensaver),
       m_deskReady(&m_mutex, false),
@@ -633,7 +633,7 @@ void MSWindowsDesks::deskThread(void *vdesk)
       continue;
 
     case DESKFLOW_MSG_SWITCH:
-      if (!m_noHooks) {
+      if (m_useHooks) {
         MSWindowsHook::uninstall();
         if (m_screensaverNotify) {
           MSWindowsHook::uninstallScreenSaver();
@@ -712,7 +712,7 @@ void MSWindowsDesks::deskThread(void *vdesk)
       break;
 
     case DESKFLOW_MSG_SCREENSAVER:
-      if (!m_noHooks) {
+      if (m_useHooks) {
         if (msg.wParam != 0) {
           MSWindowsHook::installScreenSaver();
         } else {

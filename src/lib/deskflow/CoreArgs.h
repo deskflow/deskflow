@@ -56,7 +56,7 @@ struct CoreArgs
   );
 
   inline static const auto useHooksOption =
-      QCommandLineOption("useHooks", "Sets if hooks are used for windows desks", "value");
+      QCommandLineOption("useHooks", "Sets if hooks are used on Windows", "value");
 
   // Server Options
   inline static const auto peerCheckOption = QCommandLineOption(

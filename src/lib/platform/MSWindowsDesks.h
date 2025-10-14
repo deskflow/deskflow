@@ -54,7 +54,7 @@ public:
   updated in a thread attached to the current desk.
   \p hookLibrary must be a handle to the hook library.
   */
-  MSWindowsDesks(bool isPrimary, bool noHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys);
+  MSWindowsDesks(bool isPrimary, bool useHooks, const IScreenSaver *screensaver, IEventQueue *events, IJob *updateKeys);
   ~MSWindowsDesks();
 
   //! @name manipulators
@@ -232,8 +232,8 @@ private:
   // true if screen is being used as a primary screen, false otherwise
   bool m_isPrimary;
 
-  // true if hooks are not to be installed (useful for debugging)
-  bool m_noHooks;
+  // true if hooks are to be installed (when debugging, it can be useful to disable hooks)
+  bool m_useHooks;
 
   // true if mouse has entered the screen
   bool m_isOnScreen;
