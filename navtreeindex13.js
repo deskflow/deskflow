@@ -1,6 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classOSXClipboardBMPConverter.html":[6,0,175],
 "classOSXClipboardBMPConverter.html#a0433389c42800107700ccf83af00ce21":[6,0,175,3],
 "classOSXClipboardBMPConverter.html#a23a705486e1cb9b804fbf0a946171977":[6,0,175,0],
 "classOSXClipboardBMPConverter.html#a308b69ada7381f5da08656271a5df28f":[6,0,175,5],
@@ -249,5 +248,6 @@ var NAVTREEINDEX13 =
 "classPriorityQueue.html#ae2316c3c0268deaa2953a74439b98817":[6,0,189,13],
 "classPriorityQueue.html#aeb7034acce02598b6f250fcb3893e889":[6,0,189,8],
 "classPriorityQueue.html#aefb791549f4f4806d35796060d0e2c6f":[6,0,189,18],
-"classProtocolUtil.html":[6,0,190]
+"classProtocolUtil.html":[6,0,190],
+"classProtocolUtil.html#a51274404a5e17d791c949d60e3b344a0":[6,0,190,1]
 };

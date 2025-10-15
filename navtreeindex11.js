@@ -1,6 +1,5 @@
 var NAVTREEINDEX11 =
 {
-"classInputFilter_1_1KeyboardBroadcastAction.html#a60afa8992739c3d08391f9369d19e07d":[6,0,120,2,5],
 "classInputFilter_1_1KeyboardBroadcastAction.html#a7d4ee15361d42e7b8db01b88667271a2":[6,0,120,2,0],
 "classInputFilter_1_1KeyboardBroadcastAction.html#a7d4ee15361d42e7b8db01b88667271a2a418a4abf545dbad48678c51e7dbb8a46":[6,0,120,2,0,1],
 "classInputFilter_1_1KeyboardBroadcastAction.html#a7d4ee15361d42e7b8db01b88667271a2a6a24d2f1d016f22bc5134e7d0776247b":[6,0,120,2,0,0],
@@ -249,5 +248,6 @@ var NAVTREEINDEX11 =
 "classMSWindowsClipboardHTMLConverter.html#a912dbc48b8279f7fbf9d82b8c2a23c93":[6,0,153,1],
 "classMSWindowsClipboardHTMLConverter.html#aaff082fe29b3d3e9d550c20c486a352d":[6,0,153,3],
 "classMSWindowsClipboardHTMLConverter.html#ae339b528ee3d6f5c6035050074b81088":[6,0,153,4],
-"classMSWindowsClipboardTextConverter.html":[6,0,154]
+"classMSWindowsClipboardTextConverter.html":[6,0,154],
+"classMSWindowsClipboardTextConverter.html#a5057c4a4258d5109e608502bdd466d1c":[6,0,154,2]
 };

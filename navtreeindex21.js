@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"classvalidators_1_1IpAddressValidator.html":[5,0,4,3],
 "classvalidators_1_1IpAddressValidator.html":[6,0,2,3],
 "classvalidators_1_1IpAddressValidator.html#aa2cda1ad7282a58ac5b8736045418b44":[5,0,4,3,1],
 "classvalidators_1_1IpAddressValidator.html#aa2cda1ad7282a58ac5b8736045418b44":[6,0,2,3,1],
@@ -41,18 +40,18 @@ var NAVTREEINDEX21 =
 "contributing_guide.html":[1],
 "contributing_guide.html#autotoc_md9":[1,0],
 "deprecated.html":[3],
-"deskflow-core_8cpp.html":[7,0,1,0,0,0],
-"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,0,1],
-"deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,0,0,0],
+"deskflow-core_8cpp.html":[7,0,1,0,0,3],
+"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,3,1],
+"deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,0,3,0],
 "deskflow-daemon_8cpp.html":[7,0,1,0,1,0],
 "deskflow-daemon_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,1,0,1],
 "deskflow-daemon_8cpp.html#a40d30edf9ea1ac2a47b7874352b033b3":[7,0,1,0,1,0,0],
 "deskflow-gui_8cpp.html":[7,0,1,0,2,0],
 "deskflow-gui_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97":[7,0,1,0,2,0,0],
 "deskflow-gui_8cpp.html#aa7933fe78cc39eb00c1a3ca341a4f8a8":[7,0,1,0,2,0,1],
-"deskflow_2Screen_8cpp.html":[7,0,1,1,4,54],
-"deskflow_2Screen_8h.html":[7,0,1,1,4,55],
-"deskflow_2Screen_8h_source.html":[7,0,1,1,4,55],
+"deskflow_2Screen_8cpp.html":[7,0,1,1,4,51],
+"deskflow_2Screen_8h.html":[7,0,1,1,4,52],
+"deskflow_2Screen_8h_source.html":[7,0,1,1,4,52],
 "dir_00d753f0c10974c39dc450cbdcd64c24.html":[7,0,1,1,5,4],
 "dir_1002216e319566c65ba849e54f5ae169.html":[7,0,1,1,5,1],
 "dir_101750fb3e6d5167734ab1bd49650f60.html":[7,0,1,1,3],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8428552d86c0d262a542a528af490afa":[4,1,1,0],
 "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a8f3d10eb21bd36347c258679eba9e92b":[4,1,1,2],
 "group__protocol__enums.html#gga7a47af6600fb20bf999564b4e19dced5a902b0d55fddef6f8d651fe1035b7d4bd":[4,1,1,3],
-"group__protocol__errors.html":[4,2,4]
+"group__protocol__errors.html":[4,2,4],
+"group__protocol__errors.html#ga7ab9c494db2633d5cc130efd48d88867":[4,2,4,1]
 };

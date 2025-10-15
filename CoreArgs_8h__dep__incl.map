@@ -1,5 +1,5 @@
-<map id="src/lib/deskflow/CoreArgs.h" name="src/lib/deskflow/CoreArgs.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,188,30"/>
-<area shape="rect" id="Node000002" href="$CoreArgParser_8cpp.html" title=" " alt="" coords="14,78,179,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,46,99,77,94,77,94,46"/>
+<map id="src/apps/deskflow&#45;core/CoreArgs.h" name="src/apps/deskflow&#45;core/CoreArgs.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,162,44"/>
+<area shape="rect" id="Node000002" href="$CoreArgParser_8cpp.html" title=" " alt="" coords="5,92,162,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,60,86,91,81,91,81,60"/>
 </map>

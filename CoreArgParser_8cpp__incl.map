@@ -1,7 +1,7 @@
-<map id="src/lib/deskflow/CoreArgParser.cpp" name="src/lib/deskflow/CoreArgParser.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="362,5,526,44"/>
+<map id="src/apps/deskflow&#45;core/CoreArgParser.cpp" name="src/apps/deskflow&#45;core/CoreArgParser.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="366,5,522,44"/>
 <area shape="rect" id="Node000002" href="$CoreArgParser_8h.html" title=" " alt="" coords="48,92,168,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="363,47,174,91,173,85,362,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="366,47,174,91,173,85,364,41"/>
 <area shape="rect" id="Node000004" href="$CoreArgs_8h.html" title=" " alt="" coords="196,92,284,117"/>
 <area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="395,47,285,89,283,84,394,42"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="308,92,406,117"/>
@@ -13,7 +13,7 @@
 <area shape="rect" id="Node000009" href="$Settings_8h.html" title=" " alt="" coords="653,92,787,117"/>
 <area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="511,42,664,85,663,90,510,47"/>
 <area shape="rect" id="Node000013" href="$ProtocolTypes_8h.html" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="912,92,1083,117"/>
-<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="526,35,899,87,899,92,526,40"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="523,34,899,87,899,92,522,40"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,160,189"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,118,94,151,89,149,101,116"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="183,165,336,189"/>
