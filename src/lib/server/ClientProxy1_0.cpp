@@ -305,13 +305,13 @@ void ClientProxy1_0::mouseWheel(int32_t, int32_t yDelta)
   ProtocolUtil::writef(getStream(), kMsgDMouseWheel1_0, yDelta);
 }
 
-void ClientProxy1_0::sendDragInfo(uint32_t fileCount, const char *info, size_t size)
+void ClientProxy1_0::sendDragInfo(uint32_t, const char *, size_t)
 {
   // ignore -- not supported in protocol 1.0
   LOG_DEBUG("draggingInfoSending not supported");
 }
 
-void ClientProxy1_0::fileChunkSending(uint8_t mark, char *data, size_t dataSize)
+void ClientProxy1_0::fileChunkSending(uint8_t, char *, size_t)
 {
   // ignore -- not supported in protocol 1.0
   LOG_DEBUG("fileChunkSending not supported");
@@ -324,7 +324,7 @@ std::string ClientProxy1_0::getSecureInputApp() const
   return "";
 }
 
-void ClientProxy1_0::secureInputNotification(const std::string &app) const
+void ClientProxy1_0::secureInputNotification(const std::string &) const
 {
   // ignore -- not supported in protocol 1.0
   LOG_DEBUG("secureInputNotification not supported");

@@ -106,7 +106,7 @@ std::int32_t EiKeyState::pollActiveGroup() const
   return xkb_state_serialize_layout(m_xkbState, XKB_STATE_LAYOUT_EFFECTIVE);
 }
 
-void EiKeyState::pollPressedKeys(KeyButtonSet &pressedKeys) const
+void EiKeyState::pollPressedKeys(KeyButtonSet &) const
 {
   // FIXME
   return;

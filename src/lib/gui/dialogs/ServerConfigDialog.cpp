@@ -244,7 +244,7 @@ void ServerConfigDialog::removeHotkey()
   onChange();
 }
 
-void ServerConfigDialog::listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void ServerConfigDialog::listHotkeysSelectionChanged(const QItemSelection &selected, const QItemSelection &)
 {
   bool itemsSelected = !selected.isEmpty();
   ui->btnEditHotkey->setEnabled(itemsSelected);
@@ -393,7 +393,7 @@ void ServerConfigDialog::toggleCornerTopRight(bool enable)
   onChange();
 }
 
-void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void ServerConfigDialog::listActionsSelectionChanged(const QItemSelection &selected, const QItemSelection &)
 {
   bool enabled = !selected.isEmpty();
   ui->btnEditAction->setEnabled(enabled);

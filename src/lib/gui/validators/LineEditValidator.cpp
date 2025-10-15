@@ -29,7 +29,7 @@ void LineEditValidator::addValidator(std::unique_ptr<IStringValidator> validator
   m_Validators.push_back(std::move(validator));
 }
 
-QValidator::State LineEditValidator::validate(QString &input, int &pos) const
+QValidator::State LineEditValidator::validate(QString &input, int &) const
 {
   assert(m_pLineEdit);
 

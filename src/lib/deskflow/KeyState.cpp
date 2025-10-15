@@ -954,7 +954,7 @@ void KeyState::fakeAllKeysUp()
   m_mask = pollActiveModifiers();
 }
 
-bool KeyState::fakeMediaKey(KeyID id)
+bool KeyState::fakeMediaKey(KeyID)
 {
   return false;
 }

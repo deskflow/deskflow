@@ -259,7 +259,7 @@ std::string InputFilter::RestartServer::format() const
   return deskflow::string::sprintf("restartServer(%s)", s_mode[m_mode]);
 }
 
-void InputFilter::RestartServer::perform(const Event &event)
+void InputFilter::RestartServer::perform(const Event &)
 {
   // HACK Super hack we should gracefully exit
   exit(0);

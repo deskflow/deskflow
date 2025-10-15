@@ -740,7 +740,7 @@ int32_t XWindowsScreen::getJumpZoneSize() const
   return 1;
 }
 
-bool XWindowsScreen::isAnyMouseButtonDown(uint32_t &buttonID) const
+bool XWindowsScreen::isAnyMouseButtonDown(uint32_t &) const
 {
   // query the pointer to get the button state
   Window root;

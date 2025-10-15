@@ -137,7 +137,7 @@ bool EiEventQueueBuffer::isEmpty() const
   return m_queue.empty();
 }
 
-EventQueueTimer *EiEventQueueBuffer::newTimer(double duration, bool oneShot) const
+EventQueueTimer *EiEventQueueBuffer::newTimer(double, bool) const
 {
   return new EventQueueTimer;
 }

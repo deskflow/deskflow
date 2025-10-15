@@ -16,12 +16,10 @@ using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::Return;
-using ::testing::ReturnRef;
-using ::testing::SaveArg;
 
 void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys);
 
-void assertMaskIsOne(ForeachKeyCallback cb, void *userData);
+void assertMaskIsOne(ForeachKeyCallback, void *userData);
 
 const deskflow::KeyMap::KeyItem *stubMapKey(
     deskflow::KeyMap::Keystrokes &keys, KeyID id, int32_t group, deskflow::KeyMap::ModifierToKeys &activeModifiers,
@@ -406,7 +404,7 @@ void stubPollPressedKeys(IKeyState::KeyButtonSet &pressedKeys)
   pressedKeys.insert(1);
 }
 
-void assertMaskIsOne(ForeachKeyCallback cb, void *userData)
+void assertMaskIsOne(ForeachKeyCallback, void *userData)
 {
   ASSERT_EQ(1, ((KeyState::AddActiveModifierContext *)userData)->m_mask);
 }
