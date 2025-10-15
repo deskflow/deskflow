@@ -141,7 +141,7 @@ void FileLogOutputter::setLogFilename(const QString &logFile)
   m_fileName = logFile;
 }
 
-bool FileLogOutputter::write(LogLevel level, const QString &message)
+bool FileLogOutputter::write(LogLevel, const QString &message)
 {
   QFile file(m_fileName);
   if (!file.open(QFile::WriteOnly | QFile::Append))

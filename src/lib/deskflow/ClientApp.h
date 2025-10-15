@@ -38,7 +38,7 @@ public:
   {
     // do nothing
   }
-  bool loadConfig(const std::string &pathname) override
+  bool loadConfig(const std::string &) override
   {
     return false;
   }

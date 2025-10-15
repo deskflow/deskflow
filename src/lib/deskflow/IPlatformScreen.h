@@ -181,7 +181,7 @@ public:
   bool fakeKeyUp(KeyButton button) override = 0;
   void fakeAllKeysUp() override = 0;
   bool fakeCtrlAltDel() override = 0;
-  bool fakeMediaKey(KeyID id) override;
+  bool fakeMediaKey(KeyID) override;
   bool isKeyDown(KeyButton) const override = 0;
   KeyModifierMask getActiveModifiers() const override = 0;
   KeyModifierMask pollActiveModifiers() const override = 0;
