@@ -1234,5 +1234,7 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
   toggleCanRunCore(!newRemoteHost.isEmpty() && ui->rbModeClient->isChecked());
   if (newRemoteHost.isEmpty()) {
     Settings::setValue(Settings::Client::RemoteHost, QVariant());
+  } else {
+    Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
   }
 }
