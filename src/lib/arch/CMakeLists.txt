@@ -22,8 +22,6 @@ if(WIN32)
 
 elseif(UNIX)
   set(PLATFORM_CODE
-    unix/ArchDaemonUnix.cpp
-    unix/ArchDaemonUnix.h
     unix/ArchLogUnix.cpp
     unix/ArchLogUnix.h
     unix/ArchMultithreadPosix.cpp
