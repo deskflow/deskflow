@@ -18,7 +18,7 @@ Settings *Settings::instance()
   return &m;
 }
 
-void Settings::setSettingFile(const QString &settingsFile)
+void Settings::setSettingsFile(const QString &settingsFile)
 {
   if (instance()->settingsFile() == settingsFile) {
     qDebug("settings file already set, skipping");

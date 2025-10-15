@@ -115,7 +115,7 @@ public:
   Q_ENUM(CoreMode)
 
   static Settings *instance();
-  static void setSettingFile(const QString &settingsFile = QString());
+  static void setSettingsFile(const QString &settingsFile = QString());
   static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
