@@ -14,6 +14,8 @@ unset(SERVER_BINARY)
 add_library(common STATIC
   Common.h
   ExitCodes.h
+  I18N.h
+  I18N.cpp
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp
