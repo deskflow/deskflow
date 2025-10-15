@@ -54,6 +54,7 @@ public:
     inline static const auto Display = QStringLiteral("core/display");
     inline static const auto RestartOnFailure = QStringLiteral("core/restartOnFailure");
     inline static const auto UseHooks = QStringLiteral("core/useHooks");
+    inline static const auto Language = QStringLiteral("core/language");
   };
   struct Daemon
   {
@@ -179,6 +180,7 @@ private:
     , Settings::Core::Display
     , Settings::Core::RestartOnFailure
     , Settings::Core::UseHooks
+    , Settings::Core::Language
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
     , Settings::Daemon::LogFile
