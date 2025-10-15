@@ -9,6 +9,7 @@
 #include "VersionInfo.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "common/I18N.h"
 #include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
 #include "gui/DotEnv.h"

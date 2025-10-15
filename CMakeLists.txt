@@ -166,6 +166,7 @@ configure_libs()
 
 add_subdirectory(doc)
 add_subdirectory(src)
+add_subdirectory(translations)
 
 # Install License, License is in the App Bundle on mac os (src/gui)
 if(WIN32)
