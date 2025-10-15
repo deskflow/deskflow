@@ -20,7 +20,7 @@ Settings *Settings::instance()
 
 void Settings::setSettingsFile(const QString &settingsFile)
 {
-  if (instance()->settingsFile() == settingsFile) {
+  if (Settings::settingsFile() == settingsFile) {
     qDebug("settings file already set, skipping");
     return;
   }
