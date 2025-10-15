@@ -36,7 +36,7 @@
 
 #elif SYSAPI_UNIX
 
-#include "arch/unix/ArchDaemonUnix.h"
+#include "arch/ArchDaemonNone.h"
 #include "arch/unix/ArchLogUnix.h"
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/ArchNetworkBSD.h"
