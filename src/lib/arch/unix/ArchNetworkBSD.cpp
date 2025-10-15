@@ -485,6 +485,7 @@ ArchNetAddress ArchNetworkBSD::newAnyAddr(AddressFamily family)
   }
   default:
     delete addr;
+    addr = nullptr;
     assert(0 && "invalid family");
   }
 
