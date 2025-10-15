@@ -2,15 +2,16 @@
 # SPDX-License-Identifier: MIT
 # Maintainer: Deskflow Developers
 
-pkgname=deskflow
+_basename=@CMAKE_PROJECT_NAME@
+pkgname=${_basename}-git
 pkgver=@CMAKE_PROJECT_VERSION@
 pkgrel=1
-pkgdesc="Mouse and keyboard sharing utility"
+pkgdesc="@CMAKE_PROJECT_DESCRIPTION@"
 url="@CMAKE_PROJECT_HOMEPAGE_URL@"
 arch=('i686' 'x86_64' 'armv7h' 'aarch64')
 license=(LicenseRef-GPL-2.0-only-WITH-OpenSSL-Exception)
 conflicts=('synergy-git' 'synergy-1.6' 'synergy1-bin' 'synergy2-bin' 'synergy3-bin' 'synergy3-beta-bin' 'synergy3-stable-bin' 'barrier' 'barrier-git' 'barrier-headless' 'barrier-headless-git' 'input-leap' 'input-leap-git' 'input-leap-headless-git' 'input-leap-headless' 'waynergy' 'waynergy-git' 'qsynergy' 'slim-synergy' 'quicksynergy' 'deskflow')
-provides=("deskflow-git${pkgver}")
+provides=("$_basename")
 depends=(
   gcc-libs
   glib2
