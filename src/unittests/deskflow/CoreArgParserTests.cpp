@@ -17,7 +17,7 @@ void CoreArgParserTests::initTestCase()
   if (oldSettings.exists())
     oldSettings.remove();
 
-  Settings::setSettingFile(m_settingsFile);
+  Settings::setSettingsFile(m_settingsFile);
 }
 
 void CoreArgParserTests::interfaceLong()

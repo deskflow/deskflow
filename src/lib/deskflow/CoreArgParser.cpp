@@ -47,7 +47,7 @@ void CoreArgParser::parse()
   }
 
   if (m_parser.isSet(CoreArgs::configOption)) {
-    Settings::setSettingFile(m_parser.value(CoreArgs::configOption));
+    Settings::setSettingsFile(m_parser.value(CoreArgs::configOption));
   }
 
   if (m_parser.isSet(CoreArgs::interfaceOption)) {

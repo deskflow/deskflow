@@ -14,7 +14,7 @@ class SettingsTests : public QObject
 private Q_SLOTS:
   void initTestCase();
   // Test are run in order top to bottom
-  void setSettingFile();
+  void setSettingsFile();
   void settingsFile();
   void settingsPath();
   void tlsDir();
