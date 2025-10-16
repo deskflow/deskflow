@@ -129,8 +129,10 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
     const xkb_mod_mask_t xkbModMask = (1 << xkbModIdx);
 #endif
 
-    // Skip inactive modifiers.
-    if ((xkbModMaskIn & xkbModMask) != xkbModMask)
+    // Skip modifiers that have no XKB mask (not mapped to any real modifier)
+    // or are inactive. Without the xkbModMask == 0 check, modifiers with mask 0
+    // incorrectly pass the test (0 & 0 == 0) and get processed as "active".
+    if (xkbModMask == 0 || (xkbModMaskIn & xkbModMask) != xkbModMask)
       continue;
 
     /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
