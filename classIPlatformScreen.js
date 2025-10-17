@@ -15,7 +15,7 @@ var classIPlatformScreen =
     [ "fakeKeyDown", "classIPlatformScreen.html#a9ecea30aa8f84f7cbc7dc333c909d528", null ],
     [ "fakeKeyRepeat", "classIPlatformScreen.html#aa88660c9775b845a16551164cea06622", null ],
     [ "fakeKeyUp", "classIPlatformScreen.html#a5d6dac38151cdf9ed5f651a0c6c57f2b", null ],
-    [ "fakeMediaKey", "classIPlatformScreen.html#a318205b63dc85e59ffd300048e541847", null ],
+    [ "fakeMediaKey", "classIPlatformScreen.html#a0f685fafdfacb7e7f2ffd435dc5c9bcd", null ],
     [ "fakeMouseButton", "classIPlatformScreen.html#a71fc5907ac88338143b6c509b8e90724", null ],
     [ "fakeMouseMove", "classIPlatformScreen.html#a68f2d0ff334bd49c08e1b333403c61dc", null ],
     [ "fakeMouseRelativeMove", "classIPlatformScreen.html#a67e4ede2beff4de2809fc6c585c0ff14", null ],

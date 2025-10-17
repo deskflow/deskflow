@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.116</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.124</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -250,10 +250,10 @@ $(function(){initNavTree('EiScreen_8h_source.html','',''); });
 <div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  {</div>
 <div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>    HotKeyItem(std::uint32_t mask, std::uint32_t <span class="keywordtype">id</span>);</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordtype">bool</span> operator&lt;(<span class="keyword">const</span> HotKeyItem &amp;other)<span class="keyword"> const</span></div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> HotKeyItem &amp;other)<span class="keyword"> const</span></div>
 <div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span><span class="keyword">    </span>{</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>      <span class="keywordflow">return</span> mask &lt; other.mask;</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    };</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>      <span class="keywordflow">return</span> mask &lt;=&gt; other.mask;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>    }</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  <span class="keyword">public</span>:</div>
 <div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>    std::uint32_t mask = 0;</div>
@@ -267,7 +267,7 @@ $(function(){initNavTree('EiScreen_8h_source.html','',''); });
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>    <a class="code hl_typedef" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> keyid()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span><span class="keyword">    </span>{</div>
 <div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>      <span class="keywordflow">return</span> m_id;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    };</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>    }</div>
 <div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>    <span class="keywordtype">bool</span> removeById(std::uint32_t <span class="keywordtype">id</span>);</div>
 <div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>    <span class="keywordtype">void</span> addItem(HotKeyItem item);</div>
 <div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    std::uint32_t findByMask(std::uint32_t mask) <span class="keyword">const</span>;</div>
