@@ -1,10 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a2a2baf9a875f8f55efa11c968c5f1bb5":[7,0,1,1,4,40,173],
-"KeyTypes_8h.html#a2b44c684aa113801db981f0c0ddb0d98":[7,0,1,1,4,40,143],
-"KeyTypes_8h.html#a2b80888186754ee55f3edc7c83428b31":[7,0,1,1,4,40,72],
-"KeyTypes_8h.html#a2babe1d04369762cbc46be251a076742":[7,0,1,1,4,40,155],
-"KeyTypes_8h.html#a2dc0b545598eda04468e1fa31680ee75":[7,0,1,1,4,40,31],
 "KeyTypes_8h.html#a2e63c324d0ee1f7dedc0991e87c56d5f":[7,0,1,1,4,40,133],
 "KeyTypes_8h.html#a2f0edee8a8be1d3d3d4e12664b54c390":[7,0,1,1,4,40,190],
 "KeyTypes_8h.html#a2f15ada75ea888b1781ce584f8e432a7":[7,0,1,1,4,40,19],
@@ -249,5 +244,10 @@ var NAVTREEINDEX2 =
 "Logger_8cpp.html":[7,0,1,1,5,21],
 "Logger_8h.html":[7,0,1,1,5,22],
 "Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
-"Logger_8h_source.html":[7,0,1,1,5,22]
+"Logger_8h_source.html":[7,0,1,1,5,22],
+"MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
+"MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
+"MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
+"MSWindowsClipboardBitmapConverter_8cpp.html":[7,0,1,1,9,13],
+"MSWindowsClipboardBitmapConverter_8h.html":[7,0,1,1,9,14]
 };

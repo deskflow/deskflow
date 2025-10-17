@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.124</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.126</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -94,35 +94,48 @@ $(function(){initNavTree('ArchDaemonNone_8h_source.html','',''); });
 <div class="contents">
 <a href="ArchDaemonNone_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="IArchDaemon_8h.html">arch/IArchDaemon.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="ArchDaemonNone_8h.html#a99414cdb74167761d0f444afd670538f">   12</a></span><span class="preprocessor">#define ARCH_DAEMON ArchDaemonNone</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html">   20</a></span><span class="keyword">class </span><a class="code hl_function" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIArchDaemon.html">IArchDaemon</a></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">   23</a></span>  <a class="code hl_function" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">   24</a></span>  <a class="code hl_function" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">~ArchDaemonNone</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <span class="comment">// IArchDaemon overrides</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">daemonize</a>(<a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  QString <a class="code hl_function" href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">commandLine</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers.</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IArchDaemon_8h.html">arch/IArchDaemon.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="ArchDaemonNone_8h.html#a99414cdb74167761d0f444afd670538f">   13</a></span><span class="preprocessor">#define ARCH_DAEMON ArchDaemonNone</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
+<div class="foldopen" id="foldopen00021" data-start="{" data-end="};">
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html">   21</a></span><span class="keyword">class </span><a class="code hl_function" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIArchDaemon.html">IArchDaemon</a></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>{</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">   24</a></span>  <a class="code hl_function" href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">   25</a></span>  <a class="code hl_function" href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">~ArchDaemonNone</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="comment">// IArchDaemon overrides</span></div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="}">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">   28</a></span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">daemonize</a>(<a class="code hl_typedef" href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">DaemonFunc</a> <span class="keyword">const</span> &amp;func)<span class="keyword"> override</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    <span class="comment">// simply forward the call to func.  obviously, this doesn&#39;t</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    <span class="comment">// do any daemonizing.</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <span class="keywordflow">return</span> func();</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  }</div>
+</div>
+<div class="foldopen" id="foldopen00034" data-start="{" data-end="}">
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">   34</a></span>  QString <a class="code hl_function" href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">commandLine</a>()<span class="keyword"> const override</span></div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  }</div>
+</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
 </div>
 <div class="ttc" id="aIArchDaemon_8h_html"><div class="ttname"><a href="IArchDaemon_8h.html">IArchDaemon.h</a></div></div>
 <div class="ttc" id="aclassArchDaemonNone_html_a106e9c63288251f6494e4cdbb8f255ab"><div class="ttname"><a href="classArchDaemonNone.html#a106e9c63288251f6494e4cdbb8f255ab">ArchDaemonNone::ArchDaemonNone</a></div><div class="ttdeci">ArchDaemonNone()=default</div></div>
-<div class="ttc" id="aclassArchDaemonNone_html_a702ff979fe075a5b1fa15db68644c270"><div class="ttname"><a href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">ArchDaemonNone::commandLine</a></div><div class="ttdeci">QString commandLine() const override</div><div class="ttdoc">Get the command line.</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.cpp:22</div></div>
+<div class="ttc" id="aclassArchDaemonNone_html_a702ff979fe075a5b1fa15db68644c270"><div class="ttname"><a href="classArchDaemonNone.html#a702ff979fe075a5b1fa15db68644c270">ArchDaemonNone::commandLine</a></div><div class="ttdeci">QString commandLine() const override</div><div class="ttdoc">Get the command line.</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.h:34</div></div>
 <div class="ttc" id="aclassArchDaemonNone_html_a809f29cef8e3077ccb366048fcd156a2"><div class="ttname"><a href="classArchDaemonNone.html#a809f29cef8e3077ccb366048fcd156a2">ArchDaemonNone::~ArchDaemonNone</a></div><div class="ttdeci">~ArchDaemonNone() override=default</div></div>
-<div class="ttc" id="aclassArchDaemonNone_html_aa5b70363a272bbb6417dc75d48516711"><div class="ttname"><a href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone::daemonize</a></div><div class="ttdeci">int daemonize(DaemonFunc const &amp;func) override</div><div class="ttdoc">Daemonize the process.</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.cpp:15</div></div>
+<div class="ttc" id="aclassArchDaemonNone_html_aa5b70363a272bbb6417dc75d48516711"><div class="ttname"><a href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone::daemonize</a></div><div class="ttdeci">int daemonize(DaemonFunc const &amp;func) override</div><div class="ttdoc">Daemonize the process.</div><div class="ttdef"><b>Definition</b> ArchDaemonNone.h:28</div></div>
 <div class="ttc" id="aclassIArchDaemon_html"><div class="ttname"><a href="classIArchDaemon.html">IArchDaemon</a></div><div class="ttdoc">Interface for architecture dependent daemonizing.</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:21</div></div>
 <div class="ttc" id="aclassIArchDaemon_html_a4b8d40757bd2c4c5996998e445e317ab"><div class="ttname"><a href="classIArchDaemon.html#a4b8d40757bd2c4c5996998e445e317ab">IArchDaemon::DaemonFunc</a></div><div class="ttdeci">std::function&lt; int()&gt; DaemonFunc</div><div class="ttdef"><b>Definition</b> IArchDaemon.h:23</div></div>
 </div><!-- fragment --></div><!-- contents -->

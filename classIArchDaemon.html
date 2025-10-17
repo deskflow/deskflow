@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.124</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.126</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -107,8 +107,6 @@ Inheritance diagram for IArchDaemon:</div>
 <area shape="poly" title=" " alt="" coords="127,42,84,80,80,76,124,38"/>
 <area shape="rect" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="156,78,307,103"/>
 <area shape="poly" title=" " alt="" coords="177,38,220,76,217,80,174,42"/>
-<area shape="rect" href="classArchDaemonUnix.html" title="Unix implementation of IArchDaemon." alt="" coords="7,151,131,175"/>
-<area shape="poly" title=" " alt="" coords="72,118,72,150,66,150,66,118"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -232,7 +230,7 @@ unix: Detaches from terminal. <code>func</code> gets passed one argument, the na
 win32: Becomes a service. Argument 0 is the name of the service and the rest are the arguments passed to StartService(). <code>func</code> is only called when the service is actually started. <code>func</code> must call <code><a class="el" href="classArchMiscWindows.html#af1c7cebddb8f59ed0b6b1fbf05476350" title="Run the daemon.">ArchMiscWindows::runDaemon()</a></code> to finally becoming a service. The <code>runFunc</code> function passed to <code>runDaemon()</code> must call <code>ArchMiscWindows::daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>ArchMiscWindows::daemonRunning(false)</code> when it leaves the main loop. The <code>stopFunc</code> function passed to <code>runDaemon()</code> is called when the daemon must exit the main loop and it must cause <code>runFunc</code> to return. <code>func</code> should return what <code>runDaemon()</code> returns. <code>func</code> or <code>runFunc</code> can call <code><a class="el" href="classArchMiscWindows.html#a360732a6f21a223a0595c1a75354dbd0" title="Indicate failure of running daemon.">ArchMiscWindows::daemonFailed()</a></code> to indicate startup failure. </li>
 </ul>
 
-<p>Implemented in <a class="el" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone</a>, <a class="el" href="classArchDaemonUnix.html#a9f4d274d28eedc5baa66983b5c9554ea">ArchDaemonUnix</a>, and <a class="el" href="classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf">ArchDaemonWindows</a>.</p>
+<p>Implemented in <a class="el" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf">ArchDaemonWindows</a>.</p>
 
 </div>
 </div>

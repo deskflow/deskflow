@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classIJob.html" title="Job interface." alt="" coords="5,31,52,55"/>
 <area shape="rect" id="Node000001" href="$classFunctionJob.html" title="Use a function as a job." alt="" coords="116,5,208,30"/>
-<area shape="poly" id="edge36_Node000000_Node000001" title=" " alt="" coords="66,33,115,24,116,29,67,38"/>
+<area shape="poly" id="edge35_Node000000_Node000001" title=" " alt="" coords="66,33,115,24,116,29,67,38"/>
 <area shape="rect" id="Node000002" href="$classTMethodJob.html" title="Use a function as a job." alt="" coords="100,55,225,79"/>
-<area shape="poly" id="edge37_Node000000_Node000002" title=" " alt="" coords="68,47,100,53,99,58,67,52"/>
+<area shape="poly" id="edge36_Node000000_Node000002" title=" " alt="" coords="68,47,100,53,99,58,67,52"/>
 </map>

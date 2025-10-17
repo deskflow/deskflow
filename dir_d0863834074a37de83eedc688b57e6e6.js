@@ -1,7 +1,5 @@
 var dir_d0863834074a37de83eedc688b57e6e6 =
 [
-    [ "ArchDaemonUnix.cpp", "ArchDaemonUnix_8cpp.html", null ],
-    [ "ArchDaemonUnix.h", "ArchDaemonUnix_8h.html", "ArchDaemonUnix_8h" ],
     [ "ArchLogUnix.cpp", "ArchLogUnix_8cpp.html", null ],
     [ "ArchLogUnix.h", "ArchLogUnix_8h.html", "ArchLogUnix_8h" ],
     [ "ArchMultithreadPosix.cpp", "ArchMultithreadPosix_8cpp.html", "ArchMultithreadPosix_8cpp" ],

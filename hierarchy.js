@@ -106,9 +106,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "IArchDaemon", "classIArchDaemon.html", [
-      [ "ArchDaemonNone", "classArchDaemonNone.html", [
-        [ "ArchDaemonUnix", "classArchDaemonUnix.html", null ]
-      ] ],
+      [ "ArchDaemonNone", "classArchDaemonNone.html", null ],
       [ "ArchDaemonWindows", "classArchDaemonWindows.html", null ]
     ] ],
     [ "IArchLog", "classIArchLog.html", [

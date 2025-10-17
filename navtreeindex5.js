@@ -1,10 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"ServerConnection_8h.html":[7,0,1,1,5,1,7],
-"ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
-"ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
-"ServerMessage_8h.html":[7,0,1,1,5,1,9],
-"ServerMessage_8h_source.html":[7,0,1,1,5,1,9],
 "ServerProxy_8cpp.html":[7,0,1,1,2,4],
 "ServerProxy_8h.html":[7,0,1,1,2,5],
 "ServerProxy_8h_source.html":[7,0,1,1,2,5],
@@ -109,11 +104,11 @@ var NAVTREEINDEX5 =
 "X11LayoutsParser_8cpp.html":[7,0,1,1,4,2,5],
 "X11LayoutsParser_8h.html":[7,0,1,1,4,2,6],
 "X11LayoutsParser_8h_source.html":[7,0,1,1,4,2,6],
-"XArchUnix_8cpp.html":[7,0,1,1,0,0,8],
-"XArchUnix_8cpp.html#aa89045461ec4ebc817338692ea515e9c":[7,0,1,1,0,0,8,0],
-"XArchUnix_8h.html":[7,0,1,1,0,0,9],
-"XArchUnix_8h.html#aa89045461ec4ebc817338692ea515e9c":[7,0,1,1,0,0,9,0],
-"XArchUnix_8h_source.html":[7,0,1,1,0,0,9],
+"XArchUnix_8cpp.html":[7,0,1,1,0,0,6],
+"XArchUnix_8cpp.html#aa89045461ec4ebc817338692ea515e9c":[7,0,1,1,0,0,6,0],
+"XArchUnix_8h.html":[7,0,1,1,0,0,7],
+"XArchUnix_8h.html#aa89045461ec4ebc817338692ea515e9c":[7,0,1,1,0,0,7,0],
+"XArchUnix_8h_source.html":[7,0,1,1,0,0,7],
 "XArchWindows_8cpp.html":[7,0,1,1,0,1,10],
 "XArchWindows_8cpp.html#a078ff948d8315a78de358d84f20bed1a":[7,0,1,1,0,1,10,0],
 "XArchWindows_8cpp.html#a2b35d1b9337a4df470bcd38d27177da8":[7,0,1,1,0,1,10,1],
@@ -249,5 +244,10 @@ var NAVTREEINDEX5 =
 "classAction.html#a7c1ff645ae5bf119ce8dade3a466dd16":[6,0,4,16],
 "classAction.html#a7de9f53c5ad2549614c6df202e3ade10":[6,0,4,25],
 "classAction.html#a7eca6e55b81a112ac170ea9169474854":[6,0,4,22],
-"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27]
+"classAction.html#a85fb294eb12d96369e42dc4c7f56f474":[6,0,4,27],
+"classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79":[6,0,4,9],
+"classAction.html#a8cadcfee2828374b55277314eb841ed9":[6,0,4,20],
+"classAction.html#a92f2a9af79230b153062ce7bfb21bf32":[6,0,4,15],
+"classAction.html#a9612c5cfc3c596380d3ecc07d81574b6":[6,0,4,6],
+"classAction.html#a9b6793704109f61ab6ee3cf0305dab4e":[6,0,4,12]
 };

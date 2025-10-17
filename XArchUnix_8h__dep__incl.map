@@ -1,9 +1,7 @@
 <map id="src/lib/arch/unix/XArchUnix.h" name="src/lib/arch/unix/XArchUnix.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="224,5,414,30"/>
-<area shape="rect" id="Node000002" href="$ArchDaemonUnix_8cpp.html" title=" " alt="" coords="5,78,198,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="273,38,155,80,153,75,271,33"/>
-<area shape="rect" id="Node000003" href="$ArchNetworkBSD_8cpp.html" title=" " alt="" coords="222,78,416,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="322,46,322,77,316,77,316,46"/>
-<area shape="rect" id="Node000004" href="$XArchUnix_8cpp.html" title=" " alt="" coords="439,85,644,110"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="367,33,509,82,507,87,366,38"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="118,5,308,30"/>
+<area shape="rect" id="Node000002" href="$ArchNetworkBSD_8cpp.html" title=" " alt="" coords="5,78,199,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,41,130,80,127,75,182,37"/>
+<area shape="rect" id="Node000003" href="$XArchUnix_8cpp.html" title=" " alt="" coords="222,85,427,110"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,37,309,82,306,87,240,41"/>
 </map>
