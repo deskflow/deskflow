@@ -7,6 +7,7 @@
  */
 
 #include "common/Settings.h" // must include first
+#include "deskflow/App.h"    // must include first
 
 #include "platform/XWindowsScreen.h"
 
@@ -15,7 +16,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
-#include "deskflow/App.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/KeyMap.h"

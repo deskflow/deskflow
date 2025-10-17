@@ -1,58 +1,49 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
 
-#include "mt/Thread.h"
+#include <QDBusObjectPath>
+#include <QObject>
+
 #include "platform/EiScreen.h"
 
-#include <glib.h>
-#include <libportal/portal.h>
-
-#include <memory>
+class OrgFreedesktopPortalRemoteDesktopInterface;
 
 namespace deskflow {
 
-class PortalRemoteDesktop
+class PortalRemoteDesktop : public QObject
 {
+  Q_OBJECT
 public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
   ~PortalRemoteDesktop();
 
-private:
-  void glibThread(void *);
-  gboolean timeoutHandler() const;
-  gboolean initSession();
-  void handleInitSession(GObject *object, GAsyncResult *res);
-  void handleSessionStarted(GObject *object, GAsyncResult *res);
-  void handleSessionClosed(XdpSession *session);
-  void reconnect(unsigned int timeout = 1000);
-
-  /// g_signal_connect callback wrapper
-  static void handleSessionClosedCallback(XdpSession *session, gpointer data)
-  {
-    static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
-  }
+Q_SIGNALS:
+  void error();
+  void started();
 
 private:
+  void reconnect(uint32_t timeout = 1000);
+  void openPortal();
+  QString createToken();
+  void createSession(uint code, const QVariantMap &result);
+  void selectDevices(uint code, const QVariantMap &result);
+  void sessionStarted(uint code, const QVariantMap &result);
+  void sessionClosed();
+
   EiScreen *m_screen;
   IEventQueue *m_events;
+  std::unique_ptr<OrgFreedesktopPortalRemoteDesktopInterface> m_remoteDesktopInterface;
+  QDBusObjectPath m_dbusSessionPath;
 
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
-
-  XdpPortal *m_portal = nullptr;
-  XdpSession *m_session = nullptr;
-  char *m_sessionRestoreToken = nullptr;
-
-  guint m_sessionSignalId = 0;
-
-  /// The number of successful sessions we've had already
-  guint m_sessionIteration = 0;
+  // Items needed for portal access
+  // Device Keyboadrd and Device Pointer as definded in libportal
+  inline static const uint s_portalDevices = 1 << 0 | 1 << 1;
+  inline static const uint s_portalPersistanceType = 2; // Until Revoked
 };
 
 } // namespace deskflow
