@@ -81,7 +81,7 @@ MainWindow::MainWindow()
       m_actionMinimize{new QAction(tr("&Minimize to tray"), this)},
       m_actionQuit{new QAction(tr("&Quit"), this)},
       m_actionTrayQuit{new QAction(tr("&Quit"), this)},
-      m_actionRestore{new QAction(tr("&Open Deskflow"), this)},
+      m_actionRestore{new QAction(tr("&Open %1").arg(kAppName), this)},
       m_actionSettings{new QAction(tr("&Preferences"), this)},
       m_actionStartCore{new QAction(tr("&Start"), this)},
       m_actionRestartCore{new QAction(tr("Rest&art"), this)},
@@ -89,7 +89,7 @@ MainWindow::MainWindow()
 {
   ui->setupUi(this);
 
-  setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+  setWindowIcon(QIcon::fromTheme(kAppId));
 
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
@@ -775,11 +775,11 @@ void MainWindow::setTrayIcon()
   m_trayIcon->setIcon(QIcon(iconString));
 #else
   if (symbolicIcon) {
-    auto icon = QIcon::fromTheme(QStringLiteral("deskflow-symbolic"));
+    auto icon = QIcon::fromTheme(QStringLiteral("%1-symbolic").arg(kAppId));
     icon.setIsMask(true);
     m_trayIcon->setIcon(icon);
   } else {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+    m_trayIcon->setIcon(QIcon::fromTheme(kAppId));
   }
 #endif
 }
