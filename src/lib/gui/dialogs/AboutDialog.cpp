@@ -27,7 +27,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   const QSize pixmapSize(px, px);
   ui->lblIcon->setFixedSize(pixmapSize);
 
-  ui->lblIcon->setPixmap(QPixmap(QIcon::fromTheme("deskflow").pixmap(QSize().scaled(pixmapSize, Qt::KeepAspectRatio))));
+  ui->lblIcon->setPixmap(QPixmap(QIcon::fromTheme(kAppId).pixmap(QSize().scaled(pixmapSize, Qt::KeepAspectRatio))));
 
   ui->btnCopyVersion->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
@@ -52,8 +52,8 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
 
 void AboutDialog::copyVersionText() const
 {
-  QString infoString = QStringLiteral("Deskflow: %1 (%2)\nQt: %3\nSystem: %4")
-                           .arg(kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName());
+  QString infoString = QStringLiteral("%1: %2 (%3)\nQt: %4\nSystem: %5")
+                           .arg(kAppName, kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName());
 #ifdef Q_OS_LINUX
   infoString.append(QStringLiteral("\nSession: %1 (%2)")
                         .arg(qEnvironmentVariable("XDG_CURRENT_DESKTOP"), qEnvironmentVariable("XDG_SESSION_TYPE")));
