@@ -1196,30 +1196,20 @@ void MainWindow::serverClientsChanged(const QStringList &clients)
   if (m_coreProcess.mode() != CoreMode::Server || !m_coreProcess.isStarted())
     return;
 
-  switch (clients.size()) {
-  case 0:
+  if (clients.isEmpty()) {
     setStatus(tr("%1 is waiting for clients").arg(kAppName));
     ui->statusBar->setToolTip("");
-    break;
-
-  case 1:
-    setStatus(tr("%1 is connected to a client: %2").arg(kAppName, clients.first()));
-    ui->statusBar->setToolTip("");
-    break;
-
-  case 2:
-  case 3:
-  case 4:
-    setStatus(
-        tr("%1 is connected, with %2 clients: %3").arg(kAppName, QString::number(clients.size()), clients.join(", "))
-    );
-    ui->statusBar->setToolTip(tr("Clients:\n %1").arg(clients.join("\n")));
-    break;
-  default:
-    setStatus(tr("%1 is connected, with %n client(s)", "", clients.size()).arg(kAppName));
-    ui->statusBar->setToolTip(tr("Clients:\n  %1").arg(clients.join("\n")));
-    break;
+    return;
   }
+
+  //: Shown when in server mode and at least 1 client is connected
+  //: %1 is replaced by the app name
+  //: %2 will be a list of at least one client
+  //: %n will be replaced by the number of clients (n is >=1), it is not requried to be in the translation
+  setStatus(tr("%1 is connected, with %n client(s): %2", "", clients.size()).arg(kAppName, clients.join(", ")));
+
+  const auto toolTipString = clients.count() == 1 ? "" : tr("Clients:\n %1").arg(clients.join("\n"));
+  ui->statusBar->setToolTip(toolTipString);
 }
 
 void MainWindow::daemonIpcClientConnectionFailed()
