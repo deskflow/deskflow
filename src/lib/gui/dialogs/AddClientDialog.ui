@@ -32,7 +32,7 @@
     <item row="0" column="1">
      <widget class="QLabel" name="m_pLabelHead">
       <property name="text">
-       <string>TextLabel</string>
+       <string notr="true">TextLabel</string>
       </property>
       <property name="wordWrap">
        <bool>true</bool>
