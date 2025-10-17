@@ -267,12 +267,12 @@
              <widget class="QComboBox" name="comboTlsKeyLength">
               <item>
                <property name="text">
-                <string>2048</string>
+                <string notr="true">2048</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>4096</string>
+                <string notr="true">4096</string>
                </property>
               </item>
              </widget>

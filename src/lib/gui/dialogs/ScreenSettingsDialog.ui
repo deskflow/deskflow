@@ -74,7 +74,7 @@
          </size>
         </property>
         <property name="text">
-         <string>lblNameError</string>
+         <string notr="true">lblNameError</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -615,7 +615,7 @@
              </size>
             </property>
             <property name="text">
-             <string>lblAliasError</string>
+             <string notr="true">lblAliasError</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
