@@ -760,6 +760,7 @@ void KeyState::updateKeyState()
   }
 
   // get the current modifier state
+  clearStaleModifiers();
   m_mask = pollActiveModifiers();
 
   // set active modifiers
