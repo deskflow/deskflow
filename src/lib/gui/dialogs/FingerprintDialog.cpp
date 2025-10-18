@@ -125,8 +125,8 @@ void FingerprintDialog::togglePreviewMode(bool hashMode)
 
 void FingerprintDialog::updateModeButton(bool hashMode) const
 {
-  const auto text = tr("Show %1").arg(hashMode ? "Image" : "Hash");
-  const auto toolTip = tr("Display the fingerprint as %1").arg(hashMode ? "an image" : "a hash");
+  const auto text = hashMode ? tr("Show image") : tr("Show hash");
+  const auto toolTip = hashMode ? tr("Display the fingerprint as an image") : tr("Display the fingerprint as a hash");
   m_buttonBox->button(QDialogButtonBox::Help)->setText(text);
   m_buttonBox->button(QDialogButtonBox::Help)->setToolTip(toolTip);
 }

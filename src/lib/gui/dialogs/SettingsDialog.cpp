@@ -9,12 +9,14 @@
 #include "SettingsDialog.h"
 #include "ui_SettingsDialog.h"
 
+#include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 
+#include <QComboBox>
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -30,6 +32,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 {
 
   ui->setupUi(this);
+
+  // set up the language combo
+  I18N::reDetectLanguages();
+  ui->comboLanguage->addItems(I18N::detectedLanguages());
+  ui->comboLanguage->setCurrentText(I18N::currentLanguage());
 
   // Set Tooltip for the logLevel Items
   ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
@@ -77,6 +84,7 @@ void SettingsDialog::initConnections() const
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
   connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
   connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::logLevelChanged);
+  connect(ui->comboLanguage, &QComboBox::currentTextChanged, I18N::instance(), &I18N::setLanguage);
 }
 
 void SettingsDialog::regenCertificates()
@@ -154,6 +162,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
   Settings::setValue(Settings::Client::ScrollSpeed, ui->sbScrollSpeed->value());
+  Settings::setValue(Settings::Core::Language, ui->comboLanguage->currentText());
 
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
