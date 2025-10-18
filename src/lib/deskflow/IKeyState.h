@@ -103,6 +103,16 @@ public:
   */
   virtual void fakeAllKeysUp() = 0;
 
+  //! Clear stale modifiers
+  /*!
+  Clears stuck modifier state in platform-specific keyboard tracking (e.g. XKB).
+  Default implementation does nothing.
+  */
+  virtual void clearStaleModifiers()
+  {
+    // Default implementation does nothing
+  }
+
   //! Fake ctrl+alt+del
   /*!
   Synthesize a press of ctrl+alt+del.  Return true if processing is

@@ -187,6 +187,7 @@ public:
   KeyModifierMask pollActiveModifiers() const override = 0;
   int32_t pollActiveGroup() const override = 0;
   void pollPressedKeys(KeyButtonSet &pressedKeys) const override = 0;
+  void clearStaleModifiers() override = 0;
 
 protected:
   //! Handle system event
