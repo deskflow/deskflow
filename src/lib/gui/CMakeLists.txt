@@ -19,8 +19,6 @@ add_library(${target} STATIC
   Action.h
   Diagnostic.cpp
   Diagnostic.h
-  DotEnv.cpp
-  DotEnv.h
   FileTail.cpp
   FileTail.h
   Hotkey.cpp

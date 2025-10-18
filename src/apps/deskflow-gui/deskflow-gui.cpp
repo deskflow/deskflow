@@ -12,7 +12,6 @@
 #include "common/I18N.h"
 #include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
-#include "gui/DotEnv.h"
 #include "gui/Logger.h"
 #include "gui/MainWindow.h"
 #include "gui/Messages.h"
@@ -131,8 +130,6 @@ int main(int argc, char *argv[])
 
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   qInfo("%s v%s", kAppName, kDisplayVersion);
-
-  dotenv();
 
 #if defined(Q_OS_MAC)
 
