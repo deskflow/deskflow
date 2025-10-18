@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>549</width>
-    <height>611</height>
+    <height>628</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -32,10 +32,7 @@
       <attribute name="title">
        <string>&amp;Regular</string>
       </attribute>
-      <layout class="QVBoxLayout" name="_8">
-       <property name="spacing">
-        <number>15</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
         <widget class="QGroupBox" name="groupClientOptions">
          <property name="sizePolicy">
@@ -106,11 +103,11 @@
          <property name="title">
           <string>App</string>
          </property>
-         <layout class="QVBoxLayout" name="_9">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QCheckBox" name="cbAutoUpdate">
             <property name="text">
-             <string>Check for updates on startup </string>
+             <string>Check for updates on startup</string>
             </property>
            </widget>
           </item>
@@ -337,13 +334,7 @@
       <attribute name="title">
        <string>&amp;Advanced</string>
       </attribute>
-      <layout class="QVBoxLayout" name="_2">
-       <property name="spacing">
-        <number>15</number>
-       </property>
-       <property name="topMargin">
-        <number>9</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QGroupBox" name="groupNetworking">
          <property name="sizePolicy">
@@ -639,6 +630,31 @@
         </widget>
        </item>
        <item>
+        <widget class="QWidget" name="widgetLanguage" native="true">
+         <property name="toolTip">
+          <string>Force a language to be used for the GUI.</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_3">
+          <item>
+           <widget class="QLabel" name="lblLanguage">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string>Language</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="comboLanguage"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Orientation::Vertical</enum>
@@ -650,6 +666,11 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QWidget" name="widgetLangControls" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_2"/>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -668,7 +689,6 @@
   </layout>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>cbLanguageSync</tabstop>
   <tabstop>cbScrollDirection</tabstop>
   <tabstop>cbAutoUpdate</tabstop>
