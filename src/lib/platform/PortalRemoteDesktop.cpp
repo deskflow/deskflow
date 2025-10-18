@@ -11,6 +11,8 @@
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
 
+#include <cstring>
+
 namespace deskflow {
 
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
@@ -150,7 +152,8 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
 gboolean PortalRemoteDesktop::initSession()
 {
   if (auto sessionToken = Settings::value(Settings::Client::XdpRestoreToken).toByteArray(); !sessionToken.isEmpty()) {
-    m_sessionRestoreToken = sessionToken.data();
+    free(m_sessionRestoreToken);
+    m_sessionRestoreToken = strdup(sessionToken.data());
   }
 
   LOG_DEBUG("setting up remote desktop session with restore token %s", m_sessionRestoreToken);
