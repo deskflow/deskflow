@@ -48,7 +48,6 @@
 #include <QRegularExpressionValidator>
 #include <QScreen>
 #include <QScrollBar>
-#include <QToolButton>
 
 #include <memory>
 
@@ -74,7 +73,7 @@ MainWindow::MainWindow()
       m_logDock{new LogDock(this)},
       m_lblSecurityStatus{new QLabel(this)},
       m_lblStatus{new QLabel(this)},
-      m_btnFingerprint{new QToolButton(this)},
+      m_btnFingerprint{new QPushButton(this)},
       m_btnUpdate{new QPushButton(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
@@ -236,30 +235,31 @@ void MainWindow::setupControls()
   ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
 #endif
 
-  const auto trayItemSize = QSize(24, 24);
-  m_btnFingerprint->setStyleSheet(kStyleFlatButtonHoverable);
+  static const auto btnHeight = ui->statusBar->height() - 2;
+  static const auto btnSize = QSize(btnHeight, btnHeight);
+  static const auto iconSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
+
+  m_btnFingerprint->setFlat(true);
   m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
-  m_btnFingerprint->setFixedSize(trayItemSize);
-  m_btnFingerprint->setIconSize(trayItemSize);
-  m_btnFingerprint->setAutoRaise(true);
+  m_btnFingerprint->setFixedSize(btnSize);
+  m_btnFingerprint->setIconSize(iconSize);
   m_btnFingerprint->setToolTip(tr("View local fingerprint"));
   ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
 
   m_lblSecurityStatus->setVisible(false);
-  m_lblSecurityStatus->setFixedSize(trayItemSize);
+  m_lblSecurityStatus->setFixedSize(iconSize);
   m_lblSecurityStatus->setScaledContents(true);
   ui->statusBar->insertPermanentWidget(1, m_lblSecurityStatus);
 
   ui->statusBar->insertPermanentWidget(2, m_lblStatus, 1);
 
   m_btnUpdate->setVisible(false);
-  m_btnUpdate->setStyleSheet(kStyleFlatButtonHoverable);
   m_btnUpdate->setFlat(true);
   m_btnUpdate->setText(tr("Update available"));
   m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
   m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
-  m_btnUpdate->setFixedHeight(24);
-  m_btnUpdate->setIconSize(trayItemSize);
+  m_btnUpdate->setFixedHeight(btnHeight);
+  m_btnUpdate->setIconSize(iconSize);
   ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
 }
 
@@ -322,7 +322,7 @@ void MainWindow::connectSlots()
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
   connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
-  connect(m_btnFingerprint, &QToolButton::clicked, this, &MainWindow::showMyFingerprint);
+  connect(m_btnFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
   connect(ui->rbModeServer, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);
   connect(ui->rbModeClient, &QRadioButton::toggled, this, &MainWindow::coreModeToggled);

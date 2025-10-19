@@ -11,30 +11,33 @@
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QToolButton>
+#include <QPushButton>
 #include <QVBoxLayout>
 
 LogDock::LogDock(QWidget *parent)
     : QDockWidget(tr("Log"), parent),
       m_textLog{new LogWidget(this)},
-      m_btnClose{new QToolButton(this)},
-      m_btnFloat{new QToolButton(this)},
+      m_btnClose{new QPushButton(this)},
+      m_btnFloat{new QPushButton(this)},
       m_lblTitle{new QLabel(tr("Log"), this)}
 {
   const auto iconSize = QSize(fontMetrics().height() - 2, fontMetrics().height() - 2);
+  const auto maxBtnSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
 
-  m_btnFloat->setStyleSheet(deskflow::gui::kStyleFlatButtonHoverable);
+  m_btnFloat->setFixedSize(maxBtnSize);
   m_btnFloat->setCheckable(true);
+  m_btnFloat->setFlat(true);
   m_btnFloat->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
   m_btnFloat->setIconSize(iconSize);
   m_btnFloat->setToolTip(tr("Detach from window"));
-  connect(m_btnFloat, &QToolButton::toggled, this, &LogDock::setFloating);
+  connect(m_btnFloat, &QPushButton::toggled, this, &LogDock::setFloating);
 
-  m_btnClose->setStyleSheet(deskflow::gui::kStyleFlatButtonHoverable);
+  m_btnClose->setFixedSize(maxBtnSize);
+  m_btnClose->setFlat(true);
   m_btnClose->setIcon(QIcon::fromTheme(QStringLiteral("view-close")));
   m_btnClose->setIconSize(iconSize);
   m_btnClose->setToolTip(tr("Close Log"));
-  connect(m_btnClose, &QToolButton::clicked, this, &QDockWidget::hide);
+  connect(m_btnClose, &QPushButton::clicked, this, &QDockWidget::hide);
 
   auto titleWidget = new QWidget(this);
   titleWidget->installEventFilter(this);
