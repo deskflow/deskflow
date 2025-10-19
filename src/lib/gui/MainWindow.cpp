@@ -1049,6 +1049,15 @@ void MainWindow::hide()
   m_actionMinimize->setVisible(false);
 }
 
+void MainWindow::changeEvent(QEvent *e)
+{
+  QMainWindow::changeEvent(e);
+  if (e->type() == QEvent::PaletteChange) {
+    updateIconTheme();
+    setTrayIcon();
+  }
+}
+
 void MainWindow::showConfigureServer(const QString &message)
 {
   ServerConfigDialog dialog(this, serverConfig());
