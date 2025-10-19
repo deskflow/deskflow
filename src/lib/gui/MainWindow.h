@@ -124,7 +124,7 @@ private:
   void createMenuBar();
   void setupTrayIcon();
   void applyConfig();
-  void setIcon();
+  void setTrayIcon();
   void setStatus(const QString &status);
   void updateFromLogLine(const QString &line);
   void checkConnected(const QString &line);

@@ -733,7 +733,7 @@ void MainWindow::setupTrayIcon()
   trayMenu->insertSeparator(m_actionTrayQuit);
   m_trayIcon->setContextMenu(trayMenu);
 
-  setIcon();
+  setTrayIcon();
   m_trayIcon->show();
 }
 
@@ -742,7 +742,7 @@ void MainWindow::applyConfig()
   if (!Settings::value(Settings::Client::RemoteHost).isNull())
     ui->lineHostname->setText(Settings::value(Settings::Client::RemoteHost).toString());
   updateLocalFingerprint();
-  setIcon();
+  setTrayIcon();
 
   const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
 
@@ -763,7 +763,7 @@ void MainWindow::saveSettings() const
   Settings::save();
 }
 
-void MainWindow::setIcon()
+void MainWindow::setTrayIcon()
 {
   // Using a theme icon that is packed in exe renders an invisible icon
   // Instead use the resource path of the packed icon
