@@ -11,6 +11,8 @@
 #include <QPalette>
 #include <QStyleHints>
 
+#include "common/Constants.h"
+
 namespace deskflow::gui {
 
 /**
@@ -35,4 +37,14 @@ inline QString iconMode()
   return isDarkMode() ? QStringLiteral("dark") : QStringLiteral("light");
 }
 
+inline void updateIconTheme()
+{
+  // Sets the fallback icon path and fallback theme
+  const auto themeName = QStringLiteral("%1-%2").arg(kAppId, iconMode());
+  if (QIcon::themeName().isEmpty() || QIcon::themeName().startsWith(kAppId))
+    QIcon::setThemeName(themeName);
+  else
+    QIcon::setFallbackThemeName(themeName);
+  QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
+}
 } // namespace deskflow::gui
