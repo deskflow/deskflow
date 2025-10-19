@@ -89,6 +89,9 @@ public:
 
   void hide();
 
+protected:
+  void changeEvent(QEvent *e) override;
+
 private:
   void toggleLogVisible(bool visible);
 
