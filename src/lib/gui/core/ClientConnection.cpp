@@ -56,6 +56,13 @@ void ClientConnection::showMessage(const QString &logLine)
 {
   using enum messages::ClientError;
 
+  // Only supress errors when autohide is enabled and the main window is not visible.
+  // If the main window is visible, it means the user is actively using the app,
+  // so we should show errors even with autohide.
+  if (Settings::value(Settings::Gui::Autohide).toBool() && !m_pParent->isVisible()) {
+    return;
+  }
+
   Q_EMIT messageShowing();
 
   const auto address = Settings::value(Settings::Client::RemoteHost).toString();
