@@ -8,6 +8,7 @@
 #include "deskflow/unix/AppUtilUnix.h"
 
 #include "base/Log.h"
+#include <QFile>
 
 #if WINAPI_XWINDOWS
 #include "deskflow/unix/X11LayoutsParser.h"
@@ -18,8 +19,6 @@
 #else
 #error Platform not supported.
 #endif
-
-#include <filesystem>
 
 AppUtilUnix::AppUtilUnix(const IEventQueue *)
 {
@@ -46,10 +45,16 @@ std::vector<std::string> AppUtilUnix::getKeyboardLayoutList()
   std::vector<std::string> layoutLangCodes;
 
 #if WINAPI_XWINDOWS
-  // Check /usr/local first used on bsd and some systems
-  m_evdev = "/usr/local/share/X11/xkb/rules/evdev.xml";
-  if (!std::filesystem::exists(m_evdev))
-    m_evdev = "/usr/share/X11/xkb/rules/evdev.xml";
+  static const auto evPath = QStringLiteral("%1/rules/evdev.xml");
+  auto evFile = evPath.arg("/usr/share/xkeyboard-config-2");
+  if (!QFile(evFile).exists()) {
+    evFile = evPath.arg(QStringLiteral("/usr/local/share/X11/xkb"));
+    if (!QFile(evFile).exists()) {
+      evFile = evPath.arg(QStringLiteral("/usr/share/X11/xkb"));
+    }
+  }
+
+  m_evdev = evFile.toStdString();
   layoutLangCodes = X11LayoutsParser::getX11LanguageList(m_evdev);
 
 #elif WINAPI_CARBON
