@@ -1243,10 +1243,7 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 
 void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
 {
-  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool())
-    return;
-
-  if (m_clientErrorVisible)
+  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool() || !isVisible() || m_clientErrorVisible)
     return;
 
   m_clientErrorVisible = true;
