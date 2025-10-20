@@ -56,6 +56,10 @@ void ClientConnection::showMessage(const QString &logLine)
 {
   using enum messages::ClientError;
 
+  if (Settings::value(Settings::Gui::Autohide).toBool()) {
+    return;
+  }
+
   Q_EMIT messageShowing();
 
   const auto address = Settings::value(Settings::Client::RemoteHost).toString();
