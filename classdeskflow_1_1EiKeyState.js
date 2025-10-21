@@ -2,6 +2,7 @@ var classdeskflow_1_1EiKeyState =
 [
     [ "EiKeyState", "classdeskflow_1_1EiKeyState.html#a096b4c669242628cfcd40acab3634682", null ],
     [ "~EiKeyState", "classdeskflow_1_1EiKeyState.html#aa7832070491b37c4ad44a1d8fba8cb31", null ],
+    [ "clearStaleModifiers", "classdeskflow_1_1EiKeyState.html#a3bf27f88ad6a5ed9019ce890636511b3", null ],
     [ "fakeCtrlAltDel", "classdeskflow_1_1EiKeyState.html#a639b85fa5613ee84c56f838c15d133ab", null ],
     [ "fakeKey", "classdeskflow_1_1EiKeyState.html#a631d966aa1b2671e0fe3f79e9b59f162", null ],
     [ "getKeyMap", "classdeskflow_1_1EiKeyState.html#ae81eee17a986ee3ecbe019039319b0e6", null ],

@@ -1,5 +1,7 @@
 var NAVTREEINDEX11 =
 {
+"classInputFilter_1_1KeyboardBroadcastAction.html#afdcb51e32b9df745eddf29c89382c12f":[6,0,119,2,2],
+"classInputFilter_1_1KeystrokeAction.html":[6,0,119,3],
 "classInputFilter_1_1KeystrokeAction.html#a09753675ad46eaa1a3d7bd01da5662c3":[6,0,119,3,6],
 "classInputFilter_1_1KeystrokeAction.html#a290467171f860be4b9f203c1d04ca08c":[6,0,119,3,11],
 "classInputFilter_1_1KeystrokeAction.html#a3e467f8b1b4b1aa2f780c332c3e176c2":[6,0,119,3,10],
@@ -247,7 +249,5 @@ var NAVTREEINDEX11 =
 "classMSWindowsClipboardTextConverter.html#ae3188dabe26244d106ac96864c375f62":[6,0,153,4],
 "classMSWindowsClipboardUTF16Converter.html":[6,0,154],
 "classMSWindowsClipboardUTF16Converter.html#a021338240bbe1b3572e832b1d0657fea":[6,0,154,1],
-"classMSWindowsClipboardUTF16Converter.html#a026188be5bb7763b14f8372b5d94acf2":[6,0,154,2],
-"classMSWindowsClipboardUTF16Converter.html#a0d7643adee1ced03a8947c04e1ad5d2d":[6,0,154,0],
-"classMSWindowsClipboardUTF16Converter.html#a2226afa0aa02b0bacf8f8cc3adf12fbd":[6,0,154,4]
+"classMSWindowsClipboardUTF16Converter.html#a026188be5bb7763b14f8372b5d94acf2":[6,0,154,2]
 };

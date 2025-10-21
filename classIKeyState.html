@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.127</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.128</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -156,6 +156,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0e575e9893a621bcea62907cae9d3476"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake a key release.  <br /></td></tr>
 <tr class="memitem:aa5129d1c9e92ca0b40bc8ab5d2bd8d7c" id="r_aa5129d1c9e92ca0b40bc8ab5d2bd8d7c"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5129d1c9e92ca0b40bc8ab5d2bd8d7c">fakeAllKeysUp</a> ()=0</td></tr>
 <tr class="memdesc:aa5129d1c9e92ca0b40bc8ab5d2bd8d7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake key releases for all fake pressed keys.  <br /></td></tr>
+<tr class="memitem:a50efc28abe04829d755a8d59a92160be" id="r_a50efc28abe04829d755a8d59a92160be"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a50efc28abe04829d755a8d59a92160be">clearStaleModifiers</a> ()</td></tr>
+<tr class="memdesc:a50efc28abe04829d755a8d59a92160be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear stale modifiers.  <br /></td></tr>
 <tr class="memitem:abca6d885cbb75924a9e8d36b5ba0a829" id="r_abca6d885cbb75924a9e8d36b5ba0a829"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abca6d885cbb75924a9e8d36b5ba0a829">fakeCtrlAltDel</a> ()=0</td></tr>
 <tr class="memdesc:abca6d885cbb75924a9e8d36b5ba0a829"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fake ctrl+alt+del.  <br /></td></tr>
 <tr class="memitem:ad4d89a5a6aa4cce496eae7aad0b8dbc1" id="r_ad4d89a5a6aa4cce496eae7aad0b8dbc1"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4d89a5a6aa4cce496eae7aad0b8dbc1">fakeMediaKey</a> (<a class="el" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> id)=0</td></tr>
@@ -246,6 +248,36 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a50efc28abe04829d755a8d59a92160be" name="a50efc28abe04829d755a8d59a92160be"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50efc28abe04829d755a8d59a92160be">&#9670;&#160;</a></span>clearStaleModifiers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IKeyState::clearStaleModifiers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear stale modifiers. </p>
+<p>Clears stuck modifier state in platform-specific keyboard tracking (e.g. XKB). Default implementation does nothing. </p>
+
+<p>Reimplemented in <a class="el" href="classdeskflow_1_1EiKeyState.html#a3bf27f88ad6a5ed9019ce890636511b3">deskflow::EiKeyState</a>, <a class="el" href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">IPlatformScreen</a>, and <a class="el" href="classPlatformScreen.html#a29e4557d386b175f865a84afecc690c4">PlatformScreen</a>.</p>
+
+</div>
+</div>
 <a id="aa5129d1c9e92ca0b40bc8ab5d2bd8d7c" name="aa5129d1c9e92ca0b40bc8ab5d2bd8d7c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa5129d1c9e92ca0b40bc8ab5d2bd8d7c">&#9670;&#160;</a></span>fakeAllKeysUp()</h2>
 

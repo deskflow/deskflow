@@ -1,5 +1,10 @@
 var NAVTREEINDEX22 =
 {
+"group__protocol__files.html#ga3b49e5983952babb837a4a528da6b5d4":[4,2,2,4,0],
+"group__protocol__files.html#ga6a6132d276034c56749d3bdf43c8bf3c":[4,2,2,4,1],
+"group__protocol__handshake.html":[4,2,0],
+"group__protocol__handshake.html#ga023a1e0dc40921e040d7a816292f49c7":[4,2,0,0],
+"group__protocol__handshake.html#ga7fe883657ad6c4ac7077705202493ff6":[4,2,0,1],
 "group__protocol__handshake.html#ga8b406d6f067791e9f4117d73f587c683":[4,2,0,2],
 "group__protocol__handshake.html#gaa12cde1e2a95ec6f663c1a73b57f84d1":[4,2,0,5],
 "group__protocol__handshake.html#gafb82d058b11b4cb463f49ce16bd6bb0f":[4,2,0,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX22 =
 "protocolScreenSaverControl-p.html#a7512bdda9dc70c2d96a718c959f79b42":[6,0,196,0],
 "protocolScreenSaverControl-p.html#a860e29c74d78e6dbf77e24c236c17eec":[6,0,196,1],
 "protocolScreenSaverControl-p.html#aad1777ac8a538ea6b223208d6dc85c91":[6,0,196,5],
-"protocolScreenSaverControl-p.html#af66906a410f69ee7dd6b5c717d402633":[6,0,196,4],
-"protocol_reference.html":[2],
-"protocol_reference.html#autotoc_md12":[2,0],
-"protocol_reference.html#autotoc_md13":[2,0,0],
-"protocol_reference.html#autotoc_md14":[2,1],
-"protocol_reference.html#autotoc_md15":[2,2]
+"protocolScreenSaverControl-p.html#af66906a410f69ee7dd6b5c717d402633":[6,0,196,4]
 };

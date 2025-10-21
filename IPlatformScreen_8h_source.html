@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.127</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.128</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -213,11 +213,12 @@ $(function(){initNavTree('IPlatformScreen_8h_source.html','',''); });
 <div class="line"><a id="l00187" name="l00187"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#aca049d811510cad2af0834c9456450e7">  187</a></span>  <a class="code hl_typedef" href="KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13">KeyModifierMask</a> <a class="code hl_function" href="classIPlatformScreen.html#aca049d811510cad2af0834c9456450e7">pollActiveModifiers</a>() <span class="keyword">const override</span> = 0;</div>
 <div class="line"><a id="l00188" name="l00188"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#a41575b1a73ab6914f4900cb731ac17e8">  188</a></span>  int32_t <a class="code hl_function" href="classIPlatformScreen.html#a41575b1a73ab6914f4900cb731ac17e8">pollActiveGroup</a>() <span class="keyword">const override</span> = 0;</div>
 <div class="line"><a id="l00189" name="l00189"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#a20ca109beffd59b1f215efac35c42206">  189</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classIPlatformScreen.html#a20ca109beffd59b1f215efac35c42206">pollPressedKeys</a>(<a class="code hl_typedef" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> &amp;pressedKeys) <span class="keyword">const override</span> = 0;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span> </div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span></div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1">  215</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1">handleSystemEvent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;event) = 0;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>};</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">  190</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">clearStaleModifiers</a>() <span class="keyword">override</span> = 0;</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span> </div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span></div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1">  216</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPlatformScreen.html#a5c9a1e9311f69a008b2227f90ec513e1">handleSystemEvent</a>(<span class="keyword">const</span> <a class="code hl_class" href="classEvent.html">Event</a> &amp;event) = 0;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>};</div>
 </div>
 <div class="ttc" id="aClipboardTypes_8h_html"><div class="ttname"><a href="ClipboardTypes_8h.html">ClipboardTypes.h</a></div></div>
 <div class="ttc" id="aClipboardTypes_8h_html_a63ca97102023d8f9ba64dcbe102a2647"><div class="ttname"><a href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a></div><div class="ttdeci">uint8_t ClipboardID</div><div class="ttdoc">Clipboard ID.</div><div class="ttdef"><b>Definition</b> ClipboardTypes.h:16</div></div>
@@ -281,6 +282,7 @@ $(function(){initNavTree('IPlatformScreen_8h_source.html','',''); });
 <div class="ttc" id="aclassIPlatformScreen_html_ab9dbeacd59ceda2a193a84ac17d2b5a8"><div class="ttname"><a href="classIPlatformScreen.html#ab9dbeacd59ceda2a193a84ac17d2b5a8">IPlatformScreen::enter</a></div><div class="ttdeci">virtual void enter()=0</div><div class="ttdoc">Enter screen.</div></div>
 <div class="ttc" id="aclassIPlatformScreen_html_abe7d86247e238b1492078d850e95e182"><div class="ttname"><a href="classIPlatformScreen.html#abe7d86247e238b1492078d850e95e182">IPlatformScreen::reconfigure</a></div><div class="ttdeci">void reconfigure(uint32_t activeSides) override=0</div><div class="ttdoc">Update configuration.</div></div>
 <div class="ttc" id="aclassIPlatformScreen_html_aca049d811510cad2af0834c9456450e7"><div class="ttname"><a href="classIPlatformScreen.html#aca049d811510cad2af0834c9456450e7">IPlatformScreen::pollActiveModifiers</a></div><div class="ttdeci">KeyModifierMask pollActiveModifiers() const override=0</div><div class="ttdoc">Get the active modifiers from OS.</div></div>
+<div class="ttc" id="aclassIPlatformScreen_html_acbe7a4199b4c46df835e6157c165995f"><div class="ttname"><a href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">IPlatformScreen::clearStaleModifiers</a></div><div class="ttdeci">void clearStaleModifiers() override=0</div><div class="ttdoc">Clear stale modifiers.</div></div>
 <div class="ttc" id="aclassIPlatformScreen_html_ad85af72ff780c248393b9da1b161bea3"><div class="ttname"><a href="classIPlatformScreen.html#ad85af72ff780c248393b9da1b161bea3">IPlatformScreen::getSecureInputApp</a></div><div class="ttdeci">virtual std::string getSecureInputApp() const =0</div><div class="ttdoc">Determine the name of the app causing a secure input state.</div></div>
 <div class="ttc" id="aclassIPlatformScreen_html_addf66b6472688e8a0b8ff03c238ae301"><div class="ttname"><a href="classIPlatformScreen.html#addf66b6472688e8a0b8ff03c238ae301">IPlatformScreen::updateKeyMap</a></div><div class="ttdeci">void updateKeyMap() override=0</div><div class="ttdoc">Update the keyboard map.</div></div>
 <div class="ttc" id="aclassIPlatformScreen_html_ae3dec615f96d1da78a9b237b6474b07a"><div class="ttname"><a href="classIPlatformScreen.html#ae3dec615f96d1da78a9b237b6474b07a">IPlatformScreen::enable</a></div><div class="ttdeci">virtual void enable()=0</div><div class="ttdoc">Enable screen.</div></div>

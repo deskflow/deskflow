@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.127</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.128</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -208,6 +208,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a18e30907f0eb1df9bd08a40281257547"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the active keyboard layout from OS.  <br /></td></tr>
 <tr class="memitem:ae184a339531aa38a12f485fcef4f86ba" id="r_ae184a339531aa38a12f485fcef4f86ba"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae184a339531aa38a12f485fcef4f86ba">pollPressedKeys</a> (<a class="el" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> &amp;pressedKeys) const override</td></tr>
 <tr class="memdesc:ae184a339531aa38a12f485fcef4f86ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the keys currently pressed from OS.  <br /></td></tr>
+<tr class="memitem:a29e4557d386b175f865a84afecc690c4" id="r_a29e4557d386b175f865a84afecc690c4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a29e4557d386b175f865a84afecc690c4">clearStaleModifiers</a> () override</td></tr>
+<tr class="memdesc:a29e4557d386b175f865a84afecc690c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear stale modifiers.  <br /></td></tr>
 <tr class="memitem:a6c6bfb00e3b7d8ff9c4130736d3cea27" id="r_a6c6bfb00e3b7d8ff9c4130736d3cea27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c6bfb00e3b7d8ff9c4130736d3cea27">enable</a> () override=0</td></tr>
 <tr class="memdesc:a6c6bfb00e3b7d8ff9c4130736d3cea27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable screen.  <br /></td></tr>
 <tr class="memitem:a3aa9f36ef43c60659e5f8cb2e3b48f93" id="r_a3aa9f36ef43c60659e5f8cb2e3b48f93"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3aa9f36ef43c60659e5f8cb2e3b48f93">disable</a> () override=0</td></tr>
@@ -426,6 +428,36 @@ Additional Inherited Members</h2></td></tr>
 <p>Implements <a class="el" href="classIPlatformScreen.html#aac5b540eb1ee7f2934b2829d2c333b3b">IPlatformScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a0fe3dff0bd24f2eac358f7ea1a0ed51c">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#abe2a295486fdb14d616f0970e83de6f2">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ab7489399034844a18628e1a3b3e76222">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38">XWindowsScreen</a>.</p>
+
+</div>
+</div>
+<a id="a29e4557d386b175f865a84afecc690c4" name="a29e4557d386b175f865a84afecc690c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29e4557d386b175f865a84afecc690c4">&#9670;&#160;</a></span>clearStaleModifiers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void PlatformScreen::clearStaleModifiers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear stale modifiers. </p>
+<p>Clears stuck modifier state in platform-specific keyboard tracking (e.g. XKB). Default implementation does nothing. </p>
+
+<p>Implements <a class="el" href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">IPlatformScreen</a>.</p>
 
 </div>
 </div>

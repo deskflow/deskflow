@@ -1,5 +1,10 @@
 var NAVTREEINDEX23 =
 {
+"protocol_reference.html":[2],
+"protocol_reference.html#autotoc_md12":[2,0],
+"protocol_reference.html#autotoc_md13":[2,0,0],
+"protocol_reference.html#autotoc_md14":[2,1],
+"protocol_reference.html#autotoc_md15":[2,2],
 "protocol_reference.html#autotoc_md16":[2,2,0],
 "protocol_reference.html#autotoc_md17":[2,3],
 "protocol_reference.html#autotoc_md18":[2,4],
@@ -244,10 +249,5 @@ var NAVTREEINDEX23 =
 "structdeskflow_1_1gui_1_1messages_1_1Errors.html#a4309079b391df73e568d429e58bffd90":[5,0,0,3,3,0,0],
 "structdeskflow_1_1gui_1_1messages_1_1Errors.html#a4309079b391df73e568d429e58bffd90":[6,0,0,2,2,0,0],
 "structdeskflow_1_1gui_1_1messages_1_1Errors.html#aad399bff0b7b5584e6eb73ff485f1c76":[5,0,0,3,3,0,1],
-"structdeskflow_1_1gui_1_1messages_1_1Errors.html#aad399bff0b7b5584e6eb73ff485f1c76":[6,0,0,2,2,0,1],
-"structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html":[5,0,2,0],
-"structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html":[6,0,1,0],
-"structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#a2b1d64f0704d98be7c5e869754a9c80b":[5,0,2,0,0],
-"structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#a2b1d64f0704d98be7c5e869754a9c80b":[6,0,1,0,0],
-"structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#a363eae962649cdf53016eb14a85201e4":[5,0,2,0,2]
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html#aad399bff0b7b5584e6eb73ff485f1c76":[6,0,0,2,2,0,1]
 };

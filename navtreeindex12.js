@@ -1,5 +1,7 @@
 var NAVTREEINDEX12 =
 {
+"classMSWindowsClipboardUTF16Converter.html#a0d7643adee1ced03a8947c04e1ad5d2d":[6,0,154,0],
+"classMSWindowsClipboardUTF16Converter.html#a2226afa0aa02b0bacf8f8cc3adf12fbd":[6,0,154,4],
 "classMSWindowsClipboardUTF16Converter.html#ade3abc7d0050625fb7c7756f4f90e9a5":[6,0,154,3],
 "classMSWindowsDebugOutputter.html":[6,0,155],
 "classMSWindowsDebugOutputter.html#a2c10451acc02a4d5abad997a8a763b90":[6,0,155,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX12 =
 "classOSXClipboardBMPConverter.html#a40bc12a01d27bf381409bc1a1ca010c2":[6,0,174,4],
 "classOSXClipboardBMPConverter.html#a6c0dd4301c560df5b57b6b1f0b1e2d8c":[6,0,174,1],
 "classOSXClipboardBMPConverter.html#a84a1aee61cdde8595faa2f6893815888":[6,0,174,2],
-"classOSXClipboardBMPConverter.html#adcbaada422156479dc0238147cbd59eb":[6,0,174,6],
-"classOSXClipboardHTMLConverter.html":[6,0,175],
-"classOSXClipboardHTMLConverter.html#a57a5c5606255572e15b33ec587b2de38":[6,0,175,1]
+"classOSXClipboardBMPConverter.html#adcbaada422156479dc0238147cbd59eb":[6,0,174,6]
 };

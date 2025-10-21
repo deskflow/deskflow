@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.127</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.128</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -250,6 +250,8 @@ accessors</h2></td></tr>
 <tr class="memdesc:a41575b1a73ab6914f4900cb731ac17e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the active keyboard layout from OS.  <br /></td></tr>
 <tr class="memitem:a20ca109beffd59b1f215efac35c42206" id="r_a20ca109beffd59b1f215efac35c42206"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20ca109beffd59b1f215efac35c42206">pollPressedKeys</a> (<a class="el" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> &amp;pressedKeys) const override=0</td></tr>
 <tr class="memdesc:a20ca109beffd59b1f215efac35c42206"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the keys currently pressed from OS.  <br /></td></tr>
+<tr class="memitem:acbe7a4199b4c46df835e6157c165995f" id="r_acbe7a4199b4c46df835e6157c165995f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acbe7a4199b4c46df835e6157c165995f">clearStaleModifiers</a> () override=0</td></tr>
+<tr class="memdesc:acbe7a4199b4c46df835e6157c165995f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear stale modifiers.  <br /></td></tr>
 <tr class="memitem:a5c9a1e9311f69a008b2227f90ec513e1" id="r_a5c9a1e9311f69a008b2227f90ec513e1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c9a1e9311f69a008b2227f90ec513e1">handleSystemEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event)=0</td></tr>
 <tr class="memdesc:a5c9a1e9311f69a008b2227f90ec513e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle system event.  <br /></td></tr>
 </table><table class="memberdecls">
@@ -379,6 +381,38 @@ Additional Inherited Members</h2></td></tr>
 <p>Check ownership of all clipboards and post grab events for any that have changed. This is used as a backup in case the system doesn't reliably report clipboard ownership changes. </p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a0fe3dff0bd24f2eac358f7ea1a0ed51c">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#abe2a295486fdb14d616f0970e83de6f2">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ab7489399034844a18628e1a3b3e76222">OSXScreen</a>, <a class="el" href="classPlatformScreen.html#a452f7f61275b317208b8980c0ef3461f">PlatformScreen</a>, and <a class="el" href="classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38">XWindowsScreen</a>.</p>
+
+</div>
+</div>
+<a id="acbe7a4199b4c46df835e6157c165995f" name="acbe7a4199b4c46df835e6157c165995f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbe7a4199b4c46df835e6157c165995f">&#9670;&#160;</a></span>clearStaleModifiers()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void IPlatformScreen::clearStaleModifiers </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear stale modifiers. </p>
+<p>Clears stuck modifier state in platform-specific keyboard tracking (e.g. XKB). Default implementation does nothing. </p>
+
+<p>Reimplemented from <a class="el" href="classIKeyState.html#a50efc28abe04829d755a8d59a92160be">IKeyState</a>.</p>
+
+<p>Implemented in <a class="el" href="classPlatformScreen.html#a29e4557d386b175f865a84afecc690c4">PlatformScreen</a>.</p>
 
 </div>
 </div>

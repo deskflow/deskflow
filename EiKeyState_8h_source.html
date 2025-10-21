@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.127</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.128</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -129,25 +129,26 @@ $(function(){initNavTree('EiKeyState_8h_source.html','',''); });
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a82aefa41210cfe8e2e09e44258232f86">pollPressedKeys</a>(<a class="code hl_typedef" href="classIKeyState.html#a0a0409190bff7ac81cf797d3f03a93d7">KeyButtonSet</a> &amp;pressedKeys) <span class="keyword">const override</span>;</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_typedef" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a1dfdbaa51a840f892709e6e5d997cca5">mapKeyFromKeyval</a>(std::uint32_t keyval) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a67f40d54f15d772cbe0fe547c1194e0b">updateXkbState</a>(std::uint32_t keyval, <span class="keywordtype">bool</span> isPressed);</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">protected</span>:</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="comment">// KeyState overrides</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#ae81eee17a986ee3ecbe019039319b0e6">getKeyMap</a>(<a class="code hl_class" href="classdeskflow_1_1KeyMap.html">KeyMap</a> &amp;keyMap) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a631d966aa1b2671e0fe3f79e9b59f162">fakeKey</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classKeyState.html#a971d90c4f1d955f79237257652d0cec4">Keystroke</a> &amp;keystroke) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> assignGeneratedModifiers(std::uint32_t keycode, <a class="code hl_struct" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyMap::KeyItem</a> &amp;item);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *m_screen = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  xkb_context *m_xkb = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  xkb_keymap *m_xkbKeymap = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  xkb_state *m_xkbState = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a3bf27f88ad6a5ed9019ce890636511b3">clearStaleModifiers</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">protected</span>:</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="comment">// KeyState overrides</span></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#ae81eee17a986ee3ecbe019039319b0e6">getKeyMap</a>(<a class="code hl_class" href="classdeskflow_1_1KeyMap.html">KeyMap</a> &amp;keyMap) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1EiKeyState.html#a631d966aa1b2671e0fe3f79e9b59f162">fakeKey</a>(<span class="keyword">const</span> <a class="code hl_typedef" href="classKeyState.html#a971d90c4f1d955f79237257652d0cec4">Keystroke</a> &amp;keystroke) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  std::uint32_t convertModMask(xkb_mod_mask_t xkbModMaskIn) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> assignGeneratedModifiers(std::uint32_t keycode, <a class="code hl_struct" href="structdeskflow_1_1KeyMap_1_1KeyItem.html">KeyMap::KeyItem</a> &amp;item);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  <a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *m_screen = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span> </div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  xkb_context *m_xkb = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  xkb_keymap *m_xkbKeymap = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  xkb_state *m_xkbState = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace deskflow</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace deskflow</span></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a116668e65e11e5e00d5ff946bfc24cb4"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a116668e65e11e5e00d5ff946bfc24cb4">len</a></div><div class="ttdeci">static void FAR int len</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:38</div></div>
 <div class="ttc" id="aEiScreen_8h_html"><div class="ttname"><a href="EiScreen_8h.html">EiScreen.h</a></div></div>
 <div class="ttc" id="aKeyState_8h_html"><div class="ttname"><a href="KeyState_8h.html">KeyState.h</a></div></div>
@@ -159,6 +160,7 @@ $(function(){initNavTree('EiKeyState_8h_source.html','',''); });
 <div class="ttc" id="aclassKeyState_html_a971d90c4f1d955f79237257652d0cec4"><div class="ttname"><a href="classKeyState.html#a971d90c4f1d955f79237257652d0cec4">KeyState::Keystroke</a></div><div class="ttdeci">deskflow::KeyMap::Keystroke Keystroke</div><div class="ttdef"><b>Definition</b> KeyState.h:81</div></div>
 <div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a096b4c669242628cfcd40acab3634682"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a096b4c669242628cfcd40acab3634682">deskflow::EiKeyState::EiKeyState</a></div><div class="ttdeci">EiKeyState(EiScreen *screen, IEventQueue *events)</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:22</div></div>
 <div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a1dfdbaa51a840f892709e6e5d997cca5"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a1dfdbaa51a840f892709e6e5d997cca5">deskflow::EiKeyState::mapKeyFromKeyval</a></div><div class="ttdeci">KeyID mapKeyFromKeyval(std::uint32_t keyval) const</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:294</div></div>
+<div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a3bf27f88ad6a5ed9019ce890636511b3"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a3bf27f88ad6a5ed9019ce890636511b3">deskflow::EiKeyState::clearStaleModifiers</a></div><div class="ttdeci">void clearStaleModifiers() override</div><div class="ttdoc">Clear stale modifiers.</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:312</div></div>
 <div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a631d966aa1b2671e0fe3f79e9b59f162"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a631d966aa1b2671e0fe3f79e9b59f162">deskflow::EiKeyState::fakeKey</a></div><div class="ttdeci">void fakeKey(const Keystroke &amp;keystroke) override</div><div class="ttdoc">Fake a key event.</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:282</div></div>
 <div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a639b85fa5613ee84c56f838c15d133ab"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a639b85fa5613ee84c56f838c15d133ab">deskflow::EiKeyState::fakeCtrlAltDel</a></div><div class="ttdeci">bool fakeCtrlAltDel() override</div><div class="ttdoc">Fake ctrl+alt+del.</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:92</div></div>
 <div class="ttc" id="aclassdeskflow_1_1EiKeyState_html_a67f40d54f15d772cbe0fe547c1194e0b"><div class="ttname"><a href="classdeskflow_1_1EiKeyState.html#a67f40d54f15d772cbe0fe547c1194e0b">deskflow::EiKeyState::updateXkbState</a></div><div class="ttdeci">void updateXkbState(std::uint32_t keyval, bool isPressed)</div><div class="ttdef"><b>Definition</b> EiKeyState.cpp:306</div></div>
