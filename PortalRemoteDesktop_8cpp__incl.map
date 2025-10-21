@@ -1,13 +1,15 @@
 <map id="src/lib/platform/PortalRemoteDesktop.cpp" name="src/lib/platform/PortalRemoteDesktop.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1253,5,1444,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="1386,5,1577,44"/>
 <area shape="rect" id="Node000002" href="$PortalRemoteDesktop_8h.html" title=" " alt="" coords="1141,92,1353,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1325,47,1276,85,1273,80,1322,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1426,47,1297,89,1296,84,1424,42"/>
 <area shape="rect" id="Node000016" href="$Settings_8h.html" title=" " alt="" coords="2268,310,2402,335"/>
-<area shape="poly" id="edge78_Node000001_Node000016" title=" " alt="" coords="1366,42,1397,75,1440,114,1491,154,1548,187,1641,224,1738,253,1837,275,1934,292,2113,312,2252,318,2252,324,2113,317,1934,298,1836,281,1737,258,1639,229,1546,192,1488,159,1436,118,1393,78,1362,46"/>
+<area shape="poly" id="edge78_Node000001_Node000016" title=" " alt="" coords="1486,44,1490,77,1501,116,1519,156,1533,173,1549,187,1603,215,1680,239,1773,259,1876,276,2083,300,2253,314,2252,319,2083,305,1875,281,1772,264,1679,244,1601,220,1546,192,1529,177,1515,159,1496,118,1485,78,1480,45"/>
 <area shape="rect" id="Node000041" href="$Log_8h.html" title=" " alt="" coords="474,165,559,189"/>
-<area shape="poly" id="edge65_Node000001_Node000041" title=" " alt="" coords="1253,46,575,168,574,163,1252,41"/>
+<area shape="poly" id="edge65_Node000001_Node000041" title=" " alt="" coords="1386,44,575,169,574,164,1385,38"/>
 <area shape="rect" id="Node000049" href="$TMethodJob_8h.html" title=" " alt="" coords="1519,92,1655,117"/>
-<area shape="poly" id="edge76_Node000001_Node000049" title=" " alt="" coords="1407,42,1537,84,1536,89,1405,47"/>
+<area shape="poly" id="edge76_Node000001_Node000049" title=" " alt="" coords="1509,42,1561,81,1558,85,1506,47"/>
+<area shape="rect" id="Node000051" title=" " alt="" coords="1680,92,1740,117"/>
+<area shape="poly" id="edge79_Node000001_Node000051" title=" " alt="" coords="1538,42,1666,85,1664,91,1536,47"/>
 <area shape="rect" id="Node000003" href="$Thread_8h.html" title=" " alt="" coords="1087,165,1178,189"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="1229,120,1165,159,1162,154,1227,115"/>
 <area shape="rect" id="Node000006" href="$EiScreen_8h.html" title=" " alt="" coords="695,165,831,189"/>
