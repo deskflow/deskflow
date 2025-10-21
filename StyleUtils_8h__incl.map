@@ -1,11 +1,13 @@
 <map id="src/lib/gui/StyleUtils.h" name="src/lib/gui/StyleUtils.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="104,5,254,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="159,5,308,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,54,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,33,69,73,67,69,153,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,33,69,78,67,73,199,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="78,78,173,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="172,32,146,67,141,64,168,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,33,157,72,154,67,214,28"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="197,78,270,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="190,29,218,64,213,68,186,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="236,31,236,62,231,62,231,31"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="294,78,386,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="207,28,301,69,298,74,204,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="253,28,311,67,308,71,250,33"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="411,78,557,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="276,28,429,71,428,76,274,33"/>
 </map>

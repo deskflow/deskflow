@@ -23,6 +23,7 @@ var namespacedeskflow_1_1gui =
     [ "open", "namespacedeskflow_1_1gui.html#a92f1e078e7ff8ddbc8db8a142f481f47", null ],
     [ "printLine", "namespacedeskflow_1_1gui.html#a40f5198f8a7052ac571200e651efbcad", null ],
     [ "stripQuotes", "namespacedeskflow_1_1gui.html#af092c9dc4508e1e94f2005d4de88b930", null ],
+    [ "updateIconTheme", "namespacedeskflow_1_1gui.html#aaa991ba0f8b1c14f114fa29eb3fbdc4b", null ],
     [ "kColorError", "namespacedeskflow_1_1gui.html#a898a7c122870d1fac5a4c991baa7ed4a", null ],
     [ "kColorLightGrey", "namespacedeskflow_1_1gui.html#ab7582bb180dce3495dc8032bbf87b20c", null ],
     [ "kColorSecondary", "namespacedeskflow_1_1gui.html#a3dd9bd7f9f3cfb73057ae8421abbcc04", null ],
@@ -34,8 +35,6 @@ var namespacedeskflow_1_1gui =
     [ "kRetryDelay", "namespacedeskflow_1_1gui.html#a5b38d733ad00fd5d2681a25a8c30e6da", null ],
     [ "kStyleErrorActiveLabel", "namespacedeskflow_1_1gui.html#add853f4c3c72f23fe1c6f86e129c614a", null ],
     [ "kStyleErrorInactiveLabel", "namespacedeskflow_1_1gui.html#a29f48e82aa87d7acc4e2d56429d59f1b", null ],
-    [ "kStyleFlatButton", "namespacedeskflow_1_1gui.html#af7ec53b4567312e239ab9253de9f1913", null ],
-    [ "kStyleFlatButtonHoverable", "namespacedeskflow_1_1gui.html#a00990253233909c1fd4befbd2ea7219a", null ],
     [ "kStyleLineEditErrorBorder", "namespacedeskflow_1_1gui.html#a301c112caab5107b5846e4de036d3f1d", null ],
     [ "kStyleLink", "namespacedeskflow_1_1gui.html#a2bcc71364fd81cce031ee619ba9763ae", null ]
 ];
