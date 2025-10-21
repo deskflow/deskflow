@@ -798,20 +798,15 @@ void MSWindowsDesks::checkDesk()
       sendMessage(DESKFLOW_MSG_ENTER, 0, 0);
     }
 
-    // check for desk accessibility change.  we don't get events
-    // from an inaccessible desktop so when we switch from an
-    // inaccessible desktop to an accessible one we have to
-    // update the keyboard state.
+    // always sync keys when switching desks to ensure keyboard modifier
+    // states are correct.
     LOG_DEBUG("switched to desk \"%ls\"", name.c_str());
     bool syncKeys = false;
-    bool isAccessible = isDeskAccessible(desk);
-    if (isDeskAccessible(m_activeDesk) != isAccessible) {
-      if (isAccessible) {
-        LOG_DEBUG("desktop is now accessible");
-        syncKeys = true;
-      } else {
-        LOG_DEBUG("desktop is now inaccessible");
-      }
+    if (isDeskAccessible(desk)) {
+      LOG_DEBUG("desktop is accessible - syncing keyboard state after desk switch");
+      syncKeys = true;
+    } else {
+      LOG_DEBUG("desktop is inaccessible");
     }
 
     // switch desk
