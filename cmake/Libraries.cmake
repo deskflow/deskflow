@@ -89,6 +89,7 @@ macro(configure_unix_libs)
   include(CheckIncludeFileCXX)
   include(CheckSymbolExists)
   include(CheckCSourceCompiles)
+  include(CheckCXXSourceCompiles)
 
   check_include_files(sys/socket.h HAVE_SYS_SOCKET_H)
   if (NOT HAVE_SYS_SOCKET_H)
@@ -134,6 +135,23 @@ macro(configure_unix_libs)
     list(APPEND libs pthread)
   else()
     message(FATAL_ERROR "Missing library: pthread")
+  endif()
+
+  # Check if <format> header is available
+  check_cxx_source_compiles("
+    #include <format>
+    int main() {
+        char buffer[100];
+        std::format_to_n(buffer, 100, \"test {}\", 42);
+        return 0;
+    }
+    " HAS_FORMAT)
+
+  # Display format support status
+  if(HAS_FORMAT)
+    message(STATUS "C++ <format> library support: YES")
+  else()
+    message(STATUS "C++ <format> library support: NO")
   endif()
 
   if(APPLE)
