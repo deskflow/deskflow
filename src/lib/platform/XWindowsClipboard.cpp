@@ -21,7 +21,11 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+
+#if HAS_FORMAT
 #include <format>
+#endif
+
 #include <vector>
 
 //
@@ -637,7 +641,11 @@ void XWindowsClipboard::motifFillCache()
   // get the Motif item property from the root window
   static const int buffer_size = 18 + 20;
   char name[buffer_size];
+#if HAS_FORMAT
   std::format_to_n(name, buffer_size, "_MOTIF_CLIP_ITEM_{}", header.m_item);
+#else
+  snprintf(name, buffer_size, "_MOTIF_CLIP_ITEM_%d", header.m_item);
+#endif
   Atom atomItem = XInternAtom(m_display, name, False);
   data = "";
   if (!XWindowsUtil::getWindowProperty(m_display, root, atomItem, &data, &target, &format, False)) {
@@ -662,7 +670,11 @@ void XWindowsClipboard::motifFillCache()
   MotifFormatMap motifFormats;
   for (int32_t i = 0; i < numFormats; ++i) {
     // get Motif format property from the root window
+#if HAS_FORMAT
     std::format_to_n(name, buffer_size, "_MOTIF_CLIP_ITEM_{}", formats[i]);
+#else
+    snprintf(name, buffer_size, "_MOTIF_CLIP_ITEM_%d", formats[i]);
+#endif
     Atom atomFormat = XInternAtom(m_display, name, False);
     std::string data;
     if (!XWindowsUtil::getWindowProperty(m_display, root, atomFormat, &data, &target, &format, False)) {
@@ -737,7 +749,11 @@ bool XWindowsClipboard::motifGetSelection(const MotifClipFormat *format, Atom *a
   // part that i don't know.
   static const int buffer_size = 18 + 20;
   char name[buffer_size];
+#if HAS_FORMAT
   std::format_to_n(name, buffer_size, "_MOTIF_CLIP_ITEM_{}", format->m_data);
+#else
+  snprintf(name, buffer_size, "_MOTIF_CLIP_ITEM_%d", format->m_data);
+#endif
   Atom target = XInternAtom(m_display, name, False);
   Window root = RootWindow(m_display, DefaultScreen(m_display));
   return XWindowsUtil::getWindowProperty(m_display, root, target, data, actualTarget, nullptr, False);
