@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="windowTitle">
-   <string>Deskflow</string>
-  </property>
   <widget class="QWidget" name="topLevelWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
@@ -65,7 +62,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>lblName</string>
+          <string notr="true">lblName</string>
          </property>
         </widget>
        </item>

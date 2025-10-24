@@ -105,7 +105,7 @@ p, li { white-space: pre-wrap; }
          </font>
         </property>
         <property name="text">
-         <string>Deskflow</string>
+         <string notr="true">Deskflow</string>
         </property>
         <property name="scaledContents">
          <bool>false</bool>
@@ -191,7 +191,7 @@ p, li { white-space: pre-wrap; }
             </font>
            </property>
            <property name="text">
-            <string>lbl_version</string>
+            <string notr="true">lbl_version</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
@@ -281,7 +281,7 @@ p, li { white-space: pre-wrap; }
       </sizepolicy>
      </property>
      <property name="text">
-      <string>lblDescription</string>
+      <string notr="true">lblDescription</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
@@ -417,7 +417,7 @@ p, li { white-space: pre-wrap; }
              <enum>QFrame::Shape::NoFrame</enum>
             </property>
             <property name="text">
-             <string>lblImportantDevs</string>
+             <string notr="true">lblImportantDevs</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>

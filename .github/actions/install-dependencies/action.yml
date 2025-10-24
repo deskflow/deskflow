@@ -47,12 +47,13 @@ runs:
               zypper refresh
               zypper install -y --force-resolution \
                 cmake make ninja gcc-c++ rpm-build libopenssl-devel \
-                glib2-devel libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel gtk3-devel \
+                glib2-devel libXtst-devel libxkbfile-devel qt6-base-devel qt6-tools-devel \
+                qt6-linguist-devel gtk3-devel \
                 googletest-devel googlemock-devel libei-devel libportal-devel help2man
             elif [ ${{ inputs.like }} == "arch" ]; then
               pacman -Syu --noconfirm base-devel cmake ninja \
                 gcc openssl glib2 libxtst libxkbfile gtest libei libportal \
-                qt6-base qt6-tools qt6-svg gtk3 help2man doxygen graphviz rsync
+                qt6-base qt6-tools qt6-svg qt6-translations qt6-declarative gtk3 help2man doxygen graphviz rsync
             else
               echo "Unknown like"
             fi

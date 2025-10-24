@@ -30,6 +30,7 @@ CMake options:
 | ENABLE_COVERAGE          | Enable test coverage                    | OFF                | `gcov` |
 | SKIP_BUILD_TESTS         | Skip running of tests at build time     | OFF                | |
 | VCPKG_QT                 | Build Qt w/ vcpkg (windows only)        | OFF                | |
+| CLEAN_TRS                | Remove obsolete strings from tr files   | OFF                | |
 
 Example cmake configuration.
 `cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=<INSTALLPREFIX>`

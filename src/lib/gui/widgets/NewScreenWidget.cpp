@@ -21,6 +21,7 @@ NewScreenWidget::NewScreenWidget(QWidget *parent) : QLabel(parent)
 
 void NewScreenWidget::mousePressEvent(QMouseEvent *event)
 {
+  //: Translation may not contain spaces
   Screen newScreen(tr("Unnamed"));
 
   QByteArray itemData;
