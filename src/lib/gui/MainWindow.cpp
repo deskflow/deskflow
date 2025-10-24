@@ -1,3 +1,4 @@
+#include "common/Settings.h" // must include first
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithord48@gmail.com>
@@ -19,7 +20,6 @@
 #include "dialogs/SettingsDialog.h"
 
 #include "base/String.h"
-#include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "gui/Messages.h"
 #include "gui/Styles.h"

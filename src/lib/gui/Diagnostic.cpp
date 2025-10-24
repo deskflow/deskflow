@@ -1,3 +1,4 @@
+#include "common/Settings.h" // must include first
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
@@ -5,8 +6,6 @@
  */
 
 #include "Diagnostic.h"
-
-#include "common/Settings.h"
 
 #include <QCoreApplication>
 #include <QDir>
@@ -35,7 +34,7 @@ void clearSettings(bool enableRestart)
   qDebug("clearing settings");
   Settings::proxy().clear();
 
-  // save but do not emit saving signal which will prevent the current state of
+  // save but do not Q_EMIT saving signal which will prevent the current state of
   // the app config and server configs from being applied.
   Settings::save(false);
 
