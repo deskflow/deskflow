@@ -1,19 +1,19 @@
 var namespacedeskflow_1_1gui =
 [
+    [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", "namespacedeskflow_1_1gui_1_1ipc" ],
     [ "core", "namespacedeskflow_1_1gui_1_1core.html", "namespacedeskflow_1_1gui_1_1core" ],
     [ "diagnostic", "namespacedeskflow_1_1gui_1_1diagnostic.html", [
       [ "clearSettings", "namespacedeskflow_1_1gui_1_1diagnostic.html#a6c2840f65dad3f842913674285b842af", null ],
       [ "restart", "namespacedeskflow_1_1gui_1_1diagnostic.html#a8e73d7e253216211e943a85140eb9e62", null ]
     ] ],
-    [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", "namespacedeskflow_1_1gui_1_1ipc" ],
     [ "messages", "namespacedeskflow_1_1gui_1_1messages.html", "namespacedeskflow_1_1gui_1_1messages" ],
+    [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
     [ "ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", "classdeskflow_1_1gui_1_1ClientConnection" ],
     [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", "classdeskflow_1_1gui_1_1CoreProcess" ],
-    [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
-    [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
-    [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
     [ "ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", "classdeskflow_1_1gui_1_1ServerConnection" ],
     [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
+    [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
+    [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
     [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ],
     [ "dotenv", "namespacedeskflow_1_1gui.html#ab4c997166f1edb383c9a46fb94672d12", null ],
     [ "getPair", "namespacedeskflow_1_1gui.html#a4c76fb6206a264805e66241483d320a1", null ],

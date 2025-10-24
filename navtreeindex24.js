@@ -1,5 +1,11 @@
 var NAVTREEINDEX24 =
 {
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html":[5,0,0,5,3,0],
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html":[6,0,0,4,2,0],
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html#a4309079b391df73e568d429e58bffd90":[5,0,0,5,3,0,0],
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html#a4309079b391df73e568d429e58bffd90":[6,0,0,4,2,0,0],
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html#aad399bff0b7b5584e6eb73ff485f1c76":[5,0,0,5,3,0,1],
+"structdeskflow_1_1gui_1_1messages_1_1Errors.html#aad399bff0b7b5584e6eb73ff485f1c76":[6,0,0,4,2,0,1],
 "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html":[5,0,2,0],
 "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html":[6,0,1,0],
 "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#a2b1d64f0704d98be7c5e869754a9c80b":[5,0,2,0,0],
@@ -13,10 +19,10 @@ var NAVTREEINDEX24 =
 "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#ac5274c8b1f0413f89a626a54abe5d926":[5,0,2,0,1],
 "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html#ac5274c8b1f0413f89a626a54abe5d926":[6,0,1,0,1],
 "topics.html":[4],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html":[5,0,0,13,1,1],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html":[6,0,0,12,1,1],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a7cb58d70909b9d33c77441f611fdf76a":[5,0,0,13,1,1,0],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a7cb58d70909b9d33c77441f611fdf76a":[6,0,0,12,1,1,0],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a8aac934d41823f516d837d969773313e":[5,0,0,13,1,1,1],
-"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a8aac934d41823f516d837d969773313e":[6,0,0,12,1,1,1]
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html":[5,0,0,9,1,2],
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html":[6,0,0,8,1,2],
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a7cb58d70909b9d33c77441f611fdf76a":[5,0,0,9,1,2,0],
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a7cb58d70909b9d33c77441f611fdf76a":[6,0,0,8,1,2,0],
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a8aac934d41823f516d837d969773313e":[5,0,0,9,1,2,1],
+"uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html#a8aac934d41823f516d837d969773313e":[6,0,0,8,1,2,1]
 };

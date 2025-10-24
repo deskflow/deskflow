@@ -1,4 +1,4 @@
 var PriorityQueue_8h =
 [
-    [ "PriorityQueue< T, Container, Compare >", "classPriorityQueue.html", "classPriorityQueue" ]
+    [ "PriorityQueue&lt; T, Container, Compare &gt;", "classPriorityQueue.html", "classPriorityQueue" ]
 ];

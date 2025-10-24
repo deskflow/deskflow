@@ -546,7 +546,7 @@ function initNavTree(toroot,relpath,allMembersFile) {
     function updateWidths(sidenavWidth,pagenavWidth,dragLeft)
     {
       const widths = constrainPanelWidths(sidenavWidth,pagenavWidth,dragLeft);
-      const widthStr = parseInt(widths.leftPanelWidth)+"px";
+      const widthStr = parseFloat(widths.leftPanelWidth)+"px";
       content.css({marginLeft:widthStr});
       if (fullSidebar) {
         footer.css({marginLeft:widthStr});
@@ -556,15 +556,17 @@ function initNavTree(toroot,relpath,allMembersFile) {
       }
       sidenav.css({width:widthStr});
       if (pagenav.length) {
-        container.css({gridTemplateColumns:'auto '+parseInt(widths.rightPanelWidth)+'px'});
-        pagenav.css({width:parseInt(widths.rightPanelWidth-1)+'px'});
+        container.css({gridTemplateColumns:'auto '+parseFloat(widths.rightPanelWidth)+'px'});
+        if (!dragLeft) {
+          pagenav.css({width:parseFloat(widths.rightPanelWidth-1)+'px'});
+        }
       }
       return widths;
     }
 
     function resizeWidth(dragLeft) {
       const sidenavWidth = $(sidenav).outerWidth()-barWidth;
-      const pagenavWidth = pagenav.length ? $(pagenav).outerWidth() : 0;
+      let pagenavWidth = pagenav.length ? $(pagenav).outerWidth() : 0;
       const widths = updateWidths(sidenavWidth,pagenavWidth,dragLeft);
       Cookie.writeSetting(RESIZE_COOKIE_NAME,widths.leftPanelWidth-barWidth);
       if (pagenav.length) {
@@ -627,9 +629,9 @@ function initNavTree(toroot,relpath,allMembersFile) {
            let pagenavWidth = container[0].offsetWidth-clientX+barWidth/2;
            const sidenavWidth = sidenav.width();
            const widths = constrainPanelWidths(sidenavWidth,pagenavWidth,false);
-           container.css({gridTemplateColumns:'auto '+parseInt(widths.rightPanelWidth)+'px'});
-           pagenav.css({width:parseInt(widths.rightPanelWidth-1)+'px'});
-           content.css({marginLeft:parseInt(widths.leftPanelWidth)+'px'});
+           container.css({gridTemplateColumns:'auto '+parseFloat(widths.rightPanelWidth)+'px'});
+           pagenav.css({width:parseFloat(widths.rightPanelWidth-1)+'px'});
+           content.css({marginLeft:parseFloat(widths.leftPanelWidth)+'px'});
            Cookie.writeSetting(PAGENAV_COOKIE_NAME,pagenavWidth);
          });
          $(document).on('mouseup touchend', function(e) {
@@ -738,7 +740,7 @@ function initNavTree(toroot,relpath,allMembersFile) {
             tr = tr.prev();
           }
           id = $(tr).attr('id');
-          const text = is_anon_enum ? 'anonymous enum' : $(this).find('a:first,b,div.groupHeader').text();
+          let text = is_anon_enum ? 'anonymous enum' : $(this).find(':first-child').text();
           let isMemberGroupHeader = $(tr).hasClass('groupHeader');
           if ($(tr).is(":visible") && last_id!=id && id!==undefined) {
             if (isMemberGroupHeader && inMemberGroup) {

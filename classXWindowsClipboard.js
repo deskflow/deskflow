@@ -1,9 +1,9 @@
 var classXWindowsClipboard =
 [
     [ "CICCCMGetClipboard", "classXWindowsClipboard_1_1CICCCMGetClipboard.html", "classXWindowsClipboard_1_1CICCCMGetClipboard" ],
-    [ "MotifClipFormat", "classXWindowsClipboard_1_1MotifClipFormat.html", "classXWindowsClipboard_1_1MotifClipFormat" ],
     [ "MotifClipHeader", "classXWindowsClipboard_1_1MotifClipHeader.html", "classXWindowsClipboard_1_1MotifClipHeader" ],
     [ "MotifClipItem", "classXWindowsClipboard_1_1MotifClipItem.html", "classXWindowsClipboard_1_1MotifClipItem" ],
+    [ "MotifClipFormat", "classXWindowsClipboard_1_1MotifClipFormat.html", "classXWindowsClipboard_1_1MotifClipFormat" ],
     [ "Reply", "classXWindowsClipboard_1_1Reply.html", "classXWindowsClipboard_1_1Reply" ],
     [ "ReplyEventMask", "classXWindowsClipboard.html#a7d92a85b058425649b7857b3b4a78832", null ],
     [ "ReplyList", "classXWindowsClipboard.html#aee73e27059dc833b2bb6c72c5ba8bc15", null ],

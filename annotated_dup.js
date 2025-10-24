@@ -1,6 +1,9 @@
 var annotated_dup =
 [
     [ "deskflow", "namespacedeskflow.html", [
+      [ "string", "namespacedeskflow_1_1string.html", [
+        [ "CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", "classdeskflow_1_1string_1_1CaselessCmp" ]
+      ] ],
       [ "client", "namespacedeskflow_1_1client.html", [
         [ "HelloBack", "classdeskflow_1_1client_1_1HelloBack.html", "classdeskflow_1_1client_1_1HelloBack" ]
       ] ],
@@ -9,27 +12,27 @@ var annotated_dup =
           [ "DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer" ]
         ] ]
       ] ],
+      [ "languages", "namespacedeskflow_1_1languages.html", [
+        [ "LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", "classdeskflow_1_1languages_1_1LanguageManager" ]
+      ] ],
       [ "gui", "namespacedeskflow_1_1gui.html", [
-        [ "core", "namespacedeskflow_1_1gui_1_1core.html", [
-          [ "WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings" ]
-        ] ],
         [ "ipc", "namespacedeskflow_1_1gui_1_1ipc.html", [
           [ "DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient" ]
+        ] ],
+        [ "core", "namespacedeskflow_1_1gui_1_1core.html", [
+          [ "WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings" ]
         ] ],
         [ "messages", "namespacedeskflow_1_1gui_1_1messages.html", [
           [ "Errors", "structdeskflow_1_1gui_1_1messages_1_1Errors.html", "structdeskflow_1_1gui_1_1messages_1_1Errors" ]
         ] ],
+        [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
         [ "ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", "classdeskflow_1_1gui_1_1ClientConnection" ],
         [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", "classdeskflow_1_1gui_1_1CoreProcess" ],
-        [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
-        [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
-        [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
         [ "ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", "classdeskflow_1_1gui_1_1ServerConnection" ],
         [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
+        [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
+        [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
         [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ]
-      ] ],
-      [ "languages", "namespacedeskflow_1_1languages.html", [
-        [ "LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", "classdeskflow_1_1languages_1_1LanguageManager" ]
       ] ],
       [ "platform", "namespacedeskflow_1_1platform.html", [
         [ "MSWindowsProcess", "classdeskflow_1_1platform_1_1MSWindowsProcess.html", "classdeskflow_1_1platform_1_1MSWindowsProcess" ]
@@ -39,21 +42,18 @@ var annotated_dup =
         [ "ConfigReadContext", "classdeskflow_1_1server_1_1ConfigReadContext.html", "classdeskflow_1_1server_1_1ConfigReadContext" ],
         [ "ServerConfigReadException", "classdeskflow_1_1server_1_1ServerConfigReadException.html", "classdeskflow_1_1server_1_1ServerConfigReadException" ]
       ] ],
-      [ "string", "namespacedeskflow_1_1string.html", [
-        [ "CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", "classdeskflow_1_1string_1_1CaselessCmp" ]
-      ] ],
+      [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
+      [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
+      [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
+      [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],
       [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
       [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
       [ "EiScreen", "classdeskflow_1_1EiScreen.html", "classdeskflow_1_1EiScreen" ],
-      [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
-      [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],
-      [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
       [ "PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", "classdeskflow_1_1PortalInputCapture" ],
-      [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ],
-      [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ]
+      [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ]
     ] ],
     [ "std", "namespacestd.html", [
-      [ "iterator_traits< deskflow::server::Config >", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4" ]
+      [ "iterator_traits&lt; deskflow::server::Config &gt;", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4" ]
     ] ],
     [ "validators", "namespacevalidators.html", [
       [ "AliasValidator", "classvalidators_1_1AliasValidator.html", "classvalidators_1_1AliasValidator" ],
@@ -260,7 +260,7 @@ var annotated_dup =
     [ "ScreenException", "classScreenException.html", null ],
     [ "ScreenList", "classScreenList.html", "classScreenList" ],
     [ "ScreenOpenFailureException", "classScreenOpenFailureException.html", "classScreenOpenFailureException" ],
-    [ "<ScreenSaverControl>", "protocolScreenSaverControl-p.html", "protocolScreenSaverControl-p" ],
+    [ "&lt;ScreenSaverControl&gt;", "protocolScreenSaverControl-p.html", "protocolScreenSaverControl-p" ],
     [ "ScreenSaverController", "interfaceScreenSaverController.html", "interfaceScreenSaverController" ],
     [ "ScreenSettingsDialog", "classScreenSettingsDialog.html", "classScreenSettingsDialog" ],
     [ "ScreenSetupModel", "classScreenSetupModel.html", "classScreenSetupModel" ],

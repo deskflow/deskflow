@@ -1,5 +1,5 @@
 var OSXScreenSaverControl_8h =
 [
-    [ "<ScreenSaverControl>", "protocolScreenSaverControl-p.html", "protocolScreenSaverControl-p" ],
+    [ "&lt;ScreenSaverControl&gt;", "protocolScreenSaverControl-p.html", "protocolScreenSaverControl-p" ],
     [ "ScreenSaverController", "interfaceScreenSaverController.html", "interfaceScreenSaverController" ]
 ];

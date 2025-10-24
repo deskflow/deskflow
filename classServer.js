@@ -1,10 +1,10 @@
 var classServer =
 [
-    [ "KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html", "classServer_1_1KeyboardBroadcastInfo" ],
     [ "LockCursorToScreenInfo", "classServer_1_1LockCursorToScreenInfo.html", "classServer_1_1LockCursorToScreenInfo" ],
-    [ "ScreenConnectedInfo", "classServer_1_1ScreenConnectedInfo.html", "classServer_1_1ScreenConnectedInfo" ],
-    [ "SwitchInDirectionInfo", "classServer_1_1SwitchInDirectionInfo.html", "classServer_1_1SwitchInDirectionInfo" ],
     [ "SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html", "classServer_1_1SwitchToScreenInfo" ],
+    [ "SwitchInDirectionInfo", "classServer_1_1SwitchInDirectionInfo.html", "classServer_1_1SwitchInDirectionInfo" ],
+    [ "ScreenConnectedInfo", "classServer_1_1ScreenConnectedInfo.html", "classServer_1_1ScreenConnectedInfo" ],
+    [ "KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html", "classServer_1_1KeyboardBroadcastInfo" ],
     [ "Server", "classServer.html#a34e2068b4a374bfc327b8aa3a426756f", null ],
     [ "Server", "classServer.html#ac0a402ca54125d9f8f97d191a5649965", null ],
     [ "Server", "classServer.html#a7350ff05dceefad892dc8213a1e20dc2", null ],

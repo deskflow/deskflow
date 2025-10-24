@@ -1,4 +1,4 @@
 var TSocketMultiplexerMethodJob_8h =
 [
-    [ "TSocketMultiplexerMethodJob< T >", "classTSocketMultiplexerMethodJob.html", "classTSocketMultiplexerMethodJob" ]
+    [ "TSocketMultiplexerMethodJob&lt; T &gt;", "classTSocketMultiplexerMethodJob.html", "classTSocketMultiplexerMethodJob" ]
 ];

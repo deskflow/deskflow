@@ -90,7 +90,7 @@ var hierarchy =
       ] ]
     ] ],
     [ "Client::FailInfo", "classClient_1_1FailInfo.html", null ],
-    [ "deskflow::FinalAction< Callable >", "classdeskflow_1_1FinalAction.html", null ],
+    [ "deskflow::FinalAction&lt; Callable &gt;", "classdeskflow_1_1FinalAction.html", null ],
     [ "Fingerprint", "structFingerprint.html", null ],
     [ "FingerprintDatabase", "classFingerprintDatabase.html", null ],
     [ "FunctionEventJob", "classFunctionEventJob.html", null ],
@@ -266,7 +266,7 @@ var hierarchy =
     [ "std::iterator_traits", null, [
       [ "deskflow::server::Config::const_iterator", "classdeskflow_1_1server_1_1Config_1_1const__iterator.html", null ]
     ] ],
-    [ "std::iterator_traits< deskflow::server::Config >", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", null ],
+    [ "std::iterator_traits&lt; deskflow::server::Config &gt;", "structstd_1_1iterator__traits_3_01deskflow_1_1server_1_1Config_01_4.html", null ],
     [ "IXWindowsClipboardConverter", "classIXWindowsClipboardConverter.html", [
       [ "XWindowsClipboardAnyBitmapConverter", "classXWindowsClipboardAnyBitmapConverter.html", null ],
       [ "XWindowsClipboardBMPConverter", "classXWindowsClipboardBMPConverter.html", null ],
@@ -310,7 +310,7 @@ var hierarchy =
     [ "IArchNetwork::PollEventMask", "structIArchNetwork_1_1PollEventMask.html", null ],
     [ "deskflow::PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", null ],
     [ "deskflow::PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", null ],
-    [ "PriorityQueue< T, Container, Compare >", "classPriorityQueue.html", null ],
+    [ "PriorityQueue&lt; T, Container, Compare &gt;", "classPriorityQueue.html", null ],
     [ "ProtocolUtil", "classProtocolUtil.html", null ],
     [ "QAbstractTableModel", null, [
       [ "ScreenSetupModel", "classScreenSetupModel.html", null ]
@@ -451,7 +451,7 @@ var hierarchy =
       [ "ServerConfig", "classServerConfig.html", null ]
     ] ],
     [ "Server::ScreenConnectedInfo", "classServer_1_1ScreenConnectedInfo.html", null ],
-    [ "<ScreenSaverControl>", "protocolScreenSaverControl-p.html", [
+    [ "&lt;ScreenSaverControl&gt;", "protocolScreenSaverControl-p.html", [
       [ "ScreenSaverController", "interfaceScreenSaverController.html", null ]
     ] ],
     [ "ScrollRemainder", "structScrollRemainder.html", null ],

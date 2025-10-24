@@ -1,10 +1,10 @@
 var classIPrimaryScreen =
 [
     [ "ButtonInfo", "classIPrimaryScreen_1_1ButtonInfo.html", "classIPrimaryScreen_1_1ButtonInfo" ],
-    [ "EiConnectInfo", "classIPrimaryScreen_1_1EiConnectInfo.html", "classIPrimaryScreen_1_1EiConnectInfo" ],
-    [ "HotKeyInfo", "classIPrimaryScreen_1_1HotKeyInfo.html", "classIPrimaryScreen_1_1HotKeyInfo" ],
     [ "MotionInfo", "classIPrimaryScreen_1_1MotionInfo.html", "classIPrimaryScreen_1_1MotionInfo" ],
     [ "WheelInfo", "classIPrimaryScreen_1_1WheelInfo.html", "classIPrimaryScreen_1_1WheelInfo" ],
+    [ "HotKeyInfo", "classIPrimaryScreen_1_1HotKeyInfo.html", "classIPrimaryScreen_1_1HotKeyInfo" ],
+    [ "EiConnectInfo", "classIPrimaryScreen_1_1EiConnectInfo.html", "classIPrimaryScreen_1_1EiConnectInfo" ],
     [ "~IPrimaryScreen", "classIPrimaryScreen.html#a52a0a5a62240ef5e2ffc9279605cd74d", null ],
     [ "activeSides", "classIPrimaryScreen.html#aee64b865789af789f8f6197245611fdd", null ],
     [ "fakeInputBegin", "classIPrimaryScreen.html#a5da9bf5f6a1b0dc34264c88bac459445", null ],

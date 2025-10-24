@@ -1,7 +1,7 @@
 var classIArchNetwork =
 [
-    [ "PollEntry", "classIArchNetwork_1_1PollEntry.html", "classIArchNetwork_1_1PollEntry" ],
     [ "PollEventMask", "structIArchNetwork_1_1PollEventMask.html", "structIArchNetwork_1_1PollEventMask" ],
+    [ "PollEntry", "classIArchNetwork_1_1PollEntry.html", "classIArchNetwork_1_1PollEntry" ],
     [ "AddressFamily", "classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445", [
       [ "Unknown", "classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
       [ "INet", "classIArchNetwork.html#a8c69824f3bd9925f1e5fc7216ba0d445a3a9e9b275504f7b6e6753d3aaa65e703", null ],

@@ -1,24 +1,24 @@
 var namespacedeskflow =
 [
-    [ "client", "namespacedeskflow_1_1client.html", "namespacedeskflow_1_1client" ],
-    [ "core", "namespacedeskflow_1_1core.html", "namespacedeskflow_1_1core" ],
     [ "filesystem", "namespacedeskflow_1_1filesystem.html", [
       [ "path", "namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df", null ]
     ] ],
-    [ "gui", "namespacedeskflow_1_1gui.html", "namespacedeskflow_1_1gui" ],
+    [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
+    [ "client", "namespacedeskflow_1_1client.html", "namespacedeskflow_1_1client" ],
+    [ "core", "namespacedeskflow_1_1core.html", "namespacedeskflow_1_1core" ],
     [ "languages", "namespacedeskflow_1_1languages.html", "namespacedeskflow_1_1languages" ],
+    [ "gui", "namespacedeskflow_1_1gui.html", "namespacedeskflow_1_1gui" ],
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],
     [ "server", "namespacedeskflow_1_1server.html", "namespacedeskflow_1_1server" ],
-    [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
+    [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
+    [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
+    [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
+    [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],
     [ "EiEventQueueBuffer", "classdeskflow_1_1EiEventQueueBuffer.html", "classdeskflow_1_1EiEventQueueBuffer" ],
     [ "EiKeyState", "classdeskflow_1_1EiKeyState.html", "classdeskflow_1_1EiKeyState" ],
     [ "EiScreen", "classdeskflow_1_1EiScreen.html", "classdeskflow_1_1EiScreen" ],
-    [ "FinalAction", "classdeskflow_1_1FinalAction.html", "classdeskflow_1_1FinalAction" ],
-    [ "IStream", "classdeskflow_1_1IStream.html", "classdeskflow_1_1IStream" ],
-    [ "KeyMap", "classdeskflow_1_1KeyMap.html", "classdeskflow_1_1KeyMap" ],
     [ "PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", "classdeskflow_1_1PortalInputCapture" ],
     [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ],
-    [ "Screen", "classdeskflow_1_1Screen.html", "classdeskflow_1_1Screen" ],
     [ "EventTypes", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2", [
       [ "Unknown", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
       [ "Quit", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6", null ],
