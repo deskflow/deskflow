@@ -319,8 +319,9 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
   // and xkb_state_key_get_one_sym() would return XF86_Switch_VT_* when Ctrl+Alt are
   // pressed, instead of F1. We want to send F1 + modifiers to the server, not the
   // VT switch action.
+  const auto shifted = xkb_keymap_num_levels_for_key(m_xkbKeymap, keyval, 0);
   const xkb_keysym_t *syms;
-  int nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keyval, 0, 0, &syms);
+  int nsyms = xkb_keymap_key_get_syms_by_level(m_xkbKeymap, keyval, 0, shifted, &syms);
 
   xkb_keysym_t xkbKeysym;
   if (nsyms > 0) {
