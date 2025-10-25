@@ -22,11 +22,6 @@ void MSWindowsDebugOutputter::close()
   // do nothing
 }
 
-void MSWindowsDebugOutputter::show(bool showIfEmpty)
-{
-  // do nothing
-}
-
 bool MSWindowsDebugOutputter::write(LogLevel level, const QString &msg)
 {
   std::wstring out = msg.toStdWString() + L"\n";
