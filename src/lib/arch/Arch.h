@@ -85,11 +85,6 @@ public:
   */
   static Arch *getInstance();
 
-  static void setInstance(Arch *s)
-  {
-    s_instance = s;
-  }
-
   /**
    * @brief blocks calling thread for timout seconds
    * @param timeout - blocking time in seconds. if < 0 not blocked if == 0 then caller yields the CPU
