@@ -89,7 +89,7 @@ MainWindow::MainWindow()
 {
   ui->setupUi(this);
 
-  setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+  setWindowIcon(QIcon::fromTheme(kRevFqdnName));
 
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
@@ -765,7 +765,7 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setTrayIcon()
 {
-  QString iconString = kAppId;
+  QString iconString = kRevFqdnName;
 
   if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
     m_trayIcon->setIcon(QIcon::fromTheme(iconString));
