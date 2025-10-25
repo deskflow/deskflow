@@ -89,7 +89,7 @@ MainWindow::MainWindow()
 {
   ui->setupUi(this);
 
-  setWindowIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+  setWindowIcon(QIcon::fromTheme(kRevFqdnName));
 
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
@@ -765,23 +765,27 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setTrayIcon()
 {
-  // Using a theme icon that is packed in exe renders an invisible icon
-  // Instead use the resource path of the packed icon
-  const bool symbolicIcon = Settings::value(Settings::Gui::SymbolicTrayIcon).toBool();
-#if defined(Q_OS_UNIX) && !defined(Q_OS_APPLE)
-  QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
-  if (symbolicIcon)
-    iconString.append(QStringLiteral("-symbolic"));
-  m_trayIcon->setIcon(QIcon(iconString));
-#else
-  if (symbolicIcon) {
-    auto icon = QIcon::fromTheme(QStringLiteral("deskflow-symbolic"));
-    icon.setIsMask(true);
-    m_trayIcon->setIcon(icon);
-  } else {
-    m_trayIcon->setIcon(QIcon::fromTheme(QStringLiteral("deskflow")));
+  QString iconString = kRevFqdnName;
+
+  if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
+    m_trayIcon->setIcon(QIcon::fromTheme(iconString));
+    return;
   }
+
+#ifdef Q_OS_WIN
+  QSettings settings(
+      QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+      QSettings::NativeFormat
+  );
+  const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
+                                                                                           : QStringLiteral("dark");
+  iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/%2").arg(theme, kRevFqdnName);
 #endif
+
+  iconString.append(QStringLiteral("-symbolic"));
+  auto icon = QIcon::fromTheme(iconString);
+  icon.setIsMask(true);
+  m_trayIcon->setIcon(icon);
 }
 
 void MainWindow::handleLogLine(const QString &line)

@@ -12,10 +12,12 @@ install(
 )
 
 # Install our icon
+install(FILES ${MY_DIR}/org.deskflow.deskflow.png DESTINATION share/icons/hicolor/512x512/apps/)
+
+# Install our symbolic icon
 install(
-  FILES ${MY_DIR}/deskflow.png
-  DESTINATION share/icons/hicolor/512x512/apps/
-  RENAME ${CMAKE_PROJECT_REV_FQDN}.png
+  FILES ${CMAKE_SOURCE_DIR}/src/apps/res/icons/deskflow-light/apps/64/org.deskflow.deskflow-symbolic.svg
+  DESTINATION share/icons/hicolor/symbolic/apps/
 )
 
 # Install our metainfo
