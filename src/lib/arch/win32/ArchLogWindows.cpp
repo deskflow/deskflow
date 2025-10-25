@@ -33,11 +33,6 @@ void ArchLogWindows::closeLog()
   }
 }
 
-void ArchLogWindows::showLog(bool)
-{
-  // do nothing
-}
-
 void ArchLogWindows::writeLog(LogLevel level, const QString &msg)
 {
   if (m_eventLog != nullptr) {

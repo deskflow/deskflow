@@ -91,7 +91,7 @@ void SystemLogOutputter::close()
 
 void SystemLogOutputter::show(bool showIfEmpty)
 {
-  ARCH->showLog(showIfEmpty);
+  // do nothing
 }
 
 bool SystemLogOutputter::write(LogLevel level, const QString &msg)

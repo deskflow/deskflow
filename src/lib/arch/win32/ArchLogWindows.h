@@ -24,7 +24,6 @@ public:
   // IArchLog overrides
   void openLog(const QString &name) override;
   void closeLog() override;
-  void showLog(bool showIfEmpty) override;
   void writeLog(LogLevel, const QString &) override;
 
 private:

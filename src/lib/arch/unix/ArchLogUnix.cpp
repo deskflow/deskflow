@@ -23,11 +23,6 @@ void ArchLogUnix::closeLog()
   closelog();
 }
 
-void ArchLogUnix::showLog(bool)
-{
-  // do nothing
-}
-
 void ArchLogUnix::writeLog(LogLevel level, const QString &msg)
 {
   // convert level
