@@ -57,8 +57,8 @@
         <file>icons/deskflow-dark/actions/32/document-save-as.svg</file>
         <file>icons/deskflow-dark/actions/32/help-about.svg</file>
         <file>icons/deskflow-dark/actions/32/view-refresh.svg</file>
-        <file>icons/deskflow-dark/apps/64/deskflow.svg</file>
-        <file>icons/deskflow-dark/apps/64/deskflow-symbolic.svg</file>
+        <file>icons/deskflow-dark/apps/64/org.deskflow.deskflow.svg</file>
+        <file>icons/deskflow-dark/apps/64/org.deskflow.deskflow-symbolic.svg</file>
         <file>icons/deskflow-dark/devices/64/video-display.svg</file>
         <file>icons/deskflow-dark/places/64/user-trash.svg</file>
         <file>icons/deskflow-dark/status/32/software-updates-release.svg</file>
@@ -130,8 +130,8 @@
         <file>icons/deskflow-light/actions/32/document-save-as.svg</file>
         <file>icons/deskflow-light/actions/32/help-about.svg</file>
         <file>icons/deskflow-light/actions/32/view-refresh.svg</file>
-        <file>icons/deskflow-light/apps/64/deskflow.svg</file>
-        <file>icons/deskflow-light/apps/64/deskflow-symbolic.svg</file>
+        <file>icons/deskflow-light/apps/64/org.deskflow.deskflow.svg</file>
+        <file>icons/deskflow-light/apps/64/org.deskflow.deskflow-symbolic.svg</file>
         <file>icons/deskflow-light/devices/64/video-display.svg</file>
         <file>icons/deskflow-light/status/32/software-updates-release.svg</file>
         <file>icons/deskflow-light/status/64/dialog-error.svg</file>
