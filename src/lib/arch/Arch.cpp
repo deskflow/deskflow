@@ -26,11 +26,6 @@ Arch::Arch()
   s_instance = this;
 }
 
-Arch::Arch(Arch *arch)
-{
-  s_instance = arch;
-}
-
 #if SYSAPI_WIN32
 void Arch::init()
 {
