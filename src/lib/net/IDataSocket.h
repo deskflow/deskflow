@@ -49,21 +49,8 @@ public:
   //@}
 
   // ISocket overrides
-  // close() and getEventTarget() aren't pure to work around a bug
-  // in VC++6.  it claims the methods are unused locals and warns
-  // that it's removing them.  it's presumably tickled by inheriting
-  // methods with identical signatures from both superclasses.
-  void bind(const NetworkAddress &) override = 0;
   void close() override;
   void *getEventTarget() const override;
 
-  // IStream overrides
-  uint32_t read(void *buffer, uint32_t n) override = 0;
-  void write(const void *buffer, uint32_t n) override = 0;
-  void flush() override = 0;
-  void shutdownInput() override = 0;
-  void shutdownOutput() override = 0;
-  bool isReady() const override = 0;
-  uint32_t getSize() const override = 0;
   virtual bool isFatal() const = 0;
 };
