@@ -754,23 +754,17 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setTrayIcon()
 {
-  // Using a theme icon that is packed in exe renders an invisible icon
-  // Instead use the resource path of the packed icon
-  const bool symbolicIcon = Settings::value(Settings::Gui::SymbolicTrayIcon).toBool();
-#if defined(Q_OS_UNIX) && !defined(Q_OS_APPLE)
-  QString iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/deskflow").arg(iconMode());
-  if (symbolicIcon)
-    iconString.append(QStringLiteral("-symbolic"));
-  m_trayIcon->setIcon(QIcon(iconString));
-#else
-  if (symbolicIcon) {
-    auto icon = QIcon::fromTheme(QStringLiteral("%1-symbolic").arg(kAppId));
-    icon.setIsMask(true);
-    m_trayIcon->setIcon(icon);
-  } else {
-    m_trayIcon->setIcon(QIcon::fromTheme(kAppId));
+  QString iconString = kRevFqdnName;
+
+  if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
+    m_trayIcon->setIcon(QIcon::fromTheme(iconString));
+    return;
   }
-#endif
+
+  iconString.append(QStringLiteral("-symbolic"));
+  auto icon = QIcon::fromTheme(iconString);
+  icon.setIsMask(true);
+  m_trayIcon->setIcon(icon);
 }
 
 void MainWindow::handleLogLine(const QString &line)
