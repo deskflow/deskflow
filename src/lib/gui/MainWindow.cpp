@@ -761,6 +761,16 @@ void MainWindow::setTrayIcon()
     return;
   }
 
+#ifdef Q_OS_WIN
+  QSettings settings(
+      QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+      QSettings::NativeFormat
+  );
+  const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
+                                                                                           : QStringLiteral("dark");
+  iconString = QStringLiteral(":/icons/deskflow-%1/apps/64/%2").arg(theme, kRevFqdnName);
+#endif
+
   iconString.append(QStringLiteral("-symbolic"));
   auto icon = QIcon::fromTheme(iconString);
   icon.setIsMask(true);
