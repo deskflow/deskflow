@@ -23,7 +23,6 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  void show(bool showIfEmpty) override;
   bool write(LogLevel level, const QString &message) override;
   void flush();
 };

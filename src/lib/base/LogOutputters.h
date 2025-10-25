@@ -27,7 +27,6 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  void show(bool showIfEmpty) override;
   bool write(LogLevel level, const QString &message) override;
 };
 
@@ -45,7 +44,6 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  void show(bool showIfEmpty) override;
   bool write(LogLevel level, const QString &message) override;
   void flush() const;
 };
@@ -65,7 +63,6 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  void show(bool showIfEmpty) override;
   bool write(LogLevel level, const QString &message) override;
 
   void setLogFilename(const QString &title);
@@ -87,7 +84,6 @@ public:
   // ILogOutputter overrides
   void open(const QString &title) override;
   void close() override;
-  void show(bool showIfEmpty) override;
   bool write(LogLevel level, const QString &message) override;
 };
 
