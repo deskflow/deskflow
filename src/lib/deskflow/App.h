@@ -26,7 +26,6 @@ namespace deskflow {
 class Screen;
 }
 
-class ILogOutputter;
 class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
