@@ -1,5 +1,8 @@
 var NAVTREEINDEX4 =
 {
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
+"OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,66],
+"OSXHelpers_8h.html":[7,0,1,1,5,27],
 "OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,27,5],
 "OSXHelpers_8h.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,27,4],
 "OSXHelpers_8h.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,27,1],
@@ -158,11 +161,11 @@ var NAVTREEINDEX4 =
 "ProtocolUtil_8cpp.html":[7,0,1,1,4,49],
 "ProtocolUtil_8h.html":[7,0,1,1,4,50],
 "ProtocolUtil_8h_source.html":[7,0,1,1,4,50],
-"QSettingsProxy_8cpp.html":[7,0,1,1,3,2],
-"QSettingsProxy_8cpp.html#aa88b7fdd261cfc5bb279b3993620e796":[7,0,1,1,3,2,0],
-"QSettingsProxy_8h.html":[7,0,1,1,3,3],
-"QSettingsProxy_8h.html#a1247048dd32496fc210afb1fe69883b5":[7,0,1,1,3,3,1],
-"QSettingsProxy_8h_source.html":[7,0,1,1,3,3],
+"QSettingsProxy_8cpp.html":[7,0,1,1,3,4],
+"QSettingsProxy_8cpp.html#aa88b7fdd261cfc5bb279b3993620e796":[7,0,1,1,3,4,0],
+"QSettingsProxy_8h.html":[7,0,1,1,3,5],
+"QSettingsProxy_8h.html#a1247048dd32496fc210afb1fe69883b5":[7,0,1,1,3,5,1],
+"QSettingsProxy_8h_source.html":[7,0,1,1,3,5],
 "ScreenConfig_8cpp.html":[7,0,1,1,5,0,3],
 "ScreenConfig_8h.html":[7,0,1,1,5,0,4],
 "ScreenConfig_8h_source.html":[7,0,1,1,5,0,4],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "ServerConfig_8h_source.html":[7,0,1,1,5,0,8],
 "ServerConnection_8cpp.html":[7,0,1,1,5,1,6],
 "ServerConnection_8h.html":[7,0,1,1,5,1,7],
-"ServerConnection_8h_source.html":[7,0,1,1,5,1,7],
-"ServerMessage_8cpp.html":[7,0,1,1,5,1,8],
-"ServerMessage_8h.html":[7,0,1,1,5,1,9],
-"ServerMessage_8h_source.html":[7,0,1,1,5,1,9]
+"ServerConnection_8h_source.html":[7,0,1,1,5,1,7]
 };

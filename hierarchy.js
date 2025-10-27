@@ -345,6 +345,7 @@ var hierarchy =
       [ "CommandProcess", "classCommandProcess.html", null ],
       [ "DaemonApp", "classDaemonApp.html", null ],
       [ "DataDownloader", "classDataDownloader.html", null ],
+      [ "I18N", "classI18N.html", null ],
       [ "Settings", "classSettings.html", null ],
       [ "TlsCertificate", "classTlsCertificate.html", null ],
       [ "VersionChecker", "classVersionChecker.html", null ],

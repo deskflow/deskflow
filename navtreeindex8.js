@@ -1,5 +1,8 @@
 var NAVTREEINDEX8 =
 {
+"classClientProxy.html#a7d2f77eeaf28ea20e76ae461b1e681ba":[6,0,63,21],
+"classClientProxy.html#a82dd690fb8c2f8d83854893feb58d5a4":[6,0,63,7],
+"classClientProxy.html#a85b209e83f2b16e76da50b6d6da28e89":[6,0,63,26],
 "classClientProxy.html#a89b1161489936496daa21e411db1d3ad":[6,0,63,15],
 "classClientProxy.html#a93227c092b832b011937f51f5b87e006":[6,0,63,3],
 "classClientProxy.html#a9a9da7706d7a32df6387394991773fe9":[6,0,63,27],
@@ -246,8 +249,5 @@ var NAVTREEINDEX8 =
 "classEventQueue.html#ae16e79205621b109005ee14a8ac3345f":[6,0,90,4],
 "classEventQueueTimer.html":[6,0,91],
 "classExitAppException.html":[6,0,92],
-"classExitAppException.html#a520a08066ad2251cbb0e4ab27590a882":[6,0,92,2],
-"classExitAppException.html#a5ed4b66e4509091dff20be26f1a01431":[6,0,92,1],
-"classExitAppException.html#a61c3d2092d07a05c10f8b3b14482e6b6":[6,0,92,0],
-"classExitAppException.html#aba1c0fcfff92209de383c3fa51940b76":[6,0,92,3]
+"classExitAppException.html#a520a08066ad2251cbb0e4ab27590a882":[6,0,92,2]
 };

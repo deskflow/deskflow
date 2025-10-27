@@ -1,5 +1,16 @@
 var NAVTREEINDEX20 =
 {
+"classdeskflow_1_1server_1_1Config.html#a7eb7dbde2b17231229ed7f97e5027a3b":[5,0,0,7,0,10],
+"classdeskflow_1_1server_1_1Config.html#a7eb7dbde2b17231229ed7f97e5027a3b":[6,0,0,6,0,10],
+"classdeskflow_1_1server_1_1Config.html#a8ad1988b58739baf7de06fc8e48bc10d":[5,0,0,7,0,9],
+"classdeskflow_1_1server_1_1Config.html#a8ad1988b58739baf7de06fc8e48bc10d":[6,0,0,6,0,9],
+"classdeskflow_1_1server_1_1Config.html#a8f6b0548e7bd3c6f768577d4cf11c040":[5,0,0,7,0,30],
+"classdeskflow_1_1server_1_1Config.html#a8f6b0548e7bd3c6f768577d4cf11c040":[6,0,0,6,0,30],
+"classdeskflow_1_1server_1_1Config.html#a905a731e397956acc805fcafe41d2ae0":[5,0,0,7,0,12],
+"classdeskflow_1_1server_1_1Config.html#a905a731e397956acc805fcafe41d2ae0":[6,0,0,6,0,12],
+"classdeskflow_1_1server_1_1Config.html#a97b5ef1f709925c28495770f2b0d69ef":[5,0,0,7,0,37],
+"classdeskflow_1_1server_1_1Config.html#a97b5ef1f709925c28495770f2b0d69ef":[6,0,0,6,0,37],
+"classdeskflow_1_1server_1_1Config.html#a981d5963616548b2574a596fb5c7ec44":[5,0,0,7,0,36],
 "classdeskflow_1_1server_1_1Config.html#a981d5963616548b2574a596fb5c7ec44":[6,0,0,6,0,36],
 "classdeskflow_1_1server_1_1Config.html#a985f1a015ede854e3a9e4f5f30d3b05c":[5,0,0,7,0,17],
 "classdeskflow_1_1server_1_1Config.html#a985f1a015ede854e3a9e4f5f30d3b05c":[6,0,0,6,0,17],
@@ -238,16 +249,5 @@ var NAVTREEINDEX20 =
 "contributing_guide.html#autotoc_md9":[1,0],
 "deprecated.html":[3],
 "deskflow-core_8cpp.html":[7,0,1,0,0,3],
-"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,3,1],
-"deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,0,3,0],
-"deskflow-daemon_8cpp.html":[7,0,1,0,1,0],
-"deskflow-daemon_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627":[7,0,1,0,1,0,1],
-"deskflow-daemon_8cpp.html#a40d30edf9ea1ac2a47b7874352b033b3":[7,0,1,0,1,0,0],
-"deskflow-gui_8cpp.html":[7,0,1,0,2,0],
-"deskflow-gui_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97":[7,0,1,0,2,0,0],
-"deskflow-gui_8cpp.html#aa7933fe78cc39eb00c1a3ca341a4f8a8":[7,0,1,0,2,0,1],
-"deskflow_2Screen_8cpp.html":[7,0,1,1,4,51],
-"deskflow_2Screen_8h.html":[7,0,1,1,4,52],
-"deskflow_2Screen_8h_source.html":[7,0,1,1,4,52],
-"dir_00d753f0c10974c39dc450cbdcd64c24.html":[7,0,1,1,5,4]
+"deskflow-core_8cpp.html#a1683274655ea50776ac7edf0fa1419de":[7,0,1,0,0,3,1]
 };

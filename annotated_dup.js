@@ -166,6 +166,7 @@ var annotated_dup =
     [ "FunctionJob", "classFunctionJob.html", "classFunctionJob" ],
     [ "Hotkey", "classHotkey.html", "classHotkey" ],
     [ "HotkeyDialog", "classHotkeyDialog.html", "classHotkeyDialog" ],
+    [ "I18N", "classI18N.html", "classI18N" ],
     [ "IApp", "classIApp.html", "classIApp" ],
     [ "IArchDaemon", "classIArchDaemon.html", "classIArchDaemon" ],
     [ "IArchLog", "classIArchLog.html", "classIArchLog" ],

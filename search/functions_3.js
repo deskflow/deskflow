@@ -101,5 +101,6 @@ var searchData=
   ['create_98',['create',['../classISocketFactory.html#a9d07355ed1013458802de9d05a7b764f',1,'ISocketFactory::create()'],['../classTCPSocketFactory.html#a7fd971d4d22e5a82817d3d2f079db912',1,'TCPSocketFactory::create()']]],
   ['createlisten_99',['createListen',['../classISocketFactory.html#ad108134ea372ff0667b0fe773f79a67b',1,'ISocketFactory::createListen()'],['../classTCPSocketFactory.html#a4f875b602566e69d1c826aa60f8081bc',1,'TCPSocketFactory::createListen()']]],
   ['createpipes_100',['createPipes',['../classdeskflow_1_1platform_1_1MSWindowsProcess.html#a4cae0ccf5636bc438a7a05721d7bf5b1',1,'deskflow::platform::MSWindowsProcess']]],
-  ['createscreen_101',['createScreen',['../classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00',1,'ClientApp::createScreen()'],['../classIApp.html#ad8b76d3777672aa8d28cd9c847f87729',1,'IApp::createScreen()'],['../classServerApp.html#aa35aa3f57d370b20f4fdc31d535c7864',1,'ServerApp::createScreen()']]]
+  ['createscreen_101',['createScreen',['../classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00',1,'ClientApp::createScreen()'],['../classIApp.html#ad8b76d3777672aa8d28cd9c847f87729',1,'IApp::createScreen()'],['../classServerApp.html#aa35aa3f57d370b20f4fdc31d535c7864',1,'ServerApp::createScreen()']]],
+  ['currentlanguage_102',['currentLanguage',['../classI18N.html#a7e771f002458ea1dc1d09146348bfbe7',1,'I18N']]]
 ];

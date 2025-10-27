@@ -1,5 +1,16 @@
 var NAVTREEINDEX18 =
 {
+"classdeskflow_1_1IStream.html#a66fa894adbd2f636e266482190be77b3":[5,0,0,11,6],
+"classdeskflow_1_1IStream.html#a66fa894adbd2f636e266482190be77b3":[6,0,0,10,6],
+"classdeskflow_1_1IStream.html#a716d1a032650a9b56904e1dd585498e4":[5,0,0,11,1],
+"classdeskflow_1_1IStream.html#a716d1a032650a9b56904e1dd585498e4":[6,0,0,10,1],
+"classdeskflow_1_1IStream.html#a816405d995b474f225f0bfcb3d38854d":[5,0,0,11,3],
+"classdeskflow_1_1IStream.html#a816405d995b474f225f0bfcb3d38854d":[6,0,0,10,3],
+"classdeskflow_1_1IStream.html#ae05800b51fe57029fe072ad3c00f6e78":[5,0,0,11,2],
+"classdeskflow_1_1IStream.html#ae05800b51fe57029fe072ad3c00f6e78":[6,0,0,10,2],
+"classdeskflow_1_1IStream.html#ae1bb7984db738fa5bf7edb8220820037":[5,0,0,11,9],
+"classdeskflow_1_1IStream.html#ae1bb7984db738fa5bf7edb8220820037":[6,0,0,10,9],
+"classdeskflow_1_1IStream.html#ae2e80b2768af2f745aeadcbb12ddffaf":[5,0,0,11,0],
 "classdeskflow_1_1IStream.html#ae2e80b2768af2f745aeadcbb12ddffaf":[6,0,0,10,0],
 "classdeskflow_1_1IStream.html#aeb46dd5fd4744485a4124082e9cc96a7":[5,0,0,11,8],
 "classdeskflow_1_1IStream.html#aeb46dd5fd4744485a4124082e9cc96a7":[6,0,0,10,8],
@@ -238,16 +249,5 @@ var NAVTREEINDEX18 =
 "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#af652c5beb12e0277cf61b37693497605":[5,0,0,3,0,0,4],
 "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#af652c5beb12e0277cf61b37693497605":[6,0,0,2,0,0,4],
 "classdeskflow_1_1gui_1_1ClientConnection.html":[5,0,0,5,5],
-"classdeskflow_1_1gui_1_1ClientConnection.html":[6,0,0,4,4],
-"classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c":[5,0,0,5,5,1],
-"classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c":[6,0,0,4,4,1],
-"classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241":[5,0,0,5,5,3],
-"classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241":[6,0,0,4,4,3],
-"classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585":[5,0,0,5,5,4],
-"classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585":[6,0,0,4,4,4],
-"classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af":[5,0,0,5,5,2],
-"classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af":[6,0,0,4,4,2],
-"classdeskflow_1_1gui_1_1CoreProcess.html":[5,0,0,5,6],
-"classdeskflow_1_1gui_1_1CoreProcess.html":[6,0,0,4,5],
-"classdeskflow_1_1gui_1_1CoreProcess.html#a0019841345b08a36b50a172c5e2bf4bf":[5,0,0,5,6,16]
+"classdeskflow_1_1gui_1_1ClientConnection.html":[6,0,0,4,4]
 };

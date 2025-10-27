@@ -3,6 +3,7 @@ var structSettings_1_1Core =
     [ "CoreMode", "structSettings_1_1Core.html#a4b34ca6a00d57ae4cdf2df6d3a695446", null ],
     [ "Display", "structSettings_1_1Core.html#a2a0059d3e150af140d0c1760df2dffab", null ],
     [ "Interface", "structSettings_1_1Core.html#a2a47e74b26eeb5e3f444a96c497860ab", null ],
+    [ "Language", "structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a", null ],
     [ "LastVersion", "structSettings_1_1Core.html#a22d636fbd1f06380f33e96831563a53b", null ],
     [ "Port", "structSettings_1_1Core.html#a5a1f75f35b5d101defd4395ee63d336d", null ],
     [ "PreventSleep", "structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99", null ],
