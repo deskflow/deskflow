@@ -69,9 +69,6 @@ add_library(${target} STATIC
   dialogs/ActionDialog.cpp
   dialogs/ActionDialog.h
   dialogs/ActionDialog.ui
-  dialogs/AddClientDialog.cpp
-  dialogs/AddClientDialog.h
-  dialogs/AddClientDialog.ui
   dialogs/FingerprintDialog.cpp
   dialogs/FingerprintDialog.h
   dialogs/HotkeyDialog.cpp
