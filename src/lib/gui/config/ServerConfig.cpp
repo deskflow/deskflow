@@ -9,7 +9,6 @@
 #include "ServerConfig.h"
 
 #include "Hotkey.h"
-#include "MainWindow.h"
 #include "common/Settings.h"
 #include "dialogs/AddClientDialog.h"
 
@@ -36,11 +35,7 @@ static const struct
 
 const int serverDefaultIndex = 7;
 
-ServerConfig::ServerConfig(MainWindow &mainWindow, int columns, int rows)
-    : m_pMainWindow(&mainWindow),
-      m_Screens(columns),
-      m_Columns(columns),
-      m_Rows(rows)
+ServerConfig::ServerConfig(int columns, int rows) : m_Screens(columns), m_Columns(columns), m_Rows(rows)
 {
   recall();
 }
@@ -59,25 +54,24 @@ bool ServerConfig::save(const QString &fileName) const
 
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
-  return m_Screens == sc.m_Screens &&                           //
-         m_Columns == sc.m_Columns &&                           //
-         m_Rows == sc.m_Rows &&                                 //
-         m_HasHeartbeat == sc.m_HasHeartbeat &&                 //
-         m_Heartbeat == sc.m_Heartbeat &&                       //
-         m_Protocol == sc.m_Protocol &&                         //
-         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&     //
-         m_Win32KeepForeground == sc.m_Win32KeepForeground &&   //
-         m_HasSwitchDelay == sc.m_HasSwitchDelay &&             //
-         m_SwitchDelay == sc.m_SwitchDelay &&                   //
-         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&     //
-         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&           //
-         m_SwitchCornerSize == sc.m_SwitchCornerSize &&         //
-         m_SwitchCorners == sc.m_SwitchCorners &&               //
-         m_Hotkeys == sc.m_Hotkeys &&                           //
-         m_DisableLockToScreen == sc.m_DisableLockToScreen &&   //
-         m_ClipboardSharing == sc.m_ClipboardSharing &&         //
-         m_ClipboardSharingSize == sc.m_ClipboardSharingSize && //
-         m_pMainWindow == sc.m_pMainWindow;
+  return m_Screens == sc.m_Screens &&                         //
+         m_Columns == sc.m_Columns &&                         //
+         m_Rows == sc.m_Rows &&                               //
+         m_HasHeartbeat == sc.m_HasHeartbeat &&               //
+         m_Heartbeat == sc.m_Heartbeat &&                     //
+         m_Protocol == sc.m_Protocol &&                       //
+         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&   //
+         m_Win32KeepForeground == sc.m_Win32KeepForeground && //
+         m_HasSwitchDelay == sc.m_HasSwitchDelay &&           //
+         m_SwitchDelay == sc.m_SwitchDelay &&                 //
+         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&   //
+         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&         //
+         m_SwitchCornerSize == sc.m_SwitchCornerSize &&       //
+         m_SwitchCorners == sc.m_SwitchCorners &&             //
+         m_Hotkeys == sc.m_Hotkeys &&                         //
+         m_DisableLockToScreen == sc.m_DisableLockToScreen && //
+         m_ClipboardSharing == sc.m_ClipboardSharing &&       //
+         m_ClipboardSharingSize == sc.m_ClipboardSharingSize;
 }
 
 void ServerConfig::save(QFile &file) const
