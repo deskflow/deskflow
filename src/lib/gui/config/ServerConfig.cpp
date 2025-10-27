@@ -419,16 +419,6 @@ bool ServerConfig::fixNoServer(const QString &name, int &index)
   return fixed;
 }
 
-void ServerConfig::addToFirstEmptyGrid(const QString &clientName)
-{
-  for (int i = 0; i < screens().size(); i++) {
-    if (screens()[i].isNull()) {
-      m_Screens[i].setName(clientName);
-      break;
-    }
-  }
-}
-
 size_t ServerConfig::defaultClipboardSharingSize()
 {
   return 3 * 1024; // 3 MiB
