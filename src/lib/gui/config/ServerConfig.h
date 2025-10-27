@@ -149,7 +149,6 @@ public:
   //
   void commit();
   int numScreens() const;
-  ScreenAddResults autoAddScreen(const QString name);
   QString getServerName() const;
   void updateServerName();
   QString configFile() const;
