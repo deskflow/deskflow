@@ -1026,18 +1026,6 @@ void MainWindow::updateLocalFingerprint()
   m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(Settings::tlsLocalDb()));
 }
 
-void MainWindow::autoAddScreen(const QString &name)
-{
-  if (name.isEmpty())
-    return;
-
-  if (m_serverConfig.autoAddScreen(name) == ScreenAddResults::AutoAddScreenManualClient) {
-    showConfigureServer(
-        tr("Please add the client (%1) to the grid.").arg(Settings::value(Settings::Core::ScreenName).toString())
-    );
-  }
-}
-
 void MainWindow::hide()
 {
 #ifdef Q_OS_MAC
