@@ -487,10 +487,6 @@ Do you want to connect to the server?
         <translation type="unfinished">%1 está desconectado</translation>
     </message>
     <message>
-        <source>Please add the client (%1) to the grid.</source>
-        <translation type="unfinished">Por favor agregue el cliente (%1) a la cuadrícula.</translation>
-    </message>
-    <message>
         <source>Invalid Screen Name</source>
         <translation type="unfinished">Nombre de pantalla no válido</translation>
     </message>
