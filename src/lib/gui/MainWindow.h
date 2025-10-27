@@ -85,7 +85,6 @@ public:
   {
     return m_serverConfig;
   }
-  void autoAddScreen(const QString &name);
 
   void hide();
 
