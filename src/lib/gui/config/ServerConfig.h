@@ -31,14 +31,6 @@ const auto kDefaultProtocol = NetworkProtocol::Barrier;
 
 } // namespace deskflow::gui
 
-enum class ScreenAddResults
-{
-  AutoAddScreenOk,
-  AutoAddScreenManualServer,
-  AutoAddScreenManualClient,
-  AutoAddScreenIgnore
-};
-
 class ServerConfig : public ScreenConfig, public deskflow::gui::IServerConfig
 {
   friend class ServerConfigDialog;
