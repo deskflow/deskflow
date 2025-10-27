@@ -22,6 +22,7 @@ public:
 
 protected:
   bool eventFilter(QObject *watched, QEvent *event) override;
+  void changeEvent(QEvent *e) override;
 
 private:
   LogWidget *m_textLog = nullptr;
