@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,8 +126,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:ae13b2dc001d6569055bc3283af6bc6d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the outputter.  <br /></td></tr>
 <tr class="memitem:a6229c9c75d1fd5b18a6d37151d10f226" id="r_a6229c9c75d1fd5b18a6d37151d10f226"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6229c9c75d1fd5b18a6d37151d10f226">close</a> () override</td></tr>
 <tr class="memdesc:a6229c9c75d1fd5b18a6d37151d10f226"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the outputter.  <br /></td></tr>
-<tr class="memitem:a11bb432416a7a0dbae7ef6606805e600" id="r_a11bb432416a7a0dbae7ef6606805e600"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a11bb432416a7a0dbae7ef6606805e600">show</a> (bool showIfEmpty) override</td></tr>
-<tr class="memdesc:a11bb432416a7a0dbae7ef6606805e600"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the outputter.  <br /></td></tr>
 <tr class="memitem:a52fbabec7266a776091b925dbc56ccc3" id="r_a52fbabec7266a776091b925dbc56ccc3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a52fbabec7266a776091b925dbc56ccc3">write</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const QString &amp;message) override</td></tr>
 <tr class="memdesc:a52fbabec7266a776091b925dbc56ccc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
 <tr class="memitem:add967e06763409bcfc6695eb4e03f4f8" id="r_add967e06763409bcfc6695eb4e03f4f8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add967e06763409bcfc6695eb4e03f4f8">setLogFilename</a> (const QString &amp;title)</td></tr>
@@ -263,36 +261,6 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a11bb432416a7a0dbae7ef6606805e600" name="a11bb432416a7a0dbae7ef6606805e600"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a11bb432416a7a0dbae7ef6606805e600">&#9670;&#160;</a></span>show()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void FileLogOutputter::show </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>showIfEmpty</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show the outputter. </p>
-<p>Causes the output to become visible. This generally only makes sense for a logger in a graphical user interface. Other implementations will do nothing. Iff <code class="param">showIfEmpty</code> is <code>false</code> then the implementation may optionally only show the log if it's not empty. </p>
-
-<p>Implements <a class="el" href="classILogOutputter.html#acfe18b140c97de70052ee281da764485">ILogOutputter</a>.</p>
 
 </div>
 </div>

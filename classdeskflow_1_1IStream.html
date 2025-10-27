@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -252,7 +252,7 @@ Public Member Functions</h2></td></tr>
 <p>Flush the stream. </p>
 <p>Waits until all buffered data has been written to the stream. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#a1a751f345287bdd7e68cbbe6028e4cb6">IDataSocket</a>, <a class="el" href="classStreamFilter.html#a4e86a9a65da77e9662c57d42c54cd4b8">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a6d0240e24c16c9df20bb0d848e514ae9">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classStreamFilter.html#a4e86a9a65da77e9662c57d42c54cd4b8">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a6d0240e24c16c9df20bb0d848e514ae9">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -312,7 +312,7 @@ Public Member Functions</h2></td></tr>
 <p>Get bytes available to read. </p>
 <p>Returns a conservative estimate of the available bytes to read (i.e. a number not greater than the actual number of bytes). Some streams may not be able to determine this and will always return zero. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#ad95421dfee23bcc59fc3cfea856e34b2">IDataSocket</a>, <a class="el" href="classPacketStreamFilter.html#a49d9ff903752bccc644e23d72dc0d0a9">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#a3862e0d8ebc8e657aff0941d83a5411f">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a7d67e983909ffe5d1c2b310305ed50c8">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classPacketStreamFilter.html#a49d9ff903752bccc644e23d72dc0d0a9">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#a3862e0d8ebc8e657aff0941d83a5411f">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a7d67e983909ffe5d1c2b310305ed50c8">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -342,7 +342,7 @@ Public Member Functions</h2></td></tr>
 <p>Test if <code><a class="el" href="#a62d845cca05a66438ede7cec206da293" title="Read from stream.">read()</a></code> will succeed. </p>
 <p>Returns true iff an immediate <code><a class="el" href="#a62d845cca05a66438ede7cec206da293" title="Read from stream.">read()</a></code> will return data. This may or may not be the same as <code><a class="el" href="#a070ba4635762ef6b6edde8ddf1ac9ffe" title="Get bytes available to read.">getSize()</a></code> &gt; 0, depending on the stream type. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#aaffbf2a730e900864c0eb87eddb531b6">IDataSocket</a>, <a class="el" href="classPacketStreamFilter.html#a83d84e9e771a1f3acb2b29d4c0e7d530">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#a87bf1f465da7894f154ac0678e28b39b">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classPacketStreamFilter.html#a83d84e9e771a1f3acb2b29d4c0e7d530">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#a87bf1f465da7894f154ac0678e28b39b">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#addafa94e22ef69805776b5ac8940c8e6">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -376,7 +376,7 @@ Public Member Functions</h2></td></tr>
 <p>Read from stream. </p>
 <p>Read up to <code class="param">n</code> bytes into <code class="param">buffer</code>, returning the number read (zero if no data is available or input is shutdown). <code class="param">buffer</code> may be nullptr in which case the data is discarded. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#a1085a85358918c090178f2684f967740">IDataSocket</a>, <a class="el" href="classPacketStreamFilter.html#a651e3ab1be978afb4b8eaa35dc6d507d">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#acd2d6260bc3d574cbb023b33898292a2">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#ab9b12f7fe3afd27feceee4259e5d78b1">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classPacketStreamFilter.html#a651e3ab1be978afb4b8eaa35dc6d507d">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#acd2d6260bc3d574cbb023b33898292a2">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#ab9b12f7fe3afd27feceee4259e5d78b1">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -406,7 +406,7 @@ Public Member Functions</h2></td></tr>
 <p>Shutdown input. </p>
 <p>Shutdown the input side of the stream. Any pending input data is discarded and further reads immediately return 0. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#a91d4daa2fea2025b34b64dfe617ba15b">IDataSocket</a>, <a class="el" href="classPacketStreamFilter.html#a2183ca880c637afe67e384e37f81f4dd">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#ad741ef2defeeb8d4ce61a22e0b5e3729">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a38a986d25f40740058f9fd2356bf1f72">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classPacketStreamFilter.html#a2183ca880c637afe67e384e37f81f4dd">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#ad741ef2defeeb8d4ce61a22e0b5e3729">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#a38a986d25f40740058f9fd2356bf1f72">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -436,7 +436,7 @@ Public Member Functions</h2></td></tr>
 <p>Shutdown output. </p>
 <p>Shutdown the output side of the stream. Any buffered output data is discarded and further writes generate output error events. Use <code><a class="el" href="#a816405d995b474f225f0bfcb3d38854d" title="Flush the stream.">flush()</a></code> before <code><a class="el" href="#ae1bb7984db738fa5bf7edb8220820037" title="Shutdown output.">shutdownOutput()</a></code> to send buffered output data. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#ac8f974b42d75d08161e7f2808f419ba1">IDataSocket</a>, <a class="el" href="classStreamFilter.html#abadd913fba63ab98a83efaa8bd45d1f0">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classStreamFilter.html#abadd913fba63ab98a83efaa8bd45d1f0">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#ad9b31c64155ecbe934d2abb2728af56c">TCPSocket</a>.</p>
 
 </div>
 </div>
@@ -470,7 +470,7 @@ Public Member Functions</h2></td></tr>
 <p>Write to stream. </p>
 <p>Write <code>n</code> bytes from <code>buffer</code> to the stream. If this can't complete immediately it will block. Data may be buffered in order to return more quickly. A output error event is generated when writing fails. </p>
 
-<p>Implemented in <a class="el" href="classIDataSocket.html#a816a8e8acafacdb4fd3893bf4d348299">IDataSocket</a>, <a class="el" href="classPacketStreamFilter.html#ac1f871edf1de7a4e0ae830569f70cfd4">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#ab01422a84eeb69166645c967f161007e">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#acce0c0590ca9eee2548b18f438dff710">TCPSocket</a>.</p>
+<p>Implemented in <a class="el" href="classPacketStreamFilter.html#ac1f871edf1de7a4e0ae830569f70cfd4">PacketStreamFilter</a>, <a class="el" href="classStreamFilter.html#ab01422a84eeb69166645c967f161007e">StreamFilter</a>, and <a class="el" href="classTCPSocket.html#acce0c0590ca9eee2548b18f438dff710">TCPSocket</a>.</p>
 
 </div>
 </div>

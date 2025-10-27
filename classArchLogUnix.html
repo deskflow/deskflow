@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -126,8 +126,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa79edb16e113e0792432048208c900c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the log.  <br /></td></tr>
 <tr class="memitem:a0fc900391abfebe12c3d87e418d67d61" id="r_a0fc900391abfebe12c3d87e418d67d61"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0fc900391abfebe12c3d87e418d67d61">closeLog</a> () override</td></tr>
 <tr class="memdesc:a0fc900391abfebe12c3d87e418d67d61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the log.  <br /></td></tr>
-<tr class="memitem:ac54a671658c8a90bbcd5332ad7f1bee0" id="r_ac54a671658c8a90bbcd5332ad7f1bee0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac54a671658c8a90bbcd5332ad7f1bee0">showLog</a> (bool) override</td></tr>
-<tr class="memdesc:ac54a671658c8a90bbcd5332ad7f1bee0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the log.  <br /></td></tr>
 <tr class="memitem:a350c06d29a73d44632e3623991aa645a" id="r_a350c06d29a73d44632e3623991aa645a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a350c06d29a73d44632e3623991aa645a">writeLog</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>, const QString &amp;) override</td></tr>
 <tr class="memdesc:a350c06d29a73d44632e3623991aa645a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to the log.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIArchLog"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIArchLog')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIArchLog.html">IArchLog</a></td></tr>
@@ -244,36 +242,6 @@ Public Member Functions</h2></td></tr>
 <p>Opens the log for writing. The log must be opened before being written to. </p>
 
 <p>Implements <a class="el" href="classIArchLog.html#a77e8f13d15ac2567439812c37b1eab2d">IArchLog</a>.</p>
-
-</div>
-</div>
-<a id="ac54a671658c8a90bbcd5332ad7f1bee0" name="ac54a671658c8a90bbcd5332ad7f1bee0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac54a671658c8a90bbcd5332ad7f1bee0">&#9670;&#160;</a></span>showLog()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ArchLogUnix::showLog </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>showIfEmpty</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show the log. </p>
-<p>Causes the log to become visible. This generally only makes sense for a log in a graphical user interface. Other implementations will do nothing. Iff <code class="param">showIfEmpty</code> is <code>false</code> then the implementation may optionally only show the log if it's not empty. </p>
-
-<p>Implements <a class="el" href="classIArchLog.html#abbdad52046c27adf36a665d85f642d62">IArchLog</a>.</p>
 
 </div>
 </div>

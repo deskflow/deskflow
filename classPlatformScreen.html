@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -361,7 +361,7 @@ Additional Inherited Members</h2></td></tr>
 <p>activeSides </p>
 <dl class="section return"><dt>Returns</dt><dd>a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients </dd></dl>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a12c80e96375e5589b3d6f12c1de2c22f">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#aee64b865789af789f8f6197245611fdd">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a49ec5fcf0eea67fe831518f428d61447">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#afa90fbdfd8819b92cd00ae0235904574">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a592ac1f22de03da131e97c2077155a92">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad">XWindowsScreen</a>.</p>
 
@@ -457,7 +457,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Clear stale modifiers. </p>
 <p>Clears stuck modifier state in platform-specific keyboard tracking (e.g. XKB). Default implementation does nothing. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#acbe7a4199b4c46df835e6157c165995f">IPlatformScreen</a>.</p>
+<p>Reimplemented from <a class="el" href="classIKeyState.html#a50efc28abe04829d755a8d59a92160be">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -615,7 +615,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake key releases for all fake pressed keys. </p>
 <p>Synthesizes a key release event for every key that is synthetically pressed and updates the key state. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a3ee4ff8cd4b35db1f7af2d18a07ffa91">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#aa5129d1c9e92ca0b40bc8ab5d2bd8d7c">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -645,7 +645,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake ctrl+alt+del. </p>
 <p>Synthesize a press of ctrl+alt+del. Return true if processing is complete and false if normal key processing should continue. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a1fc5a8edd71edfe0fd298d0fea5bacd0">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#abca6d885cbb75924a9e8d36b5ba0a829">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -675,7 +675,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Prepare to synthesize input on primary screen. </p>
 <p>Prepares the primary screen to receive synthesized input. We do not want to receive this synthesized input as user input so this method ensures that we ignore it. Calls to <code><a class="el" href="#a093a4c52fa3287d575986c88d66278b1" title="Prepare to synthesize input on primary screen.">fakeInputBegin()</a></code> may not be nested. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a41d8d2a04c864894f7e44317a246ee0f">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a5da9bf5f6a1b0dc34264c88bac459445">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a6342968f6e2bf9618fbc7256c7386f14">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#a52cf6d35a6a05011f55f7ad3cf3a1b9a">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#af52fd6e6987cae499ec4485056ff7097">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#ac62d6b5b8242feb2819086a550d23836">XWindowsScreen</a>.</p>
 
@@ -707,7 +707,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Done synthesizing input on primary screen. </p>
 <p>Undoes whatever <code><a class="el" href="#a093a4c52fa3287d575986c88d66278b1" title="Prepare to synthesize input on primary screen.">fakeInputBegin()</a></code> did. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a5993b7c55d3a4bbc3f42c3ade0c9789d">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a6c31b98eac9dfe5d0c2427510ed15d85">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a9beae2c611dda740692393cba83dc4d3">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#aaf87c5e3ea5be71d669611f59d97c9be">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a5a93645e7a946ef891bb37e342b8ef54">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a6c01cef6355bf5b4eea5df8cafe6af67">XWindowsScreen</a>.</p>
 
@@ -832,7 +832,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake a key release. </p>
 <p>Synthesizes a key release event and updates the key state. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a5d6dac38151cdf9ed5f651a0c6c57f2b">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#a0e575e9893a621bcea62907cae9d3476">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -866,7 +866,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake mouse press/release. </p>
 <p>Synthesize a press or release of mouse button <code>id</code>. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a71fc5907ac88338143b6c509b8e90724">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classISecondaryScreen.html#a8a1f62c1d6c2f45a63914dac3f147f1e">ISecondaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#ace046202ecb4e030061be123b274964a">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#ae66913935fd283f2fcafd023cbcfcba0">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a947052e85379398d928a7e8bd697dd64">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#acd8d3403716eebd6b877f3940d2712bb">XWindowsScreen</a>.</p>
 
@@ -902,7 +902,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake mouse move. </p>
 <p>Synthesize a mouse move to the absolute coordinates <code>x</code>,y. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a68f2d0ff334bd49c08e1b333403c61dc">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classISecondaryScreen.html#ab851383603211acc489ca0f87b6d243d">ISecondaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a9d102cc1b8c4971f83c007d0649f8784">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a02989746f0e8b11a969fc6d22f1fa820">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a92b282938b2583610a0a1940e6ef2998">XWindowsScreen</a>.</p>
 
@@ -938,7 +938,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake mouse move. </p>
 <p>Synthesize a mouse move to the relative coordinates <code>dx</code>,dy. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a67e4ede2beff4de2809fc6c585c0ff14">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classISecondaryScreen.html#a7a5573a06e4e70e7a3a218a709f322a3">ISecondaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a000c21d039ad26f6665e0fe043c0f6b7">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a7b59e3f1364bec5e64f0e565d7b4155d">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a25a73a3077b6a30c1ed3402feb47463e">XWindowsScreen</a>.</p>
 
@@ -974,7 +974,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Fake mouse wheel. </p>
 <p>Synthesize a mouse wheel event of amount <code>xDelta</code> and <code>yDelta</code>. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a73ff2f404cc7b3b1c257dcacd358f9ca">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classISecondaryScreen.html#a7589cb1f2a7ceaf1b63ad73f45ad10e9">ISecondaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#ab32e21e2e6c0e15937d885ea9262bc9d">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a981b69ed3160e02f825c1fedf017b6c8">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#afd647f99c32a95d7e55292fbee7981fa">XWindowsScreen</a>.</p>
 
@@ -1006,7 +1006,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get the active modifiers. </p>
 <p>Returns the modifiers that are currently active according to our shadowed state. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a7416a53b5ffcde1c18e5c16abc063304">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#af8d9c5477f57a8a35ca72eac271e6b85">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1040,7 +1040,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get clipboard. </p>
 <p>Save the contents of the clipboard indicated by <code>id</code> and return true iff successful. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a1c209e4e6c724788cc1a455791c70c97">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIScreen.html#a0afdaf0c93c65056f48a780ea8df12e3">IScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a9dab63c3aabe1864a39e5a8a47f472c1">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#aea93c7d6f0abd90b4231970c516fe6cf">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ae05095cf275a3d7e55a8582044524f7a">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a109acc9975299f416127a02e6264a3de">XWindowsScreen</a>.</p>
 
@@ -1076,7 +1076,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get cursor center position. </p>
 <p>Return the cursor center position which is where we park the cursor to compute cursor motion deltas and should be far from the edges of the screen, typically the center. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a7ddbb068bf3b00a959e7a7931980552b">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a56446ee1b8880c87040d9a17eab30072">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a9532cf850b1933384b5b0b70374bdceb">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a595d3fea96bd9a5542eecf655e2304ca">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8fb29b0d9400b0b52cf973dc6337c33c">XWindowsScreen</a>.</p>
 
@@ -1112,7 +1112,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get cursor position. </p>
 <p>Return the current position of the cursor in <code>x</code> and <code>y</code>. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#ae44be11fe80069c1cad4ab8dfde159e2">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIScreen.html#af4c38ab78dd4681d283ff8432a1dae45">IScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a701519233a9f85ee65a24f39c081fcea">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#aa80e25911f77d21a72d70a0db274b9dc">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#af0af20f62ff51b6bb250011ad592593c">XWindowsScreen</a>.</p>
 
@@ -1144,7 +1144,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get event target. </p>
 <p>Returns the target used for events created by this object. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a989dd81b1077aa5abf019b13ce3ab9b7">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIScreen.html#a3bc2359e5bea9d21affa5f043269a677">IScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a3dcda7daa9c790c2d396fe6e576f1290">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#a60cef8266489495b174b9710c3aefa67">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a68c375519e33206026eb623989a6bc28">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a7a3b90aaa18ef712da654387fea5b864">XWindowsScreen</a>.</p>
 
@@ -1176,7 +1176,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get jump zone size. </p>
 <p>Return the jump zone size, the size of the regions on the edges of the screen that cause the cursor to jump to another screen. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#ae48dcc3f997c8f9b6112579ee84aa209">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#ad54fac69cd13320d3e16c8259a7f5b16">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a2b6f9d78f50a2b384afb34e25c440c2a">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#ad0009f06294d0234f4a98d3c0f908a46">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ab7974ba9d338aef7b19330b4acc85b39">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8a306efc4784b594681e22f0d5f2dca4">XWindowsScreen</a>.</p>
 
@@ -1252,7 +1252,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get screen shape. </p>
 <p>Return the position of the upper-left corner of the screen in <code>x</code> and <code>y</code> and the size of the screen in <code>width</code> and <code>height</code>. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a04688a7e547d65b64b523e7653025c0c">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIScreen.html#a02819370d2ebae8f68912691c797ceaf">IScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a291ef5a8a5d75d63f970d4a8900c86c6">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a8af145455ca1a8f2057cca9aab6048bc">XWindowsScreen</a>.</p>
 
@@ -1321,7 +1321,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Test if mouse is pressed. </p>
 <p>Return true if any mouse button is currently pressed. Ideally, "current" means up to the last processed event but it can mean the current physical mouse button state. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a30e6872727a1c3c11843c1f10c25d94c">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a5caeb0554249b714a4086c989b29c2cb">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a407ab83fad280d82cb3d9f35e897b057">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a844fd85759735df238bbd48e50a9176e">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#afdb9087193132fee08e0eb3914e0d9cd">XWindowsScreen</a>.</p>
 
@@ -1353,7 +1353,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Test if key is pressed. </p>
 <p>Returns true iff the given key is down. Half-duplex toggles always return false. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a706a36da7f0f85b58d35aeb06a6d98a2">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#abc4f758f788eb134f63a138e89304778">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1507,7 +1507,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get the active keyboard layout from OS. </p>
 <p>Returns the active keyboard layout according to the operating system. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a41575b1a73ab6914f4900cb731ac17e8">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#ab6f1f58b6394dbea0220e1bf23c30bd8">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1537,7 +1537,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get the active modifiers from OS. </p>
 <p>Returns the modifiers that are currently active according to the operating system. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#aca049d811510cad2af0834c9456450e7">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#aae7fcd31aac7b12e33bb1eca46c17483">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1567,7 +1567,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Get the keys currently pressed from OS. </p>
 <p>Adds any keys that are currently pressed according to the operating system to <code class="param">pressedKeys</code>. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a20ca109beffd59b1f215efac35c42206">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#ad28fd1330ed2b626537445c9488857f8">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1597,7 +1597,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Update configuration. </p>
 <p>This is called when the configuration has changed. <code>activeSides</code> is a bitmask of <a class="el" href="DirectionTypes_8h.html#a1702cf626a6f3bc79a7db1382e2fbba9" title="Bitmask values for screen edge directions.">DirectionMask</a> indicating which sides of the primary screen are linked to clients. Override to handle the possible change in jump zones. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#abe7d86247e238b1492078d850e95e182">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#affc513d87f302cb40746304d2e422356">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#af9d2225f40decf5459177bab155ae77e">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a6f36f73c633f001195c1e676890bc00b">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#adebd866d00c93789888ed2fdef89b58f">XWindowsScreen</a>.</p>
 
@@ -1635,7 +1635,7 @@ Additional Inherited Members</h2></td></tr>
 <p>A hot key is a set of modifiers and a key, which may itself be a modifier. The hot key is pressed when the hot key's modifiers and only those modifiers are logically down (active) and the key is pressed. The hot key is released when the key is released, regardless of the modifiers.</p>
 <p>The hot key event should be generated no matter what window or application has the focus. No other window or application should receive the key press or release events (they can and should see the modifier key events). When the key is a modifier, it's acceptable to allow the user to press the modifiers in any order or to require the user to press the given key last. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a5c7bbb7be1d11ae322cecb3c09a61668">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a7ee48e0fb123ebbb39958f811c258e64">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiScreen.html#a7a787b752dc25d204694128bcb17cab0">deskflow::EiScreen</a>, <a class="el" href="classMSWindowsScreen.html#a1488e7c4b45fd447f73d7d5d9eb5e105">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a249bf3d9a2521593ef9195219b4ff615">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a320f0ac8ba3fbf8ad5948c2aee96bd2f">XWindowsScreen</a>.</p>
 
@@ -1767,7 +1767,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Set half-duplex mask. </p>
 <p>Sets which modifier toggle keys are half-duplex. A half-duplex toggle key doesn't report a key release when toggled on and doesn't report a key press when toggled off. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a6cd3980306ef5c5eda8170486fb2aafe">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#a4c1f06a56dfe9a0ba1c3bde71a1d7d7b">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1887,7 +1887,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Unregister a system hotkey. </p>
 <p>Unregisters a previously registered hot key. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a2bfd037108f917088ac80c116e984ef7">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a41e679f1aea085fc0e0242cb333ad9c8">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a07d8eab4f5484d8e6444283d76cccbe6">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a0ba8893d8cb7e1a72988edc3950ef768">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a9d043bb0916b10d64716a54dc0c55e8e">XWindowsScreen</a>.</p>
 
@@ -1949,7 +1949,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Update the keyboard map. </p>
 <p>Causes the key state to get updated to reflect the current keyboard mapping. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#addf66b6472688e8a0b8ff03c238ae301">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#a9cd829a74695cc65e20a824518d5f244">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -1979,7 +1979,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Update the key state. </p>
 <p>Causes the key state to get updated to reflect the physical keyboard state. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#aee94ca0afb739f940ef6c0b96473c063">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIKeyState.html#ab246c57cd47334d890fb1caf9c13db1e">IKeyState</a>.</p>
 
 </div>
 </div>
@@ -2013,7 +2013,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Warp cursor. </p>
 <p>Warp the cursor to the absolute coordinates <code>x</code>,y. Also discard input events up to and including the warp before returning. </p>
 
-<p>Implements <a class="el" href="classIPlatformScreen.html#a681c264d6c9b5a7e2deb24d70a2ca6b6">IPlatformScreen</a>.</p>
+<p>Implements <a class="el" href="classIPrimaryScreen.html#a23ed189034d7568c40aa1105ad2ef48d">IPrimaryScreen</a>.</p>
 
 <p>Implemented in <a class="el" href="classMSWindowsScreen.html#a205d0197f1b32bb9047788b4d42bd270">MSWindowsScreen</a>, <a class="el" href="classOSXScreen.html#a8f402f986943830b9926d2b5116aee8f">OSXScreen</a>, and <a class="el" href="classXWindowsScreen.html#a018fe832435193bd16a2090b0847acac">XWindowsScreen</a>.</p>
 

@@ -1,9 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classClientProxy.html#a7968d82142b540753635e9b10054e306":[6,0,63,25],
-"classClientProxy.html#a7d2f77eeaf28ea20e76ae461b1e681ba":[6,0,63,21],
-"classClientProxy.html#a82dd690fb8c2f8d83854893feb58d5a4":[6,0,63,7],
-"classClientProxy.html#a85b209e83f2b16e76da50b6d6da28e89":[6,0,63,26],
 "classClientProxy.html#a89b1161489936496daa21e411db1d3ad":[6,0,63,15],
 "classClientProxy.html#a93227c092b832b011937f51f5b87e006":[6,0,63,3],
 "classClientProxy.html#a9a9da7706d7a32df6387394991773fe9":[6,0,63,27],
@@ -167,8 +163,7 @@ var NAVTREEINDEX8 =
 "classConsoleLogOutputter.html":[6,0,80],
 "classConsoleLogOutputter.html#a6af820d1705c919bfc95f695ed32cfcd":[6,0,80,3],
 "classConsoleLogOutputter.html#a6be85f84a1cc4f7394582566cfc8606b":[6,0,80,0],
-"classConsoleLogOutputter.html#aa0a78dc812b4666e8b52eb24cc360d79":[6,0,80,5],
-"classConsoleLogOutputter.html#aba6561fd447aa67d21f36a60bd2a33b2":[6,0,80,6],
+"classConsoleLogOutputter.html#aba6561fd447aa67d21f36a60bd2a33b2":[6,0,80,5],
 "classConsoleLogOutputter.html#ad177cfbe757d5b8825ae7c6df701efc1":[6,0,80,4],
 "classConsoleLogOutputter.html#ae7195c4c7d09e259b0aae8da62074b4d":[6,0,80,2],
 "classConsoleLogOutputter.html#aea545807b5483abe8cbe6f6385b2e3e2":[6,0,80,1],
@@ -249,5 +244,10 @@ var NAVTREEINDEX8 =
 "classEventQueue.html#ac24cc15d9a5663011c3ab0d83c7c44b7":[6,0,90,11],
 "classEventQueue.html#ac59e3add907cf56a2c5ddc41686bc9b8":[6,0,90,19],
 "classEventQueue.html#ae16e79205621b109005ee14a8ac3345f":[6,0,90,4],
-"classEventQueueTimer.html":[6,0,91]
+"classEventQueueTimer.html":[6,0,91],
+"classExitAppException.html":[6,0,92],
+"classExitAppException.html#a520a08066ad2251cbb0e4ab27590a882":[6,0,92,2],
+"classExitAppException.html#a5ed4b66e4509091dff20be26f1a01431":[6,0,92,1],
+"classExitAppException.html#a61c3d2092d07a05c10f8b3b14482e6b6":[6,0,92,0],
+"classExitAppException.html#aba1c0fcfff92209de383c3fa51940b76":[6,0,92,3]
 };

@@ -1,11 +1,7 @@
 var classIClient =
 [
     [ "enter", "classIClient.html#a1d7dc24dbfe57dacf54a713a7f944eb4", null ],
-    [ "getClipboard", "classIClient.html#a58b29a8e28674899f314c34eb15e91d1", null ],
-    [ "getCursorPos", "classIClient.html#a339a12315be9970817015851751b8836", null ],
-    [ "getEventTarget", "classIClient.html#a613ea462021812a45cc59fdc4b8860cd", null ],
     [ "getName", "classIClient.html#a5fa2089b8a1cbe658f5c96cba7c0fb75", null ],
-    [ "getShape", "classIClient.html#ae249fdfe5362d40d646da580dc39bc84", null ],
     [ "grabClipboard", "classIClient.html#a0b888dcea257c93782f015675c8ce75c", null ],
     [ "keyDown", "classIClient.html#a7bbe8e4b22dbb896e58e7363a8e1f061", null ],
     [ "keyRepeat", "classIClient.html#a5a0a0a6fc35617156f596b054b81bc67", null ],

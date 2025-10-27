@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -389,7 +389,7 @@ Protected Attributes</h2></td></tr>
 <p>Bind socket to address. </p>
 <p>Binds the socket to a particular address. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#a082f25acd579e91212937d49f12f7770">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classISocket.html#af33566df32e8275637ee58c01952c4c1">ISocket</a>.</p>
 
 </div>
 </div>
@@ -558,7 +558,7 @@ Protected Attributes</h2></td></tr>
 <p>Flush the stream. </p>
 <p>Waits until all buffered data has been written to the stream. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#a1a751f345287bdd7e68cbbe6028e4cb6">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#a816405d995b474f225f0bfcb3d38854d">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -668,7 +668,7 @@ Protected Attributes</h2></td></tr>
 <p>Get bytes available to read. </p>
 <p>Returns a conservative estimate of the available bytes to read (i.e. a number not greater than the actual number of bytes). Some streams may not be able to determine this and will always return zero. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#ad95421dfee23bcc59fc3cfea856e34b2">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#a070ba4635762ef6b6edde8ddf1ac9ffe">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -800,7 +800,7 @@ Protected Attributes</h2></td></tr>
 <p>Test if <code><a class="el" href="#ab9b12f7fe3afd27feceee4259e5d78b1" title="Read from stream.">read()</a></code> will succeed. </p>
 <p>Returns true iff an immediate <code><a class="el" href="#ab9b12f7fe3afd27feceee4259e5d78b1" title="Read from stream.">read()</a></code> will return data. This may or may not be the same as <code><a class="el" href="#a7d67e983909ffe5d1c2b310305ed50c8" title="Get bytes available to read.">getSize()</a></code> &gt; 0, depending on the stream type. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#aaffbf2a730e900864c0eb87eddb531b6">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#a66fa894adbd2f636e266482190be77b3">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -936,7 +936,7 @@ Protected Attributes</h2></td></tr>
 <p>Read from stream. </p>
 <p>Read up to <code class="param">n</code> bytes into <code class="param">buffer</code>, returning the number read (zero if no data is available or input is shutdown). <code class="param">buffer</code> may be nullptr in which case the data is discarded. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#a1085a85358918c090178f2684f967740">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#a62d845cca05a66438ede7cec206da293">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -1091,7 +1091,7 @@ Protected Attributes</h2></td></tr>
 <p>Shutdown input. </p>
 <p>Shutdown the input side of the stream. Any pending input data is discarded and further reads immediately return 0. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#a91d4daa2fea2025b34b64dfe617ba15b">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#aeb46dd5fd4744485a4124082e9cc96a7">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -1121,7 +1121,7 @@ Protected Attributes</h2></td></tr>
 <p>Shutdown output. </p>
 <p>Shutdown the output side of the stream. Any buffered output data is discarded and further writes generate output error events. Use <code><a class="el" href="#a6d0240e24c16c9df20bb0d848e514ae9" title="Flush the stream.">flush()</a></code> before <code><a class="el" href="#ad9b31c64155ecbe934d2abb2728af56c" title="Shutdown output.">shutdownOutput()</a></code> to send buffered output data. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#ac8f974b42d75d08161e7f2808f419ba1">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#ae1bb7984db738fa5bf7edb8220820037">deskflow::IStream</a>.</p>
 
 </div>
 </div>
@@ -1155,7 +1155,7 @@ Protected Attributes</h2></td></tr>
 <p>Write to stream. </p>
 <p>Write <code>n</code> bytes from <code>buffer</code> to the stream. If this can't complete immediately it will block. Data may be buffered in order to return more quickly. A output error event is generated when writing fails. </p>
 
-<p>Implements <a class="el" href="classIDataSocket.html#a816a8e8acafacdb4fd3893bf4d348299">IDataSocket</a>.</p>
+<p>Implements <a class="el" href="classdeskflow_1_1IStream.html#a404ea5899a77ab13d2b44bd1fcff2b40">deskflow::IStream</a>.</p>
 
 </div>
 </div>

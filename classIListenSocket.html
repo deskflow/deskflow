@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -127,14 +127,14 @@ Public Member Functions</h2></td></tr>
 <tr id="pub-methods-0" class="groupHeader"><td colspan="2"><div class="groupHeader">manipulators</div></td></tr>
 <tr class="memitem:a2ae18976341b821f20f2296bf0d497cc" id="r_a2ae18976341b821f20f2296bf0d497cc"><td class="memItemLeft" align="right" valign="top">virtual std::unique_ptr&lt; <a class="el" href="classIDataSocket.html">IDataSocket</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2ae18976341b821f20f2296bf0d497cc">accept</a> ()=0</td></tr>
 <tr class="memdesc:a2ae18976341b821f20f2296bf0d497cc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accept connection.  <br /></td></tr>
-<tr class="memitem:a59460bcba2ee4686621dedbb41ebf378" id="r_a59460bcba2ee4686621dedbb41ebf378"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a59460bcba2ee4686621dedbb41ebf378">bind</a> (const <a class="el" href="classNetworkAddress.html">NetworkAddress</a> &amp;) override=0</td></tr>
-<tr class="memdesc:a59460bcba2ee4686621dedbb41ebf378"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind socket to address.  <br /></td></tr>
-<tr class="memitem:a07cd217ae7c326b54f5600d14cd9750e" id="r_a07cd217ae7c326b54f5600d14cd9750e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a07cd217ae7c326b54f5600d14cd9750e">close</a> () override=0</td></tr>
-<tr class="memdesc:a07cd217ae7c326b54f5600d14cd9750e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close socket.  <br /></td></tr>
-<tr class="memitem:a42cc50be906cf1234bcd061e65aacc2b" id="r_a42cc50be906cf1234bcd061e65aacc2b"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a42cc50be906cf1234bcd061e65aacc2b">getEventTarget</a> () const override=0</td></tr>
-<tr class="memdesc:a42cc50be906cf1234bcd061e65aacc2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event target.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classISocket"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classISocket')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classISocket.html">ISocket</a></td></tr>
 <tr class="memitem:a3c0759005e042d8cbdc7ecbbfe04e586 inherit pub_methods_classISocket" id="r_a3c0759005e042d8cbdc7ecbbfe04e586"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classISocket.html#a3c0759005e042d8cbdc7ecbbfe04e586">~ISocket</a> ()=default</td></tr>
+<tr class="memitem:af33566df32e8275637ee58c01952c4c1 inherit pub_methods_classISocket" id="r_af33566df32e8275637ee58c01952c4c1"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classISocket.html#af33566df32e8275637ee58c01952c4c1">bind</a> (const <a class="el" href="classNetworkAddress.html">NetworkAddress</a> &amp;)=0</td></tr>
+<tr class="memdesc:af33566df32e8275637ee58c01952c4c1 inherit pub_methods_classISocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bind socket to address.  <br /></td></tr>
+<tr class="memitem:a3b518625f639bfef187fde5c84b790ce inherit pub_methods_classISocket" id="r_a3b518625f639bfef187fde5c84b790ce"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classISocket.html#a3b518625f639bfef187fde5c84b790ce">close</a> ()=0</td></tr>
+<tr class="memdesc:a3b518625f639bfef187fde5c84b790ce inherit pub_methods_classISocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close socket.  <br /></td></tr>
+<tr class="memitem:aa8fcc401c9bc4083c6b133996040dfd1 inherit pub_methods_classISocket" id="r_aa8fcc401c9bc4083c6b133996040dfd1"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classISocket.html#aa8fcc401c9bc4083c6b133996040dfd1">getEventTarget</a> () const =0</td></tr>
+<tr class="memdesc:aa8fcc401c9bc4083c6b133996040dfd1 inherit pub_methods_classISocket"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get event target.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Listen socket interface. </p>
@@ -164,105 +164,9 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Accept connection. </p>
-<p>Accept a connection, returning a socket representing the full-duplex data stream. Returns nullptr if no socket is waiting to be accepted. This is only valid after a call to <code><a class="el" href="#a59460bcba2ee4686621dedbb41ebf378" title="Bind socket to address.">bind()</a></code>. </p>
+<p>Accept a connection, returning a socket representing the full-duplex data stream. Returns nullptr if no socket is waiting to be accepted. This is only valid after a call to <code><a class="el" href="classISocket.html#af33566df32e8275637ee58c01952c4c1" title="Bind socket to address.">bind()</a></code>. </p>
 
 <p>Implemented in <a class="el" href="classSecureListenSocket.html#aa5dca057acffeba4f8e050f574a0a9c5">SecureListenSocket</a>, and <a class="el" href="classTCPListenSocket.html#a705997d13d473a50f46ffcbcf9808cee">TCPListenSocket</a>.</p>
-
-</div>
-</div>
-<a id="a59460bcba2ee4686621dedbb41ebf378" name="a59460bcba2ee4686621dedbb41ebf378"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a59460bcba2ee4686621dedbb41ebf378">&#9670;&#160;</a></span>bind()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void IListenSocket::bind </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classNetworkAddress.html">NetworkAddress</a> &amp;</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Bind socket to address. </p>
-<p>Binds the socket to a particular address. </p>
-
-<p>Implements <a class="el" href="classISocket.html#af33566df32e8275637ee58c01952c4c1">ISocket</a>.</p>
-
-<p>Implemented in <a class="el" href="classTCPListenSocket.html#a70a39c96ef1da9d1dee05fd1615abe7b">TCPListenSocket</a>.</p>
-
-</div>
-</div>
-<a id="a07cd217ae7c326b54f5600d14cd9750e" name="a07cd217ae7c326b54f5600d14cd9750e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07cd217ae7c326b54f5600d14cd9750e">&#9670;&#160;</a></span>close()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void IListenSocket::close </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Close socket. </p>
-<p>Closes the socket. This should flush the output stream. </p>
-
-<p>Implements <a class="el" href="classISocket.html#a3b518625f639bfef187fde5c84b790ce">ISocket</a>.</p>
-
-<p>Implemented in <a class="el" href="classTCPListenSocket.html#a1f5b16bbcd9ef1f232a093c447f5a2da">TCPListenSocket</a>.</p>
-
-</div>
-</div>
-<a id="a42cc50be906cf1234bcd061e65aacc2b" name="a42cc50be906cf1234bcd061e65aacc2b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42cc50be906cf1234bcd061e65aacc2b">&#9670;&#160;</a></span>getEventTarget()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void * IListenSocket::getEventTarget </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get event target. </p>
-<p>Returns the event target for events generated by this socket. </p>
-
-<p>Implements <a class="el" href="classISocket.html#aa8fcc401c9bc4083c6b133996040dfd1">ISocket</a>.</p>
-
-<p>Implemented in <a class="el" href="classTCPListenSocket.html#afa6a710855586715ece1892a841e5d82">TCPListenSocket</a>.</p>
 
 </div>
 </div>

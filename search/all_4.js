@@ -23,7 +23,7 @@ var searchData=
   ['biclrused_20',['biClrUsed',['../structCBMPInfoHeader.html#a36bc22e7defdcd14b394a52d10b9b13c',1,'CBMPInfoHeader']]],
   ['bicompression_21',['biCompression',['../structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef',1,'CBMPInfoHeader']]],
   ['biheight_22',['biHeight',['../structCBMPInfoHeader.html#adc2e30ed66c813f2778768c8ba3c138b',1,'CBMPInfoHeader']]],
-  ['bind_23',['bind',['../classIDataSocket.html#a082f25acd579e91212937d49f12f7770',1,'IDataSocket::bind()'],['../classIListenSocket.html#a59460bcba2ee4686621dedbb41ebf378',1,'IListenSocket::bind()'],['../classISocket.html#af33566df32e8275637ee58c01952c4c1',1,'ISocket::bind()'],['../classTCPListenSocket.html#a70a39c96ef1da9d1dee05fd1615abe7b',1,'TCPListenSocket::bind()'],['../classTCPSocket.html#a8f565e1877ee464b808125fb826f039c',1,'TCPSocket::bind()']]],
+  ['bind_23',['bind',['../classISocket.html#af33566df32e8275637ee58c01952c4c1',1,'ISocket::bind()'],['../classTCPListenSocket.html#a70a39c96ef1da9d1dee05fd1615abe7b',1,'TCPListenSocket::bind()'],['../classTCPSocket.html#a8f565e1877ee464b808125fb826f039c',1,'TCPSocket::bind()']]],
   ['bindsocket_24',['bindSocket',['../classIArchNetwork.html#a0174cb401462609cd591237ef42278e7',1,'IArchNetwork::bindSocket()'],['../classArchNetworkBSD.html#ab9012bef3f2ce199a41e912dce29a862',1,'ArchNetworkBSD::bindSocket()'],['../classArchNetworkWinsock.html#a37710bdf58cdf35faef5bde29fcd609a',1,'ArchNetworkWinsock::bindSocket()']]],
   ['biplanes_25',['biPlanes',['../structCBMPInfoHeader.html#a995e03b7a1c3b514600ea3e0f676fb52',1,'CBMPInfoHeader']]],
   ['bisize_26',['biSize',['../structCBMPInfoHeader.html#a69649d77280795b307f42fb28bb43783',1,'CBMPInfoHeader']]],

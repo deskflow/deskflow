@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,11 +96,11 @@ $(function(){initNavTree('classIClient.html','',''); });
 <p>This is the complete list of members for <a class="el" href="classIClient.html">IClient</a>, including all inherited members.</p>
 <table class="directory">
   <tr class="even"><td class="entry"><a class="el" href="classIClient.html#a1d7dc24dbfe57dacf54a713a7f944eb4">enter</a>(int32_t xAbs, int32_t yAbs, uint32_t seqNum, KeyModifierMask mask, bool forScreensaver)=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIClient.html#a58b29a8e28674899f314c34eb15e91d1">getClipboard</a>(ClipboardID id, IClipboard *) const override=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="classIClient.html#a339a12315be9970817015851751b8836">getCursorPos</a>(int32_t &amp;x, int32_t &amp;y) const override=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIClient.html#a613ea462021812a45cc59fdc4b8860cd">getEventTarget</a>() const override=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIScreen.html#a0afdaf0c93c65056f48a780ea8df12e3">getClipboard</a>(ClipboardID id, IClipboard *) const =0</td><td class="entry"><a class="el" href="classIScreen.html">IScreen</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="classIScreen.html#af4c38ab78dd4681d283ff8432a1dae45">getCursorPos</a>(int32_t &amp;x, int32_t &amp;y) const =0</td><td class="entry"><a class="el" href="classIScreen.html">IScreen</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIScreen.html#a3bc2359e5bea9d21affa5f043269a677">getEventTarget</a>() const =0</td><td class="entry"><a class="el" href="classIScreen.html">IScreen</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIClient.html#a5fa2089b8a1cbe658f5c96cba7c0fb75">getName</a>() const =0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
-  <tr class="odd"><td class="entry"><a class="el" href="classIClient.html#ae249fdfe5362d40d646da580dc39bc84">getShape</a>(int32_t &amp;x, int32_t &amp;y, int32_t &amp;width, int32_t &amp;height) const override=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
+  <tr class="odd"><td class="entry"><a class="el" href="classIScreen.html#a02819370d2ebae8f68912691c797ceaf">getShape</a>(int32_t &amp;x, int32_t &amp;y, int32_t &amp;width, int32_t &amp;height) const =0</td><td class="entry"><a class="el" href="classIScreen.html">IScreen</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIClient.html#a0b888dcea257c93782f015675c8ce75c">grabClipboard</a>(ClipboardID)=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="odd"><td class="entry"><a class="el" href="classIClient.html#a7bbe8e4b22dbb896e58e7363a8e1f061">keyDown</a>(KeyID id, KeyModifierMask, KeyButton, const std::string &amp;)=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>
   <tr class="even"><td class="entry"><a class="el" href="classIClient.html#a5a0a0a6fc35617156f596b054b81bc67">keyRepeat</a>(KeyID id, KeyModifierMask, int32_t count, KeyButton, const std::string &amp;lang)=0</td><td class="entry"><a class="el" href="classIClient.html">IClient</a></td><td class="entry"><span class="mlabel">pure virtual</span></td></tr>

@@ -5,6 +5,5 @@ var classConsoleLogOutputter =
     [ "close", "classConsoleLogOutputter.html#ae7195c4c7d09e259b0aae8da62074b4d", null ],
     [ "flush", "classConsoleLogOutputter.html#a6af820d1705c919bfc95f695ed32cfcd", null ],
     [ "open", "classConsoleLogOutputter.html#ad177cfbe757d5b8825ae7c6df701efc1", null ],
-    [ "show", "classConsoleLogOutputter.html#aa0a78dc812b4666e8b52eb24cc360d79", null ],
     [ "write", "classConsoleLogOutputter.html#aba6561fd447aa67d21f36a60bd2a33b2", null ]
 ];

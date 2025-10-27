@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -118,8 +118,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a77e8f13d15ac2567439812c37b1eab2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the log.  <br /></td></tr>
 <tr class="memitem:a7a39ffa255cfa024345341338b492723" id="r_a7a39ffa255cfa024345341338b492723"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7a39ffa255cfa024345341338b492723">closeLog</a> ()=0</td></tr>
 <tr class="memdesc:a7a39ffa255cfa024345341338b492723"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the log.  <br /></td></tr>
-<tr class="memitem:abbdad52046c27adf36a665d85f642d62" id="r_abbdad52046c27adf36a665d85f642d62"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abbdad52046c27adf36a665d85f642d62">showLog</a> (bool showIfEmpty)=0</td></tr>
-<tr class="memdesc:abbdad52046c27adf36a665d85f642d62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the log.  <br /></td></tr>
 <tr class="memitem:a419dbbe5623dbdc36fd34b62a78fcf56" id="r_a419dbbe5623dbdc36fd34b62a78fcf56"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a419dbbe5623dbdc36fd34b62a78fcf56">writeLog</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a>, const QString &amp;)=0</td></tr>
 <tr class="memdesc:a419dbbe5623dbdc36fd34b62a78fcf56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write to the log.  <br /></td></tr>
 </table>
@@ -210,36 +208,6 @@ Public Member Functions</h2></td></tr>
 <p>Opens the log for writing. The log must be opened before being written to. </p>
 
 <p>Implemented in <a class="el" href="classArchLogUnix.html#aa79edb16e113e0792432048208c900c6">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#a7bd88da31967ab5176a993159e5c607b">ArchLogWindows</a>.</p>
-
-</div>
-</div>
-<a id="abbdad52046c27adf36a665d85f642d62" name="abbdad52046c27adf36a665d85f642d62"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbdad52046c27adf36a665d85f642d62">&#9670;&#160;</a></span>showLog()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IArchLog::showLog </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>showIfEmpty</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show the log. </p>
-<p>Causes the log to become visible. This generally only makes sense for a log in a graphical user interface. Other implementations will do nothing. Iff <code class="param">showIfEmpty</code> is <code>false</code> then the implementation may optionally only show the log if it's not empty. </p>
-
-<p>Implemented in <a class="el" href="classArchLogUnix.html#ac54a671658c8a90bbcd5332ad7f1bee0">ArchLogUnix</a>, and <a class="el" href="classArchLogWindows.html#a0b30ec83f8558227453383fe8b6a1fb3">ArchLogWindows</a>.</p>
 
 </div>
 </div>

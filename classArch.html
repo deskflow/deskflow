@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -133,14 +133,12 @@ Collaboration diagram for Arch:</div>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:aadb110c65e0419b9ecdbb499d2269ca8" id="r_aadb110c65e0419b9ecdbb499d2269ca8"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aadb110c65e0419b9ecdbb499d2269ca8">Arch</a> ()</td></tr>
-<tr class="memitem:a6f64ff645c6e2b2f5087eb8044119a9b" id="r_a6f64ff645c6e2b2f5087eb8044119a9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6f64ff645c6e2b2f5087eb8044119a9b">Arch</a> (<a class="el" href="classArch.html">Arch</a> *arch)</td></tr>
 <tr class="memitem:a6c1f0485f65368f1fde5d07ce345a925" id="r_a6c1f0485f65368f1fde5d07ce345a925"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c1f0485f65368f1fde5d07ce345a925">~Arch</a> () override=default</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a490c7518c0fa8f364eb701d46c7011cd" id="r_a490c7518c0fa8f364eb701d46c7011cd"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classArch.html">Arch</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a490c7518c0fa8f364eb701d46c7011cd">getInstance</a> ()</td></tr>
 <tr class="memdesc:a490c7518c0fa8f364eb701d46c7011cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return the singleton instance.  <br /></td></tr>
-<tr class="memitem:a2c1e7cb0b88aa7bd993368de5668cf39" id="r_a2c1e7cb0b88aa7bd993368de5668cf39"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2c1e7cb0b88aa7bd993368de5668cf39">setInstance</a> (<a class="el" href="classArch.html">Arch</a> *s)</td></tr>
 <tr class="memitem:afd43ed3a5c2fda8d0620966fb1785040" id="r_afd43ed3a5c2fda8d0620966fb1785040"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afd43ed3a5c2fda8d0620966fb1785040">sleep</a> (double <a class="el" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>)</td></tr>
 <tr class="memdesc:afd43ed3a5c2fda8d0620966fb1785040"><td class="mdescLeft">&#160;</td><td class="mdescRight">blocks calling thread for timout seconds  <br /></td></tr>
 <tr class="memitem:a462fd5dd1a3cbb017ad8e92617b2614d" id="r_a462fd5dd1a3cbb017ad8e92617b2614d"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a462fd5dd1a3cbb017ad8e92617b2614d">time</a> ()</td></tr>
@@ -151,7 +149,7 @@ Static Public Member Functions</h2></td></tr>
 <p>This class is a centralized interface to all architecture dependent interface implementations (except miscellaneous functions). It instantiates an implementation of each interface and delegates calls to each method to those implementations. Clients should use the <code>ARCH</code> macro to access this object. Clients must also instantiate exactly one of these objects before attempting to call any method, typically at the beginning of <code><a class="el" href="deskflow-core_8cpp.html#a3c04138a5bfe5d72780bb7e82a18e627">main()</a></code>. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aadb110c65e0419b9ecdbb499d2269ca8" name="aadb110c65e0419b9ecdbb499d2269ca8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aadb110c65e0419b9ecdbb499d2269ca8">&#9670;&#160;</a></span>Arch() <span class="overload">[1/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aadb110c65e0419b9ecdbb499d2269ca8">&#9670;&#160;</a></span>Arch()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -163,31 +161,6 @@ Static Public Member Functions</h2></td></tr>
           <td></td>
         </tr>
       </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a6f64ff645c6e2b2f5087eb8044119a9b" name="a6f64ff645c6e2b2f5087eb8044119a9b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6f64ff645c6e2b2f5087eb8044119a9b">&#9670;&#160;</a></span>Arch() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">Arch::Arch </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classArch.html">Arch</a> *</td>          <td class="paramname"><span class="paramname"><em>arch</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel explicit">explicit</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 </div>
@@ -243,31 +216,6 @@ Static Public Member Functions</h2></td></tr>
 
 <p>Return the singleton instance. </p>
 <p>The client must have instantiated exactly once <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> object before calling this function. </p>
-
-</div>
-</div>
-<a id="a2c1e7cb0b88aa7bd993368de5668cf39" name="a2c1e7cb0b88aa7bd993368de5668cf39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c1e7cb0b88aa7bd993368de5668cf39">&#9670;&#160;</a></span>setInstance()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void Arch::setInstance </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classArch.html">Arch</a> *</td>          <td class="paramname"><span class="paramname"><em>s</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

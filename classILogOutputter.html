@@ -26,7 +26,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.139</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.148</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,8 +124,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a270bde79491303617d509a60800ec07e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open the outputter.  <br /></td></tr>
 <tr class="memitem:a1a25270747c3028b2977f74f57cd20f5" id="r_a1a25270747c3028b2977f74f57cd20f5"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1a25270747c3028b2977f74f57cd20f5">close</a> ()=0</td></tr>
 <tr class="memdesc:a1a25270747c3028b2977f74f57cd20f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Close the outputter.  <br /></td></tr>
-<tr class="memitem:acfe18b140c97de70052ee281da764485" id="r_acfe18b140c97de70052ee281da764485"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acfe18b140c97de70052ee281da764485">show</a> (bool showIfEmpty)=0</td></tr>
-<tr class="memdesc:acfe18b140c97de70052ee281da764485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show the outputter.  <br /></td></tr>
 <tr class="memitem:a066005e1eb18339e9cc7a2ee66374719" id="r_a066005e1eb18339e9cc7a2ee66374719"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a066005e1eb18339e9cc7a2ee66374719">write</a> (<a class="el" href="LogLevel_8h.html#aca1fd1d8935433e6ba2e3918214e07f9">LogLevel</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#a16b9a398646d8d46205fb34769946458">level</a>, const QString &amp;message)=0</td></tr>
 <tr class="memdesc:a066005e1eb18339e9cc7a2ee66374719"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a message with level.  <br /></td></tr>
 </table>
@@ -216,36 +214,6 @@ Public Member Functions</h2></td></tr>
 <p>Opens the outputter for writing. Calling this method on an already open outputter must have no effect. </p>
 
 <p>Implemented in <a class="el" href="classConsoleLogOutputter.html#ad177cfbe757d5b8825ae7c6df701efc1">ConsoleLogOutputter</a>, <a class="el" href="classFileLogOutputter.html#ae13b2dc001d6569055bc3283af6bc6d3">FileLogOutputter</a>, <a class="el" href="classMSWindowsDebugOutputter.html#ad1a90f3912ebeb4a8035485aa1481df0">MSWindowsDebugOutputter</a>, <a class="el" href="classStopLogOutputter.html#a8c92782c4e3e4791a564ee7fb5ed0168">StopLogOutputter</a>, and <a class="el" href="classSystemLogOutputter.html#ae39da8a4f980852a8d370b5d33261496">SystemLogOutputter</a>.</p>
-
-</div>
-</div>
-<a id="acfe18b140c97de70052ee281da764485" name="acfe18b140c97de70052ee281da764485"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acfe18b140c97de70052ee281da764485">&#9670;&#160;</a></span>show()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void ILogOutputter::show </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>showIfEmpty</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show the outputter. </p>
-<p>Causes the output to become visible. This generally only makes sense for a logger in a graphical user interface. Other implementations will do nothing. Iff <code class="param">showIfEmpty</code> is <code>false</code> then the implementation may optionally only show the log if it's not empty. </p>
-
-<p>Implemented in <a class="el" href="classConsoleLogOutputter.html#aa0a78dc812b4666e8b52eb24cc360d79">ConsoleLogOutputter</a>, <a class="el" href="classFileLogOutputter.html#a11bb432416a7a0dbae7ef6606805e600">FileLogOutputter</a>, <a class="el" href="classMSWindowsDebugOutputter.html#a30c983cbcaf4c733b81c5e5e806e2720">MSWindowsDebugOutputter</a>, <a class="el" href="classStopLogOutputter.html#afdbfffebb4f71c0668cde8c6686df6d2">StopLogOutputter</a>, and <a class="el" href="classSystemLogOutputter.html#ab3d558d26f564ac05bb970f2be03a601">SystemLogOutputter</a>.</p>
 
 </div>
 </div>
