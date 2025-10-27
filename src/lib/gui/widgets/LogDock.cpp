@@ -86,3 +86,19 @@ bool LogDock::eventFilter(QObject *watched, QEvent *event)
     return true;
   return false;
 }
+
+void LogDock::changeEvent(QEvent *e)
+{
+  QDockWidget::changeEvent(e);
+  if (e->type() != QEvent::LanguageChange)
+    return;
+
+  setWindowTitle(tr("Log"));
+  m_lblTitle->setText(tr("Log"));
+  m_btnFloat->setToolTip(tr("Detach from window"));
+  m_btnClose->setToolTip(tr("Close Log"));
+  if (isFloating())
+    m_btnFloat->setToolTip(tr("Attach to window"));
+  else
+    m_btnFloat->setToolTip(tr("Detach from window"));
+}
