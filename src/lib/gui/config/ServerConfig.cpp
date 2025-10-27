@@ -10,7 +10,6 @@
 
 #include "Hotkey.h"
 #include "common/Settings.h"
-#include "dialogs/AddClientDialog.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>

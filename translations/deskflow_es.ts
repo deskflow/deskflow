@@ -140,17 +140,6 @@ p, li { white-space: pre-wrap; }
     </message>
 </context>
 <context>
-    <name>AddClientDialog</name>
-    <message>
-        <source>Dialog</source>
-        <translation type="unfinished">Diálogo</translation>
-    </message>
-    <message>
-        <source>Ignore auto connect clients</source>
-        <translation type="unfinished">Ignorar clientes que se conectan automáticamente</translation>
-    </message>
-</context>
-<context>
     <name>FingerprintDialog</name>
     <message>
         <source>Local Fingerprints</source>
