@@ -38,15 +38,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->comboLanguage->addItems(I18N::detectedLanguages());
   ui->comboLanguage->setCurrentText(I18N::currentLanguage());
 
-  // Set Tooltip for the logLevel Items
-  ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(1, tr("Non-fatal errors"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(3, tr("Notable events"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(4, tr("General events [Default]"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
-  ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
+  updateText();
 
   ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QStringLiteral("security-medium")));
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
@@ -67,6 +59,15 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) & ~Qt::WindowMinMaxButtonsHint);
 
   initConnections();
+}
+
+void SettingsDialog::changeEvent(QEvent *e)
+{
+  QDialog::changeEvent(e);
+  if (e->type() == QEvent::LanguageChange) {
+    ui->retranslateUi(this);
+    updateText();
+  }
 }
 
 void SettingsDialog::initConnections() const
@@ -140,6 +141,19 @@ void SettingsDialog::showReadOnlyMessage()
   if (Settings::isWritable())
     return;
   messages::showReadOnlySettings(this, Settings::settingsFile());
+}
+
+void SettingsDialog::updateText()
+{
+  // Set Tooltip for the logLevel Items
+  ui->comboLogLevel->setItemData(0, tr("Required messages"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(1, tr("Non-fatal errors"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(2, tr("General warnings"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(3, tr("Notable events"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(4, tr("General events [Default]"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(5, tr("Debug entries"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(6, tr("More debug output"), Qt::ToolTipRole);
+  ui->comboLogLevel->setItemData(7, tr("Verbose debug output"), Qt::ToolTipRole);
 }
 
 void SettingsDialog::accept()
