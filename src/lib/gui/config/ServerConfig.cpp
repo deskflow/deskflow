@@ -425,22 +425,6 @@ bool ServerConfig::fixNoServer(const QString &name, int &index)
   return fixed;
 }
 
-int ServerConfig::showAddClientDialog(const QString &clientName)
-{
-  auto result = static_cast<int>(AddAction::AddClientIgnore);
-
-  if (!m_pMainWindow->isActiveWindow()) {
-    m_pMainWindow->showNormal();
-    m_pMainWindow->activateWindow();
-  }
-
-  AddClientDialog addClientDialog(clientName, m_pMainWindow);
-  addClientDialog.exec();
-  result = static_cast<int>(addClientDialog.addResult());
-
-  return result;
-}
-
 void ServerConfig::addToFirstEmptyGrid(const QString &clientName)
 {
   for (int i = 0; i < screens().size(); i++) {

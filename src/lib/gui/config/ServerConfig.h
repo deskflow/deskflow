@@ -247,7 +247,6 @@ private:
   int adjacentScreenIndex(int idx, int deltaColumn, int deltaRow) const;
   bool findScreenName(const QString &name, int &index);
   bool fixNoServer(const QString &name, int &index);
-  int showAddClientDialog(const QString &clientName);
   void addToFirstEmptyGrid(const QString &clientName);
 
 private:
