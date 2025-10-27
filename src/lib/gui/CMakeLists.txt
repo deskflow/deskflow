@@ -17,8 +17,6 @@ add_library(${target} STATIC
   ${platform_sources}
   Action.cpp
   Action.h
-  DataDownloader.cpp
-  DataDownloader.h
   Diagnostic.cpp
   Diagnostic.h
   DotEnv.cpp
