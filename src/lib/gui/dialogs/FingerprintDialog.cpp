@@ -59,11 +59,11 @@ FingerprintDialog::FingerprintDialog(
     if (isServer) {
       setWindowTitle(tr("New client connecting"));
       m_lblHeader->setText(body.arg(tr("client")));
-      m_lblFooter->setText(tr("\nDo you want connect to and trust the client?\n"));
+      m_lblFooter->setText(tr("\nTrust client and allow connection?\n"));
     } else {
       setWindowTitle(tr("Connecting to a new server"));
       m_lblHeader->setText(body.arg(tr("server")));
-      m_lblFooter->setText(tr("\nDo you want connect to the server?\n"));
+      m_lblFooter->setText(tr("\nDo you want to connect to the server?\n"));
     }
 
     m_buttonBox->addButton(QDialogButtonBox::Yes);
