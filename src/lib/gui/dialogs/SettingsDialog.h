@@ -33,6 +33,9 @@ public:
 Q_SIGNALS:
   void shown();
 
+protected:
+  void changeEvent(QEvent *e) override;
+
 private:
   void initConnections() const;
   void regenCertificates();
@@ -45,6 +48,7 @@ private:
   void updateTlsControls();
   void updateTlsControlsEnabled();
   void showReadOnlyMessage();
+  void updateText();
 
   /// @brief Load all settings.
   void loadFromConfig();
