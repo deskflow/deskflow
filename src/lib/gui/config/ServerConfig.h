@@ -153,8 +153,6 @@ public:
   QString configFile() const;
   bool useExternalConfig() const;
   void addClient(const QString &clientName);
-  QString getClientAddress() const;
-  void setClientAddress(const QString &address);
 
 private:
   void recall();
