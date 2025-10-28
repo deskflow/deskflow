@@ -420,9 +420,6 @@ void Client::setupConnection()
   m_events->addHandler(EventTypes::StreamOutputShutdown, m_stream->getEventTarget(), [this](const auto &) {
     handleDisconnected();
   });
-  m_events->addHandler(EventTypes::SocketStopRetry, m_stream->getEventTarget(), [this](const auto &) {
-    Settings::setValue(Settings::Core::RestartOnFailure, false);
-  });
 }
 
 void Client::setupScreen()
@@ -472,7 +469,6 @@ void Client::cleanupConnection()
     m_events->removeHandler(StreamInputShutdown, m_stream->getEventTarget());
     m_events->removeHandler(StreamOutputShutdown, m_stream->getEventTarget());
     m_events->removeHandler(SocketDisconnected, m_stream->getEventTarget());
-    m_events->removeHandler(SocketStopRetry, m_stream->getEventTarget());
     cleanupStream();
   }
 }

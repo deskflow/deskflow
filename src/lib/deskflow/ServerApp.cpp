@@ -332,18 +332,7 @@ bool ServerApp::initServer()
     return false;
   }
 
-  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
-    // install a timer and handler to retry later
-    assert(m_timer == nullptr);
-    LOG_DEBUG("retry in %.0f seconds", retryTime);
-    m_timer = getEvents()->newOneShotTimer(retryTime, nullptr);
-    getEvents()->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
-    m_serverState = Initializing;
-    return true;
-  } else {
-    // don't try again
-    return false;
-  }
+  return false;
 }
 
 deskflow::Screen *ServerApp::openServerScreen()
@@ -392,11 +381,7 @@ bool ServerApp::startServer()
     m_serverState = Started;
     return true;
   } catch (SocketAddressInUseException &e) {
-    if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
-      LOG_ERR("cannot listen for clients: %s", e.what());
-    } else {
-      LOG_CRIT("cannot listen for clients: %s", e.what());
-    }
+    LOG_CRIT("cannot listen for clients: %s", e.what());
     closeClientListener(listener);
   } catch (BaseException &e) {
     LOG_CRIT("failed to start server: %s", e.what());
@@ -404,19 +389,7 @@ bool ServerApp::startServer()
     return false;
   }
 
-  if (Settings::value(Settings::Core::RestartOnFailure).toBool()) {
-    // install a timer and handler to retry later
-    assert(m_timer == nullptr);
-    const auto retryTime = 10.0;
-    LOG_DEBUG("retry in %.0f seconds", retryTime);
-    m_timer = getEvents()->newOneShotTimer(retryTime, nullptr);
-    getEvents()->addHandler(EventTypes::Timer, m_timer, [this](const auto &) { retryHandler(); });
-    m_serverState = Starting;
-    return true;
-  } else {
-    // don't try again
-    return false;
-  }
+  return false;
 }
 
 deskflow::Screen *ServerApp::createScreen()

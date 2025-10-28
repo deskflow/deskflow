@@ -114,10 +114,9 @@ QVariant Settings::defaultValue(const QString &key)
     return false;
   }
 
-  if ((key == Core::RestartOnFailure) || (key == Core::UseHooks) || (key == Gui::CloseToTray) ||
-      (key == Gui::LogExpanded) || (key == Gui::SymbolicTrayIcon) || (key == Gui::CloseReminder) ||
-      (key == Security::TlsEnabled) || (key == Security::CheckPeers) || (key == Client::LanguageSync) ||
-      (key == Gui::ShowGenericClientFailureDialog)) {
+  if ((key == Core::UseHooks) || (key == Gui::CloseToTray) || (key == Gui::LogExpanded) ||
+      (key == Gui::SymbolicTrayIcon) || (key == Gui::CloseReminder) || (key == Security::TlsEnabled) ||
+      (key == Security::CheckPeers) || (key == Client::LanguageSync) || (key == Gui::ShowGenericClientFailureDialog)) {
     return true;
   }
 
