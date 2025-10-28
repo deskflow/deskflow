@@ -317,6 +317,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>&amp;Open %1</source>
+        <extracomment>%1 will be the replaced with the appname</extracomment>
         <translation type="unfinished">Abiert&amp;o %1</translation>
     </message>
     <message>
@@ -333,14 +334,17 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>About %1...</source>
+        <extracomment>%1 will be the replaced with the appname</extracomment>
         <translation type="unfinished">Acerca de %1...</translation>
     </message>
     <message>
         <source>Ctrl+S</source>
+        <extracomment>start / restart core shortcut</extracomment>
         <translation type="unfinished">Ctrl+S</translation>
     </message>
     <message>
         <source>Ctrl+T</source>
+        <extracomment>stop core shortcut</extracomment>
         <translation type="unfinished">Ctrl+T</translation>
     </message>
     <message>
@@ -414,6 +418,10 @@ Do you want to connect to the server?
     <message>
         <source>Unable to detect an IP address. Check your network connection is active.</source>
         <translation type="unfinished">No se puede detectar una dirección IP. Compruebe que su conexión de red esté activa.</translation>
+    </message>
+    <message>
+        <source>Suggested IP: %1</source>
+        <translation type="unfinished">IP sugerida: %1</translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -510,6 +518,10 @@ Nombres válidos:
  %1</source>
         <translation type="unfinished">Clientes:
  %1</translation>
+    </message>
+    <message>
+        <source>This computer&apos;s name:</source>
+        <translation type="unfinished">Nombre de esta computadora:</translation>
     </message>
 </context>
 <context>
