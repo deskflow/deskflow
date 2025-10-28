@@ -49,7 +49,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string notr="true">This computer's name:</string>
+          <string>This computer's name:</string>
          </property>
         </widget>
        </item>

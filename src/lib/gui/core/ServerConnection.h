@@ -35,6 +35,8 @@ public:
     m_serverConfigDialogVisible = visible;
   }
 
+  QStringList connectedClients() const;
+
 Q_SIGNALS:
   void messageShowing();
   void configureClient(const QString &clientName);
@@ -42,7 +44,6 @@ Q_SIGNALS:
 
 private:
   void handleNewClient(const QString &clientName);
-  QStringList connectedClients() const;
 
   QWidget *m_pParent;
   IServerConfig &m_serverConfig;

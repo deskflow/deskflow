@@ -80,16 +80,16 @@ MainWindow::MainWindow()
       m_menuView{new QMenu(this)},
       m_menuHelp{new QMenu(this)},
       m_actionAbout{new QAction(this)},
-      m_actionClearSettings{new QAction(tr("Clear settings"), this)},
-      m_actionReportBug{new QAction(tr("Report a Bug"), this)},
-      m_actionMinimize{new QAction(tr("&Minimize to tray"), this)},
-      m_actionQuit{new QAction(tr("&Quit"), this)},
-      m_actionTrayQuit{new QAction(tr("&Quit"), this)},
-      m_actionRestore{new QAction(tr("&Open %1").arg(kAppName), this)},
-      m_actionSettings{new QAction(tr("&Preferences"), this)},
-      m_actionStartCore{new QAction(tr("&Start"), this)},
-      m_actionRestartCore{new QAction(tr("Rest&art"), this)},
-      m_actionStopCore{new QAction(tr("S&top"), this)}
+      m_actionClearSettings{new QAction(this)},
+      m_actionReportBug{new QAction(this)},
+      m_actionMinimize{new QAction(this)},
+      m_actionQuit{new QAction(this)},
+      m_actionTrayQuit{new QAction(this)},
+      m_actionRestore{new QAction(this)},
+      m_actionSettings{new QAction(this)},
+      m_actionStartCore{new QAction(this)},
+      m_actionRestartCore{new QAction(this)},
+      m_actionStopCore{new QAction(this)}
 {
   ui->setupUi(this);
 
@@ -98,7 +98,6 @@ MainWindow::MainWindow()
   addDockWidget(Qt::BottomDockWidgetArea, m_logDock);
 
   // Setup Actions
-  m_actionAbout->setText(tr("About %1...").arg(kAppName));
   m_actionAbout->setMenuRole(QAction::AboutRole);
   m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
 
@@ -108,12 +107,9 @@ MainWindow::MainWindow()
 #ifndef Q_OS_WIN
   m_actionQuit->setShortcut(QKeySequence::Quit);
   m_actionTrayQuit->setShortcut(QKeySequence::Quit);
-#else
-  m_actionQuit->setShortcut(QKeySequence(QStringLiteral("Ctrl+Q")));
-  m_actionTrayQuit->setShortcut(QKeySequence(QStringLiteral("Ctrl+Q")));
 #endif
-  m_actionQuit->setMenuRole(QAction::QuitRole);
 
+  m_actionQuit->setMenuRole(QAction::QuitRole);
   m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
   m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
 
@@ -122,14 +118,11 @@ MainWindow::MainWindow()
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
 
-  m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
 
   m_actionRestartCore->setVisible(false);
-  m_actionRestartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
   m_actionRestartCore->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
 
-  m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
 
   m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
@@ -141,10 +134,9 @@ MainWindow::MainWindow()
 
   createMenuBar();
   setupControls();
+  updateText();
   connectSlots();
-
   setupTrayIcon();
-
   updateScreenName();
   applyConfig();
   restoreWindow();
@@ -247,7 +239,6 @@ void MainWindow::setupControls()
   m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
   m_btnFingerprint->setFixedSize(btnSize);
   m_btnFingerprint->setIconSize(iconSize);
-  m_btnFingerprint->setToolTip(tr("View local fingerprint"));
   ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
 
   m_lblSecurityStatus->setVisible(false);
@@ -259,7 +250,6 @@ void MainWindow::setupControls()
 
   m_btnUpdate->setVisible(false);
   m_btnUpdate->setFlat(true);
-  m_btnUpdate->setText(tr("Update available"));
   m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
   m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
   m_btnUpdate->setFixedHeight(btnHeight);
@@ -636,8 +626,7 @@ void MainWindow::updateNetworkInfo()
     return;
   }
 
-  ui->lblIpAddresses->setText(
-      QStringLiteral("Suggested IP: %1").arg(suggestedAddress.isEmpty() ? ipList.first() : suggestedAddress)
+  ui->lblIpAddresses->setText(tr("Suggested IP: %1").arg(suggestedAddress.isEmpty() ? ipList.first() : suggestedAddress)
   );
 
   if (auto toolTipBase = tr("<p>If connecting via the hostname fails, try %1</p>"); ipList.count() < 2) {
@@ -699,20 +688,16 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createMenuBar()
 {
-  m_menuFile->setTitle(tr("&File"));
   m_menuFile->addAction(m_actionStartCore);
   m_menuFile->addAction(m_actionRestartCore);
   m_menuFile->addAction(m_actionStopCore);
   m_menuFile->addSeparator();
   m_menuFile->addAction(m_actionQuit);
 
-  m_menuEdit->setTitle(tr("&Edit"));
   m_menuEdit->addAction(m_actionSettings);
 
-  m_menuView->setTitle(tr("&View"));
   m_menuView->addAction(m_logDock->toggleViewAction());
 
-  m_menuHelp->setTitle(tr("&Help"));
   m_menuHelp->addAction(m_actionAbout);
   m_menuHelp->addAction(m_actionReportBug);
   m_menuHelp->addSeparator();
@@ -1047,7 +1032,53 @@ void MainWindow::changeEvent(QEvent *e)
   if (e->type() == QEvent::PaletteChange) {
     updateIconTheme();
     setTrayIcon();
+  } else if (e->type() == QEvent::LanguageChange) {
+    ui->retranslateUi(this);
+    updateModeControlLabels();
+    updateNetworkInfo();
+    updateStatus();
+    serverClientsChanged(m_serverConnection.connectedClients());
+    updateText();
   }
+}
+
+void MainWindow::updateText()
+{
+  m_menuFile->setTitle(tr("&File"));
+  m_menuEdit->setTitle(tr("&Edit"));
+  m_menuView->setTitle(tr("&View"));
+  m_menuHelp->setTitle(tr("&Help"));
+
+  m_actionClearSettings->setText(tr("Clear settings"));
+  m_actionReportBug->setText(tr("Report a Bug"));
+  m_actionMinimize->setText(tr("&Minimize to tray"));
+  m_actionQuit->setText(tr("&Quit"));
+  m_actionTrayQuit->setText(tr("&Quit"));
+  //: %1 will be the replaced with the appname
+  m_actionRestore->setText(tr("&Open %1").arg(kAppName));
+  m_actionSettings->setText(tr("&Preferences"));
+  m_actionStartCore->setText(tr("&Start"));
+  m_actionRestartCore->setText(tr("Rest&art"));
+  m_actionStopCore->setText(tr("S&top"));
+  //: %1 will be the replaced with the appname
+  m_actionAbout->setText(tr("About %1...").arg(kAppName));
+
+  //: start / restart core shortcut
+  m_actionStartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+  m_actionRestartCore->setShortcut(QKeySequence(tr("Ctrl+S")));
+
+  //: stop core shortcut
+  m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
+
+#ifdef Q_OS_WIN
+  //: Quit shortcut
+  m_actionQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
+  m_actionTrayQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
+#endif
+
+  // General controls
+  m_btnFingerprint->setToolTip(tr("View local fingerprint"));
+  m_btnUpdate->setText(tr("Update available"));
 }
 
 void MainWindow::showConfigureServer(const QString &message)

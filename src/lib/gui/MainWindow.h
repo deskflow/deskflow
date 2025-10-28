@@ -92,6 +92,10 @@ protected:
   void changeEvent(QEvent *e) override;
 
 private:
+  /**
+   * @brief updateText Update all text not in the UI
+   */
+  void updateText();
   void toggleLogVisible(bool visible);
 
   void settingsChanged(const QString &key = QString());
