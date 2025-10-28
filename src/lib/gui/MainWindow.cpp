@@ -75,6 +75,10 @@ MainWindow::MainWindow()
       m_lblStatus{new QLabel(this)},
       m_btnFingerprint{new QPushButton(this)},
       m_btnUpdate{new QPushButton(this)},
+      m_menuFile{new QMenu(this)},
+      m_menuEdit{new QMenu(this)},
+      m_menuView{new QMenu(this)},
+      m_menuHelp{new QMenu(this)},
       m_actionAbout{new QAction(this)},
       m_actionClearSettings{new QAction(tr("Clear settings"), this)},
       m_actionReportBug{new QAction(tr("Report a Bug"), this)},
@@ -695,30 +699,30 @@ void MainWindow::setStatus(const QString &status)
 
 void MainWindow::createMenuBar()
 {
-  auto menuFile = new QMenu(tr("&File"), this);
-  menuFile->addAction(m_actionStartCore);
-  menuFile->addAction(m_actionRestartCore);
-  menuFile->addAction(m_actionStopCore);
-  menuFile->addSeparator();
-  menuFile->addAction(m_actionQuit);
+  m_menuFile->setTitle(tr("&File"));
+  m_menuFile->addAction(m_actionStartCore);
+  m_menuFile->addAction(m_actionRestartCore);
+  m_menuFile->addAction(m_actionStopCore);
+  m_menuFile->addSeparator();
+  m_menuFile->addAction(m_actionQuit);
 
-  auto menuEdit = new QMenu(tr("&Edit"), this);
-  menuEdit->addAction(m_actionSettings);
+  m_menuEdit->setTitle(tr("&Edit"));
+  m_menuEdit->addAction(m_actionSettings);
 
-  auto menuView = new QMenu(tr("&View"), this);
-  menuView->addAction(m_logDock->toggleViewAction());
+  m_menuView->setTitle(tr("&View"));
+  m_menuView->addAction(m_logDock->toggleViewAction());
 
-  auto menuHelp = new QMenu(tr("&Help"), this);
-  menuHelp->addAction(m_actionAbout);
-  menuHelp->addAction(m_actionReportBug);
-  menuHelp->addSeparator();
-  menuHelp->addAction(m_actionClearSettings);
+  m_menuHelp->setTitle(tr("&Help"));
+  m_menuHelp->addAction(m_actionAbout);
+  m_menuHelp->addAction(m_actionReportBug);
+  m_menuHelp->addSeparator();
+  m_menuHelp->addAction(m_actionClearSettings);
 
   auto menuBar = new QMenuBar(this);
-  menuBar->addMenu(menuFile);
-  menuBar->addMenu(menuEdit);
-  menuBar->addMenu(menuView);
-  menuBar->addMenu(menuHelp);
+  menuBar->addMenu(m_menuFile);
+  menuBar->addMenu(m_menuEdit);
+  menuBar->addMenu(m_menuView);
+  menuBar->addMenu(m_menuHelp);
 
   setMenuBar(menuBar);
 }

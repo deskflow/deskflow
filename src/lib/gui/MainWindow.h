@@ -191,6 +191,12 @@ private:
   QPushButton *m_btnFingerprint = nullptr;
   QPushButton *m_btnUpdate = nullptr;
 
+  // Window Menu
+  QMenu *m_menuFile = nullptr;
+  QMenu *m_menuEdit = nullptr;
+  QMenu *m_menuView = nullptr;
+  QMenu *m_menuHelp = nullptr;
+
   // Window Actions
   QAction *m_actionAbout = nullptr;
   QAction *m_actionClearSettings = nullptr;
