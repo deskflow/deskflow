@@ -1,13 +1,11 @@
 <map id="src/lib/gui/core/ClientConnection.h" name="src/lib/gui/core/ClientConnection.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="271,5,492,30"/>
-<area shape="rect" id="Node000002" href="$MainWindow_8h.html" title=" " alt="" coords="186,78,352,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="351,41,289,80,286,75,349,36"/>
-<area shape="rect" id="Node000006" href="$ClientConnection_8cpp.html" title=" " alt="" coords="377,78,612,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="414,36,477,75,475,80,412,41"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="176,5,397,30"/>
+<area shape="rect" id="Node000002" href="$MainWindow_8h.html" title=" " alt="" coords="92,78,258,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,41,195,80,192,75,254,36"/>
+<area shape="rect" id="Node000005" href="$ClientConnection_8cpp.html" title=" " alt="" coords="282,78,518,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="320,36,383,75,380,80,317,41"/>
 <area shape="rect" id="Node000003" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="5,151,155,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="228,111,127,152,125,148,226,106"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="151,115,105,152,101,148,147,110"/>
 <area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="179,158,360,182"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="272,118,272,157,267,157,267,118"/>
-<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="384,151,510,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="311,107,405,148,403,152,309,112"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="202,111,257,155,254,159,199,115"/>
 </map>

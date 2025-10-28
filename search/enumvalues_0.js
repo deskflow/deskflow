@@ -2,18 +2,8 @@ var searchData=
 [
   ['activate_0',['Activate',['../classInputFilter.html#a7ab848b42f51c85e2fb50bd2363c48edaa13367a8e2a3f3bf4f3409079e3fdf87',1,'InputFilter']]],
   ['add_1',['Add',['../namespacedeskflow_1_1gui_1_1messages.html#a4de26c6acbb3e0263d856efb3b061c1caec211f7c20af43e742bf2570c3cb84f9',1,'deskflow::gui::messages']]],
-  ['addclientdown_2',['AddClientDown',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca98b7aba976636f7562b522a83c827760',1,'AddClientDialog.h']]],
-  ['addclientignore_3',['AddClientIgnore',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca6c547ff67fcb6a67dd668cec353db714',1,'AddClientDialog.h']]],
-  ['addclientleft_4',['AddClientLeft',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca49bd17bdde1f8658fd83fc13fcd3432c',1,'AddClientDialog.h']]],
-  ['addclientother_5',['AddClientOther',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca416bb4f42aa7f10d688fe2f0d7fe366a',1,'AddClientDialog.h']]],
-  ['addclientright_6',['AddClientRight',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca980455f58edb4fb09fb04dd4e47753b5',1,'AddClientDialog.h']]],
-  ['addclientup_7',['AddClientUp',['../AddClientDialog_8h.html#a0b22bcc43e6b441fa88496d394fe041ca3a8866e8a90ad8c9a46cde4285e4a401',1,'AddClientDialog.h']]],
-  ['addressmissing_8',['AddressMissing',['../classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467aab65ff559decc23457d1965158e7928a',1,'deskflow::gui::CoreProcess']]],
-  ['alreadyconnected_9',['AlreadyConnected',['../namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34',1,'deskflow::gui::messages']]],
-  ['alt_10',['Alt',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf',1,'ScreenConfig']]],
-  ['argserror_11',['ArgsError',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057',1,'DaemonApp']]],
-  ['autoaddscreenignore_12',['AutoAddScreenIgnore',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa59f0c5266c7f8f41a6b693267c04de12',1,'ServerConfig.h']]],
-  ['autoaddscreenmanualclient_13',['AutoAddScreenManualClient',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fab5094b611f7672180cafe697a16119f2',1,'ServerConfig.h']]],
-  ['autoaddscreenmanualserver_14',['AutoAddScreenManualServer',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3f49a3be29d699f3be1aef7e363a9773',1,'ServerConfig.h']]],
-  ['autoaddscreenok_15',['AutoAddScreenOk',['../ServerConfig_8h.html#a46595f79f6579d996bab9eefb5c0090fa3737bb2c0506485a05cf9cde59aa679d',1,'ServerConfig.h']]]
+  ['addressmissing_2',['AddressMissing',['../classdeskflow_1_1gui_1_1CoreProcess.html#adab780bcb932ba53c90fc6f6b1f25467aab65ff559decc23457d1965158e7928a',1,'deskflow::gui::CoreProcess']]],
+  ['alreadyconnected_3',['AlreadyConnected',['../namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34',1,'deskflow::gui::messages']]],
+  ['alt_4',['Alt',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf',1,'ScreenConfig']]],
+  ['argserror_5',['ArgsError',['../classDaemonApp.html#a5afdaf6aac158592b91967337196a713a32d42f7dde0861a5c5cb09915e3c3057',1,'DaemonApp']]]
 ];

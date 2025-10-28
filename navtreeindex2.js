@@ -1,15 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a2b80888186754ee55f3edc7c83428b31":[7,0,1,1,4,40,72],
-"KeyTypes_8h.html#a2babe1d04369762cbc46be251a076742":[7,0,1,1,4,40,155],
-"KeyTypes_8h.html#a2dc0b545598eda04468e1fa31680ee75":[7,0,1,1,4,40,31],
-"KeyTypes_8h.html#a2e63c324d0ee1f7dedc0991e87c56d5f":[7,0,1,1,4,40,133],
-"KeyTypes_8h.html#a2f0edee8a8be1d3d3d4e12664b54c390":[7,0,1,1,4,40,190],
-"KeyTypes_8h.html#a2f15ada75ea888b1781ce584f8e432a7":[7,0,1,1,4,40,19],
-"KeyTypes_8h.html#a30fa95c050b3f065f24748fa4a1c8755":[7,0,1,1,4,40,15],
-"KeyTypes_8h.html#a323eb88fbab3aee576eedd5ca2499814":[7,0,1,1,4,40,64],
-"KeyTypes_8h.html#a324dc349300f01a4795427ecbde3b15d":[7,0,1,1,4,40,125],
-"KeyTypes_8h.html#a324f44f98dedadaa1216a6e84e224103":[7,0,1,1,4,40,62],
 "KeyTypes_8h.html#a32ef4b8c6fd9636322655e4376cbc8ef":[7,0,1,1,4,40,18],
 "KeyTypes_8h.html#a332f60e50a590fdd1418b764c6ca12fc":[7,0,1,1,4,40,89],
 "KeyTypes_8h.html#a3677df24ef58651d9677f338ecc83533":[7,0,1,1,4,40,66],
@@ -249,5 +239,15 @@ var NAVTREEINDEX2 =
 "Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
 "Logger_8h_source.html":[7,0,1,1,5,22],
 "MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
-"MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12]
+"MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
+"MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
+"MSWindowsClipboardBitmapConverter_8cpp.html":[7,0,1,1,9,13],
+"MSWindowsClipboardBitmapConverter_8h.html":[7,0,1,1,9,14],
+"MSWindowsClipboardBitmapConverter_8h_source.html":[7,0,1,1,9,14],
+"MSWindowsClipboardFacade_8cpp.html":[7,0,1,1,9,15],
+"MSWindowsClipboardFacade_8h.html":[7,0,1,1,9,16],
+"MSWindowsClipboardFacade_8h_source.html":[7,0,1,1,9,16],
+"MSWindowsClipboardHTMLConverter_8cpp.html":[7,0,1,1,9,17],
+"MSWindowsClipboardHTMLConverter_8h.html":[7,0,1,1,9,18],
+"MSWindowsClipboardHTMLConverter_8h_source.html":[7,0,1,1,9,18]
 };

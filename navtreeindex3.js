@@ -1,15 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
-"MSWindowsClipboardBitmapConverter_8cpp.html":[7,0,1,1,9,13],
-"MSWindowsClipboardBitmapConverter_8h.html":[7,0,1,1,9,14],
-"MSWindowsClipboardBitmapConverter_8h_source.html":[7,0,1,1,9,14],
-"MSWindowsClipboardFacade_8cpp.html":[7,0,1,1,9,15],
-"MSWindowsClipboardFacade_8h.html":[7,0,1,1,9,16],
-"MSWindowsClipboardFacade_8h_source.html":[7,0,1,1,9,16],
-"MSWindowsClipboardHTMLConverter_8cpp.html":[7,0,1,1,9,17],
-"MSWindowsClipboardHTMLConverter_8h.html":[7,0,1,1,9,18],
-"MSWindowsClipboardHTMLConverter_8h_source.html":[7,0,1,1,9,18],
 "MSWindowsClipboardTextConverter_8cpp.html":[7,0,1,1,9,19],
 "MSWindowsClipboardTextConverter_8h.html":[7,0,1,1,9,20],
 "MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20],
@@ -249,5 +239,15 @@ var NAVTREEINDEX3 =
 "OSXCocoaApp_8m.html#a6212aea94dc25a72a97d9530cb984ee8":[7,0,1,1,9,64,1],
 "OSXCocoaApp_8m.html#a805c087cd103a7a9b7e9d502bf722f95":[7,0,1,1,9,64,0],
 "OSXCocoaApp_8m.html#ad6e36ef3cf11ae31babd3a200e7445c7":[7,0,1,1,9,64,2],
-"OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65]
+"OSXEventQueueBuffer_8cpp.html":[7,0,1,1,9,65],
+"OSXEventQueueBuffer_8h.html":[7,0,1,1,9,66],
+"OSXEventQueueBuffer_8h_source.html":[7,0,1,1,9,66],
+"OSXHelpers_8h.html":[7,0,1,1,5,27],
+"OSXHelpers_8h.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,27,5],
+"OSXHelpers_8h.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,27,4],
+"OSXHelpers_8h.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,27,1],
+"OSXHelpers_8h.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,27,3],
+"OSXHelpers_8h.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,27,0],
+"OSXHelpers_8h.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,27,2],
+"OSXHelpers_8h_source.html":[7,0,1,1,5,27]
 };

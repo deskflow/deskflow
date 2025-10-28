@@ -1,35 +1,34 @@
 <map id="src/lib/gui/Action.h" name="src/lib/gui/Action.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="377,5,506,30"/>
-<area shape="rect" id="Node000002" href="$Action_8cpp.html" title=" " alt="" coords="209,78,352,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="402,39,308,80,306,75,400,34"/>
-<area shape="rect" id="Node000003" href="$Hotkey_8h.html" title=" " alt="" coords="376,78,508,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="444,46,444,78,439,78,439,46"/>
-<area shape="rect" id="Node000010" href="$ActionDialog_8cpp.html" title=" " alt="" coords="514,237,639,276"/>
-<area shape="poly" id="edge19_Node000001_Node000010" title=" " alt="" coords="479,36,502,54,523,76,546,118,562,163,577,237,572,238,557,164,541,121,518,80,498,58,475,41"/>
-<area shape="rect" id="Node000004" href="$Hotkey_8cpp.html" title=" " alt="" coords="187,158,334,182"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="402,112,289,160,287,155,400,107"/>
-<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="5,324,132,363"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="360,107,255,127,209,140,176,153,149,171,131,188,100,239,83,284,74,324,68,323,77,282,95,236,127,185,146,167,174,148,207,135,254,122,359,102"/>
-<area shape="rect" id="Node000006" href="$ServerConfig_8h.html" title=" " alt="" coords="358,151,475,189"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="436,118,425,151,420,149,431,117"/>
-<area shape="poly" id="edge15_Node000003_Node000010" title=" " alt="" coords="463,113,563,235,559,238,458,116"/>
-<area shape="rect" id="Node000013" href="$HotkeyDialog_8h.html" title=" " alt="" coords="666,151,788,189"/>
-<area shape="poly" id="edge16_Node000003_Node000013" title=" " alt="" coords="500,104,666,149,665,155,498,110"/>
-<area shape="poly" id="edge10_Node000006_Node000005" title=" " alt="" coords="344,192,283,201,234,204,190,214,167,224,141,239,119,258,102,281,78,325,73,322,97,278,115,255,138,235,164,219,188,209,234,199,282,196,343,187"/>
-<area shape="rect" id="Node000007" href="$MainWindow_8h.html" title=" " alt="" coords="151,244,317,269"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="363,199,260,246,258,241,361,194"/>
-<area shape="poly" id="edge11_Node000006_Node000010" title=" " alt="" coords="467,195,542,234,540,239,464,199"/>
-<area shape="rect" id="Node000011" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="340,237,490,276"/>
-<area shape="poly" id="edge12_Node000006_Node000011" title=" " alt="" coords="419,205,418,237,413,237,413,205"/>
-<area shape="poly" id="edge9_Node000007_Node000005" title=" " alt="" coords="199,279,106,326,104,321,197,274"/>
-<area shape="rect" id="Node000008" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="155,324,304,363"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="235,285,233,324,228,324,230,284"/>
-<area shape="rect" id="Node000009" href="$MainWindow_8cpp.html" title=" " alt="" coords="329,331,509,356"/>
-<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="274,273,395,328,392,333,272,278"/>
-<area shape="poly" id="edge13_Node000011_Node000009" title=" " alt="" coords="419,292,421,330,416,331,414,292"/>
-<area shape="rect" id="Node000012" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="642,324,805,363"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="499,278,656,321,654,326,498,283"/>
-<area shape="poly" id="edge18_Node000013_Node000012" title=" " alt="" coords="773,197,792,215,806,236,811,257,806,277,785,305,759,326,756,321,781,301,801,275,806,257,801,238,787,218,770,201"/>
-<area shape="rect" id="Node000014" href="$HotkeyDialog_8cpp.html" title=" " alt="" coords="663,237,791,276"/>
-<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="730,205,730,237,724,237,724,205"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="382,5,512,30"/>
+<area shape="rect" id="Node000002" href="$Action_8cpp.html" title=" " alt="" coords="214,78,358,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="408,39,314,80,311,75,405,34"/>
+<area shape="rect" id="Node000003" href="$Hotkey_8h.html" title=" " alt="" coords="381,78,513,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="450,46,450,78,444,78,444,46"/>
+<area shape="rect" id="Node000010" href="$ActionDialog_8cpp.html" title=" " alt="" coords="520,237,644,276"/>
+<area shape="poly" id="edge18_Node000001_Node000010" title=" " alt="" coords="484,36,507,54,528,76,551,118,567,163,582,237,577,238,562,164,546,121,524,80,504,58,481,41"/>
+<area shape="rect" id="Node000004" href="$Hotkey_8cpp.html" title=" " alt="" coords="193,158,339,182"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="407,112,294,160,292,155,405,107"/>
+<area shape="rect" id="Node000005" href="$ServerConfig_8cpp.html" title=" " alt="" coords="5,237,132,276"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="366,107,261,128,214,141,182,153,152,172,125,195,85,239,81,235,122,191,149,168,179,148,213,136,260,123,365,102"/>
+<area shape="rect" id="Node000006" href="$ServerConfig_8h.html" title=" " alt="" coords="364,151,480,189"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="441,118,430,151,425,149,436,117"/>
+<area shape="poly" id="edge14_Node000003_Node000010" title=" " alt="" coords="468,113,569,235,564,238,464,116"/>
+<area shape="rect" id="Node000013" href="$HotkeyDialog_8h.html" title=" " alt="" coords="621,151,743,189"/>
+<area shape="poly" id="edge15_Node000003_Node000013" title=" " alt="" coords="497,105,626,147,624,153,496,110"/>
+<area shape="poly" id="edge9_Node000006_Node000005" title=" " alt="" coords="349,193,145,240,133,243,131,238,144,235,348,187"/>
+<area shape="rect" id="Node000007" href="$MainWindow_8h.html" title=" " alt="" coords="156,244,322,269"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="369,199,266,246,263,241,367,194"/>
+<area shape="poly" id="edge10_Node000006_Node000010" title=" " alt="" coords="472,195,548,234,545,239,469,199"/>
+<area shape="rect" id="Node000011" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="346,237,495,276"/>
+<area shape="poly" id="edge11_Node000006_Node000011" title=" " alt="" coords="424,205,423,237,418,237,419,205"/>
+<area shape="rect" id="Node000008" href="$deskflow-gui_8cpp.html" title=" " alt="" coords="156,324,306,363"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="239,285,236,324,230,324,234,284"/>
+<area shape="rect" id="Node000009" href="$MainWindow_8cpp.html" title=" " alt="" coords="330,331,511,356"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="279,273,397,328,394,333,277,278"/>
+<area shape="poly" id="edge12_Node000011_Node000009" title=" " alt="" coords="423,292,423,330,418,330,418,292"/>
+<area shape="rect" id="Node000012" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="567,324,730,363"/>
+<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="486,279,599,321,597,326,484,284"/>
+<area shape="poly" id="edge17_Node000013_Node000012" title=" " alt="" coords="678,205,655,324,650,323,673,204"/>
+<area shape="rect" id="Node000014" href="$HotkeyDialog_8cpp.html" title=" " alt="" coords="719,237,847,276"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="718,198,762,235,759,239,714,202"/>
 </map>

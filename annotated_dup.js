@@ -70,7 +70,6 @@ var annotated_dup =
     [ "AboutDialog", "classAboutDialog.html", "classAboutDialog" ],
     [ "Action", "classAction.html", "classAction" ],
     [ "ActionDialog", "classActionDialog.html", "classActionDialog" ],
-    [ "AddClientDialog", "classAddClientDialog.html", "classAddClientDialog" ],
     [ "App", "classApp.html", "classApp" ],
     [ "AppUtil", "classAppUtil.html", "classAppUtil" ],
     [ "AppUtilUnix", "classAppUtilUnix.html", "classAppUtilUnix" ],
