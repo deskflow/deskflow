@@ -623,7 +623,6 @@ void SecureSocket::checkResult(int status, int &retry)
 void SecureSocket::disconnect()
 {
   using enum EventTypes;
-  sendEvent(SocketStopRetry);
   sendEvent(SocketDisconnected);
   sendEvent(StreamInputShutdown);
 }
