@@ -1,8 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetworkBSD.html#ac8bbe36665dc6b73991bd8dd39ffcaa9":[6,0,29,28],
-"classArchNetworkBSD.html#ad99ea432cc42071bbb6d5a326bfbb9b3":[6,0,29,13],
-"classArchNetworkBSD.html#ae5b6539f07671dc47f25d446871d7e6f":[6,0,29,17],
 "classArchNetworkBSD.html#ae8439afdb5ac2d66ba2e3b2d421db117":[6,0,29,29],
 "classArchNetworkBSD.html#aeb52011a89531d24d7c27c98df555ca3":[6,0,29,21],
 "classArchNetworkBSD.html#aee06c68fe434967b98355f51bdb09136":[6,0,29,12],
@@ -249,5 +246,8 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html":[6,0,63],
 "classClientProxy1__0.html#a03fad79eab152f04d9c880fcb983fd24":[6,0,63,17],
 "classClientProxy1__0.html#a08cc452a025a32154c91ba0eb9df2d7f":[6,0,63,34],
-"classClientProxy1__0.html#a10ef8e528b8552d7b58b5603b505d591":[6,0,63,23]
+"classClientProxy1__0.html#a10ef8e528b8552d7b58b5603b505d591":[6,0,63,23],
+"classClientProxy1__0.html#a12ecae1c64f4c7d68832e33b6e92544d":[6,0,63,28],
+"classClientProxy1__0.html#a226030ddedfebf922bd83d9c5280526e":[6,0,63,33],
+"classClientProxy1__0.html#a248e32a157bc16951235b9a53b8e078a":[6,0,63,9]
 };

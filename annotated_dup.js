@@ -147,7 +147,6 @@ var annotated_dup =
     [ "CoreArgParser", "classCoreArgParser.html", "classCoreArgParser" ],
     [ "CoreArgs", "structCoreArgs.html", "structCoreArgs" ],
     [ "DaemonApp", "classDaemonApp.html", "classDaemonApp" ],
-    [ "DataDownloader", "classDataDownloader.html", "classDataDownloader" ],
     [ "DeskflowException", "classDeskflowException.html", null ],
     [ "DisplayInvalidException", "classDisplayInvalidException.html", null ],
     [ "DuplicateClientException", "classDuplicateClientException.html", "classDuplicateClientException" ],

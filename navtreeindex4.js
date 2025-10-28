@@ -1,12 +1,9 @@
 var NAVTREEINDEX4 =
 {
-"OSXHelpers_8mm.html":[7,0,1,1,5,28],
-"OSXHelpers_8mm.html#a408b2ffe3740e072f33eb2654b08e66a":[7,0,1,1,5,28,5],
-"OSXHelpers_8mm.html#a5c480918d5a448353e2aeda2c7349d9a":[7,0,1,1,5,28,4],
-"OSXHelpers_8mm.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,28,1],
-"OSXHelpers_8mm.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,28,3],
-"OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,28,0],
-"OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,28,2],
+"OSXHelpers_8mm.html#a650eae713cc343fb13031814321f6dd7":[7,0,1,1,5,26,1],
+"OSXHelpers_8mm.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,26,3],
+"OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,26,0],
+"OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,26,2],
 "OSXKeyState_8cpp.html":[7,0,1,1,9,67],
 "OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,67,6],
 "OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,67,3],
@@ -177,9 +174,9 @@ var NAVTREEINDEX4 =
 "ScreenSettingsDialog_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,2,8,1],
 "ScreenSettingsDialog_8h.html":[7,0,1,1,5,2,9],
 "ScreenSettingsDialog_8h_source.html":[7,0,1,1,5,2,9],
-"ScreenSetupModel_8cpp.html":[7,0,1,1,5,29],
-"ScreenSetupModel_8h.html":[7,0,1,1,5,30],
-"ScreenSetupModel_8h_source.html":[7,0,1,1,5,30],
+"ScreenSetupModel_8cpp.html":[7,0,1,1,5,27],
+"ScreenSetupModel_8h.html":[7,0,1,1,5,28],
+"ScreenSetupModel_8h_source.html":[7,0,1,1,5,28],
 "ScreenSetupView_8cpp.html":[7,0,1,1,5,6,10],
 "ScreenSetupView_8h.html":[7,0,1,1,5,6,11],
 "ScreenSetupView_8h_source.html":[7,0,1,1,5,6,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "SettingsDialog_8h_source.html":[7,0,1,1,5,2,13],
 "Settings_8cpp.html":[7,0,1,1,3,6],
 "Settings_8h.html":[7,0,1,1,3,7],
-"Settings_8h_source.html":[7,0,1,1,3,7]
+"Settings_8h_source.html":[7,0,1,1,3,7],
+"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,26],
+"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,27],
+"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,27]
 };

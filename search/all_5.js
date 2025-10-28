@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['cancel_0',['cancel',['../classDataDownloader.html#a72548c08228ca2d77d21ada3bdd8e83e',1,'DataDownloader::cancel()'],['../classThread.html#ab5f1ec60a122d14701747fd96daeff61',1,'Thread::cancel()']]],
+  ['cancel_0',['cancel',['../classThread.html#ab5f1ec60a122d14701747fd96daeff61',1,'Thread']]],
   ['cancelthread_1',['cancelThread',['../classIArchMultithread.html#af273bf7f0b396b59063040613d3b2d3f',1,'IArchMultithread::cancelThread()'],['../classArchMultithreadPosix.html#a503f5e77640634e5bcd66093a3cdbc03',1,'ArchMultithreadPosix::cancelThread()'],['../classArchMultithreadWindows.html#ae92d57cad6ffab38d336b5159dd9a8ed',1,'ArchMultithreadWindows::cancelThread()']]],
   ['canleave_2',['canLeave',['../classIPlatformScreen.html#a3893b318acf4129cb0961d1a5bc46ea1',1,'IPlatformScreen::canLeave()'],['../classPlatformScreen.html#af1f24d0dd3a6351567e323a99e94340c',1,'PlatformScreen::canLeave()'],['../classdeskflow_1_1EiScreen.html#ab52c25fbce6bb6b8ff8794e5a264f81a',1,'deskflow::EiScreen::canLeave()'],['../classMSWindowsScreen.html#a273da90310ba50e63e3654f8c6a83602',1,'MSWindowsScreen::canLeave()'],['../classOSXScreen.html#a25a6221c6eb475b644f101abd3e28f84',1,'OSXScreen::canLeave()'],['../classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086',1,'XWindowsScreen::canLeave()']]],
   ['capslock_3',['CapsLock',['../classScreenConfig.html#a9288122eb9f01fe71828c89207035bb5a8d0f4171170104d094d8b6d4f8bf49e6',1,'ScreenConfig']]],

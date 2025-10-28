@@ -1,8 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"SimpleEventQueueBuffer_8cpp.html":[7,0,1,1,1,26],
-"SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,27],
-"SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,27],
 "SocketException_8cpp.html":[7,0,1,1,8,19],
 "SocketException_8h.html":[7,0,1,1,8,20],
 "SocketException_8h_source.html":[7,0,1,1,8,20],
@@ -31,10 +28,10 @@ var NAVTREEINDEX5 =
 "String_8cpp.html":[7,0,1,1,1,30],
 "String_8h.html":[7,0,1,1,1,31],
 "String_8h_source.html":[7,0,1,1,1,31],
-"StyleUtils_8h.html":[7,0,1,1,5,32],
-"StyleUtils_8h_source.html":[7,0,1,1,5,32],
-"Styles_8h.html":[7,0,1,1,5,31],
-"Styles_8h_source.html":[7,0,1,1,5,31],
+"StyleUtils_8h.html":[7,0,1,1,5,30],
+"StyleUtils_8h_source.html":[7,0,1,1,5,30],
+"Styles_8h.html":[7,0,1,1,5,29],
+"Styles_8h_source.html":[7,0,1,1,5,29],
 "TCPListenSocket_8cpp.html":[7,0,1,1,8,25],
 "TCPListenSocket_8h.html":[7,0,1,1,8,26],
 "TCPListenSocket_8h_source.html":[7,0,1,1,8,26],
@@ -81,9 +78,9 @@ var NAVTREEINDEX5 =
 "ValidationError_8cpp.html":[7,0,1,1,5,5,18],
 "ValidationError_8h.html":[7,0,1,1,5,5,19],
 "ValidationError_8h_source.html":[7,0,1,1,5,5,19],
-"VersionChecker_8cpp.html":[7,0,1,1,5,33],
-"VersionChecker_8h.html":[7,0,1,1,5,34],
-"VersionChecker_8h_source.html":[7,0,1,1,5,34],
+"VersionChecker_8cpp.html":[7,0,1,1,5,31],
+"VersionChecker_8h.html":[7,0,1,1,5,32],
+"VersionChecker_8h_source.html":[7,0,1,1,5,32],
 "WaylandWarnings_8cpp.html":[7,0,1,1,5,1,10],
 "WaylandWarnings_8h.html":[7,0,1,1,5,1,11],
 "WaylandWarnings_8h_source.html":[7,0,1,1,5,1,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX5 =
 "classAction.html#aee86ab819c6de33f9dd59bd45b3d2756":[6,0,4,17],
 "classAction.html#aeee2415954f8158ef9aee75fa0c7426e":[6,0,4,11],
 "classActionDialog.html":[6,0,5],
-"classActionDialog.html#a262d9d0da1335c5ebee603364464e921":[6,0,5,1]
+"classActionDialog.html#a262d9d0da1335c5ebee603364464e921":[6,0,5,1],
+"classActionDialog.html#aa6760e0b0e044ac9d0c4cf73c0a1e2af":[6,0,5,2],
+"classActionDialog.html#ac5baa7b5531578d891ad24163818d421":[6,0,5,3],
+"classApp.html":[6,0,6]
 };

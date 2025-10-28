@@ -246,8 +246,8 @@ var NAVTREEINDEX0 =
 "DaemonIpcServer_8cpp.html":[7,0,1,1,4,0,0],
 "DaemonIpcServer_8h.html":[7,0,1,1,4,0,1],
 "DaemonIpcServer_8h_source.html":[7,0,1,1,4,0,1],
-"DataDownloader_8cpp.html":[7,0,1,1,5,9],
-"DataDownloader_8h.html":[7,0,1,1,5,10],
-"DataDownloader_8h_source.html":[7,0,1,1,5,10],
-"DeskflowException_8cpp.html":[7,0,1,1,4,19]
+"DeskflowException_8cpp.html":[7,0,1,1,4,19],
+"DeskflowException_8h.html":[7,0,1,1,4,20],
+"DeskflowException_8h_source.html":[7,0,1,1,4,20],
+"DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2]
 };

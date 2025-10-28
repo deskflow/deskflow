@@ -9,8 +9,6 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "widgets", "dir_f4d7a2d7e0cddc98a37df9ffb775e48b.html", "dir_f4d7a2d7e0cddc98a37df9ffb775e48b" ],
     [ "Action.cpp", "Action_8cpp.html", "Action_8cpp" ],
     [ "Action.h", "Action_8h.html", "Action_8h" ],
-    [ "DataDownloader.cpp", "DataDownloader_8cpp.html", null ],
-    [ "DataDownloader.h", "DataDownloader_8h.html", "DataDownloader_8h" ],
     [ "Diagnostic.cpp", "Diagnostic_8cpp.html", "Diagnostic_8cpp" ],
     [ "Diagnostic.h", "Diagnostic_8h.html", "Diagnostic_8h" ],
     [ "DotEnv.cpp", "DotEnv_8cpp.html", "DotEnv_8cpp" ],

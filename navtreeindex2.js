@@ -1,8 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a32ef4b8c6fd9636322655e4376cbc8ef":[7,0,1,1,4,40,18],
-"KeyTypes_8h.html#a332f60e50a590fdd1418b764c6ca12fc":[7,0,1,1,4,40,89],
-"KeyTypes_8h.html#a3677df24ef58651d9677f338ecc83533":[7,0,1,1,4,40,66],
 "KeyTypes_8h.html#a375c062c48f1e029279c21616d1b9acd":[7,0,1,1,4,40,87],
 "KeyTypes_8h.html#a3ad809f4722dc4a7fa806c52b33605b7":[7,0,1,1,4,40,192],
 "KeyTypes_8h.html#a3b8cbd45144fedc531e9dc40c3499846":[7,0,1,1,4,40,149],
@@ -234,10 +231,10 @@ var NAVTREEINDEX2 =
 "Log_8h.html#ae540a914cab70d94fb4963a03cd4f363":[7,0,1,1,1,18,3],
 "Log_8h.html#af52757c9a0c7c30092d48fc12f5e68d5":[7,0,1,1,1,18,22],
 "Log_8h_source.html":[7,0,1,1,1,18],
-"Logger_8cpp.html":[7,0,1,1,5,21],
-"Logger_8h.html":[7,0,1,1,5,22],
-"Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,22,2],
-"Logger_8h_source.html":[7,0,1,1,5,22],
+"Logger_8cpp.html":[7,0,1,1,5,19],
+"Logger_8h.html":[7,0,1,1,5,20],
+"Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,20,2],
+"Logger_8h_source.html":[7,0,1,1,5,20],
 "MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
 "MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
 "MSWindowsClipboardAnyTextConverter_8h_source.html":[7,0,1,1,9,12],
@@ -249,5 +246,8 @@ var NAVTREEINDEX2 =
 "MSWindowsClipboardFacade_8h_source.html":[7,0,1,1,9,16],
 "MSWindowsClipboardHTMLConverter_8cpp.html":[7,0,1,1,9,17],
 "MSWindowsClipboardHTMLConverter_8h.html":[7,0,1,1,9,18],
-"MSWindowsClipboardHTMLConverter_8h_source.html":[7,0,1,1,9,18]
+"MSWindowsClipboardHTMLConverter_8h_source.html":[7,0,1,1,9,18],
+"MSWindowsClipboardTextConverter_8cpp.html":[7,0,1,1,9,19],
+"MSWindowsClipboardTextConverter_8h.html":[7,0,1,1,9,20],
+"MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20]
 };
