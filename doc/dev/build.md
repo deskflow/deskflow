@@ -31,6 +31,7 @@ CMake options:
 | SKIP_BUILD_TESTS         | Skip running of tests at build time     | OFF                | |
 | VCPKG_QT                 | Build Qt w/ vcpkg (windows only)        | OFF                | |
 | CLEAN_TRS                | Remove obsolete strings from tr files   | OFF                | |
+| APPLE_CODESIGN_DEV       | Apple codesign cert ID for development  | Not set            | | 
 
 Example cmake configuration.
 `cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=<INSTALLPREFIX>`
@@ -53,6 +54,24 @@ Example cmake configuration.
  1. Add the option `-DVCPKG_QT=ON` to your cmake configuration command (i.e `cmake -S. -Bbuild -DVCPKG_QT=ON ...`) or if using an IDE, look for the option where you configure the project, have the IDE run cmake again.
  2. Once the configuration starts, you should see a lot more packages vcpkg will build. Building Qt takes a long time (potentially hours), so go find something else to do for a while.
  3. If you want to use the system Qt again, you must delete the `vcpkg.json` generated in the project root and the `build` folder and reconfigure the project from scratch.
+
+
+### macOS codesign
+
+The code signing option `APPLE_CODESIGN_DEV` is only for local development and not intended for distributed bundles. 
+
+Signing for local development and signing for the distribution bundle must be different because of development entitlements which are unlikely to be safe for use in production. It is impractical (i.e. very slow and cumbersome) to use the distribution bundle for local development. When developing locally, the app bundle is partial and does not contain dependencies and uses external libs, e.g. installed with Homebrew; the entitlements allow those external libs to be loaded which is not allowed by default.
+
+For development codesign:
+
+1. Install Xcode
+2. Go to Settings -> Accounts
+3. Add your account (requires a free Apple Developer ID)
+4. Manage certificates -> Add -> Apple Development
+5. To get your ID, run: `security find-identity -v -p codesigning login.keychain-db`
+6. Pass the ID to CMake, e.g. `-DAPPLE_CODESIGN_DEV=Apple Development: bob@exmaple.com (KLGSJHLFXY)`
+7. Configure and build
+8. To verify, run: `codesign -d -r- build/bin/Deskflow.app`
 
 ## Build
 After configuring you should be able to run make to build all targets.
