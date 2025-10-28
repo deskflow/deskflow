@@ -25,12 +25,12 @@ I18N *I18N::instance()
 I18N::I18N(QObject *parent) : QObject{parent}
 {
   const QList<QDir> appTrDirs{
-      QDir(QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))),
-      QDir(QStringLiteral("%1/../translations").arg(QCoreApplication::applicationDirPath())),
-      QDir(QStringLiteral("%1/../share/%2/translations").arg(QCoreApplication::applicationDirPath(), kAppId)),
-      QDir(QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), kAppId)),
-      QDir(QStringLiteral("/usr/local/share/%1/translations").arg(kAppId)),
-      QDir(QStringLiteral("/usr/share/%1/translations").arg(kAppId))
+      {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
+      {QStringLiteral("%1/../translations").arg(QCoreApplication::applicationDirPath())},
+      {QStringLiteral("%1/../share/%2/translations").arg(QCoreApplication::applicationDirPath(), kAppId)},
+      {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), kAppId)},
+      {QStringLiteral("/usr/local/share/%1/translations").arg(kAppId)},
+      {QStringLiteral("/usr/share/%1/translations").arg(kAppId)}
   };
   const QStringList appTrFilter{QStringLiteral("%1*.qm").arg(kAppId)};
 
@@ -46,12 +46,12 @@ I18N::I18N(QObject *parent) : QObject{parent}
   }
 
   const QList<QDir> qtTrDirs{
-      QDir(QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))),
-      QDir(QStringLiteral("%1/../qt-depends/translations").arg(QCoreApplication::applicationDirPath())),
-      QDir(QStringLiteral("%1/../share/qt/translations").arg(QCoreApplication::applicationDirPath())),
-      QDir(QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), QStringLiteral("qt"))),
-      QDir(QStringLiteral("/usr/local/share/qt/translations")),
-      QDir(QStringLiteral("/usr/share/qt/translations"))
+      {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
+      {QStringLiteral("%1/../qt-depends/translations").arg(QCoreApplication::applicationDirPath())},
+      {QStringLiteral("%1/../share/qt/translations").arg(QCoreApplication::applicationDirPath())},
+      {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), QStringLiteral("qt"))},
+      {QStringLiteral("/usr/local/share/qt/translations")},
+      {QStringLiteral("/usr/share/qt/translations")}
   };
   const QStringList qtTrFilter{QStringLiteral("qt_*.qm")};
 
