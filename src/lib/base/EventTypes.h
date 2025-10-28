@@ -86,9 +86,6 @@ enum class EventTypes : uint32_t
   */
   SocketDisconnected,
 
-  /// This is sent when the client doesn't want to reconnect after it disconnects from the server.
-  SocketStopRetry,
-
   OsxScreenConfirmSleep,
 
   /// This event is sent whenever a server accepts a client.
