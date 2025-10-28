@@ -8,7 +8,7 @@ set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 install(CODE "execute_process(COMMAND
   ${DEPLOYQT}
   \"\${CMAKE_INSTALL_PREFIX}/${CMAKE_PROJECT_PROPER_NAME}.app\"
-  -timestamp -codesign=-
+  -timestamp -codesign=.
 )")
 
 set(OS_STRING "macos-${BUILD_ARCHITECTURE}")
