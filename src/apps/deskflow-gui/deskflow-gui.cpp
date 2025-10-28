@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
   QApplication app(argc, argv);
 
   // Ensure the I18N object is made before strings
-  QTextStream(stdout) << "initial language: " << I18N::currentLanguage();
+  QTextStream(stdout) << "initial language: " << I18N::currentLanguage() << '\n';
 
   // Add Command Line Options
   auto helpOption = QCommandLineOption({"h", "help"}, "Display Help on the command line");
