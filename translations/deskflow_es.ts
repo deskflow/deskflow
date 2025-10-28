@@ -484,6 +484,11 @@ Do you want to connect to the server?
         <translation type="unfinished">%1 está desconectado</translation>
     </message>
     <message>
+        <source>Ctrl+Q</source>
+        <extracomment>Quit shortcut</extracomment>
+        <translation type="unfinished">Ctrl+Q</translation>
+    </message>
+    <message>
         <source>Invalid Screen Name</source>
         <translation type="unfinished">Nombre de pantalla no válido</translation>
     </message>
