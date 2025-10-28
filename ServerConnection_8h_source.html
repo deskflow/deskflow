@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.166</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.172</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,25 +136,26 @@ $(function(){initNavTree('ServerConnection_8h_source.html','',''); });
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  }</div>
 </div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>Q_SIGNALS:</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f">   39</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f">messageShowing</a>();</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478">   40</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478">configureClient</a>(<span class="keyword">const</span> QString &amp;clientName);</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114">   41</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114">clientsChanged</a>(<span class="keyword">const</span> QStringList &amp;clients);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> handleNewClient(<span class="keyword">const</span> QString &amp;clientName);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  QStringList connectedClients() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  QWidget *m_pParent;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  IServerConfig &amp;m_serverConfig;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  std::shared_ptr&lt;Deps&gt; m_pDeps;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  QSet&lt;QString&gt; m_connectedClients;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keywordtype">bool</span> m_messageShowing = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">bool</span> m_serverConfigDialogVisible = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  QStringList <a class="code hl_function" href="classdeskflow_1_1gui_1_1ServerConnection.html#aa1f9ad768905ca794b34e8b4f5131bd8">connectedClients</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>Q_SIGNALS:</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f">   41</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f">messageShowing</a>();</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478">   42</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478">configureClient</a>(<span class="keyword">const</span> QString &amp;clientName);</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114">   43</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114">clientsChanged</a>(<span class="keyword">const</span> QStringList &amp;clients);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> handleNewClient(<span class="keyword">const</span> QString &amp;clientName);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  QWidget *m_pParent;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  IServerConfig &amp;m_serverConfig;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  std::shared_ptr&lt;Deps&gt; m_pDeps;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  QSet&lt;QString&gt; m_connectedClients;</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">bool</span> m_messageShowing = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordtype">bool</span> m_serverConfigDialogVisible = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
 </div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace deskflow::gui</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace deskflow::gui</span></div>
 <div class="ttc" id="aIServerConfig_8h_html"><div class="ttname"><a href="IServerConfig_8h.html">IServerConfig.h</a></div></div>
 <div class="ttc" id="aMessages_8h_html"><div class="ttname"><a href="Messages_8h.html">Messages.h</a></div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1IServerConfig_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1IServerConfig.html">deskflow::gui::IServerConfig</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:18</div></div>
@@ -163,6 +164,7 @@ $(function(){initNavTree('ServerConnection_8h_source.html','',''); });
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ServerConnection_html_a420b4d8bb63c4f81f85e3de84f01a622"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ServerConnection.html#a420b4d8bb63c4f81f85e3de84f01a622">deskflow::gui::ServerConnection::ServerConnection</a></div><div class="ttdeci">ServerConnection(QWidget *parent, IServerConfig &amp;serverConfig, std::shared_ptr&lt; Deps &gt; deps=std::make_shared&lt; Deps &gt;())</div><div class="ttdef"><b>Definition</b> ServerConnection.cpp:33</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ServerConnection_html_a4485d9788a449269027f4e6bc3c67478"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ServerConnection.html#a4485d9788a449269027f4e6bc3c67478">deskflow::gui::ServerConnection::configureClient</a></div><div class="ttdeci">void configureClient(const QString &amp;clientName)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ServerConnection_html_a8ac722543ec953b4bf81e1e6a3b03114"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ServerConnection.html#a8ac722543ec953b4bf81e1e6a3b03114">deskflow::gui::ServerConnection::clientsChanged</a></div><div class="ttdeci">void clientsChanged(const QStringList &amp;clients)</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ServerConnection_html_aa1f9ad768905ca794b34e8b4f5131bd8"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ServerConnection.html#aa1f9ad768905ca794b34e8b4f5131bd8">deskflow::gui::ServerConnection::connectedClients</a></div><div class="ttdeci">QStringList connectedClients() const</div><div class="ttdef"><b>Definition</b> ServerConnection.cpp:119</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ServerConnection_html_af9c432f6c45b658ccb33a4ee562fb91f"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f">deskflow::gui::ServerConnection::messageShowing</a></div><div class="ttdeci">void messageShowing()</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_1_1messages_html_a4de26c6acbb3e0263d856efb3b061c1c"><div class="ttname"><a href="namespacedeskflow_1_1gui_1_1messages.html#a4de26c6acbb3e0263d856efb3b061c1c">deskflow::gui::messages::NewClientPromptResult</a></div><div class="ttdeci">NewClientPromptResult</div><div class="ttdef"><b>Definition</b> Messages.h:24</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>

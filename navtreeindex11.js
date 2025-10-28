@@ -124,9 +124,10 @@ var NAVTREEINDEX11 =
 "classLog.html#aebe9467118266e13cb73b43bf3f0e680":[6,0,143,15],
 "classLogDock.html":[6,0,144],
 "classLogDock.html#a7956f1ab9644484afbc97cb5baf7e3cc":[6,0,144,1],
-"classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb":[6,0,144,2],
+"classLogDock.html#a914ba53e5b0cd56dd134a55a372f0dbb":[6,0,144,3],
+"classLogDock.html#aa4d03ff49cdfc1644d7ef4b568cc303b":[6,0,144,2],
 "classLogDock.html#ae195a05f4d0679325b19489c8e120d17":[6,0,144,0],
-"classLogDock.html#afc732c157993b0f116694ae2a020deb6":[6,0,144,3],
+"classLogDock.html#afc732c157993b0f116694ae2a020deb6":[6,0,144,4],
 "classLogWidget.html":[6,0,145],
 "classLogWidget.html#a46782c113d9636b91dec16c178cd40ea":[6,0,145,1],
 "classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e":[6,0,145,0],
@@ -248,6 +249,5 @@ var NAVTREEINDEX11 =
 "classMSWindowsKeyState.html#a285557e909d9347fdba074e5ccb17945":[6,0,159,5],
 "classMSWindowsKeyState.html#a29080751ba8d315a6a7a808ff92c83df":[6,0,159,3],
 "classMSWindowsKeyState.html#a2c5709d3ad76370415ba9e338fb0003e":[6,0,159,2],
-"classMSWindowsKeyState.html#a3a1aa0cbfeb20c38dd0cd7236a797556":[6,0,159,0],
-"classMSWindowsKeyState.html#a53d139936a5fc8fa7dd7c1c06c688474":[6,0,159,21]
+"classMSWindowsKeyState.html#a3a1aa0cbfeb20c38dd0cd7236a797556":[6,0,159,0]
 };

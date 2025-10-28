@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classServer_1_1ScreenConnectedInfo.html":[6,0,204,3],
 "classServer_1_1ScreenConnectedInfo.html#a4263279f66994b988a62d759b72c4ad6":[6,0,204,3,1],
 "classServer_1_1ScreenConnectedInfo.html#ae2552930570dc1cffc65b473ba5b0659":[6,0,204,3,0],
 "classServer_1_1SwitchInDirectionInfo.html":[6,0,204,2],
@@ -43,10 +44,11 @@ var NAVTREEINDEX15 =
 "classSettings.html#ae9e80e06caddd4c619dc286848b1f187":[6,0,209,13],
 "classSettings.html#afd0a8dbda15587467729da0b489dd97d":[6,0,209,21],
 "classSettingsDialog.html":[6,0,210],
-"classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,210,2],
+"classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,210,3],
 "classSettingsDialog.html#a45cdb6ea744257215afd5fed9d9030e0":[6,0,210,0],
-"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,3],
+"classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,210,4],
 "classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,210,1],
+"classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,210,2],
 "classSimpleEventQueueBuffer.html":[6,0,211],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,211,10],
 "classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,211,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX15 =
 "classThread.html":[6,0,233],
 "classThread.html#a01061ad89e5cd91c126e0e24ba6085cb":[6,0,233,0],
 "classThread.html#a17bbcef542a2eeae36b3f15db6fbc5af":[6,0,233,1],
-"classThread.html#a37d9edd3a1a776cbc27dedff949c9726":[6,0,233,2],
-"classThread.html#a3bc7f9f6557f62734432d1421525cf68":[6,0,233,4],
-"classThread.html#a6b6aa2f3fce1de502a56129355cc5cf4":[6,0,233,12]
+"classThread.html#a37d9edd3a1a776cbc27dedff949c9726":[6,0,233,2]
 };
