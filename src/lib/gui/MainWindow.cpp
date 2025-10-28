@@ -62,7 +62,6 @@ using CoreProcessState = CoreProcess::ProcessState;
 
 MainWindow::MainWindow()
     : ui{std::make_unique<Ui::MainWindow>()},
-      m_serverConfig(),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
