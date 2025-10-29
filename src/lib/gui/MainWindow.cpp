@@ -753,8 +753,16 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setTrayIcon()
 {
-  static const auto themeIcon = QStringLiteral("%1-symbolic").arg(kRevFqdnName);
   static const auto fallbackPath = QStringLiteral(":/icons/%1-%2/apps/64/%3");
+
+  QString themeIcon = kRevFqdnName;
+  if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
+    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
+    return;
+  }
+
+  themeIcon.append(QStringLiteral("-symbolic"));
+
 #ifdef Q_OS_WIN
   QSettings settings(
       QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),

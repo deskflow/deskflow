@@ -69,6 +69,7 @@ public:
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
+    inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
     inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
   };
@@ -189,6 +190,7 @@ private:
     , Settings::Gui::CloseReminder
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded
+    , Settings::Gui::SymbolicTrayIcon
     , Settings::Gui::WindowGeometry
     , Settings::Gui::ShowGenericClientFailureDialog
     , Settings::Security::Certificate

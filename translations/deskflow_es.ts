@@ -1080,6 +1080,18 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation type="unfinished">Dejar la aplicación ejecutándose en el área de notificación cuando la ventana esté cerrada</translation>
     </message>
     <message>
+        <source>Tray icon style</source>
+        <translation type="unfinished">Estilo de icono de bandeja</translation>
+    </message>
+    <message>
+        <source>Colorful</source>
+        <translation type="unfinished">Vistoso</translation>
+    </message>
+    <message>
+        <source>Monocolor</source>
+        <translation type="unfinished">Monocolor</translation>
+    </message>
+    <message>
         <source>Enable TLS Encryption</source>
         <translation type="unfinished">Habilitar el cifrado TLS</translation>
     </message>
