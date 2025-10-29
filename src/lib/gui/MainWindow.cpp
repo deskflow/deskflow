@@ -755,6 +755,10 @@ void MainWindow::setTrayIcon()
 {
   QString iconString = kRevFqdnName;
 
+  if (deskflow::platform::isSandboxed()) {
+    iconString = QStringLiteral(":/icons/%1-%2/apps/64/%3").arg(kAppId, iconMode(), kRevFqdnName);
+  }
+
   if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
     m_trayIcon->setIcon(QIcon::fromTheme(iconString));
     return;
