@@ -44,9 +44,6 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
   ui->lblTlsCertInfo->setFixedSize(28, 28);
 
-  ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("%1-symbolic").arg(kRevFqdnName)));
-  ui->rbIconColorful->setIcon(QIcon::fromTheme(kRevFqdnName));
-
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   ui->tabWidget->setCurrentIndex(0);
@@ -173,7 +170,6 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Client::LanguageSync, ui->cbLanguageSync->isChecked());
   Settings::setValue(Settings::Client::InvertScrollDirection, ui->cbScrollDirection->isChecked());
   Settings::setValue(Settings::Gui::CloseToTray, ui->cbCloseToTray->isChecked());
-  Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
   Settings::setValue(Settings::Client::ScrollSpeed, ui->sbScrollSpeed->value());
   Settings::setValue(Settings::Core::Language, ui->comboLanguage->currentText());
@@ -210,11 +206,6 @@ void SettingsDialog::loadFromConfig()
 #ifndef Q_OS_WIN
   ui->groupService->setVisible(false);
 #endif
-
-  if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
-    ui->rbIconMono->setChecked(true);
-  else
-    ui->rbIconColorful->setChecked(true);
 
   ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 4);
 

@@ -115,8 +115,8 @@ QVariant Settings::defaultValue(const QString &key)
   }
 
   if ((key == Core::UseHooks) || (key == Gui::CloseToTray) || (key == Gui::LogExpanded) ||
-      (key == Gui::SymbolicTrayIcon) || (key == Gui::CloseReminder) || (key == Security::TlsEnabled) ||
-      (key == Security::CheckPeers) || (key == Client::LanguageSync) || (key == Gui::ShowGenericClientFailureDialog)) {
+      (key == Gui::CloseReminder) || (key == Security::TlsEnabled) || (key == Security::CheckPeers) ||
+      (key == Client::LanguageSync) || (key == Gui::ShowGenericClientFailureDialog)) {
     return true;
   }
 
