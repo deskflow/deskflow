@@ -32,56 +32,57 @@ var NAVTREE =
             [ "System Qt", "md_doc_2dev_2build.html#autotoc_md4", null ],
             [ "Vcpkg managed Qt", "md_doc_2dev_2build.html#autotoc_md5", null ]
           ] ]
-        ] ]
+        ] ],
+        [ "macOS codesign", "md_doc_2dev_2build.html#autotoc_md6", null ]
       ] ],
-      [ "Build", "md_doc_2dev_2build.html#autotoc_md6", null ],
-      [ "Install", "md_doc_2dev_2build.html#autotoc_md7", null ],
-      [ "Making Deskflow packages", "md_doc_2dev_2build.html#autotoc_md8", null ]
+      [ "Build", "md_doc_2dev_2build.html#autotoc_md7", null ],
+      [ "Install", "md_doc_2dev_2build.html#autotoc_md8", null ],
+      [ "Making Deskflow packages", "md_doc_2dev_2build.html#autotoc_md9", null ]
     ] ],
     [ "Contributing to Deskflow", "contributing_guide.html", [
-      [ "Read the Full Guidelines", "contributing_guide.html#autotoc_md9", null ]
+      [ "Read the Full Guidelines", "contributing_guide.html#autotoc_md10", null ]
     ] ],
     [ "Protocol Reference", "protocol_reference.html", [
-      [ "Protocol Overview", "protocol_reference.html#autotoc_md12", [
-        [ "Key Implementation Files", "protocol_reference.html#autotoc_md13", null ]
+      [ "Protocol Overview", "protocol_reference.html#autotoc_md13", [
+        [ "Key Implementation Files", "protocol_reference.html#autotoc_md14", null ]
       ] ],
-      [ "Protocol Architecture", "protocol_reference.html#autotoc_md14", null ],
-      [ "Protocol State Machine", "protocol_reference.html#autotoc_md15", [
-        [ "State Descriptions", "protocol_reference.html#autotoc_md16", null ]
+      [ "Protocol Architecture", "protocol_reference.html#autotoc_md15", null ],
+      [ "Protocol State Machine", "protocol_reference.html#autotoc_md16", [
+        [ "State Descriptions", "protocol_reference.html#autotoc_md17", null ]
       ] ],
-      [ "Message Categories", "protocol_reference.html#autotoc_md17", null ],
-      [ "Message Reference Table", "protocol_reference.html#autotoc_md18", null ],
-      [ "Typical Control Flow", "protocol_reference.html#autotoc_md19", null ],
-      [ "Protocol Constraints", "protocol_reference.html#autotoc_md20", [
-        [ "Message and Data Size Limits", "protocol_reference.html#autotoc_md21", null ],
-        [ "TLS Handshake and Security (Protocol v1.4+)", "protocol_reference.html#autotoc_md22", null ],
-        [ "Key Code and Modifier Mapping", "protocol_reference.html#autotoc_md23", null ]
+      [ "Message Categories", "protocol_reference.html#autotoc_md18", null ],
+      [ "Message Reference Table", "protocol_reference.html#autotoc_md19", null ],
+      [ "Typical Control Flow", "protocol_reference.html#autotoc_md20", null ],
+      [ "Protocol Constraints", "protocol_reference.html#autotoc_md21", [
+        [ "Message and Data Size Limits", "protocol_reference.html#autotoc_md22", null ],
+        [ "TLS Handshake and Security (Protocol v1.4+)", "protocol_reference.html#autotoc_md23", null ],
+        [ "Key Code and Modifier Mapping", "protocol_reference.html#autotoc_md24", null ]
       ] ],
-      [ "Timing and Synchronization", "protocol_reference.html#autotoc_md24", [
-        [ "Keep-Alive Mechanism (Protocol v1.3+)", "protocol_reference.html#autotoc_md25", null ],
-        [ "Synchronization on Screen Entry", "protocol_reference.html#autotoc_md26", null ],
-        [ "Handshake Timeout", "protocol_reference.html#autotoc_md27", null ]
+      [ "Timing and Synchronization", "protocol_reference.html#autotoc_md25", [
+        [ "Keep-Alive Mechanism (Protocol v1.3+)", "protocol_reference.html#autotoc_md26", null ],
+        [ "Synchronization on Screen Entry", "protocol_reference.html#autotoc_md27", null ],
+        [ "Handshake Timeout", "protocol_reference.html#autotoc_md28", null ]
       ] ],
-      [ "Version Compatibility", "protocol_reference.html#autotoc_md28", [
-        [ "Version Migration Guide", "protocol_reference.html#autotoc_md29", null ]
+      [ "Version Compatibility", "protocol_reference.html#autotoc_md29", [
+        [ "Version Migration Guide", "protocol_reference.html#autotoc_md30", null ]
       ] ],
-      [ "Implementation Examples", "protocol_reference.html#autotoc_md30", [
-        [ "Connection Lifecycle", "protocol_reference.html#autotoc_md31", null ],
-        [ "Message Handling", "protocol_reference.html#autotoc_md32", null ],
-        [ "Complete Message Exchange Sequence", "protocol_reference.html#autotoc_md33", null ]
+      [ "Implementation Examples", "protocol_reference.html#autotoc_md31", [
+        [ "Connection Lifecycle", "protocol_reference.html#autotoc_md32", null ],
+        [ "Message Handling", "protocol_reference.html#autotoc_md33", null ],
+        [ "Complete Message Exchange Sequence", "protocol_reference.html#autotoc_md34", null ]
       ] ],
-      [ "Debugging and Troubleshooting", "protocol_reference.html#autotoc_md34", [
-        [ "Common Issues", "protocol_reference.html#autotoc_md35", null ],
-        [ "Debug Tools", "protocol_reference.html#autotoc_md36", null ]
+      [ "Debugging and Troubleshooting", "protocol_reference.html#autotoc_md35", [
+        [ "Common Issues", "protocol_reference.html#autotoc_md36", null ],
+        [ "Debug Tools", "protocol_reference.html#autotoc_md37", null ]
       ] ],
-      [ "Platform-Specific Implementations", "protocol_reference.html#autotoc_md37", null ],
-      [ "Implementation Checklist", "protocol_reference.html#autotoc_md38", [
-        [ "Basic Client Implementation", "protocol_reference.html#autotoc_md39", null ],
-        [ "Advanced Features", "protocol_reference.html#autotoc_md40", null ]
+      [ "Platform-Specific Implementations", "protocol_reference.html#autotoc_md38", null ],
+      [ "Implementation Checklist", "protocol_reference.html#autotoc_md39", [
+        [ "Basic Client Implementation", "protocol_reference.html#autotoc_md40", null ],
+        [ "Advanced Features", "protocol_reference.html#autotoc_md41", null ]
       ] ],
-      [ "Reference Implementation", "protocol_reference.html#autotoc_md41", null ],
-      [ "Contributing", "protocol_reference.html#autotoc_md42", null ],
-      [ "Support and Resources", "protocol_reference.html#autotoc_md43", null ]
+      [ "Reference Implementation", "protocol_reference.html#autotoc_md42", null ],
+      [ "Contributing", "protocol_reference.html#autotoc_md43", null ],
+      [ "Support and Resources", "protocol_reference.html#autotoc_md44", null ]
     ] ],
     [ "Deprecated List", "deprecated.html", null ],
     [ "Topics", "topics.html", "topics" ],
@@ -147,8 +148,8 @@ var NAVTREEINDEX =
 "classdeskflow_1_1gui_1_1CoreProcess.html#a92bad0d010df1a623308db157ffb5ca3",
 "classdeskflow_1_1server_1_1Config.html#ad0f2be3af7e758824d6aa561b50dba13",
 "dir_a84ba1097caba659c095472ac9f070ee.html",
-"namespaceSettingsKeys.html#a4c28db236ee7f731255c5e06ff597580",
-"structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11"
+"namespaceSettingsKeys.html",
+"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

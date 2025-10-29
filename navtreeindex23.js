@@ -1,5 +1,6 @@
 var NAVTREEINDEX23 =
 {
+"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80":[4,1,0,2],
 "structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11":[4,1,0,1],
 "structChunkType.html#afca93ef4079887b13f65cde55cceefd9":[4,1,0,0],
 "structClientProxy1__0_1_1ClientClipboard.html":[6,0,63,0],

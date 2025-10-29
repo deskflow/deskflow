@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.178</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.179</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,7 +96,7 @@ $(function(){initNavTree('protocol_reference.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_doc_2dev_2protocol__reference"></a></p>
 <p>This document provides a comprehensive reference for the Deskflow network protocol. It is the primary source of information for developers implementing Deskflow clients or extending the protocol.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 Protocol Overview</h1>
 <p>The Deskflow protocol enables keyboard and mouse sharing between multiple computers over a TCP network connection. The protocol uses two distinct sets of terminology to describe the roles of the computers involved:</p>
 <ul>
@@ -113,7 +113,7 @@ Protocol Overview</h1>
 </ul>
 <p>In a typical setup, the Primary computer (the one whose keyboard and mouse are shared) also acts as the <a class="el" href="classServer.html" title="Deskflow server.">Server</a>. However, the protocol is flexible and allows these roles to be separate. For example, a Primary machine can act as a <a class="el" href="classClient.html" title="Deskflow client.">Client</a> to connect to a Secondary machine that is configured as a <a class="el" href="classServer.html" title="Deskflow server.">Server</a>. This can be useful for navigating restrictive network environments like firewalls.</p>
 <p>Throughout the documentation, message direction is often described using the Primary/Secondary roles to clarify the input control flow, while Client/Server roles are used when discussing the underlying network connection.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Key Implementation Files</h2>
 <ul>
 <li><b><a class="el" href="ProtocolTypes_8h.html">ProtocolTypes.h</a></b> – Complete protocol specification</li>
@@ -126,7 +126,7 @@ Key Implementation Files</h2>
 <li>Extensible for new features</li>
 <li>Backward compatible with older versions</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Protocol Architecture</h1>
 <div class="fragment"><div class="line">┌─────────────────┐    TCP/IP Network    ┌─────────────────┐</div>
 <div class="line">│   Primary       │◄────────────────────►│   Secondary     │</div>
@@ -137,7 +137,7 @@ Protocol Architecture</h1>
 <div class="line">│ • Coordinates   │                      │ • Executes cmds │</div>
 <div class="line">└─────────────────┘                      └─────────────────┘</div>
 </div><!-- fragment --><p>The protocol operates over a standard TCP connection on port 24800. In protocol versions 1.4 and later, TLS encryption is supported for secure communications.</p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 Protocol State Machine</h1>
 <p>The client's connection lifecycle is defined by five primary states:</p>
 <div class="fragment"><div class="line">              ┌──────────────────┐</div>
@@ -187,7 +187,7 @@ Protocol State Machine</h1>
 <div class="line">         │    ┌──────────────────┐</div>
 <div class="line">         └────┤  PROCESS EVENT   │</div>
 <div class="line">              └──────────────────┘</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 State Descriptions</h2>
 <ol type="1">
 <li><b>Disconnected</b>: Initial and final state. No connection to <a class="el" href="classServer.html">Server</a>.</li>
@@ -215,7 +215,7 @@ State Descriptions</h2>
 </ul>
 </li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Message Categories</h1>
 <p>The protocol organizes messages into logical categories:</p>
 <table class="markdownTable">
@@ -232,7 +232,7 @@ Message Categories</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b><a class="el" href="group__protocol__errors.html">Errors</a></b>  </td><td class="markdownTableBodyNone"><span class="tt">E</span>  </td><td class="markdownTableBodyNone">Error notifications  </td><td class="markdownTableBodyNone"><a class="el" href="group__protocol__errors.html#gad20ee86c779fc4fb0149d38e0aabd627">kMsgEIncompatible</a>, <a class="el" href="group__protocol__errors.html#ga7ab9c494db2633d5cc130efd48d88867">kMsgEBusy</a>  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 Message Reference Table</h1>
 <p>This table lists all protocol messages in alphabetical order. For a typical sequence of messages, see the <a class="el" href="#typical-control-flow">Typical Control Flow</a> section.</p>
 <table class="markdownTable">
@@ -315,7 +315,7 @@ Message Reference Table</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone"><a class="el" href="group__protocol__system.html#ga7e76e67c020b09782d6c865db429819b"><b>SECN</b></a>  </td><td class="markdownTableBodyNone"><a class="el" href="group__protocol__system.html#ga7e76e67c020b09782d6c865db429819b">kMsgDSecureInputNotification</a>  </td><td class="markdownTableBodyNone">Data  </td><td class="markdownTableBodyNone">Server→Client  </td><td class="markdownTableBodyNone">Secure input notification  </td><td class="markdownTableBodyNone"><a class="el" href="#constraint-protocol-max-message-length">MsgSize</a>  </td><td class="markdownTableBodyNone">1.7+  </td></tr>
 </table>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Typical Control Flow</h1>
 <p><a class="anchor" id="typical-control-flow"></a></p>
 <p>A typical control flow is as follows:</p><ol type="1">
@@ -328,11 +328,11 @@ Typical Control Flow</h1>
 <li><b><a class="el" href="classScreen.html">Screen</a> Leave</b>: The server sends <span class="tt">COUT</span> to revoke control from the client.</li>
 <li><b>Connection Close</b>: The server sends <span class="tt">CCLOSE</span> to terminate the connection.</li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Protocol Constraints</h1>
 <p>To ensure security, stability, and compatibility, the protocol enforces strict constraints:</p>
 <p><a class="anchor" id="constraint-max-msg"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 Message and Data Size Limits</h2>
 <p><b>Maximum Message Size:</b> <br  />
  <a class="anchor" id="constraint-protocol-max-message-length"></a><b>4,194,304 bytes (4 MB)</b> — <a class="el" href="group__protocol__constants.html#gad5b510266c8a03bcd0ee9745ae7046b6">PROTOCOL_MAX_MESSAGE_LENGTH</a> <br  />
@@ -347,7 +347,7 @@ Message and Data Size Limits</h2>
  Maximum size of the initial Connection Handshake message <br  />
  Defined in Protocol Limits</p>
 <p><a class="anchor" id="constraint-tls"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 TLS Handshake and Security (Protocol v1.4+)</h2>
 <p>When encryption is enabled, the protocol follows this sequence:</p>
 <ol type="1">
@@ -366,7 +366,7 @@ TLS Handshake and Security (Protocol v1.4+)</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Key Code and Modifier Mapping</h2>
 <p>A modifier (modifier mask) represents the state of modifier keys (like Shift, Control, Alt, and Command) on a keyboard. It is a binary code (like 0000 0110) where each bit corresponds to a specific modifier key.</p>
 <p><b>Key-Up/Key-Down Strategy:</b></p><ul>
@@ -379,10 +379,10 @@ Key Code and Modifier Mapping</h2>
 <li>The server can command clients to remap modifier keys via the <a class="el" href="group__protocol__info.html#ga67849a45cec6d87bf9228776b3dd876e">kMsgDSetOptions</a> message</li>
 <li>The client processes the <a class="el" href="group__protocol__info.html#ga67849a45cec6d87bf9228776b3dd876e">kMsgDSetOptions</a> message and updates the modifier translation table accordingly</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Timing and Synchronization</h1>
 <p><a class="anchor" id="constraint-keep-alive"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Keep-Alive Mechanism (Protocol v1.3+)</h2>
 <p><b>Server-Side Behavior:</b></p><ul>
 <li>The server sends kMsgCKeepAlive messages every 3.0 seconds (defined by <a class="el" href="group__protocol__constants.html#ga8460e7dc3aae99da87dcff40b2fad424">kKeepAliveRate</a>)</li>
@@ -395,14 +395,14 @@ Keep-Alive Mechanism (Protocol v1.3+)</h2>
 <li>This is handled by the (private) ServerProxy::handleKeepAliveAlarm method</li>
 </ul>
 <p><a class="anchor" id="constraint-screen-entry-sync"></a> </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Synchronization on Screen Entry</h2>
 <ul>
 <li>The <a class="el" href="group__protocol__commands.html#gae826571a53b798c573418568f4397190">kMsgCEnter</a> (Enter <a class="el" href="classScreen.html">Screen</a>) message includes the current modifier state</li>
 <li><a class="el" href="classClient.html" title="Deskflow client.">Client</a> must synchronize their local modifier state with this mask</li>
 </ul>
 <p><a class="anchor" id="constraint-handshake-timeout"></a> </p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Handshake Timeout</h2>
 <ul>
 <li><a class="el" href="classServer.html" title="Deskflow server.">Server</a> allows <b>30 seconds</b> for handshake completion</li>
@@ -411,7 +411,7 @@ Handshake Timeout</h2>
 <li>A one-shot timer is started for 30 seconds</li>
 <li>If the client fails to respond in time, the <a class="el" href="group__protocol__errors.html">Error Messages</a> function is triggered, the connection is logged as unresponsive, and the socket is closed</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Version Compatibility</h1>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -435,7 +435,7 @@ Version Compatibility</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><b>1.8</b>  </td><td class="markdownTableBodyNone">Jun 2025  </td><td class="markdownTableBodyNone">Synergy  </td><td class="markdownTableBodyNone">Language synchronization  </td><td class="markdownTableBodyNone">1.8+  </td></tr>
 </table>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Version Migration Guide</h2>
 <p>When implementing a client that supports multiple protocol versions:</p>
 <ol type="1">
@@ -444,9 +444,9 @@ Version Migration Guide</h2>
 <li><b>Fallback Mechanism</b>: Be prepared to operate with only features available in the negotiated version</li>
 <li><b>Graceful Degradation</b>: If server supports a lower version than client's minimum, handle <span class="tt">EIncompatible</span> error gracefully</li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Implementation Examples</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Connection Lifecycle</h2>
 <div class="fragment"><div class="line"><span class="comment">// 1. Connect to server</span></div>
 <div class="line">std::string server_ip = <span class="stringliteral">&quot;192.168.1.100&quot;</span>;</div>
@@ -468,7 +468,7 @@ Connection Lifecycle</h2>
 <div class="line">    <span class="keyword">auto</span> message = receive_message();</div>
 <div class="line">    handle_message(message);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Message Handling</h2>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> handle_message(<span class="keyword">const</span> Message&amp; msg) {</div>
 <div class="line">    <span class="keywordflow">switch</span> (msg.type) {</div>
@@ -484,7 +484,7 @@ Message Handling</h2>
 <div class="line">        <span class="comment">// ... handle other message types</span></div>
 <div class="line">    }</div>
 <div class="line">}</div>
-</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+</div><!-- fragment --><h2 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Complete Message Exchange Sequence</h2>
 <p>Below is a typical message exchange sequence for a client connecting to a server:</p>
 <div class="fragment"><div class="line">Client                                 Server</div>
@@ -569,9 +569,9 @@ Complete Message Exchange Sequence</h2>
 <li>Leave screen: <a class="el" href="group__protocol__commands.html#ga35d0d7f0915dec1e257361c62375c368">kMsgCLeave</a></li>
 <li>Close connection: <a class="el" href="group__protocol__commands.html#ga666d7243ecfed71d4392be6cf6119a32">kMsgCClose</a></li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Debugging and Troubleshooting</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
 Common Issues</h2>
 <ol type="1">
 <li><b>Version Mismatch</b>: Check protocol version negotiation</li>
@@ -580,22 +580,22 @@ Common Issues</h2>
 <li><b>Keep-Alive</b>: Implement proper keep-alive response</li>
 <li><b><a class="el" href="classScreen.html">Screen</a> Info</b>: Send accurate screen dimensions and mouse position</li>
 </ol>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
 Debug Tools</h2>
 <ul>
 <li><b>Wireshark</b>: Capture and analyze network traffic</li>
 <li><b>Protocol Logs</b>: Enable verbose logging in Deskflow</li>
 <li><b>Message Validation</b>: Check message format against specification</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md37"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Platform-Specific Implementations</h1>
 <p>For platform-specific implementation details, refer to:</p><ul>
 <li><a class="el" href="ProtocolTypes_8h.html">ProtocolTypes.h</a> – Complete protocol specification</li>
 <li><a class="el" href="ProtocolUtil_8h.html">ProtocolUtil.h</a> – Message formatting utilities</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 Implementation Checklist</h1>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
 Basic Client Implementation</h2>
 <ul>
 <li><b>Connection Management</b><ul>
@@ -625,7 +625,7 @@ Basic Client Implementation</h2>
 </ul>
 </li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
 Advanced Features</h2>
 <ul>
 <li><b><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> Synchronization</b><ul>
@@ -647,7 +647,7 @@ Advanced Features</h2>
 </ul>
 </li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 Reference Implementation</h1>
 <p>The <a class="el" href="classServerProxy.html">ServerProxy</a> class provides a reference implementation demonstrating:</p>
 <ul>
@@ -656,7 +656,7 @@ Reference Implementation</h1>
 <li>Connection management</li>
 <li>Input event processing</li>
 </ul>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
 Contributing</h1>
 <p>When extending the protocol:</p>
 <ol type="1">
@@ -665,7 +665,7 @@ Contributing</h1>
 <li><b>Version Increment</b>: Bump minor version for new features</li>
 <li><b>Test Thoroughly</b>: Verify with existing clients and servers</li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 Support and Resources</h1>
 <ul>
 <li><a class="el" href="ProtocolTypes_8h.html">ProtocolTypes.h</a> – Complete protocol specification</li>

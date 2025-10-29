@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.178</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.179</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,6 +136,8 @@ Configuration</h1>
 <td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">CLEAN_TRS  </td><td class="markdownTableBodyCenter">Remove obsolete strings from tr files  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyCenter">APPLE_CODESIGN_DEV  </td><td class="markdownTableBodyCenter">Apple codesign cert ID for development  </td><td class="markdownTableBodyCenter">Not set  </td><td class="markdownTableBodyCenter"></td></tr>
 </table>
 <p>Example cmake configuration. <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
@@ -164,15 +166,30 @@ Vcpkg managed Qt</h4>
 <li>Once the configuration starts, you should see a lot more packages vcpkg will build. Building Qt takes a long time (potentially hours), so go find something else to do for a while.</li>
 <li>If you want to use the system Qt again, you must delete the <span class="tt">vcpkg.json</span> generated in the project root and the <span class="tt">build</span> folder and reconfigure the project from scratch.</li>
 </ol>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+macOS codesign</h2>
+<p>The code signing option <span class="tt">APPLE_CODESIGN_DEV</span> is only for local development and not intended for distributed bundles.</p>
+<p>Signing for local development and signing for the distribution bundle must be different because of development entitlements which are unlikely to be safe for use in production. It is impractical (i.e. very slow and cumbersome) to use the distribution bundle for local development. When developing locally, the app bundle is partial and does not contain dependencies and uses external libs, e.g. installed with Homebrew; the entitlements allow those external libs to be loaded which is not allowed by default.</p>
+<p>For development codesign:</p>
+<ol type="1">
+<li>Install Xcode</li>
+<li>Go to <a class="el" href="classSettings.html">Settings</a> -&gt; Accounts</li>
+<li>Add your account (requires a free Apple Developer ID)</li>
+<li>Manage certificates -&gt; Add -&gt; Apple Development</li>
+<li>To get your ID, run: <span class="tt">security find-identity -v -p codesigning login.keychain-db</span></li>
+<li>Pass the ID to CMake, e.g. <span class="tt">-DAPPLE_CODESIGN_DEV=Apple Development: bob@exmaple.com (KLGSJHLFXY)</span></li>
+<li>Configure and build</li>
+<li>To verify, run: <span class="tt">codesign -d -r- build/bin/Deskflow.app</span></li>
+</ol>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Build</h1>
 <p>After configuring you should be able to run make to build all targets.</p>
 <p><span class="tt">cmake --build build</span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Install</h1>
 <p>To test installation run <span class="tt">DESTDIR=&lt;installDIR&gt; cmake --install build</span> to install into <span class="tt">&lt;installDir&gt;/&lt;CMAKE_INSTALL_PREFIX&gt;</span> <br  />
  Running <span class="tt">cmake --install build</span> will install to the <span class="tt">CMAKE_INSTALL_PREFIX</span></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Making Deskflow packages</h1>
 <p>Deskflow can generate several packages using cpack. To generate packages build the <span class="tt">package</span> or <span class="tt">package_source</span> target. Example: <span class="tt"> cmake --build build --target package package_source</span> would generate both package and package source packages. Deskflow can generate several package types depending on the system. Archive-based packages should work on all platforms. On Linux deb and rpm info is set up, flatpaks can be generated from the included file in deploy/linux and a PKGBUILD for <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> linux is generated in the build folder. On macos a dmg file will be created and signed. For windows wix can be used to create an installer. </p>
 </div></div><!-- contents -->

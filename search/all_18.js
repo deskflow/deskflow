@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['v1_203_0',['Keep-Alive Mechanism (Protocol v1.3+)',['../protocol_reference.html#autotoc_md25',1,'']]],
-  ['v1_204_1',['TLS Handshake and Security (Protocol v1.4+)',['../protocol_reference.html#autotoc_md22',1,'']]],
+  ['v1_203_0',['Keep-Alive Mechanism (Protocol v1.3+)',['../protocol_reference.html#autotoc_md26',1,'']]],
+  ['v1_204_1',['TLS Handshake and Security (Protocol v1.4+)',['../protocol_reference.html#autotoc_md23',1,'']]],
   ['valid_2',['valid',['../classKeySequence.html#ac1cda9feb0e2e28928b8d6fa8adbd494',1,'KeySequence::valid()'],['../classKeySequenceWidget.html#ac3037547538ee1fd04d4c1070016cb5e',1,'KeySequenceWidget::valid()']]],
   ['validate_3',['validate',['../classvalidators_1_1ComputerNameValidator.html#ab1bc0dd4f495e81b532cdf2193bf064e',1,'validators::ComputerNameValidator::validate()'],['../classvalidators_1_1EmptyStringValidator.html#a43f86a6304fbce4410265f2e6db92704',1,'validators::EmptyStringValidator::validate()'],['../classvalidators_1_1IpAddressValidator.html#aa2cda1ad7282a58ac5b8736045418b44',1,'validators::IpAddressValidator::validate()'],['../classvalidators_1_1IStringValidator.html#aff739ceb938aa53040cbe6a6a9096a42',1,'validators::IStringValidator::validate()'],['../classvalidators_1_1LineEditValidator.html#a671b53036f5fe64f9b401f0af8e45fef',1,'validators::LineEditValidator::validate()'],['../classvalidators_1_1ScreenDuplicationsValidator.html#a6aa6bbd6b54c39207decf854a84c1cbf',1,'validators::ScreenDuplicationsValidator::validate()'],['../classvalidators_1_1SpacesValidator.html#ae6970a1445dfc2201bf55cb764281860',1,'validators::SpacesValidator::validate()']]],
   ['validationerror_4',['ValidationError',['../classvalidators_1_1ValidationError.html',1,'validators::ValidationError'],['../classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215',1,'validators::ValidationError::ValidationError()']]],
@@ -14,8 +14,8 @@ var searchData=
   ['vcpkg_20managed_20qt_11',['Vcpkg managed Qt',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
   ['verifyignorecertcallback_12',['verifyIgnoreCertCallback',['../SecureSocket_8cpp.html#a8644521a3d8e3e7cd9821f7ce9d30294',1,'SecureSocket.cpp']]],
   ['version_13',['version',['../classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d',1,'CoreArgParser']]],
-  ['version_20compatibility_14',['Version Compatibility',['../protocol_reference.html#autotoc_md28',1,'']]],
-  ['version_20migration_20guide_15',['Version Migration Guide',['../protocol_reference.html#autotoc_md29',1,'']]],
+  ['version_20compatibility_14',['Version Compatibility',['../protocol_reference.html#autotoc_md29',1,'']]],
+  ['version_20migration_20guide_15',['Version Migration Guide',['../protocol_reference.html#autotoc_md30',1,'']]],
   ['versionchecker_16',['VersionChecker',['../classVersionChecker.html',1,'VersionChecker'],['../classVersionChecker.html#a39ccb925a6aab949adc6248bda078293',1,'VersionChecker::VersionChecker()']]],
   ['versionchecker_2ecpp_17',['VersionChecker.cpp',['../VersionChecker_8cpp.html',1,'']]],
   ['versionchecker_2eh_18',['VersionChecker.h',['../VersionChecker_8h.html',1,'']]],
