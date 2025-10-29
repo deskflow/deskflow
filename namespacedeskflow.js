@@ -39,7 +39,6 @@ var namespacedeskflow =
       [ "DataSocketConnectionFailed", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2ac66cb6f7cff95301c5edc0f73d7cbf78", null ],
       [ "ListenSocketConnecting", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2acf757dbb036e70fb52ff5fdcc250e77d", null ],
       [ "SocketDisconnected", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2accb8293e8d767b9891d98fbc10a6894e", null ],
-      [ "SocketStopRetry", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a04f7a055ad9674c92ee642a8823db2c2", null ],
       [ "OsxScreenConfirmSleep", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a6ab94297a308225c53fd052a1d3e7477", null ],
       [ "ClientListenerAccepted", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a17685eb2fb162dd47cafb15eebdbc01a", null ],
       [ "ClientProxyReady", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a60fcab4d750adf8fc79537e6e61769c8", null ],
