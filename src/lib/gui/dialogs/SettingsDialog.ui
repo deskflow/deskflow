@@ -132,31 +132,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QLabel" name="lblTrayIconStyle">
-              <property name="text">
-               <string>Tray icon style</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbIconColorful">
-              <property name="text">
-               <string>Colorful</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbIconMono">
-              <property name="text">
-               <string>Monocolor</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
@@ -693,8 +668,6 @@
   <tabstop>cbScrollDirection</tabstop>
   <tabstop>cbAutoUpdate</tabstop>
   <tabstop>cbCloseToTray</tabstop>
-  <tabstop>rbIconColorful</tabstop>
-  <tabstop>rbIconMono</tabstop>
   <tabstop>groupSecurity</tabstop>
   <tabstop>lineTlsCertPath</tabstop>
   <tabstop>btnTlsCertPath</tabstop>
