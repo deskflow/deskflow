@@ -25,6 +25,9 @@ deskflow-config.toml
 /*.user
 *.ui.autosave
 
+#Qt creator 18 user files
+/.qtcreator
+
 # generated vcpkg file
 vcpkg.json
 
