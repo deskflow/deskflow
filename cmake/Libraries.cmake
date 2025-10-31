@@ -57,10 +57,10 @@ macro(configure_libs)
         std::format_to_n(buffer, 100, \"test {}\", 42);
         return 0;
     }
-    " HAS_FORMAT)
+    " HAVE_FORMAT)
 
-  if(HAS_FORMAT)
-    add_definitions(-DHAS_FORMAT)
+  if(HAVE_FORMAT)
+    add_definitions(-DHAVE_FORMAT)
   endif()
 
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
