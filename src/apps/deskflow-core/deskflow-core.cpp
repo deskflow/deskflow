@@ -23,7 +23,6 @@
 #include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
-#include <iostream>
 
 void showHelp(const CoreArgParser &parser)
 {
