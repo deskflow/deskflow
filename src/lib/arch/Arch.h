@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "common/Common.h"
-
 #if SYSAPI_WIN32
 
 #include "arch/win32/ArchDaemonWindows.h"

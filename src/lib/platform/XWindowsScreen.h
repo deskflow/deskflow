@@ -8,10 +8,11 @@
 
 #pragma once
 
-#include "arch/Arch.h"
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
+
+#include "Config.h"
 
 #include <set>
 #include <vector>

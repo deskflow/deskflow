@@ -26,6 +26,8 @@
 #include "platform/XWindowsScreenSaver.h"
 #include "platform/XWindowsUtil.h"
 
+#include "Config.h"
+
 #include <X11/X.h>
 #include <X11/Xutil.h>
 #include <algorithm>

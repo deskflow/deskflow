@@ -117,30 +117,8 @@ macro(configure_unix_libs)
   endif()
 
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
-  check_function_exists(inet_aton HAVE_INET_ATON)
-
-  # For some reason, the check_function_exists macro doesn't detect the
-  # inet_aton on some pure Unix platforms (e.g. sunos5). So we need to do a more
-  # detailed check and also include some extra libs.
-  if(NOT HAVE_INET_ATON)
-    set(CMAKE_REQUIRED_LIBRARIES nsl)
-
-    check_c_source_compiles(
-      "#include <arpa/inet.h>\n int main() { inet_aton (0, 0); }"
-      HAVE_INET_ATON_ADV)
-
-    set(CMAKE_REQUIRED_LIBRARIES)
-
-    if(HAVE_INET_ATON_ADV)
-      # Override the previous fail.
-      set(HAVE_INET_ATON 1)
-
-      # Assume that both nsl and socket will be needed, it seems safe to add
-      # socket on the back of nsl, since socket only ever needed when nsl is
-      # needed.
-      list(APPEND libs nsl socket)
-    endif()
-
+  if (NOT HAVE_POSIX_SIGWAIT)
+    message(FATAL_ERROR "Missing posix sigwait")
   endif()
 
   # pthread is used on both Linux and Mac
@@ -164,7 +142,7 @@ macro(configure_unix_libs)
       ${lib_Foundation} ${lib_Carbon} ${lib_UserNotifications}
     )
 
-    add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+    add_definitions(-DWINAPI_CARBON=1)
   else()
 
     configure_xorg_libs()
