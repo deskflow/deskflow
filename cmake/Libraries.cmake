@@ -117,6 +117,10 @@ macro(configure_unix_libs)
   endif()
 
   check_function_exists(sigwait HAVE_POSIX_SIGWAIT)
+  if (NOT HAVE_POSIX_SIGWAIT)
+    message(FATAL_ERROR "Missing posix sigwait")
+  endif()
+
   check_function_exists(inet_aton HAVE_INET_ATON)
 
   # For some reason, the check_function_exists macro doesn't detect the
@@ -140,7 +144,6 @@ macro(configure_unix_libs)
       # needed.
       list(APPEND libs nsl socket)
     endif()
-
   endif()
 
   # pthread is used on both Linux and Mac
