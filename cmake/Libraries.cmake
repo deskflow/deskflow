@@ -164,7 +164,7 @@ macro(configure_unix_libs)
       ${lib_Foundation} ${lib_Carbon} ${lib_UserNotifications}
     )
 
-    add_definitions(-DWINAPI_CARBON=1 -D_THREAD_SAFE)
+    add_definitions(-DWINAPI_CARBON=1)
   else()
 
     configure_xorg_libs()
