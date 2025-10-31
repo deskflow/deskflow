@@ -49,6 +49,20 @@ macro(configure_libs)
 
   message(STATUS "Qt version: ${Qt6_VERSION}")
 
+  # Check if <format> header is available
+  check_cxx_source_compiles("
+    #include <format>
+    int main() {
+        char buffer[100];
+        std::format_to_n(buffer, 100, \"test {}\", 42);
+        return 0;
+    }
+    " HAS_FORMAT)
+
+  if(HAS_FORMAT)
+    add_definitions(-DHAS_FORMAT)
+  endif()
+
   option(ENABLE_COVERAGE "Enable test coverage" OFF)
   if(ENABLE_COVERAGE)
     message(STATUS "Enabling code coverage")
@@ -135,21 +149,6 @@ macro(configure_unix_libs)
     list(APPEND libs pthread)
   else()
     message(FATAL_ERROR "Missing library: pthread")
-  endif()
-
-  # Check if <format> header is available
-  check_cxx_source_compiles("
-    #include <format>
-    int main() {
-        char buffer[100];
-        std::format_to_n(buffer, 100, \"test {}\", 42);
-        return 0;
-    }
-    " HAS_FORMAT)
-
-  # Display format support status
-  if(HAS_FORMAT)
-    add_definitions(-D_HAS_FORMAT)
   endif()
 
   if(APPLE)
