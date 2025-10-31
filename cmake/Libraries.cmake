@@ -149,9 +149,7 @@ macro(configure_unix_libs)
 
   # Display format support status
   if(HAS_FORMAT)
-    message(STATUS "C++ <format> library support: YES")
-  else()
-    message(STATUS "C++ <format> library support: NO")
+    add_definitions(-D_HAS_FORMAT)
   endif()
 
   if(APPLE)
