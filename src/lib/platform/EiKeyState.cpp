@@ -250,8 +250,10 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
         }
 
         deskflow::KeyMap::KeyItem item{};
-        KeySym sym = keysym;
-        item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
+        // TODO Must check the replacment is correct for the old line
+        // KeySym sym = keysym; // OLD LINE
+        // item._id = XWindowsUtil::mapKeySymToKeyID(sym); //OLD LINE
+        item.m_id = static_cast<KeyID>(keysym);              // REPLACMENT
         item.m_button = static_cast<KeyButton>(keycode) - 8; // X keycode offset
         item.m_group = group;
 
@@ -332,7 +334,10 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
   }
 
   auto keysym = static_cast<KeySym>(xkbKeysym);
-  KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
+  // TODO Must check this is correct replacement for the old line
+  // The replacement currently does not send esc, backspace, arrowskeys (maybe more) to the client.
+  // KeyId keyid = XWindowsUtil::mapKeySymToKeyID(keysym); //OLD LINE
+  KeyID keyid = static_cast<KeyID>(keysym); // REPLACMENT
   LOG_DEBUG1("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
 
   return keyid;

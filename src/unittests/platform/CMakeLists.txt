@@ -25,11 +25,13 @@ elseif(APPLE)
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
   )
 elseif(UNIX)
-  create_test(
-    NAME XWindowsClipboardTests
-    DEPENDS platform
-    LIBS base arch
-    SOURCE XWindowsClipboardTests.cpp
-    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
-  )
+  if (BUILD_X11_SUPPORT)
+    create_test(
+      NAME XWindowsClipboardTests
+      DEPENDS platform
+      LIBS base arch
+      SOURCE XWindowsClipboardTests.cpp
+      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
+    )
+  endif()
 endif()
