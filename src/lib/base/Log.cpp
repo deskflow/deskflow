@@ -18,7 +18,7 @@
 #include <cstring>
 #include <ctime>
 
-#if HAS_FORMAT
+#if HAVE_FORMAT
 #include <format>
 #endif
 
@@ -73,7 +73,7 @@ void makeTimeString(std::vector<char> &buffer)
   localtime_r(&t, &tm);
 #endif
 
-#if HAS_FORMAT
+#if HAVE_FORMAT
   std::format_to_n(
       buffer.data(), buffer.size(), "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}", tm.tm_year + yearOffset,
       tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
@@ -117,7 +117,7 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     bufferSize += filenameLength + lineNumberLength;
 
     std::vector<char> buffer(bufferSize);
-#if HAS_FORMAT
+#if HAVE_FORMAT
     std::format_to_n(
         buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeBuffer.data(), sectionName, message, filename, lineNumber
     );
@@ -129,7 +129,7 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
-#if HAS_FORMAT
+#if HAVE_FORMAT
     std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeBuffer.data(), sectionName, message);
 #else
     snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), sectionName, message);
