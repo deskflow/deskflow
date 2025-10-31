@@ -7,13 +7,12 @@
 
 #pragma once
 
-#if defined(_WIN32)
-#define SYSAPI_WIN32 1
-#define WINAPI_MSWINDOWS 1
-#elif HAVE_CONFIG_H
+#if !SYSAPI_WIN32
+#if HAVE_CONFIG_H
 #include "Config.h"
 #else
 #error "config.h missing"
+#endif
 #endif
 
 // define nullptr
