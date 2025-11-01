@@ -15,8 +15,6 @@
 #elif WINAPI_CARBON
 #include <Carbon/Carbon.h>
 #include <platform/OSXAutoTypes.h>
-#else
-#error Platform not supported.
 #endif
 
 #include <filesystem>
