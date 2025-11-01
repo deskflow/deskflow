@@ -34,6 +34,6 @@ void NewScreenWidget::mousePressEvent(QMouseEvent *event)
   auto *pDrag = new QDrag(this);
   pDrag->setMimeData(pMimeData);
   pDrag->setPixmap(pixmap());
-  pDrag->setHotSpot(event->pos());
+  pDrag->setHotSpot(QPoint(width() / 2, height() / 2));
   pDrag->exec(Qt::CopyAction, Qt::CopyAction);
 }
