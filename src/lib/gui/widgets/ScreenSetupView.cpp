@@ -129,7 +129,7 @@ void ScreenSetupView::startDrag(Qt::DropActions)
   auto *pDrag = new QDrag(this);
   pDrag->setPixmap(pixmap);
   pDrag->setMimeData(pData);
-  pDrag->setHotSpot(QPoint(pixmap.width() / 2, pixmap.height() / 2));
+  pDrag->setHotSpot(QPoint(iconSize().width() / 2, iconSize().height() / 2));
 
   if (pDrag->exec(Qt::MoveAction, Qt::MoveAction) == Qt::MoveAction) {
     selectionModel()->clear();
