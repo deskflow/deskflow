@@ -515,7 +515,7 @@ Nomi validi:
         <extracomment>Shown when in server mode and at least 1 client is connected %1 is replaced by the app name %2 will be a list of at least one client %n will be replaced by the number of clients (n is &gt;=1), it is not requried to be in the translation</extracomment>  
         <translation>  
             <numerusform>%1 è connesso, con %n client: %2</numerusform>  
-            <numerusform>%1 è connesso, con %n client: %2</numerusform>  
+            <numerusform>%1 sono connessi, con %n client: %2</numerusform>  
         </translation>  
     </message>  
     <message>  
@@ -534,7 +534,7 @@ Nomi validi:
     <message>  
         <source>Unnamed</source>  
         <extracomment>Used as the hostname. Translation may not contain spaces</extracomment>  
-        <translation>Senza nome</translation>  
+        <translation>Senzanome</translation>  
     </message>  
 </context>  
 <context>  
