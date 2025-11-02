@@ -7,6 +7,7 @@ find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS LinguistTo
 # To add a new language Add 639 shortname
 set (${CMAKE_PROJECT_NAME}_TRS
   ${CMAKE_PROJECT_NAME}_es.ts
+  ${CMAKE_PROJECT_NAME}_it.ts
 )
 
 set(TR_OPTIONS -no-ui-lines -locations none -silent)
