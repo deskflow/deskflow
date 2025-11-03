@@ -989,14 +989,6 @@ Nomi validi:
         <translation>Protocollo di rete</translation>
     </message>
     <message>
-        <source>&amp;Synergy</source>
-        <translation>&amp;Synergy</translation>
-    </message>
-    <message>
-        <source>&amp;Barrier</source>
-        <translation>&amp;Barrier</translation>
-    </message>
-    <message>
         <source>&amp;Switching</source>
         <translation>&amp;Passaggio</translation>
     </message>

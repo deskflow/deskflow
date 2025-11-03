@@ -989,14 +989,6 @@ Nombres válidos:
         <translation type="unfinished">Protocolo de red</translation>
     </message>
     <message>
-        <source>&amp;Synergy</source>
-        <translation type="unfinished">&amp;Synergy</translation>
-    </message>
-    <message>
-        <source>&amp;Barrier</source>
-        <translation type="unfinished">&amp;Barrier</translation>
-    </message>
-    <message>
         <source>&amp;Switching</source>
         <translation type="unfinished">Traspue&amp;sta</translation>
     </message>
