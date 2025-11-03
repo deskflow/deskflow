@@ -142,7 +142,9 @@ size_t NetworkAddress::resolve(size_t index)
       }
 
       resolvedAddressesCount = ipv4OnlyAddresses.size();
-      assert(resolvedAddressesCount > 0);
+      if (resolvedAddressesCount <= 0) {
+        throw ArchNetworkNameUnknownException("Hostname lookup failed");
+      }
       if (index < resolvedAddressesCount - 1) {
         m_address = ipv4OnlyAddresses[index];
       } else {
