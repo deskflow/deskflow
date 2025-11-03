@@ -1,29 +1,17 @@
 <map id="src/lib/base/ILogOutputter.h" name="src/lib/base/ILogOutputter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="264,5,446,30"/>
-<area shape="rect" id="Node000002" href="$Log_8h.html" title=" " alt="" coords="251,78,336,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="347,32,316,68,312,65,343,29"/>
-<area shape="rect" id="Node000014" href="$LogLevel_8h.html" title=" " alt="" coords="360,78,475,103"/>
-<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="367,29,399,65,395,68,363,32"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="86,151,152,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="266,106,163,147,161,142,264,101"/>
-<area shape="rect" id="Node000004" href="$Arch_8h.html" title=" " alt="" coords="176,151,264,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="283,105,245,142,241,138,280,101"/>
-<area shape="rect" id="Node000011" href="$IArchMultithread_8h.html" title=" " alt="" coords="289,151,445,175"/>
-<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="308,101,346,138,343,142,304,105"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="469,151,526,175"/>
-<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="328,101,455,144,454,149,326,106"/>
-<area shape="rect" id="Node000005" href="$Common_8h.html" title=" " alt="" coords="151,223,290,248"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="223,176,223,208,218,208,218,176"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="5,296,73,321"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="191,251,84,293,82,288,189,246"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="97,296,165,321"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="207,251,159,289,155,284,204,246"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="189,296,252,321"/>
-<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="223,249,223,280,218,280,218,249"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="277,296,340,321"/>
-<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="237,246,284,284,280,288,233,251"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="364,296,428,321"/>
-<area shape="poly" id="edge9_Node000005_Node000010" title=" " alt="" coords="250,246,354,287,352,292,248,251"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="337,223,397,248"/>
-<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="370,176,370,208,364,208,364,176"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="183,5,365,30"/>
+<area shape="rect" id="Node000002" href="$Log_8h.html" title=" " alt="" coords="170,78,255,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="266,32,235,68,231,65,262,29"/>
+<area shape="rect" id="Node000008" href="$LogLevel_8h.html" title=" " alt="" coords="279,78,394,103"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="286,29,318,65,314,68,282,32"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,71,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,106,82,147,80,142,183,101"/>
+<area shape="rect" id="Node000004" href="$Arch_8h.html" title=" " alt="" coords="95,151,184,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="202,105,164,142,160,138,199,101"/>
+<area shape="rect" id="Node000005" href="$IArchMultithread_8h.html" title=" " alt="" coords="208,151,364,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="227,101,265,138,262,142,223,105"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="388,151,445,175"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="247,101,374,144,373,149,245,106"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="256,223,316,248"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="289,176,289,208,283,208,283,176"/>
 </map>

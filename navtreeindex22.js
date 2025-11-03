@@ -1,6 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"namespaceSettingsKeys.html":[5,0,1],
 "namespaceSettingsKeys.html#a4c28db236ee7f731255c5e06ff597580":[5,0,1,8],
 "namespaceSettingsKeys.html#a4d65d852907e82b8c58b1e5219c02e85":[5,0,1,2],
 "namespaceSettingsKeys.html#a5d2b0ad4c3074b0ac54b1a4bb406512e":[5,0,1,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX22 =
 "structCBMPInfoHeader.html#add45102c7f339ebb00b0d61f73f575ef":[6,0,55,3],
 "structCBMPInfoHeader.html#ae58803ac900f8dca642baa51af9ee522":[6,0,55,1],
 "structChunkType.html":[4,1,0],
-"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80":[4,1,0,2]
+"structChunkType.html#a0e7c9c3a39dd6ea0a772bf96d4695f80":[4,1,0,2],
+"structChunkType.html#a2a7ac1c6af05a9342bde6de53dcc7e11":[4,1,0,1]
 };

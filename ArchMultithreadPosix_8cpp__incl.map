@@ -1,41 +1,29 @@
 <map id="src/lib/arch/unix/ArchMultithreadPosix.cpp" name="src/lib/arch/unix/ArchMultithreadPosix.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="657,5,865,44"/>
-<area shape="rect" id="Node000002" href="$ArchMultithreadPosix_8h.html" title=" " alt="" coords="192,92,362,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="657,47,377,95,377,90,656,41"/>
-<area shape="rect" id="Node000008" href="$Arch_8h.html" title=" " alt="" coords="450,99,538,124"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="702,47,546,96,545,91,701,42"/>
-<area shape="rect" id="Node000015" href="$ArchException_8h.html" title=" " alt="" coords="563,99,708,124"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="735,47,667,92,664,88,732,42"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="732,99,790,124"/>
-<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="764,45,764,83,758,83,758,45"/>
-<area shape="rect" id="Node000018" title=" " alt="" coords="813,99,879,124"/>
-<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="782,43,825,86,822,90,778,47"/>
-<area shape="rect" id="Node000019" title=" " alt="" coords="903,99,984,124"/>
-<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="802,42,906,90,903,94,800,47"/>
-<area shape="rect" id="Node000020" title=" " alt="" coords="1008,99,1066,124"/>
-<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="838,42,915,63,996,89,998,90,997,95,995,95,913,68,837,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="557,5,765,44"/>
+<area shape="rect" id="Node000002" href="$ArchMultithreadPosix_8h.html" title=" " alt="" coords="156,92,326,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="568,47,341,93,340,87,567,42"/>
+<area shape="rect" id="Node000008" href="$Arch_8h.html" title=" " alt="" coords="350,99,438,124"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="602,47,446,96,445,91,601,42"/>
+<area shape="rect" id="Node000009" href="$ArchException_8h.html" title=" " alt="" coords="463,99,608,124"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="635,47,567,92,564,88,632,42"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="632,99,690,124"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="664,45,664,83,658,83,658,45"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="713,99,779,124"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="682,43,725,86,722,90,678,47"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="803,99,884,124"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="702,42,806,90,803,94,700,47"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="908,99,966,124"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="738,42,815,63,896,89,898,90,897,95,895,95,813,68,737,47"/>
 <area shape="rect" id="Node000003" href="$IArchMultithread_8h.html" title=" " alt="" coords="5,179,162,203"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="231,134,128,175,126,170,229,129"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="204,134,122,174,119,169,202,129"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="186,179,224,203"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="261,133,228,169,224,165,257,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="235,132,219,165,214,163,230,130"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="248,179,306,203"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="280,131,280,163,274,163,274,131"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="252,130,267,163,263,165,247,132"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="330,179,405,203"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="301,129,344,166,341,170,297,133"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="273,129,337,168,335,173,270,134"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="53,251,114,276"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="86,204,86,236,81,236,81,204"/>
-<area shape="rect" id="Node000009" href="$Common_8h.html" title=" " alt="" coords="430,179,569,203"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="498,124,500,163,495,163,492,124"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="284,251,352,276"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="471,206,363,248,361,243,469,201"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="376,251,444,276"/>
-<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="486,206,438,244,435,240,483,202"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="468,251,531,276"/>
-<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="502,204,502,236,497,236,497,204"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="556,251,619,276"/>
-<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="516,202,563,239,560,244,512,206"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="643,251,708,276"/>
-<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="530,201,633,243,631,248,528,206"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="597,179,674,203"/>
-<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="638,124,638,163,633,163,633,124"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="497,179,574,203"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="538,124,538,163,533,163,533,124"/>
 </map>

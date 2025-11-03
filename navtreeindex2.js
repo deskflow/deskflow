@@ -1,6 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"KeyTypes_8h.html#a375c062c48f1e029279c21616d1b9acd":[7,0,1,1,4,40,87],
 "KeyTypes_8h.html#a3ad809f4722dc4a7fa806c52b33605b7":[7,0,1,1,4,40,192],
 "KeyTypes_8h.html#a3b8cbd45144fedc531e9dc40c3499846":[7,0,1,1,4,40,149],
 "KeyTypes_8h.html#a3bff500ad9402266049228e5b18e869a":[7,0,1,1,4,40,42],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "MSWindowsClipboardHTMLConverter_8h_source.html":[7,0,1,1,9,18],
 "MSWindowsClipboardTextConverter_8cpp.html":[7,0,1,1,9,19],
 "MSWindowsClipboardTextConverter_8h.html":[7,0,1,1,9,20],
-"MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20]
+"MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20],
+"MSWindowsClipboardUTF16Converter_8cpp.html":[7,0,1,1,9,21]
 };

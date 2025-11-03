@@ -1,27 +1,15 @@
 <map id="src/lib/net/TSocketMultiplexerMethodJob.h" name="src/lib/net/TSocketMultiplexerMethodJob.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="255,5,447,44"/>
-<area shape="rect" id="Node000002" href="$Arch_8h.html" title=" " alt="" coords="228,92,316,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="334,47,297,83,293,79,330,43"/>
-<area shape="rect" id="Node000009" href="$ISocketMultiplexerJob_8h.html" title=" " alt="" coords="344,92,526,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="373,43,413,79,410,83,370,47"/>
-<area shape="rect" id="Node000003" href="$Common_8h.html" title=" " alt="" coords="195,165,334,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="274,118,270,149,265,149,268,117"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="5,237,73,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="228,192,89,236,87,231,226,187"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="97,237,165,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="244,192,168,232,165,227,241,188"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="189,237,252,262"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="259,191,238,226,233,223,255,188"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="277,237,340,262"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="274,188,295,223,291,226,269,191"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="364,237,428,262"/>
-<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="287,188,362,227,360,232,285,192"/>
-<area shape="rect" id="Node000010" href="$IArchNetwork_8h.html" title=" " alt="" coords="452,165,594,189"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="451,115,498,153,495,157,448,119"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="453,237,513,262"/>
-<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="519,191,499,225,495,222,514,189"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="538,237,591,262"/>
-<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="532,189,552,223,548,225,528,191"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="615,237,671,262"/>
-<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="544,188,611,227,609,231,541,192"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="32,5,224,44"/>
+<area shape="rect" id="Node000002" href="$Arch_8h.html" title=" " alt="" coords="5,92,94,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,47,74,83,70,79,107,43"/>
+<area shape="rect" id="Node000003" href="$ISocketMultiplexerJob_8h.html" title=" " alt="" coords="118,92,299,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,43,187,79,183,83,146,47"/>
+<area shape="rect" id="Node000004" href="$IArchNetwork_8h.html" title=" " alt="" coords="138,165,279,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="211,117,211,149,206,149,206,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="97,237,157,262"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="196,192,153,229,150,225,193,188"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="182,237,235,262"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="211,190,211,222,206,222,206,190"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="259,237,315,262"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="223,188,265,225,261,229,219,192"/>
 </map>

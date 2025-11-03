@@ -1,6 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classServer_1_1ScreenConnectedInfo.html":[6,0,204,3],
 "classServer_1_1ScreenConnectedInfo.html#a4263279f66994b988a62d759b72c4ad6":[6,0,204,3,1],
 "classServer_1_1ScreenConnectedInfo.html#ae2552930570dc1cffc65b473ba5b0659":[6,0,204,3,0],
 "classServer_1_1SwitchInDirectionInfo.html":[6,0,204,2],
@@ -249,5 +248,6 @@ var NAVTREEINDEX15 =
 "classThread.html":[6,0,233],
 "classThread.html#a01061ad89e5cd91c126e0e24ba6085cb":[6,0,233,0],
 "classThread.html#a17bbcef542a2eeae36b3f15db6fbc5af":[6,0,233,1],
-"classThread.html#a37d9edd3a1a776cbc27dedff949c9726":[6,0,233,2]
+"classThread.html#a37d9edd3a1a776cbc27dedff949c9726":[6,0,233,2],
+"classThread.html#a3bc7f9f6557f62734432d1421525cf68":[6,0,233,4]
 };

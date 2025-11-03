@@ -1,6 +1,5 @@
 var NAVTREEINDEX1 =
 {
-"DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3],
 "DeskflowXkbKeyboard_8h_source.html":[7,0,1,1,4,2,3],
 "Diagnostic_8cpp.html":[7,0,1,1,5,9],
 "Diagnostic_8h.html":[7,0,1,1,5,10],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "KeyTypes_8h.html#a324f44f98dedadaa1216a6e84e224103":[7,0,1,1,4,40,62],
 "KeyTypes_8h.html#a32ef4b8c6fd9636322655e4376cbc8ef":[7,0,1,1,4,40,18],
 "KeyTypes_8h.html#a332f60e50a590fdd1418b764c6ca12fc":[7,0,1,1,4,40,89],
-"KeyTypes_8h.html#a3677df24ef58651d9677f338ecc83533":[7,0,1,1,4,40,66]
+"KeyTypes_8h.html#a3677df24ef58651d9677f338ecc83533":[7,0,1,1,4,40,66],
+"KeyTypes_8h.html#a375c062c48f1e029279c21616d1b9acd":[7,0,1,1,4,40,87]
 };

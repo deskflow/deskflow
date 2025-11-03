@@ -1,6 +1,5 @@
 var NAVTREEINDEX21 =
 {
-"dir_a84ba1097caba659c095472ac9f070ee.html":[7,0,1,1,5,2],
 "dir_b54601a1fb8356964ff4c22fbf7d7455.html":[7,0,1,1,4,3],
 "dir_ba93c70bded987c32529c065a6aac783.html":[7,0,1,1,7],
 "dir_c85d3e3c5052e9ad9ce18c6863244a25.html":[7,0,1,1],
@@ -249,5 +248,6 @@ var NAVTREEINDEX21 =
 "md_doc_2dev_2build.html#autotoc_md6":[0,0,1],
 "md_doc_2dev_2build.html#autotoc_md7":[0,1],
 "md_doc_2dev_2build.html#autotoc_md8":[0,2],
-"md_doc_2dev_2build.html#autotoc_md9":[0,3]
+"md_doc_2dev_2build.html#autotoc_md9":[0,3],
+"namespaceSettingsKeys.html":[5,0,1]
 };

@@ -80,9 +80,8 @@ var NAVTREEINDEX0 =
 "ArchMultithreadWindows_8h.html#ae1735175de7a88f35e5689cc3c1ec7c4":[7,0,1,1,0,1,7,3],
 "ArchMultithreadWindows_8h_source.html":[7,0,1,1,0,1,7],
 "ArchNetworkBSD_8cpp.html":[7,0,1,1,0,0,4],
-"ArchNetworkBSD_8cpp.html#a190fe583bc8297b58c52144b8956fb37":[7,0,1,1,0,0,4,1],
-"ArchNetworkBSD_8cpp.html#a5724d9b58927a7353409e67414e513b6":[7,0,1,1,0,0,4,0],
-"ArchNetworkBSD_8cpp.html#a98cf40bd7ba312e4e24e08b66241d6fe":[7,0,1,1,0,0,4,2],
+"ArchNetworkBSD_8cpp.html#a190fe583bc8297b58c52144b8956fb37":[7,0,1,1,0,0,4,0],
+"ArchNetworkBSD_8cpp.html#a98cf40bd7ba312e4e24e08b66241d6fe":[7,0,1,1,0,0,4,1],
 "ArchNetworkBSD_8h.html":[7,0,1,1,0,0,5],
 "ArchNetworkBSD_8h.html#a852861a685ec22fcd7f722811a5b231a":[7,0,1,1,0,0,5,5],
 "ArchNetworkBSD_8h.html#aba120ef7acc3af4694ccb015ced71408":[7,0,1,1,0,0,5,6],
@@ -249,5 +248,6 @@ var NAVTREEINDEX0 =
 "DeskflowException_8cpp.html":[7,0,1,1,4,19],
 "DeskflowException_8h.html":[7,0,1,1,4,20],
 "DeskflowException_8h_source.html":[7,0,1,1,4,20],
-"DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2]
+"DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2],
+"DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3]
 };
