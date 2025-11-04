@@ -24,12 +24,6 @@ const auto kCopyright = //
 
 const auto kCoreBinName = "@CORE_BINARY@";
 
-#ifndef NDEBUG
-const auto kDebugBuild = true;
-#else
-const auto kDebugBuild = false;
-#endif
-
 const auto kTlsDirName = "tls";
 const auto kTlsCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
 const auto kTlsFingerprintLocalFilename = "local-fingerprint";
