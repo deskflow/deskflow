@@ -177,6 +177,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
   Settings::setValue(Settings::Client::ScrollSpeed, ui->sbScrollSpeed->value());
   Settings::setValue(Settings::Core::Language, ui->comboLanguage->currentText());
+  Settings::setValue(Settings::Log::GuiDebug, ui->cbGuiDebug->isChecked());
 
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
@@ -203,6 +204,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbElevateDaemon->setChecked(Settings::value(Settings::Daemon::Elevate).toBool());
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
   ui->sbScrollSpeed->setValue(Settings::value(Settings::Client::ScrollSpeed).toInt());
+  ui->cbGuiDebug->setChecked(Settings::value(Settings::Log::GuiDebug).toBool());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);

@@ -21,18 +21,10 @@ public:
     return &m;
   }
 
-  void loadEnvVars();
   void handleMessage(const QtMsgType type, const QString &fileLine, const QString &message);
 
 Q_SIGNALS:
   void newLine(const QString &line);
-
-private:
-#ifdef NDEBUG
-  bool m_debug = false;
-#else
-  bool m_debug = true;
-#endif
 };
 
 } // namespace deskflow::gui
