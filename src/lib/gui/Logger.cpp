@@ -25,7 +25,7 @@ const auto kForceDebugMessages = QStringList{
 
 QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = {})
 {
-  const auto datetime = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-ddTHH:mm:ss"));
+  const auto datetime = QDateTime::currentDateTime().toString(Qt::ISODate);
   auto logLine = QStringLiteral("[%1] %2: %3").arg(datetime, type, message);
 
   if (!fileLine.isEmpty()) {
