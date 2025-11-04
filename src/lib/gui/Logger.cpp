@@ -18,20 +18,20 @@
 namespace deskflow::gui {
 
 const auto kForceDebugMessages = QStringList{
-    "No functional TLS backend was found", "No TLS backend is available",
-    "QSslSocket::connectToHostEncrypted: TLS initialization failed", "Retrying to obtain clipboard.",
-    "Unable to obtain clipboard."
+    QStringLiteral("No functional TLS backend was found"), QStringLiteral("No TLS backend is available"),
+    QStringLiteral("QSslSocket::connectToHostEncrypted: TLS initialization failed"),
+    QStringLiteral("Retrying to obtain clipboard."), QStringLiteral("Unable to obtain clipboard.")
 };
 
 QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = "")
 {
 
-  auto datetime = QDateTime::currentDateTime().toString("yyyy-MM-ddTHH:mm:ss");
-  auto logLine = QString("[%1] %2: %3").arg(datetime, type, message);
+  auto datetime = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-ddTHH:mm:ss"));
+  auto logLine = QStringLiteral("[%1] %2: %3").arg(datetime, type, message);
 
   QTextStream stream(&logLine);
   if (!fileLine.isEmpty()) {
-    stream << "\n\t" + fileLine;
+    stream << QStringLiteral("\n\t%1").arg(fileLine);
   }
 
   // We must return a non-terminated log line, but before returning,
