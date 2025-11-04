@@ -6,6 +6,7 @@
 
 #include "deskflow/DaemonApp.h"
 
+#include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"

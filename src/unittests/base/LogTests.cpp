@@ -24,7 +24,6 @@ QString sanitizeBuffer(const std::stringstream &in)
 
 void LogTests::initTestCase()
 {
-  m_arch.init();
   m_log.setFilter(LogLevel::Debug2);
 }
 

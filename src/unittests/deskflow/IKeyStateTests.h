@@ -4,8 +4,6 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "base/Log.h"
-
 #include <QTest>
 
 class IKeyStateTests : public QObject
@@ -13,8 +11,4 @@ class IKeyStateTests : public QObject
   Q_OBJECT
 private Q_SLOTS:
   void allocDestination();
-
-private:
-  Arch m_arch;
-  Log m_log;
 };

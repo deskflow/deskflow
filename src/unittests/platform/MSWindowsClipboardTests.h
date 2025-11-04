@@ -30,7 +30,6 @@ private Q_SLOTS:
   void isOwnedByDeskflow();
 
 private:
-  Arch m_arch;
   Log m_log;
   const std::string m_testString = "deskflow test string";
   const std::string m_testString2 = "Another String";

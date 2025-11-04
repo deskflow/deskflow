@@ -17,7 +17,6 @@ private Q_SLOTS:
   void formatConvert_UTF8();
 
 private:
-  Arch m_arch;
   Log m_log;
   const std::string m_testString = "deskflow test string";
 };

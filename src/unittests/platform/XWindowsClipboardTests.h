@@ -26,7 +26,6 @@ private Q_SLOTS:
   void singleFormat();
 #endif
 private:
-  Arch m_arch;
   Log m_log;
 #if !WINAPI_LIBEI && !WINAPI_PORTAL
   const std::string m_testString = "deskflow test string";

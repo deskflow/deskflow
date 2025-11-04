@@ -7,12 +7,12 @@
 
 #pragma once
 
-#include <QString>
+#include "LogLevel.h"
 
-#include "arch/Arch.h"
-#include "arch/IArchMultithread.h"
-
+#include <list>
 #include <mutex>
+
+#include <QString>
 
 #define CLOG (Log::getInstance())
 #define BYE "\nTry `%s --help' for more information."
