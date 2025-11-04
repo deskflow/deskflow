@@ -8,12 +8,6 @@
 
 #include <QObject>
 
-#ifdef NDEBUG
-const bool kDebug = false;
-#else
-const bool kDebug = true;
-#endif
-
 namespace deskflow::gui {
 
 class Logger : public QObject
@@ -34,7 +28,11 @@ Q_SIGNALS:
 
 private:
   static Logger s_instance;
-  bool m_debug = kDebug;
+#ifdef NDEBUG
+  bool m_debug = false;
+#else
+  bool m_debug = true;
+#endif
 };
 
 } // namespace deskflow::gui
