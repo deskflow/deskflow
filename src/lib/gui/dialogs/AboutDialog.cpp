@@ -13,11 +13,6 @@
 #include "common/Constants.h"
 
 #include <QClipboard>
-#include <QDateTime>
-#include <QHBoxLayout>
-#include <QLabel>
-#include <QPushButton>
-#include <QStyle>
 
 AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique<Ui::AboutDialog>()}
 {
