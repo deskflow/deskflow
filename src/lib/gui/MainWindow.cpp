@@ -852,11 +852,6 @@ void MainWindow::checkFingerprint(const QString &line)
   }
 }
 
-QString MainWindow::getTimeStamp() const
-{
-  return QStringLiteral("[%1]").arg(QDateTime::currentDateTime().toString(Qt::ISODate));
-}
-
 void MainWindow::closeEvent(QCloseEvent *event)
 {
   if (Settings::value(Settings::Gui::CloseToTray).toBool() && event->spontaneous()) {
