@@ -23,22 +23,18 @@ const auto kForceDebugMessages = QStringList{
     QStringLiteral("Retrying to obtain clipboard."), QStringLiteral("Unable to obtain clipboard.")
 };
 
-QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = "")
+QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = {})
 {
-
-  auto datetime = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-ddTHH:mm:ss"));
+  const auto datetime = QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-ddTHH:mm:ss"));
   auto logLine = QStringLiteral("[%1] %2: %3").arg(datetime, type, message);
 
-  QTextStream stream(&logLine);
   if (!fileLine.isEmpty()) {
-    stream << QStringLiteral("\n\t%1").arg(fileLine);
+    logLine.append(QStringLiteral("\n\t%1").arg(fileLine));
   }
 
   // We must return a non-terminated log line, but before returning,
   // stdout/stderr and Windows debug output all expect a terminated line.
-  QString terminatedLogLine = logLine;
-  QTextStream terminatedStream(&terminatedLogLine);
-  terminatedStream << Qt::endl;
+  const auto terminatedLogLine = QStringLiteral("%1\n").arg(logLine);
 
 #if defined(Q_OS_WIN)
   // Debug output is viewable using either VS Code, Visual Studio, DebugView, or
@@ -47,8 +43,7 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
   // a Windows GUI app.
   OutputDebugStringA(terminatedLogLine.toLocal8Bit().constData());
 #else
-  QTextStream outStream(out);
-  outStream << terminatedLogLine;
+  QTextStream(out) << terminatedLogLine;
 #endif
 
   return logLine;
