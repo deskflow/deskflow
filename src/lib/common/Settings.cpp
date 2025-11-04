@@ -109,14 +109,11 @@ int Settings::logLevelToInt(const QString &level)
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if ((key == Gui::Autohide) || (key == Core::StartedBefore) || (key == Core::PreventSleep) ||
-      (key == Server::ExternalConfig) || (key == Client::InvertScrollDirection) || (key == Log::ToFile)) {
+  if (m_defaultFalseValues.contains(key)) {
     return false;
   }
 
-  if ((key == Core::UseHooks) || (key == Gui::CloseToTray) || (key == Gui::LogExpanded) ||
-      (key == Gui::SymbolicTrayIcon) || (key == Gui::CloseReminder) || (key == Security::TlsEnabled) ||
-      (key == Security::CheckPeers) || (key == Client::LanguageSync) || (key == Gui::ShowGenericClientFailureDialog)) {
+  if (m_defaultTrueValues.contains(key)) {
     return true;
   }
 
