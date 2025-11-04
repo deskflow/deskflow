@@ -15,9 +15,10 @@ class Logger : public QObject
   Q_OBJECT
 
 public:
-  static Logger &instance()
+  static Logger *instance()
   {
-    return s_instance;
+    static Logger m;
+    return &m;
   }
 
   void loadEnvVars();
@@ -27,7 +28,6 @@ Q_SIGNALS:
   void newLine(const QString &line);
 
 private:
-  static Logger s_instance;
 #ifdef NDEBUG
   bool m_debug = false;
 #else

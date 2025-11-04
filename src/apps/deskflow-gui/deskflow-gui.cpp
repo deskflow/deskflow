@@ -133,7 +133,7 @@ int main(int argc, char *argv[])
   qInfo("%s v%s", kAppName, kDisplayVersion);
 
   dotenv();
-  Logger::instance().loadEnvVars();
+  Logger::instance()->loadEnvVars();
 
 #if defined(Q_OS_MAC)
 

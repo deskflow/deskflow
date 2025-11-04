@@ -23,8 +23,6 @@ const auto kForceDebugMessages = QStringList{
     "Unable to obtain clipboard."
 };
 
-Logger Logger::s_instance;
-
 QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = "")
 {
 
