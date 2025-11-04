@@ -66,7 +66,7 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
   const int priorityMaxSize = 10;
   const auto currentPriority = static_cast<int>(priority);
 
-  auto timeStr = QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
+  auto timeStr = QDateTime::currentDateTime().toString(Qt::ISODateWithMs).toStdString();
 
   auto sectionName = "IPC";
   if (priority != LogLevel::IPC) {
