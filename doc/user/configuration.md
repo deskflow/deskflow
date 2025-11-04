@@ -802,24 +802,3 @@ section: links
 		down  = larry
 end
 ```
-
-# Example  `.env` file
-
-
-```
-#
-# App
-#
-
-# Shows the test menu in the GUI (on by default in debug mode)
-# DESKFLOW_TEST_MENU=true
-
-# Version checker URL to use (useful for testing)
-# DESKFLOW_VERSION_URL="https://api.deskflow.org/version?fake=1.100.0"
-
-# Enable debug logging in the GUI (on by default in debug mode)
-# DESKFLOW_GUI_DEBUG=true
-
-# Enable verbose logging in the GUI (always off by default)
-# DESKFLOW_GUI_VERBOSE=true
-```

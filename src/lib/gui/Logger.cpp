@@ -5,6 +5,7 @@
  */
 
 #include "Logger.h"
+#include "common/Settings.h"
 
 #include <QDateTime>
 #include <QDir>
@@ -49,14 +50,8 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
   return logLine;
 }
 
-void Logger::loadEnvVars()
-{
-  m_debug = QVariant(qEnvironmentVariable("DESKFLOW_GUI_DEBUG")).toBool();
-}
-
 void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const QString &message)
 {
-
   auto mutatedType = type;
   if (kForceDebugMessages.contains(message)) {
     mutatedType = QtDebugMsg;
@@ -66,10 +61,9 @@ void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const 
   auto out = stdout;
   switch (mutatedType) {
   case QtDebugMsg:
-    typeString = "DEBUG";
-    if (!m_debug) {
+    if (!Settings::value(Settings::Log::GuiDebug).toBool())
       return;
-    }
+    typeString = "DEBUG";
     break;
   case QtInfoMsg:
     typeString = "INFO";
