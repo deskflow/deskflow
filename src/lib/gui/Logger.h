@@ -28,7 +28,6 @@ public:
 
   void loadEnvVars();
   void handleMessage(const QtMsgType type, const QString &fileLine, const QString &message);
-  void logVerbose(const QString &message) const;
 
 Q_SIGNALS:
   void newLine(const QString &line);
@@ -36,12 +35,6 @@ Q_SIGNALS:
 private:
   static Logger s_instance;
   bool m_debug = kDebug;
-  bool m_verbose = false;
 };
-
-inline void logVerbose(const QString &message)
-{
-  Logger::instance().logVerbose(message);
-}
 
 } // namespace deskflow::gui

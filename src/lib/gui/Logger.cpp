@@ -59,14 +59,6 @@ QString printLine(FILE *out, const QString &type, const QString &message, const 
 void Logger::loadEnvVars()
 {
   m_debug = QVariant(qEnvironmentVariable("DESKFLOW_GUI_DEBUG")).toBool();
-  m_verbose = QVariant(qEnvironmentVariable("DESKFLOW_GUI_VERBOSE")).toBool();
-}
-
-void Logger::logVerbose(const QString &message) const
-{
-  if (m_verbose) {
-    printLine(stdout, "VERBOSE", message);
-  }
 }
 
 void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const QString &message)
