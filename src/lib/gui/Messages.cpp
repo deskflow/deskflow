@@ -90,7 +90,7 @@ QString fileLine(const QMessageLogContext &context)
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
 {
   const auto fileLine = messages::fileLine(context);
-  Logger::instance().handleMessage(type, fileLine, message);
+  Logger::instance()->handleMessage(type, fileLine, message);
 
   if (type == QtFatalMsg || type == QtCriticalMsg) {
     showErrorDialog(message, fileLine, type);
