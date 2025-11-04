@@ -134,7 +134,6 @@ private:
   void updateFromLogLine(const QString &line);
   void checkConnected(const QString &line);
   void checkFingerprint(const QString &line);
-  [[nodiscard]] QString getTimeStamp() const;
   void closeEvent(QCloseEvent *event) override;
   void secureSocket(bool secureSocket);
   void connectSlots();
