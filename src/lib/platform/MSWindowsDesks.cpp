@@ -8,6 +8,7 @@
 
 #include "platform/MSWindowsDesks.h"
 
+#include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/IJob.h"
 #include "base/Log.h"

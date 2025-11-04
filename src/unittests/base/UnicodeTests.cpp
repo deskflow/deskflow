@@ -11,7 +11,6 @@
 
 void UnicodeTests::initTestCase()
 {
-  m_arch.init();
   m_log.setFilter(LogLevel::Debug2);
 }
 

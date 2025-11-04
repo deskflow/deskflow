@@ -23,6 +23,5 @@ private Q_SLOTS:
   void printErrWithFileAndLine();
 
 private:
-  Arch m_arch;
   Log m_log;
 };

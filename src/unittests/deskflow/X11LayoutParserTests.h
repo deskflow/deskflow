@@ -18,7 +18,6 @@ private Q_SLOTS:
   void convertLayouts();
 
 private:
-  Arch m_arch;
   Log m_log;
   const QString kTestDir = "tmp/test";
   const QString kTestCorrectFile = "tmp/test/correctEvdev.xml";

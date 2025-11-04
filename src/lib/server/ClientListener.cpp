@@ -9,6 +9,7 @@
 #include "server/ClientListener.h"
 #include "server/Server.h"
 
+#include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/PacketStreamFilter.h"

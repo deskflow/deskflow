@@ -28,6 +28,5 @@ private Q_SLOTS:
 private:
   const std::string kTestString1 = "deskflow rocks";
   const std::string kTestString2 = "String 020";
-  Arch m_arch;
   Log m_log;
 };

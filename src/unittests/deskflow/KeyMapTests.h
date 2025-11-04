@@ -23,7 +23,6 @@ private Q_SLOTS:
   void mapkey();
 
 private:
-  Arch m_arch;
   Log m_log;
 };
 } // namespace deskflow

@@ -21,6 +21,5 @@ private Q_SLOTS:
   void languageInstall();
 
 private:
-  Arch m_arch;
   Log m_log;
 };

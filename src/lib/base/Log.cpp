@@ -6,10 +6,8 @@
  */
 
 #include "base/Log.h"
-#include "arch/Arch.h"
 #include "base/LogLevel.h"
 #include "base/LogOutputters.h"
-#include "common/Common.h"
 #include "common/Constants.h"
 
 #include <cstdarg>

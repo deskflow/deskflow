@@ -8,6 +8,7 @@
 
 #include "platform/OSXScreen.h"
 
+#include "arch/Arch.h"
 #include "arch/ArchException.h"
 #include "base/EventQueue.h"
 #include "base/IEventQueue.h"
