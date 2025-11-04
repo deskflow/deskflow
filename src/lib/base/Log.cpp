@@ -16,11 +16,12 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
-#include <ctime>
 
 #if HAVE_FORMAT
 #include <format>
 #endif
+
+#include <QDateTime>
 
 const int kPriorityPrefixLength = 3;
 
@@ -58,48 +59,16 @@ LogLevel getPriority(const char *&fmt)
   return static_cast<LogLevel>(fmt[2] - '0');
 }
 
-void makeTimeString(std::vector<char> &buffer)
-{
-  const int yearOffset = 1900;
-  const int monthOffset = 1;
-
-  time_t t;
-  time(&t);
-  struct tm tm;
-
-#if WINAPI_MSWINDOWS
-  localtime_s(&tm, &t);
-#else
-  localtime_r(&t, &tm);
-#endif
-
-#if HAVE_FORMAT
-  std::format_to_n(
-      buffer.data(), buffer.size(), "{:04}-{:02}-{:02}T{:02}:{:02}:{:02}", tm.tm_year + yearOffset,
-      tm.tm_mon + monthOffset, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
-  );
-#else
-  snprintf(
-      buffer.data(), buffer.size(), "%04i-%02i-%02iT%02i:%02i:%02i", tm.tm_year + yearOffset, tm.tm_mon + monthOffset,
-      tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec
-  );
-#endif
-}
-
 std::vector<char> makeMessage(const char *filename, int lineNumber, const char *message, LogLevel priority)
 {
 
   // base size includes null terminator, colon, space, etc.
   const int baseSize = 10;
 
-  const int timeBufferSize = 50;
   const int priorityMaxSize = 10;
   const auto currentPriority = static_cast<int>(priority);
 
-  std::vector<char> timeBuffer(timeBufferSize);
-  makeTimeString(timeBuffer);
-
-  size_t timestampLength = strnlen(timeBuffer.data(), timeBufferSize);
+  auto timeStr = QDateTime::currentDateTime().toString(Qt::ISODate).toStdString();
 
   auto sectionName = "IPC";
   if (priority != LogLevel::IPC) {
@@ -108,7 +77,7 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
 
   size_t priorityLength = strnlen(sectionName, priorityMaxSize);
   size_t messageLength = strnlen(message, SIZE_MAX);
-  size_t bufferSize = baseSize + timestampLength + priorityLength + messageLength;
+  size_t bufferSize = baseSize + timeStr.length() + priorityLength + messageLength;
 
   const auto filenameSet = filename != nullptr && filename[0] != '\0';
   if (filenameSet) {
@@ -119,20 +88,20 @@ std::vector<char> makeMessage(const char *filename, int lineNumber, const char *
     std::vector<char> buffer(bufferSize);
 #if HAVE_FORMAT
     std::format_to_n(
-        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeBuffer.data(), sectionName, message, filename, lineNumber
+        buffer.data(), bufferSize, "[{}] {}: {}\n\t{}:{}", timeStr.c_str(), sectionName, message, filename, lineNumber
     );
 #else
     snprintf(
-        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeBuffer.data(), sectionName, message, filename, lineNumber
+        buffer.data(), bufferSize, "[%s] %s: %s\n\t%s:%d", timeStr.c_str(), sectionName, message, filename, lineNumber
     );
 #endif
     return buffer;
   } else {
     std::vector<char> buffer(bufferSize);
 #if HAVE_FORMAT
-    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeBuffer.data(), sectionName, message);
+    std::format_to_n(buffer.data(), bufferSize, "[{}] {}: {}", timeStr.c_str(), sectionName, message);
 #else
-    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeBuffer.data(), sectionName, message);
+    snprintf(buffer.data(), bufferSize, "[%s] %s: %s", timeStr.c_str(), sectionName, message);
 #endif
     return buffer;
   }
