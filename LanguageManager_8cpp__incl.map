@@ -1,11 +1,11 @@
 <map id="src/lib/deskflow/languages/LanguageManager.cpp" name="src/lib/deskflow/languages/LanguageManager.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="527,5,702,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="519,5,694,44"/>
 <area shape="rect" id="Node000002" href="$LanguageManager_8h.html" title=" " alt="" coords="374,92,512,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="574,47,483,88,481,83,572,42"/>
-<area shape="rect" id="Node000010" href="$Log_8h.html" title=" " alt="" coords="572,92,658,117"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="618,45,618,76,612,76,612,45"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="682,92,756,117"/>
-<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="642,42,693,80,689,85,638,47"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="568,47,482,87,480,83,566,42"/>
+<area shape="rect" id="Node000010" href="$Log_8h.html" title=" " alt="" coords="564,92,650,117"/>
+<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="610,45,610,76,604,76,604,45"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="674,92,748,117"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="634,42,685,80,681,85,630,47"/>
 <area shape="rect" id="Node000003" href="$AppUtil_8h.html" title=" " alt="" coords="272,165,403,189"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="427,119,369,158,366,153,424,115"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="419,237,475,262"/>
@@ -22,14 +22,12 @@
 <area shape="rect" id="Node000006" title=" " alt="" coords="79,383,156,407"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="120,335,120,367,115,367,115,335"/>
 <area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="136,333,191,372,188,376,133,337"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="481,165,546,189"/>
-<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="600,119,544,158,541,154,597,115"/>
-<area shape="rect" id="Node000012" href="$Arch_8h.html" title=" " alt="" coords="571,165,659,189"/>
-<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="618,117,618,149,612,149,612,117"/>
-<area shape="rect" id="Node000013" href="$IArchMultithread_8h.html" title=" " alt="" coords="683,165,840,189"/>
-<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="640,115,725,155,722,160,638,120"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="864,165,921,189"/>
-<area shape="poly" id="edge16_Node000010_Node000015" title=" " alt="" coords="658,113,849,161,848,166,657,119"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="731,237,792,262"/>
-<area shape="poly" id="edge15_Node000013_Node000014" title=" " alt="" coords="764,190,764,222,759,222,759,190"/>
+<area shape="rect" id="Node000011" href="$LogLevel_8h.html" title=" " alt="" coords="480,165,563,189"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="594,119,549,157,545,153,591,115"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="588,165,626,189"/>
+<area shape="poly" id="edge13_Node000010_Node000012" title=" " alt="" coords="610,117,610,149,604,149,604,117"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="650,165,708,189"/>
+<area shape="poly" id="edge14_Node000010_Node000013" title=" " alt="" coords="621,115,658,152,654,156,617,119"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="732,165,797,189"/>
+<area shape="poly" id="edge15_Node000010_Node000014" title=" " alt="" coords="634,115,726,156,723,160,632,120"/>
 </map>

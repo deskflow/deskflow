@@ -37,7 +37,7 @@ var searchData=
   ['portalremotedesktop_34',['PortalRemoteDesktop',['../classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e',1,'deskflow::PortalRemoteDesktop']]],
   ['primaryclient_35',['PrimaryClient',['../classPrimaryClient.html#a756d6dd96a0b27cff6b6a3550fb05fb0',1,'PrimaryClient']]],
   ['print_36',['print',['../classLog.html#a243b6feb9f64bccfa82a6c3afffd7fcf',1,'Log']]],
-  ['printline_37',['printLine',['../namespacedeskflow_1_1gui.html#a40f5198f8a7052ac571200e651efbcad',1,'deskflow::gui']]],
+  ['printline_37',['printLine',['../namespacedeskflow_1_1gui.html#a302e57e11bdb1ecd18afd06b9180ee7e',1,'deskflow::gui']]],
   ['priorityqueue_38',['PriorityQueue',['../classPriorityQueue.html#ab0aea96d90b65b7fb2d9f6069abde25b',1,'PriorityQueue::PriorityQueue()=default'],['../classPriorityQueue.html#ab1fd0952ad2e78d4749bf69bef0b9707',1,'PriorityQueue::PriorityQueue(Container &amp;swappedIn)']]],
   ['processname_39',['processName',['../classApp.html#a975d935098b0a08ef69b1af32d85a499',1,'App']]],
   ['processrequest_40',['processRequest',['../classXWindowsClipboard.html#a7f1db99d5f8feebcb2e443717d63a3aa',1,'XWindowsClipboard']]],

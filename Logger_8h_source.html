@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.204</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.216</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -104,59 +104,45 @@ $(function(){initNavTree('Logger_8h_source.html','',''); });
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#ifdef NDEBUG</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea">kDebug</a> = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea">   14</a></span><span class="keyword">const</span> <span class="keywordtype">bool</span> <a class="code hl_variable" href="Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea">kDebug</a> = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="foldopen" id="foldopen00013" data-start="{" data-end="};">
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html">   13</a></span><span class="keyword">class </span><a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> : <span class="keyword">public</span> QObject</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>{</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>  Q_OBJECT</div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  Q_OBJECT</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html#a7e8876c905e4db710f60fa6bef0c58b1">   24</a></span>  <span class="keyword">static</span> <a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> &amp;<a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a7e8876c905e4db710f60fa6bef0c58b1">instance</a>()</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  {</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="keywordflow">return</span> s_instance;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  }</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="}">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html#aaa9a51a4e3428148277a6ef5eb6f5f6e">   18</a></span>  <span class="keyword">static</span> <a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> *<a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#aaa9a51a4e3428148277a6ef5eb6f5f6e">instance</a>()</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keyword">static</span> <a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> m;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keywordflow">return</span> &amp;m;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  }</div>
 </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d">loadEnvVars</a>();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213">handleMessage</a>(<span class="keyword">const</span> QtMsgType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keyword">const</span> QString &amp;fileLine, <span class="keyword">const</span> QString &amp;message);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787">logVerbose</a>(<span class="keyword">const</span> QString &amp;message) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span> </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>Q_SIGNALS:</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7">   34</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7">newLine</a>(<span class="keyword">const</span> QString &amp;line);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">static</span> <a class="code hl_class" href="classdeskflow_1_1gui_1_1Logger.html">Logger</a> s_instance;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">bool</span> m_debug = <a class="code hl_variable" href="Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea">kDebug</a>;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">bool</span> m_verbose = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>};</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d">loadEnvVars</a>();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213">handleMessage</a>(<span class="keyword">const</span> QtMsgType <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keyword">const</span> QString &amp;fileLine, <span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>Q_SIGNALS:</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7">   28</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7">newLine</a>(<span class="keyword">const</span> QString &amp;line);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span> </div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="preprocessor">#ifdef NDEBUG</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">bool</span> m_debug = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">bool</span> m_debug = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="foldopen" id="foldopen00042" data-start="{" data-end="}">
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac">   42</a></span><span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code hl_function" href="namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac">logVerbose</a>(<span class="keyword">const</span> QString &amp;message)</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>{</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a7e8876c905e4db710f60fa6bef0c58b1">Logger::instance</a>().<a class="code hl_function" href="classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787">logVerbose</a>(message);</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>}</div>
-</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace deskflow::gui</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>} <span class="comment">// namespace deskflow::gui</span></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:45</div></div>
-<div class="ttc" id="aLogger_8h_html_a752b5c2151fa43393e90e7e72443c0ea"><div class="ttname"><a href="Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea">kDebug</a></div><div class="ttdeci">const bool kDebug</div><div class="ttdef"><b>Definition</b> Logger.h:14</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html">deskflow::gui::Logger</a></div><div class="ttdef"><b>Definition</b> Logger.h:20</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_a056de9695c620940e8f80a0348bc5787"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787">deskflow::gui::Logger::logVerbose</a></div><div class="ttdeci">void logVerbose(const QString &amp;message) const</div><div class="ttdef"><b>Definition</b> Logger.cpp:65</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_a1a2da5e81e88a5234f6181ce70485213"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213">deskflow::gui::Logger::handleMessage</a></div><div class="ttdeci">void handleMessage(const QtMsgType type, const QString &amp;fileLine, const QString &amp;message)</div><div class="ttdef"><b>Definition</b> Logger.cpp:72</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_a7e8876c905e4db710f60fa6bef0c58b1"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#a7e8876c905e4db710f60fa6bef0c58b1">deskflow::gui::Logger::instance</a></div><div class="ttdeci">static Logger &amp; instance()</div><div class="ttdef"><b>Definition</b> Logger.h:24</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html">deskflow::gui::Logger</a></div><div class="ttdef"><b>Definition</b> Logger.h:14</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_a1a2da5e81e88a5234f6181ce70485213"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213">deskflow::gui::Logger::handleMessage</a></div><div class="ttdeci">void handleMessage(const QtMsgType type, const QString &amp;fileLine, const QString &amp;message)</div><div class="ttdef"><b>Definition</b> Logger.cpp:57</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_aa0e09541d36382debb92ae7f2e46f9b7"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7">deskflow::gui::Logger::newLine</a></div><div class="ttdeci">void newLine(const QString &amp;line)</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_afd1f782158a9f4dec6615c22211a463d"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d">deskflow::gui::Logger::loadEnvVars</a></div><div class="ttdeci">void loadEnvVars()</div><div class="ttdef"><b>Definition</b> Logger.cpp:59</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_aaa9a51a4e3428148277a6ef5eb6f5f6e"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#aaa9a51a4e3428148277a6ef5eb6f5f6e">deskflow::gui::Logger::instance</a></div><div class="ttdeci">static Logger * instance()</div><div class="ttdef"><b>Definition</b> Logger.h:18</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1Logger_html_afd1f782158a9f4dec6615c22211a463d"><div class="ttname"><a href="classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d">deskflow::gui::Logger::loadEnvVars</a></div><div class="ttdeci">void loadEnvVars()</div><div class="ttdef"><b>Definition</b> Logger.cpp:52</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_html_a6735b957ac764ca228835c6f724152ac"><div class="ttname"><a href="namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac">deskflow::gui::logVerbose</a></div><div class="ttdeci">void logVerbose(const QString &amp;message)</div><div class="ttdef"><b>Definition</b> Logger.h:42</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

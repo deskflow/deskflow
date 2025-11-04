@@ -1,13 +1,11 @@
 <map id="src/lib/base/Log.h" name="src/lib/base/Log.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="150,5,275,30"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,71,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,33,82,74,80,69,183,28"/>
-<area shape="rect" id="Node000003" href="$Arch_8h.html" title=" " alt="" coords="95,78,184,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,32,164,69,160,65,199,29"/>
-<area shape="rect" id="Node000004" href="$IArchMultithread_8h.html" title=" " alt="" coords="208,78,364,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="227,29,265,65,262,69,223,32"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="388,78,445,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="247,28,374,72,373,77,245,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="256,151,316,175"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="289,103,289,135,283,135,283,103"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="106,5,230,30"/>
+<area shape="rect" id="Node000002" href="$LogLevel_8h.html" title=" " alt="" coords="5,78,89,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,33,81,72,78,68,147,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="113,78,152,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,32,147,66,143,63,160,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,78,233,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,29,194,63,189,66,172,32"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="257,78,322,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="190,28,258,68,256,72,187,33"/>
 </map>

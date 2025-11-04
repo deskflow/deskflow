@@ -92,12 +92,11 @@ var searchData=
   ['logsecurecipherinfo_89',['logSecureCipherInfo',['../classSslLogger.html#a7c7865b270c39016211299627aa4e7d5',1,'SslLogger']]],
   ['logsecureconnectinfo_90',['logSecureConnectInfo',['../classSslLogger.html#a8fde3eab2bafe94aa1cc11314027a306',1,'SslLogger']]],
   ['logsecurelibinfo_91',['logSecureLibInfo',['../classSslLogger.html#a709952f5eed5de3f977cceacc5481084',1,'SslLogger']]],
-  ['logverbose_92',['logVerbose',['../classdeskflow_1_1gui_1_1Logger.html#a056de9695c620940e8f80a0348bc5787',1,'deskflow::gui::Logger::logVerbose()'],['../namespacedeskflow_1_1gui.html#a6735b957ac764ca228835c6f724152ac',1,'deskflow::gui::logVerbose()']]],
-  ['logwidget_93',['LogWidget',['../classLogWidget.html',1,'LogWidget'],['../classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e',1,'LogWidget::LogWidget()']]],
-  ['logwidget_2ecpp_94',['LogWidget.cpp',['../LogWidget_8cpp.html',1,'']]],
-  ['logwidget_2eh_95',['LogWidget.h',['../LogWidget_8h.html',1,'']]],
-  ['long_96',['long',['../ArchNetworkWinsock_8cpp.html#a0bc651ef7626a7868da4cbfdbe70f96f',1,'long:&#160;ArchNetworkWinsock.cpp'],['../ArchNetworkWinsock_8cpp.html#a2b70d06c0aace9c8693696cc736f3a31',1,'long(PASCAL FAR *inet_addr_winsock)(const char FAR *cp):&#160;ArchNetworkWinsock.cpp']]],
-  ['loop_97',['loop',['../classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1',1,'EventQueue::loop()'],['../classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4',1,'IEventQueue::loop()']]],
-  ['lost_98',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]],
-  ['lpwsanetworkevents_99',['LPWSANETWORKEVENTS',['../ArchNetworkWinsock_8cpp.html#aa1b63b60fb3f206fad88bf4f0f008d6b',1,'ArchNetworkWinsock.cpp']]]
+  ['logwidget_92',['LogWidget',['../classLogWidget.html',1,'LogWidget'],['../classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e',1,'LogWidget::LogWidget()']]],
+  ['logwidget_2ecpp_93',['LogWidget.cpp',['../LogWidget_8cpp.html',1,'']]],
+  ['logwidget_2eh_94',['LogWidget.h',['../LogWidget_8h.html',1,'']]],
+  ['long_95',['long',['../ArchNetworkWinsock_8cpp.html#a0bc651ef7626a7868da4cbfdbe70f96f',1,'long:&#160;ArchNetworkWinsock.cpp'],['../ArchNetworkWinsock_8cpp.html#a2b70d06c0aace9c8693696cc736f3a31',1,'long(PASCAL FAR *inet_addr_winsock)(const char FAR *cp):&#160;ArchNetworkWinsock.cpp']]],
+  ['loop_96',['loop',['../classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1',1,'EventQueue::loop()'],['../classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4',1,'IEventQueue::loop()']]],
+  ['lost_97',['lost',['../classXWindowsClipboard.html#ad7d153734c6645677babf9496f77a5fd',1,'XWindowsClipboard']]],
+  ['lpwsanetworkevents_98',['LPWSANETWORKEVENTS',['../ArchNetworkWinsock_8cpp.html#aa1b63b60fb3f206fad88bf4f0f008d6b',1,'ArchNetworkWinsock.cpp']]]
 ];

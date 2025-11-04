@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.204</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.216</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -120,8 +120,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ab4c997166f1edb383c9a46fb94672d12" id="r_ab4c997166f1edb383c9a46fb94672d12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ab4c997166f1edb383c9a46fb94672d12">dotenv</a> (const QString &amp;filename)</td></tr>
 <tr class="memdesc:ab4c997166f1edb383c9a46fb94672d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <em>very</em> basic Qt .env file parser.  <br /></td></tr>
 <tr class="memitem:af092c9dc4508e1e94f2005d4de88b930" id="r_af092c9dc4508e1e94f2005d4de88b930"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af092c9dc4508e1e94f2005d4de88b930">stripQuotes</a> (const QString &amp;value)</td></tr>
-<tr class="memitem:a40f5198f8a7052ac571200e651efbcad" id="r_a40f5198f8a7052ac571200e651efbcad"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a40f5198f8a7052ac571200e651efbcad">printLine</a> (FILE *out, const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, const QString &amp;message, const QString &amp;fileLine=&quot;&quot;)</td></tr>
-<tr class="memitem:a6735b957ac764ca228835c6f724152ac" id="r_a6735b957ac764ca228835c6f724152ac"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6735b957ac764ca228835c6f724152ac">logVerbose</a> (const QString &amp;message)</td></tr>
+<tr class="memitem:a302e57e11bdb1ecd18afd06b9180ee7e" id="r_a302e57e11bdb1ecd18afd06b9180ee7e"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a302e57e11bdb1ecd18afd06b9180ee7e">printLine</a> (FILE *out, const QString &amp;<a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, const QString &amp;message, const QString &amp;fileLine={})</td></tr>
 <tr class="memitem:aafd8747004a0dc462453e60e4602a918" id="r_aafd8747004a0dc462453e60e4602a918"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aafd8747004a0dc462453e60e4602a918">isDarkMode</a> ()</td></tr>
 <tr class="memdesc:aafd8747004a0dc462453e60e4602a918"><td class="mdescLeft">&#160;</td><td class="mdescRight">Detects dark mode in a universal manner (all Qt versions). Until better platform support is added, it's more reliable to use the old way (compare text and window lightness), because the newer versions in Qt 6.5+ are not always correct and some return <span class="tt">UnknownScheme</span>. <a href="https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5">https://www.qt.io/blog/dark-mode-on-windows-11-with-qt-6.5</a>.  <br /></td></tr>
 <tr class="memitem:a6c3353d5cbfbd26b2acd734e71d61b12" id="r_a6c3353d5cbfbd26b2acd734e71d61b12"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6c3353d5cbfbd26b2acd734e71d61b12">iconMode</a> ()</td></tr>
@@ -240,31 +239,6 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a6735b957ac764ca228835c6f724152ac" name="a6735b957ac764ca228835c6f724152ac"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6735b957ac764ca228835c6f724152ac">&#9670;&#160;</a></span>logVerbose()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void deskflow::gui::logVerbose </td>
-          <td>(</td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>message</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a92f1e078e7ff8ddbc8db8a142f481f47" name="a92f1e078e7ff8ddbc8db8a142f481f47"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a92f1e078e7ff8ddbc8db8a142f481f47">&#9670;&#160;</a></span>open()</h2>
 
@@ -286,8 +260,8 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a40f5198f8a7052ac571200e651efbcad" name="a40f5198f8a7052ac571200e651efbcad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40f5198f8a7052ac571200e651efbcad">&#9670;&#160;</a></span>printLine()</h2>
+<a id="a302e57e11bdb1ecd18afd06b9180ee7e" name="a302e57e11bdb1ecd18afd06b9180ee7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a302e57e11bdb1ecd18afd06b9180ee7e">&#9670;&#160;</a></span>printLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -310,7 +284,7 @@ Variables</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>fileLine</em></span><span class="paramdefsep"> = </span><span class="paramdefval">&quot;&quot;</span>&#160;)</td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>fileLine</em></span><span class="paramdefsep"> = </span><span class="paramdefval">{}</span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -456,9 +430,9 @@ Variables</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">= QStringList{</div>
-<div class="line">    <span class="stringliteral">&quot;No functional TLS backend was found&quot;</span>, <span class="stringliteral">&quot;No TLS backend is available&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;QSslSocket::connectToHostEncrypted: TLS initialization failed&quot;</span>, <span class="stringliteral">&quot;Retrying to obtain clipboard.&quot;</span>,</div>
-<div class="line">    <span class="stringliteral">&quot;Unable to obtain clipboard.&quot;</span></div>
+<div class="line">    QStringLiteral(<span class="stringliteral">&quot;No functional TLS backend was found&quot;</span>), QStringLiteral(<span class="stringliteral">&quot;No TLS backend is available&quot;</span>),</div>
+<div class="line">    QStringLiteral(<span class="stringliteral">&quot;QSslSocket::connectToHostEncrypted: TLS initialization failed&quot;</span>),</div>
+<div class="line">    QStringLiteral(<span class="stringliteral">&quot;Retrying to obtain clipboard.&quot;</span>), QStringLiteral(<span class="stringliteral">&quot;Unable to obtain clipboard.&quot;</span>)</div>
 <div class="line">}</div>
 </div><!-- fragment -->
 </div>

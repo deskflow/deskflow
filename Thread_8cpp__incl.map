@@ -1,36 +1,38 @@
 <map id="src/lib/mt/Thread.cpp" name="src/lib/mt/Thread.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="347,5,492,30"/>
-<area shape="rect" id="Node000002" href="$Thread_8h.html" title=" " alt="" coords="72,78,164,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="370,33,180,77,179,72,369,28"/>
-<area shape="rect" id="Node000005" href="$Arch_8h.html" title=" " alt="" coords="186,151,274,175"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="348,32,298,49,275,63,255,80,240,107,234,136,228,135,235,105,251,76,272,58,296,44,346,26"/>
-<area shape="rect" id="Node000006" href="$IJob_8h.html" title=" " alt="" coords="375,78,464,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="422,31,422,62,417,62,417,31"/>
-<area shape="rect" id="Node000007" href="$Log_8h.html" title=" " alt="" coords="265,78,350,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="402,33,340,72,337,67,400,28"/>
-<area shape="rect" id="Node000010" href="$MTException_8h.html" title=" " alt="" coords="488,78,615,103"/>
-<area shape="poly" id="edge11_Node000001_Node000010" title=" " alt="" coords="443,28,517,68,515,73,440,33"/>
-<area shape="rect" id="Node000014" href="$ThreadException_8h.html" title=" " alt="" coords="639,78,787,103"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="469,28,650,71,649,77,467,33"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="811,78,887,103"/>
-<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="493,26,630,46,796,75,795,80,629,52,492,31"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="350,5,494,30"/>
+<area shape="rect" id="Node000002" href="$Thread_8h.html" title=" " alt="" coords="38,78,129,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="366,33,145,79,144,74,365,28"/>
+<area shape="rect" id="Node000005" href="$Arch_8h.html" title=" " alt="" coords="153,78,241,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="386,33,249,75,248,70,384,28"/>
+<area shape="rect" id="Node000006" href="$IJob_8h.html" title=" " alt="" coords="266,78,355,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="405,33,343,72,340,67,402,28"/>
+<area shape="rect" id="Node000007" href="$Log_8h.html" title=" " alt="" coords="380,78,465,103"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="425,31,425,62,420,62,420,31"/>
+<area shape="rect" id="Node000012" href="$MTException_8h.html" title=" " alt="" coords="489,78,616,103"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="445,28,519,68,517,73,442,33"/>
+<area shape="rect" id="Node000016" href="$ThreadException_8h.html" title=" " alt="" coords="640,78,788,103"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="471,28,652,71,651,77,470,33"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="812,78,888,103"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="495,26,632,46,797,75,796,80,631,52,495,32"/>
 <area shape="rect" id="Node000003" href="$IArchMultithread_8h.html" title=" " alt="" coords="5,151,162,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="115,104,98,138,93,135,110,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,103,86,135,81,135,81,103"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="53,223,114,248"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="86,176,86,208,81,208,81,176"/>
-<area shape="poly" id="edge9_Node000007_Node000003" title=" " alt="" coords="271,106,136,148,134,143,270,101"/>
-<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="297,105,256,142,252,138,293,101"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="299,151,364,175"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="314,102,325,135,320,137,309,104"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="388,151,446,175"/>
-<area shape="poly" id="edge10_Node000007_Node000009" title=" " alt="" coords="327,101,388,140,385,144,324,105"/>
-<area shape="rect" id="Node000011" href="$BaseException_8h.html" title=" " alt="" coords="473,151,624,175"/>
-<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="554,103,553,135,547,135,548,103"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="641,223,718,248"/>
-<area shape="poly" id="edge13_Node000011_Node000012" title=" " alt="" coords="572,174,646,213,644,218,569,178"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="522,223,576,248"/>
-<area shape="poly" id="edge14_Node000011_Node000013" title=" " alt="" coords="552,176,552,208,546,208,546,176"/>
-<area shape="rect" id="Node000015" href="$ArchException_8h.html" title=" " alt="" coords="648,151,794,175"/>
-<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="717,103,720,135,715,135,712,104"/>
-<area shape="poly" id="edge17_Node000015_Node000012" title=" " alt="" coords="716,177,696,211,692,209,712,175"/>
+<area shape="rect" id="Node000008" href="$LogLevel_8h.html" title=" " alt="" coords="204,151,288,175"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="394,106,290,147,288,142,392,101"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="312,151,351,175"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="409,105,360,143,356,139,406,101"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="375,151,432,175"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="422,104,413,136,408,135,417,103"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="456,151,522,175"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="435,101,469,137,466,141,431,105"/>
+<area shape="rect" id="Node000013" href="$BaseException_8h.html" title=" " alt="" coords="545,151,696,175"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="566,101,601,137,597,141,562,105"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="713,223,790,248"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="644,174,718,213,716,218,641,178"/>
+<area shape="rect" id="Node000015" title=" " alt="" coords="594,223,648,248"/>
+<area shape="poly" id="edge14_Node000013_Node000015" title=" " alt="" coords="624,176,624,208,618,208,618,176"/>
+<area shape="rect" id="Node000017" href="$ArchException_8h.html" title=" " alt="" coords="720,151,866,175"/>
+<area shape="poly" id="edge16_Node000016_Node000017" title=" " alt="" coords="729,101,771,138,767,142,725,105"/>
+<area shape="poly" id="edge17_Node000017_Node000014" title=" " alt="" coords="788,177,768,211,764,209,784,175"/>
 </map>

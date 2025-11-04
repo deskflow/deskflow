@@ -232,7 +232,6 @@ var NAVTREEINDEX2 =
 "Log_8h_source.html":[7,0,1,1,1,18],
 "Logger_8cpp.html":[7,0,1,1,5,19],
 "Logger_8h.html":[7,0,1,1,5,20],
-"Logger_8h.html#a752b5c2151fa43393e90e7e72443c0ea":[7,0,1,1,5,20,2],
 "Logger_8h_source.html":[7,0,1,1,5,20],
 "MSWindowsClipboardAnyTextConverter_8cpp.html":[7,0,1,1,9,11],
 "MSWindowsClipboardAnyTextConverter_8h.html":[7,0,1,1,9,12],
@@ -249,5 +248,6 @@ var NAVTREEINDEX2 =
 "MSWindowsClipboardTextConverter_8cpp.html":[7,0,1,1,9,19],
 "MSWindowsClipboardTextConverter_8h.html":[7,0,1,1,9,20],
 "MSWindowsClipboardTextConverter_8h_source.html":[7,0,1,1,9,20],
-"MSWindowsClipboardUTF16Converter_8cpp.html":[7,0,1,1,9,21]
+"MSWindowsClipboardUTF16Converter_8cpp.html":[7,0,1,1,9,21],
+"MSWindowsClipboardUTF16Converter_8h.html":[7,0,1,1,9,22]
 };

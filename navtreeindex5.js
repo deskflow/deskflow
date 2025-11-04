@@ -1,6 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"SocketException_8h.html":[7,0,1,1,8,20],
 "SocketException_8h_source.html":[7,0,1,1,8,20],
 "SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
@@ -249,5 +248,6 @@ var NAVTREEINDEX5 =
 "classActionDialog.html#aa6760e0b0e044ac9d0c4cf73c0a1e2af":[6,0,5,2],
 "classActionDialog.html#ac5baa7b5531578d891ad24163818d421":[6,0,5,3],
 "classApp.html":[6,0,6],
-"classApp.html#a176d732d8b1d9ffd19947e8726f3257b":[6,0,6,15]
+"classApp.html#a176d732d8b1d9ffd19947e8726f3257b":[6,0,6,15],
+"classApp.html#a2999f6b9b1129542847a07bcf5bc7c21":[6,0,6,9]
 };

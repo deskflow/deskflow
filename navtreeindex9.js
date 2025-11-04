@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classFunctionJob.html#a3881040e861afaf3add561cb72f3390d":[6,0,97,2],
 "classFunctionJob.html#a52b64a652db0a30d5dc8089e57ae5d0e":[6,0,97,1],
 "classFunctionJob.html#ac838394bfaf5e7d2dca08b69c9ea193f":[6,0,97,0],
 "classHotkey.html":[6,0,98],
@@ -249,5 +248,6 @@ var NAVTREEINDEX9 =
 "classIListenSocket.html":[6,0,113],
 "classIListenSocket.html#a2ae18976341b821f20f2296bf0d497cc":[6,0,113,0],
 "classILogOutputter.html":[6,0,114],
-"classILogOutputter.html#a066005e1eb18339e9cc7a2ee66374719":[6,0,114,3]
+"classILogOutputter.html#a066005e1eb18339e9cc7a2ee66374719":[6,0,114,3],
+"classILogOutputter.html#a1a25270747c3028b2977f74f57cd20f5":[6,0,114,1]
 };

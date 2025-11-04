@@ -1,6 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetworkBSD.html#aeb52011a89531d24d7c27c98df555ca3":[6,0,29,21],
 "classArchNetworkBSD.html#aee06c68fe434967b98355f51bdb09136":[6,0,29,12],
 "classArchNetworkBSD.html#af1920f7432654f87a6645cdc0193b747":[6,0,29,27],
 "classArchNetworkBSD.html#af6acccb01ea83458e9be43aa77e3cf89":[6,0,29,26],
@@ -249,5 +248,6 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html#a12ecae1c64f4c7d68832e33b6e92544d":[6,0,63,28],
 "classClientProxy1__0.html#a226030ddedfebf922bd83d9c5280526e":[6,0,63,33],
 "classClientProxy1__0.html#a248e32a157bc16951235b9a53b8e078a":[6,0,63,9],
-"classClientProxy1__0.html#a25395e6426a245a739a876feabcd48cc":[6,0,63,38]
+"classClientProxy1__0.html#a25395e6426a245a739a876feabcd48cc":[6,0,63,38],
+"classClientProxy1__0.html#a2afd8760616695f4deb076da1d619a0b":[6,0,63,35]
 };
