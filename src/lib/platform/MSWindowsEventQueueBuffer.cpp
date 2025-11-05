@@ -45,7 +45,7 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
   // MsgWaitForMultipleObjects() will block even if the queue isn't
   // empty if the messages in the queue were there before the last
   // call to GetMessage()/PeekMessage().
-  if (HIWORD(GetQueueStatus(QS_ALLPOSTMESSAGE)) != 0) {
+  if (HIWORD(GetQueueStatus(m_supportedMessages)) != 0) {
     return;
   }
 
@@ -61,13 +61,13 @@ void MSWindowsEventQueueBuffer::waitForEvent(double timeout)
   // cancellation but that's okay because we're run in the main
   // thread and we never cancel that thread.
   HANDLE dummy[1];
-  MsgWaitForMultipleObjects(0, dummy, FALSE, t, QS_ALLPOSTMESSAGE);
+  MsgWaitForMultipleObjects(0, dummy, FALSE, t, m_supportedMessages);
 }
 
 IEventQueueBuffer::Type MSWindowsEventQueueBuffer::getEvent(Event &event, uint32_t &dataID)
 {
   using enum IEventQueueBuffer::Type;
-  // NOTE: QS_ALLINPUT was replaced with QS_ALLPOSTMESSAGE.
+  // NOTE: QS_ALLINPUT was replaced with m_supportedMessages.
   //
   // peek at messages first.  waiting for QS_ALLINPUT will return
   // if a message has been sent to our window but GetMessage will
@@ -103,7 +103,7 @@ bool MSWindowsEventQueueBuffer::addEvent(uint32_t dataID)
 
 bool MSWindowsEventQueueBuffer::isEmpty() const
 {
-  return (HIWORD(GetQueueStatus(QS_ALLPOSTMESSAGE)) == 0);
+  return (HIWORD(GetQueueStatus(m_supportedMessages)) == 0);
 }
 
 EventQueueTimer *MSWindowsEventQueueBuffer::newTimer(double, bool) const

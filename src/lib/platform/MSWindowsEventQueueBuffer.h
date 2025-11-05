@@ -38,4 +38,5 @@ private:
   MSG m_event;
   UINT m_daemonQuit;
   IEventQueue *m_events;
+  const UINT m_supportedMessages = (QS_ALLINPUT & ~(QS_TOUCH | QS_POINTER));
 };
