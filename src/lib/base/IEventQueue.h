@@ -152,13 +152,6 @@ public:
   //! @name accessors
   //@{
 
-  //! Test if queue is empty
-  /*!
-  Returns true iff the queue has no events in it, including timer
-  events.
-  */
-  virtual bool isEmpty() const = 0;
-
   //! Get the system event type target
   /*!
   Returns the target to use for dispatching \c EventTypes::System events.
