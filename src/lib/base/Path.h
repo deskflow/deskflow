@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "common/Common.h"
 #include <string>
 
 namespace deskflow::filesystem {
