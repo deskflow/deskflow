@@ -57,9 +57,6 @@
 #endif
 
 #include <fstream>
-#include <iostream>
-#include <sstream>
-#include <stdio.h>
 
 using namespace deskflow::server;
 
