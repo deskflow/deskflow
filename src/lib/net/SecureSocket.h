@@ -8,7 +8,6 @@
 #pragma once
 
 #include "net/SecurityLevel.h"
-#include "net/SocketException.h"
 #include "net/TCPSocket.h"
 
 #include <memory>

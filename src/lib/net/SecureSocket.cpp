@@ -11,9 +11,7 @@
 #include "arch/ArchException.h"
 #include "base/Log.h"
 #include "base/Path.h"
-#include "base/String.h"
 #include "common/Settings.h"
-#include "io/Filesystem.h"
 #include "mt/Lock.h"
 #include "net/FingerprintDatabase.h"
 #include "net/TCPSocket.h"
@@ -27,7 +25,6 @@
 #include <memory>
 #include <openssl/err.h>
 #include <openssl/ssl.h>
-#include <sstream>
 
 //
 // SecureSocket
