@@ -286,11 +286,6 @@ void EventQueue::removeHandlers(void *target)
   }
 }
 
-bool EventQueue::isEmpty() const
-{
-  return (m_buffer->isEmpty() && getNextTimerTimeout() != 0.0);
-}
-
 const EventQueue::EventHandler *EventQueue::getHandler(EventTypes type, void *target) const
 {
   std::scoped_lock lock{m_mutex};
