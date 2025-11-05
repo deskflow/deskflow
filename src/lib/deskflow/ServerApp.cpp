@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "base/Path.h"
 #include "common/ExitCodes.h"
+#include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/Screen.h"
@@ -50,10 +51,6 @@
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
 #include "platform/OSXScreen.h"
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-#include "platform/Wayland.h"
 #endif
 
 #include <fstream>

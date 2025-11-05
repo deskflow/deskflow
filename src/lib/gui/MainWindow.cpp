@@ -19,6 +19,7 @@
 #include "dialogs/SettingsDialog.h"
 
 #include "base/String.h"
+#include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "gui/Messages.h"
@@ -27,7 +28,6 @@
 #include "gui/ipc/DaemonIpcClient.h"
 #include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
-#include "platform/Wayland.h"
 
 #if defined(Q_OS_LINUX)
 #include "Config.h"
