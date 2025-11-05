@@ -8,15 +8,12 @@
 
 #include "deskflow/ClientApp.h"
 
-#include "arch/Arch.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/Client.h"
-#include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
-#include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
 #include "net/NetworkAddress.h"
@@ -55,8 +52,6 @@
 #endif
 
 #include <memory>
-#include <sstream>
-#include <stdio.h>
 
 constexpr static auto s_retryTime = 1.0;
 
