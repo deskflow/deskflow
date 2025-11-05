@@ -16,6 +16,7 @@ add_library(common STATIC
   ExitCodes.h
   I18N.h
   I18N.cpp
+  PlatformInfo.h
   Settings.h
   Settings.cpp
   QSettingsProxy.cpp

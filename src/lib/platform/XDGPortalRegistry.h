@@ -11,7 +11,7 @@
 #include <QDBusReply>
 
 #include "common/Constants.h"
-#include "platform/Wayland.h"
+#include "common/PlatformInfo.h"
 
 namespace deskflow::platform {
 

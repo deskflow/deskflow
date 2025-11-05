@@ -13,6 +13,7 @@
 #include "base/Log.h"
 #include "client/Client.h"
 #include "common/ExitCodes.h"
+#include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
@@ -20,7 +21,6 @@
 #include "net/SocketException.h"
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
-#include "platform/Wayland.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -45,10 +45,6 @@
 #include "mt/Thread.h"
 #include "platform/OSXCocoaApp.h"
 #include "platform/OSXScreen.h"
-#endif
-
-#if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
-#include "platform/Wayland.h"
 #endif
 
 #include <memory>
