@@ -7,6 +7,7 @@
  */
 
 #include "ServerConfigDialog.h"
+#include "common/PlatformInfo.h"
 #include "ui_ServerConfigDialog.h"
 
 #include "base/NetworkProtocol.h"
@@ -79,9 +80,9 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   ui->cbRelativeMouseMoves->setChecked(serverConfig().relativeMouseMoves());
 
-#ifndef Q_OS_WIN
-  ui->cbWin32KeepForeground->setVisible(false);
-#endif
+  if (!deskflow::platform::isWindows())
+    ui->cbWin32KeepForeground->setVisible(false);
+
   ui->cbWin32KeepForeground->setChecked(serverConfig().win32KeepForeground());
   connect(ui->cbWin32KeepForeground, &QCheckBox::toggled, this, &ServerConfigDialog::toggleWin32Foreground);
 

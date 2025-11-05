@@ -605,20 +605,16 @@ int ServerApp::start()
 
 const char *ServerApp::daemonName() const
 {
-#if SYSAPI_WIN32
-  return "Deskflow Server";
-#elif SYSAPI_UNIX
+  if (deskflow::platform::isWindows())
+    return "Deskflow Server";
   return "deskflow-server";
-#endif
 }
 
 const char *ServerApp::daemonInfo() const
 {
-#if SYSAPI_WIN32
-  return "Shares this computers mouse and keyboard with other computers.";
-#elif SYSAPI_UNIX
+  if (deskflow::platform::isWindows())
+    return "Shares this computers mouse and keyboard with other computers.";
   return "";
-#endif
 }
 
 void ServerApp::startNode()

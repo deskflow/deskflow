@@ -78,21 +78,16 @@ void ClientApp::parseArgs()
 
 const char *ClientApp::daemonName() const
 {
-#if SYSAPI_WIN32
-  return "Deskflow Client";
-#elif SYSAPI_UNIX
+  if (deskflow::platform::isWindows())
+    return "Deskflow Client";
   return "deskflow-client";
-#endif
 }
 
 const char *ClientApp::daemonInfo() const
 {
-#if SYSAPI_WIN32
-  return "Allows another computer to share it's keyboard and mouse with this "
-         "computer.";
-#elif SYSAPI_UNIX
+  if (deskflow::platform::isWindows())
+    return "Allows another computer to share it's keyboard and mouse with this computer.";
   return "";
-#endif
 }
 
 deskflow::Screen *ClientApp::createScreen()

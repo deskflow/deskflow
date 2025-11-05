@@ -103,10 +103,10 @@ MainWindow::MainWindow()
   m_actionMinimize->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
   m_actionRestore->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
 
-#ifndef Q_OS_WIN
-  m_actionQuit->setShortcut(QKeySequence::Quit);
-  m_actionTrayQuit->setShortcut(QKeySequence::Quit);
-#endif
+  if (!deskflow::platform::isWindows()) {
+    m_actionQuit->setShortcut(QKeySequence::Quit);
+    m_actionTrayQuit->setShortcut(QKeySequence::Quit);
+  }
 
   m_actionQuit->setMenuRole(QAction::QuitRole);
   m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
@@ -763,19 +763,20 @@ void MainWindow::setTrayIcon()
 
   themeIcon.append(QStringLiteral("-symbolic"));
 
-#ifdef Q_OS_WIN
-  QSettings settings(
-      QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
-      QSettings::NativeFormat
-  );
-  const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
-                                                                                           : QStringLiteral("dark");
-  m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
-#else
+  if (deskflow::platform::isWindows()) {
+    QSettings settings(
+        QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+        QSettings::NativeFormat
+    );
+    const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
+                                                                                             : QStringLiteral("dark");
+    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
+    return;
+  }
+
   auto icon = QIcon::fromTheme(themeIcon, QIcon(fallbackPath.arg(kAppId, iconMode(), themeIcon)));
   icon.setIsMask(true);
   m_trayIcon->setIcon(icon);
-#endif
 }
 
 void MainWindow::handleLogLine(const QString &line)
@@ -1071,11 +1072,11 @@ void MainWindow::updateText()
   //: stop core shortcut
   m_actionStopCore->setShortcut(QKeySequence(tr("Ctrl+T")));
 
-#ifdef Q_OS_WIN
-  //: Quit shortcut
-  m_actionQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
-  m_actionTrayQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
-#endif
+  if (deskflow::platform::isWindows()) {
+    //: Quit shortcut
+    m_actionQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
+    m_actionTrayQuit->setShortcut(QKeySequence(tr("Ctrl+Q")));
+  }
 
   // General controls
   m_btnFingerprint->setToolTip(tr("View local fingerprint"));

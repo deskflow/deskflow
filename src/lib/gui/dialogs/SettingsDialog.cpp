@@ -7,6 +7,7 @@
  */
 
 #include "SettingsDialog.h"
+#include "common/PlatformInfo.h"
 #include "ui_SettingsDialog.h"
 
 #include "common/I18N.h"
@@ -209,9 +210,8 @@ void SettingsDialog::loadFromConfig()
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
 
-#ifndef Q_OS_WIN
-  ui->groupService->setVisible(false);
-#endif
+  if (!deskflow::platform::isWindows())
+    ui->groupService->setVisible(false);
 
   if (Settings::value(Settings::Gui::SymbolicTrayIcon).toBool())
     ui->rbIconMono->setChecked(true);
