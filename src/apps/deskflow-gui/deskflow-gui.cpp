@@ -13,7 +13,6 @@
 #include "common/PlatformInfo.h"
 #include "common/UrlConstants.h"
 #include "gui/Diagnostic.h"
-#include "gui/Logger.h"
 #include "gui/MainWindow.h"
 #include "gui/Messages.h"
 #include "gui/StyleUtils.h"
