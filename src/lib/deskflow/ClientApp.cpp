@@ -68,10 +68,9 @@ ClientApp::ClientApp(IEventQueue *events, const QString &processName) : App(even
 void ClientApp::parseArgs()
 {
   // save server address
-  if (!Settings::value(Settings::Client::RemoteHost).isNull()) {
+  if (const auto address = Settings::value(Settings::Client::RemoteHost).toString(); !address.isEmpty()) {
     try {
-      *m_serverAddress =
-          NetworkAddress(Settings::value(Settings::Client::RemoteHost).toString().toStdString(), kDefaultPort);
+      *m_serverAddress = NetworkAddress(address.toStdString(), Settings::value(Settings::Core::Port).toInt());
       m_serverAddress->resolve();
     } catch (SocketAddressException &e) {
       // allow an address that we can't look up if we're restartable.
