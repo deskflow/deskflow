@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -9,16 +10,14 @@
 #include "Messages.h"
 #include "common/Settings.h"
 
-using namespace deskflow::platform;
-
 namespace deskflow::gui::core {
 
-void WaylandWarnings::showOnce(QWidget *parent, bool hasEi, bool hasPortal, bool hasPortalInputCapture)
+void WaylandWarnings::showOnce(QWidget *parent)
 {
   const auto mode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
-  const bool portalIcProblem = !hasPortalInputCapture && mode == Settings::CoreMode::Server;
+  const bool portalIcProblem = !m_hasPortalInputCapture && mode == Settings::CoreMode::Server;
 
-  if (!hasEi || !hasPortal || portalIcProblem) {
+  if (!m_hasEi || !m_hasPortal || portalIcProblem) {
     if (!m_errorShown) {
       m_errorShown = true;
       messages::showWaylandLibraryError(parent);
