@@ -7,8 +7,6 @@
 
 #include "Filesystem.h"
 
-#include "common/Common.h"
-
 #include <fstream>
 
 namespace deskflow {
