@@ -1,8 +1,5 @@
 var NAVTREEINDEX5 =
 {
-"SocketException_8h_source.html":[7,0,1,1,8,20],
-"SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
-"SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
 "SpacesValidator_8cpp.html":[7,0,1,1,5,5,16],
 "SpacesValidator_8h.html":[7,0,1,1,5,5,17],
@@ -26,10 +23,10 @@ var NAVTREEINDEX5 =
 "String_8cpp.html":[7,0,1,1,1,30],
 "String_8h.html":[7,0,1,1,1,31],
 "String_8h_source.html":[7,0,1,1,1,31],
-"StyleUtils_8h.html":[7,0,1,1,5,30],
-"StyleUtils_8h_source.html":[7,0,1,1,5,30],
-"Styles_8h.html":[7,0,1,1,5,29],
-"Styles_8h_source.html":[7,0,1,1,5,29],
+"StyleUtils_8h.html":[7,0,1,1,5,28],
+"StyleUtils_8h_source.html":[7,0,1,1,5,28],
+"Styles_8h.html":[7,0,1,1,5,27],
+"Styles_8h_source.html":[7,0,1,1,5,27],
 "TCPListenSocket_8cpp.html":[7,0,1,1,8,25],
 "TCPListenSocket_8h.html":[7,0,1,1,8,26],
 "TCPListenSocket_8h_source.html":[7,0,1,1,8,26],
@@ -76,9 +73,9 @@ var NAVTREEINDEX5 =
 "ValidationError_8cpp.html":[7,0,1,1,5,5,18],
 "ValidationError_8h.html":[7,0,1,1,5,5,19],
 "ValidationError_8h_source.html":[7,0,1,1,5,5,19],
-"VersionChecker_8cpp.html":[7,0,1,1,5,31],
-"VersionChecker_8h.html":[7,0,1,1,5,32],
-"VersionChecker_8h_source.html":[7,0,1,1,5,32],
+"VersionChecker_8cpp.html":[7,0,1,1,5,29],
+"VersionChecker_8h.html":[7,0,1,1,5,30],
+"VersionChecker_8h_source.html":[7,0,1,1,5,30],
 "WaylandWarnings_8cpp.html":[7,0,1,1,5,1,10],
 "WaylandWarnings_8h.html":[7,0,1,1,5,1,11],
 "WaylandWarnings_8h_source.html":[7,0,1,1,5,1,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX5 =
 "classActionDialog.html#ac5baa7b5531578d891ad24163818d421":[6,0,5,3],
 "classApp.html":[6,0,6],
 "classApp.html#a176d732d8b1d9ffd19947e8726f3257b":[6,0,6,15],
-"classApp.html#a2999f6b9b1129542847a07bcf5bc7c21":[6,0,6,9]
+"classApp.html#a2999f6b9b1129542847a07bcf5bc7c21":[6,0,6,9],
+"classApp.html#a3de184a2f5202d1e0458223d11e871fd":[6,0,6,14],
+"classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e":[6,0,6,13],
+"classApp.html#a4af9e4bbb719ae9fce079bd11d263878":[6,0,6,7]
 };

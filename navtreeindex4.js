@@ -1,8 +1,5 @@
 var NAVTREEINDEX4 =
 {
-"OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,26,0],
-"OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,26,2],
-"OSXKeyState_8cpp.html":[7,0,1,1,9,67],
 "OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,67,6],
 "OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,67,3],
 "OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,67,2],
@@ -172,9 +169,9 @@ var NAVTREEINDEX4 =
 "ScreenSettingsDialog_8cpp.html#aa614b21714c5878160804fb6375ea814":[7,0,1,1,5,2,8,1],
 "ScreenSettingsDialog_8h.html":[7,0,1,1,5,2,9],
 "ScreenSettingsDialog_8h_source.html":[7,0,1,1,5,2,9],
-"ScreenSetupModel_8cpp.html":[7,0,1,1,5,27],
-"ScreenSetupModel_8h.html":[7,0,1,1,5,28],
-"ScreenSetupModel_8h_source.html":[7,0,1,1,5,28],
+"ScreenSetupModel_8cpp.html":[7,0,1,1,5,25],
+"ScreenSetupModel_8h.html":[7,0,1,1,5,26],
+"ScreenSetupModel_8h_source.html":[7,0,1,1,5,26],
 "ScreenSetupView_8cpp.html":[7,0,1,1,5,6,10],
 "ScreenSetupView_8h.html":[7,0,1,1,5,6,11],
 "ScreenSetupView_8h_source.html":[7,0,1,1,5,6,11],
@@ -249,5 +246,8 @@ var NAVTREEINDEX4 =
 "SimpleEventQueueBuffer_8h.html":[7,0,1,1,1,27],
 "SimpleEventQueueBuffer_8h_source.html":[7,0,1,1,1,27],
 "SocketException_8cpp.html":[7,0,1,1,8,19],
-"SocketException_8h.html":[7,0,1,1,8,20]
+"SocketException_8h.html":[7,0,1,1,8,20],
+"SocketException_8h_source.html":[7,0,1,1,8,20],
+"SocketMultiplexer_8cpp.html":[7,0,1,1,8,21],
+"SocketMultiplexer_8h.html":[7,0,1,1,8,22]
 };

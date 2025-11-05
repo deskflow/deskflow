@@ -28,5 +28,6 @@ var searchData=
   ['g_5fxscreen_25',['g_xScreen',['../MSWindowsHook_8cpp.html#aa749232d57b79d6dcce16f7b1b44915d',1,'MSWindowsHook.cpp']]],
   ['g_5fyscreen_26',['g_yScreen',['../MSWindowsHook_8cpp.html#a652e5c5abcc4f329650e917996ba7211',1,'MSWindowsHook.cpp']]],
   ['g_5fzonesides_27',['g_zoneSides',['../MSWindowsHook_8cpp.html#a3fc450995f60fe1bdfe3284b53033cee',1,'MSWindowsHook.cpp']]],
-  ['g_5fzonesize_28',['g_zoneSize',['../MSWindowsHook_8cpp.html#afad0458b7c62fc732d8e8c9af19f7c00',1,'MSWindowsHook.cpp']]]
+  ['g_5fzonesize_28',['g_zoneSize',['../MSWindowsHook_8cpp.html#afad0458b7c62fc732d8e8c9af19f7c00',1,'MSWindowsHook.cpp']]],
+  ['guidebug_29',['GuiDebug',['../structSettings_1_1Log.html#a2cf2eda726a37ebbd8bc31dc076dbde1',1,'Settings::Log']]]
 ];

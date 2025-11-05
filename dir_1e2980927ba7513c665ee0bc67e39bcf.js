@@ -11,8 +11,6 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "Action.h", "Action_8h.html", "Action_8h" ],
     [ "Diagnostic.cpp", "Diagnostic_8cpp.html", "Diagnostic_8cpp" ],
     [ "Diagnostic.h", "Diagnostic_8h.html", "Diagnostic_8h" ],
-    [ "DotEnv.cpp", "DotEnv_8cpp.html", "DotEnv_8cpp" ],
-    [ "DotEnv.h", "DotEnv_8h.html", "DotEnv_8h" ],
     [ "FileTail.cpp", "FileTail_8cpp.html", null ],
     [ "FileTail.h", "FileTail_8h.html", "FileTail_8h" ],
     [ "Hotkey.cpp", "Hotkey_8cpp.html", "Hotkey_8cpp" ],

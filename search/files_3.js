@@ -16,7 +16,5 @@ var searchData=
   ['diagnostic_2ecpp_13',['Diagnostic.cpp',['../Diagnostic_8cpp.html',1,'']]],
   ['diagnostic_2eh_14',['Diagnostic.h',['../Diagnostic_8h.html',1,'']]],
   ['directiontypes_2eh_15',['DirectionTypes.h',['../DirectionTypes_8h.html',1,'']]],
-  ['displayinvalidexception_2eh_16',['DisplayInvalidException.h',['../DisplayInvalidException_8h.html',1,'']]],
-  ['dotenv_2ecpp_17',['DotEnv.cpp',['../DotEnv_8cpp.html',1,'']]],
-  ['dotenv_2eh_18',['DotEnv.h',['../DotEnv_8h.html',1,'']]]
+  ['displayinvalidexception_2eh_16',['DisplayInvalidException.h',['../DisplayInvalidException_8h.html',1,'']]]
 ];

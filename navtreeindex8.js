@@ -1,8 +1,5 @@
 var NAVTREEINDEX8 =
 {
-"classClientProxy1__0.html#a3790aef721f8f0c149d3f5cb30f3a41d":[6,0,63,26],
-"classClientProxy1__0.html#a41a50c07913ceb28fc6abee83a62e5a4":[6,0,63,3],
-"classClientProxy1__0.html#a45bc305a1b8f4fa262beb57b18b9a242":[6,0,63,1],
 "classClientProxy1__0.html#a4d2fc40230d7a3a00f93694643ad8018":[6,0,63,25],
 "classClientProxy1__0.html#a5127354b6901d5fd7df12ff5d80936f2":[6,0,63,29],
 "classClientProxy1__0.html#a522432fc265f0b5d54a8afb2908e64b1":[6,0,63,6],
@@ -249,5 +246,8 @@ var NAVTREEINDEX8 =
 "classFunctionEventJob.html#a884ae6a2f2ffd1af438b805e23cffaf4":[6,0,96,2],
 "classFunctionEventJob.html#ab5d67ff3f358b87eab56ebaea268c368":[6,0,96,0],
 "classFunctionJob.html":[6,0,97],
-"classFunctionJob.html#a3881040e861afaf3add561cb72f3390d":[6,0,97,2]
+"classFunctionJob.html#a3881040e861afaf3add561cb72f3390d":[6,0,97,2],
+"classFunctionJob.html#a52b64a652db0a30d5dc8089e57ae5d0e":[6,0,97,1],
+"classFunctionJob.html#ac838394bfaf5e7d2dca08b69c9ea193f":[6,0,97,0],
+"classHotkey.html":[6,0,98]
 };

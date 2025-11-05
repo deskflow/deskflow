@@ -1,8 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classServer_1_1ScreenConnectedInfo.html#ae2552930570dc1cffc65b473ba5b0659":[6,0,204,3,0],
-"classServer_1_1SwitchInDirectionInfo.html":[6,0,204,2],
-"classServer_1_1SwitchInDirectionInfo.html#a90bdb6c725309a0c8d030d682aa62422":[6,0,204,2,1],
 "classServer_1_1SwitchInDirectionInfo.html#a93813da212634947ce1d6a529505352c":[6,0,204,2,0],
 "classServer_1_1SwitchToScreenInfo.html":[6,0,204,1],
 "classServer_1_1SwitchToScreenInfo.html#a119cf00dc1529d5116d80f9ec2d3e95a":[6,0,204,1,1],
@@ -249,5 +246,8 @@ var NAVTREEINDEX15 =
 "classThread.html#a17bbcef542a2eeae36b3f15db6fbc5af":[6,0,233,1],
 "classThread.html#a37d9edd3a1a776cbc27dedff949c9726":[6,0,233,2],
 "classThread.html#a3bc7f9f6557f62734432d1421525cf68":[6,0,233,4],
-"classThread.html#a6b6aa2f3fce1de502a56129355cc5cf4":[6,0,233,12]
+"classThread.html#a6b6aa2f3fce1de502a56129355cc5cf4":[6,0,233,12],
+"classThread.html#a7063ad2909bd9828179040dac9b51cfb":[6,0,233,5],
+"classThread.html#a79cab40ed39165e26ed58bd47acb4dda":[6,0,233,6],
+"classThread.html#a8739fe294144c846e1ce839c23393a18":[6,0,233,9]
 };

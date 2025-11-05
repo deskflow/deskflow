@@ -1,8 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetworkBSD.html#aee06c68fe434967b98355f51bdb09136":[6,0,29,12],
-"classArchNetworkBSD.html#af1920f7432654f87a6645cdc0193b747":[6,0,29,27],
-"classArchNetworkBSD.html#af6acccb01ea83458e9be43aa77e3cf89":[6,0,29,26],
 "classArchNetworkBSD.html#af82016a992cdb1ce14d4d603b5223f85":[6,0,29,19],
 "classArchNetworkBSD.html#afc3900348e5d64cbc04c4177cc6bc45b":[6,0,29,9],
 "classArchNetworkConnectionRefusedException.html":[6,0,30],
@@ -249,5 +246,8 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html#a226030ddedfebf922bd83d9c5280526e":[6,0,63,33],
 "classClientProxy1__0.html#a248e32a157bc16951235b9a53b8e078a":[6,0,63,9],
 "classClientProxy1__0.html#a25395e6426a245a739a876feabcd48cc":[6,0,63,38],
-"classClientProxy1__0.html#a2afd8760616695f4deb076da1d619a0b":[6,0,63,35]
+"classClientProxy1__0.html#a2afd8760616695f4deb076da1d619a0b":[6,0,63,35],
+"classClientProxy1__0.html#a3790aef721f8f0c149d3f5cb30f3a41d":[6,0,63,26],
+"classClientProxy1__0.html#a41a50c07913ceb28fc6abee83a62e5a4":[6,0,63,3],
+"classClientProxy1__0.html#a45bc305a1b8f4fa262beb57b18b9a242":[6,0,63,1]
 };

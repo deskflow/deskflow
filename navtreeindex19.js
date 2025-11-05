@@ -1,8 +1,5 @@
 var NAVTREEINDEX19 =
 {
-"classdeskflow_1_1gui_1_1CoreProcess.html#a956743f8c6dccdab5787b6f8cc110dff":[5,0,0,5,6,4],
-"classdeskflow_1_1gui_1_1CoreProcess.html#a956743f8c6dccdab5787b6f8cc110dff":[6,0,0,4,5,4],
-"classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9":[5,0,0,5,6,0],
 "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9":[6,0,0,4,5,0],
 "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9a2ec0d16e4ca169baedb9b2d50ec5c6d7":[5,0,0,5,6,0,2],
 "classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9a2ec0d16e4ca169baedb9b2d50ec5c6d7":[6,0,0,4,5,0,2],
@@ -70,12 +67,10 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1Logger.html":[6,0,0,4,9],
 "classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213":[5,0,0,5,10,0],
 "classdeskflow_1_1gui_1_1Logger.html#a1a2da5e81e88a5234f6181ce70485213":[6,0,0,4,9,0],
-"classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7":[5,0,0,5,10,3],
-"classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7":[6,0,0,4,9,3],
+"classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7":[5,0,0,5,10,2],
+"classdeskflow_1_1gui_1_1Logger.html#aa0e09541d36382debb92ae7f2e46f9b7":[6,0,0,4,9,2],
 "classdeskflow_1_1gui_1_1Logger.html#aaa9a51a4e3428148277a6ef5eb6f5f6e":[5,0,0,5,10,1],
 "classdeskflow_1_1gui_1_1Logger.html#aaa9a51a4e3428148277a6ef5eb6f5f6e":[6,0,0,4,9,1],
-"classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d":[5,0,0,5,10,2],
-"classdeskflow_1_1gui_1_1Logger.html#afd1f782158a9f4dec6615c22211a463d":[6,0,0,4,9,2],
 "classdeskflow_1_1gui_1_1ServerConnection.html":[5,0,0,5,7],
 "classdeskflow_1_1gui_1_1ServerConnection.html":[6,0,0,4,6],
 "classdeskflow_1_1gui_1_1ServerConnection.html#a1ee48784cb1e77a1143c7c96cedaa8d8":[5,0,0,5,7,5],
@@ -249,5 +244,10 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1server_1_1Config.html#ad0f2be3af7e758824d6aa561b50dba13":[5,0,0,7,0,13],
 "classdeskflow_1_1server_1_1Config.html#ad0f2be3af7e758824d6aa561b50dba13":[6,0,0,6,0,13],
 "classdeskflow_1_1server_1_1Config.html#ad3d485d38fe8beb6e9b1dae13306f350":[5,0,0,7,0,8],
-"classdeskflow_1_1server_1_1Config.html#ad3d485d38fe8beb6e9b1dae13306f350":[6,0,0,6,0,8]
+"classdeskflow_1_1server_1_1Config.html#ad3d485d38fe8beb6e9b1dae13306f350":[6,0,0,6,0,8],
+"classdeskflow_1_1server_1_1Config.html#ad58dc9a3f2b30ad0f0ade060722669eb":[5,0,0,7,0,5],
+"classdeskflow_1_1server_1_1Config.html#ad58dc9a3f2b30ad0f0ade060722669eb":[6,0,0,6,0,5],
+"classdeskflow_1_1server_1_1Config.html#ad6a5177e22cb3570994b7b686bf36b33":[5,0,0,7,0,7],
+"classdeskflow_1_1server_1_1Config.html#ad6a5177e22cb3570994b7b686bf36b33":[6,0,0,6,0,7],
+"classdeskflow_1_1server_1_1Config.html#ad9ae5b5f52ee442dfe72b048170bbf87":[5,0,0,7,0,16]
 };
