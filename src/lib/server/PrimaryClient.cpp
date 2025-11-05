@@ -8,8 +8,6 @@
 #include "server/PrimaryClient.h"
 
 #include "base/Log.h"
-#include "deskflow/AppUtil.h"
-#include "deskflow/Clipboard.h"
 #include "deskflow/Screen.h"
 //
 // PrimaryClient
