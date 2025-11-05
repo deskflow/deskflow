@@ -9,7 +9,6 @@
 
 #include "common/ExitCodes.h"
 #include "gui/ipc/DaemonIpcClient.h"
-#include "tls/TlsUtility.h"
 
 #if defined(Q_OS_MAC)
 #include "OSXHelpers.h"
