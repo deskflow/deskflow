@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.221</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.222</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,8 +122,8 @@ Collaboration diagram for TMethodJob&lt; T &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aac7955ae85aa6e66f9302538cee3342d" id="r_aac7955ae85aa6e66f9302538cee3342d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aac7955ae85aa6e66f9302538cee3342d">TMethodJob</a> (T *object, void(T::*method)(void *), void *arg=nullptr)</td></tr>
-<tr class="memdesc:aac7955ae85aa6e66f9302538cee3342d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="#aff5bbe2da821ee51107c555122a756e1" title="Run the job.">run()</a> invokes <code>object-&gt;method(arg)</code>  <br /></td></tr>
+<tr class="memitem:aa3e998abc7a641fdce2c3898daad7309" id="r_aa3e998abc7a641fdce2c3898daad7309"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa3e998abc7a641fdce2c3898daad7309">TMethodJob</a> (T *object, void(T::*method)(const void *), void *arg=nullptr)</td></tr>
+<tr class="memdesc:aa3e998abc7a641fdce2c3898daad7309"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="#aff5bbe2da821ee51107c555122a756e1" title="Run the job.">run()</a> invokes <code>object-&gt;method(arg)</code>  <br /></td></tr>
 <tr class="memitem:ae607d23b9c32431acbe493a3cf51c36f" id="r_ae607d23b9c32431acbe493a3cf51c36f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae607d23b9c32431acbe493a3cf51c36f">~TMethodJob</a> () override=default</td></tr>
 <tr class="memitem:aff5bbe2da821ee51107c555122a756e1" id="r_aff5bbe2da821ee51107c555122a756e1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aff5bbe2da821ee51107c555122a756e1">run</a> () override</td></tr>
 <tr class="memdesc:aff5bbe2da821ee51107c555122a756e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the job.  <br /></td></tr>
@@ -135,8 +135,8 @@ Public Member Functions</h2></td></tr>
 class TMethodJob&lt; T &gt;</div><p>Use a function as a job. </p>
 <p>A job class that invokes a member function. </p>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="aac7955ae85aa6e66f9302538cee3342d" name="aac7955ae85aa6e66f9302538cee3342d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aac7955ae85aa6e66f9302538cee3342d">&#9670;&#160;</a></span>TMethodJob()</h2>
+<a id="aa3e998abc7a641fdce2c3898daad7309" name="aa3e998abc7a641fdce2c3898daad7309"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3e998abc7a641fdce2c3898daad7309">&#9670;&#160;</a></span>TMethodJob()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -154,7 +154,7 @@ template&lt;class T&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">void(T::*</td>          <td class="paramname"><span class="paramname"><em>method&#160;</em></span>)(void *), </td>
+          <td class="paramtype">void(T::*</td>          <td class="paramname"><span class="paramname"><em>method&#160;</em></span>)(const void *), </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
