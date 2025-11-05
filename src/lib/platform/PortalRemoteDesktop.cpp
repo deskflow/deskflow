@@ -1,3 +1,4 @@
+#include "linux/portal/ClipboardPortal.h"
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
@@ -6,10 +7,10 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "platform/PortalRemoteDesktop.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
+#include "platform/PortalRemoteDesktop.h"
 
 #include <cstring>
 
