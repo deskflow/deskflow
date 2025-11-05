@@ -8,12 +8,22 @@
 #pragma once
 
 #include <QFileInfo>
+#include <QSysInfo>
 
 namespace deskflow::platform {
 
 inline bool isWayland()
 {
   return qEnvironmentVariable("XDG_SESSION_TYPE") == QStringLiteral("wayland");
+}
+
+/**
+ * @brief isWindows
+ * @return Returns true if we are running on windows
+ */
+inline bool isWindows()
+{
+  return QSysInfo::productType() == QStringLiteral("windows");
 }
 
 /**

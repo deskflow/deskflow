@@ -14,6 +14,7 @@
 #include "base/LogOutputters.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
+#include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
@@ -108,11 +109,7 @@ int App::run()
 
 int App::daemonMainLoop(int, const char **)
 {
-#if SYSAPI_WIN32
-  SystemLogger sysLogger(daemonName(), false);
-#else
-  SystemLogger sysLogger(daemonName(), true);
-#endif
+  SystemLogger sysLogger(daemonName(), !deskflow::platform::isWindows());
   return mainLoop();
 }
 
