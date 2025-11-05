@@ -11,7 +11,6 @@ var classEventQueue =
     [ "dispatchEvent", "classEventQueue.html#a6934fca3d8c36d6e629c6150808c410e", null ],
     [ "getEvent", "classEventQueue.html#a0e30a16c3e4ad4cc4cc5d9f1d11fbb05", null ],
     [ "getSystemTarget", "classEventQueue.html#a83a3df042611c634df2b2035049dd23d", null ],
-    [ "isEmpty", "classEventQueue.html#ac24cc15d9a5663011c3ab0d83c7c44b7", null ],
     [ "loop", "classEventQueue.html#a489971b5fe3aca77b863c982b1ce92c1", null ],
     [ "newOneShotTimer", "classEventQueue.html#a0ae7d297f6c1a610fcfe9391746f7421", null ],
     [ "newTimer", "classEventQueue.html#a626d3de0f708e20e674204adfd0e1acf", null ],

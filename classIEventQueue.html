@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.219</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.221</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -147,8 +147,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1469ab4e186c12cc3000b4e49ee183e3" id="r_a1469ab4e186c12cc3000b4e49ee183e3"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1469ab4e186c12cc3000b4e49ee183e3">waitForReady</a> () const =0</td></tr>
 <tr class="memdesc:a1469ab4e186c12cc3000b4e49ee183e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for event queue to become ready.  <br /></td></tr>
 <tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
-<tr class="memitem:a3551f61e6739a7a981e532d2ee1a92c2" id="r_a3551f61e6739a7a981e532d2ee1a92c2"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3551f61e6739a7a981e532d2ee1a92c2">isEmpty</a> () const =0</td></tr>
-<tr class="memdesc:a3551f61e6739a7a981e532d2ee1a92c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if queue is empty.  <br /></td></tr>
 <tr class="memitem:ac5534abeb246a36c64f63bb04a38b7c3" id="r_ac5534abeb246a36c64f63bb04a38b7c3"><td class="memItemLeft" align="right" valign="top">virtual void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac5534abeb246a36c64f63bb04a38b7c3">getSystemTarget</a> ()=0</td></tr>
 <tr class="memdesc:ac5534abeb246a36c64f63bb04a38b7c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system event type target.  <br /></td></tr>
 </table>
@@ -418,36 +416,6 @@ Public Member Functions</h2></td></tr>
 <p>Returns the target to use for dispatching <code><a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a" title="This event is sent when system event occurs. The data is a pointer to system event type.">EventTypes::System</a></code> events. </p>
 
 <p>Implemented in <a class="el" href="classEventQueue.html#a83a3df042611c634df2b2035049dd23d">EventQueue</a>.</p>
-
-</div>
-</div>
-<a id="a3551f61e6739a7a981e532d2ee1a92c2" name="a3551f61e6739a7a981e532d2ee1a92c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3551f61e6739a7a981e532d2ee1a92c2">&#9670;&#160;</a></span>isEmpty()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual bool IEventQueue::isEmpty </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Test if queue is empty. </p>
-<p>Returns true iff the queue has no events in it, including timer events. </p>
-
-<p>Implemented in <a class="el" href="classEventQueue.html#ac24cc15d9a5663011c3ab0d83c7c44b7">EventQueue</a>.</p>
 
 </div>
 </div>

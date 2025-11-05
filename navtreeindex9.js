@@ -1,6 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classHotkey.html#a03801f4755f300c298f76570bc275883":[6,0,98,11],
 "classHotkey.html#a0d8f1fc8fa6f2b3f18a4ae38347960b9":[6,0,98,4],
 "classHotkey.html#a499f878845ddeaaa9cb0fb565686032a":[6,0,98,2],
 "classHotkey.html#a57ca9109e2da3343064777dee953741b":[6,0,98,12],
@@ -173,20 +172,19 @@ var NAVTREEINDEX9 =
 "classIDataSocket_1_1ConnectionFailedInfo.html#a97a4e4a8de386d0fdb168fc9149a81ba":[6,0,108,0,1],
 "classIEventQueue.html":[6,0,109],
 "classIEventQueue.html#a0245c52f3630880e8e4ac265520a806e":[6,0,109,4],
-"classIEventQueue.html#a135df3daf33f6ac2e13e70895bedfd56":[6,0,109,13],
-"classIEventQueue.html#a1469ab4e186c12cc3000b4e49ee183e3":[6,0,109,16],
+"classIEventQueue.html#a135df3daf33f6ac2e13e70895bedfd56":[6,0,109,12],
+"classIEventQueue.html#a1469ab4e186c12cc3000b4e49ee183e3":[6,0,109,15],
 "classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8":[6,0,109,1],
 "classIEventQueue.html#a2a9b3e766507af31980c28fce4acfa66":[6,0,109,8],
-"classIEventQueue.html#a3551f61e6739a7a981e532d2ee1a92c2":[6,0,109,10],
-"classIEventQueue.html#a3ff4e1913c2a794be3b4314948ec4e5c":[6,0,109,14],
+"classIEventQueue.html#a3ff4e1913c2a794be3b4314948ec4e5c":[6,0,109,13],
 "classIEventQueue.html#a51529b3c2b81c013b4106802958510ad":[6,0,109,3],
 "classIEventQueue.html#a63a4943cd0625b03ec3bcb38fc79d4a4":[6,0,109,2],
-"classIEventQueue.html#a729346cb4e7faf9b9510dd8b48935e3d":[6,0,109,12],
-"classIEventQueue.html#a7980284a1d3dd7e2c3f496f1bfb293a9":[6,0,109,15],
+"classIEventQueue.html#a729346cb4e7faf9b9510dd8b48935e3d":[6,0,109,11],
+"classIEventQueue.html#a7980284a1d3dd7e2c3f496f1bfb293a9":[6,0,109,14],
 "classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc":[6,0,109,6],
 "classIEventQueue.html#a9af1fcd05003a150ebb85c5c57c2c564":[6,0,109,7],
 "classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3":[6,0,109,9],
-"classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4":[6,0,109,11],
+"classIEventQueue.html#acd06874382d81f9e39d4e888eee68ba4":[6,0,109,10],
 "classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5":[6,0,109,5],
 "classIEventQueueBuffer.html":[6,0,110],
 "classIEventQueueBuffer.html#a2da8721379cbf34b44b5064423efda0a":[6,0,110,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX9 =
 "classILogOutputter.html#a1a25270747c3028b2977f74f57cd20f5":[6,0,114,1],
 "classILogOutputter.html#a270bde79491303617d509a60800ec07e":[6,0,114,2],
 "classILogOutputter.html#abc39f78d7b6046b8ca349f88098a09bc":[6,0,114,0],
-"classIMSWindowsClipboardConverter.html":[6,0,115]
+"classIMSWindowsClipboardConverter.html":[6,0,115],
+"classIMSWindowsClipboardConverter.html#a28000e0d85db3393750c7f29e8a1b307":[6,0,115,2],
+"classIMSWindowsClipboardConverter.html#a616df500e881ea730979191dc4562719":[6,0,115,0]
 };

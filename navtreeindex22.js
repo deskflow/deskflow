@@ -1,7 +1,5 @@
 var NAVTREEINDEX22 =
 {
-"namespaceSettingsKeys.html#ae19849dae134d7a634582a6e0169447b":[5,0,1,7],
-"namespaceSettingsKeys.html#ae2487530b52af7d18c3a0b7703b9ffd9":[5,0,1,6],
 "namespaceUi.html":[5,0,3],
 "namespacedeskflow.html":[5,0,0],
 "namespacedeskflow.html#a108d2978bd73d96786e7e28c9960c501":[5,0,0,19],
@@ -249,5 +247,7 @@ var NAVTREEINDEX22 =
 "structCoreArgs.html#ada973b89e10429ac0eab7618024c2e38":[6,0,81,3],
 "structCoreArgs.html#af596e33bb54c0b63d633ae0ed47d3658":[6,0,81,1],
 "structEvent_1_1EventFlags.html":[6,0,86,0],
-"structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920":[6,0,86,0,2]
+"structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920":[6,0,86,0,2],
+"structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213":[6,0,86,0,1],
+"structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8":[6,0,86,0,0]
 };

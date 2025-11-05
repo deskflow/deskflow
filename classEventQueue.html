@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.219</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.221</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -150,8 +150,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a15c33878b01e4e9fbfd4c55d0d0d844d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister an event handler for an event type.  <br /></td></tr>
 <tr class="memitem:a5094ef2feb59bc232b24b145dbd789f1" id="r_a5094ef2feb59bc232b24b145dbd789f1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5094ef2feb59bc232b24b145dbd789f1">removeHandlers</a> (void *target) override</td></tr>
 <tr class="memdesc:a5094ef2feb59bc232b24b145dbd789f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister all event handlers for an event target.  <br /></td></tr>
-<tr class="memitem:ac24cc15d9a5663011c3ab0d83c7c44b7" id="r_ac24cc15d9a5663011c3ab0d83c7c44b7"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac24cc15d9a5663011c3ab0d83c7c44b7">isEmpty</a> () const override</td></tr>
-<tr class="memdesc:ac24cc15d9a5663011c3ab0d83c7c44b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Test if queue is empty.  <br /></td></tr>
 <tr class="memitem:a83a3df042611c634df2b2035049dd23d" id="r_a83a3df042611c634df2b2035049dd23d"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83a3df042611c634df2b2035049dd23d">getSystemTarget</a> () override</td></tr>
 <tr class="memdesc:a83a3df042611c634df2b2035049dd23d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the system event type target.  <br /></td></tr>
 <tr class="memitem:ac59e3add907cf56a2c5ddc41686bc9b8" id="r_ac59e3add907cf56a2c5ddc41686bc9b8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac59e3add907cf56a2c5ddc41686bc9b8">waitForReady</a> () const override</td></tr>
@@ -482,36 +480,6 @@ Additional Inherited Members</h2></td></tr>
 <p>Returns the target to use for dispatching <code><a class="el" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2aa45da96d0bf6575970f2d27af22be28a" title="This event is sent when system event occurs. The data is a pointer to system event type.">EventTypes::System</a></code> events. </p>
 
 <p>Implements <a class="el" href="classIEventQueue.html#ac5534abeb246a36c64f63bb04a38b7c3">IEventQueue</a>.</p>
-
-</div>
-</div>
-<a id="ac24cc15d9a5663011c3ab0d83c7c44b7" name="ac24cc15d9a5663011c3ab0d83c7c44b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac24cc15d9a5663011c3ab0d83c7c44b7">&#9670;&#160;</a></span>isEmpty()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool EventQueue::isEmpty </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Test if queue is empty. </p>
-<p>Returns true iff the queue has no events in it, including timer events. </p>
-
-<p>Implements <a class="el" href="classIEventQueue.html#a3551f61e6739a7a981e532d2ee1a92c2">IEventQueue</a>.</p>
 
 </div>
 </div>

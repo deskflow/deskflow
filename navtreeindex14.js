@@ -1,7 +1,5 @@
 var NAVTREEINDEX14 =
 {
-"classScreenConfig.html#aa614b21714c5878160804fb6375ea814a6adf97f83acf6453d4a6a4b1070f3754":[6,0,191,1,6],
-"classScreenConfig.html#aa614b21714c5878160804fb6375ea814a825a3d98017bab11815ad2817201324c":[6,0,191,1,1],
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf":[6,0,191,1,3],
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814ab6755d218d5f4e1cef9cce9cc39aeda9":[6,0,191,1,4],
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814ac4640319a26ddefaa529bd0d954c6b9e":[6,0,191,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX14 =
 "classServer_1_1ScreenConnectedInfo.html#a4263279f66994b988a62d759b72c4ad6":[6,0,204,3,1],
 "classServer_1_1ScreenConnectedInfo.html#ae2552930570dc1cffc65b473ba5b0659":[6,0,204,3,0],
 "classServer_1_1SwitchInDirectionInfo.html":[6,0,204,2],
-"classServer_1_1SwitchInDirectionInfo.html#a90bdb6c725309a0c8d030d682aa62422":[6,0,204,2,1]
+"classServer_1_1SwitchInDirectionInfo.html#a90bdb6c725309a0c8d030d682aa62422":[6,0,204,2,1],
+"classServer_1_1SwitchInDirectionInfo.html#a93813da212634947ce1d6a529505352c":[6,0,204,2,0],
+"classServer_1_1SwitchToScreenInfo.html":[6,0,204,1]
 };

@@ -1,7 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213":[6,0,86,0,1],
-"structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8":[6,0,86,0,0],
 "structFingerprint.html":[6,0,92],
 "structFingerprint.html#a030170043d67afd657a30201d0d39d1a":[6,0,92,11],
 "structFingerprint.html#a082356b171885eb6320845bc889227b4":[6,0,92,3],
