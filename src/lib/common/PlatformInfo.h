@@ -27,6 +27,15 @@ inline bool isWindows()
 }
 
 /**
+ * @brief isMac
+ * @return Returns true if we are running on mac os
+ */
+inline bool isMac()
+{
+  return QSysInfo::productType() == QStringLiteral("macos");
+}
+
+/**
  * @brief isFlatpak
  * @return Returns true if we are running as flatpak
  */

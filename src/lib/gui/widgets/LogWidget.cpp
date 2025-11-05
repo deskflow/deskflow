@@ -5,6 +5,7 @@
  */
 
 #include "LogWidget.h"
+#include "common/PlatformInfo.h"
 
 #include <gui/Logger.h>
 
@@ -19,11 +20,12 @@ LogWidget::LogWidget(QWidget *parent) : QWidget{parent}, m_textLog{new QPlainTex
 
   // setup the log font
   m_textLog->setFont(QFontDatabase::systemFont(QFontDatabase::FixedFont));
-#ifdef Q_OS_MAC
-  auto f = m_textLog->font();
-  f.setPixelSize(12);
-  m_textLog->setFont(f);
-#endif
+  if (deskflow::platform::isMac()) {
+    auto f = m_textLog->font();
+    f.setPixelSize(12);
+    m_textLog->setFont(f);
+  }
+
   auto layout = new QVBoxLayout;
   layout->setContentsMargins(0, 0, 0, 0);
   layout->addWidget(m_textLog);
