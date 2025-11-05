@@ -222,13 +222,13 @@ void MainWindow::setupControls()
   ui->lineEditName->setValidator(new QRegularExpressionValidator(m_nameRegEx, this));
   ui->lineEditName->setVisible(false);
 
-#if defined(Q_OS_MAC)
-  ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, 0);
-  ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, 0);
-  ui->btnSaveServerConfig->setFixedWidth(ui->btnSaveServerConfig->height());
-#else
-  ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
-#endif
+  if (deskflow::platform::isMac()) {
+    ui->rbModeServer->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->rbModeClient->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->btnSaveServerConfig->setFixedWidth(ui->btnSaveServerConfig->height());
+  } else {
+    ui->btnSaveServerConfig->setIconSize(QSize(22, 22));
+  }
 
   static const auto btnHeight = ui->statusBar->height() - 2;
   static const auto btnSize = QSize(btnHeight, btnHeight);
@@ -295,10 +295,9 @@ void MainWindow::connectSlots()
 
   connect(&m_versionChecker, &VersionChecker::updateFound, this, &MainWindow::versionCheckerUpdateFound);
 
-// Mac os tray will only show a menu
-#ifndef Q_OS_MAC
-  connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
-#endif
+  // Mac os tray will only show a menu
+  if (!deskflow::platform::isMac())
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this, &MainWindow::trayIconActivated);
 
   connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
   connect(&m_serverConnection, &ServerConnection::clientsChanged, this, &MainWindow::serverClientsChanged);
