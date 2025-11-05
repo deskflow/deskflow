@@ -13,7 +13,6 @@
 #include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
-#include "gui/core/CoreProcess.h"
 #include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 
