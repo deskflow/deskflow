@@ -73,13 +73,16 @@ ServerApp::ServerApp(IEventQueue *events, const QString &processName) : App(even
 void ServerApp::parseArgs()
 {
   if (const auto address = Settings::value(Settings::Core::Interface).toString(); !address.isEmpty()) {
-    try {
-      *m_deskflowAddress = NetworkAddress(address.toStdString(), kDefaultPort);
-      m_deskflowAddress->resolve();
-    } catch (SocketAddressException &e) {
-      LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
-      bye(s_exitArgs);
-    }
+    *m_deskflowAddress = NetworkAddress(address.toStdString(), Settings::value(Settings::Core::Port).toInt());
+  } else {
+    *m_deskflowAddress = NetworkAddress(Settings::value(Settings::Core::Port).toInt());
+  }
+
+  try {
+    m_deskflowAddress->resolve();
+  } catch (SocketAddressException &e) {
+    LOG_CRIT("%s: %s" BYE, qPrintable(processName()), e.what(), qPrintable(processName()));
+    bye(s_exitArgs);
   }
 }
 
