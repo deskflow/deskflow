@@ -913,8 +913,17 @@ void OSXScreen::handleSystemEvent(const Event &event)
   }
 }
 
-bool OSXScreen::onMouseMove(CGFloat mx, CGFloat my)
+bool OSXScreen::onMouseMove()
 {
+  // when we receive a mouse-move event, it is possible it was queued for a period
+  // and that the mouse has already moved again since then.  to handle this, we need
+  // to query the current mouse position rather than using the position in the event.
+  CGEventRef event = CGEventCreate(NULL);
+  CGPoint pos = CGEventGetLocation(event);
+  CFRelease(event);
+  CGFloat mx = pos.x;
+  CGFloat my = pos.y;
+
   LOG_DEBUG2("mouse move %+f,%+f", mx, my);
 
   CGFloat x = mx - m_xCursor;
@@ -1613,7 +1622,6 @@ OSXScreen::handleCGInputEventSecondary(CGEventTapProxy proxy, CGEventType type, 
 CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon)
 {
   OSXScreen *screen = (OSXScreen *)refcon;
-  CGPoint pos;
 
   switch (type) {
   case kCGEventLeftMouseDown:
@@ -1630,8 +1638,9 @@ CGEventRef OSXScreen::handleCGInputEvent(CGEventTapProxy proxy, CGEventType type
   case kCGEventRightMouseDragged:
   case kCGEventOtherMouseDragged:
   case kCGEventMouseMoved:
-    pos = CGEventGetLocation(event);
-    screen->onMouseMove(pos.x, pos.y);
+    // we intentionally ignore the position in the event here as the events are
+    // queued and will no longer be accurate when we process them.
+    screen->onMouseMove();
 
     // The system ignores our cursor-centering calls if
     // we don't return the event. This should be harmless,
