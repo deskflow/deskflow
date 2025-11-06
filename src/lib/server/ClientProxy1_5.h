@@ -8,8 +8,6 @@
 
 #include "server/ClientProxy1_4.h"
 
-#include <vector>
-
 class Server;
 class IEventQueue;
 
