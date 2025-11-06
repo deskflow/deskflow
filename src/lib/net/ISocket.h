@@ -8,9 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
-
 class NetworkAddress;
 
 //! Generic socket interface
