@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "deskflow/KeyState.h"
 #include "platform/IOSXKeyResource.h"
 
 #include <Carbon/Carbon.h>
