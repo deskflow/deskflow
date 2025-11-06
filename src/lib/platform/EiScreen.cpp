@@ -8,17 +8,11 @@
 
 #include "platform/EiScreen.h"
 
-#include "arch/Arch.h"
-#include "arch/ArchException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/Stopwatch.h"
 #include "common/Constants.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
-#include "deskflow/Clipboard.h"
-#include "deskflow/KeyMap.h"
-#include "deskflow/ScreenException.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"

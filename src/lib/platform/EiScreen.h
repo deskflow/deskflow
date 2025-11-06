@@ -7,14 +7,11 @@
 
 #pragma once
 
-#include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
 
 #include <libei.h>
-#include <memory>
 #include <mutex>
-#include <set>
 #include <vector>
 
 struct ei;
