@@ -8,10 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
-#include "deskflow/OptionTypes.h"
-
 #include <string>
 
 class ClientProxy;

@@ -10,11 +10,9 @@
 
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "deskflow/AppUtil.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/ProtocolUtil.h"
-#include "io/IOException.h"
 #include "io/IStream.h"
 #include "server/ClientProxy1_0.h"
 #include "server/ClientProxy1_1.h"
@@ -26,9 +24,6 @@
 #include "server/ClientProxy1_7.h"
 #include "server/ClientProxy1_8.h"
 #include "server/Server.h"
-
-#include <iterator>
-#include <sstream>
 
 //
 // ClientProxyUnknown
