@@ -14,6 +14,7 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"
+#include "common/Constants.h"
 #include "deskflow/App.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/Screen.h"

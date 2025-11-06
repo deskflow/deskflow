@@ -7,7 +7,6 @@
 
 #include "deskflow/PlatformScreen.h"
 #include "base/DirectionTypes.h"
-#include "common/Settings.h"
 #include "deskflow/App.h"
 
 PlatformScreen::PlatformScreen(IEventQueue *events, bool invertScrolling)

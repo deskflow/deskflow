@@ -7,10 +7,7 @@
 
 #pragma once
 
-#include "common/Settings.h"
 #include "deskflow/IPlatformScreen.h"
-
-#include <stdexcept>
 
 //! Base screen implementation
 /*!
