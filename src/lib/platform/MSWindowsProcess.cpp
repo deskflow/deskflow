@@ -9,7 +9,6 @@
 
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
-#include "common/Common.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 
@@ -18,7 +17,6 @@
 
 #include <UserEnv.h>
 
-#include <stdexcept>
 #include <string>
 
 namespace deskflow::platform {
