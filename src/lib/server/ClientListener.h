@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
 #include "net/SecurityLevel.h"
 #include "server/Config.h"
 
