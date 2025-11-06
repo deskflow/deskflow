@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
+#include <cstdint>
 
 //! Mouse button ID
 /*!
