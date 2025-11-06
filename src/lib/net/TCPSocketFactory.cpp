@@ -7,8 +7,6 @@
  */
 
 #include "net/TCPSocketFactory.h"
-#include "arch/Arch.h"
-#include "base/Log.h"
 #include "net/SecureListenSocket.h"
 #include "net/SecureSocket.h"
 #include "net/TCPListenSocket.h"
