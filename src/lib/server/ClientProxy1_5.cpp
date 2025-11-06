@@ -6,13 +6,12 @@
 
 #include "server/ClientProxy1_5.h"
 
-#include "base/Log.h"
 #include "deskflow/ProtocolUtil.h"
 #include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
 #include "server/Server.h"
 
-#include <sstream>
+#include <cstring>
 
 //
 // ClientProxy1_5
