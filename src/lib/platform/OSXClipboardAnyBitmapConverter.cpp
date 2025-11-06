@@ -6,7 +6,6 @@
  */
 
 #include "platform/OSXClipboardAnyBitmapConverter.h"
-#include <algorithm>
 
 IClipboard::Format OSXClipboardAnyBitmapConverter::getFormat() const
 {
