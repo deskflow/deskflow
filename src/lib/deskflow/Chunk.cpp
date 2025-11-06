@@ -5,7 +5,6 @@
  */
 
 #include "deskflow/Chunk.h"
-#include "base/String.h"
 
 Chunk::Chunk(size_t size) : m_chunk{new char[size]}
 {
