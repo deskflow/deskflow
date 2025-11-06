@@ -7,7 +7,10 @@
 #pragma once
 
 #include <stdexcept>
+
+#ifdef __APPLE__
 #include <string>
+#endif
 
 class DisplayInvalidException : public std::runtime_error
 {
