@@ -8,7 +8,6 @@
 #include "SecureUtils.h"
 
 #include "base/FinalAction.h"
-#include "base/String.h"
 #include "io/Filesystem.h"
 
 #include <openssl/evp.h>
