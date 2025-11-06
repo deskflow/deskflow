@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "base/DirectionTypes.h"
-#include "base/EventTypes.h"
-
+#include <cstdint>
 /**
  * @file ProtocolTypes.h
  * @brief Deskflow Network Protocol Specification and Implementation
