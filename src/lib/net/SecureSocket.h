@@ -13,6 +13,7 @@
 #include <memory>
 #include <mutex>
 
+class Event;
 class IEventQueue;
 class SocketMultiplexer;
 class ISocketMultiplexerJob;

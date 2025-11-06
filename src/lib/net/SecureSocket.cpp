@@ -9,6 +9,7 @@
 #include "SecureUtils.h"
 
 #include "arch/ArchException.h"
+#include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Path.h"
 #include "common/Settings.h"

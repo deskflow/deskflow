@@ -10,6 +10,8 @@
 #include "io/IStream.h"
 #include "net/ISocket.h"
 
+#include <string>
+
 //! Data stream socket interface
 /*!
 This interface defines the methods common to all network sockets that

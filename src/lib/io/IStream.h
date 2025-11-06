@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
-#include "base/IEventQueue.h"
+#include <cstdint>
 
 class IEventQueue;
 

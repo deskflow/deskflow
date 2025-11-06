@@ -11,6 +11,7 @@
 
 #include <functional>
 #include <memory>
+#include <string> //IWYU
 
 namespace deskflow::client {
 
