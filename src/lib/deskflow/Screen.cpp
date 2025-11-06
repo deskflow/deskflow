@@ -9,8 +9,6 @@
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "deskflow/IPlatformScreen.h"
-#include "deskflow/ProtocolTypes.h"
-#include "server/ClientProxy.h"
 
 namespace deskflow {
 
