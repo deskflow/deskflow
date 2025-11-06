@@ -7,7 +7,6 @@
 
 #if WINAPI_XWINDOWS
 #include <algorithm>
-#include <fstream>
 #include <sstream>
 
 #include <QDomDocument>
