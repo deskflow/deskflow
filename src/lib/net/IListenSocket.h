@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
 #include "net/ISocket.h"
 
 #include <memory>
