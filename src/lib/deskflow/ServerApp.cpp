@@ -16,6 +16,7 @@
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/App.h"
+#include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/ScreenException.h"
 #include "net/SocketException.h"

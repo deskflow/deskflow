@@ -13,6 +13,7 @@
 #include "deskflow/KeyMap.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/OptionTypes.h"
+#include "deskflow/ProtocolTypes.h"
 #include "net/SocketException.h"
 #include "server/Server.h"
 
