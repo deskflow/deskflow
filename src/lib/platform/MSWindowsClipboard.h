@@ -9,7 +9,6 @@
 #pragma once
 
 #include "deskflow/IClipboard.h"
-#include "platform/MSWindowsClipboardFacade.h"
 
 #include <vector>
 
