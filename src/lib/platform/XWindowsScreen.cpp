@@ -11,7 +11,6 @@
 #include "platform/XWindowsScreen.h"
 
 #include "arch/Arch.h"
-#include "arch/ArchException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/Stopwatch.h"
