@@ -9,7 +9,6 @@
 
 #include "arch/ArchException.h"
 #include "base/Log.h"
-#include "deskflow/Clipboard.h"
 #include "platform/OSXClipboardBMPConverter.h"
 #include "platform/OSXClipboardHTMLConverter.h"
 #include "platform/OSXClipboardTextConverter.h"
