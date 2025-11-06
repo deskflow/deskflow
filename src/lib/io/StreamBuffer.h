@@ -7,8 +7,7 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
-
+#include <cstdint>
 #include <list>
 #include <vector>
 
