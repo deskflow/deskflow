@@ -21,7 +21,6 @@
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsScreen.h"
 
-#include <VersionHelpers.h>
 #include <Windows.h>
 #include <conio.h>
 #include <memory>
@@ -105,10 +104,6 @@ static int foregroundStartupStatic()
 
 int AppUtilWindows::run()
 {
-  if (!IsWindowsXPSP3OrGreater()) {
-    throw std::runtime_error("unsupported os version, xp sp3 or greater required");
-  }
-
   // record window instance for tray icon, etc
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 
