@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
 #include "deskflow/MouseTypes.h"
 
 //! Secondary screen interface
