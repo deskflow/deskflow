@@ -13,7 +13,6 @@
 #include "deskflow/ProtocolUtil.h"
 
 #include <cstring>
-#include <memory>
 
 //
 // ClientProxy1_3
