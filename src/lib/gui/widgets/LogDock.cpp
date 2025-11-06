@@ -6,7 +6,6 @@
 
 #include "LogDock.h"
 #include "LogWidget.h"
-#include "gui/Styles.h"
 
 #include <QEvent>
 #include <QHBoxLayout>
