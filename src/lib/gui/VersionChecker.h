@@ -8,7 +8,6 @@
 
 #include <QObject>
 #include <QString>
-#include <memory>
 
 class QNetworkAccessManager;
 class QNetworkReply;
