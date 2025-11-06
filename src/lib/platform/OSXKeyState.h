@@ -13,7 +13,6 @@
 #include <Carbon/Carbon.h>
 
 #include <map>
-#include <set>
 #include <vector>
 
 class IOSXKeyResource;
