@@ -7,6 +7,8 @@
 
 #include "base/Unicode.h"
 
+#include <assert.h>
+
 //
 // local utility functions
 //
