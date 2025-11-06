@@ -8,6 +8,7 @@
 
 #include <QDir>
 #include <QFileInfoList>
+#include <QIcon>
 #include <QPalette>
 #include <QStyleHints>
 
