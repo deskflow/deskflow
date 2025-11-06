@@ -6,12 +6,9 @@
  */
 
 #include "server/ClientProxy1_1.h"
-#include "deskflow/AppUtil.h"
 
 #include "base/Log.h"
 #include "deskflow/ProtocolUtil.h"
-
-#include <cstring>
 
 //
 // ClientProxy1_1
