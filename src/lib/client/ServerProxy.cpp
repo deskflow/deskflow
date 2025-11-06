@@ -8,11 +8,9 @@
 
 #include "client/ServerProxy.h"
 
-#include "base/BaseException.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "client/Client.h"
-#include "deskflow/AppUtil.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardChunk.h"
 #include "deskflow/DeskflowException.h"
@@ -22,9 +20,7 @@
 #include "deskflow/StreamChunker.h"
 #include "io/IStream.h"
 
-#include <algorithm>
 #include <cstring>
-#include <memory>
 
 //
 // ServerProxy
