@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
 #include "io/IOException.h"
 
+#include <cstdint>
 #include <stdarg.h>
 #include <vector>
 

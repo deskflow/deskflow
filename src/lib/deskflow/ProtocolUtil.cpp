@@ -13,7 +13,6 @@
 #include <array>
 #include <iterator>
 
-#include <cctype>
 #include <cstring>
 #include <vector>
 
