@@ -14,7 +14,6 @@
 #include "mt/Thread.h"
 
 #include <cassert>
-#include <cstdio>
 #include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
