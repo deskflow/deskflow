@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
-#include "base/NetworkProtocol.h"
-
+#include <cstdint>
 #include <vector>
 
 //! Option ID
