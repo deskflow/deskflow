@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-
 //! Screen saver interface
 /*!
 This interface defines the methods common to all screen savers.
