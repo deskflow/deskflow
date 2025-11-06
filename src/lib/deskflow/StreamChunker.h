@@ -8,7 +8,7 @@
 
 #include "deskflow/ClipboardTypes.h"
 
-#include <string>
+#include <string_view>
 
 class IEventQueue;
 
