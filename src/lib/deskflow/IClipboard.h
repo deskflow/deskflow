@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
-
 #include <cstdint>
 #include <string>
 
