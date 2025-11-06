@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/OSXClipboard.h"
 #include "platform/OSXPowerManager.h"
