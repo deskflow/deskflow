@@ -9,10 +9,8 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/EventTypes.h"
 
 #include <functional>
-#include <string>
 
 class IEventQueueBuffer;
 

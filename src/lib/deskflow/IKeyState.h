@@ -12,6 +12,7 @@
 #include "deskflow/KeyTypes.h"
 
 #include <set>
+#include <string>
 
 //! Key state interface
 /*!
