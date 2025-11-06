@@ -19,7 +19,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <memory>
 
 static const std::size_t s_maxInputBufferSize = 1024 * 1024;
 
