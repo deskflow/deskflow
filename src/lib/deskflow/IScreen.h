@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
 #include "deskflow/ClipboardTypes.h"
 
 class IClipboard;

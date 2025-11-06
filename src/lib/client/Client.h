@@ -11,12 +11,14 @@
 #include "deskflow/IClient.h"
 
 #include "HelloBack.h"
+#include "base/EventTypes.h"
 #include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
 #include <climits>
 #include <memory>
 
+class Event;
 class EventQueueTimer;
 namespace deskflow {
 class Screen;
@@ -154,7 +156,7 @@ public:
 
 private:
   void sendClipboard(ClipboardID);
-  void sendEvent(EventTypes, void *);
+  void sendEvent(deskflow::EventTypes, void *);
   void sendConnectionFailedEvent(const char *msg);
   void setupConnecting();
   void setupConnection();
