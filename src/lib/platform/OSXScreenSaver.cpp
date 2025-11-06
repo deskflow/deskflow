@@ -9,7 +9,6 @@
 
 #import "base/IEventQueue.h"
 #import "base/Log.h"
-#import "deskflow/IPrimaryScreen.h"
 #import "platform/OSXScreenSaverUtil.h"
 
 #import <string.h>
