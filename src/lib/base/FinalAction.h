@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <utility>
+
 namespace deskflow {
 
 /**
