@@ -8,12 +8,9 @@
 #pragma once
 
 #include "base/IEventQueueBuffer.h"
-#include "deskflow/IScreen.h"
-#include "mt/Thread.h"
 #include "platform/EiScreen.h"
 
 #include <libei.h>
-#include <memory>
 #include <mutex>
 #include <queue>
 
