@@ -9,7 +9,6 @@
 
 #include "base/String.h"
 #include "deskflow/KeyTypes.h"
-#include "mt/Thread.h"
 #include "platform/XWindowsUtil.h"
 
 #include <X11/Xatom.h>
