@@ -8,6 +8,7 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
+#include "base/Event.h"
 #include "io/StreamBuffer.h"
 #include "mt/CondVar.h"
 #include "mt/Mutex.h"

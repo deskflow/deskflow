@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "base/EventTypes.h"
 #include "io/IStream.h"
 
 #include <gmock/gmock.h>
@@ -27,10 +28,10 @@ public:
   MOCK_METHOD(void, flush, (), (override));
   MOCK_METHOD(void, shutdownInput, (), (override));
   MOCK_METHOD(void, shutdownOutput, (), (override));
-  MOCK_METHOD(EventTypes, getInputReadyEvent, ());
-  MOCK_METHOD(EventTypes, getOutputErrorEvent, ());
-  MOCK_METHOD(EventTypes, getInputShutdownEvent, ());
-  MOCK_METHOD(EventTypes, getOutputShutdownEvent, ());
+  MOCK_METHOD(deskflow::EventTypes, getInputReadyEvent, ());
+  MOCK_METHOD(deskflow::EventTypes, getOutputErrorEvent, ());
+  MOCK_METHOD(deskflow::EventTypes, getInputShutdownEvent, ());
+  MOCK_METHOD(deskflow::EventTypes, getOutputShutdownEvent, ());
   MOCK_METHOD(void *, getEventTarget, (), (const, override));
   MOCK_METHOD(bool, isReady, (), (const, override));
   MOCK_METHOD(uint32_t, getSize, (), (const, override));
