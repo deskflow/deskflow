@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "mt/Thread.h"
 #include "platform/MSWindowsProcess.h"
 #include "platform/MSWindowsSession.h"
 
@@ -19,7 +20,6 @@
 
 typedef VOID(WINAPI *SendSas)(BOOL asUser);
 
-class Thread;
 class FileLogOutputter;
 
 /**

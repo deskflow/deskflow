@@ -18,6 +18,7 @@
 #include "deskflow/App.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/Screen.h"
+#include "mt/Thread.h"
 #include "platform/MSWindowsScreen.h"
 
 #include <Windows.h>
