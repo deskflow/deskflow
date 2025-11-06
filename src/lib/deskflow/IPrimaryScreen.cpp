@@ -6,7 +6,6 @@
  */
 
 #include "deskflow/IPrimaryScreen.h"
-#include "base/EventQueue.h"
 
 #include <cstdlib>
 
