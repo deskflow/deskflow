@@ -9,8 +9,6 @@
 
 #include "platform/IMSWindowsClipboardFacade.h"
 
-#include "deskflow/IClipboard.h"
-
 class MSWindowsClipboardFacade : public IMSWindowsClipboardFacade
 {
 public:

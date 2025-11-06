@@ -7,8 +7,6 @@
 
 #include "platform/MSWindowsClipboardFacade.h"
 
-#include "platform/MSWindowsClipboard.h"
-
 void MSWindowsClipboardFacade::write(HANDLE win32Data, UINT win32Format)
 {
   if (SetClipboardData(win32Format, win32Data) == nullptr) {
