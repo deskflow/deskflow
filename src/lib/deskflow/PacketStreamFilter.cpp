@@ -10,7 +10,6 @@
 #include "deskflow/ProtocolTypes.h"
 
 #include <cstring>
-#include <memory>
 
 //
 // PacketStreamFilter
