@@ -8,14 +8,12 @@
 #include "deskflow/win32/AppUtilWindows.h"
 
 #include "arch/Arch.h"
-#include "arch/ArchException.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/LogOutputters.h"
-#include "common/Constants.h"
 #include "deskflow/App.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/Screen.h"
@@ -23,7 +21,6 @@
 
 #include <Windows.h>
 #include <conio.h>
-#include <memory>
 
 AppUtilWindows::AppUtilWindows(IEventQueue *events) : m_events(events), m_exitMode(kExitModeNormal)
 {
