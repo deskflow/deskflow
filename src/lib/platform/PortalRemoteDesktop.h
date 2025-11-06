@@ -13,8 +13,6 @@
 #include <glib.h>
 #include <libportal/portal.h>
 
-#include <memory>
-
 namespace deskflow {
 
 class PortalRemoteDesktop
