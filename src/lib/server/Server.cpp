@@ -8,10 +8,8 @@
 
 #include "server/Server.h"
 
-#include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/TMethodJob.h"
 #include "deskflow/AppUtil.h"
 #include "deskflow/DeskflowException.h"
 #include "deskflow/IPlatformScreen.h"
@@ -20,7 +18,6 @@
 #include "deskflow/ProtocolTypes.h"
 #include "deskflow/Screen.h"
 #include "deskflow/StreamChunker.h"
-#include "mt/Thread.h"
 #include "net/TCPSocket.h"
 #include "server/ClientListener.h"
 #include "server/ClientProxy.h"
@@ -35,7 +32,6 @@
 #include <cstdlib>
 #include <cstring>
 #include <ctime>
-#include <stdexcept>
 
 using namespace deskflow::server;
 

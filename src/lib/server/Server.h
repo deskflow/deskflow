@@ -9,18 +9,15 @@
 #pragma once
 
 #include "base/Event.h"
-#include "base/EventTypes.h"
 #include "base/Stopwatch.h"
 #include "deskflow/Clipboard.h"
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/KeyTypes.h"
 #include "deskflow/MouseTypes.h"
-#include "deskflow/OptionTypes.h"
 #include "server/Config.h"
 
 #include <climits>
 #include <map>
-#include <memory>
 #include <set>
 #include <vector>
 
