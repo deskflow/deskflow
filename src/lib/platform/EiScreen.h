@@ -11,6 +11,7 @@
 #include "platform/XDGPowerManager.h"
 
 #include <libei.h>
+#include <map>
 #include <mutex>
 #include <vector>
 
