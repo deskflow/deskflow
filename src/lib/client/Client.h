@@ -11,9 +11,7 @@
 #include "deskflow/IClient.h"
 
 #include "HelloBack.h"
-#include "base/EventTypes.h"
-#include "deskflow/Clipboard.h"
-#include "mt/CondVar.h"
+#include "deskflow/IClipboard.h"
 #include "net/NetworkAddress.h"
 
 #include <climits>
