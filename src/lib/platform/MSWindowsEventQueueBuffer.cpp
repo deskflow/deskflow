@@ -9,7 +9,6 @@
 
 #include "arch/win32/ArchMiscWindows.h"
 #include "base/IEventQueue.h"
-#include "mt/Thread.h"
 
 //
 // EventQueueTimer
