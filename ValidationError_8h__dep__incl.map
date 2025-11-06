@@ -1,30 +1,24 @@
 <map id="src/lib/gui/validators/ValidationError.h" name="src/lib/gui/validators/ValidationError.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="439,5,576,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="367,5,504,44"/>
 <area shape="rect" id="Node000002" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="167,265,344,304"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="424,36,351,56,316,72,285,94,260,121,247,148,244,179,246,217,254,265,248,265,241,218,238,178,242,146,255,118,282,90,314,68,350,51,422,31"/>
-<area shape="rect" id="Node000003" href="$SettingsDialog_8h.html" title=" " alt="" coords="666,92,788,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="571,48,680,89,678,94,569,53"/>
-<area shape="rect" id="Node000006" href="$AliasValidator_8h.html" title=" " alt="" coords="43,179,180,217"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="424,32,371,38,313,50,255,68,201,94,176,113,154,136,124,180,119,177,150,133,172,109,198,90,253,63,312,45,370,33,423,27"/>
-<area shape="rect" id="Node000008" href="$LineEditValidator_8h.html" title=" " alt="" coords="296,92,433,131"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="464,55,398,94,395,89,461,50"/>
-<area shape="rect" id="Node000010" href="$ScreenNameValidator_8h.html" title=" " alt="" coords="426,179,588,217"/>
-<area shape="poly" id="edge15_Node000001_Node000010" title=" " alt="" coords="510,59,510,178,505,178,505,59"/>
-<area shape="rect" id="Node000011" href="$ScreenNameValidator_8cpp.html" title=" " alt="" coords="478,265,654,304"/>
-<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="535,55,573,110,590,143,603,178,607,198,603,218,594,244,581,266,577,263,589,242,598,217,601,198,598,179,585,145,568,112,531,58"/>
-<area shape="rect" id="Node000012" href="$ValidationError_8cpp.html" title=" " alt="" coords="812,92,949,131"/>
-<area shape="poly" id="edge16_Node000001_Node000012" title=" " alt="" coords="591,42,812,92,811,97,590,47"/>
-<area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="822,186,1003,210"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="783,135,888,183,886,187,781,140"/>
-<area shape="rect" id="Node000005" href="$SettingsDialog_8cpp.html" title=" " alt="" coords="664,179,799,217"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="732,146,733,178,728,178,726,146"/>
-<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="158,223,225,262,222,267,155,228"/>
-<area shape="rect" id="Node000007" href="$AliasValidator_8cpp.html" title=" " alt="" coords="5,265,143,304"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="99,233,85,266,80,264,94,231"/>
-<area shape="poly" id="edge9_Node000008_Node000006" title=" " alt="" coords="295,139,168,181,167,176,293,134"/>
-<area shape="rect" id="Node000009" href="$LineEditValidator_8cpp.html" title=" " alt="" coords="255,179,402,217"/>
-<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="353,146,339,179,334,177,348,144"/>
-<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="411,137,477,176,474,180,408,141"/>
-<area shape="poly" id="edge12_Node000010_Node000002" title=" " alt="" coords="438,225,312,267,310,262,436,220"/>
-<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="531,229,555,263,551,266,527,232"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,44,307,64,286,77,268,94,255,113,246,135,240,183,244,228,252,264,247,265,239,229,235,182,241,134,250,111,264,90,283,73,304,59,351,39"/>
+<area shape="rect" id="Node000003" href="$AliasValidator_8h.html" title=" " alt="" coords="43,179,180,217"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="352,40,275,59,237,75,201,94,176,114,155,136,124,180,120,177,151,133,173,110,198,90,235,70,274,54,351,34"/>
+<area shape="rect" id="Node000005" href="$LineEditValidator_8h.html" title=" " alt="" coords="277,92,415,131"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="406,57,368,93,364,89,403,53"/>
+<area shape="rect" id="Node000007" href="$ScreenNameValidator_8h.html" title=" " alt="" coords="426,179,588,217"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="451,57,502,177,497,179,446,59"/>
+<area shape="rect" id="Node000008" href="$ScreenNameValidator_8cpp.html" title=" " alt="" coords="478,265,654,304"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="483,51,515,74,549,103,580,138,603,178,608,201,603,226,583,266,578,264,598,224,602,202,598,180,575,141,545,107,512,78,480,55"/>
+<area shape="rect" id="Node000009" href="$ValidationError_8cpp.html" title=" " alt="" coords="664,92,801,131"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="516,46,668,89,666,94,515,51"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="158,223,225,262,222,267,155,228"/>
+<area shape="rect" id="Node000004" href="$AliasValidator_8cpp.html" title=" " alt="" coords="5,265,143,304"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="99,233,85,266,80,264,94,231"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="281,139,164,181,162,176,279,134"/>
+<area shape="rect" id="Node000006" href="$LineEditValidator_8cpp.html" title=" " alt="" coords="255,179,402,217"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="342,147,335,179,330,178,336,146"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="397,136,473,176,470,180,394,141"/>
+<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="438,225,312,267,310,262,436,220"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="531,229,555,263,551,266,527,232"/>
 </map>

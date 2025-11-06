@@ -1,31 +1,29 @@
 <map id="src/lib/deskflow/AppUtil.h" name="src/lib/deskflow/AppUtil.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="1064,5,1234,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="964,5,1134,30"/>
 <area shape="rect" id="Node000002" href="$Client_8cpp.html" title=" " alt="" coords="5,251,159,276"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1048,24,857,29,624,40,400,57,308,68,238,81,177,93,127,103,105,111,85,123,66,141,47,166,41,187,47,210,60,232,73,249,69,252,55,235,42,212,36,187,42,164,62,137,82,119,103,106,126,98,176,87,238,75,307,62,399,51,623,35,857,24,1048,18"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="948,25,572,43,378,59,299,69,239,81,177,93,127,103,105,111,85,123,66,141,47,166,41,187,47,210,60,232,73,249,69,252,55,235,42,212,36,187,42,164,62,137,82,119,103,106,126,98,176,88,237,75,298,64,378,53,572,37,948,19"/>
 <area shape="rect" id="Node000003" href="$ServerProxy_8cpp.html" title=" " alt="" coords="378,251,570,276"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1048,23,951,28,849,38,758,55,723,66,698,80,685,94,677,108,673,139,668,172,661,189,648,205,626,222,602,236,551,253,549,248,600,231,623,218,644,201,656,186,663,171,667,139,672,106,680,91,695,76,721,61,757,50,848,33,951,23,1048,18"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="948,28,876,35,803,45,740,60,716,70,698,80,685,94,678,108,673,140,668,172,661,189,648,205,626,222,602,236,551,253,549,248,600,231,623,218,644,201,656,186,663,171,667,139,673,107,681,91,695,76,713,65,738,55,802,40,876,29,948,22"/>
 <area shape="rect" id="Node000004" href="$AppUtil_8cpp.html" title=" " alt="" coords="450,85,634,110"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="1048,32,653,81,611,87,610,82,652,75,1048,27"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="954,35,653,81,613,87,612,82,652,75,953,30"/>
 <area shape="rect" id="Node000005" href="$LanguageManager_8h.html" title=" " alt="" coords="250,78,426,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1048,27,773,46,606,61,438,81,427,82,426,77,438,75,605,56,772,41,1048,22"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="948,29,715,49,438,81,427,82,426,77,438,75,714,44,948,24"/>
 <area shape="rect" id="Node000009" href="$AppUtilUnix_8h.html" title=" " alt="" coords="709,78,850,117"/>
-<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="1077,36,863,81,851,83,850,78,861,75,1076,31"/>
+<area shape="poly" id="edge10_Node000001_Node000009" title=" " alt="" coords="995,37,845,80,844,75,993,32"/>
 <area shape="rect" id="Node000011" href="$AppUtilWindows_8h.html" title=" " alt="" coords="874,78,1024,117"/>
-<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="1105,38,998,80,996,75,1104,34"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="1024,42,974,80,971,75,1020,37"/>
 <area shape="rect" id="Node000014" href="$EiKeyState_8cpp.html" title=" " alt="" coords="1048,85,1249,110"/>
-<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="1151,46,1151,85,1146,85,1146,46"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="1077,37,1135,82,1132,87,1074,42"/>
 <area shape="rect" id="Node000015" href="$XWindowsKeyState_8cpp.html" title=" " alt="" coords="1274,78,1448,117"/>
-<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="1195,33,1310,75,1308,80,1194,38"/>
+<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="1111,32,1286,75,1285,80,1110,37"/>
 <area shape="rect" id="Node000016" href="$ClientProxy1__1_8cpp.html" title=" " alt="" coords="1472,78,1647,117"/>
-<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="1226,31,1472,77,1471,82,1225,36"/>
+<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="1150,30,1460,75,1471,77,1471,83,1459,81,1149,35"/>
 <area shape="rect" id="Node000017" href="$ClientProxy1__7_8cpp.html" title=" " alt="" coords="1672,78,1847,117"/>
-<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="1249,26,1440,47,1660,75,1671,77,1671,82,1659,81,1439,52,1249,31"/>
+<area shape="poly" id="edge18_Node000001_Node000017" title=" " alt="" coords="1150,24,1383,44,1660,75,1671,77,1671,82,1659,81,1383,49,1149,29"/>
 <area shape="rect" id="Node000018" href="$ClientProxyUnknown_8cpp.html" title=" " alt="" coords="1871,78,2040,117"/>
-<area shape="poly" id="edge19_Node000001_Node000018" title=" " alt="" coords="1250,21,1525,40,1692,56,1860,75,1871,77,1870,82,1859,81,1692,61,1525,46,1249,27"/>
-<area shape="rect" id="Node000019" href="$PrimaryClient_8cpp.html" title=" " alt="" coords="2064,85,2268,110"/>
-<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="1249,20,1604,38,1827,54,2052,75,2099,82,2098,87,2051,81,1827,59,1604,43,1249,25"/>
-<area shape="rect" id="Node000020" href="$Server_8cpp.html" title=" " alt="" coords="2292,85,2456,110"/>
-<area shape="poly" id="edge21_Node000001_Node000020" title=" " alt="" coords="1249,17,1441,20,1697,30,1988,47,2281,75,2321,82,2320,87,2280,81,1987,52,1697,35,1441,26,1249,22"/>
+<area shape="poly" id="edge19_Node000001_Node000018" title=" " alt="" coords="1150,20,1467,38,1663,54,1860,75,1871,77,1870,82,1859,81,1662,59,1466,43,1149,25"/>
+<area shape="rect" id="Node000019" href="$Server_8cpp.html" title=" " alt="" coords="2063,85,2226,110"/>
+<area shape="poly" id="edge20_Node000001_Node000019" title=" " alt="" coords="1150,18,1321,23,1545,33,1798,50,2052,75,2091,82,2091,87,2051,81,1797,55,1545,38,1321,28,1149,23"/>
 <area shape="rect" id="Node000006" href="$ServerProxy_8h.html" title=" " alt="" coords="57,172,235,196"/>
 <area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="283,126,174,174,171,169,281,121"/>
 <area shape="rect" id="Node000007" href="$LanguageManager_8cpp.html" title=" " alt="" coords="458,165,634,203"/>

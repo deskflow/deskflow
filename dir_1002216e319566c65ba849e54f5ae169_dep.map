@@ -1,19 +1,13 @@
 <map id="src/lib/gui/core" name="src/lib/gui/core">
-<area shape="rect" id="node1" href="dir_00d753f0c10974c39dc450cbdcd64c24.html" title="tls" alt="" coords="26,124,65,149"/>
-<area shape="rect" id="node2" href="dir_5c0332ce89d6380d62f51763b17fe46d.html" title="ipc" alt="" coords="89,124,127,149"/>
-<area shape="rect" id="node3" href="dir_da58851cf6af1fd60b06cfef734271e0.html" title="config" alt="" coords="152,124,208,149"/>
-<area shape="rect" id="node4" href="dir_1002216e319566c65ba849e54f5ae169.html" title="core" alt="" coords="157,51,203,76"/>
-<area shape="poly" id="edge1" href="dir_000006_000025.html" alt="" coords="159,79,80,120,77,115,157,74"/>
-<area shape="rect" id="edge1-headlabel" href="dir_000006_000025.html" title="1" alt="" coords="81,117,88,131"/>
-<area shape="poly" id="edge3" href="dir_000006_000017.html" alt="" coords="170,78,132,115,129,111,166,75"/>
-<area shape="rect" id="edge3-headlabel" href="dir_000006_000017.html" title="1" alt="" coords="135,110,142,124"/>
-<area shape="poly" id="edge5" href="dir_000006_000005.html" alt="" coords="183,77,183,108,177,108,177,77"/>
-<area shape="rect" id="edge5-headlabel" href="dir_000006_000005.html" title="2" alt="" coords="185,99,192,113"/>
-<area shape="rect" id="node5" href="dir_101750fb3e6d5167734ab1bd49650f60.html" title="common" alt="" coords="232,124,304,149"/>
-<area shape="poly" id="edge2" href="dir_000006_000004.html" alt="" coords="196,74,243,112,240,116,193,79"/>
-<area shape="rect" id="edge2-headlabel" href="dir_000006_000004.html" title="5" alt="" coords="241,99,248,113"/>
-<area shape="rect" id="node6" href="dir_9d41f2d9dd9f152ba43e738700883d1e.html" title="platform" alt="" coords="327,124,396,149"/>
-<area shape="poly" id="edge4" href="dir_000006_000022.html" alt="" coords="205,72,319,116,317,121,203,77"/>
-<area shape="rect" id="edge4-headlabel" href="dir_000006_000022.html" title="1" alt="" coords="314,102,321,116"/>
-<area shape="rect" id="clust1" href="dir_1e2980927ba7513c665ee0bc67e39bcf.html" title="gui" alt="" coords="16,16,219,159"/>
+<area shape="rect" id="node1" href="dir_5c0332ce89d6380d62f51763b17fe46d.html" title="ipc" alt="" coords="26,124,65,149"/>
+<area shape="rect" id="node2" href="dir_da58851cf6af1fd60b06cfef734271e0.html" title="config" alt="" coords="89,124,146,149"/>
+<area shape="rect" id="node3" href="dir_1002216e319566c65ba849e54f5ae169.html" title="core" alt="" coords="94,51,140,76"/>
+<area shape="poly" id="edge2" href="dir_000006_000017.html" alt="" coords="107,78,70,115,66,111,104,75"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000006_000017.html" title="1" alt="" coords="72,110,79,124"/>
+<area shape="poly" id="edge3" href="dir_000006_000005.html" alt="" coords="120,77,120,108,115,108,115,77"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000006_000005.html" title="2" alt="" coords="122,99,129,113"/>
+<area shape="rect" id="node4" href="dir_101750fb3e6d5167734ab1bd49650f60.html" title="common" alt="" coords="170,124,241,149"/>
+<area shape="poly" id="edge1" href="dir_000006_000004.html" alt="" coords="134,74,181,112,177,116,130,79"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000006_000004.html" title="5" alt="" coords="179,99,186,113"/>
+<area shape="rect" id="clust1" href="dir_1e2980927ba7513c665ee0bc67e39bcf.html" title="gui" alt="" coords="16,16,156,159"/>
 </map>

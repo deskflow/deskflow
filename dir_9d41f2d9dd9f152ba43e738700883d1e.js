@@ -88,7 +88,6 @@ var dir_9d41f2d9dd9f152ba43e738700883d1e =
     [ "PortalInputCapture.h", "PortalInputCapture_8h.html", "PortalInputCapture_8h" ],
     [ "PortalRemoteDesktop.cpp", "PortalRemoteDesktop_8cpp.html", null ],
     [ "PortalRemoteDesktop.h", "PortalRemoteDesktop_8h.html", "PortalRemoteDesktop_8h" ],
-    [ "Wayland.h", "Wayland_8h.html", "Wayland_8h" ],
     [ "XDGPortalRegistry.h", "XDGPortalRegistry_8h.html", "XDGPortalRegistry_8h" ],
     [ "XDGPowerManager.cpp", "XDGPowerManager_8cpp.html", null ],
     [ "XDGPowerManager.h", "XDGPowerManager_8h.html", "XDGPowerManager_8h" ],

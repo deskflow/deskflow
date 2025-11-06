@@ -131,7 +131,7 @@ var NAVTREEINDEX =
 "KeyTypes_8h.html#a3c04d04f7af9bddc5cf9a3e9eb2198eb",
 "MSWindowsClipboard_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9",
 "OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf",
-"SocketMultiplexer_8h_source.html",
+"SocketMultiplexer_8cpp.html",
 "classApp.html#a5ecbaa8022d8e3a787779f2549b33379",
 "classArchNetworkBSD.html#af82016a992cdb1ce14d4d603b5223f85",
 "classClientProxy1__0.html#a4d2fc40230d7a3a00f93694643ad8018",
@@ -149,7 +149,7 @@ var NAVTREEINDEX =
 "classdeskflow_1_1server_1_1Config.html#adf44f2c5fb7f5b55f46e48512d866f01",
 "dir_ff8b35c4f72248d38fab92b0ac2707d5.html",
 "namespaceUi.html",
-"structFingerprint.html"
+"structFingerprint.html#a030170043d67afd657a30201d0d39d1a"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

@@ -1,21 +1,9 @@
 <map id="src/lib/deskflow/DaemonApp.h" name="src/lib/deskflow/DaemonApp.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="284,5,482,30"/>
-<area shape="rect" id="Node000002" href="$Common_8h.html" title=" " alt="" coords="151,78,290,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,33,262,74,260,69,355,28"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="314,78,367,103"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="378,32,357,66,353,63,374,29"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="391,78,460,103"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="392,29,413,63,409,66,388,32"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="485,78,556,103"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="407,28,485,68,483,73,404,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,73,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="191,106,84,147,82,142,189,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="97,151,165,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="207,105,159,143,155,139,204,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="189,151,252,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="223,103,223,135,218,135,218,103"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="277,151,340,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="237,101,284,139,280,143,233,105"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="364,151,428,175"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="250,101,354,142,352,147,248,106"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="18,5,216,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,59,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,33,59,70,56,66,102,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="83,78,152,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,31,120,62,115,62,115,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,78,248,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="135,28,186,67,183,71,131,33"/>
 </map>

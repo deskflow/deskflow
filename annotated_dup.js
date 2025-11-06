@@ -7,6 +7,9 @@ var annotated_dup =
       [ "client", "namespacedeskflow_1_1client.html", [
         [ "HelloBack", "classdeskflow_1_1client_1_1HelloBack.html", "classdeskflow_1_1client_1_1HelloBack" ]
       ] ],
+      [ "platform", "namespacedeskflow_1_1platform.html", [
+        [ "MSWindowsProcess", "classdeskflow_1_1platform_1_1MSWindowsProcess.html", "classdeskflow_1_1platform_1_1MSWindowsProcess" ]
+      ] ],
       [ "core", "namespacedeskflow_1_1core.html", [
         [ "ipc", "namespacedeskflow_1_1core_1_1ipc.html", [
           [ "DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer" ]
@@ -33,9 +36,6 @@ var annotated_dup =
         [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
         [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
         [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ]
-      ] ],
-      [ "platform", "namespacedeskflow_1_1platform.html", [
-        [ "MSWindowsProcess", "classdeskflow_1_1platform_1_1MSWindowsProcess.html", "classdeskflow_1_1platform_1_1MSWindowsProcess" ]
       ] ],
       [ "server", "namespacedeskflow_1_1server.html", [
         [ "Config", "classdeskflow_1_1server_1_1Config.html", "classdeskflow_1_1server_1_1Config" ],
