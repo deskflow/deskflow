@@ -11,7 +11,6 @@
 #include "arch/ArchException.h"
 #include "arch/unix/ArchMultithreadPosix.h"
 #include "arch/unix/XArchUnix.h"
-#include "common/Common.h"
 
 #include <arpa/inet.h>
 #include <cstring>
