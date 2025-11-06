@@ -6,7 +6,6 @@
  */
 
 #include "XDGPowerManager.h"
-#include "arch/Arch.h"
 #include "base/Log.h"
 #include "common/Constants.h"
 
