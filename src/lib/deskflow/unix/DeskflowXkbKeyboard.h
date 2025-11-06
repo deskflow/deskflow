@@ -11,7 +11,6 @@
 
 #include <X11/XKBlib.h>
 #include <X11/extensions/XKBrules.h>
-#include <cstdio>
 
 namespace deskflow::linux {
 
