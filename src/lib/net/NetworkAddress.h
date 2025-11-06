@@ -8,7 +8,6 @@
 #pragma once
 
 #include "arch/IArchNetwork.h"
-#include "base/EventTypes.h"
 
 //! Network address type
 /*!
