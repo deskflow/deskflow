@@ -8,12 +8,10 @@
 #include "server/ClientProxy1_4.h"
 
 #include "base/IEventQueue.h"
-#include "base/Log.h"
 #include "deskflow/ProtocolUtil.h"
 #include "server/Server.h"
 
-#include <cstring>
-#include <memory>
+#include <assert.h>
 
 //
 // ClientProxy1_4
