@@ -7,8 +7,6 @@
 
 #include "platform/OSXClipboardTextConverter.h"
 
-#include "base/Unicode.h"
-
 //
 // OSXClipboardTextConverter
 //
