@@ -6,7 +6,6 @@
 
 #include "server/ClientProxy1_7.h"
 #include "base/Log.h"
-#include "deskflow/AppUtil.h"
 #include "deskflow/ProtocolUtil.h"
 #include "server/Server.h"
 
