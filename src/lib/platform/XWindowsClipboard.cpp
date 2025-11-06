@@ -19,7 +19,6 @@
 
 #include <X11/Xatom.h>
 #include <algorithm>
-#include <cstdio>
 #include <cstring>
 
 #if HAVE_FORMAT
