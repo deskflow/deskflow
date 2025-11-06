@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/PriorityQueue.h"
 #include "base/Stopwatch.h"
