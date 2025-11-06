@@ -8,7 +8,6 @@
 #include "KeySequenceWidget.h"
 
 #include <QMouseEvent>
-#include <iostream>
 
 KeySequenceWidget::KeySequenceWidget(QWidget *parent, const KeySequence &seq)
     : QPushButton(parent),
