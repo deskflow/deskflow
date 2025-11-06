@@ -11,8 +11,6 @@
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
 
-#include <cstring>
-
 namespace deskflow {
 
 PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
