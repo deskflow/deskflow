@@ -7,7 +7,6 @@
 
 #include "server/ClientProxy.h"
 
-#include "base/EventQueue.h"
 #include "base/Log.h"
 #include "deskflow/ProtocolUtil.h"
 #include "io/IStream.h"

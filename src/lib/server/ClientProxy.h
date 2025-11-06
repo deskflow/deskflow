@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "base/Event.h"
-#include "base/EventTypes.h"
 #include "server/BaseClientProxy.h"
 
 namespace deskflow {
