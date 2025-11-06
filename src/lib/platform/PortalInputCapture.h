@@ -14,7 +14,6 @@
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
-#include <memory>
 
 namespace deskflow {
 
