@@ -9,10 +9,8 @@
 
 #include "Fingerprint.h"
 
-#include <cstdint>
 #include <openssl/ossl_typ.h>
 #include <string>
-#include <vector>
 
 namespace deskflow {
 
