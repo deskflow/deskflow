@@ -7,8 +7,6 @@
 
 #include "platform/MSWindowsClipboardTextConverter.h"
 
-#include "base/Unicode.h"
-
 #include <QString>
 
 //
