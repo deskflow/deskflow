@@ -8,6 +8,7 @@
 #include "platform/EiEventQueueBuffer.h"
 
 #include "base/Event.h"
+#include "base/EventQueueTimer.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -17,10 +18,6 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
-
-class EventQueueTimer
-{
-};
 
 namespace deskflow {
 

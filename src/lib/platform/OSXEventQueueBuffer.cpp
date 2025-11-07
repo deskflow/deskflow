@@ -9,16 +9,9 @@
 #include "platform/OSXEventQueueBuffer.h"
 
 #include "base/Event.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-
-//
-// EventQueueTimer
-//
-
-class EventQueueTimer
-{
-};
 
 //
 // OSXEventQueueBuffer
