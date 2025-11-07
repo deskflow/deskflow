@@ -24,8 +24,6 @@ if(WIN32)
     MSWindowsClipboardFacade.h
     MSWindowsClipboardHTMLConverter.cpp
     MSWindowsClipboardHTMLConverter.h
-    MSWindowsClipboardTextConverter.cpp
-    MSWindowsClipboardTextConverter.h
     MSWindowsClipboardUTF16Converter.cpp
     MSWindowsClipboardUTF16Converter.h
     MSWindowsDebugOutputter.cpp
