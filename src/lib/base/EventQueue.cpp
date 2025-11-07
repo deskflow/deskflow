@@ -274,6 +274,9 @@ void EventQueue::removeHandler(EventTypes type, void *target)
     if (index2 != typeHandlers.end()) {
       typeHandlers.erase(index2);
     }
+    if (typeHandlers.empty()) {
+      m_handlers.erase(index);
+    }
   }
 }
 
@@ -282,7 +285,7 @@ void EventQueue::removeHandlers(void *target)
   std::scoped_lock lock{m_mutex};
   HandlerTable::iterator index = m_handlers.find(target);
   if (index != m_handlers.end()) {
-    index->second.clear();
+    m_handlers.erase(index);
   }
 }
 
