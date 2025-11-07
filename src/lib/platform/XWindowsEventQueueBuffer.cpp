@@ -8,20 +8,13 @@
 #include "platform/XWindowsEventQueueBuffer.h"
 
 #include "base/Event.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "mt/Thread.h"
 
 #include <fcntl.h>
 #include <poll.h>
 #include <unistd.h>
-
-//
-// EventQueueTimer
-//
-
-class EventQueueTimer
-{
-};
 
 //
 // XWindowsEventQueueBuffer

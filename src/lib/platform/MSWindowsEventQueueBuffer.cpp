@@ -8,15 +8,8 @@
 #include "platform/MSWindowsEventQueueBuffer.h"
 
 #include "arch/win32/ArchMiscWindows.h"
+#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
-
-//
-// EventQueueTimer
-//
-
-class EventQueueTimer
-{
-};
 
 //
 // MSWindowsEventQueueBuffer
