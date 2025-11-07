@@ -1,15 +1,7 @@
 <map id="src/lib/net/SocketMultiplexer.h" name="src/lib/net/SocketMultiplexer.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="132,5,328,30"/>
-<area shape="rect" id="Node000002" href="$IArchNetwork_8h.html" title=" " alt="" coords="46,78,188,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,33,150,72,147,67,210,28"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="211,78,249,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="233,31,233,62,228,62,228,31"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="274,78,320,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="243,29,277,65,274,69,239,32"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,66,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,105,62,142,58,138,102,101"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="90,151,144,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,103,120,135,114,135,114,103"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="167,151,224,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="132,101,173,138,170,142,128,105"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,201,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="50,78,89,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,32,84,65,79,63,95,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="113,78,160,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,29,127,63,122,65,106,32"/>
 </map>

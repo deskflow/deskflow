@@ -1,13 +1,7 @@
 <map id="src/lib/deskflow/ISecondaryScreen.h" name="src/lib/deskflow/ISecondaryScreen.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="47,5,230,44"/>
-<area shape="rect" id="Node000002" href="$Event_8h.html" title=" " alt="" coords="5,92,102,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,47,79,83,76,79,116,43"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="89,165,189,189"/>
-<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="142,44,142,149,136,149,136,44"/>
-<area shape="rect" id="Node000005" href="$MouseTypes_8h.html" title=" " alt="" coords="176,92,339,117"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="169,42,229,81,226,86,166,47"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,115,115,153,112,157,66,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="107,237,170,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="142,190,142,222,136,222,136,190"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="239,120,173,159,170,154,237,115"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,189,44"/>
+<area shape="rect" id="Node000002" href="$MouseTypes_8h.html" title=" " alt="" coords="16,92,178,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,45,100,76,94,76,94,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="67,165,127,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,117,100,149,94,149,94,117"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="src/lib/deskflow/StreamChunker.h" name="src/lib/deskflow/StreamChunker.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="55,5,272,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="64,5,282,30"/>
 <area shape="rect" id="Node000002" href="$ClipboardTypes_8h.html" title=" " alt="" coords="5,78,184,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,32,118,69,114,65,150,29"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="208,78,261,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,29,214,65,210,69,174,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,33,120,70,117,66,158,29"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="208,78,296,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="188,29,230,66,226,70,184,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="64,151,125,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,103,97,135,92,135,92,103"/>
 </map>

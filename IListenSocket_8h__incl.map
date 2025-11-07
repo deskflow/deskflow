@@ -1,15 +1,7 @@
 <map id="src/lib/net/IListenSocket.h" name="src/lib/net/IListenSocket.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="22,5,193,30"/>
-<area shape="rect" id="Node000002" href="$EventTypes_8h.html" title=" " alt="" coords="5,223,138,248"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,33,67,52,49,79,41,113,43,147,51,180,62,208,57,210,46,182,38,148,36,112,44,77,63,49,87,28"/>
-<area shape="rect" id="Node000004" href="$ISocket_8h.html" title=" " alt="" coords="59,78,156,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="110,31,110,62,105,62,105,31"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="181,78,250,103"/>
-<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="127,28,187,67,184,72,124,33"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="40,296,103,321"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,249,74,280,69,280,69,249"/>
-<area shape="poly" id="edge6_Node000004_Node000002" title=" " alt="" coords="107,104,81,209,76,207,102,102"/>
-<area shape="rect" id="Node000005" href="$Event_8h.html" title=" " alt="" coords="109,151,205,175"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="118,102,142,136,138,139,113,105"/>
-<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="144,178,99,216,95,211,141,174"/>
+<area shape="rect" id="Node000002" href="$ISocket_8h.html" title=" " alt="" coords="5,78,103,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,32,74,67,70,64,96,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="127,78,197,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="118,29,146,64,142,68,114,32"/>
 </map>

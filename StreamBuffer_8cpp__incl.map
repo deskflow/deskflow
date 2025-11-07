@@ -1,15 +1,13 @@
 <map id="src/lib/io/StreamBuffer.cpp" name="src/lib/io/StreamBuffer.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="153,5,328,30"/>
-<area shape="rect" id="Node000002" href="$StreamBuffer_8h.html" title=" " alt="" coords="120,78,242,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,32,202,68,198,65,229,29"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="267,78,335,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="253,29,283,65,279,68,249,32"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="5,151,138,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="164,105,104,144,101,140,161,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="162,151,200,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="184,103,184,135,178,135,178,103"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="225,151,281,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="195,101,232,138,228,142,191,105"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="40,223,103,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="74,176,74,208,69,208,69,176"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="81,5,256,30"/>
+<area shape="rect" id="Node000002" href="$StreamBuffer_8h.html" title=" " alt="" coords="48,78,170,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,32,130,68,126,65,157,29"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="195,78,263,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="181,29,211,65,207,68,177,32"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,151,66,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="99,105,60,142,56,138,95,101"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="90,151,128,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="112,103,112,135,106,135,106,103"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="153,151,209,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="123,101,160,138,156,142,119,105"/>
 </map>

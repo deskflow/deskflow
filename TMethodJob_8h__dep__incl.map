@@ -1,23 +1,19 @@
 <map id="src/lib/base/TMethodJob.h" name="src/lib/base/TMethodJob.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="944,5,1119,30"/>
-<area shape="rect" id="Node000002" href="$Client_8cpp.html" title=" " alt="" coords="5,85,159,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="928,24,591,41,381,57,170,81,133,87,133,82,170,75,380,52,590,35,928,19"/>
-<area shape="rect" id="Node000003" href="$SocketMultiplexer_8cpp.html" title=" " alt="" coords="183,85,392,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="928,29,688,50,404,81,358,87,357,82,403,75,688,45,928,24"/>
-<area shape="rect" id="Node000004" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="416,78,601,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="929,35,613,81,602,82,601,77,612,75,928,30"/>
-<area shape="rect" id="Node000005" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="625,78,811,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="970,37,794,80,793,75,969,32"/>
-<area shape="rect" id="Node000006" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="835,78,1020,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="1005,42,954,80,951,75,1002,37"/>
-<area shape="rect" id="Node000007" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1044,78,1229,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="1060,37,1113,75,1110,80,1057,41"/>
-<area shape="rect" id="Node000008" href="$OSXScreen_8mm.html" title=" " alt="" coords="1254,85,1460,110"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1096,32,1308,82,1307,87,1095,37"/>
-<area shape="rect" id="Node000009" href="$PortalInputCapture_8cpp.html" title=" " alt="" coords="1484,78,1659,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1135,29,1472,75,1483,77,1483,83,1471,81,1134,34"/>
-<area shape="rect" id="Node000010" href="$PortalRemoteDesktop_8cpp.html" title=" " alt="" coords="1684,78,1875,117"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="1135,24,1380,44,1672,75,1684,77,1683,82,1671,81,1379,49,1134,29"/>
-<area shape="rect" id="Node000011" href="$Server_8cpp.html" title=" " alt="" coords="1899,85,2062,110"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="1134,19,1470,36,1678,53,1888,75,1927,82,1926,87,1887,81,1678,58,1470,42,1134,25"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="766,5,942,30"/>
+<area shape="rect" id="Node000002" href="$SocketMultiplexer_8cpp.html" title=" " alt="" coords="5,85,215,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="751,29,511,50,226,81,181,87,180,82,226,75,511,45,751,24"/>
+<area shape="rect" id="Node000003" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="239,78,424,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="751,35,436,81,425,82,424,77,435,75,750,30"/>
+<area shape="rect" id="Node000004" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="448,78,633,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="793,37,617,80,616,75,792,32"/>
+<area shape="rect" id="Node000005" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="657,78,843,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="828,42,777,80,774,75,825,37"/>
+<area shape="rect" id="Node000006" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="867,78,1052,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="883,37,935,75,932,80,880,41"/>
+<area shape="rect" id="Node000007" href="$OSXScreen_8mm.html" title=" " alt="" coords="1076,85,1282,110"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="918,32,1131,82,1130,87,917,37"/>
+<area shape="rect" id="Node000008" href="$PortalInputCapture_8cpp.html" title=" " alt="" coords="1306,78,1482,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="958,29,1294,75,1306,77,1305,83,1294,81,957,34"/>
+<area shape="rect" id="Node000009" href="$PortalRemoteDesktop_8cpp.html" title=" " alt="" coords="1506,78,1698,117"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="957,24,1203,44,1494,75,1506,77,1506,82,1494,81,1202,49,957,29"/>
 </map>

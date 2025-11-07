@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,49 +103,47 @@ $(function(){initNavTree('StreamBuffer_8h_source.html','',''); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="EventTypes_8h.html">base/EventTypes.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;list&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classStreamBuffer.html">   19</a></span><span class="keyword">class </span><a class="code hl_function" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">StreamBuffer</a></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">   22</a></span>  <a class="code hl_function" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">StreamBuffer</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classStreamBuffer.html#aa86184feefbd10d6f55894eed9328b76">   23</a></span>  <a class="code hl_function" href="classStreamBuffer.html#aa86184feefbd10d6f55894eed9328b76">~StreamBuffer</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;list&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classStreamBuffer.html">   18</a></span><span class="keyword">class </span><a class="code hl_function" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">StreamBuffer</a></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">   21</a></span>  <a class="code hl_function" href="classStreamBuffer.html#ab2c305aa736e0121bfabef9643aaf1ae">StreamBuffer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classStreamBuffer.html#aa86184feefbd10d6f55894eed9328b76">   22</a></span>  <a class="code hl_function" href="classStreamBuffer.html#aa86184feefbd10d6f55894eed9328b76">~StreamBuffer</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span></div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span></div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_function" href="classStreamBuffer.html#ace01cb8dd700e87f55c9ef8ab7280433">peek</a>(uint32_t n);</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span></div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamBuffer.html#a222d7a18457ef299c179905ccaeae829">pop</a>(uint32_t n);</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span></div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamBuffer.html#a4824ac0fd26be8283fb06c491a0dd495">write</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t n);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  uint32_t <a class="code hl_function" href="classStreamBuffer.html#aaed7700f749fff199dc0db885a1d452b">getSize</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">static</span> <span class="keyword">const</span> uint32_t kChunkSize;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">using </span>Chunk = std::vector&lt;uint8_t&gt;;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>  <span class="keyword">using </span>ChunkList = std::list&lt;Chunk&gt;;</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  ChunkList m_chunks;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  uint32_t m_size = 0;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  uint32_t m_headUsed = 0;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>};</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_function" href="classStreamBuffer.html#ace01cb8dd700e87f55c9ef8ab7280433">peek</a>(uint32_t n);</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamBuffer.html#a222d7a18457ef299c179905ccaeae829">pop</a>(uint32_t n);</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classStreamBuffer.html#a4824ac0fd26be8283fb06c491a0dd495">write</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>, uint32_t n);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  uint32_t <a class="code hl_function" href="classStreamBuffer.html#aaed7700f749fff199dc0db885a1d452b">getSize</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">static</span> <span class="keyword">const</span> uint32_t kChunkSize;</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">using </span>Chunk = std::vector&lt;uint8_t&gt;;</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">using </span>ChunkList = std::list&lt;Chunk&gt;;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  ChunkList m_chunks;</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  uint32_t m_size = 0;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  uint32_t m_headUsed = 0;</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_aa36d05423b2dd8f3c8296093b4674b63"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a></div><div class="ttdeci">static int void FAR * data</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:35</div></div>
-<div class="ttc" id="aEventTypes_8h_html"><div class="ttname"><a href="EventTypes_8h.html">EventTypes.h</a></div></div>
 <div class="ttc" id="aclassStreamBuffer_html_a222d7a18457ef299c179905ccaeae829"><div class="ttname"><a href="classStreamBuffer.html#a222d7a18457ef299c179905ccaeae829">StreamBuffer::pop</a></div><div class="ttdeci">void pop(uint32_t n)</div><div class="ttdoc">Discard data.</div><div class="ttdef"><b>Definition</b> StreamBuffer.cpp:43</div></div>
 <div class="ttc" id="aclassStreamBuffer_html_a4824ac0fd26be8283fb06c491a0dd495"><div class="ttname"><a href="classStreamBuffer.html#a4824ac0fd26be8283fb06c491a0dd495">StreamBuffer::write</a></div><div class="ttdeci">void write(const void *data, uint32_t n)</div><div class="ttdoc">Write data to buffer.</div><div class="ttdef"><b>Definition</b> StreamBuffer.cpp:72</div></div>
 <div class="ttc" id="aclassStreamBuffer_html_aa86184feefbd10d6f55894eed9328b76"><div class="ttname"><a href="classStreamBuffer.html#aa86184feefbd10d6f55894eed9328b76">StreamBuffer::~StreamBuffer</a></div><div class="ttdeci">~StreamBuffer()=default</div></div>

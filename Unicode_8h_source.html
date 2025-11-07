@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -103,72 +103,70 @@ $(function(){initNavTree('Unicode_8h_source.html','',''); });
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Common_8h.html">common/Common.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span></div>
-<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classUnicode.html">   19</a></span><span class="keyword">class </span><a class="code hl_class" href="classUnicode.html">Unicode</a></div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span></div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classUnicode.html">   18</a></span><span class="keyword">class </span><a class="code hl_class" href="classUnicode.html">Unicode</a></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classUnicode.html#a318adabcf876bf85a933412df0732c97">isUTF8</a>(<span class="keyword">const</span> std::string &amp;);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span></div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span></div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a6cf183d92569cbd9d50211908810ffec">UTF8ToUCS2</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span></div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a3bdb942cd19651cda84c95311756d0db">UTF8ToUCS4</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span></div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span></div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b">UTF8ToUTF16</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span></div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span></div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439">UTF8ToUTF32</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c">UCS2ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a01c9f5cfff80725d254e4f9a5f5b4541">UCS4ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span></div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span></div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e">UTF16ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#af35f349e90c98d8e51404b7f8ef63166">UTF32ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="comment">// internal conversion to UTF8</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">static</span> std::string doUCS2ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keyword">static</span> std::string doUCS4ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">static</span> std::string doUTF16ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>  <span class="keyword">static</span> std::string doUTF32ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span> </div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="comment">// convert characters to/from UTF8</span></div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keyword">static</span> uint32_t fromUTF8(<span class="keyword">const</span> uint8_t *&amp;src, uint32_t &amp;size);</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> toUTF8(std::string &amp;dst, uint32_t c, <span class="keywordtype">bool</span> *errors);</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span> </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keyword">static</span> uint32_t s_invalid;</div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <span class="keyword">static</span> uint32_t s_replacement;</div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>};</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classUnicode.html#a318adabcf876bf85a933412df0732c97">isUTF8</a>(<span class="keyword">const</span> std::string &amp;);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span></div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a6cf183d92569cbd9d50211908810ffec">UTF8ToUCS2</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span></div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a3bdb942cd19651cda84c95311756d0db">UTF8ToUCS4</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b">UTF8ToUTF16</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span></div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439">UTF8ToUTF32</a>(<span class="keyword">const</span> std::string &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span></div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span></div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c">UCS2ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span></div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a01c9f5cfff80725d254e4f9a5f5b4541">UCS4ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e">UTF16ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span></div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">static</span> std::string <a class="code hl_function" href="classUnicode.html#af35f349e90c98d8e51404b7f8ef63166">UTF32ToUTF8</a>(<span class="keyword">const</span> std::string_view &amp;, <span class="keywordtype">bool</span> *errors = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span> </div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>  <span class="comment">// internal conversion to UTF8</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>  <span class="keyword">static</span> std::string doUCS2ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">static</span> std::string doUCS4ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>  <span class="keyword">static</span> std::string doUTF16ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">static</span> std::string doUTF32ToUTF8(<span class="keyword">const</span> uint8_t *src, uint32_t n, <span class="keywordtype">bool</span> *errors);</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span> </div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  <span class="comment">// convert characters to/from UTF8</span></div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <span class="keyword">static</span> uint32_t fromUTF8(<span class="keyword">const</span> uint8_t *&amp;src, uint32_t &amp;size);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> toUTF8(std::string &amp;dst, uint32_t c, <span class="keywordtype">bool</span> *errors);</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span> </div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>  <span class="keyword">static</span> uint32_t s_invalid;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>  <span class="keyword">static</span> uint32_t s_replacement;</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>};</div>
 </div>
-<div class="ttc" id="aCommon_8h_html"><div class="ttname"><a href="Common_8h.html">Common.h</a></div></div>
-<div class="ttc" id="aclassUnicode_html"><div class="ttname"><a href="classUnicode.html">Unicode</a></div><div class="ttdoc">Unicode utility functions.</div><div class="ttdef"><b>Definition</b> Unicode.h:20</div></div>
-<div class="ttc" id="aclassUnicode_html_a01c9f5cfff80725d254e4f9a5f5b4541"><div class="ttname"><a href="classUnicode.html#a01c9f5cfff80725d254e4f9a5f5b4541">Unicode::UCS4ToUTF8</a></div><div class="ttdeci">static std::string UCS4ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UCS-4 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:208</div></div>
-<div class="ttc" id="aclassUnicode_html_a1be18b41a5f937d7d795fe3c9fac1d9e"><div class="ttname"><a href="classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e">Unicode::UTF16ToUTF8</a></div><div class="ttdeci">static std::string UTF16ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-16 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:218</div></div>
-<div class="ttc" id="aclassUnicode_html_a318adabcf876bf85a933412df0732c97"><div class="ttname"><a href="classUnicode.html#a318adabcf876bf85a933412df0732c97">Unicode::isUTF8</a></div><div class="ttdeci">static bool isUTF8(const std::string &amp;)</div><div class="ttdoc">Test UTF-8 string for validity.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:75</div></div>
-<div class="ttc" id="aclassUnicode_html_a3bdb942cd19651cda84c95311756d0db"><div class="ttname"><a href="classUnicode.html#a3bdb942cd19651cda84c95311756d0db">Unicode::UTF8ToUCS4</a></div><div class="ttdeci">static std::string UTF8ToUCS4(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UCS-4 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:114</div></div>
-<div class="ttc" id="aclassUnicode_html_a648d34ac2f92bfae890e2be5b21a004b"><div class="ttname"><a href="classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b">Unicode::UTF8ToUTF16</a></div><div class="ttdeci">static std::string UTF8ToUTF16(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UTF-16 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:137</div></div>
-<div class="ttc" id="aclassUnicode_html_a6cf183d92569cbd9d50211908810ffec"><div class="ttname"><a href="classUnicode.html#a6cf183d92569cbd9d50211908810ffec">Unicode::UTF8ToUCS2</a></div><div class="ttdeci">static std::string UTF8ToUCS2(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UCS-2 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:87</div></div>
-<div class="ttc" id="aclassUnicode_html_a7ce4b7916c31ff9b06aa3936dd53bc5c"><div class="ttname"><a href="classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c">Unicode::UCS2ToUTF8</a></div><div class="ttdeci">static std::string UCS2ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UCS-2 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:198</div></div>
-<div class="ttc" id="aclassUnicode_html_abb05f3eb42145b9be0f1ab9715edf439"><div class="ttname"><a href="classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439">Unicode::UTF8ToUTF32</a></div><div class="ttdeci">static std::string UTF8ToUTF32(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UTF-32 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:172</div></div>
-<div class="ttc" id="aclassUnicode_html_af35f349e90c98d8e51404b7f8ef63166"><div class="ttname"><a href="classUnicode.html#af35f349e90c98d8e51404b7f8ef63166">Unicode::UTF32ToUTF8</a></div><div class="ttdeci">static std::string UTF32ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-32 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:228</div></div>
+<div class="ttc" id="aclassUnicode_html"><div class="ttname"><a href="classUnicode.html">Unicode</a></div><div class="ttdoc">Unicode utility functions.</div><div class="ttdef"><b>Definition</b> Unicode.h:19</div></div>
+<div class="ttc" id="aclassUnicode_html_a01c9f5cfff80725d254e4f9a5f5b4541"><div class="ttname"><a href="classUnicode.html#a01c9f5cfff80725d254e4f9a5f5b4541">Unicode::UCS4ToUTF8</a></div><div class="ttdeci">static std::string UCS4ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UCS-4 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:210</div></div>
+<div class="ttc" id="aclassUnicode_html_a1be18b41a5f937d7d795fe3c9fac1d9e"><div class="ttname"><a href="classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e">Unicode::UTF16ToUTF8</a></div><div class="ttdeci">static std::string UTF16ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-16 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:220</div></div>
+<div class="ttc" id="aclassUnicode_html_a318adabcf876bf85a933412df0732c97"><div class="ttname"><a href="classUnicode.html#a318adabcf876bf85a933412df0732c97">Unicode::isUTF8</a></div><div class="ttdeci">static bool isUTF8(const std::string &amp;)</div><div class="ttdoc">Test UTF-8 string for validity.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:77</div></div>
+<div class="ttc" id="aclassUnicode_html_a3bdb942cd19651cda84c95311756d0db"><div class="ttname"><a href="classUnicode.html#a3bdb942cd19651cda84c95311756d0db">Unicode::UTF8ToUCS4</a></div><div class="ttdeci">static std::string UTF8ToUCS4(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UCS-4 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:116</div></div>
+<div class="ttc" id="aclassUnicode_html_a648d34ac2f92bfae890e2be5b21a004b"><div class="ttname"><a href="classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b">Unicode::UTF8ToUTF16</a></div><div class="ttdeci">static std::string UTF8ToUTF16(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UTF-16 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:139</div></div>
+<div class="ttc" id="aclassUnicode_html_a6cf183d92569cbd9d50211908810ffec"><div class="ttname"><a href="classUnicode.html#a6cf183d92569cbd9d50211908810ffec">Unicode::UTF8ToUCS2</a></div><div class="ttdeci">static std::string UTF8ToUCS2(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UCS-2 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:89</div></div>
+<div class="ttc" id="aclassUnicode_html_a7ce4b7916c31ff9b06aa3936dd53bc5c"><div class="ttname"><a href="classUnicode.html#a7ce4b7916c31ff9b06aa3936dd53bc5c">Unicode::UCS2ToUTF8</a></div><div class="ttdeci">static std::string UCS2ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UCS-2 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:200</div></div>
+<div class="ttc" id="aclassUnicode_html_abb05f3eb42145b9be0f1ab9715edf439"><div class="ttname"><a href="classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439">Unicode::UTF8ToUTF32</a></div><div class="ttdeci">static std::string UTF8ToUTF32(const std::string &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-8 to UTF-32 encoding.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:174</div></div>
+<div class="ttc" id="aclassUnicode_html_af35f349e90c98d8e51404b7f8ef63166"><div class="ttname"><a href="classUnicode.html#af35f349e90c98d8e51404b7f8ef63166">Unicode::UTF32ToUTF8</a></div><div class="ttdeci">static std::string UTF32ToUTF8(const std::string_view &amp;, bool *errors=nullptr)</div><div class="ttdoc">Convert from UTF-32 to UTF-8.</div><div class="ttdef"><b>Definition</b> Unicode.cpp:230</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

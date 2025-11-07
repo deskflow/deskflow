@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,48 +102,46 @@ $(function(){initNavTree('OSXUchrKeyResource_8h_source.html','',''); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="KeyState_8h.html">deskflow/KeyState.h</a>&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="IOSXKeyResource_8h.html">platform/IOSXKeyResource.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;Carbon/Carbon.h&gt;</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">   14</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">KeyLayout</a> = TISInputSourceRef;</div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classOSXUchrKeyResource.html">   16</a></span><span class="keyword">class </span><a class="code hl_function" href="classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f">OSXUchrKeyResource</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIOSXKeyResource.html">IOSXKeyResource</a></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <a class="code hl_function" href="classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f">OSXUchrKeyResource</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *, uint32_t keyboardType);</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="comment">// KeyResource overrides</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classOSXUchrKeyResource.html#a7fdc80f70d3f9fa3524f9c7ba5832304">isValid</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a5143d9dc52f047be322b0ef78fd13793">getNumModifierCombinations</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a88ab4a6942dc11e0aba4750e218cfb66">getNumTables</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a114c7c96e804afc45d33712cab412db9">getNumButtons</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#acecc66fadd639c891a73c420d16a05ff">getTableForModifier</a>(uint32_t mask) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <a class="code hl_typedef" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="code hl_function" href="classOSXUchrKeyResource.html#a6a74fddd74f2c0e4882aa3659c5ae5a4">getKey</a>(uint32_t table, uint32_t button) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">using </span>KeySequence = std::vector&lt;KeyID&gt;;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">bool</span> getDeadKey(KeySequence &amp;keys, uint16_t index) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">bool</span> getKeyRecord(KeySequence &amp;keys, uint16_t index, uint16_t &amp;state) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keywordtype">bool</span> addSequence(KeySequence &amp;keys, UCKeyCharSeq c) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">const</span> UCKeyboardLayout *m_resource;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">const</span> UCKeyModifiersToTableNum *m_m;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">const</span> UCKeyToCharTableIndex *m_cti;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">const</span> UCKeySequenceDataIndex *m_sdi;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">const</span> UCKeyStateRecordsIndex *m_sri;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keyword">const</span> UCKeyStateTerminators *m_st;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  uint16_t m_spaceOutput;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>};</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="IOSXKeyResource_8h.html">platform/IOSXKeyResource.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;Carbon/Carbon.h&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">   13</a></span><span class="keyword">using </span><a class="code hl_typedef" href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">KeyLayout</a> = TISInputSourceRef;</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classOSXUchrKeyResource.html">   15</a></span><span class="keyword">class </span><a class="code hl_function" href="classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f">OSXUchrKeyResource</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIOSXKeyResource.html">IOSXKeyResource</a></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <a class="code hl_function" href="classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f">OSXUchrKeyResource</a>(<span class="keyword">const</span> <span class="keywordtype">void</span> *, uint32_t keyboardType);</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="comment">// KeyResource overrides</span></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classOSXUchrKeyResource.html#a7fdc80f70d3f9fa3524f9c7ba5832304">isValid</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a5143d9dc52f047be322b0ef78fd13793">getNumModifierCombinations</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a88ab4a6942dc11e0aba4750e218cfb66">getNumTables</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#a114c7c96e804afc45d33712cab412db9">getNumButtons</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  uint32_t <a class="code hl_function" href="classOSXUchrKeyResource.html#acecc66fadd639c891a73c420d16a05ff">getTableForModifier</a>(uint32_t mask) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  <a class="code hl_typedef" href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a> <a class="code hl_function" href="classOSXUchrKeyResource.html#a6a74fddd74f2c0e4882aa3659c5ae5a4">getKey</a>(uint32_t table, uint32_t button) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keyword">using </span>KeySequence = std::vector&lt;KeyID&gt;;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">bool</span> getDeadKey(KeySequence &amp;keys, uint16_t index) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">bool</span> getKeyRecord(KeySequence &amp;keys, uint16_t index, uint16_t &amp;state) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">bool</span> addSequence(KeySequence &amp;keys, UCKeyCharSeq c) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">const</span> UCKeyboardLayout *m_resource;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keyword">const</span> UCKeyModifiersToTableNum *m_m;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">const</span> UCKeyToCharTableIndex *m_cti;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keyword">const</span> UCKeySequenceDataIndex *m_sdi;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">const</span> UCKeyStateRecordsIndex *m_sri;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">const</span> UCKeyStateTerminators *m_st;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  uint16_t m_spaceOutput;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>};</div>
 </div>
 <div class="ttc" id="aIOSXKeyResource_8h_html"><div class="ttname"><a href="IOSXKeyResource_8h.html">IOSXKeyResource.h</a></div></div>
-<div class="ttc" id="aKeyState_8h_html"><div class="ttname"><a href="KeyState_8h.html">KeyState.h</a></div></div>
 <div class="ttc" id="aKeyTypes_8h_html_a05063eae84ba2351a8b3a2447eb2d0bb"><div class="ttname"><a href="KeyTypes_8h.html#a05063eae84ba2351a8b3a2447eb2d0bb">KeyID</a></div><div class="ttdeci">uint32_t KeyID</div><div class="ttdoc">Key ID.</div><div class="ttdef"><b>Definition</b> KeyTypes.h:21</div></div>
-<div class="ttc" id="aOSXUchrKeyResource_8h_html_a7e8b8a7e5c47be625a826417ba6b12b2"><div class="ttname"><a href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">KeyLayout</a></div><div class="ttdeci">TISInputSourceRef KeyLayout</div><div class="ttdef"><b>Definition</b> OSXUchrKeyResource.h:14</div></div>
+<div class="ttc" id="aOSXUchrKeyResource_8h_html_a7e8b8a7e5c47be625a826417ba6b12b2"><div class="ttname"><a href="OSXUchrKeyResource_8h.html#a7e8b8a7e5c47be625a826417ba6b12b2">KeyLayout</a></div><div class="ttdeci">TISInputSourceRef KeyLayout</div><div class="ttdef"><b>Definition</b> OSXUchrKeyResource.h:13</div></div>
 <div class="ttc" id="aclassIOSXKeyResource_html"><div class="ttname"><a href="classIOSXKeyResource.html">IOSXKeyResource</a></div><div class="ttdef"><b>Definition</b> IOSXKeyResource.h:15</div></div>
 <div class="ttc" id="aclassOSXUchrKeyResource_html_a04505721c2f15f06c24c45a42fecbb1f"><div class="ttname"><a href="classOSXUchrKeyResource.html#a04505721c2f15f06c24c45a42fecbb1f">OSXUchrKeyResource::OSXUchrKeyResource</a></div><div class="ttdeci">OSXUchrKeyResource(const void *, uint32_t keyboardType)</div><div class="ttdef"><b>Definition</b> OSXUchrKeyResource.cpp:15</div></div>
 <div class="ttc" id="aclassOSXUchrKeyResource_html_a114c7c96e804afc45d33712cab412db9"><div class="ttname"><a href="classOSXUchrKeyResource.html#a114c7c96e804afc45d33712cab412db9">OSXUchrKeyResource::getNumButtons</a></div><div class="ttdeci">uint32_t getNumButtons() const override</div><div class="ttdef"><b>Definition</b> OSXUchrKeyResource.cpp:91</div></div>

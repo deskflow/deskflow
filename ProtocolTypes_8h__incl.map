@@ -1,11 +1,5 @@
 <map id="src/lib/deskflow/ProtocolTypes.h" name="src/lib/deskflow/ProtocolTypes.h">
-<area shape="rect" id="Node000001" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="81,5,245,44"/>
-<area shape="rect" id="Node000002" href="$DirectionTypes_8h.html" title=" " alt="" coords="5,92,156,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="145,47,106,83,102,79,141,43"/>
-<area shape="rect" id="Node000004" href="$EventTypes_8h.html" title=" " alt="" coords="180,92,312,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="185,43,224,79,221,83,181,47"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="50,165,111,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="83,117,83,149,78,149,78,117"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="214,165,278,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="248,117,248,149,243,149,243,117"/>
+<area shape="rect" id="Node000001" title="Deskflow Network Protocol Specification and Implementation." alt="" coords="5,5,170,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="57,92,118,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,45,90,76,85,76,85,45"/>
 </map>

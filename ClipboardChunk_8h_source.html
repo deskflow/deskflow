@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -146,7 +146,7 @@ $(function(){initNavTree('ClipboardChunk_8h_source.html','',''); });
 <div class="ttc" id="aClipboardTypes_8h_html"><div class="ttname"><a href="ClipboardTypes_8h.html">ClipboardTypes.h</a></div></div>
 <div class="ttc" id="aClipboardTypes_8h_html_a63ca97102023d8f9ba64dcbe102a2647"><div class="ttname"><a href="ClipboardTypes_8h.html#a63ca97102023d8f9ba64dcbe102a2647">ClipboardID</a></div><div class="ttdeci">uint8_t ClipboardID</div><div class="ttdoc">Clipboard ID.</div><div class="ttdef"><b>Definition</b> ClipboardTypes.h:16</div></div>
 <div class="ttc" id="aProtocolTypes_8h_html"><div class="ttname"><a href="ProtocolTypes_8h.html">ProtocolTypes.h</a></div><div class="ttdoc">Deskflow Network Protocol Specification and Implementation.</div></div>
-<div class="ttc" id="aclassChunk_html_a17d6a5e6e4c6b8924ac0cb86afd71eaf"><div class="ttname"><a href="classChunk.html#a17d6a5e6e4c6b8924ac0cb86afd71eaf">Chunk::Chunk</a></div><div class="ttdeci">Chunk(size_t size)</div><div class="ttdef"><b>Definition</b> Chunk.cpp:10</div></div>
+<div class="ttc" id="aclassChunk_html_a17d6a5e6e4c6b8924ac0cb86afd71eaf"><div class="ttname"><a href="classChunk.html#a17d6a5e6e4c6b8924ac0cb86afd71eaf">Chunk::Chunk</a></div><div class="ttdeci">Chunk(size_t size)</div><div class="ttdef"><b>Definition</b> Chunk.cpp:9</div></div>
 <div class="ttc" id="aclassClipboardChunk_html_a2bbd7a3408e4c1c2478b60d9e2942094"><div class="ttname"><a href="classClipboardChunk.html#a2bbd7a3408e4c1c2478b60d9e2942094">ClipboardChunk::getExpectedSize</a></div><div class="ttdeci">static size_t getExpectedSize()</div><div class="ttdef"><b>Definition</b> ClipboardChunk.h:35</div></div>
 <div class="ttc" id="aclassClipboardChunk_html_a31e7336bb7c41e78203ed20dec29022b"><div class="ttname"><a href="classClipboardChunk.html#a31e7336bb7c41e78203ed20dec29022b">ClipboardChunk::start</a></div><div class="ttdeci">static ClipboardChunk * start(ClipboardID id, uint32_t sequence, const std::string &amp;size)</div><div class="ttdef"><b>Definition</b> ClipboardChunk.cpp:23</div></div>
 <div class="ttc" id="aclassClipboardChunk_html_a441114df9348ef0e585d75608c10f181"><div class="ttname"><a href="classClipboardChunk.html#a441114df9348ef0e585d75608c10f181">ClipboardChunk::send</a></div><div class="ttdeci">static void send(deskflow::IStream *stream, void *data)</div><div class="ttdef"><b>Definition</b> ClipboardChunk.cpp:99</div></div>
@@ -154,8 +154,8 @@ $(function(){initNavTree('ClipboardChunk_8h_source.html','',''); });
 <div class="ttc" id="aclassClipboardChunk_html_aeac1042cc7887f085ad51f79fb126ea3"><div class="ttname"><a href="classClipboardChunk.html#aeac1042cc7887f085ad51f79fb126ea3">ClipboardChunk::assemble</a></div><div class="ttdeci">static TransferState assemble(deskflow::IStream *stream, std::string &amp;dataCached, ClipboardID &amp;id, uint32_t &amp;sequence)</div><div class="ttdef"><b>Definition</b> ClipboardChunk.cpp:66</div></div>
 <div class="ttc" id="aclassClipboardChunk_html_af1d0e148e5a1635297a3080a8cfce2e9"><div class="ttname"><a href="classClipboardChunk.html#af1d0e148e5a1635297a3080a8cfce2e9">ClipboardChunk::ClipboardChunk</a></div><div class="ttdeci">ClipboardChunk(size_t size)</div><div class="ttdef"><b>Definition</b> ClipboardChunk.cpp:18</div></div>
 <div class="ttc" id="aclassClipboardChunk_html_afae6f5cb2f076eada93fd4a11a88fe87"><div class="ttname"><a href="classClipboardChunk.html#afae6f5cb2f076eada93fd4a11a88fe87">ClipboardChunk::data</a></div><div class="ttdeci">static ClipboardChunk * data(ClipboardID id, uint32_t sequence, const std::string &amp;data)</div><div class="ttdef"><b>Definition</b> ClipboardChunk.cpp:38</div></div>
-<div class="ttc" id="aclassdeskflow_1_1IStream_html"><div class="ttname"><a href="classdeskflow_1_1IStream.html">deskflow::IStream</a></div><div class="ttdoc">Bidirectional stream interface.</div><div class="ttdef"><b>Definition</b> IStream.h:24</div></div>
-<div class="ttc" id="agroup__protocol__enums_html_ga7a47af6600fb20bf999564b4e19dced5"><div class="ttname"><a href="group__protocol__enums.html#ga7a47af6600fb20bf999564b4e19dced5">TransferState</a></div><div class="ttdeci">TransferState</div><div class="ttdoc">Data reception state codes.</div><div class="ttdef"><b>Definition</b> ProtocolTypes.h:176</div></div>
+<div class="ttc" id="aclassdeskflow_1_1IStream_html"><div class="ttname"><a href="classdeskflow_1_1IStream.html">deskflow::IStream</a></div><div class="ttdoc">Bidirectional stream interface.</div><div class="ttdef"><b>Definition</b> IStream.h:22</div></div>
+<div class="ttc" id="agroup__protocol__enums_html_ga7a47af6600fb20bf999564b4e19dced5"><div class="ttname"><a href="group__protocol__enums.html#ga7a47af6600fb20bf999564b4e19dced5">TransferState</a></div><div class="ttdeci">TransferState</div><div class="ttdoc">Data reception state codes.</div><div class="ttdef"><b>Definition</b> ProtocolTypes.h:174</div></div>
 <div class="ttc" id="anamespacedeskflow_html"><div class="ttname"><a href="namespacedeskflow.html">deskflow</a></div><div class="ttdef"><b>Definition</b> EventTypes.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

@@ -1,32 +1,28 @@
 <map id="src/lib/deskflow/PacketStreamFilter.h" name="src/lib/deskflow/PacketStreamFilter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="115,5,314,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="125,5,323,44"/>
 <area shape="rect" id="Node000002" href="$StreamBuffer_8h.html" title=" " alt="" coords="5,92,128,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,47,103,87,101,82,177,42"/>
-<area shape="rect" id="Node000007" href="$StreamFilter_8h.html" title=" " alt="" coords="156,92,273,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="217,45,217,76,212,76,212,45"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="298,92,355,117"/>
-<area shape="poly" id="edge17_Node000001_Node000013" title=" " alt="" coords="243,42,299,81,296,85,240,47"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="123,383,255,407"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,119,46,140,36,165,30,209,35,253,50,295,74,333,102,357,134,374,132,379,99,362,70,336,45,297,29,254,25,209,31,164,42,137,55,116"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="45,165,83,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="69,117,68,149,62,149,63,117"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="108,165,164,189"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="80,115,116,152,112,156,76,119"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="158,455,221,480"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="192,408,192,440,186,440,186,408"/>
-<area shape="rect" id="Node000008" href="$IEventQueue_8h.html" title=" " alt="" coords="145,237,284,262"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="217,117,217,222,212,222,212,117"/>
-<area shape="rect" id="Node000012" href="$IStream_8h.html" title=" " alt="" coords="264,165,357,189"/>
-<area shape="poly" id="edge13_Node000007_Node000012" title=" " alt="" coords="232,115,284,153,281,158,229,119"/>
-<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="155,265,115,283,98,295,85,311,81,321,81,330,91,347,112,362,138,374,136,379,109,367,87,351,76,331,75,320,80,309,95,291,113,278,153,260"/>
-<area shape="rect" id="Node000009" href="$Event_8h.html" title=" " alt="" coords="273,310,369,335"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="234,260,292,299,289,303,231,265"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="94,310,172,335"/>
-<area shape="poly" id="edge11_Node000008_Node000010" title=" " alt="" coords="203,265,160,302,156,298,199,261"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="196,310,249,335"/>
-<area shape="poly" id="edge12_Node000008_Node000011" title=" " alt="" coords="218,262,222,294,217,295,213,263"/>
-<area shape="poly" id="edge9_Node000009_Node000003" title=" " alt="" coords="301,338,226,377,223,373,298,333"/>
-<area shape="poly" id="edge15_Node000012_Node000003" title=" " alt="" coords="325,188,352,215,379,253,389,274,394,295,393,316,383,336,360,359,333,375,302,386,271,393,270,388,301,381,330,371,357,355,379,333,388,315,389,296,384,276,374,256,348,219,321,192"/>
-<area shape="poly" id="edge16_Node000012_Node000008" title=" " alt="" coords="296,192,244,230,241,226,293,188"/>
-<area shape="poly" id="edge14_Node000012_Node000009" title=" " alt="" coords="314,189,322,294,317,294,309,190"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,47,105,87,102,82,185,42"/>
+<area shape="rect" id="Node000006" href="$StreamFilter_8h.html" title=" " alt="" coords="165,92,282,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="226,45,226,76,221,76,221,45"/>
+<area shape="rect" id="Node000013" title=" " alt="" coords="307,92,364,117"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="252,42,308,81,305,85,249,47"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="99,237,159,262"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="55,119,40,134,28,151,21,170,25,188,37,203,51,215,86,233,83,238,48,220,33,207,20,190,16,170,23,149,36,130,51,115"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="34,165,72,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="67,118,61,150,56,149,62,117"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="97,165,153,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="78,116,108,151,104,154,74,119"/>
+<area shape="rect" id="Node000007" href="$IEventQueue_8h.html" title=" " alt="" coords="294,165,434,189"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="248,115,328,155,326,160,246,120"/>
+<area shape="rect" id="Node000012" href="$IStream_8h.html" title=" " alt="" coords="178,165,270,189"/>
+<area shape="poly" id="edge11_Node000006_Node000012" title=" " alt="" coords="226,117,226,149,221,149,221,117"/>
+<area shape="rect" id="Node000008" href="$Event_8h.html" title=" " alt="" coords="260,237,356,262"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="357,192,328,227,324,224,353,188"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="380,237,457,262"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="375,188,403,224,398,227,371,192"/>
+<area shape="rect" id="Node000009" href="$EventTypes_8h.html" title=" " alt="" coords="258,310,358,335"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="310,263,310,294,305,294,305,263"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="276,383,340,407"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="310,335,310,367,305,367,305,335"/>
+<area shape="poly" id="edge12_Node000012_Node000003" title=" " alt="" coords="210,192,158,230,155,226,207,188"/>
 </map>

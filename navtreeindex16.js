@@ -1,7 +1,5 @@
 var NAVTREEINDEX16 =
 {
-"classThread.html#ab55c85cdc3cf7d713a84ad6974343a1a":[6,0,233,8],
-"classThread.html#ab5f1ec60a122d14701747fd96daeff61":[6,0,233,3],
 "classThread.html#acfc942d337953f40adaea872f439259d":[6,0,233,11],
 "classThread.html#ae6fced5fdf9d033c4cc3b3ae009e4b46":[6,0,233,7],
 "classThreadCancelException.html":[6,0,234],
@@ -249,5 +247,7 @@ var NAVTREEINDEX16 =
 "classXWindowsScreen.html#a8af145455ca1a8f2057cca9aab6048bc":[6,0,256,22],
 "classXWindowsScreen.html#a8ec688a55cf37827395c39918ea99aad":[6,0,256,2],
 "classXWindowsScreen.html#a8fb29b0d9400b0b52cf973dc6337c33c":[6,0,256,16],
-"classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38":[6,0,256,4]
+"classXWindowsScreen.html#a901e540d5e85159302ab7f40aff0df38":[6,0,256,4],
+"classXWindowsScreen.html#a92b282938b2583610a0a1940e6ef2998":[6,0,256,12],
+"classXWindowsScreen.html#a9d043bb0916b10d64716a54dc0c55e8e":[6,0,256,35]
 };

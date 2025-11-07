@@ -1,17 +1,13 @@
 <map id="src/lib/deskflow/IClipboard.cpp" name="src/lib/deskflow/IClipboard.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="223,5,424,30"/>
-<area shape="rect" id="Node000002" href="$IClipboard_8h.html" title=" " alt="" coords="118,78,265,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="303,33,228,73,226,68,300,28"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="289,78,358,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="326,31,326,62,321,62,321,31"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="382,78,438,103"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="339,28,386,66,383,70,336,33"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="5,151,138,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="173,106,106,145,103,140,170,101"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="161,151,222,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="194,103,194,135,189,135,189,103"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="246,151,300,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="207,101,250,138,246,142,203,105"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="40,223,103,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="74,176,74,208,69,208,69,176"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="111,5,311,30"/>
+<area shape="rect" id="Node000002" href="$IClipboard_8h.html" title=" " alt="" coords="5,78,153,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,33,116,73,113,68,188,28"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="177,78,245,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="214,31,214,62,208,62,208,31"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="270,78,326,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="227,28,274,66,270,70,224,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="9,151,69,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,105,55,138,51,136,70,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="94,151,147,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="88,102,108,136,104,139,84,105"/>
 </map>

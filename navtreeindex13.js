@@ -1,7 +1,5 @@
 var NAVTREEINDEX13 =
 {
-"classOSXScreen.html#a844fd85759735df238bbd48e50a9176e":[6,0,181,25],
-"classOSXScreen.html#a8f402f986943830b9926d2b5116aee8f":[6,0,181,39],
 "classOSXScreen.html#a947052e85379398d928a7e8bd697dd64":[6,0,181,11],
 "classOSXScreen.html#a981b69ed3160e02f825c1fedf017b6c8":[6,0,181,14],
 "classOSXScreen.html#a9df6664d350e53377ff613adb90bd8a0":[6,0,181,27],
@@ -249,5 +247,7 @@ var NAVTREEINDEX13 =
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a1e1d357a199c55b82db55f2992a484f0":[6,0,191,1,7],
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a2b61e0d5977f2e38f06e16281c802b47":[6,0,191,1,2],
 "classScreenConfig.html#aa614b21714c5878160804fb6375ea814a6adf97f83acf6453d4a6a4b1070f3754":[6,0,191,1,6],
-"classScreenConfig.html#aa614b21714c5878160804fb6375ea814a825a3d98017bab11815ad2817201324c":[6,0,191,1,1]
+"classScreenConfig.html#aa614b21714c5878160804fb6375ea814a825a3d98017bab11815ad2817201324c":[6,0,191,1,1],
+"classScreenConfig.html#aa614b21714c5878160804fb6375ea814aa2e92861b757ab878312dd57993d60cf":[6,0,191,1,3],
+"classScreenConfig.html#aa614b21714c5878160804fb6375ea814ab6755d218d5f4e1cef9cce9cc39aeda9":[6,0,191,1,4]
 };

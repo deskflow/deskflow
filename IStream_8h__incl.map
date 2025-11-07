@@ -1,18 +1,5 @@
 <map id="src/lib/io/IStream.h" name="src/lib/io/IStream.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,137,30"/>
-<area shape="rect" id="Node000002" href="$Event_8h.html" title=" " alt="" coords="27,151,123,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,30,77,135,72,135,69,30"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="25,223,125,248"/>
-<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="63,32,44,58,24,94,12,134,12,155,17,174,30,195,47,212,43,215,26,198,13,176,7,155,7,134,19,92,39,55,59,29"/>
-<area shape="rect" id="Node000005" href="$IEventQueue_8h.html" title=" " alt="" coords="108,78,247,103"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="90,28,149,67,146,71,87,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="78,176,78,208,72,208,72,176"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="43,296,107,321"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="78,249,78,280,72,280,72,249"/>
-<area shape="poly" id="edge6_Node000005_Node000002" title=" " alt="" coords="162,105,106,144,103,139,159,101"/>
-<area shape="poly" id="edge7_Node000005_Node000003" title=" " alt="" coords="191,102,215,136,220,156,215,177,200,194,182,207,142,225,139,220,179,203,196,190,210,174,215,156,210,138,187,105"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="275,151,352,175"/>
-<area shape="poly" id="edge8_Node000005_Node000006" title=" " alt="" coords="201,101,279,141,276,146,199,106"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="147,151,200,175"/>
-<area shape="poly" id="edge9_Node000005_Node000007" title=" " alt="" coords="180,103,178,135,173,135,174,103"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="41,78,101,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,31,74,62,68,62,68,31"/>
 </map>

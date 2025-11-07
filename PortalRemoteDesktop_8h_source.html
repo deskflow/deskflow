@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -109,58 +109,56 @@ $(function(){initNavTree('PortalRemoteDesktop_8h_source.html','',''); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;glib.h&gt;</span></div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;libportal/portal.h&gt;</span></div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow.html">deskflow</a> {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow.html">deskflow</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classdeskflow_1_1PortalRemoteDesktop.html">   20</a></span><span class="keyword">class </span><a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a></div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a>(<a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *screen, <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942">~PortalRemoteDesktop</a>();</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  <span class="keywordtype">void</span> glibThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *);</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  gboolean timeoutHandler() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  gboolean initSession();</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">void</span> handleInitSession(GObject *<span class="keywordtype">object</span>, GAsyncResult *res);</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> handleSessionStarted(GObject *<span class="keywordtype">object</span>, GAsyncResult *res);</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">void</span> handleSessionClosed(XdpSession *session);</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> reconnect(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a> = 1000);</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handleSessionClosedCallback(XdpSession *session, gpointer <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  {</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a> *<span class="keyword">&gt;</span>(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)-&gt;handleSessionClosed(session);</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  }</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *m_screen;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <a class="code hl_class" href="classThread.html">Thread</a> *m_glibThread;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  GMainLoop *m_glibMainLoop = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span> </div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  XdpPortal *m_portal = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  XdpSession *m_session = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">char</span> *m_sessionRestoreToken = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  guint m_sessionSignalId = 0;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  guint m_sessionIteration = 0;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>};</div>
+<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classdeskflow_1_1PortalRemoteDesktop.html">   18</a></span><span class="keyword">class </span><a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a>(<a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *screen, <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942">~PortalRemoteDesktop</a>();</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="keywordtype">void</span> glibThread(<span class="keyword">const</span> <span class="keywordtype">void</span> *);</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  gboolean timeoutHandler() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  gboolean initSession();</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> handleInitSession(GObject *<span class="keywordtype">object</span>, GAsyncResult *res);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> handleSessionStarted(GObject *<span class="keywordtype">object</span>, GAsyncResult *res);</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">void</span> handleSessionClosed(XdpSession *session);</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">void</span> reconnect(<span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a> = 1000);</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span></div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> handleSessionClosedCallback(XdpSession *session, gpointer <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keyword">static_cast&lt;</span><a class="code hl_function" href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">PortalRemoteDesktop</a> *<span class="keyword">&gt;</span>(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>)-&gt;handleSessionClosed(session);</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  }</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_class" href="classdeskflow_1_1EiScreen.html">EiScreen</a> *m_screen;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <a class="code hl_class" href="classThread.html">Thread</a> *m_glibThread;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  GMainLoop *m_glibMainLoop = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span> </div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  XdpPortal *m_portal = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  XdpSession *m_session = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">char</span> *m_sessionRestoreToken = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  guint m_sessionSignalId = 0;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span></div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  guint m_sessionIteration = 0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
 </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>} <span class="comment">// namespace deskflow</span></div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span> </div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>} <span class="comment">// namespace deskflow</span></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_aa36d05423b2dd8f3c8296093b4674b63"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a></div><div class="ttdeci">static int void FAR * data</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:35</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:40</div></div>
 <div class="ttc" id="aEiScreen_8h_html"><div class="ttname"><a href="EiScreen_8h.html">EiScreen.h</a></div></div>
 <div class="ttc" id="aThread_8h_html"><div class="ttname"><a href="Thread_8h.html">Thread.h</a></div></div>
-<div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:31</div></div>
+<div class="ttc" id="aclassIEventQueue_html"><div class="ttname"><a href="classIEventQueue.html">IEventQueue</a></div><div class="ttdoc">Event queue interface.</div><div class="ttdef"><b>Definition</b> IEventQueue.h:29</div></div>
 <div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
-<div class="ttc" id="aclassdeskflow_1_1EiScreen_html"><div class="ttname"><a href="classdeskflow_1_1EiScreen.html">deskflow::EiScreen</a></div><div class="ttdoc">Implementation of IPlatformScreen for X11.</div><div class="ttdef"><b>Definition</b> EiScreen.h:34</div></div>
-<div class="ttc" id="aclassdeskflow_1_1PortalRemoteDesktop_html_a36c37487ace03a9c05cc404cfe84451e"><div class="ttname"><a href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">deskflow::PortalRemoteDesktop::PortalRemoteDesktop</a></div><div class="ttdeci">PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)</div><div class="ttdef"><b>Definition</b> PortalRemoteDesktop.cpp:18</div></div>
-<div class="ttc" id="aclassdeskflow_1_1PortalRemoteDesktop_html_a3fa2db4b278995b2478146e9a2b23942"><div class="ttname"><a href="classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942">deskflow::PortalRemoteDesktop::~PortalRemoteDesktop</a></div><div class="ttdeci">~PortalRemoteDesktop()</div><div class="ttdef"><b>Definition</b> PortalRemoteDesktop.cpp:31</div></div>
+<div class="ttc" id="aclassdeskflow_1_1EiScreen_html"><div class="ttname"><a href="classdeskflow_1_1EiScreen.html">deskflow::EiScreen</a></div><div class="ttdoc">Implementation of IPlatformScreen for X11.</div><div class="ttdef"><b>Definition</b> EiScreen.h:32</div></div>
+<div class="ttc" id="aclassdeskflow_1_1PortalRemoteDesktop_html_a36c37487ace03a9c05cc404cfe84451e"><div class="ttname"><a href="classdeskflow_1_1PortalRemoteDesktop.html#a36c37487ace03a9c05cc404cfe84451e">deskflow::PortalRemoteDesktop::PortalRemoteDesktop</a></div><div class="ttdeci">PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)</div><div class="ttdef"><b>Definition</b> PortalRemoteDesktop.cpp:16</div></div>
+<div class="ttc" id="aclassdeskflow_1_1PortalRemoteDesktop_html_a3fa2db4b278995b2478146e9a2b23942"><div class="ttname"><a href="classdeskflow_1_1PortalRemoteDesktop.html#a3fa2db4b278995b2478146e9a2b23942">deskflow::PortalRemoteDesktop::~PortalRemoteDesktop</a></div><div class="ttdeci">~PortalRemoteDesktop()</div><div class="ttdef"><b>Definition</b> PortalRemoteDesktop.cpp:29</div></div>
 <div class="ttc" id="anamespacedeskflow_html"><div class="ttname"><a href="namespacedeskflow.html">deskflow</a></div><div class="ttdef"><b>Definition</b> EventTypes.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

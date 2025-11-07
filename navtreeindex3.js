@@ -1,7 +1,5 @@
 var NAVTREEINDEX3 =
 {
-"MSWindowsClipboard_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,10,2],
-"MSWindowsClipboard_8h_source.html":[7,0,1,1,9,10],
 "MSWindowsDebugOutputter_8cpp.html":[7,0,1,1,9,23],
 "MSWindowsDebugOutputter_8cpp.html#ac7bef5d85e3dcd73eef56ad39ffc84a9":[7,0,1,1,9,23,0],
 "MSWindowsDebugOutputter_8h.html":[7,0,1,1,9,24],
@@ -249,5 +247,7 @@ var NAVTREEINDEX3 =
 "OSXHelpers_8mm.html#a79d7d05a2843fe7a797275070bef96d8":[7,0,1,1,5,24,3],
 "OSXHelpers_8mm.html#a98bc640a643cde34f8c731e709f09a9b":[7,0,1,1,5,24,0],
 "OSXHelpers_8mm.html#afbc12a04cb2f9a593d00adf3b194197f":[7,0,1,1,5,24,2],
-"OSXKeyState_8cpp.html":[7,0,1,1,9,67]
+"OSXKeyState_8cpp.html":[7,0,1,1,9,67],
+"OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,67,6],
+"OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,67,3]
 };

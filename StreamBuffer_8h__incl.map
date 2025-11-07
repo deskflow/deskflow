@@ -1,11 +1,9 @@
 <map id="src/lib/io/StreamBuffer.h" name="src/lib/io/StreamBuffer.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="100,5,262,30"/>
-<area shape="rect" id="Node000002" href="$EventTypes_8h.html" title=" " alt="" coords="5,78,138,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,33,104,72,101,67,161,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="162,78,200,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="184,31,184,62,178,62,178,31"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="225,78,281,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="195,29,232,65,228,69,191,32"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="40,151,103,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="74,103,74,135,69,135,69,103"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="28,5,190,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,66,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,32,60,69,56,65,95,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="90,78,128,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,31,112,62,106,62,106,31"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="153,78,209,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="123,29,160,65,156,69,119,32"/>
 </map>

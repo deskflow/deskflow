@@ -1,9 +1,7 @@
 <map id="src/lib/gui/VersionChecker.h" name="src/lib/gui/VersionChecker.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="40,5,224,30"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,75,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,33,69,71,65,66,115,28"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="99,78,165,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,31,135,62,129,62,129,31"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="189,78,259,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,28,199,66,195,71,146,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,190,30"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="18,78,87,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="92,32,70,66,66,63,88,29"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="112,78,177,103"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,29,130,64,126,67,103,32"/>
 </map>

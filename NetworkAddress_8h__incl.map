@@ -1,15 +1,11 @@
 <map id="src/lib/net/NetworkAddress.h" name="src/lib/net/NetworkAddress.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="102,5,292,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="22,5,212,30"/>
 <area shape="rect" id="Node000002" href="$IArchNetwork_8h.html" title=" " alt="" coords="46,78,188,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,33,143,70,139,66,182,29"/>
-<area shape="rect" id="Node000006" href="$EventTypes_8h.html" title=" " alt="" coords="212,78,344,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="212,29,255,66,252,70,209,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,31,120,62,114,62,114,31"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,151,66,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,105,62,142,58,138,102,101"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="90,151,144,175"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,103,120,135,114,135,114,103"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="167,151,224,175"/>
 <area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="132,101,173,138,170,142,128,105"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="248,151,311,175"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="281,103,282,135,276,135,276,103"/>
 </map>

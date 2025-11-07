@@ -215,8 +215,6 @@ var NAVTREEINDEX0 =
 "CommandProcess_8cpp.html":[7,0,1,1,5,1,2],
 "CommandProcess_8h.html":[7,0,1,1,5,1,3],
 "CommandProcess_8h_source.html":[7,0,1,1,5,1,3],
-"Common_8h.html":[7,0,1,1,3,0],
-"Common_8h_source.html":[7,0,1,1,3,0],
 "ComputerNameValidator_8cpp.html":[7,0,1,1,5,5,2],
 "ComputerNameValidator_8h.html":[7,0,1,1,5,5,3],
 "ComputerNameValidator_8h_source.html":[7,0,1,1,5,5,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "DeskflowException_8h.html":[7,0,1,1,4,20],
 "DeskflowException_8h_source.html":[7,0,1,1,4,20],
 "DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2],
-"DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3]
+"DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3],
+"DeskflowXkbKeyboard_8h_source.html":[7,0,1,1,4,2,3],
+"Diagnostic_8cpp.html":[7,0,1,1,5,9]
 };

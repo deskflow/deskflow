@@ -1,19 +1,17 @@
 <map id="src/lib/deskflow/ScreenException.h" name="src/lib/deskflow/ScreenException.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="805,5,1030,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="697,5,922,30"/>
 <area shape="rect" id="Node000002" href="$ClientApp_8cpp.html" title=" " alt="" coords="5,85,204,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="790,29,525,49,215,81,171,87,170,82,215,75,524,44,790,24"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="682,32,464,52,216,81,172,87,171,82,215,75,463,47,681,27"/>
 <area shape="rect" id="Node000003" href="$ScreenException_8cpp.html" title=" " alt="" coords="228,85,467,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="816,35,480,81,433,87,432,82,479,75,816,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="726,36,418,87,417,82,725,30"/>
 <area shape="rect" id="Node000004" href="$ServerApp_8cpp.html" title=" " alt="" coords="491,85,694,110"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="855,37,642,87,641,82,853,32"/>
-<area shape="rect" id="Node000005" href="$EiScreen_8cpp.html" title=" " alt="" coords="718,85,907,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="892,41,830,86,827,82,889,37"/>
-<area shape="rect" id="Node000006" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="932,78,1117,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="947,37,1000,75,997,80,944,41"/>
-<area shape="rect" id="Node000007" href="$MSWindowsHook_8cpp.html" title=" " alt="" coords="1141,78,1326,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="981,32,1158,75,1157,80,979,37"/>
-<area shape="rect" id="Node000008" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1350,78,1536,117"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="1022,30,1340,75,1351,77,1350,82,1339,81,1022,35"/>
-<area shape="rect" id="Node000009" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="1560,78,1734,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="1046,25,1281,45,1549,75,1560,77,1559,82,1548,81,1280,50,1046,30"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="764,38,626,87,624,82,762,33"/>
+<area shape="rect" id="Node000005" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="717,78,902,117"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="812,46,812,77,807,77,807,46"/>
+<area shape="rect" id="Node000006" href="$MSWindowsHook_8cpp.html" title=" " alt="" coords="926,78,1112,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="856,33,969,75,968,80,855,38"/>
+<area shape="rect" id="Node000007" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="1136,78,1321,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="888,31,1136,76,1135,81,887,36"/>
+<area shape="rect" id="Node000008" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="1345,78,1520,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="938,28,1125,48,1334,75,1345,77,1344,82,1333,81,1125,54,937,34"/>
 </map>

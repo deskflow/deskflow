@@ -1,9 +1,0 @@
-<map id="src/lib/deskflow/IScreenSaver.h" name="src/lib/deskflow/IScreenSaver.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,167,44"/>
-<area shape="rect" id="Node000002" href="$Event_8h.html" title=" " alt="" coords="38,92,134,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,45,89,76,83,76,83,45"/>
-<area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="36,165,136,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="89,117,89,149,83,149,83,117"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="54,237,118,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="89,190,89,222,83,222,83,190"/>
-</map>

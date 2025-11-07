@@ -1,19 +1,15 @@
 <map id="src/lib/platform/OSXClipboardAnyBitmapConverter.h" name="src/lib/platform/OSXClipboardAnyBitmapConverter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="252,5,446,44"/>
-<area shape="rect" id="Node000002" href="$OSXClipboard_8h.html" title=" " alt="" coords="266,92,432,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="352,45,352,76,346,76,346,45"/>
-<area shape="rect" id="Node000003" href="$IClipboard_8h.html" title=" " alt="" coords="118,165,265,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="324,120,232,160,230,156,322,115"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="289,165,409,189"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="352,117,352,149,346,149,346,117"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="433,165,489,189"/>
-<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="369,115,431,154,428,158,366,119"/>
-<area shape="rect" id="Node000004" href="$EventTypes_8h.html" title=" " alt="" coords="5,237,138,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="173,192,106,231,103,227,170,188"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="161,237,222,262"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="194,190,194,222,189,222,189,190"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="246,237,300,262"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="207,188,250,225,246,229,203,192"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="40,310,103,335"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="74,263,74,294,69,294,69,263"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="140,5,333,44"/>
+<area shape="rect" id="Node000002" href="$OSXClipboard_8h.html" title=" " alt="" coords="154,92,319,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,45,239,76,234,76,234,45"/>
+<area shape="rect" id="Node000003" href="$IClipboard_8h.html" title=" " alt="" coords="5,165,153,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="211,120,120,160,118,156,209,115"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="176,165,296,189"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="239,117,239,149,234,149,234,117"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="320,165,376,189"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="256,115,318,154,316,158,253,119"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="9,237,69,262"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,191,55,225,51,222,70,189"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="94,237,147,262"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="88,189,108,223,104,225,84,191"/>
 </map>

@@ -1,11 +1,9 @@
 <map id="src/lib/deskflow/AppUtil.cpp" name="src/lib/deskflow/AppUtil.cpp">
-<area shape="rect" id="Node000001" title=" " alt="" coords="324,5,508,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="259,5,443,30"/>
 <area shape="rect" id="Node000002" href="$AppUtil_8h.html" title=" " alt="" coords="224,78,355,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="397,33,325,72,322,68,394,28"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="379,78,453,103"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="419,31,419,62,414,62,414,31"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="478,78,546,103"/>
-<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="434,28,486,67,483,71,430,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,32,311,68,307,65,339,29"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="379,78,448,103"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="363,29,395,65,391,68,359,32"/>
 <area shape="rect" id="Node000003" href="$DeskflowException_8h.html" title=" " alt="" coords="5,151,206,175"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="260,106,151,147,149,142,258,101"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="192,296,246,321"/>

@@ -1,13 +1,15 @@
 <map id="src/lib/gui/StyleUtils.h" name="src/lib/gui/StyleUtils.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="159,5,308,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="195,5,344,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,54,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,33,69,78,67,73,199,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,33,70,80,68,74,228,28"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="78,78,173,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,33,157,72,154,67,214,28"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="197,78,270,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="236,31,236,62,231,62,231,31"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="294,78,386,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="253,28,311,67,308,71,250,33"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="411,78,557,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="276,28,429,71,428,76,274,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,33,164,73,162,68,245,28"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="197,78,254,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="264,32,243,66,238,63,260,29"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="277,78,350,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="279,29,301,63,296,66,275,32"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="374,78,466,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="296,28,383,69,380,73,293,33"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="491,78,637,103"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="319,28,501,71,500,77,318,33"/>
 </map>

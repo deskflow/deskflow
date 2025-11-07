@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.242</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.320</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -102,20 +102,20 @@ $(function(){initNavTree('MSWindowsWatchdog_8h_source.html','',''); });
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="MSWindowsProcess_8h.html">platform/MSWindowsProcess.h</a>&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="MSWindowsSession_8h.html">platform/MSWindowsSession.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="MSWindowsWatchdog_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">   12</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">   20</a></span><span class="keyword">typedef</span> VOID(WINAPI *<a class="code hl_typedef" href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a>)(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> asUser);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">class </span><a class="code hl_class" href="classThread.html">Thread</a>;</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="Thread_8h.html">mt/Thread.h</a>&quot;</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="MSWindowsProcess_8h.html">platform/MSWindowsProcess.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="MSWindowsSession_8h.html">platform/MSWindowsSession.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="MSWindowsWatchdog_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">   13</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#include &lt;mutex&gt;</span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">   21</a></span><span class="keyword">typedef</span> VOID(WINAPI *<a class="code hl_typedef" href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a>)(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a> asUser);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">class </span><a class="code hl_class" href="classFileLogOutputter.html">FileLogOutputter</a>;</div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span></div>
 <div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
@@ -189,8 +189,9 @@ $(function(){initNavTree('MSWindowsWatchdog_8h_source.html','',''); });
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a36a00ba9910ecdadcef4246d090b3e1f"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a36a00ba9910ecdadcef4246d090b3e1f">BOOL</a></div><div class="ttdeci">static const WSAEVENT FAR BOOL</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:55</div></div>
 <div class="ttc" id="aMSWindowsProcess_8h_html"><div class="ttname"><a href="MSWindowsProcess_8h.html">MSWindowsProcess.h</a></div></div>
 <div class="ttc" id="aMSWindowsSession_8h_html"><div class="ttname"><a href="MSWindowsSession_8h.html">MSWindowsSession.h</a></div></div>
-<div class="ttc" id="aMSWindowsWatchdog_8h_html_a7bc356bdf6c2476015756a426984f00f"><div class="ttname"><a href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a></div><div class="ttdeci">VOID(WINAPI * SendSas)(BOOL asUser)</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.h:20</div></div>
-<div class="ttc" id="aclassFileLogOutputter_html"><div class="ttname"><a href="classFileLogOutputter.html">FileLogOutputter</a></div><div class="ttdoc">Write log to file.</div><div class="ttdef"><b>Definition</b> LogOutputters.h:58</div></div>
+<div class="ttc" id="aMSWindowsWatchdog_8h_html_a7bc356bdf6c2476015756a426984f00f"><div class="ttname"><a href="MSWindowsWatchdog_8h.html#a7bc356bdf6c2476015756a426984f00f">SendSas</a></div><div class="ttdeci">VOID(WINAPI * SendSas)(BOOL asUser)</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.h:21</div></div>
+<div class="ttc" id="aThread_8h_html"><div class="ttname"><a href="Thread_8h.html">Thread.h</a></div></div>
+<div class="ttc" id="aclassFileLogOutputter_html"><div class="ttname"><a href="classFileLogOutputter.html">FileLogOutputter</a></div><div class="ttdoc">Write log to file.</div><div class="ttdef"><b>Definition</b> LogOutputters.h:57</div></div>
 <div class="ttc" id="aclassMSWindowsSession_html"><div class="ttname"><a href="classMSWindowsSession.html">MSWindowsSession</a></div><div class="ttdef"><b>Definition</b> MSWindowsSession.h:15</div></div>
 <div class="ttc" id="aclassMSWindowsWatchdog_html_a51b3c78ae280ff3e3f7387af06d460c2"><div class="ttname"><a href="classMSWindowsWatchdog.html#a51b3c78ae280ff3e3f7387af06d460c2">MSWindowsWatchdog::isProcessRunning</a></div><div class="ttdeci">bool isProcessRunning()</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.cpp:237</div></div>
 <div class="ttc" id="aclassMSWindowsWatchdog_html_a6493798fd62f1b3bb9800caaef5b578e"><div class="ttname"><a href="classMSWindowsWatchdog.html#a6493798fd62f1b3bb9800caaef5b578e">MSWindowsWatchdog::MSWindowsWatchdog</a></div><div class="ttdeci">MSWindowsWatchdog(bool foreground, FileLogOutputter &amp;fileLogOutputter)</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.cpp:65</div></div>
@@ -198,7 +199,6 @@ $(function(){initNavTree('MSWindowsWatchdog_8h_source.html','',''); });
 <div class="ttc" id="aclassMSWindowsWatchdog_html_adcb632aec46aee3d5391d9be2e925e1d"><div class="ttname"><a href="classMSWindowsWatchdog.html#adcb632aec46aee3d5391d9be2e925e1d">MSWindowsWatchdog::setProcessConfig</a></div><div class="ttdeci">void setProcessConfig(const std::string_view &amp;command, bool elevate)</div><div class="ttdoc">Set the command to run and whether to elevate the process.</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.cpp:306</div></div>
 <div class="ttc" id="aclassMSWindowsWatchdog_html_ae446bc5eb685364e0979a4a18ced2947"><div class="ttname"><a href="classMSWindowsWatchdog.html#ae446bc5eb685364e0979a4a18ced2947">MSWindowsWatchdog::~MSWindowsWatchdog</a></div><div class="ttdeci">~MSWindowsWatchdog()=default</div></div>
 <div class="ttc" id="aclassMSWindowsWatchdog_html_aef50b7c9122178538744211152b94f42"><div class="ttname"><a href="classMSWindowsWatchdog.html#aef50b7c9122178538744211152b94f42">MSWindowsWatchdog::stop</a></div><div class="ttdeci">void stop()</div><div class="ttdoc">Stop the main loop and output loop threads.</div><div class="ttdef"><b>Definition</b> MSWindowsWatchdog.cpp:80</div></div>
-<div class="ttc" id="aclassThread_html"><div class="ttname"><a href="classThread.html">Thread</a></div><div class="ttdoc">Thread handle.</div><div class="ttdef"><b>Definition</b> Thread.h:33</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
