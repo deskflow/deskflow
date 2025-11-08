@@ -11,6 +11,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QRect>
+#include <QRegularExpression>
 
 Settings *Settings::instance()
 {
@@ -117,8 +118,13 @@ QVariant Settings::defaultValue(const QString &key)
     return true;
   }
 
-  if (key == Core::ScreenName)
-    return QSysInfo::machineHostName();
+  if (key == Core::ScreenName) {
+    // The localhost name can contain spaces and non word characters
+    QString name = QSysInfo::machineHostName().simplified();
+    name.replace(QLatin1String(" "), QStringLiteral("_"));
+    name.replace(QRegularExpression(QLatin1String("\\W")), QLatin1String(""));
+    return name;
+  }
 
   if (key == Gui::WindowGeometry)
     return QRect();
