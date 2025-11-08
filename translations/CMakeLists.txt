@@ -24,15 +24,10 @@ qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${${CMAKE_PROJECT_NAME}_TRS} O
 #ensure that the targets are built always
 add_custom_target(app_translations ALL DEPENDS ${TRS})
 
-if(UNIX AND NOT APPLE)
-  install(FILES ${TRS} DESTINATION share/${CMAKE_PROJECT_NAME}/translations)
-elseif(WIN32)
-  install(FILES ${TRS} DESTINATION translations)
-elseif(APPLE)
-  #install our translations
-  set(MAC_LANG_PATH ${CMAKE_PROJECT_PROPER_NAME}.app/Contents/MacOS/translations)
-  install(FILES ${TRS} DESTINATION ${MAC_LANG_PATH})
+# install our translations
+install(FILES ${TRS} DESTINATION ${CMAKE_INSTALL_I18N_DIR})
 
+if(APPLE)
   # find the qt translation files not deployed by macdeployqt
   get_target_property(lupdate_executable Qt6::lupdate IMPORTED_LOCATION)
   get_filename_component(_qt_bin_dir "${lupdate_executable}" DIRECTORY)
@@ -42,10 +37,10 @@ elseif(APPLE)
 
   # install each lang file and rename to the same name
   # rename does not work with a list so foreach is used instead
-  install(FILES ${MAC_QT_LANG_PATH}/qtbase_en.qm DESTINATION ${MAC_LANG_PATH} RENAME qt_en.qm)
+  install(FILES ${MAC_QT_LANG_PATH}/qtbase_en.qm DESTINATION ${CMAKE_INSTALL_I18N_DIR} RENAME qt_en.qm)
   foreach(LANG ${${CMAKE_PROJECT_NAME}_TRS})
     string(REPLACE "${CMAKE_PROJECT_NAME}_" "" LANG ${LANG})
     string(REPLACE ".ts" "" LANG ${LANG})
-    install(FILES ${MAC_QT_LANG_PATH}/qtbase_${LANG}.qm DESTINATION ${MAC_LANG_PATH} RENAME qt_${LANG}.qm)
+    install(FILES ${MAC_QT_LANG_PATH}/qtbase_${LANG}.qm DESTINATION ${CMAKE_INSTALL_I18N_DIR} RENAME qt_${LANG}.qm)
   endforeach()
 endif()
