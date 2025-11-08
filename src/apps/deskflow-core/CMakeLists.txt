@@ -38,21 +38,19 @@ target_link_libraries(
   app
   ${libs})
 
+install(
+  TARGETS ${target}
+  RUNTIME_DEPENDENCY_SET coreDeps
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
 if(APPLE)
   set_target_properties(${target} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
-    RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_BINDIR}
   )
-elseif(UNIX)
-  install(TARGETS ${target} DESTINATION bin)
-  generate_app_man(${target} "${CMAKE_PROJECT_DESCRIPTION}")
-elseif(WIN32)
-  install(
-    TARGETS ${target}
-    RUNTIME_DEPENDENCY_SET coreDeps
-    DESTINATION .
-  )
+elseif (WIN32)
   install(RUNTIME_DEPENDENCY_SET coreDeps
     PRE_EXCLUDE_REGEXES
       "api-ms-win-.*"
@@ -60,6 +58,8 @@ elseif(WIN32)
       "^hvsifiletrust\\.dll$"
     POST_EXCLUDE_REGEXES
       ".*system32.*"
-    RUNTIME DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
+else()
+  generate_app_man(${target} "${CMAKE_PROJECT_DESCRIPTION}")
 endif()
