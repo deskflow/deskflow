@@ -58,7 +58,7 @@ elseif (WIN32)
       "^hvsifiletrust\\.dll$"
     POST_EXCLUDE_REGEXES
       ".*system32.*"
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 else()
   generate_app_man(${target} "${CMAKE_PROJECT_DESCRIPTION}")

@@ -39,6 +39,6 @@ if(WIN32)
       "^hvsifiletrust\\.dll$"
     POST_EXCLUDE_REGEXES
       ".*system32.*"
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()
