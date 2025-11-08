@@ -8,22 +8,22 @@ set(MY_DIR ${CMAKE_CURRENT_LIST_DIR})
 # Install our desktop file
 install(
   FILES ${MY_DIR}/${CMAKE_PROJECT_REV_FQDN}.desktop
-  DESTINATION share/applications
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/applications
 )
 
 # Install our icon
-install(FILES ${MY_DIR}/org.deskflow.deskflow.png DESTINATION share/icons/hicolor/512x512/apps/)
+install(FILES ${MY_DIR}/org.deskflow.deskflow.png DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/512x512/apps/)
 
 # Install our symbolic icon
 install(
   FILES ${CMAKE_SOURCE_DIR}/src/apps/res/icons/deskflow-light/apps/64/org.deskflow.deskflow-symbolic.svg
-  DESTINATION share/icons/hicolor/symbolic/apps/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/symbolic/apps/
 )
 
 # Install our metainfo
 install(
   FILES ${MY_DIR}/${CMAKE_PROJECT_REV_FQDN}.metainfo.xml
-  DESTINATION share/metainfo/
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo/
 )
 
 # Prepare PKGBUILD for Arch Linux
@@ -32,7 +32,6 @@ configure_file(
   ${CMAKE_BINARY_DIR}/PKGBUILD
   @ONLY
 )
-
 
 set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
