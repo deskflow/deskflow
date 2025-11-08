@@ -29,11 +29,5 @@ function(generate_app_man TARGET NAME)
 endfunction()
 
 add_subdirectory(deskflow-core)
-
-## Only used on windows
-add_subdirectory(deskflow-daemon)
-
-option(BUILD_GUI "Build GUI" ON)
-if(BUILD_GUI)
-  add_subdirectory(deskflow-gui)
-endif(BUILD_GUI)
+add_subdirectory(deskflow-daemon) #Only used on windows
+add_subdirectory(deskflow-gui)
