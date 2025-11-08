@@ -30,7 +30,7 @@ if(WIN32)
   install(
     TARGETS ${target}
     RUNTIME_DEPENDENCY_SET deamonDeps
-    DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
   install(RUNTIME_DEPENDENCY_SET daemonDeps
     PRE_EXCLUDE_REGEXES
@@ -39,6 +39,6 @@ if(WIN32)
       "^hvsifiletrust\\.dll$"
     POST_EXCLUDE_REGEXES
       ".*system32.*"
-    RUNTIME DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
 endif()
