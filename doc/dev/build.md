@@ -22,7 +22,6 @@ Deskflow supports the following build options
 CMake options:
 |         Option           |            Description                  |   Default Value    | Additional requirements |
 :-------------------------:|:---------------------------------------:|:------------------:|:-----------------------:|
-| BUILD_GUI                | Build GUI                               | ON                 | |
 | BUILD_USER_DOCS          | Build user documentation                | DOXYGEN_FOUND      | `Doxygen` |
 | BUILD_DEV_DOCS           | Build development documentation         | OFF                | `Doxygen` |
 | BUILD_INSTALLER          | Build installers/packages               | ON                 | |
