@@ -83,7 +83,8 @@ project(
   VERSION "${DESKFLOW_VERSION_MAJOR}.${DESKFLOW_VERSION_MINOR}.${DESKFLOW_VERSION_PATCH}.${DESKFLOW_VERSION_TWEAK}"
   DESCRIPTION "Keyboard and mouse sharing utility"
   HOMEPAGE_URL "https://deskflow.org"
-  LANGUAGES C CXX)
+  LANGUAGES C CXX
+)
 
 # Define Additional "PROJECT" vars for packaging and metadata
 set(CMAKE_PROJECT_PROPER_NAME "Deskflow")
@@ -156,38 +157,34 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # prevents issues when used with glib for libportal
 add_definitions(-DQT_NO_KEYWORDS)
 include(cmake/Libraries.cmake)
-include(GNUInstallDirs)
-
 configure_libs()
+
+# setup install paths
+include(GNUInstallDirs)
+if (WIN32)
+  set(CMAKE_INSTALL_LICENSE_DIR .)
+elseif(UNIX AND NOT APPLE)
+  set(CMAKE_INSTALL_LICENSE_DIR ${CMAKE_INSTALL_DATADIR}/licenses/${CMAKE_PROJECT_NAME})
+else()
+  set(CMAKE_INSTALL_LICENSE_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/Resources)
+endif()
 
 add_subdirectory(doc)
 add_subdirectory(src)
 add_subdirectory(translations)
 
-# Install License, License is in the App Bundle on mac os (src/gui)
-if(WIN32)
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/LICENSE
-    DESTINATION .
-  )
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
-    DESTINATION .
-    RENAME LICENSE_EXCEPTION
-  )
-elseif(UNIX AND NOT APPLE)
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/LICENSE
-    DESTINATION share/licenses/deskflow
-  )
-  install(
-    FILES ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
-    DESTINATION share/licenses/deskflow
-    RENAME LICENSE_EXCEPTION
-  )
-endif()
-
 option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
     add_subdirectory(deploy)
 endif()
+
+install(
+  FILES ${PROJECT_SOURCE_DIR}/LICENSE
+  DESTINATION ${CMAKE_INSTALL_LICENSE_DIR}
+)
+
+install(
+  FILES ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
+  DESTINATION ${CMAKE_INSTALL_LICENSE_DIR}
+  RENAME LICENSE_EXCEPTION
+)

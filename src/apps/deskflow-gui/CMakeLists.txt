@@ -31,13 +31,7 @@ elseif(APPLE)
     @ONLY
   )
 
-  file(COPY_FILE
-    ${PROJECT_SOURCE_DIR}/LICENSES/LicenseRef-OpenSSL-Exception.txt
-    ${CMAKE_CURRENT_BINARY_DIR}/LICENSE_EXCEPTION
-    ONLY_IF_DIFFERENT
-  )
-
-  set(platform_extra ../res/Deskflow.icns ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_CURRENT_BINARY_DIR}/LICENSE_EXCEPTION)
+  set(platform_extra ../res/Deskflow.icns)
   set_source_files_properties(${platform_extra} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
 endif()
 
