@@ -410,7 +410,7 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "continuous"
           prerelease: true
-          title: "Continuous Build"
+          title: "Continuous v${{env.DESKFLOW_VERSION}}"
           files: |
             deskflow-*
             sums.txt
