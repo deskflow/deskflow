@@ -13,8 +13,7 @@
 #include "common/Settings.h"
 #include "deskflow/ProtocolTypes.h"
 
-const QString CoreArgParser::s_appName = QStringLiteral("%1-core").arg(kAppId);
-const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(s_appName, kDisplayVersion);
+const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(kCoreBinName, kDisplayVersion);
 
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
@@ -26,7 +25,7 @@ CoreArgParser::CoreArgParser(const QStringList &args)
   m_parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsOptions);
   m_parser.parse(args);
 
-  m_helpText = m_parser.helpText().replace("<executable_name>", s_appName);
+  m_helpText = m_parser.helpText().replace("<executable_name>", kCoreBinName);
   m_helpText.replace("[options] coremode", "coremode [options]");
 }
 
@@ -67,7 +66,7 @@ QString CoreArgParser::versionText() const
 {
   const static auto vString = QStringLiteral("%1 v%2, protocol v%3.%4\n%5\n");
   return vString.arg(
-      s_appName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion),
+      kCoreBinName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion),
       kCopyright
   );
 }
