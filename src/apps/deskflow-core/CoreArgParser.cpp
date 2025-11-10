@@ -27,6 +27,8 @@ CoreArgParser::CoreArgParser(const QStringList &args)
 
   m_helpText = m_parser.helpText().replace("<executable_name>", kCoreBinName);
   m_helpText.replace("[options] coremode", "coremode [options]");
+
+  m_singleInstance = !m_parser.isSet(CoreArgs::multiInstanceOption);
 }
 
 void CoreArgParser::parse()
@@ -94,4 +96,9 @@ bool CoreArgParser::serverMode() const
 bool CoreArgParser::clientMode() const
 {
   return m_clientMode;
+}
+
+bool CoreArgParser::singleInstanceOnly() const
+{
+  return m_singleInstance;
 }

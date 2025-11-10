@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "base/EventQueue.h"
 #include "base/Log.h"
+#include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
@@ -65,20 +66,22 @@ int main(int argc, char **argv)
     return s_exitSuccess;
   }
 
-  // Before we check any more args we need to check for a duplicate process.
-  // Create a shared memory segment with a unique key
-  // This is to prevent a new instance from running if one is already running
-  QSharedMemory sharedMemory("deskflow-core");
+  if (parser.singleInstanceOnly()) {
+    // Before we check any more args we need to check for a duplicate process.
+    // Create a shared memory segment with a unique key
+    // This is to prevent a new instance from running if one is already running
+    QSharedMemory sharedMemory(kCoreBinName);
 
-  // Attempt to attach first and detach in order to clean up stale shm chunks
-  // This can happen if the previous instance was killed or crashed
-  if (sharedMemory.attach())
-    sharedMemory.detach();
+    // Attempt to attach first and detach in order to clean up stale shm chunks
+    // This can happen if the previous instance was killed or crashed
+    if (sharedMemory.attach())
+      sharedMemory.detach();
 
-  // If we can create 1 byte of SHM we are the only instance
-  if (!sharedMemory.create(1)) {
-    LOG_WARN("an instance of deskflow core is already running");
-    return s_exitDuplicate;
+    // If we can create 1 byte of SHM we are the only instance
+    if (!sharedMemory.create(1)) {
+      LOG_WARN("an instance of deskflow core is already running");
+      return s_exitDuplicate;
+    }
   }
 
   parser.parse();
