@@ -10,11 +10,12 @@
 #include <QFileInfo>
 #include <QSysInfo>
 
+using namespace Qt::StringLiterals;
 namespace deskflow::platform {
 
 inline bool isWayland()
 {
-  return qEnvironmentVariable("XDG_SESSION_TYPE") == QStringLiteral("wayland");
+  return qEnvironmentVariable("XDG_SESSION_TYPE") == u"wayland"_s;
 }
 
 /**
@@ -23,7 +24,7 @@ inline bool isWayland()
  */
 inline bool isWindows()
 {
-  return QSysInfo::productType() == QStringLiteral("windows");
+  return QSysInfo::productType() == u"windows"_s;
 }
 
 /**
@@ -32,7 +33,7 @@ inline bool isWindows()
  */
 inline bool isMac()
 {
-  return QSysInfo::productType() == QStringLiteral("macos");
+  return QSysInfo::productType() == u"macos"_s;
 }
 
 /**
@@ -41,7 +42,7 @@ inline bool isMac()
  */
 inline bool isFlatpak()
 {
-  return QFileInfo::exists(QStringLiteral("/.flatpak-info"));
+  return QFileInfo::exists(u"/.flatpak-info"_s);
 }
 
 /**
