@@ -70,9 +70,6 @@ private:
   //! Execute a command with input data
   bool executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const;
 
-  //! Check if a command exists
-  static bool checkCommandExists(const char *command);
-
   //! Convert IClipboard format to MIME type
   std::string formatToMimeType(Format format) const;
 
