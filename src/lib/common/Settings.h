@@ -14,83 +14,85 @@
 #include "common/Constants.h"
 #include "common/QSettingsProxy.h"
 
+using namespace Qt::StringLiterals;
+
 class Settings : public QObject
 {
   Q_OBJECT
 public:
 #if defined(Q_OS_WIN)
-  inline const static auto UserDir = QStringLiteral("%1/AppData/Roaming/%2").arg(QDir::homePath(), kAppName);
-  inline const static auto SystemDir = QStringLiteral("%1ProgramData/%2").arg(QDir::rootPath(), kAppName);
+  inline const static auto UserDir = u"%1/AppData/Roaming/%2"_s.arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = u"%1ProgramData/%2"_s.arg(QDir::rootPath(), kAppName);
 #elif defined(Q_OS_MAC)
-  inline const static auto UserDir = QStringLiteral("%1/Library/%2").arg(QDir::homePath(), kAppName);
-  inline const static auto SystemDir = QStringLiteral("/Library/%1").arg(kAppName);
+  inline const static auto UserDir = u"%1/Library/%2"_s.arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = u"/Library/%1"_s.arg(kAppName);
 #else
-  inline const static auto UserDir = QStringLiteral("%1/.config/%2").arg(QDir::homePath(), kAppName);
-  inline const static auto SystemDir = QStringLiteral("/etc/%1").arg(kAppName);
+  inline const static auto UserDir = u"%1/.config/%2"_s.arg(QDir::homePath(), kAppName);
+  inline const static auto SystemDir = u"/etc/%1"_s.arg(kAppName);
 #endif
 
-  inline const static auto UserSettingFile = QStringLiteral("%1/%2.conf").arg(UserDir, kAppName);
-  inline const static auto SystemSettingFile = QStringLiteral("%1/%2.conf").arg(SystemDir, kAppName);
+  inline const static auto UserSettingFile = u"%1/%2.conf"_s.arg(UserDir, kAppName);
+  inline const static auto SystemSettingFile = u"%1/%2.conf"_s.arg(SystemDir, kAppName);
 
   struct Client
   {
-    inline static const auto InvertScrollDirection = QStringLiteral("client/invertScrollDirection");
-    inline static const auto ScrollSpeed = QStringLiteral("client/yscroll");
-    inline static const auto LanguageSync = QStringLiteral("client/languageSync");
-    inline static const auto RemoteHost = QStringLiteral("client/remoteHost");
-    inline static const auto XdpRestoreToken = QStringLiteral("client/xdpRestoreToken");
+    inline static const auto InvertScrollDirection = u"client/invertScrollDirection"_s;
+    inline static const auto ScrollSpeed = u"client/yscroll"_s;
+    inline static const auto LanguageSync = u"client/languageSync"_s;
+    inline static const auto RemoteHost = u"client/remoteHost"_s;
+    inline static const auto XdpRestoreToken = u"client/xdpRestoreToken"_s;
   };
   struct Core
   {
-    inline static const auto CoreMode = QStringLiteral("core/coreMode");
-    inline static const auto Interface = QStringLiteral("core/interface");
-    inline static const auto LastVersion = QStringLiteral("core/lastVersion");
-    inline static const auto Port = QStringLiteral("core/port");
-    inline static const auto PreventSleep = QStringLiteral("core/preventSleep");
-    inline static const auto ProcessMode = QStringLiteral("core/processMode");
-    inline static const auto ScreenName = QStringLiteral("core/screenName");
-    inline static const auto StartedBefore = QStringLiteral("core/startedBefore");
-    inline static const auto UpdateUrl = QStringLiteral("core/updateUrl");
-    inline static const auto Display = QStringLiteral("core/display");
-    inline static const auto UseHooks = QStringLiteral("core/useHooks");
-    inline static const auto Language = QStringLiteral("core/language");
+    inline static const auto CoreMode = u"core/coreMode"_s;
+    inline static const auto Interface = u"core/interface"_s;
+    inline static const auto LastVersion = u"core/lastVersion"_s;
+    inline static const auto Port = u"core/port"_s;
+    inline static const auto PreventSleep = u"core/preventSleep"_s;
+    inline static const auto ProcessMode = u"core/processMode"_s;
+    inline static const auto ScreenName = u"core/screenName"_s;
+    inline static const auto StartedBefore = u"core/startedBefore"_s;
+    inline static const auto UpdateUrl = u"core/updateUrl"_s;
+    inline static const auto Display = u"core/display"_s;
+    inline static const auto UseHooks = u"core/useHooks"_s;
+    inline static const auto Language = u"core/language"_s;
   };
   struct Daemon
   {
-    inline static const auto Command = QStringLiteral("daemon/command");
-    inline static const auto Elevate = QStringLiteral("daemon/elevate");
-    inline static const auto LogFile = QStringLiteral("daemon/logFile");
-    inline static const auto LogLevel = QStringLiteral("daemon/logLevel");
+    inline static const auto Command = u"daemon/command"_s;
+    inline static const auto Elevate = u"daemon/elevate"_s;
+    inline static const auto LogFile = u"daemon/logFile"_s;
+    inline static const auto LogLevel = u"daemon/logLevel"_s;
   };
   struct Gui
   {
-    inline static const auto Autohide = QStringLiteral("gui/autoHide");
-    inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
-    inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
-    inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
-    inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
-    inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
-    inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
-    inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
+    inline static const auto Autohide = u"gui/autoHide"_s;
+    inline static const auto AutoUpdateCheck = u"gui/enableUpdateCheck"_s;
+    inline static const auto CloseReminder = u"gui/closeReminder"_s;
+    inline static const auto CloseToTray = u"gui/closeToTray"_s;
+    inline static const auto LogExpanded = u"gui/logExpanded"_s;
+    inline static const auto SymbolicTrayIcon = u"gui/symbolicTrayIcon"_s;
+    inline static const auto WindowGeometry = u"gui/windowGeometry"_s;
+    inline static const auto ShowGenericClientFailureDialog = u"gui/showGenericClientFailureDialog"_s;
   };
   struct Log
   {
-    inline static const auto File = QStringLiteral("log/file");
-    inline static const auto Level = QStringLiteral("log/level");
-    inline static const auto ToFile = QStringLiteral("log/toFile");
-    inline static const auto GuiDebug = QStringLiteral("log/guiDebug");
+    inline static const auto File = u"log/file"_s;
+    inline static const auto Level = u"log/level"_s;
+    inline static const auto ToFile = u"log/toFile"_s;
+    inline static const auto GuiDebug = u"log/guiDebug"_s;
   };
   struct Security
   {
-    inline static const auto CheckPeers = QStringLiteral("security/checkPeerFingerprints");
-    inline static const auto Certificate = QStringLiteral("security/certificate");
-    inline static const auto KeySize = QStringLiteral("security/keySize");
-    inline static const auto TlsEnabled = QStringLiteral("security/tlsEnabled");
+    inline static const auto CheckPeers = u"security/checkPeerFingerprints"_s;
+    inline static const auto Certificate = u"security/certificate"_s;
+    inline static const auto KeySize = u"security/keySize"_s;
+    inline static const auto TlsEnabled = u"security/tlsEnabled"_s;
   };
   struct Server
   {
-    inline static const auto ExternalConfig = QStringLiteral("server/externalConfig");
-    inline static const auto ExternalConfigFile = QStringLiteral("server/externalConfigFile");
+    inline static const auto ExternalConfig = u"server/externalConfig"_s;
+    inline static const auto ExternalConfigFile = u"server/externalConfigFile"_s;
   };
 
   // Enums types used in settings
@@ -134,7 +136,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
-  static int logLevelToInt(const QString &level = "INFO");
+  static int logLevelToInt(const QString &level = u"INFO"_s);
   static QString portableSettingsFile();
 
 Q_SIGNALS:
@@ -155,14 +157,14 @@ private:
 
   // clang-format off
   inline static const QStringList m_logLevels = {
-      QStringLiteral("FATAL")
-    , QStringLiteral("ERROR")
-    , QStringLiteral("WARNING")
-    , QStringLiteral("NOTE")
-    , QStringLiteral("INFO")
-    , QStringLiteral("DEBUG")
-    , QStringLiteral("DEBUG1")
-    , QStringLiteral("DEBUG2")
+      u"FATAL"_s
+    , u"ERROR"_s
+    , u"WARNING"_s
+    , u"NOTE"_s
+    , u"INFO"_s
+    , u"DEBUG"_s
+    , u"DEBUG1"_s
+    , u"DEBUG2"_s
   };
 
   inline static const QStringList m_validKeys = {

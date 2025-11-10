@@ -59,7 +59,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
     fileToLoad = portableFile;
 #else
   if (const auto xdgConfigHome = qEnvironmentVariable("XDG_CONFIG_HOME"); !xdgConfigHome.isEmpty())
-    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(xdgConfigHome, kAppName);
+    fileToLoad = u"%1/%2/%2.conf"_s.arg(xdgConfigHome, kAppName);
 #endif
   else if (QFile(UserSettingFile).exists())
     fileToLoad = UserSettingFile;
@@ -77,7 +77,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
   const auto stateBase = !xdgStateHome.isEmpty()
                              ? xdgStateHome
                              : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
-  const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
+  const auto stateFile = u"%1/%2.state"_s.arg(stateBase, kAppName);
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 }
@@ -107,35 +107,35 @@ void Settings::cleanStateSettings()
 int Settings::logLevelToInt(const QString &level)
 {
   // Can do this better later ?
-  if (level.toUpper() == "FATAL") {
+  if (level.toUpper() == u"FATAL"_s) {
     return 0;
   }
 
-  if (level.toUpper() == "ERROR") {
+  if (level.toUpper() == u"ERROR"_s) {
     return 1;
   }
 
-  if (level.toUpper() == "WARNING") {
+  if (level.toUpper() == u"WARNING"_s) {
     return 2;
   }
 
-  if (level.toUpper() == "NOTE") {
+  if (level.toUpper() == u"NOTE"_s) {
     return 3;
   }
 
-  if (level.toUpper() == "INFO") {
+  if (level.toUpper() == u"INFO"_s) {
     return 4;
   }
 
-  if (level.toUpper() == "DEBUG") {
+  if (level.toUpper() == u"DEBUG"_s) {
     return 5;
   }
 
-  if (level.toUpper() == "DEBUG1") {
+  if (level.toUpper() == u"DEBUG1"_s) {
     return 6;
   }
 
-  if (level.toUpper() == "DEBUG2") {
+  if (level.toUpper() == u"DEBUG2"_s) {
     return 7;
   }
 
@@ -165,13 +165,13 @@ QVariant Settings::defaultValue(const QString &key)
     return QRect();
 
   if (key == Security::Certificate)
-    return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsCertificateFilename);
+    return u"%1/%2"_s.arg(Settings::tlsDir(), kTlsCertificateFilename);
 
   if (key == Security::KeySize)
     return 2048;
 
   if (key == Log::File)
-    return QStringLiteral("%1/%2").arg(QDir::homePath(), kDefaultLogFile);
+    return u"%1/%2"_s.arg(QDir::homePath(), kDefaultLogFile);
 
   if (key == Log::Level)
     return 4; // INFO
@@ -183,7 +183,7 @@ QVariant Settings::defaultValue(const QString &key)
     return kUrlUpdateCheck;
 
   if (key == Server::ExternalConfigFile)
-    return QStringLiteral("%1/%2-server.conf").arg(Settings::settingsPath(), kAppId);
+    return u"%1/%2-server.conf"_s.arg(Settings::settingsPath(), kAppId);
 
   if (key == Core::Port)
     return 24800;
@@ -198,7 +198,7 @@ QVariant Settings::defaultValue(const QString &key)
   }
 
   if (key == Daemon::LogFile) {
-    return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kDaemonLogFilename);
+    return u"%1/%2"_s.arg(Settings::settingsPath(), kDaemonLogFilename);
   }
 
   if (key == Client::ScrollSpeed) {
@@ -259,22 +259,22 @@ QString Settings::settingsPath()
 
 QString Settings::tlsDir()
 {
-  return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kTlsDirName);
+  return u"%1/%2"_s.arg(instance()->settingsPath(), kTlsDirName);
 }
 
 QString Settings::tlsLocalDb()
 {
-  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintLocalFilename);
+  return u"%1/%2"_s.arg(instance()->tlsDir(), kTlsFingerprintLocalFilename);
 }
 
 QString Settings::tlsTrustedServersDb()
 {
-  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);
+  return u"%1/%2"_s.arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);
 }
 
 QString Settings::tlsTrustedClientsDb()
 {
-  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedClientsFilename);
+  return u"%1/%2"_s.arg(instance()->tlsDir(), kTlsFingerprintTrustedClientsFilename);
 }
 
 void Settings::setValue(const QString &key, const QVariant &value)
@@ -310,7 +310,6 @@ void Settings::restoreDefaultSettings()
 
 QString Settings::portableSettingsFile()
 {
-  static const auto filename =
-      QStringLiteral("%1/settings/%2.conf").arg(QCoreApplication::applicationDirPath(), kAppName);
+  static const auto filename = u"%1/settings/%2.conf"_s.arg(QCoreApplication::applicationDirPath(), kAppName);
   return filename;
 }
