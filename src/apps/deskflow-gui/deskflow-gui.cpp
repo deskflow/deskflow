@@ -36,19 +36,20 @@
 #include "platform/XDGPortalRegistry.h"
 #endif
 
+using namespace Qt::StringLiterals;
 using namespace deskflow::gui;
 
 #if defined(Q_OS_MAC)
 bool checkMacAssistiveDevices();
 #endif
 
-const static auto kHeader = QStringLiteral("%1: %2\n").arg(kAppName, kDisplayVersion);
+const static auto kHeader = u"%1: %2\n"_s.arg(kAppName, kDisplayVersion);
 
 int main(int argc, char *argv[])
 {
 #if defined(Q_OS_UNIX) && defined(QT_DEBUG)
   // Fixes Fedora bug where qDebug() messages aren't printed.
-  QLoggingCategory::setFilterRules(QStringLiteral("*.debug=true\nqt.*=false"));
+  QLoggingCategory::setFilterRules(u"*.debug=true\nqt.*=false"_s);
 #endif
 
 #if defined(WINAPI_XWINDOWS) or defined(WINAPI_LIBEI)
@@ -84,7 +85,7 @@ int main(int argc, char *argv[])
   }
 
   if (parser.isSet(helpOption)) {
-    QTextStream(stdout) << kHeader << QStringLiteral("  %1\n\n").arg(kAppDescription)
+    QTextStream(stdout) << kHeader << u"  %1\n\n"_s.arg(kAppDescription)
                         << parser.helpText().replace(QApplication::applicationFilePath(), kAppId);
     return s_exitSuccess;
   }
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
     return s_exitSuccess;
   }
 
-  const auto shmId = QStringLiteral("%1-gui").arg(kAppId);
+  const auto shmId = u"%1-gui"_s.arg(kAppId);
   // Create a shared memory segment with a unique key
   // This is to prevent a new instance from running if one is already running
   QSharedMemory sharedMemory(shmId);
@@ -118,8 +119,8 @@ int main(int argc, char *argv[])
     return s_exitDuplicate;
   }
 
-  if (!deskflow::platform::isMac() && qEnvironmentVariable("XDG_CURRENT_DESKTOP") != QLatin1String("KDE")) {
-    QApplication::setStyle("fusion");
+  if (!deskflow::platform::isMac() && qEnvironmentVariable("XDG_CURRENT_DESKTOP") != u"KDE"_s) {
+    QApplication::setStyle(u"fusion"_s);
   }
 
   // Sets the fallback icon path and fallback theme
@@ -130,12 +131,9 @@ int main(int argc, char *argv[])
 
 #if defined(Q_OS_MAC)
 
-  if (app.applicationDirPath().startsWith("/Volumes/")) {
-    QString msgBody = QStringLiteral(
-        "Please drag %1 to the Applications folder, "
-        "and open it from there."
-    );
-    QMessageBox::information(nullptr, kAppName, msgBody.arg(kAppName));
+  if (app.applicationDirPath().startsWith(u"/Volumes/"_s)) {
+    const QString msgBody = u"Please drag %1 to the Applications folder, and open it from there."_s.arg(kAppName);
+    QMessageBox::information(nullptr, kAppName, msgBody);
     return 1;
   }
 
