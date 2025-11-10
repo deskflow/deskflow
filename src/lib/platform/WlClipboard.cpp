@@ -20,7 +20,12 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <QStandardPaths>
+
 namespace {
+
+inline static const auto s_copyApp = QStringLiteral("wl-copy");
+inline static const auto s_pasteApp = QStringLiteral("wl-paste");
 
 // MIME types for different clipboard formats
 const char *const kMimeTypeText = "text/plain;charset=utf-8";
@@ -175,41 +180,7 @@ ClipboardID WlClipboard::getID() const
 
 bool WlClipboard::isAvailable()
 {
-  return checkCommandExists("wl-paste") && checkCommandExists("wl-copy");
-}
-
-bool WlClipboard::checkCommandExists(const char *command)
-{
-  std::vector<const char *> args = {command, "--help", nullptr};
-
-  // Set up file actions for posix_spawn
-  posix_spawn_file_actions_t fileActions;
-  posix_spawn_file_actions_init(&fileActions);
-
-  // Redirect stdout and stderr to /dev/null
-  posix_spawn_file_actions_addopen(&fileActions, STDOUT_FILENO, "/dev/null", O_WRONLY, 0);
-  posix_spawn_file_actions_addopen(&fileActions, STDERR_FILENO, "/dev/null", O_WRONLY, 0);
-
-  extern char **environ;
-  pid_t pid;
-  int spawnResult = posix_spawnp(&pid, command, &fileActions, nullptr, const_cast<char *const *>(args.data()), environ);
-
-  posix_spawn_file_actions_destroy(&fileActions);
-
-  if (spawnResult != 0) {
-    return false;
-  }
-
-  ProcessGuard processGuard(pid);
-
-  int status;
-  bool success = waitpidWithTimeout(pid, &status, kCommandTimeout);
-  if (success) {
-    processGuard.release();
-    return WIFEXITED(status) && WEXITSTATUS(status) == 0;
-  } else {
-    return false;
-  }
+  return !QStandardPaths::findExecutable(s_copyApp).isEmpty() && !QStandardPaths::findExecutable(s_pasteApp).isEmpty();
 }
 
 bool WlClipboard::isEnabled()
