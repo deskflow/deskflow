@@ -9,6 +9,7 @@
 #include <QMap>
 #include <QObject>
 
+using namespace Qt::StringLiterals;
 class QTranslator;
 /**
  * @brief The I18N singleton class handles detection and loading of translation files
@@ -64,7 +65,7 @@ private:
 
   QMap<QString, QStringList> m_translations;
   QList<QTranslator *> m_currentTranslations;
-  QString m_currentLang = QStringLiteral("English");
+  QString m_currentLang = u"English"_s;
   QString m_appTrPath;
   QString m_qtTrPath;
 };

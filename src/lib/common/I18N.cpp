@@ -25,14 +25,14 @@ I18N *I18N::instance()
 I18N::I18N(QObject *parent) : QObject{parent}
 {
   const QList<QDir> appTrDirs{
-      {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
-      {QStringLiteral("%1/../translations").arg(QCoreApplication::applicationDirPath())},
-      {QStringLiteral("%1/../share/%2/translations").arg(QCoreApplication::applicationDirPath(), kAppId)},
-      {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), kAppId)},
-      {QStringLiteral("/usr/local/share/%1/translations").arg(kAppId)},
-      {QStringLiteral("/usr/share/%1/translations").arg(kAppId)}
+      {u"%1/%2"_s.arg(QCoreApplication::applicationDirPath(), u"translations"_s)},
+      {u"%1/../translations"_s.arg(QCoreApplication::applicationDirPath())},
+      {u"%1/../share/%2/translations"_s.arg(QCoreApplication::applicationDirPath(), kAppId)},
+      {u"%1/.local/share/%2/translations"_s.arg(QDir::homePath(), kAppId)},
+      {u"/usr/local/share/%1/translations"_s.arg(kAppId)},
+      {u"/usr/share/%1/translations"_s.arg(kAppId)}
   };
-  const QStringList appTrFilter{QStringLiteral("%1*.qm").arg(kAppId)};
+  const QStringList appTrFilter{u"%1*.qm"_s.arg(kAppId)};
 
   for (const auto &dir : appTrDirs) {
     if (!dir.entryList(appTrFilter, QDir::Files, QDir::Name).isEmpty()) {
@@ -46,14 +46,14 @@ I18N::I18N(QObject *parent) : QObject{parent}
   }
 
   const QList<QDir> qtTrDirs{
-      {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
-      {QStringLiteral("%1/../qt-depends/translations").arg(QCoreApplication::applicationDirPath())},
-      {QStringLiteral("%1/../share/qt/translations").arg(QCoreApplication::applicationDirPath())},
-      {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), QStringLiteral("qt"))},
-      {QStringLiteral("/usr/local/share/qt/translations")},
-      {QStringLiteral("/usr/share/qt/translations")}
+      {u"%1/%2"_s.arg(QCoreApplication::applicationDirPath(), u"translations"_s)},
+      {u"%1/../qt-depends/translations"_s.arg(QCoreApplication::applicationDirPath())},
+      {u"%1/../share/qt/translations"_s.arg(QCoreApplication::applicationDirPath())},
+      {u"%1/.local/share/%2/translations"_s.arg(QDir::homePath(), u"qt"_s)},
+      {u"/usr/local/share/qt/translations"_s},
+      {u"/usr/share/qt/translations"_s}
   };
-  const QStringList qtTrFilter{QStringLiteral("qt_*.qm")};
+  const QStringList qtTrFilter{u"qt_*.qm"_s};
 
   for (const auto &dir : qtTrDirs) {
     if (!dir.entryList(qtTrFilter, QDir::Files, QDir::Name).isEmpty()) {
@@ -70,17 +70,17 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
   if (Settings::value(Settings::Core::Language).isNull()) {
     auto appTranslator = new QTranslator(this);
-    if (appTranslator->load(QLocale(), kAppId, "_", m_appTrPath)) {
+    if (appTranslator->load(QLocale(), kAppId, u"_"_s, m_appTrPath)) {
       m_currentTranslations.append(appTranslator);
       QCoreApplication::installTranslator(appTranslator);
     }
 
     m_currentLang = appTranslator->translate("i18n", "LocalizedName");
     if (m_currentLang.isEmpty())
-      m_currentLang = QStringLiteral("English");
+      m_currentLang = u"English"_s;
 
     auto qtTranslator = new QTranslator(this);
-    if (qtTranslator->load(QLocale(), QStringLiteral("qt"), "_", m_qtTrPath)) {
+    if (qtTranslator->load(QLocale(), u"qt"_s, u"_"_s, m_qtTrPath)) {
       m_currentTranslations.append(qtTranslator);
       QCoreApplication::installTranslator(qtTranslator);
     }
@@ -148,7 +148,7 @@ void I18N::detectLanguages()
   const auto oldList = m_translations;
   m_translations.clear();
 
-  QStringList nameFilter = {QStringLiteral("%1_*.qm").arg(kAppId)};
+  QStringList nameFilter = {u"%1_*.qm"_s.arg(kAppId)};
   QMap<QString, QString> appTranslations;
   QMap<QString, QString> shortToNative;
   QStringList detectedLangCodes;
@@ -163,17 +163,17 @@ void I18N::detectLanguages()
     //: This is a required string
     QString nativeLang = translator.translate("i18n", "LocalizedName");
     if (nativeLang.isEmpty())
-      nativeLang = QStringLiteral("English");
+      nativeLang = u"English"_s;
 
     QString shortCode;
-    if (longCode.startsWith(QStringLiteral("zh")) || longCode.startsWith(QStringLiteral("pt")))
+    if (longCode.startsWith(u"zh"_s) || longCode.startsWith(u"pt"_s))
       shortCode = longCode;
     else
       shortCode = longCode.mid(0, 2);
 
     appTranslations.insert(shortCode, translator.filePath());
     shortToNative.insert(shortCode, nativeLang);
-    detectedLangCodes.append(QStringLiteral("qt_%1.qm").arg(shortCode));
+    detectedLangCodes.append(u"qt_%1.qm"_s.arg(shortCode));
   }
 
   dir.setPath(m_qtTrPath);
@@ -183,7 +183,7 @@ void I18N::detectLanguages()
   QMap<QString, QString> qtTranslations;
   for (const QString &translation : std::as_const(langList)) {
     QString lang = translation.mid(qtTrNameLen, translation.lastIndexOf('.') - qtTrNameLen);
-    qtTranslations.insert(lang, QStringLiteral("%1/%2").arg(m_qtTrPath, translation));
+    qtTranslations.insert(lang, u"%1/%2"_s.arg(m_qtTrPath, translation));
   }
 
   const QStringList keys = appTranslations.keys();
