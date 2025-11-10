@@ -20,6 +20,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <QDateTime>
 #include <QStandardPaths>
 
 namespace {
@@ -712,9 +713,7 @@ void WlClipboard::monitorClipboard()
 
 IClipboard::Time WlClipboard::getCurrentTime() const
 {
-  auto now = std::chrono::steady_clock::now();
-  auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
-  return static_cast<Time>(ms.count());
+  return static_cast<Time>(QDateTime::currentMSecsSinceEpoch());
 }
 
 bool WlClipboard::isOwned() const
