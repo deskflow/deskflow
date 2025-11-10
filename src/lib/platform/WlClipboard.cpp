@@ -29,13 +29,13 @@ inline static const auto s_copyApp = QStringLiteral("wl-copy");
 inline static const auto s_pasteApp = QStringLiteral("wl-paste");
 
 // MIME types for different clipboard formats
-const char *const kMimeTypeText = "text/plain;charset=utf-8";
-const char *const kMimeTypeHtml = "text/html";
-const char *const kMimeTypeBmp = "image/bmp";
+inline static const auto s_mimeTypeText = QStringLiteral("text/plain;charset=utf-8");
+inline static const auto s_mimeTypeHtml = QStringLiteral("text/html");
+inline static const auto s_mimeTypeBmp = QStringLiteral("image/bmp");
 
 // Additional HTML MIME type variants
-const char *const kMimeTypeHtmlUtf8 = "text/html;charset=UTF-8";
-const char *const kMimeTypeHtmlWindows = "HTML Format";
+const char *const s_mimeTypeHtmlUtf8 = "text/html;charset=UTF-8";
+const char *const s_mimeTypeHtmlWindows = "HTML Format";
 
 // Command timeout (milliseconds)
 const int kCommandTimeout = 5000;
@@ -254,7 +254,7 @@ void WlClipboard::add(Format format, const std::string &data)
     return;
   }
 
-  std::string mimeType = formatToMimeType(format);
+  auto mimeType = formatToMimeType(format).toStdString();
   if (mimeType.empty()) {
     LOG_WARN("unsupported clipboard format: %d", format);
     return;
@@ -334,10 +334,10 @@ bool WlClipboard::has(Format format) const
     // Check each format against available types
     for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
       Format currentFormat = static_cast<Format>(i);
-      std::string mimeType = formatToMimeType(currentFormat);
+      const auto mimeType = formatToMimeType(currentFormat);
 
       m_cachedAvailable[i] = false;
-      if (!mimeType.empty()) {
+      if (!mimeType.isEmpty()) {
         for (const std::string &available : availableTypes) {
           if (available == mimeType || (currentFormat == Format::Text && available == "text/plain") ||
               (currentFormat == Format::HTML && available.find("text/html") == 0)) {
@@ -368,7 +368,7 @@ std::string WlClipboard::get(Format format) const
     return m_cachedData[static_cast<int>(format)];
   }
 
-  std::string mimeType = formatToMimeType(format);
+  std::string mimeType = formatToMimeType(format).toStdString();
   if (mimeType.empty()) {
     return std::string();
   }
@@ -618,30 +618,30 @@ bool WlClipboard::executeCommandWithInput(const std::vector<const char *> &args,
   }
 }
 
-std::string WlClipboard::formatToMimeType(Format format) const
+QString WlClipboard::formatToMimeType(Format format) const
 {
   switch (format) {
   case Format::Text:
-    return kMimeTypeText;
+    return s_mimeTypeText;
   case Format::HTML:
-    return kMimeTypeHtml;
+    return s_mimeTypeHtml;
   case Format::Bitmap:
-    return kMimeTypeBmp;
+    return s_mimeTypeBmp;
   default:
-    return std::string();
+    return {};
   }
 }
 
-IClipboard::Format WlClipboard::mimeTypeToFormat(const std::string &mimeType) const
+IClipboard::Format WlClipboard::mimeTypeToFormat(const QString &mimeType) const
 {
-  if (mimeType == kMimeTypeText || mimeType == "text/plain") {
+  if (mimeType == s_mimeTypeText || mimeType == QStringLiteral("text/plain")) {
     return Format::Text;
   }
-  if (mimeType == kMimeTypeHtml || mimeType == kMimeTypeHtmlUtf8 || mimeType == kMimeTypeHtmlWindows ||
-      mimeType.find("text/html") == 0) {
+  if (mimeType == s_mimeTypeHtml || mimeType == s_mimeTypeHtmlUtf8 || mimeType == s_mimeTypeHtmlWindows ||
+      mimeType.contains("text/html")) {
     return Format::HTML;
   }
-  if (mimeType == kMimeTypeBmp || mimeType == "image/bmp") {
+  if (mimeType == s_mimeTypeBmp) {
     return Format::Bitmap;
   }
   return Format::Text; // Default fallback
