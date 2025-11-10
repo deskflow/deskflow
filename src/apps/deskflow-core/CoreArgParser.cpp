@@ -13,7 +13,9 @@
 #include "common/Settings.h"
 #include "deskflow/ProtocolTypes.h"
 
-const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(kCoreBinName, kDisplayVersion);
+using namespace Qt::StringLiterals;
+
+const QString CoreArgParser::s_headerText = u"%1: %2\n"_s.arg(kCoreBinName, kDisplayVersion);
 
 CoreArgParser::CoreArgParser(const QStringList &args)
 {
@@ -40,8 +42,8 @@ void CoreArgParser::parse()
   }
 
   const QString mode = posArgs.takeFirst();
-  m_serverMode = (mode.compare("server", Qt::CaseInsensitive) == 0);
-  m_clientMode = (mode.compare("client", Qt::CaseInsensitive) == 0);
+  m_serverMode = (mode.compare(u"server"_s, Qt::CaseInsensitive) == 0);
+  m_clientMode = (mode.compare(u"client"_s, Qt::CaseInsensitive) == 0);
 
   if ((!m_clientMode && !m_serverMode) || mode.isEmpty()) {
     showHelpText();
@@ -61,12 +63,12 @@ void CoreArgParser::parse()
 
 QString CoreArgParser::helpText() const
 {
-  return QStringLiteral("%1%2").arg(s_headerText, m_helpText);
+  return u"%1%2"_s.arg(s_headerText, m_helpText);
 }
 
 QString CoreArgParser::versionText() const
 {
-  const static auto vString = QStringLiteral("%1 v%2, protocol v%3.%4\n%5\n");
+  const static auto vString = u"%1 v%2, protocol v%3.%4\n%5\n"_s;
   return vString.arg(
       kCoreBinName, kDisplayVersion, QString::number(kProtocolMajorVersion), QString::number(kProtocolMinorVersion),
       kCopyright
