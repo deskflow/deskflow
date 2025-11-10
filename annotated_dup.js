@@ -153,7 +153,7 @@ var annotated_dup =
     [ "Event", "classEvent.html", "classEvent" ],
     [ "EventData", "classEventData.html", "classEventData" ],
     [ "EventQueue", "classEventQueue.html", "classEventQueue" ],
-    [ "EventQueueTimer", "classEventQueueTimer.html", null ],
+    [ "EventQueueTimer", "classEventQueueTimer.html", "classEventQueueTimer" ],
     [ "ExitAppException", "classExitAppException.html", "classExitAppException" ],
     [ "FileLogOutputter", "classFileLogOutputter.html", "classFileLogOutputter" ],
     [ "Fingerprint", "structFingerprint.html", "structFingerprint" ],

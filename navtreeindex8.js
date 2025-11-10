@@ -1,5 +1,7 @@
 var NAVTREEINDEX8 =
 {
+"classClientProxy1__0.html#a61e5a2b5ba3716e9668be0e221c80fa9":[6,0,63,31],
+"classClientProxy1__0.html#a639366aae815831141f8f25727b3fd90":[6,0,63,18],
 "classClientProxy1__0.html#a69ff8dcfe1e0d84cffa1b96aeeb1f282":[6,0,63,27],
 "classClientProxy1__0.html#a7695c49f1cdf4fbb0cffa38268814792":[6,0,63,2],
 "classClientProxy1__0.html#a775108f85b052026e78f428c5d05d0a6":[6,0,63,5],
@@ -207,6 +209,7 @@ var NAVTREEINDEX8 =
 "classEventQueue.html#ac59e3add907cf56a2c5ddc41686bc9b8":[6,0,88,18],
 "classEventQueue.html#ae16e79205621b109005ee14a8ac3345f":[6,0,88,4],
 "classEventQueueTimer.html":[6,0,89],
+"classEventQueueTimer.html#a88f1676d8db4c51f7e3c49991abcee73":[6,0,89,0],
 "classExitAppException.html":[6,0,90],
 "classExitAppException.html#a520a08066ad2251cbb0e4ab27590a882":[6,0,90,2],
 "classExitAppException.html#a5ed4b66e4509091dff20be26f1a01431":[6,0,90,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX8 =
 "classHotkey.html":[6,0,98],
 "classHotkey.html#a03801f4755f300c298f76570bc275883":[6,0,98,11],
 "classHotkey.html#a0d8f1fc8fa6f2b3f18a4ae38347960b9":[6,0,98,4],
-"classHotkey.html#a499f878845ddeaaa9cb0fb565686032a":[6,0,98,2],
-"classHotkey.html#a57ca9109e2da3343064777dee953741b":[6,0,98,12],
-"classHotkey.html#a5eb73441f3f12e373e5dd1fffd21f1eb":[6,0,98,10],
-"classHotkey.html#a714b1d4186e2342c60e47d38a56ebf48":[6,0,98,3]
+"classHotkey.html#a499f878845ddeaaa9cb0fb565686032a":[6,0,98,2]
 };

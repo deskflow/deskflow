@@ -1,5 +1,8 @@
 var NAVTREEINDEX9 =
 {
+"classHotkey.html#a57ca9109e2da3343064777dee953741b":[6,0,98,12],
+"classHotkey.html#a5eb73441f3f12e373e5dd1fffd21f1eb":[6,0,98,10],
+"classHotkey.html#a714b1d4186e2342c60e47d38a56ebf48":[6,0,98,3],
 "classHotkey.html#a75198c283d4d6320de77db7363d77316":[6,0,98,9],
 "classHotkey.html#a9542e9345d4a02058a6731b6956e7120":[6,0,98,7],
 "classHotkey.html#aa4108af4e38e8c787f4b87d8a433b9cc":[6,0,98,6],
@@ -246,8 +249,5 @@ var NAVTREEINDEX9 =
 "classIMSWindowsClipboardConverter.html#a28000e0d85db3393750c7f29e8a1b307":[6,0,115,2],
 "classIMSWindowsClipboardConverter.html#a616df500e881ea730979191dc4562719":[6,0,115,0],
 "classIMSWindowsClipboardConverter.html#a6e248e03c142b9e67cbfa4707bbb98e3":[6,0,115,4],
-"classIMSWindowsClipboardConverter.html#af0af806c8ff62c01bf8571a749770ae2":[6,0,115,3],
-"classIMSWindowsClipboardConverter.html#af1e8980d35e309fec7935917dc488c52":[6,0,115,1],
-"classIMSWindowsClipboardFacade.html":[6,0,116],
-"classIMSWindowsClipboardFacade.html#a21eabf0ddac6d16a81044d849cecae78":[6,0,116,1]
+"classIMSWindowsClipboardConverter.html#af0af806c8ff62c01bf8571a749770ae2":[6,0,115,3]
 };

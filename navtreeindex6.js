@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"classApp.html#a699f3588a184a543d55effeaac0e49c1":[6,0,6,16],
+"classApp.html#a6e71fe1043dc15637ded72799b92df0d":[6,0,6,1],
 "classApp.html#a6ee3b458bbf3a3b42bc7b51af7e9f1bc":[6,0,6,26],
 "classApp.html#a7007955907d7a63830ee966fc25110da":[6,0,6,23],
 "classApp.html#a724365d623e53560cf6a9f7246081ad9":[6,0,6,12],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classArchNetworkBSD.html#af6acccb01ea83458e9be43aa77e3cf89":[6,0,29,26],
 "classArchNetworkBSD.html#af82016a992cdb1ce14d4d603b5223f85":[6,0,29,19],
 "classArchNetworkBSD.html#afc3900348e5d64cbc04c4177cc6bc45b":[6,0,29,9],
-"classArchNetworkConnectionRefusedException.html":[6,0,30],
-"classArchNetworkDisconnectedException.html":[6,0,31],
-"classArchNetworkException.html":[6,0,32]
+"classArchNetworkConnectionRefusedException.html":[6,0,30]
 };

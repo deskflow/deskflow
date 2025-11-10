@@ -1,5 +1,8 @@
 var NAVTREEINDEX15 =
 {
+"classSettings.html#a40d35b59575553c8357e59fb13df7207":[6,0,208,20],
+"classSettings.html#a4442c59d0afdc1ef9e697d2cbf429148":[6,0,208,30],
+"classSettings.html#a5265ce95aaeca4f5599b0e818912ce04":[6,0,208,9],
 "classSettings.html#a553d33cac9d4eaf1abec9aefd4b0db3e":[6,0,208,27],
 "classSettings.html#a565f262c5b1781981383661e6195a336":[6,0,208,25],
 "classSettings.html#a5e492f42c603dcc42007ae7b34c04a83":[6,0,208,15],
@@ -246,8 +249,5 @@ var NAVTREEINDEX15 =
 "classThreadCancelException.html":[6,0,233],
 "classThreadException.html":[6,0,234],
 "classThreadExitException.html":[6,0,235],
-"classThreadExitException.html#a28743a06d489ef94523897fa1b3c8fd9":[6,0,235,0],
-"classThreadExitException.html#aba81c659ec2cbf02120b2a9b0d3bdffb":[6,0,235,1],
-"classThreadExitException.html#abe7e14baa4fb2393eb179173408d3d51":[6,0,235,2],
-"classTlsCertificate.html":[6,0,236]
+"classThreadExitException.html#a28743a06d489ef94523897fa1b3c8fd9":[6,0,235,0]
 };

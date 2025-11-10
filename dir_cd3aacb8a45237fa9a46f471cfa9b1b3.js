@@ -7,6 +7,7 @@ var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
     [ "Event.h", "Event_8h.html", "Event_8h" ],
     [ "EventQueue.cpp", "EventQueue_8cpp.html", "EventQueue_8cpp" ],
     [ "EventQueue.h", "EventQueue_8h.html", "EventQueue_8h" ],
+    [ "EventQueueTimer.h", "EventQueueTimer_8h.html", "EventQueueTimer_8h" ],
     [ "EventTypes.h", "EventTypes_8h.html", "EventTypes_8h" ],
     [ "FinalAction.h", "FinalAction_8h.html", "FinalAction_8h" ],
     [ "FunctionEventJob.cpp", "FunctionEventJob_8cpp.html", null ],
