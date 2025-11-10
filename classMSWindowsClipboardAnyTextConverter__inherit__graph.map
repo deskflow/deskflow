@@ -1,11 +1,9 @@
 <map id="MSWindowsClipboardAnyTextConverter" name="MSWindowsClipboardAnyTextConverter">
-<area shape="rect" id="Node000001" title="Convert to/from some text encoding." alt="" coords="265,48,463,86"/>
-<area shape="rect" id="Node000003" href="$classMSWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="513,5,755,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="478,44,562,28,563,33,479,49"/>
-<area shape="rect" id="Node000004" href="$classMSWindowsClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="518,55,750,79"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="478,64,517,64,517,70,478,70"/>
-<area shape="rect" id="Node000005" href="$classMSWindowsClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="511,104,757,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="479,85,563,101,562,106,478,90"/>
-<area shape="rect" id="Node000002" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="5,55,217,79"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,64,264,64,264,70,232,70"/>
+<area shape="rect" id="Node000001" title="Convert to/from some text encoding." alt="" coords="161,78,359,117"/>
+<area shape="rect" id="Node000003" href="$classMSWindowsClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="5,165,248,189"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="216,127,148,166,145,162,213,123"/>
+<area shape="rect" id="Node000004" href="$classMSWindowsClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="271,165,518,189"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="307,123,376,162,373,166,304,127"/>
+<area shape="rect" id="Node000002" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="154,5,366,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,46,262,77,257,77,257,46"/>
 </map>

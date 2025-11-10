@@ -19,8 +19,6 @@ var dir_9d41f2d9dd9f152ba43e738700883d1e =
     [ "MSWindowsClipboardFacade.h", "MSWindowsClipboardFacade_8h.html", "MSWindowsClipboardFacade_8h" ],
     [ "MSWindowsClipboardHTMLConverter.cpp", "MSWindowsClipboardHTMLConverter_8cpp.html", null ],
     [ "MSWindowsClipboardHTMLConverter.h", "MSWindowsClipboardHTMLConverter_8h.html", "MSWindowsClipboardHTMLConverter_8h" ],
-    [ "MSWindowsClipboardTextConverter.cpp", "MSWindowsClipboardTextConverter_8cpp.html", null ],
-    [ "MSWindowsClipboardTextConverter.h", "MSWindowsClipboardTextConverter_8h.html", "MSWindowsClipboardTextConverter_8h" ],
     [ "MSWindowsClipboardUTF16Converter.cpp", "MSWindowsClipboardUTF16Converter_8cpp.html", null ],
     [ "MSWindowsClipboardUTF16Converter.h", "MSWindowsClipboardUTF16Converter_8h.html", "MSWindowsClipboardUTF16Converter_8h" ],
     [ "MSWindowsDebugOutputter.cpp", "MSWindowsDebugOutputter_8cpp.html", "MSWindowsDebugOutputter_8cpp" ],

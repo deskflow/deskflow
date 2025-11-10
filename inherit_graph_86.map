@@ -1,21 +1,21 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classISocket.html" title="Generic socket interface." alt="" coords="36,31,101,55"/>
 <area shape="rect" id="Node000001" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="184,55,276,79"/>
-<area shape="poly" id="edge99_Node000000_Node000001" title=" " alt="" coords="117,47,183,57,183,63,116,53"/>
+<area shape="poly" id="edge98_Node000000_Node000001" title=" " alt="" coords="117,47,183,57,183,63,116,53"/>
 <area shape="rect" id="Node000007" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="180,5,280,30"/>
-<area shape="poly" id="edge102_Node000000_Node000007" title=" " alt="" coords="116,33,179,23,180,28,117,38"/>
+<area shape="poly" id="edge101_Node000000_Node000007" title=" " alt="" coords="116,33,179,23,180,28,117,38"/>
 <area shape="rect" id="Node000002" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="350,55,438,79"/>
-<area shape="poly" id="edge100_Node000001_Node000002" title=" " alt="" coords="292,64,349,64,349,70,292,70"/>
+<area shape="poly" id="edge99_Node000001_Node000002" title=" " alt="" coords="292,64,349,64,349,70,292,70"/>
 <area shape="rect" id="Node000003" href="$classSecureSocket.html" title="Secure socket." alt="" coords="526,55,628,79"/>
-<area shape="poly" id="edge101_Node000002_Node000003" title=" " alt="" coords="454,64,525,64,525,70,454,70"/>
+<area shape="poly" id="edge100_Node000002_Node000003" title=" " alt="" coords="454,64,525,64,525,70,454,70"/>
 <area shape="rect" id="Node000008" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="332,5,456,30"/>
-<area shape="poly" id="edge103_Node000007_Node000008" title=" " alt="" coords="296,15,332,15,332,20,296,20"/>
+<area shape="poly" id="edge102_Node000007_Node000008" title=" " alt="" coords="296,15,332,15,332,20,296,20"/>
 <area shape="rect" id="Node000009" href="$classSecureListenSocket.html" title=" " alt="" coords="508,5,646,30"/>
-<area shape="poly" id="edge104_Node000008_Node000009" title=" " alt="" coords="472,15,508,15,508,20,472,20"/>
+<area shape="poly" id="edge103_Node000008_Node000009" title=" " alt="" coords="472,15,508,15,508,20,472,20"/>
 <area shape="rect" id="Node000004" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="5,80,132,105"/>
-<area shape="poly" id="edge105_Node000004_Node000001" title=" " alt="" coords="147,77,183,72,184,77,147,83"/>
+<area shape="poly" id="edge104_Node000004_Node000001" title=" " alt="" coords="147,77,183,72,184,77,147,83"/>
 <area shape="rect" id="Node000005" href="$classStreamFilter.html" title="A stream filter." alt="" coords="184,104,276,129"/>
-<area shape="poly" id="edge106_Node000004_Node000005" title=" " alt="" coords="147,101,184,107,183,112,147,107"/>
+<area shape="poly" id="edge105_Node000004_Node000005" title=" " alt="" coords="147,101,184,107,183,112,147,107"/>
 <area shape="rect" id="Node000006" href="$classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="328,104,460,129"/>
-<area shape="poly" id="edge107_Node000005_Node000006" title=" " alt="" coords="292,114,328,114,328,119,292,119"/>
+<area shape="poly" id="edge106_Node000005_Node000006" title=" " alt="" coords="292,114,328,114,328,119,292,119"/>
 </map>

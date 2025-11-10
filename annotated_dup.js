@@ -216,7 +216,6 @@ var annotated_dup =
     [ "MSWindowsClipboardBitmapConverter", "classMSWindowsClipboardBitmapConverter.html", "classMSWindowsClipboardBitmapConverter" ],
     [ "MSWindowsClipboardFacade", "classMSWindowsClipboardFacade.html", "classMSWindowsClipboardFacade" ],
     [ "MSWindowsClipboardHTMLConverter", "classMSWindowsClipboardHTMLConverter.html", "classMSWindowsClipboardHTMLConverter" ],
-    [ "MSWindowsClipboardTextConverter", "classMSWindowsClipboardTextConverter.html", "classMSWindowsClipboardTextConverter" ],
     [ "MSWindowsClipboardUTF16Converter", "classMSWindowsClipboardUTF16Converter.html", "classMSWindowsClipboardUTF16Converter" ],
     [ "MSWindowsDebugOutputter", "classMSWindowsDebugOutputter.html", "classMSWindowsDebugOutputter" ],
     [ "MSWindowsDesks", "classMSWindowsDesks.html", "classMSWindowsDesks" ],

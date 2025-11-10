@@ -167,7 +167,6 @@ var hierarchy =
     [ "IMSWindowsClipboardConverter", "classIMSWindowsClipboardConverter.html", [
       [ "MSWindowsClipboardAnyTextConverter", "classMSWindowsClipboardAnyTextConverter.html", [
         [ "MSWindowsClipboardHTMLConverter", "classMSWindowsClipboardHTMLConverter.html", null ],
-        [ "MSWindowsClipboardTextConverter", "classMSWindowsClipboardTextConverter.html", null ],
         [ "MSWindowsClipboardUTF16Converter", "classMSWindowsClipboardUTF16Converter.html", null ]
       ] ],
       [ "MSWindowsClipboardBitmapConverter", "classMSWindowsClipboardBitmapConverter.html", null ]

@@ -1,8 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetworkConnectionRefusedException.html":[6,0,30],
-"classArchNetworkDisconnectedException.html":[6,0,31],
-"classArchNetworkException.html":[6,0,32],
 "classArchNetworkIOException.html":[6,0,34],
 "classArchNetworkInterruptedException.html":[6,0,33],
 "classArchNetworkNameException.html":[6,0,35],
@@ -249,5 +246,8 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html#a41a50c07913ceb28fc6abee83a62e5a4":[6,0,63,3],
 "classClientProxy1__0.html#a45bc305a1b8f4fa262beb57b18b9a242":[6,0,63,1],
 "classClientProxy1__0.html#a4d2fc40230d7a3a00f93694643ad8018":[6,0,63,25],
-"classClientProxy1__0.html#a5127354b6901d5fd7df12ff5d80936f2":[6,0,63,29]
+"classClientProxy1__0.html#a5127354b6901d5fd7df12ff5d80936f2":[6,0,63,29],
+"classClientProxy1__0.html#a522432fc265f0b5d54a8afb2908e64b1":[6,0,63,6],
+"classClientProxy1__0.html#a61e5a2b5ba3716e9668be0e221c80fa9":[6,0,63,31],
+"classClientProxy1__0.html#a639366aae815831141f8f25727b3fd90":[6,0,63,18]
 };
