@@ -157,8 +157,9 @@ QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
 
   QString formattedString;
   while (!hex.isEmpty()) {
-    formattedString.append(hex.first(kMaxColumns));
-    hex.remove(0, kMaxColumns);
+    const auto take = std::min<size_t>(kMaxColumns, hex.size());
+    formattedString.append(hex.first(take));
+    hex.remove(0, take);
     if (formattedString.endsWith(':'))
       formattedString.removeLast();
     formattedString.append('\n');
