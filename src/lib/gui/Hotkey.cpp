@@ -55,14 +55,14 @@ QTextStream &operator<<(QTextStream &outStream, const Hotkey &hotkey)
   if (hotkey.actions().size() == 0)
     return outStream;
 
-  QString outText = QStringLiteral("\t%1 = ").arg(hotkey.text());
+  QString outText = u"\t%1 = "_s.arg(hotkey.text());
   for (int i = 0; i < hotkey.actions().size(); i++) {
     outText.append(hotkey.actions().at(i).text());
     if (i != hotkey.actions().size() - 1) {
-      outText.append(QStringLiteral(", "));
+      outText.append(u", "_s);
     }
   }
-  outText.append(QStringLiteral("\n"));
+  outText.append(u"\n"_s);
 
   outStream << outText;
   return outStream;

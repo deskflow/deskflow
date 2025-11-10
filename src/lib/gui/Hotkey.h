@@ -15,6 +15,8 @@
 #include "Action.h"
 #include "KeySequence.h"
 
+using namespace Qt::StringLiterals;
+
 class HotkeyDialog;
 class ServerConfigDialog;
 class QSettings;
@@ -60,9 +62,9 @@ protected:
 private:
   KeySequence m_keySequence = {};
   ActionList m_actions = {};
-  inline static const QString kSectionActions = QStringLiteral("actions");
-  inline static const QString kMousebutton = QStringLiteral("mousebutton(%1)");
-  inline static const QString kKeystroke = QStringLiteral("keystroke(%1)");
+  inline static const QString kSectionActions = u"actions"_s;
+  inline static const QString kMousebutton = u"mousebutton(%1)"_s;
+  inline static const QString kKeystroke = u"keystroke(%1)"_s;
 };
 
 using HotkeyList = QList<Hotkey>;
