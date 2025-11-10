@@ -18,16 +18,18 @@ class ActionDialog;
 class QSettings;
 class QTextStream;
 
+using namespace Qt::StringLiterals;
+
 namespace SettingsKeys {
-inline static const QString ActionType = QStringLiteral("type");
-inline static const QString ScreenNames = QStringLiteral("typeScreenNames");
-inline static const QString ScreenName = QStringLiteral("typeScreenName");
-inline static const QString SwitchToScreen = QStringLiteral("switchScreenName");
-inline static const QString SwitchDirection = QStringLiteral("switchInDirection");
-inline static const QString LockToScreen = QStringLiteral("lockCursorToScreen");
-inline static const QString ActiveOnRelease = QStringLiteral("activeOnRelease");
-inline static const QString HasScreens = QStringLiteral("hasScreens");
-inline static const QString RestartServer = QStringLiteral("restartServer");
+inline static const QString ActionType = u"type"_s;
+inline static const QString ScreenNames = u"typeScreenNames"_s;
+inline static const QString ScreenName = u"typeScreenName"_s;
+inline static const QString SwitchToScreen = u"switchScreenName"_s;
+inline static const QString SwitchDirection = u"switchInDirection"_s;
+inline static const QString LockToScreen = u"lockCursorToScreen"_s;
+inline static const QString ActiveOnRelease = u"activeOnRelease"_s;
+inline static const QString HasScreens = u"hasScreens"_s;
+inline static const QString RestartServer = u"restartServer"_s;
 } // namespace SettingsKeys
 
 class Action
@@ -162,28 +164,24 @@ private:
   bool m_hasScreens = false;
   bool m_restartServer;
 
-  inline static const QString m_commandTemplate = QStringLiteral("(%1)");
+  inline static const QString m_commandTemplate = u"(%1)"_s;
   inline static const QStringList m_actionTypeNames{
-      QStringLiteral("keyDown"),
-      QStringLiteral("keyUp"),
-      QStringLiteral("keystroke"),
-      QStringLiteral("switchToScreen"),
-      QStringLiteral("switchInDirection"),
-      QStringLiteral("switchToNextScreen"),
-      QStringLiteral("lockCursorToScreen"),
-      QStringLiteral("restartServer"),
-      QStringLiteral("mouseDown"),
-      QStringLiteral("mouseUp"),
-      QStringLiteral("mousebutton")
+      u"keyDown"_s,
+      u"keyUp"_s,
+      u"keystroke"_s,
+      u"switchToScreen"_s,
+      u"switchInDirection"_s,
+      u"switchToNextScreen"_s,
+      u"lockCursorToScreen"_s,
+      u"restartServer"_s,
+      u"mouseDown"_s,
+      u"mouseUp"_s,
+      u"mousebutton"_s
   };
 
-  inline static const QStringList m_switchDirectionNames{
-      QStringLiteral("left"), QStringLiteral("right"), QStringLiteral("up"), QStringLiteral("down")
-  };
+  inline static const QStringList m_switchDirectionNames{u"left"_s, u"right"_s, u"up"_s, u"down"_s};
 
-  inline static const QStringList m_lockCursorModeNames{
-      QStringLiteral("toggle"), QStringLiteral("on"), QStringLiteral("off")
-  };
+  inline static const QStringList m_lockCursorModeNames{u"toggle"_s, u"on"_s, u"off"_s};
 };
 
 using ActionList = QList<Action>;

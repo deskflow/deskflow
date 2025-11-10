@@ -29,11 +29,11 @@ QString Action::text() const
         for (int i = 0; i < screens.size(); i++) {
           screenList.append(screens[i]);
           if (i != screens.size() - 1)
-            screenList.append(QStringLiteral(":"));
+            screenList.append(u":"_s);
         }
-        commandArgs.append(QStringLiteral(",%1").arg(screenList));
+        commandArgs.append(u",%1"_s.arg(screenList));
       } else
-        commandArgs.append(QStringLiteral(",*"));
+        commandArgs.append(u",*"_s);
     }
     text.append(m_commandTemplate.arg(commandArgs));
   } break;
