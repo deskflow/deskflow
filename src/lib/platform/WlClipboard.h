@@ -17,6 +17,7 @@
 #include <thread>
 #include <vector>
 
+#include <QString>
 //! Wayland clipboard implementation using wl-copy/wl-paste
 /*!
 This class implements clipboard functionality for Wayland environments
@@ -71,10 +72,10 @@ private:
   bool executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const;
 
   //! Convert IClipboard format to MIME type
-  std::string formatToMimeType(Format format) const;
+  QString formatToMimeType(Format format) const;
 
   //! Convert MIME type to IClipboard format
-  Format mimeTypeToFormat(const std::string &mimeType) const;
+  Format mimeTypeToFormat(const QString &mimeType) const;
 
   //! Get available MIME types from clipboard
   std::vector<std::string> getAvailableMimeTypes() const;
