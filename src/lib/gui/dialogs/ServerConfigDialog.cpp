@@ -463,15 +463,12 @@ void ServerConfigDialog::toggleExternalConfig(bool checked)
 
 bool ServerConfigDialog::browseConfigFile()
 {
-#if defined(Q_OS_WIN)
-  static const auto configExt = QStringLiteral("sgc");
-#else
-  static const auto configExt = QStringLiteral("conf");
-#endif
-  static const auto deskflowConfigFilter = QStringLiteral("%1 Configurations (*.%2);;All files (*.*)");
+  //: %1 is replaced with the application names
+  //: (*.conf) and (*.*) should not be translated
+  const auto deskflowConfigFilter = tr("%1 Configurations (*.conf);;All files (*.*)");
 
   QString fileName =
-      QFileDialog::getOpenFileName(this, "Browse for a config file", "", deskflowConfigFilter.arg(kAppName, configExt));
+      QFileDialog::getOpenFileName(this, tr("Browse for a config file"), "", deskflowConfigFilter.arg(kAppName));
 
   if (!fileName.isEmpty()) {
     ui->lineConfigFile->setText(fileName);

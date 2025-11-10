@@ -1024,6 +1024,15 @@ Enabling this setting will disable the server config GUI.</source>
 
 L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia grafica di configurazione del server.</translation>
     </message>
+    <message>
+        <source>%1 Configurations (*.conf);;All files (*.*)</source>
+        <extracomment>%1 is replaced with the application names (*.conf) and (*.*) should not be translated</extracomment>
+        <translation>%1 Configurazioni (*.conf);;Tutti i file (*.*)</translation>
+    </message>
+    <message>
+        <source>Browse for a config file</source>
+        <translation>Cerca un file di configurazione</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
