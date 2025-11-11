@@ -115,11 +115,10 @@ mouse and keyboard sharing tools. We aim for idea sharing and interoperability.
 - [**Lan Mouse**](https://github.com/feschber/lan-mouse) -
   Rust implementation with the goal of having native front-ends and interoperability with
   Deskflow/Synergy.
-- [**Input Leap**](https://github.com/input-leap/input-leap) -
-  Deskflow/Synergy-derivative with the goal of continuing what Barrier started, after Barrier
-  became a dead fork.
 - [**Synergy**](https://symless.com/synergy) -
   Downstream commercial fork. Synergy sponsors Deskflow with financial support and contributes code ([learn more](https://github.com/deskflow/deskflow/wiki/Relationship-with-Synergy)).
+- [**Input Leap**](https://github.com/input-leap/input-leap) -
+  Inactive Deskflow/Synergy-derivative with the goal continuing Barrier development (now a dead fork).
 
 ## FAQ
 
