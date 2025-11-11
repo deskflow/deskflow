@@ -857,6 +857,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
       messages::showCloseReminder(this);
       Settings::setValue(Settings::Gui::CloseReminder, false);
     }
+    Settings::setValue(Settings::Gui::WindowGeometry, geometry());
     qDebug() << "hiding to tray";
     hide();
     event->ignore();
@@ -1113,6 +1114,7 @@ void MainWindow::showAndActivate()
   activateWindow();
   m_actionRestore->setVisible(false);
   m_actionMinimize->setVisible(true);
+  restoreWindow();
 }
 
 void MainWindow::showHostNameEditor()
