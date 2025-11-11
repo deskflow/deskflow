@@ -12,6 +12,7 @@
 #include <QFile>
 #include <QRect>
 #include <QRegularExpression>
+#include <QStandardPaths>
 
 Settings *Settings::instance()
 {
@@ -32,6 +33,20 @@ void Settings::setSettingsFile(const QString &settingsFile)
   instance()->m_settings = new QSettings(settingsFile, QSettings::IniFormat);
   instance()->m_settingsProxy->load(settingsFile);
   qInfo().noquote() << "settings file changed:" << instance()->m_settings->fileName();
+}
+
+void Settings::setStateFile(const QString &stateFile)
+{
+  if (instance()->m_stateSettings->fileName() == stateFile) {
+    qDebug("settings file already set, skipping");
+    return;
+  }
+
+  if (instance()->m_stateSettings)
+    instance()->m_stateSettings->deleteLater();
+
+  instance()->m_stateSettings = new QSettings(stateFile, QSettings::IniFormat);
+  qInfo().noquote() << "settings file changed:" << instance()->m_stateSettings->fileName();
 }
 
 Settings::Settings(QObject *parent) : QObject(parent)
@@ -57,6 +72,13 @@ Settings::Settings(QObject *parent) : QObject(parent)
   m_settingsProxy = std::make_shared<QSettingsProxy>();
   m_settingsProxy->load(fileToLoad);
   qInfo().noquote() << "initial settings file:" << m_settings->fileName();
+
+  const auto stateBase = !qEnvironmentVariable("XDG_STATE_HOME").isEmpty()
+                             ? qEnvironmentVariable("XDG_STATE_HOME")
+                             : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
+  const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
+
+  m_stateSettings = new QSettings(stateFile, QSettings::IniFormat);
 }
 
 void Settings::cleanSettings()
@@ -67,6 +89,17 @@ void Settings::cleanSettings()
       m_settings->remove(key);
     if (m_settings->value(key).toString().isEmpty() && !m_settings->value(key).isValid())
       m_settings->remove(key);
+  }
+}
+
+void Settings::cleanStateSettings()
+{
+  const QStringList keys = m_stateKeys;
+  for (const QString &key : keys) {
+    if (!m_stateKeys.contains(key))
+      m_stateSettings->remove(key);
+    if (m_stateSettings->value(key).toString().isEmpty() && !m_stateSettings->value(key).isValid())
+      m_stateSettings->remove(key);
   }
 }
 
@@ -188,6 +221,7 @@ void Settings::save(bool emitSaving)
   if (emitSaving)
     Q_EMIT instance()->serverSettingsChanged();
   instance()->m_settings->sync();
+  instance()->m_stateSettings->sync();
 }
 
 QStringList Settings::validKeys()
@@ -243,21 +277,26 @@ QString Settings::tlsTrustedClientsDb()
 
 void Settings::setValue(const QString &key, const QVariant &value)
 {
-  if (instance()->m_settings->value(key) == value)
+  const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
+  auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
+
+  if (settings->value(key) == value)
     return;
 
   if (!value.isValid())
-    instance()->m_settings->remove(key);
+    settings->remove(key);
   else
-    instance()->m_settings->setValue(key, value);
+    settings->setValue(key, value);
 
-  instance()->m_settings->sync();
+  settings->sync();
   Q_EMIT instance()->settingsChanged(key);
 }
 
 QVariant Settings::value(const QString &key)
 {
-  return instance()->m_settings->value(key, defaultValue(key));
+  const bool useState = Settings::m_stateKeys.contains(key) && !instance()->isPortableMode();
+  auto settings = useState ? instance()->m_stateSettings : instance()->m_settings;
+  return settings->value(key, defaultValue(key));
 }
 
 void Settings::restoreDefaultSettings()

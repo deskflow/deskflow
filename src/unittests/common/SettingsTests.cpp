@@ -21,6 +21,11 @@ void SettingsTests::setSettingsFile()
   Settings::setSettingsFile(m_settingsFile);
 }
 
+void SettingsTests::setStateFile()
+{
+  Settings::setStateFile(m_stateFile);
+}
+
 void SettingsTests::settingsFile()
 {
   QVERIFY(Settings::settingsFile().endsWith(m_settingsFile));

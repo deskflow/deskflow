@@ -117,6 +117,7 @@ public:
 
   static Settings *instance();
   static void setSettingsFile(const QString &settingsFile = QString());
+  static void setStateFile(const QString &stateFile = QString());
   static void setValue(const QString &key = QString(), const QVariant &value = QVariant());
   static QVariant value(const QString &key = QString());
   static void restoreDefaultSettings();
@@ -146,8 +147,10 @@ private:
   Settings(const Settings &other) = delete;
   ~Settings() override = default;
   void cleanSettings();
+  void cleanStateSettings();
 
   QSettings *m_settings = nullptr;
+  QSettings *m_stateSettings = nullptr;
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
 
   // clang-format off
@@ -226,5 +229,8 @@ private:
     , Settings::Security::TlsEnabled
     , Settings::Security::CheckPeers
   };
+
+  // Settings saved in our State file
+  inline static const QStringList m_stateKeys = { Settings::Gui::WindowGeometry };
   // clang-format on
 };
