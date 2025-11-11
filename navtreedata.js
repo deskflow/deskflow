@@ -135,21 +135,21 @@ var NAVTREEINDEX =
 "classApp.html#a699f3588a184a543d55effeaac0e49c1",
 "classArchNetworkDisconnectedException.html",
 "classClientProxy1__0.html#a61e5a2b5ba3716e9668be0e221c80fa9",
-"classHotkey.html#a57ca9109e2da3343064777dee953741b",
-"classIMSWindowsClipboardConverter.html#af1e8980d35e309fec7935917dc488c52",
-"classInputFilter_1_1Rule.html#adae8a33b39f289dab918a437a386e4cf",
-"classMSWindowsKeyState.html#aad2ff4faeaea07a5bffa19a8f8cdff77",
-"classOSXScreen.html#ab7489399034844a18628e1a3b3e76222",
-"classScreenException.html",
-"classSettings.html#a40d35b59575553c8357e59fb13df7207",
-"classThreadExitException.html#aba81c659ec2cbf02120b2a9b0d3bdffb",
-"classXWindowsScreen.html#acd8d3403716eebd6b877f3940d2712bb",
+"classHotkey.html#a499f878845ddeaaa9cb0fb565686032a",
+"classIMSWindowsClipboardConverter.html#af0af806c8ff62c01bf8571a749770ae2",
+"classInputFilter_1_1Rule.html#ad2609ed132854ee72c96c1b3e6cd57a0",
+"classMSWindowsKeyState.html#aa8a6b0b2f93744e165ab754c0ce2da05",
+"classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf",
+"classScreenConfig.html#ad762dc8ee812c3db4916ddb19416f31a",
+"classSettings.html#a3a262a7a2956c62b6467e0ae548cf13d",
+"classThreadExitException.html#a28743a06d489ef94523897fa1b3c8fd9",
+"classXWindowsScreen.html#ac62d6b5b8242feb2819086a550d23836",
 "classdeskflow_1_1KeyMap.html#a92cde43b05ff9802fedef4f8b4774549",
 "classdeskflow_1_1gui_1_1CoreProcess.html#aa6b3faa1c42637f07adb9a6bef2e7065",
 "classdeskflow_1_1server_1_1Config.html#af1b8d1b689844f359188f141cba80af3",
-"functions_e.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0ae6e170e568c20bb7238c4c97737050",
-"structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b"
+"functions_d.html",
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a004547810dfb2badbe0c7c42f3d94aed",
+"structFingerprint.html#a6a18c4c916c2bc457d9e3f24e61766d2"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

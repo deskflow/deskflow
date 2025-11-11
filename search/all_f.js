@@ -248,7 +248,8 @@ var searchData=
   ['mtexception_2ecpp_245',['MTException.cpp',['../MTException_8cpp.html',1,'']]],
   ['mtexception_2eh_246',['MTException.h',['../MTException_8h.html',1,'']]],
   ['mtthreadunavailableexception_247',['MTThreadUnavailableException',['../classMTThreadUnavailableException.html',1,'']]],
-  ['mutex_248',['Mutex',['../classMutex.html',1,'Mutex'],['../classMutex.html#a593423d868daf926c7b0d63a833ae29a',1,'Mutex::Mutex()'],['../classMutex.html#a201127851a64538f2174186385fd5f0d',1,'Mutex::Mutex(const Mutex &amp;)']]],
-  ['mutex_2ecpp_249',['Mutex.cpp',['../Mutex_8cpp.html',1,'']]],
-  ['mutex_2eh_250',['Mutex.h',['../Mutex_8h.html',1,'']]]
+  ['multiinstanceoption_248',['multiInstanceOption',['../structCoreArgs.html#ac8cdc5a447a2f53a672aa1a0e561d4eb',1,'CoreArgs']]],
+  ['mutex_249',['Mutex',['../classMutex.html',1,'Mutex'],['../classMutex.html#a593423d868daf926c7b0d63a833ae29a',1,'Mutex::Mutex()'],['../classMutex.html#a201127851a64538f2174186385fd5f0d',1,'Mutex::Mutex(const Mutex &amp;)']]],
+  ['mutex_2ecpp_250',['Mutex.cpp',['../Mutex_8cpp.html',1,'']]],
+  ['mutex_2eh_251',['Mutex.h',['../Mutex_8h.html',1,'']]]
 ];

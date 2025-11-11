@@ -1,5 +1,7 @@
 var NAVTREEINDEX23 =
 {
+"structFingerprint.html#a6a18c4c916c2bc457d9e3f24e61766d2":[6,0,92,10],
+"structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78":[6,0,92,0],
 "structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b":[6,0,92,0,0],
 "structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78a9a9f4eb6d0036a164588b6ee74390442":[6,0,92,0,1],
 "structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78ab505df5aa812b4f320420b8a952f20e5":[6,0,92,0,2],

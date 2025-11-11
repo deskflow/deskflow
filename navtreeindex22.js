@@ -1,5 +1,6 @@
 var NAVTREEINDEX22 =
 {
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a004547810dfb2badbe0c7c42f3d94aed":[5,0,0,17,14],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0ae6e170e568c20bb7238c4c97737050":[5,0,0,17,33],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0bfd7cd9b871f07b663aa5e92f680681":[5,0,0,17,23],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6":[5,0,0,17,1],
@@ -234,8 +235,9 @@ var NAVTREEINDEX22 =
 "structClientProxy1__0_1_1ClientClipboard.html#af123963f0bb7bb90736cd7483adebbbc":[6,0,63,0,2],
 "structCoreArgs.html":[6,0,81],
 "structCoreArgs.html#a79230ec384dd83b877382b679948e189":[6,0,81,0],
-"structCoreArgs.html#aa37f4464fef14c7dbe609f19baaf6189":[6,0,81,2],
-"structCoreArgs.html#ada973b89e10429ac0eab7618024c2e38":[6,0,81,3],
+"structCoreArgs.html#aa37f4464fef14c7dbe609f19baaf6189":[6,0,81,3],
+"structCoreArgs.html#ac8cdc5a447a2f53a672aa1a0e561d4eb":[6,0,81,2],
+"structCoreArgs.html#ada973b89e10429ac0eab7618024c2e38":[6,0,81,4],
 "structCoreArgs.html#af596e33bb54c0b63d633ae0ed47d3658":[6,0,81,1],
 "structEvent_1_1EventFlags.html":[6,0,86,0],
 "structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920":[6,0,86,0,2],
@@ -247,7 +249,5 @@ var NAVTREEINDEX22 =
 "structFingerprint.html#a1d2a2af9f741ce07389b0e037239525a":[6,0,92,4],
 "structFingerprint.html#a36a58f17da7503eec8e5206ea9dfd7e5":[6,0,92,5],
 "structFingerprint.html#a595cc3e2b1194eea703e69e7a4705287":[6,0,92,6],
-"structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc":[6,0,92,2],
-"structFingerprint.html#a6a18c4c916c2bc457d9e3f24e61766d2":[6,0,92,10],
-"structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78":[6,0,92,0]
+"structFingerprint.html#a656f619bb76ccf6905e7a94a128557dc":[6,0,92,2]
 };

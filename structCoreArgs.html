@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.334</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.335</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -104,8 +104,9 @@ $(function(){initNavTree('structCoreArgs.html','','structCoreArgs-members'); });
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:af596e33bb54c0b63d633ae0ed47d3658" id="r_af596e33bb54c0b63d633ae0ed47d3658"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af596e33bb54c0b63d633ae0ed47d3658">helpOption</a> = QCommandLineOption({&quot;h&quot;, &quot;help&quot;}, &quot;Display Help on the command line&quot;)</td></tr>
 <tr class="memitem:ada973b89e10429ac0eab7618024c2e38" id="r_ada973b89e10429ac0eab7618024c2e38"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ada973b89e10429ac0eab7618024c2e38">versionOption</a> = QCommandLineOption({&quot;v&quot;, &quot;version&quot;}, &quot;Display version information&quot;)</td></tr>
+<tr class="memitem:ac8cdc5a447a2f53a672aa1a0e561d4eb" id="r_ac8cdc5a447a2f53a672aa1a0e561d4eb"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac8cdc5a447a2f53a672aa1a0e561d4eb">multiInstanceOption</a></td></tr>
 <tr class="memitem:a79230ec384dd83b877382b679948e189" id="r_a79230ec384dd83b877382b679948e189"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a79230ec384dd83b877382b679948e189">configOption</a></td></tr>
-<tr class="memitem:aa37f4464fef14c7dbe609f19baaf6189" id="r_aa37f4464fef14c7dbe609f19baaf6189"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa37f4464fef14c7dbe609f19baaf6189">options</a> = {<a class="el" href="#af596e33bb54c0b63d633ae0ed47d3658">helpOption</a>, <a class="el" href="#ada973b89e10429ac0eab7618024c2e38">versionOption</a>, <a class="el" href="#a79230ec384dd83b877382b679948e189">configOption</a>}</td></tr>
+<tr class="memitem:aa37f4464fef14c7dbe609f19baaf6189" id="r_aa37f4464fef14c7dbe609f19baaf6189"><td class="memItemLeft" align="right" valign="top">static const auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa37f4464fef14c7dbe609f19baaf6189">options</a> = {<a class="el" href="#af596e33bb54c0b63d633ae0ed47d3658">helpOption</a>, <a class="el" href="#ada973b89e10429ac0eab7618024c2e38">versionOption</a>, <a class="el" href="#ac8cdc5a447a2f53a672aa1a0e561d4eb">multiInstanceOption</a>, <a class="el" href="#a79230ec384dd83b877382b679948e189">configOption</a>}</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The <a class="el" href="structCoreArgs.html" title="The CoreArgs class This class contains args for the CoreArgParser.">CoreArgs</a> class This class contains args for the <a class="el" href="classCoreArgParser.html" title="The CoreArgParser class This class processes the argments for the &quot;core&quot; app.">CoreArgParser</a>. </p>
@@ -156,6 +157,30 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ac8cdc5a447a2f53a672aa1a0e561d4eb" name="ac8cdc5a447a2f53a672aa1a0e561d4eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8cdc5a447a2f53a672aa1a0e561d4eb">&#9670;&#160;</a></span>multiInstanceOption</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const auto CoreArgs::multiInstanceOption</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">=</div>
+<div class="line">      QCommandLineOption(<span class="stringliteral">&quot;new-instance&quot;</span>, <span class="stringliteral">&quot;Skip the check for a running instance, always makes a new instance&quot;</span>)</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="aa37f4464fef14c7dbe609f19baaf6189" name="aa37f4464fef14c7dbe609f19baaf6189"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa37f4464fef14c7dbe609f19baaf6189">&#9670;&#160;</a></span>options</h2>
 
@@ -166,7 +191,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">const auto CoreArgs::options = {<a class="el" href="#af596e33bb54c0b63d633ae0ed47d3658">helpOption</a>, <a class="el" href="#ada973b89e10429ac0eab7618024c2e38">versionOption</a>, <a class="el" href="#a79230ec384dd83b877382b679948e189">configOption</a>}</td>
+          <td class="memname">const auto CoreArgs::options = {<a class="el" href="#af596e33bb54c0b63d633ae0ed47d3658">helpOption</a>, <a class="el" href="#ada973b89e10429ac0eab7618024c2e38">versionOption</a>, <a class="el" href="#ac8cdc5a447a2f53a672aa1a0e561d4eb">multiInstanceOption</a>, <a class="el" href="#a79230ec384dd83b877382b679948e189">configOption</a>}</td>
         </tr>
       </table>
   </td>

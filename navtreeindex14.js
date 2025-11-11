@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classScreenConfig.html#ad762dc8ee812c3db4916ddb19416f31a":[6,0,190,6],
 "classScreenException.html":[6,0,191],
 "classScreenList.html":[6,0,192],
 "classScreenList.html#a009d77ba5a0c69d1961c0e4c9dd90f79":[6,0,192,2],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classSettings.html#a01b338f345071d37338583c8739338e6":[6,0,208,11],
 "classSettings.html#a0ea737fa0ddeffdf053e7d9522ef4a0d":[6,0,208,32],
 "classSettings.html#a33616afa82a5433ced5104646ab88dee":[6,0,208,33],
-"classSettings.html#a37be043c4fa4b592b9e334520bef9814":[6,0,208,34],
-"classSettings.html#a3a262a7a2956c62b6467e0ae548cf13d":[6,0,208,24]
+"classSettings.html#a37be043c4fa4b592b9e334520bef9814":[6,0,208,34]
 };

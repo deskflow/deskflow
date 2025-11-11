@@ -1,5 +1,6 @@
 var NAVTREEINDEX13 =
 {
+"classOSXScreen.html#ab3f6fb838702f3a22e118ea73596a2bf":[6,0,180,23],
 "classOSXScreen.html#ab7489399034844a18628e1a3b3e76222":[6,0,180,4],
 "classOSXScreen.html#ab7974ba9d338aef7b19330b4acc85b39":[6,0,180,20],
 "classOSXScreen.html#ac65894f8b956a08176b90612f6257760":[6,0,180,33],
@@ -248,6 +249,5 @@ var NAVTREEINDEX13 =
 "classScreenConfig.html#ab4f336028c5aab1fc34b993f4cb56f65":[6,0,190,9],
 "classScreenConfig.html#ab9dfc8ab8dff1cca5fd7e3d0523f5371":[6,0,190,10],
 "classScreenConfig.html#ac7deded16472a37b87b2cfccdde036dc":[6,0,190,5],
-"classScreenConfig.html#ad3625809ad5d53534773d9713e53cd57":[6,0,190,3],
-"classScreenConfig.html#ad762dc8ee812c3db4916ddb19416f31a":[6,0,190,6]
+"classScreenConfig.html#ad3625809ad5d53534773d9713e53cd57":[6,0,190,3]
 };

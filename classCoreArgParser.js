@@ -7,6 +7,7 @@ var classCoreArgParser =
     [ "helpText", "classCoreArgParser.html#a63cb88b7b66c588a6e040502583bec12", null ],
     [ "parse", "classCoreArgParser.html#a286059bd2a4b738878baee293f43e37c", null ],
     [ "serverMode", "classCoreArgParser.html#ac372ae7285fe4670a6f8adbd97c9acad", null ],
+    [ "singleInstanceOnly", "classCoreArgParser.html#a8ce24d8fd679724cb416f78b18eac2a6", null ],
     [ "version", "classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d", null ],
     [ "versionText", "classCoreArgParser.html#abe71a56b153f1c0fb3e1ebd646cc963e", null ]
 ];

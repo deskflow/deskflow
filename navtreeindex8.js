@@ -143,10 +143,11 @@ var NAVTREEINDEX8 =
 "classCoreArgParser.html":[6,0,80],
 "classCoreArgParser.html#a286059bd2a4b738878baee293f43e37c":[6,0,80,5],
 "classCoreArgParser.html#a63cb88b7b66c588a6e040502583bec12":[6,0,80,4],
+"classCoreArgParser.html#a8ce24d8fd679724cb416f78b18eac2a6":[6,0,80,7],
 "classCoreArgParser.html#a9987ebf366d0700aeb618f4afca0e8ff":[6,0,80,0],
-"classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d":[6,0,80,7],
+"classCoreArgParser.html#a9d6428bc7373d68acb4824778dfb515d":[6,0,80,8],
 "classCoreArgParser.html#aafc9a818b746d0909819f2ccbaf4889e":[6,0,80,1],
-"classCoreArgParser.html#abe71a56b153f1c0fb3e1ebd646cc963e":[6,0,80,8],
+"classCoreArgParser.html#abe71a56b153f1c0fb3e1ebd646cc963e":[6,0,80,9],
 "classCoreArgParser.html#ac3084d94a1e3463f1fe5f889cdc03f9f":[6,0,80,2],
 "classCoreArgParser.html#ac372ae7285fe4670a6f8adbd97c9acad":[6,0,80,6],
 "classCoreArgParser.html#aeea629c5cb12497501a151275327f65b":[6,0,80,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX8 =
 "classFunctionJob.html#ac838394bfaf5e7d2dca08b69c9ea193f":[6,0,97,0],
 "classHotkey.html":[6,0,98],
 "classHotkey.html#a03801f4755f300c298f76570bc275883":[6,0,98,11],
-"classHotkey.html#a0d8f1fc8fa6f2b3f18a4ae38347960b9":[6,0,98,4],
-"classHotkey.html#a499f878845ddeaaa9cb0fb565686032a":[6,0,98,2]
+"classHotkey.html#a0d8f1fc8fa6f2b3f18a4ae38347960b9":[6,0,98,4]
 };

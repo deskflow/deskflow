@@ -98,5 +98,6 @@ var searchData=
   ['m_5fydelta_95',['m_yDelta',['../classIPrimaryScreen_1_1WheelInfo.html#a36463259d04cc2dde4154908e27d30ac',1,'IPrimaryScreen::WheelInfo']]],
   ['magic_5fsection_96',['magic_section',['../OSXScreen_8mm.html#a1a03b970897173cd5ad998e9cb2eaaf3',1,'OSXScreen.mm']]],
   ['modifiersfromxdefaultsize_97',['ModifiersFromXDefaultSize',['../XWindowsKeyState_8cpp.html#a2cd5801a15ae657aea7ab2755550ad75',1,'XWindowsKeyState.cpp']]],
-  ['modifycursorlock_98',['ModifyCursorLock',['../structActionDialog_1_1ActionTypes.html#a8df74127a3162dc5655e5034bae6cdcd',1,'ActionDialog::ActionTypes']]]
+  ['modifycursorlock_98',['ModifyCursorLock',['../structActionDialog_1_1ActionTypes.html#a8df74127a3162dc5655e5034bae6cdcd',1,'ActionDialog::ActionTypes']]],
+  ['multiinstanceoption_99',['multiInstanceOption',['../structCoreArgs.html#ac8cdc5a447a2f53a672aa1a0e561d4eb',1,'CoreArgs']]]
 ];
