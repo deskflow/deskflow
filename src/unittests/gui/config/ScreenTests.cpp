@@ -20,6 +20,7 @@ void ScreenTests::initTestCase()
     oldSettings.remove();
 
   Settings::setSettingsFile(m_settingsFile);
+  Settings::setStateFile(m_stateFile);
 }
 
 void ScreenTests::basicFunctionality()
