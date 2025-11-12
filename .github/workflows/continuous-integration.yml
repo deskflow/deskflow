@@ -24,12 +24,12 @@ env:
 
 jobs:
   # Quality gate to allow PR merge, used in the branch protection rules.
-  ci-passed:
+  final-step:
     runs-on: ubuntu-latest
     needs: [test-results, unix, flatpak]
 
     steps:
-      - run: echo "✅ CI passed" > $GITHUB_STEP_SUMMARY
+      - run: echo "Finished CI"
 
   # Summary of test results, combined from test result artifacts.
   # Runs even if the tests fail to provide a summary of the failures.
