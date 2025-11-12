@@ -24,7 +24,7 @@ on:
       - '!src/unittests/**'
 
 jobs:
-  analyze:
+  codeql:
     runs-on: ubuntu-latest
     container: debian:trixie-slim
     timeout-minutes: 20

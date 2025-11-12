@@ -25,7 +25,7 @@ on:
       - '!src/unittests/**'
 
 jobs:
-  analyze:
+  sonar:
     # This job would fail for contributors who open PRs as the workflow runs outside of our repo
     # in this scenario. Having a var that only we set to true prevents this job from running.
     if: ${{ vars.SONAR_SCANNER_ENABLED }}
