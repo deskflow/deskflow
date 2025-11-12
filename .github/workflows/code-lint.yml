@@ -1,0 +1,29 @@
+name: "Code Lint"
+
+on:
+  push:
+    branches: [master]
+    tags:
+      - "v*"
+  pull_request:
+
+jobs:
+
+  reuse-lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: REUSE Compliance Check
+        uses: fsfe/reuse-action@v5
+      - name: Lint Checker
+        uses: ./.github/actions/lint-clang
+
+  code-lint:
+    needs: [reuse-lint]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Clang Lint Check
+        uses: ./.github/actions/lint-clang
