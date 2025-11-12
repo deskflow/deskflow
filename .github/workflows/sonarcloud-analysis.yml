@@ -5,7 +5,6 @@ name: "SonarCloud Analysis"
 on:
   workflow_dispatch:
   pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
     paths:
       - '.github/workflows/sonarcloud-analysis.yml'
       - 'sonar-project.properties'

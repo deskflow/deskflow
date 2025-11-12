@@ -10,11 +10,6 @@ on:
     tags:
       - "v*"
   pull_request:
-    types:
-      - opened
-      - reopened
-      - synchronize
-      - ready_for_review
 
 env:
   GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
