@@ -6,16 +6,22 @@ on:
   workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    paths-ignore:
-      - "**/*.md"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".editorconfig"
-      - ".env-example"
-      - ".gitignore"
-      - ".gitattributes"
-      - "cspell.json"
+    paths:
+      - '.github/workflows/codeql-analysis.yml'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
   push:
     branches: [master]
+    paths:
+      - '.github/workflows/codeql-analysis.yml'
+      - 'cmake/Libraries.cmake'
+      - 'CMakeLists.txt'
+      - 'src/**'
+      - '!src/res/**'
+      - '!src/unittests/**'
 
 jobs:
   analyze:
