@@ -1234,8 +1234,163 @@ XK_Uhorn
 XK_uhorn
 */
 
-// map "Internet" keys to KeyIDs
-static const KeySym s_map1008FF[] = {
+//
+// XDGKeyUtil
+//
+
+XDGKeyUtil::KeySymMap XDGKeyUtil::s_keySymToUCS4;
+
+KeyID XDGKeyUtil::mapKeySymToKeyID(KeySym k)
+{
+  initKeyMaps();
+
+  switch (k & 0xffffff00) {
+  case 0x0000:
+    // Latin-1
+    return static_cast<KeyID>(k);
+
+  case 0xfe00:
+    // ISO 9995 Function and Modifier Keys
+    switch (k) {
+    case XK_ISO_Left_Tab:
+      return kKeyLeftTab;
+
+    case XK_ISO_Level3_Shift:
+      return kKeyAltGr;
+
+#ifdef XK_ISO_Level5_Shift
+    case XK_ISO_Level5_Shift:
+      return XK_ISO_Level5_Shift; // there is no "usual" key for this...
+#endif
+
+    case XK_ISO_Next_Group:
+      return kKeyNextGroup;
+
+    case XK_ISO_Prev_Group:
+      return kKeyPrevGroup;
+
+    case XK_dead_grave:
+      return kKeyDeadGrave;
+
+    case XK_dead_acute:
+      return kKeyDeadAcute;
+
+    case XK_dead_circumflex:
+      return kKeyDeadCircumflex;
+
+    case XK_dead_tilde:
+      return kKeyDeadTilde;
+
+    case XK_dead_macron:
+      return kKeyDeadMacron;
+
+    case XK_dead_breve:
+      return kKeyDeadBreve;
+
+    case XK_dead_abovedot:
+      return kKeyDeadAbovedot;
+
+    case XK_dead_diaeresis:
+      return kKeyDeadDiaeresis;
+
+    case XK_dead_abovering:
+      return kKeyDeadAbovering;
+
+    case XK_dead_doubleacute:
+      return kKeyDeadDoubleacute;
+
+    case XK_dead_caron:
+      return kKeyDeadCaron;
+
+    case XK_dead_cedilla:
+      return kKeyDeadCedilla;
+
+    case XK_dead_ogonek:
+      return kKeyDeadOgonek;
+
+    default:
+      return kKeyNone;
+    }
+
+  case 0xff00:
+    // MISCELLANY
+    return static_cast<KeyID>(k - 0xff00 + 0xef00);
+
+  case 0x1008ff00:
+    // "Internet" keys
+    return static_cast<KeyID>(s_map1008FF.at(k & 0xff));
+
+  default: {
+    // lookup character in table
+    auto index = s_keySymToUCS4.find(k);
+    if (index != s_keySymToUCS4.end()) {
+      return static_cast<KeyID>(index->second);
+    }
+
+    // unknown character
+    return kKeyNone;
+  }
+  }
+}
+
+std::uint32_t XDGKeyUtil::getModifierBitForKeySym(KeySym keysym)
+{
+  switch (keysym) {
+  case XK_Shift_L:
+  case XK_Shift_R:
+    return kKeyModifierBitShift;
+
+  case XK_Control_L:
+  case XK_Control_R:
+    return kKeyModifierBitControl;
+
+  case XK_Alt_L:
+  case XK_Alt_R:
+    return kKeyModifierBitAlt;
+
+  case XK_Meta_L:
+  case XK_Meta_R:
+    return kKeyModifierBitMeta;
+
+  case XK_Super_L:
+  case XK_Super_R:
+  case XK_Hyper_L:
+  case XK_Hyper_R:
+    return kKeyModifierBitSuper;
+
+  case XK_Mode_switch:
+  case XK_ISO_Level3_Shift:
+    return kKeyModifierBitAltGr;
+
+#ifdef XK_ISO_Level5_Shift
+  case XK_ISO_Level5_Shift:
+    return kKeyModifierBitLevel5Lock;
+#endif
+
+  case XK_Caps_Lock:
+    return kKeyModifierBitCapsLock;
+
+  case XK_Num_Lock:
+    return kKeyModifierBitNumLock;
+
+  case XK_Scroll_Lock:
+    return kKeyModifierBitScrollLock;
+
+  default:
+    return kKeyModifierBitNone;
+  }
+}
+
+void XDGKeyUtil::initKeyMaps()
+{
+  if (s_keySymToUCS4.empty()) {
+    for (size_t i = 0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
+      s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
+    }
+  }
+}
+
+std::array<KeySym, 256> XDGKeyUtil::s_map1008FF = {
     /* 0x00 */ 0,
     0,
     kKeyBrightnessUp,
@@ -1493,159 +1648,3 @@ static const KeySym s_map1008FF[] = {
     0,
     0
 };
-
-//
-// XDGKeyUtil
-//
-
-XDGKeyUtil::KeySymMap XDGKeyUtil::s_keySymToUCS4;
-
-KeyID XDGKeyUtil::mapKeySymToKeyID(KeySym k)
-{
-  initKeyMaps();
-
-  switch (k & 0xffffff00) {
-  case 0x0000:
-    // Latin-1
-    return static_cast<KeyID>(k);
-
-  case 0xfe00:
-    // ISO 9995 Function and Modifier Keys
-    switch (k) {
-    case XK_ISO_Left_Tab:
-      return kKeyLeftTab;
-
-    case XK_ISO_Level3_Shift:
-      return kKeyAltGr;
-
-#ifdef XK_ISO_Level5_Shift
-    case XK_ISO_Level5_Shift:
-      return XK_ISO_Level5_Shift; // there is no "usual" key for this...
-#endif
-
-    case XK_ISO_Next_Group:
-      return kKeyNextGroup;
-
-    case XK_ISO_Prev_Group:
-      return kKeyPrevGroup;
-
-    case XK_dead_grave:
-      return kKeyDeadGrave;
-
-    case XK_dead_acute:
-      return kKeyDeadAcute;
-
-    case XK_dead_circumflex:
-      return kKeyDeadCircumflex;
-
-    case XK_dead_tilde:
-      return kKeyDeadTilde;
-
-    case XK_dead_macron:
-      return kKeyDeadMacron;
-
-    case XK_dead_breve:
-      return kKeyDeadBreve;
-
-    case XK_dead_abovedot:
-      return kKeyDeadAbovedot;
-
-    case XK_dead_diaeresis:
-      return kKeyDeadDiaeresis;
-
-    case XK_dead_abovering:
-      return kKeyDeadAbovering;
-
-    case XK_dead_doubleacute:
-      return kKeyDeadDoubleacute;
-
-    case XK_dead_caron:
-      return kKeyDeadCaron;
-
-    case XK_dead_cedilla:
-      return kKeyDeadCedilla;
-
-    case XK_dead_ogonek:
-      return kKeyDeadOgonek;
-
-    default:
-      return kKeyNone;
-    }
-
-  case 0xff00:
-    // MISCELLANY
-    return static_cast<KeyID>(k - 0xff00 + 0xef00);
-
-  case 0x1008ff00:
-    // "Internet" keys
-    return s_map1008FF[k & 0xff];
-
-  default: {
-    // lookup character in table
-    auto index = s_keySymToUCS4.find(k);
-    if (index != s_keySymToUCS4.end()) {
-      return static_cast<KeyID>(index->second);
-    }
-
-    // unknown character
-    return kKeyNone;
-  }
-  }
-}
-
-std::uint32_t XDGKeyUtil::getModifierBitForKeySym(KeySym keysym)
-{
-  switch (keysym) {
-  case XK_Shift_L:
-  case XK_Shift_R:
-    return kKeyModifierBitShift;
-
-  case XK_Control_L:
-  case XK_Control_R:
-    return kKeyModifierBitControl;
-
-  case XK_Alt_L:
-  case XK_Alt_R:
-    return kKeyModifierBitAlt;
-
-  case XK_Meta_L:
-  case XK_Meta_R:
-    return kKeyModifierBitMeta;
-
-  case XK_Super_L:
-  case XK_Super_R:
-  case XK_Hyper_L:
-  case XK_Hyper_R:
-    return kKeyModifierBitSuper;
-
-  case XK_Mode_switch:
-  case XK_ISO_Level3_Shift:
-    return kKeyModifierBitAltGr;
-
-#ifdef XK_ISO_Level5_Shift
-  case XK_ISO_Level5_Shift:
-    return kKeyModifierBitLevel5Lock;
-#endif
-
-  case XK_Caps_Lock:
-    return kKeyModifierBitCapsLock;
-
-  case XK_Num_Lock:
-    return kKeyModifierBitNumLock;
-
-  case XK_Scroll_Lock:
-    return kKeyModifierBitScrollLock;
-
-  default:
-    return kKeyModifierBitNone;
-  }
-}
-
-void XDGKeyUtil::initKeyMaps()
-{
-  if (s_keySymToUCS4.empty()) {
-    for (size_t i = 0; i < sizeof(s_keymap) / sizeof(s_keymap[0]); ++i) {
-      s_keySymToUCS4[s_keymap[i].keysym] = s_keymap[i].ucs4;
-    }
-  }
-}

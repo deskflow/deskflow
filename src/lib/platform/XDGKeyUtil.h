@@ -10,6 +10,7 @@
 
 #include <X11/X.h>
 
+#include <array>
 #include <cstdint>
 #include <map>
 
@@ -37,4 +38,7 @@ private:
   typedef std::map<KeySym, std::uint32_t> KeySymMap;
 
   static KeySymMap s_keySymToUCS4;
+
+  // map "Internet" keys to KeyIDs
+  static std::array<KeySym, 256> s_map1008FF;
 };
