@@ -32,7 +32,6 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
 using namespace deskflow::core;
 
 void showHelp(int argc, char **argv) // NOSONAR - CLI args

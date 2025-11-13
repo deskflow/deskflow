@@ -17,8 +17,6 @@
 #include <fstream>
 #include <stdexcept>
 
-using namespace std;
-
 static const size_t g_chunkSize = 512 * 1024; // 512kb
 
 void StreamChunker::sendClipboard(
