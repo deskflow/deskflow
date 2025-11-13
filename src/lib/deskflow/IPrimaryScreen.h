@@ -24,6 +24,10 @@ public:
   class ButtonInfo
   {
   public:
+    ButtonInfo(ButtonID button, KeyModifierMask mask) : m_button{button}, m_mask{mask}
+    {
+      // do nothing
+    }
     static ButtonInfo *alloc(ButtonID, KeyModifierMask);
     static ButtonInfo *alloc(const ButtonInfo &);
 
