@@ -40,7 +40,7 @@ void IClipboard::unmarshall(IClipboard *clipboard, const std::string_view &data,
 
       // save the data if it's a known format.  if either the client
       // or server supports more clipboard formats than the other
-      // then one of them will get a format >= kNumFormats here.
+      // then one of them will get a format >= TotalFormats here.
       if (format < IClipboard::Format::TotalFormats) {
         clipboard->add(format, std::string(index, size));
       }

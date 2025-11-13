@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "deskflow/IScreen.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
 
@@ -26,6 +27,8 @@ class EiClipboard;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
+
+using ClipboardInfo = IScreen::ClipboardInfo;
 
 //! Implementation of IPlatformScreen for X11
 class EiScreen : public PlatformScreen
@@ -90,6 +93,7 @@ private:
   void initEi();
   void cleanupEi();
   void sendEvent(EventTypes type, void *data);
+  void sendClipboardEvent(EventTypes type, ClipboardID id) const;
   ButtonID mapButtonFromEvdev(ei_event *event) const;
   void onKeyEvent(ei_event *event);
   void onButtonEvent(ei_event *event);
@@ -117,6 +121,9 @@ private:
 
   // keyboard stuff
   EiKeyState *m_keyState = nullptr;
+
+  // clipboard stuff
+  EiClipboard *m_clipboard = nullptr;
 
   std::vector<ei_device *> m_eiDevices;
 
