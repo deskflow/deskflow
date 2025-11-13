@@ -155,7 +155,8 @@ QVariant Settings::defaultValue(const QString &key)
     // The localhost name can contain spaces and non word characters
     QString name = QSysInfo::machineHostName().simplified();
     name.replace(QLatin1String(" "), QStringLiteral("_"));
-    name.replace(QRegularExpression(QLatin1String("\\W")), QLatin1String(""));
+    static const auto nameRegex = QRegularExpression(QLatin1String("\\W"));
+    name.replace(nameRegex, QLatin1String(""));
     return name;
   }
 
