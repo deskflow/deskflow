@@ -8,15 +8,16 @@
 
 #pragma once
 
-#include <X11/X.h>
-
 #include <array>
 #include <cstdint>
 #include <map>
 
+using KeySym = unsigned long;
+
 //! XKB utility functions
 class XDGKeyUtil
 {
+
 public:
   //! Convert KeySym to KeyID
   /*!
