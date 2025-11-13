@@ -100,12 +100,12 @@ void InputFilter::KeystrokeCondition::disablePrimary(PrimaryClient *primary)
   m_id = 0;
 }
 
-InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, IPlatformScreen::ButtonInfo *info)
-    : m_button(info->m_button),
-      m_mask(info->m_mask),
+InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, const IPlatformScreen::ButtonInfo &info)
+    : m_button(info.m_button),
+      m_mask(info.m_mask),
       m_events(events)
 {
-  free(info);
+  // do nothing
 }
 
 InputFilter::MouseButtonCondition::MouseButtonCondition(IEventQueue *events, ButtonID button, KeyModifierMask mask)
@@ -492,7 +492,9 @@ const char *InputFilter::KeystrokeAction::formatName() const
   return (m_press ? "keyDown" : "keyUp");
 }
 
-InputFilter::MouseButtonAction::MouseButtonAction(IEventQueue *events, IPlatformScreen::ButtonInfo *info, bool press)
+InputFilter::MouseButtonAction::MouseButtonAction(
+    IEventQueue *events, const IPlatformScreen::ButtonInfo &info, bool press
+)
     : m_buttonInfo(info),
       m_press(press),
       m_events(events)
@@ -500,12 +502,7 @@ InputFilter::MouseButtonAction::MouseButtonAction(IEventQueue *events, IPlatform
   // do nothing
 }
 
-InputFilter::MouseButtonAction::~MouseButtonAction()
-{
-  free(m_buttonInfo);
-}
-
-const IPlatformScreen::ButtonInfo *InputFilter::MouseButtonAction::getInfo() const
+const IPlatformScreen::ButtonInfo &InputFilter::MouseButtonAction::getInfo() const
 {
   return m_buttonInfo;
 }
@@ -517,16 +514,15 @@ bool InputFilter::MouseButtonAction::isOnPress() const
 
 InputFilter::Action *InputFilter::MouseButtonAction::clone() const
 {
-  IPlatformScreen::ButtonInfo *info = IPrimaryScreen::ButtonInfo::alloc(*m_buttonInfo);
-  return new MouseButtonAction(m_events, info, m_press);
+  return new MouseButtonAction(m_events, m_buttonInfo, m_press);
 }
 
 std::string InputFilter::MouseButtonAction::format() const
 {
   const char *type = formatName();
 
-  std::string key = deskflow::KeyMap::formatKey(kKeyNone, m_buttonInfo->m_mask);
-  return deskflow::string::sprintf("%s(%s%s%d)", type, key.c_str(), key.empty() ? "" : "+", m_buttonInfo->m_button);
+  std::string key = deskflow::KeyMap::formatKey(kKeyNone, m_buttonInfo.m_mask);
+  return deskflow::string::sprintf("%s(%s%s%d)", type, key.c_str(), key.empty() ? "" : "+", m_buttonInfo.m_button);
 }
 
 void InputFilter::MouseButtonAction::perform(const Event &event)
@@ -535,16 +531,16 @@ void InputFilter::MouseButtonAction::perform(const Event &event)
   // send modifiers
   using enum EventTypes;
   IPlatformScreen::KeyInfo *modifierInfo = nullptr;
-  if (m_buttonInfo->m_mask != 0) {
+  if (m_buttonInfo.m_mask != 0) {
     KeyID key = m_press ? kKeySetModifiers : kKeyClearModifiers;
-    modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo->m_mask, 0, 1);
+    modifierInfo = IKeyState::KeyInfo::alloc(key, m_buttonInfo.m_mask, 0, 1);
     m_events->addEvent(Event(KeyStateKeyDown, event.getTarget(), modifierInfo, Event::EventFlags::DeliverImmediately));
   }
 
   // send button
   EventTypes type = m_press ? PrimaryScreenButtonDown : PrimaryScreenButtonUp;
   m_events->addEvent(Event(
-      type, event.getTarget(), m_buttonInfo, Event::EventFlags::DeliverImmediately | Event::EventFlags::DontFreeData
+      type, event.getTarget(), &m_buttonInfo, Event::EventFlags::DeliverImmediately | Event::EventFlags::DontFreeData
   ));
 }
 
