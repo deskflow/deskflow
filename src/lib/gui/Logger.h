@@ -25,6 +25,10 @@ public:
 
 Q_SIGNALS:
   void newLine(const QString &line);
+
+private:
+  explicit Logger() = default;
+  ~Logger() = default;
 };
 
 } // namespace deskflow::gui
