@@ -8,9 +8,7 @@
 #pragma once
 
 #include <cstdint>
-#include <map>
 #include <string>
-#include <vector>
 
 #include <X11/Xlib.h>
 
@@ -18,8 +16,6 @@
 class XWindowsUtil
 {
 public:
-  using KeySyms = std::vector<KeySym>;
-
   //! Get property
   /*!
   Gets property \c property on \c window.  \b Appends the data to
@@ -46,20 +42,6 @@ public:
   Returns the current X server time.
   */
   static Time getCurrentTime(Display *, Window);
-
-  //! Convert KeySym to KeyID
-  /*!
-  Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
-  KeySym cannot be mapped.
-  */
-  static uint32_t mapKeySymToKeyID(KeySym);
-
-  //! Convert KeySym to corresponding KeyModifierMask
-  /*!
-  Converts a KeySym to the corresponding KeyModifierMask, or 0 if the
-  KeySym is not a modifier.
-  */
-  static uint32_t getModifierBitForKeySym(KeySym keysym);
 
   //! Convert Atom to its string
   /*!
@@ -165,11 +147,4 @@ private:
   };
 
   static Bool propertyNotifyPredicate(Display *, XEvent *xevent, XPointer arg);
-
-  static void initKeyMaps();
-
-private:
-  using KeySymMap = std::map<KeySym, uint32_t>;
-
-  static KeySymMap s_keySymToUCS4;
 };

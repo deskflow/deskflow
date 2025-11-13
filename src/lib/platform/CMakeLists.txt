@@ -97,6 +97,8 @@ elseif(UNIX)
     XDGPortalRegistry.h
     XDGPowerManager.cpp
     XDGPowerManager.h
+    XDGKeyUtil.h
+    XDGKeyUtil.cpp
     XWindowsClipboard.cpp
     XWindowsClipboard.h
     XWindowsClipboardAnyBitmapConverter.cpp
