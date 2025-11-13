@@ -30,13 +30,11 @@ void LoggerTests::initTestCase()
 
 void LoggerTests::newLine()
 {
-  Logger logger;
-
-  QSignalSpy spy(&logger, &Logger::newLine);
+  QSignalSpy spy(Logger::instance(), &Logger::newLine);
   QVERIFY(spy.isValid());
 
   Settings::setValue(Settings::Log::GuiDebug, true);
-  logger.handleMessage(QtDebugMsg, "stub", "test");
+  Logger::instance()->handleMessage(QtDebugMsg, "stub", "test");
 
   QCOMPARE(spy.count(), 1);
   QVERIFY(qvariant_cast<QString>(spy.takeFirst().at(0)).contains("test"));
@@ -45,14 +43,13 @@ void LoggerTests::newLine()
 
 void LoggerTests::noNewLine()
 {
-  Logger logger;
   bool newLineEmitted = false;
 
-  QSignalSpy spy(&logger, &Logger::newLine);
+  QSignalSpy spy(Logger::instance(), &Logger::newLine);
   QVERIFY(spy.isValid());
 
   Settings::setValue(Settings::Log::GuiDebug, false);
-  logger.handleMessage(QtDebugMsg, "stub", "test");
+  Logger::instance()->handleMessage(QtDebugMsg, "stub", "test");
   QCOMPARE(spy.count(), 0);
   QVERIFY(!newLineEmitted);
 }
