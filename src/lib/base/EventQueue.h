@@ -39,7 +39,7 @@ public:
   void adoptBuffer(IEventQueueBuffer *) override;
   bool getEvent(Event &event, double timeout = -1.0) override;
   bool dispatchEvent(const Event &event) override;
-  void addEvent(const Event &event) override;
+  void addEvent(Event &&event) override;
   EventQueueTimer *newTimer(double duration, void *target) override;
   EventQueueTimer *newOneShotTimer(double duration, void *target) override;
   void deleteTimer(EventQueueTimer *) override;
@@ -51,11 +51,11 @@ public:
 
 private:
   const EventHandler *getHandler(EventTypes type, void *target) const;
-  uint32_t saveEvent(const Event &event);
+  uint32_t saveEvent(Event &&event);
   Event removeEvent(uint32_t eventID);
   bool hasTimerExpired(Event &event);
   double getNextTimerTimeout() const;
-  void addEventToBuffer(const Event &event);
+  void addEventToBuffer(Event &&event);
 
   //!
   //! \brief processEvent Internal event proccessing
