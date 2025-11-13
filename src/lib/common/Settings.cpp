@@ -30,7 +30,7 @@ void Settings::setSettingsFile(const QString &settingsFile)
   if (instance()->m_settings)
     instance()->m_settings->deleteLater();
 
-  instance()->m_settings = new QSettings(settingsFile, QSettings::IniFormat);
+  instance()->m_settings = new QSettings(settingsFile, QSettings::IniFormat, instance());
   instance()->m_settingsProxy->load(settingsFile);
   qInfo().noquote() << "settings file changed:" << instance()->m_settings->fileName();
 }
@@ -45,7 +45,7 @@ void Settings::setStateFile(const QString &stateFile)
   if (instance()->m_stateSettings)
     instance()->m_stateSettings->deleteLater();
 
-  instance()->m_stateSettings = new QSettings(stateFile, QSettings::IniFormat);
+  instance()->m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, instance());
   qInfo().noquote() << "settings file changed:" << instance()->m_stateSettings->fileName();
 }
 
@@ -68,7 +68,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
   else
     fileToLoad = UserSettingFile;
 
-  m_settings = new QSettings(fileToLoad, QSettings::IniFormat);
+  m_settings = new QSettings(fileToLoad, QSettings::IniFormat, this);
   m_settingsProxy = std::make_shared<QSettingsProxy>();
   m_settingsProxy->load(fileToLoad);
   qInfo().noquote() << "initial settings file:" << m_settings->fileName();
@@ -78,7 +78,7 @@ Settings::Settings(QObject *parent) : QObject(parent)
                              : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
   const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
-  m_stateSettings = new QSettings(stateFile, QSettings::IniFormat);
+  m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 }
 
 void Settings::cleanSettings()
