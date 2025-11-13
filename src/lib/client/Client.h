@@ -156,7 +156,7 @@ public:
 
 private:
   void sendClipboard(ClipboardID);
-  void sendEvent(deskflow::EventTypes, void *);
+  void sendEvent(deskflow::EventTypes);
   void sendConnectionFailedEvent(const char *msg);
   void setupConnecting();
   void setupConnection();
