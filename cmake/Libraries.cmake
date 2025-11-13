@@ -145,7 +145,9 @@ macro(configure_unix_libs)
     add_definitions(-DWINAPI_CARBON=1)
   else()
 
-    configure_xorg_libs()
+    if (BUILD_X11_SUPPORT)
+      configure_xorg_libs()
+    endif()
 
     include(FindPkgConfig)
     find_package(PkgConfig)

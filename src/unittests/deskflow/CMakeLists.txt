@@ -45,9 +45,7 @@ create_test(
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/deskflow"
 )
 
-
-if(UNIX AND NOT APPLE)
-  #this test does not work properly on windows / mac os
+if(BUILD_X11_SUPPORT)
   create_test(
     NAME X11LayoutParserTests
     DEPENDS app

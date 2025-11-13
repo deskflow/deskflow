@@ -156,6 +156,12 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # Instead use Q_SIGNAL, Q_SLOT and Q_EMIT
 # prevents issues when used with glib for libportal
 add_definitions(-DQT_NO_KEYWORDS)
+
+#Options for Linux platform support
+if(UNIX AND NOT APPLE)
+  option(BUILD_X11_SUPPORT "Build with x11 support" ON)
+endif()
+
 include(cmake/Libraries.cmake)
 configure_libs()
 
