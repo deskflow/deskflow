@@ -61,7 +61,7 @@ void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const 
   auto out = stdout;
   switch (mutatedType) {
   case QtDebugMsg:
-    if (!Settings::value(Settings::Log::GuiDebug).toBool())
+    if (!m_guiDebug)
       return;
     typeString = "DEBUG";
     break;
@@ -84,6 +84,24 @@ void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const 
 
   const auto logLine = printLine(out, typeString, message, fileLine);
   Q_EMIT newLine(logLine);
+}
+
+Logger::Logger()
+{
+  m_guiDebug = Settings::value(Settings::Log::GuiDebug).toBool();
+  connect(Settings::instance(), &Settings::settingsChanged, this, &Logger::settingChanged);
+}
+
+Logger::~Logger()
+{
+  disconnect(Settings::instance(), &Settings::settingsChanged, this, &Logger::settingChanged);
+}
+
+void Logger::settingChanged(const QString &key)
+{
+  if (key != Settings::Log::GuiDebug)
+    return;
+  m_guiDebug = Settings::value(Settings::Log::GuiDebug).toBool();
 }
 
 } // namespace deskflow::gui
