@@ -99,31 +99,35 @@ elseif(UNIX)
     XDGPowerManager.h
     XDGKeyUtil.h
     XDGKeyUtil.cpp
-    XWindowsClipboard.cpp
-    XWindowsClipboard.h
-    XWindowsClipboardAnyBitmapConverter.cpp
-    XWindowsClipboardAnyBitmapConverter.h
-    XWindowsClipboardBMPConverter.cpp
-    XWindowsClipboardBMPConverter.h
-    XWindowsClipboardHTMLConverter.cpp
-    XWindowsClipboardHTMLConverter.h
-    XWindowsClipboardTextConverter.cpp
-    XWindowsClipboardTextConverter.h
-    XWindowsClipboardUCS2Converter.cpp
-    XWindowsClipboardUCS2Converter.h
-    XWindowsClipboardUTF8Converter.cpp
-    XWindowsClipboardUTF8Converter.h
-    XWindowsEventQueueBuffer.cpp
-    XWindowsEventQueueBuffer.h
-    XWindowsKeyState.cpp
-    XWindowsKeyState.h
-    XWindowsScreen.cpp
-    XWindowsScreen.h
-    XWindowsScreenSaver.cpp
-    XWindowsScreenSaver.h
-    XWindowsUtil.cpp
-    XWindowsUtil.h
   )
+  if (BUILD_X11_SUPPORT)
+    list(APPEND PLATFORM_SOURCES
+      XWindowsClipboard.cpp
+      XWindowsClipboard.h
+      XWindowsClipboardAnyBitmapConverter.cpp
+      XWindowsClipboardAnyBitmapConverter.h
+      XWindowsClipboardBMPConverter.cpp
+      XWindowsClipboardBMPConverter.h
+      XWindowsClipboardHTMLConverter.cpp
+      XWindowsClipboardHTMLConverter.h
+      XWindowsClipboardTextConverter.cpp
+      XWindowsClipboardTextConverter.h
+      XWindowsClipboardUCS2Converter.cpp
+      XWindowsClipboardUCS2Converter.h
+      XWindowsClipboardUTF8Converter.cpp
+      XWindowsClipboardUTF8Converter.h
+      XWindowsEventQueueBuffer.cpp
+      XWindowsEventQueueBuffer.h
+      XWindowsKeyState.cpp
+      XWindowsKeyState.h
+      XWindowsScreen.cpp
+      XWindowsScreen.h
+      XWindowsScreenSaver.cpp
+      XWindowsScreenSaver.h
+      XWindowsUtil.cpp
+      XWindowsUtil.h
+    )
+  endif()
 
   if(LIBEI_FOUND)
     list(APPEND PLATFORM_SOURCES
