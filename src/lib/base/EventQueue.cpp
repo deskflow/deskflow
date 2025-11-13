@@ -54,8 +54,8 @@ void EventQueue::loop()
   LOG_DEBUG("event queue is ready");
   while (!m_pending.empty()) {
     LOG_DEBUG("add pending events to buffer");
-    const Event &event = m_pending.front();
-    addEventToBuffer(event);
+    Event &event = m_pending.front();
+    addEventToBuffer(std::move(event));
     m_pending.pop();
   }
 
@@ -171,7 +171,7 @@ bool EventQueue::dispatchEvent(const Event &event)
   return false;
 }
 
-void EventQueue::addEvent(const Event &event)
+void EventQueue::addEvent(Event &&event)
 {
   // discard bogus event types
   switch (event.getType()) {
@@ -188,24 +188,24 @@ void EventQueue::addEvent(const Event &event)
     dispatchEvent(event);
     Event::deleteData(event);
   } else if (!(*m_readyCondVar)) {
-    m_pending.push(event);
+    m_pending.push(std::move(event));
   } else {
-    addEventToBuffer(event);
+    addEventToBuffer(std::move(event));
   }
 }
 
-void EventQueue::addEventToBuffer(const Event &event)
+void EventQueue::addEventToBuffer(Event &&event)
 {
   std::scoped_lock lock{m_mutex};
 
   // store the event's data locally
-  auto eventID = saveEvent(event);
+  auto eventID = saveEvent(std::move(event));
 
   // add it
   if (!m_buffer->addEvent(eventID)) {
     // failed to send event
-    removeEvent(eventID);
-    Event::deleteData(event);
+    auto removedEvent = removeEvent(eventID);
+    Event::deleteData(removedEvent);
   }
 }
 
@@ -302,7 +302,7 @@ const EventQueue::EventHandler *EventQueue::getHandler(EventTypes type, void *ta
   return nullptr;
 }
 
-uint32_t EventQueue::saveEvent(const Event &event)
+uint32_t EventQueue::saveEvent(Event &&event)
 {
   // choose id
   uint32_t id;
@@ -316,7 +316,7 @@ uint32_t EventQueue::saveEvent(const Event &event)
   }
 
   // save data
-  m_events[id] = event;
+  m_events[id] = std::move(event);
   return id;
 }
 
@@ -329,7 +329,7 @@ Event EventQueue::removeEvent(uint32_t eventID)
   }
 
   // get data
-  Event event = index->second;
+  Event event = std::move(index->second);
   m_events.erase(index);
 
   // save old id for reuse

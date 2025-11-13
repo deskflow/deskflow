@@ -909,5 +909,5 @@ void InputFilter::handleEvent(const Event &event)
   }
 
   // not handled so pass through
-  m_events->addEvent(myEvent);
+  m_events->addEvent(std::move(myEvent));
 }
