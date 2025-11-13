@@ -18,7 +18,7 @@
 
 #include "base/Log.h"
 #include "deskflow/AppUtil.h"
-#include "platform/XWindowsUtil.h"
+#include "platform/XDGKeyUtil.h"
 
 #include <X11/X.h>
 #include <X11/Xutil.h>
@@ -479,15 +479,15 @@ void XWindowsKeyState::updateKeysymMap(deskflow::KeyMap &keyMap)
 
     // do each keysym (shift level)
     for (int j = 0; j < maxKeysyms; ++j) {
-      item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[j]);
+      item.m_id = XDGKeyUtil::mapKeySymToKeyID(keysyms[j]);
       if (item.m_id == kKeyNone) {
         if (j != 0 && modifierButtons.contains(keycode)) {
           // pretend the modifier works in other shift levels
           // because it probably does.
           if (keysyms[1] == NoSymbol || j != 3) {
-            item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[0]);
+            item.m_id = XDGKeyUtil::mapKeySymToKeyID(keysyms[0]);
           } else {
-            item.m_id = XWindowsUtil::mapKeySymToKeyID(keysyms[1]);
+            item.m_id = XDGKeyUtil::mapKeySymToKeyID(keysyms[1]);
           }
         }
         if (item.m_id == kKeyNone) {
@@ -700,7 +700,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         // record the modifier mask for this key.  don't bother
         // for keys that change the group.
         item.m_generates = 0;
-        if (uint32_t modifierBit = XWindowsUtil::getModifierBitForKeySym(keysym);
+        if (uint32_t modifierBit = XDGKeyUtil::getModifierBitForKeySym(keysym);
             isModifier && modifierBit != kKeyModifierBitNone) {
           item.m_generates = (1u << modifierBit);
           for (int32_t j = 0; j < 8; ++j) {
@@ -740,8 +740,8 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
 
             item.m_sensitive |= ShiftMask | LockMask;
 
-            KeyID lKeyID = XWindowsUtil::mapKeySymToKeyID(lKeysym);
-            KeyID uKeyID = XWindowsUtil::mapKeySymToKeyID(uKeysym);
+            KeyID lKeyID = XDGKeyUtil::mapKeySymToKeyID(lKeysym);
+            KeyID uKeyID = XDGKeyUtil::mapKeySymToKeyID(uKeysym);
             if (lKeyID == kKeyNone || uKeyID == kKeyNone) {
               continue;
             }
@@ -765,7 +765,7 @@ void XWindowsKeyState::updateKeysymMapXKB(deskflow::KeyMap &keyMap)
         }
 
         // add entry
-        item.m_id = XWindowsUtil::mapKeySymToKeyID(keysym);
+        item.m_id = XDGKeyUtil::mapKeySymToKeyID(keysym);
         keyMap.addKeyEntry(item);
         if (group == 0) {
           m_keyCodeFromKey.insert(std::make_pair(item.m_id, keycode));

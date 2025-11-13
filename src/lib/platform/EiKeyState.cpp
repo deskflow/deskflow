@@ -11,7 +11,7 @@
 #include "base/Log.h"
 #include "common/Settings.h"
 #include "deskflow/AppUtil.h"
-#include "platform/XWindowsUtil.h"
+#include "platform/XDGKeyUtil.h"
 
 #include <cstddef>
 #include <memory>
@@ -251,7 +251,7 @@ void EiKeyState::getKeyMap(deskflow::KeyMap &keyMap)
 
         deskflow::KeyMap::KeyItem item{};
         KeySym sym = keysym;
-        item.m_id = XWindowsUtil::mapKeySymToKeyID(sym);
+        item.m_id = XDGKeyUtil::mapKeySymToKeyID(sym);
         item.m_button = static_cast<KeyButton>(keycode) - 8; // X keycode offset
         item.m_group = group;
 
@@ -332,7 +332,7 @@ KeyID EiKeyState::mapKeyFromKeyval(uint32_t keyval) const
   }
 
   auto keysym = static_cast<KeySym>(xkbKeysym);
-  KeyID keyid = XWindowsUtil::mapKeySymToKeyID(keysym);
+  KeyID keyid = XDGKeyUtil::mapKeySymToKeyID(keysym);
   LOG_DEBUG1("mapped key: code=%d keysym=0x%04lx to keyID=%d", keyval, keysym, keyid);
 
   return keyid;
