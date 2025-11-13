@@ -1,1 +1,11 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Ask a question
+    url: https://github.com/deskflow/deskflow/discussions/new?category=q-a
+    about: Where to ask general questions.
+  - name: Show and Tell
+    url: https://github.com/deskflow/deskflow/discussions/new?category=show-and-tell
+    about: Show off things you have done with Deskflow
+  - name: Chat with us
+    url: https://matrix.to/#/#deskflow:matrix.org
+    about: Join us in live chat.
