@@ -7,6 +7,8 @@
 
 #pragma once
 
+#if WINAPI_XWINDOWS
+
 #include <string>
 #include <vector>
 // copy from
@@ -66,3 +68,5 @@ const std::vector<std::pair<std::string, std::string>> ISO_Table = {
     std::make_pair("wln", "wa"), std::make_pair("wol", "wo"), std::make_pair("xho", "xh"), std::make_pair("yid", "yi"),
     std::make_pair("yor", "yo"), std::make_pair("zha", "za"), std::make_pair("zho", "zh"), std::make_pair("zul", "zu"),
 };
+
+#endif
