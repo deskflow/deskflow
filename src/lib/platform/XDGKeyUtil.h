@@ -13,6 +13,7 @@
 #include <map>
 
 using KeySym = unsigned long;
+using KeySymMap = std::map<KeySym, uint32_t>;
 
 //! XKB utility functions
 class XDGKeyUtil
@@ -34,12 +35,7 @@ public:
   static std::uint32_t getModifierBitForKeySym(KeySym keysym);
 
 private:
-  static void initKeyMaps();
-
-  typedef std::map<KeySym, std::uint32_t> KeySymMap;
-
-  static KeySymMap s_keySymToUCS4;
-
+  static const KeySymMap s_keySymToUCS4;
   // map "Internet" keys to KeyIDs
-  static std::array<KeySym, 256> s_map1008FF;
+  static const std::array<KeySym, 256> s_map1008FF;
 };
