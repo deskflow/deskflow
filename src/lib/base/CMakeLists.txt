@@ -7,7 +7,6 @@ add_library(base STATIC
   BaseException.cpp
   BaseException.h
   DirectionTypes.h
-  Event.cpp
   Event.h
   EventQueue.cpp
   EventQueue.h
