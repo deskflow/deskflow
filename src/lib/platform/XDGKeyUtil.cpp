@@ -92,9 +92,8 @@ KeyID XDGKeyUtil::mapKeySymToKeyID(KeySym k)
 
   default: {
     // lookup character in table
-    auto index = s_keySymToUCS4.find(k);
-    if (index != s_keySymToUCS4.end()) {
-      return static_cast<KeyID>(index->second);
+    if (const auto i = s_keySymToUCS4.find(k); i != s_keySymToUCS4.end()) {
+      return i->second;
     }
 
     // unknown character
