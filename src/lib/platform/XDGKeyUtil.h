@@ -12,14 +12,11 @@
 
 #include <cstdint>
 #include <map>
-#include <vector>
 
 //! XKB utility functions
 class XDGKeyUtil
 {
 public:
-  typedef std::vector<KeySym> KeySyms;
-
   //! Convert KeySym to KeyID
   /*!
   Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
