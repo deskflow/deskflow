@@ -102,7 +102,7 @@ KeyID XDGKeyUtil::mapKeySymToKeyID(KeySym k)
   }
 }
 
-std::uint32_t XDGKeyUtil::getModifierBitForKeySym(KeySym keysym)
+uint32_t XDGKeyUtil::getModifierBitForKeySym(KeySym keysym)
 {
   switch (keysym) {
   case XKB_KEY_Shift_L:
