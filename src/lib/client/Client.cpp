@@ -137,7 +137,7 @@ void Client::disconnect(const char *msg)
   if (msg) {
     sendConnectionFailedEvent(msg);
   } else {
-    sendEvent(EventTypes::ClientDisconnected, nullptr);
+    sendEvent(EventTypes::ClientDisconnected);
   }
 }
 
@@ -157,7 +157,7 @@ void Client::handshakeComplete()
 {
   m_ready = true;
   m_screen->enable();
-  sendEvent(EventTypes::ClientConnected, nullptr);
+  sendEvent(EventTypes::ClientConnected);
 }
 
 bool Client::isConnected() const
@@ -362,9 +362,9 @@ void Client::sendClipboard(ClipboardID id)
   }
 }
 
-void Client::sendEvent(EventTypes type, void *data)
+void Client::sendEvent(EventTypes type)
 {
-  m_events->addEvent(Event(type, getEventTarget(), data));
+  m_events->addEvent(Event(type, getEventTarget()));
 }
 
 void Client::sendConnectionFailedEvent(const char *msg)
@@ -536,7 +536,7 @@ void Client::handleOutputError()
   cleanupScreen();
   cleanupConnection();
   LOG_WARN("error sending to server");
-  sendEvent(EventTypes::ClientDisconnected, nullptr);
+  sendEvent(EventTypes::ClientDisconnected);
 }
 
 void Client::handleDisconnected()
@@ -545,7 +545,7 @@ void Client::handleDisconnected()
   cleanupScreen();
   cleanupConnection();
   LOG_DEBUG1("disconnected");
-  sendEvent(EventTypes::ClientDisconnected, nullptr);
+  sendEvent(EventTypes::ClientDisconnected);
 }
 
 void Client::handleShapeChanged()
