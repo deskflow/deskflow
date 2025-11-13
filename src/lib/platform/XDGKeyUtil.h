@@ -25,14 +25,14 @@ public:
   Converts a KeySym to the equivalent KeyID.  Returns kKeyNone if the
   KeySym cannot be mapped.
   */
-  static std::uint32_t mapKeySymToKeyID(KeySym);
+  static uint32_t mapKeySymToKeyID(KeySym);
 
   //! Convert KeySym to corresponding KeyModifierMask
   /*!
   Converts a KeySym to the corresponding KeyModifierMask, or 0 if the
   KeySym is not a modifier.
   */
-  static std::uint32_t getModifierBitForKeySym(KeySym keysym);
+  static uint32_t getModifierBitForKeySym(KeySym keysym);
 
 private:
   static const KeySymMap s_keySymToUCS4;
