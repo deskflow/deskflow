@@ -3,7 +3,7 @@ var classIEventQueue =
     [ "TimerEvent", "classIEventQueue_1_1TimerEvent.html", "classIEventQueue_1_1TimerEvent" ],
     [ "EventHandler", "classIEventQueue.html#a26d1cc702a73d6399e46120f7b51b2d8", null ],
     [ "~IEventQueue", "classIEventQueue.html#a63a4943cd0625b03ec3bcb38fc79d4a4", null ],
-    [ "addEvent", "classIEventQueue.html#a51529b3c2b81c013b4106802958510ad", null ],
+    [ "addEvent", "classIEventQueue.html#afa768ac29e98999d69b74ae1d749864d", null ],
     [ "addHandler", "classIEventQueue.html#a0245c52f3630880e8e4ac265520a806e", null ],
     [ "adoptBuffer", "classIEventQueue.html#aecbae935d6739631699414d2ff5ac6c5", null ],
     [ "deleteTimer", "classIEventQueue.html#a9a504772d2d2e06e4b5b831f5a12e7dc", null ],

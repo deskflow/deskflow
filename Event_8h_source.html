@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.352</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.364</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -105,96 +105,172 @@ $(function(){initNavTree('Event_8h_source.html','',''); });
 <div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="EventTypes_8h.html">EventTypes.h</a>&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
-<div class="foldopen" id="foldopen00014" data-start="{" data-end="};">
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classEventData.html">   14</a></span><span class="keyword">class </span><a class="code hl_function" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">EventData</a></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>{</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">   17</a></span>  <a class="code hl_function" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">EventData</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classEventData.html#abc776b7a755383c50e618a8b2140174c">   18</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classEventData.html#abc776b7a755383c50e618a8b2140174c">~EventData</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>};</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;assert.h&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;cstdlib&gt;</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">using </span><a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a>;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="foldopen" id="foldopen00017" data-start="{" data-end="};">
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classEventData.html">   17</a></span><span class="keyword">class </span><a class="code hl_function" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">EventData</a></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>{</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">   20</a></span>  <a class="code hl_function" href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">EventData</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno"><a class="line" href="classEventData.html#abc776b7a755383c50e618a8b2140174c">   21</a></span>  <span class="keyword">virtual</span> <a class="code hl_function" href="classEventData.html#abc776b7a755383c50e618a8b2140174c">~EventData</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>};</div>
 </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span></div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span></div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classEvent.html">   25</a></span><span class="keyword">class </span><a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>{</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">   28</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> = uint32_t;</div>
-<div class="foldopen" id="foldopen00029" data-start="{" data-end="};">
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html">   29</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structEvent_1_1EventFlags.html">EventFlags</a></div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  {</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">   31</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">NoFlags</a> = 0x00;            </div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">   32</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">DeliverImmediately</a> = 0x01; </div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">   33</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">DontFreeData</a> = 0x02;       </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  };</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span></div>
+<div class="foldopen" id="foldopen00028" data-start="{" data-end="};">
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno"><a class="line" href="classEvent.html">   28</a></span><span class="keyword">class </span><a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a></div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>{</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">   31</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> = uint32_t;</div>
+<div class="foldopen" id="foldopen00032" data-start="{" data-end="};">
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html">   32</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structEvent_1_1EventFlags.html">EventFlags</a></div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">   34</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">NoFlags</a> = 0x00;            </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">   35</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">DeliverImmediately</a> = 0x01; </div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">   36</a></span>    <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">DontFreeData</a> = 0x02;       </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  };</div>
 </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">   36</a></span>  <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span></div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keywordtype">void</span> *target = <span class="keyword">nullptr</span>, <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a> = <span class="keyword">nullptr</span>, <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a6c50550d1a116a362712205288efdc21">flags</a> = <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">EventFlags::NoFlags</a>);</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span></div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span></div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keywordtype">void</span> *target, <a class="code hl_class" href="classEventData.html">EventData</a> *dataObject);</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span></div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span></div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span></div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span></div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classEvent.html#a72116643a54884af95978c63e3c14166">deleteData</a>(<span class="keyword">const</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;);</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">   39</a></span>  <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno"><a class="line" href="classEvent.html#a852478c107cec155148edb3ed1c74d13">   40</a></span>  <a class="code hl_function" href="classEvent.html#a852478c107cec155148edb3ed1c74d13">Event</a>(<span class="keyword">const</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno"><a class="line" href="classEvent.html#a545f9fd32826c052f8cb428341b0ba95">   41</a></span>  <a class="code hl_function" href="classEvent.html#a545f9fd32826c052f8cb428341b0ba95">Event</a>(<a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;&amp;other) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno"><a class="line" href="classEvent.html#a3076f28ea91393f1b68675864c00b591">   42</a></span>  <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;<a class="code hl_function" href="classEvent.html#a3076f28ea91393f1b68675864c00b591">operator=</a>(<span class="keyword">const</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;) = <span class="keyword">delete</span>;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno"><a class="line" href="classEvent.html#a4adb348c763dc4358d90c4f788ccab8d">   43</a></span>  <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;<a class="code hl_function" href="classEvent.html#a4adb348c763dc4358d90c4f788ccab8d">operator=</a>(<a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;&amp;) = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span></div>
+<div class="foldopen" id="foldopen00054" data-start="{" data-end="}">
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classEvent.html#a565bf8a816edbed2ad3072f57e03f688">   54</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classEvent.html#a565bf8a816edbed2ad3072f57e03f688">Event</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keywordtype">void</span> *target = <span class="keyword">nullptr</span>, <span class="keywordtype">void</span> *<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a> = <span class="keyword">nullptr</span>, <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a6c50550d1a116a362712205288efdc21">flags</a> = <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">EventFlags::NoFlags</a>)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      : m_type(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>),</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>        m_target(target),</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>        m_data(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a>),</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>        m_flags(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a6c50550d1a116a362712205288efdc21">flags</a>)</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  {</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    <span class="comment">// do nothing</span></div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>  }</div>
+</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span> </div>
+<div class="foldopen" id="foldopen00063" data-start="{" data-end="}">
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno"><a class="line" href="classEvent.html#ab478412608853061117a54d6398ddbda">   63</a></span>  <a class="code hl_function" href="classEvent.html#ab478412608853061117a54d6398ddbda">Event</a>(<a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>, <span class="keywordtype">void</span> *target, <a class="code hl_class" href="classEventData.html">EventData</a> *dataObject) : m_type(<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>), m_target(target), m_dataObject(dataObject)</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  {</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>    <span class="comment">// do nothing</span></div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>  }</div>
+</div>
 <div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span></div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classEvent.html#ad52ce063f0a91e4faaf728310663977a">setDataObject</a>(<a class="code hl_class" href="classEventData.html">EventData</a> *dataObject);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span></div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span></div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span></div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span></div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span></div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span></div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_function" href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">getType</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span></div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span></div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>  <span class="keywordtype">void</span> *<a class="code hl_function" href="classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b">getTarget</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span></div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span></div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>  <span class="keywordtype">void</span> *<a class="code hl_function" href="classEvent.html#a66e3660db6ad05261724596001a15a4a">getData</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span></div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span></div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>  <a class="code hl_class" href="classEventData.html">EventData</a> *<a class="code hl_function" href="classEvent.html#a55e1f61b2aded4588abf69bf51b46afc">getDataObject</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span></div>
+<div class="foldopen" id="foldopen00075" data-start="{" data-end="}">
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno"><a class="line" href="classEvent.html#a6b2acd3b638e2fa4cc44e7c58be80211">   75</a></span>  <span class="keyword">static</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classEvent.html#a6b2acd3b638e2fa4cc44e7c58be80211">deleteData</a>(<span class="keyword">const</span> <a class="code hl_function" href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event</a> &amp;event)</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>  {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    <span class="keywordflow">switch</span> (event.<a class="code hl_function" href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">getType</a>()) {</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>      <span class="keyword">using </span>enum <a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a>;</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>    <span class="keywordflow">case</span> Unknown:</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    <span class="keywordflow">case</span> Quit:</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    <span class="keywordflow">case</span> System:</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">case</span> Timer:</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>    <span class="keywordflow">default</span>:</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>      <span class="keywordflow">if</span> ((event.<a class="code hl_function" href="classEvent.html#aef64d8be3c0e7647dbfbad2bdbf4886f">getFlags</a>() &amp; <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">EventFlags::DontFreeData</a>) == 0) {</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>        free(event.<a class="code hl_function" href="classEvent.html#a66e3660db6ad05261724596001a15a4a">getData</a>());</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>        <span class="keyword">delete</span> <span class="keyword">event</span>.getDataObject();</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>      }</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    }</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  }</div>
+</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span></div>
+<div class="foldopen" id="foldopen00099" data-start="{" data-end="}">
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno"><a class="line" href="classEvent.html#ad52ce063f0a91e4faaf728310663977a">   99</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classEvent.html#ad52ce063f0a91e4faaf728310663977a">setDataObject</a>(<a class="code hl_class" href="classEventData.html">EventData</a> *dataObject)</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>  {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>    assert(m_dataObject == <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>    m_dataObject = dataObject;</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>  };</div>
+</div>
 <div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span></div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>  <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_function" href="classEvent.html#aeb86033c9840507407a27d132f60df4c">getFlags</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span></div>
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span></div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> m_type = <a class="code hl_enumvalue" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e">EventTypes::Unknown</a>;</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>  <span class="keywordtype">void</span> *m_target = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>  <span class="keywordtype">void</span> *m_data = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> m_flags = <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">EventFlags::NoFlags</a>;</div>
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  <a class="code hl_class" href="classEventData.html">EventData</a> *m_dataObject = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>};</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span></div>
+<div class="foldopen" id="foldopen00113" data-start="{" data-end="}">
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno"><a class="line" href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">  113</a></span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> <a class="code hl_function" href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">getType</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    <span class="keywordflow">return</span> m_type;</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span>  }</div>
+</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span></div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span></div>
+<div class="foldopen" id="foldopen00122" data-start="{" data-end="}">
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b">  122</a></span>  <span class="keywordtype">void</span> *<a class="code hl_function" href="classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b">getTarget</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>    <span class="keywordflow">return</span> m_target;</div>
+<div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>  }</div>
+</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span></div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span></div>
+<div class="foldopen" id="foldopen00131" data-start="{" data-end="}">
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="classEvent.html#a66e3660db6ad05261724596001a15a4a">  131</a></span>  <span class="keywordtype">void</span> *<a class="code hl_function" href="classEvent.html#a66e3660db6ad05261724596001a15a4a">getData</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>    <span class="keywordflow">return</span> m_data;</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  }</div>
+</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span></div>
+<div class="foldopen" id="foldopen00142" data-start="{" data-end="}">
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno"><a class="line" href="classEvent.html#a55e1f61b2aded4588abf69bf51b46afc">  142</a></span>  <a class="code hl_class" href="classEventData.html">EventData</a> *<a class="code hl_function" href="classEvent.html#a55e1f61b2aded4588abf69bf51b46afc">getDataObject</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>    <span class="keywordflow">return</span> m_dataObject;</div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  }</div>
+</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span></div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span></div>
+<div class="foldopen" id="foldopen00151" data-start="{" data-end="}">
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno"><a class="line" href="classEvent.html#aef64d8be3c0e7647dbfbad2bdbf4886f">  151</a></span>  <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> <a class="code hl_function" href="classEvent.html#aef64d8be3c0e7647dbfbad2bdbf4886f">getFlags</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>    <span class="keywordflow">return</span> m_flags;</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  }</div>
+</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span></div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span> </div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  <a class="code hl_enumeration" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">EventTypes</a> m_type = <a class="code hl_enumvalue" href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e">EventTypes::Unknown</a>;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">void</span> *m_target = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> *m_data = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  <a class="code hl_typedef" href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Flags</a> m_flags = <a class="code hl_variable" href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">EventFlags::NoFlags</a>;</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>  <a class="code hl_class" href="classEventData.html">EventData</a> *m_dataObject = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a6c50550d1a116a362712205288efdc21"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a6c50550d1a116a362712205288efdc21">flags</a></div><div class="ttdeci">static void FAR int int flags</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:38</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_aa36d05423b2dd8f3c8296093b4674b63"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#aa36d05423b2dd8f3c8296093b4674b63">data</a></div><div class="ttdeci">static int void FAR * data</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:35</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ac765329451135abec74c45e1897abf26"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a></div><div class="ttdeci">static int type</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:45</div></div>
 <div class="ttc" id="aEventTypes_8h_html"><div class="ttname"><a href="EventTypes_8h.html">EventTypes.h</a></div></div>
-<div class="ttc" id="aclassEventData_html"><div class="ttname"><a href="classEventData.html">EventData</a></div><div class="ttdef"><b>Definition</b> Event.h:15</div></div>
+<div class="ttc" id="aclassEventData_html"><div class="ttname"><a href="classEventData.html">EventData</a></div><div class="ttdef"><b>Definition</b> Event.h:18</div></div>
 <div class="ttc" id="aclassEventData_html_abc776b7a755383c50e618a8b2140174c"><div class="ttname"><a href="classEventData.html#abc776b7a755383c50e618a8b2140174c">EventData::~EventData</a></div><div class="ttdeci">virtual ~EventData()=default</div></div>
 <div class="ttc" id="aclassEventData_html_af3b2887aee6312e35a2df0d621930b75"><div class="ttname"><a href="classEventData.html#af3b2887aee6312e35a2df0d621930b75">EventData::EventData</a></div><div class="ttdeci">EventData()=default</div></div>
-<div class="ttc" id="aclassEvent_html_a0e11da93de1ef32d11f43c51a3cec656"><div class="ttname"><a href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Event::Flags</a></div><div class="ttdeci">uint32_t Flags</div><div class="ttdef"><b>Definition</b> Event.h:28</div></div>
-<div class="ttc" id="aclassEvent_html_a42fb3824daaae27f05ead6c5c9edd51b"><div class="ttname"><a href="classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b">Event::getTarget</a></div><div class="ttdeci">void * getTarget() const</div><div class="ttdoc">Get the event target.</div><div class="ttdef"><b>Definition</b> Event.cpp:38</div></div>
-<div class="ttc" id="aclassEvent_html_a55e1f61b2aded4588abf69bf51b46afc"><div class="ttname"><a href="classEvent.html#a55e1f61b2aded4588abf69bf51b46afc">Event::getDataObject</a></div><div class="ttdeci">EventData * getDataObject() const</div><div class="ttdoc">Get the event data (non-POD).</div><div class="ttdef"><b>Definition</b> Event.cpp:48</div></div>
-<div class="ttc" id="aclassEvent_html_a66e3660db6ad05261724596001a15a4a"><div class="ttname"><a href="classEvent.html#a66e3660db6ad05261724596001a15a4a">Event::getData</a></div><div class="ttdeci">void * getData() const</div><div class="ttdoc">Get the event data (POD).</div><div class="ttdef"><b>Definition</b> Event.cpp:43</div></div>
-<div class="ttc" id="aclassEvent_html_a72116643a54884af95978c63e3c14166"><div class="ttname"><a href="classEvent.html#a72116643a54884af95978c63e3c14166">Event::deleteData</a></div><div class="ttdeci">static void deleteData(const Event &amp;)</div><div class="ttdoc">Release event data.</div><div class="ttdef"><b>Definition</b> Event.cpp:58</div></div>
-<div class="ttc" id="aclassEvent_html_abb1c3354f2ceb8ced2173c40fb696b42"><div class="ttname"><a href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">Event::getType</a></div><div class="ttdeci">EventTypes getType() const</div><div class="ttdoc">Get event type.</div><div class="ttdef"><b>Definition</b> Event.cpp:33</div></div>
-<div class="ttc" id="aclassEvent_html_ad52ce063f0a91e4faaf728310663977a"><div class="ttname"><a href="classEvent.html#ad52ce063f0a91e4faaf728310663977a">Event::setDataObject</a></div><div class="ttdeci">void setDataObject(EventData *dataObject)</div><div class="ttdoc">Set data (non-POD).</div><div class="ttdef"><b>Definition</b> Event.cpp:77</div></div>
-<div class="ttc" id="aclassEvent_html_aeb86033c9840507407a27d132f60df4c"><div class="ttname"><a href="classEvent.html#aeb86033c9840507407a27d132f60df4c">Event::getFlags</a></div><div class="ttdeci">Flags getFlags() const</div><div class="ttdoc">Get event flags.</div><div class="ttdef"><b>Definition</b> Event.cpp:53</div></div>
+<div class="ttc" id="aclassEvent_html_a0e11da93de1ef32d11f43c51a3cec656"><div class="ttname"><a href="classEvent.html#a0e11da93de1ef32d11f43c51a3cec656">Event::Flags</a></div><div class="ttdeci">uint32_t Flags</div><div class="ttdef"><b>Definition</b> Event.h:31</div></div>
+<div class="ttc" id="aclassEvent_html_a3076f28ea91393f1b68675864c00b591"><div class="ttname"><a href="classEvent.html#a3076f28ea91393f1b68675864c00b591">Event::operator=</a></div><div class="ttdeci">Event &amp; operator=(const Event &amp;)=delete</div></div>
+<div class="ttc" id="aclassEvent_html_a42fb3824daaae27f05ead6c5c9edd51b"><div class="ttname"><a href="classEvent.html#a42fb3824daaae27f05ead6c5c9edd51b">Event::getTarget</a></div><div class="ttdeci">void * getTarget() const</div><div class="ttdoc">Get the event target.</div><div class="ttdef"><b>Definition</b> Event.h:122</div></div>
+<div class="ttc" id="aclassEvent_html_a4adb348c763dc4358d90c4f788ccab8d"><div class="ttname"><a href="classEvent.html#a4adb348c763dc4358d90c4f788ccab8d">Event::operator=</a></div><div class="ttdeci">Event &amp; operator=(Event &amp;&amp;)=default</div></div>
+<div class="ttc" id="aclassEvent_html_a545f9fd32826c052f8cb428341b0ba95"><div class="ttname"><a href="classEvent.html#a545f9fd32826c052f8cb428341b0ba95">Event::Event</a></div><div class="ttdeci">Event(Event &amp;&amp;other)=default</div></div>
+<div class="ttc" id="aclassEvent_html_a55e1f61b2aded4588abf69bf51b46afc"><div class="ttname"><a href="classEvent.html#a55e1f61b2aded4588abf69bf51b46afc">Event::getDataObject</a></div><div class="ttdeci">EventData * getDataObject() const</div><div class="ttdoc">Get the event data (non-POD).</div><div class="ttdef"><b>Definition</b> Event.h:142</div></div>
+<div class="ttc" id="aclassEvent_html_a565bf8a816edbed2ad3072f57e03f688"><div class="ttname"><a href="classEvent.html#a565bf8a816edbed2ad3072f57e03f688">Event::Event</a></div><div class="ttdeci">Event(EventTypes type, void *target=nullptr, void *data=nullptr, Flags flags=EventFlags::NoFlags)</div><div class="ttdoc">Create Event with data (POD).</div><div class="ttdef"><b>Definition</b> Event.h:54</div></div>
+<div class="ttc" id="aclassEvent_html_a66e3660db6ad05261724596001a15a4a"><div class="ttname"><a href="classEvent.html#a66e3660db6ad05261724596001a15a4a">Event::getData</a></div><div class="ttdeci">void * getData() const</div><div class="ttdoc">Get the event data (POD).</div><div class="ttdef"><b>Definition</b> Event.h:131</div></div>
+<div class="ttc" id="aclassEvent_html_a6b2acd3b638e2fa4cc44e7c58be80211"><div class="ttname"><a href="classEvent.html#a6b2acd3b638e2fa4cc44e7c58be80211">Event::deleteData</a></div><div class="ttdeci">static void deleteData(const Event &amp;event)</div><div class="ttdoc">Release event data.</div><div class="ttdef"><b>Definition</b> Event.h:75</div></div>
+<div class="ttc" id="aclassEvent_html_a852478c107cec155148edb3ed1c74d13"><div class="ttname"><a href="classEvent.html#a852478c107cec155148edb3ed1c74d13">Event::Event</a></div><div class="ttdeci">Event(const Event &amp;)=delete</div></div>
+<div class="ttc" id="aclassEvent_html_ab478412608853061117a54d6398ddbda"><div class="ttname"><a href="classEvent.html#ab478412608853061117a54d6398ddbda">Event::Event</a></div><div class="ttdeci">Event(EventTypes type, void *target, EventData *dataObject)</div><div class="ttdef"><b>Definition</b> Event.h:63</div></div>
+<div class="ttc" id="aclassEvent_html_abb1c3354f2ceb8ced2173c40fb696b42"><div class="ttname"><a href="classEvent.html#abb1c3354f2ceb8ced2173c40fb696b42">Event::getType</a></div><div class="ttdeci">EventTypes getType() const</div><div class="ttdoc">Get event type.</div><div class="ttdef"><b>Definition</b> Event.h:113</div></div>
+<div class="ttc" id="aclassEvent_html_ad52ce063f0a91e4faaf728310663977a"><div class="ttname"><a href="classEvent.html#ad52ce063f0a91e4faaf728310663977a">Event::setDataObject</a></div><div class="ttdeci">void setDataObject(EventData *dataObject)</div><div class="ttdoc">Set data (non-POD).</div><div class="ttdef"><b>Definition</b> Event.h:99</div></div>
 <div class="ttc" id="aclassEvent_html_aee6a4269152dcdb7a11de3e24d90c229"><div class="ttname"><a href="classEvent.html#aee6a4269152dcdb7a11de3e24d90c229">Event::Event</a></div><div class="ttdeci">Event()=default</div></div>
+<div class="ttc" id="aclassEvent_html_aef64d8be3c0e7647dbfbad2bdbf4886f"><div class="ttname"><a href="classEvent.html#aef64d8be3c0e7647dbfbad2bdbf4886f">Event::getFlags</a></div><div class="ttdeci">Flags getFlags() const</div><div class="ttdoc">Get event flags.</div><div class="ttdef"><b>Definition</b> Event.h:151</div></div>
 <div class="ttc" id="anamespacedeskflow_html_a34787a880fd439e02383f336665d7bc2"><div class="ttname"><a href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2">deskflow::EventTypes</a></div><div class="ttdeci">EventTypes</div><div class="ttdef"><b>Definition</b> EventTypes.h:13</div></div>
 <div class="ttc" id="anamespacedeskflow_html_a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e"><div class="ttname"><a href="namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e">deskflow::EventTypes::Unknown</a></div><div class="ttdeci">@ Unknown</div><div class="ttdef"><b>Definition</b> EventTypes.h:17</div></div>
-<div class="ttc" id="astructEvent_1_1EventFlags_html"><div class="ttname"><a href="structEvent_1_1EventFlags.html">Event::EventFlags</a></div><div class="ttdef"><b>Definition</b> Event.h:30</div></div>
-<div class="ttc" id="astructEvent_1_1EventFlags_html_a4f182532c8456e5bc78eafdbc78f3920"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">Event::EventFlags::NoFlags</a></div><div class="ttdeci">static const Flags NoFlags</div><div class="ttdoc">No flags.</div><div class="ttdef"><b>Definition</b> Event.h:31</div></div>
-<div class="ttc" id="astructEvent_1_1EventFlags_html_a5831619089ed5d34a4b7618ed8dc6213"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">Event::EventFlags::DontFreeData</a></div><div class="ttdeci">static const Flags DontFreeData</div><div class="ttdoc">Don&#39;t free data in deleteData.</div><div class="ttdef"><b>Definition</b> Event.h:33</div></div>
-<div class="ttc" id="astructEvent_1_1EventFlags_html_a78b0f7049f5f8aa9ec6b27621f602aa8"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">Event::EventFlags::DeliverImmediately</a></div><div class="ttdeci">static const Flags DeliverImmediately</div><div class="ttdoc">Dispatch and free event immediately.</div><div class="ttdef"><b>Definition</b> Event.h:32</div></div>
+<div class="ttc" id="astructEvent_1_1EventFlags_html"><div class="ttname"><a href="structEvent_1_1EventFlags.html">Event::EventFlags</a></div><div class="ttdef"><b>Definition</b> Event.h:33</div></div>
+<div class="ttc" id="astructEvent_1_1EventFlags_html_a4f182532c8456e5bc78eafdbc78f3920"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a4f182532c8456e5bc78eafdbc78f3920">Event::EventFlags::NoFlags</a></div><div class="ttdeci">static const Flags NoFlags</div><div class="ttdoc">No flags.</div><div class="ttdef"><b>Definition</b> Event.h:34</div></div>
+<div class="ttc" id="astructEvent_1_1EventFlags_html_a5831619089ed5d34a4b7618ed8dc6213"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a5831619089ed5d34a4b7618ed8dc6213">Event::EventFlags::DontFreeData</a></div><div class="ttdeci">static const Flags DontFreeData</div><div class="ttdoc">Don&#39;t free data in deleteData.</div><div class="ttdef"><b>Definition</b> Event.h:36</div></div>
+<div class="ttc" id="astructEvent_1_1EventFlags_html_a78b0f7049f5f8aa9ec6b27621f602aa8"><div class="ttname"><a href="structEvent_1_1EventFlags.html#a78b0f7049f5f8aa9ec6b27621f602aa8">Event::EventFlags::DeliverImmediately</a></div><div class="ttdeci">static const Flags DeliverImmediately</div><div class="ttdoc">Dispatch and free event immediately.</div><div class="ttdef"><b>Definition</b> Event.h:35</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

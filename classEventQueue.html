@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.352</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.364</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -136,8 +136,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0e30a16c3e4ad4cc4cc5d9f1d11fbb05"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove event from queue.  <br /></td></tr>
 <tr class="memitem:a6934fca3d8c36d6e629c6150808c410e" id="r_a6934fca3d8c36d6e629c6150808c410e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6934fca3d8c36d6e629c6150808c410e">dispatchEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event) override</td></tr>
 <tr class="memdesc:a6934fca3d8c36d6e629c6150808c410e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatch an event.  <br /></td></tr>
-<tr class="memitem:ae16e79205621b109005ee14a8ac3345f" id="r_ae16e79205621b109005ee14a8ac3345f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae16e79205621b109005ee14a8ac3345f">addEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event) override</td></tr>
-<tr class="memdesc:ae16e79205621b109005ee14a8ac3345f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add event to queue.  <br /></td></tr>
+<tr class="memitem:a002d3bef97ac47db9fc97136cf33ecd5" id="r_a002d3bef97ac47db9fc97136cf33ecd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a002d3bef97ac47db9fc97136cf33ecd5">addEvent</a> (<a class="el" href="classEvent.html">Event</a> &amp;&amp;event) override</td></tr>
+<tr class="memdesc:a002d3bef97ac47db9fc97136cf33ecd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add event to queue.  <br /></td></tr>
 <tr class="memitem:a626d3de0f708e20e674204adfd0e1acf" id="r_a626d3de0f708e20e674204adfd0e1acf"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a626d3de0f708e20e674204adfd0e1acf">newTimer</a> (double duration, void *target) override</td></tr>
 <tr class="memdesc:a626d3de0f708e20e674204adfd0e1acf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a recurring timer.  <br /></td></tr>
 <tr class="memitem:a0ae7d297f6c1a610fcfe9391746f7421" id="r_a0ae7d297f6c1a610fcfe9391746f7421"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a0ae7d297f6c1a610fcfe9391746f7421">newOneShotTimer</a> (double duration, void *target) override</td></tr>
@@ -259,8 +259,8 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="ae16e79205621b109005ee14a8ac3345f" name="ae16e79205621b109005ee14a8ac3345f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae16e79205621b109005ee14a8ac3345f">&#9670;&#160;</a></span>addEvent()</h2>
+<a id="a002d3bef97ac47db9fc97136cf33ecd5" name="a002d3bef97ac47db9fc97136cf33ecd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a002d3bef97ac47db9fc97136cf33ecd5">&#9670;&#160;</a></span>addEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -271,7 +271,7 @@ Additional Inherited Members</h2></td></tr>
         <tr>
           <td class="memname">void EventQueue::addEvent </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classEvent.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEvent.html">Event</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -285,7 +285,7 @@ Additional Inherited Members</h2></td></tr>
 <p>Add event to queue. </p>
 <p>Adds <code class="param">event</code> to the end of the queue. </p>
 
-<p>Implements <a class="el" href="classIEventQueue.html#a51529b3c2b81c013b4106802958510ad">IEventQueue</a>.</p>
+<p>Implements <a class="el" href="classIEventQueue.html#afa768ac29e98999d69b74ae1d749864d">IEventQueue</a>.</p>
 
 </div>
 </div>

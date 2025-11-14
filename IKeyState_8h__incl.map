@@ -1,20 +1,24 @@
 <map id="src/lib/deskflow/IKeyState.h" name="src/lib/deskflow/IKeyState.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="176,5,360,30"/>
-<area shape="rect" id="Node000002" href="$IEventQueue_8h.html" title=" " alt="" coords="64,78,203,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,33,170,73,168,68,245,28"/>
-<area shape="rect" id="Node000007" href="$KeyTypes_8h.html" title=" " alt="" coords="157,223,302,248"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="269,31,237,208,232,207,263,30"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="278,78,317,103"/>
-<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="275,30,289,63,284,65,271,32"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="342,78,395,103"/>
-<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="286,28,341,66,338,71,283,33"/>
-<area shape="rect" id="Node000003" href="$Event_8h.html" title=" " alt="" coords="5,151,102,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,105,80,142,76,138,119,101"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="126,151,203,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="141,102,155,135,151,137,136,104"/>
-<area shape="rect" id="Node000004" href="$EventTypes_8h.html" title=" " alt="" coords="23,223,124,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="59,175,69,208,64,209,54,177"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="115,296,178,321"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,247,126,283,122,287,84,250"/>
-<area shape="poly" id="edge7_Node000007_Node000005" title=" " alt="" coords="218,251,174,288,170,284,214,247"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="307,5,492,30"/>
+<area shape="rect" id="Node000002" href="$IEventQueue_8h.html" title=" " alt="" coords="180,78,320,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="376,33,290,73,287,69,374,28"/>
+<area shape="rect" id="Node000009" href="$KeyTypes_8h.html" title=" " alt="" coords="314,151,459,175"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="401,30,391,135,386,135,396,30"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="409,78,448,103"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="407,30,421,63,416,65,402,32"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="473,78,526,103"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="418,28,472,66,469,71,414,33"/>
+<area shape="rect" id="Node000003" href="$Event_8h.html" title=" " alt="" coords="91,151,188,175"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="233,105,172,144,169,140,230,101"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="212,151,289,175"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="253,103,253,135,248,135,248,103"/>
+<area shape="rect" id="Node000004" href="$EventTypes_8h.html" title=" " alt="" coords="5,223,106,248"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="127,178,82,216,79,211,124,174"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="129,223,198,248"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="146,175,157,208,152,209,141,177"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="222,223,281,248"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="159,174,222,212,219,217,157,178"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="154,296,218,321"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="78,246,153,286,150,291,76,251"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="377,177,342,211,294,250,226,291,223,286,291,246,338,208,374,174"/>
 </map>

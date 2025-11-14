@@ -15,5 +15,6 @@ var searchData=
   ['broadcast_12',['broadcast',['../classCondVarBase.html#ac51c24891aa0ccc8c892b2a6bf9eaa32',1,'CondVarBase']]],
   ['broadcastcondvar_13',['broadcastCondVar',['../classIArchMultithread.html#af8b53fdd69b8c47e89492f3642f46ed3',1,'IArchMultithread::broadcastCondVar()'],['../classArchMultithreadPosix.html#a3194088ccd4748a2d310142661bed80b',1,'ArchMultithreadPosix::broadcastCondVar()'],['../classArchMultithreadWindows.html#ad9221ff3656c81cfd59514abcbf6f430',1,'ArchMultithreadWindows::broadcastCondVar()']]],
   ['browseconfigfile_14',['browseConfigFile',['../classServerConfigDialog.html#af21a737077f157f315f015baaaa476c4',1,'ServerConfigDialog']]],
-  ['bye_15',['bye',['../classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048',1,'App::bye()'],['../classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7',1,'IApp::bye()']]]
+  ['buttoninfo_15',['ButtonInfo',['../classIPrimaryScreen_1_1ButtonInfo.html#ab2f57381d48597fecdf6ffe0c0e8c978',1,'IPrimaryScreen::ButtonInfo']]],
+  ['bye_16',['bye',['../classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048',1,'App::bye()'],['../classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7',1,'IApp::bye()']]]
 ];

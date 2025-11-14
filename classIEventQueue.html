@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.352</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.364</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -130,8 +130,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a2a9b3e766507af31980c28fce4acfa66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove event from queue.  <br /></td></tr>
 <tr class="memitem:a9af1fcd05003a150ebb85c5c57c2c564" id="r_a9af1fcd05003a150ebb85c5c57c2c564"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a9af1fcd05003a150ebb85c5c57c2c564">dispatchEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event)=0</td></tr>
 <tr class="memdesc:a9af1fcd05003a150ebb85c5c57c2c564"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatch an event.  <br /></td></tr>
-<tr class="memitem:a51529b3c2b81c013b4106802958510ad" id="r_a51529b3c2b81c013b4106802958510ad"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51529b3c2b81c013b4106802958510ad">addEvent</a> (const <a class="el" href="classEvent.html">Event</a> &amp;event)=0</td></tr>
-<tr class="memdesc:a51529b3c2b81c013b4106802958510ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add event to queue.  <br /></td></tr>
+<tr class="memitem:afa768ac29e98999d69b74ae1d749864d" id="r_afa768ac29e98999d69b74ae1d749864d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afa768ac29e98999d69b74ae1d749864d">addEvent</a> (<a class="el" href="classEvent.html">Event</a> &amp;&amp;event)=0</td></tr>
+<tr class="memdesc:afa768ac29e98999d69b74ae1d749864d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add event to queue.  <br /></td></tr>
 <tr class="memitem:a135df3daf33f6ac2e13e70895bedfd56" id="r_a135df3daf33f6ac2e13e70895bedfd56"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a135df3daf33f6ac2e13e70895bedfd56">newTimer</a> (double duration, void *target)=0</td></tr>
 <tr class="memdesc:a135df3daf33f6ac2e13e70895bedfd56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a recurring timer.  <br /></td></tr>
 <tr class="memitem:a729346cb4e7faf9b9510dd8b48935e3d" id="r_a729346cb4e7faf9b9510dd8b48935e3d"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a729346cb4e7faf9b9510dd8b48935e3d">newOneShotTimer</a> (double duration, void *target)=0</td></tr>
@@ -195,8 +195,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a51529b3c2b81c013b4106802958510ad" name="a51529b3c2b81c013b4106802958510ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51529b3c2b81c013b4106802958510ad">&#9670;&#160;</a></span>addEvent()</h2>
+<a id="afa768ac29e98999d69b74ae1d749864d" name="afa768ac29e98999d69b74ae1d749864d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afa768ac29e98999d69b74ae1d749864d">&#9670;&#160;</a></span>addEvent()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,7 +207,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">virtual void IEventQueue::addEvent </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classEvent.html">Event</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="classEvent.html">Event</a> &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>event</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -221,7 +221,7 @@ Public Member Functions</h2></td></tr>
 <p>Add event to queue. </p>
 <p>Adds <code class="param">event</code> to the end of the queue. </p>
 
-<p>Implemented in <a class="el" href="classEventQueue.html#ae16e79205621b109005ee14a8ac3345f">EventQueue</a>.</p>
+<p>Implemented in <a class="el" href="classEventQueue.html#a002d3bef97ac47db9fc97136cf33ecd5">EventQueue</a>.</p>
 
 </div>
 </div>

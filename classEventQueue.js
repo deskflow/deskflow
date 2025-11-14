@@ -4,7 +4,7 @@ var classEventQueue =
     [ "EventQueue", "classEventQueue.html#a28691f56ac27312585b11a8711b8188e", null ],
     [ "EventQueue", "classEventQueue.html#a2c2ede9173de1737b96100f1cc95360a", null ],
     [ "~EventQueue", "classEventQueue.html#a8228726bd49d192d3aa915650333133b", null ],
-    [ "addEvent", "classEventQueue.html#ae16e79205621b109005ee14a8ac3345f", null ],
+    [ "addEvent", "classEventQueue.html#a002d3bef97ac47db9fc97136cf33ecd5", null ],
     [ "addHandler", "classEventQueue.html#a07298fa009c56da6460a900612f33c03", null ],
     [ "adoptBuffer", "classEventQueue.html#aa4997d4e34e0f2f61dabd6f0133b4a66", null ],
     [ "deleteTimer", "classEventQueue.html#a4ca51efde4b04ae90a8b9c8420a7f5d6", null ],

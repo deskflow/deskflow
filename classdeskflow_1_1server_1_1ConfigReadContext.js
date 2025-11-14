@@ -15,7 +15,7 @@ var classdeskflow_1_1server_1_1ConfigReadContext =
     [ "parseKeystroke", "classdeskflow_1_1server_1_1ConfigReadContext.html#a392278459377e512e48f87f54783b143", null ],
     [ "parseModifier", "classdeskflow_1_1server_1_1ConfigReadContext.html#ab7a8ac0919ee7d2dd10b98e9aed53c6c", null ],
     [ "parseModifierKey", "classdeskflow_1_1server_1_1ConfigReadContext.html#a5d1992c030a9ce36e917dcc4cf19467f", null ],
-    [ "parseMouse", "classdeskflow_1_1server_1_1ConfigReadContext.html#a88efd34369685e066996104730015073", null ],
+    [ "parseMouse", "classdeskflow_1_1server_1_1ConfigReadContext.html#a0acbd253d8976071d35a0caeceb3a1eb", null ],
     [ "parseNameWithArgs", "classdeskflow_1_1server_1_1ConfigReadContext.html#a46bd7f50cbfbd54167302679043a21f7", null ],
     [ "parseProtocol", "classdeskflow_1_1server_1_1ConfigReadContext.html#a30b2301fb03f84b75ddbc5e6ccd761dd", null ],
     [ "readLine", "classdeskflow_1_1server_1_1ConfigReadContext.html#a39405a29fff9fbd13123c48f8d67d6ea", null ]

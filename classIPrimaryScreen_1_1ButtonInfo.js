@@ -1,5 +1,6 @@
 var classIPrimaryScreen_1_1ButtonInfo =
 [
+    [ "ButtonInfo", "classIPrimaryScreen_1_1ButtonInfo.html#ab2f57381d48597fecdf6ffe0c0e8c978", null ],
     [ "alloc", "classIPrimaryScreen_1_1ButtonInfo.html#a27fad3e9f14589868c8dc640287fac13", null ],
     [ "alloc", "classIPrimaryScreen_1_1ButtonInfo.html#a50c866df339eff84a8007117804d392a", null ],
     [ "equal", "classIPrimaryScreen_1_1ButtonInfo.html#a8fe9bc4c84ea85e647bca04ce81ea5dc", null ],

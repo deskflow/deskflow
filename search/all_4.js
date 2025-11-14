@@ -47,7 +47,7 @@ var searchData=
   ['building_20deskflow_44',['Building Deskflow',['../md_doc_2dev_2build.html',1,'']]],
   ['button_45',['Button',['../structdeskflow_1_1KeyMap_1_1Keystroke_1_1Button.html',1,'deskflow::KeyMap::Keystroke::Button'],['../classdeskflow_1_1KeyMap_1_1Keystroke.html#aa7148218bafe2b89c7003ae5871903c7a87b7760f14fbff78d8819291f36ab9a0',1,'deskflow::KeyMap::Keystroke::Button']]],
   ['buttonid_46',['ButtonID',['../MouseTypes_8h.html#a38bb5aaf660cd0a9217897febf8d4eee',1,'MouseTypes.h']]],
-  ['buttoninfo_47',['ButtonInfo',['../classIPrimaryScreen_1_1ButtonInfo.html',1,'IPrimaryScreen']]],
+  ['buttoninfo_47',['ButtonInfo',['../classIPrimaryScreen_1_1ButtonInfo.html',1,'IPrimaryScreen::ButtonInfo'],['../classIPrimaryScreen_1_1ButtonInfo.html#ab2f57381d48597fecdf6ffe0c0e8c978',1,'IPrimaryScreen::ButtonInfo::ButtonInfo()']]],
   ['buttontokeymap_48',['ButtonToKeyMap',['../classdeskflow_1_1KeyMap.html#a3dd2e04cf139679828d24f73b7de7442',1,'deskflow::KeyMap']]],
   ['bye_49',['BYE',['../Log_8h.html#a3d91eaf9be1bd362e3779b2667768051',1,'Log.h']]],
   ['bye_50',['bye',['../classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048',1,'App::bye()'],['../classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7',1,'IApp::bye()']]]
