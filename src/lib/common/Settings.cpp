@@ -58,8 +58,8 @@ Settings::Settings(QObject *parent) : QObject(parent)
   if (QFile(portableFile).exists())
     fileToLoad = portableFile;
 #else
-  if (!qEnvironmentVariable("XDG_CONFIG_HOME").isEmpty())
-    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(qEnvironmentVariable("XDG_CONFIG_HOME"), kAppName);
+  if (const auto xdgConfigHome = qEnvironmentVariable("XDG_CONFIG_HOME"); !xdgConfigHome.isEmpty())
+    fileToLoad = QStringLiteral("%1/%2/%2.conf").arg(xdgConfigHome, kAppName);
 #endif
   else if (QFile(UserSettingFile).exists())
     fileToLoad = UserSettingFile;
@@ -73,8 +73,9 @@ Settings::Settings(QObject *parent) : QObject(parent)
   m_settingsProxy->load(fileToLoad);
   qInfo().noquote() << "initial settings file:" << m_settings->fileName();
 
-  const auto stateBase = !qEnvironmentVariable("XDG_STATE_HOME").isEmpty()
-                             ? qEnvironmentVariable("XDG_STATE_HOME")
+  const auto xdgStateHome = qEnvironmentVariable("XDG_STATE_HOME");
+  const auto stateBase = !xdgStateHome.isEmpty()
+                             ? xdgStateHome
                              : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
   const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
