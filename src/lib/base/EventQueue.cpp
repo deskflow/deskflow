@@ -270,8 +270,7 @@ void EventQueue::removeHandler(EventTypes type, void *target)
   HandlerTable::iterator index = m_handlers.find(target);
   if (index != m_handlers.end()) {
     TypeHandlerTable &typeHandlers = index->second;
-    TypeHandlerTable::iterator index2 = typeHandlers.find(type);
-    if (index2 != typeHandlers.end()) {
+    if (auto index2 = typeHandlers.find(type); index2 != typeHandlers.end()) {
       typeHandlers.erase(index2);
     }
     if (typeHandlers.empty()) {
