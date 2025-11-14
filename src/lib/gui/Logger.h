@@ -28,7 +28,7 @@ Q_SIGNALS:
 
 private:
   explicit Logger();
-  ~Logger();
+  ~Logger() override;
   void settingChanged(const QString &key);
   bool m_guiDebug = false;
 };
