@@ -1,17 +1,5 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,153,74,178"/>
-<area shape="rect" id="Node000001" href="$classAboutDialog.html" title=" " alt="" coords="149,5,242,30"/>
-<area shape="poly" id="edge118_Node000000_Node000001" title=" " alt="" coords="50,138,77,89,97,63,120,41,148,26,150,31,123,45,101,67,82,92,54,140"/>
-<area shape="rect" id="Node000002" href="$classActionDialog.html" title=" " alt="" coords="148,55,243,79"/>
-<area shape="poly" id="edge119_Node000000_Node000002" title=" " alt="" coords="60,140,87,114,120,90,147,78,149,82,123,95,91,118,64,144"/>
-<area shape="rect" id="Node000003" href="$classFingerprintDialog.html" title=" " alt="" coords="135,104,256,129"/>
-<area shape="poly" id="edge120_Node000000_Node000003" title=" " alt="" coords="88,148,153,127,155,132,89,153"/>
-<area shape="rect" id="Node000004" href="$classHotkeyDialog.html" title=" " alt="" coords="146,153,245,178"/>
-<area shape="poly" id="edge121_Node000000_Node000004" title=" " alt="" coords="89,163,145,163,145,168,89,168"/>
-<area shape="rect" id="Node000005" href="$classScreenSettingsDialog.html" title=" " alt="" coords="122,203,269,227"/>
-<area shape="poly" id="edge122_Node000000_Node000005" title=" " alt="" coords="89,179,155,199,153,205,88,184"/>
-<area shape="rect" id="Node000006" href="$classServerConfigDialog.html" title=" " alt="" coords="128,252,262,277"/>
-<area shape="poly" id="edge123_Node000000_Node000006" title=" " alt="" coords="64,187,91,213,123,237,149,249,147,254,120,241,87,217,60,191"/>
-<area shape="rect" id="Node000007" href="$classSettingsDialog.html" title=" " alt="" coords="142,301,248,326"/>
-<area shape="poly" id="edge124_Node000000_Node000007" title=" " alt="" coords="54,191,82,240,101,265,123,286,145,298,142,303,120,290,97,268,77,243,50,194"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,5,109,30"/>
+<area shape="rect" id="Node000001" href="$classLogDock.html" title=" " alt="" coords="157,5,230,30"/>
+<area shape="poly" id="edge125_Node000000_Node000001" title=" " alt="" coords="125,15,156,15,156,20,125,20"/>
 </map>

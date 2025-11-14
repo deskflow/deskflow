@@ -151,7 +151,6 @@ var NAVTREEINDEX1 =
 "IPrimaryScreen_8h.html":[7,0,1,1,4,31],
 "IPrimaryScreen_8h_source.html":[7,0,1,1,4,31],
 "ISO639Table_8h.html":[7,0,1,1,4,2,4],
-"ISO639Table_8h.html#ae0beacb6a48251de6c792228b411b234":[7,0,1,1,4,2,4,0],
 "ISO639Table_8h_source.html":[7,0,1,1,4,2,4],
 "IScreenSaver_8h.html":[7,0,1,1,4,33],
 "IScreenSaver_8h_source.html":[7,0,1,1,4,33],
@@ -249,5 +248,6 @@ var NAVTREEINDEX1 =
 "KeyTypes_8h.html#a375c062c48f1e029279c21616d1b9acd":[7,0,1,1,4,40,87],
 "KeyTypes_8h.html#a3ad809f4722dc4a7fa806c52b33605b7":[7,0,1,1,4,40,192],
 "KeyTypes_8h.html#a3b8cbd45144fedc531e9dc40c3499846":[7,0,1,1,4,40,149],
-"KeyTypes_8h.html#a3bff500ad9402266049228e5b18e869a":[7,0,1,1,4,40,42]
+"KeyTypes_8h.html#a3bff500ad9402266049228e5b18e869a":[7,0,1,1,4,40,42],
+"KeyTypes_8h.html#a3c04d04f7af9bddc5cf9a3e9eb2198eb":[7,0,1,1,4,40,25]
 };

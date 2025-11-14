@@ -11,5 +11,6 @@ var searchData=
   ['keymodifiermask_8',['KeyModifierMask',['../KeyTypes_8h.html#aaaeb68ca75dd837e4de1a5d73bb12a13',1,'KeyTypes.h']]],
   ['keystroke_9',['Keystroke',['../classKeyState.html#a971d90c4f1d955f79237257652d0cec4',1,'KeyState']]],
   ['keystrokes_10',['Keystrokes',['../classdeskflow_1_1KeyMap.html#a7dc5414ea2ff596d1aa6181137801a36',1,'deskflow::KeyMap']]],
-  ['keysyms_11',['KeySyms',['../classXWindowsUtil.html#a201e1401f49fca161f1993f2830edaea',1,'XWindowsUtil']]]
+  ['keysym_11',['KeySym',['../XDGKeyUtil_8h.html#a347f53a4a70999bcd5e086b5f3d8566a',1,'XDGKeyUtil.h']]],
+  ['keysymmap_12',['KeySymMap',['../XDGKeyUtil_8h.html#ae7792f8251db395106162e682196d397',1,'XDGKeyUtil.h']]]
 ];

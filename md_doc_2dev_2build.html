@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.343</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.352</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -127,14 +127,16 @@ Configuration</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">BUILD_TESTS  </td><td class="markdownTableBodyCenter">Build unit tests and legacy tests  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">gtest</span>  </td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">BUILD_X11_SUPPORT  </td><td class="markdownTableBodyCenter">Build X11 backend (linux and bsd only)  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">x11 libs</span>  </td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">ENABLE_COVERAGE  </td><td class="markdownTableBodyCenter">Enable test coverage  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"><span class="tt">gcov</span>  </td></tr>
-<tr class="markdownTableRowEven">
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">SKIP_BUILD_TESTS  </td><td class="markdownTableBodyCenter">Skip running of tests at build time  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
-<tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">CLEAN_TRS  </td><td class="markdownTableBodyCenter">Remove obsolete strings from tr files  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">CLEAN_TRS  </td><td class="markdownTableBodyCenter">Remove obsolete strings from tr files  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">APPLE_CODESIGN_DEV  </td><td class="markdownTableBodyCenter">Apple codesign cert ID for development  </td><td class="markdownTableBodyCenter">Not set  </td><td class="markdownTableBodyCenter"></td></tr>
 </table>
 <p>Example cmake configuration. <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>

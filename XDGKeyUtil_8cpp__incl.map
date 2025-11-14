@@ -1,0 +1,17 @@
+<map id="src/lib/platform/XDGKeyUtil.cpp" name="src/lib/platform/XDGKeyUtil.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="180,5,388,30"/>
+<area shape="rect" id="Node000002" href="$XDGKeyUtil_8h.html" title=" " alt="" coords="33,85,188,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="259,33,151,81,149,76,257,28"/>
+<area shape="rect" id="Node000006" href="$KeyTypes_8h.html" title=" " alt="" coords="211,85,356,110"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="286,30,286,69,281,69,281,30"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="380,78,548,117"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="312,28,408,69,405,74,310,33"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,165,56,189"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,112,55,156,51,152,97,108"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="80,165,141,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="113,110,113,149,108,149,108,110"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="165,165,211,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="124,108,168,152,164,156,120,112"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="252,165,316,189"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="286,110,286,149,281,149,281,110"/>
+</map>

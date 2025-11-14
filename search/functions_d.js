@@ -13,7 +13,7 @@ var searchData=
   ['mapkey_10',['mapKey',['../classdeskflow_1_1KeyMap.html#a11f2301e51624261a0d976081b979572',1,'deskflow::KeyMap']]],
   ['mapkeyfromevent_11',['mapKeyFromEvent',['../classMSWindowsKeyState.html#aa8a6b0b2f93744e165ab754c0ce2da05',1,'MSWindowsKeyState::mapKeyFromEvent()'],['../classOSXKeyState.html#a3c994e67d83b7e22cc9c66779a709a4f',1,'OSXKeyState::mapKeyFromEvent()']]],
   ['mapkeyfromkeyval_12',['mapKeyFromKeyval',['../classdeskflow_1_1EiKeyState.html#a1dfdbaa51a840f892709e6e5d997cca5',1,'deskflow::EiKeyState']]],
-  ['mapkeysymtokeyid_13',['mapKeySymToKeyID',['../classXWindowsUtil.html#a78b0a889bd6a3336a067e5985ec7c0e3',1,'XWindowsUtil']]],
+  ['mapkeysymtokeyid_13',['mapKeySymToKeyID',['../classXDGKeyUtil.html#a5eacc1972537b408537c4fb82b1c02f2',1,'XDGKeyUtil']]],
   ['mapkeytokeycodes_14',['mapKeyToKeycodes',['../classXWindowsKeyState.html#ac4af84616c7341dd0fda20c6b057813b',1,'XWindowsKeyState']]],
   ['mapkeytovirtualkey_15',['mapKeyToVirtualKey',['../classMSWindowsKeyState.html#a7162678d4e04712cbc568eea859f4cf0',1,'MSWindowsKeyState']]],
   ['mapmodifiersfromosx_16',['mapModifiersFromOSX',['../classOSXKeyState.html#a9ffac6205228e26d6bb1d942ac1479e1',1,'OSXKeyState']]],

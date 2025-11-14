@@ -86,6 +86,8 @@ var dir_9d41f2d9dd9f152ba43e738700883d1e =
     [ "PortalInputCapture.h", "PortalInputCapture_8h.html", "PortalInputCapture_8h" ],
     [ "PortalRemoteDesktop.cpp", "PortalRemoteDesktop_8cpp.html", null ],
     [ "PortalRemoteDesktop.h", "PortalRemoteDesktop_8h.html", "PortalRemoteDesktop_8h" ],
+    [ "XDGKeyUtil.cpp", "XDGKeyUtil_8cpp.html", null ],
+    [ "XDGKeyUtil.h", "XDGKeyUtil_8h.html", "XDGKeyUtil_8h" ],
     [ "XDGPortalRegistry.h", "XDGPortalRegistry_8h.html", "XDGPortalRegistry_8h" ],
     [ "XDGPowerManager.cpp", "XDGPowerManager_8cpp.html", null ],
     [ "XDGPowerManager.h", "XDGPowerManager_8h.html", "XDGPowerManager_8h" ],
@@ -111,6 +113,6 @@ var dir_9d41f2d9dd9f152ba43e738700883d1e =
     [ "XWindowsScreen.h", "XWindowsScreen_8h.html", "XWindowsScreen_8h" ],
     [ "XWindowsScreenSaver.cpp", "XWindowsScreenSaver_8cpp.html", null ],
     [ "XWindowsScreenSaver.h", "XWindowsScreenSaver_8h.html", "XWindowsScreenSaver_8h" ],
-    [ "XWindowsUtil.cpp", "XWindowsUtil_8cpp.html", "XWindowsUtil_8cpp" ],
+    [ "XWindowsUtil.cpp", "XWindowsUtil_8cpp.html", null ],
     [ "XWindowsUtil.h", "XWindowsUtil_8h.html", "XWindowsUtil_8h" ]
 ];
