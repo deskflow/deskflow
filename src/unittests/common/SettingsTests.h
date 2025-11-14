@@ -23,6 +23,8 @@ private Q_SLOTS:
   void tlsTrustedServersDb();
   void tlsTrustedClientsDb();
   void checkValidSettings();
+  void checkCleanScreenName();
+  void checkCleanScreenName_LongName();
 
 private:
   inline static const QString m_settingsPathTemp = QStringLiteral("tmp/test");
