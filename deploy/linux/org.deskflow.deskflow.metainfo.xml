@@ -68,6 +68,36 @@
 	</branding>
 	<content_rating type="oars-1.0" />
 	<releases>
+		<release version="1.25.0" date="2025-11-21" urgency="high">
+			<description>
+				<p>This stable release fixes known issues and adds a few new features. Most notable symbolic icon support, I18N support and experimental support for wl-clipboard to access clipboards on wayland. This release also continues our trend of cleaning up the codebase. For the full changelog, see the release page.</p>
+				<ul>
+					<li>Removed the ability to use toml config and env based config files</li>
+					<li>Set XDG app ID (app_id) on Wayland</li>
+					<li>Support symbolic icon deployment and recoloring</li>
+					<li>Added Spanish translation</li>
+					<li>Added Italian translation</li>
+					<li>Added Japanese translation</li>
+					<li>Added Simplified Chinese translation</li>
+					<li>Added Russian translation</li>
+					<li>Translate the GUI without needed to restart the application</li>
+					<li>Expose setting to adjust clients scroll speed</li>
+					<li>Expose setting to show the GUI debug messages in the log</li>
+					<li>Expose setting to allow use of wl-clipboard backend on Wayland</li>
+					<li>Fixed the port settings not being used from settings</li>
+					<li>Save the geometry info into a state file</li>
+					<li>The Core (deskflow-core) has a new CLI interface</li>
+					<li>Fixed Wayland sleep inhibit on client</li>
+					<li>Fixed XWindowsScreen: properly calculate xrandr/xinerama screens</li>
+					<li>Fixed XWindowsScreen: stop centering panned screens on client when leaving the screen</li>
+					<li>Fixed stop retying to launch the Core if its crashed</li>
+					<li>Fixed various input issues</li>
+					<li>Fixed apply scroll lock setting on initialization</li>
+					<li>Fixed crash caused by hostnames with invalid characters returned default value</li>
+				</ul>
+			</description>
+			<url>https://github.com/deskflow/deskflow/releases/tag/v1.25.0</url>
+		</release>
 		<release version="1.24.0" date="2025-09-11" urgency="high">
 			<description>
 				<p>This stable release fixes issues found in the previous version and adds a few new features. This release also uses more C++20 features. For the full changelog, see the release page.</p>
