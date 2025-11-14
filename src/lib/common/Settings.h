@@ -149,6 +149,18 @@ private:
   void cleanSettings();
   void cleanStateSettings();
 
+  /**
+   * @brief write an initial screen name
+   */
+  void setupScreenName();
+
+  /**
+   * @brief cleanScreenName ensure a valid screenName from the provided one
+   * @param name any string to be used as the screenName
+   * @return a valid screeName
+   */
+  static QString cleanScreenName(const QString &name);
+
   QSettings *m_settings = nullptr;
   QSettings *m_stateSettings = nullptr;
   std::shared_ptr<QSettingsProxy> m_settingsProxy;
