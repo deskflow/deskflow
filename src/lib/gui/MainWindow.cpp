@@ -98,8 +98,8 @@ MainWindow::MainWindow()
   m_actionAbout->setMenuRole(QAction::AboutRole);
   m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
 
-  m_actionMinimize->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
-  m_actionRestore->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
+  m_actionMinimize->setIcon(QIcon::fromTheme(u"window-minimize-pip"_s));
+  m_actionRestore->setIcon(QIcon::fromTheme(u"window-restore-pip"_s));
 
   if (!deskflow::platform::isWindows()) {
     m_actionQuit->setShortcut(QKeySequence::Quit);
@@ -107,22 +107,22 @@ MainWindow::MainWindow()
   }
 
   m_actionQuit->setMenuRole(QAction::QuitRole);
-  m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
-  m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionQuit->setIcon(QIcon(QIcon::fromTheme(u"application-exit"_s)));
+  m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme(u"application-exit"_s)));
 
-  m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
+  m_actionClearSettings->setIcon(QIcon::fromTheme(u"edit-clear-all"_s));
 
   m_actionSettings->setMenuRole(QAction::PreferencesRole);
-  m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+  m_actionSettings->setIcon(QIcon::fromTheme(u"configure"_s));
 
-  m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
+  m_actionStartCore->setIcon(QIcon::fromTheme(u"system-run"_s));
 
   m_actionRestartCore->setVisible(false);
-  m_actionRestartCore->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
+  m_actionRestartCore->setIcon(QIcon::fromTheme(u"view-refresh"_s));
 
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
 
-  m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
+  m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(u"tools-report-bug"_s)));
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
@@ -195,7 +195,7 @@ void MainWindow::setupControls()
 
   secureSocket(false);
 
-  ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+  ui->btnConfigureServer->setIcon(QIcon::fromTheme(u"configure"_s));
 
   updateNetworkInfo();
 
@@ -233,7 +233,7 @@ void MainWindow::setupControls()
   static const auto iconSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
 
   m_btnFingerprint->setFlat(true);
-  m_btnFingerprint->setIcon(QIcon::fromTheme(QStringLiteral("fingerprint")));
+  m_btnFingerprint->setIcon(QIcon::fromTheme(u"fingerprint"_s));
   m_btnFingerprint->setFixedSize(btnSize);
   m_btnFingerprint->setIconSize(iconSize);
   ui->statusBar->insertPermanentWidget(0, m_btnFingerprint);
@@ -248,7 +248,7 @@ void MainWindow::setupControls()
   m_btnUpdate->setVisible(false);
   m_btnUpdate->setFlat(true);
   m_btnUpdate->setLayoutDirection(Qt::RightToLeft);
-  m_btnUpdate->setIcon(QIcon::fromTheme(QStringLiteral("software-updates-release")));
+  m_btnUpdate->setIcon(QIcon::fromTheme(u"software-updates-release"_s));
   m_btnUpdate->setFixedHeight(btnHeight);
   m_btnUpdate->setIconSize(iconSize);
   ui->statusBar->insertPermanentWidget(3, m_btnUpdate);
@@ -310,7 +310,7 @@ void MainWindow::connectSlots()
   connect(ui->lineHostname, &QLineEdit::textChanged, this, &MainWindow::remoteHostChanged);
 
   connect(ui->btnSaveServerConfig, &QPushButton::clicked, this, &MainWindow::saveServerConfig);
-  connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer(""); });
+  connect(ui->btnConfigureServer, &QPushButton::clicked, this, [this] { showConfigureServer({}); });
   connect(ui->lblComputerName, &QLabel::linkActivated, this, &MainWindow::openSettings);
   connect(m_btnFingerprint, &QPushButton::clicked, this, &MainWindow::showMyFingerprint);
 
@@ -503,7 +503,7 @@ void MainWindow::coreModeToggled()
 {
   auto serverMode = ui->rbModeServer->isChecked();
 
-  const auto mode = serverMode ? QStringLiteral("server enabled") : QStringLiteral("client enabled");
+  const auto mode = serverMode ? u"server enabled"_s : u"client enabled"_s;
   qDebug() << mode;
 
   const auto coreMode = serverMode ? Settings::CoreMode::Server : Settings::CoreMode::Client;
@@ -552,13 +552,13 @@ void MainWindow::updateModeControlLabels()
   if (isServer) {
     startText = tr("Start");
     stopText = tr("Stop");
-    startIcon = QIcon::fromTheme(QStringLiteral("system-run"));
+    startIcon = QIcon::fromTheme(u"system-run"_s);
     stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop);
   } else {
     startText = tr("Connect");
     stopText = tr("Disconnect");
-    startIcon = QIcon::fromTheme(QStringLiteral("network-connect"));
-    stopIcon = QIcon::fromTheme(QStringLiteral("network-disconnect"));
+    startIcon = QIcon::fromTheme(u"network-connect"_s);
+    stopIcon = QIcon::fromTheme(u"network-disconnect"_s);
   }
 
   m_actionStartCore->setText(startText);
@@ -593,7 +593,7 @@ void MainWindow::updateSecurityIcon(bool visible)
 
 void MainWindow::updateNetworkInfo()
 {
-  static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
+  static const auto colorText = uR"(<span style="color:%1;">%2</span>)"_s;
 
   QStringList ipList;
   QString suggestedAddress;
@@ -750,23 +750,22 @@ void MainWindow::saveSettings() const
 
 void MainWindow::setTrayIcon()
 {
-  static const auto fallbackPath = QStringLiteral(":/icons/%1-%2/apps/64/%3");
+  static const auto fallbackPath = u":/icons/%1-%2/apps/64/%3"_s;
 
   QString themeIcon = kRevFqdnName;
   if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
-    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
+    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, u"dark"_s, themeIcon)));
     return;
   }
 
-  themeIcon.append(QStringLiteral("-symbolic"));
+  themeIcon.append(u"-symbolic"_s);
 
   if (deskflow::platform::isWindows()) {
     QSettings settings(
-        QStringLiteral("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"),
+        u"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"_s,
         QSettings::NativeFormat
     );
-    const QString theme = settings.value(QStringLiteral("SystemUsesLightTheme"), 1).toBool() ? QStringLiteral("light")
-                                                                                             : QStringLiteral("dark");
+    const QString theme = settings.value(u"SystemUsesLightTheme"_s, 1).toBool() ? u"light"_s : u"dark"_s;
     m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, theme, themeIcon)));
     return;
   }
@@ -799,7 +798,7 @@ void MainWindow::checkConnected(const QString &line)
 
 void MainWindow::checkFingerprint(const QString &line)
 {
-  static const auto tlsPeerMessage = QStringLiteral("peer fingerprint: ");
+  static const auto tlsPeerMessage = u"peer fingerprint: "_s;
   static const qsizetype msgLen = QString(tlsPeerMessage).length();
 
   const qsizetype midStart = line.indexOf(tlsPeerMessage);

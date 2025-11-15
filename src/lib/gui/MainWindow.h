@@ -55,6 +55,8 @@ namespace deskflow::gui::ipc {
 class DaemonIpcClient;
 }
 
+using namespace Qt::StringLiterals;
+
 class MainWindow : public QMainWindow
 {
   using CoreMode = Settings::CoreMode;
@@ -169,8 +171,8 @@ private:
 
   void serverClientsChanged(const QStringList &clients);
 
-  inline static const auto m_guiSocketName = QStringLiteral("deskflow-gui");
-  inline static const auto m_nameRegEx = QRegularExpression(QStringLiteral("^[\\w\\-_\\.]{0,255}$"));
+  inline static const auto m_guiSocketName = u"deskflow-gui"_s;
+  inline static const auto m_nameRegEx = QRegularExpression(u"^[\\w\\-_\\.]{0,255}$"_s);
 
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
