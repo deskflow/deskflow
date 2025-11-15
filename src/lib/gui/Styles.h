@@ -8,6 +8,8 @@
 
 #include <QString>
 
+using namespace Qt::StringLiterals;
+
 namespace deskflow::gui {
 
 const auto kColorWhite = "#ffffff";
@@ -15,23 +17,14 @@ const auto kColorSecondary = "#4285f4";
 const auto kColorError = "#ec4c47";
 const auto kColorLightGrey = "#666666";
 
-const auto kStyleLink = //
-    QStringLiteral("color: %1").arg(kColorSecondary);
+const auto kStyleLink = u"color: %1"_s.arg(kColorSecondary);
 
-const auto kStyleLineEditErrorBorder =
-    QStringLiteral("border: 1px solid %1; border-radius: 2px; padding: 2px;").arg(kColorError);
+const auto kStyleLineEditErrorBorder = u"border: 1px solid %1; border-radius: 2px; padding: 2px;"_s.arg(kColorError);
 
 const auto kStyleErrorActiveLabel = //
-    QStringLiteral(
-        "padding: 3px 5px; border-radius: 3px; "
-        "background-color: %1; color: %2"
-    )
-        .arg(kColorError, kColorWhite);
+    u"padding: 3px 5px; border-radius: 3px; "
+    "background-color: %1; color: %2"_s.arg(kColorError, kColorWhite);
 
-const auto kStyleErrorInactiveLabel = //
-    QStringLiteral(
-        "padding: 3px 5px; border-radius: 3px;"
-        "background-color: none"
-    );
+const auto kStyleErrorInactiveLabel = u"padding: 3px 5px; border-radius: 3px; background-color: none"_s;
 
 } // namespace deskflow::gui
