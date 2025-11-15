@@ -185,10 +185,12 @@ bool DaemonIpcClient::sendLogLevel(const QString &logLevel)
 
 bool DaemonIpcClient::sendStartProcess(const QString &command, bool elevate)
 {
+  using namespace Qt::StringLiterals;
+
   if (!keepAlive())
     return false;
 
-  if (!sendMessage("elevate=" + (elevate ? QStringLiteral("yes") : QStringLiteral("no")))) {
+  if (!sendMessage("elevate=" + (elevate ? u"yes"_s : u"no"_s))) {
     return false;
   }
 
