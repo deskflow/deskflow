@@ -40,11 +40,11 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 
   updateText();
 
-  ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QStringLiteral("security-medium")));
+  ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(u"security-medium"_s));
   ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
   ui->lblTlsCertInfo->setFixedSize(28, 28);
 
-  ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("%1-symbolic").arg(kRevFqdnName)));
+  ui->rbIconMono->setIcon(QIcon::fromTheme(u"%1-symbolic"_s.arg(kRevFqdnName)));
   ui->rbIconColorful->setIcon(QIcon::fromTheme(kRevFqdnName));
 
   // force the first tab, since qt creator sets the active tab as the last one
@@ -272,12 +272,12 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   auto length = ssl.getCertKeyLength(path);
   auto labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow).pixmap(24, 24));
   if (length == 2048)
-    labelIcon = QPixmap(QIcon::fromTheme(QStringLiteral("security-medium")).pixmap(24, 24));
+    labelIcon = QPixmap(QIcon::fromTheme(u"security-medium"_s).pixmap(24, 24));
   if (length == 4096)
     labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh).pixmap(24, 24));
 
   ui->lblTlsCertInfo->setPixmap(labelIcon);
-  ui->lblTlsCertInfo->setToolTip(QStringLiteral("Key length: %1 bits").arg(QString::number(length)));
+  ui->lblTlsCertInfo->setToolTip(u"Key length: %1 bits"_s.arg(QString::number(length)));
 }
 
 void SettingsDialog::updateControls()
