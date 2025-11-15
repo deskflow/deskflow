@@ -11,6 +11,8 @@
 
 #include "KeySequence.h"
 
+using namespace Qt::StringLiterals;
+
 class KeySequenceWidget : public QPushButton
 {
   Q_OBJECT
@@ -99,8 +101,8 @@ private:
   KeySequence m_KeySequence;
   KeySequence m_BackupSequence;
   Status m_Status = Status::Stopped;
-  QString m_MousePrefix = QStringLiteral("mousebutton(");
-  QString m_MousePostfix = QStringLiteral(")");
-  QString m_KeyPrefix = QStringLiteral("keystroke(");
-  QString m_KeyPostfix = QStringLiteral(")");
+  QString m_MousePrefix = u"mousebutton("_s;
+  QString m_MousePostfix = u")"_s;
+  QString m_KeyPrefix = u"keystroke("_s;
+  QString m_KeyPostfix = u")"_s;
 };
