@@ -48,13 +48,13 @@ QString CoreProcess::makeQuotedArgs(const QString &app, const QStringList &args)
   QStringList command = {app};
   command.append(args);
 
-  static const auto quote = QStringLiteral("\"");
-  static const auto space = QStringLiteral(" ");
+  static const auto quote = u"\""_s;
+  static const auto space = u" "_s;
   QStringList quoted;
   for (const auto &item : std::as_const(command)) {
     auto temp = item.simplified();
     if (const auto wrapped = (temp.startsWith(quote) && temp.endsWith(quote)); temp.contains(space) && !wrapped) {
-      temp = QStringLiteral("%1%2%1").arg(quote, temp);
+      temp = u"%1%2%1"_s.arg(quote, temp);
     }
     quoted.append(temp);
   }
@@ -67,9 +67,9 @@ QString CoreProcess::makeQuotedArgs(const QString &app, const QStringList &args)
  */
 QString CoreProcess::wrapIpv6(const QString &address)
 {
-  static const auto colon = QStringLiteral(":");
-  static const auto openBracket = QStringLiteral("[");
-  static const auto closeBracket = QStringLiteral("]");
+  static const auto colon = u":"_s;
+  static const auto openBracket = u"["_s;
+  static const auto closeBracket = u"]"_s;
 
   if (!address.contains(colon) || address.isEmpty()) {
     return address;
@@ -96,7 +96,7 @@ CoreProcess::CoreProcess(const IServerConfig &serverConfig)
     : m_serverConfig(serverConfig),
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)}
 {
-  m_appPath = QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), kCoreBinName);
+  m_appPath = u"%1/%2"_s.arg(QCoreApplication::applicationDirPath(), kCoreBinName);
   if (!QFile::exists(m_appPath)) {
     qFatal("core server binary does not exist");
     return;
@@ -347,7 +347,7 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
   if (processMode == ProcessMode::Desktop) {
     startForegroundProcess(args);
   } else if (processMode == ProcessMode::Service) {
-    args.append({QStringLiteral("--settings"), Settings::settingsFile()});
+    args.append({u"--settings"_s, Settings::settingsFile()});
     startProcessFromDaemon(args);
   }
 
@@ -389,9 +389,9 @@ void CoreProcess::restart()
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<ProcessMode>();
 
   if (m_lastProcessMode != std::nullopt && m_lastProcessMode != processMode) {
-    const auto debugMessage =
-        QStringLiteral("process mode changed to %1, stopping %2 process")
-            .arg(processModeToString(processMode), processModeToString(m_lastProcessMode.value()));
+    const auto debugMessage = u"process mode changed to %1, stopping %2 process"_s.arg(
+        processModeToString(processMode), processModeToString(m_lastProcessMode.value())
+    );
     qDebug().noquote() << debugMessage;
     stop(m_lastProcessMode);
   } else {
