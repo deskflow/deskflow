@@ -14,6 +14,8 @@
 
 #include "common/Constants.h"
 
+using namespace Qt::StringLiterals;
+
 namespace deskflow::gui {
 
 /**
@@ -35,17 +37,17 @@ inline bool isDarkMode()
  */
 inline QString iconMode()
 {
-  return isDarkMode() ? QStringLiteral("dark") : QStringLiteral("light");
+  return isDarkMode() ? u"dark"_s : u"light"_s;
 }
 
 inline void updateIconTheme()
 {
   // Sets the fallback icon path and fallback theme
-  const auto themeName = QStringLiteral("%1-%2").arg(kAppId, iconMode());
+  const auto themeName = u"%1-%2"_s.arg(kAppId, iconMode());
   if (QIcon::themeName().isEmpty() || QIcon::themeName().startsWith(kAppId))
     QIcon::setThemeName(themeName);
   else
     QIcon::setFallbackThemeName(themeName);
-  QIcon::setFallbackSearchPaths({QStringLiteral(":/icons/%1").arg(themeName)});
+  QIcon::setFallbackSearchPaths({u":/icons/%1"_s.arg(themeName)});
 }
 } // namespace deskflow::gui
