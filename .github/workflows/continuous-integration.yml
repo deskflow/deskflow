@@ -169,20 +169,6 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_DEV_DOCS=ON"
 
-          - name: "ubuntu-25.04-x86_64"
-            runs-on: ubuntu-latest
-            container: ubuntu:25.04
-            like: "debian"
-            timeout: 20
-            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
-
-          - name: "ubuntu-25.04-arm64"
-            runs-on: ubuntu-24.04-arm
-            container: ubuntu:25.04
-            like: "debian"
-            timeout: 20
-            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
-
           - name: "ubuntu-25.10-x86_64"
             runs-on: ubuntu-latest
             container: ubuntu:25.10
