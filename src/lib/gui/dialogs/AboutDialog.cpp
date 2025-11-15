@@ -36,11 +36,11 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   QStringList devsNbsp;
   for (const auto &dev : s_awesomeDevs) {
     QString withNbsp = dev;
-    devsNbsp.append(withNbsp.replace(" ", QStringLiteral("&nbsp;")));
+    devsNbsp.append(withNbsp.replace(u" "_s, u"&nbsp;"_s));
   }
 
   ui->lblImportantDevs->setTextFormat(Qt::RichText);
-  ui->lblImportantDevs->setText(QStringLiteral("%1\n").arg(devsNbsp.join(", ")));
+  ui->lblImportantDevs->setText(u"%1\n"_s.arg(devsNbsp.join(u", "_s)));
 
   ui->btnOk->setDefault(true);
   connect(ui->btnOk, &QPushButton::clicked, this, &AboutDialog::close);
@@ -48,11 +48,13 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
 
 void AboutDialog::copyVersionText() const
 {
-  QString infoString = QStringLiteral("%1: %2 (%3)\nQt: %4\nSystem: %5")
-                           .arg(kAppName, kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName());
+  QString infoString = u"%1: %2 (%3)\nQt: %4\nSystem: %5"_s.arg(
+      kAppName, kVersion, kVersionGitSha, qVersion(), QSysInfo::prettyProductName()
+  );
 #ifdef Q_OS_LINUX
-  infoString.append(QStringLiteral("\nSession: %1 (%2)")
-                        .arg(qEnvironmentVariable("XDG_CURRENT_DESKTOP"), qEnvironmentVariable("XDG_SESSION_TYPE")));
+  infoString.append(
+      u"\nSession: %1 (%2)"_s.arg(qEnvironmentVariable("XDG_CURRENT_DESKTOP"), qEnvironmentVariable("XDG_SESSION_TYPE"))
+  );
 #endif
   QGuiApplication::clipboard()->setText(infoString);
 }
