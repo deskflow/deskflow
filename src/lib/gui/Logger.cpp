@@ -16,26 +16,28 @@
 #include <Windows.h>
 #endif
 
+using namespace Qt::StringLiterals;
+
 namespace deskflow::gui {
 
 const auto kForceDebugMessages = QStringList{
-    QStringLiteral("No functional TLS backend was found"), QStringLiteral("No TLS backend is available"),
-    QStringLiteral("QSslSocket::connectToHostEncrypted: TLS initialization failed"),
-    QStringLiteral("Retrying to obtain clipboard."), QStringLiteral("Unable to obtain clipboard.")
+    u"No functional TLS backend was found"_s, u"No TLS backend is available"_s,
+    u"QSslSocket::connectToHostEncrypted: TLS initialization failed"_s, u"Retrying to obtain clipboard."_s,
+    u"Unable to obtain clipboard."_s
 };
 
 QString printLine(FILE *out, const QString &type, const QString &message, const QString &fileLine = {})
 {
   const auto datetime = QDateTime::currentDateTime().toString(Qt::ISODateWithMs);
-  auto logLine = QStringLiteral("[%1] %2: %3").arg(datetime, type, message);
+  auto logLine = u"[%1] %2: %3"_s.arg(datetime, type, message);
 
   if (!fileLine.isEmpty()) {
-    logLine.append(QStringLiteral("\n\t%1").arg(fileLine));
+    logLine.append(u"\n\t%1"_s.arg(fileLine));
   }
 
   // We must return a non-terminated log line, but before returning,
   // stdout/stderr and Windows debug output all expect a terminated line.
-  const auto terminatedLogLine = QStringLiteral("%1\n").arg(logLine);
+  const auto terminatedLogLine = u"%1\n"_s.arg(logLine);
 
 #if defined(Q_OS_WIN)
   // Debug output is viewable using either VS Code, Visual Studio, DebugView, or
@@ -63,21 +65,21 @@ void Logger::handleMessage(const QtMsgType type, const QString &fileLine, const 
   case QtDebugMsg:
     if (!m_guiDebug)
       return;
-    typeString = "DEBUG";
+    typeString = u"DEBUG"_s;
     break;
   case QtInfoMsg:
-    typeString = "INFO";
+    typeString = u"INFO"_s;
     break;
   case QtWarningMsg:
-    typeString = "WARNING";
+    typeString = u"WARNING"_s;
     out = stderr;
     break;
   case QtCriticalMsg:
-    typeString = "CRITICAL";
+    typeString = u"CRITICAL"_s;
     out = stderr;
     break;
   case QtFatalMsg:
-    typeString = "FATAL";
+    typeString = u"FATAL"_s;
     out = stderr;
     break;
   }
