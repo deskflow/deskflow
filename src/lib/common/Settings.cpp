@@ -33,6 +33,8 @@ void Settings::setSettingsFile(const QString &settingsFile)
   instance()->m_settings = new QSettings(settingsFile, QSettings::IniFormat, instance());
   instance()->m_settingsProxy->load(settingsFile);
   qInfo().noquote() << "settings file changed:" << instance()->m_settings->fileName();
+
+  instance()->setupScreenName();
 }
 
 void Settings::setStateFile(const QString &stateFile)
@@ -80,6 +82,8 @@ Settings::Settings(QObject *parent) : QObject(parent)
   const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
+
+  setupScreenName();
 }
 
 void Settings::cleanSettings()
@@ -102,6 +106,35 @@ void Settings::cleanStateSettings()
     if (m_stateSettings->value(key).toString().isEmpty() && !m_stateSettings->value(key).isValid())
       m_stateSettings->remove(key);
   }
+}
+
+void Settings::setupScreenName()
+{
+  if (m_settings->value(Settings::Core::ScreenName).isNull())
+    m_settings->setValue(Settings::Core::ScreenName, cleanScreenName(QSysInfo::machineHostName()));
+}
+
+QString Settings::cleanScreenName(const QString &name)
+{
+  static const auto hyphen = QStringLiteral("-");
+  static const auto space = QStringLiteral(" ");
+  static const auto underscore = QStringLiteral("_");
+  static const auto peroid = QStringLiteral(".");
+  static const auto nothing = QStringLiteral("");
+  static const auto nameRegex = QRegularExpression(QStringLiteral("[^\\w\\-\\.]"));
+
+  QString cleanName = name.simplified();
+  cleanName.replace(space, underscore);
+  cleanName.replace(nameRegex, nothing);
+  while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(peroid))
+    cleanName.removeFirst();
+  while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(peroid))
+    cleanName.removeLast();
+  if (cleanName.length() > 255) {
+    cleanName.truncate(255);
+    cleanName = cleanScreenName(cleanName);
+  }
+  return cleanName;
 }
 
 int Settings::logLevelToInt(const QString &level)
@@ -150,15 +183,6 @@ QVariant Settings::defaultValue(const QString &key)
 
   if (m_defaultTrueValues.contains(key)) {
     return true;
-  }
-
-  if (key == Core::ScreenName) {
-    // The localhost name can contain spaces and non word characters
-    QString name = QSysInfo::machineHostName().simplified();
-    name.replace(QLatin1String(" "), QStringLiteral("_"));
-    static const auto nameRegex = QRegularExpression(QLatin1String("\\W"));
-    name.replace(nameRegex, QLatin1String(""));
-    return name;
   }
 
   if (key == Gui::WindowGeometry)
@@ -287,8 +311,12 @@ void Settings::setValue(const QString &key, const QVariant &value)
 
   if (!value.isValid())
     settings->remove(key);
-  else
-    settings->setValue(key, value);
+  else {
+    if (key == Settings::Core::ScreenName)
+      settings->setValue(key, cleanScreenName(value.toString()));
+    else
+      settings->setValue(key, value);
+  }
 
   settings->sync();
   Q_EMIT instance()->settingsChanged(key);
