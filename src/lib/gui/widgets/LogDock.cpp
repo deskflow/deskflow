@@ -13,6 +13,8 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 
+using namespace Qt::StringLiterals;
+
 LogDock::LogDock(QWidget *parent)
     : QDockWidget(tr("Log"), parent),
       m_textLog{new LogWidget(this)},
@@ -26,14 +28,14 @@ LogDock::LogDock(QWidget *parent)
   m_btnFloat->setFixedSize(maxBtnSize);
   m_btnFloat->setCheckable(true);
   m_btnFloat->setFlat(true);
-  m_btnFloat->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
+  m_btnFloat->setIcon(QIcon::fromTheme(u"window-minimize-pip"_s));
   m_btnFloat->setIconSize(iconSize);
   m_btnFloat->setToolTip(tr("Detach from window"));
   connect(m_btnFloat, &QPushButton::toggled, this, &LogDock::setFloating);
 
   m_btnClose->setFixedSize(maxBtnSize);
   m_btnClose->setFlat(true);
-  m_btnClose->setIcon(QIcon::fromTheme(QStringLiteral("view-close")));
+  m_btnClose->setIcon(QIcon::fromTheme(u"view-close"_s));
   m_btnClose->setIconSize(iconSize);
   m_btnClose->setToolTip(tr("Close Log"));
   connect(m_btnClose, &QPushButton::clicked, this, &QDockWidget::hide);
@@ -66,11 +68,11 @@ void LogDock::setFloating(bool floating)
 {
   if (floating) {
     m_btnFloat->setToolTip(tr("Attach to window"));
-    m_btnFloat->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
+    m_btnFloat->setIcon(QIcon::fromTheme(u"window-restore-pip"_s));
     setWindowFlags(Qt::Dialog);
   } else {
     m_btnFloat->setToolTip(tr("Detach from window"));
-    m_btnFloat->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
+    m_btnFloat->setIcon(QIcon::fromTheme(u"window-minimize-pip"_s));
     setWindowFlags(Qt::Widget);
   }
   m_lblTitle->setVisible(!floating);
