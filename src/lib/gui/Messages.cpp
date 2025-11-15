@@ -18,6 +18,8 @@
 #include <QPushButton>
 #include <memory>
 
+using namespace Qt::StringLiterals;
+
 namespace deskflow::gui::messages {
 
 struct Errors
@@ -39,7 +41,7 @@ void raiseCriticalDialog()
 void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType type)
 {
   auto errorType = QtFatalMsg ? QObject::tr("fatal error") : QObject::tr("error");
-  auto title = QStringLiteral("%1 %2").arg(kAppName, errorType);
+  auto title = u"%1 %2"_s.arg(kAppName, errorType);
   auto text = QObject::tr(
                   R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
                   " and copy/paste the following error:</p><pre>v%3\n%4\n%5</pre>"
@@ -84,7 +86,7 @@ QString fileLine(const QMessageLogContext &context)
   if (!context.file) {
     return {};
   }
-  return QStringLiteral("%1:%2").arg(context.file, QString::number(context.line));
+  return u"%1:%2"_s.arg(context.file, QString::number(context.line));
 }
 
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
