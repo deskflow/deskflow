@@ -30,7 +30,7 @@ QString Fingerprint::toDbLine() const
     qInfo() << "unable to parse invalid db line";
     return {};
   }
-  return QStringLiteral("v2:%1:%2").arg(typeToString(type), data.toHex().toLower());
+  return u"v2:%1:%2"_s.arg(typeToString(type), data.toHex().toLower());
 }
 
 Fingerprint Fingerprint::fromDbLine(const QString &line)
@@ -40,7 +40,7 @@ Fingerprint Fingerprint::fromDbLine(const QString &line)
   if (line.isEmpty())
     return result;
 
-  if (line.startsWith("v2:")) {
+  if (line.startsWith(u"v2:"_s)) {
     const auto sLine = line.split(':');
     if (sLine.count() != 3)
       return result;

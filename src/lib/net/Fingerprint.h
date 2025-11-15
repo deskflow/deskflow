@@ -9,12 +9,14 @@
 #include <QByteArray>
 #include <QObject>
 
+using namespace Qt::StringLiterals;
+
 struct Fingerprint
 {
   Q_GADGET
-  inline static QString m_type_sha1 = QStringLiteral("sha1");
-  inline static QString m_type_sha256 = QStringLiteral("sha256");
-  inline static QString m_type_invalid = QStringLiteral("invalid");
+  inline static QString m_type_sha1 = u"sha1"_s;
+  inline static QString m_type_sha256 = u"sha256"_s;
+  inline static QString m_type_invalid = u"invalid"_s;
 
 public:
   enum class Type
