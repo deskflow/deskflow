@@ -12,6 +12,7 @@
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
+using namespace Qt::StringLiterals;
 
 Screen::Screen(const QString &name)
 {
@@ -50,25 +51,25 @@ void Screen::saveSettings(QSettingsProxy &settings) const
 
 QString Screen::screensSection() const
 {
-  const auto lineTemplate = QStringLiteral("\t\t%1 = %2\n");
+  const auto lineTemplate = u"\t\t%1 = %2\n"_s;
 
-  QString out = QStringLiteral("\t%1:\n").arg(name());
+  QString out = u"\t%1:\n"_s.arg(name());
   for (int i = 0; i < modifiers().size(); i++) {
     if (modifier(i) != i)
       out.append(lineTemplate.arg(modifierName(i), modifierName(modifier(i))));
   }
 
   for (int i = 0; i < fixes().size(); i++)
-    out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? QStringLiteral("true") : QStringLiteral("false")));
+    out.append(lineTemplate.arg(fixName(i), fixes().at(i) ? u"true"_s : u"false"_s));
 
-  auto corners = QStringLiteral("none");
+  auto corners = u"none"_s;
   for (int i = 0; i < switchCorners().size(); i++) {
     if (switchCorners()[i])
-      corners.append(QStringLiteral(" +%1 ").arg(switchCornerName(i)));
+      corners.append(u" +%1 "_s.arg(switchCornerName(i)));
   }
-  out.append(lineTemplate.arg(QStringLiteral("switchCorners"), corners));
+  out.append(lineTemplate.arg(u"switchCorners"_s, corners));
 
-  out.append(lineTemplate.arg(QStringLiteral("switchCornerSize"), QString::number(switchCornerSize())));
+  out.append(lineTemplate.arg(u"switchCornerSize"_s, QString::number(switchCornerSize())));
 
   return out;
 }
@@ -77,10 +78,10 @@ QString Screen::aliasesSection() const
 {
   QString out;
   if (!aliases().isEmpty()) {
-    out = QStringLiteral("\t%1:\n").arg(name());
+    out = u"\t%1:\n"_s.arg(name());
 
     for (const QString &alias : aliases())
-      out.append(QStringLiteral("\t\t%1\n").arg(alias));
+      out.append(u"\t\t%1\n"_s.arg(alias));
   }
   return out;
 }
