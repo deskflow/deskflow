@@ -17,6 +17,8 @@
 #include <QRegularExpression>
 #include <climits>
 
+using namespace Qt::StringLiterals;
+
 VersionChecker::VersionChecker(QObject *parent) : QObject(parent), m_network{new QNetworkAccessManager(this)}
 {
   connect(m_network, &QNetworkAccessManager::finished, this, &VersionChecker::replyFinished, Qt::UniqueConnection);
@@ -56,10 +58,10 @@ void VersionChecker::replyFinished(QNetworkReply *reply)
 
   if (compareVersions(kVersion, newestVersion) > 0) {
     qWarning().noquote() //
-        << QStringLiteral("current version %1 out of date, update available: %2").arg(kVersion, newestVersion);
+        << u"current version %1 out of date, update available: %2"_s.arg(kVersion, newestVersion);
     Q_EMIT updateFound(newestVersion);
   } else {
-    qDebug().noquote() << QStringLiteral("current version %1 is upto date").arg(kVersion);
+    qDebug().noquote() << u"current version %1 is upto date"_s.arg(kVersion);
   }
 }
 
@@ -78,7 +80,7 @@ int VersionChecker::getStageVersion(QString stage)
   if (stage.isEmpty() || stage == stableName) {
     return stableValue;
   } else if (stage.startsWith(rcName, Qt::CaseInsensitive)) {
-    static QRegularExpression re("\\d*", QRegularExpression::CaseInsensitiveOption);
+    static QRegularExpression re(u"\\d*"_s, QRegularExpression::CaseInsensitiveOption);
     auto match = re.match(stage);
     if (match.hasMatch()) {
       // return the rc value plus the rc number (e.g. 2 + 1)
