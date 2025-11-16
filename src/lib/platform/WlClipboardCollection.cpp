@@ -56,7 +56,7 @@ void WlClipboardCollection::startMonitoring()
     return;
   }
 
-  for (auto &clipboard : m_clipboards) {
+  for (const auto &clipboard : m_clipboards) {
     if (clipboard) {
       clipboard->startMonitoring();
     }
@@ -71,7 +71,7 @@ void WlClipboardCollection::stopMonitoring()
     return;
   }
 
-  for (auto &clipboard : m_clipboards) {
+  for (const auto &clipboard : m_clipboards) {
     if (clipboard) {
       clipboard->stopMonitoring();
     }
@@ -80,13 +80,13 @@ void WlClipboardCollection::stopMonitoring()
   m_monitoring = false;
 }
 
-void WlClipboardCollection::resetChanged()
+void WlClipboardCollection::resetChanged() const
 {
   if (!m_available) {
     return;
   }
 
-  for (auto &clipboard : m_clipboards) {
+  for (const auto &clipboard : m_clipboards) {
     if (clipboard) {
       clipboard->resetChanged();
     }

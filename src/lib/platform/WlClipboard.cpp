@@ -258,7 +258,7 @@ bool WlClipboard::empty()
 
   if (success) {
     // Update ownership and cache only if command succeeded
-    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    std::scoped_lock<std::mutex> lock(m_cacheMutex);
     updateOwnership(true);
     invalidateCache();
   }
@@ -291,7 +291,7 @@ void WlClipboard::add(Format format, const std::string &data)
 
   bool success = executeCommandWithInput(args, data);
   if (success) {
-    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    std::scoped_lock<std::mutex> lock(m_cacheMutex);
     updateOwnership(true);
     invalidateCache();
   } else {
@@ -335,7 +335,7 @@ bool WlClipboard::has(Format format) const
     return false;
   }
 
-  std::lock_guard<std::mutex> lock(m_cacheMutex);
+  std::scoped_lock<std::mutex> lock(m_cacheMutex);
 
   // Check cache validity
   Time currentTime = getCurrentTime();
@@ -383,7 +383,7 @@ std::string WlClipboard::get(Format format) const
     return std::string();
   }
 
-  std::lock_guard<std::mutex> lock(m_cacheMutex);
+  std::scoped_lock<std::mutex> lock(m_cacheMutex);
 
   // Return cached data if available and valid
   if (m_cached && m_cachedAvailable[static_cast<int>(format)] && !m_cachedData[static_cast<int>(format)].empty()) {
@@ -713,7 +713,7 @@ void WlClipboard::monitorClipboard()
         lastTypes = currentTypes;
 
         // Clear cache when clipboard changes
-        std::lock_guard<std::mutex> lock(m_cacheMutex);
+        std::scoped_lock<std::mutex> lock(m_cacheMutex);
         invalidateCache();
         const_cast<WlClipboard *>(this)->updateOwnership(false);
       }
@@ -750,7 +750,7 @@ void WlClipboard::resetChanged()
   m_hasChanged = false;
 
   // Clear cache when resetting change flag to force fresh data retrieval
-  std::lock_guard<std::mutex> lock(m_cacheMutex);
+  std::scoped_lock<std::mutex> lock(m_cacheMutex);
   invalidateCache();
 }
 
