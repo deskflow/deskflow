@@ -43,7 +43,7 @@ public:
   void stopMonitoring();
 
   //! Reset change detection
-  void resetChanged();
+  void resetChanged() const;
 
 private:
   //! Initialize clipboard backends
