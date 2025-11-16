@@ -178,6 +178,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Client::ScrollSpeed, ui->sbScrollSpeed->value());
   Settings::setValue(Settings::Core::Language, ui->comboLanguage->currentText());
   Settings::setValue(Settings::Log::GuiDebug, ui->cbGuiDebug->isChecked());
+  Settings::setValue(Settings::Core::useWlClipboard, ui->cbUseWlClipboard->isChecked());
 
   Settings::ProcessMode mode;
   if (ui->groupService->isChecked())
@@ -205,6 +206,7 @@ void SettingsDialog::loadFromConfig()
   ui->cbAutoUpdate->setChecked(Settings::value(Settings::Gui::AutoUpdateCheck).toBool());
   ui->sbScrollSpeed->setValue(Settings::value(Settings::Client::ScrollSpeed).toInt());
   ui->cbGuiDebug->setChecked(Settings::value(Settings::Log::GuiDebug).toBool());
+  ui->cbUseWlClipboard->setChecked(Settings::value(Settings::Core::useWlClipboard).toBool());
 
   const auto processMode = Settings::value(Settings::Core::ProcessMode).value<Settings::ProcessMode>();
   ui->groupService->setChecked(processMode == Settings::ProcessMode::Service);
@@ -306,6 +308,14 @@ void SettingsDialog::updateControls()
     ui->cbElevateDaemon->setEnabled(writable && serviceChecked);
   } else if (ui->groupService->isVisibleTo(ui->tabAdvanced)) {
     ui->groupService->setVisible(false);
+  }
+
+  // wl-clipboard support only works on wayland.
+  // options should only be available when we are *not* running on wayland.
+  if (deskflow::platform::isWayland()) {
+    ui->cbUseWlClipboard->setEnabled(writable);
+  } else if (ui->widgetWlClipboard->isVisibleTo(ui->tabAdvanced)) {
+    ui->widgetWlClipboard->setVisible(false);
   }
 
   ui->groupClientOptions->setEnabled(writable && isClientMode());

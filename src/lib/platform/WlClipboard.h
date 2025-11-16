@@ -39,6 +39,9 @@ public:
   //! Check if wl-clipboard tools are available
   static bool isAvailable();
 
+  //! Check if WlClipboard is enabled
+  static bool isEnabled();
+
   //! Start monitoring clipboard changes
   void startMonitoring();
 

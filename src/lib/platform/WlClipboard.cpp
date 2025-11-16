@@ -9,6 +9,7 @@
 #include "base/Log.h"
 
 #include <chrono>
+#include <common/Settings.h>
 #include <cstdlib>
 #include <cstring>
 #include <errno.h>
@@ -209,6 +210,11 @@ bool WlClipboard::checkCommandExists(const char *command)
   } else {
     return false;
   }
+}
+
+bool WlClipboard::isEnabled()
+{
+  return Settings::value(Settings::Core::useWlClipboard).toBool();
 }
 
 void WlClipboard::startMonitoring()
