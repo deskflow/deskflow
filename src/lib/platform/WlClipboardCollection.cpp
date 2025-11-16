@@ -95,7 +95,11 @@ void WlClipboardCollection::resetChanged() const
 
 void WlClipboardCollection::initialize()
 {
-  // Check if Wayland clipboard is available
+  if (!WlClipboard::isEnabled()) {
+    LOG_DEBUG("wl-clipboard setting disabled");
+    return;
+  }
+
   if (!WlClipboard::isAvailable()) {
     LOG_WARN("wl-clipboard tools not found, clipboard functionality disabled");
     return;
