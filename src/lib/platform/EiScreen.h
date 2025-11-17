@@ -23,7 +23,7 @@ struct ei_device;
 
 namespace deskflow {
 
-class EiClipboard;
+class WlClipboardCollection;
 class EiKeyState;
 class PortalRemoteDesktop;
 class PortalInputCapture;
@@ -123,7 +123,7 @@ private:
   EiKeyState *m_keyState = nullptr;
 
   // clipboard stuff
-  EiClipboard *m_clipboard = nullptr;
+  WlClipboardCollection *m_clipboard = nullptr;
 
   std::vector<ei_device *> m_eiDevices;
 
