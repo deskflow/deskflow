@@ -38,10 +38,10 @@ elseif(UNIX)
   # Add Wayland clipboard tests when Wayland support is available
   if(LIBEI_FOUND AND LIBPORTAL_FOUND)
     create_test(
-      NAME WaylandClipboardTests
+      NAME WlClipboardTests
       DEPENDS platform
       LIBS base arch
-      SOURCE WaylandClipboardTests.cpp
+      SOURCE WlClipboardTests.cpp
       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/platform"
     )
   endif()

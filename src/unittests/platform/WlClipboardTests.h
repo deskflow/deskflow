@@ -11,13 +11,13 @@
 #include "deskflow/ClipboardTypes.h"
 
 #if WINAPI_LIBEI || WINAPI_PORTAL
-#include "platform/WaylandClipboard.h"
+#include "platform/WlClipboard.h"
 #endif
 
 #include <QTest>
 #include <functional>
 
-//! Unit tests for WaylandClipboard class
+//! Unit tests for WlClipboard class
 /*!
 Tests the Wayland clipboard implementation that uses wl-copy and wl-paste
 utilities for clipboard operations. These tests verify basic functionality
@@ -27,7 +27,7 @@ and monitoring clipboard changes.
 Note: These tests require wl-clipboard tools to be installed and will be
 skipped if they are not available or if Wayland support is not compiled in.
 */
-class WaylandClipboardTests : public QObject
+class WlClipboardTests : public QObject
 {
   Q_OBJECT
 private Q_SLOTS:
@@ -61,17 +61,17 @@ private:
   const std::string m_testString2 = "Another test string";
   const std::string m_testHtml = "<html><body>Test HTML</body></html>";
 
-  std::unique_ptr<WaylandClipboard> m_clipboard;
-  std::unique_ptr<WaylandClipboard> m_primaryClipboard;
+  std::unique_ptr<WlClipboard> m_clipboard;
+  std::unique_ptr<WlClipboard> m_primaryClipboard;
 
-  WaylandClipboard &getClipboard();
-  WaylandClipboard &getPrimaryClipboard();
+  WlClipboard &getClipboard();
+  WlClipboard &getPrimaryClipboard();
 
+  // clang-format off
   // Helper methods for robust testing
-  bool waitForClipboardCondition(WaylandClipboard &clipboard, std::function<bool()> condition, int timeoutMs = 2000);
-  bool waitForClipboardEmpty(WaylandClipboard &clipboard, const std::string &previousContent, int timeoutMs = 2000);
-  bool waitForClipboardContent(
-      WaylandClipboard &clipboard, IClipboard::Format format, const std::string &expectedContent, int timeoutMs = 2000
-  );
+  bool waitForClipboardCondition(WlClipboard &clipboard, std::function<bool()> condition, int timeoutMs = 2000);
+  bool waitForClipboardEmpty(WlClipboard &clipboard, const std::string &previousContent, int timeoutMs = 2000);
+  bool waitForClipboardContent(WlClipboard &clipboard, IClipboard::Format format, const std::string &expectedContent, int timeoutMs = 2000);
+  // clang-format on
 #endif
 };

@@ -22,16 +22,16 @@
 This class implements clipboard functionality for Wayland environments
 by using the wl-clipboard utilities (wl-copy and wl-paste).
 */
-class WaylandClipboard : public IClipboard
+class WlClipboard : public IClipboard
 {
 public:
-  WaylandClipboard(ClipboardID id);
-  WaylandClipboard(WaylandClipboard const &) = delete;
-  WaylandClipboard(WaylandClipboard &&) = delete;
-  ~WaylandClipboard() override;
+  WlClipboard(ClipboardID id);
+  WlClipboard(WlClipboard const &) = delete;
+  WlClipboard(WlClipboard &&) = delete;
+  ~WlClipboard() override;
 
-  WaylandClipboard &operator=(WaylandClipboard const &) = delete;
-  WaylandClipboard &operator=(WaylandClipboard &&) = delete;
+  WlClipboard &operator=(WlClipboard const &) = delete;
+  WlClipboard &operator=(WlClipboard &&) = delete;
 
   //! Get clipboard ID
   ClipboardID getID() const;

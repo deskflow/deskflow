@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "platform/WaylandClipboard.h"
+#include "platform/WlClipboard.h"
 
 #include "base/Log.h"
 
@@ -154,7 +154,7 @@ public:
 
 } // namespace
 
-WaylandClipboard::WaylandClipboard(ClipboardID id) : m_id(id), m_useClipboard(id == kClipboardClipboard)
+WlClipboard::WlClipboard(ClipboardID id) : m_id(id), m_useClipboard(id == kClipboardClipboard)
 {
   // Initialize cached data
   for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
@@ -162,22 +162,22 @@ WaylandClipboard::WaylandClipboard(ClipboardID id) : m_id(id), m_useClipboard(id
   }
 }
 
-WaylandClipboard::~WaylandClipboard()
+WlClipboard::~WlClipboard()
 {
   stopMonitoring();
 }
 
-ClipboardID WaylandClipboard::getID() const
+ClipboardID WlClipboard::getID() const
 {
   return m_id;
 }
 
-bool WaylandClipboard::isAvailable()
+bool WlClipboard::isAvailable()
 {
   return checkCommandExists("wl-paste") && checkCommandExists("wl-copy");
 }
 
-bool WaylandClipboard::checkCommandExists(const char *command)
+bool WlClipboard::checkCommandExists(const char *command)
 {
   std::vector<const char *> args = {command, "--help", nullptr};
 
@@ -211,17 +211,17 @@ bool WaylandClipboard::checkCommandExists(const char *command)
   }
 }
 
-void WaylandClipboard::startMonitoring()
+void WlClipboard::startMonitoring()
 {
   if (m_monitoring) {
     return;
   }
   m_stopMonitoring = false;
   m_monitoring = true;
-  m_monitorThread = std::make_unique<std::thread>(&WaylandClipboard::monitorClipboard, this);
+  m_monitorThread = std::make_unique<std::thread>(&WlClipboard::monitorClipboard, this);
 }
 
-void WaylandClipboard::stopMonitoring()
+void WlClipboard::stopMonitoring()
 {
   if (!m_monitoring) {
     return;
@@ -236,12 +236,12 @@ void WaylandClipboard::stopMonitoring()
   m_monitorThread.reset();
 }
 
-bool WaylandClipboard::hasChanged() const
+bool WlClipboard::hasChanged() const
 {
   return m_hasChanged.load();
 }
 
-bool WaylandClipboard::empty()
+bool WlClipboard::empty()
 {
   if (!m_open) {
     return false;
@@ -266,7 +266,7 @@ bool WaylandClipboard::empty()
   return success;
 }
 
-void WaylandClipboard::add(Format format, const std::string &data)
+void WlClipboard::add(Format format, const std::string &data)
 {
   if (!m_open) {
     return;
@@ -299,7 +299,7 @@ void WaylandClipboard::add(Format format, const std::string &data)
   }
 }
 
-bool WaylandClipboard::open(Time time) const
+bool WlClipboard::open(Time time) const
 {
   if (m_open) {
     LOG_DEBUG("failed to open clipboard: already opened");
@@ -312,7 +312,7 @@ bool WaylandClipboard::open(Time time) const
   return true;
 }
 
-void WaylandClipboard::close() const
+void WlClipboard::close() const
 {
   if (!m_open) {
     return;
@@ -321,15 +321,15 @@ void WaylandClipboard::close() const
   LOG_DEBUG("close clipboard");
 
   m_open = false;
-  const_cast<WaylandClipboard *>(this)->invalidateCache();
+  const_cast<WlClipboard *>(this)->invalidateCache();
 }
 
-IClipboard::Time WaylandClipboard::getTime() const
+IClipboard::Time WlClipboard::getTime() const
 {
   return m_time;
 }
 
-bool WaylandClipboard::has(Format format) const
+bool WlClipboard::has(Format format) const
 {
   if (!m_open) {
     return false;
@@ -344,7 +344,7 @@ bool WaylandClipboard::has(Format format) const
   }
 
   // Update cache by checking available MIME types
-  std::vector<std::string> availableTypes = const_cast<WaylandClipboard *>(this)->getAvailableMimeTypes();
+  std::vector<std::string> availableTypes = const_cast<WlClipboard *>(this)->getAvailableMimeTypes();
 
   if (availableTypes.empty()) {
     // No types available - mark all formats as unavailable
@@ -377,7 +377,7 @@ bool WaylandClipboard::has(Format format) const
   return m_cachedAvailable[static_cast<int>(format)];
 }
 
-std::string WaylandClipboard::get(Format format) const
+std::string WlClipboard::get(Format format) const
 {
   if (!m_open) {
     return std::string();
@@ -402,7 +402,7 @@ std::string WaylandClipboard::get(Format format) const
     args = {"wl-paste", "-t", mimeType.c_str(), "-p", nullptr};
   }
 
-  std::string data = const_cast<WaylandClipboard *>(this)->executeCommand(args);
+  std::string data = const_cast<WlClipboard *>(this)->executeCommand(args);
 
   // Update cache
   m_cachedData[static_cast<int>(format)] = data;
@@ -413,7 +413,7 @@ std::string WaylandClipboard::get(Format format) const
   return data;
 }
 
-std::string WaylandClipboard::executeCommand(const std::vector<const char *> &args) const
+std::string WlClipboard::executeCommand(const std::vector<const char *> &args) const
 {
   int pipefd[2];
   if (pipe(pipefd) == -1) {
@@ -525,7 +525,7 @@ std::string WaylandClipboard::executeCommand(const std::vector<const char *> &ar
   }
 }
 
-bool WaylandClipboard::executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const
+bool WlClipboard::executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const
 {
   int pipefd[2];
   if (pipe(pipefd) == -1) {
@@ -640,7 +640,7 @@ bool WaylandClipboard::executeCommandWithInput(const std::vector<const char *> &
   }
 }
 
-std::string WaylandClipboard::formatToMimeType(Format format) const
+std::string WlClipboard::formatToMimeType(Format format) const
 {
   switch (format) {
   case Format::Text:
@@ -654,7 +654,7 @@ std::string WaylandClipboard::formatToMimeType(Format format) const
   }
 }
 
-IClipboard::Format WaylandClipboard::mimeTypeToFormat(const std::string &mimeType) const
+IClipboard::Format WlClipboard::mimeTypeToFormat(const std::string &mimeType) const
 {
   if (mimeType == kMimeTypeText || mimeType == "text/plain") {
     return Format::Text;
@@ -669,7 +669,7 @@ IClipboard::Format WaylandClipboard::mimeTypeToFormat(const std::string &mimeTyp
   return Format::Text; // Default fallback
 }
 
-std::vector<std::string> WaylandClipboard::getAvailableMimeTypes() const
+std::vector<std::string> WlClipboard::getAvailableMimeTypes() const
 {
   std::vector<const char *> args;
   if (m_useClipboard) {
@@ -694,7 +694,7 @@ std::vector<std::string> WaylandClipboard::getAvailableMimeTypes() const
   return types;
 }
 
-std::string WaylandClipboard::getClipboardData(const std::string &mimeType) const
+std::string WlClipboard::getClipboardData(const std::string &mimeType) const
 {
   std::vector<const char *> args;
   if (m_useClipboard) {
@@ -705,7 +705,7 @@ std::string WaylandClipboard::getClipboardData(const std::string &mimeType) cons
   return executeCommand(args);
 }
 
-bool WaylandClipboard::setClipboardData(const std::string &mimeType, const std::string &data) const
+bool WlClipboard::setClipboardData(const std::string &mimeType, const std::string &data) const
 {
   std::vector<const char *> args;
   if (m_useClipboard) {
@@ -716,7 +716,7 @@ bool WaylandClipboard::setClipboardData(const std::string &mimeType, const std::
   return executeCommandWithInput(args, data);
 }
 
-void WaylandClipboard::monitorClipboard()
+void WlClipboard::monitorClipboard()
 {
   std::vector<std::string> lastTypes;
   int consecutiveErrors = 0;
@@ -737,7 +737,7 @@ void WaylandClipboard::monitorClipboard()
         // Clear cache when clipboard changes
         std::lock_guard<std::mutex> lock(m_cacheMutex);
         invalidateCache();
-        const_cast<WaylandClipboard *>(this)->updateOwnership(false);
+        const_cast<WlClipboard *>(this)->updateOwnership(false);
       }
     } catch (const std::exception &e) {
       LOG_WARN("clipboard monitoring error: %s", e.what());
@@ -755,19 +755,19 @@ void WaylandClipboard::monitorClipboard()
   }
 }
 
-IClipboard::Time WaylandClipboard::getCurrentTime() const
+IClipboard::Time WlClipboard::getCurrentTime() const
 {
   auto now = std::chrono::steady_clock::now();
   auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch());
   return static_cast<Time>(ms.count());
 }
 
-bool WaylandClipboard::isOwned() const
+bool WlClipboard::isOwned() const
 {
   return m_owned;
 }
 
-void WaylandClipboard::resetChanged()
+void WlClipboard::resetChanged()
 {
   m_hasChanged = false;
 
@@ -776,12 +776,12 @@ void WaylandClipboard::resetChanged()
   invalidateCache();
 }
 
-void WaylandClipboard::updateOwnership(bool owned)
+void WlClipboard::updateOwnership(bool owned)
 {
   m_owned = owned;
 }
 
-void WaylandClipboard::invalidateCache()
+void WlClipboard::invalidateCache()
 {
   m_cached = false;
   m_cachedTime = 0;

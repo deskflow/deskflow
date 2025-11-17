@@ -96,7 +96,7 @@ void EiClipboard::resetChanged()
 void EiClipboard::initialize()
 {
   // Check if Wayland clipboard is available
-  if (!WaylandClipboard::isAvailable()) {
+  if (!WlClipboard::isAvailable()) {
     LOG_WARN("wl-clipboard tools not found, clipboard functionality disabled");
     return;
   }
@@ -106,10 +106,10 @@ void EiClipboard::initialize()
 
   try {
     // Primary clipboard (selection)
-    m_clipboards[kClipboardSelection] = std::make_unique<WaylandClipboard>(kClipboardSelection);
+    m_clipboards[kClipboardSelection] = std::make_unique<WlClipboard>(kClipboardSelection);
 
     // Standard clipboard
-    m_clipboards[kClipboardClipboard] = std::make_unique<WaylandClipboard>(kClipboardClipboard);
+    m_clipboards[kClipboardClipboard] = std::make_unique<WlClipboard>(kClipboardClipboard);
 
     m_available = true;
     LOG_DEBUG1("initialized Wayland clipboard support");
