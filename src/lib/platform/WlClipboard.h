@@ -78,7 +78,7 @@ private:
   Format mimeTypeToFormat(const QString &mimeType) const;
 
   //! Get available MIME types from clipboard
-  std::vector<std::string> getAvailableMimeTypes() const;
+  QStringList getAvailableMimeTypes() const;
 
   //! Monitor clipboard changes in background thread
   void monitorClipboard();

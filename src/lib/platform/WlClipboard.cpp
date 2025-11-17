@@ -21,12 +21,17 @@
 #include <unistd.h>
 
 #include <QDateTime>
+#include <QProcess>
 #include <QStandardPaths>
 
 namespace {
 
 inline static const auto s_copyApp = QStringLiteral("wl-copy");
 inline static const auto s_pasteApp = QStringLiteral("wl-paste");
+
+// wl-clipboard args
+inline static const auto s_listTypes = QStringLiteral("--list-types");
+inline static const auto s_isPrimary = QStringLiteral("--primary");
 
 // MIME types for different clipboard formats
 inline static const auto s_mimeTypeText = QStringLiteral("text/plain;charset=utf-8");
@@ -322,9 +327,9 @@ bool WlClipboard::has(Format format) const
   }
 
   // Update cache by checking available MIME types
-  std::vector<std::string> availableTypes = const_cast<WlClipboard *>(this)->getAvailableMimeTypes();
+  const auto availableTypes = const_cast<WlClipboard *>(this)->getAvailableMimeTypes();
 
-  if (availableTypes.empty()) {
+  if (availableTypes.isEmpty()) {
     // No types available - mark all formats as unavailable
     for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
       m_cachedAvailable[i] = false;
@@ -338,9 +343,9 @@ bool WlClipboard::has(Format format) const
 
       m_cachedAvailable[i] = false;
       if (!mimeType.isEmpty()) {
-        for (const std::string &available : availableTypes) {
+        for (const auto &available : availableTypes) {
           if (available == mimeType || (currentFormat == Format::Text && available == "text/plain") ||
-              (currentFormat == Format::HTML && available.find("text/html") == 0)) {
+              (currentFormat == Format::HTML && available.startsWith("text/html"))) {
             m_cachedAvailable[i] = true;
             break;
           }
@@ -647,41 +652,33 @@ IClipboard::Format WlClipboard::mimeTypeToFormat(const QString &mimeType) const
   return Format::Text; // Default fallback
 }
 
-std::vector<std::string> WlClipboard::getAvailableMimeTypes() const
+QStringList WlClipboard::getAvailableMimeTypes() const
 {
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-paste", "--list-types", nullptr};
-  } else {
-    args = {"wl-paste", "--list-types", "-p", nullptr};
-  }
+  QProcess cmd;
+  cmd.setProgram(s_pasteApp);
 
-  std::string result = executeCommand(args);
-  std::vector<std::string> types;
+  QStringList args = {s_listTypes};
+  if (!m_useClipboard)
+    args.append(s_isPrimary);
 
-  if (!result.empty()) {
-    std::istringstream iss(result);
-    std::string type;
-    while (std::getline(iss, type)) {
-      if (!type.empty()) {
-        types.push_back(type);
-      }
-    }
-  }
+  cmd.setArguments(args);
+  cmd.start();
+  cmd.waitForFinished();
 
-  return types;
+  const static QChar newLine = QLatin1Char('\n');
+  return QString::fromLocal8Bit(cmd.readAll()).split(newLine);
 }
 
 void WlClipboard::monitorClipboard()
 {
-  std::vector<std::string> lastTypes;
+  QStringList lastTypes;
   int consecutiveErrors = 0;
 
   while (!m_stopMonitoring) {
     std::this_thread::sleep_for(std::chrono::milliseconds(kMonitorIntervalMs));
     try {
       // Check if clipboard content has changed by comparing available types
-      std::vector<std::string> currentTypes = getAvailableMimeTypes();
+      const auto currentTypes = getAvailableMimeTypes();
 
       // Reset error counter on successful operation
       consecutiveErrors = 0;
