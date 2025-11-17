@@ -8,7 +8,7 @@
 
 #include "deskflow/ClipboardTypes.h"
 #include "deskflow/IClipboard.h"
-#include "platform/WaylandClipboard.h"
+#include "platform/WlClipboard.h"
 
 #include <memory>
 #include <vector>
@@ -53,7 +53,7 @@ private:
   void cleanup();
 
 private:
-  std::vector<std::unique_ptr<WaylandClipboard>> m_clipboards;
+  std::vector<std::unique_ptr<WlClipboard>> m_clipboards;
   bool m_available = false;
   bool m_monitoring = false;
 };

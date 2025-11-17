@@ -4,11 +4,11 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "WaylandClipboardTests.h"
+#include "WlClipboardTests.h"
 
 #include "base/LogLevel.h"
 #include "deskflow/ClipboardTypes.h"
-#include "platform/WaylandClipboard.h"
+#include "platform/WlClipboard.h"
 
 #include <chrono>
 #include <functional>
@@ -16,38 +16,38 @@
 
 #include <QTest>
 
-void WaylandClipboardTests::defaultCtor()
+void WlClipboardTests::defaultCtor()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QCOMPARE(kClipboardClipboard, clipboard.getID());
 
-  WaylandClipboard primaryClipboard(kClipboardSelection);
+  WlClipboard primaryClipboard(kClipboardSelection);
   QCOMPARE(kClipboardSelection, primaryClipboard.getID());
 }
 
-void WaylandClipboardTests::isAvailable()
+void WlClipboardTests::isAvailable()
 {
   // This test may fail on systems without wl-clipboard installed
   // In CI environments, we might need to skip this test or mock the commands
-  bool available = WaylandClipboard::isAvailable();
+  bool available = WlClipboard::isAvailable();
 
   // We don't assert true/false here because it depends on system setup
   // Just verify the method doesn't crash and returns a boolean
   QVERIFY(available == true || available == false);
 }
 
-void WaylandClipboardTests::initTestCase()
+void WlClipboardTests::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(LogLevel::Debug2);
 
   // Only run tests if Wayland clipboard tools are available
-  if (!WaylandClipboard::isAvailable()) {
+  if (!WlClipboard::isAvailable()) {
     QSKIP("wl-clipboard tools not available, skipping Wayland clipboard tests");
   }
 
   // Test if Wayland commands actually work (not just exist)
-  WaylandClipboard testClipboard(kClipboardClipboard);
+  WlClipboard testClipboard(kClipboardClipboard);
   if (!testClipboard.open(0)) {
     QSKIP("Failed to open Wayland clipboard, likely no Wayland session");
   }
@@ -61,11 +61,11 @@ void WaylandClipboardTests::initTestCase()
   testClipboard.close();
 }
 
-void WaylandClipboardTests::cleanupTestCase()
+void WlClipboardTests::cleanupTestCase()
 {
   // Clean up by emptying clipboards
   try {
-    WaylandClipboard clipboard(kClipboardClipboard);
+    WlClipboard clipboard(kClipboardClipboard);
     if (clipboard.open(0)) {
       clipboard.empty();
       clipboard.close();
@@ -75,9 +75,9 @@ void WaylandClipboardTests::cleanupTestCase()
   }
 }
 
-void WaylandClipboardTests::open()
+void WlClipboardTests::open()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // Opening again should return false
@@ -90,9 +90,9 @@ void WaylandClipboardTests::open()
   clipboard.close();
 }
 
-void WaylandClipboardTests::empty()
+void WlClipboardTests::empty()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // First add some known content
@@ -109,9 +109,9 @@ void WaylandClipboardTests::empty()
   clipboard.close();
 }
 
-void WaylandClipboardTests::singleFormat()
+void WlClipboardTests::singleFormat()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // Clear clipboard first - if this fails, skip test
@@ -141,9 +141,9 @@ void WaylandClipboardTests::singleFormat()
   clipboard.close();
 }
 
-void WaylandClipboardTests::multipleFormats()
+void WlClipboardTests::multipleFormats()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // Clear clipboard first
@@ -156,7 +156,7 @@ void WaylandClipboardTests::multipleFormats()
   // So we test formats separately rather than simultaneously
   QVERIFY(waitForClipboardContent(clipboard, IClipboard::Format::Text, m_testString));
 
-  // HTML format is currently not supported in WaylandClipboard implementation
+  // HTML format is currently not supported in WlClipboard implementation
   // So we skip HTML testing and just verify text format works
 
   // Clear and add different text data to test format replacement
@@ -169,9 +169,9 @@ void WaylandClipboardTests::multipleFormats()
   clipboard.close();
 }
 
-void WaylandClipboardTests::hasFormat()
+void WlClipboardTests::hasFormat()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // Clear clipboard first
@@ -195,9 +195,9 @@ void WaylandClipboardTests::hasFormat()
   clipboard.close();
 }
 
-void WaylandClipboardTests::getTime()
+void WlClipboardTests::getTime()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(100));
 
   // Should return the time passed to open()
@@ -209,9 +209,9 @@ void WaylandClipboardTests::getTime()
   clipboard.close();
 }
 
-void WaylandClipboardTests::monitoring()
+void WlClipboardTests::monitoring()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
   QVERIFY(clipboard.open(0));
 
   // Clear clipboard first
@@ -225,7 +225,7 @@ void WaylandClipboardTests::monitoring()
 
   // Make a change to the clipboard using a separate clipboard instance
   // to simulate external changes
-  WaylandClipboard externalClipboard(kClipboardClipboard);
+  WlClipboard externalClipboard(kClipboardClipboard);
   if (externalClipboard.open(1)) {
     externalClipboard.empty();
     externalClipboard.add(IClipboard::Format::Text, m_testString);
@@ -244,27 +244,27 @@ void WaylandClipboardTests::monitoring()
   // This test mainly verifies that monitoring doesn't crash
 }
 
-WaylandClipboard &WaylandClipboardTests::getClipboard()
+WlClipboard &WlClipboardTests::getClipboard()
 {
   if (!m_clipboard) {
-    m_clipboard = std::make_unique<WaylandClipboard>(kClipboardClipboard);
+    m_clipboard = std::make_unique<WlClipboard>(kClipboardClipboard);
   }
   return *m_clipboard;
 }
 
-WaylandClipboard &WaylandClipboardTests::getPrimaryClipboard()
+WlClipboard &WlClipboardTests::getPrimaryClipboard()
 {
   if (!m_primaryClipboard) {
-    m_primaryClipboard = std::make_unique<WaylandClipboard>(kClipboardSelection);
+    m_primaryClipboard = std::make_unique<WlClipboard>(kClipboardSelection);
   }
   return *m_primaryClipboard;
 }
 
-void WaylandClipboardTests::primaryClipboard()
+void WlClipboardTests::primaryClipboard()
 {
   // Test that primary clipboard works independently from regular clipboard
-  WaylandClipboard clipboard(kClipboardClipboard);
-  WaylandClipboard primaryClipboard(kClipboardSelection);
+  WlClipboard clipboard(kClipboardClipboard);
+  WlClipboard primaryClipboard(kClipboardSelection);
 
   QVERIFY(clipboard.open(0));
   QVERIFY(primaryClipboard.open(1));
@@ -285,9 +285,9 @@ void WaylandClipboardTests::primaryClipboard()
   primaryClipboard.close();
 }
 
-void WaylandClipboardTests::closeWithoutOpen()
+void WlClipboardTests::closeWithoutOpen()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
 
   // Should be safe to call close without open
   clipboard.close();
@@ -297,9 +297,9 @@ void WaylandClipboardTests::closeWithoutOpen()
   clipboard.close();
 }
 
-void WaylandClipboardTests::addWithoutOpen()
+void WlClipboardTests::addWithoutOpen()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
 
   // Should not crash when adding without open
   clipboard.add(IClipboard::Format::Text, m_testString);
@@ -309,9 +309,9 @@ void WaylandClipboardTests::addWithoutOpen()
   clipboard.close();
 }
 
-void WaylandClipboardTests::getWithoutOpen()
+void WlClipboardTests::getWithoutOpen()
 {
-  WaylandClipboard clipboard(kClipboardClipboard);
+  WlClipboard clipboard(kClipboardClipboard);
 
   // Should return empty string when getting without open
   std::string result = clipboard.get(IClipboard::Format::Text);
@@ -325,9 +325,7 @@ void WaylandClipboardTests::getWithoutOpen()
   clipboard.close();
 }
 
-bool WaylandClipboardTests::waitForClipboardCondition(
-    WaylandClipboard &clipboard, std::function<bool()> condition, int timeoutMs
-)
+bool WlClipboardTests::waitForClipboardCondition(WlClipboard &clipboard, std::function<bool()> condition, int timeoutMs)
 {
   auto startTime = std::chrono::steady_clock::now();
   auto timeout = std::chrono::milliseconds(timeoutMs);
@@ -342,9 +340,7 @@ bool WaylandClipboardTests::waitForClipboardCondition(
   return false;
 }
 
-bool WaylandClipboardTests::waitForClipboardEmpty(
-    WaylandClipboard &clipboard, const std::string &previousContent, int timeoutMs
-)
+bool WlClipboardTests::waitForClipboardEmpty(WlClipboard &clipboard, const std::string &previousContent, int timeoutMs)
 {
   auto condition = [&clipboard, &previousContent]() {
     // Check if clipboard is empty or no longer contains our previous content
@@ -359,8 +355,8 @@ bool WaylandClipboardTests::waitForClipboardEmpty(
   return waitForClipboardCondition(clipboard, condition, timeoutMs);
 }
 
-bool WaylandClipboardTests::waitForClipboardContent(
-    WaylandClipboard &clipboard, IClipboard::Format format, const std::string &expectedContent, int timeoutMs
+bool WlClipboardTests::waitForClipboardContent(
+    WlClipboard &clipboard, IClipboard::Format format, const std::string &expectedContent, int timeoutMs
 )
 {
   auto condition = [&clipboard, format, &expectedContent]() {
@@ -373,4 +369,4 @@ bool WaylandClipboardTests::waitForClipboardContent(
   return waitForClipboardCondition(clipboard, condition, timeoutMs);
 }
 
-QTEST_MAIN(WaylandClipboardTests)
+QTEST_MAIN(WlClipboardTests)
