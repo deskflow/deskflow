@@ -14,11 +14,11 @@
 #include "common/Settings.h"
 #include "deskflow/App.h"
 #include "deskflow/IScreen.h"
-#include "platform/EiClipboard.h"
 #include "platform/EiEventQueueBuffer.h"
 #include "platform/EiKeyState.h"
 #include "platform/PortalInputCapture.h"
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/WlClipboardCollection.h"
 
 #include <algorithm>
 #include <cmath>
@@ -46,7 +46,7 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool inv
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
-  m_clipboard = new EiClipboard();
+  m_clipboard = new WlClipboardCollection();
   // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
     handleSystemEvent(e);

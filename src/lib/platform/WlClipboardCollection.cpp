@@ -4,29 +4,29 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "platform/EiClipboard.h"
+#include "platform/WlClipboardCollection.h"
 
 #include "base/Log.h"
 #include "deskflow/ClipboardTypes.h"
 
 namespace deskflow {
 
-EiClipboard::EiClipboard()
+WlClipboardCollection::WlClipboardCollection()
 {
   initialize();
 }
 
-EiClipboard::~EiClipboard()
+WlClipboardCollection::~WlClipboardCollection()
 {
   cleanup();
 }
 
-bool EiClipboard::isAvailable() const
+bool WlClipboardCollection::isAvailable() const
 {
   return m_available;
 }
 
-IClipboard *EiClipboard::getClipboard(ClipboardID id) const
+IClipboard *WlClipboardCollection::getClipboard(ClipboardID id) const
 {
   if (!m_available || id >= m_clipboards.size()) {
     return nullptr;
@@ -35,7 +35,7 @@ IClipboard *EiClipboard::getClipboard(ClipboardID id) const
   return m_clipboards[id].get();
 }
 
-bool EiClipboard::hasChanged() const
+bool WlClipboardCollection::hasChanged() const
 {
   if (!m_available) {
     return false;
@@ -50,7 +50,7 @@ bool EiClipboard::hasChanged() const
   return false;
 }
 
-void EiClipboard::startMonitoring()
+void WlClipboardCollection::startMonitoring()
 {
   if (!m_available || m_monitoring) {
     return;
@@ -65,7 +65,7 @@ void EiClipboard::startMonitoring()
   m_monitoring = true;
 }
 
-void EiClipboard::stopMonitoring()
+void WlClipboardCollection::stopMonitoring()
 {
   if (!m_available || !m_monitoring) {
     return;
@@ -80,7 +80,7 @@ void EiClipboard::stopMonitoring()
   m_monitoring = false;
 }
 
-void EiClipboard::resetChanged()
+void WlClipboardCollection::resetChanged()
 {
   if (!m_available) {
     return;
@@ -93,7 +93,7 @@ void EiClipboard::resetChanged()
   }
 }
 
-void EiClipboard::initialize()
+void WlClipboardCollection::initialize()
 {
   // Check if Wayland clipboard is available
   if (!WlClipboard::isAvailable()) {
@@ -121,7 +121,7 @@ void EiClipboard::initialize()
   }
 }
 
-void EiClipboard::cleanup()
+void WlClipboardCollection::cleanup()
 {
   if (m_monitoring) {
     stopMonitoring();

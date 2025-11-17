@@ -21,11 +21,11 @@ This class manages clipboard operations for the EiScreen implementation.
 It automatically detects the best available clipboard backend and provides
 a unified interface for clipboard operations.
 */
-class EiClipboard
+class WlClipboardCollection
 {
 public:
-  EiClipboard();
-  ~EiClipboard();
+  WlClipboardCollection();
+  ~WlClipboardCollection();
 
   //! Check if clipboard functionality is available
   bool isAvailable() const;
