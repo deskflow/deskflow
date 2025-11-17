@@ -1,7 +1,7 @@
 <map id="validators::ScreenNameValidator" name="validators::ScreenNameValidator">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,151,217,175"/>
 <area shape="rect" id="Node000002" href="$classvalidators_1_1LineEditValidator.html" title=" " alt="" coords="20,78,202,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,118,114,150,108,150,108,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,117,113,151,109,149,109,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="70,5,152,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="114,46,114,78,108,78,108,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,43,114,78,108,77,110,48"/>
 </map>

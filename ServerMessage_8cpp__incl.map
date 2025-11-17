@@ -1,7 +1,7 @@
 <map id="src/lib/gui/core/ServerMessage.cpp" name="src/lib/gui/core/ServerMessage.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,232,30"/>
 <area shape="rect" id="Node000002" href="$ServerMessage_8h.html" title=" " alt="" coords="57,78,180,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="121,31,121,62,116,62,116,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,28,121,63,116,62,117,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="86,151,151,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="121,103,121,135,116,135,116,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="120,101,121,136,116,134,117,105"/>
 </map>

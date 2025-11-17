@@ -1,7 +1,7 @@
 <map id="IDataSocket" name="IDataSocket">
 <area shape="rect" id="Node000001" title="Data stream socket interface." alt="" coords="52,78,144,103"/>
 <area shape="rect" id="Node000002" href="$classISocket.html" title="Generic socket interface." alt="" coords="5,5,71,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="60,40,90,76,86,79,56,44"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,40,91,77,86,78,56,44"/>
 <area shape="rect" id="Node000003" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="95,5,221,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,44,110,79,106,76,136,40"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="141,41,109,80,106,76,136,43"/>
 </map>

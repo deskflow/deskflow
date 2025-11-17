@@ -1,11 +1,11 @@
 <map id="SocketCreateException" name="SocketCreateException">
 <area shape="rect" id="Node000001" title="SocketCreateException &#45; Thrown when a socket cannot be created (by the operating system)." alt="" coords="15,296,172,321"/>
 <area shape="rect" id="Node000002" href="$classSocketWithWhatException.html" title="SocketWithWhatException &#45; generic SocketException Exception with a generic what method impl." alt="" coords="5,223,182,248"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,264,96,296,91,296,91,264"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,262,96,297,91,295,92,266"/>
 <area shape="rect" id="Node000003" href="$classSocketException.html" title="SocketException generic socket exception." alt="" coords="34,151,153,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,191,96,223,91,223,91,191"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,189,96,224,91,222,92,194"/>
 <area shape="rect" id="Node000004" href="$classBaseException.html" title="Exception base class." alt="" coords="39,78,148,103"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="96,118,96,150,91,150,91,118"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,116,96,151,91,150,93,121"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="32,5,155,30"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="96,46,96,78,91,78,91,46"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="94,43,96,78,91,77,93,48"/>
 </map>

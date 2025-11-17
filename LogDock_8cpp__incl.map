@@ -1,23 +1,23 @@
 <map id="src/lib/gui/widgets/LogDock.cpp" name="src/lib/gui/widgets/LogDock.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="318,5,444,44"/>
 <area shape="rect" id="Node000002" href="$LogDock_8h.html" title=" " alt="" coords="15,92,99,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="318,44,115,92,114,87,317,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="317,44,115,92,114,87,318,38"/>
 <area shape="rect" id="Node000004" href="$LogWidget_8h.html" title=" " alt="" coords="124,92,217,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="331,47,217,89,215,84,329,42"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="328,46,217,89,215,84,332,43"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="241,92,305,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="356,47,303,85,300,81,353,42"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="357,43,303,85,300,80,352,46"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="330,92,432,117"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="384,45,384,76,378,76,378,45"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="383,43,383,78,379,75,379,47"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="456,92,519,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="408,42,461,81,458,85,405,47"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="407,42,462,83,457,83,406,47"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="543,92,643,117"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="433,42,548,84,546,89,431,47"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="433,42,550,86,544,87,432,47"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="666,92,768,117"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="445,38,652,85,651,91,444,43"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="445,38,654,87,649,89,444,43"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,109,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,117,60,149,54,149,54,117"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,115,60,150,54,149,55,119"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="134,165,204,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="173,117,172,149,167,149,167,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="172,115,172,150,167,148,168,119"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="228,165,300,189"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="187,115,238,153,235,157,184,119"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="187,115,239,155,234,155,185,120"/>
 </map>

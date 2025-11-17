@@ -1,24 +1,24 @@
 <map id="src/lib/platform/XWindowsClipboardAnyBitmapConverter.h" name="src/lib/platform/XWindowsClipboardAnyBitmapConverter.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="384,5,592,44"/>
 <area shape="rect" id="Node000002" href="$XWindowsClipboard_8h.html" title=" " alt="" coords="387,92,588,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="490,45,490,76,485,76,485,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="489,42,490,78,486,75,486,47"/>
 <area shape="rect" id="Node000003" href="$ClipboardTypes_8h.html" title=" " alt="" coords="5,165,184,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="423,120,176,164,175,159,422,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="422,120,176,164,175,159,423,115"/>
 <area shape="rect" id="Node000005" href="$IClipboard_8h.html" title=" " alt="" coords="208,165,355,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="455,120,331,162,329,157,453,115"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="456,116,331,162,329,157,451,118"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="379,165,444,189"/>
-<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="477,119,437,156,433,152,473,115"/>
+<area shape="poly" id="edge7_Node000002_Node000007" title=" " alt="" coords="478,116,437,156,434,152,473,118"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="469,165,507,189"/>
-<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="490,117,490,149,485,149,485,117"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="490,115,490,151,486,148,486,119"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="531,165,578,189"/>
-<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="501,115,535,151,531,155,497,119"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="500,115,536,154,531,153,498,120"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="602,165,659,189"/>
-<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="513,115,595,155,592,160,510,120"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="512,115,596,158,591,157,511,120"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="683,165,764,189"/>
-<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="528,115,671,157,669,162,526,120"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="527,115,673,160,667,160,527,120"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="118,237,178,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="105,188,132,223,128,226,101,192"/>
-<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="260,192,184,232,182,227,258,188"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="104,187,133,225,127,225,102,192"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="262,189,184,232,182,227,257,190"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="254,237,308,262"/>
-<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="284,190,284,222,278,222,278,190"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="283,188,283,223,279,220,279,192"/>
 </map>

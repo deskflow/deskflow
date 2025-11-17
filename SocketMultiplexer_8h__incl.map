@@ -1,7 +1,7 @@
 <map id="src/lib/net/SocketMultiplexer.h" name="src/lib/net/SocketMultiplexer.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,201,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="50,78,89,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,32,84,65,79,63,95,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,29,84,66,79,62,95,32"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="113,78,160,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,29,127,63,122,65,106,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="110,28,127,64,122,64,107,33"/>
 </map>

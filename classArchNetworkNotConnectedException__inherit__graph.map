@@ -1,7 +1,7 @@
 <map id="ArchNetworkNotConnectedException" name="ArchNetworkNotConnectedException">
 <area shape="rect" id="Node000001" title="Socket not connected." alt="" coords="5,151,244,175"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="47,78,202,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,118,127,150,122,150,122,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,117,127,152,122,149,123,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="63,5,186,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,46,127,78,122,78,122,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="126,44,127,78,122,77,123,48"/>
 </map>

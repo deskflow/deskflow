@@ -1,13 +1,13 @@
 <map id="src/lib/arch/win32/ArchMultithreadWindows.h" name="src/lib/arch/win32/ArchMultithreadWindows.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="150,5,332,44"/>
 <area shape="rect" id="Node000002" href="$IArchMultithread_8h.html" title=" " alt="" coords="5,92,162,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,47,122,87,119,82,202,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,47,122,87,119,83,205,43"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="186,92,224,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="235,46,219,79,214,77,230,44"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="234,43,219,79,215,76,230,46"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="248,92,306,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="252,44,267,77,263,79,247,46"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="251,42,268,78,262,77,248,47"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="330,92,416,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="274,42,341,81,339,86,271,47"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="273,42,343,84,337,84,272,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="53,165,114,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="86,117,86,149,81,149,81,117"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="85,115,86,150,81,148,82,119"/>
 </map>

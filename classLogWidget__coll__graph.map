@@ -1,5 +1,5 @@
 <map id="LogWidget" name="LogWidget">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,78,89,103"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="11,5,83,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="50,46,50,78,44,78,44,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="49,44,50,78,44,77,45,48"/>
 </map>

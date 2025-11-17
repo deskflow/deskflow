@@ -1,7 +1,7 @@
 <map id="src/lib/deskflow/ipc/DaemonIpcServer.h" name="src/lib/deskflow/ipc/DaemonIpcServer.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="11,5,152,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,75,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,46,56,79,51,77,69,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,43,56,80,51,77,69,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="98,92,150,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="94,43,113,77,108,79,89,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="93,42,113,78,108,78,90,47"/>
 </map>

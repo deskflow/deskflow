@@ -1,7 +1,7 @@
 <map id="src/lib/platform/MSWindowsProcess.h" name="src/lib/platform/MSWindowsProcess.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,191,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="8,92,94,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,46,69,80,64,77,84,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,43,68,80,64,77,84,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="118,92,171,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,43,132,77,127,80,107,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,42,132,79,127,78,108,47"/>
 </map>

@@ -1,11 +1,11 @@
 <map id="src/lib/base/Log.h" name="src/lib/base/Log.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="106,5,230,30"/>
 <area shape="rect" id="Node000002" href="$LogLevel_8h.html" title=" " alt="" coords="5,78,89,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,33,81,72,78,68,147,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,31,81,72,78,68,146,30"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="113,78,152,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,32,147,66,143,63,160,29"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="165,29,147,66,143,63,160,32"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="176,78,233,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,29,194,63,189,66,172,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="176,28,194,65,189,64,173,33"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="257,78,322,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="190,28,258,68,256,72,187,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="189,28,260,70,254,70,188,33"/>
 </map>

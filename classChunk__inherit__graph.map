@@ -1,7 +1,7 @@
 <map id="Chunk" name="Chunk">
 <area shape="rect" id="Node000001" title=" " alt="" coords="33,78,92,103"/>
 <area shape="rect" id="Node000003" href="$classClipboardChunk.html" title=" " alt="" coords="5,151,120,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="65,118,65,150,60,150,60,118"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="64,117,65,151,60,150,61,120"/>
 <area shape="rect" id="Node000002" href="$classEventData.html" title=" " alt="" coords="22,5,103,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,46,65,78,60,78,60,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="63,43,65,78,60,77,62,48"/>
 </map>

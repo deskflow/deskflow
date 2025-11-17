@@ -1,13 +1,13 @@
 <map id="src/lib/platform/OSXClipboard.h" name="src/lib/platform/OSXClipboard.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="134,5,338,30"/>
 <area shape="rect" id="Node000002" href="$IClipboard_8h.html" title=" " alt="" coords="5,78,153,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,33,120,74,118,69,209,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,33,120,74,117,69,212,29"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="176,78,296,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="239,31,239,62,234,62,234,31"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="238,28,239,64,234,61,235,33"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="320,78,376,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="256,28,318,67,316,72,253,33"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="255,28,320,69,314,70,254,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="9,151,69,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,105,55,138,51,136,70,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,102,55,139,51,136,70,105"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="94,151,147,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="88,102,108,136,104,139,84,105"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="87,101,109,137,103,137,85,106"/>
 </map>

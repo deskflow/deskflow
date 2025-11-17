@@ -1,11 +1,11 @@
 <map id="src/lib/deskflow/IPrimaryScreen.h" name="src/lib/deskflow/IPrimaryScreen.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="83,5,249,44"/>
 <area shape="rect" id="Node000002" href="$KeyTypes_8h.html" title=" " alt="" coords="5,92,151,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,47,104,84,101,80,143,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,47,104,84,101,80,147,43"/>
 <area shape="rect" id="Node000004" href="$MouseTypes_8h.html" title=" " alt="" coords="174,92,336,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="189,43,232,80,229,84,186,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="188,42,233,81,228,82,187,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="46,165,110,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,117,81,149,75,149,75,117"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="80,115,81,150,75,148,76,119"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="225,165,286,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="258,117,258,149,253,149,253,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="257,115,258,151,253,148,253,119"/>
 </map>

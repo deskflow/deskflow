@@ -1,21 +1,21 @@
 <map id="IPlatformScreen" name="IPlatformScreen">
 <area shape="rect" id="Node000001" title="Screen interface." alt="" coords="218,78,334,103"/>
 <area shape="rect" id="Node000006" href="$classPlatformScreen.html" title="Base screen implementation." alt="" coords="220,151,332,175"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="279,118,279,150,274,150,274,118"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="278,116,278,152,274,149,275,121"/>
 <area shape="rect" id="Node000002" href="$classIScreen.html" title="Screen interface." alt="" coords="58,5,124,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,33,246,75,245,80,135,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,33,248,76,243,79,136,39"/>
 <area shape="rect" id="Node000003" href="$classIPrimaryScreen.html" title="Primary screen interface." alt="" coords="148,5,260,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,39,266,76,263,80,225,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="227,39,267,77,262,78,227,44"/>
 <area shape="rect" id="Node000004" href="$classISecondaryScreen.html" title="Secondary screen interface." alt="" coords="285,5,414,30"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="328,43,290,80,286,76,325,39"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="329,39,290,80,286,76,324,42"/>
 <area shape="rect" id="Node000005" href="$classIKeyState.html" title="Key state interface." alt="" coords="438,5,517,30"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="431,38,310,80,309,75,429,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="427,37,310,80,308,75,432,34"/>
 <area shape="rect" id="Node000007" href="$classMSWindowsScreen.html" title="Implementation of IPlatformScreen for Microsoft Windows." alt="" coords="5,223,142,248"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="229,183,108,225,106,220,228,178"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="230,183,108,225,106,220,227,178"/>
 <area shape="rect" id="Node000008" href="$classOSXScreen.html" title="Implementation of IPlatformScreen for OS X." alt="" coords="166,223,256,248"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="257,189,223,225,219,221,253,185"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="258,186,223,225,220,221,253,188"/>
 <area shape="rect" id="Node000009" href="$classXWindowsScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="280,223,406,248"/>
-<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="300,185,334,221,330,225,296,189"/>
+<area shape="poly" id="edge8_Node000006_Node000009" title=" " alt="" coords="299,184,335,224,329,222,297,189"/>
 <area shape="rect" id="Node000010" href="$classdeskflow_1_1EiScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="430,223,563,248"/>
-<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="328,178,461,220,459,225,326,183"/>
+<area shape="poly" id="edge9_Node000006_Node000010" title=" " alt="" coords="327,178,462,222,457,223,326,183"/>
 </map>

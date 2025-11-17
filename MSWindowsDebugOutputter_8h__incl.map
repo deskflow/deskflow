@@ -1,16 +1,16 @@
 <map id="src/lib/platform/MSWindowsDebugOutputter.h" name="src/lib/platform/MSWindowsDebugOutputter.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,191,44"/>
 <area shape="rect" id="Node000002" href="$ILogOutputter_8h.html" title=" " alt="" coords="26,92,170,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,45,101,76,95,76,95,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,42,101,77,95,76,97,47"/>
 <area shape="rect" id="Node000003" href="$Log_8h.html" title=" " alt="" coords="98,165,183,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,116,128,150,124,153,103,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,115,129,151,123,152,104,120"/>
 <area shape="rect" id="Node000004" href="$LogLevel_8h.html" title=" " alt="" coords="14,237,97,262"/>
-<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="97,118,66,223,61,222,92,116"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,192,82,230,79,225,125,188"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="97,117,66,223,61,222,92,117"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="129,189,82,230,79,225,124,191"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="121,237,160,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="143,190,143,222,138,222,138,190"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="142,188,143,223,138,221,139,192"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="184,237,241,262"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="154,188,192,224,188,228,151,192"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="154,187,193,226,187,226,152,192"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="265,237,331,262"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="168,187,259,228,257,233,166,192"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="167,187,261,230,256,231,166,192"/>
 </map>

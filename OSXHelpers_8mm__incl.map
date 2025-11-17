@@ -1,23 +1,23 @@
 <map id="src/lib/gui/OSXHelpers.mm" name="src/lib/gui/OSXHelpers.mm">
 <area shape="rect" id="Node000001" title=" " alt="" coords="652,5,833,30"/>
 <area shape="rect" id="Node000002" href="$OSXHelpers_8h.html" title=" " alt="" coords="5,85,112,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="652,25,412,42,268,58,124,81,111,83,110,78,123,75,267,53,412,37,651,20"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="649,24,412,42,268,58,124,81,112,83,110,78,123,75,267,53,412,37,654,22"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="136,85,248,110"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="651,29,470,48,260,81,247,83,246,78,259,75,469,43,651,24"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="649,27,470,48,260,81,248,83,246,78,259,75,469,43,654,26"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="272,85,418,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="680,33,431,81,415,84,413,79,430,75,679,28"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="677,31,431,81,415,84,413,79,430,75,682,30"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="443,85,607,110"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="711,33,573,82,571,77,709,28"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="713,30,573,82,572,77,707,31"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="631,85,854,110"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="745,30,745,69,740,69,740,30"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="744,28,745,71,740,68,741,32"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="878,78,1090,117"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="779,28,912,70,910,75,778,33"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="779,28,914,73,908,73,778,33"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="1114,78,1326,117"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="815,28,1099,74,1098,79,814,33"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="815,28,1101,76,1096,77,814,33"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="1350,78,1524,117"/>
-<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="834,23,1058,43,1335,75,1334,80,1057,48,833,28"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="834,23,1058,43,1337,77,1332,78,1057,48,834,28"/>
 <area shape="rect" id="Node000011" title=" " alt="" coords="1549,85,1621,110"/>
-<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="834,15,971,17,1147,25,1342,43,1440,57,1536,75,1544,77,1542,82,1535,81,1440,63,1341,48,1146,30,971,22,833,20"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="833,15,971,17,1147,25,1342,43,1440,57,1536,75,1546,80,1540,80,1535,81,1440,63,1341,48,1146,30,971,22,834,20"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="26,165,91,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="61,110,61,149,56,149,56,110"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="60,108,61,150,56,148,57,112"/>
 </map>

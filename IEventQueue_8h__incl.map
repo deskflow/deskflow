@@ -1,15 +1,15 @@
 <map id="src/lib/base/IEventQueue.h" name="src/lib/base/IEventQueue.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="129,5,307,30"/>
 <area shape="rect" id="Node000002" href="$Event_8h.html" title=" " alt="" coords="115,78,212,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,32,184,68,179,64,207,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,29,184,68,179,64,207,33"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="236,78,313,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="229,29,258,64,254,68,225,32"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="228,28,258,66,253,66,227,33"/>
 <area shape="rect" id="Node000003" href="$EventTypes_8h.html" title=" " alt="" coords="5,151,106,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="147,105,87,144,84,140,144,101"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,105,87,144,84,140,147,101"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="129,151,198,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="166,103,166,135,161,135,161,103"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="165,101,166,136,161,134,162,106"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="222,151,281,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="180,101,227,139,224,143,176,105"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="179,101,228,140,223,141,177,106"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="24,223,87,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="58,176,58,208,53,208,53,176"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="57,174,58,208,53,207,54,178"/>
 </map>

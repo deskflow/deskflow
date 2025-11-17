@@ -1,7 +1,7 @@
 <map id="ArchNetworkNoRouteException" name="ArchNetworkNoRouteException">
 <area shape="rect" id="Node000001" title="No route to address." alt="" coords="5,151,212,175"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="31,78,186,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,118,111,150,106,150,106,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,117,111,151,106,149,107,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="47,5,170,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,46,111,78,106,78,106,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,43,111,78,106,77,107,48"/>
 </map>

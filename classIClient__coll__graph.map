@@ -1,5 +1,5 @@
 <map id="IClient" name="IClient">
 <area shape="rect" id="Node000001" title="Client interface." alt="" coords="9,78,68,103"/>
 <area shape="rect" id="Node000002" href="$classIScreen.html" title="Screen interface." alt="" coords="5,5,72,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,46,41,78,36,78,36,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,44,41,78,36,77,36,48"/>
 </map>

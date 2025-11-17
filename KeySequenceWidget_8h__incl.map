@@ -1,11 +1,11 @@
 <map id="src/lib/gui/widgets/KeySequenceWidget.h" name="src/lib/gui/widgets/KeySequenceWidget.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="41,5,197,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,105,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,46,76,82,72,78,101,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,47,76,82,72,78,105,42"/>
 <area shape="rect" id="Node000003" href="$KeySequence_8h.html" title=" " alt="" coords="128,92,240,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="137,43,167,78,163,82,133,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,42,167,80,162,80,134,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="117,165,169,189"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,119,160,153,155,150,175,116"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="180,116,159,153,155,150,175,119"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="193,165,258,189"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="193,116,214,150,209,153,189,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="192,115,214,152,209,151,190,120"/>
 </map>

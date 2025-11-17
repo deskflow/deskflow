@@ -1,7 +1,7 @@
 <map id="src/lib/base/IEventQueueBuffer.h" name="src/lib/base/IEventQueueBuffer.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,173,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="11,92,79,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,46,61,80,57,77,76,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,43,61,80,57,77,76,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="103,92,163,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="102,43,121,77,117,80,97,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="101,42,122,79,116,78,98,47"/>
 </map>

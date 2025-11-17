@@ -1,7 +1,7 @@
 <map id="OSXKeyState" name="OSXKeyState">
 <area shape="rect" id="Node000001" title="OS X key state." alt="" coords="5,151,108,175"/>
 <area shape="rect" id="Node000002" href="$classKeyState.html" title="Core key state." alt="" coords="19,78,94,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,118,59,150,54,150,54,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="59,117,59,151,54,150,54,120"/>
 <area shape="rect" id="Node000003" href="$classIKeyState.html" title="Key state interface." alt="" coords="17,5,96,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="59,46,59,78,54,78,54,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,43,59,78,54,77,56,48"/>
 </map>

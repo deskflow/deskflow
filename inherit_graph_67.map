@@ -1,61 +1,61 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classIKeyState.html" title="Key state interface." alt="" coords="31,191,109,215"/>
 <area shape="rect" id="Node000001" href="$classIPlatformScreen.html" title="Screen interface." alt="" coords="186,141,301,166"/>
-<area shape="poly" id="edge37_Node000000_Node000001" title=" " alt="" coords="124,185,196,164,198,169,125,190"/>
+<area shape="poly" id="edge37_Node000000_Node000001" title=" " alt="" coords="123,185,199,165,195,169,126,190"/>
 <area shape="rect" id="Node000025" href="$classKeyState.html" title="Core key state." alt="" coords="206,191,280,215"/>
-<area shape="poly" id="edge43_Node000000_Node000025" title=" " alt="" coords="125,200,206,200,206,206,125,206"/>
+<area shape="poly" id="edge43_Node000000_Node000025" title=" " alt="" coords="124,200,208,201,204,205,126,206"/>
 <area shape="rect" id="Node000002" href="$classPlatformScreen.html" title="Base screen implementation." alt="" coords="370,79,482,103"/>
-<area shape="poly" id="edge38_Node000001_Node000002" title=" " alt="" coords="295,133,387,101,388,106,297,138"/>
+<area shape="poly" id="edge38_Node000001_Node000002" title=" " alt="" coords="295,133,390,102,385,106,297,138"/>
 <area shape="rect" id="Node000003" href="$classMSWindowsScreen.html" title="Implementation of IPlatformScreen for Microsoft Windows." alt="" coords="548,104,685,129"/>
-<area shape="poly" id="edge39_Node000002_Node000003" title=" " alt="" coords="498,98,548,105,548,110,497,103"/>
+<area shape="poly" id="edge39_Node000002_Node000003" title=" " alt="" coords="497,98,551,107,545,108,498,103"/>
 <area shape="rect" id="Node000004" href="$classOSXScreen.html" title="Implementation of IPlatformScreen for OS X." alt="" coords="571,153,662,178"/>
-<area shape="poly" id="edge40_Node000002_Node000004" title=" " alt="" coords="483,107,501,114,549,138,580,150,578,155,547,143,499,119,481,112"/>
+<area shape="poly" id="edge40_Node000002_Node000004" title=" " alt="" coords="482,106,501,114,549,138,582,153,577,153,547,143,499,119,482,112"/>
 <area shape="rect" id="Node000005" href="$classXWindowsScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="554,5,679,30"/>
-<area shape="poly" id="edge41_Node000002_Node000005" title=" " alt="" coords="473,70,547,41,580,28,582,33,549,45,475,75"/>
+<area shape="poly" id="edge41_Node000002_Node000005" title=" " alt="" coords="473,70,547,41,583,29,578,32,549,45,475,75"/>
 <area shape="rect" id="Node000006" href="$classdeskflow_1_1EiScreen.html" title="Implementation of IPlatformScreen for X11." alt="" coords="550,55,683,79"/>
-<area shape="poly" id="edge42_Node000002_Node000006" title=" " alt="" coords="497,79,549,73,550,78,498,85"/>
+<area shape="poly" id="edge42_Node000002_Node000006" title=" " alt="" coords="497,80,552,74,547,76,498,85"/>
 <area shape="rect" id="Node000026" href="$classMSWindowsKeyState.html" title="Microsoft Windows key mapper." alt="" coords="352,177,500,202"/>
-<area shape="poly" id="edge44_Node000025_Node000026" title=" " alt="" coords="296,197,351,192,352,198,296,202"/>
+<area shape="poly" id="edge44_Node000025_Node000026" title=" " alt="" coords="295,197,354,194,349,196,297,202"/>
 <area shape="rect" id="Node000027" href="$classOSXKeyState.html" title="OS X key state." alt="" coords="375,227,477,251"/>
-<area shape="poly" id="edge45_Node000025_Node000027" title=" " alt="" coords="297,211,375,226,374,232,296,216"/>
+<area shape="poly" id="edge45_Node000025_Node000027" title=" " alt="" coords="296,211,377,228,372,230,296,216"/>
 <area shape="rect" id="Node000028" href="$classXWindowsKeyState.html" title="X Windows key state." alt="" coords="358,276,495,301"/>
-<area shape="poly" id="edge46_Node000025_Node000028" title=" " alt="" coords="279,221,353,261,384,273,383,278,351,265,276,226"/>
+<area shape="poly" id="edge46_Node000025_Node000028" title=" " alt="" coords="278,221,353,261,386,275,381,276,351,265,277,226"/>
 <area shape="rect" id="Node000029" href="$classdeskflow_1_1EiKeyState.html" title="A key state for Ei." alt="" coords="354,128,499,153"/>
-<area shape="poly" id="edge47_Node000025_Node000029" title=" " alt="" coords="294,183,387,151,389,156,296,188"/>
+<area shape="poly" id="edge47_Node000025_Node000029" title=" " alt="" coords="294,183,390,152,386,155,297,188"/>
 <area shape="rect" id="Node000007" href="$classIPrimaryScreen.html" title="Primary screen interface." alt="" coords="14,92,126,117"/>
-<area shape="poly" id="edge48_Node000007_Node000001" title=" " alt="" coords="132,119,198,138,197,143,130,124"/>
+<area shape="poly" id="edge48_Node000007_Node000001" title=" " alt="" coords="130,119,200,139,195,142,132,124"/>
 <area shape="rect" id="Node000008" href="$classIScreen.html" title="Screen interface." alt="" coords="37,264,103,289"/>
-<area shape="poly" id="edge63_Node000008_Node000001" title=" " alt="" coords="99,252,133,225,156,200,181,177,204,164,207,169,184,181,160,204,136,229,103,257"/>
+<area shape="poly" id="edge63_Node000008_Node000001" title=" " alt="" coords="99,253,133,225,156,200,181,177,208,165,204,168,184,181,160,204,136,229,103,256"/>
 <area shape="rect" id="Node000009" href="$classIClient.html" title="Client interface." alt="" coords="214,325,273,350"/>
-<area shape="poly" id="edge49_Node000008_Node000009" title=" " alt="" coords="119,290,214,325,213,330,117,295"/>
+<area shape="poly" id="edge49_Node000008_Node000009" title=" " alt="" coords="118,290,216,326,211,329,117,296"/>
 <area shape="rect" id="Node000023" href="$classdeskflow_1_1Screen.html" title="Platform independent screen." alt="" coords="183,264,304,289"/>
-<area shape="poly" id="edge64_Node000008_Node000023" title=" " alt="" coords="118,274,182,274,182,279,118,279"/>
+<area shape="poly" id="edge64_Node000008_Node000023" title=" " alt="" coords="118,274,184,275,180,278,119,279"/>
 <area shape="rect" id="Node000010" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="366,375,486,399"/>
-<area shape="poly" id="edge50_Node000009_Node000010" title=" " alt="" coords="289,347,378,372,377,377,287,352"/>
+<area shape="poly" id="edge50_Node000009_Node000010" title=" " alt="" coords="288,347,380,374,375,374,288,352"/>
 <area shape="rect" id="Node000022" href="$classClient.html" title="Deskflow client." alt="" coords="398,325,454,350"/>
-<area shape="poly" id="edge62_Node000009_Node000022" title=" " alt="" coords="289,335,398,335,398,340,289,340"/>
+<area shape="poly" id="edge62_Node000009_Node000022" title=" " alt="" coords="289,335,401,337,396,338,289,340"/>
 <area shape="rect" id="Node000011" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="572,349,661,374"/>
-<area shape="poly" id="edge51_Node000010_Node000011" title=" " alt="" coords="501,374,571,365,572,370,502,380"/>
+<area shape="poly" id="edge51_Node000010_Node000011" title=" " alt="" coords="501,374,569,368,574,367,502,380"/>
 <area shape="rect" id="Node000021" href="$classPrimaryClient.html" title="Primary screen as pseudo&#45;client." alt="" coords="566,399,667,423"/>
-<area shape="poly" id="edge61_Node000010_Node000021" title=" " alt="" coords="501,394,566,402,565,407,501,399"/>
+<area shape="poly" id="edge61_Node000010_Node000021" title=" " alt="" coords="501,394,568,405,563,405,501,399"/>
 <area shape="rect" id="Node000012" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="733,349,843,374"/>
-<area shape="poly" id="edge52_Node000011_Node000012" title=" " alt="" coords="677,359,733,359,733,364,677,364"/>
+<area shape="poly" id="edge52_Node000011_Node000012" title=" " alt="" coords="676,359,735,362,730,362,677,364"/>
 <area shape="rect" id="Node000013" href="$classClientProxy1__1.html" title="Proxy for client implementing protocol version 1.1." alt="" coords="891,349,1001,374"/>
-<area shape="poly" id="edge53_Node000012_Node000013" title=" " alt="" coords="859,359,891,359,891,364,859,364"/>
+<area shape="poly" id="edge53_Node000012_Node000013" title=" " alt="" coords="859,359,893,362,888,362,859,364"/>
 <area shape="rect" id="Node000014" href="$classClientProxy1__2.html" title="Proxy for client implementing protocol version 1.2." alt="" coords="1049,349,1160,374"/>
-<area shape="poly" id="edge54_Node000013_Node000014" title=" " alt="" coords="1017,359,1049,359,1049,364,1017,364"/>
+<area shape="poly" id="edge54_Node000013_Node000014" title=" " alt="" coords="1017,359,1052,362,1046,362,1017,364"/>
 <area shape="rect" id="Node000015" href="$classClientProxy1__3.html" title="Proxy for client implementing protocol version 1.3." alt="" coords="1208,349,1318,374"/>
-<area shape="poly" id="edge55_Node000014_Node000015" title=" " alt="" coords="1176,359,1207,359,1207,364,1176,364"/>
+<area shape="poly" id="edge55_Node000014_Node000015" title=" " alt="" coords="1176,359,1210,362,1205,362,1176,364"/>
 <area shape="rect" id="Node000016" href="$classClientProxy1__4.html" title="Proxy for client implementing protocol version 1.4." alt="" coords="1366,349,1476,374"/>
-<area shape="poly" id="edge56_Node000015_Node000016" title=" " alt="" coords="1334,359,1366,359,1366,364,1334,364"/>
+<area shape="poly" id="edge56_Node000015_Node000016" title=" " alt="" coords="1334,359,1368,362,1363,362,1334,364"/>
 <area shape="rect" id="Node000017" href="$classClientProxy1__5.html" title="Proxy for client implementing protocol version 1.5." alt="" coords="1524,349,1635,374"/>
-<area shape="poly" id="edge57_Node000016_Node000017" title=" " alt="" coords="1492,359,1524,359,1524,364,1492,364"/>
+<area shape="poly" id="edge57_Node000016_Node000017" title=" " alt="" coords="1492,359,1527,362,1521,362,1492,364"/>
 <area shape="rect" id="Node000018" href="$classClientProxy1__6.html" title="Proxy for client implementing protocol version 1.6." alt="" coords="1683,349,1793,374"/>
-<area shape="poly" id="edge58_Node000017_Node000018" title=" " alt="" coords="1651,359,1682,359,1682,364,1651,364"/>
+<area shape="poly" id="edge58_Node000017_Node000018" title=" " alt="" coords="1651,359,1685,362,1680,362,1651,364"/>
 <area shape="rect" id="Node000019" href="$classClientProxy1__7.html" title="Proxy for client implementing protocol version 1.7." alt="" coords="1841,349,1951,374"/>
-<area shape="poly" id="edge59_Node000018_Node000019" title=" " alt="" coords="1809,359,1841,359,1841,364,1809,364"/>
+<area shape="poly" id="edge59_Node000018_Node000019" title=" " alt="" coords="1809,359,1843,362,1838,362,1809,364"/>
 <area shape="rect" id="Node000020" href="$classClientProxy1__8.html" title=" " alt="" coords="1999,349,2110,374"/>
-<area shape="poly" id="edge60_Node000019_Node000020" title=" " alt="" coords="1967,359,1999,359,1999,364,1967,364"/>
+<area shape="poly" id="edge60_Node000019_Node000020" title=" " alt="" coords="1967,359,2002,362,1996,362,1967,364"/>
 <area shape="rect" id="Node000024" href="$classISecondaryScreen.html" title="Secondary screen interface." alt="" coords="5,141,135,166"/>
-<area shape="poly" id="edge65_Node000024_Node000001" title=" " alt="" coords="150,151,185,151,185,156,150,156"/>
+<area shape="poly" id="edge65_Node000024_Node000001" title=" " alt="" coords="149,151,187,152,183,155,151,156"/>
 </map>

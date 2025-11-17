@@ -1,7 +1,7 @@
 <map id="src/lib/deskflow/OptionTypes.h" name="src/lib/deskflow/OptionTypes.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,205,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="34,78,94,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,32,80,66,76,63,96,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,29,80,66,76,63,96,32"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="118,78,174,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,29,134,63,130,66,110,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,28,135,65,129,65,111,33"/>
 </map>

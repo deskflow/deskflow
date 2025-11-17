@@ -1,11 +1,11 @@
 <map id="src/lib/gui/widgets/FingerprintPreview.h" name="src/lib/gui/widgets/FingerprintPreview.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="25,5,169,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,74,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,46,59,81,55,78,81,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,47,59,81,55,78,84,42"/>
 <area shape="rect" id="Node000003" href="$Fingerprint_8h.html" title=" " alt="" coords="98,92,213,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,43,140,78,135,81,109,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,42,140,79,135,80,110,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="59,165,148,189"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,119,123,154,119,151,145,116"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="149,116,123,154,119,150,145,118"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="173,165,242,189"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="166,116,192,151,188,154,162,119"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="165,115,193,153,187,152,163,120"/>
 </map>

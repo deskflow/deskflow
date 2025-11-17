@@ -1,9 +1,9 @@
 <map id="ThreadException" name="ThreadException">
 <area shape="rect" id="Node000001" title="Generic thread exception." alt="" coords="112,78,230,103"/>
 <area shape="rect" id="Node000003" href="$classThreadCancelException.html" title="Thread exception to cancel." alt="" coords="5,151,164,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="147,115,100,152,97,148,143,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,112,100,153,97,148,142,113"/>
 <area shape="rect" id="Node000004" href="$classThreadExitException.html" title="Thread exception to exit." alt="" coords="187,151,328,175"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="199,111,245,148,242,152,196,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="198,110,246,150,241,150,196,115"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="120,5,222,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,46,174,78,168,78,168,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,44,174,79,169,77,170,48"/>
 </map>

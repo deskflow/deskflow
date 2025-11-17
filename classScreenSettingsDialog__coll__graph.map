@@ -1,5 +1,5 @@
 <map id="ScreenSettingsDialog" name="ScreenSettingsDialog">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,78,153,103"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="45,5,113,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,46,82,78,76,78,76,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,44,82,79,76,77,77,48"/>
 </map>

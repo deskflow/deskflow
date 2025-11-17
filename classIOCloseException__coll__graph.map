@@ -1,9 +1,9 @@
 <map id="IOCloseException" name="IOCloseException">
 <area shape="rect" id="Node000001" title="The IOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="5,223,132,248"/>
 <area shape="rect" id="Node000002" href="$classIOException.html" title="The IOException class Generic i/o exception class." alt="" coords="22,151,115,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,191,71,223,66,223,66,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,189,71,224,66,222,67,193"/>
 <area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="14,78,123,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="71,118,71,150,66,150,66,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="69,116,71,151,66,150,68,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="7,5,130,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="71,46,71,78,66,78,66,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="69,43,71,78,66,77,68,48"/>
 </map>

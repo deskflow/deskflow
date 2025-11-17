@@ -1,5 +1,5 @@
 <map id="ArchLogUnix" name="ArchLogUnix">
 <area shape="rect" id="Node000001" title="Unix implementation of IArchLog." alt="" coords="5,78,102,103"/>
 <area shape="rect" id="Node000002" href="$classIArchLog.html" title="Interface for architecture dependent logging." alt="" coords="17,5,90,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,46,56,78,51,78,51,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="56,44,56,78,51,77,51,48"/>
 </map>

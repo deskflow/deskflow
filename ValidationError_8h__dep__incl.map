@@ -1,24 +1,24 @@
 <map id="src/lib/gui/validators/ValidationError.h" name="src/lib/gui/validators/ValidationError.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="367,5,504,44"/>
 <area shape="rect" id="Node000002" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="167,265,344,304"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="353,44,307,64,286,77,268,94,255,113,246,135,240,183,244,228,252,264,247,265,239,229,235,182,241,134,250,111,264,90,283,73,304,59,351,39"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="349,43,307,64,286,77,268,94,255,113,246,135,240,183,244,228,252,266,247,264,239,229,235,182,241,134,250,111,264,90,283,73,304,59,354,40"/>
 <area shape="rect" id="Node000003" href="$AliasValidator_8h.html" title=" " alt="" coords="43,179,180,217"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="352,40,275,59,237,75,201,94,176,114,155,136,124,180,120,177,151,133,173,110,198,90,235,70,274,54,351,34"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="349,38,275,59,237,75,201,94,176,114,155,136,124,180,120,177,151,133,173,110,198,90,235,70,274,54,354,36"/>
 <area shape="rect" id="Node000005" href="$LineEditValidator_8h.html" title=" " alt="" coords="277,92,415,131"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="406,57,368,93,364,89,403,53"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="407,54,367,94,364,89,402,57"/>
 <area shape="rect" id="Node000007" href="$ScreenNameValidator_8h.html" title=" " alt="" coords="426,179,588,217"/>
-<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="451,57,502,177,497,179,446,59"/>
+<area shape="poly" id="edge12_Node000001_Node000007" title=" " alt="" coords="450,56,502,179,497,177,447,60"/>
 <area shape="rect" id="Node000008" href="$ScreenNameValidator_8cpp.html" title=" " alt="" coords="478,265,654,304"/>
-<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="483,51,515,74,549,103,580,138,603,178,608,201,603,226,583,266,578,264,598,224,602,202,598,180,575,141,545,107,512,78,480,55"/>
+<area shape="poly" id="edge11_Node000001_Node000008" title=" " alt="" coords="482,50,515,74,549,103,580,138,603,178,608,201,603,226,582,267,579,263,598,224,602,202,598,180,575,141,545,107,512,78,481,56"/>
 <area shape="rect" id="Node000009" href="$ValidationError_8cpp.html" title=" " alt="" coords="664,92,801,131"/>
-<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="516,46,668,89,666,94,515,51"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="158,223,225,262,222,267,155,228"/>
+<area shape="poly" id="edge13_Node000001_Node000009" title=" " alt="" coords="516,46,669,91,664,92,516,51"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="157,223,226,264,221,265,156,228"/>
 <area shape="rect" id="Node000004" href="$AliasValidator_8cpp.html" title=" " alt="" coords="5,265,143,304"/>
-<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="99,233,85,266,80,264,94,231"/>
-<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="281,139,164,181,162,176,279,134"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="99,230,84,266,80,263,95,233"/>
+<area shape="poly" id="edge6_Node000005_Node000003" title=" " alt="" coords="278,138,164,181,162,176,282,135"/>
 <area shape="rect" id="Node000006" href="$LineEditValidator_8cpp.html" title=" " alt="" coords="255,179,402,217"/>
-<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="342,147,335,179,330,178,336,146"/>
-<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="397,136,473,176,470,180,394,141"/>
-<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="438,225,312,267,310,262,436,220"/>
-<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="531,229,555,263,551,266,527,232"/>
+<area shape="poly" id="edge7_Node000005_Node000006" title=" " alt="" coords="341,144,335,180,330,176,337,148"/>
+<area shape="poly" id="edge8_Node000005_Node000007" title=" " alt="" coords="396,136,474,178,469,178,395,141"/>
+<area shape="poly" id="edge9_Node000007_Node000002" title=" " alt="" coords="440,222,312,267,310,262,435,223"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="530,228,555,266,551,264,528,233"/>
 </map>

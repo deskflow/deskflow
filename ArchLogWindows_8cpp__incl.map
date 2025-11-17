@@ -1,14 +1,14 @@
 <map id="src/lib/arch/win32/ArchLogWindows.cpp" name="src/lib/arch/win32/ArchLogWindows.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="122,5,274,44"/>
 <area shape="rect" id="Node000002" href="$ArchLogWindows_8h.html" title=" " alt="" coords="28,92,229,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,46,151,82,147,78,179,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,47,151,82,147,79,183,43"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="189,237,254,262"/>
-<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="217,43,232,65,244,91,251,118,252,140,244,190,235,223,230,222,239,189,246,140,245,119,239,93,228,68,212,46"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="215,42,232,65,244,91,251,118,252,140,244,190,234,224,230,221,239,189,246,140,245,119,239,93,228,68,214,47"/>
 <area shape="rect" id="Node000003" href="$IArchLog_8h.html" title=" " alt="" coords="6,165,120,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="119,119,86,155,82,152,116,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,119,86,155,82,152,119,115"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="144,165,230,189"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="140,116,170,151,166,154,136,119"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,187,183,228,181,233,88,192"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="139,115,170,152,165,153,137,120"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,187,184,229,179,232,89,192"/>
 <area shape="rect" id="Node000005" href="$LogLevel_8h.html" title=" " alt="" coords="5,237,121,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="66,190,66,222,60,222,60,190"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="65,188,66,222,60,221,61,192"/>
 </map>

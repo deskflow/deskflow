@@ -1,14 +1,14 @@
 <map id="src/lib/base/SimpleEventQueueBuffer.h" name="src/lib/base/SimpleEventQueueBuffer.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="190,5,356,44"/>
 <area shape="rect" id="Node000002" href="$IArchMultithread_8h.html" title=" " alt="" coords="5,92,162,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,47,127,88,125,83,226,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,47,127,88,125,83,229,43"/>
 <area shape="rect" id="Node000004" href="$IEventQueueBuffer_8h.html" title=" " alt="" coords="186,92,360,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="276,45,276,76,270,76,270,45"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="274,42,275,77,270,75,271,47"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="383,92,440,117"/>
-<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="308,42,379,82,376,86,305,47"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="307,42,380,84,375,84,306,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="104,165,164,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,116,119,151,115,154,90,119"/>
-<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="251,120,172,160,169,155,249,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="93,115,120,152,115,152,91,120"/>
+<area shape="poly" id="edge5_Node000004_Node000003" title=" " alt="" coords="253,117,172,160,169,155,247,118"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="239,165,307,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="276,117,276,149,270,149,270,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="275,115,275,151,271,148,271,119"/>
 </map>

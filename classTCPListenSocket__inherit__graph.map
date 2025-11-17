@@ -1,9 +1,9 @@
 <map id="TCPListenSocket" name="TCPListenSocket">
 <area shape="rect" id="Node000001" title="TCP listen socket." alt="" coords="12,151,136,175"/>
 <area shape="rect" id="Node000004" href="$classSecureListenSocket.html" title=" " alt="" coords="5,223,143,248"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="77,191,77,223,71,223,71,191"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="76,189,77,224,71,222,72,193"/>
 <area shape="rect" id="Node000002" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="24,78,124,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,118,77,150,71,150,71,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,116,77,151,71,150,73,121"/>
 <area shape="rect" id="Node000003" href="$classISocket.html" title="Generic socket interface." alt="" coords="41,5,107,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,46,77,78,71,78,71,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,43,77,78,71,77,73,48"/>
 </map>

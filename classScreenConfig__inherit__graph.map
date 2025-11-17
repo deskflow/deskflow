@@ -1,7 +1,7 @@
 <map id="ScreenConfig" name="ScreenConfig">
 <area shape="rect" id="Node000001" title="Screen configuration base class." alt="" coords="38,5,139,30"/>
 <area shape="rect" id="Node000002" href="$classScreen.html" title=" " alt="" coords="5,78,68,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,44,47,79,43,76,69,41"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,42,47,79,43,76,68,43"/>
 <area shape="rect" id="Node000003" href="$classServerConfig.html" title=" " alt="" coords="92,78,189,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,41,134,76,130,79,104,44"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,40,135,78,129,78,105,45"/>
 </map>

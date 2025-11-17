@@ -1,9 +1,9 @@
 <map id="ArchNetworkNameUnknownException" name="ArchNetworkNameUnknownException">
 <area shape="rect" id="Node000001" title="The named host is unknown." alt="" coords="5,223,250,248"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkNameException.html" title="Generic network name lookup erros." alt="" coords="33,151,222,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,191,130,223,125,223,125,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,189,130,224,125,222,126,193"/>
 <area shape="rect" id="Node000003" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="50,78,205,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,118,130,150,125,150,125,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,116,130,151,125,149,126,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="66,5,189,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="130,46,130,78,125,78,125,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="128,43,130,78,125,77,127,48"/>
 </map>

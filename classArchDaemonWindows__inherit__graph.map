@@ -1,5 +1,5 @@
 <map id="ArchDaemonWindows" name="ArchDaemonWindows">
 <area shape="rect" id="Node000001" title="Win32 implementation of IArchDaemon." alt="" coords="5,78,156,103"/>
 <area shape="rect" id="Node000002" href="$classIArchDaemon.html" title="Interface for architecture dependent daemonizing." alt="" coords="30,5,131,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,46,83,78,78,78,78,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,44,83,79,78,77,79,48"/>
 </map>

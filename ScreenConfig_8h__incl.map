@@ -1,11 +1,11 @@
 <map id="src/lib/gui/config/ScreenConfig.h" name="src/lib/gui/config/ScreenConfig.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="72,5,188,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,71,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,47,65,84,62,80,106,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,47,65,84,62,80,109,42"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="94,92,166,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,45,133,76,127,76,127,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="131,42,133,77,127,75,129,47"/>
 <area shape="rect" id="Node000004" href="$QSettingsProxy_8h.html" title=" " alt="" coords="189,92,367,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="167,42,244,82,241,87,165,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="166,42,245,84,240,85,165,47"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="238,165,318,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="281,117,281,149,275,149,275,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="280,115,280,151,276,148,276,119"/>
 </map>

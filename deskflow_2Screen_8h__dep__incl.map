@@ -1,17 +1,17 @@
 <map id="src/lib/deskflow/Screen.h" name="src/lib/deskflow/Screen.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="628,5,797,30"/>
 <area shape="rect" id="Node000002" href="$Client_8cpp.html" title=" " alt="" coords="5,85,159,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="613,30,409,50,172,81,136,87,135,82,171,75,408,45,612,25"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="610,28,409,50,172,81,136,87,135,82,171,75,408,45,615,27"/>
 <area shape="rect" id="Node000003" href="$ClientApp_8cpp.html" title=" " alt="" coords="183,85,381,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="633,36,348,87,347,82,632,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="636,33,348,87,347,82,630,33"/>
 <area shape="rect" id="Node000004" href="$deskflow_2Screen_8cpp.html" title=" " alt="" coords="406,85,588,110"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="667,38,530,87,528,82,665,33"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="669,35,530,87,529,82,663,36"/>
 <area shape="rect" id="Node000005" href="$ServerApp_8cpp.html" title=" " alt="" coords="612,85,814,110"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="715,46,715,85,710,85,710,46"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="715,44,715,86,711,83,711,47"/>
 <area shape="rect" id="Node000006" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="838,78,988,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="758,34,865,75,863,80,756,38"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="757,33,867,78,862,77,756,39"/>
 <area shape="rect" id="Node000007" href="$PrimaryClient_8cpp.html" title=" " alt="" coords="1012,85,1216,110"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="788,31,1054,82,1053,87,787,36"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="788,31,1056,84,1051,85,788,36"/>
 <area shape="rect" id="Node000008" href="$Server_8cpp.html" title=" " alt="" coords="1240,85,1404,110"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="813,25,1006,46,1229,75,1266,82,1265,87,1228,81,1005,51,812,31"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="812,25,1006,46,1229,75,1268,85,1263,84,1228,81,1005,51,812,31"/>
 </map>

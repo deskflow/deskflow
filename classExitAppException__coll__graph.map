@@ -1,9 +1,9 @@
 <map id="ExitAppException" name="ExitAppException">
 <area shape="rect" id="Node000001" title="Generic exit eception." alt="" coords="10,223,134,248"/>
 <area shape="rect" id="Node000002" href="$classDeskflowException.html" title="The DeskflowException class Generic deskflow exception class." alt="" coords="5,151,139,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,191,75,223,69,223,69,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,189,75,224,69,222,70,193"/>
 <area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="18,78,126,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,118,75,150,69,150,69,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="73,116,75,151,69,150,71,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="10,5,134,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,46,75,78,69,78,69,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="73,43,75,78,69,77,71,48"/>
 </map>

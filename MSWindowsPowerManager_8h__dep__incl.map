@@ -1,15 +1,15 @@
 <map id="src/lib/platform/MSWindowsPowerManager.h" name="src/lib/platform/MSWindowsPowerManager.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="178,5,364,44"/>
 <area shape="rect" id="Node000002" href="$MSWindowsPowerManager_8cpp.html" title=" " alt="" coords="74,92,260,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,56,192,93,189,89,235,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,52,192,94,189,89,234,56"/>
 <area shape="rect" id="Node000003" href="$MSWindowsScreen_8h.html" title=" " alt="" coords="284,92,469,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="308,52,355,89,352,93,305,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="307,51,356,91,351,91,306,57"/>
 <area shape="rect" id="Node000004" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="5,179,156,217"/>
 <area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="297,138,147,181,145,176,296,133"/>
 <area shape="rect" id="Node000005" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="180,179,365,217"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="343,143,297,180,294,176,340,139"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="344,140,297,180,294,176,339,142"/>
 <area shape="rect" id="Node000006" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="389,179,574,217"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="413,139,460,176,457,180,410,143"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="413,138,461,179,456,178,411,143"/>
 <area shape="rect" id="Node000007" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="598,179,784,217"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="462,133,622,176,621,181,460,138"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="461,133,624,178,619,178,460,138"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="XWindowsEventQueueBuffer" name="XWindowsEventQueueBuffer">
 <area shape="rect" id="Node000001" title="Event queue buffer for X11." alt="" coords="5,78,195,103"/>
 <area shape="rect" id="Node000002" href="$classIEventQueueBuffer.html" title="Event queue buffer interface." alt="" coords="35,5,165,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,46,103,78,97,78,97,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,44,102,79,98,77,98,48"/>
 </map>

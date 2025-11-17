@@ -1,5 +1,5 @@
 <map id="MSWindowsEventQueueBuffer" name="MSWindowsEventQueueBuffer">
 <area shape="rect" id="Node000001" title="Event queue buffer for Win32." alt="" coords="5,78,206,103"/>
 <area shape="rect" id="Node000002" href="$classIEventQueueBuffer.html" title="Event queue buffer interface." alt="" coords="40,5,171,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,46,108,78,103,78,103,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,44,108,79,103,77,104,48"/>
 </map>

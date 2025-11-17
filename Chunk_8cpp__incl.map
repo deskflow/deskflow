@@ -1,17 +1,17 @@
 <map id="src/lib/deskflow/Chunk.cpp" name="src/lib/deskflow/Chunk.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="124,5,304,30"/>
 <area shape="rect" id="Node000002" href="$Chunk_8h.html" title=" " alt="" coords="151,78,277,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,31,217,62,212,62,212,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="215,28,217,63,212,62,213,33"/>
 <area shape="rect" id="Node000003" href="$Event_8h.html" title=" " alt="" coords="115,151,212,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,105,183,140,178,137,204,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="208,101,183,140,178,137,204,105"/>
 <area shape="rect" id="Node000008" title=" " alt="" coords="236,151,296,175"/>
-<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="225,102,251,137,247,140,221,105"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="223,101,251,138,246,138,222,106"/>
 <area shape="rect" id="Node000004" href="$EventTypes_8h.html" title=" " alt="" coords="5,223,106,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="147,178,87,217,84,212,144,174"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="144,178,87,217,84,213,147,174"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="129,223,198,248"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="166,176,166,208,161,208,161,176"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="165,174,166,209,161,207,162,178"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="222,223,281,248"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="180,174,227,211,224,216,176,178"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="179,173,228,213,223,214,177,179"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="24,296,87,321"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="58,249,58,280,53,280,53,249"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="57,247,58,281,53,280,54,251"/>
 </map>

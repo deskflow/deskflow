@@ -1,15 +1,15 @@
 <map id="src/lib/platform/MSWindowsPowerManager.cpp" name="src/lib/platform/MSWindowsPowerManager.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="121,5,306,44"/>
 <area shape="rect" id="Node000002" href="$MSWindowsPowerManager_8h.html" title=" " alt="" coords="5,92,198,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,47,132,85,129,81,185,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,46,132,85,129,81,188,43"/>
 <area shape="rect" id="Node000003" href="$ArchMiscWindows_8h.html" title=" " alt="" coords="221,92,430,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="242,42,298,81,295,85,239,47"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,42,299,83,294,83,240,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="151,165,204,189"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="302,120,217,160,214,155,300,115"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,117,217,160,215,155,298,118"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="228,165,314,189"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="319,119,291,154,287,151,314,116"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="319,116,290,155,287,150,314,118"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="338,165,420,189"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="336,116,363,151,359,154,332,119"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="335,115,364,153,358,151,333,120"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="444,165,522,189"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="353,115,444,156,442,160,350,120"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="352,115,446,158,440,158,351,120"/>
 </map>

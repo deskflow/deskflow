@@ -1,15 +1,15 @@
 <map id="src/lib/platform/MSWindowsClipboardBitmapConverter.h" name="src/lib/platform/MSWindowsClipboardBitmapConverter.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="112,5,297,44"/>
 <area shape="rect" id="Node000002" href="$MSWindowsClipboard_8h.html" title=" " alt="" coords="98,92,310,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,45,207,76,202,76,202,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="206,42,207,77,202,75,203,47"/>
 <area shape="rect" id="Node000003" href="$IClipboard_8h.html" title=" " alt="" coords="5,165,153,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="185,120,114,159,112,154,182,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="182,119,114,159,111,155,186,115"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="176,165,232,189"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="207,117,207,149,202,149,202,117"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="206,115,207,150,202,148,203,119"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="257,165,344,189"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="222,115,274,153,271,158,219,119"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="221,115,275,155,270,156,220,120"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="9,237,69,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,191,55,225,51,222,70,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,188,55,225,51,222,70,191"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="94,237,147,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="88,189,108,223,104,225,84,191"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="87,188,109,224,103,224,85,192"/>
 </map>

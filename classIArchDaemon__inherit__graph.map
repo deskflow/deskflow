@@ -1,7 +1,7 @@
 <map id="IArchDaemon" name="IArchDaemon">
 <area shape="rect" id="Node000001" title="Interface for architecture dependent daemonizing." alt="" coords="100,5,200,30"/>
 <area shape="rect" id="Node000002" href="$classArchDaemonNone.html" title="Dummy implementation of IArchDaemon." alt="" coords="5,78,133,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,42,84,80,80,76,124,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,40,84,80,81,75,123,41"/>
 <area shape="rect" id="Node000003" href="$classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon." alt="" coords="156,78,307,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,38,220,76,217,80,174,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,38,221,78,216,78,174,43"/>
 </map>

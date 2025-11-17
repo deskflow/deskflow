@@ -1,9 +1,9 @@
 <map id="src/lib/gui/Logger.h" name="src/lib/gui/Logger.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="192,5,324,30"/>
 <area shape="rect" id="Node000002" href="$Logger_8cpp.html" title=" " alt="" coords="5,85,151,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="218,39,106,87,104,82,216,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,39,106,87,104,82,216,34"/>
 <area shape="rect" id="Node000003" href="$Messages_8cpp.html" title=" " alt="" coords="175,85,341,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,46,261,85,255,85,255,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="260,44,260,86,256,83,256,47"/>
 <area shape="rect" id="Node000004" href="$LogWidget_8cpp.html" title=" " alt="" coords="366,78,492,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="298,34,389,75,387,80,296,39"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="298,34,390,77,385,78,297,39"/>
 </map>

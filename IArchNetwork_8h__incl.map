@@ -1,9 +1,9 @@
 <map id="src/lib/arch/IArchNetwork.h" name="src/lib/arch/IArchNetwork.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="27,5,207,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,66,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,33,62,70,58,66,102,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,30,62,70,58,66,101,31"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="90,78,144,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,31,120,62,114,62,114,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,29,119,64,114,61,115,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="167,78,224,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="132,29,173,66,170,70,128,33"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="131,28,174,68,169,68,129,33"/>
 </map>

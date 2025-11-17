@@ -1,5 +1,5 @@
 <map id="KeyState" name="KeyState">
 <area shape="rect" id="Node000001" title="Core key state." alt="" coords="7,78,82,103"/>
 <area shape="rect" id="Node000002" href="$classIKeyState.html" title="Key state interface." alt="" coords="5,5,84,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,46,47,78,42,78,42,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,44,47,78,42,77,42,48"/>
 </map>

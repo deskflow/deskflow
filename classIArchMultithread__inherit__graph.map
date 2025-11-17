@@ -1,7 +1,7 @@
 <map id="IArchMultithread" name="IArchMultithread">
 <area shape="rect" id="Node000001" title="Interface for architecture dependent multithreading." alt="" coords="109,5,226,30"/>
 <area shape="rect" id="Node000002" href="$classArchMultithreadPosix.html" title="Posix implementation of IArchMultithread." alt="" coords="5,78,151,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,42,94,80,91,76,139,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,39,94,80,91,75,138,40"/>
 <area shape="rect" id="Node000003" href="$classArchMultithreadWindows.html" title="Win32 implementation of IArchMultithread." alt="" coords="175,78,341,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,38,245,76,242,80,193,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,37,246,78,241,78,193,42"/>
 </map>

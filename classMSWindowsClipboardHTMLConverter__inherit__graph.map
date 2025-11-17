@@ -1,7 +1,7 @@
 <map id="MSWindowsClipboardHTMLConverter" name="MSWindowsClipboardHTMLConverter">
 <area shape="rect" id="Node000001" title="Convert to/from HTML encoding." alt="" coords="5,165,248,189"/>
 <area shape="rect" id="Node000002" href="$classMSWindowsClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="27,78,226,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,133,129,164,124,164,124,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,131,129,165,124,163,125,134"/>
 <area shape="rect" id="Node000003" href="$classIMSWindowsClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="21,5,232,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="129,46,129,77,124,77,124,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="128,43,129,78,124,77,125,48"/>
 </map>

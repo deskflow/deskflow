@@ -1,7 +1,7 @@
 <map id="OSXClipboardUTF8Converter" name="OSXClipboardUTF8Converter">
 <area shape="rect" id="Node000001" title=" " alt="" coords="13,151,206,175"/>
 <area shape="rect" id="Node000002" href="$classOSXClipboardAnyTextConverter.html" title="Convert to/from some text encoding." alt="" coords="5,78,214,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,118,112,150,107,150,107,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,117,112,151,107,149,108,120"/>
 <area shape="rect" id="Node000003" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="27,5,192,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="112,46,112,78,107,78,107,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,43,112,78,107,77,108,48"/>
 </map>

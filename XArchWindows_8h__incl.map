@@ -1,9 +1,9 @@
 <map id="src/lib/arch/win32/XArchWindows.h" name="src/lib/arch/win32/XArchWindows.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="59,5,185,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,71,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,47,63,83,60,79,100,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,44,63,83,60,79,99,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="95,92,149,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="125,45,125,76,119,76,119,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,43,124,77,120,75,120,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="172,92,258,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="146,43,192,80,188,84,143,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="146,42,193,82,187,82,144,47"/>
 </map>

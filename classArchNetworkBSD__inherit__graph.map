@@ -1,5 +1,5 @@
 <map id="ArchNetworkBSD" name="ArchNetworkBSD">
 <area shape="rect" id="Node000001" title="Berkeley (BSD) sockets implementation of IArchNetwork." alt="" coords="5,78,131,103"/>
 <area shape="rect" id="Node000002" href="$classIArchNetwork.html" title="Interface for architecture dependent networking." alt="" coords="17,5,119,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,46,71,78,65,78,65,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="70,44,71,78,65,77,66,48"/>
 </map>

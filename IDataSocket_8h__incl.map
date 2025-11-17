@@ -1,11 +1,11 @@
 <map id="src/lib/net/IDataSocket.h" name="src/lib/net/IDataSocket.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="88,5,252,30"/>
 <area shape="rect" id="Node000002" href="$IStream_8h.html" title=" " alt="" coords="5,78,98,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,33,85,72,83,67,149,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="149,33,86,72,83,68,152,28"/>
 <area shape="rect" id="Node000004" href="$ISocket_8h.html" title=" " alt="" coords="122,78,219,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,31,173,62,168,62,168,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="172,28,173,63,168,61,169,33"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="244,78,297,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="188,28,243,66,240,71,185,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="187,28,244,68,238,69,186,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="21,151,82,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="54,103,54,135,49,135,49,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="53,101,54,136,49,135,50,105"/>
 </map>

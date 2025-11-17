@@ -1,7 +1,7 @@
 <map id="ArchNetworkAddressInUseException" name="ArchNetworkAddressInUseException">
 <area shape="rect" id="Node000001" title="Network address in use." alt="" coords="5,151,243,175"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="47,78,201,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="127,118,127,150,121,150,121,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,117,126,152,122,149,122,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="62,5,186,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="127,46,127,78,121,78,121,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="125,44,127,78,121,77,123,48"/>
 </map>

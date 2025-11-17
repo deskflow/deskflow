@@ -1,5 +1,5 @@
 <map id="ArchMultithreadPosix" name="ArchMultithreadPosix">
 <area shape="rect" id="Node000001" title="Posix implementation of IArchMultithread." alt="" coords="5,78,151,103"/>
 <area shape="rect" id="Node000002" href="$classIArchMultithread.html" title="Interface for architecture dependent multithreading." alt="" coords="20,5,136,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,46,81,78,75,78,75,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,44,81,79,75,77,76,48"/>
 </map>

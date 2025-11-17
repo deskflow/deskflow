@@ -1,12 +1,12 @@
 <map id="src/lib/net/SocketException.h" name="src/lib/net/SocketException.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,196,30"/>
 <area shape="rect" id="Node000002" href="$BaseException_8h.html" title=" " alt="" coords="25,151,176,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,31,88,53,80,78,81,108,90,136,85,137,76,109,75,78,83,51,92,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,33,88,53,80,78,81,108,90,137,85,137,76,109,75,78,83,51,96,28"/>
 <area shape="rect" id="Node000005" href="$IOException_8h.html" title=" " alt="" coords="90,78,207,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="111,29,134,64,130,67,106,32"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="109,28,135,65,130,66,108,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="18,223,95,248"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="95,177,74,212,69,209,91,174"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,175,74,212,70,208,91,177"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="119,223,172,248"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="110,174,132,209,128,212,106,177"/>
-<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="143,105,119,139,115,136,138,102"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="109,174,133,210,127,210,107,178"/>
+<area shape="poly" id="edge5_Node000005_Node000002" title=" " alt="" coords="142,101,119,139,115,136,139,105"/>
 </map>

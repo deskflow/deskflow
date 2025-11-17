@@ -1,9 +1,9 @@
 <map id="src/lib/platform/OSXPowerManager.h" name="src/lib/platform/OSXPowerManager.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="109,5,285,44"/>
 <area shape="rect" id="Node000002" href="$OSXPowerManager_8cpp.html" title=" " alt="" coords="5,92,181,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,56,118,93,114,89,161,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,56,118,93,114,89,164,52"/>
 <area shape="rect" id="Node000003" href="$OSXScreen_8h.html" title=" " alt="" coords="205,99,397,124"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="233,52,288,96,285,100,230,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="232,51,289,98,284,99,231,57"/>
 <area shape="rect" id="Node000004" href="$OSXScreen_8mm.html" title=" " alt="" coords="198,179,404,203"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="304,139,304,178,298,178,298,139"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="303,137,303,180,299,177,299,141"/>
 </map>

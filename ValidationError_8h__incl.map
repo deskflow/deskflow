@@ -1,9 +1,9 @@
 <map id="src/lib/gui/validators/ValidationError.h" name="src/lib/gui/validators/ValidationError.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="57,5,194,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,68,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,47,63,84,59,80,102,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,44,63,84,60,80,102,45"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="91,92,160,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,45,128,76,123,76,123,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="128,43,128,77,123,75,124,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="185,92,250,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="150,43,194,80,191,84,146,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,42,195,82,190,82,147,47"/>
 </map>

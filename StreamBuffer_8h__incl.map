@@ -1,9 +1,9 @@
 <map id="src/lib/io/StreamBuffer.h" name="src/lib/io/StreamBuffer.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="28,5,190,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,66,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,32,60,69,56,65,95,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,30,60,69,56,65,94,31"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="90,78,128,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,31,112,62,106,62,106,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="111,29,111,63,106,61,107,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="153,78,209,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="123,29,160,65,156,69,119,32"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="122,28,161,67,156,67,120,33"/>
 </map>

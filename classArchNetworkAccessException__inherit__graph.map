@@ -1,7 +1,7 @@
 <map id="ArchNetworkAccessException" name="ArchNetworkAccessException">
 <area shape="rect" id="Node000001" title="Network insufficient permission." alt="" coords="5,151,204,175"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="27,78,182,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,118,107,150,102,150,102,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,117,107,151,102,149,103,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="43,5,166,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,46,107,78,102,78,102,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,43,107,78,102,77,103,48"/>
 </map>

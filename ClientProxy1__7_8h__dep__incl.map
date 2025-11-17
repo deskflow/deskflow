@@ -1,12 +1,12 @@
 <map id="src/lib/server/ClientProxy1_7.h" name="src/lib/server/ClientProxy1_7.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="205,5,405,30"/>
 <area shape="rect" id="Node000002" href="$ClientProxy1__7_8cpp.html" title=" " alt="" coords="5,78,181,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="260,38,145,80,143,75,258,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="257,38,145,80,143,75,261,34"/>
 <area shape="rect" id="Node000003" href="$ClientProxy1__8_8h.html" title=" " alt="" coords="205,85,405,110"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="308,46,308,85,302,85,302,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="307,43,307,86,303,83,303,48"/>
 <area shape="rect" id="Node000005" href="$ClientProxyUnknown_8cpp.html" title=" " alt="" coords="358,165,526,203"/>
-<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="360,34,392,51,419,76,432,98,439,121,445,164,440,164,434,123,427,100,415,80,389,56,358,39"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="359,34,392,51,419,76,432,98,439,121,445,166,440,163,434,123,427,100,415,80,389,56,359,39"/>
 <area shape="rect" id="Node000004" href="$ClientProxy1__8_8cpp.html" title=" " alt="" coords="159,165,334,203"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="291,124,261,166,257,163,286,121"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="338,116,413,162,411,166,335,120"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="291,121,261,167,257,162,286,124"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="337,115,415,164,409,164,336,120"/>
 </map>

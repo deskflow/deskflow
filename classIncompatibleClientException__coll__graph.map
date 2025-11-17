@@ -1,9 +1,9 @@
 <map id="IncompatibleClientException" name="IncompatibleClientException">
 <area shape="rect" id="Node000001" title="Incompatible client exception." alt="" coords="5,223,192,248"/>
 <area shape="rect" id="Node000002" href="$classDeskflowException.html" title="The DeskflowException class Generic deskflow exception class." alt="" coords="32,151,165,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,191,101,223,96,223,96,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,189,101,224,96,222,97,193"/>
 <area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="44,78,153,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="101,118,101,150,96,150,96,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="100,116,101,151,96,150,97,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="37,5,160,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="101,46,101,78,96,78,96,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="99,43,101,78,96,77,98,48"/>
 </map>

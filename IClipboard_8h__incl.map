@@ -1,7 +1,7 @@
 <map id="src/lib/deskflow/IClipboard.h" name="src/lib/deskflow/IClipboard.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,192,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="28,78,89,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,32,75,66,70,63,90,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,29,75,66,70,63,90,32"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="113,78,166,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="108,29,128,63,123,66,103,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,28,128,65,123,65,104,33"/>
 </map>

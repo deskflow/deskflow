@@ -1,28 +1,28 @@
 <map id="src/lib/base/IJob.h" name="src/lib/base/IJob.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="578,5,706,30"/>
 <area shape="rect" id="Node000002" href="$FunctionJob_8h.html" title=" " alt="" coords="167,78,341,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="563,36,319,80,318,75,562,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="560,35,319,80,318,75,565,32"/>
 <area shape="rect" id="Node000004" href="$TMethodJob_8h.html" title=" " alt="" coords="769,78,944,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="693,33,822,75,821,80,691,38"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="692,33,824,77,819,77,692,38"/>
 <area shape="rect" id="Node000006" href="$MSWindowsDesks_8cpp.html" title=" " alt="" coords="218,151,403,189"/>
-<area shape="poly" id="edge13_Node000001_Node000006" title=" " alt="" coords="604,39,353,152,350,148,602,34"/>
+<area shape="poly" id="edge13_Node000001_Node000006" title=" " alt="" coords="606,37,352,153,351,148,600,36"/>
 <area shape="rect" id="Node000013" href="$Thread_8cpp.html" title=" " alt="" coords="969,78,1113,103"/>
-<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="722,30,975,75,974,80,721,36"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="722,30,977,77,972,78,721,36"/>
 <area shape="rect" id="Node000003" href="$FunctionJob_8cpp.html" title=" " alt="" coords="5,158,194,182"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="219,112,124,159,122,155,216,107"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="220,110,124,159,122,155,215,110"/>
 <area shape="rect" id="Node000005" href="$SocketMultiplexer_8cpp.html" title=" " alt="" coords="427,158,636,182"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="794,109,581,160,580,154,792,104"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="754,107,416,153,404,155,403,150,415,148,753,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="796,107,581,160,580,154,790,107"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="756,104,416,153,404,155,403,150,415,148,751,104"/>
 <area shape="rect" id="Node000007" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="660,151,846,189"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="831,114,780,152,776,148,828,110"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="832,111,779,153,777,148,827,113"/>
 <area shape="rect" id="Node000008" href="$MSWindowsScreenSaver_8cpp.html" title=" " alt="" coords="870,151,1055,189"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="886,110,938,148,935,152,883,114"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="885,109,939,151,934,149,883,114"/>
 <area shape="rect" id="Node000009" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1079,151,1264,189"/>
-<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="919,104,1096,147,1095,153,918,109"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="919,104,1098,150,1093,150,918,109"/>
 <area shape="rect" id="Node000010" href="$OSXScreen_8mm.html" title=" " alt="" coords="1288,158,1495,182"/>
-<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="958,103,1277,148,1319,154,1318,160,1276,153,957,108"/>
+<area shape="poly" id="edge9_Node000004_Node000010" title=" " alt="" coords="958,103,1277,148,1321,157,1316,157,1276,153,957,108"/>
 <area shape="rect" id="Node000011" href="$PortalInputCapture_8cpp.html" title=" " alt="" coords="1518,151,1694,189"/>
-<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="960,100,1235,121,1355,130,1507,148,1518,150,1518,155,1506,153,1354,136,1235,126,960,106"/>
+<area shape="poly" id="edge10_Node000004_Node000011" title=" " alt="" coords="960,100,1235,121,1355,130,1507,148,1521,152,1515,152,1506,153,1354,136,1235,126,960,106"/>
 <area shape="rect" id="Node000012" href="$PortalRemoteDesktop_8cpp.html" title=" " alt="" coords="1718,151,1910,189"/>
-<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="960,100,1171,114,1335,121,1499,129,1706,148,1719,150,1718,155,1706,153,1498,134,1335,126,1171,120,960,106"/>
+<area shape="poly" id="edge11_Node000004_Node000012" title=" " alt="" coords="960,100,1171,114,1335,121,1499,129,1706,148,1721,152,1716,152,1706,153,1498,134,1335,126,1171,120,960,106"/>
 </map>

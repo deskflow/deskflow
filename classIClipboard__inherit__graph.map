@@ -3,9 +3,9 @@
 <area shape="rect" id="Node000002" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="5,78,82,103"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,38,79,80,78,75,205,33"/>
 <area shape="rect" id="Node000003" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="106,78,256,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,43,195,80,191,76,230,39"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,40,194,80,192,75,230,42"/>
 <area shape="rect" id="Node000004" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="280,78,383,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="281,39,321,76,317,80,277,43"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,38,322,78,317,77,278,43"/>
 <area shape="rect" id="Node000005" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="407,78,546,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,33,441,75,439,80,306,38"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,32,443,77,438,78,306,38"/>
 </map>

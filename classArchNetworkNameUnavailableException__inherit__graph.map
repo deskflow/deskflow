@@ -1,9 +1,9 @@
 <map id="ArchNetworkNameUnavailableException" name="ArchNetworkNameUnavailableException">
 <area shape="rect" id="Node000001" title="Temporary name server error." alt="" coords="5,223,205,262"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkNameException.html" title="Generic network name lookup erros." alt="" coords="10,151,200,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,191,108,223,102,223,102,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,189,107,224,103,222,103,193"/>
 <area shape="rect" id="Node000003" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="28,78,182,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,118,108,150,102,150,102,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,116,108,151,102,150,104,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="43,5,167,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="108,46,108,78,102,78,102,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="106,43,108,78,102,77,104,48"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="BaseClientProxy" name="BaseClientProxy">
 <area shape="rect" id="Node000001" title="Generic proxy for client or primary." alt="" coords="5,151,125,175"/>
 <area shape="rect" id="Node000002" href="$classIClient.html" title="Client interface." alt="" coords="35,78,95,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,118,68,150,62,150,62,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,117,68,151,62,150,63,120"/>
 <area shape="rect" id="Node000003" href="$classIScreen.html" title="Screen interface." alt="" coords="32,5,98,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,46,68,78,62,78,62,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="66,43,68,78,62,77,64,48"/>
 </map>

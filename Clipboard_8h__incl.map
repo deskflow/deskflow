@@ -1,9 +1,9 @@
 <map id="src/lib/deskflow/Clipboard.h" name="src/lib/deskflow/Clipboard.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,5,188,30"/>
 <area shape="rect" id="Node000002" href="$IClipboard_8h.html" title=" " alt="" coords="23,78,170,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,31,99,62,94,62,94,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,28,99,63,94,62,95,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="26,151,87,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,105,73,138,68,136,88,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,102,73,139,68,135,88,105"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="111,151,164,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="106,102,126,136,121,139,101,105"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="105,101,126,138,121,137,102,106"/>
 </map>

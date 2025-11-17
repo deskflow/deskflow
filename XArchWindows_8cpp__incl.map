@@ -1,12 +1,12 @@
 <map id="src/lib/arch/win32/XArchWindows.cpp" name="src/lib/arch/win32/XArchWindows.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="9,5,150,44"/>
 <area shape="rect" id="Node000002" href="$XArchWindows_8h.html" title=" " alt="" coords="51,92,241,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,43,128,78,124,82,93,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,42,129,79,123,80,95,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,71,189"/>
-<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="67,46,53,68,42,93,37,121,38,149,32,149,32,121,37,91,48,65,62,43"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="130,119,70,158,67,154,127,115"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="63,47,53,68,42,93,37,121,38,149,32,148,32,121,37,91,48,65,66,42"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="131,118,70,158,67,154,126,117"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="107,165,161,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="147,118,141,150,136,149,141,117"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="146,115,141,151,136,148,142,119"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="184,165,270,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="161,115,204,152,201,156,158,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="160,115,205,154,200,155,158,120"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="src/lib/platform/XDGKeyUtil.h" name="src/lib/platform/XDGKeyUtil.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="14,5,207,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,56,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,33,57,70,53,66,96,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,30,56,70,53,66,95,31"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="80,78,141,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,31,113,62,108,62,108,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,29,113,63,108,61,109,33"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="165,78,211,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="125,29,166,65,162,69,121,33"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="124,28,167,67,161,68,122,33"/>
 </map>

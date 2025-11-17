@@ -1,13 +1,13 @@
 <map id="src/lib/platform/OSXCocoaApp.m" name="src/lib/platform/OSXCocoaApp.m">
 <area shape="rect" id="Node000001" title=" " alt="" coords="269,5,445,44"/>
 <area shape="rect" id="Node000002" href="$OSXCocoaApp_8h.html" title=" " alt="" coords="30,92,201,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="299,47,167,89,166,84,298,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="296,46,167,89,166,84,300,43"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="225,92,337,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="340,47,305,82,301,79,337,43"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="341,43,304,83,301,78,336,46"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="361,92,507,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="377,43,414,79,410,83,374,47"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="376,42,415,81,409,81,375,47"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="532,92,696,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="420,42,562,84,560,90,418,47"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="419,42,563,87,558,87,419,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,226,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="118,117,118,149,113,149,113,117"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="117,115,118,150,113,148,114,119"/>
 </map>

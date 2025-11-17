@@ -1,5 +1,5 @@
 <map id="ConsoleLogOutputter" name="ConsoleLogOutputter">
 <area shape="rect" id="Node000001" title="Write log to console." alt="" coords="5,78,150,103"/>
 <area shape="rect" id="Node000002" href="$classILogOutputter.html" title="Outputter interface." alt="" coords="27,5,128,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,46,80,78,75,78,75,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,44,80,79,75,77,76,48"/>
 </map>

@@ -1,11 +1,11 @@
 <map id="src/lib/platform/OSXMediaKeySupport.h" name="src/lib/platform/OSXMediaKeySupport.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="173,5,347,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,126,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,47,110,88,108,83,212,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="212,47,110,88,108,83,215,42"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="150,92,370,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,45,263,76,258,76,258,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="262,42,263,77,258,75,259,47"/>
 <area shape="rect" id="Node000004" href="$KeyTypes_8h.html" title=" " alt="" coords="394,92,540,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="311,42,423,84,421,89,309,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="311,42,424,86,419,87,310,47"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="435,165,498,189"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="470,117,470,149,464,149,464,117"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="469,115,469,151,465,147,465,119"/>
 </map>

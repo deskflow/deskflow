@@ -1,9 +1,9 @@
 <map id="IOEndOfStreamException" name="IOEndOfStreamException">
 <area shape="rect" id="Node000001" title="IOEndOfStreamException &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="5,223,177,248"/>
 <area shape="rect" id="Node000002" href="$classIOException.html" title="The IOException class Generic i/o exception class." alt="" coords="45,151,137,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,191,94,223,88,223,88,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,189,93,224,89,222,89,193"/>
 <area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="37,78,145,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="94,118,94,150,88,150,88,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="92,116,94,151,88,150,90,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="29,5,153,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="94,46,94,78,88,78,88,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="92,43,94,78,88,77,90,48"/>
 </map>

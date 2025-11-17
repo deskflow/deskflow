@@ -1,5 +1,5 @@
 <map id="deskflow::Screen" name="deskflow::Screen">
 <area shape="rect" id="Node000001" title="Platform independent screen." alt="" coords="5,78,127,103"/>
 <area shape="rect" id="Node000002" href="$classIScreen.html" title="Screen interface." alt="" coords="33,5,99,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="69,46,69,78,63,78,63,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="68,44,69,78,63,77,64,48"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="src/lib/platform/OSXKeyState.h" name="src/lib/platform/OSXKeyState.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="130,5,333,30"/>
 <area shape="rect" id="Node000002" href="$OSXKeyState_8cpp.html" title=" " alt="" coords="5,78,223,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,41,135,80,132,75,198,36"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,38,135,80,132,75,196,39"/>
 <area shape="rect" id="Node000003" href="$OSXScreen_8mm.html" title=" " alt="" coords="247,78,453,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,36,332,75,329,80,263,41"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,36,333,77,328,77,263,41"/>
 </map>

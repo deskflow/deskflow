@@ -1,16 +1,16 @@
 <map id="src/lib/net/TCPSocketFactory.h" name="src/lib/net/TCPSocketFactory.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="68,5,272,30"/>
 <area shape="rect" id="Node000002" href="$IArchNetwork_8h.html" title=" " alt="" coords="46,151,188,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,32,145,79,126,136,121,135,140,77,162,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,28,145,79,126,137,121,134,140,77,163,33"/>
 <area shape="rect" id="Node000006" href="$ISocketFactory_8h.html" title=" " alt="" coords="154,78,296,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="181,29,209,64,205,68,177,32"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="180,28,209,66,204,66,179,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,223,66,248"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="105,178,62,215,58,211,102,174"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="106,175,62,215,58,211,101,177"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="90,223,144,248"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="120,176,120,208,114,208,114,176"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="119,174,119,209,114,207,115,178"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="167,223,224,248"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="132,174,173,211,170,215,128,178"/>
-<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="208,105,149,144,146,140,206,101"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="131,173,174,213,169,213,129,178"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="205,105,149,144,146,140,209,102"/>
 <area shape="rect" id="Node000007" href="$SecurityLevel_8h.html" title=" " alt="" coords="212,151,344,175"/>
-<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="236,102,262,137,258,140,232,105"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="235,101,263,138,258,138,233,106"/>
 </map>

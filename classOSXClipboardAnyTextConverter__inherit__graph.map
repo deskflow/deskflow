@@ -1,13 +1,13 @@
 <map id="OSXClipboardAnyTextConverter" name="OSXClipboardAnyTextConverter">
 <area shape="rect" id="Node000001" title="Convert to/from some text encoding." alt="" coords="218,80,426,105"/>
 <area shape="rect" id="Node000003" href="$classOSXClipboardHTMLConverter.html" title="Convert to/from HTML encoding." alt="" coords="476,5,671,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="374,72,473,40,519,28,520,33,475,46,375,77"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="374,72,473,40,522,30,517,31,475,46,375,77"/>
 <area shape="rect" id="Node000004" href="$classOSXClipboardTextConverter.html" title="Convert to/from locale text encoding." alt="" coords="481,55,666,79"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="441,78,480,74,481,79,442,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="441,78,483,76,478,77,442,83"/>
 <area shape="rect" id="Node000005" href="$classOSXClipboardUTF16Converter.html" title="Convert to/from UTF&#45;16 encoding." alt="" coords="474,104,673,129"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="442,101,474,104,473,109,441,106"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="441,101,476,107,471,107,442,106"/>
 <area shape="rect" id="Node000006" href="$classOSXClipboardUTF8Converter.html" title=" " alt="" coords="478,153,670,178"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="377,107,475,138,521,150,519,155,473,143,375,112"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="376,107,475,138,523,153,517,153,473,143,375,113"/>
 <area shape="rect" id="Node000002" href="$classIOSXClipboardConverter.html" title="Clipboard format converter interface." alt="" coords="5,80,170,105"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,90,217,90,217,95,185,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,90,220,92,215,93,186,95"/>
 </map>

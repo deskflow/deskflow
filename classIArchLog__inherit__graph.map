@@ -1,7 +1,7 @@
 <map id="IArchLog" name="IArchLog">
 <area shape="rect" id="Node000001" title="Interface for architecture dependent logging." alt="" coords="84,5,157,30"/>
 <area shape="rect" id="Node000002" href="$classArchLogUnix.html" title="Unix implementation of IArchLog." alt="" coords="5,78,102,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,43,66,79,62,76,97,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,41,66,80,63,76,96,42"/>
 <area shape="rect" id="Node000003" href="$classArchLogWindows.html" title="Win32 implementation of IArchLog." alt="" coords="125,78,248,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="144,40,178,76,174,79,140,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="143,39,179,78,173,78,141,44"/>
 </map>

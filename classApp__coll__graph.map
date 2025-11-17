@@ -1,5 +1,5 @@
 <map id="App" name="App">
 <area shape="rect" id="Node000001" title=" " alt="" coords="7,78,52,103"/>
 <area shape="rect" id="Node000002" href="$classIApp.html" title=" " alt="" coords="5,5,54,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="32,46,32,78,27,78,27,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="32,44,32,78,27,77,27,47"/>
 </map>

@@ -1,15 +1,15 @@
 <map id="src/lib/platform/OSXClipboardAnyBitmapConverter.h" name="src/lib/platform/OSXClipboardAnyBitmapConverter.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="140,5,333,44"/>
 <area shape="rect" id="Node000002" href="$OSXClipboard_8h.html" title=" " alt="" coords="154,92,319,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,45,239,76,234,76,234,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,42,239,77,234,75,235,47"/>
 <area shape="rect" id="Node000003" href="$IClipboard_8h.html" title=" " alt="" coords="5,165,153,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="211,120,120,160,118,156,209,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="209,119,120,160,117,156,212,115"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="176,165,296,189"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="239,117,239,149,234,149,234,117"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="238,115,239,150,234,148,235,119"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="320,165,376,189"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="256,115,318,154,316,158,253,119"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="255,115,320,156,314,156,254,120"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="9,237,69,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,191,55,225,51,222,70,189"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="75,188,55,225,51,222,70,191"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="94,237,147,262"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="88,189,108,223,104,225,84,191"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="87,188,109,224,103,224,85,192"/>
 </map>

@@ -1,7 +1,7 @@
 <map id="Client" name="Client">
 <area shape="rect" id="Node000001" title="Deskflow client." alt="" coords="11,151,66,175"/>
 <area shape="rect" id="Node000002" href="$classIClient.html" title="Client interface." alt="" coords="9,78,68,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,118,41,150,36,150,36,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="41,117,41,151,36,150,36,120"/>
 <area shape="rect" id="Node000003" href="$classIScreen.html" title="Screen interface." alt="" coords="5,5,72,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="41,46,41,78,36,78,36,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="39,43,41,78,36,77,38,48"/>
 </map>

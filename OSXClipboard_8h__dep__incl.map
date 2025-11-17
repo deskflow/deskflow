@@ -1,43 +1,43 @@
 <map id="src/lib/platform/OSXClipboard.h" name="src/lib/platform/OSXClipboard.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="1138,5,1343,30"/>
 <area shape="rect" id="Node000002" href="$OSXClipboard_8cpp.html" title=" " alt="" coords="997,258,1215,283"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1221,43,1178,97,1155,130,1135,166,1118,216,1110,258,1105,257,1113,215,1130,164,1150,128,1173,94,1217,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1222,40,1178,97,1155,130,1135,166,1118,216,1109,260,1106,256,1113,215,1130,164,1150,128,1173,94,1217,43"/>
 <area shape="rect" id="Node000003" href="$OSXClipboardAnyBitmapConverter_8h.html" title=" " alt="" coords="224,78,417,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1123,31,418,91,418,85,1123,26"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1123,31,418,91,417,85,1124,26"/>
 <area shape="rect" id="Node000005" href="$OSXClipboardAnyTextConverter_8h.html" title=" " alt="" coords="767,78,960,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1169,36,955,80,954,75,1168,31"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="1166,34,955,80,954,75,1172,33"/>
 <area shape="rect" id="Node000015" href="$OSXClipboardBMPConverter_8h.html" title=" " alt="" coords="1279,78,1472,117"/>
-<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="1275,35,1344,75,1342,80,1272,40"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="1274,35,1345,78,1340,77,1273,40"/>
 <area shape="rect" id="Node000017" href="$OSXScreen_8h.html" title=" " alt="" coords="1500,85,1691,110"/>
-<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="1310,31,1543,82,1541,87,1308,36"/>
+<area shape="poly" id="edge21_Node000001_Node000017" title=" " alt="" coords="1309,31,1545,84,1539,85,1309,36"/>
 <area shape="rect" id="Node000018" href="$OSXScreen_8mm.html" title=" " alt="" coords="1631,172,1837,196"/>
-<area shape="poly" id="edge23_Node000001_Node000018" title=" " alt="" coords="1359,17,1456,21,1557,31,1646,49,1680,61,1705,76,1722,98,1732,125,1737,171,1732,172,1727,126,1718,101,1702,80,1678,66,1644,54,1557,37,1456,27,1358,22"/>
+<area shape="poly" id="edge23_Node000001_Node000018" title=" " alt="" coords="1358,17,1456,21,1557,31,1646,49,1680,61,1705,76,1722,98,1732,125,1736,173,1732,170,1727,126,1718,101,1702,80,1678,66,1644,54,1557,37,1456,27,1359,22"/>
 <area shape="rect" id="Node000004" href="$OSXClipboardAnyBitmapConverter_8cpp.html" title=" " alt="" coords="5,165,199,203"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="259,125,151,167,149,162,257,120"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="256,125,152,166,149,162,260,121"/>
 <area shape="rect" id="Node000006" href="$OSXClipboardAnyTextConverter_8cpp.html" title=" " alt="" coords="440,165,633,203"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="777,124,610,167,608,161,775,119"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="779,121,610,167,608,161,774,122"/>
 <area shape="rect" id="Node000007" href="$OSXClipboardHTMLConverter_8h.html" title=" " alt="" coords="223,165,416,203"/>
-<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="752,118,428,167,417,169,416,164,427,162,751,113"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="749,116,428,167,417,169,416,164,427,162,754,114"/>
 <area shape="rect" id="Node000009" href="$OSXClipboardTextConverter_8h.html" title=" " alt="" coords="657,165,851,203"/>
-<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="829,128,780,166,777,162,826,124"/>
+<area shape="poly" id="edge9_Node000005_Node000009" title=" " alt="" coords="830,125,779,166,777,162,825,127"/>
 <area shape="rect" id="Node000011" href="$OSXClipboardUTF16Converter_8h.html" title=" " alt="" coords="875,165,1068,203"/>
-<area shape="poly" id="edge12_Node000005_Node000011" title=" " alt="" coords="901,125,949,162,946,166,898,129"/>
+<area shape="poly" id="edge12_Node000005_Node000011" title=" " alt="" coords="900,124,950,165,945,164,899,129"/>
 <area shape="rect" id="Node000013" href="$OSXClipboardUTF8Converter_8h.html" title=" " alt="" coords="1144,165,1337,203"/>
-<area shape="poly" id="edge15_Node000005_Node000013" title=" " alt="" coords="962,118,1158,161,1157,167,961,123"/>
-<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="432,201,588,217,710,226,832,233,986,249,1034,255,1033,260,986,254,831,239,710,231,587,223,431,206"/>
+<area shape="poly" id="edge15_Node000005_Node000013" title=" " alt="" coords="962,118,1160,164,1154,164,962,123"/>
+<area shape="poly" id="edge7_Node000007_Node000002" title=" " alt="" coords="431,201,588,217,710,226,832,233,986,249,1036,258,1031,258,986,254,831,239,710,231,587,223,431,206"/>
 <area shape="rect" id="Node000008" href="$OSXClipboardHTMLConverter_8cpp.html" title=" " alt="" coords="223,251,416,290"/>
-<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="322,219,322,251,317,251,317,219"/>
-<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="847,205,1058,255,1057,260,846,210"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="321,217,321,252,317,249,317,221"/>
+<area shape="poly" id="edge10_Node000009_Node000002" title=" " alt="" coords="847,205,1060,258,1055,258,846,210"/>
 <area shape="rect" id="Node000010" href="$OSXClipboardTextConverter_8cpp.html" title=" " alt="" coords="563,251,756,290"/>
-<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="723,216,682,253,679,249,720,212"/>
-<area shape="poly" id="edge13_Node000011_Node000002" title=" " alt="" coords="1015,210,1089,255,1086,260,1013,214"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="724,213,681,253,679,248,719,215"/>
+<area shape="poly" id="edge13_Node000011_Node000002" title=" " alt="" coords="1015,209,1090,258,1085,257,1013,214"/>
 <area shape="rect" id="Node000012" href="$OSXClipboardUTF16Converter_8cpp.html" title=" " alt="" coords="780,251,973,290"/>
-<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="941,216,899,253,896,249,937,212"/>
-<area shape="poly" id="edge16_Node000013_Node000002" title=" " alt="" coords="1199,214,1126,260,1123,255,1197,210"/>
+<area shape="poly" id="edge14_Node000011_Node000012" title=" " alt="" coords="941,213,899,253,897,248,936,215"/>
+<area shape="poly" id="edge16_Node000013_Node000002" title=" " alt="" coords="1201,211,1125,260,1124,255,1195,213"/>
 <area shape="rect" id="Node000014" href="$OSXClipboardUTF8Converter_8cpp.html" title=" " alt="" coords="1239,251,1432,290"/>
-<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="1275,212,1316,249,1313,253,1271,216"/>
-<area shape="poly" id="edge19_Node000015_Node000002" title=" " alt="" coords="1378,133,1372,170,1364,189,1352,205,1324,223,1281,238,1181,260,1180,255,1279,233,1321,218,1348,201,1359,186,1366,169,1373,132"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="1274,212,1317,252,1312,250,1272,217"/>
+<area shape="poly" id="edge19_Node000015_Node000002" title=" " alt="" coords="1378,131,1372,170,1364,189,1352,205,1324,223,1281,238,1181,260,1180,255,1279,233,1321,218,1348,201,1359,186,1366,169,1374,134"/>
 <area shape="rect" id="Node000016" href="$OSXClipboardBMPConverter_8cpp.html" title=" " alt="" coords="1413,165,1607,203"/>
-<area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="1419,123,1482,162,1479,166,1417,128"/>
-<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="1628,116,1717,169,1714,174,1626,120"/>
+<area shape="poly" id="edge20_Node000015_Node000016" title=" " alt="" coords="1419,123,1483,165,1478,164,1417,128"/>
+<area shape="poly" id="edge22_Node000017_Node000018" title=" " alt="" coords="1628,115,1718,172,1713,171,1626,120"/>
 </map>

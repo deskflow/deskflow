@@ -1,5 +1,5 @@
 <map id="validators::ComputerNameValidator" name="validators::ComputerNameValidator">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,78,183,117"/>
 <area shape="rect" id="Node000002" href="$classvalidators_1_1IStringValidator.html" title=" " alt="" coords="7,5,181,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,46,97,77,91,77,91,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,44,96,78,92,76,92,48"/>
 </map>

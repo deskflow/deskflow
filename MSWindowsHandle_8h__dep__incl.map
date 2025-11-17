@@ -1,7 +1,7 @@
 <map id="src/lib/platform/MSWindowsHandle.h" name="src/lib/platform/MSWindowsHandle.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="109,5,295,44"/>
 <area shape="rect" id="Node000002" href="$MSWindowsKeyState_8cpp.html" title=" " alt="" coords="5,92,191,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,56,123,93,119,89,166,52"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,53,123,94,120,89,165,55"/>
 <area shape="rect" id="Node000003" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="215,92,400,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="239,52,286,89,282,93,235,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="238,52,287,92,281,91,236,57"/>
 </map>

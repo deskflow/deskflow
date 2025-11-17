@@ -1,19 +1,19 @@
 <map id="IOException" name="IOException">
 <area shape="rect" id="Node000001" title="The IOException class Generic i/o exception class." alt="" coords="333,104,425,129"/>
 <area shape="rect" id="Node000004" href="$classIOCloseException.html" title="The IOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="496,5,622,30"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="402,91,434,65,472,41,503,28,505,33,475,45,437,69,406,96"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="403,91,434,65,472,41,501,32,506,30,475,45,437,69,406,96"/>
 <area shape="rect" id="Node000006" href="$classIOClosedException.html" title="IOClosedException &#45; Thrown when attempting to close or perform I/O on an already closed." alt="" coords="492,55,626,79"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="440,97,511,77,512,82,441,102"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="440,97,514,79,509,81,441,102"/>
 <area shape="rect" id="Node000007" href="$classIOEndOfStreamException.html" title="IOEndOfStreamException &#45; Thrown when attempting to read beyond the end of a stream." alt="" coords="473,104,645,129"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="441,114,473,114,473,119,441,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="441,114,476,116,470,117,441,119"/>
 <area shape="rect" id="Node000008" href="$classIOWouldBlockException.html" title="IOWouldBlockException &#45; Thrown if an operation on a stream would block." alt="" coords="478,153,640,178"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="441,130,512,150,511,155,440,136"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="441,130,514,153,509,153,440,136"/>
 <area shape="rect" id="Node000009" href="$classXIOReadMismatch.html" title="Mismatched read exception." alt="" coords="493,203,625,227"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="406,137,437,163,475,187,505,200,503,205,472,192,434,168,402,141"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="405,137,437,163,475,187,506,203,501,202,472,192,434,168,403,142"/>
 <area shape="rect" id="Node000002" href="$classBaseException.html" title="Exception base class." alt="" coords="177,104,285,129"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="301,114,333,114,333,119,301,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="300,114,335,116,330,117,301,119"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,104,129,129"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,114,176,114,176,119,144,119"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="144,114,179,115,174,117,145,119"/>
 <area shape="rect" id="Node000005" href="$classSocketIOCloseException.html" title="SocketIOCloseException &#45; Thrown if a stream cannot be closed." alt="" coords="693,5,859,30"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="638,15,692,15,692,20,638,20"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="637,15,695,17,690,18,638,20"/>
 </map>

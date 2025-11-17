@@ -1,5 +1,5 @@
 <map id="ScreenList" name="ScreenList">
 <area shape="rect" id="Node000001" title=" " alt="" coords="22,78,106,103"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,5,123,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="67,46,67,78,61,78,61,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,44,67,78,61,77,62,48"/>
 </map>

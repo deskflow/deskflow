@@ -1,11 +1,11 @@
 <map id="IPlatformScreen" name="IPlatformScreen">
 <area shape="rect" id="Node000001" title="Screen interface." alt="" coords="166,78,282,103"/>
 <area shape="rect" id="Node000002" href="$classIScreen.html" title="Screen interface." alt="" coords="5,5,72,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,33,194,75,192,80,82,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,33,195,76,191,79,83,39"/>
 <area shape="rect" id="Node000003" href="$classIPrimaryScreen.html" title="Primary screen interface." alt="" coords="96,5,208,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,39,214,76,210,80,173,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,39,215,78,210,77,174,44"/>
 <area shape="rect" id="Node000004" href="$classISecondaryScreen.html" title="Secondary screen interface." alt="" coords="232,5,362,30"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="276,43,238,80,234,76,272,39"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="277,40,237,80,234,75,272,42"/>
 <area shape="rect" id="Node000005" href="$classIKeyState.html" title="Key state interface." alt="" coords="386,5,464,30"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="378,38,258,80,256,75,377,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="380,35,258,80,256,75,375,36"/>
 </map>

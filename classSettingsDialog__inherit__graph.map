@@ -1,5 +1,5 @@
 <map id="SettingsDialog" name="SettingsDialog">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,78,112,103"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="24,5,93,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,46,61,78,56,78,56,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,44,61,78,56,77,56,48"/>
 </map>

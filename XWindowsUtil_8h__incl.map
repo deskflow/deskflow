@@ -1,9 +1,9 @@
 <map id="src/lib/platform/XWindowsUtil.h" name="src/lib/platform/XWindowsUtil.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="30,5,204,44"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,92,66,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,47,61,83,57,79,95,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,44,61,83,57,79,95,46"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="90,92,144,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,45,120,76,114,76,114,45"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,43,119,77,114,75,115,47"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="168,92,250,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="141,43,185,80,182,84,137,47"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,42,186,81,181,82,138,47"/>
 </map>

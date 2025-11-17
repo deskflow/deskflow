@@ -1,9 +1,9 @@
 <map id="IScreenSaver" name="IScreenSaver">
 <area shape="rect" id="Node000001" title="Screen saver interface." alt="" coords="211,5,310,30"/>
 <area shape="rect" id="Node000002" href="$classMSWindowsScreenSaver.html" title="Microsoft windows screen saver implementation." alt="" coords="5,78,175,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="220,39,119,80,117,75,218,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,37,119,80,117,75,216,36"/>
 <area shape="rect" id="Node000003" href="$classOSXScreenSaver.html" title="OSX screen saver implementation." alt="" coords="199,78,322,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,46,263,78,258,78,258,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,44,263,79,258,76,259,48"/>
 <area shape="rect" id="Node000004" href="$classXWindowsScreenSaver.html" title="X11 screen saver implementation." alt="" coords="347,78,505,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="303,34,400,75,398,80,301,39"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="302,34,401,77,396,78,301,39"/>
 </map>

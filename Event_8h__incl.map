@@ -1,11 +1,11 @@
 <map id="src/lib/base/Event.h" name="src/lib/base/Event.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="96,5,231,30"/>
 <area shape="rect" id="Node000002" href="$EventTypes_8h.html" title=" " alt="" coords="5,78,106,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="147,33,87,72,84,67,144,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,33,87,72,84,67,147,28"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="129,78,198,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="166,31,166,62,161,62,161,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="165,28,166,63,161,62,162,33"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="222,78,281,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="180,28,227,66,224,70,176,33"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="179,28,228,68,223,69,177,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="24,151,87,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="58,103,58,135,53,135,53,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="57,101,58,136,53,135,54,105"/>
 </map>

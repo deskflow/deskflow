@@ -1,7 +1,7 @@
 <map id="src/lib/deskflow/IScreen.h" name="src/lib/deskflow/IScreen.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="8,5,181,30"/>
 <area shape="rect" id="Node000002" href="$ClipboardTypes_8h.html" title=" " alt="" coords="5,78,184,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,31,97,62,92,62,92,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="96,28,97,63,92,62,93,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="64,151,125,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="97,103,97,135,92,135,92,103"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,101,97,136,92,134,93,105"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="ArchDaemonNone" name="ArchDaemonNone">
 <area shape="rect" id="Node000001" title="Dummy implementation of IArchDaemon." alt="" coords="5,78,133,103"/>
 <area shape="rect" id="Node000002" href="$classIArchDaemon.html" title="Interface for architecture dependent daemonizing." alt="" coords="19,5,119,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="72,46,72,78,66,78,66,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,44,72,78,66,77,67,48"/>
 </map>

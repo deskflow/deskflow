@@ -1,7 +1,7 @@
 <map id="StreamFilter" name="StreamFilter">
 <area shape="rect" id="Node000001" title="A stream filter." alt="" coords="25,78,118,103"/>
 <area shape="rect" id="Node000003" href="$classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="5,151,138,175"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="74,118,74,150,69,150,69,118"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="73,117,74,151,69,149,70,120"/>
 <area shape="rect" id="Node000002" href="$classdeskflow_1_1IStream.html" title="Bidirectional stream interface." alt="" coords="8,5,135,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="74,46,74,78,69,78,69,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="73,43,74,78,69,77,70,48"/>
 </map>

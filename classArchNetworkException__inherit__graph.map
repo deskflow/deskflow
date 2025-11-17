@@ -1,43 +1,43 @@
 <map id="ArchNetworkException" name="ArchNetworkException">
 <area shape="rect" id="Node000001" title="Generic network exception." alt="" coords="177,340,331,365"/>
 <area shape="rect" id="Node000003" href="$classArchNetworkAccessException.html" title="Network insufficient permission." alt="" coords="399,5,597,30"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,324,265,265,285,188,301,148,322,109,347,72,377,41,397,28,400,33,381,45,351,76,326,111,306,150,290,190,270,266,260,325"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="255,324,265,265,285,188,301,148,322,109,347,72,377,41,401,29,397,33,381,45,351,76,326,111,306,150,290,190,270,266,260,326"/>
 <area shape="rect" id="Node000004" href="$classArchNetworkAddressInUseException.html" title="Network address in use." alt="" coords="380,55,617,79"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="257,324,270,273,292,209,327,144,350,114,377,89,396,78,399,82,381,93,354,118,332,147,297,211,275,275,262,325"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="257,324,270,273,292,209,327,144,350,114,377,89,399,78,395,82,381,93,354,118,332,147,297,211,275,275,262,326"/>
 <area shape="rect" id="Node000005" href="$classArchNetworkConnectionRefusedException.html" title="Remote end of socket refused connection." alt="" coords="392,104,604,142"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="262,324,279,286,303,239,336,193,377,153,398,141,401,145,381,157,340,196,308,242,284,288,267,326"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="262,324,279,286,303,239,336,193,377,153,401,141,398,145,381,157,340,196,308,242,284,288,267,326"/>
 <area shape="rect" id="Node000006" href="$classArchNetworkDisconnectedException.html" title="Remote end of socket has disconnected." alt="" coords="381,167,615,191"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="267,325,311,262,342,229,378,202,405,189,407,194,380,207,345,233,315,266,272,328"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="267,325,311,262,342,229,378,202,408,190,404,194,380,207,345,233,315,266,272,328"/>
 <area shape="rect" id="Node000007" href="$classArchNetworkIOException.html" title="Network I/O error." alt="" coords="414,216,582,241"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="276,327,321,288,348,268,378,251,413,239,414,244,380,256,351,272,324,292,280,331"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="276,327,321,288,348,268,378,251,416,240,411,243,380,256,351,272,324,292,280,331"/>
 <area shape="rect" id="Node000008" href="$classArchNetworkInterruptedException.html" title="Operation was interrupted." alt="" coords="390,265,606,290"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="297,331,378,300,427,288,428,293,380,306,298,336"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="296,331,378,300,429,289,425,292,380,306,299,336"/>
 <area shape="rect" id="Node000009" href="$classArchNetworkNameException.html" title="Generic network name lookup erros." alt="" coords="404,315,593,339"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="347,340,403,334,403,339,347,345"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="346,340,405,336,401,338,348,345"/>
 <area shape="rect" id="Node000015" href="$classArchNetworkNoAddressException.html" title="Network address is unavailable or not local." alt="" coords="388,364,608,389"/>
-<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="347,359,388,363,388,368,346,364"/>
+<area shape="poly" id="edge14_Node000001_Node000015" title=" " alt="" coords="346,359,391,365,386,366,347,364"/>
 <area shape="rect" id="Node000016" href="$classArchNetworkNoRouteException.html" title="No route to address." alt="" coords="395,413,601,438"/>
-<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="300,369,380,398,428,410,427,415,378,403,298,374"/>
+<area shape="poly" id="edge15_Node000001_Node000016" title=" " alt="" coords="299,369,380,398,430,412,425,413,378,403,299,374"/>
 <area shape="rect" id="Node000017" href="$classArchNetworkNotConnectedException.html" title="Socket not connected." alt="" coords="379,463,617,487"/>
-<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="280,374,324,412,380,447,414,460,413,465,378,452,321,416,276,378"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="278,373,324,412,380,447,416,462,411,462,378,452,321,416,278,378"/>
 <area shape="rect" id="Node000018" href="$classArchNetworkResourceException.html" title="Network insufficient resources." alt="" coords="394,512,603,537"/>
-<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="272,376,315,438,345,470,380,497,407,509,405,514,378,501,342,474,311,441,267,380"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="270,375,315,438,345,470,380,497,409,511,404,511,378,501,342,474,311,441,269,381"/>
 <area shape="rect" id="Node000019" href="$classArchNetworkShutdownException.html" title="Remote read end of socket has closed." alt="" coords="392,561,604,586"/>
-<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="267,378,283,417,307,462,340,508,381,546,404,558,401,563,377,551,336,512,302,465,278,419,262,380"/>
+<area shape="poly" id="edge18_Node000001_Node000019" title=" " alt="" coords="265,377,283,417,307,462,340,508,381,546,405,561,400,561,377,551,336,512,302,465,278,419,264,382"/>
 <area shape="rect" id="Node000020" href="$classArchNetworkSupportException.html" title="No support for requested network resource/service." alt="" coords="398,611,598,635"/>
-<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="263,379,277,427,300,486,334,546,355,572,381,596,402,608,399,612,377,600,352,576,329,549,295,488,272,428,258,380"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="262,377,277,427,300,486,334,546,355,572,381,596,403,610,398,610,377,600,352,576,329,549,295,488,272,428,260,382"/>
 <area shape="rect" id="Node000021" href="$classArchNetworkTimedOutException.html" title="Remote end of socket is not responding." alt="" coords="392,660,604,685"/>
-<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="261,379,271,436,292,508,308,546,328,582,352,616,381,645,401,657,398,662,377,649,348,619,323,585,303,548,287,510,266,437,256,380"/>
+<area shape="poly" id="edge20_Node000001_Node000021" title=" " alt="" coords="259,377,271,436,292,508,308,546,328,582,352,616,381,645,402,660,397,659,377,649,348,619,323,585,303,548,287,510,266,437,257,382"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,340,129,365"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,350,176,350,176,355,144,355"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,350,178,351,174,354,146,355"/>
 <area shape="rect" id="Node000010" href="$classArchNetworkNameFailureException.html" title="Non&#45;recoverable name server error." alt="" coords="673,196,902,221"/>
-<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="605,306,616,300,631,283,639,266,647,247,664,230,686,219,689,224,667,234,651,250,644,268,636,286,619,304,607,311"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="605,306,616,300,631,283,639,266,647,247,664,230,690,220,685,223,667,234,651,250,644,268,636,286,619,304,607,310"/>
 <area shape="rect" id="Node000011" href="$classArchNetworkNameNoAddressException.html" title="The named host is known but has no address." alt="" coords="689,245,886,284"/>
-<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="574,308,617,299,696,282,697,287,618,304,576,313"/>
+<area shape="poly" id="edge10_Node000009_Node000011" title=" " alt="" coords="574,308,617,299,699,283,694,285,618,304,576,313"/>
 <area shape="rect" id="Node000012" href="$classArchNetworkNameUnavailableException.html" title="Temporary name server error." alt="" coords="688,308,887,346"/>
-<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="608,324,688,324,688,330,608,330"/>
+<area shape="poly" id="edge11_Node000009_Node000012" title=" " alt="" coords="608,324,690,326,685,328,609,330"/>
 <area shape="rect" id="Node000013" href="$classArchNetworkNameUnknownException.html" title="The named host is unknown." alt="" coords="665,371,910,395"/>
-<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="581,340,721,367,720,373,580,345"/>
+<area shape="poly" id="edge12_Node000009_Node000013" title=" " alt="" coords="580,340,723,369,717,371,581,345"/>
 <area shape="rect" id="Node000014" href="$classArchNetworkNameUnsupportedException.html" title="The named host is known but no supported address." alt="" coords="684,420,891,458"/>
-<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="605,343,619,350,635,364,644,378,652,392,667,405,691,417,688,422,664,409,648,395,639,381,631,367,616,355,602,348"/>
+<area shape="poly" id="edge13_Node000009_Node000014" title=" " alt="" coords="603,343,619,350,635,364,644,378,652,392,667,405,692,419,687,419,664,409,648,395,639,381,631,367,616,355,603,348"/>
 </map>

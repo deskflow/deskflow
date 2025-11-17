@@ -1,15 +1,15 @@
 <map id="src/lib/deskflow/IPrimaryScreen.cpp" name="src/lib/deskflow/IPrimaryScreen.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="155,5,321,44"/>
 <area shape="rect" id="Node000002" href="$IPrimaryScreen_8h.html" title=" " alt="" coords="76,92,256,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,46,189,82,185,78,219,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,43,189,82,185,78,219,47"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="280,92,340,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="257,43,291,78,287,82,253,46"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="256,42,291,80,286,80,255,47"/>
 <area shape="rect" id="Node000003" href="$KeyTypes_8h.html" title=" " alt="" coords="5,165,151,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="153,119,106,157,103,153,150,115"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="150,119,106,157,102,153,153,115"/>
 <area shape="rect" id="Node000005" href="$MouseTypes_8h.html" title=" " alt="" coords="174,165,336,189"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="182,115,231,153,228,157,179,119"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="181,115,232,155,227,156,180,120"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="46,237,110,262"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="81,190,81,222,75,222,75,190"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="80,188,81,223,75,221,76,192"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="225,237,286,262"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="258,190,258,222,253,222,253,190"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="257,188,258,223,253,220,253,192"/>
 </map>

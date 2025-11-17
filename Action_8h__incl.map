@@ -1,13 +1,13 @@
 <map id="src/lib/gui/Action.h" name="src/lib/gui/Action.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="102,5,231,30"/>
 <area shape="rect" id="Node000002" href="$KeySequence_8h.html" title=" " alt="" coords="63,78,176,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="161,32,138,67,133,64,156,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,29,137,67,133,63,157,32"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,151,58,175"/>
-<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="126,33,87,51,69,64,54,80,40,107,35,136,30,135,35,105,49,76,66,60,84,47,124,28"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="123,32,87,51,69,64,54,80,40,107,35,136,30,134,35,105,49,76,66,60,84,47,127,29"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="134,151,199,175"/>
-<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="175,29,187,62,191,82,190,103,180,137,175,136,185,102,185,83,182,63,170,31"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="173,28,187,62,191,82,190,103,180,138,175,135,185,102,185,83,182,63,171,33"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="250,78,336,103"/>
-<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="188,28,260,68,257,72,186,33"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="107,105,59,143,56,139,103,101"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="129,102,152,136,148,139,125,105"/>
+<area shape="poly" id="edge6_Node000001_Node000005" title=" " alt="" coords="187,28,261,69,256,71,187,33"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="108,103,59,143,56,139,102,103"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="128,101,153,138,148,138,126,106"/>
 </map>

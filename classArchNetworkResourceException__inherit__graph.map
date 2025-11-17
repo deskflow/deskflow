@@ -1,7 +1,7 @@
 <map id="ArchNetworkResourceException" name="ArchNetworkResourceException">
 <area shape="rect" id="Node000001" title="Network insufficient resources." alt="" coords="5,151,215,175"/>
 <area shape="rect" id="Node000002" href="$classArchNetworkException.html" title="Generic network exception." alt="" coords="33,78,187,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,118,113,150,107,150,107,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,117,112,151,108,149,108,120"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="48,5,172,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="113,46,113,78,107,78,107,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,43,113,78,107,77,109,48"/>
 </map>

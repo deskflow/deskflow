@@ -1,7 +1,7 @@
 <map id="ClientApp" name="ClientApp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="5,151,84,175"/>
 <area shape="rect" id="Node000002" href="$classApp.html" title=" " alt="" coords="22,78,67,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,118,47,150,42,150,42,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="47,117,47,151,42,150,42,120"/>
 <area shape="rect" id="Node000003" href="$classIApp.html" title=" " alt="" coords="20,5,69,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="47,46,47,78,42,78,42,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="45,43,47,78,42,77,44,48"/>
 </map>

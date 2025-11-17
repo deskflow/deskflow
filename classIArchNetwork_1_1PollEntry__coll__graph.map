@@ -1,5 +1,5 @@
 <map id="IArchNetwork::PollEntry" name="IArchNetwork::PollEntry">
 <area shape="rect" id="Node000001" title="A socket query for poll()." alt="" coords="5,100,168,125"/>
 <area shape="rect" id="Node000002" href="$classArchSocketImpl.html" title="Internal socket data. An architecture dependent type holding the necessary data for a socket." alt="" coords="30,5,143,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,46,89,100,84,100,84,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,44,89,100,84,99,84,47"/>
 </map>

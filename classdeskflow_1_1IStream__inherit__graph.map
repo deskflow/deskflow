@@ -1,13 +1,13 @@
 <map id="deskflow::IStream" name="deskflow::IStream">
 <area shape="rect" id="Node000001" title="Bidirectional stream interface." alt="" coords="60,5,186,30"/>
 <area shape="rect" id="Node000002" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="20,78,112,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,44,77,79,73,76,102,41"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,45,77,79,73,76,105,40"/>
 <area shape="rect" id="Node000005" href="$classStreamFilter.html" title="A stream filter." alt="" coords="140,78,232,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="146,40,178,76,174,79,142,44"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="144,39,178,77,173,78,143,45"/>
 <area shape="rect" id="Node000003" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="12,151,101,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="65,118,61,151,55,150,60,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="63,116,61,151,55,150,61,121"/>
 <area shape="rect" id="Node000004" href="$classSecureSocket.html" title="Secure socket." alt="" coords="5,223,108,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="59,191,59,223,54,223,54,191"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="59,189,59,224,54,222,54,193"/>
 <area shape="rect" id="Node000006" href="$classPacketStreamFilter.html" title="Packetizing stream filter." alt="" coords="125,151,257,175"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="191,118,193,150,188,151,185,119"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="189,116,193,151,188,149,186,121"/>
 </map>

@@ -1,13 +1,13 @@
 <map id="src/apps" name="src/apps">
 <area shape="rect" id="node1" href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html" title="lib" alt="" coords="281,135,319,159"/>
 <area shape="rect" id="node3" href="dir_ff8b35c4f72248d38fab92b0ac2707d5.html" title="deskflow&#45;core" alt="" coords="112,62,214,87"/>
-<area shape="poly" id="edge1" href="dir_000008_000019.html" alt="" coords="187,85,268,127,266,131,184,90"/>
+<area shape="poly" id="edge1" href="dir_000008_000019.html" alt="" coords="186,85,270,128,264,130,185,90"/>
 <area shape="rect" id="edge1-headlabel" href="dir_000008_000019.html" title="9" alt="" coords="265,113,272,127"/>
 <area shape="rect" id="node4" href="dir_888a3b2d528a9580c7ad589962c83e5c.html" title="deskflow&#45;daemon" alt="" coords="238,62,362,87"/>
-<area shape="poly" id="edge2" href="dir_000009_000019.html" alt="" coords="303,87,303,119,297,119,297,87"/>
+<area shape="poly" id="edge2" href="dir_000009_000019.html" alt="" coords="302,85,302,121,298,118,298,89"/>
 <area shape="rect" id="edge2-headlabel" href="dir_000009_000019.html" title="7" alt="" coords="305,109,312,123"/>
 <area shape="rect" id="node5" href="dir_75dfbb33c1dae5d0ff6bfd601e940de2.html" title="deskflow&#45;gui" alt="" coords="386,62,481,87"/>
-<area shape="poly" id="edge3" href="dir_000010_000019.html" alt="" coords="413,90,334,131,331,126,410,85"/>
+<area shape="poly" id="edge3" href="dir_000010_000019.html" alt="" coords="414,87,334,131,332,126,409,88"/>
 <area shape="rect" id="edge3-headlabel" href="dir_000010_000019.html" title="8" alt="" coords="336,128,343,142"/>
 <area shape="rect" id="clust2" href="dir_53adf0b982dc8545998aae3f283a5a58.html" alt="" coords="27,51,492,97"/>
 <area shape="rect" id="clust1" href="dir_68267d1309a1af8e8297ef4c3efbcdba.html" title="src" alt="" coords="16,16,503,170"/>

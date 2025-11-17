@@ -1,9 +1,9 @@
 <map id="src/lib/platform/OSXAutoTypes.h" name="src/lib/platform/OSXAutoTypes.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="148,5,314,44"/>
 <area shape="rect" id="Node000002" href="$OSXKeyState_8h.html" title=" " alt="" coords="130,92,333,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,60,234,91,229,91,229,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,58,234,93,229,90,230,62"/>
 <area shape="rect" id="Node000003" href="$OSXKeyState_8cpp.html" title=" " alt="" coords="5,165,223,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="200,127,135,166,132,162,198,123"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="202,124,135,166,132,162,196,125"/>
 <area shape="rect" id="Node000004" href="$OSXScreen_8mm.html" title=" " alt="" coords="247,165,453,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="265,123,332,162,329,166,263,127"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="265,122,333,164,328,164,263,127"/>
 </map>

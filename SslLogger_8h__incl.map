@@ -1,7 +1,7 @@
 <map id="src/lib/net/SslLogger.h" name="src/lib/net/SslLogger.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="28,5,180,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,104,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,32,73,67,69,64,94,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,29,73,67,69,63,93,32"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="128,78,181,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="114,29,140,64,135,67,110,32"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="113,28,140,66,135,66,111,33"/>
 </map>

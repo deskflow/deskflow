@@ -1,13 +1,13 @@
 <map id="src/lib/deskflow/IClipboard.cpp" name="src/lib/deskflow/IClipboard.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="111,5,311,30"/>
 <area shape="rect" id="Node000002" href="$IClipboard_8h.html" title=" " alt="" coords="5,78,153,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,33,116,73,113,68,188,28"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,32,116,73,113,68,191,29"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="177,78,245,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="214,31,214,62,208,62,208,31"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="213,28,213,64,209,61,209,33"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="270,78,326,103"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="227,28,274,66,270,70,224,33"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="226,28,275,68,269,68,225,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="9,151,69,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,105,55,138,51,136,70,102"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="75,102,55,139,51,136,70,105"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="94,151,147,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="88,102,108,136,104,139,84,105"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="87,101,109,137,103,137,85,106"/>
 </map>

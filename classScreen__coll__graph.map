@@ -1,5 +1,5 @@
 <map id="Screen" name="Screen">
 <area shape="rect" id="Node000001" title=" " alt="" coords="24,78,87,103"/>
 <area shape="rect" id="Node000002" href="$classScreenConfig.html" title="Screen configuration base class." alt="" coords="5,5,106,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,46,58,78,53,78,53,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,44,58,78,53,77,53,48"/>
 </map>

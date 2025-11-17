@@ -1,9 +1,9 @@
 <map id="IApp" name="IApp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="72,5,121,30"/>
 <area shape="rect" id="Node000002" href="$classApp.html" title=" " alt="" coords="74,78,119,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,46,99,78,94,78,94,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="98,43,99,78,94,77,95,48"/>
 <area shape="rect" id="Node000003" href="$classClientApp.html" title=" " alt="" coords="5,151,84,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,117,55,152,51,149,77,114"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,115,55,152,51,149,76,116"/>
 <area shape="rect" id="Node000004" href="$classServerApp.html" title=" " alt="" coords="107,151,190,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="116,114,142,149,138,152,112,117"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="115,113,143,150,137,150,113,118"/>
 </map>

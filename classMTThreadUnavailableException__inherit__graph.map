@@ -1,9 +1,9 @@
 <map id="MTThreadUnavailableException" name="MTThreadUnavailableException">
 <area shape="rect" id="Node000001" title="MTThreadUnavailableException &#45; Thrown when a thread cannot be created." alt="" coords="5,223,210,248"/>
 <area shape="rect" id="Node000002" href="$classMTException.html" title="MTException generic multithreading exception." alt="" coords="59,151,156,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="110,191,110,223,105,223,105,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,189,110,224,105,222,106,193"/>
 <area shape="rect" id="Node000003" href="$classBaseException.html" title="Exception base class." alt="" coords="53,78,162,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="110,118,110,150,105,150,105,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="109,116,110,151,105,150,106,121"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="46,5,169,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="110,46,110,78,105,78,105,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="108,43,110,78,105,77,107,48"/>
 </map>

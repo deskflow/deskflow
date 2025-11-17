@@ -1,15 +1,15 @@
 <map id="src/lib/net/IDataSocket.cpp" name="src/lib/net/IDataSocket.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="142,5,319,30"/>
 <area shape="rect" id="Node000002" href="$IDataSocket_8h.html" title=" " alt="" coords="108,78,232,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,32,192,68,188,65,218,29"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,29,192,68,188,64,218,32"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="256,78,324,103"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="242,29,273,65,269,68,238,32"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="241,28,273,66,268,66,240,33"/>
 <area shape="rect" id="Node000003" href="$IStream_8h.html" title=" " alt="" coords="5,151,98,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="152,106,85,145,83,140,149,101"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="149,105,86,145,83,140,152,101"/>
 <area shape="rect" id="Node000005" href="$ISocket_8h.html" title=" " alt="" coords="122,151,219,175"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="173,103,173,135,168,135,168,103"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="172,101,173,136,168,134,169,105"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="244,151,297,175"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="188,101,243,139,240,144,185,105"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="187,101,244,141,238,142,186,106"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="21,223,82,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="54,176,54,208,49,208,49,176"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="53,174,54,208,49,207,50,178"/>
 </map>

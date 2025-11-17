@@ -1,9 +1,9 @@
 <map id="src/lib/gui/dialogs/ScreenSettingsDialog.h" name="src/lib/gui/dialogs/ScreenSettingsDialog.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="206,5,368,44"/>
 <area shape="rect" id="Node000002" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="5,92,182,131"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,53,137,94,135,89,229,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,50,137,94,135,89,228,51"/>
 <area shape="rect" id="Node000003" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="205,92,368,131"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="290,60,290,91,284,91,284,60"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="289,58,289,93,285,90,285,62"/>
 <area shape="rect" id="Node000004" href="$ScreenSetupView_8cpp.html" title=" " alt="" coords="393,92,546,131"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="342,49,430,89,428,94,340,53"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="342,48,432,91,426,91,341,54"/>
 </map>

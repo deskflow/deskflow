@@ -1,15 +1,15 @@
 <map id="src/lib/common/QSettingsProxy.cpp" name="src/lib/common/QSettingsProxy.cpp">
 <area shape="rect" id="Node000001" title=" " alt="" coords="33,5,205,44"/>
 <area shape="rect" id="Node000002" href="$QSettingsProxy_8h.html" title=" " alt="" coords="5,165,129,189"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,45,95,93,77,150,72,149,90,91,109,43"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,42,95,93,77,151,72,149,90,91,110,47"/>
 <area shape="rect" id="Node000004" href="$Settings_8h.html" title=" " alt="" coords="104,92,238,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,43,157,77,152,80,129,46"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="132,42,157,79,152,79,131,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="77,237,156,262"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="77,188,102,223,97,226,73,191"/>
-<area shape="poly" id="edge7_Node000004_Node000002" title=" " alt="" coords="155,119,98,158,95,153,152,115"/>
-<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="169,118,143,190,129,224,124,222,138,188,164,116"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="76,188,102,224,97,225,74,192"/>
+<area shape="poly" id="edge7_Node000004_Node000002" title=" " alt="" coords="152,119,98,158,95,154,156,115"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="169,116,143,190,129,225,125,221,138,188,165,119"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="203,165,251,189"/>
-<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="182,116,211,151,206,154,178,119"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="181,115,211,153,206,153,179,120"/>
 <area shape="rect" id="Node000006" title=" " alt="" coords="275,165,422,189"/>
-<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="201,115,306,156,304,161,199,120"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="201,115,307,158,302,160,200,120"/>
 </map>

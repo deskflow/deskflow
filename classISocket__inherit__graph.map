@@ -1,15 +1,15 @@
 <map id="ISocket" name="ISocket">
 <area shape="rect" id="Node000001" title="Generic socket interface." alt="" coords="94,5,160,30"/>
 <area shape="rect" id="Node000002" href="$classIDataSocket.html" title="Data stream socket interface." alt="" coords="21,78,113,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="109,44,79,79,75,76,105,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,44,79,79,75,76,109,40"/>
 <area shape="rect" id="Node000005" href="$classIListenSocket.html" title="Listen socket interface." alt="" coords="140,78,240,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="150,40,182,76,178,79,146,44"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="148,39,182,77,177,78,147,45"/>
 <area shape="rect" id="Node000003" href="$classTCPSocket.html" title="TCP data socket." alt="" coords="19,151,107,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="68,119,66,150,61,150,63,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="67,116,66,151,61,150,65,121"/>
 <area shape="rect" id="Node000004" href="$classSecureSocket.html" title="Secure socket." alt="" coords="5,223,108,248"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,191,60,223,55,223,58,191"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="63,189,60,224,55,222,59,193"/>
 <area shape="rect" id="Node000006" href="$classTCPListenSocket.html" title="TCP listen socket." alt="" coords="135,151,258,175"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="195,118,198,150,193,151,190,119"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="194,116,198,151,193,149,191,121"/>
 <area shape="rect" id="Node000007" href="$classSecureListenSocket.html" title=" " alt="" coords="132,223,269,248"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="201,191,203,223,197,223,195,191"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="200,189,202,224,198,222,196,193"/>
 </map>

@@ -1,17 +1,17 @@
 <map id="src/lib/gui/ScreenSetupModel.h" name="src/lib/gui/ScreenSetupModel.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="396,5,599,30"/>
 <area shape="rect" id="Node000002" href="$ScreenSetupModel_8cpp.html" title=" " alt="" coords="5,85,222,110"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="425,36,172,87,171,82,424,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="424,36,172,87,171,82,426,31"/>
 <area shape="rect" id="Node000003" href="$ServerConfigDialog_8h.html" title=" " alt="" coords="246,78,395,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="458,39,364,80,362,75,456,34"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="460,36,364,80,362,75,455,37"/>
 <area shape="rect" id="Node000006" href="$NewScreenWidget_8cpp.html" title=" " alt="" coords="418,78,577,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="500,46,500,77,495,77,495,46"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="499,44,500,79,495,76,496,48"/>
 <area shape="rect" id="Node000007" href="$ScreenSetupView_8cpp.html" title=" " alt="" coords="601,78,754,117"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="539,34,635,75,633,80,537,39"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="539,34,637,77,631,77,538,39"/>
 <area shape="rect" id="Node000008" href="$TrashScreenWidget_8cpp.html" title=" " alt="" coords="778,78,942,117"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="567,31,779,76,778,81,566,36"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="567,31,781,78,775,79,567,36"/>
 <area shape="rect" id="Node000004" href="$MainWindow_8cpp.html" title=" " alt="" coords="131,172,312,196"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="288,129,237,173,233,169,285,125"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="289,126,236,173,234,169,284,128"/>
 <area shape="rect" id="Node000005" href="$ServerConfigDialog_8cpp.html" title=" " alt="" coords="336,165,499,203"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="355,125,398,162,394,166,351,129"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="354,125,399,165,393,164,352,130"/>
 </map>

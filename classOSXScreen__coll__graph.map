@@ -1,15 +1,15 @@
 <map id="OSXScreen" name="OSXScreen">
 <area shape="rect" id="Node000001" title="Implementation of IPlatformScreen for OS X." alt="" coords="179,223,269,248"/>
 <area shape="rect" id="Node000002" href="$classPlatformScreen.html" title="Base screen implementation." alt="" coords="168,151,280,175"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,191,226,223,221,223,221,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="226,189,226,224,222,221,222,193"/>
 <area shape="rect" id="Node000003" href="$classIPlatformScreen.html" title="Screen interface." alt="" coords="166,78,282,103"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="226,118,226,150,221,150,221,118"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="225,116,226,152,221,149,222,121"/>
 <area shape="rect" id="Node000004" href="$classIScreen.html" title="Screen interface." alt="" coords="5,5,72,30"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="84,33,194,75,192,80,82,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="83,33,195,76,191,79,83,39"/>
 <area shape="rect" id="Node000005" href="$classIPrimaryScreen.html" title="Primary screen interface." alt="" coords="96,5,208,30"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="177,39,214,76,210,80,173,43"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="175,39,215,77,210,78,174,44"/>
 <area shape="rect" id="Node000006" href="$classISecondaryScreen.html" title="Secondary screen interface." alt="" coords="232,5,362,30"/>
-<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="276,43,238,80,234,76,272,39"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="276,39,237,80,234,76,272,43"/>
 <area shape="rect" id="Node000007" href="$classIKeyState.html" title="Key state interface." alt="" coords="386,5,464,30"/>
-<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="378,38,258,80,256,75,377,33"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="375,37,258,80,256,75,380,34"/>
 </map>

@@ -1,9 +1,9 @@
 <map id="src/lib/net/TCPSocketFactory.h" name="src/lib/net/TCPSocketFactory.h">
 <area shape="rect" id="Node000001" title=" " alt="" coords="226,5,431,30"/>
 <area shape="rect" id="Node000002" href="$ClientApp_8cpp.html" title=" " alt="" coords="5,78,204,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="278,38,142,80,141,75,276,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="279,37,142,80,141,75,275,34"/>
 <area shape="rect" id="Node000003" href="$ServerApp_8cpp.html" title=" " alt="" coords="227,78,430,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="331,46,331,78,326,78,326,46"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="330,44,331,79,326,76,327,48"/>
 <area shape="rect" id="Node000004" href="$TCPSocketFactory_8cpp.html" title=" " alt="" coords="454,78,672,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="383,32,525,75,524,80,381,37"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="382,32,527,77,522,78,381,38"/>
 </map>

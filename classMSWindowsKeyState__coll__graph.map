@@ -1,7 +1,7 @@
 <map id="MSWindowsKeyState" name="MSWindowsKeyState">
 <area shape="rect" id="Node000001" title="Microsoft Windows key mapper." alt="" coords="5,151,154,175"/>
 <area shape="rect" id="Node000002" href="$classKeyState.html" title="Core key state." alt="" coords="42,78,117,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="82,118,82,150,77,150,77,118"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,117,82,151,77,149,78,120"/>
 <area shape="rect" id="Node000003" href="$classIKeyState.html" title="Key state interface." alt="" coords="40,5,119,30"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="82,46,82,78,77,78,77,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="81,43,82,78,77,77,78,48"/>
 </map>

@@ -1,19 +1,19 @@
 <map id="ClientProxy1_1" name="ClientProxy1_1">
 <area shape="rect" id="Node000001" title="Proxy for client implementing protocol version 1.1." alt="" coords="95,417,206,441"/>
 <area shape="rect" id="Node000002" href="$classClientProxy1__0.html" title="Proxy for client implementing protocol version 1.0." alt="" coords="95,343,206,367"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,383,153,416,148,416,148,383"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,381,153,418,148,415,148,385"/>
 <area shape="rect" id="Node000003" href="$classClientProxy.html" title="Generic proxy for client." alt="" coords="20,248,110,273"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,282,142,341,138,344,84,286"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,282,142,342,137,343,85,287"/>
 <area shape="rect" id="Node000004" href="$classBaseClientProxy.html" title="Generic proxy for client or primary." alt="" coords="5,153,125,178"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="68,194,68,248,62,248,62,194"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="66,191,68,248,62,247,64,197"/>
 <area shape="rect" id="Node000005" href="$classIClient.html" title="Client interface." alt="" coords="35,79,95,104"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="68,119,68,153,62,153,62,119"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="65,117,68,153,62,153,65,122"/>
 <area shape="rect" id="Node000006" href="$classIScreen.html" title="Screen interface." alt="" coords="32,5,98,30"/>
-<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="68,45,68,79,62,79,62,45"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="65,43,68,79,62,79,65,48"/>
 <area shape="rect" id="Node000007" href="$structClientProxy1__0_1_1ClientClipboard.html" title=" " alt="" coords="133,248,341,273"/>
-<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="218,286,163,344,159,341,214,282"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="218,283,163,344,159,340,214,286"/>
 <area shape="rect" id="Node000008" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="199,153,275,178"/>
-<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="240,194,240,248,234,248,234,194"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="238,192,240,249,234,247,236,196"/>
 <area shape="rect" id="Node000009" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="197,79,277,104"/>
-<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="240,119,240,153,234,153,234,119"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="238,117,240,154,234,152,236,122"/>
 </map>

@@ -1,5 +1,5 @@
 <map id="IListenSocket" name="IListenSocket">
 <area shape="rect" id="Node000001" title="Listen socket interface." alt="" coords="5,78,106,103"/>
 <area shape="rect" id="Node000002" href="$classISocket.html" title="Generic socket interface." alt="" coords="23,5,88,30"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,46,58,78,53,78,53,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,44,58,78,53,77,53,48"/>
 </map>
