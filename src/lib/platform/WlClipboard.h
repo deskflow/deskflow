@@ -79,12 +79,6 @@ private:
   //! Get available MIME types from clipboard
   std::vector<std::string> getAvailableMimeTypes() const;
 
-  //! Get clipboard data for specific MIME type
-  std::string getClipboardData(const std::string &mimeType) const;
-
-  //! Set clipboard data for specific MIME type
-  bool setClipboardData(const std::string &mimeType, const std::string &data) const;
-
   //! Monitor clipboard changes in background thread
   void monitorClipboard();
 

@@ -694,28 +694,6 @@ std::vector<std::string> WlClipboard::getAvailableMimeTypes() const
   return types;
 }
 
-std::string WlClipboard::getClipboardData(const std::string &mimeType) const
-{
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-paste", "-t", mimeType.c_str(), nullptr};
-  } else {
-    args = {"wl-paste", "-t", mimeType.c_str(), "-p", nullptr};
-  }
-  return executeCommand(args);
-}
-
-bool WlClipboard::setClipboardData(const std::string &mimeType, const std::string &data) const
-{
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-copy", "-t", mimeType.c_str(), nullptr};
-  } else {
-    args = {"wl-copy", "-t", mimeType.c_str(), "-p", nullptr};
-  }
-  return executeCommandWithInput(args, data);
-}
-
 void WlClipboard::monitorClipboard()
 {
   std::vector<std::string> lastTypes;
