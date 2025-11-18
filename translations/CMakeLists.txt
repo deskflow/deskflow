@@ -8,6 +8,7 @@ find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS LinguistTo
 set (${CMAKE_PROJECT_NAME}_TRS
   ${CMAKE_PROJECT_NAME}_es.ts
   ${CMAKE_PROJECT_NAME}_it.ts
+  ${CMAKE_PROJECT_NAME}_ja.ts
 )
 
 set(TR_OPTIONS -no-ui-lines -locations none -silent)
