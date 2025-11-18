@@ -29,7 +29,7 @@ class WlClipboard : public QObject, public IClipboard
 {
   Q_OBJECT
 public:
-  WlClipboard(ClipboardID id);
+  explicit WlClipboard(ClipboardID id);
   WlClipboard(WlClipboard const &) = delete;
   WlClipboard(WlClipboard &&) = delete;
   ~WlClipboard() override;
