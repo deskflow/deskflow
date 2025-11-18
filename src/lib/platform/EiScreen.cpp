@@ -40,13 +40,13 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool inv
     : PlatformScreen{events, invertScrolling},
       m_isPrimary{isPrimary},
       m_events{events},
+      m_clipboard{new WlClipboardCollection()},
       m_w{1},
       m_h{1},
       m_isOnScreen{isPrimary}
 {
   initEi();
   m_keyState = new EiKeyState(this, events);
-  m_clipboard = new WlClipboardCollection();
   // install event handlers
   m_events->addHandler(EventTypes::System, m_events->getSystemTarget(), [this](const auto &e) {
     handleSystemEvent(e);
@@ -169,7 +169,7 @@ bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
     return false;
   }
 
-  IClipboard *sourceClipboard = m_clipboard->getClipboard(id);
+  const auto sourceClipboard = m_clipboard->getClipboard(id);
   if (!sourceClipboard) {
     return false;
   }
