@@ -15,7 +15,6 @@
 #include <mutex>
 #include <string>
 #include <thread>
-#include <vector>
 
 #include <QObject>
 #include <QString>
@@ -69,9 +68,6 @@ public:
   std::string get(Format format) const override;
 
 private:
-  //! Execute a command with input data
-  bool executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const;
-
   //! Convert IClipboard format to MIME type
   QString formatToMimeType(Format format) const;
 
