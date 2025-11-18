@@ -65,9 +65,6 @@ public:
   std::string get(Format format) const override;
 
 private:
-  //! Execute a command and return its output
-  std::string executeCommand(const std::vector<const char *> &args) const;
-
   //! Execute a command with input data
   bool executeCommandWithInput(const std::vector<const char *> &args, const std::string &input) const;
 
