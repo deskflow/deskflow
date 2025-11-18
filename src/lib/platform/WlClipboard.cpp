@@ -179,6 +179,11 @@ WlClipboard::WlClipboard(ClipboardID id) : m_id(id), m_useClipboard(id == kClipb
 WlClipboard::~WlClipboard()
 {
   stopMonitoring();
+  for (auto &cmd : m_runningWlCopies) {
+    cmd->kill();
+    cmd->waitForFinished(100);
+  }
+  m_runningWlCopies.clear();
 }
 
 ClipboardID WlClipboard::getID() const
@@ -261,26 +266,29 @@ void WlClipboard::add(Format format, const std::string &data)
     return;
   }
 
-  auto mimeType = formatToMimeType(format).toStdString();
-  if (mimeType.empty()) {
+  auto mimeType = formatToMimeType(format);
+  if (mimeType.isEmpty()) {
     LOG_WARN("unsupported clipboard format: %d", format);
     return;
   }
 
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-copy", "-t", mimeType.c_str(), nullptr};
-  } else {
-    args = {"wl-copy", "-t", mimeType.c_str(), "-p", nullptr};
-  }
+  auto cmd = new QProcess(this);
+  cmd->setProgram(s_copyApp);
 
-  bool success = executeCommandWithInput(args, data);
-  if (success) {
+  m_runningWlCopies.append(cmd);
+  connect(cmd, &QProcess::finished, this, [&] { m_runningWlCopies.removeAll(cmd); });
+
+  QStringList args = {s_noNewLine, s_readType.arg(mimeType), QString::fromStdString(data)};
+  if (!m_useClipboard)
+    args.prepend(s_isPrimary);
+
+  cmd->setArguments(args);
+  cmd->start();
+
+  if (cmd->waitForStarted(100)) {
     std::scoped_lock<std::mutex> lock(m_cacheMutex);
     updateOwnership(true);
     invalidateCache();
-  } else {
-    LOG_WARN("failed to set clipboard data");
   }
 }
 
