@@ -17,14 +17,16 @@
 #include <thread>
 #include <vector>
 
+#include <QObject>
 #include <QString>
 //! Wayland clipboard implementation using wl-copy/wl-paste
 /*!
 This class implements clipboard functionality for Wayland environments
 by using the wl-clipboard utilities (wl-copy and wl-paste).
 */
-class WlClipboard : public IClipboard
+class WlClipboard : public QObject, public IClipboard
 {
+  Q_OBJECT
 public:
   WlClipboard(ClipboardID id);
   WlClipboard(WlClipboard const &) = delete;
