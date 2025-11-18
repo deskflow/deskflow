@@ -32,6 +32,8 @@ inline static const auto s_pasteApp = QStringLiteral("wl-paste");
 // wl-clipboard args
 inline static const auto s_listTypes = QStringLiteral("--list-types");
 inline static const auto s_isPrimary = QStringLiteral("--primary");
+inline static const auto s_noNewLine = QStringLiteral("-n");
+inline static const auto s_readType = QStringLiteral("-t%1");
 
 // MIME types for different clipboard formats
 inline static const auto s_mimeTypeText = QStringLiteral("text/plain;charset=utf-8");
@@ -373,19 +375,23 @@ std::string WlClipboard::get(Format format) const
     return m_cachedData[static_cast<int>(format)];
   }
 
-  std::string mimeType = formatToMimeType(format).toStdString();
-  if (mimeType.empty()) {
+  auto mimeType = formatToMimeType(format);
+  if (mimeType.isEmpty()) {
     return std::string();
   }
 
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-paste", "-t", mimeType.c_str(), nullptr};
-  } else {
-    args = {"wl-paste", "-t", mimeType.c_str(), "-p", nullptr};
-  }
+  QProcess cmd;
+  cmd.setProgram(s_pasteApp);
 
-  std::string data = const_cast<WlClipboard *>(this)->executeCommand(args);
+  QStringList args = {s_noNewLine, s_readType.arg(mimeType)};
+  if (!m_useClipboard)
+    args.append(s_isPrimary);
+
+  cmd.setArguments(args);
+  cmd.start();
+  cmd.waitForFinished();
+
+  auto data = cmd.readAll().toStdString();
 
   // Update cache
   m_cachedData[static_cast<int>(format)] = data;
