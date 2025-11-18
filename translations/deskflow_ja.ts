@@ -825,19 +825,19 @@ Valid names:
     </message>
     <message>
         <source>Screen name is empty</source>
-        <translation>空のコンピュータ名</translation>
+        <translation>空のコンピューター名</translation>
     </message>
     <message>
         <source>The screen name cannot be empty. Please either fill in a name or cancel the dialog.</source>
-        <translation>コンピュータ名は削除できません。なにか名前を入力するか、ダイアログをキャンセルしてください。</translation>
+        <translation>コンピューター名を空にすることはできません。なにか名前を入力するか、ダイアログをキャンセルしてください。</translation>
     </message>
     <message>
         <source>Screen name matches alias</source>
-        <translation>コンピュータ名と別名の重複</translation>
+        <translation>コンピューター名と別名の重複</translation>
     </message>
     <message>
         <source>The screen name cannot be the same as an alias. Please either remove the alias or change the screen name.</source>
-        <translation>コンピュータ名は別名と同じにできません。別名を削除するか、コンピュータ名を変更してください。</translation>
+        <translation>コンピューター名は別名と同じにできません。別名を削除するか、コンピューター名を変更してください。</translation>
     </message>
 </context>
 <context>
