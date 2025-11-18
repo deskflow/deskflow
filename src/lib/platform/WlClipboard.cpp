@@ -236,15 +236,18 @@ bool WlClipboard::empty()
   if (!m_open) {
     return false;
   }
+  auto cmd = new QProcess(this);
+  cmd->setProgram(s_copyApp);
+  m_runningWlCopies.append(cmd);
+  connect(cmd, &QProcess::finished, this, [&] { m_runningWlCopies.removeAll(cmd); });
 
-  std::vector<const char *> args;
-  if (m_useClipboard) {
-    args = {"wl-copy", nullptr};
-  } else {
-    args = {"wl-copy", "-p", nullptr};
-  }
+  QStringList args = {s_noNewLine, ""};
+  if (!m_useClipboard)
+    args.prepend(s_isPrimary);
 
-  bool success = executeCommandWithInput(args, "");
+  cmd->setArguments(args);
+  cmd->start();
+  bool success = cmd->waitForStarted(100);
 
   if (success) {
     // Update ownership and cache only if command succeeded
