@@ -41,7 +41,6 @@ const char *const s_mimeTypeHtmlUtf8 = "text/html;charset=UTF-8";
 const char *const s_mimeTypeHtmlWindows = "HTML Format";
 
 // Command timeout (milliseconds)
-const int kCommandTimeout = 5000;
 const int kCacheValidityMs = 100;
 const int kMonitorIntervalMs = 1000;
 const int kMaxConsecutiveErrors = 5;
@@ -218,26 +217,24 @@ bool WlClipboard::has(Format format) const
     return m_cachedAvailable[static_cast<int>(format)];
   }
 
-  // Update cache by checking available MIME types
-  const auto availableTypes = const_cast<WlClipboard *>(this)->getAvailableMimeTypes();
-
-  if (availableTypes.isEmpty()) {
+  if (const auto availableTypes = getAvailableMimeTypes(); availableTypes.isEmpty()) {
     // No types available - mark all formats as unavailable
     for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
       m_cachedAvailable[i] = false;
       m_cachedData[i].clear();
     }
   } else {
+    using enum IClipboard::Format;
     // Check each format against available types
-    for (int i = 0; i < static_cast<int>(Format::TotalFormats); ++i) {
-      Format currentFormat = static_cast<Format>(i);
+    for (int i = 0; i < static_cast<int>(TotalFormats); ++i) {
+      auto currentFormat = static_cast<Format>(i);
       const auto mimeType = formatToMimeType(currentFormat);
 
       m_cachedAvailable[i] = false;
       if (!mimeType.isEmpty()) {
         for (const auto &available : availableTypes) {
-          if (available == mimeType || (currentFormat == Format::Text && available == "text/plain") ||
-              (currentFormat == Format::HTML && available.startsWith("text/html"))) {
+          if (available == mimeType || (currentFormat == Text && available == QStringLiteral("text/plain")) ||
+              (currentFormat == HTML && available.startsWith(QStringLiteral("text/html")))) {
             m_cachedAvailable[i] = true;
             break;
           }
@@ -295,11 +292,12 @@ std::string WlClipboard::get(Format format) const
 QString WlClipboard::formatToMimeType(Format format) const
 {
   switch (format) {
-  case Format::Text:
+    using enum IClipboard::Format;
+  case Text:
     return s_mimeTypeText;
-  case Format::HTML:
+  case HTML:
     return s_mimeTypeHtml;
-  case Format::Bitmap:
+  case Bitmap:
     return s_mimeTypeBmp;
   default:
     return {};
@@ -308,17 +306,18 @@ QString WlClipboard::formatToMimeType(Format format) const
 
 IClipboard::Format WlClipboard::mimeTypeToFormat(const QString &mimeType) const
 {
+  using enum IClipboard::Format;
   if (mimeType == s_mimeTypeText || mimeType == QStringLiteral("text/plain")) {
-    return Format::Text;
+    return Text;
   }
   if (mimeType == s_mimeTypeHtml || mimeType == s_mimeTypeHtmlUtf8 || mimeType == s_mimeTypeHtmlWindows ||
       mimeType.contains("text/html")) {
-    return Format::HTML;
+    return HTML;
   }
   if (mimeType == s_mimeTypeBmp) {
-    return Format::Bitmap;
+    return Bitmap;
   }
-  return Format::Text; // Default fallback
+  return Text; // Default fallback
 }
 
 QStringList WlClipboard::getAvailableMimeTypes() const
@@ -359,7 +358,7 @@ void WlClipboard::monitorClipboard()
         // Clear cache when clipboard changes
         std::scoped_lock<std::mutex> lock(m_cacheMutex);
         invalidateCache();
-        const_cast<WlClipboard *>(this)->updateOwnership(false);
+        updateOwnership(false);
       }
     } catch (const std::exception &e) {
       LOG_WARN("clipboard monitoring error: %s", e.what());
