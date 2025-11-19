@@ -27,10 +27,10 @@ qt_create_translation(TRS ${CMAKE_SOURCE_DIR}/src ${${CMAKE_PROJECT_NAME}_TRS} O
 #ensure that the targets are built always
 add_custom_target(app_translations ALL DEPENDS ${TRS})
 
-if (NOT APPLE)
+if (NOT BUILD_OSX_BUNDLE)
   # install our translations
   install(FILES ${TRS} DESTINATION ${CMAKE_INSTALL_I18N_DIR})
-elseif(APPLE)
+else()
   #when making the bundle copy our translation into the bundle
   set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS/translations)
 
