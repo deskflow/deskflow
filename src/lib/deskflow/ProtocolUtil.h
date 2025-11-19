@@ -33,7 +33,7 @@ public:
   are regular and are transmitted unchanged.
 
   Format specifiers are:
-  - \%\%   -- literal `\%'
+  - \%\%   -- literal `\%`
   - \%1i  -- converts integer argument to 1 byte integer
   - \%2i  -- converts integer argument to 2 byte integer in NBO
   - \%4i  -- converts integer argument to 4 byte integer in NBO
@@ -52,7 +52,7 @@ public:
   format was successfully parsed, false otherwise.
 
   Format specifiers are:
-  - \%\%   -- read (and discard) a literal `\%'
+  - \%\%   -- read (and discard) a literal `\%`
   - \%1i  -- reads a 1 byte integer; argument is a int32_t* or uint32_t*
   - \%2i  -- reads an NBO 2 byte integer;  arg is int32_t* or uint32_t*
   - \%4i  -- reads an NBO 4 byte integer;  arg is int32_t* or uint32_t*
