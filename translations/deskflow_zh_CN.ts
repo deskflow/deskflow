@@ -1289,4 +1289,38 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>简体中文</translation>
     </message>
 </context>
+<context>
+    <name>validators::AliasValidator</name>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation>计算机名称不能包含空格</translation>
+    </message>
+    <message>
+        <source>Aliases may not be ip addresses</source>
+        <translation>不能用 IP 地址作为别名</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation>包含无效字符或过长</translation>
+    </message>
+</context>
+<context>
+    <name>validators::ScreenNameValidator</name>
+    <message>
+        <source>Computer name cannot be empty</source>
+        <translation>计算机名称不能为空</translation>
+    </message>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation>计算机名称不能包含空格</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation>包含无效字符或过长</translation>
+    </message>
+    <message>
+        <source>A computer with this name already exists</source>
+        <translation>一台同名的计算机已经存在</translation>
+    </message>
+</context>
 </TS>
