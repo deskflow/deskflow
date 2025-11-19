@@ -48,7 +48,7 @@ if(APPLE)
   set_target_properties(${target} PROPERTIES
     BUILD_WITH_INSTALL_RPATH TRUE
     INSTALL_RPATH "@loader_path/../Libraries;@loader_path/../Frameworks"
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_BINDIR}
+    RUNTIME_OUTPUT_DIRECTORY $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS
   )
 elseif (WIN32)
   install(RUNTIME_DEPENDENCY_SET coreDeps
