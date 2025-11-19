@@ -1288,4 +1288,38 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <translation>Italiano</translation>
     </message>
 </context>
+<context>
+    <name>validators::AliasValidator</name>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation type="unfinished">Il nome del computer non può contenere spazi</translation>
+    </message>
+    <message>
+        <source>Aliases may not be ip addresses</source>
+        <translation type="unfinished">Gli alias non possono essere indirizzi IP</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation type="unfinished">Contiene caratteri non validi o è troppo lungo</translation>
+    </message>
+</context>
+<context>
+    <name>validators::ScreenNameValidator</name>
+    <message>
+        <source>Computer name cannot be empty</source>
+        <translation type="unfinished">Il nome del computer non può essere vuoto</translation>
+    </message>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation type="unfinished">Il nome del computer non può contenere spazi</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation type="unfinished">Contiene caratteri non validi o è troppo lungo</translation>
+    </message>
+    <message>
+        <source>A computer with this name already exists</source>
+        <translation type="unfinished">Esiste già un computer con questo nome</translation>
+    </message>
+</context>
 </TS>

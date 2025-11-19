@@ -1293,4 +1293,38 @@ Enabling this setting will disable the server config GUI.</source>
         <translation>Русский</translation>
     </message>
 </context>
+<context>
+    <name>validators::AliasValidator</name>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation>Имя компьютера не может содержать пробелы</translation>
+    </message>
+    <message>
+        <source>Aliases may not be ip addresses</source>
+        <translation>Псевдонимы не могут быть IP-адресами</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation>Содержит недопустимые символы или слишком длинный</translation>
+    </message>
+</context>
+<context>
+    <name>validators::ScreenNameValidator</name>
+    <message>
+        <source>Computer name cannot be empty</source>
+        <translation>Имя компьютера не может быть пустым</translation>
+    </message>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation>Имя компьютера не может содержать пробелы</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation>Имя содержит недопосутмые символы или слишком длинное</translation>
+    </message>
+    <message>
+        <source>A computer with this name already exists</source>
+        <translation>Компьютер с таким именем уже существует</translation>
+    </message>
+</context>
 </TS>

@@ -1288,4 +1288,38 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <translation>Español</translation>
     </message>
 </context>
+<context>
+    <name>validators::AliasValidator</name>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation type="unfinished">El nombre de la computadora no puede contener espacios</translation>
+    </message>
+    <message>
+        <source>Aliases may not be ip addresses</source>
+        <translation type="unfinished">Los alias no pueden ser direcciones IP</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation type="unfinished">Contiene caracteres no válidos o es demasiado largo</translation>
+    </message>
+</context>
+<context>
+    <name>validators::ScreenNameValidator</name>
+    <message>
+        <source>Computer name cannot be empty</source>
+        <translation type="unfinished">El nombre de la computadora no puede estar vacío</translation>
+    </message>
+    <message>
+        <source>Computer name cannot contain spaces</source>
+        <translation type="unfinished">El nombre de la computadora no puede contener espacios</translation>
+    </message>
+    <message>
+        <source>Contains invalid characters or is too long</source>
+        <translation type="unfinished">Contiene caracteres no válidos o es demasiado largo</translation>
+    </message>
+    <message>
+        <source>A computer with this name already exists</source>
+        <translation type="unfinished">Ya existe un ordenador con este nombre</translation>
+    </message>
+</context>
 </TS>
