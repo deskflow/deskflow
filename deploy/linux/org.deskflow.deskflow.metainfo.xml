@@ -8,9 +8,13 @@
 		<name>Deskflow Developers</name>
 	</developer>
 	<summary>Software Keyboard and mouse sharing</summary>
+	<summary xml:lang="zh_CN">用软件共享键鼠</summary>
 	<description>
 		<p>
 			Use the keyboard, mouse, or trackpad of one computer to control nearby computers, and work seamlessly between them.
+		</p>
+		<p xml:lang="zh_CN">
+			使用一台计算机的键盘、鼠标或触控板来控制附近的其它计算机，并在它们之间无缝工作。
 		</p>
 	</description>
 	<launchable type="desktop-id">org.deskflow.deskflow.desktop</launchable>
@@ -51,8 +55,10 @@
 		<category>Utility</category>
 	</categories>
 	<keywords>
-		<keyword translate="no">Input</keyword>
-		<keyword translate="no">Sharing</keyword>
+		<keyword>Input</keyword>
+		<keyword xml:lang="zh_CN">输入</keyword>
+		<keyword>Sharing</keyword>
+		<keyword xml:lang="zh_CN">共享</keyword>
 		<keyword translate="no">KVM</keyword>
 		<keyword translate="no">Synergy</keyword>
 	</keywords>

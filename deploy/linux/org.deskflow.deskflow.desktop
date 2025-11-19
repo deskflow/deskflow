@@ -11,3 +11,6 @@ Icon=org.deskflow.deskflow
 Terminal=false
 Categories=Utility;
 Keywords=keyboard;mouse;sharing;network;share;
+Name[zh_CN]=Deskflow
+Comment[zh_CN]=键鼠共享工具
+Keywords[zh_CN]=键盘;鼠标;网络;共享;
