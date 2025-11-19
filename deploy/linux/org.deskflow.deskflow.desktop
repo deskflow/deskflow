@@ -14,3 +14,6 @@ Keywords=keyboard;mouse;sharing;network;share;
 Name[zh_CN]=Deskflow
 Comment[zh_CN]=键鼠共享工具
 Keywords[zh_CN]=键盘;鼠标;网络;共享;
+Name[ru]=Deskflow
+Commnet[ru]=Приложения чтобы использовать одну мышку и клавиатуру с разными устройствами
+Keywords[ru]=Передача;Трансляция;barrier;input-leap;
