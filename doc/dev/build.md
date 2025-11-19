@@ -27,6 +27,7 @@ CMake options:
 | BUILD_INSTALLER          | Build installers/packages               | ON                 | |
 | BUILD_TESTS              | Build unit tests and legacy tests       | ON                 | `gtest`|
 | BUILD_X11_SUPPORT        | Build X11 backend (linux and bsd only)  | ON                 | `x11 libs`|
+| BUILD_OSX_BUNDLE         | Build an app bundle (mac os only)       | ON                 | |
 | ENABLE_COVERAGE          | Enable test coverage                    | OFF                | `gcov` |
 | SKIP_BUILD_TESTS         | Skip running of tests at build time     | OFF                | |
 | VCPKG_QT                 | Build Qt w/ vcpkg (windows only)        | OFF                | |
