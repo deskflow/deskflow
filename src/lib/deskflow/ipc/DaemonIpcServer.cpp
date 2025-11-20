@@ -14,8 +14,8 @@
 
 namespace deskflow::core::ipc {
 
-const auto kAckMessage = "ok\n";
-const auto kErrorMessage = "error\n";
+const auto kAckMessage = "ok";
+const auto kErrorMessage = "error";
 
 DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
     : QObject(parent),
@@ -109,17 +109,17 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
   const auto parts = message.split('=');
   if (parts.size() < 1) {
     LOG_ERR("ipc server got invalid message: %s", message.toUtf8().constData());
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   const auto &command = parts[0];
   if (command == "hello") { // NOSONAR - if-init is confusing here
     LOG_DEBUG("ipc server got hello message, sending hello back");
-    clientSocket->write("hello\n");
+    writeToClientSocket(clientSocket, "hello");
   } else if (command == "noop") {
     LOG_DEBUG("ipc server got noop message");
-    clientSocket->write(kAckMessage);
+    writeToClientSocket(clientSocket, kAckMessage);
   } else if (command == "logLevel") {
     processLogLevel(clientSocket, parts);
   } else if (command == "elevate") {
@@ -129,18 +129,18 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
   } else if (command == "start") {
     LOG_DEBUG("ipc server got start message");
     Q_EMIT startProcessRequested();
-    clientSocket->write(kAckMessage);
+    writeToClientSocket(clientSocket, kAckMessage);
   } else if (command == "stop") {
     LOG_DEBUG("ipc server got stop message");
     Q_EMIT stopProcessRequested();
-    clientSocket->write(kAckMessage);
+    writeToClientSocket(clientSocket, kAckMessage);
   } else if (command == "logPath") {
     LOG_DEBUG("ipc server got log path request");
-    clientSocket->write("logPath=" + m_logFilename.toUtf8() + "\n");
+    writeToClientSocket(clientSocket, "logPath=" + m_logFilename.toUtf8());
   } else if (command == "clearSettings") {
     LOG_DEBUG("ipc server got clear settings message");
     Q_EMIT clearSettingsRequested();
-    clientSocket->write(kAckMessage);
+    writeToClientSocket(clientSocket, kAckMessage);
   } else {
     LOG_WARN("ipc server got unknown message: %s", message.toUtf8().constData());
   }
@@ -152,60 +152,71 @@ void DaemonIpcServer::processLogLevel(QLocalSocket *&clientSocket, const QString
 {
   if (messageParts.size() < 2) {
     LOG_ERR("ipc server got invalid log level message");
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   const auto &logLevel = messageParts[1];
   if (logLevel.isEmpty()) {
     LOG_ERR("ipc server got empty log level");
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   LOG_DEBUG("ipc server got new log level: %s", logLevel.toUtf8().constData());
   Q_EMIT logLevelChanged(logLevel);
-  clientSocket->write(kAckMessage);
+  writeToClientSocket(clientSocket, kAckMessage);
 }
 
 void DaemonIpcServer::processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts)
 {
   if (messageParts.size() < 2) {
     LOG_ERR("ipc server got invalid elevate message");
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   const auto &elevate = messageParts[1];
   if (elevate != "yes" && elevate != "no") {
     LOG_ERR("ipc server got invalid elevate value: %s", elevate.toUtf8().constData());
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   LOG_DEBUG("ipc server got new elevate value: %s", elevate.toUtf8().constData());
   Q_EMIT elevateModeChanged(elevate == "yes");
-  clientSocket->write(kAckMessage);
+  writeToClientSocket(clientSocket, kAckMessage);
 }
 
 void DaemonIpcServer::processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts)
 {
   if (messageParts.size() < 2) {
     LOG_ERR("ipc server got invalid command message");
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   const auto &command = messageParts[1];
   if (command.isEmpty()) {
     LOG_ERR("ipc server got empty command");
-    clientSocket->write(kErrorMessage);
+    writeToClientSocket(clientSocket, kErrorMessage);
     return;
   }
 
   LOG_DEBUG("ipc server got new command: %s", command.toUtf8().constData());
   Q_EMIT commandChanged(command);
-  clientSocket->write(kAckMessage);
+  writeToClientSocket(clientSocket, kAckMessage);
+}
+
+void DaemonIpcServer::writeToClientSocket(QLocalSocket *&clientSocket, const QString &message)
+{
+  QByteArray messageData = message.toUtf8() + '\n';
+  qint64 bytesWritten = clientSocket->write(messageData);
+  if (bytesWritten != messageData.size()) {
+    LOG_ERR("ipc server failed to write full message to client socket");
+  } else {
+    LOG_DEBUG1("ipc server wrote message to client socket: %s", message.toUtf8().constData());
+  }
 }
 
 } // namespace deskflow::core::ipc
