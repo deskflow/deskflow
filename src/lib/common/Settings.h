@@ -224,6 +224,7 @@ private:
   // When checking the default values this list contains the ones that default to false.
   inline static const QStringList m_defaultFalseValues = {
       Settings::Gui::Autohide
+    , Settings::Gui::JoinPopularityContest
     , Settings::Core::StartedBefore
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
