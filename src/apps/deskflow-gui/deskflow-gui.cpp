@@ -23,7 +23,7 @@
 #include <QMessageBox>
 #include <QSharedMemory>
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include <Carbon/Carbon.h>
 #include <cstdlib>
 #endif
@@ -38,7 +38,7 @@
 
 using namespace deskflow::gui;
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 bool checkMacAssistiveDevices();
 #endif
 
@@ -128,7 +128,7 @@ int main(int argc, char *argv[])
   qInstallMessageHandler(deskflow::gui::messages::messageHandler);
   qInfo("%s v%s", kAppName, kDisplayVersion);
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 
   if (app.applicationDirPath().startsWith("/Volumes/")) {
     QString msgBody = QStringLiteral(
@@ -155,7 +155,7 @@ int main(int argc, char *argv[])
   return QApplication::exec();
 }
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 bool checkMacAssistiveDevices()
 {
   // new in mavericks, applications are trusted individually
