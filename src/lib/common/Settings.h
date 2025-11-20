@@ -54,7 +54,7 @@ public:
     inline static const auto Display = QStringLiteral("core/display");
     inline static const auto UseHooks = QStringLiteral("core/useHooks");
     inline static const auto Language = QStringLiteral("core/language");
-    inline static const auto useWlClipboard = QStringLiteral("core/wlClipboard");
+    inline static const auto UseWlClipboard = QStringLiteral("core/wlClipboard");
   };
   struct Daemon
   {
@@ -195,7 +195,7 @@ private:
     , Settings::Core::UpdateUrl
     , Settings::Core::Display
     , Settings::Core::UseHooks
-    , Settings::Core::useWlClipboard
+    , Settings::Core::UseWlClipboard
     , Settings::Core::Language
     , Settings::Daemon::Command
     , Settings::Daemon::Elevate
@@ -225,7 +225,7 @@ private:
       Settings::Gui::Autohide
     , Settings::Core::StartedBefore
     , Settings::Core::PreventSleep
-    , Settings::Core::useWlClipboard
+    , Settings::Core::UseWlClipboard
     , Settings::Server::ExternalConfig
     , Settings::Client::InvertScrollDirection
     , Settings::Log::ToFile

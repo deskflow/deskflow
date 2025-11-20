@@ -76,7 +76,7 @@ bool WlClipboard::isAvailable()
 
 bool WlClipboard::isEnabled()
 {
-  return Settings::value(Settings::Core::useWlClipboard).toBool();
+  return Settings::value(Settings::Core::UseWlClipboard).toBool();
 }
 
 void WlClipboard::startMonitoring()
