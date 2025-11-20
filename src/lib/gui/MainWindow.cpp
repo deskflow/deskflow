@@ -628,7 +628,7 @@ void MainWindow::updateNetworkInfo()
   if (auto toolTipBase = tr("<p>If connecting via the hostname fails, try %1</p>"); ipList.count() < 2) {
     ui->lblIpAddresses->setToolTip(toolTipBase.arg(tr("the suggested IP.")));
   } else {
-    ui->lblIpAddresses->setToolTip(toolTipBase.arg(tr("one of the following IPs:<br/>%1").arg(ipList.join("br/>"))));
+    ui->lblIpAddresses->setToolTip(toolTipBase.arg(tr("one of the following IPs:<br/>%1").arg(ipList.join("<br/>"))));
   }
 }
 
