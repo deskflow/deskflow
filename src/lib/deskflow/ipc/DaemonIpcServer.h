@@ -38,6 +38,14 @@ private:
   void processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts);
   void processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts);
 
+  /**!
+   * Write a message to the client socket and append a newline character.
+   *
+   * \param clientSocket The client socket to write to.
+   * \param message The message to write (without trailing newline).
+   */
+  void writeToClientSocket(QLocalSocket *&clientSocket, const QString &message);
+
 private Q_SLOTS:
   void handleNewConnection();
   void handleReadyRead();
