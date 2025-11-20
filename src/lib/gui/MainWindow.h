@@ -25,7 +25,7 @@
 #include "gui/tls/TlsUtility.h"
 #include "net/Fingerprint.h"
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
 #include "gui/OSXHelpers.h"
 #endif
 

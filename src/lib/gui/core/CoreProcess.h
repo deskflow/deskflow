@@ -127,7 +127,7 @@ private:
   static QString processStateToString(const CoreProcess::ProcessState state);
   static QString wrapIpv6(const QString &address);
 
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
   void checkOSXNotification(const QString &line);
 #endif
 

@@ -49,7 +49,7 @@
 
 #include <memory>
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include <ApplicationServices/ApplicationServices.h>
 #endif
 
@@ -1016,7 +1016,7 @@ void MainWindow::updateLocalFingerprint()
 
 void MainWindow::hide()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
   macOSNativeHide();
 #else
   QMainWindow::hide();
@@ -1106,7 +1106,7 @@ void MainWindow::updateScreenName()
 
 void MainWindow::showAndActivate()
 {
-#ifdef Q_OS_MAC
+#ifdef Q_OS_MACOS
   forceAppActive();
 #endif
   showNormal();
