@@ -27,6 +27,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
   const QList<QDir> appTrDirs{
       {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
       {QStringLiteral("%1/../translations").arg(QCoreApplication::applicationDirPath())},
+      {QStringLiteral("%1/../Resources/translations").arg(QCoreApplication::applicationDirPath())},
       {QStringLiteral("%1/../share/%2/translations").arg(QCoreApplication::applicationDirPath(), kAppId)},
       {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), kAppId)},
       {QStringLiteral("/usr/local/share/%1/translations").arg(kAppId)},
@@ -47,6 +48,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
   const QList<QDir> qtTrDirs{
       {QStringLiteral("%1/%2").arg(QCoreApplication::applicationDirPath(), QStringLiteral("translations"))},
+      {QStringLiteral("%1/../Resources/translations").arg(QCoreApplication::applicationDirPath())},
       {QStringLiteral("%1/../qt-depends/translations").arg(QCoreApplication::applicationDirPath())},
       {QStringLiteral("%1/../share/qt/translations").arg(QCoreApplication::applicationDirPath())},
       {QStringLiteral("%1/.local/share/%2/translations").arg(QDir::homePath(), QStringLiteral("qt"))},

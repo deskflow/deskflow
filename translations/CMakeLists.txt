@@ -32,7 +32,7 @@ if (NOT BUILD_OSX_BUNDLE)
   install(FILES ${TRS} DESTINATION ${CMAKE_INSTALL_I18N_DIR})
 else()
   #when making the bundle copy our translation into the bundle
-  set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/MacOS/translations)
+  set(BUNDLE_TR_DIR $<TARGET_BUNDLE_CONTENT_DIR:${CMAKE_PROJECT_PROPER_NAME}>/Resources/translations)
 
   # find the qt translation files needed to copy into the bundle
   get_target_property(lupdate_executable Qt6::lupdate IMPORTED_LOCATION)
