@@ -1,11 +1,13 @@
 <map id="IClipboard" name="IClipboard">
-<area shape="rect" id="Node000001" title="Clipboard interface." alt="" coords="215,5,296,30"/>
+<area shape="rect" id="Node000001" title="Clipboard interface." alt="" coords="291,5,372,30"/>
 <area shape="rect" id="Node000002" href="$classClipboard.html" title="Memory buffer clipboard." alt="" coords="5,78,82,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,38,79,80,78,75,205,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="277,35,83,82,81,77,275,30"/>
 <area shape="rect" id="Node000003" href="$classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="106,78,256,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="235,40,194,80,192,75,230,42"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="295,37,207,80,205,75,290,37"/>
 <area shape="rect" id="Node000004" href="$classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="280,78,383,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="280,38,322,78,317,77,278,43"/>
-<area shape="rect" id="Node000005" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="407,78,546,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,32,443,77,438,78,306,38"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="333,44,334,79,329,76,330,48"/>
+<area shape="rect" id="Node000005" href="$classWlClipboard.html" title="Wayland clipboard implementation using wl&#45;copy/wl&#45;paste." alt="" coords="407,78,499,103"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="366,36,435,78,430,77,364,41"/>
+<area shape="rect" id="Node000006" href="$classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="523,78,662,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="387,31,552,77,547,78,386,36"/>
 </map>

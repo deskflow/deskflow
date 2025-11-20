@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.376</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.403</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -104,15 +104,17 @@ Inheritance diagram for IClipboard:</div>
 <div class="dyncontent">
 <div class="center"><img src="classIClipboard__inherit__graph.png" border="0" usemap="#aIClipboard_inherit__map" loading="lazy" alt="Inheritance graph"/></div>
 <map name="aIClipboard_inherit__map" id="aIClipboard_inherit__map">
-<area shape="rect" title="Clipboard interface." alt="" coords="215,5,296,30"/>
+<area shape="rect" title="Clipboard interface." alt="" coords="291,5,372,30"/>
 <area shape="rect" href="classClipboard.html" title="Memory buffer clipboard." alt="" coords="5,78,82,103"/>
-<area shape="poly" title=" " alt="" coords="207,38,79,80,78,75,205,33"/>
+<area shape="poly" title=" " alt="" coords="277,35,83,82,81,77,275,30"/>
 <area shape="rect" href="classMSWindowsClipboard.html" title="Microsoft windows clipboard implementation." alt="" coords="106,78,256,103"/>
-<area shape="poly" title=" " alt="" coords="235,40,194,80,192,75,230,42"/>
+<area shape="poly" title=" " alt="" coords="295,37,207,80,205,75,290,37"/>
 <area shape="rect" href="classOSXClipboard.html" title="OS X clipboard implementation." alt="" coords="280,78,383,103"/>
-<area shape="poly" title=" " alt="" coords="280,38,322,78,317,77,278,43"/>
-<area shape="rect" href="classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="407,78,546,103"/>
-<area shape="poly" title=" " alt="" coords="307,32,443,77,438,78,306,38"/>
+<area shape="poly" title=" " alt="" coords="333,44,334,79,329,76,330,48"/>
+<area shape="rect" href="classWlClipboard.html" title="Wayland clipboard implementation using wl&#45;copy/wl&#45;paste." alt="" coords="407,78,499,103"/>
+<area shape="poly" title=" " alt="" coords="366,36,435,78,430,77,364,41"/>
+<area shape="rect" href="classXWindowsClipboard.html" title="X11 clipboard implementation." alt="" coords="523,78,662,103"/>
+<area shape="poly" title=" " alt="" coords="387,31,552,77,547,78,386,36"/>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -200,7 +202,7 @@ accessors</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> formats. </p>
-<p>The list of known clipboard formats. kNumFormats must be last and formats must be sequential starting from zero. <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> data set via <a class="el" href="#a626df1c5cedfc790e84dcee64edf682f" title="Add data.">add()</a> and retrieved via <a class="el" href="#a742c618d6056270cf533962ae905a059" title="Get data.">get()</a> must be in one of these formats. Platform dependent clipboard subclasses can and should present any suitable formats derivable from these formats.</p>
+<p>The list of known clipboard formats. TotalFormats must be last and formats must be sequential starting from zero. <a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> data set via <a class="el" href="#a626df1c5cedfc790e84dcee64edf682f" title="Add data.">add()</a> and retrieved via <a class="el" href="#a742c618d6056270cf533962ae905a059" title="Get data.">get()</a> must be in one of these formats. Platform dependent clipboard subclasses can and should present any suitable formats derivable from these formats.</p>
 <p><code>kText</code> is a text format encoded in UTF-8. Newlines are LF (not CR or LF/CR).</p>
 <p><code>kBitmap</code> is an image format. The data is a BMP file without the 14 byte header (i.e. starting at the INFOHEADER) and with the image data immediately following the 40 byte INFOHEADER.</p>
 <p><code>kHTML</code> is a text format encoded in UTF-8 and containing a valid HTML fragment (but not necessarily a complete HTML document). Newlines are LF. </p>
@@ -274,7 +276,7 @@ accessors</h2></td></tr>
 <p>Add data. </p>
 <p>Add data in the given format to the clipboard. May only be called after a successful <a class="el" href="#a5eea232f00e11ff558ae97dd4157a151" title="Empty clipboard.">empty()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a9e249e84b390532fd48e3d8a49464f32">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a21fa058bc4182ca36851ee5a41f9e224">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a211a60474df04f515594a381262fb026">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ad23b5c1a0a720adf19779c2b9b2c42fc">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a9e249e84b390532fd48e3d8a49464f32">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a21fa058bc4182ca36851ee5a41f9e224">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a211a60474df04f515594a381262fb026">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#afc67317cc943200c041dfd6d03ce9c37">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ad23b5c1a0a720adf19779c2b9b2c42fc">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -304,7 +306,7 @@ accessors</h2></td></tr>
 <p>Close clipboard. </p>
 <p>Close the clipboard. <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a> must match a preceding successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a>. This signals that the clipboard has been filled with all the necessary data or all data has been read. It does not mean the clipboard ownership should be released (if it was taken). </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#ac4a03c5af681ee354a8a71f7265c925e">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#ae60b5d11f014f9666bc535da97d534f2">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#ac0e091e51bd2ade87822a039eda853c2">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ac1d0a3546c8ed85a7bd5a3a4fad6a545">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#ac4a03c5af681ee354a8a71f7265c925e">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#ae60b5d11f014f9666bc535da97d534f2">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#ac0e091e51bd2ade87822a039eda853c2">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#aa6d3bb80ead321708116ac1bf6427bd6">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ac1d0a3546c8ed85a7bd5a3a4fad6a545">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -403,7 +405,7 @@ accessors</h2></td></tr>
 <p>Empty clipboard. </p>
 <p>Take ownership of the clipboard and clear all data from it. This must be called between a successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> and <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a>. Return false if the clipboard ownership could not be taken; the clipboard should not be emptied in this case. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a195be5a60c4c38fb9b594c89a8ba7fe6">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a3cd9c06c3e66cf4ac0c65964598b5161">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a984ba93944a6c7a228bbc16b261b647c">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a05c1cabfd1ce449f9c85f8723353bee8">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a195be5a60c4c38fb9b594c89a8ba7fe6">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a3cd9c06c3e66cf4ac0c65964598b5161">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a984ba93944a6c7a228bbc16b261b647c">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#a2d60523b3e860f2e1b787cbf2c9840ab">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a05c1cabfd1ce449f9c85f8723353bee8">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -433,7 +435,7 @@ accessors</h2></td></tr>
 <p>Get data. </p>
 <p>Return the data in the given format. Returns the empty string if there is no data in that format. Must be called between a successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> and <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#acc73e977864a48b2fcee12594b72cd34">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a79268c92d239ce4d9efac3568a8fa856">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a5a3736cb7ed7d14ce9ddce3ccd2a27f5">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a41b2d85b6ea5aa730239c8ec38954283">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#acc73e977864a48b2fcee12594b72cd34">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a79268c92d239ce4d9efac3568a8fa856">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a5a3736cb7ed7d14ce9ddce3ccd2a27f5">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#a1b170edeb0ff71e832d11d37b28f52b3">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a41b2d85b6ea5aa730239c8ec38954283">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -463,7 +465,7 @@ accessors</h2></td></tr>
 <p>Get time. </p>
 <p>Return the timestamp passed to the last successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#ad20304fb216c32e85da18425b0248c27">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#ad14ff5016dc5716933ce588094bb8da7">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a0826a6baa01ebbd9205e59aaa944ad31">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ab7ae9786fc59bfc2ef7005b33db392e7">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#ad20304fb216c32e85da18425b0248c27">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#ad14ff5016dc5716933ce588094bb8da7">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a0826a6baa01ebbd9205e59aaa944ad31">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#a2ca9659902bada07275e74c7848185c8">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#ab7ae9786fc59bfc2ef7005b33db392e7">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -493,7 +495,7 @@ accessors</h2></td></tr>
 <p>Check for data. </p>
 <p>Return true iff the clipboard contains data in the given format. Must be called between a successful <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> and <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a>. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a5812a2355d6e4818b9217cc18f9d0785">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a3db53404389feb7f3b2eb490653a249f">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a99298d285dbbbb273645ae744cf7fd19">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a2607d95a1eb6152e09ba9cf5a661d5b8">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a5812a2355d6e4818b9217cc18f9d0785">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a3db53404389feb7f3b2eb490653a249f">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a99298d285dbbbb273645ae744cf7fd19">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#a08322c9e6c1d88a85ce7618c16410692">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#a2607d95a1eb6152e09ba9cf5a661d5b8">XWindowsClipboard</a>.</p>
 
 </div>
 </div>
@@ -551,7 +553,7 @@ accessors</h2></td></tr>
 <p>Open clipboard. </p>
 <p>Open the clipboard. Return true iff the clipboard could be opened. If <a class="el" href="#a943ac453b759e3bf174ee99114243d5e" title="Open clipboard.">open()</a> returns true then the client must call <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a> at some later time; if it returns false then <a class="el" href="#ac4baa709cc801acd2bd72a1b2404eceb" title="Close clipboard.">close()</a> must not be called. <code>time</code> should be the current time or a time in the past when the open should effectively have taken place. </p>
 
-<p>Implemented in <a class="el" href="classClipboard.html#a9ea9d11bcb20e64ced19d5480f30183d">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a5e554860266ee9d40d3102e88d1723e3">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a861d53feb2830eea809370a8245e74d1">OSXClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#aeaddad5350fce4e4b0cddcc93ca7264a">XWindowsClipboard</a>.</p>
+<p>Implemented in <a class="el" href="classClipboard.html#a9ea9d11bcb20e64ced19d5480f30183d">Clipboard</a>, <a class="el" href="classMSWindowsClipboard.html#a5e554860266ee9d40d3102e88d1723e3">MSWindowsClipboard</a>, <a class="el" href="classOSXClipboard.html#a861d53feb2830eea809370a8245e74d1">OSXClipboard</a>, <a class="el" href="classWlClipboard.html#a79ec4c40c4a6147a56287014353501f8">WlClipboard</a>, and <a class="el" href="classXWindowsClipboard.html#aeaddad5350fce4e4b0cddcc93ca7264a">XWindowsClipboard</a>.</p>
 
 </div>
 </div>

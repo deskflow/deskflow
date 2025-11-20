@@ -41,10 +41,11 @@ var searchData=
   ['userdir_38',['UserDir',['../classSettings.html#a33616afa82a5433ced5104646ab88dee',1,'Settings']]],
   ['usersettingfile_39',['UserSettingFile',['../classSettings.html#a37be043c4fa4b592b9e334520bef9814',1,'Settings']]],
   ['usesavedmodifiers_40',['useSavedModifiers',['../classMSWindowsKeyState.html#a00048a1a17ffb4dfd00010c1674f9497',1,'MSWindowsKeyState']]],
-  ['utf16toutf8_41',['UTF16ToUTF8',['../classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e',1,'Unicode']]],
-  ['utf32toutf8_42',['UTF32ToUTF8',['../classUnicode.html#af35f349e90c98d8e51404b7f8ef63166',1,'Unicode']]],
-  ['utf8toucs2_43',['UTF8ToUCS2',['../classUnicode.html#a6cf183d92569cbd9d50211908810ffec',1,'Unicode']]],
-  ['utf8toucs4_44',['UTF8ToUCS4',['../classUnicode.html#a3bdb942cd19651cda84c95311756d0db',1,'Unicode']]],
-  ['utf8toutf16_45',['UTF8ToUTF16',['../classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b',1,'Unicode']]],
-  ['utf8toutf32_46',['UTF8ToUTF32',['../classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439',1,'Unicode']]]
+  ['usewlclipboard_41',['useWlClipboard',['../structSettings_1_1Core.html#a2cd89bc6e908c295341b6c4110c60f37',1,'Settings::Core']]],
+  ['utf16toutf8_42',['UTF16ToUTF8',['../classUnicode.html#a1be18b41a5f937d7d795fe3c9fac1d9e',1,'Unicode']]],
+  ['utf32toutf8_43',['UTF32ToUTF8',['../classUnicode.html#af35f349e90c98d8e51404b7f8ef63166',1,'Unicode']]],
+  ['utf8toucs2_44',['UTF8ToUCS2',['../classUnicode.html#a6cf183d92569cbd9d50211908810ffec',1,'Unicode']]],
+  ['utf8toucs4_45',['UTF8ToUCS4',['../classUnicode.html#a3bdb942cd19651cda84c95311756d0db',1,'Unicode']]],
+  ['utf8toutf16_46',['UTF8ToUTF16',['../classUnicode.html#a648d34ac2f92bfae890e2be5b21a004b',1,'Unicode']]],
+  ['utf8toutf32_47',['UTF8ToUTF32',['../classUnicode.html#abb05f3eb42145b9be0f1ab9715edf439',1,'Unicode']]]
 ];

@@ -19,6 +19,8 @@ var namespacedeskflow =
     [ "EiScreen", "classdeskflow_1_1EiScreen.html", "classdeskflow_1_1EiScreen" ],
     [ "PortalInputCapture", "classdeskflow_1_1PortalInputCapture.html", "classdeskflow_1_1PortalInputCapture" ],
     [ "PortalRemoteDesktop", "classdeskflow_1_1PortalRemoteDesktop.html", "classdeskflow_1_1PortalRemoteDesktop" ],
+    [ "WlClipboardCollection", "classdeskflow_1_1WlClipboardCollection.html", "classdeskflow_1_1WlClipboardCollection" ],
+    [ "ClipboardInfo", "namespacedeskflow.html#a7e6b295055478c56c471ed9ec99905e2", null ],
     [ "EventTypes", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2", [
       [ "Unknown", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a88183b946cc5f0e8c96b2e66e1c74a7e", null ],
       [ "Quit", "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6", null ],

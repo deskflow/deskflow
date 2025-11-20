@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.376</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.403</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -125,6 +125,12 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of <a class="el" href="classIPlatformScreen.html" title="Screen interface.">IPlatformScreen</a> for X11.  <a href="classdeskflow_1_1EiScreen.html#details">More...</a><br /></td></tr>
 <tr class="memitem:PortalInputCapture" id="r_PortalInputCapture"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdeskflow_1_1PortalInputCapture.html">PortalInputCapture</a></td></tr>
 <tr class="memitem:PortalRemoteDesktop" id="r_PortalRemoteDesktop"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdeskflow_1_1PortalRemoteDesktop.html">PortalRemoteDesktop</a></td></tr>
+<tr class="memitem:WlClipboardCollection" id="r_WlClipboardCollection"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classdeskflow_1_1WlClipboardCollection.html">WlClipboardCollection</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classClipboard.html" title="Memory buffer clipboard.">Clipboard</a> manager for <a class="el" href="classdeskflow_1_1EiScreen.html" title="Implementation of IPlatformScreen for X11.">EiScreen</a>.  <a href="classdeskflow_1_1WlClipboardCollection.html#details">More...</a><br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:a7e6b295055478c56c471ed9ec99905e2" id="r_a7e6b295055478c56c471ed9ec99905e2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7e6b295055478c56c471ed9ec99905e2">ClipboardInfo</a> = <a class="el" href="structIScreen_1_1ClipboardInfo.html">IScreen::ClipboardInfo</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -222,6 +228,21 @@ Functions</h2></td></tr>
 <tr class="memitem:ad861c9ab209c83520015ecd34ea46d02" id="r_ad861c9ab209c83520015ecd34ea46d02"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad861c9ab209c83520015ecd34ea46d02">formatSSLFingerprintColumns</a> (const QByteArray &amp;fingerprint)</td></tr>
 <tr class="memitem:ae59df1508908bc129534f32f6865d6f0" id="r_ae59df1508908bc129534f32f6865d6f0"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae59df1508908bc129534f32f6865d6f0">generateFingerprintArt</a> (const QByteArray &amp;rawDigest)</td></tr>
 </table>
+<a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="a7e6b295055478c56c471ed9ec99905e2" name="a7e6b295055478c56c471ed9ec99905e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e6b295055478c56c471ed9ec99905e2">&#9670;&#160;</a></span>ClipboardInfo</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a7e6b295055478c56c471ed9ec99905e2">deskflow::ClipboardInfo</a> = <a class="el" href="structIScreen_1_1ClipboardInfo.html">IScreen::ClipboardInfo</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
 <a id="a34787a880fd439e02383f336665d7bc2" name="a34787a880fd439e02383f336665d7bc2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a34787a880fd439e02383f336665d7bc2">&#9670;&#160;</a></span>EventTypes</h2>
@@ -347,9 +368,9 @@ Functions</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2a31b9ba3c4015a697a50ed6dd2a9577b5" name="a34787a880fd439e02383f336665d7bc2a31b9ba3c4015a697a50ed6dd2a9577b5"></a>ScreenResume&#160;</td><td class="fielddoc"><p>This event is sent whenever the system wakes up or a user session is activated (fast user switching). </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121" name="a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121"></a>ClipboardGrabbed&#160;</td><td class="fielddoc"><p>This event is sent whenever the clipboard is grabbed by some other application so we don't own it anymore. The data is a pointer to a ClipboardInfo. </p>
+<tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121" name="a34787a880fd439e02383f336665d7bc2ab693bad8d2758377eff2d73976c0c121"></a>ClipboardGrabbed&#160;</td><td class="fielddoc"><p>This event is sent whenever the clipboard is grabbed by some other application so we don't own it anymore. The data is a pointer to a <a class="el" href="#a7e6b295055478c56c471ed9ec99905e2">ClipboardInfo</a>. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db" name="a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db"></a>ClipboardChanged&#160;</td><td class="fielddoc"><p>This event is sent whenever the contents of the clipboard has changed. The data is a pointer to a ClipboardInfo. </p>
+<tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db" name="a34787a880fd439e02383f336665d7bc2a98f1b4fe2c8af605faaa5ce9f5c589db"></a>ClipboardChanged&#160;</td><td class="fielddoc"><p>This event is sent whenever the contents of the clipboard has changed. The data is a pointer to a <a class="el" href="#a7e6b295055478c56c471ed9ec99905e2">ClipboardInfo</a>. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2" name="a34787a880fd439e02383f336665d7bc2a6fe8d07fdc1c600919bbf677c067ede2"></a>ClipboardSending&#160;</td><td class="fielddoc"><p>This event is sent whenever a clipboard chunk is transferred. </p>
 </td></tr>

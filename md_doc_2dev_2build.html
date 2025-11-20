@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.376</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.403</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -107,15 +107,15 @@ $(function(){initNavTree('md_doc_2dev_2build.html','',''); });
 <p>^ Will be fetched if not found on the host system. </p>
 </blockquote>
 <p>By default a build of Deskflow will:</p><ul>
-<li>The GUI application deskflow</li>
-<li>The Core application deskflow-core</li>
+<li>The GUI application <span class="tt"><a class="el" href="namespacedeskflow.html">deskflow</a></span></li>
+<li>The Core application <span class="tt">deskflow-core</span></li>
 <li>Documentation if <a href="http://www.stack.nl/~dimitri/doxygen/">doxygen</a> was found on your system</li>
-<li>Tests that will be run as part of the build process.</li>
+<li>Tests that will be run as part of the build process</li>
 </ul>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 Configuration</h1>
-<p>Deskflow supports the following build options</p>
-<p>CMake options: </p><table class="markdownTable">
+<p>Deskflow supports the following CMake options:</p>
+<table class="markdownTable">
 <tr class="markdownTableHead">
 <th class="markdownTableHeadCenter">Option  </th><th class="markdownTableHeadCenter">Description  </th><th class="markdownTableHeadCenter">Default Value  </th><th class="markdownTableHeadCenter">Additional requirements  </th></tr>
 <tr class="markdownTableRowOdd">
@@ -127,19 +127,21 @@ Configuration</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">BUILD_TESTS  </td><td class="markdownTableBodyCenter">Build unit tests and legacy tests  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">gtest</span>  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">BUILD_X11_SUPPORT  </td><td class="markdownTableBodyCenter">Build X11 backend (linux and bsd only)  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">x11 libs</span>  </td></tr>
+<td class="markdownTableBodyCenter">BUILD_X11_SUPPORT  </td><td class="markdownTableBodyCenter">Build X11 backend (Linux and BSD only)  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"><span class="tt">x11 libs</span>  </td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyCenter">BUILD_OSX_BUNDLE  </td><td class="markdownTableBodyCenter">Build an app bundle (macOS only)  </td><td class="markdownTableBodyCenter">ON  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">ENABLE_COVERAGE  </td><td class="markdownTableBodyCenter">Enable test coverage  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"><span class="tt">gcov</span>  </td></tr>
-<tr class="markdownTableRowOdd">
+<tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">SKIP_BUILD_TESTS  </td><td class="markdownTableBodyCenter">Skip running of tests at build time  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
-<tr class="markdownTableRowEven">
-<td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyCenter">CLEAN_TRS  </td><td class="markdownTableBodyCenter">Remove obsolete strings from tr files  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<td class="markdownTableBodyCenter">VCPKG_QT  </td><td class="markdownTableBodyCenter">Build Qt w/ vcpkg (Windows only)  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
 <tr class="markdownTableRowEven">
+<td class="markdownTableBodyCenter">CLEAN_TRS  </td><td class="markdownTableBodyCenter">Remove obsolete strings from tr files  </td><td class="markdownTableBodyCenter">OFF  </td><td class="markdownTableBodyCenter"></td></tr>
+<tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">APPLE_CODESIGN_DEV  </td><td class="markdownTableBodyCenter">Apple codesign cert ID for development  </td><td class="markdownTableBodyCenter">Not set  </td><td class="markdownTableBodyCenter"></td></tr>
 </table>
-<p>Example cmake configuration. <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>
+<p>Example cmake configuration: <span class="tt">cmake -S. -Bbuild -DCMAKE_INSTALL_PREFIX=&lt;INSTALLPREFIX&gt;</span></p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Windows Configuration</h2>
 <p>It is recommended to use vcpkg to install the dependencies. The first time you configure Deskflow, all dependencies other than Qt will be built. If you don't want to use vcpkg, you must manually setup the dependencies. However, that will not be covered by this document.</p>
@@ -150,17 +152,17 @@ Windows and Qt</h3>
 System Qt</h4>
 <ol type="1">
 <li>Download and install the <a href="https://www.qt.io">Qt</a> online installer from their website.</li>
-<li>Add the path of Qt's cmake files to your system path. (Skipping this may require you provide this path to cmake via <span class="tt">Qt6_DIR</span> at configure time)<ul>
-<li>Often <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\lib\cmake</span></li>
+<li>Add the path of Qt's cmake files to your system path (skipping this may require you provide this path to cmake via <span class="tt">Qt6_DIR</span> at configure time).<ul>
+<li>Often: <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\lib\cmake</span></li>
 </ul>
 </li>
 <li>Add the path of Qt's binary tools to your system path.<ul>
-<li>Often <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\bin</span></li>
+<li>Often: <span class="tt">C:\Qt\&lt;version&gt;\&lt;msvcinfo&gt;\bin</span></li>
 </ul>
 </li>
 </ol>
 <h4 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
-Vcpkg managed Qt</h4>
+vcpkg managed Qt</h4>
 <ol type="1">
 <li>Add the option <span class="tt">-DVCPKG_QT=ON</span> to your cmake configuration command (i.e <span class="tt">cmake -S. -Bbuild -DVCPKG_QT=ON ...</span>) or if using an IDE, look for the option where you configure the project, have the IDE run cmake again.</li>
 <li>Once the configuration starts, you should see a lot more packages vcpkg will build. Building Qt takes a long time (potentially hours), so go find something else to do for a while.</li>
@@ -187,11 +189,15 @@ Build</h1>
 <p><span class="tt">cmake --build build</span></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 Install</h1>
-<p>To test installation run <span class="tt">DESTDIR=&lt;installDIR&gt; cmake --install build</span> to install into <span class="tt">&lt;installDir&gt;/&lt;CMAKE_INSTALL_PREFIX&gt;</span> <br  />
- Running <span class="tt">cmake --install build</span> will install to the <span class="tt">CMAKE_INSTALL_PREFIX</span></p>
+<p>To test installation run <span class="tt">DESTDIR=&lt;installDIR&gt; cmake --install build</span> to install into <span class="tt">&lt;installDir&gt;/&lt;CMAKE_INSTALL_PREFIX&gt;</span></p>
+<p>Running <span class="tt">cmake --install build</span> will install to the <span class="tt">CMAKE_INSTALL_PREFIX</span></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 Making Deskflow packages</h1>
-<p>Deskflow can generate several packages using cpack. To generate packages build the <span class="tt">package</span> or <span class="tt">package_source</span> target. Example: <span class="tt"> cmake --build build --target package package_source</span> would generate both package and package source packages. Deskflow can generate several package types depending on the system. Archive-based packages should work on all platforms. On Linux deb and rpm info is set up, flatpaks can be generated from the included file in deploy/linux and a PKGBUILD for <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> linux is generated in the build folder. On macos a dmg file will be created and signed. For windows wix can be used to create an installer. </p>
+<p>Deskflow can generate several packages using <span class="tt">cpack</span>.</p>
+<p>To generate packages build the <span class="tt">package</span> or <span class="tt">package_source</span> target.</p>
+<p>Example: <span class="tt"> cmake --build build --target package package_source</span> would generate both package and package source packages.</p>
+<p>Deskflow can generate several package types depending on the system.</p>
+<p>Archive-based packages should work on all platforms. On Linux deb and rpm info is set up, Flatpaks can be generated from the included file in deploy/linux and a <span class="tt">PKGBUILD</span> for <a class="el" href="classArch.html" title="Delegating implementation of architecture dependent interfaces.">Arch</a> linux is generated in the build folder. On macos a dmg file will be created and signed. For windows WiX can be used to create an installer. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->

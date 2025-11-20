@@ -30,7 +30,7 @@ var NAVTREE =
         [ "Windows Configuration", "md_doc_2dev_2build.html#autotoc_md2", [
           [ "Windows and Qt", "md_doc_2dev_2build.html#autotoc_md3", [
             [ "System Qt", "md_doc_2dev_2build.html#autotoc_md4", null ],
-            [ "Vcpkg managed Qt", "md_doc_2dev_2build.html#autotoc_md5", null ]
+            [ "vcpkg managed Qt", "md_doc_2dev_2build.html#autotoc_md5", null ]
           ] ]
         ] ],
         [ "macOS codesign", "md_doc_2dev_2build.html#autotoc_md6", null ]
@@ -92,6 +92,7 @@ var NAVTREE =
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
         [ "Variables", "namespacemembers_vars.html", null ],
+        [ "Typedefs", "namespacemembers_type.html", null ],
         [ "Enumerations", "namespacemembers_enum.html", null ]
       ] ]
     ] ],
@@ -132,24 +133,24 @@ var NAVTREEINDEX =
 "MSWindowsDebugOutputter_8h_source.html",
 "OSXKeyState_8cpp.html#a5d80ee8e879186619558806ad996f98d",
 "SpacesValidator_8h_source.html",
-"classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784",
-"classArchNetworkWinsock.html#a4500154a30ebcdfb1701dedb63c07a46",
-"classClientProxy1__1.html#a0a36bccf1295f78afb13ddb5c946b9e0",
-"classI18N.html#aad8e50cfa0c2d9c68b64985624827a83",
-"classIOSXKeyResource.html#a58823379c0a3c7e6a307d0c937ca357f",
-"classInputFilter_1_1SwitchToScreenAction.html#a3f1824015b00b14478f23d174d3f3007",
-"classMSWindowsScreen.html#a32506d299e745880278714833aed4db9",
-"classOSXScreenSaver.html#af44294a5b89c07a490b7140a71be03da",
+"classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d",
+"classArchNetworkWinsock.html#a0fab2de7056932426fd107606d3c8ab2",
+"classClientProxy1__0.html#ae2812c552a2eb8c7a36d6ba92d0afd83",
+"classHotkeyDialog.html#ae95ebac862e1337db4a8634206793557",
+"classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2",
+"classInputFilter_1_1SwitchToNextScreenAction.html",
+"classMSWindowsScreen.html#a191ffb095bbac747eda76bb883b44872",
+"classOSXScreenSaver.html",
 "classScreenSetupModel.html#a69a190af2f7852f331102120b57dd7eb",
 "classSettings.html#acae7403fc5587261131793d51be7af24",
 "classUnicode.html#a6cf183d92569cbd9d50211908810ffec",
-"classXWindowsScreenSaver.html#aa07068b1d29488e49ee8464bcb8f74e8",
-"classdeskflow_1_1KeyMap.html#ad075cb1a257a8c3f4ab402a75e5d8921",
-"classdeskflow_1_1gui_1_1CoreProcess.html#ad7712b9cc9037d67853c3b4da8fe7bdb",
-"classdeskflow_1_1server_1_1ConfigReadContext.html#a29387f1ea56d5f6faf208020d290746f",
-"functions_func_n.html",
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a662eedb3d21ec748ac1199d4357c8bd5",
-"structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa"
+"classXWindowsScreen.html#ab2081f805c4225a52a529f2552936086",
+"classdeskflow_1_1KeyMap.html#a8aa58250fe051e6cbcac1fd7ed19020f",
+"classdeskflow_1_1gui_1_1CoreProcess.html#a7e71f9782c34b927045af276d0e3f11f",
+"classdeskflow_1_1server_1_1Config.html#acf5bbdff9cc061836a428bce5ec471ff",
+"dir_9d41f2d9dd9f152ba43e738700883d1e.html",
+"md_doc_2dev_2build.html#autotoc_md9",
+"structClientProxy1__0_1_1ClientClipboard.html#a7e4b6c67808c8f28b1246bc2d4ab7432"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';

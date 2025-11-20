@@ -1,7 +1,13 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classIJob.html" title="Job interface." alt="" coords="5,31,52,55"/>
-<area shape="rect" id="Node000001" href="$classFunctionJob.html" title="Use a function as a job." alt="" coords="116,5,208,30"/>
-<area shape="poly" id="edge35_Node000000_Node000001" title=" " alt="" coords="66,33,118,25,114,28,68,38"/>
-<area shape="rect" id="Node000002" href="$classTMethodJob.html" title="Use a function as a job." alt="" coords="100,55,225,79"/>
-<area shape="poly" id="edge36_Node000000_Node000002" title=" " alt="" coords="67,47,102,55,97,57,67,52"/>
+<area shape="rect" id="Node000000" href="$classIEventQueueBuffer.html" title="Event queue buffer interface." alt="" coords="5,104,136,129"/>
+<area shape="rect" id="Node000001" href="$classMSWindowsEventQueueBuffer.html" title="Event queue buffer for Win32." alt="" coords="184,5,384,30"/>
+<area shape="poly" id="edge47_Node000000_Node000001" title=" " alt="" coords="98,92,137,65,183,41,221,29,217,32,185,45,140,70,101,96"/>
+<area shape="rect" id="Node000002" href="$classOSXEventQueueBuffer.html" title="Event queue buffer for OS X." alt="" coords="207,55,361,79"/>
+<area shape="poly" id="edge48_Node000000_Node000002" title=" " alt="" coords="141,97,229,78,225,82,143,102"/>
+<area shape="rect" id="Node000003" href="$classSimpleEventQueueBuffer.html" title="In&#45;memory event queue buffer." alt="" coords="201,104,367,129"/>
+<area shape="poly" id="edge49_Node000000_Node000003" title=" " alt="" coords="151,114,203,115,198,117,152,119"/>
+<area shape="rect" id="Node000004" href="$classXWindowsEventQueueBuffer.html" title="Event queue buffer for X11." alt="" coords="189,153,378,178"/>
+<area shape="poly" id="edge50_Node000000_Node000004" title=" " alt="" coords="142,130,230,152,225,154,142,135"/>
+<area shape="rect" id="Node000005" href="$classdeskflow_1_1EiEventQueueBuffer.html" title="Event queue buffer for Ei." alt="" coords="185,203,382,227"/>
+<area shape="poly" id="edge51_Node000000_Node000005" title=" " alt="" coords="100,136,140,163,185,187,222,202,217,202,183,192,137,167,99,141"/>
 </map>

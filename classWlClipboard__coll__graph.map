@@ -1,0 +1,7 @@
+<map id="WlClipboard" name="WlClipboard">
+<area shape="rect" id="Node000001" title="Wayland clipboard implementation using wl&#45;copy/wl&#45;paste." alt="" coords="43,78,136,103"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,75,30"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="58,40,84,77,79,78,55,45"/>
+<area shape="rect" id="Node000003" href="$classIClipboard.html" title="Clipboard interface." alt="" coords="98,5,179,30"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,42,99,80,95,76,119,44"/>
+</map>

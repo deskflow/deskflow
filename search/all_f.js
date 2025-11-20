@@ -110,7 +110,7 @@ var searchData=
   ['makekeymsg_107',['makeKeyMsg',['../MSWindowsHook_8cpp.html#ab87ca94d9fcc1bae39a7ffa4d6e40d23',1,'MSWindowsHook.cpp']]],
   ['makepollfd_108',['makePollFD',['../structArchNetworkBSD_1_1Deps.html#adcac3640b39350d7f4121a0fa96c3847',1,'ArchNetworkBSD::Deps']]],
   ['making_20deskflow_20packages_109',['Making Deskflow packages',['../md_doc_2dev_2build.html#autotoc_md9',1,'']]],
-  ['managed_20qt_110',['Vcpkg managed Qt',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
+  ['managed_20qt_110',['vcpkg managed Qt',['../md_doc_2dev_2build.html#autotoc_md5',1,'']]],
   ['mapbuttontovirtualkey_111',['mapButtonToVirtualKey',['../classMSWindowsKeyState.html#a8b57983005599168d2ddbd860af1254d',1,'MSWindowsKeyState']]],
   ['mapclientscrolldirection_112',['mapClientScrollDirection',['../classPlatformScreen.html#a395adf1076033b25c832ff03c0ab0776',1,'PlatformScreen']]],
   ['mapdeskflowhotkeytomac_113',['mapDeskflowHotKeyToMac',['../classOSXKeyState.html#a90d966a307ced9047caa7e06826f8a8d',1,'OSXKeyState']]],

@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" title=" " alt="" coords="5,31,108,55"/>
 <area shape="rect" id="Node000001" href="$classThreadException.html" title="Generic thread exception." alt="" coords="156,31,274,55"/>
-<area shape="poly" id="edge152_Node000000_Node000001" title=" " alt="" coords="123,40,158,42,153,44,124,46"/>
+<area shape="poly" id="edge154_Node000000_Node000001" title=" " alt="" coords="123,40,158,42,153,44,124,46"/>
 <area shape="rect" id="Node000002" href="$classThreadCancelException.html" title="Thread exception to cancel." alt="" coords="322,5,480,30"/>
-<area shape="poly" id="edge153_Node000001_Node000002" title=" " alt="" coords="289,30,325,28,319,29,290,36"/>
+<area shape="poly" id="edge155_Node000001_Node000002" title=" " alt="" coords="289,30,325,28,319,29,290,36"/>
 <area shape="rect" id="Node000003" href="$classThreadExitException.html" title="Thread exception to exit." alt="" coords="330,55,472,79"/>
-<area shape="poly" id="edge154_Node000001_Node000003" title=" " alt="" coords="289,50,333,58,327,58,289,55"/>
+<area shape="poly" id="edge156_Node000001_Node000003" title=" " alt="" coords="289,50,333,58,327,58,289,55"/>
 </map>

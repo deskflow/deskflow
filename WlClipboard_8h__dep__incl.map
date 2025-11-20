@@ -1,0 +1,11 @@
+<map id="src/lib/platform/WlClipboard.h" name="src/lib/platform/WlClipboard.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="122,5,315,30"/>
+<area shape="rect" id="Node000002" href="$WlClipboard_8cpp.html" title=" " alt="" coords="5,85,213,110"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,41,127,86,124,82,192,37"/>
+<area shape="rect" id="Node000003" href="$WlClipboardCollection_8h.html" title=" " alt="" coords="236,78,419,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,36,304,77,299,78,246,42"/>
+<area shape="rect" id="Node000004" href="$EiScreen_8cpp.html" title=" " alt="" coords="128,172,317,196"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="295,126,238,173,236,169,290,128"/>
+<area shape="rect" id="Node000005" href="$WlClipboardCollection_8cpp.html" title=" " alt="" coords="340,165,523,203"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="363,124,411,165,406,164,361,129"/>
+</map>

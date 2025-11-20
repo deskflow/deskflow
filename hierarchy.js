@@ -124,6 +124,7 @@ var hierarchy =
       [ "Clipboard", "classClipboard.html", null ],
       [ "MSWindowsClipboard", "classMSWindowsClipboard.html", null ],
       [ "OSXClipboard", "classOSXClipboard.html", null ],
+      [ "WlClipboard", "classWlClipboard.html", null ],
       [ "XWindowsClipboard", "classXWindowsClipboard.html", null ]
     ] ],
     [ "IEventQueue", "classIEventQueue.html", [
@@ -345,6 +346,7 @@ var hierarchy =
       [ "Settings", "classSettings.html", null ],
       [ "TlsCertificate", "classTlsCertificate.html", null ],
       [ "VersionChecker", "classVersionChecker.html", null ],
+      [ "WlClipboard", "classWlClipboard.html", null ],
       [ "deskflow::core::ipc::DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", null ],
       [ "deskflow::gui::ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", null ],
       [ "deskflow::gui::CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", null ],
@@ -472,6 +474,7 @@ var hierarchy =
     [ "deskflow::gui::core::WaylandWarnings", "classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html", null ],
     [ "IPrimaryScreen::WheelInfo", "classIPrimaryScreen_1_1WheelInfo.html", null ],
     [ "Win32Modifiers", "structWin32Modifiers.html", null ],
+    [ "deskflow::WlClipboardCollection", "classdeskflow_1_1WlClipboardCollection.html", null ],
     [ "XDGKeyUtil", "classXDGKeyUtil.html", null ],
     [ "XDGPowerManager", "classXDGPowerManager.html", null ],
     [ "XWindowsUtil", "classXWindowsUtil.html", null ]

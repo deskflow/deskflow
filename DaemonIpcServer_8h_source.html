@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.376</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.24.0.403</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -134,21 +134,23 @@ $(function(){initNavTree('DaemonIpcServer_8h_source.html','',''); });
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  <span class="keywordtype">void</span> processLogLevel(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">void</span> processElevate(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> processCommand(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">private</span> Q_SLOTS:</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  <span class="keywordtype">void</span> handleNewConnection();</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  <span class="keywordtype">void</span> handleReadyRead();</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">void</span> handleDisconnected();</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keywordtype">void</span> handleErrorOccurred();</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keyword">const</span> QString m_logFilename;</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>  QLocalServer *m_server;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  QSet&lt;QLocalSocket *&gt; m_clients;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>};</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> writeToClientSocket(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span> Q_SLOTS:</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">void</span> handleNewConnection();</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keywordtype">void</span> handleReadyRead();</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">void</span> handleDisconnected();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>  <span class="keywordtype">void</span> handleErrorOccurred();</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">const</span> QString m_logFilename;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>  QLocalServer *m_server;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  QSet&lt;QLocalSocket *&gt; m_clients;</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>};</div>
 </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span> </div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>} <span class="comment">// namespace deskflow::core::ipc</span></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer_html_a0df591df3970451ca72ba7567cc6f870"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a0df591df3970451ca72ba7567cc6f870">deskflow::core::ipc::DaemonIpcServer::stopProcessRequested</a></div><div class="ttdeci">void stopProcessRequested()</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer_html_a1f2f52740caf1549da28d5769506df41"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a1f2f52740caf1549da28d5769506df41">deskflow::core::ipc::DaemonIpcServer::logLevelChanged</a></div><div class="ttdeci">void logLevelChanged(const QString &amp;logLevel)</div></div>
 <div class="ttc" id="aclassdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer_html_a30963e8f1a6d7f4e5f1c813d699382da"><div class="ttname"><a href="classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a30963e8f1a6d7f4e5f1c813d699382da">deskflow::core::ipc::DaemonIpcServer::listen</a></div><div class="ttdeci">void listen()</div><div class="ttdef"><b>Definition</b> DaemonIpcServer.cpp:33</div></div>

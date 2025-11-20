@@ -11,5 +11,6 @@ var structSettings_1_1Core =
     [ "ScreenName", "structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508", null ],
     [ "StartedBefore", "structSettings_1_1Core.html#a8e5d24f3689064d508522eaedef45012", null ],
     [ "UpdateUrl", "structSettings_1_1Core.html#ac9abe007912bc0f8cd98d53aa0e267ab", null ],
-    [ "UseHooks", "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54", null ]
+    [ "UseHooks", "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54", null ],
+    [ "useWlClipboard", "structSettings_1_1Core.html#a2cd89bc6e908c295341b6c4110c60f37", null ]
 ];
