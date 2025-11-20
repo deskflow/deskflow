@@ -1,2 +1,9 @@
 # Apply to all files
 * @nbolton @sithlord48
+
+# Translators
+translations/deskflow_es.ts @sithlord48
+translations/deskflow_it.ts @sithlord48
+translations/deskflow_ja.ts @ykasap
+translations/deskflow_ru.ts @levpr1c
+translations/deskflow_zh_CN.ts @sailordiary
