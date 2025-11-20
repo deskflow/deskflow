@@ -756,25 +756,6 @@
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>cbLanguageSync</tabstop>
-  <tabstop>cbScrollDirection</tabstop>
-  <tabstop>cbAutoUpdate</tabstop>
-  <tabstop>cbCloseToTray</tabstop>
-  <tabstop>rbIconColorful</tabstop>
-  <tabstop>rbIconMono</tabstop>
-  <tabstop>groupSecurity</tabstop>
-  <tabstop>lineTlsCertPath</tabstop>
-  <tabstop>btnTlsCertPath</tabstop>
-  <tabstop>comboTlsKeyLength</tabstop>
-  <tabstop>btnTlsRegenCert</tabstop>
-  <tabstop>cbRequireClientCert</tabstop>
-  <tabstop>comboInterface</tabstop>
-  <tabstop>sbPort</tabstop>
-  <tabstop>cbLogToFile</tabstop>
-  <tabstop>lineLogFilename</tabstop>
-  <tabstop>btnBrowseLog</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>
