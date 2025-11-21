@@ -391,7 +391,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>%1 will retry in a moment...</source>
-        <translation>%1 попробюуйте ещё раз через несколько секунд...</translation>
+        <translation>%1 пробует переподкючиться...</translation>
     </message>
     <message>
         <source>%1 is stopping...</source>
