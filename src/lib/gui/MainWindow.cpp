@@ -666,7 +666,7 @@ void MainWindow::open()
   if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
     m_versionChecker.checkLatest();
   } else {
-    qDebug() << "update check disabled";
+    qDebug() << "skipping check for new version, disabled";
   }
 
   if (Settings::value(Settings::Core::StartedBefore).toBool()) {
