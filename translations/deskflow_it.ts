@@ -528,6 +528,10 @@ Nomi validi:
         <translation>Usa mouse e tastiera di un altro computer
 (imposta questo computer come client)</translation>
     </message>
+    <message>
+        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
+        <translation type="unfinished">Non è stato possibile avviare correttamente l&apos;eseguibile Core, sebbene esista. Verifica di disporre delle autorizzazioni necessarie per eseguire questo programma.</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
