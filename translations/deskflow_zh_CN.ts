@@ -709,14 +709,6 @@ Interface is not active. Unable to start server.</source>
         <translation>不，谢谢</translation>
     </message>
     <message>
-        <source>Check for updates</source>
-        <translation>检查更新</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;您希望在 %1 启动时检查更新吗？&lt;/p&gt;&lt;p&gt;检查更新需要互联网连接。&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Background service offline</source>
         <translation>后台服务离线</translation>
     </message>
@@ -750,6 +742,34 @@ Interface is not active. Unable to start server.</source>
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">无法从证书文件中读取 RSA 密钥：%1</translation>
+    </message>
+    <message>
+        <source>Some optional %1 features require an Internet connection. Would you like to enable them?</source>
+        <translation type="unfinished">某些可选的 %1 功能需要互联网连接。&lt;br /&gt;是否启用它们？</translation>
+    </message>
+    <message>
+        <source>Choose which features to enable:</source>
+        <translation type="unfinished">选择要启用的功能：</translation>
+    </message>
+    <message>
+        <source>Check for new versions when app starts</source>
+        <translation type="unfinished">应用启动时检查新版本</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest</source>
+        <translation type="unfinished">参与人气竞赛</translation>
+    </message>
+    <message>
+        <source>Requires the version check. The popularity contest is based on the user agent.</source>
+        <translation type="unfinished">需要进行版本检查。人气竞赛基于 user-agent。</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;用户代理：&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;URL：&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
     </message>
 </context>
 <context>

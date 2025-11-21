@@ -709,14 +709,6 @@ Interface is not active. Unable to start server.</source>
         <translation>不要です</translation>
     </message>
     <message>
-        <source>Check for updates</source>
-        <translation>更新を確認する</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;%1 の起動時にソフトウェア更新を確認しますか？&lt;/p&gt;&lt;p&gt;更新の確認にはインターネット接続が必要です。&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Background service offline</source>
         <translation>バックグラウンドサービス停止中</translation>
     </message>
@@ -750,6 +742,34 @@ Interface is not active. Unable to start server.</source>
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">証明書ファイルから RSA キーを読み取ることができませんでした: %1</translation>
+    </message>
+    <message>
+        <source>Some optional %1 features require an Internet connection. Would you like to enable them?</source>
+        <translation type="unfinished">いくつかの %1 のオプション機能はインターネット接続を必要とします。有効にしますか？</translation>
+    </message>
+    <message>
+        <source>Choose which features to enable:</source>
+        <translation type="unfinished">有効にする機能を選択:</translation>
+    </message>
+    <message>
+        <source>Check for new versions when app starts</source>
+        <translation type="unfinished">アプリ起動時に新しいバージョンを確認する</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest</source>
+        <translation type="unfinished">人気投票に参加する</translation>
+    </message>
+    <message>
+        <source>Requires the version check. The popularity contest is based on the user agent.</source>
+        <translation type="unfinished">バージョンチェックが必要です。人気投票はユーザーエージェントに基づきます。</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;ユーザーエージェント:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
     </message>
 </context>
 <context>
