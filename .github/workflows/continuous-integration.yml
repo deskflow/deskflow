@@ -304,8 +304,8 @@ jobs:
           usesh: true
           run: |
             pkg install -y cmake ninja gmake gcc12 openssl glib \
-            libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 googletest \
-            tomlplusplus cli11 pkgconf libei libportal
+            libX11 libXtst libxkbfile qt6-base qt6-tools gtk3 \
+            googletest pkgconf libei libportal
             ${{env.CMAKE_CONFIGURE}} -G Ninja
             cmake --build build -j16
             # Integration tests are flakey by nature, make them optional.
