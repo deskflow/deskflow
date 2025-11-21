@@ -152,7 +152,7 @@ macro(configure_unix_libs)
     include(FindPkgConfig)
     find_package(PkgConfig)
     if(PKG_CONFIG_FOUND)
-      pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon)
+      pkg_check_modules(LIBXKBCOMMON REQUIRED xkbcommon>=1.10)
       pkg_check_modules(GLIB2 REQUIRED glib-2.0)
       find_library(LIBM m)
       include_directories(${LIBXKBCOMMON_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS}
