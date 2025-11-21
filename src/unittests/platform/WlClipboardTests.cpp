@@ -7,6 +7,7 @@
 #include "WlClipboardTests.h"
 
 #include "base/LogLevel.h"
+#include "common/PlatformInfo.h"
 #include "deskflow/ClipboardTypes.h"
 #include "platform/WlClipboard.h"
 
@@ -40,6 +41,11 @@ void WlClipboardTests::initTestCase()
 {
   m_arch.init();
   m_log.setFilter(LogLevel::Debug2);
+
+  // Only run tests if Wayland clipboard tools are available
+  if (!deskflow::platform::isWayland()) {
+    QSKIP("not running on wayland skipping Wayland clipboard tests");
+  }
 
   // Only run tests if Wayland clipboard tools are available
   if (!WlClipboard::isAvailable()) {
