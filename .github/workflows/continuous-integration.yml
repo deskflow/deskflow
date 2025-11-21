@@ -106,16 +106,16 @@ jobs:
             timeout: 20
             config-args: '-DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_OSX_DEPLOYMENT_TARGET=12 -DCMAKE_OSX_SYSROOT=/Applications/Xcode_16.4.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk'
 
-          - name: "debian-13-x86_64"
+          - name: "debian-x86_64"
             runs-on: ubuntu-latest
-            container: debian:trixie-slim
+            container: debian:stable-slim
             like: "debian"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
-          - name: "debian-13-arm64"
+          - name: "debian-arm64"
             runs-on: ubuntu-24.04-arm
-            container: debian:trixie-slim
+            container: debian:stable-slim
             like: "debian"
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
