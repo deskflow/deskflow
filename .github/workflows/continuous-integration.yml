@@ -183,6 +183,20 @@ jobs:
             timeout: 20
             config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
 
+          - name: "ubuntu-26.04-x86_64"
+            runs-on: ubuntu-latest
+            container: ubuntu:26.04
+            like: "debian"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
+          - name: "ubuntu-26.04-arm64"
+            runs-on: ubuntu-24.04-arm
+            container: ubuntu:26.04
+            like: "debian"
+            timeout: 20
+            config-args: "-G Ninja -DCMAKE_INSTALL_PREFIX=/usr"
+
     steps:
       # Make sure the container has git before we do anything else
       - name: Install Git on Container
