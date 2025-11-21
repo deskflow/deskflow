@@ -12,5 +12,5 @@ var structSettings_1_1Core =
     [ "StartedBefore", "structSettings_1_1Core.html#a8e5d24f3689064d508522eaedef45012", null ],
     [ "UpdateUrl", "structSettings_1_1Core.html#ac9abe007912bc0f8cd98d53aa0e267ab", null ],
     [ "UseHooks", "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54", null ],
-    [ "useWlClipboard", "structSettings_1_1Core.html#a2cd89bc6e908c295341b6c4110c60f37", null ]
+    [ "UseWlClipboard", "structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda", null ]
 ];
