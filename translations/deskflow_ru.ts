@@ -531,6 +531,10 @@ Valid names:
         <translation>Клиент:
  %1</translation>
     </message>
+    <message>
+        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
+        <translation type="unfinished">Не удалось запустить исполняемый файл Core, хотя он существует. Проверьте, есть ли у вас достаточные права для запуска этой программы.</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>

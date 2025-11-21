@@ -528,6 +528,10 @@ Nombres válidos:
         <source>This computer&apos;s name:</source>
         <translation type="unfinished">Nombre de esta computadora:</translation>
     </message>
+    <message>
+        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
+        <translation type="unfinished">No se pudo iniciar el archivo ejecutable principal, aunque existe. Compruebe si tiene permisos suficientes para ejecutar este programa.</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>

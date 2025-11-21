@@ -407,9 +407,9 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
     show();
     QMessageBox::warning(
         this, tr("Core cannot be started"),
-        "The Core executable could not be successfully started, "
-        "although it does exist. "
-        "Please check if you have sufficient permissions to run this program."
+        tr("The Core executable could not be successfully started, "
+           "although it does exist. "
+           "Please check if you have sufficient permissions to run this program.")
     );
   }
 }

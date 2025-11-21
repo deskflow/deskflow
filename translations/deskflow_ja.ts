@@ -321,7 +321,7 @@ Do you want to connect to the server?
     </message>
     <message>
         <source>Core cannot be started</source>
-        <translation>Coreが起動できません</translation>
+        <translation>コアが起動できません</translation>
     </message>
     <message>
         <source>Save server configuration as...</source>
@@ -526,6 +526,10 @@ Valid names:
  %1</source>
         <translation>クライアント:
  %1</translation>
+    </message>
+    <message>
+        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
+        <translation>コア実行ファイルは存在していますが、起動できませんでした。このプログラムを実行するのに十分な権限があることを確認してください。</translation>
     </message>
 </context>
 <context>
@@ -911,7 +915,7 @@ Valid names:
     </message>
     <message>
         <source>&amp;Dead corners (for this computer)</source>
-        <translation>無効領域(&amp;D) (このコンピュータ)</translation>
+        <translation>無効領域(&amp;D) (このコンピューター)</translation>
     </message>
     <message>
         <source>&amp;Bottom-left</source>

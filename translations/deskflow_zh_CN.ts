@@ -527,6 +527,10 @@ Valid names:
         <translation>客户端：
  %1</translation>
     </message>
+    <message>
+        <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
+        <translation type="unfinished">Core 可执行文件虽然存在，但无法成功启动。请检查您是否拥有运行此程序的足够权限。</translation>
+    </message>
 </context>
 <context>
     <name>NewScreenWidget</name>
