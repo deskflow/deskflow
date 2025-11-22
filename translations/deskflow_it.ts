@@ -711,6 +711,25 @@ Nomi validi:
         <source>&lt;p&gt;There was a problem finding the %1 background service (daemon).&lt;/p&gt;&lt;p&gt;The background service makes %1 work with UAC prompts and the login screen.&lt;/p&gt;&lt;p&gt;If don&apos;t want to use the background service and intentionally stopped it, you can prevent it&apos;s use by disabling this feature.&lt;/p&gt;&lt;p&gt;If you did not stop the background service intentionally, there may be a problem with it. Please retry or try restarting the %1 service from the Windows services program.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Si è verificato un problema durante la ricerca del servizio in background %1 (daemon).&lt;/p&gt;&lt;p&gt;Il servizio in background consente a %1 di funzionare con i prompt UAC e la schermata di accesso.&lt;/p&gt;&lt;p&gt;Se non desideri utilizzare il servizio in background e lo hai interrotto intenzionalmente, puoi impedirne l&apos;uso disabilitando questa funzionalità.&lt;/p&gt;&lt;p&gt;Se non hai interrotto intenzionalmente il servizio in background, potrebbe esserci un problema. Riprova o prova a riavviare il servizio %1 dal programma dei servizi di Windows.&lt;/p&gt;</translation>
     </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile leggere la chiave dal file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile analizzare il file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">la chiave rilevata ha una dimensione errata</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile leggere la chiave RSA o DSA dal file del certificato: %1</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
@@ -1263,28 +1282,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Richiede il pacchetto wl-clipboard&lt;/p&gt;&lt;p&gt;Quando si utilizza wl-clipboard v2.2.1, si verifica un bug di furto del focus che potrebbe rendere Deskflow più difficile da usare. Questo problema è stato risolto quando si utilizza il ramo master di wl-clipboard, a meno che il proprio compositore non supporti il ​​protocollo wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>deskflow::gui::TlsUtility</name>
-    <message>
-        <source>failed to parse certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">impossibile analizzare il file del certificato: %1</translation>
-    </message>
-    <message>
-        <source>failed to read key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">impossibile leggere la chiave dal file del certificato: %1</translation>
-    </message>
-    <message>
-        <source>key detected is the incorrect size</source>
-        <translation type="unfinished">la chiave rilevata ha una dimensione errata</translation>
-    </message>
-    <message>
-        <source>failed to read RSA or DSA key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">impossibile leggere la chiave RSA o DSA dal file del certificato: %1</translation>
     </message>
 </context>
 <context>

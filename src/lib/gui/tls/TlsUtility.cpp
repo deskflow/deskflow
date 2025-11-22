@@ -15,82 +15,77 @@
 #include <QSslKey>
 #include <QString>
 
-namespace deskflow::gui {
+namespace deskflow::gui::TlsUtility {
 
-TlsUtility::TlsUtility(QObject *parent) : QObject(parent)
-{
-  // do nothing
-}
-
-bool TlsUtility::isEnabled()
+bool isEnabled()
 {
   return Settings::value(Settings::Security::TlsEnabled).toBool();
 }
 
-bool TlsUtility::isCertValid(const QString &certPath)
+bool isCertValid(const QString &certPath)
 {
   const auto certs = QSslCertificate::fromPath(certPath);
   if (certs.isEmpty()) {
     //: %1 will be replaced by the certificate path
-    qDebug() << tr("failed to read key from certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to read key from certificate file: %1").arg(certPath);
     return false;
   }
 
   const auto cert = certs.first();
   if (cert.isNull()) {
     //: %1 will be replaced by the certificate path
-    qDebug() << tr("failed to parse certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to parse certificate file: %1").arg(certPath);
     return false;
   }
 
   const auto key = cert.publicKey();
   if (key.isNull()) {
     //: %1 will be replaced by the certificate path
-    qDebug() << tr("failed to read key from certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to read key from certificate file: %1").arg(certPath);
     return false;
   }
 
   if (key.length() != Settings::value(Settings::Security::KeySize).toInt()) {
-    qDebug() << tr("key detected is the incorrect size");
+    qDebug() << QObject::tr("key detected is the incorrect size");
     return false;
   }
 
   if (const auto type = key.algorithm(); (type != QSsl::Dsa || type != QSsl::Rsa)) {
     //: %1 will be replaced by the certificate path
-    qDebug() << tr("failed to read RSA or DSA key from certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to read RSA or DSA key from certificate file: %1").arg(certPath);
     return false;
   }
 
   return true;
 }
 
-int TlsUtility::getCertKeyLength(const QString &certPath)
+int getCertKeyLength(const QString &certPath)
 {
   return deskflow::getCertLength(certPath.toStdString());
 }
 
-QByteArray TlsUtility::certFingerprint(const QString &certPath)
+QByteArray certFingerprint(const QString &certPath)
 {
   QByteArray fingerprint;
 
   const auto certs = QSslCertificate::fromPath(certPath);
   if (certs.isEmpty()) {
     //: %1 will be replaced by the certificate path
-    qDebug() << tr("failed to read key from certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to read key from certificate file: %1").arg(certPath);
     return fingerprint;
   }
 
   const auto cert = certs.first();
   if (cert.isNull()) {
     //: %1 will be replaced by the certificate path
-    qWarning() << tr("failed to parse certificate file: %1").arg(certPath);
+    qWarning() << QObject::tr("failed to parse certificate file: %1").arg(certPath);
     return fingerprint;
   }
 
   return cert.digest(QCryptographicHash::Sha256);
 }
 
-bool TlsUtility::generateCertificate()
+bool generateCertificate()
 {
   qDebug(
       "generating tls certificate, "
@@ -116,4 +111,4 @@ bool TlsUtility::generateCertificate()
   return true;
 }
 
-} // namespace deskflow::gui
+} // namespace deskflow::gui::TlsUtility

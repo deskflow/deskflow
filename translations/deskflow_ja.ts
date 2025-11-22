@@ -712,6 +712,25 @@ Valid names:
         <source>&lt;p&gt;There was a problem finding the %1 background service (daemon).&lt;/p&gt;&lt;p&gt;The background service makes %1 work with UAC prompts and the login screen.&lt;/p&gt;&lt;p&gt;If don&apos;t want to use the background service and intentionally stopped it, you can prevent it&apos;s use by disabling this feature.&lt;/p&gt;&lt;p&gt;If you did not stop the background service intentionally, there may be a problem with it. Please retry or try restarting the %1 service from the Windows services program.&lt;/p&gt;</source>
         <translation>&lt;p&gt;%1 バックグラウンドサービス(デーモン)が検出できませんでした。&lt;/p&gt;&lt;p&gt;バックグラウンドサービスは %1 がUACプロンプトとログイン画面で動作するために必要です。&lt;/p&gt;&lt;p&gt;もしバックグラウンドサービスが不要で意図的に停止したのであれば、この機能を無効化することで利用を止めることができます。&lt;/p&gt;&lt;p&gt;もし意図的に止めたのでなければ、何か問題があるかもしれません。再試行するか、%1 サービスをWindowsのサービス設定から再起動してみてください。&lt;/p&gt;</translation>
     </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルからキーを読み取ることができませんでした: %1</translation>
+    </message>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルの解析に失敗しました: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">検出されたキーのサイズが正しくありません</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルから RSA または DSA キーを読み取ることができませんでした: %1</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
@@ -1264,28 +1283,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wl-clipboard パッケージが必要です。&lt;/p&gt;&lt;p&gt;wl-clipboard v2.2.1 を使用すると、フォーカス盗用のバグにより Deskflow の使い勝手が悪くなる可能性があります。この問題は wl-clipboard のマスターブランチで修正されていますが、使用しているコンポジターが wlroots-data-control プロトコルに対応している必要があります。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>deskflow::gui::TlsUtility</name>
-    <message>
-        <source>failed to parse certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルの解析に失敗しました: %1</translation>
-    </message>
-    <message>
-        <source>failed to read key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルからキーを読み取ることができませんでした: %1</translation>
-    </message>
-    <message>
-        <source>key detected is the incorrect size</source>
-        <translation type="unfinished">検出されたキーのサイズが正しくありません</translation>
-    </message>
-    <message>
-        <source>failed to read RSA or DSA key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルから RSA または DSA キーを読み取ることができませんでした: %1</translation>
     </message>
 </context>
 <context>
