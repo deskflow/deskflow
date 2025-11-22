@@ -308,6 +308,10 @@ Do you want to connect to the server?
         <translation>現在のTLS鍵長が許容される長さより小さいため、新しい2048ビット長の鍵を生成します。</translation>
     </message>
     <message>
+        <source>invalid certificate, generating a new one</source>
+        <translation type="unfinished">無効な証明書、新しい証明書を生成しています</translation>
+    </message>
+    <message>
         <source>A new version v%1 is available</source>
         <translation>新しいバージョン(v%1)が利用できます</translation>
     </message>
@@ -1283,6 +1287,28 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>public key in default certificate key file is too small</source>
         <translation>既定の証明書鍵ファイル内の公開鍵が小さすぎます</translation>
+    </message>
+</context>
+<context>
+    <name>deskflow::gui::TlsUtility</name>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルの解析に失敗しました: %1</translation>
+    </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルからキーを読み取ることができませんでした: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">検出されたキーのサイズが正しくありません</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">証明書ファイルから RSA または DSA キーを読み取ることができませんでした: %1</translation>
     </message>
 </context>
 <context>

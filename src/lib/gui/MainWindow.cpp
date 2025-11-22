@@ -147,8 +147,13 @@ MainWindow::MainWindow()
           this, kAppName,
           tr("Your current TLS key is smaller than the minimum allowed size, A new key 2048-bit key will be generated.")
       );
-      regenerateLocalFingerprints();
+      Settings::setValue(Settings::Security::KeySize, 2048);
     }
+    if (!TlsUtility::isCertValid()) {
+      regenerateLocalFingerprints();
+      return;
+    }
+
     if (!QFile::exists(Settings::tlsLocalDb())) {
       regenerateLocalFingerprints();
       return;
@@ -371,7 +376,8 @@ void MainWindow::settingsChanged(const QString &key)
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
-    if (TlsUtility::isEnabled() && !QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
+    if (TlsUtility::isEnabled() && !TlsUtility::isCertValid()) {
+      qWarning() << tr("invalid certificate, generating a new one");
       m_tlsUtility.generateCertificate();
     }
     updateSecurityIcon(m_lblSecurityStatus->isVisible());

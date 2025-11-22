@@ -464,6 +464,10 @@ Nomi validi:
         <translation>%1 si sta avviando...</translation>
     </message>
     <message>
+        <source>invalid certificate, generating a new one</source>
+        <translation type="unfinished">certificato non valido, ne viene generato uno nuovo</translation>
+    </message>
+    <message>
         <source>%1 will retry in a moment...</source>
         <translation>%1 riproverà tra un momento...</translation>
     </message>
@@ -1282,6 +1286,28 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>public key in default certificate key file is too small</source>
         <translation>La chiave pubblica nel file della chiave del certificato predefinito è troppo piccola</translation>
+    </message>
+</context>
+<context>
+    <name>deskflow::gui::TlsUtility</name>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile analizzare il file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile leggere la chiave dal file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">la chiave rilevata ha una dimensione errata</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">impossibile leggere la chiave RSA o DSA dal file del certificato: %1</translation>
     </message>
 </context>
 <context>
