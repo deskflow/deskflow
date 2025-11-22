@@ -714,6 +714,25 @@ Valid names:
         <source>&lt;p&gt;There was a problem finding the %1 background service (daemon).&lt;/p&gt;&lt;p&gt;The background service makes %1 work with UAC prompts and the login screen.&lt;/p&gt;&lt;p&gt;If don&apos;t want to use the background service and intentionally stopped it, you can prevent it&apos;s use by disabling this feature.&lt;/p&gt;&lt;p&gt;If you did not stop the background service intentionally, there may be a problem with it. Please retry or try restarting the %1 service from the Windows services program.&lt;/p&gt;</source>
         <translation>&lt;p&gt;Возникла проблема нахождения %1 фоновым процессом (daemon).&lt;/p&gt;&lt;p&gt;Сервис %1 работает с UAC промтом и экраном входа.&lt;/p&gt;&lt;p&gt;Если Вы не хотите использовать сервис в фоновом режиме и намеренно останавливать его, Вы можете предотвратить его использование после отключения опции.&lt;/p&gt;&lt;p&gt;Если Вы не останавливали сервис намеренно, проблема может заключаться нем. Попробуйте перезапустить сервис %1 из программы Windows services.&lt;/p&gt;</translation>
     </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось прочитать ключ из файла сертификата: %1</translation>
+    </message>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось проанализировать файл сертификата: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">обнаружен ключ неправильного размера</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось прочитать ключ RSA или DSA из файла сертификата: %1</translation>
+    </message>
 </context>
 <context>
     <name>ScreenSettingsDialog</name>
@@ -1268,28 +1287,6 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Для этого необходим пакет wl-clipboard.&lt;/p&gt;&lt;p&gt;Когда ты используешь wl-clipboard v2.2.1. Возникает ошибка перехвата фокуса, которая мешает использовать deskflowю. Это фиксется если использовать wl-clipboard из ветки master, если только ваш Compositor не поддерживает протокол wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
-    </message>
-</context>
-<context>
-    <name>deskflow::gui::TlsUtility</name>
-    <message>
-        <source>failed to parse certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось проанализировать файл сертификата: %1</translation>
-    </message>
-    <message>
-        <source>failed to read key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось прочитать ключ из файла сертификата: %1</translation>
-    </message>
-    <message>
-        <source>key detected is the incorrect size</source>
-        <translation type="unfinished">обнаружен ключ неправильного размера</translation>
-    </message>
-    <message>
-        <source>failed to read RSA or DSA key from certificate file: %1</source>
-        <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">не удалось прочитать ключ RSA или DSA из файла сертификата: %1</translation>
     </message>
 </context>
 <context>
