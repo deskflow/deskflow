@@ -286,11 +286,6 @@ QString Settings::tlsDir()
   return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kTlsDirName);
 }
 
-QString Settings::tlsLocalDb()
-{
-  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintLocalFilename);
-}
-
 QString Settings::tlsTrustedServersDb()
 {
   return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);

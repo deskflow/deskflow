@@ -128,7 +128,6 @@ public:
   static QString settingsFile();
   static QString settingsPath();
   static QString tlsDir();
-  static QString tlsLocalDb();
   static QString tlsTrustedServersDb();
   static QString tlsTrustedClientsDb();
   static QString logLevelText();

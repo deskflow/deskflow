@@ -26,7 +26,6 @@ const auto kCoreBinName = "@CORE_BINARY@";
 
 const auto kTlsDirName = "tls";
 const auto kTlsCertificateFilename = "@CMAKE_PROJECT_NAME@.pem";
-const auto kTlsFingerprintLocalFilename = "local-fingerprint";
 const auto kTlsFingerprintTrustedServersFilename = "trusted-servers";
 const auto kTlsFingerprintTrustedClientsFilename = "trusted-clients";
 
