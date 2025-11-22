@@ -81,8 +81,6 @@ add_library(${target} STATIC
   dialogs/SettingsDialog.ui
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
-  tls/TlsCertificate.cpp
-  tls/TlsCertificate.h
   tls/TlsUtility.cpp
   tls/TlsUtility.h
   validators/AliasValidator.cpp

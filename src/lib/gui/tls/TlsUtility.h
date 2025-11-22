@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "TlsCertificate.h"
 #include <common/Settings.h>
 
 #include <QObject>
