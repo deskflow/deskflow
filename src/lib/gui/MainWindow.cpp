@@ -150,19 +150,19 @@ MainWindow::MainWindow()
       Settings::setValue(Settings::Security::KeySize, 2048);
     }
     if (!TlsUtility::isCertValid()) {
-      regenerateLocalFingerprints();
+      generateCertificate();
       return;
     }
 
     if (!QFile::exists(Settings::tlsLocalDb())) {
-      regenerateLocalFingerprints();
+      generateCertificate();
       return;
     }
 
     FingerprintDatabase db;
     db.read(Settings::tlsLocalDb());
     if (db.fingerprints().isEmpty()) {
-      regenerateLocalFingerprints();
+      generateCertificate();
     }
   }
 }
@@ -1181,7 +1181,7 @@ QString MainWindow::trustedFingerprintDatabase() const
   return isClient ? Settings::tlsTrustedServersDb() : Settings::tlsTrustedClientsDb();
 }
 
-bool MainWindow::regenerateLocalFingerprints()
+bool MainWindow::generateCertificate()
 {
   const auto certificate = Settings::value(Settings::Security::Certificate).toString();
   if (!QFile::exists(certificate) && !m_tlsUtility.generateCertificate()) {
@@ -1199,14 +1199,14 @@ bool MainWindow::regenerateLocalFingerprints()
 Fingerprint MainWindow::localFingerprint()
 {
   if (!QFile::exists(Settings::tlsLocalDb())) {
-    if (regenerateLocalFingerprints())
+    if (generateCertificate())
       return localFingerprint();
   }
 
   FingerprintDatabase db;
   db.read(Settings::tlsLocalDb());
   if (db.fingerprints().isEmpty()) {
-    if (regenerateLocalFingerprints())
+    if (generateCertificate())
       return localFingerprint();
   }
 
