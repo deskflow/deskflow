@@ -70,6 +70,27 @@ int TlsUtility::getCertKeyLength(const QString &certPath)
   return deskflow::getCertLength(certPath.toStdString());
 }
 
+QByteArray TlsUtility::certFingerprint(const QString &certPath)
+{
+  QByteArray fingerprint;
+
+  const auto certs = QSslCertificate::fromPath(certPath);
+  if (certs.isEmpty()) {
+    //: %1 will be replaced by the certificate path
+    qDebug() << tr("failed to read key from certificate file: %1").arg(certPath);
+    return fingerprint;
+  }
+
+  const auto cert = certs.first();
+  if (cert.isNull()) {
+    //: %1 will be replaced by the certificate path
+    qWarning() << tr("failed to parse certificate file: %1").arg(certPath);
+    return fingerprint;
+  }
+
+  return cert.digest(QCryptographicHash::Sha256);
+}
+
 bool TlsUtility::generateCertificate() const
 {
   qDebug(
