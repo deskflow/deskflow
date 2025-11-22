@@ -7,7 +7,6 @@
 
 #include "TlsUtility.h"
 
-#include "TlsCertificate.h"
 #include "common/Settings.h"
 #include "net/SecureUtils.h"
 
