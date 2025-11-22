@@ -165,7 +165,7 @@ private:
    */
   bool generateCertificate();
 
-  Fingerprint localFingerprint();
+  Fingerprint m_fingerprint;
 
   void serverClientsChanged(const QStringList &clients);
 
