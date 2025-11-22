@@ -41,11 +41,6 @@ void SettingsTests::tlsDir()
   QVERIFY(Settings::tlsDir().endsWith(m_expectedTlsDir));
 }
 
-void SettingsTests::tlsLocalDb()
-{
-  QVERIFY(Settings::tlsLocalDb().endsWith(m_expectedTlsLocalDB));
-}
-
 void SettingsTests::tlsTrustedServersDb()
 {
   QVERIFY(Settings::tlsTrustedServersDb().endsWith(m_expectedTlsServerDB));

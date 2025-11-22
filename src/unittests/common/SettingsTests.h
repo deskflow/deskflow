@@ -19,7 +19,6 @@ private Q_SLOTS:
   void settingsFile();
   void settingsPath();
   void tlsDir();
-  void tlsLocalDb();
   void tlsTrustedServersDb();
   void tlsTrustedClientsDb();
   void checkValidSettings();
@@ -40,8 +39,6 @@ private:
 #endif
 
   inline static const QString m_expectedTlsDir = QStringLiteral("%1/%2").arg(m_settingsPath, kTlsDirName);
-  inline static const QString m_expectedTlsLocalDB =
-      QStringLiteral("%1/%2").arg(m_expectedTlsDir, kTlsFingerprintLocalFilename);
   inline static const QString m_expectedTlsServerDB =
       QStringLiteral("%1/%2").arg(m_expectedTlsDir, kTlsFingerprintTrustedServersFilename);
   inline static const QString m_expectedTlsClientDB =
