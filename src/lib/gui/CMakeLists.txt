@@ -36,6 +36,8 @@ add_library(${target} STATIC
   ScreenSetupModel.h
   Styles.h
   StyleUtils.h
+  TlsUtility.cpp
+  TlsUtility.h
   VersionChecker.cpp
   VersionChecker.h
   config/IServerConfig.h
@@ -81,8 +83,6 @@ add_library(${target} STATIC
   dialogs/SettingsDialog.ui
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
-  tls/TlsUtility.cpp
-  tls/TlsUtility.h
   validators/AliasValidator.cpp
   validators/AliasValidator.h
   validators/ComputerNameValidator.cpp
