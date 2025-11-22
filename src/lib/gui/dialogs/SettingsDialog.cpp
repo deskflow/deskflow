@@ -13,7 +13,6 @@
 #include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
-#include "gui/tls/TlsCertificate.h"
 #include "gui/tls/TlsUtility.h"
 
 #include <QComboBox>
@@ -27,8 +26,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
     : QDialog(parent),
       ui{std::make_unique<Ui::SettingsDialog>()},
       m_serverConfig(serverConfig),
-      m_coreProcess(coreProcess),
-      m_tlsUtility(this)
+      m_coreProcess(coreProcess)
 {
 
   ui->setupUi(this);
@@ -90,7 +88,7 @@ void SettingsDialog::initConnections() const
 
 void SettingsDialog::regenCertificates()
 {
-  if (m_tlsUtility.generateCertificate()) {
+  if (TlsUtility::generateCertificate()) {
     QMessageBox::information(this, tr("TLS Certificate Regenerated"), tr("TLS certificate regenerated successfully."));
     const auto certificate = Settings::value(Settings::Security::Certificate).toString();
     updateKeyLengthOnFile(certificate);
