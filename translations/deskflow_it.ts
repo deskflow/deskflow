@@ -1266,29 +1266,6 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     </message>
 </context>
 <context>
-    <name>TlsCertificate</name>
-    <message>
-        <source>could not read from default certificate file</source>
-        <translation>Impossibile leggere dal file di certificato predefinito</translation>
-    </message>
-    <message>
-        <source>could not load default certificate file to memory</source>
-        <translation>Impossibile caricare il file di certificato predefinito in memoria</translation>
-    </message>
-    <message>
-        <source>default certificate key file does not contain valid public key</source>
-        <translation>Il file della chiave del certificato predefinito non contiene una chiave pubblica valida</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is not RSA or DSA</source>
-        <translation>La chiave pubblica nel file della chiave del certificato predefinito non è RSA o DSA</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is too small</source>
-        <translation>La chiave pubblica nel file della chiave del certificato predefinito è troppo piccola</translation>
-    </message>
-</context>
-<context>
     <name>deskflow::gui::TlsUtility</name>
     <message>
         <source>failed to parse certificate file: %1</source>

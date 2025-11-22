@@ -1267,29 +1267,6 @@ Enabling this setting will disable the server config GUI.</source>
     </message>
 </context>
 <context>
-    <name>TlsCertificate</name>
-    <message>
-        <source>could not read from default certificate file</source>
-        <translation>无法从默认证书文件读取</translation>
-    </message>
-    <message>
-        <source>could not load default certificate file to memory</source>
-        <translation>无法将默认证书文件加载到内存</translation>
-    </message>
-    <message>
-        <source>default certificate key file does not contain valid public key</source>
-        <translation>默认证书密钥文件不包含有效的公钥</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is not RSA or DSA</source>
-        <translation>默认证书密钥文件中的公钥不是 RSA 或 DSA</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is too small</source>
-        <translation>默认证书密钥文件中的公钥太短</translation>
-    </message>
-</context>
-<context>
     <name>deskflow::gui::TlsUtility</name>
     <message>
         <source>failed to parse certificate file: %1</source>
