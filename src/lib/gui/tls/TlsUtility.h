@@ -36,6 +36,13 @@ public:
    */
   static bool isCertValid(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
 
+  /**
+   * @brief Get the lenght of a key
+   * @param certPath path of the file to check, when unset will use the value of Settings::Security::Certificate
+   * @return the bitsize of the key
+   */
+  static int getCertKeyLength(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
+
 private:
   TlsCertificate m_certificate;
 };

@@ -47,8 +47,3 @@ bool TlsCertificate::generateFingerprint(const QString &certificateFilename) con
   db.addTrusted(deskflow::pemFileCertFingerprint(certPath, Fingerprint::Type::SHA256));
   return db.write(Settings::tlsLocalDb());
 }
-
-int TlsCertificate::getCertKeyLength(const QString &path) const
-{
-  return deskflow::getCertLength(path.toStdString());
-}

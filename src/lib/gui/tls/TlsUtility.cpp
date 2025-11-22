@@ -9,6 +9,7 @@
 
 #include "TlsCertificate.h"
 #include "common/Settings.h"
+#include "net/SecureUtils.h"
 
 #include <QFile>
 #include <QSslCertificate>
@@ -62,6 +63,11 @@ bool TlsUtility::isCertValid(const QString &certPath)
   }
 
   return true;
+}
+
+int TlsUtility::getCertKeyLength(const QString &certPath)
+{
+  return deskflow::getCertLength(certPath.toStdString());
 }
 
 bool TlsUtility::generateCertificate() const
