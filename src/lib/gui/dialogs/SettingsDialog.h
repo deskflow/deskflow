@@ -11,7 +11,6 @@
 
 #include "gui/config/IServerConfig.h"
 #include "gui/core/CoreProcess.h"
-#include "gui/tls/TlsUtility.h"
 
 namespace Ui {
 class SettingsDialog;
@@ -67,5 +66,4 @@ private:
   std::unique_ptr<Ui::SettingsDialog> ui;
   const IServerConfig &m_serverConfig;
   const CoreProcess &m_coreProcess;
-  deskflow::gui::TlsUtility m_tlsUtility;
 };

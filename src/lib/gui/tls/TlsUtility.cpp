@@ -91,23 +91,30 @@ QByteArray TlsUtility::certFingerprint(const QString &certPath)
   return cert.digest(QCryptographicHash::Sha256);
 }
 
-bool TlsUtility::generateCertificate() const
+bool TlsUtility::generateCertificate()
 {
   qDebug(
       "generating tls certificate, "
       "all clients must trust the new fingerprint"
   );
 
-  auto length = Settings::value(Settings::Security::KeySize).toInt();
+  const auto keyLength = std::max(2048, Settings::value(Settings::Security::KeySize).toInt());
+  const auto certPath = Settings::value(Settings::Security::Certificate).toString();
 
-  if (length < 2048) {
-    length = 2048;
-    qDebug("selected size too small setting certificate size to 2048");
-    Settings::setValue(Settings::Security::KeySize, 2048);
+  QFileInfo info(certPath);
+  if (QDir dir(info.absolutePath()); !dir.exists() && !dir.mkpath(".")) {
+    qCritical("failed to create directory for tls certificate");
+    return false;
   }
 
-  const auto certificate = Settings::value(Settings::Security::Certificate).toString();
-  return m_certificate.generateCertificate(certificate, length);
+  try {
+    deskflow::generatePemSelfSignedCert(certPath.toStdString(), keyLength);
+  } catch (const std::exception &e) {
+    qCritical() << "failed to generate self-signed pem cert: " << e.what();
+    return false;
+  }
+  qDebug("tls certificate generated");
+  return true;
 }
 
 } // namespace deskflow::gui

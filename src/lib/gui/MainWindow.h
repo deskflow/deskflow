@@ -22,7 +22,6 @@
 #include "gui/core/CoreProcess.h"
 #include "gui/core/ServerConnection.h"
 #include "gui/core/WaylandWarnings.h"
-#include "gui/tls/TlsUtility.h"
 #include "net/Fingerprint.h"
 
 #ifdef Q_OS_MACOS
@@ -180,7 +179,6 @@ private:
   deskflow::gui::CoreProcess m_coreProcess;
   deskflow::gui::ServerConnection m_serverConnection;
   deskflow::gui::ClientConnection m_clientConnection;
-  deskflow::gui::TlsUtility m_tlsUtility;
   QSize m_expandedSize = QSize();
   QStringList m_checkedClients;
   QStringList m_checkedServers;

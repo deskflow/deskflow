@@ -24,6 +24,7 @@
 #include "gui/Messages.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
+#include "gui/tls/TlsUtility.h"
 #include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
 
@@ -63,7 +64,6 @@ MainWindow::MainWindow()
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
-      m_tlsUtility(this),
       m_trayIcon{new QSystemTrayIcon(this)},
       m_guiDupeChecker{new QLocalServer(this)},
       m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
@@ -367,7 +367,7 @@ void MainWindow::settingsChanged(const QString &key)
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
     if (TlsUtility::isEnabled() && !TlsUtility::isCertValid()) {
       qWarning() << tr("invalid certificate, generating a new one");
-      m_tlsUtility.generateCertificate();
+      TlsUtility::generateCertificate();
     }
     updateSecurityIcon(m_lblSecurityStatus->isVisible());
     return;
@@ -1173,7 +1173,7 @@ QString MainWindow::trustedFingerprintDatabase() const
 bool MainWindow::generateCertificate()
 {
   const auto certificate = Settings::value(Settings::Security::Certificate).toString();
-  if (!QFile::exists(certificate) && !m_tlsUtility.generateCertificate()) {
+  if (!QFile::exists(certificate) && !TlsUtility::generateCertificate()) {
     return false;
   }
 

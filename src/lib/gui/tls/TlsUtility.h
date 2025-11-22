@@ -21,7 +21,7 @@ class TlsUtility : public QObject
 public:
   explicit TlsUtility(QObject *parent = nullptr);
 
-  bool generateCertificate() const;
+  static bool generateCertificate();
 
   /**
    * @brief Checks the settings values Settings::Security::TlsEnabled
@@ -51,8 +51,6 @@ public:
   // clang-format off
   static QByteArray certFingerprint(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
   // clang-format on
-private:
-  TlsCertificate m_certificate;
 };
 
 } // namespace deskflow::gui
