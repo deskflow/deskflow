@@ -22,9 +22,9 @@
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "gui/Messages.h"
+#include "gui/TlsUtility.h"
 #include "gui/core/CoreProcess.h"
 #include "gui/ipc/DaemonIpcClient.h"
-#include "gui/tls/TlsUtility.h"
 #include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
 

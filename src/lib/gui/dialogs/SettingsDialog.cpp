@@ -13,7 +13,7 @@
 #include "common/I18N.h"
 #include "common/Settings.h"
 #include "gui/Messages.h"
-#include "gui/tls/TlsUtility.h"
+#include "gui/TlsUtility.h"
 
 #include <QComboBox>
 #include <QDir>
