@@ -456,6 +456,10 @@ Do you want to connect to the server?
         <translation type="unfinished">%1 está iniciando...</translation>
     </message>
     <message>
+        <source>invalid certificate, generating a new one</source>
+        <translation type="unfinished">certificado no válido, generando uno nuevo</translation>
+    </message>
+    <message>
         <source>%1 will retry in a moment...</source>
         <translation type="unfinished">%1 lo intentará nuevamente en un momento...</translation>
     </message>
@@ -1282,6 +1286,28 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>public key in default certificate key file is too small</source>
         <translation type="unfinished">La clave pública en el archivo de clave del certificado predeterminado es demasiado pequeña</translation>
+    </message>
+</context>
+<context>
+    <name>deskflow::gui::TlsUtility</name>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">Error al analizar el archivo de certificado: %1</translation>
+    </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">No se pudo leer la clave del archivo de certificado: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">La clave detectada es de tamaño incorrecto</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">No se pudo leer la clave RSA o DSA del archivo de certificado: %1</translation>
     </message>
 </context>
 <context>

@@ -310,6 +310,10 @@ Do you want to connect to the server?
         <translation>Ваш нынешний TLS ключ меньше чем минимальный разрешимый размер , Новый ключ 2048-бит ключ будет сгенерирован.</translation>
     </message>
     <message>
+        <source>invalid certificate, generating a new one</source>
+        <translation type="unfinished">недействительный сертификат, генерация нового</translation>
+    </message>
+    <message>
         <source>A new version v%1 is available</source>
         <translation>Новая версия %1 доступна</translation>
     </message>
@@ -1287,6 +1291,28 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>public key in default certificate key file is too small</source>
         <translation>Публичный ключ в стандартном файле сертификата слишком мал</translation>
+    </message>
+</context>
+<context>
+    <name>deskflow::gui::TlsUtility</name>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось проанализировать файл сертификата: %1</translation>
+    </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось прочитать ключ из файла сертификата: %1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">обнаружен ключ неправильного размера</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">не удалось прочитать ключ RSA или DSA из файла сертификата: %1</translation>
     </message>
 </context>
 <context>

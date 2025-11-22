@@ -308,6 +308,10 @@ Do you want to connect to the server?
         <translation>您当前的 TLS 密钥长度小于允许的最小值，将生成一个新的 2048 位密钥。</translation>
     </message>
     <message>
+        <source>invalid certificate, generating a new one</source>
+        <translation type="unfinished">证书无效，正在生成新证书</translation>
+    </message>
+    <message>
         <source>A new version v%1 is available</source>
         <translation>新版本 v%1 可用</translation>
     </message>
@@ -1283,6 +1287,28 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>public key in default certificate key file is too small</source>
         <translation>默认证书密钥文件中的公钥太短</translation>
+    </message>
+</context>
+<context>
+    <name>deskflow::gui::TlsUtility</name>
+    <message>
+        <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">解析证书文件失败：%1</translation>
+    </message>
+    <message>
+        <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">无法从证书文件中读取密钥：%1</translation>
+    </message>
+    <message>
+        <source>key detected is the incorrect size</source>
+        <translation type="unfinished">检测到的密钥大小不正确。</translation>
+    </message>
+    <message>
+        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
+        <translation type="unfinished">无法从证书文件中读取 RSA 或 DSA 密钥：%1</translation>
     </message>
 </context>
 <context>
