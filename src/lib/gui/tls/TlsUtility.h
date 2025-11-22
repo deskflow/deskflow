@@ -22,7 +22,6 @@ public:
   explicit TlsUtility(QObject *parent = nullptr);
 
   bool generateCertificate() const;
-  bool persistCertificate() const;
 
   /**
    * @brief Checks the settings values Settings::Security::TlsEnabled

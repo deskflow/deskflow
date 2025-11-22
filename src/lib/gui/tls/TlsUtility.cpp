@@ -83,16 +83,4 @@ bool TlsUtility::generateCertificate() const
   return m_certificate.generateCertificate(certificate, length);
 }
 
-bool TlsUtility::persistCertificate() const
-{
-  qDebug("persisting tls certificate");
-
-  if (QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
-    qDebug("tls certificate already exists");
-    return true;
-  }
-
-  return generateCertificate();
-}
-
 } // namespace deskflow::gui
