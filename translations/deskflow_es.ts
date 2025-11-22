@@ -1266,29 +1266,6 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     </message>
 </context>
 <context>
-    <name>TlsCertificate</name>
-    <message>
-        <source>could not read from default certificate file</source>
-        <translation type="unfinished">No se pudo leer el archivo de certificado predeterminado</translation>
-    </message>
-    <message>
-        <source>could not load default certificate file to memory</source>
-        <translation type="unfinished">No se pudo cargar el archivo de certificado predeterminado en la memoria</translation>
-    </message>
-    <message>
-        <source>default certificate key file does not contain valid public key</source>
-        <translation type="unfinished">El archivo de clave de certificado predeterminado no contiene una clave pública válida</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is not RSA or DSA</source>
-        <translation type="unfinished">La clave pública en el archivo de clave de certificado predeterminado no es RSA ni DSA</translation>
-    </message>
-    <message>
-        <source>public key in default certificate key file is too small</source>
-        <translation type="unfinished">La clave pública en el archivo de clave del certificado predeterminado es demasiado pequeña</translation>
-    </message>
-</context>
-<context>
     <name>deskflow::gui::TlsUtility</name>
     <message>
         <source>failed to parse certificate file: %1</source>

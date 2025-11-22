@@ -16,7 +16,6 @@ class TlsCertificate : public QObject
 public:
   explicit TlsCertificate(QObject *parent = nullptr);
 
-  bool isCertificateValid(const QString &path) const;
   bool generateCertificate(const QString &path, int keyLength) const;
   bool generateFingerprint(const QString &certificateFilename) const;
   int getCertKeyLength(const QString &path) const;
