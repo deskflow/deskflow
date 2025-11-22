@@ -18,5 +18,4 @@ public:
 
   bool generateCertificate(const QString &path, int keyLength) const;
   bool generateFingerprint(const QString &certificateFilename) const;
-  int getCertKeyLength(const QString &path) const;
 };

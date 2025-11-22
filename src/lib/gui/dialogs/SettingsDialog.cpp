@@ -264,12 +264,11 @@ bool SettingsDialog::isClientMode() const
 
 void SettingsDialog::updateKeyLengthOnFile(const QString &path)
 {
-  TlsCertificate ssl;
   if (!QFile(path).exists()) {
     qFatal("tls certificate file not found: %s", qUtf8Printable(path));
   }
 
-  auto length = ssl.getCertKeyLength(path);
+  auto length = TlsUtility::getCertKeyLength(path);
   auto labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow).pixmap(24, 24));
   if (length == 2048)
     labelIcon = QPixmap(QIcon::fromTheme(QStringLiteral("security-medium")).pixmap(24, 24));
