@@ -43,6 +43,14 @@ public:
    */
   static int getCertKeyLength(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
 
+  /**
+   * @brief get the SHA256 fingerprint of a certificatefile.
+   * @param certPath path of the file to fingerprint, when not set uses the vaule of Settings::Security::Certificate
+   * @return A QByteArray of the SHA256 fingerprint of the file or empty array if invalid file is passed
+   */
+  // clang-format off
+  static QByteArray certFingerprint(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
+  // clang-format on
 private:
   TlsCertificate m_certificate;
 };
