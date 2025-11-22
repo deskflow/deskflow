@@ -36,14 +36,5 @@ bool TlsCertificate::generateCertificate(const QString &path, int keyLength) con
     return false;
   }
   qDebug("tls certificate generated");
-  return generateFingerprint(path);
-}
-
-bool TlsCertificate::generateFingerprint(const QString &certificateFilename) const
-{
-  qDebug("generating tls fingerprint");
-  const std::string certPath = certificateFilename.toStdString();
-  FingerprintDatabase db;
-  db.addTrusted(deskflow::pemFileCertFingerprint(certPath, Fingerprint::Type::SHA256));
-  return db.write(Settings::tlsLocalDb());
+  return true;
 }
