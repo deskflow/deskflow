@@ -160,10 +160,10 @@ private:
   QString trustedFingerprintDatabase() const;
 
   /**
-   * @brief regenerateLocalFingerprints Generate fingerprints if they are missing
+   * @brief generateCertificate Generate a new certificate
    * @return true when successful
    */
-  bool regenerateLocalFingerprints();
+  bool generateCertificate();
 
   Fingerprint localFingerprint();
 
