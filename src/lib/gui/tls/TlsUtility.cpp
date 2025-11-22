@@ -18,7 +18,7 @@ TlsUtility::TlsUtility(QObject *parent) : QObject(parent)
   // do nothing
 }
 
-bool TlsUtility::isEnabled() const
+bool TlsUtility::isEnabled()
 {
   return Settings::value(Settings::Security::TlsEnabled).toBool();
 }

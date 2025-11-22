@@ -23,13 +23,10 @@ public:
   bool persistCertificate() const;
 
   /**
-   * @brief Combines the availability and the enabled status of TLS.
-   *
-   * @return Given that the app setting for TLS is enabled:
-   * If licensing is enabled, it checks whether the product has TLS
-   * available, and if licensing is not enabled, true is returned.
+   * @brief Checks the settings values Settings::Security::TlsEnabled
+   * @return true when tls is enabled
    */
-  bool isEnabled() const;
+  static bool isEnabled();
 
 private:
   TlsCertificate m_certificate;

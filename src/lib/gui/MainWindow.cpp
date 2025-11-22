@@ -141,7 +141,7 @@ MainWindow::MainWindow()
   qDebug().noquote() << "active settings path:" << Settings::settingsPath();
 
   // Force generation of SHA256 for the localhost
-  if (Settings::value(Settings::Security::TlsEnabled).toBool()) {
+  if (TlsUtility::isEnabled()) {
     if (Settings::value(Settings::Security::KeySize).toInt() < 2048) {
       QMessageBox::information(
           this, kAppName,
@@ -371,7 +371,7 @@ void MainWindow::settingsChanged(const QString &key)
 
   if ((key == Settings::Security::Certificate) || (key == Settings::Security::KeySize) ||
       (key == Settings::Security::TlsEnabled) || (key == Settings::Security::CheckPeers)) {
-    if (m_tlsUtility.isEnabled() && !QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
+    if (TlsUtility::isEnabled() && !QFile::exists(Settings::value(Settings::Security::Certificate).toString())) {
       m_tlsUtility.generateCertificate();
     }
     updateSecurityIcon(m_lblSecurityStatus->isVisible());
@@ -581,7 +581,7 @@ void MainWindow::updateSecurityIcon(bool visible)
   if (!visible)
     return;
 
-  bool secureSocket = Settings::value(Settings::Security::TlsEnabled).toBool();
+  bool secureSocket = TlsUtility::isEnabled();
 
   const auto txt =
       secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
@@ -1010,8 +1010,7 @@ void MainWindow::coreConnectionStateChanged(CoreConnectionState state)
 
 void MainWindow::updateLocalFingerprint()
 {
-  const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
-  m_btnFingerprint->setVisible(tlsEnabled && QFile::exists(Settings::tlsLocalDb()));
+  m_btnFingerprint->setVisible(TlsUtility::isEnabled() && QFile::exists(Settings::tlsLocalDb()));
 }
 
 void MainWindow::hide()
