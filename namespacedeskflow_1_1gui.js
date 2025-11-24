@@ -7,6 +7,13 @@ var namespacedeskflow_1_1gui =
       [ "restart", "namespacedeskflow_1_1gui_1_1diagnostic.html#a8e73d7e253216211e943a85140eb9e62", null ]
     ] ],
     [ "messages", "namespacedeskflow_1_1gui_1_1messages.html", "namespacedeskflow_1_1gui_1_1messages" ],
+    [ "TlsUtility", "namespacedeskflow_1_1gui_1_1TlsUtility.html", [
+      [ "certFingerprint", "namespacedeskflow_1_1gui_1_1TlsUtility.html#af89819b5e203344184b53851134fc1f3", null ],
+      [ "generateCertificate", "namespacedeskflow_1_1gui_1_1TlsUtility.html#a63117db72e713097624c35d8458e462c", null ],
+      [ "getCertKeyLength", "namespacedeskflow_1_1gui_1_1TlsUtility.html#ab7fff2c05ebaf5e0aeb48519a9e9e5c6", null ],
+      [ "isCertValid", "namespacedeskflow_1_1gui_1_1TlsUtility.html#a1768f15e74168a3e5b621f2981ba5029", null ],
+      [ "isEnabled", "namespacedeskflow_1_1gui_1_1TlsUtility.html#aedd7ad3bb197354baeb738cef4b467a5", null ]
+    ] ],
     [ "IServerConfig", "classdeskflow_1_1gui_1_1IServerConfig.html", "classdeskflow_1_1gui_1_1IServerConfig" ],
     [ "ClientConnection", "classdeskflow_1_1gui_1_1ClientConnection.html", "classdeskflow_1_1gui_1_1ClientConnection" ],
     [ "CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", "classdeskflow_1_1gui_1_1CoreProcess" ],
@@ -14,7 +21,6 @@ var namespacedeskflow_1_1gui =
     [ "ServerMessage", "classdeskflow_1_1gui_1_1ServerMessage.html", "classdeskflow_1_1gui_1_1ServerMessage" ],
     [ "FileTail", "classdeskflow_1_1gui_1_1FileTail.html", "classdeskflow_1_1gui_1_1FileTail" ],
     [ "Logger", "classdeskflow_1_1gui_1_1Logger.html", "classdeskflow_1_1gui_1_1Logger" ],
-    [ "TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", "classdeskflow_1_1gui_1_1TlsUtility" ],
     [ "iconMode", "namespacedeskflow_1_1gui.html#a6c3353d5cbfbd26b2acd734e71d61b12", null ],
     [ "isDarkMode", "namespacedeskflow_1_1gui.html#aafd8747004a0dc462453e60e4602a918", null ],
     [ "printLine", "namespacedeskflow_1_1gui.html#a302e57e11bdb1ecd18afd06b9180ee7e", null ],

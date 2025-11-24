@@ -34,7 +34,6 @@ var classSettings =
     [ "settingsPath", "classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d", null ],
     [ "setValue", "classSettings.html#a3a262a7a2956c62b6467e0ae548cf13d", null ],
     [ "tlsDir", "classSettings.html#a565f262c5b1781981383661e6195a336", null ],
-    [ "tlsLocalDb", "classSettings.html#acae7403fc5587261131793d51be7af24", null ],
     [ "tlsTrustedClientsDb", "classSettings.html#a553d33cac9d4eaf1abec9aefd4b0db3e", null ],
     [ "tlsTrustedServersDb", "classSettings.html#a7be5d45437cb22c436eb8b9f5dcf9b85", null ],
     [ "validKeys", "classSettings.html#a7f9698fa8a82c0b3b9afe6f560ade6a6", null ],

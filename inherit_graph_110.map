@@ -1,17 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" title=" " alt="" coords="5,153,74,178"/>
 <area shape="rect" id="Node000001" href="$classAboutDialog.html" title=" " alt="" coords="149,5,242,30"/>
-<area shape="poly" id="edge135_Node000000_Node000001" title=" " alt="" coords="50,138,77,89,97,63,120,41,151,26,147,30,123,45,101,67,82,92,55,140"/>
+<area shape="poly" id="edge133_Node000000_Node000001" title=" " alt="" coords="50,138,77,89,97,63,120,41,151,26,147,30,123,45,101,67,82,92,55,140"/>
 <area shape="rect" id="Node000002" href="$classActionDialog.html" title=" " alt="" coords="148,55,243,79"/>
-<area shape="poly" id="edge136_Node000000_Node000002" title=" " alt="" coords="60,140,87,114,120,90,150,78,146,82,123,95,91,118,64,144"/>
+<area shape="poly" id="edge134_Node000000_Node000002" title=" " alt="" coords="60,140,87,114,120,90,150,78,146,82,123,95,91,118,64,144"/>
 <area shape="rect" id="Node000003" href="$classFingerprintDialog.html" title=" " alt="" coords="135,104,256,129"/>
-<area shape="poly" id="edge137_Node000000_Node000003" title=" " alt="" coords="87,148,155,127,152,131,90,153"/>
+<area shape="poly" id="edge135_Node000000_Node000003" title=" " alt="" coords="87,148,155,127,152,131,90,153"/>
 <area shape="rect" id="Node000004" href="$classHotkeyDialog.html" title=" " alt="" coords="146,153,245,178"/>
-<area shape="poly" id="edge138_Node000000_Node000004" title=" " alt="" coords="88,163,147,164,143,167,90,168"/>
+<area shape="poly" id="edge136_Node000000_Node000004" title=" " alt="" coords="88,163,147,164,143,167,90,168"/>
 <area shape="rect" id="Node000005" href="$classScreenSettingsDialog.html" title=" " alt="" coords="122,203,269,227"/>
-<area shape="poly" id="edge139_Node000000_Node000005" title=" " alt="" coords="88,178,156,201,152,203,89,184"/>
+<area shape="poly" id="edge137_Node000000_Node000005" title=" " alt="" coords="88,178,156,201,152,203,89,184"/>
 <area shape="rect" id="Node000006" href="$classServerConfigDialog.html" title=" " alt="" coords="128,252,262,277"/>
-<area shape="poly" id="edge140_Node000000_Node000006" title=" " alt="" coords="62,187,91,213,123,237,151,251,145,252,120,241,87,217,62,192"/>
+<area shape="poly" id="edge138_Node000000_Node000006" title=" " alt="" coords="62,187,91,213,123,237,151,251,145,252,120,241,87,217,62,192"/>
 <area shape="rect" id="Node000007" href="$classSettingsDialog.html" title=" " alt="" coords="142,301,248,326"/>
-<area shape="poly" id="edge141_Node000000_Node000007" title=" " alt="" coords="53,190,82,240,101,265,123,286,146,301,141,301,120,290,97,268,77,243,51,195"/>
+<area shape="poly" id="edge139_Node000000_Node000007" title=" " alt="" coords="53,190,82,240,101,265,123,286,146,301,141,301,120,290,97,268,77,243,51,195"/>
 </map>

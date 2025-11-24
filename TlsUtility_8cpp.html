@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Deskflow: src/lib/gui/tls/TlsUtility.cpp File Reference</title>
+<title>Deskflow: src/lib/gui/TlsUtility.cpp File Reference</title>
 <link rel="icon" href="deskflow-logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.9</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.23</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -95,39 +95,52 @@ $(function(){initNavTree('TlsUtility_8cpp.html','',''); });
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &quot;<a class="el" href="TlsUtility_8h_source.html">TlsUtility.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="TlsCertificate_8h_source.html">TlsCertificate.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="Settings_8h_source.html">common/Settings.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="SecureUtils_8h_source.html">net/SecureUtils.h</a>&quot;</code><br />
 <code>#include &lt;QFile&gt;</code><br />
+<code>#include &lt;QSslCertificate&gt;</code><br />
+<code>#include &lt;QSslKey&gt;</code><br />
 <code>#include &lt;QString&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for TlsUtility.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="TlsUtility_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2tls_2TlsUtility_8cpp" loading="lazy" alt=""/></div>
-<map name="asrc_2lib_2gui_2tls_2TlsUtility_8cpp" id="asrc_2lib_2gui_2tls_2TlsUtility_8cpp">
-<area shape="rect" title=" " alt="" coords="185,5,361,30"/>
-<area shape="rect" href="TlsUtility_8h.html" title=" " alt="" coords="98,78,181,103"/>
-<area shape="poly" title=" " alt="" coords="249,32,176,73,174,68,253,29"/>
-<area shape="rect" href="TlsCertificate_8h.html" title=" " alt="" coords="5,151,117,175"/>
-<area shape="poly" title=" " alt="" coords="183,31,133,49,109,63,88,80,72,107,65,136,60,135,67,104,84,76,106,58,131,44,187,27"/>
-<area shape="rect" href="Settings_8h.html" title=" " alt="" coords="206,78,340,103"/>
-<area shape="poly" title=" " alt="" coords="274,28,275,64,271,61,272,33"/>
-<area shape="rect" title=" " alt="" coords="364,78,416,103"/>
-<area shape="poly" title=" " alt="" coords="293,28,361,69,355,70,292,33"/>
-<area shape="rect" title=" " alt="" coords="440,78,506,103"/>
-<area shape="poly" title=" " alt="" coords="306,28,428,72,423,73,306,33"/>
-<area shape="poly" title=" " alt="" coords="125,105,87,142,83,139,128,101"/>
-<area shape="rect" title=" " alt="" coords="85,223,154,248"/>
-<area shape="poly" title=" " alt="" coords="140,101,132,176,126,210,122,207,126,175,136,105"/>
-<area shape="poly" title=" " alt="" coords="72,173,103,211,98,212,70,178"/>
-<area shape="rect" title=" " alt="" coords="201,223,281,248"/>
-<area shape="poly" title=" " alt="" coords="264,102,248,126,236,151,232,180,236,209,231,207,227,180,230,150,244,123,260,105"/>
-<area shape="rect" title=" " alt="" coords="245,151,293,175"/>
-<area shape="poly" title=" " alt="" coords="274,101,273,136,268,134,271,105"/>
-<area shape="rect" title=" " alt="" coords="317,151,464,175"/>
-<area shape="poly" title=" " alt="" coords="293,101,361,142,355,143,292,106"/>
-<area shape="rect" href="QSettingsProxy_8h.html" title=" " alt="" coords="487,151,664,175"/>
-<area shape="poly" title=" " alt="" coords="324,101,513,146,508,148,323,106"/>
-<area shape="poly" title=" " alt="" coords="523,176,296,225,295,220,517,176"/>
+<div class="center"><img src="TlsUtility_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2TlsUtility_8cpp" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2gui_2TlsUtility_8cpp" id="asrc_2lib_2gui_2TlsUtility_8cpp">
+<area shape="rect" title=" " alt="" coords="535,5,693,30"/>
+<area shape="rect" href="TlsUtility_8h.html" title=" " alt="" coords="222,78,305,103"/>
+<area shape="poly" title=" " alt="" coords="554,32,321,80,319,75,558,29"/>
+<area shape="rect" href="Settings_8h.html" title=" " alt="" coords="113,151,248,175"/>
+<area shape="poly" title=" " alt="" coords="574,32,429,81,230,148,228,143,428,75,579,29"/>
+<area shape="rect" href="SecureUtils_8h.html" title=" " alt="" coords="441,78,563,103"/>
+<area shape="poly" title=" " alt="" coords="598,29,535,72,532,67,593,32"/>
+<area shape="rect" title=" " alt="" coords="588,78,640,103"/>
+<area shape="poly" title=" " alt="" coords="615,28,616,64,612,61,612,33"/>
+<area shape="rect" title=" " alt="" coords="664,78,775,103"/>
+<area shape="poly" title=" " alt="" coords="632,28,692,69,686,69,631,33"/>
+<area shape="rect" title=" " alt="" coords="799,78,871,103"/>
+<area shape="poly" title=" " alt="" coords="651,28,787,73,782,73,650,33"/>
+<area shape="rect" title=" " alt="" coords="896,78,961,103"/>
+<area shape="poly" title=" " alt="" coords="669,28,883,77,878,78,669,33"/>
+<area shape="poly" title=" " alt="" coords="248,105,207,142,204,138,252,101"/>
+<area shape="rect" title=" " alt="" coords="132,296,211,321"/>
+<area shape="poly" title=" " alt="" coords="111,172,86,179,59,189,34,204,15,225,9,239,10,250,19,261,33,271,72,286,118,298,113,300,71,291,30,275,15,265,6,253,3,238,10,222,31,200,56,185,84,174,115,168"/>
+<area shape="rect" title=" " alt="" coords="24,223,73,248"/>
+<area shape="poly" title=" " alt="" coords="157,178,85,218,82,213,160,174"/>
+<area shape="rect" title=" " alt="" coords="97,223,243,248"/>
+<area shape="poly" title=" " alt="" coords="180,174,176,209,171,207,177,178"/>
+<area shape="rect" href="QSettingsProxy_8h.html" title=" " alt="" coords="267,223,444,248"/>
+<area shape="poly" title=" " alt="" coords="210,173,315,216,310,218,209,179"/>
+<area shape="poly" title=" " alt="" coords="327,248,217,293,215,288,322,249"/>
+<area shape="rect" href="Fingerprint_8h.html" title=" " alt="" coords="455,151,549,175"/>
+<area shape="poly" title=" " alt="" coords="503,101,504,137,500,134,500,105"/>
+<area shape="rect" title=" " alt="" coords="573,151,703,175"/>
+<area shape="poly" title=" " alt="" coords="525,101,605,143,599,143,524,106"/>
+<area shape="rect" title=" " alt="" coords="727,151,781,175"/>
+<area shape="poly" title=" " alt="" coords="545,101,715,149,710,150,544,106"/>
+<area shape="rect" title=" " alt="" coords="468,223,557,248"/>
+<area shape="poly" title=" " alt="" coords="505,174,511,210,506,207,502,178"/>
+<area shape="rect" title=" " alt="" coords="582,223,651,248"/>
+<area shape="poly" title=" " alt="" coords="521,173,588,215,582,215,520,178"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -135,6 +148,19 @@ Include dependency graph for TlsUtility.cpp:</div>
 Namespaces</h2></td></tr>
 <tr class="memitem:deskflow" id="r_deskflow"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow.html">deskflow</a></td></tr>
 <tr class="memitem:deskflow_3A_3Agui" id="r_deskflow_3A_3Agui"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui.html">deskflow::gui</a></td></tr>
+<tr class="memitem:deskflow_3A_3Agui_3A_3ATlsUtility" id="r_deskflow_3A_3Agui_3A_3ATlsUtility"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html">deskflow::gui::TlsUtility</a></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:aedd7ad3bb197354baeb738cef4b467a5" id="r_aedd7ad3bb197354baeb738cef4b467a5"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html#aedd7ad3bb197354baeb738cef4b467a5">deskflow::gui::TlsUtility::isEnabled</a> ()</td></tr>
+<tr class="memdesc:aedd7ad3bb197354baeb738cef4b467a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks the settings values <a class="el" href="structSettings_1_1Security.html#ae5ece8411e9242bfabba2000d76127db">Settings::Security::TlsEnabled</a>.  <br /></td></tr>
+<tr class="memitem:a1768f15e74168a3e5b621f2981ba5029" id="r_a1768f15e74168a3e5b621f2981ba5029"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html#a1768f15e74168a3e5b621f2981ba5029">deskflow::gui::TlsUtility::isCertValid</a> (const QString &amp;certPath=<a class="el" href="classSettings.html#a4442c59d0afdc1ef9e697d2cbf429148">Settings::value</a>(<a class="el" href="structSettings_1_1Security.html#a6b3caec9e2768a7f5623b0b19e2d7944">Settings::Security::Certificate</a>).toString())</td></tr>
+<tr class="memdesc:a1768f15e74168a3e5b621f2981ba5029"><td class="mdescLeft">&#160;</td><td class="mdescRight">isCertValid  <br /></td></tr>
+<tr class="memitem:ab7fff2c05ebaf5e0aeb48519a9e9e5c6" id="r_ab7fff2c05ebaf5e0aeb48519a9e9e5c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html#ab7fff2c05ebaf5e0aeb48519a9e9e5c6">deskflow::gui::TlsUtility::getCertKeyLength</a> (const QString &amp;certPath=<a class="el" href="classSettings.html#a4442c59d0afdc1ef9e697d2cbf429148">Settings::value</a>(<a class="el" href="structSettings_1_1Security.html#a6b3caec9e2768a7f5623b0b19e2d7944">Settings::Security::Certificate</a>).toString())</td></tr>
+<tr class="memdesc:ab7fff2c05ebaf5e0aeb48519a9e9e5c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the lenght of a key.  <br /></td></tr>
+<tr class="memitem:af89819b5e203344184b53851134fc1f3" id="r_af89819b5e203344184b53851134fc1f3"><td class="memItemLeft" align="right" valign="top">QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html#af89819b5e203344184b53851134fc1f3">deskflow::gui::TlsUtility::certFingerprint</a> (const QString &amp;certPath=<a class="el" href="classSettings.html#a4442c59d0afdc1ef9e697d2cbf429148">Settings::value</a>(<a class="el" href="structSettings_1_1Security.html#a6b3caec9e2768a7f5623b0b19e2d7944">Settings::Security::Certificate</a>).toString())</td></tr>
+<tr class="memdesc:af89819b5e203344184b53851134fc1f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">get the SHA256 fingerprint of a certificatefile.  <br /></td></tr>
+<tr class="memitem:a63117db72e713097624c35d8458e462c" id="r_a63117db72e713097624c35d8458e462c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui_1_1TlsUtility.html#a63117db72e713097624c35d8458e462c">deskflow::gui::TlsUtility::generateCertificate</a> ()</td></tr>
 </table>
 </div><!-- contents -->
 </div><!-- doc-content -->
@@ -149,7 +175,7 @@ Namespaces</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_1e2980927ba7513c665ee0bc67e39bcf.html">gui</a></li><li class="navelem"><a href="dir_00d753f0c10974c39dc450cbdcd64c24.html">tls</a></li><li class="navelem"><a href="TlsUtility_8cpp.html">TlsUtility.cpp</a></li>
+    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_1e2980927ba7513c665ee0bc67e39bcf.html">gui</a></li><li class="navelem"><a href="TlsUtility_8cpp.html">TlsUtility.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

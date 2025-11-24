@@ -4,7 +4,6 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "core", "dir_1002216e319566c65ba849e54f5ae169.html", "dir_1002216e319566c65ba849e54f5ae169" ],
     [ "dialogs", "dir_a84ba1097caba659c095472ac9f070ee.html", "dir_a84ba1097caba659c095472ac9f070ee" ],
     [ "ipc", "dir_5c0332ce89d6380d62f51763b17fe46d.html", "dir_5c0332ce89d6380d62f51763b17fe46d" ],
-    [ "tls", "dir_00d753f0c10974c39dc450cbdcd64c24.html", "dir_00d753f0c10974c39dc450cbdcd64c24" ],
     [ "validators", "dir_3ff4f3859d29e4b9d0eef20a26879564.html", "dir_3ff4f3859d29e4b9d0eef20a26879564" ],
     [ "widgets", "dir_f4d7a2d7e0cddc98a37df9ffb775e48b.html", "dir_f4d7a2d7e0cddc98a37df9ffb775e48b" ],
     [ "Action.cpp", "Action_8cpp.html", "Action_8cpp" ],
@@ -29,6 +28,8 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "ScreenSetupModel.h", "ScreenSetupModel_8h.html", "ScreenSetupModel_8h" ],
     [ "Styles.h", "Styles_8h.html", "Styles_8h" ],
     [ "StyleUtils.h", "StyleUtils_8h.html", "StyleUtils_8h" ],
+    [ "TlsUtility.cpp", "TlsUtility_8cpp.html", "TlsUtility_8cpp" ],
+    [ "TlsUtility.h", "TlsUtility_8h.html", "TlsUtility_8h" ],
     [ "VersionChecker.cpp", "VersionChecker_8cpp.html", null ],
     [ "VersionChecker.h", "VersionChecker_8h.html", "VersionChecker_8h" ]
 ];

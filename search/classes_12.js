@@ -8,9 +8,7 @@ var searchData=
   ['threadexception_5',['ThreadException',['../classThreadException.html',1,'']]],
   ['threadexitexception_6',['ThreadExitException',['../classThreadExitException.html',1,'']]],
   ['timerevent_7',['TimerEvent',['../classIEventQueue_1_1TimerEvent.html',1,'IEventQueue']]],
-  ['tlscertificate_8',['TlsCertificate',['../classTlsCertificate.html',1,'']]],
-  ['tlsutility_9',['TlsUtility',['../classdeskflow_1_1gui_1_1TlsUtility.html',1,'deskflow::gui']]],
-  ['tmethodjob_10',['TMethodJob',['../classTMethodJob.html',1,'']]],
-  ['trashscreenwidget_11',['TrashScreenWidget',['../classTrashScreenWidget.html',1,'']]],
-  ['tsocketmultiplexermethodjob_12',['TSocketMultiplexerMethodJob',['../classTSocketMultiplexerMethodJob.html',1,'']]]
+  ['tmethodjob_8',['TMethodJob',['../classTMethodJob.html',1,'']]],
+  ['trashscreenwidget_9',['TrashScreenWidget',['../classTrashScreenWidget.html',1,'']]],
+  ['tsocketmultiplexermethodjob_10',['TSocketMultiplexerMethodJob',['../classTSocketMultiplexerMethodJob.html',1,'']]]
 ];

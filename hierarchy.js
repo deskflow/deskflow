@@ -344,7 +344,6 @@ var hierarchy =
       [ "DaemonApp", "classDaemonApp.html", null ],
       [ "I18N", "classI18N.html", null ],
       [ "Settings", "classSettings.html", null ],
-      [ "TlsCertificate", "classTlsCertificate.html", null ],
       [ "VersionChecker", "classVersionChecker.html", null ],
       [ "WlClipboard", "classWlClipboard.html", null ],
       [ "deskflow::core::ipc::DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", null ],
@@ -353,7 +352,6 @@ var hierarchy =
       [ "deskflow::gui::FileTail", "classdeskflow_1_1gui_1_1FileTail.html", null ],
       [ "deskflow::gui::Logger", "classdeskflow_1_1gui_1_1Logger.html", null ],
       [ "deskflow::gui::ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", null ],
-      [ "deskflow::gui::TlsUtility", "classdeskflow_1_1gui_1_1TlsUtility.html", null ],
       [ "deskflow::gui::ipc::DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", null ],
       [ "validators::ValidationError", "classvalidators_1_1ValidationError.html", null ]
     ] ],

@@ -10,8 +10,9 @@ var searchData=
   ['deskflow_3a_3agui_3a_3adiagnostic_7',['diagnostic',['../namespacedeskflow_1_1gui_1_1diagnostic.html',1,'deskflow::gui']]],
   ['deskflow_3a_3agui_3a_3aipc_8',['ipc',['../namespacedeskflow_1_1gui_1_1ipc.html',1,'deskflow::gui']]],
   ['deskflow_3a_3agui_3a_3amessages_9',['messages',['../namespacedeskflow_1_1gui_1_1messages.html',1,'deskflow::gui']]],
-  ['deskflow_3a_3alanguages_10',['languages',['../namespacedeskflow_1_1languages.html',1,'deskflow']]],
-  ['deskflow_3a_3aplatform_11',['platform',['../namespacedeskflow_1_1platform.html',1,'deskflow']]],
-  ['deskflow_3a_3aserver_12',['server',['../namespacedeskflow_1_1server.html',1,'deskflow']]],
-  ['deskflow_3a_3astring_13',['string',['../namespacedeskflow_1_1string.html',1,'deskflow']]]
+  ['deskflow_3a_3agui_3a_3atlsutility_10',['TlsUtility',['../namespacedeskflow_1_1gui_1_1TlsUtility.html',1,'deskflow::gui']]],
+  ['deskflow_3a_3alanguages_11',['languages',['../namespacedeskflow_1_1languages.html',1,'deskflow']]],
+  ['deskflow_3a_3aplatform_12',['platform',['../namespacedeskflow_1_1platform.html',1,'deskflow']]],
+  ['deskflow_3a_3aserver_13',['server',['../namespacedeskflow_1_1server.html',1,'deskflow']]],
+  ['deskflow_3a_3astring_14',['string',['../namespacedeskflow_1_1string.html',1,'deskflow']]]
 ];
