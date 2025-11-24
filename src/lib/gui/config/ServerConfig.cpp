@@ -68,6 +68,7 @@ bool ServerConfig::operator==(const ServerConfig &sc) const
          m_SwitchCornerSize == sc.m_SwitchCornerSize &&       //
          m_SwitchCorners == sc.m_SwitchCorners &&             //
          m_Hotkeys == sc.m_Hotkeys &&                         //
+         m_ForceLockToScreen == sc.m_ForceLockToScreen &&     //
          m_DisableLockToScreen == sc.m_DisableLockToScreen && //
          m_ClipboardSharing == sc.m_ClipboardSharing &&       //
          m_ClipboardSharingSize == sc.m_ClipboardSharingSize;
@@ -115,6 +116,7 @@ void ServerConfig::commit()
   settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
+  settings().setValue("forceLockToScreen", forceLockToScreen());
   settings().setValue("disableLockToScreen", disableLockToScreen());
   settings().setValue("clipboardSharing", clipboardSharing());
   settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
@@ -166,6 +168,7 @@ void ServerConfig::recall()
   haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
+  setForceLockToScreen(settings().value("forceLockToScreen", false).toBool());
   setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
   setClipboardSharingSize(
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
@@ -270,6 +273,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
+  outStream << "\t"
+            << "forceLockToScreen = " << (config.forceLockToScreen() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << Qt::endl;
   outStream << "\t"

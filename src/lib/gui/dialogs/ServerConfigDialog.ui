@@ -435,6 +435,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbForceLockToScreen">
+            <property name="text">
+             <string>Force lock to computer</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbRelativeMouseMoves">
             <property name="enabled">
              <bool>true</bool>

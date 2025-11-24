@@ -1038,6 +1038,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Browse for a config file</source>
         <translation>浏览配置文件</translation>
     </message>
+    <message>
+        <source>Force lock to computer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

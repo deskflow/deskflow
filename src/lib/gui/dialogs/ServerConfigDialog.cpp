@@ -137,8 +137,11 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
+  ui->cbForceLockToScreen->setChecked(serverConfig().forceLockToScreen());
+  connect(ui->cbForceLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleForceLockToScreen);
+
   ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
-  connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToScreen);
+  connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDisableLockToScreen);
 
   ui->cbEnableClipboard->setChecked(serverConfig().clipboardSharing());
   auto clipboardSharingSizeM = static_cast<int>(serverConfig().clipboardSharingSize() / 1024);
@@ -427,7 +430,13 @@ void ServerConfigDialog::setSwitchDelay(int delay)
   onChange();
 }
 
-void ServerConfigDialog::toggleLockToScreen(bool disabled)
+void ServerConfigDialog::toggleForceLockToScreen(bool forced)
+{
+  serverConfig().setForceLockToScreen(forced);
+  onChange();
+}
+
+void ServerConfigDialog::toggleDisableLockToScreen(bool disabled)
 {
   serverConfig().setDisableLockToScreen(disabled);
   onChange();

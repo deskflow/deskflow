@@ -1038,6 +1038,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Browse for a config file</source>
         <translation>設定ファイルを選択</translation>
     </message>
+    <message>
+        <source>Force lock to computer</source>
+        <translation>コンピューター間移動のロック機能を強制有効にする</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

@@ -59,7 +59,8 @@ protected:
   void toggleSwitchDelay(bool enable);
   void setSwitchDelay(int delay);
 
-  void toggleLockToScreen(bool disabled);
+  void toggleForceLockToScreen(bool disabled);
+  void toggleDisableLockToScreen(bool disabled);
   void toggleWin32Foreground(bool enabled);
 
   void toggleClipboard(bool enabled);

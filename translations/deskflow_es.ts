@@ -1037,6 +1037,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
         <source>Browse for a config file</source>
         <translation type="unfinished">Busque un archivo de configuración</translation>
     </message>
+    <message>
+        <source>Force lock to computer</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>
