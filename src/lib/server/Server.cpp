@@ -134,6 +134,9 @@ Server::Server(ServerConfig &config, PrimaryClient *primaryClient, deskflow::Scr
   if (!m_disableLockToScreen && (m_primaryClient->getToggleMask() & KeyModifierScrollLock)) {
     LOG_NOTE("scroll lock is on, locking cursor to screen");
     m_lockedToScreen = true;
+  } else if (m_defaultLockToScreenState) {
+    LOG_NOTE("default screen lock is on, locking cursor to screen");
+    m_lockedToScreen = true;
   }
 }
 
@@ -337,7 +340,9 @@ bool Server::isLockedToScreen() const
 
   // locked if we say we're locked
   if (isLockedToScreenServer()) {
-    LOG_NOTE("cursor is locked to screen, check scroll lock key");
+    if (!m_defaultLockToScreenState) {
+      LOG_NOTE("cursor is locked to screen, check scroll lock key");
+    }
     return true;
   }
 
@@ -1098,6 +1103,8 @@ void Server::processOptions()
       m_switchNeedsAlt = (value != 0);
     } else if (id == kOptionRelativeMouseMoves) {
       newRelativeMoves = (value != 0);
+    } else if (id == kOptionDefaultLockToScreenState) {
+      m_defaultLockToScreenState = (value != 0);
     } else if (id == kOptionDisableLockToScreen) {
       m_disableLockToScreen = (value != 0);
     } else if (id == kOptionClipboardSharing) {

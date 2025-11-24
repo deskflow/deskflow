@@ -435,6 +435,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbDefaultLockToScreenState">
+            <property name="text">
+             <string>Enable lock to computer at startup</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbRelativeMouseMoves">
             <property name="enabled">
              <bool>true</bool>

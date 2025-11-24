@@ -1064,6 +1064,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Browse for a config file</source>
         <translation>Выбрать файл для конфигурации</translation>
     </message>
+    <message>
+        <source>Enable lock to computer at startup</source>
+        <translation type="unfinished">Включить блокировку компьютера при запуске</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

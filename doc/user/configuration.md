@@ -141,6 +141,7 @@ block of a server config file as seen below. This section is used by the GUI to 
 [internalConfig]
 clipboardSharing=true
 clipboardSharingSize=@Variant(\0\0\0\x84\0\0\0\0\0\0<\0)
+defaultLockToScreenState=false
 disableLockToScreen=false
 hasHeartbeat=false
 hasSwitchDelay=false
