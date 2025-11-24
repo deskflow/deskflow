@@ -113,6 +113,10 @@ public:
   {
     return m_Hotkeys;
   }
+  bool defaultLockToScreenState() const
+  {
+    return m_DefaultLockToScreenState;
+  }
   bool disableLockToScreen() const
   {
     return m_DisableLockToScreen;
@@ -214,6 +218,10 @@ private:
   {
     m_SwitchCornerSize = val;
   }
+  void setDefaultLockToScreenState(bool on)
+  {
+    m_DefaultLockToScreenState = on;
+  }
   void setDisableLockToScreen(bool on)
   {
     m_DisableLockToScreen = on;
@@ -248,6 +256,7 @@ private:
   bool m_HasSwitchDoubleTap = false;
   int m_SwitchDoubleTap = 0;
   int m_SwitchCornerSize = 0;
+  bool m_DefaultLockToScreenState = false;
   bool m_DisableLockToScreen = false;
   bool m_ClipboardSharing = true;
   QString m_ClientAddress = "";

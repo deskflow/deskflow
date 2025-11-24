@@ -1061,6 +1061,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Browse for a config file</source>
         <translation>浏览配置文件</translation>
     </message>
+    <message>
+        <source>Enable lock to computer at startup</source>
+        <translation type="unfinished">启动时启用锁定到计算机</translation>
+    </message>
 </context>
 <context>
     <name>SettingsDialog</name>

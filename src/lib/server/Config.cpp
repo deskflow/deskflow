@@ -671,6 +671,8 @@ void Config::readSectionOptions(ConfigReadContext &s)
       addOption("", kOptionRelativeMouseMoves, s.parseBoolean(value));
     } else if (name == "win32KeepForeground") {
       addOption("", kOptionWin32KeepForeground, s.parseBoolean(value));
+    } else if (name == "defaultLockToScreenState") {
+      addOption("", kOptionDefaultLockToScreenState, s.parseBoolean(value));
     } else if (name == "disableLockToScreen") {
       addOption("", kOptionDisableLockToScreen, s.parseBoolean(value));
     } else if (name == "clipboardSharing") {
@@ -1248,6 +1250,9 @@ const char *Config::getOptionName(OptionID id)
   }
   if (id == kOptionScreenPreserveFocus) {
     return "preserveFocus";
+  }
+  if (id == kOptionDefaultLockToScreenState) {
+    return "defaultLockToScreenState";
   }
   if (id == kOptionDisableLockToScreen) {
     return "disableLockToScreen";

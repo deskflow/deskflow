@@ -53,23 +53,24 @@ bool ServerConfig::save(const QString &fileName) const
 
 bool ServerConfig::operator==(const ServerConfig &sc) const
 {
-  return m_Screens == sc.m_Screens &&                         //
-         m_Columns == sc.m_Columns &&                         //
-         m_Rows == sc.m_Rows &&                               //
-         m_HasHeartbeat == sc.m_HasHeartbeat &&               //
-         m_Heartbeat == sc.m_Heartbeat &&                     //
-         m_Protocol == sc.m_Protocol &&                       //
-         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&   //
-         m_Win32KeepForeground == sc.m_Win32KeepForeground && //
-         m_HasSwitchDelay == sc.m_HasSwitchDelay &&           //
-         m_SwitchDelay == sc.m_SwitchDelay &&                 //
-         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&   //
-         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&         //
-         m_SwitchCornerSize == sc.m_SwitchCornerSize &&       //
-         m_SwitchCorners == sc.m_SwitchCorners &&             //
-         m_Hotkeys == sc.m_Hotkeys &&                         //
-         m_DisableLockToScreen == sc.m_DisableLockToScreen && //
-         m_ClipboardSharing == sc.m_ClipboardSharing &&       //
+  return m_Screens == sc.m_Screens &&                                   //
+         m_Columns == sc.m_Columns &&                                   //
+         m_Rows == sc.m_Rows &&                                         //
+         m_HasHeartbeat == sc.m_HasHeartbeat &&                         //
+         m_Heartbeat == sc.m_Heartbeat &&                               //
+         m_Protocol == sc.m_Protocol &&                                 //
+         m_RelativeMouseMoves == sc.m_RelativeMouseMoves &&             //
+         m_Win32KeepForeground == sc.m_Win32KeepForeground &&           //
+         m_HasSwitchDelay == sc.m_HasSwitchDelay &&                     //
+         m_SwitchDelay == sc.m_SwitchDelay &&                           //
+         m_HasSwitchDoubleTap == sc.m_HasSwitchDoubleTap &&             //
+         m_SwitchDoubleTap == sc.m_SwitchDoubleTap &&                   //
+         m_SwitchCornerSize == sc.m_SwitchCornerSize &&                 //
+         m_SwitchCorners == sc.m_SwitchCorners &&                       //
+         m_Hotkeys == sc.m_Hotkeys &&                                   //
+         m_DefaultLockToScreenState == sc.m_DefaultLockToScreenState && //
+         m_DisableLockToScreen == sc.m_DisableLockToScreen &&           //
+         m_ClipboardSharing == sc.m_ClipboardSharing &&                 //
          m_ClipboardSharingSize == sc.m_ClipboardSharingSize;
 }
 
@@ -115,6 +116,7 @@ void ServerConfig::commit()
   settings().setValue("hasSwitchDoubleTap", hasSwitchDoubleTap());
   settings().setValue("switchDoubleTap", switchDoubleTap());
   settings().setValue("switchCornerSize", switchCornerSize());
+  settings().setValue("defaultLockToScreenState", defaultLockToScreenState());
   settings().setValue("disableLockToScreen", disableLockToScreen());
   settings().setValue("clipboardSharing", clipboardSharing());
   settings().setValue("clipboardSharingSize", QVariant::fromValue(clipboardSharingSize()));
@@ -166,6 +168,7 @@ void ServerConfig::recall()
   haveSwitchDoubleTap(settings().value("hasSwitchDoubleTap", false).toBool());
   setSwitchDoubleTap(settings().value("switchDoubleTap", 250).toInt());
   setSwitchCornerSize(settings().value("switchCornerSize").toInt());
+  setDefaultLockToScreenState(settings().value("defaultLockToScreenState", false).toBool());
   setDisableLockToScreen(settings().value("disableLockToScreen", false).toBool());
   setClipboardSharingSize(
       settings().value("clipboardSharingSize", (int)ServerConfig::defaultClipboardSharingSize()).toULongLong()
@@ -270,6 +273,8 @@ QTextStream &operator<<(QTextStream &outStream, const ServerConfig &config)
             << "relativeMouseMoves = " << (config.relativeMouseMoves() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "win32KeepForeground = " << (config.win32KeepForeground() ? "true" : "false") << Qt::endl;
+  outStream << "\t"
+            << "defaultLockToScreenState = " << (config.defaultLockToScreenState() ? "true" : "false") << Qt::endl;
   outStream << "\t"
             << "disableLockToScreen = " << (config.disableLockToScreen() ? "true" : "false") << Qt::endl;
   outStream << "\t"

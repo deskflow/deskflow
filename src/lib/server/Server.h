@@ -450,6 +450,7 @@ private:
   // screen locking (former scroll lock)
   bool m_lockedToScreen = false;
 
+  bool m_defaultLockToScreenState = false;
   bool m_disableLockToScreen = false;
   bool m_enableClipboard = true;
 };

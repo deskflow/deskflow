@@ -137,6 +137,11 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
 
   ui->sbSwitchCornerSize->setValue(serverConfig().switchCornerSize());
 
+  ui->cbDefaultLockToScreenState->setChecked(serverConfig().defaultLockToScreenState());
+  connect(
+      ui->cbDefaultLockToScreenState, &QCheckBox::toggled, this, &ServerConfigDialog::toggleDefaultLockToScreenState
+  );
+
   ui->cbDisableLockToScreen->setChecked(serverConfig().disableLockToScreen());
   connect(ui->cbDisableLockToScreen, &QCheckBox::toggled, this, &ServerConfigDialog::toggleLockToScreen);
 
@@ -424,6 +429,12 @@ void ServerConfigDialog::toggleSwitchDelay(bool enable)
 void ServerConfigDialog::setSwitchDelay(int delay)
 {
   serverConfig().setSwitchDelay(delay);
+  onChange();
+}
+
+void ServerConfigDialog::toggleDefaultLockToScreenState(bool state)
+{
+  serverConfig().setDefaultLockToScreenState(state);
   onChange();
 }
 
