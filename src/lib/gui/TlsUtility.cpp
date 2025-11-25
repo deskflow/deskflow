@@ -61,7 +61,20 @@ bool isCertValid(const QString &certPath)
 
 int getCertKeyLength(const QString &certPath)
 {
-  return deskflow::getCertLength(certPath.toStdString());
+  QFile file(certPath);
+  if (!file.open(QFile::ReadOnly)) {
+    //: %1 will be replaced by the certificate path
+    qDebug() << QObject::tr("failed to read key from certificate file: %1").arg(certPath);
+    return -1;
+  }
+
+  const auto key = QSslKey(&file, QSsl::Rsa);
+  if (key.isNull()) {
+    //: %1 will be replaced by the certificate path
+    qDebug() << QObject::tr("failed to parse certificate file: %1").arg(certPath);
+    return -1;
+  }
+  return key.length();
 }
 
 QByteArray certFingerprint(const QString &certPath)

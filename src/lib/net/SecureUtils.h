@@ -30,7 +30,5 @@ Fingerprint pemFileCertFingerprint(const std::string &path, QCryptographicHash::
 
 void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
 
-int getCertLength(const std::string &path);
-
 QString generateFingerprintArt(const QByteArray &rawDigest);
 } // namespace deskflow

@@ -29,7 +29,7 @@ bool isCertValid(const QString &certPath = Settings::value(Settings::Security::C
 /**
  * @brief Get the lenght of a key
  * @param certPath path of the file to check, when unset will use the value of Settings::Security::Certificate
- * @return the bitsize of the key
+ * @return the bitsize of the key or -1 if there was an error reading the file
  */
 int getCertKeyLength(const QString &certPath = Settings::value(Settings::Security::Certificate).toString());
 
