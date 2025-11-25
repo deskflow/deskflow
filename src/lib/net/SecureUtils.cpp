@@ -160,9 +160,9 @@ QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
     const auto take = std::min<size_t>(kMaxColumns, hex.size());
     formattedString.append(hex.first(take));
     hex.remove(0, take);
-    if (formattedString.endsWith(':'))
+    if (formattedString.endsWith(QLatin1Char(':')))
       formattedString.removeLast();
-    formattedString.append('\n');
+    formattedString.append(QLatin1Char('\n'));
   }
   formattedString.removeLast();
   return formattedString;
@@ -200,7 +200,7 @@ QString generateFingerprintArt(const QByteArray &rawDigest)
   const auto baseSize = 8;
   const auto rows = (baseSize + 1);
   const auto columns = (baseSize * 2 + 1);
-  const QString characterPool = " .o+=*BOX@%&#/^SE";
+  const QString characterPool = QStringLiteral(" .o+=*BOX@%&#/^SE");
   const std::size_t len = characterPool.length() - 1;
 
   std::uint8_t field[columns][rows];
@@ -233,17 +233,17 @@ QString generateFingerprintArt(const QByteArray &rawDigest)
 
   QString result;
   result.reserve((columns + 3) * (rows + 2));
-  result.append("╔═════════════════╗\n");
+  result.append(QStringLiteral("╔═════════════════╗\n"));
 
   /* output content */
   for (y = 0; y < rows; y++) {
-    result.append("║");
+    result.append(QStringLiteral("║"));
     for (x = 0; x < columns; x++)
       result.append(characterPool.at(std::min<int>(field[x][y], len)));
-    result.append("║\n");
+    result.append(QStringLiteral("║\n"));
   }
 
-  result.append("╚═════════════════╝");
+  result.append(QStringLiteral("╚═════════════════╝"));
   return result;
 }
 
