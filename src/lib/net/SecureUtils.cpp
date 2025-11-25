@@ -62,23 +62,6 @@ Fingerprint sslCertFingerprint(const X509 *cert, QCryptographicHash::Algorithm t
   return {type, digestArray};
 }
 
-Fingerprint pemFileCertFingerprint(const std::string &path, QCryptographicHash::Algorithm type)
-{
-  auto fp = fopenUtf8Path(path, "r");
-  if (!fp) {
-    throw std::runtime_error("could not open certificate path");
-  }
-  auto fileClose = finally([fp]() { std::fclose(fp); });
-
-  X509 *cert = PEM_read_X509(fp, nullptr, nullptr, nullptr);
-  if (!cert) {
-    throw std::runtime_error("certificate could not be parsed");
-  }
-  auto certFree = finally([cert]() { X509_free(cert); });
-
-  return sslCertFingerprint(cert, type);
-}
-
 void generatePemSelfSignedCert(const std::string &path, int keyLength)
 {
   auto expirationDays = 365;
