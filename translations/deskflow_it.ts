@@ -726,9 +726,9 @@ Nomi validi:
         <translation type="unfinished">la chiave rilevata ha una dimensione errata</translation>
     </message>
     <message>
-        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">impossibile leggere la chiave RSA o DSA dal file del certificato: %1</translation>
+        <translation type="unfinished">impossibile leggere la chiave RSA dal file del certificato: %1</translation>
     </message>
 </context>
 <context>
