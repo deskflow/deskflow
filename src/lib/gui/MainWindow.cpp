@@ -324,9 +324,9 @@ void MainWindow::connectSlots()
 
 void MainWindow::toggleLogVisible(bool visible)
 {
-  // When the main window is hidden (e.g. close to tray), this also triggers the log visibility toggle,
+  // When the main window is hidden e.g. close to tray / minimized), this also triggers the log visibility toggle,
   // but we don't want to hide the log in this case since we would need to un-hide it when the window is shown again.
-  if (!isVisible()) {
+  if (!isVisible() || isMinimized()) {
     qDebug() << "not toggling log, window not visible";
     return;
   }
