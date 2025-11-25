@@ -10,8 +10,6 @@
 #include "net/Fingerprint.h"
 #include "net/FingerprintDatabase.h"
 
-#include <sstream>
-
 void FingerprintDatabaseTests::readFile()
 {
   QString data = R"(
@@ -27,7 +25,7 @@ AB:CD:EF:00:01:02:03:04:05:06:07:08:09:10:11:12:13:14:15:16
 
   // Only one will be in our list as only one is valid
   QList<Fingerprint> expected = {
-      {Fingerprint::Type::SHA1,
+      {QCryptographicHash::Algorithm::Sha1,
        QByteArray::fromRawData("\xAB\xCD\xEF\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x10\x11\x12\x13\x14\x15\x16", 20)}
   };
 
@@ -41,10 +39,10 @@ void FingerprintDatabaseTests::writeFile()
 
   FingerprintDatabase db;
   db.addTrusted(
-      {Fingerprint::Type::SHA1, QByteArray::fromHex(QString("ABCDEF0001020304050607080910111213141516").toLatin1())}
+      {QCryptographicHash::Sha1, QByteArray::fromHex(QString("ABCDEF0001020304050607080910111213141516").toLatin1())}
   );
   db.addTrusted(
-      {Fingerprint::Type::SHA1, QByteArray::fromHex(QString("0001020304050607080910111213141516ABCDEF").toLatin1())}
+      {QCryptographicHash::Sha1, QByteArray::fromHex(QString("0001020304050607080910111213141516ABCDEF").toLatin1())}
   );
   db.writeStream(stream);
 
@@ -56,7 +54,7 @@ v2:sha1:0001020304050607080910111213141516abcdef
 void FingerprintDatabaseTests::clear()
 {
   FingerprintDatabase db;
-  db.addTrusted({Fingerprint::Type::SHA1, QByteArray::fromHex(QString("01020304ab").toLatin1())});
+  db.addTrusted({QCryptographicHash::Sha1, QByteArray::fromHex(QString("01020304ab").toLatin1())});
   db.clear();
 
   QVERIFY(db.fingerprints().empty());
@@ -64,9 +62,9 @@ void FingerprintDatabaseTests::clear()
 
 void FingerprintDatabaseTests::trusted()
 {
-  Fingerprint trusted1 = {Fingerprint::Type::SHA1, QByteArray::fromHex(QString("01020304ab").toLatin1())};
-  Fingerprint trusted2 = {Fingerprint::Type::SHA1, QByteArray::fromHex(QString("03040506ab").toLatin1())};
-  Fingerprint untrusted = {Fingerprint::Type::SHA1, QByteArray::fromHex(QString("01020304ac").toLatin1())};
+  Fingerprint trusted1 = {QCryptographicHash::Sha1, QByteArray::fromHex(QString("01020304ab").toLatin1())};
+  Fingerprint trusted2 = {QCryptographicHash::Sha1, QByteArray::fromHex(QString("03040506ab").toLatin1())};
+  Fingerprint untrusted = {QCryptographicHash::Sha1, QByteArray::fromHex(QString("01020304ac").toLatin1())};
 
   FingerprintDatabase db;
 

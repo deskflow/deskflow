@@ -22,7 +22,7 @@ FingerprintPreview::FingerprintPreview(
   setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
   setLayout(
-      fingerprint.type == Fingerprint::Type::SHA256 ? sha256Layout(fingerprint, titleText, hashMode) : emptyLayout()
+      fingerprint.type == QCryptographicHash::Sha256 ? sha256Layout(fingerprint, titleText, hashMode) : emptyLayout()
   );
   adjustSize();
   setFixedSize(size());
