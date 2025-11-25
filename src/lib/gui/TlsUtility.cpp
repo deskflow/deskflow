@@ -50,9 +50,9 @@ bool isCertValid(const QString &certPath)
     return false;
   }
 
-  if (const auto type = key.algorithm(); (type != QSsl::Dsa || type != QSsl::Rsa)) {
+  if (key.algorithm() != QSsl::Rsa) {
     //: %1 will be replaced by the certificate path
-    qDebug() << QObject::tr("failed to read RSA or DSA key from certificate file: %1").arg(certPath);
+    qDebug() << QObject::tr("failed to read RSA key from certificate file: %1").arg(certPath);
     return false;
   }
 

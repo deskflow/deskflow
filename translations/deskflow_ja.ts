@@ -727,9 +727,9 @@ Valid names:
         <translation type="unfinished">検出されたキーのサイズが正しくありません</translation>
     </message>
     <message>
-        <source>failed to read RSA or DSA key from certificate file: %1</source>
+        <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
-        <translation type="unfinished">証明書ファイルから RSA または DSA キーを読み取ることができませんでした: %1</translation>
+        <translation type="unfinished">証明書ファイルから RSA キーを読み取ることができませんでした: %1</translation>
     </message>
 </context>
 <context>
