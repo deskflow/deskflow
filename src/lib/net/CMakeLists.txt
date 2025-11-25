@@ -10,6 +10,7 @@ if(APPLE)
   set(OPENSSL_USE_STATIC_LIBS TRUE)
 endif()
 
+find_package(Qt6 ${REQUIRED_QT_VERSION} REQUIRED COMPONENTS Network)
 find_package(OpenSSL ${REQUIRED_OPENSSL_VERSION} REQUIRED COMPONENTS SSL Crypto)
 
 add_library(net STATIC
@@ -49,7 +50,7 @@ add_library(net STATIC
 
 target_link_libraries(
   net
-  PUBLIC OpenSSL::SSL OpenSSL::Crypto common
+  PUBLIC OpenSSL::SSL OpenSSL::Crypto Qt6::Network common
   PRIVATE mt io)
 
 if(WIN32)

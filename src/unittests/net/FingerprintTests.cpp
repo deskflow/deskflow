@@ -19,7 +19,7 @@ void FingerprintTests::test_isValid()
   QVERIFY(!f.isValid());
 
   // SHA1 Tests
-  f.type = Fingerprint::Type::SHA1;
+  f.type = QCryptographicHash::Sha1;
 
   // Invalid SHA1, no Data
   f.data.clear();
@@ -38,7 +38,7 @@ void FingerprintTests::test_isValid()
   QVERIFY(!f.isValid());
 
   // SHA256 Tests
-  f.type = Fingerprint::Type::SHA256;
+  f.type = QCryptographicHash::Sha256;
 
   // Invalid SHA256, no Data
   f.data.clear();
@@ -69,7 +69,7 @@ void FingerprintTests::test_toDbLine()
   QVERIFY(f.toDbLine().isEmpty());
 
   // Invalid SHA1, type w/o data
-  f.type = Fingerprint::Type::SHA1;
+  f.type = QCryptographicHash::Sha1;
   f.data.clear();
   QVERIFY(f.toDbLine().isEmpty());
 
@@ -79,7 +79,7 @@ void FingerprintTests::test_toDbLine()
   QCOMPARE(f.toDbLine(), expectedString);
 
   // Valid Sha256
-  f.type = Fingerprint::Type::SHA256;
+  f.type = QCryptographicHash::Sha256;
   f.data = f.data.fill('\x23', 32);
   expectedString = QStringLiteral("v2:sha256:2323232323232323232323232323232323232323232323232323232323232323");
   QCOMPARE(f.toDbLine(), expectedString);
@@ -112,14 +112,14 @@ void FingerprintTests::test_fromDbLine()
   QCOMPARE(actual, expected);
 
   // Test V1 Only support Sha1
-  expected.type = Fingerprint::Type::SHA1;
+  expected.type = QCryptographicHash::Sha1;
   expected.data =
       QByteArray::fromRawData("\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23", 20);
   actual = Fingerprint::fromDbLine("23:23:23:23:23:23:23:23:23:23:23:23:23:23:23:23:23:23:23:23");
   QCOMPARE(actual, expected);
 
   // V1 does not support SHA256
-  expected.type = Fingerprint::Type::SHA256;
+  expected.type = QCryptographicHash::Sha256;
   expected.data = QByteArray::fromRawData(
       "\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23"
       "\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23",
@@ -131,7 +131,7 @@ void FingerprintTests::test_fromDbLine()
   QCOMPARE_NE(actual, expected);
 
   // V2 SHA1 Test
-  expected.type = Fingerprint::Type::SHA1;
+  expected.type = QCryptographicHash::Sha1;
   expected.data =
       QByteArray::fromRawData("\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23", 20);
   actual = Fingerprint::fromDbLine("v2:sha1:2323232323232323232323232323232323232323");
@@ -142,7 +142,7 @@ void FingerprintTests::test_fromDbLine()
   QCOMPARE_NE(actual, expected);
 
   // V2 SHA256 Test
-  expected.type = Fingerprint::Type::SHA256;
+  expected.type = QCryptographicHash::Sha256;
   expected.data = QByteArray::fromRawData(
       "\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23"
       "\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23\x23",
@@ -160,29 +160,29 @@ void FingerprintTests::test_typeToString()
 {
   Fingerprint expected;
 
-  expected.type = Fingerprint::Type::Invalid;
-  QCOMPARE(expected.type, Fingerprint::Type::Invalid);
+  expected.type = QCryptographicHash::Md4;
+  QCOMPARE(expected.type, QCryptographicHash::Md4);
   QCOMPARE(Fingerprint::typeToString(expected.type), QStringLiteral("invalid"));
 
-  expected.type = Fingerprint::Type::SHA1;
-  QCOMPARE(expected.type, Fingerprint::Type::SHA1);
+  expected.type = QCryptographicHash::Sha1;
+  QCOMPARE(expected.type, QCryptographicHash::Sha1);
   QCOMPARE(Fingerprint::typeToString(expected.type), QStringLiteral("sha1"));
 
-  expected.type = Fingerprint::Type::SHA256;
-  QCOMPARE(expected.type, Fingerprint::Type::SHA256);
+  expected.type = QCryptographicHash::Sha256;
+  QCOMPARE(expected.type, QCryptographicHash::Sha256);
   QCOMPARE(Fingerprint::typeToString(expected.type), QStringLiteral("sha256"));
 }
 
 void FingerprintTests::test_typeFromString()
 {
-  QCOMPARE(Fingerprint::Type::SHA1, Fingerprint::typeFromString("sha1"));
-  QCOMPARE(Fingerprint::Type::SHA1, Fingerprint::typeFromString("SHA1"));
-  QCOMPARE(Fingerprint::Type::SHA256, Fingerprint::typeFromString("sha256"));
-  QCOMPARE(Fingerprint::Type::SHA256, Fingerprint::typeFromString("SHA256"));
+  QCOMPARE(QCryptographicHash::Sha1, Fingerprint::typeFromString("sha1"));
+  QCOMPARE(QCryptographicHash::Sha1, Fingerprint::typeFromString("SHA1"));
+  QCOMPARE(QCryptographicHash::Sha256, Fingerprint::typeFromString("sha256"));
+  QCOMPARE(QCryptographicHash::Sha256, Fingerprint::typeFromString("SHA256"));
 
-  QCOMPARE(Fingerprint::Type::Invalid, Fingerprint::typeFromString("invalid"));
-  QCOMPARE(Fingerprint::Type::Invalid, Fingerprint::typeFromString(""));
-  QCOMPARE(Fingerprint::Type::Invalid, Fingerprint::typeFromString("230p89jivon345"));
+  QCOMPARE(QCryptographicHash::Md4, Fingerprint::typeFromString("invalid"));
+  QCOMPARE(QCryptographicHash::Md4, Fingerprint::typeFromString(""));
+  QCOMPARE(QCryptographicHash::Md4, Fingerprint::typeFromString("230p89jivon345"));
 }
 
 QTEST_MAIN(FingerprintTests)

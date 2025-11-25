@@ -152,7 +152,7 @@ MainWindow::MainWindow()
     if (!TlsUtility::isCertValid()) {
       generateCertificate();
     } else {
-      m_fingerprint = {Fingerprint::Type::SHA256, TlsUtility::certFingerprint()};
+      m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
     }
   }
 }
@@ -803,7 +803,7 @@ void MainWindow::checkFingerprint(const QString &line)
 
   const auto sha256Text = line.mid(midStart + msgLen).remove(':');
 
-  const Fingerprint sha256 = {Fingerprint::Type::SHA256, QByteArray::fromHex(sha256Text.toLatin1())};
+  const Fingerprint sha256 = {QCryptographicHash::Sha256, QByteArray::fromHex(sha256Text.toLatin1())};
 
   const bool isClient = m_coreProcess.mode() == CoreMode::Client;
   if ((isClient && m_checkedServers.contains(sha256Text)) || (!isClient && m_checkedClients.contains(sha256Text))) {
@@ -1177,7 +1177,7 @@ bool MainWindow::generateCertificate()
     return false;
   }
 
-  m_fingerprint = {Fingerprint::Type::SHA256, TlsUtility::certFingerprint()};
+  m_fingerprint = {QCryptographicHash::Sha256, TlsUtility::certFingerprint()};
 
   updateLocalFingerprint();
   return true;

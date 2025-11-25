@@ -12,12 +12,9 @@
 bool Fingerprint::isValid() const
 {
   switch (type) {
-    using enum Type;
-  case Invalid:
-    return false;
-  case SHA1:
+  case QCryptographicHash::Sha1:
     return data.length() == 20;
-  case SHA256:
+  case QCryptographicHash::Sha256:
     return data.length() == 32;
   default:
     return false;
@@ -54,7 +51,7 @@ Fingerprint Fingerprint::fromDbLine(const QString &line)
     const bool wrongSize = line.size() != kSha1ExpectedSize;
     if (bool badColonCount = line.count(':') != kSha1ColonCount; wrongSize || badColonCount)
       return result;
-    result.type = Fingerprint::Type::SHA1;
+    result.type = QCryptographicHash::Sha1;
     auto l2 = line;
     result.data = QByteArray::fromHex(l2.remove(':').toLatin1());
   }
@@ -62,25 +59,25 @@ Fingerprint Fingerprint::fromDbLine(const QString &line)
   return result;
 }
 
-Fingerprint::Type Fingerprint::typeFromString(const QString &type)
-{
-  using enum Type;
-  const auto t = type.toLower();
-  if (t == m_type_sha1)
-    return SHA1;
-  if (t == m_type_sha256)
-    return SHA256;
-  return Invalid;
-}
-
-QString Fingerprint::typeToString(Fingerprint::Type type)
+QString Fingerprint::typeToString(QCryptographicHash::Algorithm type)
 {
   switch (type) {
-  case Type::SHA1:
+  case QCryptographicHash::Sha1:
     return m_type_sha1;
-  case Type::SHA256:
+  case QCryptographicHash::Sha256:
     return m_type_sha256;
   default:
     return m_type_invalid;
   }
+}
+
+QCryptographicHash::Algorithm Fingerprint::typeFromString(const QString &type)
+{
+  using enum QCryptographicHash::Algorithm;
+  const auto t = type.toLower();
+  if (t == m_type_sha1)
+    return Sha1;
+  if (t == m_type_sha256)
+    return Sha256;
+  return Md4;
 }

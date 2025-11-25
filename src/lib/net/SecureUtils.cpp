@@ -22,12 +22,12 @@ namespace deskflow {
 
 namespace {
 
-const EVP_MD *digestForType(Fingerprint::Type type)
+const EVP_MD *digestForType(QCryptographicHash::Algorithm type)
 {
   switch (type) {
-  case Fingerprint::Type::SHA1:
+  case QCryptographicHash::Sha1:
     return EVP_sha1();
-  case Fingerprint::Type::SHA256:
+  case QCryptographicHash::Sha256:
     return EVP_sha256();
   default:
     break;
@@ -45,7 +45,7 @@ QString formatSSLFingerprint(const QByteArray &fingerprint, bool enableSeparator
     return fingerprint.toHex().toUpper();
 }
 
-Fingerprint sslCertFingerprint(const X509 *cert, Fingerprint::Type type)
+Fingerprint sslCertFingerprint(const X509 *cert, QCryptographicHash::Algorithm type)
 {
   if (!cert) {
     throw std::runtime_error("certificate is null");
@@ -62,7 +62,7 @@ Fingerprint sslCertFingerprint(const X509 *cert, Fingerprint::Type type)
   return {type, digestArray};
 }
 
-Fingerprint pemFileCertFingerprint(const std::string &path, Fingerprint::Type type)
+Fingerprint pemFileCertFingerprint(const std::string &path, QCryptographicHash::Algorithm type)
 {
   auto fp = fopenUtf8Path(path, "r");
   if (!fp) {

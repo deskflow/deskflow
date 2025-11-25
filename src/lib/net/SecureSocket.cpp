@@ -628,7 +628,7 @@ void SecureSocket::disconnect()
 bool SecureSocket::verifyCertFingerprint(const QString &FingerprintDatabasePath) const
 {
   const auto cert = SSL_get_peer_certificate(m_ssl->m_ssl);
-  const auto sha256 = deskflow::sslCertFingerprint(cert, Fingerprint::Type::SHA256);
+  const auto sha256 = deskflow::sslCertFingerprint(cert, QCryptographicHash::Sha256);
 
   if (cert)
     X509_free(cert);
