@@ -118,34 +118,6 @@ void generatePemSelfSignedCert(const std::string &path, int keyLength)
   PEM_write_X509(fp, cert);
 }
 
-int getCertLength(const std::string &path)
-{
-  auto fp = fopenUtf8Path(path.c_str(), "r");
-  if (!fp) {
-    throw std::runtime_error("could not open certificate output path");
-    return -1;
-  }
-
-  EVP_PKEY *privateKey = PEM_read_PrivateKey(fp, nullptr, nullptr, nullptr);
-
-  fclose(fp);
-
-  if (!privateKey) {
-    throw std::runtime_error("could not open certificate");
-    return -1;
-  }
-
-  if (EVP_PKEY_base_id(privateKey) != EVP_PKEY_RSA) {
-    throw std::runtime_error("not an RSA key");
-    return -1;
-  }
-  int size = EVP_PKEY_get_bits(privateKey);
-
-  EVP_PKEY_free(privateKey);
-
-  return size;
-}
-
 QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
 {
   auto kMaxColumns = 24;
