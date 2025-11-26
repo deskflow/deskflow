@@ -66,22 +66,19 @@ int main(int argc, char **argv)
     return s_exitSuccess;
   }
 
-  if (parser.singleInstanceOnly()) {
-    // Before we check any more args we need to check for a duplicate process.
-    // Create a shared memory segment with a unique key
-    // This is to prevent a new instance from running if one is already running
-    QSharedMemory sharedMemory(kCoreBinName);
+  // Before we check any more args we need to check for a duplicate process.
+  // Create a shared memory segment with a unique key
+  // This is to prevent a new instance from running if one is already running
+  QSharedMemory sharedMemory(kCoreBinName);
 
-    // Attempt to attach first and detach in order to clean up stale shm chunks
-    // This can happen if the previous instance was killed or crashed
-    if (sharedMemory.attach())
-      sharedMemory.detach();
+  // Attempt to attach first and detach in order to clean up stale shm chunks
+  // This can happen if the previous instance was killed or crashed
+  if (sharedMemory.attach())
+    sharedMemory.detach();
 
-    // If we can create 1 byte of SHM we are the only instance
-    if (!sharedMemory.create(1)) {
-      LOG_WARN("an instance of deskflow core is already running");
-      return s_exitDuplicate;
-    }
+  if (!sharedMemory.create(1) && parser.singleInstanceOnly()) {
+    LOG_WARN("an instance of deskflow core is already running");
+    return s_exitDuplicate;
   }
 
   parser.parse();
