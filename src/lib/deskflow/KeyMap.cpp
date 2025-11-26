@@ -945,9 +945,7 @@ void KeyMap::addKeystrokes(
     break;
 
   case kKeystrokeRepeat:
-    keystrokes.push_back(Keystroke(button, false, true, data));
-    keystrokes.push_back(Keystroke(button, true, true, data));
-    // no modifier changes on key repeat
+    // no changes on key repeat
     break;
 
   case kKeystrokeClick:
