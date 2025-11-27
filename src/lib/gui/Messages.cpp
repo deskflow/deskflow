@@ -186,6 +186,8 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
 void showClientConnectError(QWidget *parent, ClientError error, const QString &address)
 {
   using enum ClientError;
+  if (error == NoError)
+    return;
 
   auto message = QObject::tr("<p>Failed to connect to the server '%1'.</p>").arg(address);
 

@@ -15,6 +15,7 @@ namespace deskflow::gui::messages {
 
 enum class ClientError
 {
+  NoError,
   AlreadyConnected,
   HostnameError,
   GenericError
