@@ -56,19 +56,27 @@ void ClientConnection::showMessage(const QString &logLine)
 {
   using enum messages::ClientError;
 
-  Q_EMIT messageShowing();
+  if (logLine.isEmpty())
+    return;
 
   const auto address = Settings::value(Settings::Client::RemoteHost).toString();
+  auto error = NoError;
 
   if (logLine.contains("server already has a connected client with our name")) {
-    m_deps->showError(m_pParent, AlreadyConnected, address);
+    error = AlreadyConnected;
   } else if (QHostAddress a(address); a.isNull()) {
     qDebug("ip not detected, showing hostname error");
-    m_deps->showError(m_pParent, HostnameError, address);
+    error = HostnameError;
   } else {
     qDebug("ip detected, showing generic error");
-    m_deps->showError(m_pParent, GenericError, address);
+    error = GenericError;
   }
+
+  if (error == NoError)
+    return;
+
+  Q_EMIT messageShowing();
+  m_deps->showError(m_pParent, error, address);
 }
 
 } // namespace deskflow::gui
