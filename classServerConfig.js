@@ -8,6 +8,7 @@ var classServerConfig =
     [ "commit", "classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c", null ],
     [ "configFile", "classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68", null ],
     [ "defaultClipboardSharingSize", "classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177", null ],
+    [ "defaultLockToScreenState", "classServerConfig.html#a49ef38e0132bcfd8184bc6c06834ff34", null ],
     [ "disableLockToScreen", "classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a", null ],
     [ "getServerName", "classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93", null ],
     [ "hasHeartbeat", "classServerConfig.html#a03b3f88897a63eda3d7b2a0fc48a5fd5", null ],

@@ -31,6 +31,7 @@ var classServerConfigDialog =
     [ "toggleCornerBottomRight", "classServerConfigDialog.html#aba86a78e3c4ffe4e0fbcf2410a8637b3", null ],
     [ "toggleCornerTopLeft", "classServerConfigDialog.html#a3057ab0dda1af74a23459bda6b968ec5", null ],
     [ "toggleCornerTopRight", "classServerConfigDialog.html#abc36030df59d58b0201d53db7b2009dc", null ],
+    [ "toggleDefaultLockToScreenState", "classServerConfigDialog.html#a34a8ff304009519ea29bce03db9a5ad2", null ],
     [ "toggleExternalConfig", "classServerConfigDialog.html#ad4e49ef8a8cd36ed27596c460cd3f773", null ],
     [ "toggleHeartbeat", "classServerConfigDialog.html#a799279161b343bd54c11096890d9f995", null ],
     [ "toggleLockToScreen", "classServerConfigDialog.html#aee115db41f74f59c6dae066d9c510892", null ],

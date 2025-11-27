@@ -1,5 +1,6 @@
 var NAVTREEINDEX7 =
 {
+"classArchNetworkWinsock.html#a1e4b37c52e972be8227056e7b5042407":[6,0,48,4],
 "classArchNetworkWinsock.html#a23f42c40529c7c19d3b94bab3c090ef5":[6,0,48,10],
 "classArchNetworkWinsock.html#a264ece975c6da5186e95d0fd1654ed3d":[6,0,48,21],
 "classArchNetworkWinsock.html#a37710bdf58cdf35faef5bde29fcd609a":[6,0,48,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html#abe3252213e7c8c67acb553edd555307c":[6,0,63,32],
 "classClientProxy1__0.html#abfa4a23e93d20b068283729691fd20b3":[6,0,63,13],
 "classClientProxy1__0.html#ae2812c552a2eb8c7a36d6ba92d0afd83":[6,0,63,10],
-"classClientProxy1__0.html#ae70bcbcbe7a3eb996a715b68010d1a3b":[6,0,63,37],
-"classClientProxy1__0.html#aea6a029c66a459240122d57883695d13":[6,0,63,21]
+"classClientProxy1__0.html#ae70bcbcbe7a3eb996a715b68010d1a3b":[6,0,63,37]
 };

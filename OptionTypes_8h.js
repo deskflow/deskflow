@@ -6,6 +6,7 @@ var OptionTypes_8h =
     [ "OptionValue", "OptionTypes_8h.html#a516314192e79c5d057fa63f0243f3155", null ],
     [ "kOptionClipboardSharing", "OptionTypes_8h.html#ae3bfc83c4cab0b6ded099668df59009e", null ],
     [ "kOptionClipboardSharingSize", "OptionTypes_8h.html#a1daaa88f250b6c3dc6c216ea2d6f9a94", null ],
+    [ "kOptionDefaultLockToScreenState", "OptionTypes_8h.html#a86b59e2da5f0f0c05fa13c2bba53db36", null ],
     [ "kOptionDisableLockToScreen", "OptionTypes_8h.html#ae46efda56ea28850f648a985dd8336d5", null ],
     [ "kOptionHalfDuplexCapsLock", "OptionTypes_8h.html#acac121f152e172256ba9f6b5338fb0f2", null ],
     [ "kOptionHalfDuplexNumLock", "OptionTypes_8h.html#ab1dae0bed4aacf6df7012566fa82dfca", null ],

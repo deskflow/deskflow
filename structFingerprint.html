@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.25</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.32</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -97,13 +97,6 @@ $(function(){initNavTree('structFingerprint.html','','structFingerprint-members'
 
 <p><code>#include &lt;<a class="el" href="Fingerprint_8h_source.html">Fingerprint.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
-Public Types</h2></td></tr>
-<tr class="memitem:a927929ca06f2dc5736267ab4c5d9cd78" id="r_a927929ca06f2dc5736267ab4c5d9cd78"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Type</a> { <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b">Invalid</a>
-, <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78a9a9f4eb6d0036a164588b6ee74390442">SHA1</a>
-, <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78ab505df5aa812b4f320420b8a952f20e5">SHA256</a>
- }</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a656f619bb76ccf6905e7a94a128557dc" id="r_a656f619bb76ccf6905e7a94a128557dc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a656f619bb76ccf6905e7a94a128557dc">isValid</a> () const</td></tr>
@@ -113,12 +106,12 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ad054e0fb6bc2f09d0391928d4671c52a" id="r_ad054e0fb6bc2f09d0391928d4671c52a"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structFingerprint.html">Fingerprint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad054e0fb6bc2f09d0391928d4671c52a">fromDbLine</a> (const QString &amp;line)</td></tr>
-<tr class="memitem:a595cc3e2b1194eea703e69e7a4705287" id="r_a595cc3e2b1194eea703e69e7a4705287"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a595cc3e2b1194eea703e69e7a4705287">typeToString</a> (<a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a> <a class="el" href="#a030170043d67afd657a30201d0d39d1a">type</a>)</td></tr>
-<tr class="memitem:a36a58f17da7503eec8e5206ea9dfd7e5" id="r_a36a58f17da7503eec8e5206ea9dfd7e5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a36a58f17da7503eec8e5206ea9dfd7e5">typeFromString</a> (const QString &amp;<a class="el" href="#a030170043d67afd657a30201d0d39d1a">type</a>)</td></tr>
+<tr class="memitem:a7ec0f1896e530e41926ba8e9b76c5d24" id="r_a7ec0f1896e530e41926ba8e9b76c5d24"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a7ec0f1896e530e41926ba8e9b76c5d24">typeToString</a> (QCryptographicHash::Algorithm <a class="el" href="#a4ceac308fd115e91b4a1d518bffba894">type</a>)</td></tr>
+<tr class="memitem:a51334b683be2778fac1e598c4211a2bc" id="r_a51334b683be2778fac1e598c4211a2bc"><td class="memItemLeft" align="right" valign="top">static QCryptographicHash::Algorithm&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a51334b683be2778fac1e598c4211a2bc">typeFromString</a> (const QString &amp;<a class="el" href="#a4ceac308fd115e91b4a1d518bffba894">type</a>)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a030170043d67afd657a30201d0d39d1a" id="r_a030170043d67afd657a30201d0d39d1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Type</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a030170043d67afd657a30201d0d39d1a">type</a> = <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b">Type::Invalid</a></td></tr>
+<tr class="memitem:a4ceac308fd115e91b4a1d518bffba894" id="r_a4ceac308fd115e91b4a1d518bffba894"><td class="memItemLeft" align="right" valign="top">QCryptographicHash::Algorithm&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4ceac308fd115e91b4a1d518bffba894">type</a> = QCryptographicHash::Md4</td></tr>
 <tr class="memitem:ac0a51b5ec53e509b02bb0ff329484340" id="r_ac0a51b5ec53e509b02bb0ff329484340"><td class="memItemLeft" align="right" valign="top">QByteArray&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac0a51b5ec53e509b02bb0ff329484340">data</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
@@ -127,34 +120,6 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a6a18c4c916c2bc457d9e3f24e61766d2" id="r_a6a18c4c916c2bc457d9e3f24e61766d2"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6a18c4c916c2bc457d9e3f24e61766d2">m_type_sha256</a> = QStringLiteral(&quot;sha256&quot;)</td></tr>
 <tr class="memitem:aa455414a29a07be4e22cebf5db6d5856" id="r_aa455414a29a07be4e22cebf5db6d5856"><td class="memItemLeft" align="right" valign="top">static QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa455414a29a07be4e22cebf5db6d5856">m_type_invalid</a> = QStringLiteral(&quot;invalid&quot;)</td></tr>
 </table>
-<a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Member Enumeration Documentation</h2>
-<a id="a927929ca06f2dc5736267ab4c5d9cd78" name="a927929ca06f2dc5736267ab4c5d9cd78"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a927929ca06f2dc5736267ab4c5d9cd78">&#9670;&#160;</a></span>Type</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b" name="a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b"></a>Invalid&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a927929ca06f2dc5736267ab4c5d9cd78a9a9f4eb6d0036a164588b6ee74390442" name="a927929ca06f2dc5736267ab4c5d9cd78a9a9f4eb6d0036a164588b6ee74390442"></a>SHA1&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a927929ca06f2dc5736267ab4c5d9cd78ab505df5aa812b4f320420b8a952f20e5" name="a927929ca06f2dc5736267ab4c5d9cd78ab505df5aa812b4f320420b8a952f20e5"></a>SHA256&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="ad054e0fb6bc2f09d0391928d4671c52a" name="ad054e0fb6bc2f09d0391928d4671c52a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad054e0fb6bc2f09d0391928d4671c52a">&#9670;&#160;</a></span>fromDbLine()</h2>
@@ -240,8 +205,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a36a58f17da7503eec8e5206ea9dfd7e5" name="a36a58f17da7503eec8e5206ea9dfd7e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36a58f17da7503eec8e5206ea9dfd7e5">&#9670;&#160;</a></span>typeFromString()</h2>
+<a id="a51334b683be2778fac1e598c4211a2bc" name="a51334b683be2778fac1e598c4211a2bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51334b683be2778fac1e598c4211a2bc">&#9670;&#160;</a></span>typeFromString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -250,7 +215,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a> Fingerprint::typeFromString </td>
+          <td class="memname">QCryptographicHash::Algorithm Fingerprint::typeFromString </td>
           <td>(</td>
           <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
           <td></td>
@@ -265,8 +230,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a595cc3e2b1194eea703e69e7a4705287" name="a595cc3e2b1194eea703e69e7a4705287"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a595cc3e2b1194eea703e69e7a4705287">&#9670;&#160;</a></span>typeToString()</h2>
+<a id="a7ec0f1896e530e41926ba8e9b76c5d24" name="a7ec0f1896e530e41926ba8e9b76c5d24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7ec0f1896e530e41926ba8e9b76c5d24">&#9670;&#160;</a></span>typeToString()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,7 +242,7 @@ Static Public Attributes</h2></td></tr>
         <tr>
           <td class="memname">QString Fingerprint::typeToString </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
+          <td class="paramtype">QCryptographicHash::Algorithm</td>          <td class="paramname"><span class="paramname"><em>type</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -371,14 +336,14 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a030170043d67afd657a30201d0d39d1a" name="a030170043d67afd657a30201d0d39d1a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a030170043d67afd657a30201d0d39d1a">&#9670;&#160;</a></span>type</h2>
+<a id="a4ceac308fd115e91b4a1d518bffba894" name="a4ceac308fd115e91b4a1d518bffba894"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ceac308fd115e91b4a1d518bffba894">&#9670;&#160;</a></span>type</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78">Type</a> Fingerprint::type = <a class="el" href="#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b">Type::Invalid</a></td>
+          <td class="memname">QCryptographicHash::Algorithm Fingerprint::type = QCryptographicHash::Md4</td>
         </tr>
       </table>
 </div><div class="memdoc">

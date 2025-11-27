@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.25</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.32</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -221,10 +221,8 @@ Functions</h2></td></tr>
 <tr class="memitem:a108d2978bd73d96786e7e28c9960c501" id="r_a108d2978bd73d96786e7e28c9960c501"><td class="memItemLeft" align="right" valign="top">std::FILE *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a108d2978bd73d96786e7e28c9960c501">fopenUtf8Path</a> (const fs::path &amp;path, const std::string &amp;mode)</td></tr>
 <tr class="memitem:a421442748c7922d0c2154f6a2980b772" id="r_a421442748c7922d0c2154f6a2980b772"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a421442748c7922d0c2154f6a2980b772">formatSSLFingerprint</a> (const QByteArray &amp;fingerprint, bool enableSeparators=true)</td></tr>
 <tr class="memdesc:a421442748c7922d0c2154f6a2980b772"><td class="mdescLeft">&#160;</td><td class="mdescRight">formatSSLFingerprint Format an ssl <a class="el" href="structFingerprint.html">Fingerprint</a>  <br /></td></tr>
-<tr class="memitem:a280351dc32d6086d1edbbb0728d020e4" id="r_a280351dc32d6086d1edbbb0728d020e4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFingerprint.html">Fingerprint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a280351dc32d6086d1edbbb0728d020e4">sslCertFingerprint</a> (const X509 *cert, <a class="el" href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>)</td></tr>
-<tr class="memitem:a69cae3765d48b99aee4eec1c13cb88f9" id="r_a69cae3765d48b99aee4eec1c13cb88f9"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFingerprint.html">Fingerprint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a69cae3765d48b99aee4eec1c13cb88f9">pemFileCertFingerprint</a> (const std::string &amp;path, <a class="el" href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a> <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>)</td></tr>
+<tr class="memitem:a6cb2aaf99f20b081d331c8e1df016dca" id="r_a6cb2aaf99f20b081d331c8e1df016dca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structFingerprint.html">Fingerprint</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cb2aaf99f20b081d331c8e1df016dca">sslCertFingerprint</a> (const X509 *cert, QCryptographicHash::Algorithm <a class="el" href="ArchNetworkWinsock_8cpp.html#ac765329451135abec74c45e1897abf26">type</a>)</td></tr>
 <tr class="memitem:ad922daf8219186d3fa5db7d89278a5ae" id="r_ad922daf8219186d3fa5db7d89278a5ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad922daf8219186d3fa5db7d89278a5ae">generatePemSelfSignedCert</a> (const std::string &amp;path, <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> keyLength)</td></tr>
-<tr class="memitem:a58136b80db0f779f11a128bc425b6411" id="r_a58136b80db0f779f11a128bc425b6411"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a58136b80db0f779f11a128bc425b6411">getCertLength</a> (const std::string &amp;path)</td></tr>
 <tr class="memitem:ad861c9ab209c83520015ecd34ea46d02" id="r_ad861c9ab209c83520015ecd34ea46d02"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad861c9ab209c83520015ecd34ea46d02">formatSSLFingerprintColumns</a> (const QByteArray &amp;fingerprint)</td></tr>
 <tr class="memitem:ae59df1508908bc129534f32f6865d6f0" id="r_ae59df1508908bc129534f32f6865d6f0"><td class="memItemLeft" align="right" valign="top">QString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae59df1508908bc129534f32f6865d6f0">generateFingerprintArt</a> (const QByteArray &amp;rawDigest)</td></tr>
 </table>
@@ -517,23 +515,6 @@ template&lt;class Callable&gt; </div>
 
 </div>
 </div>
-<a id="a58136b80db0f779f11a128bc425b6411" name="a58136b80db0f779f11a128bc425b6411"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a58136b80db0f779f11a128bc425b6411">&#9670;&#160;</a></span>getCertLength()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> deskflow::getCertLength </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a32533323f904a907d8019efebdd38d8c" name="a32533323f904a907d8019efebdd38d8c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a32533323f904a907d8019efebdd38d8c">&#9670;&#160;</a></span>openUtf8Path() <span class="overload">[1/3]</span></h2>
 
@@ -612,29 +593,8 @@ template&lt;class Callable&gt; </div>
 
 </div>
 </div>
-<a id="a69cae3765d48b99aee4eec1c13cb88f9" name="a69cae3765d48b99aee4eec1c13cb88f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69cae3765d48b99aee4eec1c13cb88f9">&#9670;&#160;</a></span>pemFileCertFingerprint()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="structFingerprint.html">Fingerprint</a> deskflow::pemFileCertFingerprint </td>
-          <td>(</td>
-          <td class="paramtype">const std::string &amp;</td>          <td class="paramname"><span class="paramname"><em>path</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a280351dc32d6086d1edbbb0728d020e4" name="a280351dc32d6086d1edbbb0728d020e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a280351dc32d6086d1edbbb0728d020e4">&#9670;&#160;</a></span>sslCertFingerprint()</h2>
+<a id="a6cb2aaf99f20b081d331c8e1df016dca" name="a6cb2aaf99f20b081d331c8e1df016dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cb2aaf99f20b081d331c8e1df016dca">&#9670;&#160;</a></span>sslCertFingerprint()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -647,7 +607,7 @@ template&lt;class Callable&gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78">Fingerprint::Type</a></td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
+          <td class="paramtype">QCryptographicHash::Algorithm</td>          <td class="paramname"><span class="paramname"><em>type</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">

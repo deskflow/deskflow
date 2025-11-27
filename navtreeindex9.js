@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classI18N.html":[6,0,99],
 "classI18N.html#a6e63f67b2679596d86edf5aab17c5162":[6,0,99,6],
 "classI18N.html#a7e771f002458ea1dc1d09146348bfbe7":[6,0,99,0],
 "classI18N.html#a85d2215cabeb121773139c490d932ef1":[6,0,99,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classIOSXClipboardConverter.html#a5cacc689ad2be9a984557d15e123df14":[6,0,123,4],
 "classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3":[6,0,123,1],
 "classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2":[6,0,123,0],
-"classIOSXKeyResource.html":[6,0,124],
-"classIOSXKeyResource.html#a2098d8a56e0e37a377ad07cb1f02f259":[6,0,124,5]
+"classIOSXKeyResource.html":[6,0,124]
 };

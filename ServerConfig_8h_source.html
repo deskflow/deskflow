@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.25</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.32</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -243,160 +243,171 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00116" data-start="{" data-end="}">
-<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">  116</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">disableLockToScreen</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno"><a class="line" href="classServerConfig.html#a49ef38e0132bcfd8184bc6c06834ff34">  116</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a49ef38e0132bcfd8184bc6c06834ff34">defaultLockToScreenState</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">return</span> m_DisableLockToScreen;</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>    <span class="keywordflow">return</span> m_DefaultLockToScreenState;</div>
 <div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00120" data-start="{" data-end="}">
-<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">  120</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">clipboardSharing</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno"><a class="line" href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">  120</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">disableLockToScreen</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> m_ClipboardSharing;</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span>    <span class="keywordflow">return</span> m_DisableLockToScreen;</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>  }</div>
 </div>
 <div class="foldopen" id="foldopen00124" data-start="{" data-end="}">
-<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">  124</a></span>  <span class="keywordtype">size_t</span> <a class="code hl_function" href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">clipboardSharingSize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00124" name="l00124"></a><span class="lineno"><a class="line" href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">  124</a></span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">clipboardSharing</a>()<span class="keyword"> const</span></div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">return</span> m_ClipboardSharingSize;</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>    <span class="keywordflow">return</span> m_ClipboardSharing;</div>
 <div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>  }</div>
 </div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>  <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">defaultClipboardSharingSize</a>();</div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>  <span class="comment">//</span></div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  <span class="comment">// Overrides</span></div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="comment">//</span></div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a6bb4661131a1a3558c8eb3e608612044">save</a>(<span class="keyword">const</span> QString &amp;fileName) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#acd5f2656049bc18e82331130b141f6ad">screenExists</a>(<span class="keyword">const</span> QString &amp;screenName) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#a6bb4661131a1a3558c8eb3e608612044">save</a>(QFile &amp;file) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43">isFull</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span> </div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  <span class="comment">//</span></div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="comment">// New methods</span></div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <span class="comment">//</span></div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c">commit</a>();</div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358">numScreens</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  QString <a class="code hl_function" href="classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93">getServerName</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9">updateServerName</a>();</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  QString <a class="code hl_function" href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">configFile</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">useExternalConfig</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33">addClient</a>(<span class="keyword">const</span> QString &amp;clientName);</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keywordtype">void</span> recall();</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  <span class="keywordtype">void</span> setupScreens();</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <a class="code hl_class" href="classQSettingsProxy.html">QSettingsProxy</a> &amp;settings();</div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <a class="code hl_class" href="classScreenList.html">ScreenList</a> &amp;<a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>()</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  {</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>    <span class="keywordflow">return</span> m_Screens;</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  }</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <span class="keywordtype">void</span> setScreens(<span class="keyword">const</span> ScreenList &amp;<a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>)</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  {</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    m_Screens = <a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  }</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> addScreen(<span class="keyword">const</span> Screen &amp;screen)</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  {</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    m_Screens.append(screen);</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  }</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keywordtype">void</span> setNumColumns(<span class="keywordtype">int</span> n)</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  {</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    m_Columns = n;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  }</div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keywordtype">void</span> setNumRows(<span class="keywordtype">int</span> n)</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  {</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    m_Rows = n;</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  }</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keywordtype">void</span> haveHeartbeat(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  {</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    m_HasHeartbeat = on;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  }</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keywordtype">void</span> setHeartbeat(<span class="keywordtype">int</span> val)</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    m_Heartbeat = val;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  }</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <span class="keywordtype">void</span> setProtocol(<a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> val)</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    m_Protocol = val;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  }</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  <span class="keywordtype">void</span> setRelativeMouseMoves(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    m_RelativeMouseMoves = on;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  }</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keywordtype">void</span> setWin32KeepForeground(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    m_Win32KeepForeground = on;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  }</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="keywordtype">void</span> haveSwitchDelay(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  {</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    m_HasSwitchDelay = on;</div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  }</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keywordtype">void</span> setSwitchDelay(<span class="keywordtype">int</span> val)</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  {</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    m_SwitchDelay = val;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  }</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="keywordtype">void</span> haveSwitchDoubleTap(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  {</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    m_HasSwitchDoubleTap = on;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  }</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordtype">void</span> setSwitchDoubleTap(<span class="keywordtype">int</span> val)</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    m_SwitchDoubleTap = val;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  }</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="keywordtype">void</span> setSwitchCorner(<span class="keywordtype">int</span> c, <span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  {</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    m_SwitchCorners[c] = on;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  }</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordtype">void</span> setSwitchCornerSize(<span class="keywordtype">int</span> val)</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  {</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    m_SwitchCornerSize = val;</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  }</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keywordtype">void</span> setDisableLockToScreen(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  {</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    m_DisableLockToScreen = on;</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  }</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="keywordtype">void</span> setClipboardSharing(<span class="keywordtype">bool</span> on)</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  {</div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    m_ClipboardSharing = on;</div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  }</div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keywordtype">void</span> setConfigFile(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">configFile</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  <span class="keywordtype">void</span> setUseExternalConfig(<span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">useExternalConfig</a>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>  <span class="keywordtype">size_t</span> setClipboardSharingSize(<span class="keywordtype">size_t</span> size);</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  QList&lt;bool&gt; &amp;<a class="code hl_function" href="classServerConfig.html#a2519d8532c26b1f551b58f0d9059913a">switchCorners</a>()</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  {</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>    <span class="keywordflow">return</span> m_SwitchCorners;</div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>  }</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  <a class="code hl_typedef" href="Hotkey_8h.html#a57a9f8448d931e69feadebf463229218">HotkeyList</a> &amp;<a class="code hl_function" href="classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8">hotkeys</a>()</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  {</div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>    <span class="keywordflow">return</span> m_Hotkeys;</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  }</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  <span class="keywordtype">int</span> adjacentScreenIndex(<span class="keywordtype">int</span> idx, <span class="keywordtype">int</span> deltaColumn, <span class="keywordtype">int</span> deltaRow) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  <span class="keywordtype">bool</span> findScreenName(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <span class="keywordtype">int</span> &amp;index);</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>  <span class="keywordtype">bool</span> fixNoServer(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <span class="keywordtype">int</span> &amp;index);</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span> </div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  <span class="keywordtype">bool</span> m_HasHeartbeat = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>  <span class="keywordtype">int</span> m_Heartbeat = 0;</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> m_Protocol = <a class="code hl_variable" href="namespacedeskflow_1_1gui.html#abcbdcbeeb5309fe706a35d40a3c1c719">deskflow::gui::kDefaultProtocol</a>;</div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  <span class="keywordtype">bool</span> m_RelativeMouseMoves = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keywordtype">bool</span> m_Win32KeepForeground = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keywordtype">bool</span> m_HasSwitchDelay = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>  <span class="keywordtype">int</span> m_SwitchDelay = 0;</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>  <span class="keywordtype">bool</span> m_HasSwitchDoubleTap = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  <span class="keywordtype">int</span> m_SwitchDoubleTap = 0;</div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  <span class="keywordtype">int</span> m_SwitchCornerSize = 0;</div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  <span class="keywordtype">bool</span> m_DisableLockToScreen = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  <span class="keywordtype">bool</span> m_ClipboardSharing = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  QString m_ClientAddress = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  QList&lt;bool&gt; m_SwitchCorners;</div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  <a class="code hl_typedef" href="Hotkey_8h.html#a57a9f8448d931e69feadebf463229218">HotkeyList</a> m_Hotkeys;</div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span> </div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>  ScreenList m_Screens;</div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  <span class="keywordtype">int</span> m_Columns;</div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="keywordtype">int</span> m_Rows;</div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordtype">size_t</span> m_ClipboardSharingSize = <a class="code hl_function" href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">defaultClipboardSharingSize</a>();</div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>};</div>
+<div class="foldopen" id="foldopen00128" data-start="{" data-end="}">
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno"><a class="line" href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">  128</a></span>  <span class="keywordtype">size_t</span> <a class="code hl_function" href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">clipboardSharingSize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    <span class="keywordflow">return</span> m_ClipboardSharingSize;</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>  }</div>
 </div>
-<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span> </div>
-<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>QTextStream &amp;<a class="code hl_function" href="ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2">operator&lt;&lt;</a>(QTextStream &amp;outStream, <span class="keyword">const</span> <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;config);</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>  <span class="keyword">static</span> <span class="keywordtype">size_t</span> <a class="code hl_function" href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">defaultClipboardSharingSize</a>();</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span> </div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>  <span class="comment">// Overrides</span></div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a6bb4661131a1a3558c8eb3e608612044">save</a>(<span class="keyword">const</span> QString &amp;fileName) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#acd5f2656049bc18e82331130b141f6ad">screenExists</a>(<span class="keyword">const</span> QString &amp;screenName) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#a6bb4661131a1a3558c8eb3e608612044">save</a>(QFile &amp;file) <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43">isFull</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>  <span class="comment">// New methods</span></div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>  <span class="comment">//</span></div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c">commit</a>();</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>  <span class="keywordtype">int</span> <a class="code hl_function" href="classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358">numScreens</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>  QString <a class="code hl_function" href="classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93">getServerName</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9">updateServerName</a>();</div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>  QString <a class="code hl_function" href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">configFile</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">useExternalConfig</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33">addClient</a>(<span class="keyword">const</span> QString &amp;clientName);</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span> </div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>  <span class="keywordtype">void</span> recall();</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>  <span class="keywordtype">void</span> setupScreens();</div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>  <a class="code hl_class" href="classQSettingsProxy.html">QSettingsProxy</a> &amp;settings();</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>  <a class="code hl_class" href="classScreenList.html">ScreenList</a> &amp;<a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>()</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>  {</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>    <span class="keywordflow">return</span> m_Screens;</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  }</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>  <span class="keywordtype">void</span> setScreens(<span class="keyword">const</span> ScreenList &amp;<a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>)</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>  {</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>    m_Screens = <a class="code hl_function" href="classServerConfig.html#a46add15793db9cff86acb247e875134a">screens</a>;</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>  }</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keywordtype">void</span> addScreen(<span class="keyword">const</span> Screen &amp;screen)</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  {</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>    m_Screens.append(screen);</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>  }</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keywordtype">void</span> setNumColumns(<span class="keywordtype">int</span> n)</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>  {</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>    m_Columns = n;</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  }</div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keywordtype">void</span> setNumRows(<span class="keywordtype">int</span> n)</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  {</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>    m_Rows = n;</div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  }</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <span class="keywordtype">void</span> haveHeartbeat(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  {</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>    m_HasHeartbeat = on;</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  }</div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <span class="keywordtype">void</span> setHeartbeat(<span class="keywordtype">int</span> val)</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    m_Heartbeat = val;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  }</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  <span class="keywordtype">void</span> setProtocol(<a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> val)</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  {</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>    m_Protocol = val;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  }</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <span class="keywordtype">void</span> setRelativeMouseMoves(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  {</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>    m_RelativeMouseMoves = on;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  }</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  <span class="keywordtype">void</span> setWin32KeepForeground(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  {</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>    m_Win32KeepForeground = on;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  }</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <span class="keywordtype">void</span> haveSwitchDelay(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  {</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>    m_HasSwitchDelay = on;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  }</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="keywordtype">void</span> setSwitchDelay(<span class="keywordtype">int</span> val)</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  {</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    m_SwitchDelay = val;</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  }</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  <span class="keywordtype">void</span> haveSwitchDoubleTap(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  {</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>    m_HasSwitchDoubleTap = on;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  }</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="keywordtype">void</span> setSwitchDoubleTap(<span class="keywordtype">int</span> val)</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  {</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>    m_SwitchDoubleTap = val;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  }</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  <span class="keywordtype">void</span> setSwitchCorner(<span class="keywordtype">int</span> c, <span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  {</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    m_SwitchCorners[c] = on;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  }</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  <span class="keywordtype">void</span> setSwitchCornerSize(<span class="keywordtype">int</span> val)</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  {</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    m_SwitchCornerSize = val;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  }</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>  <span class="keywordtype">void</span> setDefaultLockToScreenState(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>  {</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>    m_DefaultLockToScreenState = on;</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>  }</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>  <span class="keywordtype">void</span> setDisableLockToScreen(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>  {</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>    m_DisableLockToScreen = on;</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>  }</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>  <span class="keywordtype">void</span> setClipboardSharing(<span class="keywordtype">bool</span> on)</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>  {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>    m_ClipboardSharing = on;</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>  }</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>  <span class="keywordtype">void</span> setConfigFile(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">configFile</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>  <span class="keywordtype">void</span> setUseExternalConfig(<span class="keywordtype">bool</span> <a class="code hl_function" href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">useExternalConfig</a>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>  <span class="keywordtype">size_t</span> setClipboardSharingSize(<span class="keywordtype">size_t</span> size);</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>  QList&lt;bool&gt; &amp;<a class="code hl_function" href="classServerConfig.html#a2519d8532c26b1f551b58f0d9059913a">switchCorners</a>()</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>  {</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>    <span class="keywordflow">return</span> m_SwitchCorners;</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>  }</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>  <a class="code hl_typedef" href="Hotkey_8h.html#a57a9f8448d931e69feadebf463229218">HotkeyList</a> &amp;<a class="code hl_function" href="classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8">hotkeys</a>()</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>  {</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>    <span class="keywordflow">return</span> m_Hotkeys;</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>  }</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>  <span class="keywordtype">int</span> adjacentScreenIndex(<span class="keywordtype">int</span> idx, <span class="keywordtype">int</span> deltaColumn, <span class="keywordtype">int</span> deltaRow) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>  <span class="keywordtype">bool</span> findScreenName(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <span class="keywordtype">int</span> &amp;index);</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>  <span class="keywordtype">bool</span> fixNoServer(<span class="keyword">const</span> QString &amp;<a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a>, <span class="keywordtype">int</span> &amp;index);</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span> </div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>  <span class="keywordtype">bool</span> m_HasHeartbeat = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>  <span class="keywordtype">int</span> m_Heartbeat = 0;</div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>  <a class="code hl_enumeration" href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e">NetworkProtocol</a> m_Protocol = <a class="code hl_variable" href="namespacedeskflow_1_1gui.html#abcbdcbeeb5309fe706a35d40a3c1c719">deskflow::gui::kDefaultProtocol</a>;</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>  <span class="keywordtype">bool</span> m_RelativeMouseMoves = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>  <span class="keywordtype">bool</span> m_Win32KeepForeground = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>  <span class="keywordtype">bool</span> m_HasSwitchDelay = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span>  <span class="keywordtype">int</span> m_SwitchDelay = 0;</div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>  <span class="keywordtype">bool</span> m_HasSwitchDoubleTap = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>  <span class="keywordtype">int</span> m_SwitchDoubleTap = 0;</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span>  <span class="keywordtype">int</span> m_SwitchCornerSize = 0;</div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>  <span class="keywordtype">bool</span> m_DefaultLockToScreenState = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>  <span class="keywordtype">bool</span> m_DisableLockToScreen = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>  <span class="keywordtype">bool</span> m_ClipboardSharing = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>  QString m_ClientAddress = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>  QList&lt;bool&gt; m_SwitchCorners;</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>  <a class="code hl_typedef" href="Hotkey_8h.html#a57a9f8448d931e69feadebf463229218">HotkeyList</a> m_Hotkeys;</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span> </div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>  ScreenList m_Screens;</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>  <span class="keywordtype">int</span> m_Columns;</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span>  <span class="keywordtype">int</span> m_Rows;</div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>  <span class="keywordtype">size_t</span> m_ClipboardSharingSize = <a class="code hl_function" href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">defaultClipboardSharingSize</a>();</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>};</div>
+</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span> </div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>QTextStream &amp;<a class="code hl_function" href="ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2">operator&lt;&lt;</a>(QTextStream &amp;outStream, <span class="keyword">const</span> <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> &amp;config);</div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a129068cd4154b9a162b20d566a10d8b6"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a129068cd4154b9a162b20d566a10d8b6">name</a></div><div class="ttdeci">static const struct sockaddr FAR * name</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:28</div></div>
 <div class="ttc" id="aHotkey_8h_html"><div class="ttname"><a href="Hotkey_8h.html">Hotkey.h</a></div></div>
 <div class="ttc" id="aHotkey_8h_html_a57a9f8448d931e69feadebf463229218"><div class="ttname"><a href="Hotkey_8h.html#a57a9f8448d931e69feadebf463229218">HotkeyList</a></div><div class="ttdeci">QList&lt; Hotkey &gt; HotkeyList</div><div class="ttdef"><b>Definition</b> Hotkey.h:68</div></div>
@@ -406,7 +417,7 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <div class="ttc" id="aNetworkProtocol_8h_html_a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6"><div class="ttname"><a href="NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6">NetworkProtocol::Barrier</a></div><div class="ttdeci">@ Barrier</div><div class="ttdef"><b>Definition</b> NetworkProtocol.h:12</div></div>
 <div class="ttc" id="aScreenConfig_8h_html"><div class="ttname"><a href="ScreenConfig_8h.html">ScreenConfig.h</a></div></div>
 <div class="ttc" id="aScreenList_8h_html"><div class="ttname"><a href="ScreenList_8h.html">ScreenList.h</a></div></div>
-<div class="ttc" id="aServerConfig_8h_html_a627940781f81e0b7434cd8f444373ab2"><div class="ttname"><a href="ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2">operator&lt;&lt;</a></div><div class="ttdeci">QTextStream &amp; operator&lt;&lt;(QTextStream &amp;outStream, const ServerConfig &amp;config)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:218</div></div>
+<div class="ttc" id="aServerConfig_8h_html_a627940781f81e0b7434cd8f444373ab2"><div class="ttname"><a href="ServerConfig_8h.html#a627940781f81e0b7434cd8f444373ab2">operator&lt;&lt;</a></div><div class="ttdeci">QTextStream &amp; operator&lt;&lt;(QTextStream &amp;outStream, const ServerConfig &amp;config)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:221</div></div>
 <div class="ttc" id="aServerConfig_8h_html_a906310204d4b0df7ec6894a6a631bf4f"><div class="ttname"><a href="ServerConfig_8h.html#a906310204d4b0df7ec6894a6a631bf4f">kDefaultRows</a></div><div class="ttdeci">const auto kDefaultRows</div><div class="ttdef"><b>Definition</b> ServerConfig.h:19</div></div>
 <div class="ttc" id="aServerConfig_8h_html_af90325e0d999b56ac0456671321114aa"><div class="ttname"><a href="ServerConfig_8h.html#af90325e0d999b56ac0456671321114aa">kDefaultColumns</a></div><div class="ttdeci">const auto kDefaultColumns</div><div class="ttdef"><b>Definition</b> ServerConfig.h:18</div></div>
 <div class="ttc" id="aclassQSettingsProxy_html"><div class="ttname"><a href="classQSettingsProxy.html">QSettingsProxy</a></div><div class="ttdef"><b>Definition</b> QSettingsProxy.h:14</div></div>
@@ -415,39 +426,40 @@ $(function(){initNavTree('ServerConfig_8h_source.html','',''); });
 <div class="ttc" id="aclassServerConfigDialog_html"><div class="ttname"><a href="classServerConfigDialog.html">ServerConfigDialog</a></div><div class="ttdef"><b>Definition</b> ServerConfigDialog.h:23</div></div>
 <div class="ttc" id="aclassServerConfig_html"><div class="ttname"><a href="classServerConfig.html">ServerConfig</a></div><div class="ttdef"><b>Definition</b> ServerConfig.h:35</div></div>
 <div class="ttc" id="aclassServerConfig_html_a03b3f88897a63eda3d7b2a0fc48a5fd5"><div class="ttname"><a href="classServerConfig.html#a03b3f88897a63eda3d7b2a0fc48a5fd5">ServerConfig::hasHeartbeat</a></div><div class="ttdeci">bool hasHeartbeat() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:64</div></div>
-<div class="ttc" id="aclassServerConfig_html_a122a43e53760a00895e838b45c5d7394"><div class="ttname"><a href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">ServerConfig::clipboardSharingSize</a></div><div class="ttdeci">size_t clipboardSharingSize() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:124</div></div>
-<div class="ttc" id="aclassServerConfig_html_a1f4008c9eaac54fe0846b5755c2abdb2"><div class="ttname"><a href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">ServerConfig::useExternalConfig</a></div><div class="ttdeci">bool useExternalConfig() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:338</div></div>
+<div class="ttc" id="aclassServerConfig_html_a122a43e53760a00895e838b45c5d7394"><div class="ttname"><a href="classServerConfig.html#a122a43e53760a00895e838b45c5d7394">ServerConfig::clipboardSharingSize</a></div><div class="ttdeci">size_t clipboardSharingSize() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:128</div></div>
+<div class="ttc" id="aclassServerConfig_html_a1f4008c9eaac54fe0846b5755c2abdb2"><div class="ttname"><a href="classServerConfig.html#a1f4008c9eaac54fe0846b5755c2abdb2">ServerConfig::useExternalConfig</a></div><div class="ttdeci">bool useExternalConfig() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:343</div></div>
 <div class="ttc" id="aclassServerConfig_html_a2519d8532c26b1f551b58f0d9059913a"><div class="ttname"><a href="classServerConfig.html#a2519d8532c26b1f551b58f0d9059913a">ServerConfig::switchCorners</a></div><div class="ttdeci">const QList&lt; bool &gt; &amp; switchCorners() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:108</div></div>
 <div class="ttc" id="aclassServerConfig_html_a302bb0f6af4598923574f2be20b03615"><div class="ttname"><a href="classServerConfig.html#a302bb0f6af4598923574f2be20b03615">ServerConfig::win32KeepForeground</a></div><div class="ttdeci">bool win32KeepForeground() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:80</div></div>
 <div class="ttc" id="aclassServerConfig_html_a35a947fb16ea7790ab0cf7443580dfcd"><div class="ttname"><a href="classServerConfig.html#a35a947fb16ea7790ab0cf7443580dfcd">ServerConfig::switchCornerSize</a></div><div class="ttdeci">int switchCornerSize() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:104</div></div>
 <div class="ttc" id="aclassServerConfig_html_a39ecfa64d36010361187b8f12726ccb8"><div class="ttname"><a href="classServerConfig.html#a39ecfa64d36010361187b8f12726ccb8">ServerConfig::hotkeys</a></div><div class="ttdeci">const HotkeyList &amp; hotkeys() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:112</div></div>
 <div class="ttc" id="aclassServerConfig_html_a46add15793db9cff86acb247e875134a"><div class="ttname"><a href="classServerConfig.html#a46add15793db9cff86acb247e875134a">ServerConfig::screens</a></div><div class="ttdeci">const ScreenList &amp; screens() const override</div><div class="ttdef"><b>Definition</b> ServerConfig.h:48</div></div>
+<div class="ttc" id="aclassServerConfig_html_a49ef38e0132bcfd8184bc6c06834ff34"><div class="ttname"><a href="classServerConfig.html#a49ef38e0132bcfd8184bc6c06834ff34">ServerConfig::defaultLockToScreenState</a></div><div class="ttdeci">bool defaultLockToScreenState() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:116</div></div>
 <div class="ttc" id="aclassServerConfig_html_a4d13a635873af215a47ed296142e7d76"><div class="ttname"><a href="classServerConfig.html#a4d13a635873af215a47ed296142e7d76">ServerConfig::switchDelay</a></div><div class="ttdeci">int switchDelay() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:88</div></div>
 <div class="ttc" id="aclassServerConfig_html_a57ca9109e2da3343064777dee953741b"><div class="ttname"><a href="classServerConfig.html#a57ca9109e2da3343064777dee953741b">ServerConfig::ServerConfigDialog</a></div><div class="ttdeci">friend class ServerConfigDialog</div><div class="ttdef"><b>Definition</b> ServerConfig.h:36</div></div>
-<div class="ttc" id="aclassServerConfig_html_a581ecb6f47b7e1ae3bea4abec296c177"><div class="ttname"><a href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">ServerConfig::defaultClipboardSharingSize</a></div><div class="ttdeci">static size_t defaultClipboardSharingSize()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:421</div></div>
+<div class="ttc" id="aclassServerConfig_html_a581ecb6f47b7e1ae3bea4abec296c177"><div class="ttname"><a href="classServerConfig.html#a581ecb6f47b7e1ae3bea4abec296c177">ServerConfig::defaultClipboardSharingSize</a></div><div class="ttdeci">static size_t defaultClipboardSharingSize()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:426</div></div>
 <div class="ttc" id="aclassServerConfig_html_a5aab296dceacaa7cf3e5758fe35f8e4e"><div class="ttname"><a href="classServerConfig.html#a5aab296dceacaa7cf3e5758fe35f8e4e">ServerConfig::operator==</a></div><div class="ttdeci">bool operator==(const ServerConfig &amp;sc) const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:54</div></div>
-<div class="ttc" id="aclassServerConfig_html_a627940781f81e0b7434cd8f444373ab2"><div class="ttname"><a href="classServerConfig.html#a627940781f81e0b7434cd8f444373ab2">ServerConfig::operator&lt;&lt;</a></div><div class="ttdeci">friend QTextStream &amp; operator&lt;&lt;(QTextStream &amp;outStream, const ServerConfig &amp;config)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:218</div></div>
+<div class="ttc" id="aclassServerConfig_html_a627940781f81e0b7434cd8f444373ab2"><div class="ttname"><a href="classServerConfig.html#a627940781f81e0b7434cd8f444373ab2">ServerConfig::operator&lt;&lt;</a></div><div class="ttdeci">friend QTextStream &amp; operator&lt;&lt;(QTextStream &amp;outStream, const ServerConfig &amp;config)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:221</div></div>
 <div class="ttc" id="aclassServerConfig_html_a6bb4661131a1a3558c8eb3e608612044"><div class="ttname"><a href="classServerConfig.html#a6bb4661131a1a3558c8eb3e608612044">ServerConfig::save</a></div><div class="ttdeci">bool save(const QString &amp;fileName) const override</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:42</div></div>
-<div class="ttc" id="aclassServerConfig_html_a6cf4ab864768614fa085a1a8de6da358"><div class="ttname"><a href="classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358">ServerConfig::numScreens</a></div><div class="ttdeci">int numScreens() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:306</div></div>
+<div class="ttc" id="aclassServerConfig_html_a6cf4ab864768614fa085a1a8de6da358"><div class="ttname"><a href="classServerConfig.html#a6cf4ab864768614fa085a1a8de6da358">ServerConfig::numScreens</a></div><div class="ttdeci">int numScreens() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:311</div></div>
 <div class="ttc" id="aclassServerConfig_html_a71142f11b4d0d60127f4a9e54fc0b956"><div class="ttname"><a href="classServerConfig.html#a71142f11b4d0d60127f4a9e54fc0b956">ServerConfig::protocol</a></div><div class="ttdeci">NetworkProtocol protocol() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:72</div></div>
 <div class="ttc" id="aclassServerConfig_html_a7e70843d41deda17e8275886f7329748"><div class="ttname"><a href="classServerConfig.html#a7e70843d41deda17e8275886f7329748">ServerConfig::relativeMouseMoves</a></div><div class="ttdeci">bool relativeMouseMoves() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:76</div></div>
-<div class="ttc" id="aclassServerConfig_html_a890ced68d8b042f26b91136b53d2e6a9"><div class="ttname"><a href="classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9">ServerConfig::updateServerName</a></div><div class="ttdeci">void updateServerName()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:323</div></div>
-<div class="ttc" id="aclassServerConfig_html_aa4860f00cb14e10ad721b4474bf9fa6a"><div class="ttname"><a href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">ServerConfig::disableLockToScreen</a></div><div class="ttdeci">bool disableLockToScreen() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:116</div></div>
+<div class="ttc" id="aclassServerConfig_html_a890ced68d8b042f26b91136b53d2e6a9"><div class="ttname"><a href="classServerConfig.html#a890ced68d8b042f26b91136b53d2e6a9">ServerConfig::updateServerName</a></div><div class="ttdeci">void updateServerName()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:328</div></div>
+<div class="ttc" id="aclassServerConfig_html_aa4860f00cb14e10ad721b4474bf9fa6a"><div class="ttname"><a href="classServerConfig.html#aa4860f00cb14e10ad721b4474bf9fa6a">ServerConfig::disableLockToScreen</a></div><div class="ttdeci">bool disableLockToScreen() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:120</div></div>
 <div class="ttc" id="aclassServerConfig_html_aa4cfe2ba697a83cc5f2e8e405e370525"><div class="ttname"><a href="classServerConfig.html#aa4cfe2ba697a83cc5f2e8e405e370525">ServerConfig::hasSwitchDelay</a></div><div class="ttdeci">bool hasSwitchDelay() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:84</div></div>
 <div class="ttc" id="aclassServerConfig_html_ab040a16da46bd870409da3e346ddf359"><div class="ttname"><a href="classServerConfig.html#ab040a16da46bd870409da3e346ddf359">ServerConfig::hasSwitchDoubleTap</a></div><div class="ttdeci">bool hasSwitchDoubleTap() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:92</div></div>
-<div class="ttc" id="aclassServerConfig_html_ab158319dfca18b141178adf7e8c6bc43"><div class="ttname"><a href="classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43">ServerConfig::isFull</a></div><div class="ttdeci">bool isFull() const override</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:343</div></div>
+<div class="ttc" id="aclassServerConfig_html_ab158319dfca18b141178adf7e8c6bc43"><div class="ttname"><a href="classServerConfig.html#ab158319dfca18b141178adf7e8c6bc43">ServerConfig::isFull</a></div><div class="ttdeci">bool isFull() const override</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:348</div></div>
 <div class="ttc" id="aclassServerConfig_html_abd4a8f5e8607088ad68ded7b099a0bb1"><div class="ttname"><a href="classServerConfig.html#abd4a8f5e8607088ad68ded7b099a0bb1">ServerConfig::numColumns</a></div><div class="ttdeci">int numColumns() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:56</div></div>
 <div class="ttc" id="aclassServerConfig_html_abe4249e71bb58791526297608989b20f"><div class="ttname"><a href="classServerConfig.html#abe4249e71bb58791526297608989b20f">ServerConfig::ServerConfig</a></div><div class="ttdeci">ServerConfig(int columns=kDefaultColumns, int rows=kDefaultRows)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:37</div></div>
 <div class="ttc" id="aclassServerConfig_html_abea939ec81a74b3ef04f9cc687edd04a"><div class="ttname"><a href="classServerConfig.html#abea939ec81a74b3ef04f9cc687edd04a">ServerConfig::~ServerConfig</a></div><div class="ttdeci">~ServerConfig() override=default</div></div>
 <div class="ttc" id="aclassServerConfig_html_ac050f77b53bfed677f390ed406f5b886"><div class="ttname"><a href="classServerConfig.html#ac050f77b53bfed677f390ed406f5b886">ServerConfig::switchCorner</a></div><div class="ttdeci">bool switchCorner(int c) const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:100</div></div>
 <div class="ttc" id="aclassServerConfig_html_ac6b5e0ff511f9d7738bfe10f52dd62a9"><div class="ttname"><a href="classServerConfig.html#ac6b5e0ff511f9d7738bfe10f52dd62a9">ServerConfig::switchDoubleTap</a></div><div class="ttdeci">int switchDoubleTap() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:96</div></div>
-<div class="ttc" id="aclassServerConfig_html_acd5f2656049bc18e82331130b141f6ad"><div class="ttname"><a href="classServerConfig.html#acd5f2656049bc18e82331130b141f6ad">ServerConfig::screenExists</a></div><div class="ttdeci">bool screenExists(const QString &amp;screenName) const override</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:357</div></div>
-<div class="ttc" id="aclassServerConfig_html_ad2ce0ba0f37e2cb755747a5528a94b33"><div class="ttname"><a href="classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33">ServerConfig::addClient</a></div><div class="ttdeci">void addClient(const QString &amp;clientName)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:371</div></div>
+<div class="ttc" id="aclassServerConfig_html_acd5f2656049bc18e82331130b141f6ad"><div class="ttname"><a href="classServerConfig.html#acd5f2656049bc18e82331130b141f6ad">ServerConfig::screenExists</a></div><div class="ttdeci">bool screenExists(const QString &amp;screenName) const override</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:362</div></div>
+<div class="ttc" id="aclassServerConfig_html_ad2ce0ba0f37e2cb755747a5528a94b33"><div class="ttname"><a href="classServerConfig.html#ad2ce0ba0f37e2cb755747a5528a94b33">ServerConfig::addClient</a></div><div class="ttdeci">void addClient(const QString &amp;clientName)</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:376</div></div>
 <div class="ttc" id="aclassServerConfig_html_ad3b599bd08a258a8b7cb960ce00e8c87"><div class="ttname"><a href="classServerConfig.html#ad3b599bd08a258a8b7cb960ce00e8c87">ServerConfig::heartbeat</a></div><div class="ttdeci">int heartbeat() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:68</div></div>
-<div class="ttc" id="aclassServerConfig_html_ad425434f99c8b24e4488f4ed148166aa"><div class="ttname"><a href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">ServerConfig::clipboardSharing</a></div><div class="ttdeci">bool clipboardSharing() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:120</div></div>
-<div class="ttc" id="aclassServerConfig_html_adc84a7a50be3f77d416f0ba63e299c93"><div class="ttname"><a href="classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93">ServerConfig::getServerName</a></div><div class="ttdeci">QString getServerName() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:318</div></div>
-<div class="ttc" id="aclassServerConfig_html_af4415eb8b591c65fe85e83efed83ce68"><div class="ttname"><a href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">ServerConfig::configFile</a></div><div class="ttdeci">QString configFile() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:333</div></div>
-<div class="ttc" id="aclassServerConfig_html_af7b4b97c9d720ee4ffe088e97df5616c"><div class="ttname"><a href="classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c">ServerConfig::commit</a></div><div class="ttdeci">void commit()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:98</div></div>
+<div class="ttc" id="aclassServerConfig_html_ad425434f99c8b24e4488f4ed148166aa"><div class="ttname"><a href="classServerConfig.html#ad425434f99c8b24e4488f4ed148166aa">ServerConfig::clipboardSharing</a></div><div class="ttdeci">bool clipboardSharing() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:124</div></div>
+<div class="ttc" id="aclassServerConfig_html_adc84a7a50be3f77d416f0ba63e299c93"><div class="ttname"><a href="classServerConfig.html#adc84a7a50be3f77d416f0ba63e299c93">ServerConfig::getServerName</a></div><div class="ttdeci">QString getServerName() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:323</div></div>
+<div class="ttc" id="aclassServerConfig_html_af4415eb8b591c65fe85e83efed83ce68"><div class="ttname"><a href="classServerConfig.html#af4415eb8b591c65fe85e83efed83ce68">ServerConfig::configFile</a></div><div class="ttdeci">QString configFile() const</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:338</div></div>
+<div class="ttc" id="aclassServerConfig_html_af7b4b97c9d720ee4ffe088e97df5616c"><div class="ttname"><a href="classServerConfig.html#af7b4b97c9d720ee4ffe088e97df5616c">ServerConfig::commit</a></div><div class="ttdeci">void commit()</div><div class="ttdef"><b>Definition</b> ServerConfig.cpp:99</div></div>
 <div class="ttc" id="aclassServerConfig_html_afe2a6dfcba324a343229cf583c515e02"><div class="ttname"><a href="classServerConfig.html#afe2a6dfcba324a343229cf583c515e02">ServerConfig::numRows</a></div><div class="ttdeci">int numRows() const</div><div class="ttdef"><b>Definition</b> ServerConfig.h:60</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1IServerConfig_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1IServerConfig.html">deskflow::gui::IServerConfig</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:18</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>

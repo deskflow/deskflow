@@ -1,13 +1,15 @@
 <map id="src/lib/gui/dialogs/FingerprintDialog.h" name="src/lib/gui/dialogs/FingerprintDialog.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="150,5,286,44"/>
-<area shape="rect" id="Node000002" href="$Fingerprint_8h.html" title=" " alt="" coords="44,92,160,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,46,134,85,130,81,192,43"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="184,92,252,117"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="220,42,220,77,216,75,216,47"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="276,92,405,117"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="248,42,312,83,307,84,247,47"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="240,5,375,44"/>
+<area shape="rect" id="Node000002" href="$Fingerprint_8h.html" title=" " alt="" coords="134,92,249,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="282,43,223,85,220,81,277,46"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="273,92,342,117"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="309,43,310,78,305,75,306,47"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="365,92,495,117"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="338,42,402,83,396,83,336,47"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,165,95,189"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,116,69,154,65,150,91,118"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="119,165,189,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="112,115,139,152,134,152,109,120"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,119,88,160,86,155,166,116"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="119,165,264,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="193,115,194,150,189,148,189,119"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="287,165,357,189"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="214,115,290,157,285,157,212,120"/>
 </map>

@@ -1,11 +1,13 @@
 <map id="src/lib/net/FingerprintDatabase.h" name="src/lib/net/FingerprintDatabase.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="45,5,255,30"/>
-<area shape="rect" id="Node000002" href="$Fingerprint_8h.html" title=" " alt="" coords="55,78,149,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,29,120,67,116,64,140,33"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="173,78,226,103"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="159,28,185,65,180,65,157,33"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="134,5,344,30"/>
+<area shape="rect" id="Node000002" href="$Fingerprint_8h.html" title=" " alt="" coords="145,78,238,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,29,210,67,206,63,229,32"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="262,78,315,103"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="248,28,275,66,269,65,247,33"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,151,95,175"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="96,102,69,140,65,136,91,104"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="119,151,189,175"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="112,101,139,138,134,138,109,106"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,105,88,146,86,141,166,102"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="119,151,264,175"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="193,101,194,136,189,134,189,105"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="287,151,357,175"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="214,101,290,143,285,143,212,106"/>
 </map>

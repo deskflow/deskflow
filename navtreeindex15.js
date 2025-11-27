@@ -1,5 +1,8 @@
 var NAVTREEINDEX15 =
 {
+"classSettings.html#acc77a634afaed3905e6545630c71d5f2":[6,0,207,12],
+"classSettings.html#ad3ba2f3025c98073226c0d896158ad17":[6,0,207,31],
+"classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8":[6,0,207,14],
 "classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a":[6,0,207,10],
 "classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,207,18],
 "classSettings.html#ae4b815a70e84d0dd40b295cb1d0d6a9d":[6,0,207,24],
@@ -246,8 +249,5 @@ var NAVTREEINDEX15 =
 "classUnicode.html#af35f349e90c98d8e51404b7f8ef63166":[6,0,238,4],
 "classUnknownClientException.html":[6,0,239],
 "classUnknownClientException.html#ab7fe867664f6c955d5ab0634579f8607":[6,0,239,3],
-"classUnknownClientException.html#ac7609989daccff293c204c39204fd954":[6,0,239,1],
-"classUnknownClientException.html#ad2020a088749677f2e636cba876a23d0":[6,0,239,0],
-"classUnknownClientException.html#ae89842e669a44aaa2cd0a882d8a7dbdf":[6,0,239,2],
-"classVersionChecker.html":[6,0,240]
+"classUnknownClientException.html#ac7609989daccff293c204c39204fd954":[6,0,239,1]
 };

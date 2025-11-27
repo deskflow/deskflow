@@ -92,7 +92,7 @@ var searchData=
   ['interrupt_89',['Interrupt',['../classIArchMultithread.html#ac57c283e8bbc214a527ac279ea3e68f1a1ce92afa20b1c7f6a4e5d0dc73e5c92a',1,'IArchMultithread']]],
   ['interrupt_90',['interrupt',['../EventQueue_8cpp.html#a3a852b93fae6ddf02f74df9a27f7a488',1,'EventQueue.cpp']]],
   ['interval_91',['Interval',['../classdeskflow_1_1server_1_1Config.html#a5adfa5b8c634f5519527a8333aa27672',1,'deskflow::server::Config']]],
-  ['invalid_92',['Invalid',['../structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c',1,'IArchNetwork::PollEventMask::Invalid'],['../structFingerprint.html#a927929ca06f2dc5736267ab4c5d9cd78a4bbb8f967da6d1a610596d7257179c2b',1,'Fingerprint::Invalid']]],
+  ['invalid_92',['Invalid',['../structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c',1,'IArchNetwork::PollEventMask']]],
   ['invalidhello_93',['invalidHello',['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a28afb3dccfc9ea4bf5d26a8d01fd1703',1,'deskflow::client::HelloBack::Deps']]],
   ['invalidprotocolexception_94',['InvalidProtocolException',['../classInvalidProtocolException.html',1,'']]],
   ['inversetransform_95',['inverseTransform',['../classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a0037cafd7326cdd026cbbad462273e13',1,'deskflow::server::Config::CellEdge']]],
