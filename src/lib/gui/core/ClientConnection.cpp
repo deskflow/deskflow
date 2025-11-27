@@ -75,6 +75,7 @@ void ClientConnection::showMessage(const QString &logLine)
   if (error == NoError)
     return;
 
+  Q_EMIT requestShowError(error, address);
   Q_EMIT messageShowing();
   m_deps->showError(m_pParent, error, address);
 }
