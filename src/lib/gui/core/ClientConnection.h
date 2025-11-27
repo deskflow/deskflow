@@ -42,6 +42,13 @@ public:
   }
 
 Q_SIGNALS:
+  /**
+   * @brief requestShowError, This signal is emitted when the client
+   * connection would like the owning process to report an error message
+   * @param error the type of error being reported
+   * @param address of the host
+   */
+  void requestShowError(deskflow::gui::messages::ClientError error, const QString &address);
   void messageShowing();
 
 private:
