@@ -22,7 +22,7 @@ public:
   struct Deps
   {
     virtual ~Deps() = default;
-    virtual messages::NewClientPromptResult
+    virtual bool
     showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false) const;
   };
 

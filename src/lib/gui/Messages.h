@@ -15,12 +15,6 @@ class QWidget;
 
 namespace deskflow::gui::messages {
 
-enum class NewClientPromptResult
-{
-  Add,
-  Ignore
-};
-
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 void raiseCriticalDialog();
@@ -33,8 +27,7 @@ void showCloseReminder(QWidget *parent);
 
 void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address);
 
-NewClientPromptResult
-showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false);
+bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false);
 
 bool showClearSettings(QWidget *parent);
 
