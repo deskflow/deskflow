@@ -7,14 +7,12 @@
 
 #include "arch/Arch.h"
 #include "base/Log.h"
-#include "common/Settings.h"
 #include "unittests/legacytests/shared/ExitTimeout.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
 #endif
 
-#include <filesystem>
 #include <gtest/gtest.h>
 
 using deskflow::test::ExitTimeout;
@@ -23,13 +21,6 @@ const auto testDir = "tmp/test";
 
 int main(int argc, char **argv)
 {
-  // HACK: Unit tests should not use the filesystem.
-  std::filesystem::create_directories(testDir);
-
-  Settings::setSettingsFile("tmp/test/settings.ini");
-  Settings::setStateFile("tmp/test/Deskflow.state");
-  Settings::setValue(Settings::Server::ExternalConfig, true);
-
   ExitTimeout exitTimeout(1, "Unit tests");
 
 #if SYSAPI_WIN32

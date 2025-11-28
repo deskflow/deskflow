@@ -151,7 +151,7 @@ private:
   void daemonIpcClientConnectionFailed();
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
-
+  void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
   /**
    * @brief showClientError
    * @param error Error Type
