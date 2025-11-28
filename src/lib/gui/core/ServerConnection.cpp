@@ -19,7 +19,7 @@ namespace deskflow::gui {
 // ServerConnection::Deps
 //
 
-messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
+bool ServerConnection::Deps::showNewClientPrompt(
     QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth
 ) const
 {
@@ -83,8 +83,6 @@ void ServerConnection::handleLogLine(const QString &logLine)
 
 void ServerConnection::handleNewClient(const QString &clientName)
 {
-  using enum messages::NewClientPromptResult;
-
   if (m_serverConfig.isFull()) {
     qDebug("server config full, skipping new client prompt for: %s", qPrintable(clientName));
     return;
@@ -103,13 +101,11 @@ void ServerConnection::handleNewClient(const QString &clientName)
   const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && requireCerts);
   m_messageShowing = false;
 
-  if (result == Add) {
+  if (result) {
     qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
     Q_EMIT configureClient(clientName);
-  } else if (result == Ignore) {
-    qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
   } else {
-    qFatal("unexpected add client result");
+    qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
   }
 
   m_connectedClients.insert(clientName);
