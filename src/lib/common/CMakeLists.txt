@@ -12,6 +12,7 @@ unset(CLIENT_BINARY)
 unset(SERVER_BINARY)
 
 add_library(common STATIC
+  Enums.h
   ExitCodes.h
   I18N.h
   I18N.cpp

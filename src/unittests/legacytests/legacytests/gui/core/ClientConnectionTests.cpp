@@ -15,14 +15,14 @@ class QWidget;
 using testing::_;
 using testing::NiceMock;
 using namespace deskflow::gui;
-using enum messages::ClientError;
+using enum deskflow::client::ErrorType;
 
 namespace {
 
 struct DepsMock : public ClientConnection::Deps
 {
   MOCK_METHOD(
-      void, showError, (QWidget * parent, messages::ClientError error, const QString &address), (const, override)
+      void, showError, (QWidget * parent, deskflow::client::ErrorType error, const QString &address), (const, override)
   );
 };
 
