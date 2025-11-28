@@ -41,6 +41,7 @@ private:
   QWidget *m_pParent;
   IServerConfig &m_serverConfig;
   QSet<QString> m_connectedClients;
+  QSet<QString> m_ignoredClients;
   bool m_messageShowing = false;
   bool m_serverConfigDialogVisible = false;
 };
