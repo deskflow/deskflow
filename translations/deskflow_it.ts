@@ -688,14 +688,6 @@ Nomi validi:
         <translation>No, grazie</translation>
     </message>
     <message>
-        <source>Check for updates</source>
-        <translation>Controlla aggiornamenti</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Vuoi controllare gli aggiornamenti all&apos;avvio di %1?&lt;/p&gt;&lt;p&gt;Il controllo degli aggiornamenti richiede una connessione Internet.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Background service offline</source>
         <translation>Servizio in background offline</translation>
     </message>
@@ -729,6 +721,34 @@ Nomi validi:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">impossibile leggere la chiave RSA dal file del certificato: %1</translation>
+    </message>
+    <message>
+        <source>Some optional %1 features require an Internet connection. Would you like to enable them?</source>
+        <translation type="unfinished">Alcune funzionalità opzionali di %1 richiedono una connessione Internet. Vuoi abilitarle?</translation>
+    </message>
+    <message>
+        <source>Choose which features to enable:</source>
+        <translation type="unfinished">Scegli quali funzionalità abilitare:</translation>
+    </message>
+    <message>
+        <source>Check for new versions when app starts</source>
+        <translation type="unfinished">Controlla la disponibilità di nuove versioni all’avvio dell’app</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest</source>
+        <translation type="unfinished">Partecipa al concorso di popolarità</translation>
+    </message>
+    <message>
+        <source>Requires the version check. The popularity contest is based on the user agent.</source>
+        <translation type="unfinished">Richiede il controllo della versione. Il concorso di popolarità si basa sullo user-agent.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
     </message>
 </context>
 <context>
@@ -1286,6 +1306,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Richiede il pacchetto wl-clipboard&lt;/p&gt;&lt;p&gt;Quando si utilizza wl-clipboard v2.2.1, si verifica un bug di furto del focus che potrebbe rendere Deskflow più difficile da usare. Questo problema è stato risolto quando si utilizza il ramo master di wl-clipboard, a meno che il proprio compositore non supporti il ​​protocollo wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Partecipare al concorso di popolarità (inviare dati aggiuntivi dello user-agent)</translation>
     </message>
 </context>
 <context>

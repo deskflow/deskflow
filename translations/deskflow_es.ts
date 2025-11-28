@@ -688,14 +688,6 @@ Nombres válidos:
         <translation type="unfinished">No, gracias</translation>
     </message>
     <message>
-        <source>Check for updates</source>
-        <translation type="unfinished">Buscar actualizaciones</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;¿Desea comprobar si hay actualizaciones cuando se inicie %1?&lt;/p&gt;&lt;p&gt;Para comprobar si hay actualizaciones se requiere una conexión a Internet.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Background service offline</source>
         <translation type="unfinished">Servicio en segundo plano sin conexión</translation>
     </message>
@@ -729,6 +721,34 @@ Nombres válidos:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">No se pudo leer la clave RSA del archivo de certificado: %1</translation>
+    </message>
+    <message>
+        <source>Some optional %1 features require an Internet connection. Would you like to enable them?</source>
+        <translation type="unfinished">Algunas funciones opcionales de %1 requieren una conexión a Internet. ¿Desea activarlas?</translation>
+    </message>
+    <message>
+        <source>Choose which features to enable:</source>
+        <translation type="unfinished">Elija qué funciones activar:</translation>
+    </message>
+    <message>
+        <source>Check for new versions when app starts</source>
+        <translation type="unfinished">Comprobar si hay nuevas versiones al iniciar la aplicación</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest</source>
+        <translation type="unfinished">Participar en el concurso de popularidad</translation>
+    </message>
+    <message>
+        <source>Requires the version check. The popularity contest is based on the user agent.</source>
+        <translation type="unfinished">Requiere la comprobación de versión. El concurso de popularidad se basa en el user-agent.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
     </message>
 </context>
 <context>
@@ -1286,6 +1306,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requiere el paquete wl-clipboard&lt;/p&gt;&lt;p&gt;Al usar wl-clipboard v2.2.1, existe un error que provoca la pérdida del foco y que puede dificultar el uso de Deskflow. Este error se ha corregido al usar la rama principal de wl-clipboard, a menos que su Compositor no sea compatible con el protocolo wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Participar en el concurso de popularidad (enviar datos adicionales del user-agent)</translation>
     </message>
 </context>
 <context>

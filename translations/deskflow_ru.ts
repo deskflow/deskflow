@@ -691,14 +691,6 @@ Valid names:
         <translation>Нет спасибо</translation>
     </message>
     <message>
-        <source>Check for updates</source>
-        <translation>Проверка обновлений</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Would you like to check for updates when %1 starts?&lt;/p&gt;&lt;p&gt;Checking for updates requires an Internet connection.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Хотите проверять наличие обновлений при запуске %1 ?&lt;/p&gt;&lt;p&gt;Проверка обновлений требует Интернет соединение.&lt;/p&gt;&lt;p&gt;URL: &lt;pre&gt;%2&lt;/pre&gt;&lt;/p&gt;</translation>
-    </message>
-    <message>
         <source>Background service offline</source>
         <translation>Фоновый процесс не в сети</translation>
     </message>
@@ -732,6 +724,34 @@ Valid names:
         <source>failed to read RSA key from certificate file: %1</source>
         <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation type="unfinished">не удалось прочитать ключ RSA из файла сертификата: %1</translation>
+    </message>
+    <message>
+        <source>Some optional %1 features require an Internet connection. Would you like to enable them?</source>
+        <translation type="unfinished">Некоторые дополнительные функции %1 требуют подключения к Интернету. Включить их?</translation>
+    </message>
+    <message>
+        <source>Choose which features to enable:</source>
+        <translation type="unfinished">Выберите функции для включения:</translation>
+    </message>
+    <message>
+        <source>Check for new versions when app starts</source>
+        <translation type="unfinished">Проверять наличие новых версий при запуске приложения</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest</source>
+        <translation type="unfinished">Участвовать в конкурсе популярности</translation>
+    </message>
+    <message>
+        <source>Requires the version check. The popularity contest is based on the user agent.</source>
+        <translation type="unfinished">Требуется проверка версии. Конкурс популярности основан на user-agent.</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;User agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;User-agent:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</source>
+        <translation type="unfinished">&lt;b&gt;URL:&lt;/b&gt;&amp;nbsp;&amp;nbsp;&lt;code&gt;%1&lt;/code&gt;</translation>
     </message>
 </context>
 <context>
@@ -1291,6 +1311,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Для этого необходим пакет wl-clipboard.&lt;/p&gt;&lt;p&gt;Когда ты используешь wl-clipboard v2.2.1. Возникает ошибка перехвата фокуса, которая мешает использовать deskflowю. Это фиксется если использовать wl-clipboard из ветки master, если только ваш Compositor не поддерживает протокол wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Participate in popularity contest (send extra user-agent data)</source>
+        <translation type="unfinished">Участвовать в конкурсе популярности (отправлять дополнительные данные user-agent)</translation>
     </message>
 </context>
 <context>
