@@ -293,8 +293,10 @@ void MainWindow::connectSlots()
 
   connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
   connect(&m_serverConnection, &ServerConnection::clientsChanged, this, &MainWindow::serverClientsChanged);
+  connect(
+      &m_serverConnection, &ServerConnection::requestNewClientPrompt, this, &MainWindow::handleNewClientPromptRequest
+  );
 
-  connect(&m_serverConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
   connect(&m_clientConnection, &ClientConnection::requestShowError, this, &MainWindow::showClientError);
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
@@ -1236,4 +1238,11 @@ void MainWindow::showClientError(deskflow::client::ErrorType error, const QStrin
   deskflow::gui::messages::showClientConnectError(this, error, address);
   showAndActivate();
   m_clientErrorVisible = false;
+}
+
+void MainWindow::handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth)
+{
+  showAndActivate();
+  bool result = deskflow::gui::messages::showNewClientPrompt(this, clientName, usePeerAuth);
+  m_serverConnection.handleNewClientResult(clientName, result);
 }

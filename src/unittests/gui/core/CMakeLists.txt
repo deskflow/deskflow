@@ -14,3 +14,10 @@ create_test(
   SOURCE ClientConnectionTests.cpp
   WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
 )
+
+create_test(
+  NAME ServerConnectionTests
+  DEPENDS gui
+  SOURCE ServerConnectionTests.cpp
+  WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/src/lib/gui"
+)

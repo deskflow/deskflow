@@ -1,12 +1,12 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2021 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "ServerConnection.h"
 
-#include "Messages.h"
 #include "ServerMessage.h"
 #include "common/Settings.h"
 
@@ -15,25 +15,9 @@
 
 namespace deskflow::gui {
 
-//
-// ServerConnection::Deps
-//
-
-bool ServerConnection::Deps::showNewClientPrompt(
-    QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth
-) const
-{
-  return messages::showNewClientPrompt(parent, clientName, serverRequiresPeerAuth);
-}
-
-//
-// ServerConnection
-//
-
-ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
+ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig)
     : m_pParent(parent),
-      m_serverConfig(serverConfig),
-      m_pDeps(deps)
+      m_serverConfig(serverConfig)
 {
 }
 
@@ -93,15 +77,17 @@ void ServerConnection::handleNewClient(const QString &clientName)
     return;
   }
 
-  Q_EMIT messageShowing();
-
   m_messageShowing = true;
   const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
   const bool requireCerts = Settings::value(Settings::Security::CheckPeers).toBool();
-  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && requireCerts);
+  Q_EMIT requestNewClientPrompt(clientName, tlsEnabled && requireCerts);
+}
+
+void ServerConnection::handleNewClientResult(const QString &clientName, bool acceptClient)
+{
   m_messageShowing = false;
 
-  if (result) {
+  if (acceptClient) {
     qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
     Q_EMIT configureClient(clientName);
   } else {
