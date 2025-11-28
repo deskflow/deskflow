@@ -293,9 +293,11 @@ void MainWindow::connectSlots()
 
   connect(&m_serverConnection, &ServerConnection::configureClient, this, &MainWindow::serverConnectionConfigureClient);
   connect(&m_serverConnection, &ServerConnection::clientsChanged, this, &MainWindow::serverClientsChanged);
+  connect(
+      &m_serverConnection, &ServerConnection::requestNewClientPrompt, this, &MainWindow::handleNewClientPromptRequest
+  );
 
-  connect(&m_serverConnection, &ServerConnection::messageShowing, this, &MainWindow::showAndActivate);
-  connect(&m_clientConnection, &ClientConnection::messageShowing, this, &MainWindow::showAndActivate);
+  connect(&m_clientConnection, &ClientConnection::requestShowError, this, &MainWindow::showClientError);
 
   connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
@@ -411,7 +413,6 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
 
 void MainWindow::startCore()
 {
-  m_clientConnection.setShowMessage();
   m_coreProcess.start();
   m_actionStartCore->setVisible(false);
   m_actionRestartCore->setVisible(true);
@@ -484,7 +485,6 @@ void MainWindow::openSettings()
 
 void MainWindow::resetCore()
 {
-  m_clientConnection.setShowMessage();
   m_coreProcess.restart();
 }
 
@@ -1228,4 +1228,21 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
   } else {
     Settings::setValue(Settings::Client::RemoteHost, newRemoteHost);
   }
+}
+
+void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
+{
+  if (m_clientErrorVisible)
+    return;
+  m_clientErrorVisible = true;
+  deskflow::gui::messages::showClientConnectError(this, error, address);
+  showAndActivate();
+  m_clientErrorVisible = false;
+}
+
+void MainWindow::handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth)
+{
+  showAndActivate();
+  bool result = deskflow::gui::messages::showNewClientPrompt(this, clientName, usePeerAuth);
+  m_serverConnection.handleNewClientResult(clientName, result);
 }

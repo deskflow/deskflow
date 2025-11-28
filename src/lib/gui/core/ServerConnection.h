@@ -19,16 +19,7 @@ class ServerConnection : public QObject
   using IServerConfig = deskflow::gui::IServerConfig;
 
 public:
-  struct Deps
-  {
-    virtual ~Deps() = default;
-    virtual messages::NewClientPromptResult
-    showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false) const;
-  };
-
-  explicit ServerConnection(
-      QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps = std::make_shared<Deps>()
-  );
+  explicit ServerConnection(QWidget *parent, IServerConfig &serverConfig);
   void handleLogLine(const QString &logLine);
   void serverConfigDialogVisible(bool visible)
   {
@@ -36,9 +27,11 @@ public:
   }
 
   QStringList connectedClients() const;
+  void handleNewClientResult(const QString &clientName, bool acceptClient);
 
 Q_SIGNALS:
   void messageShowing();
+  void requestNewClientPrompt(const QString &clientName, bool peerAuthRequired);
   void configureClient(const QString &clientName);
   void clientsChanged(const QStringList &clients);
 
@@ -47,8 +40,8 @@ private:
 
   QWidget *m_pParent;
   IServerConfig &m_serverConfig;
-  std::shared_ptr<Deps> m_pDeps;
   QSet<QString> m_connectedClients;
+  QSet<QString> m_ignoredClients;
   bool m_messageShowing = false;
   bool m_serverConfigDialogVisible = false;
 };

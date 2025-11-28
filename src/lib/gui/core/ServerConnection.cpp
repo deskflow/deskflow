@@ -6,7 +6,6 @@
 
 #include "ServerConnection.h"
 
-#include "Messages.h"
 #include "ServerMessage.h"
 #include "common/Settings.h"
 
@@ -15,25 +14,9 @@
 
 namespace deskflow::gui {
 
-//
-// ServerConnection::Deps
-//
-
-messages::NewClientPromptResult ServerConnection::Deps::showNewClientPrompt(
-    QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth
-) const
-{
-  return messages::showNewClientPrompt(parent, clientName, serverRequiresPeerAuth);
-}
-
-//
-// ServerConnection
-//
-
-ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig, std::shared_ptr<Deps> deps)
+ServerConnection::ServerConnection(QWidget *parent, IServerConfig &serverConfig)
     : m_pParent(parent),
-      m_serverConfig(serverConfig),
-      m_pDeps(deps)
+      m_serverConfig(serverConfig)
 {
 }
 
@@ -41,6 +24,11 @@ void ServerConnection::handleLogLine(const QString &logLine)
 {
   ServerMessage message(logLine);
   const auto &clientName = message.getClientName();
+
+  if (m_ignoredClients.contains(clientName)) {
+    qDebug("ignoring %s:", qPrintable(clientName));
+    return;
+  }
 
   if (message.isDisconnectedMessage()) {
     m_connectedClients.remove(clientName);
@@ -83,8 +71,6 @@ void ServerConnection::handleLogLine(const QString &logLine)
 
 void ServerConnection::handleNewClient(const QString &clientName)
 {
-  using enum messages::NewClientPromptResult;
-
   if (m_serverConfig.isFull()) {
     qDebug("server config full, skipping new client prompt for: %s", qPrintable(clientName));
     return;
@@ -95,23 +81,23 @@ void ServerConnection::handleNewClient(const QString &clientName)
     return;
   }
 
-  Q_EMIT messageShowing();
-
   m_messageShowing = true;
   const bool tlsEnabled = Settings::value(Settings::Security::TlsEnabled).toBool();
   const bool requireCerts = Settings::value(Settings::Security::CheckPeers).toBool();
-  const auto result = m_pDeps->showNewClientPrompt(m_pParent, clientName, tlsEnabled && requireCerts);
-  m_messageShowing = false;
+  Q_EMIT requestNewClientPrompt(clientName, tlsEnabled && requireCerts);
+}
 
-  if (result == Add) {
-    qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
-    Q_EMIT configureClient(clientName);
-  } else if (result == Ignore) {
+void ServerConnection::handleNewClientResult(const QString &clientName, bool acceptClient)
+{
+  m_messageShowing = false;
+  if (!acceptClient) {
     qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
-  } else {
-    qFatal("unexpected add client result");
+    m_ignoredClients.insert(clientName);
+    return;
   }
 
+  qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
+  Q_EMIT configureClient(clientName);
   m_connectedClients.insert(clientName);
   Q_EMIT clientsChanged(connectedClients());
 }

@@ -10,6 +10,7 @@
 #include "Styles.h"
 #include "VersionInfo.h"
 
+#include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 
@@ -183,9 +184,11 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   QMessageBox::information(parent, title, message);
 }
 
-void showClientConnectError(QWidget *parent, ClientError error, const QString &address)
+void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address)
 {
-  using enum ClientError;
+  using enum deskflow::client::ErrorType;
+  if (error == NoError)
+    return;
 
   auto message = QObject::tr("<p>Failed to connect to the server '%1'.</p>").arg(address);
 
@@ -214,7 +217,7 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
 
   auto title = QObject::tr("%1 Connection Error").arg(kAppName);
 
-  if (error != ClientError::HostnameError) {
+  if (error != HostnameError) {
     QMessageBox::warning(parent, title, message);
     return;
   }
@@ -239,10 +242,8 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
   dialog.exec();
 }
 
-NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
+bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
 {
-  using enum NewClientPromptResult;
-
   if (serverRequiresPeerAuth) {
     // When peer auth is enabled you will be prompted to allow the connection before seeing this dialog.
     // This is why we do not show a dialog with an option to ignore the new client
@@ -251,22 +252,14 @@ NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &client
         QObject::tr("A new client called '%1' has been accepted. You'll need to add it to your server's screen layout.")
             .arg(clientName)
     );
-    return Add;
-  } else {
-    QMessageBox message(parent);
-    const QPushButton *ignore = message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-    const QPushButton *add = message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
-    message.setText(QObject::tr("A new client called '%1' wants to connect").arg(clientName));
-    message.exec();
-    if (message.clickedButton() == add) {
-      return Add;
-    } else if (message.clickedButton() == ignore) {
-      return Ignore;
-    } else {
-      qFatal("no expected dialog button was clicked");
-      abort();
-    }
+    return true;
   }
+  QMessageBox message(parent);
+  message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+  message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
+  message.setText(QObject::tr("A new client called '%1' wants to connect").arg(clientName));
+  message.exec();
+  return message.buttonRole(message.clickedButton()) == QMessageBox::AcceptRole;
 }
 
 bool showClearSettings(QWidget *parent)
