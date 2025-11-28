@@ -23,8 +23,8 @@ namespace {
 struct DepsMock : public ServerConnection::Deps
 {
   MOCK_METHOD(
-      messages::NewClientPromptResult, showNewClientPrompt,
-      (QWidget * parent, const QString &clientName, bool previousyAccepted), (const, override)
+      bool, showNewClientPrompt, (QWidget * parent, const QString &clientName, bool previousyAccepted),
+      (const, override)
   );
 };
 
@@ -50,8 +50,7 @@ TEST_F(ServerConnectionTests, handleLogLine_newClient_shouldShowPrompt)
 TEST_F(ServerConnectionTests, handleLogLine_ignoredClient_shouldNotShowPrompt)
 {
   ServerConnection serverConnection(nullptr, m_serverConfig, m_pDeps);
-  ON_CALL(*m_pDeps, showNewClientPrompt(_, _, false))
-      .WillByDefault(testing::Return(messages::NewClientPromptResult::Ignore));
+  ON_CALL(*m_pDeps, showNewClientPrompt(_, _, false)).WillByDefault(testing::Return(false));
   serverConnection.handleLogLine(R"(unrecognised client name "stub")");
 
   EXPECT_CALL(*m_pDeps, showNewClientPrompt(_, _, false)).Times(0);

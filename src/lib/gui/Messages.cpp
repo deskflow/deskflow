@@ -242,10 +242,8 @@ void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, 
   dialog.exec();
 }
 
-NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
+bool showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth)
 {
-  using enum NewClientPromptResult;
-
   if (serverRequiresPeerAuth) {
     // When peer auth is enabled you will be prompted to allow the connection before seeing this dialog.
     // This is why we do not show a dialog with an option to ignore the new client
@@ -254,22 +252,14 @@ NewClientPromptResult showNewClientPrompt(QWidget *parent, const QString &client
         QObject::tr("A new client called '%1' has been accepted. You'll need to add it to your server's screen layout.")
             .arg(clientName)
     );
-    return Add;
-  } else {
-    QMessageBox message(parent);
-    const QPushButton *ignore = message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
-    const QPushButton *add = message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
-    message.setText(QObject::tr("A new client called '%1' wants to connect").arg(clientName));
-    message.exec();
-    if (message.clickedButton() == add) {
-      return Add;
-    } else if (message.clickedButton() == ignore) {
-      return Ignore;
-    } else {
-      qFatal("no expected dialog button was clicked");
-      abort();
-    }
+    return true;
   }
+  QMessageBox message(parent);
+  message.addButton(QObject::tr("Ignore"), QMessageBox::RejectRole);
+  message.addButton(QObject::tr("Add client"), QMessageBox::AcceptRole);
+  message.setText(QObject::tr("A new client called '%1' wants to connect").arg(clientName));
+  message.exec();
+  return message.buttonRole(message.clickedButton()) == QMessageBox::AcceptRole;
 }
 
 bool showClearSettings(QWidget *parent)
