@@ -1,12 +1,12 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2021 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "ClientConnection.h"
 
-#include "Messages.h"
 #include "common/Settings.h"
 
 #include <QHostAddress>
@@ -14,41 +14,30 @@
 
 namespace deskflow::gui {
 
-//
-// ClientConnection::Deps
-//
-
-void ClientConnection::Deps::showError(QWidget *parent, deskflow::client::ErrorType error, const QString &address) const
-{
-  messages::showClientConnectError(parent, error, address);
-}
-
-//
-// ClientConnection
-//
-
 void ClientConnection::handleLogLine(const QString &logLine)
 {
+  if (logLine.contains("disconnected from server")) {
+    m_supressMessage = false;
+    return;
+  }
+
+  if (logLine.contains("connected to server")) {
+    m_supressMessage = true;
+    return;
+  }
 
   if (logLine.contains("failed to connect to server")) {
-
-    if (!m_showMessage) {
+    if (m_supressMessage) {
       qDebug("message already shown, skipping");
       return;
     }
-
-    m_showMessage = false;
-
     // ignore the message if it's about the server refusing by name as
     // this will trigger the server to show an 'add client' dialog.
     if (logLine.contains("server refused client with our name")) {
       qDebug("ignoring client name refused message");
       return;
     }
-
     showMessage(logLine);
-  } else if (logLine.contains("connected to server")) {
-    m_showMessage = false;
   }
 }
 
@@ -76,8 +65,6 @@ void ClientConnection::showMessage(const QString &logLine)
     return;
 
   Q_EMIT requestShowError(error, address);
-  Q_EMIT messageShowing();
-  m_deps->showError(m_pParent, error, address);
 }
 
 } // namespace deskflow::gui
