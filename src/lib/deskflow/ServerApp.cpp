@@ -90,10 +90,17 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
   events->addEvent(Event(EventTypes::ServerAppReloadConfig, events->getSystemTarget()));
 }
 
+std::string ServerApp::currentConfig() const
+{
+  bool useExt = Settings::value(Settings::Server::ExternalConfig).toBool();
+  return useExt ? Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString()
+                : Settings::defaultValue(Settings::Server::ExternalConfigFile).toString().toStdString();
+}
+
 void ServerApp::reloadConfig()
 {
   LOG_DEBUG("reload configuration");
-  if (loadConfig(Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString())) {
+  if (loadConfig(currentConfig())) {
     if (m_server != nullptr) {
       m_server->setConfig(*m_config);
     }
@@ -103,7 +110,7 @@ void ServerApp::reloadConfig()
 
 void ServerApp::loadConfig()
 {
-  const auto path = Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString();
+  const auto path = currentConfig();
   if (path.empty()) {
     LOG_CRIT("no configuration path provided");
     bye(s_exitConfig);
