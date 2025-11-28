@@ -9,16 +9,11 @@
 #include <QMessageLogContext>
 #include <QString>
 
+#include <common/Enums.h>
+
 class QWidget;
 
 namespace deskflow::gui::messages {
-
-enum class ClientError
-{
-  AlreadyConnected,
-  HostnameError,
-  GenericError
-};
 
 enum class NewClientPromptResult
 {
@@ -36,7 +31,7 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
 
 void showCloseReminder(QWidget *parent);
 
-void showClientConnectError(QWidget *parent, ClientError error, const QString &address);
+void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address);
 
 NewClientPromptResult
 showNewClientPrompt(QWidget *parent, const QString &clientName, bool serverRequiresPeerAuth = false);

@@ -153,6 +153,13 @@ private:
   void remoteHostChanged(const QString &newRemoteHost);
 
   /**
+   * @brief showClientError
+   * @param error Error Type
+   * @param address
+   */
+  void showClientError(deskflow::client::ErrorType error, const QString &address);
+
+  /**
    * @brief trustedFingerprintDatabase get the FingerprintDatabase for the trusted clients or trusted servers.
    * @return The path to the trusted fingerprint file
    */
@@ -174,6 +181,7 @@ private:
   VersionChecker m_versionChecker;
   bool m_secureSocket = false;
   bool m_saveOnExit = true;
+  bool m_clientErrorVisible = false;
   deskflow::gui::core::WaylandWarnings m_waylandWarnings;
   ServerConfig m_serverConfig;
   deskflow::gui::CoreProcess m_coreProcess;
