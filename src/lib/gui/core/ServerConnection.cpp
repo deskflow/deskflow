@@ -26,6 +26,11 @@ void ServerConnection::handleLogLine(const QString &logLine)
   ServerMessage message(logLine);
   const auto &clientName = message.getClientName();
 
+  if (m_ignoredClients.contains(clientName)) {
+    qDebug("ignoring %s:", qPrintable(clientName));
+    return;
+  }
+
   if (message.isDisconnectedMessage()) {
     m_connectedClients.remove(clientName);
     Q_EMIT clientsChanged(connectedClients());
@@ -86,14 +91,14 @@ void ServerConnection::handleNewClient(const QString &clientName)
 void ServerConnection::handleNewClientResult(const QString &clientName, bool acceptClient)
 {
   m_messageShowing = false;
-
-  if (acceptClient) {
-    qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
-    Q_EMIT configureClient(clientName);
-  } else {
+  if (!acceptClient) {
     qDebug("declined dialog, ignoring client: %s", qPrintable(clientName));
+    m_ignoredClients.insert(clientName);
+    return;
   }
 
+  qDebug("accepted dialog, adding client: %s", qPrintable(clientName));
+  Q_EMIT configureClient(clientName);
   m_connectedClients.insert(clientName);
   Q_EMIT clientsChanged(connectedClients());
 }
