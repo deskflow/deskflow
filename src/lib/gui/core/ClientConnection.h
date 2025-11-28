@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "common/Enums.h"
 #include "gui/Messages.h"
 
 #include <QObject>
@@ -25,7 +26,7 @@ public:
   struct Deps
   {
     virtual ~Deps() = default;
-    virtual void showError(QWidget *parent, messages::ClientError error, const QString &address) const;
+    virtual void showError(QWidget *parent, deskflow::client::ErrorType error, const QString &address) const;
   };
 
   explicit ClientConnection(QWidget *parent, std::shared_ptr<Deps> deps = std::make_shared<Deps>())
@@ -48,7 +49,7 @@ Q_SIGNALS:
    * @param error the type of error being reported
    * @param address of the host
    */
-  void requestShowError(deskflow::gui::messages::ClientError error, const QString &address);
+  void requestShowError(deskflow::client::ErrorType error, const QString &address);
   void messageShowing();
 
 private:

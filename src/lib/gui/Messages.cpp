@@ -10,6 +10,7 @@
 #include "Styles.h"
 #include "VersionInfo.h"
 
+#include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 
@@ -183,9 +184,9 @@ void showFirstConnectedMessage(QWidget *parent, bool closeToTray, bool enableSer
   QMessageBox::information(parent, title, message);
 }
 
-void showClientConnectError(QWidget *parent, ClientError error, const QString &address)
+void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, const QString &address)
 {
-  using enum ClientError;
+  using enum deskflow::client::ErrorType;
   if (error == NoError)
     return;
 
@@ -216,7 +217,7 @@ void showClientConnectError(QWidget *parent, ClientError error, const QString &a
 
   auto title = QObject::tr("%1 Connection Error").arg(kAppName);
 
-  if (error != ClientError::HostnameError) {
+  if (error != HostnameError) {
     QMessageBox::warning(parent, title, message);
     return;
   }

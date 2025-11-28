@@ -18,7 +18,7 @@ namespace deskflow::gui {
 // ClientConnection::Deps
 //
 
-void ClientConnection::Deps::showError(QWidget *parent, messages::ClientError error, const QString &address) const
+void ClientConnection::Deps::showError(QWidget *parent, deskflow::client::ErrorType error, const QString &address) const
 {
   messages::showClientConnectError(parent, error, address);
 }
@@ -54,7 +54,7 @@ void ClientConnection::handleLogLine(const QString &logLine)
 
 void ClientConnection::showMessage(const QString &logLine)
 {
-  using enum messages::ClientError;
+  using enum deskflow::client::ErrorType;
 
   if (logLine.isEmpty())
     return;
