@@ -106,23 +106,30 @@ MainWindow::MainWindow()
     m_actionTrayQuit->setShortcut(QKeySequence::Quit);
   }
 
-  m_actionQuit->setMenuRole(QAction::QuitRole);
   m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionQuit->setMenuRole(QAction::QuitRole);
+
   m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionTrayQuit->setMenuRole(QAction::NoRole);
 
   m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
+  m_actionClearSettings->setMenuRole(QAction::NoRole);
 
-  m_actionSettings->setMenuRole(QAction::PreferencesRole);
   m_actionSettings->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
+  m_actionSettings->setMenuRole(QAction::PreferencesRole);
 
   m_actionStartCore->setIcon(QIcon::fromTheme(QStringLiteral("system-run")));
+  m_actionStartCore->setMenuRole(QAction::NoRole);
 
   m_actionRestartCore->setVisible(false);
   m_actionRestartCore->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
+  m_actionRestartCore->setMenuRole(QAction::NoRole);
 
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
+  m_actionStopCore->setMenuRole(QAction::NoRole);
 
   m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
+  m_actionReportBug->setMenuRole(QAction::NoRole);
 
   // Setup the Instance Checking
   // In case of a previous crash remove first
