@@ -881,9 +881,9 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
 void MainWindow::showFirstConnectedMessage()
 {
-  if (Settings::value(Settings::Core::StartedBefore).toBool())
+  if (Settings::value(Settings::Gui::ShownFirstConnectedMessage).toBool())
     return;
-  Settings::setValue(Settings::Core::StartedBefore, true);
+  Settings::setValue(Settings::Gui::ShownFirstConnectedMessage, true);
 
   const auto isServer = m_coreProcess.mode() == CoreMode::Server;
   const auto closeToTray = Settings::value(Settings::Gui::CloseToTray).toBool();
