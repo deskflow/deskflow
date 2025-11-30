@@ -1107,6 +1107,7 @@ void MainWindow::updateScreenName()
 
 void MainWindow::showAndActivate()
 {
+  const auto wasVisible = isVisible();
 #ifdef Q_OS_MACOS
   forceAppActive();
 #endif
@@ -1115,7 +1116,8 @@ void MainWindow::showAndActivate()
   activateWindow();
   m_actionRestore->setVisible(false);
   m_actionMinimize->setVisible(true);
-  restoreWindow();
+  if (!wasVisible)
+    restoreWindow();
 }
 
 void MainWindow::showHostNameEditor()
