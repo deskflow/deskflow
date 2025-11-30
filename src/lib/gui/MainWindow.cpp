@@ -532,7 +532,6 @@ void MainWindow::updateModeControls(bool serverMode)
     // unrecognized client tries to connect.
     const auto startedBefore = Settings::value(Settings::Core::StartedBefore).toBool();
     if (!startedBefore && !m_coreProcess.isStarted()) {
-      qDebug() << "auto-starting core server for first time";
       m_coreProcess.start();
     }
   }
@@ -957,11 +956,14 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 {
   updateStatus();
 
-  if (state == CoreProcessState::Started && !Settings::value(Settings::Core::StartedBefore).toBool()) {
+  if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
     Settings::setValue(Settings::Core::StartedBefore, true);
-    if (m_coreProcess.mode() == CoreMode::Server) {
+    if (m_coreProcess.mode() == CoreMode::Server &&
+        !Settings::value(Settings::Gui::ShownServerFirstStartMessage).toBool()) {
+      qDebug() << "starting core server for first time";
       messages::showFirstServerStartMessage(this);
+      Settings::setValue(Settings::Gui::ShownServerFirstStartMessage, true);
     }
   }
 
