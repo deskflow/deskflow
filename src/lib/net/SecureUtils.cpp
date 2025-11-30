@@ -155,7 +155,7 @@ QString generateFingerprintArt(const QByteArray &rawDigest)
   const auto baseSize = 8;
   const auto rows = (baseSize + 1);
   const auto columns = (baseSize * 2 + 1);
-  const QString characterPool = QStringLiteral(" .o+=*BOX@%&#/^SE");
+  const auto characterPool = QStringLiteral(" .o+=*BOX@%&#/^SE");
   const std::size_t len = characterPool.length() - 1;
 
   std::uint8_t field[columns][rows];
