@@ -44,7 +44,7 @@ private:
    * \param clientSocket The client socket to write to.
    * \param message The message to write (without trailing newline).
    */
-  void writeToClientSocket(QLocalSocket *&clientSocket, const QString &message);
+  void writeToClientSocket(QLocalSocket *&clientSocket, const QString &message) const;
 
 private Q_SLOTS:
   void handleNewConnection();

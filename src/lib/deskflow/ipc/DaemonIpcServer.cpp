@@ -208,7 +208,7 @@ void DaemonIpcServer::processCommand(QLocalSocket *&clientSocket, const QStringL
   writeToClientSocket(clientSocket, kAckMessage);
 }
 
-void DaemonIpcServer::writeToClientSocket(QLocalSocket *&clientSocket, const QString &message)
+void DaemonIpcServer::writeToClientSocket(QLocalSocket *&clientSocket, const QString &message) const
 {
   QByteArray messageData = message.toUtf8() + '\n';
   qint64 bytesWritten = clientSocket->write(messageData);
