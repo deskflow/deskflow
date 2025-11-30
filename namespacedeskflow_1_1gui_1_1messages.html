@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.33</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.38</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -101,10 +101,6 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
-<tr class="memitem:a4070dd1286443a5ae887887932ab1c93" id="r_a4070dd1286443a5ae887887932ab1c93"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4070dd1286443a5ae887887932ab1c93">ClientError</a> { <a class="el" href="#a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34">AlreadyConnected</a>
-, <a class="el" href="#a4070dd1286443a5ae887887932ab1c93a4799233e783a39e6b720d33fb45a33d7">HostnameError</a>
-, <a class="el" href="#a4070dd1286443a5ae887887932ab1c93ab8f3ed63a76e8f1710dfd83958de1789">GenericError</a>
- }</td></tr>
 <tr class="memitem:a4de26c6acbb3e0263d856efb3b061c1c" id="r_a4de26c6acbb3e0263d856efb3b061c1c"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a4de26c6acbb3e0263d856efb3b061c1c">NewClientPromptResult</a> { <a class="el" href="#a4de26c6acbb3e0263d856efb3b061c1caec211f7c20af43e742bf2570c3cb84f9">Add</a>
 , <a class="el" href="#a4de26c6acbb3e0263d856efb3b061c1cafd038fc7f319e48f3115d92bf5bdbef9">Ignore</a>
  }</td></tr>
@@ -118,7 +114,7 @@ Functions</h2></td></tr>
 <tr class="memitem:aefd2a689c47cf3fefb5d844fd8ed327f" id="r_aefd2a689c47cf3fefb5d844fd8ed327f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aefd2a689c47cf3fefb5d844fd8ed327f">showCloseReminder</a> (QWidget *parent)</td></tr>
 <tr class="memitem:ae36c4e343b7e48e06e2a9005a5bf4eda" id="r_ae36c4e343b7e48e06e2a9005a5bf4eda"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae36c4e343b7e48e06e2a9005a5bf4eda">showFirstServerStartMessage</a> (QWidget *parent)</td></tr>
 <tr class="memitem:aedad0d21c313ee2a3e62076024608d56" id="r_aedad0d21c313ee2a3e62076024608d56"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aedad0d21c313ee2a3e62076024608d56">showFirstConnectedMessage</a> (QWidget *parent, bool closeToTray, bool enableService, bool isServer)</td></tr>
-<tr class="memitem:ad4cbc0e0370327c6dd94d778cdcf6389" id="r_ad4cbc0e0370327c6dd94d778cdcf6389"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4cbc0e0370327c6dd94d778cdcf6389">showClientConnectError</a> (QWidget *parent, <a class="el" href="#a4070dd1286443a5ae887887932ab1c93">ClientError</a> error, const QString &amp;address)</td></tr>
+<tr class="memitem:a10809d0fc10a0db8c68b2b644479bfe1" id="r_a10809d0fc10a0db8c68b2b644479bfe1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a10809d0fc10a0db8c68b2b644479bfe1">showClientConnectError</a> (QWidget *parent, <a class="el" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a> error, const QString &amp;address)</td></tr>
 <tr class="memitem:a114b53ec2ee554f8fa21468dbdce6f71" id="r_a114b53ec2ee554f8fa21468dbdce6f71"><td class="memItemLeft" align="right" valign="top"><a class="el" href="#a4de26c6acbb3e0263d856efb3b061c1c">NewClientPromptResult</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a114b53ec2ee554f8fa21468dbdce6f71">showNewClientPrompt</a> (QWidget *parent, const QString &amp;clientName, bool serverRequiresPeerAuth)</td></tr>
 <tr class="memitem:a3cef3788e3fae6bc7ebb84ef4969bca3" id="r_a3cef3788e3fae6bc7ebb84ef4969bca3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3cef3788e3fae6bc7ebb84ef4969bca3">showClearSettings</a> (QWidget *parent)</td></tr>
 <tr class="memitem:a3ee57c3c76be1f5eb084883f65fbf93e" id="r_a3ee57c3c76be1f5eb084883f65fbf93e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a3ee57c3c76be1f5eb084883f65fbf93e">showReadOnlySettings</a> (QWidget *parent, const QString &amp;systemSettingsPath)</td></tr>
@@ -127,33 +123,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a60dc73cee3be7ef255a925127c1fa2b6" id="r_a60dc73cee3be7ef255a925127c1fa2b6"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60dc73cee3be7ef255a925127c1fa2b6">showDaemonOffline</a> (QWidget *parent)</td></tr>
 </table>
 <a name="doc-enum-members" id="doc-enum-members"></a><h2 id="header-doc-enum-members" class="groupheader">Enumeration Type Documentation</h2>
-<a id="a4070dd1286443a5ae887887932ab1c93" name="a4070dd1286443a5ae887887932ab1c93"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4070dd1286443a5ae887887932ab1c93">&#9670;&#160;</a></span>ClientError</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum class <a class="el" href="#a4070dd1286443a5ae887887932ab1c93">deskflow::gui::messages::ClientError</a></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel strong">strong</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34" name="a4070dd1286443a5ae887887932ab1c93a026d4490386eaf538cd104d5b3cb5b34"></a>AlreadyConnected&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4070dd1286443a5ae887887932ab1c93a4799233e783a39e6b720d33fb45a33d7" name="a4070dd1286443a5ae887887932ab1c93a4799233e783a39e6b720d33fb45a33d7"></a>HostnameError&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="a4070dd1286443a5ae887887932ab1c93ab8f3ed63a76e8f1710dfd83958de1789" name="a4070dd1286443a5ae887887932ab1c93ab8f3ed63a76e8f1710dfd83958de1789"></a>GenericError&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
 <a id="a4de26c6acbb3e0263d856efb3b061c1c" name="a4de26c6acbb3e0263d856efb3b061c1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4de26c6acbb3e0263d856efb3b061c1c">&#9670;&#160;</a></span>NewClientPromptResult</h2>
 
@@ -258,8 +227,8 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad4cbc0e0370327c6dd94d778cdcf6389" name="ad4cbc0e0370327c6dd94d778cdcf6389"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad4cbc0e0370327c6dd94d778cdcf6389">&#9670;&#160;</a></span>showClientConnectError()</h2>
+<a id="a10809d0fc10a0db8c68b2b644479bfe1" name="a10809d0fc10a0db8c68b2b644479bfe1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10809d0fc10a0db8c68b2b644479bfe1">&#9670;&#160;</a></span>showClientConnectError()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -272,7 +241,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="#a4070dd1286443a5ae887887932ab1c93">ClientError</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span>, </td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"classAppUtil.html#a2a4f7e02e6b8664cfc269339341f7f4d":[6,0,7,0],
+"classAppUtil.html#a6daff781fe1904f066d0d56d914a35cd":[6,0,7,1],
 "classAppUtil.html#a8766d51fe30577548aec3896464489d6":[6,0,7,7],
 "classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9],
 "classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "classArchNetworkTimedOutException.html":[6,0,47],
 "classArchNetworkWinsock.html":[6,0,48],
 "classArchNetworkWinsock.html#a08c9ea08771aa19863036742929ad264":[6,0,48,6],
-"classArchNetworkWinsock.html#a0f735f2e437cb1b7f1af78ed16540f79":[6,0,48,24],
-"classArchNetworkWinsock.html#a0fab2de7056932426fd107606d3c8ab2":[6,0,48,15],
-"classArchNetworkWinsock.html#a12564229e8a1ba65f02f881ef34c9ffe":[6,0,48,8]
+"classArchNetworkWinsock.html#a0f735f2e437cb1b7f1af78ed16540f79":[6,0,48,24]
 };

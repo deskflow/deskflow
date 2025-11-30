@@ -1,5 +1,7 @@
 var NAVTREEINDEX13 =
 {
+"classOSXScreenSaver.html":[6,0,180],
+"classOSXScreenSaver.html#a0db0292e8fd9a3ab3bf9fadf50279254":[6,0,180,5],
 "classOSXScreenSaver.html#a2e1a2cce3fa391703fc94bf2348053fe":[6,0,180,6],
 "classOSXScreenSaver.html#a757ea15e6ad0d178d6fc0126f5d44bae":[6,0,180,1],
 "classOSXScreenSaver.html#adb26b45c6f6c6390b274397c3d607c0c":[6,0,180,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX13 =
 "classScreenSetupModel.html#a24c810d6d27c2c954bdad39ee23d3b0c":[6,0,196,19],
 "classScreenSetupModel.html#a4e750b6cf198be9d44c29433ce0d9532":[6,0,196,1],
 "classScreenSetupModel.html#a552871041ae601b0b193940333382f78":[6,0,196,17],
-"classScreenSetupModel.html#a57ca9109e2da3343064777dee953741b":[6,0,196,20],
-"classScreenSetupModel.html#a69a190af2f7852f331102120b57dd7eb":[6,0,196,14],
-"classScreenSetupModel.html#a6a5b61f67e1c21f61f677a76cfdf9fe1":[6,0,196,0]
+"classScreenSetupModel.html#a57ca9109e2da3343064777dee953741b":[6,0,196,20]
 };

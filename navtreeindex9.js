@@ -1,5 +1,7 @@
 var NAVTREEINDEX9 =
 {
+"classHotkeyDialog.html#ae95ebac862e1337db4a8634206793557":[6,0,98,1],
+"classHotkeyDialog.html#af7bfd1146080aa63ea6190a93065543a":[6,0,98,5],
 "classI18N.html":[6,0,99],
 "classI18N.html#a6e63f67b2679596d86edf5aab17c5162":[6,0,99,6],
 "classI18N.html#a7e771f002458ea1dc1d09146348bfbe7":[6,0,99,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX9 =
 "classIOSXClipboardConverter.html#a040be5d29b7a271ee128dfdbe35b5ca1":[6,0,123,3],
 "classIOSXClipboardConverter.html#a4adc3b10a0bf35530b80ab1fdd286206":[6,0,123,2],
 "classIOSXClipboardConverter.html#a5cacc689ad2be9a984557d15e123df14":[6,0,123,4],
-"classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3":[6,0,123,1],
-"classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2":[6,0,123,0],
-"classIOSXKeyResource.html":[6,0,124]
+"classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3":[6,0,123,1]
 };

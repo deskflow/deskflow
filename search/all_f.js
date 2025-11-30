@@ -141,7 +141,7 @@ var searchData=
   ['messages_138',['Messages',['../group__protocol__clipboard.html',1,'Clipboard Messages'],['../group__protocol__commands.html',1,'Command Messages'],['../group__protocol__data.html',1,'Data Messages'],['../group__protocol__errors.html',1,'Error Messages'],['../group__protocol__files.html',1,'File Transfer Messages'],['../group__protocol__handshake.html',1,'Handshake Messages'],['../group__protocol__info.html',1,'Information Messages'],['../group__protocol__keyboard.html',1,'Keyboard Messages'],['../group__protocol__mouse.html',1,'Mouse Messages'],['../group__protocol__queries.html',1,'Query Messages'],['../group__protocol__system.html',1,'System Messages']]],
   ['messages_2ecpp_139',['Messages.cpp',['../Messages_8cpp.html',1,'']]],
   ['messages_2eh_140',['Messages.h',['../Messages_8h.html',1,'']]],
-  ['messageshowing_141',['messageShowing',['../classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241',1,'deskflow::gui::ClientConnection::messageShowing()'],['../classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f',1,'deskflow::gui::ServerConnection::messageShowing()']]],
+  ['messageshowing_141',['messageShowing',['../classdeskflow_1_1gui_1_1ServerConnection.html#af9c432f6c45b658ccb33a4ee562fb91f',1,'deskflow::gui::ServerConnection']]],
   ['meta_142',['Meta',['../classScreenConfig.html#aa614b21714c5878160804fb6375ea814ab6755d218d5f4e1cef9cce9cc39aeda9',1,'ScreenConfig']]],
   ['method_143',['Method',['../classTSocketMultiplexerMethodJob.html#a42c8bc4a4eef9f374e7030d3dd5a8a2c',1,'TSocketMultiplexerMethodJob']]],
   ['migration_20guide_144',['Version Migration Guide',['../protocol_reference.html#autotoc_md30',1,'']]],

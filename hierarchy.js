@@ -69,7 +69,6 @@ var hierarchy =
     [ "deskflow::KeyMap::Keystroke::Data", "uniondeskflow_1_1KeyMap_1_1Keystroke_1_1Data.html", null ],
     [ "ArchNetworkBSD::Deps", "structArchNetworkBSD_1_1Deps.html", null ],
     [ "deskflow::client::HelloBack::Deps", "structdeskflow_1_1client_1_1HelloBack_1_1Deps.html", null ],
-    [ "deskflow::gui::ClientConnection::Deps", "structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html", null ],
     [ "deskflow::gui::ServerConnection::Deps", "structdeskflow_1_1gui_1_1ServerConnection_1_1Deps.html", null ],
     [ "IPrimaryScreen::EiConnectInfo", "classIPrimaryScreen_1_1EiConnectInfo.html", null ],
     [ "XWindowsUtil::ErrorLock", "classXWindowsUtil_1_1ErrorLock.html", null ],

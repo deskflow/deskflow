@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.33</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.38</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,77 +96,55 @@ $(function(){initNavTree('ClientConnection_8h_source.html','',''); });
 <div class="contents">
 <a href="ClientConnection_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2021 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;<a class="code" href="Messages_8h.html">gui/Messages.h</a>&quot;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2021 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="Enums_8h.html">common/Enums.h</a>&quot;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;QWidget&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;memory&gt;</span></div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">class </span>QWidget;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="foldopen" id="foldopen00020" data-start="{" data-end="};">
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html">   20</a></span><span class="keyword">class </span><a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c">ClientConnection</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>{</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  Q_OBJECT</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">public</span>:</div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="};">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">   25</a></span>  <span class="keyword">struct </span><a class="code hl_struct" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  {</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html#a375d24b82683a9fac5c761aa5b31b4b8">   27</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html#a375d24b82683a9fac5c761aa5b31b4b8">~Deps</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html#a0820c4b1c15cf56f2db1dd8584cdc177">showError</a>(QWidget *parent, <a class="code hl_enumeration" href="namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93">messages::ClientError</a> error, <span class="keyword">const</span> QString &amp;address) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  };</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">class </span>QWidget;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span> </div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacedeskflow_1_1gui.html">deskflow::gui</a> {</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html">   19</a></span><span class="keyword">class </span><a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#a6dedf51506682748ddbdd880f4363df6">ClientConnection</a> : <span class="keyword">public</span> QObject</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  Q_OBJECT</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">public</span>:</div>
+<div class="foldopen" id="foldopen00024" data-start="{" data-end="}">
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#a6dedf51506682748ddbdd880f4363df6">   24</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#a6dedf51506682748ddbdd880f4363df6">ClientConnection</a>(QWidget *parent) : m_pParent(parent)</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  {</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    <span class="comment">// do nothing</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  }</div>
 </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af">handleLogLine</a>(<span class="keyword">const</span> QString &amp;line);</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="foldopen" id="foldopen00031" data-start="{" data-end="}">
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c">   31</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c">ClientConnection</a>(QWidget *parent, std::shared_ptr&lt;Deps&gt; deps = std::make_shared&lt;Deps&gt;())</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>      : m_pParent(parent),</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>        m_deps(deps)</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  {</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="comment">// do nothing</span></div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  }</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>Q_SIGNALS:</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">   38</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">requestShowError</a>(<a class="code hl_enumeration" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a> error, <span class="keyword">const</span> QString &amp;address);</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keywordtype">void</span> showMessage(<span class="keyword">const</span> QString &amp;logLine);</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>  QWidget *m_pParent;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>  <span class="keywordtype">bool</span> m_supressMessage = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
 </div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af">handleLogLine</a>(<span class="keyword">const</span> QString &amp;line);</div>
-<div class="foldopen" id="foldopen00039" data-start="{" data-end="}">
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585">   39</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585">setShowMessage</a>()</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  {</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    m_showMessage = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>  }</div>
-</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span> </div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>Q_SIGNALS:</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno"><a class="line" href="classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241">   45</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241">messageShowing</a>();</div>
 <div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>  <span class="keywordtype">void</span> showMessage(<span class="keyword">const</span> QString &amp;logLine);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  QWidget *m_pParent;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  std::shared_ptr&lt;Deps&gt; m_deps;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keywordtype">bool</span> m_showMessage = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>};</div>
-</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>} <span class="comment">// namespace deskflow::gui</span></div>
-<div class="ttc" id="aMessages_8h_html"><div class="ttname"><a href="Messages_8h.html">Messages.h</a></div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_a1656b9d038e3003cace1b59b2f93dc5c"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#a1656b9d038e3003cace1b59b2f93dc5c">deskflow::gui::ClientConnection::ClientConnection</a></div><div class="ttdeci">ClientConnection(QWidget *parent, std::shared_ptr&lt; Deps &gt; deps=std::make_shared&lt; Deps &gt;())</div><div class="ttdef"><b>Definition</b> ClientConnection.h:31</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_a5c7e6af5528dcc07e8bbe80a90905241"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#a5c7e6af5528dcc07e8bbe80a90905241">deskflow::gui::ClientConnection::messageShowing</a></div><div class="ttdeci">void messageShowing()</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af00f141d8330a27521f5b75e336db585"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af00f141d8330a27521f5b75e336db585">deskflow::gui::ClientConnection::setShowMessage</a></div><div class="ttdeci">void setShowMessage()</div><div class="ttdef"><b>Definition</b> ClientConnection.h:39</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af57b859d12d85d46ac15c9ec71f684af"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af">deskflow::gui::ClientConnection::handleLogLine</a></div><div class="ttdeci">void handleLogLine(const QString &amp;line)</div><div class="ttdef"><b>Definition</b> ClientConnection.cpp:30</div></div>
-<div class="ttc" id="anamespacedeskflow_1_1gui_1_1messages_html_a4070dd1286443a5ae887887932ab1c93"><div class="ttname"><a href="namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93">deskflow::gui::messages::ClientError</a></div><div class="ttdeci">ClientError</div><div class="ttdef"><b>Definition</b> Messages.h:17</div></div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>} <span class="comment">// namespace deskflow::gui</span></div>
+<div class="ttc" id="aEnums_8h_html"><div class="ttname"><a href="Enums_8h.html">Enums.h</a></div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_a6dedf51506682748ddbdd880f4363df6"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#a6dedf51506682748ddbdd880f4363df6">deskflow::gui::ClientConnection::ClientConnection</a></div><div class="ttdeci">ClientConnection(QWidget *parent)</div><div class="ttdef"><b>Definition</b> ClientConnection.h:24</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af57b859d12d85d46ac15c9ec71f684af"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af57b859d12d85d46ac15c9ec71f684af">deskflow::gui::ClientConnection::handleLogLine</a></div><div class="ttdeci">void handleLogLine(const QString &amp;line)</div><div class="ttdef"><b>Definition</b> ClientConnection.cpp:17</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html_af82f333ba2a0666529ac3859f00a75d4"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html#af82f333ba2a0666529ac3859f00a75d4">deskflow::gui::ClientConnection::requestShowError</a></div><div class="ttdeci">void requestShowError(deskflow::client::ErrorType error, const QString &amp;address)</div><div class="ttdoc">requestShowError, This signal is emitted when the client connection would like the owning process to ...</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1client_html_aa4ce66800aaa4ff88fb0a1106e568210"><div class="ttname"><a href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a></div><div class="ttdeci">ErrorType</div><div class="ttdef"><b>Definition</b> Enums.h:16</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_html"><div class="ttname"><a href="namespacedeskflow_1_1gui.html">deskflow::gui</a></div><div class="ttdef"><b>Definition</b> IServerConfig.h:14</div></div>
-<div class="ttc" id="astructdeskflow_1_1gui_1_1ClientConnection_1_1Deps_html"><div class="ttname"><a href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">deskflow::gui::ClientConnection::Deps</a></div><div class="ttdef"><b>Definition</b> ClientConnection.h:26</div></div>
-<div class="ttc" id="astructdeskflow_1_1gui_1_1ClientConnection_1_1Deps_html_a0820c4b1c15cf56f2db1dd8584cdc177"><div class="ttname"><a href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html#a0820c4b1c15cf56f2db1dd8584cdc177">deskflow::gui::ClientConnection::Deps::showError</a></div><div class="ttdeci">virtual void showError(QWidget *parent, messages::ClientError error, const QString &amp;address) const</div><div class="ttdef"><b>Definition</b> ClientConnection.cpp:21</div></div>
-<div class="ttc" id="astructdeskflow_1_1gui_1_1ClientConnection_1_1Deps_html_a375d24b82683a9fac5c761aa5b31b4b8"><div class="ttname"><a href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html#a375d24b82683a9fac5c761aa5b31b4b8">deskflow::gui::ClientConnection::Deps::~Deps</a></div><div class="ttdeci">virtual ~Deps()=default</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

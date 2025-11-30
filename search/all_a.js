@@ -40,7 +40,7 @@ var searchData=
   ['helpoption_37',['helpOption',['../structCoreArgs.html#af596e33bb54c0b63d633ae0ed47d3658',1,'CoreArgs']]],
   ['helptext_38',['helpText',['../classCoreArgParser.html#a63cb88b7b66c588a6e040502583bec12',1,'CoreArgParser']]],
   ['hide_39',['hide',['../classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9',1,'MainWindow']]],
-  ['hostnameerror_40',['HostnameError',['../namespacedeskflow_1_1gui_1_1messages.html#a4070dd1286443a5ae887887932ab1c93a4799233e783a39e6b720d33fb45a33d7',1,'deskflow::gui::messages']]],
+  ['hostnameerror_40',['HostnameError',['../namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210a4799233e783a39e6b720d33fb45a33d7',1,'deskflow::client']]],
   ['hotkey_41',['Hotkey',['../classHotkey.html',1,'Hotkey'],['../classHotkey.html#abe326f7aa81e9e39d2e9a36a91dab84c',1,'Hotkey::Hotkey()']]],
   ['hotkey_42',['hotkey',['../classHotkeyDialog.html#a6b6efc14d6a365207f9f15fb9fd5fad0',1,'HotkeyDialog::hotkey() const'],['../classHotkeyDialog.html#ad5374fed612267e9313fc138a20b29d2',1,'HotkeyDialog::hotkey()']]],
   ['hotkey_2ecpp_43',['Hotkey.cpp',['../Hotkey_8cpp.html',1,'']]],

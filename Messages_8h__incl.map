@@ -1,7 +1,11 @@
 <map id="src/lib/gui/Messages.h" name="src/lib/gui/Messages.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="70,5,222,30"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="137,5,289,30"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,78,157,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,29,104,69,100,65,133,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,32,118,73,115,68,193,29"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="180,78,246,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,28,194,67,189,67,156,33"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="215,28,215,64,211,61,211,33"/>
+<area shape="rect" id="Node000004" href="$Enums_8h.html" title=" " alt="" coords="269,78,397,103"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="233,28,303,69,297,70,232,33"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="298,151,368,175"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="335,101,335,137,331,134,331,105"/>
 </map>

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.33</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.38</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -117,23 +117,19 @@ Collaboration diagram for deskflow::gui::ClientConnection:</div>
 </map>
 <center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:Deps" id="r_Deps"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a></td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-signals" class="groupheader"><a id="signals" name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:a5c7e6af5528dcc07e8bbe80a90905241" id="r_a5c7e6af5528dcc07e8bbe80a90905241"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a5c7e6af5528dcc07e8bbe80a90905241">messageShowing</a> ()</td></tr>
+<tr class="memitem:af82f333ba2a0666529ac3859f00a75d4" id="r_af82f333ba2a0666529ac3859f00a75d4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af82f333ba2a0666529ac3859f00a75d4">requestShowError</a> (<a class="el" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a> error, const QString &amp;address)</td></tr>
+<tr class="memdesc:af82f333ba2a0666529ac3859f00a75d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">requestShowError, This signal is emitted when the client connection would like the owning process to report an error message  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1656b9d038e3003cace1b59b2f93dc5c" id="r_a1656b9d038e3003cace1b59b2f93dc5c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1656b9d038e3003cace1b59b2f93dc5c">ClientConnection</a> (QWidget *parent, std::shared_ptr&lt; <a class="el" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a> &gt; deps=std::make_shared&lt; <a class="el" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a> &gt;())</td></tr>
+<tr class="memitem:a6dedf51506682748ddbdd880f4363df6" id="r_a6dedf51506682748ddbdd880f4363df6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6dedf51506682748ddbdd880f4363df6">ClientConnection</a> (QWidget *parent)</td></tr>
 <tr class="memitem:af57b859d12d85d46ac15c9ec71f684af" id="r_af57b859d12d85d46ac15c9ec71f684af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af57b859d12d85d46ac15c9ec71f684af">handleLogLine</a> (const QString &amp;line)</td></tr>
-<tr class="memitem:af00f141d8330a27521f5b75e336db585" id="r_af00f141d8330a27521f5b75e336db585"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af00f141d8330a27521f5b75e336db585">setShowMessage</a> ()</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a1656b9d038e3003cace1b59b2f93dc5c" name="a1656b9d038e3003cace1b59b2f93dc5c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1656b9d038e3003cace1b59b2f93dc5c">&#9670;&#160;</a></span>ClientConnection()</h2>
+<a id="a6dedf51506682748ddbdd880f4363df6" name="a6dedf51506682748ddbdd880f4363df6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6dedf51506682748ddbdd880f4363df6">&#9670;&#160;</a></span>ClientConnection()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,12 +140,8 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">deskflow::gui::ClientConnection::ClientConnection </td>
           <td>(</td>
-          <td class="paramtype">QWidget *</td>          <td class="paramname"><span class="paramname"><em>parent</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramtype">QWidget *</td>          <td class="paramname"><span class="paramname"><em>parent</em></span></td><td>)</td>
           <td></td>
-          <td class="paramtype">std::shared_ptr&lt; <a class="el" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>deps</em></span><span class="paramdefsep"> = </span><span class="paramdefval">std::make_shared&lt;<a class="el" href="structdeskflow_1_1gui_1_1ClientConnection_1_1Deps.html">Deps</a>&gt;()</span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -179,8 +171,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a5c7e6af5528dcc07e8bbe80a90905241" name="a5c7e6af5528dcc07e8bbe80a90905241"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c7e6af5528dcc07e8bbe80a90905241">&#9670;&#160;</a></span>messageShowing</h2>
+<a id="af82f333ba2a0666529ac3859f00a75d4" name="af82f333ba2a0666529ac3859f00a75d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af82f333ba2a0666529ac3859f00a75d4">&#9670;&#160;</a></span>requestShowError</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -189,10 +181,14 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void deskflow::gui::ClientConnection::messageShowing </td>
+          <td class="memname">void deskflow::gui::ClientConnection::requestShowError </td>
           <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td class="paramtype"><a class="el" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a></td>          <td class="paramname"><span class="paramname"><em>error</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">const QString &amp;</td>          <td class="paramname"><span class="paramname"><em>address</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -202,30 +198,14 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="af00f141d8330a27521f5b75e336db585" name="af00f141d8330a27521f5b75e336db585"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af00f141d8330a27521f5b75e336db585">&#9670;&#160;</a></span>setShowMessage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void deskflow::gui::ClientConnection::setShowMessage </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
+<p>requestShowError, This signal is emitted when the client connection would like the owning process to report an error message </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">error</td><td>the type of error being reported </td></tr>
+    <tr><td class="paramname">address</td><td>of the host </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

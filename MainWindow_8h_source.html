@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.33</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.38</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -252,57 +252,60 @@ $(function(){initNavTree('MainWindow_8h_source.html','',''); });
 <div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>  <span class="keywordtype">void</span> toggleCanRunCore(<span class="keywordtype">bool</span> enableButtons);</div>
 <div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>  <span class="keywordtype">void</span> remoteHostChanged(<span class="keyword">const</span> QString &amp;newRemoteHost);</div>
 <div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span></div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>  QString trustedFingerprintDatabase() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span></div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>  <span class="keywordtype">bool</span> generateCertificate();</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>  <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> m_fingerprint;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span> </div>
-<div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span>  <span class="keywordtype">void</span> serverClientsChanged(<span class="keyword">const</span> QStringList &amp;clients);</div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span> </div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> m_guiSocketName = QStringLiteral(<span class="stringliteral">&quot;deskflow-gui&quot;</span>);</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> m_nameRegEx = QRegularExpression(QStringLiteral(<span class="stringliteral">&quot;^[\\w\\-_\\.]{0,255}$&quot;</span>));</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>  <span class="keywordtype">void</span> showClientError(<a class="code hl_enumeration" href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a> error, <span class="keyword">const</span> QString &amp;address);</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span></div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>  QString trustedFingerprintDatabase() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span></div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>  <span class="keywordtype">bool</span> generateCertificate();</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span> </div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <a class="code hl_class" href="classVersionChecker.html">VersionChecker</a> m_versionChecker;</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>  <span class="keywordtype">bool</span> m_secureSocket = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keywordtype">bool</span> m_saveOnExit = <span class="keyword">true</span>;</div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html">deskflow::gui::core::WaylandWarnings</a> m_waylandWarnings;</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> m_serverConfig;</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1CoreProcess.html">deskflow::gui::CoreProcess</a> m_coreProcess;</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ServerConnection.html">deskflow::gui::ServerConnection</a> m_serverConnection;</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ClientConnection.html">deskflow::gui::ClientConnection</a> m_clientConnection;</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  QSize m_expandedSize = QSize();</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  QStringList m_checkedClients;</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  QStringList m_checkedServers;</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  QSystemTrayIcon *m_trayIcon = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  QLocalServer *m_guiDupeChecker = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html">deskflow::gui::ipc::DaemonIpcClient</a> *m_daemonIpcClient = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span> </div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <a class="code hl_class" href="classLogDock.html">LogDock</a> *m_logDock;</div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  QLabel *m_lblSecurityStatus = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  QLabel *m_lblStatus = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  QPushButton *m_btnFingerprint = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  QPushButton *m_btnUpdate = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  <span class="comment">// Window Menu</span></div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>  QMenu *m_menuFile = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  QMenu *m_menuEdit = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  QMenu *m_menuView = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  QMenu *m_menuHelp = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span> </div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  <span class="comment">// Window Actions</span></div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>  QAction *m_actionAbout = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  QAction *m_actionClearSettings = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  QAction *m_actionReportBug = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  QAction *m_actionMinimize = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  QAction *m_actionQuit = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  QAction *m_actionTrayQuit = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>  QAction *m_actionRestore = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  QAction *m_actionSettings = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  QAction *m_actionStartCore = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  QAction *m_actionRestartCore = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  QAction *m_actionStopCore = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>};</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>  <a class="code hl_struct" href="structFingerprint.html">Fingerprint</a> m_fingerprint;</div>
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span> </div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>  <span class="keywordtype">void</span> serverClientsChanged(<span class="keyword">const</span> QStringList &amp;clients);</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span> </div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> m_guiSocketName = QStringLiteral(<span class="stringliteral">&quot;deskflow-gui&quot;</span>);</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">auto</span> m_nameRegEx = QRegularExpression(QStringLiteral(<span class="stringliteral">&quot;^[\\w\\-_\\.]{0,255}$&quot;</span>));</div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span> </div>
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>  <a class="code hl_class" href="classVersionChecker.html">VersionChecker</a> m_versionChecker;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>  <span class="keywordtype">bool</span> m_secureSocket = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>  <span class="keywordtype">bool</span> m_saveOnExit = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>  <span class="keywordtype">bool</span> m_clientErrorVisible = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html">deskflow::gui::core::WaylandWarnings</a> m_waylandWarnings;</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>  <a class="code hl_class" href="classServerConfig.html">ServerConfig</a> m_serverConfig;</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1CoreProcess.html">deskflow::gui::CoreProcess</a> m_coreProcess;</div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ServerConnection.html">deskflow::gui::ServerConnection</a> m_serverConnection;</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ClientConnection.html">deskflow::gui::ClientConnection</a> m_clientConnection;</div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>  QSize m_expandedSize = QSize();</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>  QStringList m_checkedClients;</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>  QStringList m_checkedServers;</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>  QSystemTrayIcon *m_trayIcon = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>  QLocalServer *m_guiDupeChecker = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>  <a class="code hl_class" href="classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html">deskflow::gui::ipc::DaemonIpcClient</a> *m_daemonIpcClient = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span> </div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>  <a class="code hl_class" href="classLogDock.html">LogDock</a> *m_logDock;</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>  QLabel *m_lblSecurityStatus = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>  QLabel *m_lblStatus = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>  QPushButton *m_btnFingerprint = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>  QPushButton *m_btnUpdate = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>  <span class="comment">// Window Menu</span></div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>  QMenu *m_menuFile = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>  QMenu *m_menuEdit = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>  QMenu *m_menuView = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>  QMenu *m_menuHelp = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span> </div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>  <span class="comment">// Window Actions</span></div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>  QAction *m_actionAbout = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>  QAction *m_actionClearSettings = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>  QAction *m_actionReportBug = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>  QAction *m_actionMinimize = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>  QAction *m_actionQuit = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>  QAction *m_actionTrayQuit = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>  QAction *m_actionRestore = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>  QAction *m_actionSettings = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>  QAction *m_actionStartCore = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>  QAction *m_actionRestartCore = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>  QAction *m_actionStopCore = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>};</div>
 </div>
 <div class="ttc" id="aClientConnection_8h_html"><div class="ttname"><a href="ClientConnection_8h.html">ClientConnection.h</a></div></div>
 <div class="ttc" id="aCoreProcess_8h_html"><div class="ttname"><a href="CoreProcess_8h.html">CoreProcess.h</a></div></div>
@@ -316,12 +319,12 @@ $(function(){initNavTree('MainWindow_8h_source.html','',''); });
 <div class="ttc" id="aclassLogDock_html"><div class="ttname"><a href="classLogDock.html">LogDock</a></div><div class="ttdef"><b>Definition</b> LogDock.h:16</div></div>
 <div class="ttc" id="aclassMainWindow_html_a1f7d2c56410fc1bfa135bb907d43313f"><div class="ttname"><a href="classMainWindow.html#a1f7d2c56410fc1bfa135bb907d43313f">MainWindow::~MainWindow</a></div><div class="ttdeci">~MainWindow() override</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:159</div></div>
 <div class="ttc" id="aclassMainWindow_html_a34c4b4207b46d11a4100c9b19f0e81bb"><div class="ttname"><a href="classMainWindow.html#a34c4b4207b46d11a4100c9b19f0e81bb">MainWindow::MainWindow</a></div><div class="ttdeci">MainWindow()</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:62</div></div>
-<div class="ttc" id="aclassMainWindow_html_a3c9e6940d44970aee2e791efbaecb0c9"><div class="ttname"><a href="classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9">MainWindow::hide</a></div><div class="ttdeci">void hide()</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:1011</div></div>
-<div class="ttc" id="aclassMainWindow_html_a4ef155139c11908dd3c73fcf78bc5e1d"><div class="ttname"><a href="classMainWindow.html#a4ef155139c11908dd3c73fcf78bc5e1d">MainWindow::changeEvent</a></div><div class="ttdeci">void changeEvent(QEvent *e) override</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:1022</div></div>
+<div class="ttc" id="aclassMainWindow_html_a3c9e6940d44970aee2e791efbaecb0c9"><div class="ttname"><a href="classMainWindow.html#a3c9e6940d44970aee2e791efbaecb0c9">MainWindow::hide</a></div><div class="ttdeci">void hide()</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:1009</div></div>
+<div class="ttc" id="aclassMainWindow_html_a4ef155139c11908dd3c73fcf78bc5e1d"><div class="ttname"><a href="classMainWindow.html#a4ef155139c11908dd3c73fcf78bc5e1d">MainWindow::changeEvent</a></div><div class="ttdeci">void changeEvent(QEvent *e) override</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:1020</div></div>
 <div class="ttc" id="aclassMainWindow_html_a569ba885dcf12c616588d5859b9f97e0"><div class="ttname"><a href="classMainWindow.html#a569ba885dcf12c616588d5859b9f97e0">MainWindow::DeskflowApplication</a></div><div class="ttdeci">friend class DeskflowApplication</div><div class="ttdef"><b>Definition</b> MainWindow.h:64</div></div>
 <div class="ttc" id="aclassMainWindow_html_a9db86c59ffef16a64d60b4167690fcff"><div class="ttname"><a href="classMainWindow.html#a9db86c59ffef16a64d60b4167690fcff">MainWindow::coreMode</a></div><div class="ttdeci">CoreMode coreMode() const</div><div class="ttdef"><b>Definition</b> MainWindow.h:78</div></div>
 <div class="ttc" id="aclassMainWindow_html_aa0ee1fdc634179b66566f3599595393a"><div class="ttname"><a href="classMainWindow.html#aa0ee1fdc634179b66566f3599595393a">MainWindow::serverConfig</a></div><div class="ttdeci">ServerConfig &amp; serverConfig()</div><div class="ttdef"><b>Definition</b> MainWindow.h:83</div></div>
-<div class="ttc" id="aclassMainWindow_html_aa7473e4bbbcc281706ac2edef864fb45"><div class="ttname"><a href="classMainWindow.html#aa7473e4bbbcc281706ac2edef864fb45">MainWindow::open</a></div><div class="ttdeci">void open()</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:644</div></div>
+<div class="ttc" id="aclassMainWindow_html_aa7473e4bbbcc281706ac2edef864fb45"><div class="ttname"><a href="classMainWindow.html#aa7473e4bbbcc281706ac2edef864fb45">MainWindow::open</a></div><div class="ttdeci">void open()</div><div class="ttdef"><b>Definition</b> MainWindow.cpp:642</div></div>
 <div class="ttc" id="aclassMainWindow_html_ac35c75567108290ee50f30a0cf639526"><div class="ttname"><a href="classMainWindow.html#ac35c75567108290ee50f30a0cf639526">MainWindow::SettingsDialog</a></div><div class="ttdeci">friend class SettingsDialog</div><div class="ttdef"><b>Definition</b> MainWindow.h:65</div></div>
 <div class="ttc" id="aclassMainWindow_html_ae9f151608e7c0e611ab434cd585d1c2b"><div class="ttname"><a href="classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2b">MainWindow::LogLevel</a></div><div class="ttdeci">LogLevel</div><div class="ttdef"><b>Definition</b> MainWindow.h:69</div></div>
 <div class="ttc" id="aclassMainWindow_html_ae9f151608e7c0e611ab434cd585d1c2ba4059b0251f66a18cb56f544728796875"><div class="ttname"><a href="classMainWindow.html#ae9f151608e7c0e611ab434cd585d1c2ba4059b0251f66a18cb56f544728796875">MainWindow::LogLevel::Info</a></div><div class="ttdeci">@ Info</div><div class="ttdef"><b>Definition</b> MainWindow.h:71</div></div>
@@ -329,7 +332,7 @@ $(function(){initNavTree('MainWindow_8h_source.html','',''); });
 <div class="ttc" id="aclassServerConfig_html"><div class="ttname"><a href="classServerConfig.html">ServerConfig</a></div><div class="ttdef"><b>Definition</b> ServerConfig.h:35</div></div>
 <div class="ttc" id="aclassSettings_html_a871632dd31afbacff3eb0a6c3e0d63bf"><div class="ttname"><a href="classSettings.html#a871632dd31afbacff3eb0a6c3e0d63bf">Settings::CoreMode</a></div><div class="ttdeci">CoreMode</div><div class="ttdef"><b>Definition</b> Settings.h:112</div></div>
 <div class="ttc" id="aclassVersionChecker_html"><div class="ttname"><a href="classVersionChecker.html">VersionChecker</a></div><div class="ttdef"><b>Definition</b> VersionChecker.h:16</div></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html">deskflow::gui::ClientConnection</a></div><div class="ttdef"><b>Definition</b> ClientConnection.h:21</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1ClientConnection_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ClientConnection.html">deskflow::gui::ClientConnection</a></div><div class="ttdef"><b>Definition</b> ClientConnection.h:20</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html">deskflow::gui::CoreProcess</a></div><div class="ttdef"><b>Definition</b> CoreProcess.h:26</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_aa193dc075dafb00ca6a7742c489a83d9"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#aa193dc075dafb00ca6a7742c489a83d9">deskflow::gui::CoreProcess::ConnectionState</a></div><div class="ttdeci">ConnectionState</div><div class="ttdef"><b>Definition</b> CoreProcess.h:49</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1CoreProcess_html_abe59082d5d955a9e8e2413e19bcecc8c"><div class="ttname"><a href="classdeskflow_1_1gui_1_1CoreProcess.html#abe59082d5d955a9e8e2413e19bcecc8c">deskflow::gui::CoreProcess::ProcessState</a></div><div class="ttdeci">ProcessState</div><div class="ttdef"><b>Definition</b> CoreProcess.h:39</div></div>
@@ -338,6 +341,7 @@ $(function(){initNavTree('MainWindow_8h_source.html','',''); });
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1core_1_1WaylandWarnings_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1core_1_1WaylandWarnings.html">deskflow::gui::core::WaylandWarnings</a></div><div class="ttdef"><b>Definition</b> WaylandWarnings.h:15</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient_html"><div class="ttname"><a href="classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html">deskflow::gui::ipc::DaemonIpcClient</a></div><div class="ttdef"><b>Definition</b> DaemonIpcClient.h:16</div></div>
 <div class="ttc" id="anamespaceUi_html"><div class="ttname"><a href="namespaceUi.html">Ui</a></div><div class="ttdef"><b>Definition</b> AboutDialog.h:13</div></div>
+<div class="ttc" id="anamespacedeskflow_1_1client_html_aa4ce66800aaa4ff88fb0a1106e568210"><div class="ttname"><a href="namespacedeskflow_1_1client.html#aa4ce66800aaa4ff88fb0a1106e568210">deskflow::client::ErrorType</a></div><div class="ttdeci">ErrorType</div><div class="ttdef"><b>Definition</b> Enums.h:16</div></div>
 <div class="ttc" id="anamespacedeskflow_1_1gui_1_1ipc_html"><div class="ttname"><a href="namespacedeskflow_1_1gui_1_1ipc.html">deskflow::gui::ipc</a></div><div class="ttdef"><b>Definition</b> CoreProcess.h:21</div></div>
 <div class="ttc" id="astructFingerprint_html"><div class="ttname"><a href="structFingerprint.html">Fingerprint</a></div><div class="ttdef"><b>Definition</b> Fingerprint.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->

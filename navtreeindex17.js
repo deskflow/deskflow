@@ -1,5 +1,7 @@
 var NAVTREEINDEX17 =
 {
+"classXWindowsScreen.html#acd8d3403716eebd6b877f3940d2712bb":[6,0,255,11],
+"classXWindowsScreen.html#adebd866d00c93789888ed2fdef89b58f":[6,0,255,28],
 "classXWindowsScreen.html#ae63168f2ac727cbbb96cf63a9313ba86":[6,0,255,32],
 "classXWindowsScreen.html#af0af20f62ff51b6bb250011ad592593c":[6,0,255,17],
 "classXWindowsScreen.html#af1e7f83220b4a34343af344c009f9b21":[6,0,255,20],
@@ -247,7 +249,5 @@ var NAVTREEINDEX17 =
 "classdeskflow_1_1KeyMap.html#a92cde43b05ff9802fedef4f8b4774549":[5,0,0,9,32],
 "classdeskflow_1_1KeyMap.html#a92cde43b05ff9802fedef4f8b4774549":[6,0,0,8,32],
 "classdeskflow_1_1KeyMap.html#a96ff8c796feab9da3d8ba488ddd49a0a":[5,0,0,9,30],
-"classdeskflow_1_1KeyMap.html#a96ff8c796feab9da3d8ba488ddd49a0a":[6,0,0,8,30],
-"classdeskflow_1_1KeyMap.html#a9c17f533313debc42b773f6d37fa1cd9":[5,0,0,9,4],
-"classdeskflow_1_1KeyMap.html#a9c17f533313debc42b773f6d37fa1cd9":[6,0,0,8,4]
+"classdeskflow_1_1KeyMap.html#a96ff8c796feab9da3d8ba488ddd49a0a":[6,0,0,8,30]
 };
