@@ -74,6 +74,7 @@ public:
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
     inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
     inline static const auto ShownFirstConnectedMessage = QStringLiteral("gui/shownFirstConnectedMessage");
+    inline static const auto ShownServerFirstStartMessage = QStringLiteral("gui/shownServerFirstStartMessage");
   };
   struct Log
   {
@@ -213,6 +214,7 @@ private:
     , Settings::Gui::WindowGeometry
     , Settings::Gui::ShowGenericClientFailureDialog
     , Settings::Gui::ShownFirstConnectedMessage
+    , Settings::Gui::ShownServerFirstStartMessage
     , Settings::Security::Certificate
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
@@ -225,6 +227,7 @@ private:
   inline static const QStringList m_defaultFalseValues = {
       Settings::Gui::Autohide
     , Settings::Gui::ShownFirstConnectedMessage
+    , Settings::Gui::ShownServerFirstStartMessage
     , Settings::Core::StartedBefore
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
