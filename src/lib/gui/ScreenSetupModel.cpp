@@ -9,10 +9,10 @@
 #include "ScreenSetupModel.h"
 
 #include <QIODevice>
-#include <QIcon>
 #include <QMimeData>
 
 #include "gui/config/Screen.h"
+#include "gui/widgets/MonitorLayoutWidget.h"
 
 const QString ScreenSetupModel::m_MimeType = "application/x-deskflow-screen";
 
@@ -40,23 +40,61 @@ QVariant ScreenSetupModel::data(const QModelIndex &index, int role) const
 {
   if (!index.isValid() || index.row() > m_NumRows || index.row() < 0 || index.column() < 0 ||
       index.column() > m_NumColumns)
-    return QVariant();
+    return {};
 
   if (screen(index).isNull())
-    return QVariant();
+    return {};
 
   switch (role) {
-  case Qt::DecorationRole:
-    return screen(index).pixmap();
+  case Qt::DecorationRole: {
+    const auto &monitors = screen(index).monitors();
+    
+    qDebug() << "DecorationRole for screen" << screen(index).name() 
+             << "- monitors:" << monitors.size();
 
-  case Qt::ToolTipRole:
-    return QString(tr("<center>Screen: <b>%1</b></center>"
-                      "<br>Double click to edit settings"
-                      "<br>Drag screen to the trashcan to remove it"))
+    if (monitors.size() > 1) {
+      qDebug() << "Creating multi-monitor pixmap for" << screen(index).name();
+      QPixmap pixmap(96, 96);
+      pixmap.fill(Qt::transparent);
+      QPainter painter(&pixmap);
+      painter.setRenderHint(QPainter::Antialiasing);
+      MonitorLayoutWidget tempWidget;
+      tempWidget.setMonitors(monitors);
+      tempWidget.resize(96, 96);
+      tempWidget.render(&painter);
+      
+      return pixmap;
+    }
+
+    qDebug() << "Using default icon for" << screen(index).name();
+    return screen(index).pixmap();
+  }
+
+  case Qt::ToolTipRole: {
+    QString tooltip = QString(tr("<center>Screen: <b>%1</b></center>"))
         .arg(screen(index).name());
 
-  case Qt::DisplayRole:
+    if (const auto &monitors = screen(index).monitors(); !monitors.isEmpty()) {
+      tooltip += QString(tr("<br><b>Monitors:</b> %1")).arg(monitors.size());
+      for (const auto &monitor : monitors) {
+        tooltip += QString(tr("<br>  • %1: %2x%3 at (%4, %5)%6"))
+            .arg(monitor.name)
+            .arg(monitor.geometry.width())
+            .arg(monitor.geometry.height())
+            .arg(monitor.geometry.x())
+            .arg(monitor.geometry.y())
+            .arg(monitor.isPrimary ? tr(" (primary)") : "");
+      }
+    }
+    
+    tooltip += tr("<br>Double click to edit settings"
+                  "<br>Drag screen to the trashcan to remove it");
+    return tooltip;
+  }
+
+  case Qt::DisplayRole: {
     return screen(index).name();
+  }
 
   default:
     break;

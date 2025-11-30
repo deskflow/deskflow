@@ -27,6 +27,9 @@ public:
   void setModel(QAbstractItemModel *model) override;
   ScreenSetupModel *model() const;
 
+Q_SIGNALS:
+  void expandToMonitors(const QModelIndex &index, int monitorCount);
+
 private:
   void showScreenConfig(int col, int row);
 
@@ -42,4 +45,5 @@ protected:
   {
     // do nothing
   }
+  void contextMenuEvent(QContextMenuEvent *event) override;
 };

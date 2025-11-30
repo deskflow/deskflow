@@ -953,6 +953,99 @@ void XWindowsScreen::setShape(int32_t width, int32_t height)
 #endif
 
   LOG_DEBUG("center: %d,%d", m_xCenter, m_yCenter);
+  detectMonitors();
+}
+
+void XWindowsScreen::detectMonitors()
+{
+  m_monitors.clear();
+
+#if HAVE_X11_EXTENSIONS_XRANDR_H
+  if (m_xrandr) {
+    if (auto *resources = XRRGetScreenResources(m_display, m_root)) {
+      LOG_DEBUG("XRandR: found %d outputs", resources->noutput);
+      const auto primaryOutput = XRRGetOutputPrimary(m_display, m_root);
+      
+      for (int i = 0; i < resources->noutput; i++) {
+        auto *output = XRRGetOutputInfo(m_display, resources, resources->outputs[i]);
+        
+        if (output && output->connection == RR_Connected && output->crtc) {
+
+          if (auto *crtc = XRRGetCrtcInfo(m_display, resources, output->crtc)) {
+            MonitorInfo monitor;
+            monitor.x = crtc->x;
+            monitor.y = crtc->y;
+            monitor.width = crtc->width;
+            monitor.height = crtc->height;
+            monitor.name = output->name ? output->name : "Unknown";
+            monitor.isPrimary = (resources->outputs[i] == primaryOutput);
+            
+            m_monitors.push_back(monitor);
+            
+            LOG_DEBUG(
+                "Monitor %d: %s at %d,%d size %dx%d %s",
+                i, monitor.name.c_str(), monitor.x, monitor.y,
+                monitor.width, monitor.height,
+                monitor.isPrimary ? "(primary)" : ""
+            );
+            
+            XRRFreeCrtcInfo(crtc);
+          }
+        }
+        
+        if (output) {
+          XRRFreeOutputInfo(output);
+        }
+      }
+      
+      XRRFreeScreenResources(resources);
+    }
+  }
+#endif
+
+#if HAVE_X11_EXTENSIONS_XINERAMA_H
+  if (m_monitors.empty() && m_xinerama) {
+    int numScreens;
+
+    if (auto *screens = XineramaQueryScreens(m_display, &numScreens)) {
+      LOG_DEBUG("Xinerama: found %d screens", numScreens);
+      
+      for (int i = 0; i < numScreens; i++) {
+        MonitorInfo monitor;
+        monitor.x = screens[i].x_org;
+        monitor.y = screens[i].y_org;
+        monitor.width = screens[i].width;
+        monitor.height = screens[i].height;
+        monitor.name = "Monitor " + std::to_string(i);
+        monitor.isPrimary = (i == 0);
+        
+        m_monitors.push_back(monitor);
+        
+        LOG_DEBUG(
+            "Xinerama screen %d: %d,%d %dx%d %s",
+            i, monitor.x, monitor.y, monitor.width, monitor.height,
+            monitor.isPrimary ? "(primary)" : ""
+        );
+      }
+      
+      XFree(screens);
+    }
+  }
+#endif
+
+  if (m_monitors.empty()) {
+    MonitorInfo monitor;
+    monitor.x = m_x;
+    monitor.y = m_y;
+    monitor.width = m_w;
+    monitor.height = m_h;
+    monitor.name = "Default";
+    monitor.isPrimary = true;
+    
+    m_monitors.push_back(monitor);
+    
+    LOG_DEBUG("No multi-monitor setup detected, using single screen: %dx%d", m_w, m_h);
+  }
 }
 
 Window XWindowsScreen::openWindow() const
@@ -1965,3 +2058,16 @@ void XWindowsScreen::selectXIRawMotion()
   free(mask.mask);
 }
 #endif
+
+const std::vector<XWindowsScreen::MonitorInfo> &XWindowsScreen::getMonitors() const
+{
+  return m_monitors;
+}
+
+void XWindowsScreen::getTotalBounds(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const
+{
+  x = m_x;
+  y = m_y;
+  width = m_w;
+  height = m_h;
+}

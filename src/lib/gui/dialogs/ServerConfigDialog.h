@@ -38,6 +38,7 @@ public Q_SLOTS:
 
 protected Q_SLOTS:
   void onScreenRemoved();
+  void onExpandToMonitors(const QModelIndex &index, int monitorCount);
 
 protected:
   void addClient();

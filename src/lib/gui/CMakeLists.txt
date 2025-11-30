@@ -55,6 +55,8 @@ add_library(${target} STATIC
   core/CommandProcess.h
   core/CoreProcess.cpp
   core/CoreProcess.h
+  core/MonitorDetection.cpp
+  core/MonitorDetection.h
   core/ServerConnection.cpp
   core/ServerConnection.h
   core/ServerMessage.cpp
@@ -111,6 +113,8 @@ add_library(${target} STATIC
   widgets/LogDock.h
   widgets/LogWidget.h
   widgets/LogWidget.cpp
+  widgets/MonitorLayoutWidget.cpp
+  widgets/MonitorLayoutWidget.h
   widgets/NewScreenWidget.cpp
   widgets/NewScreenWidget.h
   widgets/ScreenSetupView.cpp

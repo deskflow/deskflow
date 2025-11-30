@@ -8,8 +8,9 @@
 
 #include "ServerConfig.h"
 
-#include "Hotkey.h"
+#include "Screen.h"
 #include "common/Settings.h"
+#include "core/MonitorDetection.h"
 
 #include <QAbstractButton>
 #include <QMessageBox>
@@ -184,6 +185,7 @@ void ServerConfig::recall()
     screens()[i].loadSettings(settings());
     if (getServerName() == screens()[i].name()) {
       screens()[i].markAsServer();
+      deskflow::gui::populateScreenMonitors(screens()[i]);
     }
   }
   settings().endArray();
@@ -330,6 +332,7 @@ void ServerConfig::updateServerName()
   for (auto &screen : screens()) {
     if (screen.isServer()) {
       screen.setName(Settings::value(Settings::Core::ScreenName).toString());
+      deskflow::gui::populateScreenMonitors(screen);
       break;
     }
   }
@@ -380,8 +383,12 @@ void ServerConfig::addClient(const QString &clientName)
 
   if (findScreenName(screenName, serverIndex)) {
     m_Screens[serverIndex].markAsServer();
+    deskflow::gui::populateScreenMonitors(m_Screens[serverIndex]);
   } else {
     fixNoServer(screenName, serverIndex);
+    if (serverIndex >= 0 && serverIndex < m_Screens.size()) {
+      deskflow::gui::populateScreenMonitors(m_Screens[serverIndex]);
+    }
   }
 
   m_Screens.addScreenByPriority(Screen(clientName));

@@ -15,6 +15,8 @@
 #include "dialogs/ActionDialog.h"
 #include "dialogs/HotkeyDialog.h"
 #include "dialogs/ScreenSettingsDialog.h"
+#include "gui/config/ServerConfig.h"
+#include "gui/core/MonitorDetection.h"
 
 #include <QFileDialog>
 #include <QMessageBox>
@@ -163,15 +165,51 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   if (server == screens.end()) {
     Screen serverScreen(serverConfig().getServerName());
     serverScreen.markAsServer();
-    model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = serverScreen;
+    deskflow::gui::populateScreenMonitors(serverScreen);
+
+    if (const auto &monitors = serverScreen.monitors(); monitors.size() > 1) {
+      qDebug() << "Expanding" << monitors.size() << "monitors into separate grid cells";
+      
+      int centerCol = serverConfig().numColumns() / 2;
+      int centerRow = serverConfig().numRows() / 2;
+      
+      // Place monitors horizontally from center
+      int startCol = centerCol - (monitors.size() / 2);
+      
+      for (int i = 0; i < monitors.size(); ++i) {
+        // First monitor keeps the original server name
+        QString monitorName = (i == 0) 
+          ? serverConfig().getServerName() 
+          : QString("%1-M%2").arg(serverConfig().getServerName()).arg(i + 1);
+          
+        Screen monitorScreen(monitorName);
+        if (i == 0) {
+          monitorScreen.markAsServer();
+        }
+
+        QVector<MonitorInfo> singleMonitor;
+        singleMonitor.append(monitors[i]);
+        monitorScreen.setMonitors(singleMonitor);
+        
+        const auto col = startCol + i;
+        if (col >= 0 && col < serverConfig().numColumns()) {
+          model().screen(col, centerRow) = monitorScreen;
+          qDebug() << "Placed monitor" << (i+1) << "at grid position" << col << "," << centerRow;
+        }
+      }
+    } else {
+      model().screen(serverConfig().numColumns() / 2, serverConfig().numRows() / 2) = serverScreen;
+    }
   } else {
     server->markAsServer();
+    deskflow::gui::populateScreenMonitors(*server);
   }
 
   onChange();
 
   // computers
   connect(&m_screenSetupModel, &ScreenSetupModel::screensChanged, this, &ServerConfigDialog::onChange);
+  connect(ui->screenSetupView, &ScreenSetupView::expandToMonitors, this, &ServerConfigDialog::onExpandToMonitors);
 }
 
 ServerConfigDialog::~ServerConfigDialog() = default;
@@ -459,6 +497,44 @@ void ServerConfigDialog::onScreenRemoved()
 {
   ui->lblNewScreen->setEnabled(true);
   onChange();
+}
+
+void ServerConfigDialog::onExpandToMonitors(const QModelIndex &index, int monitorCount)
+{
+  if (!index.isValid() || monitorCount < 2) {
+    return;
+  }
+  
+  Screen &originalScreen = model().screen(index);
+  if (originalScreen.isNull()) {
+    return;
+  }
+
+  const QString baseName = originalScreen.name();
+  const int col = index.column();
+  const int row = index.row();
+  qDebug() << "Expanding" << baseName << "into" << monitorCount << "monitors";
+  originalScreen = Screen();
+  const int startCol = col - (monitorCount / 2);
+  
+  for (int i = 0; i < monitorCount; ++i) {
+    Screen monitorScreen(QString("%1-M%2").arg(baseName).arg(i + 1));
+    MonitorInfo fakeMonitor;
+    fakeMonitor.name = QString("Monitor %1").arg(i + 1);
+    fakeMonitor.geometry = QRect(i * 1920, 0, 1920, 1080);  // Fake geometry
+    fakeMonitor.isPrimary = (i == 0);
+    QVector<MonitorInfo> singleMonitor;
+    singleMonitor.append(fakeMonitor);
+    monitorScreen.setMonitors(singleMonitor);
+
+    if (const auto targetCol = startCol + i; targetCol >= 0 && targetCol < serverConfig().numColumns()) {
+      model().screen(targetCol, row) = monitorScreen;
+      qDebug() << "Created monitor screen" << monitorScreen.name() << "at" << targetCol << "," << row;
+    }
+  }
+  
+  onChange();
+  Q_EMIT model().screensChanged();
 }
 
 void ServerConfigDialog::toggleExternalConfig(bool checked)

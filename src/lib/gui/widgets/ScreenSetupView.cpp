@@ -12,12 +12,11 @@
 #include "dialogs/ScreenSettingsDialog.h"
 
 #include <QDrag>
-#include <QDragEnterEvent>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMimeData>
-#include <QMouseEvent>
-#include <QResizeEvent>
+#include <QMenu>
+#include <QInputDialog>
 
 ScreenSetupView::ScreenSetupView(QWidget *parent) : QTableView(parent)
 {
@@ -44,7 +43,7 @@ ScreenSetupModel *ScreenSetupView::model() const
   return qobject_cast<ScreenSetupModel *>(QTableView::model());
 }
 
-void ScreenSetupView::showScreenConfig(int col, int row)
+void ScreenSetupView::showScreenConfig(const int col, const int row)
 {
   ScreenSettingsDialog dlg(this, &model()->screen(col, row), &model()->m_Screens);
   dlg.exec();
@@ -159,4 +158,42 @@ void ScreenSetupView::initViewItemOption(QStyleOptionViewItem *option) const
   option->decorationAlignment = Qt::AlignHCenter | Qt::AlignVCenter;
   option->displayAlignment = Qt::AlignTop | Qt::AlignHCenter;
   option->textElideMode = Qt::ElideMiddle;
+}
+
+void ScreenSetupView::contextMenuEvent(QContextMenuEvent *event)
+{
+  auto index = indexAt(event->pos());
+  if (!index.isValid() || model()->screen(index).isNull()) {
+    return;
+  }
+
+  const auto &screen = model()->screen(index);
+  
+  QMenu menu(this);
+  
+  // Only show "Expand to monitors" for non-server screens without monitors already
+  if (!screen.isServer() && screen.monitors().isEmpty()) {
+    const QAction *expandAction = menu.addAction(tr("Expand to Multiple Monitors..."));
+    connect(expandAction, &QAction::triggered, this, [this, index]() {
+      bool ok;
+      const auto monitorCount = QInputDialog::getInt(
+        this,
+        tr("Expand to Monitors"),
+        tr("How many monitors does this computer have?"),
+        2,  // default
+        1,  // minimum
+        8,  // maximum
+        1,  // step
+        &ok
+      );
+      
+      if (ok && monitorCount > 1) {
+        Q_EMIT expandToMonitors(index, monitorCount);
+      }
+    });
+  }
+  
+  if (!menu.isEmpty()) {
+    menu.exec(event->globalPos());
+  }
 }

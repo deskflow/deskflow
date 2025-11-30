@@ -16,11 +16,24 @@
 #include <QList>
 #include <QPixmap>
 #include <QString>
-#include <QStringList>
+#include <QRect>
+#include <QVector>
+#include <utility>
 
 class QSettings;
 class QTextStream;
 class ScreenSettingsDialog;
+
+struct MonitorInfo
+{
+  QString name;
+  QRect geometry;
+  bool isPrimary;
+  
+  MonitorInfo() : isPrimary(false) {}
+  MonitorInfo(const auto n, const auto x, const auto y, const auto w, const auto h, const auto primary = false)
+    : name(std::move(n)), geometry(x, y, w, h), isPrimary(primary) {}
+};
 
 class Screen : public ScreenConfig
 {
@@ -111,6 +124,22 @@ public:
   {
     m_isServer = true;
   }
+  [[nodiscard]] const QVector<MonitorInfo> &monitors() const
+  {
+    return m_Monitors;
+  }
+  void setMonitors(const QVector<MonitorInfo> &monitors)
+  {
+    m_Monitors = monitors;
+  }
+  void addMonitor(const MonitorInfo &monitor)
+  {
+    m_Monitors.append(monitor);
+  }
+  [[nodiscard]] bool hasMultipleMonitors() const
+  {
+    return m_Monitors.size() > 1;
+  }
 
   bool operator==(const Screen &screen) const;
 
@@ -166,4 +195,5 @@ private:
   QList<bool> m_Fixes{false, false, false, false};
   bool m_Swapped = false;
   bool m_isServer = false;
+  QVector<MonitorInfo> m_Monitors;  // Individual monitors for this screen
 };

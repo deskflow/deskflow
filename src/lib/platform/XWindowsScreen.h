@@ -39,11 +39,23 @@ public:
 
   //@}
 
+  struct MonitorInfo
+  {
+    int32_t x;
+    int32_t y;
+    int32_t width;
+    int32_t height;
+    std::string name;
+    bool isPrimary;
+  };
+
   // IScreen overrides
   void *getEventTarget() const final;
   bool getClipboard(ClipboardID id, IClipboard *) const override;
   void getShape(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const override;
   void getCursorPos(int32_t &x, int32_t &y) const override;
+  const std::vector<MonitorInfo> &getMonitors() const;
+  void getTotalBounds(int32_t &x, int32_t &y, int32_t &width, int32_t &height) const;
 
   // IPrimaryScreen overrides
   void reconfigure(uint32_t activeSides) override;
@@ -120,6 +132,7 @@ private:
   Display *openDisplay(const char *displayName);
   void saveShape();
   void setShape(int32_t width, int32_t height);
+  void detectMonitors();
   Window openWindow() const;
   void openIM();
 
@@ -243,6 +256,8 @@ private:
   // XRandR extension stuff
   bool m_xrandr = false;
   int m_xrandrEventBase;
+
+  std::vector<MonitorInfo> m_monitors;
 
   IEventQueue *m_events = nullptr;
   deskflow::KeyMap m_keyMap;
