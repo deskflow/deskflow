@@ -73,6 +73,7 @@ public:
     inline static const auto SymbolicTrayIcon = QStringLiteral("gui/symbolicTrayIcon");
     inline static const auto WindowGeometry = QStringLiteral("gui/windowGeometry");
     inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
+    inline static const auto ShownFirstConnectedMessage = QStringLiteral("gui/shownFirstConnectedMessage");
   };
   struct Log
   {
@@ -211,6 +212,7 @@ private:
     , Settings::Gui::SymbolicTrayIcon
     , Settings::Gui::WindowGeometry
     , Settings::Gui::ShowGenericClientFailureDialog
+    , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Security::Certificate
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
@@ -222,6 +224,7 @@ private:
   // When checking the default values this list contains the ones that default to false.
   inline static const QStringList m_defaultFalseValues = {
       Settings::Gui::Autohide
+    , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Core::StartedBefore
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
