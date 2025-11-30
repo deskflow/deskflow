@@ -222,9 +222,6 @@ void showClientConnectError(QWidget *parent, deskflow::client::ErrorType error, 
     return;
   }
 
-  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool())
-    return;
-
   auto dialog = QMessageBox(parent);
   dialog.setWindowTitle(title);
   dialog.setText(message);

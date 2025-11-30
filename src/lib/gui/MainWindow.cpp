@@ -1239,11 +1239,15 @@ void MainWindow::remoteHostChanged(const QString &newRemoteHost)
 
 void MainWindow::showClientError(deskflow::client::ErrorType error, const QString &address)
 {
+  if (!Settings::value(Settings::Gui::ShowGenericClientFailureDialog).toBool())
+    return;
+
   if (m_clientErrorVisible)
     return;
+
   m_clientErrorVisible = true;
-  deskflow::gui::messages::showClientConnectError(this, error, address);
   showAndActivate();
+  deskflow::gui::messages::showClientConnectError(this, error, address);
   m_clientErrorVisible = false;
 }
 
