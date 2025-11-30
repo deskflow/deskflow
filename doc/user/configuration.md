@@ -59,13 +59,14 @@ It will begin with `[client]`
 | remoteHost            | `IP` or `hostname` | The remote host last connected to | 
 | xdpRestoreToken       | UUID               | Restore token provided by XDG portals |
 
-
 ### Core
+
 This section contains general options it will begin with `[core]`
 
 |Option         | Valid Values|Description|
 |:--------------|:-----------:|:-----------|
 | coreMode      | `0` or `1` or `2` | The mode to start in 0: None, 1: Client, 2: Server [default: 0]|
+| display       |  int              | The XWindow display to use [default: autodetected] |
 | interface     | IP Address        | Preferred IP to use for network communication. By default the server board casts on any available address |
 | lastVersion   | M.m.p.t           | The version last run used for checking for updates |
 | port          | port #            | Port to use when connecting [default: 24800 |
@@ -74,6 +75,9 @@ This section contains general options it will begin with `[core]`
 | screenName    | string            | Name used to identify the screen [default: machine's hostname] |
 | startedBefore | `true` or `false `| Have we started client or server before. Used in logic when deciding to show some dialogs.
 | updateUrl     | URL               | The URL to use when checking for a new version number, it should return a version [default: https://api.deskflow.org/version]|
+| useHooks      | `true` or `false` | If Windows uses hooks or not [default: true] |
+| language      | 639 language      | The language to display the GUI in [default: en] |
+| wlClipboard   | `true` or `false` | When true the wl-clipboard backend will be enabled [default: false] |
 
 ### Daemon
 
@@ -90,25 +94,27 @@ This section contains options used by the daemon on windows it will begin with `
 
 This section contains options used by the GUI it will begin with `[gui]`
 
-|Option             | Valid Values      |Description|
-|:------------------|:-----------------:|:-----------|
-| autoHide          | `true` or `false` | When true the app will hide itself on start up [default: false] |
-| enableUpdateCheck | `true` or `false` | When true check the update URL to see if a new version was released on start up [default: false] |
-| closeReminder     | `true` or `false` | Used to track if we have shown the reminder that when you close the app it remain running in the background  [default: true]|
-| logExpanded       | `true` or `false` | Should the log section of the GUI be opened [default: false] |
-| symbolicTrayIcon  | `true` or `false` | When true use the monocolor (symbolic) icon false uses a colorful icon for the tray |
-| windowGeometry    | QRect             | Geometry of the window used to restore the window geometry after exiting the app |
+|Option                          | Valid Values      |Description|
+|:-------------------------------|:-----------------:|:-----------|
+| autoHide                       | `true` or `false` | When true the app will hide itself on start up [default: false] |
+| enableUpdateCheck              | `true` or `false` | When true check the update URL to see if a new version was released on start up [default: false] |
+| closeReminder                  | `true` or `false` | Used to track if we have shown the reminder that when you close the app it remain running in the background  [default: true]|
+| closeToTray                    | `true` or `false` | When `true` the gui will run in the systemTray when its closed [default: true] |
+| logExpanded                    | `true` or `false` | Should the log section of the GUI be opened [default: false] |
+| symbolicTrayIcon               | `true` or `false` | When true use the monocolor (symbolic) icon false uses a colorful icon for the tray [default: true] |
+| windowGeometry                 | QRect             | Geometry of the window used to restore the window geometry after exiting the app |
+| showGenericClientFailureDialog | `true` or `false` | When `true` client connection errors will not show popup error messages [default: true] |
 
 ### Log
 
 This section contains options used by the application logging it will begin with `[log]`
 
-|Option |    Valid Values   |Description|
-|:------|:-----------------:|:-----------|
-| file   | Filepath          | The file to write the log into |
-| level  | Valid log level   | Log level to use |
-| toFile | `true` or `false` | When true the log will be written to the value of the `file` option |
-
+|Option    |    Valid Values   |Description|
+|:---------|:-----------------:|:-----------|
+| file     | Filepath          | The file to write the log into |
+| level    | Valid log level   | Log level to use |
+| toFile   | `true` or `false` | When true the log will be written to the value of the `file` option |
+| guiDebug | `true` or `false` | When true the log will show the Gui's internal debug messages |
 
 ### Security
 
@@ -127,8 +133,6 @@ This section contains options used when in server mode it will begin with `[serv
 
 |Option              |    Valid Values   |Description|
 |:-------------------|:-----------------:|:-----------|
-| binary             | Filename          | The name of the binary to call for client mode. This binary exists in same path as the Deskflow GUI |
-| configVisible      | `true` or `false` | Used internally to track when the severs has a configuration dialog showing.|
 | externalConfig     | `true` or `false` | When true use the external config path |
 | externalConfigFile | Filepath          | Path the server config file if it does not exist the GUI will it generated based on the `internalConfig` section.|
 
