@@ -7,6 +7,7 @@
 
 #include "deskflow/KeyMap.h"
 #include "base/Log.h"
+#include "common/PlatformInfo.h"
 #include "deskflow/KeyTypes.h"
 
 #include <algorithm>
@@ -945,7 +946,11 @@ void KeyMap::addKeystrokes(
     break;
 
   case kKeystrokeRepeat:
-    // no changes on key repeat
+    if (deskflow::platform::isWindows()) {
+      // Windows repeat needs this
+      keystrokes.push_back(Keystroke(button, false, true, data));
+      keystrokes.push_back(Keystroke(button, true, true, data));
+    }
     break;
 
   case kKeystrokeClick:
