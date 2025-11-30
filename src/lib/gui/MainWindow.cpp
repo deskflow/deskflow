@@ -306,7 +306,12 @@ void MainWindow::connectSlots()
 
   connect(&m_clientConnection, &ClientConnection::requestShowError, this, &MainWindow::showClientError);
 
-  connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
+  if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
+    connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStopCore, &QAction::trigger, Qt::UniqueConnection);
+  } else {
+    connect(ui->btnToggleCore, &QPushButton::clicked, m_actionStartCore, &QAction::trigger, Qt::UniqueConnection);
+  }
+
   connect(ui->btnRestartCore, &QPushButton::clicked, this, &MainWindow::resetCore);
 
   connect(ui->lineHostname, &QLineEdit::returnPressed, ui->btnRestartCore, &QPushButton::click);
@@ -526,15 +531,6 @@ void MainWindow::updateModeControls(bool serverMode)
   if (m_coreProcess.isStarted() && m_coreProcess.mode() != expectedCoreMode)
     m_coreProcess.stop();
   m_coreProcess.setMode(expectedCoreMode);
-  if (serverMode) {
-    // The server can run without any clients configured, and this is actually
-    // what you'll want to do the first time since you'll be prompted when an
-    // unrecognized client tries to connect.
-    const auto startedBefore = Settings::value(Settings::Core::StartedBefore).toBool();
-    if (!startedBefore && !m_coreProcess.isStarted()) {
-      m_coreProcess.start();
-    }
-  }
   updateModeControlLabels();
 
   toggleCanRunCore((!serverMode && !ui->lineHostname->text().isEmpty()) || serverMode);
@@ -671,7 +667,7 @@ void MainWindow::open()
     qDebug() << "update check disabled";
   }
 
-  if (Settings::value(Settings::Core::StartedBefore).toBool()) {
+  if (Settings::value(Settings::Gui::AutoStartCore).toBool()) {
     if (ui->rbModeClient->isChecked() && ui->lineHostname->text().isEmpty())
       return;
     startCore();
@@ -867,6 +863,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 
   if (m_saveOnExit) {
     Settings::setValue(Settings::Gui::WindowGeometry, geometry());
+    Settings::setValue(Settings::Gui::AutoStartCore, m_coreProcess.isStarted());
   }
   qDebug() << "quitting application";
 
@@ -958,7 +955,7 @@ void MainWindow::coreProcessStateChanged(CoreProcessState state)
 
   if (state == CoreProcessState::Started) {
     qDebug() << "recording that core has started";
-    Settings::setValue(Settings::Core::StartedBefore, true);
+    Settings::setValue(Settings::Gui::AutoStartCore, true);
     if (m_coreProcess.mode() == CoreMode::Server &&
         !Settings::value(Settings::Gui::ShownServerFirstStartMessage).toBool()) {
       qDebug() << "starting core server for first time";
