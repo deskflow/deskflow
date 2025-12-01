@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.43</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.45</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -135,7 +135,7 @@ $(function(){initNavTree('DaemonIpcServer_8h_source.html','',''); });
 <div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keywordtype">void</span> processElevate(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
 <div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <span class="keywordtype">void</span> processCommand(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QStringList &amp;messageParts);</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span></div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> writeToClientSocket(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QString &amp;message);</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keywordtype">void</span> writeToClientSocket(QLocalSocket *&amp;clientSocket, <span class="keyword">const</span> QString &amp;message) <span class="keyword">const</span>;</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span><span class="keyword">private</span> Q_SLOTS:</div>
 <div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  <span class="keywordtype">void</span> handleNewConnection();</div>
