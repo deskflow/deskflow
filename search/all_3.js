@@ -180,7 +180,8 @@ var searchData=
   ['atomstostring_177',['atomsToString',['../classXWindowsUtil.html#a709f164a95f839252d36c21b08005e60',1,'XWindowsUtil']]],
   ['atomtostring_178',['atomToString',['../classXWindowsUtil.html#aca62fbe907ff6c95b6081258b10f3f0f',1,'XWindowsUtil']]],
   ['autohide_179',['Autohide',['../structSettings_1_1Gui.html#a2f5f638ae1ce82b3e05c58ccd721893f',1,'Settings::Gui']]],
-  ['autoupdatecheck_180',['AutoUpdateCheck',['../structSettings_1_1Gui.html#a8b6bb5f319f02e22b891a44253f6caf2',1,'Settings::Gui']]],
-  ['avoidhesitatingcursor_181',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
-  ['avoidsupression_182',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
+  ['autostartcore_180',['AutoStartCore',['../structSettings_1_1Gui.html#abb43a603fadbde9f7ba0ff2fca319817',1,'Settings::Gui']]],
+  ['autoupdatecheck_181',['AutoUpdateCheck',['../structSettings_1_1Gui.html#a8b6bb5f319f02e22b891a44253f6caf2',1,'Settings::Gui']]],
+  ['avoidhesitatingcursor_182',['avoidHesitatingCursor',['../OSXScreen_8mm.html#a3ed592b4f1ae656616b993fad167d04f',1,'OSXScreen.mm']]],
+  ['avoidsupression_183',['avoidSupression',['../OSXScreen_8mm.html#aacd901c10242511e6f7c110592d1bdfd',1,'OSXScreen.mm']]]
 ];
