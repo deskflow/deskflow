@@ -9,7 +9,6 @@
 #include "base/Event.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/String.h"
 #include "deskflow/ClipboardChunk.h"
 
 static const size_t g_chunkSize = 512 * 1024; // 512kb
@@ -19,7 +18,7 @@ void StreamChunker::sendClipboard(
 )
 {
   // send first message (data size)
-  std::string dataSize = deskflow::string::sizeTypeToString(size);
+  std::string dataSize = QString::number(size).toStdString();
   ClipboardChunk *sizeMessage = ClipboardChunk::start(id, sequence, dataSize);
 
   events->addEvent(Event(EventTypes::ClipboardSending, eventTarget, sizeMessage));
