@@ -12,7 +12,6 @@
 #include <cstdarg>
 #include <cstdint>
 #include <cstring>
-#include <sstream>
 #include <vector>
 
 namespace deskflow::string {
@@ -138,14 +137,6 @@ std::string sprintf(const char *fmt, ...)
   }
 
   return result;
-}
-
-size_t stringToSizeType(const std::string &string)
-{
-  std::istringstream iss(string);
-  size_t value;
-  iss >> value;
-  return value;
 }
 
 //

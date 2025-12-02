@@ -74,7 +74,7 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
   }
 
   if (mark == ChunkType::DataStart) {
-    s_expectedSize = deskflow::string::stringToSizeType(data);
+    s_expectedSize = QString::fromStdString(data).size();
     LOG_DEBUG("start receiving clipboard data");
     dataCached.clear();
     return Started;
