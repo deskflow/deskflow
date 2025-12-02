@@ -40,11 +40,4 @@ void StringTests::stringToInt()
   QCOMPARE(value, 123);
 }
 
-void StringTests::intToString()
-{
-  size_t value = 123;
-  std::string number = deskflow::string::sizeTypeToString(value);
-  QCOMPARE(number, "123");
-}
-
 QTEST_MAIN(StringTests)

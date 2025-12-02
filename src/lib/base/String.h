@@ -40,12 +40,6 @@ Equivalent to sprintf() except the result is returned as a String.
 */
 std::string sprintf(const char *fmt, ...);
 
-//! Convert a size type to a string
-/*!
-Convert an size type to a string
-*/
-std::string sizeTypeToString(size_t n);
-
 //! Convert a string to a size type
 /*!
 Convert an a \c string to an size type
