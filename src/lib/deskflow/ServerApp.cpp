@@ -11,7 +11,6 @@
 #include "arch/Arch.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
-#include "base/Path.h"
 #include "common/ExitCodes.h"
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
@@ -90,11 +89,11 @@ void ServerApp::reloadSignalHandler(Arch::ThreadSignal, void *)
   events->addEvent(Event(EventTypes::ServerAppReloadConfig, events->getSystemTarget()));
 }
 
-std::string ServerApp::currentConfig() const
+QString ServerApp::currentConfig() const
 {
   bool useExt = Settings::value(Settings::Server::ExternalConfig).toBool();
-  return useExt ? Settings::value(Settings::Server::ExternalConfigFile).toString().toStdString()
-                : Settings::defaultValue(Settings::Server::ExternalConfigFile).toString().toStdString();
+  return useExt ? Settings::value(Settings::Server::ExternalConfigFile).toString()
+                : Settings::defaultValue(Settings::Server::ExternalConfigFile).toString();
 }
 
 void ServerApp::reloadConfig()
@@ -111,25 +110,30 @@ void ServerApp::reloadConfig()
 void ServerApp::loadConfig()
 {
   const auto path = currentConfig();
-  if (path.empty()) {
+  if (path.isEmpty()) {
     LOG_CRIT("no configuration path provided");
     bye(s_exitConfig);
   }
 
   if (!loadConfig(path)) {
-    LOG_CRIT("%s: failed to load config: %s", qPrintable(processName()), path.c_str());
+    LOG_CRIT("%s: failed to load config: %s", qPrintable(processName()), path.toStdString().c_str());
     bye(s_exitConfig);
   }
 }
 
-bool ServerApp::loadConfig(const std::string &pathname)
+bool ServerApp::loadConfig(const QString &filename)
 {
+  const auto path = filename.toStdString();
   try {
     // load configuration
-    LOG_DEBUG("opening configuration \"%s\"", pathname.c_str());
-    std::ifstream configStream(deskflow::filesystem::path(pathname));
+    LOG_DEBUG("opening configuration \"%s\"", path.c_str());
+#ifdef SYSAPI_WIN32
+    std::ifstream configStream(filename.toStdWString());
+#else
+    std::ifstream configStream(path);
+#endif
     if (!configStream.is_open()) {
-      LOG_ERR("cannot open configuration \"%s\"", pathname.c_str());
+      LOG_ERR("cannot open configuration \"%s\"", path.c_str());
       return false;
     }
     configStream >> *m_config;
@@ -137,7 +141,7 @@ bool ServerApp::loadConfig(const std::string &pathname)
     return true;
   } catch (ServerConfigReadException &e) {
     // report error in configuration file
-    LOG_ERR("cannot read configuration \"%s\": %s", pathname.c_str(), e.what());
+    LOG_ERR("cannot read configuration \"%s\": %s", path.c_str(), e.what());
   }
   return false;
 }

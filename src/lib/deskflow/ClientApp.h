@@ -38,7 +38,7 @@ public:
   {
     // do nothing
   }
-  bool loadConfig(const std::string &) override
+  bool loadConfig(const QString &) override
   {
     return false;
   }
