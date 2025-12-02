@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.51</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.57</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -152,7 +152,7 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="classApp.html#ab25cb14c8734dd3d83f96240f3b25740">   52</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#ab25cb14c8734dd3d83f96240f3b25740">parseArgs</a>() = 0;</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno"><a class="line" href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">   53</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">loadConfig</a>() = 0;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">   54</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">loadConfig</a>(<span class="keyword">const</span> std::string &amp;pathname) = 0;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno"><a class="line" href="classApp.html#a564afc9582b02f9ddfecb33f38bf7120">   54</a></span>  <span class="keyword">virtual</span> <span class="keywordtype">bool</span> <a class="code hl_function" href="classApp.html#a564afc9582b02f9ddfecb33f38bf7120">loadConfig</a>(<span class="keyword">const</span> QString &amp;filename) = 0;</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">   55</a></span>  <span class="keyword">virtual</span> <span class="keyword">const</span> <span class="keywordtype">char</span> *<a class="code hl_function" href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">daemonInfo</a>() <span class="keyword">const</span> = 0;</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
 <div class="foldopen" id="foldopen00057" data-start="{" data-end="}">
@@ -264,11 +264,11 @@ $(function(){initNavTree('App_8h_source.html','',''); });
 <div class="ttc" id="aSocketMultiplexer_8h_html"><div class="ttname"><a href="SocketMultiplexer_8h.html">SocketMultiplexer.h</a></div></div>
 <div class="ttc" id="aclassApp_1_1XNoEiSupport_html_a9f6c5560e08e0b46f890960c51e6a45a"><div class="ttname"><a href="classApp_1_1XNoEiSupport.html#a9f6c5560e08e0b46f890960c51e6a45a">App::XNoEiSupport::XNoEiSupport</a></div><div class="ttdeci">XNoEiSupport()</div><div class="ttdef"><b>Definition</b> App.h:38</div></div>
 <div class="ttc" id="aclassApp_html"><div class="ttname"><a href="classApp.html">App</a></div><div class="ttdef"><b>Definition</b> App.h:33</div></div>
-<div class="ttc" id="aclassApp_html_a176d732d8b1d9ffd19947e8726f3257b"><div class="ttname"><a href="classApp.html#a176d732d8b1d9ffd19947e8726f3257b">App::loadConfig</a></div><div class="ttdeci">virtual bool loadConfig(const std::string &amp;pathname)=0</div></div>
 <div class="ttc" id="aclassApp_html_a2999f6b9b1129542847a07bcf5bc7c21"><div class="ttname"><a href="classApp.html#a2999f6b9b1129542847a07bcf5bc7c21">App::getEvents</a></div><div class="ttdeci">IEventQueue * getEvents() const override</div><div class="ttdef"><b>Definition</b> App.h:65</div></div>
 <div class="ttc" id="aclassApp_html_a3de184a2f5202d1e0458223d11e871fd"><div class="ttname"><a href="classApp.html#a3de184a2f5202d1e0458223d11e871fd">App::loadConfig</a></div><div class="ttdeci">virtual void loadConfig()=0</div></div>
 <div class="ttc" id="aclassApp_html_a42f44f9b4dc89ed5daaf0cbdb455c10e"><div class="ttname"><a href="classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e">App::instance</a></div><div class="ttdeci">static App &amp; instance()</div><div class="ttdef"><b>Definition</b> App.h:95</div></div>
 <div class="ttc" id="aclassApp_html_a4af9e4bbb719ae9fce079bd11d263878"><div class="ttname"><a href="classApp.html#a4af9e4bbb719ae9fce079bd11d263878">App::daemonInfo</a></div><div class="ttdeci">virtual const char * daemonInfo() const =0</div></div>
+<div class="ttc" id="aclassApp_html_a564afc9582b02f9ddfecb33f38bf7120"><div class="ttname"><a href="classApp.html#a564afc9582b02f9ddfecb33f38bf7120">App::loadConfig</a></div><div class="ttdeci">virtual bool loadConfig(const QString &amp;filename)=0</div></div>
 <div class="ttc" id="aclassApp_html_a5ecbaa8022d8e3a787779f2549b33379"><div class="ttname"><a href="classApp.html#a5ecbaa8022d8e3a787779f2549b33379">App::App</a></div><div class="ttdeci">App(App const &amp;)=delete</div></div>
 <div class="ttc" id="aclassApp_html_a60b51c7e60aa48b222849fbdc68971a0"><div class="ttname"><a href="classApp.html#a60b51c7e60aa48b222849fbdc68971a0">App::getSocketMultiplexer</a></div><div class="ttdeci">SocketMultiplexer * getSocketMultiplexer() const</div><div class="ttdef"><b>Definition</b> App.h:90</div></div>
 <div class="ttc" id="aclassApp_html_a662e265aad8fec31f4b4e85368478c51"><div class="ttname"><a href="classApp.html#a662e265aad8fec31f4b4e85368478c51">App::operator=</a></div><div class="ttdeci">App &amp; operator=(App &amp;&amp;)=delete</div></div>

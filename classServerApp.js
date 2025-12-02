@@ -18,7 +18,7 @@ var classServerApp =
     [ "initServer", "classServerApp.html#ae503783ded61fc2ccf91f66a1d334cac", null ],
     [ "instance", "classServerApp.html#a8559270c84a6ab7b0726b1a227e232a1", null ],
     [ "loadConfig", "classServerApp.html#abb45813fdd5bc56aecd870675c7677f2", null ],
-    [ "loadConfig", "classServerApp.html#a1cb54b601ee20261e9154eac81266fc5", null ],
+    [ "loadConfig", "classServerApp.html#ac9c89c656d2478c9c6ceca862c435fc3", null ],
     [ "mainLoop", "classServerApp.html#a632aaac3fac40b8e5f7aa534f2040c17", null ],
     [ "openClientListener", "classServerApp.html#a7d02860f4e1237a6bc2bd5bf2b7792e6", null ],
     [ "openPrimaryClient", "classServerApp.html#a793f0f9e3f8b059994b51f5eaa5f0d7b", null ],

@@ -1,8 +1,5 @@
 var namespacedeskflow =
 [
-    [ "filesystem", "namespacedeskflow_1_1filesystem.html", [
-      [ "path", "namespacedeskflow_1_1filesystem.html#a10409508645291342692b373ebfcd2df", null ]
-    ] ],
     [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
     [ "client", "namespacedeskflow_1_1client.html", "namespacedeskflow_1_1client" ],
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],

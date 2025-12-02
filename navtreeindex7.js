@@ -1,8 +1,5 @@
 var NAVTREEINDEX7 =
 {
-"classArchNetworkWinsock.html#a0fab2de7056932426fd107606d3c8ab2":[6,0,48,15],
-"classArchNetworkWinsock.html#a12564229e8a1ba65f02f881ef34c9ffe":[6,0,48,8],
-"classArchNetworkWinsock.html#a1e4b37c52e972be8227056e7b5042407":[6,0,48,4],
 "classArchNetworkWinsock.html#a23f42c40529c7c19d3b94bab3c090ef5":[6,0,48,10],
 "classArchNetworkWinsock.html#a264ece975c6da5186e95d0fd1654ed3d":[6,0,48,21],
 "classArchNetworkWinsock.html#a37710bdf58cdf35faef5bde29fcd609a":[6,0,48,5],
@@ -143,7 +140,6 @@ var NAVTREEINDEX7 =
 "classClientApp.html#a1854a88ad11e0633cd0a59c83857d042":[6,0,59,23],
 "classClientApp.html#a207e31c7d2165d89817fe9901d745ff1":[6,0,59,8],
 "classClientApp.html#a3ba4f1476522b8cd8f142fb033fab1a0":[6,0,59,19],
-"classClientApp.html#a3bd46e277fdbbe5242e082d31ef407e2":[6,0,59,15],
 "classClientApp.html#a45de5fff69e8fab95653e2ffce2e6237":[6,0,59,5],
 "classClientApp.html#a49de08e2beda98b19641d57d26e2a89a":[6,0,59,11],
 "classClientApp.html#a56e7e4a870873b46f02f801f77f7ce1c":[6,0,59,21],
@@ -163,6 +159,7 @@ var NAVTREEINDEX7 =
 "classClientApp.html#ada018e5652bfcbbc0648dc50d8bbe5c5":[6,0,59,7],
 "classClientApp.html#ae4a765893f132f28e07849ffcc14979b":[6,0,59,12],
 "classClientApp.html#ae799ea6987584f49025f371fcb35e7ba":[6,0,59,1],
+"classClientApp.html#ae7edd9ac0a43d2a3674dfec363023e35":[6,0,59,15],
 "classClientApp.html#aee6830f88444842bc81db990ab9cf8e7":[6,0,59,14],
 "classClientApp.html#aef69c11f23a5e05bfa7b5eee03e13858":[6,0,59,25],
 "classClientInfo.html":[4,3,0],
@@ -249,5 +246,8 @@ var NAVTREEINDEX7 =
 "classClientProxy1__0.html#ab77bc286b00b262f374512b984646fd5":[6,0,63,4],
 "classClientProxy1__0.html#abd10cb631a4ad7298673b8cf24b8a920":[6,0,63,8],
 "classClientProxy1__0.html#abe3252213e7c8c67acb553edd555307c":[6,0,63,32],
-"classClientProxy1__0.html#abfa4a23e93d20b068283729691fd20b3":[6,0,63,13]
+"classClientProxy1__0.html#abfa4a23e93d20b068283729691fd20b3":[6,0,63,13],
+"classClientProxy1__0.html#ae2812c552a2eb8c7a36d6ba92d0afd83":[6,0,63,10],
+"classClientProxy1__0.html#ae70bcbcbe7a3eb996a715b68010d1a3b":[6,0,63,37],
+"classClientProxy1__0.html#aea6a029c66a459240122d57883695d13":[6,0,63,21]
 };

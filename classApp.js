@@ -15,7 +15,7 @@ var classApp =
     [ "initApp", "classApp.html#a724365d623e53560cf6a9f7246081ad9", null ],
     [ "instance", "classApp.html#a42f44f9b4dc89ed5daaf0cbdb455c10e", null ],
     [ "loadConfig", "classApp.html#a3de184a2f5202d1e0458223d11e871fd", null ],
-    [ "loadConfig", "classApp.html#a176d732d8b1d9ffd19947e8726f3257b", null ],
+    [ "loadConfig", "classApp.html#a564afc9582b02f9ddfecb33f38bf7120", null ],
     [ "loggingFilterWarning", "classApp.html#a699f3588a184a543d55effeaac0e49c1", null ],
     [ "operator=", "classApp.html#a662e265aad8fec31f4b4e85368478c51", null ],
     [ "operator=", "classApp.html#ab51ebb2be69b544372c4ab6a9169264f", null ],

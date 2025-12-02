@@ -13,7 +13,7 @@ var classSecureSocket =
     [ "isFatal", "classSecureSocket.html#ad76517790ccd0c4d60c51707d0b2d203", null ],
     [ "isFatal", "classSecureSocket.html#ad8eedc0ffb5efe13f53168317d6515d3", null ],
     [ "isSecureReady", "classSecureSocket.html#a76c9224c4c7f042bd584d4f36ff7cce3", null ],
-    [ "loadCertificates", "classSecureSocket.html#a2a794b733ac2d188a028f809d2bd4d4a", null ],
+    [ "loadCertificate", "classSecureSocket.html#a56c55e64894f12d26ba9f10907083b71", null ],
     [ "newJob", "classSecureSocket.html#a0370dbf6d7aecd42388a18ad5483dcd2", null ],
     [ "operator=", "classSecureSocket.html#a84a51f16e8dd3932fed8a4b41c7b3256", null ],
     [ "operator=", "classSecureSocket.html#a49d45e3c16a8f9fe1e93f4f559dc2b2b", null ],
