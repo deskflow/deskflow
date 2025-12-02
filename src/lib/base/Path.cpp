@@ -7,7 +7,7 @@
 #include "Path.h"
 
 #if SYSAPI_WIN32
-#include "arch/win32/ArchMiscWindows.h"
+#include <QString>
 #endif
 
 namespace deskflow::filesystem {
@@ -16,15 +16,8 @@ namespace deskflow::filesystem {
 
 std::wstring path(const std::string &filePath)
 {
-  std::wstring result;
-
-  auto length = MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), nullptr, 0);
-  if (length > 0) {
-    result.resize(length);
-    MultiByteToWideChar(CP_UTF8, 0, filePath.c_str(), static_cast<int>(filePath.length()), &result[0], length);
-  }
-
-  return result;
+  const auto qstring = QString::fromStdString(filePath);
+  return qstring.toStdWString();
 }
 
 #else
