@@ -40,12 +40,6 @@ Equivalent to sprintf() except the result is returned as a String.
 */
 std::string sprintf(const char *fmt, ...);
 
-//! Convert a string to a size type
-/*!
-Convert an a \c string to an size type
-*/
-size_t stringToSizeType(const std::string &string);
-
 //! Case-insensitive comparisons
 /*!
 This class provides case-insensitve comparison functions.

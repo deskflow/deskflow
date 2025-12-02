@@ -9,8 +9,6 @@
 
 #include "base/String.h"
 
-#include <string.h>
-
 void StringTests::formatWithArgs()
 {
   const char *format = "%%%{1}=%{2}";
@@ -31,13 +29,6 @@ void StringTests::formatedString()
   std::string result = deskflow::string::sprintf(format, arg1, arg2);
 
   QCOMPARE("answer=42", result);
-}
-
-void StringTests::stringToInt()
-{
-  std::string number = "123";
-  size_t value = deskflow::string::stringToSizeType(number);
-  QCOMPARE(value, 123);
 }
 
 QTEST_MAIN(StringTests)
