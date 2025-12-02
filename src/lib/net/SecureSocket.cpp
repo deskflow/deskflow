@@ -197,7 +197,6 @@ TCPSocket::JobResult SecureSocket::doWrite()
     status = secureWrite(s_staticBuffer, bufferSize, bytesWrote);
     if (status > 0) {
       s_retry = false;
-      bufferSize = 0;
     } else if (status < 0) {
       return Break;
     } else if (status == 0) {
