@@ -66,7 +66,7 @@ public:
   JobResult doRead() override;
   JobResult doWrite() override;
   void initSsl(bool server);
-  bool loadCertificates(const std::string &CertFile);
+  bool loadCertificate(const QString &filename);
 
 private:
   // SSL
