@@ -99,7 +99,7 @@ It is recommend to install Deskflow using [Homebrew](https://brew.sh) from our [
 To add our tap, run:
 
 ```
-brew tap deskflow/homebrew-tap
+brew tap deskflow/tap
 ```
 
 Then install either:
