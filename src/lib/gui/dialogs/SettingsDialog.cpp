@@ -34,7 +34,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   // set up the language combo
   I18N::reDetectLanguages();
   ui->comboLanguage->addItems(I18N::detectedLanguages());
-  ui->comboLanguage->setCurrentText(I18N::currentLanguage());
+  ui->comboLanguage->setCurrentText(I18N::toNativeName(I18N::currentLanguage()));
 
   updateText();
 
@@ -83,7 +83,10 @@ void SettingsDialog::initConnections() const
   connect(ui->btnBrowseLog, &QPushButton::clicked, this, &SettingsDialog::browseLogPath);
   connect(ui->cbLogToFile, &QCheckBox::toggled, this, &SettingsDialog::setLogToFile);
   connect(ui->comboLogLevel, &QComboBox::currentIndexChanged, this, &SettingsDialog::logLevelChanged);
-  connect(ui->comboLanguage, &QComboBox::currentTextChanged, I18N::instance(), &I18N::setLanguage);
+  connect(ui->comboLanguage, &QComboBox::currentTextChanged, this, [](const QString &lang) {
+    const auto shortName = I18N::nativeTo639Name(lang);
+    I18N::setLanguage(shortName);
+  });
 }
 
 void SettingsDialog::regenCertificates()
@@ -174,7 +177,7 @@ void SettingsDialog::accept()
   Settings::setValue(Settings::Gui::SymbolicTrayIcon, ui->rbIconMono->isChecked());
   Settings::setValue(Settings::Security::CheckPeers, ui->cbRequireClientCert->isChecked());
   Settings::setValue(Settings::Client::ScrollSpeed, ui->sbScrollSpeed->value());
-  Settings::setValue(Settings::Core::Language, ui->comboLanguage->currentText());
+  Settings::setValue(Settings::Core::Language, I18N::nativeTo639Name(ui->comboLanguage->currentText()));
   Settings::setValue(Settings::Log::GuiDebug, ui->cbGuiDebug->isChecked());
   Settings::setValue(Settings::Core::UseWlClipboard, ui->cbUseWlClipboard->isChecked());
 

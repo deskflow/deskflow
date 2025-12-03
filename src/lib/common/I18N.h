@@ -26,8 +26,22 @@ public:
   static QStringList detectedLanguages();
 
   /**
+   * @brief nativeTo639Name Convert a native Language name into a 639 name
+   * @param nativeName English, Español etc..
+   * @return  639 name for the language e, zh_CN , it, etc..)
+   */
+  static QString nativeTo639Name(QString nativeName);
+
+  /**
+   * @brief toNativeName Convert a 639 Name into a Native Language string
+   * @param shortName A 639 name en, es etc...
+   * @return  native language string for the language
+   */
+  static QString toNativeName(QString shortName);
+
+  /**
    * @brief currentLanguage
-   * @return The current language string (native name: English, Español etc..)
+   * @return The current language string (639-1 names i.e en, es)
    */
   static QString currentLanguage();
 
@@ -45,12 +59,12 @@ public:
 Q_SIGNALS:
   /**
    * @brief languageChanged Emitted when the current language changes
-   * @param language The current language (native name, i.e English, Español)
+   * @param language The current language (639-1 names i.e en, es)
    */
   void languageChanged(const QString language);
   /**
    * @brief langaugesChanged Emitted when the detected languages changes
-   * @param languages The current list of languages (native names i.e English, Español..)
+   * @param languages The current list of languages (639-1 names i.e en, es)
    */
   void langaugesChanged(const QStringList languages);
 
@@ -63,8 +77,9 @@ private:
   void detectLanguages();
 
   QMap<QString, QStringList> m_translations;
+  QMap<QString, QString> m_nameMap;
   QList<QTranslator *> m_currentTranslations;
-  QString m_currentLang = QStringLiteral("English");
+  QString m_currentLang = QStringLiteral("en");
   QString m_appTrPath;
   QString m_qtTrPath;
 };
