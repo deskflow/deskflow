@@ -111,7 +111,17 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
 QStringList I18N::detectedLanguages()
 {
-  return instance()->m_translations.keys();
+  return instance()->m_nameMap.values();
+}
+
+QString I18N::nativeTo639Name(QString nativeName)
+{
+  return instance()->m_nameMap.key(nativeName);
+}
+
+QString I18N::toNativeName(QString shortName)
+{
+  return instance()->m_nameMap.value(shortName);
 }
 
 QString I18N::currentLanguage()
@@ -159,10 +169,10 @@ void I18N::detectLanguages()
 {
   const auto oldList = m_translations;
   m_translations.clear();
+  m_nameMap.clear();
 
   QStringList nameFilter = {QStringLiteral("%1_*.qm").arg(kAppId)};
   QMap<QString, QString> appTranslations;
-  QMap<QString, QString> shortToNative;
   QStringList detectedLangCodes;
   QDir dir(m_appTrPath);
   QStringList langList = dir.entryList(nameFilter, QDir::Files, QDir::Name);
@@ -184,7 +194,7 @@ void I18N::detectLanguages()
       shortCode = longCode.mid(0, 2);
 
     appTranslations.insert(shortCode, translator.filePath());
-    shortToNative.insert(shortCode, nativeLang);
+    m_nameMap.insert(shortCode, nativeLang);
     detectedLangCodes.append(QStringLiteral("qt_%1.qm").arg(shortCode));
   }
 
@@ -200,7 +210,7 @@ void I18N::detectLanguages()
 
   const QStringList keys = appTranslations.keys();
   for (const QString &lang : keys)
-    m_translations.insert(shortToNative.value(lang), {appTranslations.value(lang), qtTranslations.value(lang)});
+    m_translations.insert(lang, {appTranslations.value(lang), qtTranslations.value(lang)});
 
   if (oldList != m_translations)
     Q_EMIT langaugesChanged(m_translations.keys());
