@@ -67,13 +67,6 @@ public:
   */
   static std::string UCS2ToUTF8(const std::string_view &, bool *errors = nullptr);
 
-  //! Convert from UCS-4 to UTF-8
-  /*!
-  Convert from UCS-4 to UTF-8.  If errors is not nullptr then *errors is
-  set to true iff any character could not be decoded.
-  */
-  static std::string UCS4ToUTF8(const std::string_view &, bool *errors = nullptr);
-
   //! Convert from UTF-16 to UTF-8
   /*!
   Convert from UTF-16 to UTF-8.  If errors is not nullptr then *errors is
@@ -86,7 +79,6 @@ public:
 private:
   // internal conversion to UTF8
   static std::string doUCS2ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
-  static std::string doUCS4ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
   static std::string doUTF16ToUTF8(const uint8_t *src, uint32_t n, bool *errors);
 
   // convert characters to/from UTF8

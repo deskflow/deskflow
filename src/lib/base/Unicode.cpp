@@ -207,16 +207,6 @@ std::string Unicode::UCS2ToUTF8(const std::string_view &src, bool *errors)
   return doUCS2ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::UCS4ToUTF8(const std::string_view &src, bool *errors)
-{
-  // default to success
-  resetError(errors);
-
-  // convert
-  uint32_t n = (uint32_t)src.size() >> 2;
-  return doUCS4ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
-}
-
 std::string Unicode::UTF16ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success
@@ -258,42 +248,6 @@ std::string Unicode::doUCS2ToUTF8(const uint8_t *data, uint32_t n, bool *errors)
     uint32_t c = decode16(data, byteSwapped);
     toUTF8(dst, c, errors);
     data += 2;
-  }
-
-  return dst;
-}
-
-std::string Unicode::doUCS4ToUTF8(const uint8_t *data, uint32_t n, bool *errors)
-{
-  // make some space
-  std::string dst;
-  dst.reserve(n);
-
-  // check if first character is 0xfffe or 0xfeff
-  bool byteSwapped = false;
-  if (n >= 1) {
-    switch (decode32(data, false)) {
-    case 0x0000feff:
-      data += 4;
-      --n;
-      break;
-
-    case 0x0000fffe:
-      byteSwapped = true;
-      data += 4;
-      --n;
-      break;
-
-    default:
-      break;
-    }
-  }
-
-  // convert each character
-  for (; n > 0; --n) {
-    auto c = decode32(data, byteSwapped);
-    toUTF8(dst, c, errors);
-    data += 4;
   }
 
   return dst;
