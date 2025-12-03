@@ -751,7 +751,10 @@ void MainWindow::setTrayIcon()
 
   QString themeIcon = kRevFqdnName;
   if (!Settings::value(Settings::Gui::SymbolicTrayIcon).toBool()) {
-    m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
+    if (deskflow::platform::isMac())
+      m_trayIcon->setIcon(QIcon::fromTheme(themeIcon));
+    else
+      m_trayIcon->setIcon(QIcon(fallbackPath.arg(kAppId, QStringLiteral("dark"), themeIcon)));
     return;
   }
 
