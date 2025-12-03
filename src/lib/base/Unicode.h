@@ -36,14 +36,6 @@ public:
   */
   static std::string UTF8ToUCS2(const std::string &, bool *errors = nullptr);
 
-  //! Convert from UTF-8 to UCS-4 encoding
-  /*!
-  Convert from UTF-8 to UCS-4.  If errors is not nullptr then *errors
-  is set to true iff any character could not be encoded in UCS-4.
-  Decoding errors do not set *errors.
-  */
-  static std::string UTF8ToUCS4(const std::string &, bool *errors = nullptr);
-
   //! Convert from UTF-8 to UTF-16 encoding
   /*!
   Convert from UTF-8 to UTF-16.  If errors is not nullptr then *errors
