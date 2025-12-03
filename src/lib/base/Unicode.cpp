@@ -171,32 +171,6 @@ std::string Unicode::UTF8ToUTF16(const std::string &src, bool *errors)
   return dst;
 }
 
-std::string Unicode::UTF8ToUTF32(const std::string &src, bool *errors)
-{
-  // default to success
-  resetError(errors);
-
-  // get size of input string and reserve some space in output
-  auto n = (uint32_t)src.size();
-  std::string dst;
-  dst.reserve(4 * n);
-
-  // convert each character
-  const auto *data = reinterpret_cast<const uint8_t *>(src.c_str());
-  while (n > 0) {
-    uint32_t c = fromUTF8(data, n);
-    if (c == s_invalid) {
-      c = s_replacement;
-    } else if (c >= 0x00110000) {
-      setError(errors);
-      c = s_replacement;
-    }
-    dst.append(reinterpret_cast<const char *>(&c), 4);
-  }
-
-  return dst;
-}
-
 std::string Unicode::UCS2ToUTF8(const std::string_view &src, bool *errors)
 {
   // default to success

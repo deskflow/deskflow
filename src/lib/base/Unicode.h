@@ -52,14 +52,6 @@ public:
   */
   static std::string UTF8ToUTF16(const std::string &, bool *errors = nullptr);
 
-  //! Convert from UTF-8 to UTF-32 encoding
-  /*!
-  Convert from UTF-8 to UTF-32.  If errors is not nullptr then *errors
-  is set to true iff any character could not be encoded in UTF-32.
-  Decoding errors do not set *errors.
-  */
-  static std::string UTF8ToUTF32(const std::string &, bool *errors = nullptr);
-
   //! Convert from UCS-2 to UTF-8
   /*!
   Convert from UCS-2 to UTF-8.  If errors is not nullptr then *errors is
