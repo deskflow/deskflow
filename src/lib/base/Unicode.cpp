@@ -227,16 +227,6 @@ std::string Unicode::UTF16ToUTF8(const std::string_view &src, bool *errors)
   return doUTF16ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
 }
 
-std::string Unicode::UTF32ToUTF8(const std::string_view &src, bool *errors)
-{
-  // default to success
-  resetError(errors);
-
-  // convert
-  uint32_t n = (uint32_t)src.size() >> 2;
-  return doUTF32ToUTF8(reinterpret_cast<const uint8_t *>(src.data()), n, errors);
-}
-
 std::string Unicode::doUCS2ToUTF8(const uint8_t *data, uint32_t n, bool *errors)
 {
   // make some space
@@ -363,48 +353,6 @@ std::string Unicode::doUTF16ToUTF8(const uint8_t *data, uint32_t n, bool *errors
     }
     data += 2;
     --n;
-  }
-
-  return dst;
-}
-
-std::string Unicode::doUTF32ToUTF8(const uint8_t *data, uint32_t n, bool *errors)
-{
-  // make some space
-  std::string dst;
-  dst.reserve(n);
-
-  // check if first character is 0xfffe or 0xfeff
-  bool byteSwapped = false;
-  if (n >= 1) {
-    switch (decode32(data, false)) {
-    case 0x0000feff:
-      data += 4;
-      --n;
-      break;
-
-    case 0x0000fffe:
-      byteSwapped = true;
-      data += 4;
-      --n;
-      break;
-
-    default:
-      break;
-    }
-  }
-#ifdef WORDS_BIGENDIAN
-  byteSwapped = !byteSwapped;
-#endif
-  // convert each character
-  for (; n > 0; --n) {
-    auto c = decode32(data, byteSwapped);
-    if (c >= 0x00110000) {
-      setError(errors);
-      c = s_replacement;
-    }
-    toUTF8(dst, c, errors);
-    data += 4;
   }
 
   return dst;

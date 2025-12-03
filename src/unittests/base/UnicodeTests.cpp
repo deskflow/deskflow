@@ -14,15 +14,6 @@ void UnicodeTests::initTestCase()
   m_log.setFilter(LogLevel::Debug2);
 }
 
-void UnicodeTests::UTF32ToUTF8()
-{
-  bool errors;
-  auto result = Unicode::UTF32ToUTF8(std::string("h\0\0\0e\0\0\0l\0\0\0l\0\0\0o\0\0\0", 20), &errors);
-
-  QVERIFY(!errors);
-  QCOMPARE(result.c_str(), "hello");
-}
-
 void UnicodeTests::UTF16ToUTF8()
 {
   bool errors;
