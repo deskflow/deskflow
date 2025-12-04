@@ -1,5 +1,7 @@
 var NAVTREEINDEX21 =
 {
+"functions_enum.html":[6,3,4],
+"functions_eval.html":[6,3,5],
 "functions_f.html":[6,3,0,6],
 "functions_func.html":[6,3,1],
 "functions_func.html":[6,3,1,0],
@@ -247,7 +249,5 @@ var NAVTREEINDEX21 =
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a004547810dfb2badbe0c7c42f3d94aed":[5,0,0,18,14],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0ae6e170e568c20bb7238c4c97737050":[5,0,0,18,33],
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0bfd7cd9b871f07b663aa5e92f680681":[5,0,0,18,23],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6":[5,0,0,18,1],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0eadd8fb22f5ae32670ec0c5f24755b1":[5,0,0,18,37],
-"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a14c10dffde99b1de817065ca715797c4":[5,0,0,18,11]
+"namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a0d82790b0612935992bd564a17ce37d6":[5,0,0,18,1]
 };
