@@ -8,7 +8,6 @@
 #include "SecureUtils.h"
 
 #include "base/FinalAction.h"
-#include "io/Filesystem.h"
 
 #include <openssl/evp.h>
 #include <openssl/pem.h>
@@ -16,6 +15,7 @@
 #include <openssl/x509v3.h>
 
 #include <algorithm>
+#include <filesystem>
 #include <stdexcept>
 
 namespace deskflow {
@@ -91,7 +91,13 @@ void generatePemSelfSignedCert(const QString &path, int keyLength)
 
   X509_sign(cert, privateKey, EVP_sha256());
 
-  auto fp = fopenUtf8Path(path.toStdString().c_str(), "w");
+  const std::filesystem::path fsPath = path.toStdString();
+#if SYSAPI_WIN32
+  auto fp = _wfopen(fsPath.native().c_str(), L"w");
+#else
+  auto fp = std::fopen(fsPath.native().c_str(), "w");
+#endif
+
   if (!fp) {
     throw std::runtime_error("could not open certificate output path");
   }
