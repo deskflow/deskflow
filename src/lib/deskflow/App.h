@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
+ * SPDX-FileCopyrightText: (C) 2012 - 2026 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -19,6 +19,9 @@
 #include "deskflow/unix/AppUtilUnix.h"
 #endif
 
+#include <QObject>
+#include <QThread>
+
 #include <memory>
 #include <stdexcept>
 
@@ -30,7 +33,7 @@ class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
 
-class App : public IApp
+class App : public QObject, private IApp
 {
 public:
   class XNoEiSupport : public std::runtime_error
@@ -72,7 +75,7 @@ public:
     return m_appUtil;
   }
 
-  int run();
+  void run(QThread &coreThread);
   void setupFileLogging();
   void loggingFilterWarning() const;
   void initApp() override;
