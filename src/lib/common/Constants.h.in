@@ -21,6 +21,7 @@ const auto kCopyright = //
     "Copyright (C) 2002-2009 Chris Schoeneman";
 
 const auto kCoreBinName = "@CORE_BINARY@";
+const auto kCoreIpcName = "@CMAKE_PROJECT_NAME@-core";
 
 #ifdef _WIN32
 

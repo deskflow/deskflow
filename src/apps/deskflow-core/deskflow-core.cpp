@@ -15,6 +15,7 @@
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
+#include "deskflow/ipc/CoreIpcServer.h"
 
 #if defined(Q_OS_WIN)
 #include "arch/win32/ArchMiscWindows.h"
@@ -103,6 +104,9 @@ int main(int argc, char **argv)
 
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+
+  const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
+  ipcServer->listen();
 
   QThread coreThread;
   QObject::connect(&coreThread, &QThread::finished, &app, &QCoreApplication::quit);

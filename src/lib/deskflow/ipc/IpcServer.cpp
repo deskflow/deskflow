@@ -13,9 +13,6 @@
 
 namespace deskflow::core::ipc {
 
-const auto kAckMessage = "ok";
-const auto kErrorMessage = "error";
-
 IpcServer::IpcServer(QObject *parent, const QString &serverName)
     : QObject(parent),
       m_server{new QLocalServer(this)}, // NOSONAR - Qt memory
@@ -100,6 +97,29 @@ void IpcServer::handleErrorOccurred()
   LOG_ERR("ipc server client error: %s", clientSocket->errorString().toUtf8().constData());
   m_clients.remove(clientSocket);
   clientSocket->deleteLater();
+}
+
+void IpcServer::processMessage(QLocalSocket *clientSocket, const QString &message)
+{
+  LOG_DEBUG1("ipc server got message: %s", message.toUtf8().constData());
+  const auto parts = message.split('=');
+  if (parts.isEmpty()) {
+    LOG_ERR("ipc server got invalid message: %s", message.toUtf8().constData());
+    writeToClientSocket(clientSocket, "error");
+    return;
+  }
+
+  if (const auto &command = parts.at(0); command == "hello") {
+    LOG_DEBUG("ipc server got hello message, sending hello back");
+    writeToClientSocket(clientSocket, "hello");
+  } else if (command == "noop") {
+    LOG_DEBUG("ipc server got noop message");
+    writeToClientSocket(clientSocket, "ok");
+  } else {
+    processCommand(clientSocket, command, parts);
+  }
+
+  clientSocket->flush();
 }
 
 void IpcServer::writeToClientSocket(QLocalSocket *&clientSocket, const QString &message) const

@@ -42,7 +42,8 @@ protected:
   void writeToClientSocket(QLocalSocket *&clientSocket, const QString &message) const;
 
 private:
-  virtual void processMessage(QLocalSocket *clientSocket, const QString &message) = 0;
+  void processMessage(QLocalSocket *clientSocket, const QString &message);
+  virtual void processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts) = 0;
   void handleNewConnection();
   void handleReadyRead();
   void handleDisconnected();
