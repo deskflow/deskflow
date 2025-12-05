@@ -18,6 +18,9 @@
 #include "deskflow/unix/AppUtilUnix.h"
 #endif
 
+#include <QObject>
+#include <QThread>
+
 #include <memory>
 #include <stdexcept>
 
@@ -29,7 +32,7 @@ class FileLogOutputter;
 class IEventQueue;
 class SocketMultiplexer;
 
-class App : public IApp
+class App : public QObject, IApp
 {
 public:
   class XNoEiSupport : public std::runtime_error
@@ -72,7 +75,7 @@ public:
     return m_appUtil;
   }
 
-  int run();
+  void run(QThread &coreThread);
   int daemonMainLoop(int, const char **);
   void setupFileLogging();
   void loggingFilterWarning() const;

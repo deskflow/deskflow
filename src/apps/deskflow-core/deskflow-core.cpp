@@ -21,13 +21,25 @@
 #include <QCoreApplication>
 #endif
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QSharedMemory>
 #include <QTextStream>
+#include <QThread>
 
 void showHelp(const CoreArgParser &parser)
 {
   QTextStream(stdout) << parser.helpText();
+}
+
+App *createApp(CoreArgParser &parser, EventQueue &events, const QString &processName)
+{
+  if (parser.serverMode()) {
+    return new ServerApp(&events, processName);
+  } else if (parser.clientMode()) {
+    return new ClientApp(&events, processName);
+  }
+  return nullptr;
 }
 
 int main(int argc, char **argv)
@@ -86,13 +98,18 @@ int main(int argc, char **argv)
   EventQueue events;
   const auto processName = QFileInfo(argv[0]).fileName();
 
-  if (parser.serverMode()) {
-    ServerApp app(&events, processName);
-    return app.run();
-  } else if (parser.clientMode()) {
-    ClientApp app(&events, processName);
-    return app.run();
-  }
+  App *coreApp = createApp(parser, events, processName);
 
-  return s_exitSuccess;
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+
+  QThread coreThread;
+  QObject::connect(&coreThread, &QThread::finished, &app, &QCoreApplication::quit);
+  coreApp->run(coreThread);
+
+  const auto exitCode = QCoreApplication::exec();
+  coreThread.wait();
+
+  LOG_DEBUG("core exited, code: %d", exitCode);
+  return exitCode;
 }

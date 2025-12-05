@@ -57,48 +57,69 @@ App::~App()
   s_instance = nullptr;
 }
 
-int App::run()
+void App::run(QThread &coreThread)
 {
+  LOG_NOTE("starting core");
+
+  // Important: Move the daemon app to the daemon thread before creating any more Qt objects
+  // owned by the daemon app, as they will be created on the daemon thread.
+  moveToThread(&coreThread);
+
+  connect(&coreThread, &QThread::started, this, [this, &coreThread]() {
+    LOG_DEBUG("core thread started");
+
 #if MAC_OS_X_VERSION_10_7
-  // dock hide only supported on lion :(
-  ProcessSerialNumber psn = {0, kCurrentProcess};
+    // dock hide only supported on lion :(
+    ProcessSerialNumber psn = {0, kCurrentProcess};
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-  GetCurrentProcess(&psn);
+    GetCurrentProcess(&psn);
 #pragma GCC diagnostic pop
 
-  TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
+    TransformProcessType(&psn, kProcessTransformToBackgroundApplication);
 #endif
 
-  // install application in to arch
-  appUtil().adoptApp(this);
+    // install application in to arch
+    appUtil().adoptApp(this);
 
-  // HACK: fail by default (saves us setting result in each catch)
-  int result = s_exitFailed;
+    // HACK: fail by default (saves us setting result in each catch)
+    int result = s_exitFailed;
 
-  try {
-    result = appUtil().run();
-  } catch (ExitAppException &e) {
-    // instead of showing a nasty error, just exit with the error code.
-    // not sure if i like this behaviour, but it's probably better than
-    // using the exit(int) function!
-    result = e.getCode();
-  } catch (DisplayInvalidException &die) {
-    LOG_CRIT("a display invalid exception error occurred: %s\n", die.what());
-    // display invalid exceptions can occur when going to sleep. When this
-    // process exits, the UI will restart us instantly. We don't really want
-    // that behevior, so we quies for a bit
-    Arch::sleep(10);
-  } catch (std::runtime_error &re) {
-    LOG_CRIT("a runtime error occurred: %s\n", re.what());
-  } catch (std::exception &e) {
-    LOG_CRIT("an error occurred: %s\n", e.what());
-  } catch (...) {
-    LOG_CRIT("an unknown error occurred\n");
-  }
+    try {
+      result = appUtil().run();
+    } catch (ExitAppException &e) {
+      // instead of showing a nasty error, just exit with the error code.
+      // not sure if i like this behaviour, but it's probably better than
+      // using the exit(int) function!
+      result = e.getCode();
+    } catch (DisplayInvalidException &die) {
+      LOG_CRIT("a display invalid exception error occurred: %s\n", die.what());
+      // display invalid exceptions can occur when going to sleep. When this
+      // process exits, the UI will restart us instantly. We don't really want
+      // that behevior, so we quies for a bit
+      Arch::sleep(10);
+    } catch (std::runtime_error &re) {
+      LOG_CRIT("a runtime error occurred: %s\n", re.what());
+    } catch (std::exception &e) {
+      LOG_CRIT("an error occurred: %s\n", e.what());
+    } catch (...) {
+      LOG_CRIT("an unknown error occurred\n");
+    }
 
-  return result;
+    if (result == s_exitSuccess) {
+      LOG_INFO("core stopped successfully");
+    } else {
+      // TODO: surface error code to main thread somehow
+      LOG_ERR("core stopped with error code: %d", result);
+    }
+
+    coreThread.quit();
+    LOG_DEBUG("core thread finished");
+  });
+
+  LOG_DEBUG("starting core thread");
+  coreThread.start();
 }
 
 int App::daemonMainLoop(int, const char **)
