@@ -11,8 +11,6 @@
 
 #include <openssl/x509.h>
 
-#include <string>
-
 namespace deskflow {
 
 /**
@@ -27,7 +25,7 @@ QString formatSSLFingerprintColumns(const QByteArray &fingerprint);
 
 Fingerprint sslCertFingerprint(const X509 *cert, QCryptographicHash::Algorithm type);
 
-void generatePemSelfSignedCert(const std::string &path, int keyLength = 2048);
+void generatePemSelfSignedCert(const QString &path, int keyLength = 2048);
 
 QString generateFingerprintArt(const QByteArray &rawDigest);
 } // namespace deskflow
