@@ -6,23 +6,21 @@
 
 #pragma once
 
-#include <QObject>
-#include <QSet>
+#include "IpcServer.h"
 
-class QLocalServer;
+#include <QObject>
+#include <QString>
+
 class QLocalSocket;
 
 namespace deskflow::core::ipc {
 
-class DaemonIpcServer : public QObject
+class DaemonIpcServer : public IpcServer
 {
   Q_OBJECT
 
 public:
   explicit DaemonIpcServer(QObject *parent, const QString &logFilename);
-  ~DaemonIpcServer() override;
-
-  void listen();
 
 Q_SIGNALS:
   void logLevelChanged(const QString &logLevel);
@@ -33,29 +31,13 @@ Q_SIGNALS:
   void clearSettingsRequested();
 
 private:
-  void processMessage(QLocalSocket *clientSocket, const QString &message);
+  void processMessage(QLocalSocket *clientSocket, const QString &message) override;
   void processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts);
   void processElevate(QLocalSocket *&clientSocket, const QStringList &messageParts);
   void processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts);
 
-  /**!
-   * Write a message to the client socket and append a newline character.
-   *
-   * \param clientSocket The client socket to write to.
-   * \param message The message to write (without trailing newline).
-   */
-  void writeToClientSocket(QLocalSocket *&clientSocket, const QString &message) const;
-
-private Q_SLOTS:
-  void handleNewConnection();
-  void handleReadyRead();
-  void handleDisconnected();
-  void handleErrorOccurred();
-
 private:
   const QString m_logFilename;
-  QLocalServer *m_server;
-  QSet<QLocalSocket *> m_clients;
 };
 
 } // namespace deskflow::core::ipc
