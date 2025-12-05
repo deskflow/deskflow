@@ -62,7 +62,7 @@ Fingerprint sslCertFingerprint(const X509 *cert, QCryptographicHash::Algorithm t
   return {type, digestArray};
 }
 
-void generatePemSelfSignedCert(const std::string &path, int keyLength)
+void generatePemSelfSignedCert(const QString &path, int keyLength)
 {
   auto expirationDays = 365;
 
@@ -91,7 +91,7 @@ void generatePemSelfSignedCert(const std::string &path, int keyLength)
 
   X509_sign(cert, privateKey, EVP_sha256());
 
-  auto fp = fopenUtf8Path(path.c_str(), "w");
+  auto fp = fopenUtf8Path(path.toStdString().c_str(), "w");
   if (!fp) {
     throw std::runtime_error("could not open certificate output path");
   }
