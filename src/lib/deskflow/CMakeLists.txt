@@ -79,6 +79,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   StreamChunker.h
   languages/LanguageManager.cpp
   languages/LanguageManager.h
+  ipc/IpcServer.cpp
+  ipc/IpcServer.h
   ipc/DaemonIpcServer.cpp
   ipc/DaemonIpcServer.h
 )
