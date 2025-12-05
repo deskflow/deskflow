@@ -8,6 +8,7 @@
 #include "CoreProcess.h"
 
 #include "common/ExitCodes.h"
+#include "gui/ipc/CoreIpcClient.h"
 #include "gui/ipc/DaemonIpcClient.h"
 
 #if defined(Q_OS_MACOS)
@@ -372,6 +373,21 @@ void CoreProcess::start(std::optional<ProcessMode> processModeOption)
     startProcessFromDaemon(args);
   }
 
+  // Don't block the main GUI render thread when connecting to the Core IPC server.
+  QTimer::singleShot(kRetryDelay, this, [this] {
+    if (m_processState != ProcessState::Started) {
+      qWarning("core process failed to start, skipping core ipc connection");
+      return;
+    }
+
+    m_coreIpcClient = new ipc::CoreIpcClient(this);
+    if (m_coreIpcClient->connectToServer()) {
+      qInfo("connected to core ipc server");
+    } else {
+      qWarning("failed to establish core ipc connection");
+    }
+  });
+
   m_lastProcessMode = processMode;
 }
 
@@ -383,6 +399,12 @@ void CoreProcess::stop(std::optional<ProcessMode> processModeOption)
   const auto processMode = processModeOption.value_or(currentMode);
 
   qInfo("stopping core process (%s mode)", qPrintable(processModeToString(processMode)));
+
+  if (m_coreIpcClient) {
+    m_coreIpcClient->disconnectFromServer();
+    delete m_coreIpcClient;
+    m_coreIpcClient = nullptr;
+  }
 
   if (m_processState == ProcessState::Starting) {
     qDebug("core process is starting, cancelling");

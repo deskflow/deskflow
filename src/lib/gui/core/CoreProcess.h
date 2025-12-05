@@ -20,6 +20,7 @@
 namespace deskflow::gui {
 
 namespace ipc {
+class CoreIpcClient;
 class DaemonIpcClient;
 }
 
@@ -128,6 +129,7 @@ private:
   std::optional<ProcessMode> m_lastProcessMode = std::nullopt;
   QTimer m_retryTimer;
   int m_connections = 0;
+  deskflow::gui::ipc::CoreIpcClient *m_coreIpcClient = nullptr;
   deskflow::gui::ipc::DaemonIpcClient *m_daemonIpcClient = nullptr;
   FileTail *m_daemonFileTail = nullptr;
   QProcess *m_process = nullptr;

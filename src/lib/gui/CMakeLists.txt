@@ -85,6 +85,8 @@ add_library(${target} STATIC
   ipc/IpcClient.h
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
+  ipc/CoreIpcClient.cpp
+  ipc/CoreIpcClient.h
   validators/AliasValidator.cpp
   validators/AliasValidator.h
   validators/ComputerNameValidator.cpp

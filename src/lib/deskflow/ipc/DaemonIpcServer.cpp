@@ -23,29 +23,14 @@ DaemonIpcServer::DaemonIpcServer(QObject *parent, const QString &logFilename)
   // do nothing
 }
 
-void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &message)
+void DaemonIpcServer::processCommand(QLocalSocket *clientSocket, const QString &command, const QStringList &parts)
 {
-  LOG_DEBUG1("daemon ipc server got message: %s", message.toUtf8().constData());
-  const auto parts = message.split('=');
-  if (parts.size() < 1) {
-    LOG_ERR("daemon ipc server got invalid message: %s", message.toUtf8().constData());
-    writeToClientSocket(clientSocket, kErrorMessage);
-    return;
-  }
-
-  const auto &command = parts[0];
-  if (command == "hello") { // NOSONAR - if-init is confusing here
-    LOG_DEBUG("daemon ipc server got hello message, sending hello back");
-    writeToClientSocket(clientSocket, "hello");
-  } else if (command == "noop") {
-    LOG_DEBUG("daemon ipc server got noop message");
-    writeToClientSocket(clientSocket, kAckMessage);
-  } else if (command == "logLevel") {
+  if (command == "logLevel") {
     processLogLevel(clientSocket, parts);
   } else if (command == "elevate") {
     processElevate(clientSocket, parts);
   } else if (command == "command") {
-    processCommand(clientSocket, parts);
+    processCommandMessage(clientSocket, parts);
   } else if (command == "start") {
     LOG_DEBUG("daemon ipc server got start message");
     Q_EMIT startProcessRequested();
@@ -62,10 +47,8 @@ void DaemonIpcServer::processMessage(QLocalSocket *clientSocket, const QString &
     Q_EMIT clearSettingsRequested();
     writeToClientSocket(clientSocket, kAckMessage);
   } else {
-    LOG_WARN("daemon ipc server got unknown message: %s", message.toUtf8().constData());
+    LOG_WARN("daemon ipc server got unknown command: %s", command.toUtf8().constData());
   }
-
-  clientSocket->flush();
 }
 
 void DaemonIpcServer::processLogLevel(QLocalSocket *&clientSocket, const QStringList &messageParts)
@@ -108,7 +91,7 @@ void DaemonIpcServer::processElevate(QLocalSocket *&clientSocket, const QStringL
   writeToClientSocket(clientSocket, kAckMessage);
 }
 
-void DaemonIpcServer::processCommand(QLocalSocket *&clientSocket, const QStringList &messageParts)
+void DaemonIpcServer::processCommandMessage(QLocalSocket *&clientSocket, const QStringList &messageParts)
 {
   if (messageParts.size() < 2) {
     LOG_ERR("daemon ipc server got invalid command message");
