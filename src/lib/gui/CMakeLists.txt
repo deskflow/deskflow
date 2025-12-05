@@ -81,6 +81,8 @@ add_library(${target} STATIC
   dialogs/SettingsDialog.cpp
   dialogs/SettingsDialog.h
   dialogs/SettingsDialog.ui
+  ipc/IpcClient.cpp
+  ipc/IpcClient.h
   ipc/DaemonIpcClient.cpp
   ipc/DaemonIpcClient.h
   validators/AliasValidator.cpp
