@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: MIT
 
 add_library(io STATIC
-    Filesystem.cpp
-    Filesystem.h
     IOException.cpp
     IOException.h
     IStream.h

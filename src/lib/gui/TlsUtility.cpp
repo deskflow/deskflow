@@ -115,7 +115,7 @@ bool generateCertificate()
   }
 
   try {
-    deskflow::generatePemSelfSignedCert(certPath.toStdString(), keyLength);
+    deskflow::generatePemSelfSignedCert(certPath, keyLength);
   } catch (const std::exception &e) {
     qCritical() << "failed to generate self-signed pem cert: " << e.what();
     return false;
