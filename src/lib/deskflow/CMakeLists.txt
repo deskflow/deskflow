@@ -85,6 +85,8 @@ add_library(${lib_name} STATIC ${PLATFORM_CODE}
   ipc/IpcServer.h
   ipc/DaemonIpcServer.cpp
   ipc/DaemonIpcServer.h
+  ipc/CoreIpcServer.cpp
+  ipc/CoreIpcServer.h
 )
 
 target_link_libraries(${lib_name} PUBLIC common Qt6::Core Qt6::Network)
