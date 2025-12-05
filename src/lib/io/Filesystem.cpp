@@ -7,33 +7,7 @@
 
 #include "Filesystem.h"
 
-#include <fstream>
-
 namespace deskflow {
-
-namespace {
-
-template <class Stream> void openUtf8PathImpl(Stream &stream, const fs::path &path, std::ios_base::openmode mode)
-{
-  stream.open(path.native().c_str(), mode);
-}
-
-} // namespace
-
-void openUtf8Path(std::ifstream &stream, const fs::path &path, std::ios_base::openmode mode)
-{
-  openUtf8PathImpl(stream, path, mode);
-}
-
-void openUtf8Path(std::ofstream &stream, const fs::path &path, std::ios_base::openmode mode)
-{
-  openUtf8PathImpl(stream, path, mode);
-}
-
-void openUtf8Path(std::fstream &stream, const fs::path &path, std::ios_base::openmode mode)
-{
-  openUtf8PathImpl(stream, path, mode);
-}
 
 std::FILE *fopenUtf8Path(const fs::path &path, const std::string &mode)
 {
