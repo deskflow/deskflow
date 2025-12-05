@@ -916,7 +916,7 @@ void MainWindow::coreProcessStateChanged(ProcessState state)
 
 void MainWindow::coreConnectionStateChanged(ConnectionState state)
 {
-  qDebug() << "core connection state changed: " << static_cast<int>(state);
+  qDebug() << "core connection state changed:" << static_cast<int>(state);
 
   updateStatus();
 
