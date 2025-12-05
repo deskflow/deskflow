@@ -128,7 +128,7 @@ bool IpcClient::sendMessage(const QString &message, const QString &expectAck, co
   }
 
   if (!expectAck.isEmpty()) {
-    qDebug() << "ipc client waiting for ack: " << expectAck;
+    qDebug() << "ipc client waiting for ack:" << expectAck;
 
     if (!m_socket->waitForReadyRead(kTimeout)) {
       qWarning() << "ipc client socket ready read timed out";
@@ -148,12 +148,12 @@ bool IpcClient::sendMessage(const QString &message, const QString &expectAck, co
     }
 
     if (responseData != expectAck + "\n") {
-      qWarning() << "ipc client got unexpected response: " << responseData;
+      qWarning() << "ipc client got unexpected response:" << responseData;
       return false;
     }
   }
 
-  qDebug() << "ipc client sent message: " << messageData;
+  qDebug() << "ipc client sent message:" << messageData;
   return true;
 }
 

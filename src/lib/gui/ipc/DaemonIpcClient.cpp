@@ -80,12 +80,12 @@ QString DaemonIpcClient::requestLogPath()
   // Trimming removes newline from end of message.
   QStringList parts = responseData.trimmed().split("=");
   if (parts.size() != 2) {
-    qWarning() << "daemon ipc client got invalid log path response: " << responseData;
+    qWarning() << "daemon ipc client got invalid log path response:" << responseData;
     return QString();
   }
 
   if (parts[0] != "logPath") {
-    qWarning() << "daemon ipc client got unexpected log path response: " << responseData;
+    qWarning() << "daemon ipc client got unexpected log path response:" << responseData;
     return QString();
   }
 
