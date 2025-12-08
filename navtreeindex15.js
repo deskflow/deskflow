@@ -1,8 +1,5 @@
 var NAVTREEINDEX15 =
 {
-"classSettings.html#abcc759b17caec78486a4b8a8fc87fb79":[6,0,207,19],
-"classSettings.html#acc77a634afaed3905e6545630c71d5f2":[6,0,207,12],
-"classSettings.html#ad3ba2f3025c98073226c0d896158ad17":[6,0,207,31],
 "classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8":[6,0,207,14],
 "classSettings.html#ae160acd2fb41ec90b706c4d4e84dec4a":[6,0,207,10],
 "classSettings.html#ae251f1cdec2bce2dbbf133c18550888c":[6,0,207,18],
@@ -249,5 +246,8 @@ var NAVTREEINDEX15 =
 "classUnknownClientException.html#ac7609989daccff293c204c39204fd954":[6,0,239,1],
 "classUnknownClientException.html#ad2020a088749677f2e636cba876a23d0":[6,0,239,0],
 "classUnknownClientException.html#ae89842e669a44aaa2cd0a882d8a7dbdf":[6,0,239,2],
-"classVersionChecker.html":[6,0,240]
+"classVersionChecker.html":[6,0,240],
+"classVersionChecker.html#a1fc73b7fe6ac155ed9a69fb91315d56a":[6,0,240,2],
+"classVersionChecker.html#a39ccb925a6aab949adc6248bda078293":[6,0,240,0],
+"classVersionChecker.html#a50c74a07497c4b2bf506f50647361472":[6,0,240,3]
 };

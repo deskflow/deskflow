@@ -21,8 +21,6 @@
 <area shape="rect" id="Node000007" title=" " alt="" coords="386,237,456,262"/>
 <area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="312,187,389,230,384,230,311,192"/>
 <area shape="poly" id="edge11_Node000011_Node000004" title=" " alt="" coords="484,118,344,162,343,157,489,116"/>
-<area shape="rect" id="Node000012" title=" " alt="" coords="417,165,526,189"/>
-<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="518,116,491,154,488,150,514,119"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="550,165,604,189"/>
-<area shape="poly" id="edge13_Node000011_Node000013" title=" " alt="" coords="534,115,562,153,557,151,532,120"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="470,165,580,189"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="527,115,527,151,523,148,523,119"/>
 </map>

@@ -1,7 +1,5 @@
 var dir_65bc51589f8002bfcb72faf47ab41180 =
 [
-    [ "Filesystem.cpp", "Filesystem_8cpp.html", "Filesystem_8cpp" ],
-    [ "Filesystem.h", "Filesystem_8h.html", "Filesystem_8h" ],
     [ "IOException.cpp", "IOException_8cpp.html", null ],
     [ "IOException.h", "IOException_8h.html", "IOException_8h" ],
     [ "IStream.h", "IStream_8h.html", "IStream_8h" ],

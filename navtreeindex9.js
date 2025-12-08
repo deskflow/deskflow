@@ -1,8 +1,5 @@
 var NAVTREEINDEX9 =
 {
-"classI18N.html#a60703e3fda940b7865157467092eb663":[6,0,99,8],
-"classI18N.html#a6e63f67b2679596d86edf5aab17c5162":[6,0,99,7],
-"classI18N.html#a7e771f002458ea1dc1d09146348bfbe7":[6,0,99,0],
 "classI18N.html#a85d2215cabeb121773139c490d932ef1":[6,0,99,4],
 "classI18N.html#aad210a6082eb2fb277ab3548c4f49b8d":[6,0,99,5],
 "classI18N.html#aad8e50cfa0c2d9c68b64985624827a83":[6,0,99,2],
@@ -249,5 +246,8 @@ var NAVTREEINDEX9 =
 "classIOSXClipboardConverter.html#a4adc3b10a0bf35530b80ab1fdd286206":[6,0,123,2],
 "classIOSXClipboardConverter.html#a5cacc689ad2be9a984557d15e123df14":[6,0,123,4],
 "classIOSXClipboardConverter.html#abab1bc86237e2025440afba738b6b2f3":[6,0,123,1],
-"classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2":[6,0,123,0]
+"classIOSXClipboardConverter.html#adb8ed8667a27752184d5a1125a209cb2":[6,0,123,0],
+"classIOSXKeyResource.html":[6,0,124],
+"classIOSXKeyResource.html#a2098d8a56e0e37a377ad07cb1f02f259":[6,0,124,5],
+"classIOSXKeyResource.html#a38d017ad4d21d216804d09e8825d8ca8":[6,0,124,1]
 };

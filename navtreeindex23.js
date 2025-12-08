@@ -1,12 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structFingerprint.html#ac4467dd44454e8be054a8228a5288903":[6,0,91,8],
-"structFingerprint.html#ad054e0fb6bc2f09d0391928d4671c52a":[6,0,91,0],
-"structIArchNetwork_1_1PollEventMask.html":[6,0,104,0],
-"structIArchNetwork_1_1PollEventMask.html#a2a37fe75c8d7a7b0b533ad4a3827a1aa":[6,0,104,0,3],
-"structIArchNetwork_1_1PollEventMask.html#a63c05ada1c4ff3608177a5df753753e2":[6,0,104,0,0],
-"structIArchNetwork_1_1PollEventMask.html#ac5d78f713bee0e3d288def3d5b737911":[6,0,104,0,1],
-"structIArchNetwork_1_1PollEventMask.html#adc3edc69b9ea00a4f6ea46cf7c45b22c":[6,0,104,0,2],
 "structIScreen_1_1ClipboardInfo.html":[6,0,128,0],
 "structIScreen_1_1ClipboardInfo.html#a7738ad80c618ba7007173d8bd0f23969":[6,0,128,0,0],
 "structIScreen_1_1ClipboardInfo.html#a90677c6ed442834e74f03f70aca39884":[6,0,128,0,1],
