@@ -1,12 +1,30 @@
 # Building Deskflow
 
-To build Deskflow you will a minimum of: 
+To build Deskflow you will a minimum of:
     - [cmake] 3.24+
     - [Qt] 6.7.0+
     - [openssl] 3.0+
     - [libportal] 0.8+ (linux, bsd)
     - [libei] 1.3+ (linux, bsd)
     - [google_test] ^
+
+### Linux (Debian/Ubuntu)
+
+```shell
+sudo apt update && sudo apt install -y cmake build-essential qt6-base-dev qt6-declarative-dev qt6-tools-dev libssl-dev libportal-dev libei-dev libgtest-dev libxkbfile-dev libx11-dev libxext-dev
+```
+
+### macOS (Homebrew)
+
+```shell
+brew update && brew install cmake qt@6 openssl@3 pkg-config
+```
+
+### Windows (vcpkg recommended)
+
+```shell
+git clone https://github.com/microsoft/vcpkg.git && cd vcpkg && ./bootstrap-vcpkg.bat && ./vcpkg install cmake qt6-base qt6-declarative openssl && ./vcpkg integrate install
+```
 
 > ^ Will be fetched if not found on the host system.
 
