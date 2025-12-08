@@ -15,6 +15,7 @@
 #include "common/ExitCodes.h"
 #include "deskflow/ClientApp.h"
 #include "deskflow/ServerApp.h"
+#include "deskflow/ipc/CoreIpcServer.h"
 
 #if SYSAPI_WIN32
 #include "arch/win32/ArchMiscWindows.h"
@@ -78,20 +79,22 @@ int main(int argc, char **argv)
     return s_exitSuccess;
   }
 
-  // Before we check any more args we need to check for a duplicate process.
-  // Create a shared memory segment with a unique key
-  // This is to prevent a new instance from running if one is already running
-  QSharedMemory sharedMemory(kCoreBinName);
+  // TODO: rename single instance name or use IPC to check for existing instance?
 
-  // Attempt to attach first and detach in order to clean up stale shm chunks
-  // This can happen if the previous instance was killed or crashed
-  if (sharedMemory.attach())
-    sharedMemory.detach();
+  // // Before we check any more args we need to check for a duplicate process.
+  // // Create a shared memory segment with a unique key
+  // // This is to prevent a new instance from running if one is already running
+  // QSharedMemory sharedMemory(kCoreBinName);
 
-  if (!sharedMemory.create(1) && parser.singleInstanceOnly()) {
-    LOG_WARN("an instance of deskflow core is already running");
-    return s_exitDuplicate;
-  }
+  // // Attempt to attach first and detach in order to clean up stale shm chunks
+  // // This can happen if the previous instance was killed or crashed
+  // if (sharedMemory.attach())
+  //   sharedMemory.detach();
+
+  // if (!sharedMemory.create(1) && parser.singleInstanceOnly()) {
+  //   LOG_WARN("an instance of deskflow core is already running");
+  //   return s_exitDuplicate;
+  // }
 
   parser.parse();
 
@@ -101,7 +104,10 @@ int main(int argc, char **argv)
   App *coreApp = createApp(parser, events, processName);
 
   QCoreApplication app(argc, argv);
-  QCoreApplication::setApplicationName(QStringLiteral("%1 Daemon").arg(kAppName));
+  QCoreApplication::setApplicationName(QStringLiteral("%1 Core").arg(kAppName));
+
+  const auto ipcServer = new deskflow::core::ipc::CoreIpcServer(&app); // NOSONAR - Qt managed
+  ipcServer->listen();
 
   QThread coreThread;
   QObject::connect(&coreThread, &QThread::finished, &app, &QCoreApplication::quit);
