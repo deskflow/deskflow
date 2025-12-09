@@ -247,7 +247,7 @@ var NAVTREEINDEX8 =
 "classHotkeyDialog.html#ae95ebac862e1337db4a8634206793557":[6,0,98,1],
 "classHotkeyDialog.html#af7bfd1146080aa63ea6190a93065543a":[6,0,98,5],
 "classI18N.html":[6,0,99],
+"classI18N.html#a557f04dec8c74bc065cc1a19966e3016":[6,0,99,4],
 "classI18N.html#a60703e3fda940b7865157467092eb663":[6,0,99,8],
-"classI18N.html#a6e63f67b2679596d86edf5aab17c5162":[6,0,99,7],
-"classI18N.html#a7e771f002458ea1dc1d09146348bfbe7":[6,0,99,0]
+"classI18N.html#a6e63f67b2679596d86edf5aab17c5162":[6,0,99,7]
 };

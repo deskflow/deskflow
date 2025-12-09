@@ -136,7 +136,7 @@ var NAVTREEINDEX =
 "classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784",
 "classArchNetworkWinsock.html#a4500154a30ebcdfb1701dedb63c07a46",
 "classClientProxy1__1.html#a0a36bccf1295f78afb13ddb5c946b9e0",
-"classI18N.html#a85d2215cabeb121773139c490d932ef1",
+"classI18N.html#a7e771f002458ea1dc1d09146348bfbe7",
 "classIOSXKeyResource.html#a466ff980dad8ab4d34508c1fef0b1673",
 "classInputFilter_1_1SwitchToNextScreenAction.html#ab226c21f01acf9f4adb06daea3cd6009",
 "classMSWindowsScreen.html#a291ef5a8a5d75d63f970d4a8900c86c6",

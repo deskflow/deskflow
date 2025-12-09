@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.73</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.75</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -127,7 +127,7 @@ $(function(){initNavTree('I18N_8h_source.html','',''); });
 <div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
 <div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>Q_SIGNALS:</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="classI18N.html#a85d2215cabeb121773139c490d932ef1">   64</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classI18N.html#a85d2215cabeb121773139c490d932ef1">languageChanged</a>(<span class="keyword">const</span> QString language);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classI18N.html#abf9a2b15f106b9eab0b92834d43fc32e">   69</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classI18N.html#abf9a2b15f106b9eab0b92834d43fc32e">langaugesChanged</a>(<span class="keyword">const</span> QStringList languages);</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno"><a class="line" href="classI18N.html#a557f04dec8c74bc065cc1a19966e3016">   69</a></span>  <span class="keywordtype">void</span> <a class="code hl_signal" href="classI18N.html#a557f04dec8c74bc065cc1a19966e3016">languagesChanged</a>(<span class="keyword">const</span> QStringList languages);</div>
 <div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span> </div>
 <div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">private</span>:</div>
 <div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>  <span class="keyword">explicit</span> I18N(QObject *parent = <span class="keyword">nullptr</span>);</div>
@@ -145,13 +145,13 @@ $(function(){initNavTree('I18N_8h_source.html','',''); });
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  QString m_qtTrPath;</div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>};</div>
 </div>
+<div class="ttc" id="aclassI18N_html_a557f04dec8c74bc065cc1a19966e3016"><div class="ttname"><a href="classI18N.html#a557f04dec8c74bc065cc1a19966e3016">I18N::languagesChanged</a></div><div class="ttdeci">void languagesChanged(const QStringList languages)</div><div class="ttdoc">languagesChanged Emitted when the detected languages changes</div></div>
 <div class="ttc" id="aclassI18N_html_a60703e3fda940b7865157467092eb663"><div class="ttname"><a href="classI18N.html#a60703e3fda940b7865157467092eb663">I18N::toNativeName</a></div><div class="ttdeci">static QString toNativeName(QString shortName)</div><div class="ttdoc">toNativeName Convert a 639 Name into a Native Language string</div><div class="ttdef"><b>Definition</b> I18N.cpp:122</div></div>
 <div class="ttc" id="aclassI18N_html_a6e63f67b2679596d86edf5aab17c5162"><div class="ttname"><a href="classI18N.html#a6e63f67b2679596d86edf5aab17c5162">I18N::setLanguage</a></div><div class="ttdeci">static void setLanguage(const QString &amp;langName)</div><div class="ttdoc">setLanguage Sets the current language</div><div class="ttdef"><b>Definition</b> I18N.cpp:132</div></div>
 <div class="ttc" id="aclassI18N_html_a7e771f002458ea1dc1d09146348bfbe7"><div class="ttname"><a href="classI18N.html#a7e771f002458ea1dc1d09146348bfbe7">I18N::currentLanguage</a></div><div class="ttdeci">static QString currentLanguage()</div><div class="ttdoc">currentLanguage</div><div class="ttdef"><b>Definition</b> I18N.cpp:127</div></div>
 <div class="ttc" id="aclassI18N_html_a85d2215cabeb121773139c490d932ef1"><div class="ttname"><a href="classI18N.html#a85d2215cabeb121773139c490d932ef1">I18N::languageChanged</a></div><div class="ttdeci">void languageChanged(const QString language)</div><div class="ttdoc">languageChanged Emitted when the current language changes</div></div>
 <div class="ttc" id="aclassI18N_html_aad210a6082eb2fb277ab3548c4f49b8d"><div class="ttname"><a href="classI18N.html#aad210a6082eb2fb277ab3548c4f49b8d">I18N::nativeTo639Name</a></div><div class="ttdeci">static QString nativeTo639Name(QString nativeName)</div><div class="ttdoc">nativeTo639Name Convert a native Language name into a 639 name</div><div class="ttdef"><b>Definition</b> I18N.cpp:117</div></div>
 <div class="ttc" id="aclassI18N_html_aad8e50cfa0c2d9c68b64985624827a83"><div class="ttname"><a href="classI18N.html#aad8e50cfa0c2d9c68b64985624827a83">I18N::instance</a></div><div class="ttdeci">static I18N * instance()</div><div class="ttdef"><b>Definition</b> I18N.cpp:19</div></div>
-<div class="ttc" id="aclassI18N_html_abf9a2b15f106b9eab0b92834d43fc32e"><div class="ttname"><a href="classI18N.html#abf9a2b15f106b9eab0b92834d43fc32e">I18N::langaugesChanged</a></div><div class="ttdeci">void langaugesChanged(const QStringList languages)</div><div class="ttdoc">langaugesChanged Emitted when the detected languages changes</div></div>
 <div class="ttc" id="aclassI18N_html_ac13c797c0d292af2a4bd4bfa97394d0f"><div class="ttname"><a href="classI18N.html#ac13c797c0d292af2a4bd4bfa97394d0f">I18N::detectedLanguages</a></div><div class="ttdeci">static QStringList detectedLanguages()</div><div class="ttdoc">detectedLanguages</div><div class="ttdef"><b>Definition</b> I18N.cpp:112</div></div>
 <div class="ttc" id="aclassI18N_html_afdfcb9157525f42eef4e947eadd6c217"><div class="ttname"><a href="classI18N.html#afdfcb9157525f42eef4e947eadd6c217">I18N::reDetectLanguages</a></div><div class="ttdeci">static void reDetectLanguages()</div><div class="ttdoc">detectLanguages Detect new language files</div><div class="ttdef"><b>Definition</b> I18N.cpp:163</div></div>
 </div><!-- fragment --></div><!-- contents -->

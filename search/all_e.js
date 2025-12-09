@@ -1,11 +1,11 @@
 var searchData=
 [
-  ['langaugeschanged_0',['langaugesChanged',['../classI18N.html#abf9a2b15f106b9eab0b92834d43fc32e',1,'I18N']]],
-  ['language_1',['Language',['../structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a',1,'Settings::Core']]],
-  ['languagechanged_2',['languageChanged',['../classI18N.html#a85d2215cabeb121773139c490d932ef1',1,'I18N']]],
-  ['languagemanager_3',['LanguageManager',['../classdeskflow_1_1languages_1_1LanguageManager.html',1,'deskflow::languages::LanguageManager'],['../classdeskflow_1_1languages_1_1LanguageManager.html#a746032fe9d51cbf80ee75d5c2f218667',1,'deskflow::languages::LanguageManager::LanguageManager()']]],
-  ['languagemanager_2ecpp_4',['LanguageManager.cpp',['../LanguageManager_8cpp.html',1,'']]],
-  ['languagemanager_2eh_5',['LanguageManager.h',['../LanguageManager_8h.html',1,'']]],
+  ['language_0',['Language',['../structSettings_1_1Core.html#a438f42902d3451ced0dfd1ff83bb0d9a',1,'Settings::Core']]],
+  ['languagechanged_1',['languageChanged',['../classI18N.html#a85d2215cabeb121773139c490d932ef1',1,'I18N']]],
+  ['languagemanager_2',['LanguageManager',['../classdeskflow_1_1languages_1_1LanguageManager.html',1,'deskflow::languages::LanguageManager'],['../classdeskflow_1_1languages_1_1LanguageManager.html#a746032fe9d51cbf80ee75d5c2f218667',1,'deskflow::languages::LanguageManager::LanguageManager()']]],
+  ['languagemanager_2ecpp_3',['LanguageManager.cpp',['../LanguageManager_8cpp.html',1,'']]],
+  ['languagemanager_2eh_4',['LanguageManager.h',['../LanguageManager_8h.html',1,'']]],
+  ['languageschanged_5',['languagesChanged',['../classI18N.html#a557f04dec8c74bc065cc1a19966e3016',1,'I18N']]],
   ['languagesync_6',['LanguageSync',['../structSettings_1_1Client.html#a50b1127b62ac5088157236dd298d623b',1,'Settings::Client']]],
   ['lastdirection_7',['LastDirection',['../DirectionTypes_8h.html#a5d16bedaff50120f1b7fc0b264d62da6a40d961b4321f05443220ee5ae3b4615f',1,'DirectionTypes.h']]],
   ['lastversion_8',['LastVersion',['../structSettings_1_1Core.html#a22d636fbd1f06380f33e96831563a53b',1,'Settings::Core']]],

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.73</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.75</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -124,8 +124,8 @@ Collaboration diagram for I18N:</div>
 Signals</h2></td></tr>
 <tr class="memitem:a85d2215cabeb121773139c490d932ef1" id="r_a85d2215cabeb121773139c490d932ef1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a85d2215cabeb121773139c490d932ef1">languageChanged</a> (const QString language)</td></tr>
 <tr class="memdesc:a85d2215cabeb121773139c490d932ef1"><td class="mdescLeft">&#160;</td><td class="mdescRight">languageChanged Emitted when the current language changes  <br /></td></tr>
-<tr class="memitem:abf9a2b15f106b9eab0b92834d43fc32e" id="r_abf9a2b15f106b9eab0b92834d43fc32e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abf9a2b15f106b9eab0b92834d43fc32e">langaugesChanged</a> (const QStringList languages)</td></tr>
-<tr class="memdesc:abf9a2b15f106b9eab0b92834d43fc32e"><td class="mdescLeft">&#160;</td><td class="mdescRight">langaugesChanged Emitted when the detected languages changes  <br /></td></tr>
+<tr class="memitem:a557f04dec8c74bc065cc1a19966e3016" id="r_a557f04dec8c74bc065cc1a19966e3016"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a557f04dec8c74bc065cc1a19966e3016">languagesChanged</a> (const QStringList languages)</td></tr>
+<tr class="memdesc:a557f04dec8c74bc065cc1a19966e3016"><td class="mdescLeft">&#160;</td><td class="mdescRight">languagesChanged Emitted when the detected languages changes  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -227,39 +227,6 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abf9a2b15f106b9eab0b92834d43fc32e" name="abf9a2b15f106b9eab0b92834d43fc32e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf9a2b15f106b9eab0b92834d43fc32e">&#9670;&#160;</a></span>langaugesChanged</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void I18N::langaugesChanged </td>
-          <td>(</td>
-          <td class="paramtype">const QStringList</td>          <td class="paramname"><span class="paramname"><em>languages</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>langaugesChanged Emitted when the detected languages changes </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">languages</td><td>The current list of languages (639-1 names i.e en, es) </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="a85d2215cabeb121773139c490d932ef1" name="a85d2215cabeb121773139c490d932ef1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a85d2215cabeb121773139c490d932ef1">&#9670;&#160;</a></span>languageChanged</h2>
 
@@ -287,6 +254,39 @@ Static Public Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">language</td><td>The current language (639-1 names i.e en, es) </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a557f04dec8c74bc065cc1a19966e3016" name="a557f04dec8c74bc065cc1a19966e3016"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a557f04dec8c74bc065cc1a19966e3016">&#9670;&#160;</a></span>languagesChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void I18N::languagesChanged </td>
+          <td>(</td>
+          <td class="paramtype">const QStringList</td>          <td class="paramname"><span class="paramname"><em>languages</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel signal">signal</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>languagesChanged Emitted when the detected languages changes </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">languages</td><td>The current list of languages (639-1 names i.e en, es) </td></tr>
   </table>
   </dd>
 </dl>
