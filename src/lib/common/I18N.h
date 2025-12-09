@@ -63,10 +63,10 @@ Q_SIGNALS:
    */
   void languageChanged(const QString language);
   /**
-   * @brief langaugesChanged Emitted when the detected languages changes
+   * @brief languagesChanged Emitted when the detected languages changes
    * @param languages The current list of languages (639-1 names i.e en, es)
    */
-  void langaugesChanged(const QStringList languages);
+  void languagesChanged(const QStringList languages);
 
 private:
   explicit I18N(QObject *parent = nullptr);

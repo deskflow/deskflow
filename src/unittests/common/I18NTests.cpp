@@ -72,7 +72,7 @@ void I18NTests::setLangTest()
 
 void I18NTests::reDetectTest()
 {
-  QSignalSpy spy(I18N::instance(), &I18N::langaugesChanged);
+  QSignalSpy spy(I18N::instance(), &I18N::languagesChanged);
 
   I18N::reDetectLanguages();
   QCOMPARE(spy.count(), 0);
