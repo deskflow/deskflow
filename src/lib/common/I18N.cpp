@@ -213,5 +213,5 @@ void I18N::detectLanguages()
     m_translations.insert(lang, {appTranslations.value(lang), qtTranslations.value(lang)});
 
   if (oldList != m_translations)
-    Q_EMIT langaugesChanged(m_translations.keys());
+    Q_EMIT languagesChanged(m_translations.keys());
 }
