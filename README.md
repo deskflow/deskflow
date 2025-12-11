@@ -65,7 +65,7 @@ For instructions on building Deskflow, use the wiki page: [Building](https://git
 
 We support all major operating systems, including Windows, macOS, Linux, and Unix-like BSD-derived.
 
-Windows 10 or higher is required.
+Windows 10 v1809 or higher is required.
 
 macOS 12 or higher is required.
 
