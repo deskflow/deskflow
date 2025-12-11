@@ -393,10 +393,12 @@
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineInterface">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
+           <widget class="QComboBox" name="comboInterface">
+            <item>
+             <property name="text">
+              <string>Automatic</string>
+             </property>
+            </item>
            </widget>
           </item>
          </layout>
@@ -733,7 +735,7 @@
   <tabstop>btnTlsRegenCert</tabstop>
   <tabstop>cbRequireClientCert</tabstop>
   <tabstop>sbPort</tabstop>
-  <tabstop>lineInterface</tabstop>
+  <tabstop>comboInterface</tabstop>
   <tabstop>cbLogToFile</tabstop>
   <tabstop>lineLogFilename</tabstop>
   <tabstop>btnBrowseLog</tabstop>

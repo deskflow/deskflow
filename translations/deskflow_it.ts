@@ -408,8 +408,16 @@ Vuoi connetterti al server?
         <translation>Impossibile rilevare un indirizzo IP. Controlla che la tua connessione di rete sia attiva.</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation>IP suggerito: %1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">Utilizzo dell&apos;indirizzo IP: </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">Selezionata come interfaccia nelle impostazioni.</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">IP suggerito: </translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -422,6 +430,12 @@ Vuoi connetterti al server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation>uno dei seguenti IP:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+L&apos;indirizzo IP associato non è più valido, potrebbe essere necessario riavviare il server.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -466,6 +480,12 @@ Nomi validi:
     <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificato non valido, ne viene generato uno nuovo</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+L&apos;interfaccia non è attiva. Impossibile avviare il server.</translation>
     </message>
     <message>
         <source>%1 will retry in a moment...</source>
@@ -1286,6 +1306,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Richiede il pacchetto wl-clipboard&lt;/p&gt;&lt;p&gt;Quando si utilizza wl-clipboard v2.2.1, si verifica un bug di furto del focus che potrebbe rendere Deskflow più difficile da usare. Questo problema è stato risolto quando si utilizza il ramo master di wl-clipboard, a meno che il proprio compositore non supporti il ​​protocollo wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation type="unfinished">Automatica</translation>
     </message>
 </context>
 <context>

@@ -372,8 +372,12 @@ Do you want to connect to the server?
         <translation>IPアドレスが見つかりません。ネットワーク接続を確認してください。</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation>推奨IPアドレス: %1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">IPアドレスを使用する： </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">設定でインターフェースとして選択されています。</translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -386,6 +390,12 @@ Do you want to connect to the server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation>以下のIPアドレスのいずれか:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+割り当て済みのIPアドレスが無効になりました。サーバーを再起動する必要があるかもしれません。</translation>
     </message>
     <message>
         <source>%1 is starting...</source>
@@ -530,6 +540,16 @@ Valid names:
  %1</source>
         <translation>クライアント:
  %1</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+インターフェースがアクティブではありません。サーバーを起動できません。</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">推奨IPアドレス: </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
@@ -1287,6 +1307,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wl-clipboard パッケージが必要です。&lt;/p&gt;&lt;p&gt;wl-clipboard v2.2.1 を使用すると、フォーカス盗用のバグにより Deskflow の使い勝手が悪くなる可能性があります。この問題は wl-clipboard のマスターブランチで修正されていますが、使用しているコンポジターが wlroots-data-control プロトコルに対応している必要があります。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation type="unfinished">自動</translation>
     </message>
 </context>
 <context>

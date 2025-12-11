@@ -372,8 +372,12 @@ Do you want to connect to the server?
         <translation>无法检测到 IP 地址。请检查您的网络连接是否正常。</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation>建议 IP：%1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">使用IP地址： </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">在设置中选择为接口。</translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -386,6 +390,12 @@ Do you want to connect to the server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation>以下 IP 地址之一：&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+绑定的IP地址现在无效，您可能需要重启服务器。</translation>
     </message>
     <message>
         <source>%1 is starting...</source>
@@ -530,6 +540,16 @@ Valid names:
  %1</source>
         <translation>客户端：
  %1</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+接口未激活。无法启动服务器。</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">建议 IP： </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
@@ -1287,6 +1307,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;需要 wl-clipboard 包&lt;/p&gt;&lt;p&gt;使用 wl-clipboard v2.2.1 时存在一个焦点抢夺 Bug，可能导致 Deskflow 使用不便。该问题已在 wl-clipboard 的 master 分支中修复，除非您的合成器不支持 wlroots-data-control 协议。&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation type="unfinished">自动的</translation>
     </message>
 </context>
 <context>
