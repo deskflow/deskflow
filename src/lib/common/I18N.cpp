@@ -80,9 +80,11 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
   detectLanguages();
 
+  static const auto s_prefix = QStringLiteral("_");
+
   if (Settings::value(Settings::Core::Language).isNull()) {
     auto appTranslator = new QTranslator(this);
-    if (appTranslator->load(QLocale(), kAppId, "_", m_appTrPath)) {
+    if (appTranslator->load(QLocale(), kAppId, s_prefix, m_appTrPath)) {
       m_currentTranslations.append(appTranslator);
       QCoreApplication::installTranslator(appTranslator);
     }
@@ -92,7 +94,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
       m_currentLang = QStringLiteral("English");
 
     auto qtTranslator = new QTranslator(this);
-    if (qtTranslator->load(QLocale(), QStringLiteral("qt"), "_", m_qtTrPath)) {
+    if (qtTranslator->load(QLocale(), QStringLiteral("qt"), s_prefix, m_qtTrPath)) {
       m_currentTranslations.append(qtTranslator);
       QCoreApplication::installTranslator(qtTranslator);
     }
@@ -204,7 +206,7 @@ void I18N::detectLanguages()
 
   QMap<QString, QString> qtTranslations;
   for (const QString &translation : std::as_const(langList)) {
-    QString lang = translation.mid(qtTrNameLen, translation.lastIndexOf('.') - qtTrNameLen);
+    QString lang = translation.mid(qtTrNameLen, translation.lastIndexOf(QLatin1Char('.')) - qtTrNameLen);
     qtTranslations.insert(lang, QStringLiteral("%1/%2").arg(m_qtTrPath, translation));
   }
 
