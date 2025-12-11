@@ -13,9 +13,13 @@ private Q_SLOTS:
   void initTestCase();
   void creationTest();
   void detectedLangTest();
-  void check639NameTest();
-  void toNativeNameTest();
-  void setLangTest();
+  void check639NameTest_validMapValues();
+  void check639NameTest_invalidName();
+  void toNativeNameTest_validMapValues();
+  void toNativeNameTest_invalidName();
+  void setLangTest_validLangs();
+  void setLangTest_invalidLang();
+  void setLangTest_currentLang();
   void reDetectTest();
 
 private:

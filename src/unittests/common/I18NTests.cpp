@@ -48,21 +48,31 @@ void I18NTests::detectedLangTest()
     QVERIFY(m_langMap.contains(lang));
 }
 
-void I18NTests::check639NameTest()
+void I18NTests::check639NameTest_validMapValues()
 {
   for (const auto &lang : m_langMap.keys())
     QCOMPARE(I18N::nativeTo639Name(lang), m_langMap.value(lang));
 }
 
-void I18NTests::toNativeNameTest()
+void I18NTests::check639NameTest_invalidName()
+{
+  QCOMPARE(I18N::nativeTo639Name("INVALID"), QString());
+}
+
+void I18NTests::toNativeNameTest_validMapValues()
 {
   for (const auto &lang : m_langMap.values())
     QCOMPARE(I18N::toNativeName(lang), m_langMap.key(lang));
 }
 
-void I18NTests::setLangTest()
+void I18NTests::toNativeNameTest_invalidName()
 {
-  // make sure we are not staring with our language set to the maps first value
+  QCOMPARE(I18N::toNativeName("INVALID"), QString());
+}
+
+void I18NTests::setLangTest_validLangs()
+{
+  // make sure we are not staring with our language set to the maps last value
   // ensures a languageChanged signal will be emited for each itteration of the testing loop
   I18N::setLanguage(m_langMap.value(m_langMap.lastKey()));
   QSignalSpy spy(I18N::instance(), &I18N::languageChanged);
@@ -71,6 +81,20 @@ void I18NTests::setLangTest()
     QCOMPARE(I18N::currentLanguage(), lang);
   }
   QCOMPARE(spy.count(), m_langMap.count());
+}
+
+void I18NTests::setLangTest_invalidLang()
+{
+  QSignalSpy spy(I18N::instance(), &I18N::languageChanged);
+  I18N::setLanguage("INVALID-LANGUAGE");
+  QCOMPARE(spy.count(), 0);
+}
+
+void I18NTests::setLangTest_currentLang()
+{
+  QSignalSpy spy(I18N::instance(), &I18N::languageChanged);
+  I18N::setLanguage(I18N::currentLanguage());
+  QCOMPARE(spy.count(), 0);
 }
 
 void I18NTests::reDetectTest()
