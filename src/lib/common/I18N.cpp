@@ -89,9 +89,9 @@ I18N::I18N(QObject *parent) : QObject{parent}
       QCoreApplication::installTranslator(appTranslator);
     }
 
-    m_currentLang = appTranslator->translate("i18n", "LocalizedName");
+    m_currentLang = m_nameMap.key(appTranslator->translate("i18n", "LocalizedName"));
     if (m_currentLang.isEmpty())
-      m_currentLang = QStringLiteral("English");
+      m_currentLang = QStringLiteral("en");
 
     auto qtTranslator = new QTranslator(this);
     if (qtTranslator->load(QLocale(), QStringLiteral("qt"), s_prefix, m_qtTrPath)) {

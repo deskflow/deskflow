@@ -62,6 +62,9 @@ void I18NTests::toNativeNameTest()
 
 void I18NTests::setLangTest()
 {
+  // make sure we are not staring with our language set to the maps first value
+  // ensures a languageChanged signal will be emited for each itteration of the testing loop
+  I18N::setLanguage(m_langMap.value(m_langMap.lastKey()));
   QSignalSpy spy(I18N::instance(), &I18N::languageChanged);
   for (const auto &lang : m_langMap.values()) {
     I18N::setLanguage(lang);
