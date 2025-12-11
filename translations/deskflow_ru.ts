@@ -374,8 +374,12 @@ Do you want to connect to the server?
         <translation>Не получаеться найти Ip адресc. Проверте подключение к сети.</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation>Ваш (рекомендованый) IP адресс: %1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">Использование IP-адреса: </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">Выбран в качестве интерфейса в настройках.</translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -388,6 +392,12 @@ Do you want to connect to the server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation>один из следующих IP-адресов:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+Привязанный IP-адрес теперь недействителен, возможно, потребуется перезапустить сервер.</translation>
     </message>
     <message>
         <source>%1 is starting...</source>
@@ -534,6 +544,16 @@ Valid names:
  %1</source>
         <translation>Клиент:
  %1</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+Интерфейс неактивен. Невозможно запустить сервер.</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">Ваш (рекомендованый) IP адресс: </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
@@ -1239,6 +1259,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Enable wl-clipboard support</source>
         <translation>Врубить поддержку буфера обмена</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished">Любой</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>
