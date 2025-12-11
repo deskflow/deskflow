@@ -420,8 +420,16 @@ Do you want to connect to the server?
         <translation type="unfinished">No se puede detectar una dirección IP. Compruebe que su conexión de red esté activa.</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation type="unfinished">IP sugerida: %1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">Usando IP: </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">Seleccionado como la interfaz en la configuración.</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">IP sugerida: </translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -434,6 +442,12 @@ Do you want to connect to the server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation type="unfinished">una de las siguientes IP:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+La dirección IP asignada ahora no es válida; es posible que deba reiniciar el servidor.</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -458,6 +472,12 @@ Do you want to connect to the server?
     <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificado no válido, generando uno nuevo</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+La interfaz no está activa. No se puede iniciar el servidor.</translation>
     </message>
     <message>
         <source>%1 will retry in a moment...</source>
@@ -1286,6 +1306,10 @@ Al habilitar esta opción, se deshabilitará la interfaz gráfica de usuario (GU
     <message>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requires the wl-clipboard package&lt;/p&gt;&lt;p&gt;When using wl-clipboard v2.2.1, there is a focus stealing bug that may make Deskflow harder to use. This has been fixed when using the wl-clipboard master branch, unless your Compositor lacks wlroots-data-control protocol support.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Requiere el paquete wl-clipboard&lt;/p&gt;&lt;p&gt;Al usar wl-clipboard v2.2.1, existe un error que provoca la pérdida del foco y que puede dificultar el uso de Deskflow. Este error se ha corregido al usar la rama principal de wl-clipboard, a menos que su Compositor no sea compatible con el protocolo wlroots-data-control.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+    </message>
+    <message>
+        <source>Automatic</source>
+        <translation type="unfinished">Automática</translation>
     </message>
 </context>
 <context>

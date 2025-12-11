@@ -14,6 +14,7 @@
 #include "common/Settings.h"
 #include "gui/Messages.h"
 #include "gui/TlsUtility.h"
+#include "gui/core/NetworkMonitor.h"
 
 #include <QComboBox>
 #include <QDir>
@@ -48,6 +49,16 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   // force the first tab, since qt creator sets the active tab as the last one
   // the developer was looking at, and it's easy to accidentally save that.
   ui->tabWidget->setCurrentIndex(0);
+
+  // Populate the list of IP addresses
+  NetworkMonitor networkMonitor(this);
+  const auto addresses = networkMonitor.getAvailableIPv4Addresses();
+  for (const auto &address : addresses) {
+    QString ipString = address.toString();
+    if (ui->comboInterface->findText(ipString) == -1) {
+      ui->comboInterface->addItem(ipString, ipString);
+    }
+  }
 
   loadFromConfig();
 
@@ -160,7 +171,7 @@ void SettingsDialog::updateText()
 void SettingsDialog::accept()
 {
   Settings::setValue(Settings::Core::Port, ui->sbPort->value());
-  Settings::setValue(Settings::Core::Interface, ui->lineInterface->text());
+  Settings::setValue(Settings::Core::Interface, ui->comboInterface->currentData());
   Settings::setValue(Settings::Log::Level, ui->comboLogLevel->currentIndex());
   Settings::setValue(Settings::Log::ToFile, ui->cbLogToFile->isChecked());
   Settings::setValue(Settings::Log::File, ui->lineLogFilename->text());
@@ -194,7 +205,6 @@ void SettingsDialog::accept()
 void SettingsDialog::loadFromConfig()
 {
   ui->sbPort->setValue(Settings::value(Settings::Core::Port).toInt());
-  ui->lineInterface->setText(Settings::value(Settings::Core::Interface).toString());
   ui->comboLogLevel->setCurrentIndex(Settings::value(Settings::Log::Level).toInt());
   ui->cbLogToFile->setChecked(Settings::value(Settings::Log::ToFile).toBool());
   ui->lineLogFilename->setText(Settings::value(Settings::Log::File).toString());
@@ -221,6 +231,10 @@ void SettingsDialog::loadFromConfig()
     ui->rbIconColorful->setChecked(true);
 
   ui->lblDebugWarning->setVisible(Settings::value(Settings::Log::Level).toInt() > 4);
+
+  ui->comboInterface->setCurrentText(Settings::value(Settings::Core::Interface).toString());
+  if (ui->comboInterface->currentIndex() < 0)
+    ui->comboInterface->setCurrentIndex(0);
 
   qDebug() << "load from config done";
   updateControls();
@@ -289,7 +303,7 @@ void SettingsDialog::updateControls()
   ui->buttonBox->button(QDialogButtonBox::Save)->setEnabled(writable);
 
   ui->sbPort->setEnabled(writable);
-  ui->lineInterface->setEnabled(writable);
+  ui->comboInterface->setEnabled(writable);
   ui->comboLogLevel->setEnabled(writable);
   ui->cbLogToFile->setEnabled(writable);
   ui->cbAutoHide->setEnabled(writable);
