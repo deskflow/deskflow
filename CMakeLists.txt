@@ -183,8 +183,11 @@ else()
 endif()
 
 add_subdirectory(doc)
-add_subdirectory(src)
+
+# build translations before source, I18N unit tests fail if they are missing
 add_subdirectory(translations)
+
+add_subdirectory(src)
 
 option(BUILD_INSTALLER "Build installer" ON)
 if(BUILD_INSTALLER)
