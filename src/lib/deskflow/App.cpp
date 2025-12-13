@@ -110,12 +110,10 @@ int App::daemonMainLoop(int, const char **)
 void App::setupFileLogging()
 {
   if (Settings::value(Settings::Log::ToFile).toBool()) {
-    if (const auto file = Settings::value(Settings::Log::File).toString(); !file.isEmpty()) {
-      const auto logFile = qPrintable(file);
-      m_fileLog = new FileLogOutputter(logFile); // NOSONAR - Adopted by `Log`
-      CLOG->insert(m_fileLog);
-      LOG_DEBUG1("logging to file (%s) enabled", logFile);
-    }
+    const auto file = Settings::value(Settings::Log::File).toString();
+    m_fileLog = new FileLogOutputter(file); // NOSONAR - Adopted by `Log`
+    CLOG->insert(m_fileLog);
+    LOG_DEBUG1("logging to file (%s) enabled", qPrintable(file));
   }
 }
 
