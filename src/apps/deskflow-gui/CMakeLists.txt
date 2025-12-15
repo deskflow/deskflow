@@ -60,12 +60,8 @@ if(WIN32)
   set_target_properties(${target} PROPERTIES LINK_FLAGS "/NODEFAULTLIB:LIBCMT")
 
   install(RUNTIME_DEPENDENCY_SET guiDeps
-    PRE_EXCLUDE_REGEXES
-      "api-ms-win-.*"
-      "ext-ms-.*"
-      "^hvsifiletrust\\.dll$"
-    POST_EXCLUDE_REGEXES
-      ".*system32.*"
+    PRE_EXCLUDE_REGEXES ${WIN32_PRE_EXCLUDE_REGEXES}
+    POST_EXCLUDE_REGEXES ${WIN32_POST_EXCLUDE_REGEXES}
     RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 

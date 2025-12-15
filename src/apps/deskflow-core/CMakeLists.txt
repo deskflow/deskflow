@@ -52,12 +52,8 @@ if(BUILD_OSX_BUNDLE)
   )
 elseif (WIN32)
   install(RUNTIME_DEPENDENCY_SET coreDeps
-    PRE_EXCLUDE_REGEXES
-      "api-ms-win-.*"
-      "ext-ms-.*"
-      "^hvsifiletrust\\.dll$"
-    POST_EXCLUDE_REGEXES
-      ".*system32.*"
+    PRE_EXCLUDE_REGEXES ${WIN32_PRE_EXCLUDE_REGEXES}
+    POST_EXCLUDE_REGEXES ${WIN32_POST_EXCLUDE_REGEXES}
     RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 else()

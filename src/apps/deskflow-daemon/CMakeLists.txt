@@ -33,12 +33,8 @@ if(WIN32)
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   )
   install(RUNTIME_DEPENDENCY_SET daemonDeps
-    PRE_EXCLUDE_REGEXES
-      "api-ms-win-.*"
-      "ext-ms-.*"
-      "^hvsifiletrust\\.dll$"
-    POST_EXCLUDE_REGEXES
-      ".*system32.*"
+    PRE_EXCLUDE_REGEXES ${WIN32_PRE_EXCLUDE_REGEXES}
+    POST_EXCLUDE_REGEXES ${WIN32_POST_EXCLUDE_REGEXES}
     RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
 endif()

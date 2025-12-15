@@ -28,6 +28,14 @@ function(generate_app_man TARGET NAME)
   endif()
 endfunction()
 
+set(WIN32_PRE_EXCLUDE_REGEXES
+    "api-ms-win-.*"
+    "ext-ms-.*"
+    "^hvsifiletrust\\.dll$"
+)
+
+set(WIN32_POST_EXCLUDE_REGEXES ".*system32.*")
+
 add_subdirectory(deskflow-core)
 add_subdirectory(deskflow-daemon) #Only used on windows
 add_subdirectory(deskflow-gui)
