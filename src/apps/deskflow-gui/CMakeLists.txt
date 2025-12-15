@@ -86,6 +86,7 @@ if(WIN32)
     DIRECTORY ${QT_DEPENDS_DIR}/
     DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PATTERN "dx*.dll" EXCLUDE
+    PATTERN "icu*.dll" EXCLUDE
   )
 
 elseif(APPLE)
