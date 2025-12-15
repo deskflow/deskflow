@@ -44,6 +44,15 @@ XWindowsEventQueueBuffer::~XWindowsEventQueueBuffer()
 int XWindowsEventQueueBuffer::getPendingCountLocked()
 {
   std::scoped_lock lock{m_mutex};
+  // Work around a bug in libx11 which causes the first XPending() not to read events under
+  // certain conditions. The issue happens when libx11 has not yet received replies for all
+  // flushed events. In that case, internally XPending() will not try to process received events
+  // as the reply for the last event was not found. As a result, XPending() will return the number
+  // of pending events without regard to the events it has just read.
+  // See: https://gitlab.freedesktop.org/xorg/lib/libx11/-/merge_requests/1
+  // This fix was adopted from Input-Leap (commit 34a34fb, Nov 2025)
+  // Reference: Fixes XCB crashes in applications like Wezterm during fast typing
+  XPending(m_display);
   return XPending(m_display);
 }
 
