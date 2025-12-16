@@ -47,7 +47,7 @@ public:
       // do nothing
     }
     bool m_retry = false;
-    std::string m_what;
+    QString m_what;
   };
 
 public:

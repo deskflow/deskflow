@@ -182,7 +182,7 @@ void ClientApp::handleClientFailed(const Event &e)
     // Try next resolved address for current hostname
     std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
-    LOG_WARN("failed to connect to server=%s, trying next resolved address", info->m_what.c_str());
+    LOG_WARN("failed to connect to server=%s, trying next resolved address", qPrintable(info->m_what));
     if (!m_suspended) {
       scheduleClientRestart(retryTime());
     }
@@ -196,7 +196,7 @@ void ClientApp::handleClientFailed(const Event &e)
       handleClientRefused(e);
     } else {
       std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
-      LOG_WARN("failed to connect to server=%s, trying next server in list", info->m_what.c_str());
+      LOG_WARN("failed to connect to server=%s, trying next server in list", qPrintable(info->m_what));
       if (!m_suspended) {
         scheduleClientRestart(retryTime());
       }
@@ -209,10 +209,10 @@ void ClientApp::handleClientRefused(const Event &e)
   std::unique_ptr<Client::FailInfo> info(static_cast<Client::FailInfo *>(e.getData()));
 
   if (!info->m_retry) {
-    LOG_ERR("failed to connect to server: %s", info->m_what.c_str());
+    LOG_ERR("failed to connect to server: %s", qPrintable(info->m_what));
     getEvents()->addEvent(Event(EventTypes::Quit));
   } else {
-    LOG_WARN("failed to connect to server: %s", info->m_what.c_str());
+    LOG_WARN("failed to connect to server: %s", qPrintable(info->m_what));
     if (!m_suspended) {
       scheduleClientRestart(retryTime());
       m_retryCount++;

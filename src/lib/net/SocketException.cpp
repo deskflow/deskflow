@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -36,7 +36,7 @@ int SocketAddressException::getPort() const noexcept
   return m_port;
 }
 
-std::string SocketAddressException::getWhat() const throw()
+QString SocketAddressException::getWhat() const throw()
 {
   static const char *s_errorID[] = {
       "SocketAddressUnknownException", "SocketAddressNotFoundException", "SocketAddressNoAddressException",
@@ -57,7 +57,7 @@ std::string SocketAddressException::getWhat() const throw()
 // SocketIOCloseException
 //
 
-std::string SocketIOCloseException::getWhat() const throw()
+QString SocketIOCloseException::getWhat() const throw()
 {
   return format("SocketIOCloseException", "close: %{1}", what());
 }
@@ -66,7 +66,7 @@ std::string SocketIOCloseException::getWhat() const throw()
 // SocketBindException
 //
 
-std::string SocketBindException::getWhat() const throw()
+QString SocketBindException::getWhat() const throw()
 {
   return format("SocketBindException", "cannot bind address: %{1}", what());
 }
@@ -75,7 +75,7 @@ std::string SocketBindException::getWhat() const throw()
 // SocketAddressInUseException
 //
 
-std::string SocketAddressInUseException::getWhat() const throw()
+QString SocketAddressInUseException::getWhat() const throw()
 {
   return format("SocketAddressInUseException", "cannot bind address: %{1}", what());
 }
@@ -84,7 +84,7 @@ std::string SocketAddressInUseException::getWhat() const throw()
 // SocketConnectException
 //
 
-std::string SocketConnectException::getWhat() const throw()
+QString SocketConnectException::getWhat() const throw()
 {
   return format("SocketConnectException", "cannot connect socket: %{1}", what());
 }
@@ -93,7 +93,7 @@ std::string SocketConnectException::getWhat() const throw()
 // SocketCreateException
 //
 
-std::string SocketCreateException::getWhat() const throw()
+QString SocketCreateException::getWhat() const throw()
 {
   return format("SocketCreateException", "cannot create socket: %{1}", what());
 }

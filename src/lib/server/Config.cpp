@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -2066,7 +2066,7 @@ ServerConfigReadException::ServerConfigReadException(
   // do nothing
 }
 
-std::string ServerConfigReadException::getWhat() const throw()
+QString ServerConfigReadException::getWhat() const throw()
 {
   return format("ServerConfigReadException", "read error: %{1}", m_error.c_str());
 }

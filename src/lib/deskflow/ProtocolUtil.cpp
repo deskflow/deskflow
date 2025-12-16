@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -567,7 +568,7 @@ void ProtocolUtil::readBytes(deskflow::IStream *stream, uint32_t len, std::strin
 // XIOReadMismatch
 //
 
-std::string XIOReadMismatch::getWhat() const throw()
+QString XIOReadMismatch::getWhat() const throw()
 {
   return format("XIOReadMismatch", "ProtocolUtil::readf() mismatch");
 }

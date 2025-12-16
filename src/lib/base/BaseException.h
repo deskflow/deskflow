@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -10,6 +10,8 @@
 
 #include <stdexcept>
 #include <string>
+
+#include <QString>
 
 //! Exception base class
 /*!
@@ -21,7 +23,7 @@ public:
   //! Use getWhat() as the result of what()
   BaseException();
   //! Use \c msg as the result of what()
-  explicit BaseException(const std::string &msg);
+  explicit BaseException(const QString &msg);
   ~BaseException() throw() override = default;
 
   //! Reason for exception
@@ -29,9 +31,9 @@ public:
 
 protected:
   //! Get a human readable string describing the exception
-  virtual std::string getWhat() const noexcept
+  virtual QString getWhat() const noexcept
   {
-    return "";
+    return {};
   }
 
   //! Format a string
@@ -40,8 +42,8 @@ protected:
   no format can be found, then replaces positional parameters in
   the format string and returns the result.
   */
-  virtual std::string format(const char *id, const char *defaultFormat, ...) const noexcept;
+  virtual QString format(const char *id, const char *defaultFormat, ...) const noexcept;
 
 private:
-  mutable std::string m_what;
+  mutable QString m_what;
 };

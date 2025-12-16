@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -12,7 +12,7 @@
 // IOClosedException
 //
 
-std::string IOClosedException::getWhat() const throw()
+QString IOClosedException::getWhat() const throw()
 {
   return format("IOClosedException", "already closed");
 }
@@ -21,7 +21,7 @@ std::string IOClosedException::getWhat() const throw()
 // IOEndOfStreamException
 //
 
-std::string IOEndOfStreamException::getWhat() const throw()
+QString IOEndOfStreamException::getWhat() const throw()
 {
   return format("IOEndOfStreamException", "reached end of stream");
 }
@@ -30,7 +30,7 @@ std::string IOEndOfStreamException::getWhat() const throw()
 // IOWouldBlockException
 //
 
-std::string IOWouldBlockException::getWhat() const throw()
+QString IOWouldBlockException::getWhat() const throw()
 {
   return format("IOWouldBlockException", "stream operation would block");
 }
