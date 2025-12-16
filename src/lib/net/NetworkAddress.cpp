@@ -122,36 +122,33 @@ size_t NetworkAddress::resolve(size_t index)
   }
 
   try {
-    // if hostname is empty then use wildcard address otherwise look
-    // up the name.
     if (m_hostname.empty()) {
       m_address = ARCH->newAnyAddr(IArchNetwork::AddressFamily::INet);
       resolvedAddressesCount = 1;
     } else {
-      // Logic for temporary filtring only ipv4 addresses
-      std::vector<ArchNetAddress> ipv4OnlyAddresses;
+      std::vector<ArchNetAddress> ipAddresses;
       {
         auto addresses = ARCH->nameToAddr(m_hostname);
         for (auto address : addresses) {
-          if (ARCH->getAddrFamily(address) == IArchNetwork::AddressFamily::INet) {
-            ipv4OnlyAddresses.emplace_back(address);
+          if (ARCH->getAddrFamily(address) != IArchNetwork::AddressFamily::Unknown) {
+            ipAddresses.emplace_back(address);
           } else {
             ARCH->closeAddr(address);
           }
         }
       }
 
-      resolvedAddressesCount = ipv4OnlyAddresses.size();
+      resolvedAddressesCount = ipAddresses.size();
       if (resolvedAddressesCount <= 0) {
         throw ArchNetworkNameUnknownException("Hostname lookup failed");
       }
       if (index < resolvedAddressesCount - 1) {
-        m_address = ipv4OnlyAddresses[index];
+        m_address = ipAddresses[index];
       } else {
-        m_address = ipv4OnlyAddresses[resolvedAddressesCount - 1];
+        m_address = ipAddresses[resolvedAddressesCount - 1];
       }
 
-      for (auto address : ipv4OnlyAddresses) {
+      for (auto address : ipAddresses) {
         if (m_address != address) {
           ARCH->closeAddr(address);
         }
