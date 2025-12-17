@@ -40,7 +40,7 @@ void Settings::setSettingsFile(const QString &settingsFile)
 void Settings::setStateFile(const QString &stateFile)
 {
   if (instance()->m_stateSettings->fileName() == stateFile) {
-    qDebug("settings file already set, skipping");
+    qDebug("state file already set, skipping");
     return;
   }
 
@@ -48,7 +48,7 @@ void Settings::setStateFile(const QString &stateFile)
     instance()->m_stateSettings->deleteLater();
 
   instance()->m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, instance());
-  qInfo().noquote() << "settings file changed:" << instance()->m_stateSettings->fileName();
+  qInfo().noquote() << "state file changed:" << instance()->m_stateSettings->fileName();
 }
 
 Settings::Settings(QObject *parent) : QObject(parent)
