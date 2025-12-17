@@ -13,6 +13,7 @@ namespace validators {
 
 class AliasValidator : public LineEditValidator
 {
+  Q_OBJECT
 public:
   explicit AliasValidator(QLineEdit *parent = nullptr, ValidationError *error = nullptr);
 };
