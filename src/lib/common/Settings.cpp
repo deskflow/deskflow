@@ -146,13 +146,11 @@ int Settings::logLevelToInt(const QString &level)
 
 QVariant Settings::defaultValue(const QString &key)
 {
-  if (m_defaultFalseValues.contains(key)) {
+  if (m_defaultFalseValues.contains(key))
     return false;
-  }
 
-  if (m_defaultTrueValues.contains(key)) {
+  if (m_defaultTrueValues.contains(key))
     return true;
-  }
 
   if (key == Gui::WindowGeometry)
     return QRect();
@@ -186,17 +184,14 @@ QVariant Settings::defaultValue(const QString &key)
     if (!Settings::isPortableMode())
       return Settings::ProcessMode::Service;
 #endif
-
     return Settings::ProcessMode::Desktop;
   }
 
-  if (key == Daemon::LogFile) {
+  if (key == Daemon::LogFile)
     return QStringLiteral("%1/%2").arg(Settings::settingsPath(), kDaemonLogFilename);
-  }
 
-  if (key == Client::ScrollSpeed) {
+  if (key == Client::ScrollSpeed)
     return 120;
-  }
 
   return QVariant();
 }
