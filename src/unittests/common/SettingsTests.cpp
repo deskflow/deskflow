@@ -101,4 +101,25 @@ void SettingsTests::checkCleanScreenName_LongName()
   QCOMPARE(Settings::value(Settings::Core::ScreenName).toString(), expected);
 }
 
+void SettingsTests::checkLogLevels_Valid()
+{
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("Fatal")), 0);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("erRor")), 1);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("wArning")), 2);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("notE")), 3);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("info")), 4);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("deBug")), 5);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("debuG1")), 6);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("dEbug2")), 7);
+}
+
+void SettingsTests::checkLogLevels_Invalid()
+{
+  QCOMPARE(Settings::logLevelToInt(QString()), 4);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("INVALID")), 4);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("debug3")), 4);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("infomatic")), 4);
+  QCOMPARE(Settings::logLevelToInt(QStringLiteral("warn")), 4);
+}
+
 QTEST_MAIN(SettingsTests)

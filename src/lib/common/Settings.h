@@ -136,7 +136,7 @@ public:
   static QSettingsProxy &proxy();
   static void save(bool emitSaving = true);
   static QStringList validKeys();
-  static int logLevelToInt(const QString &level = "INFO");
+  static int logLevelToInt(const QString &level);
   static QString portableSettingsFile();
 
 Q_SIGNALS:

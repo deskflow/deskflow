@@ -24,6 +24,8 @@ private Q_SLOTS:
   void checkValidSettings();
   void checkCleanScreenName();
   void checkCleanScreenName_LongName();
+  void checkLogLevels_Valid();
+  void checkLogLevels_Invalid();
 
 private:
   inline static const QString m_settingsPathTemp = QStringLiteral("tmp/test");

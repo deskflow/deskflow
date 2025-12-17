@@ -139,40 +139,9 @@ QString Settings::cleanScreenName(const QString &name)
 
 int Settings::logLevelToInt(const QString &level)
 {
-  // Can do this better later ?
-  if (level.toUpper() == "FATAL") {
-    return 0;
-  }
-
-  if (level.toUpper() == "ERROR") {
-    return 1;
-  }
-
-  if (level.toUpper() == "WARNING") {
-    return 2;
-  }
-
-  if (level.toUpper() == "NOTE") {
-    return 3;
-  }
-
-  if (level.toUpper() == "INFO") {
+  if (level.isEmpty() || !m_logLevels.contains(level, Qt::CaseInsensitive))
     return 4;
-  }
-
-  if (level.toUpper() == "DEBUG") {
-    return 5;
-  }
-
-  if (level.toUpper() == "DEBUG1") {
-    return 6;
-  }
-
-  if (level.toUpper() == "DEBUG2") {
-    return 7;
-  }
-
-  return 4; // If all else fail return info
+  return static_cast<int>(m_logLevels.indexOf(level, 0, Qt::CaseInsensitive));
 }
 
 QVariant Settings::defaultValue(const QString &key)
