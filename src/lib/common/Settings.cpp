@@ -119,16 +119,16 @@ QString Settings::cleanScreenName(const QString &name)
   static const auto hyphen = QStringLiteral("-");
   static const auto space = QStringLiteral(" ");
   static const auto underscore = QStringLiteral("_");
-  static const auto peroid = QStringLiteral(".");
+  static const auto period = QStringLiteral(".");
   static const auto nothing = QStringLiteral("");
   static const auto nameRegex = QRegularExpression(QStringLiteral("[^\\w\\-\\.]"));
 
   QString cleanName = name.simplified();
   cleanName.replace(space, underscore);
   cleanName.replace(nameRegex, nothing);
-  while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(peroid))
+  while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))
     cleanName.removeFirst();
-  while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(peroid))
+  while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(period))
     cleanName.removeLast();
   if (cleanName.length() > 255) {
     cleanName.truncate(255);
