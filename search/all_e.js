@@ -84,7 +84,7 @@ var searchData=
   ['loglevel_2eh_81',['LogLevel.h',['../LogLevel_8h.html',1,'']]],
   ['loglevelchanged_82',['logLevelChanged',['../classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html#a1f2f52740caf1549da28d5769506df41',1,'deskflow::core::ipc::DaemonIpcServer']]],
   ['logleveltext_83',['logLevelText',['../classSettings.html#ae9e80e06caddd4c619dc286848b1f187',1,'Settings']]],
-  ['logleveltoint_84',['logLevelToInt',['../classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8',1,'Settings']]],
+  ['logleveltoint_84',['logLevelToInt',['../classSettings.html#a2e54da5a8ba70bbafe2cb04efaec8a63',1,'Settings']]],
   ['logline_85',['logLine',['../classdeskflow_1_1gui_1_1CoreProcess.html#ae9771a6cd17446caa6a47c28e58abf80',1,'deskflow::gui::CoreProcess']]],
   ['logoutputters_2ecpp_86',['LogOutputters.cpp',['../LogOutputters_8cpp.html',1,'']]],
   ['logoutputters_2eh_87',['LogOutputters.h',['../LogOutputters_8h.html',1,'']]],

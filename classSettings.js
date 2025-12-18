@@ -21,7 +21,7 @@ var classSettings =
     [ "isPortableMode", "classSettings.html#a01b338f345071d37338583c8739338e6", null ],
     [ "isWritable", "classSettings.html#acc77a634afaed3905e6545630c71d5f2", null ],
     [ "logLevelText", "classSettings.html#ae9e80e06caddd4c619dc286848b1f187", null ],
-    [ "logLevelToInt", "classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8", null ],
+    [ "logLevelToInt", "classSettings.html#a2e54da5a8ba70bbafe2cb04efaec8a63", null ],
     [ "portableSettingsFile", "classSettings.html#a5e492f42c603dcc42007ae7b34c04a83", null ],
     [ "proxy", "classSettings.html#a6debf0cebe43970f836cd1969ded08e9", null ],
     [ "restoreDefaultSettings", "classSettings.html#aa6e367eea7196300fc008ca44c727a92", null ],

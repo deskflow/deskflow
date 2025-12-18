@@ -142,7 +142,7 @@ var NAVTREEINDEX =
 "classMSWindowsScreen.html#a291ef5a8a5d75d63f970d4a8900c86c6",
 "classOSXScreenSaver.html#adb26b45c6f6c6390b274397c3d607c0c",
 "classScreenSetupModel.html#a7467442d5926d17c37e5d110deb8a3f9",
-"classSettings.html#ad9c053fe0121e30789e2a9d07a7f83c8",
+"classSettings.html#ad3ba2f3025c98073226c0d896158ad17",
 "classVersionChecker.html#acbfe2ec8122ff39fb65b67a014b2f855",
 "classXWindowsScreenSaver.html",
 "classdeskflow_1_1KeyMap.html#abffaa0f00b4408c26c4be014517c91d6",
