@@ -74,11 +74,23 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
   }
 
   if (mark == ChunkType::DataStart) {
-    s_expectedSize = QString::fromStdString(data).size();
-    LOG_DEBUG("start receiving clipboard data");
+    bool ok = false;
+    const auto expected = QString::fromStdString(data).toULongLong(&ok);
+    if (!ok) {
+      LOG_ERR("invalid clipboard size header: \"%s\"", data.c_str());
+      return Error;
+    }
+
+    s_expectedSize = static_cast<size_t>(expected);
+    LOG_DEBUG("start receiving clipboard data, expected size=%d", s_expectedSize);
     dataCached.clear();
     return Started;
   } else if (mark == ChunkType::DataChunk) {
+    if (s_expectedSize > 0 && dataCached.size() + data.size() > s_expectedSize) {
+      LOG_ERR("clipboard data exceeds expected size (expected=%d, would-be=%d)", s_expectedSize,
+              dataCached.size() + data.size());
+      return Error;
+    }
     dataCached.append(data);
     return TransferState::InProgress;
   } else if (mark == ChunkType::DataEnd) {
