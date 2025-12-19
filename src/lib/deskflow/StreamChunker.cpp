@@ -33,7 +33,7 @@ void StreamChunker::sendClipboard(
       chunkSize = size - sentLength;
     }
 
-    const char* chunkPointer = data.data() + sentLength;
+    const char *chunkPointer = data.data() + sentLength;
     std::string chunk(chunkPointer, chunkSize);
     ClipboardChunk *dataChunk = ClipboardChunk::data(id, sequence, chunk);
 

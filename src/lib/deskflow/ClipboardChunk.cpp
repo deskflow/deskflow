@@ -87,8 +87,10 @@ ClipboardChunk::assemble(deskflow::IStream *stream, std::string &dataCached, Cli
     return Started;
   } else if (mark == ChunkType::DataChunk) {
     if (s_expectedSize > 0 && dataCached.size() + data.size() > s_expectedSize) {
-      LOG_ERR("clipboard data exceeds expected size (expected=%d, would-be=%d)", s_expectedSize,
-              dataCached.size() + data.size());
+      LOG_ERR(
+          "clipboard data exceeds expected size (expected=%d, actual size=%d)", s_expectedSize,
+          dataCached.size() + data.size()
+      );
       return Error;
     }
     dataCached.append(data);
