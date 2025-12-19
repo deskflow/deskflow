@@ -52,6 +52,11 @@
 #define VK_XBUTTON2 0x06
 #endif
 
+// Horizontal mouse wheel support (Windows Vista+)
+#if !defined(MOUSEEVENTF_HWHEEL)
+#define MOUSEEVENTF_HWHEEL 0x01000
+#endif
+
 // <unused>; <unused>
 #define DESKFLOW_MSG_SWITCH DESKFLOW_HOOK_LAST_MSG + 1
 // <unused>; <unused>
@@ -693,8 +698,13 @@ void MSWindowsDesks::deskThread(const void *vdesk)
       break;
 
     case DESKFLOW_MSG_FAKE_WHEEL:
-      // XXX -- add support for x-axis scrolling
+      // Support both vertical (yDelta in lParam) and horizontal (xDelta in wParam) scrolling
+      if (msg.wParam != 0) {
+        // Horizontal scroll (x-axis)
+        send_mouse_input(MOUSEEVENTF_HWHEEL, 0, 0, (DWORD)msg.wParam);
+      }
       if (msg.lParam != 0) {
+        // Vertical scroll (y-axis)
         send_mouse_input(MOUSEEVENTF_WHEEL, 0, 0, (DWORD)msg.lParam);
       }
       break;

@@ -900,7 +900,9 @@ bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LP
     return onMouseMove(static_cast<int32_t>(wParam), static_cast<int32_t>(lParam));
 
   case DESKFLOW_MSG_MOUSE_WHEEL:
-    // XXX -- support x-axis scrolling
+    // Note: This message only contains vertical scroll data from WM_MOUSEWHEEL.
+    // To support horizontal scrolling on Windows as primary screen, would need to
+    // also hook WM_MOUSEHWHEEL in MSWindowsHook.cpp
     return onMouseWheel(0, static_cast<int32_t>(wParam));
 
   case DESKFLOW_MSG_PRE_WARP: {

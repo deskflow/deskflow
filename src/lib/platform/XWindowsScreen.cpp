@@ -791,48 +791,69 @@ void XWindowsScreen::fakeMouseRelativeMove(int32_t dx, int32_t dy) const
   XFlush(m_display);
 }
 
-void XWindowsScreen::fakeMouseWheel(int32_t, int32_t yDelta) const
+void XWindowsScreen::fakeMouseWheel(int32_t xDelta, int32_t yDelta) const
 {
-  // XXX -- support x-axis scrolling
-  if (yDelta == 0) {
-    return;
-  }
+  // Handle vertical scrolling
+  if (yDelta != 0) {
+    int32_t mappedYDelta = mapClientScrollDirection(yDelta);
 
-  yDelta = mapClientScrollDirection(yDelta);
-
-  // choose button depending on rotation direction
-  const unsigned int xButton = mapButtonToX(static_cast<ButtonID>((yDelta >= 0) ? -1 : -2));
-  if (xButton == 0) {
-    // If we get here, then the XServer does not support the scroll
-    // wheel buttons, so send PageUp/PageDown keystrokes instead.
-    // Patch by Tom Chadwick.
-    KeyCode keycode = 0;
-    if (yDelta >= 0) {
-      keycode = XKeysymToKeycode(m_display, XK_Page_Up);
+    // choose button depending on rotation direction
+    const unsigned int yButton = mapButtonToX(static_cast<ButtonID>((mappedYDelta >= 0) ? -1 : -2));
+    if (yButton == 0) {
+      // If we get here, then the XServer does not support the scroll
+      // wheel buttons, so send PageUp/PageDown keystrokes instead.
+      // Patch by Tom Chadwick.
+      KeyCode keycode = 0;
+      if (mappedYDelta >= 0) {
+        keycode = XKeysymToKeycode(m_display, XK_Page_Up);
+      } else {
+        keycode = XKeysymToKeycode(m_display, XK_Page_Down);
+      }
+      if (keycode != 0) {
+        XTestFakeKeyEvent(m_display, keycode, True, CurrentTime);
+        XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
+      }
     } else {
-      keycode = XKeysymToKeycode(m_display, XK_Page_Down);
+      // now use absolute value of delta
+      if (mappedYDelta < 0) {
+        mappedYDelta = -mappedYDelta;
+      }
+
+      if (mappedYDelta < m_mouseScrollDelta) {
+        LOG_WARN("wheel scroll delta (%d) smaller than threshold (%d)", mappedYDelta, m_mouseScrollDelta);
+      }
+
+      // send as many clicks as necessary
+      for (; mappedYDelta >= m_mouseScrollDelta; mappedYDelta -= m_mouseScrollDelta) {
+        XTestFakeButtonEvent(m_display, yButton, True, CurrentTime);
+        XTestFakeButtonEvent(m_display, yButton, False, CurrentTime);
+      }
     }
-    if (keycode != 0) {
-      XTestFakeKeyEvent(m_display, keycode, True, CurrentTime);
-      XTestFakeKeyEvent(m_display, keycode, False, CurrentTime);
+  }
+
+  // Handle horizontal scrolling
+  if (xDelta != 0) {
+    int32_t mappedXDelta = mapClientScrollDirection(xDelta);
+
+    // For horizontal scrolling, button 6 is left, button 7 is right
+    const unsigned int xButton = (mappedXDelta >= 0) ? 7 : 6;
+
+    // now use absolute value of delta
+    if (mappedXDelta < 0) {
+      mappedXDelta = -mappedXDelta;
     }
-    return;
+
+    if (mappedXDelta < m_mouseScrollDelta) {
+      LOG_WARN("horizontal wheel scroll delta (%d) smaller than threshold (%d)", mappedXDelta, m_mouseScrollDelta);
+    }
+
+    // send as many clicks as necessary
+    for (; mappedXDelta >= m_mouseScrollDelta; mappedXDelta -= m_mouseScrollDelta) {
+      XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
+      XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
+    }
   }
 
-  // now use absolute value of delta
-  if (yDelta < 0) {
-    yDelta = -yDelta;
-  }
-
-  if (yDelta < m_mouseScrollDelta) {
-    LOG_WARN("wheel scroll delta (%d) smaller than threshold (%d)", yDelta, m_mouseScrollDelta);
-  }
-
-  // send as many clicks as necessary
-  for (; yDelta >= m_mouseScrollDelta; yDelta -= m_mouseScrollDelta) {
-    XTestFakeButtonEvent(m_display, xButton, True, CurrentTime);
-    XTestFakeButtonEvent(m_display, xButton, False, CurrentTime);
-  }
   XFlush(m_display);
 }
 
@@ -1452,6 +1473,12 @@ bool XWindowsScreen::onHotKey(const XKeyEvent &xkey, bool isRepeat)
 void XWindowsScreen::onMousePress(const XButtonEvent &xbutton)
 {
   LOG_DEBUG1("event: ButtonPress button=%d", xbutton.button);
+
+  // Buttons 4, 5, 6, 7 are wheel events, handle them in onMouseRelease
+  if (xbutton.button >= 4 && xbutton.button <= 7) {
+    return;
+  }
+
   ButtonID button = mapButtonFromX(&xbutton);
   KeyModifierMask mask = m_keyState->mapModifiersFromX(xbutton.state);
   if (button != kButtonNone) {
@@ -1473,8 +1500,13 @@ void XWindowsScreen::onMouseRelease(const XButtonEvent &xbutton)
   } else if (xbutton.button == 5) {
     // wheel backward (toward user)
     sendEvent(PrimaryScreenWheel, WheelInfo::alloc(0, -120));
+  } else if (xbutton.button == 6) {
+    // wheel left (horizontal scroll left)
+    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(-120, 0));
+  } else if (xbutton.button == 7) {
+    // wheel right (horizontal scroll right)
+    sendEvent(PrimaryScreenWheel, WheelInfo::alloc(120, 0));
   }
-  // XXX -- support x-axis scrolling
 }
 
 void XWindowsScreen::onMouseMove(const XMotionEvent &xmotion)
