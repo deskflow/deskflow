@@ -162,7 +162,7 @@ QVariant Settings::defaultValue(const QString &key)
     return 2048;
 
   if (key == Log::File)
-    return QStringLiteral("%1/%2").arg(QDir::homePath(), kDefaultLogFile);
+    return QStringLiteral("%1/%2.log").arg(QDir::homePath(), kAppId);
 
   if (key == Log::Level)
     return 4; // INFO

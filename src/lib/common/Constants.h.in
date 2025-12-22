@@ -12,7 +12,6 @@ const auto kAppId = "@CMAKE_PROJECT_NAME@";
 const auto kAppDescription = "@CMAKE_PROJECT_DESCRIPTION@";
 const auto kDaemonBinName = "@CMAKE_PROJECT_NAME@-daemon";
 const auto kDaemonIpcName = "@CMAKE_PROJECT_NAME@-daemon";
-const auto kDefaultLogFile = "@CMAKE_PROJECT_NAME@.log";
 const auto kRevFqdnName = "@CMAKE_PROJECT_REV_FQDN@";
 
 const auto kCopyright = //
