@@ -252,7 +252,7 @@ QString Settings::tlsDir()
 
 QString Settings::tlsTrustedServersDb()
 {
-  return QStringLiteral("%1/%2").arg(instance()->tlsDir(), kTlsFingerprintTrustedServersFilename);
+  return QStringLiteral("%1/trusted-servers").arg(instance()->tlsDir());
 }
 
 QString Settings::tlsTrustedClientsDb()
