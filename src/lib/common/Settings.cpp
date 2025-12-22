@@ -247,7 +247,7 @@ QString Settings::settingsPath()
 
 QString Settings::tlsDir()
 {
-  return QStringLiteral("%1/%2").arg(instance()->settingsPath(), kTlsDirName);
+  return QStringLiteral("%1/tls").arg(instance()->settingsPath());
 }
 
 QString Settings::tlsTrustedServersDb()

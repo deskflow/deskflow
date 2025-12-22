@@ -40,7 +40,7 @@ private:
   inline static const QString m_settingsPath = m_settingsPathTemp;
 #endif
 
-  inline static const QString m_expectedTlsDir = QStringLiteral("%1/%2").arg(m_settingsPath, kTlsDirName);
+  inline static const QString m_expectedTlsDir = QStringLiteral("%1/tls").arg(m_settingsPath);
   inline static const QString m_expectedTlsServerDB =
       QStringLiteral("%1/%2").arg(m_expectedTlsDir, kTlsFingerprintTrustedServersFilename);
   inline static const QString m_expectedTlsClientDB =
