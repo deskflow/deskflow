@@ -36,7 +36,6 @@ const auto kWindowsRuntimeMajor = @REQUIRED_MSVC_RUNTIME_MAJOR@;
 const auto kWindowsRuntimeMinor = @REQUIRED_MSVC_RUNTIME_MINOR@;
 // clang-format on
 
-constexpr auto kWindowsRegistryKey = L"SOFTWARE\\@CMAKE_PROJECT_PROPER_NAME@";
 constexpr auto kCloseEventName = L"Global\\@CMAKE_PROJECT_PROPER_NAME@Close";
 constexpr auto kSendSasEventName = L"Global\\@CMAKE_PROJECT_PROPER_NAME@SendSAS";
 
