@@ -156,7 +156,7 @@ QVariant Settings::defaultValue(const QString &key)
     return QRect();
 
   if (key == Security::Certificate)
-    return QStringLiteral("%1/%2").arg(Settings::tlsDir(), kTlsCertificateFilename);
+    return QStringLiteral("%1/%2.pem").arg(Settings::tlsDir(), kAppId);
 
   if (key == Security::KeySize)
     return 2048;
