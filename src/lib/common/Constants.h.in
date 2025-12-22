@@ -22,8 +22,6 @@ const auto kCopyright = //
 
 const auto kCoreBinName = "@CORE_BINARY@";
 
-const auto kTlsFingerprintTrustedClientsFilename = "trusted-clients";
-
 #ifdef _WIN32
 
 // clang-format off
