@@ -11,6 +11,7 @@
 #include "arch/Arch.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
+#include "base/DirectionTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
@@ -1909,18 +1910,19 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
         bogus = true;
       }
 
-      // Check for mouse inside jump zone
+      // Check for mouse inside jump zone using DirectionMask enum
       bool inside = false;
-      if ((zoneSides & 0x01) != 0) { // Left
+      using enum DirectionMask;
+      if ((zoneSides & static_cast<int>(LeftMask)) != 0) {
         inside = (x < xScreen + zoneSize);
       }
-      if (!inside && (zoneSides & 0x02) != 0) { // Right
+      if (!inside && (zoneSides & static_cast<int>(RightMask)) != 0) {
         inside = (x >= xScreen + wScreen - zoneSize);
       }
-      if (!inside && (zoneSides & 0x04) != 0) { // Top
+      if (!inside && (zoneSides & static_cast<int>(TopMask)) != 0) {
         inside = (y < yScreen + zoneSize);
       }
-      if (!inside && (zoneSides & 0x08) != 0) { // Bottom
+      if (!inside && (zoneSides & static_cast<int>(BottomMask)) != 0) {
         inside = (y >= yScreen + hScreen - zoneSize);
       }
 
@@ -1934,7 +1936,8 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
 
   // Handle mouse buttons
   if (mouse.usButtonFlags != 0) {
-    // Map button flags to window messages
+    // Map button flags to window messages and call onMouseButton
+    // onMouseButton expects WPARAM to be the message type and LPARAM to contain button data
     if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
       onMouseButton(WM_LBUTTONDOWN, 0);
     }
