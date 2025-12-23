@@ -13,6 +13,7 @@
 #include "platform/MSWindowsPowerManager.h"
 
 #include <map>
+#include <mutex>
 #include <string>
 
 #define WIN32_LEAN_AND_MEAN
@@ -231,9 +232,12 @@ private: // HACK
   // raw input handling for high polling rate mouse support
   void registerRawInput();
   void unregisterRawInput();
-  bool handleRawInput(HRAWINPUT hRawInput);
-  bool handleRawInputSingle(HRAWINPUT hRawInput);
-  bool processRawMouseInput(const RAWMOUSE &mouse);
+  void processRawMouseInput(const RAWMOUSE &mouse);
+  
+  // dedicated raw input polling thread to bypass message queue
+  void startRawInputThread();
+  void stopRawInputThread();
+  static DWORD WINAPI rawInputThreadProc(LPVOID lpParameter);
 
 private:
   struct HotKeyItem
@@ -339,6 +343,11 @@ private:
 
   // raw input for high polling rate mouse support
   bool m_rawInputRegistered = false;
+  
+  // dedicated thread for polling raw input buffer
+  HANDLE m_rawInputThread = nullptr;
+  volatile bool m_rawInputThreadRunning = false;
+  std::mutex m_rawInputMutex;
 
   static MSWindowsScreen *s_screen;
 

@@ -946,15 +946,10 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
 {
   switch (msg) {
 
-  case WM_INPUT:
-    // handle raw input for high polling rate mouse support
-    if (m_isPrimary && m_rawInputRegistered) {
-      if (handleRawInput((HRAWINPUT)lParam)) {
-        *result = 0;
-        return true;
-      }
-    }
-    break;
+  // WM_INPUT is no longer handled here - we use a dedicated polling thread
+  // to call GetRawInputBuffer() directly, bypassing the message queue entirely.
+  // This prevents the message queue from becoming a bottleneck for high polling
+  // rate mice.
 
   case WM_CLIPBOARDUPDATE: {
     DWORD clipboardSequenceNumber = GetClipboardSequenceNumber();
@@ -1763,18 +1758,21 @@ void MSWindowsScreen::registerRawInput()
   }
 
   // Register for raw mouse input to support high polling rate devices.
-  // This provides direct access to the input buffer, bypassing the message queue
-  // which can struggle with high-frequency input events.
+  // We use RIDEV_NOLEGACY to prevent WM_INPUT messages from being generated,
+  // since we'll be polling GetRawInputBuffer() directly on a separate thread.
+  // This completely bypasses the message queue bottleneck.
   RAWINPUTDEVICE rid;
-  rid.usUsagePage = 0x01;        // HID_USAGE_PAGE_GENERIC
-  rid.usUsage = 0x02;            // HID_USAGE_GENERIC_MOUSE
-  rid.dwFlags = RIDEV_INPUTSINK; // receive input even when not in foreground
+  rid.usUsagePage = 0x01;                        // HID_USAGE_PAGE_GENERIC
+  rid.usUsage = 0x02;                            // HID_USAGE_GENERIC_MOUSE
+  rid.dwFlags = RIDEV_INPUTSINK | RIDEV_NOLEGACY; // receive input even when not in foreground, no legacy messages
   rid.hwndTarget = m_window;
 
   if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
     m_rawInputRegistered = true;
     // Disable mouse hook since we're using raw input instead
     MSWindowsHook::setInstallMouseHook(false);
+    // Start dedicated polling thread to bypass message queue
+    startRawInputThread();
     LOG_DEBUG("registered for raw mouse input (high polling rate support), disabled mouse hook");
   } else {
     LOG_ERR("failed to register raw input devices: %d", GetLastError());
@@ -1786,6 +1784,9 @@ void MSWindowsScreen::unregisterRawInput()
   if (!m_rawInputRegistered) {
     return;
   }
+
+  // Stop the polling thread first
+  stopRawInputThread();
 
   RAWINPUTDEVICE rid;
   rid.usUsagePage = 0x01; // HID_USAGE_PAGE_GENERIC
@@ -1803,66 +1804,7 @@ void MSWindowsScreen::unregisterRawInput()
   }
 }
 
-bool MSWindowsScreen::handleRawInput(HRAWINPUT hRawInput)
-{
-  // Use GetRawInputBuffer for batch processing of buffered input events.
-  // This is more efficient for high polling rate devices that generate
-  // many events in quick succession.
-
-  const UINT maxInputs = 128; // Process up to 128 buffered events at once
-  std::vector<RAWINPUT> inputs(maxInputs);
-
-  UINT numInputs = maxInputs;
-  UINT size = GetRawInputBuffer(reinterpret_cast<PRAWINPUT>(inputs.data()), &numInputs, sizeof(RAWINPUTHEADER));
-
-  if (size == (UINT)-1) {
-    DWORD error = GetLastError();
-    if (error != ERROR_INSUFFICIENT_BUFFER) {
-      LOG_ERR("failed to get raw input buffer: %d", error);
-    }
-    // Fall back to single event processing
-    return handleRawInputSingle(hRawInput);
-  }
-
-  // Process all buffered events
-  bool handled = false;
-  for (UINT i = 0; i < numInputs; i++) {
-    if (inputs[i].header.dwType == RIM_TYPEMOUSE) {
-      handled = processRawMouseInput(inputs[i].data.mouse) || handled;
-    }
-  }
-
-  return handled;
-}
-
-bool MSWindowsScreen::handleRawInputSingle(HRAWINPUT hRawInput)
-{
-  // Get the size of the raw input data
-  UINT size = 0;
-  if (GetRawInputData(hRawInput, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER)) == (UINT)-1) {
-    LOG_ERR("failed to get raw input data size: %d", GetLastError());
-    return false;
-  }
-
-  // Allocate buffer for raw input data
-  std::vector<BYTE> buffer(size);
-  RAWINPUT *raw = reinterpret_cast<RAWINPUT *>(buffer.data());
-
-  // Get the raw input data
-  if (GetRawInputData(hRawInput, RID_INPUT, raw, &size, sizeof(RAWINPUTHEADER)) != size) {
-    LOG_ERR("failed to get raw input data: %d", GetLastError());
-    return false;
-  }
-
-  // We only care about mouse input
-  if (raw->header.dwType == RIM_TYPEMOUSE) {
-    return processRawMouseInput(raw->data.mouse);
-  }
-
-  return false;
-}
-
-bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
+void MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
 {
   // Get the current hook mode to determine how to process events
   EHookMode mode = m_hook.getMode();
@@ -1872,15 +1814,16 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
     // Get current cursor position for absolute coordinates
     POINT cursorPos;
     if (!GetCursorPos(&cursorPos)) {
-      return false;
+      return;
     }
 
     int32_t x = cursorPos.x;
     int32_t y = cursorPos.y;
 
-    // In RELAY_EVENTS mode, relay and eat event
+    // In RELAY_EVENTS mode, relay event
     if (mode == kHOOK_RELAY_EVENTS) {
-      return onMouseMove(x, y);
+      onMouseMove(x, y);
+      return;
     }
     // In WATCH_JUMP_ZONE mode, check for jump zone and handle accordingly
     else if (mode == kHOOK_WATCH_JUMP_ZONE) {
@@ -1924,9 +1867,6 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
 
       // Relay the event
       onMouseMove(x, y);
-
-      // If inside jump zone and not bogus, eat the event
-      return inside && !bogus;
     }
   }
 
@@ -1960,10 +1900,101 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
       int32_t delta = static_cast<int16_t>(mouse.usButtonData);
       onMouseWheel(0, delta);
     }
+  }
+}
 
-    // Eat button events if relaying
-    return (mode == kHOOK_RELAY_EVENTS);
+void MSWindowsScreen::startRawInputThread()
+{
+  if (m_rawInputThread != nullptr) {
+    return;
   }
 
-  return false;
+  m_rawInputThreadRunning = true;
+  m_rawInputThread = CreateThread(
+      nullptr,                  // default security attributes
+      0,                        // default stack size
+      rawInputThreadProc,       // thread function
+      this,                     // thread parameter (this pointer)
+      0,                        // default creation flags
+      nullptr                   // don't need thread ID
+  );
+
+  if (m_rawInputThread == nullptr) {
+    LOG_ERR("failed to create raw input thread: %d", GetLastError());
+    m_rawInputThreadRunning = false;
+  } else {
+    LOG_DEBUG("started raw input polling thread");
+  }
+}
+
+void MSWindowsScreen::stopRawInputThread()
+{
+  if (m_rawInputThread == nullptr) {
+    return;
+  }
+
+  m_rawInputThreadRunning = false;
+  
+  // Wait for thread to exit (with timeout)
+  DWORD result = WaitForSingleObject(m_rawInputThread, 1000);
+  if (result == WAIT_TIMEOUT) {
+    LOG_WARN("raw input thread did not exit cleanly, terminating");
+    TerminateThread(m_rawInputThread, 0);
+  }
+
+  CloseHandle(m_rawInputThread);
+  m_rawInputThread = nullptr;
+  LOG_DEBUG("stopped raw input polling thread");
+}
+
+DWORD WINAPI MSWindowsScreen::rawInputThreadProc(LPVOID lpParameter)
+{
+  MSWindowsScreen *screen = static_cast<MSWindowsScreen *>(lpParameter);
+  
+  LOG_DEBUG("raw input polling thread started");
+
+  // Allocate buffer for batch processing
+  const UINT maxInputs = 128;
+  std::vector<RAWINPUT> inputs(maxInputs);
+
+  while (screen->m_rawInputThreadRunning) {
+    // Poll GetRawInputBuffer directly, bypassing the message queue
+    UINT numInputs = maxInputs;
+    UINT size = GetRawInputBuffer(
+        reinterpret_cast<PRAWINPUT>(inputs.data()),
+        &numInputs,
+        sizeof(RAWINPUTHEADER)
+    );
+
+    if (size == (UINT)-1) {
+      DWORD error = GetLastError();
+      if (error != ERROR_INSUFFICIENT_BUFFER) {
+        // Only log non-buffer errors
+        if (error != ERROR_INVALID_PARAMETER) {
+          LOG_DEBUG1("GetRawInputBuffer error: %d", error);
+        }
+      }
+      // Brief sleep on error to avoid busy loop
+      Sleep(1);
+      continue;
+    }
+
+    if (numInputs > 0) {
+      // Lock for thread-safe processing
+      std::lock_guard<std::mutex> lock(screen->m_rawInputMutex);
+      
+      // Process all buffered events
+      for (UINT i = 0; i < numInputs; i++) {
+        if (inputs[i].header.dwType == RIM_TYPEMOUSE) {
+          screen->processRawMouseInput(inputs[i].data.mouse);
+        }
+      }
+    } else {
+      // No input available, sleep briefly to avoid busy loop
+      Sleep(1);
+    }
+  }
+
+  LOG_DEBUG("raw input polling thread exiting");
+  return 0;
 }
