@@ -1936,37 +1936,31 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
 
   // Handle mouse buttons
   if (mouse.usButtonFlags != 0) {
-    // Map button flags to window messages and call onMouseButton
-    // onMouseButton expects WPARAM to be the message type and LPARAM to contain button data
-    if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
-      onMouseButton(WM_LBUTTONDOWN, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP) {
-      onMouseButton(WM_LBUTTONUP, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) {
-      onMouseButton(WM_RBUTTONDOWN, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP) {
-      onMouseButton(WM_RBUTTONUP, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN) {
-      onMouseButton(WM_MBUTTONDOWN, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP) {
-      onMouseButton(WM_MBUTTONUP, 0);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
-      onMouseButton(WM_XBUTTONDOWN, XBUTTON1);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_UP) {
-      onMouseButton(WM_XBUTTONUP, XBUTTON1);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
-      onMouseButton(WM_XBUTTONDOWN, XBUTTON2);
-    }
-    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_UP) {
-      onMouseButton(WM_XBUTTONUP, XBUTTON2);
+    // Map raw input button flags to window messages using a lookup table
+    struct ButtonMapping {
+      USHORT flag;
+      UINT message;
+      LPARAM data;
+    };
+    
+    const ButtonMapping buttonMappings[] = {
+      {RI_MOUSE_LEFT_BUTTON_DOWN, WM_LBUTTONDOWN, 0},
+      {RI_MOUSE_LEFT_BUTTON_UP, WM_LBUTTONUP, 0},
+      {RI_MOUSE_RIGHT_BUTTON_DOWN, WM_RBUTTONDOWN, 0},
+      {RI_MOUSE_RIGHT_BUTTON_UP, WM_RBUTTONUP, 0},
+      {RI_MOUSE_MIDDLE_BUTTON_DOWN, WM_MBUTTONDOWN, 0},
+      {RI_MOUSE_MIDDLE_BUTTON_UP, WM_MBUTTONUP, 0},
+      {RI_MOUSE_BUTTON_4_DOWN, WM_XBUTTONDOWN, XBUTTON1},
+      {RI_MOUSE_BUTTON_4_UP, WM_XBUTTONUP, XBUTTON1},
+      {RI_MOUSE_BUTTON_5_DOWN, WM_XBUTTONDOWN, XBUTTON2},
+      {RI_MOUSE_BUTTON_5_UP, WM_XBUTTONUP, XBUTTON2},
+    };
+    
+    // Process all button events
+    for (const auto& mapping : buttonMappings) {
+      if (mouse.usButtonFlags & mapping.flag) {
+        onMouseButton(mapping.message, mapping.data);
+      }
     }
 
     // Handle mouse wheel
