@@ -1772,7 +1772,9 @@ void MSWindowsScreen::registerRawInput()
 
   if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
     m_rawInputRegistered = true;
-    LOG_DEBUG("registered for raw mouse input (high polling rate support)");
+    // Disable mouse hook since we're using raw input instead
+    MSWindowsHook::setInstallMouseHook(false);
+    LOG_DEBUG("registered for raw mouse input (high polling rate support), disabled mouse hook");
   } else {
     LOG_ERR("failed to register raw input devices: %d", GetLastError());
   }
@@ -1792,7 +1794,9 @@ void MSWindowsScreen::unregisterRawInput()
 
   if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
     m_rawInputRegistered = false;
-    LOG_DEBUG("unregistered raw mouse input");
+    // Re-enable mouse hook
+    MSWindowsHook::setInstallMouseHook(true);
+    LOG_DEBUG("unregistered raw mouse input, re-enabled mouse hook");
   } else {
     LOG_ERR("failed to unregister raw input devices: %d", GetLastError());
   }
@@ -1863,6 +1867,9 @@ bool MSWindowsScreen::handleRawInputSingle(HRAWINPUT hRawInput)
 
 bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
 {
+  // Get the current hook mode to determine how to process events
+  EHookMode mode = m_hook.getMode();
+
   // Handle mouse movement
   if (mouse.usFlags == MOUSE_MOVE_RELATIVE && (mouse.lLastX != 0 || mouse.lLastY != 0)) {
     // Get current cursor position for absolute coordinates
@@ -1874,50 +1881,99 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
     int32_t x = cursorPos.x;
     int32_t y = cursorPos.y;
 
-    // Process the mouse move event with current absolute position
-    // The onMouseMove handler will calculate the delta internally
-    return onMouseMove(x, y);
+    // In RELAY_EVENTS mode, relay and eat event
+    if (mode == kHOOK_RELAY_EVENTS) {
+      return onMouseMove(x, y);
+    }
+    // In WATCH_JUMP_ZONE mode, check for jump zone and handle accordingly
+    else if (mode == kHOOK_WATCH_JUMP_ZONE) {
+      // Get jump zone parameters
+      int32_t xScreen, yScreen, wScreen, hScreen, zoneSize;
+      m_hook.getZone(xScreen, yScreen, wScreen, hScreen, zoneSize);
+      uint32_t zoneSides = m_hook.getSides();
+
+      // Clamp position to screen bounds (handles bogus positions)
+      bool bogus = false;
+      if (x < xScreen) {
+        x = xScreen;
+        bogus = true;
+      } else if (x >= xScreen + wScreen) {
+        x = xScreen + wScreen - 1;
+        bogus = true;
+      }
+      if (y < yScreen) {
+        y = yScreen;
+        bogus = true;
+      } else if (y >= yScreen + hScreen) {
+        y = yScreen + hScreen - 1;
+        bogus = true;
+      }
+
+      // Check for mouse inside jump zone
+      bool inside = false;
+      if ((zoneSides & 0x01) != 0) { // Left
+        inside = (x < xScreen + zoneSize);
+      }
+      if (!inside && (zoneSides & 0x02) != 0) { // Right
+        inside = (x >= xScreen + wScreen - zoneSize);
+      }
+      if (!inside && (zoneSides & 0x04) != 0) { // Top
+        inside = (y < yScreen + zoneSize);
+      }
+      if (!inside && (zoneSides & 0x08) != 0) { // Bottom
+        inside = (y >= yScreen + hScreen - zoneSize);
+      }
+
+      // Relay the event
+      onMouseMove(x, y);
+
+      // If inside jump zone and not bogus, eat the event
+      return inside && !bogus;
+    }
   }
 
   // Handle mouse buttons
   if (mouse.usButtonFlags != 0) {
     // Map button flags to window messages
     if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
-      return onMouseButton(WM_LBUTTONDOWN, 0);
+      onMouseButton(WM_LBUTTONDOWN, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP) {
-      return onMouseButton(WM_LBUTTONUP, 0);
+      onMouseButton(WM_LBUTTONUP, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) {
-      return onMouseButton(WM_RBUTTONDOWN, 0);
+      onMouseButton(WM_RBUTTONDOWN, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP) {
-      return onMouseButton(WM_RBUTTONUP, 0);
+      onMouseButton(WM_RBUTTONUP, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN) {
-      return onMouseButton(WM_MBUTTONDOWN, 0);
+      onMouseButton(WM_MBUTTONDOWN, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP) {
-      return onMouseButton(WM_MBUTTONUP, 0);
+      onMouseButton(WM_MBUTTONUP, 0);
     }
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
-      return onMouseButton(WM_XBUTTONDOWN, XBUTTON1);
+      onMouseButton(WM_XBUTTONDOWN, XBUTTON1);
     }
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_UP) {
-      return onMouseButton(WM_XBUTTONUP, XBUTTON1);
+      onMouseButton(WM_XBUTTONUP, XBUTTON1);
     }
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
-      return onMouseButton(WM_XBUTTONDOWN, XBUTTON2);
+      onMouseButton(WM_XBUTTONDOWN, XBUTTON2);
     }
     if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_UP) {
-      return onMouseButton(WM_XBUTTONUP, XBUTTON2);
+      onMouseButton(WM_XBUTTONUP, XBUTTON2);
     }
 
     // Handle mouse wheel
     if (mouse.usButtonFlags & RI_MOUSE_WHEEL) {
       int32_t delta = static_cast<int16_t>(mouse.usButtonData);
-      return onMouseWheel(0, delta);
+      onMouseWheel(0, delta);
     }
+
+    // Eat button events if relaying
+    return (mode == kHOOK_RELAY_EVENTS);
   }
 
   return false;

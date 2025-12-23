@@ -33,6 +33,7 @@ static BYTE g_keyState[256] = {0};
 static DWORD g_hookThread = 0;
 static bool g_fakeServerInput = false;
 static BOOL g_isPrimary = TRUE;
+static bool g_installMouseHook = true;
 
 MSWindowsHook::~MSWindowsHook()
 {
@@ -136,6 +137,25 @@ void MSWindowsHook::setMode(EHookMode mode)
     return;
   }
   g_mode = mode;
+}
+
+EHookMode MSWindowsHook::getMode()
+{
+  return g_mode;
+}
+
+void MSWindowsHook::getZone(int32_t &x, int32_t &y, int32_t &w, int32_t &h, int32_t &jumpZoneSize)
+{
+  x = g_xScreen;
+  y = g_yScreen;
+  w = g_wScreen;
+  h = g_hScreen;
+  jumpZoneSize = g_zoneSize;
+}
+
+void MSWindowsHook::setInstallMouseHook(bool install)
+{
+  g_installMouseHook = install;
 }
 
 static void keyboardGetState(BYTE keys[256], DWORD vkCode, bool kf_up)
@@ -605,11 +625,13 @@ EHookResult MSWindowsHook::install()
   // reset fake input flag
   g_fakeServerInput = false;
 
-  // install low-level hooks.  we require that they both get installed.
-  g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL, &mouseLLHook, nullptr, 0);
+  // install low-level hooks. install mouse hook only if not using raw input.
+  if (g_installMouseHook) {
+    g_mouseLL = SetWindowsHookEx(WH_MOUSE_LL, &mouseLLHook, nullptr, 0);
+  }
 #if !NO_GRAB_KEYBOARD
   g_keyboardLL = SetWindowsHookEx(WH_KEYBOARD_LL, &keyboardLLHook, nullptr, 0);
-  if (g_mouseLL == nullptr || g_keyboardLL == nullptr) {
+  if ((g_installMouseHook && g_mouseLL == nullptr) || g_keyboardLL == nullptr) {
     if (g_keyboardLL != nullptr) {
       UnhookWindowsHookEx(g_keyboardLL);
       g_keyboardLL = nullptr;
@@ -622,7 +644,7 @@ EHookResult MSWindowsHook::install()
 #endif
 
   // check that we got all the hooks we wanted
-  if ((g_mouseLL == nullptr) ||
+  if ((g_installMouseHook && g_mouseLL == nullptr) ||
 #if !NO_GRAB_KEYBOARD
       (g_keyboardLL == nullptr)
 #endif

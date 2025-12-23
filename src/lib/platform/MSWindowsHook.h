@@ -61,6 +61,10 @@ public:
   void setZone(int32_t x, int32_t y, int32_t w, int32_t h, int32_t jumpZoneSize);
 
   void setMode(EHookMode mode);
+  EHookMode getMode();
+
+  // Get jump zone parameters for use by raw input processing
+  void getZone(int32_t &x, int32_t &y, int32_t &w, int32_t &h, int32_t &jumpZoneSize);
 
   static EHookResult install();
 
@@ -69,4 +73,7 @@ public:
   static int installScreenSaver();
 
   static int uninstallScreenSaver();
+  
+  // Control whether to install mouse hook (false when using raw input)
+  static void setInstallMouseHook(bool install);
 };
