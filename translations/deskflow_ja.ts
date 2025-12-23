@@ -559,14 +559,6 @@ Valid names:
         <translation>エラー</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</source>
-        <translation>&lt;p&gt;&lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;バグレポート&lt;/a&gt;して以下のエラーをコピー＆ペーストしてください:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
         <translation>&lt;p&gt;申し訳ありません、致命的なエラーが発生したため、アプリケーションを終了します。&lt;/p&gt;
@@ -585,8 +577,16 @@ Valid names:
         <translation>&lt;p&gt;%1 はバックグラウンドで引き続き実行され、システム通知領域の %1 アイコンからアクセスできます。この設定は無効にできます。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot; %2&gt;enable an extension&lt;/a&gt; to see the %3 tray icon.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;GNOME 3 を使用している Linux システムでは、通知領域が無効化されていることがあります。その場合は %3 トレイアイコンを表示するために&lt;a href=&quot;%1&quot; %2&gt;拡張機能の有効化&lt;/a&gt;が必要かもしれません。&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</source>
+        <translation>&lt;p&gt;&lt;a href=&quot;%1&quot;&gt;バグレポート&lt;/a&gt;して以下のエラーをコピー＆ペーストしてください:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;GNOME 3 を使用している Linux システムでは、通知領域が無効化されていることがあります。その場合は %2 トレイアイコンを表示するために&lt;a href=&quot;%1&quot;&gt;拡張機能の有効化&lt;/a&gt;が必要かもしれません。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
@@ -681,8 +681,8 @@ Valid names:
         <translation>&lt;p&gt;以下のファイルへの書き込み権限がないため、設定は読み取り専用です:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;申し訳ありません、このバージョンの %1 は Wayland に対応していますが、このビルドには必要なライブラリがリンクされていません。&lt;/p&gt;&lt;p&gt;ログイン画面から X に切り替えるか、正しいライブラリをリンクしたビルドを使用してください。&lt;/p&gt;&lt;p&gt;もしこの説明が正しくないと思われる場合は、&lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;バグレポート&lt;/a&gt;してください。&lt;/p&gt;&lt;p&gt;詳細はログを確認してください。&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;申し訳ありません、このバージョンの %1 は Wayland に対応していますが、このビルドには必要なライブラリがリンクされていません。&lt;/p&gt;&lt;p&gt;ログイン画面から X に切り替えるか、正しいライブラリをリンクしたビルドを使用してください。&lt;/p&gt;&lt;p&gt;もしこの説明が正しくないと思われる場合は、&lt;a href=&quot;%2&quot;&gt;バグレポート&lt;/a&gt;してください。&lt;/p&gt;&lt;p&gt;詳細はログを確認してください。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>

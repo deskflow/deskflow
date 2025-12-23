@@ -559,14 +559,6 @@ Valid names:
         <translation>错误</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</source>
-        <translation>&lt;p&gt;请 &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;报告 Bug&lt;/a&gt; 并复制/粘贴以下错误：&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
         <translation>&lt;p&gt;抱歉，发生了致命错误，应用程序现在必须退出。&lt;/p&gt;
@@ -585,8 +577,16 @@ Valid names:
         <translation>&lt;p&gt;%1 将在后台继续运行，可通过系统通知区域的 %1 图标访问。此设置可以禁用。&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot; %2&gt;enable an extension&lt;/a&gt; to see the %3 tray icon.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;在使用 GNOME 3 的 Linux 系统上，通知区域可能被禁用。您可能需要 &lt;a href=&quot;%1&quot; %2&gt;启用扩展&lt;/a&gt; 才能看到 %3 托盘图标。&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</source>
+        <translation>&lt;p&gt;请 &lt;a href=&quot;%1&quot;&gt;报告 Bug&lt;/a&gt; 并复制/粘贴以下错误：&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;在使用 GNOME 3 的 Linux 系统上，通知区域可能被禁用。您可能需要 &lt;a href=&quot;%1&quot;&gt;启用扩展&lt;/a&gt; 才能看到 %2 托盘图标。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
@@ -681,8 +681,8 @@ Valid names:
         <translation>&lt;p&gt;设置是只读的，因为您对该文件只有读取权限：&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;抱歉，虽然此版本的 %1 支持 Wayland，但此构建版本未链接一个或多个所需的库。&lt;/p&gt;&lt;p&gt;请从登录屏幕切换到 X，或者使用链接了正确库的构建版本。&lt;/p&gt;&lt;p&gt;如果您认为存在问题，请 &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;报告 Bug&lt;/a&gt;。&lt;/p&gt;&lt;p&gt;请查看日志以获取更多信息。&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;抱歉，虽然此版本的 %1 支持 Wayland，但此构建版本未链接一个或多个所需的库。&lt;/p&gt;&lt;p&gt;请从登录屏幕切换到 X，或者使用链接了正确库的构建版本。&lt;/p&gt;&lt;p&gt;如果您认为存在问题，请 &lt;a href=&quot;%2&quot;&gt;报告 Bug&lt;/a&gt;。&lt;/p&gt;&lt;p&gt;请查看日志以获取更多信息。&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>
