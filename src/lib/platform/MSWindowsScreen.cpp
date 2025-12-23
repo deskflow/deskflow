@@ -32,6 +32,7 @@
 #include <algorithm>
 #include <comutil.h>
 #include <string.h>
+#include <vector>
 
 // suppress warning about GetVersionEx, which is used indirectly in this
 // compilation unit.
@@ -192,6 +193,9 @@ void MSWindowsScreen::enable()
   m_desks->enable();
 
   if (m_isPrimary) {
+    // register for raw input to handle high polling rate mice
+    registerRawInput();
+
     // set jump zones
     m_hook.setZone(m_x, m_y, m_w, m_h, getJumpZoneSize());
 
@@ -209,6 +213,9 @@ void MSWindowsScreen::disable()
   m_desks->disable();
 
   if (m_isPrimary) {
+    // unregister raw input
+    unregisterRawInput();
+
     // disable hooks
     m_hook.setMode(kHOOK_DISABLE);
 
@@ -937,6 +944,16 @@ bool MSWindowsScreen::onPreDispatchPrimary(HWND, UINT message, WPARAM wParam, LP
 bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT *result)
 {
   switch (msg) {
+
+  case WM_INPUT:
+    // handle raw input for high polling rate mouse support
+    if (m_isPrimary && m_rawInputRegistered) {
+      if (handleRawInput((HRAWINPUT)lParam)) {
+        *result = 0;
+        return true;
+      }
+    }
+    break;
 
   case WM_CLIPBOARDUPDATE: {
     DWORD clipboardSequenceNumber = GetClipboardSequenceNumber();
@@ -1736,4 +1753,172 @@ bool MSWindowsScreen::isModifierRepeat(KeyModifierMask oldState, KeyModifierMask
   }
 
   return result;
+}
+
+void MSWindowsScreen::registerRawInput()
+{
+  if (m_rawInputRegistered) {
+    return;
+  }
+
+  // Register for raw mouse input to support high polling rate devices.
+  // This provides direct access to the input buffer, bypassing the message queue
+  // which can struggle with high-frequency input events.
+  RAWINPUTDEVICE rid;
+  rid.usUsagePage = 0x01; // HID_USAGE_PAGE_GENERIC
+  rid.usUsage = 0x02;     // HID_USAGE_GENERIC_MOUSE
+  rid.dwFlags = RIDEV_INPUTSINK; // receive input even when not in foreground
+  rid.hwndTarget = m_window;
+
+  if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
+    m_rawInputRegistered = true;
+    LOG_DEBUG("registered for raw mouse input (high polling rate support)");
+  } else {
+    LOG_ERR("failed to register raw input devices: %d", GetLastError());
+  }
+}
+
+void MSWindowsScreen::unregisterRawInput()
+{
+  if (!m_rawInputRegistered) {
+    return;
+  }
+
+  RAWINPUTDEVICE rid;
+  rid.usUsagePage = 0x01; // HID_USAGE_PAGE_GENERIC
+  rid.usUsage = 0x02;     // HID_USAGE_GENERIC_MOUSE
+  rid.dwFlags = RIDEV_REMOVE;
+  rid.hwndTarget = nullptr;
+
+  if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
+    m_rawInputRegistered = false;
+    LOG_DEBUG("unregistered raw mouse input");
+  } else {
+    LOG_ERR("failed to unregister raw input devices: %d", GetLastError());
+  }
+}
+
+bool MSWindowsScreen::handleRawInput(HRAWINPUT hRawInput)
+{
+  // Use GetRawInputBuffer for batch processing of buffered input events.
+  // This is more efficient for high polling rate devices that generate
+  // many events in quick succession.
+  
+  const UINT maxInputs = 128; // Process up to 128 buffered events at once
+  std::vector<RAWINPUT> inputs(maxInputs);
+  
+  UINT numInputs = maxInputs;
+  UINT size = GetRawInputBuffer(
+      reinterpret_cast<PRAWINPUT>(inputs.data()),
+      &numInputs,
+      sizeof(RAWINPUTHEADER)
+  );
+  
+  if (size == (UINT)-1) {
+    DWORD error = GetLastError();
+    if (error != ERROR_INSUFFICIENT_BUFFER) {
+      LOG_ERR("failed to get raw input buffer: %d", error);
+    }
+    // Fall back to single event processing
+    return handleRawInputSingle(hRawInput);
+  }
+  
+  // Process all buffered events
+  bool handled = false;
+  for (UINT i = 0; i < numInputs; i++) {
+    if (inputs[i].header.dwType == RIM_TYPEMOUSE) {
+      handled = processRawMouseInput(inputs[i].data.mouse) || handled;
+    }
+  }
+  
+  return handled;
+}
+
+bool MSWindowsScreen::handleRawInputSingle(HRAWINPUT hRawInput)
+{
+  // Get the size of the raw input data
+  UINT size = 0;
+  if (GetRawInputData(hRawInput, RID_INPUT, nullptr, &size, sizeof(RAWINPUTHEADER)) == (UINT)-1) {
+    LOG_ERR("failed to get raw input data size: %d", GetLastError());
+    return false;
+  }
+
+  // Allocate buffer for raw input data
+  std::vector<BYTE> buffer(size);
+  RAWINPUT *raw = reinterpret_cast<RAWINPUT *>(buffer.data());
+
+  // Get the raw input data
+  if (GetRawInputData(hRawInput, RID_INPUT, raw, &size, sizeof(RAWINPUTHEADER)) != size) {
+    LOG_ERR("failed to get raw input data: %d", GetLastError());
+    return false;
+  }
+
+  // We only care about mouse input
+  if (raw->header.dwType == RIM_TYPEMOUSE) {
+    return processRawMouseInput(raw->data.mouse);
+  }
+
+  return false;
+}
+
+bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
+{
+  // Handle mouse movement
+  if (mouse.usFlags == MOUSE_MOVE_RELATIVE && (mouse.lLastX != 0 || mouse.lLastY != 0)) {
+    // Get current cursor position for absolute coordinates
+    POINT cursorPos;
+    if (!GetCursorPos(&cursorPos)) {
+      return false;
+    }
+
+    int32_t x = cursorPos.x;
+    int32_t y = cursorPos.y;
+
+    // Process the mouse move event with current absolute position
+    // The onMouseMove handler will calculate the delta internally
+    return onMouseMove(x, y);
+  }
+
+  // Handle mouse buttons
+  if (mouse.usButtonFlags != 0) {
+    // Map button flags to window messages
+    if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_DOWN) {
+      return onMouseButton(WM_LBUTTONDOWN, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_LEFT_BUTTON_UP) {
+      return onMouseButton(WM_LBUTTONUP, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_DOWN) {
+      return onMouseButton(WM_RBUTTONDOWN, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_RIGHT_BUTTON_UP) {
+      return onMouseButton(WM_RBUTTONUP, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN) {
+      return onMouseButton(WM_MBUTTONDOWN, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_MIDDLE_BUTTON_UP) {
+      return onMouseButton(WM_MBUTTONUP, 0);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_DOWN) {
+      return onMouseButton(WM_XBUTTONDOWN, XBUTTON1);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_4_UP) {
+      return onMouseButton(WM_XBUTTONUP, XBUTTON1);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_DOWN) {
+      return onMouseButton(WM_XBUTTONDOWN, XBUTTON2);
+    }
+    if (mouse.usButtonFlags & RI_MOUSE_BUTTON_5_UP) {
+      return onMouseButton(WM_XBUTTONUP, XBUTTON2);
+    }
+
+    // Handle mouse wheel
+    if (mouse.usButtonFlags & RI_MOUSE_WHEEL) {
+      int32_t delta = static_cast<int16_t>(mouse.usButtonData);
+      return onMouseWheel(0, delta);
+    }
+  }
+
+  return false;
 }

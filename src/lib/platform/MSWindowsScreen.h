@@ -228,6 +228,13 @@ private: // HACK
   // check if it is a modifier key repeating message
   bool isModifierRepeat(KeyModifierMask oldState, KeyModifierMask state, WPARAM wParam) const;
 
+  // raw input handling for high polling rate mouse support
+  void registerRawInput();
+  void unregisterRawInput();
+  bool handleRawInput(HRAWINPUT hRawInput);
+  bool handleRawInputSingle(HRAWINPUT hRawInput);
+  bool processRawMouseInput(const RAWMOUSE &mouse);
+
 private:
   struct HotKeyItem
   {
@@ -329,6 +336,9 @@ private:
   MOUSEKEYS m_mouseKeys;
 
   MSWindowsHook m_hook;
+
+  // raw input for high polling rate mouse support
+  bool m_rawInputRegistered = false;
 
   static MSWindowsScreen *s_screen;
 
