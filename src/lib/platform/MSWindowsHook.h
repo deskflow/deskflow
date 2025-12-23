@@ -73,7 +73,7 @@ public:
   static int installScreenSaver();
 
   static int uninstallScreenSaver();
-  
+
   // Control whether to install mouse hook (false when using raw input)
   static void setInstallMouseHook(bool install);
 };

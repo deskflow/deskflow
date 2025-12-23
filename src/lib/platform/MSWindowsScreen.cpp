@@ -1766,8 +1766,8 @@ void MSWindowsScreen::registerRawInput()
   // This provides direct access to the input buffer, bypassing the message queue
   // which can struggle with high-frequency input events.
   RAWINPUTDEVICE rid;
-  rid.usUsagePage = 0x01; // HID_USAGE_PAGE_GENERIC
-  rid.usUsage = 0x02;     // HID_USAGE_GENERIC_MOUSE
+  rid.usUsagePage = 0x01;        // HID_USAGE_PAGE_GENERIC
+  rid.usUsage = 0x02;            // HID_USAGE_GENERIC_MOUSE
   rid.dwFlags = RIDEV_INPUTSINK; // receive input even when not in foreground
   rid.hwndTarget = m_window;
 
@@ -1808,17 +1808,13 @@ bool MSWindowsScreen::handleRawInput(HRAWINPUT hRawInput)
   // Use GetRawInputBuffer for batch processing of buffered input events.
   // This is more efficient for high polling rate devices that generate
   // many events in quick succession.
-  
+
   const UINT maxInputs = 128; // Process up to 128 buffered events at once
   std::vector<RAWINPUT> inputs(maxInputs);
-  
+
   UINT numInputs = maxInputs;
-  UINT size = GetRawInputBuffer(
-      reinterpret_cast<PRAWINPUT>(inputs.data()),
-      &numInputs,
-      sizeof(RAWINPUTHEADER)
-  );
-  
+  UINT size = GetRawInputBuffer(reinterpret_cast<PRAWINPUT>(inputs.data()), &numInputs, sizeof(RAWINPUTHEADER));
+
   if (size == (UINT)-1) {
     DWORD error = GetLastError();
     if (error != ERROR_INSUFFICIENT_BUFFER) {
@@ -1827,7 +1823,7 @@ bool MSWindowsScreen::handleRawInput(HRAWINPUT hRawInput)
     // Fall back to single event processing
     return handleRawInputSingle(hRawInput);
   }
-  
+
   // Process all buffered events
   bool handled = false;
   for (UINT i = 0; i < numInputs; i++) {
@@ -1835,7 +1831,7 @@ bool MSWindowsScreen::handleRawInput(HRAWINPUT hRawInput)
       handled = processRawMouseInput(inputs[i].data.mouse) || handled;
     }
   }
-  
+
   return handled;
 }
 
@@ -1937,27 +1933,23 @@ bool MSWindowsScreen::processRawMouseInput(const RAWMOUSE &mouse)
   // Handle mouse buttons
   if (mouse.usButtonFlags != 0) {
     // Map raw input button flags to window messages using a lookup table
-    struct ButtonMapping {
+    struct ButtonMapping
+    {
       USHORT flag;
       UINT message;
       LPARAM data;
     };
-    
+
     const ButtonMapping buttonMappings[] = {
-      {RI_MOUSE_LEFT_BUTTON_DOWN, WM_LBUTTONDOWN, 0},
-      {RI_MOUSE_LEFT_BUTTON_UP, WM_LBUTTONUP, 0},
-      {RI_MOUSE_RIGHT_BUTTON_DOWN, WM_RBUTTONDOWN, 0},
-      {RI_MOUSE_RIGHT_BUTTON_UP, WM_RBUTTONUP, 0},
-      {RI_MOUSE_MIDDLE_BUTTON_DOWN, WM_MBUTTONDOWN, 0},
-      {RI_MOUSE_MIDDLE_BUTTON_UP, WM_MBUTTONUP, 0},
-      {RI_MOUSE_BUTTON_4_DOWN, WM_XBUTTONDOWN, XBUTTON1},
-      {RI_MOUSE_BUTTON_4_UP, WM_XBUTTONUP, XBUTTON1},
-      {RI_MOUSE_BUTTON_5_DOWN, WM_XBUTTONDOWN, XBUTTON2},
-      {RI_MOUSE_BUTTON_5_UP, WM_XBUTTONUP, XBUTTON2},
+        {RI_MOUSE_LEFT_BUTTON_DOWN, WM_LBUTTONDOWN, 0},     {RI_MOUSE_LEFT_BUTTON_UP, WM_LBUTTONUP, 0},
+        {RI_MOUSE_RIGHT_BUTTON_DOWN, WM_RBUTTONDOWN, 0},    {RI_MOUSE_RIGHT_BUTTON_UP, WM_RBUTTONUP, 0},
+        {RI_MOUSE_MIDDLE_BUTTON_DOWN, WM_MBUTTONDOWN, 0},   {RI_MOUSE_MIDDLE_BUTTON_UP, WM_MBUTTONUP, 0},
+        {RI_MOUSE_BUTTON_4_DOWN, WM_XBUTTONDOWN, XBUTTON1}, {RI_MOUSE_BUTTON_4_UP, WM_XBUTTONUP, XBUTTON1},
+        {RI_MOUSE_BUTTON_5_DOWN, WM_XBUTTONDOWN, XBUTTON2}, {RI_MOUSE_BUTTON_5_UP, WM_XBUTTONUP, XBUTTON2},
     };
-    
+
     // Process all button events
-    for (const auto& mapping : buttonMappings) {
+    for (const auto &mapping : buttonMappings) {
       if (mouse.usButtonFlags & mapping.flag) {
         onMouseButton(mapping.message, mapping.data);
       }
