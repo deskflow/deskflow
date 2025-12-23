@@ -10,7 +10,6 @@
 
 namespace deskflow::gui {
 
-const auto kColorWhite = "#ffffff";
 const auto kColorSecondary = "#4285f4";
 const auto kColorError = "#ec4c47";
 
@@ -23,9 +22,9 @@ const auto kStyleLineEditErrorBorder =
 const auto kStyleErrorActiveLabel = //
     QStringLiteral(
         "padding: 3px 5px; border-radius: 3px; "
-        "background-color: %1; color: %2"
+        "background-color: %1; color: white"
     )
-        .arg(kColorError, kColorWhite);
+        .arg(kColorError);
 
 const auto kStyleErrorInactiveLabel = //
     QStringLiteral(
