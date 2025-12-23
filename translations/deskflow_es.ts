@@ -560,14 +560,6 @@ Nombres válidos:
         <translation type="unfinished">error</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Por favor, &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;informa de un error&lt;/a&gt; y copia y pega el siguiente error:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
         <translation type="unfinished">&lt;p&gt;Lo sentimos, se ha producido un error fatal y la aplicación debe salir ahora.&lt;/p&gt;
@@ -584,8 +576,16 @@ Nombres válidos:
         <translation type="unfinished">&lt;p&gt;%1 seguirá ejecutándose en segundo plano y se podrá acceder a él mediante el icono %1 en el área de notificaciones del sistema. Esta configuración se puede desactivar.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot; %2&gt;enable an extension&lt;/a&gt; to see the %3 tray icon.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;En sistemas Linux que usan GNOME 3, el área de notificaciones podría estar deshabilitada. Quizás necesite &lt;a href=&quot;%1&quot; %2&gt;habilitar una extensión&lt;/a&gt; para ver el icono de la bandeja %3.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</source>
+        <translation>&lt;p&gt;Por favor, &lt;a href=&quot;%1&quot;&gt;informa de un error&lt;/a&gt; y copia y pega el siguiente error:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;En sistemas Linux que usan GNOME 3, el área de notificaciones podría estar deshabilitada. Quizás necesite &lt;a href=&quot;%1&quot;&gt;habilitar una extensión&lt;/a&gt; para ver el icono de la bandeja %2.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
@@ -680,8 +680,8 @@ Nombres válidos:
         <translation type="unfinished">&lt;p&gt;Las configuraciones son de solo lectura porque solo tiene acceso de lectura al archivo:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation type="unfinished">&lt;p&gt;Lo sentimos, aunque esta versión de %1 es compatible con Wayland, esta compilación no se vinculó con una o más de las bibliotecas requeridas.&lt;/p&gt;&lt;p&gt;Cambie a X desde su pantalla de inicio de sesión o use una compilación que use las bibliotecas correctas.&lt;/p&gt;&lt;p&gt;Si cree que esto es incorrecto, &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;informe un error&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Consulte los registros para obtener más información.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Lo sentimos, aunque esta versión de %1 es compatible con Wayland, esta compilación no se vinculó con una o más de las bibliotecas requeridas.&lt;/p&gt;&lt;p&gt;Cambie a X desde su pantalla de inicio de sesión o use una compilación que use las bibliotecas correctas.&lt;/p&gt;&lt;p&gt;Si cree que esto es incorrecto, &lt;a href=&quot;%2&quot;&gt;informe un error&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Consulte los registros para obtener más información.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>

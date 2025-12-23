@@ -7,7 +7,6 @@
 #include "Messages.h"
 
 #include "Logger.h"
-#include "Styles.h"
 #include "VersionInfo.h"
 
 #include "common/Enums.h"
@@ -42,10 +41,10 @@ void showErrorDialog(const QString &message, const QString &fileLine, QtMsgType 
   auto errorType = QtFatalMsg ? QObject::tr("fatal error") : QObject::tr("error");
   auto title = QStringLiteral("%1 %2").arg(kAppName, errorType);
   auto text = QObject::tr(
-                  R"(<p>Please <a href="%1" style="color: %2">report a bug</a>)"
-                  " and copy/paste the following error:</p><pre>v%3\n%4\n%5</pre>"
+                  R"(<p>Please <a href="%1">report a bug</a>)"
+                  " and copy/paste the following error:</p><pre>v%2\n%3\n%4</pre>"
   )
-                  .arg(kUrlHelp, kColorSecondary, kVersion, message, fileLine);
+                  .arg(kUrlHelp, kVersion, message, fileLine);
 
   if (type == QtFatalMsg) {
     text.prepend(QObject::tr("<p>Sorry, a fatal error has occurred and the application must now exit.</p>\n"));
@@ -122,9 +121,9 @@ void showCloseReminder(QWidget *parent)
   message.append(
       QObject::tr(
           "<p>On Linux systems using GNOME 3, the notification area might be disabled. "
-          R"(You may need to <a href="%1" %2>enable an extension</a> to see the %3 tray icon.</p>)"
+          R"(You may need to <a href="%1">enable an extension</a> to see the %2 tray icon.</p>)"
       )
-          .arg(kUrlGnomeTrayFix, kStyleLink, kAppName)
+          .arg(kUrlGnomeTrayFix, kAppName)
   );
 #endif
 
@@ -292,10 +291,10 @@ void showWaylandLibraryError(QWidget *parent)
           "<p>Please either switch to X from your login screen or use a build "
           "that uses the correct libraries.</p>"
           "<p>If you think this is incorrect, please "
-          R"(<a href="%2" style="color: %3">report a bug</a>.</p>)"
+          R"(<a href="%2">report a bug</a>.</p>)"
           "<p>Please check the logs for more information.</p>"
       )
-          .arg(kAppName, kUrlHelp, kColorSecondary)
+          .arg(kAppName, kUrlHelp)
   );
 }
 

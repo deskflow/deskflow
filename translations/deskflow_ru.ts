@@ -563,14 +563,6 @@ Valid names:
         <translation>ошибка</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</source>
-        <translation>&lt;p&gt;Пожалуйста &lt;a href=&quot;%1&quot; style=&quot;color: %2&quot;&gt;сообщите об ошибке&lt;/a&gt;и скопируйте/вставьте следующее сообщение об ошибке:&lt;/p&gt;&lt;pre&gt;v%3
-%4
-%5&lt;/pre&gt;</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;Sorry, a fatal error has occurred and the application must now exit.&lt;/p&gt;
 </source>
         <translation>&lt;p&gt;Извините, возникла критическая ошибка и приложение сейчас завершит работу.&lt;/p&gt;
@@ -587,8 +579,16 @@ Valid names:
         <translation>&lt;p&gt;%1 продолжит работу в фоновом режиме и может быть развернуто через %1 иконку на вашей панели уведомлений. Эту настройку можно отключить.&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot; %2&gt;enable an extension&lt;/a&gt; to see the %3 tray icon.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;На Linux (пингвинчики) системах, использующих GNOME 3, панель уведомлений может быть отключена. Вам может понадобиться &lt;a href=&quot;%1&quot; %2&gt;подключить расширение&lt;/a&gt;, чтобы увидеть %3 иконку.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Please &lt;a href=&quot;%1&quot;&gt;report a bug&lt;/a&gt; and copy/paste the following error:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</source>
+        <translation>&lt;p&gt;Пожалуйста &lt;a href=&quot;%1&quot;&gt;сообщите об ошибке&lt;/a&gt;и скопируйте/вставьте следующее сообщение об ошибке:&lt;/p&gt;&lt;pre&gt;v%2
+%3
+%4&lt;/pre&gt;</translation>
+    </message>
+    <message>
+        <source>&lt;p&gt;On Linux systems using GNOME 3, the notification area might be disabled. You may need to &lt;a href=&quot;%1&quot;&gt;enable an extension&lt;/a&gt; to see the %2 tray icon.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;На Linux (пингвинчики) системах, использующих GNOME 3, панель уведомлений может быть отключена. Вам может понадобиться &lt;a href=&quot;%1&quot;&gt;подключить расширение&lt;/a&gt;, чтобы увидеть %2 иконку.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>%1 Server</source>
@@ -683,8 +683,8 @@ Valid names:
         <translation>&lt;p&gt;Вам разрешено только чтение настроек из-за ограничения доступа к файлу:&lt;/p&gt;&lt;p&gt;%1&lt;/p&gt;</translation>
     </message>
     <message>
-        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
-        <translation>&lt;p&gt;Извините, пока эта версия %1 поддерживает Wayland, эта сборка не связана с одной или несколькими необходимыми библиотеками.&lt;/p&gt;&lt;p&gt;Пожалуйста, либо перейдите в X, либо используйте сборку, которая поддерживает необходимые библиотеки.&lt;/p&gt;&lt;p&gt;Если Вы считаете, что это не работает, пожалуйста &lt;a href=&quot;%2&quot; style=&quot;color: %3&quot;&gt;сообщите о баге&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Проверьте лог для большей информации.&lt;/p&gt;</translation>
+        <source>&lt;p&gt;Sorry, while this version of %1 does support Wayland, this build was not linked with one or more of the required libraries.&lt;/p&gt;&lt;p&gt;Please either switch to X from your login screen or use a build that uses the correct libraries.&lt;/p&gt;&lt;p&gt;If you think this is incorrect, please &lt;a href=&quot;%2&quot;&gt;report a bug&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Please check the logs for more information.&lt;/p&gt;</source>
+        <translation>&lt;p&gt;Извините, пока эта версия %1 поддерживает Wayland, эта сборка не связана с одной или несколькими необходимыми библиотеками.&lt;/p&gt;&lt;p&gt;Пожалуйста, либо перейдите в X, либо используйте сборку, которая поддерживает необходимые библиотеки.&lt;/p&gt;&lt;p&gt;Если Вы считаете, что это не работает, пожалуйста &lt;a href=&quot;%2&quot;&gt;сообщите о баге&lt;/a&gt;.&lt;/p&gt;&lt;p&gt;Проверьте лог для большей информации.&lt;/p&gt;</translation>
     </message>
     <message>
         <source>No thanks</source>
