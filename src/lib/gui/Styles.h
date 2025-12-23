@@ -13,7 +13,6 @@ namespace deskflow::gui {
 const auto kColorWhite = "#ffffff";
 const auto kColorSecondary = "#4285f4";
 const auto kColorError = "#ec4c47";
-const auto kColorLightGrey = "#666666";
 
 const auto kStyleLink = //
     QStringLiteral("color: %1").arg(kColorSecondary);
