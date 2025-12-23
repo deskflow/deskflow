@@ -946,10 +946,15 @@ bool MSWindowsScreen::onEvent(HWND, UINT msg, WPARAM wParam, LPARAM lParam, LRES
 {
   switch (msg) {
 
-  // WM_INPUT is no longer handled here - we use a dedicated polling thread
-  // to call GetRawInputBuffer() directly, bypassing the message queue entirely.
-  // This prevents the message queue from becoming a bottleneck for high polling
-  // rate mice.
+  case WM_INPUT:
+    // When raw input thread is active, we ignore WM_INPUT messages since the
+    // dedicated thread polls GetRawInputBuffer() directly, bypassing the queue.
+    // This prevents the message queue from becoming a bottleneck.
+    if (m_isPrimary && m_rawInputRegistered && m_rawInputThread != nullptr) {
+      *result = 0;
+      return true;
+    }
+    break;
 
   case WM_CLIPBOARDUPDATE: {
     DWORD clipboardSequenceNumber = GetClipboardSequenceNumber();
@@ -1758,13 +1763,14 @@ void MSWindowsScreen::registerRawInput()
   }
 
   // Register for raw mouse input to support high polling rate devices.
-  // We use RIDEV_NOLEGACY to prevent WM_INPUT messages from being generated,
-  // since we'll be polling GetRawInputBuffer() directly on a separate thread.
-  // This completely bypasses the message queue bottleneck.
+  // We use a dedicated thread to poll GetRawInputBuffer() directly,
+  // which completely bypasses the message queue bottleneck.
+  // We keep RIDEV_INPUTSINK but not RIDEV_NOLEGACY to maintain compatibility
+  // with other code that may rely on legacy mouse messages.
   RAWINPUTDEVICE rid;
-  rid.usUsagePage = 0x01;                        // HID_USAGE_PAGE_GENERIC
-  rid.usUsage = 0x02;                            // HID_USAGE_GENERIC_MOUSE
-  rid.dwFlags = RIDEV_INPUTSINK | RIDEV_NOLEGACY; // receive input even when not in foreground, no legacy messages
+  rid.usUsagePage = 0x01;        // HID_USAGE_PAGE_GENERIC
+  rid.usUsage = 0x02;            // HID_USAGE_GENERIC_MOUSE
+  rid.dwFlags = RIDEV_INPUTSINK; // receive input even when not in foreground
   rid.hwndTarget = m_window;
 
   if (RegisterRawInputDevices(&rid, 1, sizeof(rid))) {
@@ -1911,12 +1917,12 @@ void MSWindowsScreen::startRawInputThread()
 
   m_rawInputThreadRunning = true;
   m_rawInputThread = CreateThread(
-      nullptr,                  // default security attributes
-      0,                        // default stack size
-      rawInputThreadProc,       // thread function
-      this,                     // thread parameter (this pointer)
-      0,                        // default creation flags
-      nullptr                   // don't need thread ID
+      nullptr,            // default security attributes
+      0,                  // default stack size
+      rawInputThreadProc, // thread function
+      this,               // thread parameter (this pointer)
+      0,                  // default creation flags
+      nullptr             // don't need thread ID
   );
 
   if (m_rawInputThread == nullptr) {
@@ -1934,11 +1940,13 @@ void MSWindowsScreen::stopRawInputThread()
   }
 
   m_rawInputThreadRunning = false;
-  
-  // Wait for thread to exit (with timeout)
-  DWORD result = WaitForSingleObject(m_rawInputThread, 1000);
+
+  // Wait for thread to exit (with generous timeout to allow graceful shutdown)
+  DWORD result = WaitForSingleObject(m_rawInputThread, 5000);
   if (result == WAIT_TIMEOUT) {
-    LOG_WARN("raw input thread did not exit cleanly, terminating");
+    LOG_ERR("raw input thread did not exit cleanly within 5 seconds");
+    // As a last resort, terminate the thread
+    // Note: This is dangerous but necessary if thread is truly stuck
     TerminateThread(m_rawInputThread, 0);
   }
 
@@ -1950,7 +1958,7 @@ void MSWindowsScreen::stopRawInputThread()
 DWORD WINAPI MSWindowsScreen::rawInputThreadProc(LPVOID lpParameter)
 {
   MSWindowsScreen *screen = static_cast<MSWindowsScreen *>(lpParameter);
-  
+
   LOG_DEBUG("raw input polling thread started");
 
   // Allocate buffer for batch processing
@@ -1960,11 +1968,7 @@ DWORD WINAPI MSWindowsScreen::rawInputThreadProc(LPVOID lpParameter)
   while (screen->m_rawInputThreadRunning) {
     // Poll GetRawInputBuffer directly, bypassing the message queue
     UINT numInputs = maxInputs;
-    UINT size = GetRawInputBuffer(
-        reinterpret_cast<PRAWINPUT>(inputs.data()),
-        &numInputs,
-        sizeof(RAWINPUTHEADER)
-    );
+    UINT size = GetRawInputBuffer(reinterpret_cast<PRAWINPUT>(inputs.data()), &numInputs, sizeof(RAWINPUTHEADER));
 
     if (size == (UINT)-1) {
       DWORD error = GetLastError();
@@ -1974,24 +1978,25 @@ DWORD WINAPI MSWindowsScreen::rawInputThreadProc(LPVOID lpParameter)
           LOG_DEBUG1("GetRawInputBuffer error: %d", error);
         }
       }
-      // Brief sleep on error to avoid busy loop
-      Sleep(1);
+      // Brief yield on error to avoid busy loop
+      Sleep(0);
       continue;
     }
 
     if (numInputs > 0) {
-      // Lock for thread-safe processing
+      // Process all buffered events with minimal lock time
+      // We could optimize further by using a lock-free queue, but for now
+      // we keep the lock to ensure thread safety with minimal complexity
       std::lock_guard<std::mutex> lock(screen->m_rawInputMutex);
-      
-      // Process all buffered events
+
       for (UINT i = 0; i < numInputs; i++) {
         if (inputs[i].header.dwType == RIM_TYPEMOUSE) {
           screen->processRawMouseInput(inputs[i].data.mouse);
         }
       }
     } else {
-      // No input available, sleep briefly to avoid busy loop
-      Sleep(1);
+      // No input available, yield to other threads
+      Sleep(0);
     }
   }
 
