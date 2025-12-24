@@ -12,9 +12,6 @@ namespace deskflow::gui {
 
 const auto kColorError = "#ec4c47";
 
-const auto kStyleLineEditErrorBorder =
-    QStringLiteral("border: 1px solid %1; border-radius: 2px; padding: 2px;").arg(kColorError);
-
 const auto kStyleErrorActiveLabel = //
     QStringLiteral(
         "padding: 3px 5px; border-radius: 3px; "
