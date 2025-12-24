@@ -20,11 +20,11 @@ void clear(QLabel *label)
   }
 }
 
-ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_pLabel(label)
+ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_label(label)
 {
 
-  if (m_pLabel) {
-    clear(m_pLabel);
+  if (m_label) {
+    clear(m_label);
   }
 }
 
@@ -37,12 +37,12 @@ void ValidationError::setMessage(const QString &message)
 {
   m_message = message;
 
-  if (m_pLabel) {
+  if (m_label) {
     if (message.isEmpty()) {
-      clear(m_pLabel);
+      clear(m_label);
     } else {
-      m_pLabel->setStyleSheet(kStyleErrorActiveLabel);
-      m_pLabel->setText(message);
+      m_label->setStyleSheet(kStyleErrorActiveLabel);
+      m_label->setText(message);
     }
   }
 }

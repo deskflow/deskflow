@@ -21,7 +21,7 @@ public:
 
 private:
   QString m_message;
-  QLabel *m_pLabel = nullptr;
+  QLabel *m_label = nullptr;
 };
 
 } // namespace validators
