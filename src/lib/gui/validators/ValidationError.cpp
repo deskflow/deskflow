@@ -25,15 +25,19 @@ const QString &ValidationError::message() const
 
 void ValidationError::setMessage(const QString &message)
 {
+  if (m_message == message)
+    return;
+
   m_message = message;
 
-  if (m_label) {
-    if (message.isEmpty()) {
-      clear();
-    } else {
-      m_label->setStyleSheet(kStyleErrorActiveLabel);
-      m_label->setText(message);
-    }
+  if (!m_label)
+    return;
+
+  if (message.isEmpty()) {
+    clear();
+  } else {
+    m_label->setStyleSheet(kStyleErrorActiveLabel);
+    m_label->setText(message);
   }
 }
 
