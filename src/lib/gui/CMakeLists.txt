@@ -34,7 +34,6 @@ add_library(${target} STATIC
   Messages.h
   ScreenSetupModel.cpp
   ScreenSetupModel.h
-  Styles.h
   StyleUtils.h
   TlsUtility.cpp
   TlsUtility.h
