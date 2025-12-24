@@ -62,7 +62,19 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
         set(DESKFLOW_VERSION_PATCH ${PATCH})
         set(DESKFLOW_VERSION_TWEAK ${TWEAK})
       elseif(NOT ${GITREV} STREQUAL "")
-        set(DESKFLOW_VERSION_TWEAK ${GITREV})
+        execute_process(
+          COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0
+          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+          OUTPUT_VARIABLE LAST_TAG
+          ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        execute_process(
+          COMMAND ${GIT_EXECUTABLE} rev-list refs/tags/${LAST_TAG}..HEAD --count
+          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+          OUTPUT_VARIABLE COUNT_COMMITS
+          ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+        set(DESKFLOW_VERSION_TWEAK ${COUNT_COMMITS})
       endif()
     endif()
   endif()
