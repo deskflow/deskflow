@@ -27,7 +27,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
   if(GIT_FOUND)
     # Set a placeholder "most recent tag" so we can check if there are no tags returned
-    set(GIT_LAST_TAG 0)
+    set(GIT_LATEST_TAG 0)
     execute_process(
       COMMAND ${GIT_EXECUTABLE} rev-parse --short=8 HEAD
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
