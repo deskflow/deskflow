@@ -14,13 +14,14 @@ namespace validators {
 
 class ValidationError : public QObject
 {
-  QString m_message;
-  QLabel *m_pLabel = nullptr;
-
 public:
   explicit ValidationError(QObject *parent, QLabel *label = nullptr);
   const QString &message() const;
   void setMessage(const QString &message);
+
+private:
+  QString m_message;
+  QLabel *m_pLabel = nullptr;
 };
 
 } // namespace validators
