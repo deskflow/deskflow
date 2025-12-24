@@ -1,9 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structIScreen_1_1ClipboardInfo.html":[6,0,128,0],
-"structIScreen_1_1ClipboardInfo.html#a7738ad80c618ba7007173d8bd0f23969":[6,0,128,0,0],
-"structIScreen_1_1ClipboardInfo.html#a90677c6ed442834e74f03f70aca39884":[6,0,128,0,1],
-"structKeyEntry.html":[6,0,135],
 "structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7":[6,0,135,0],
 "structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c":[6,0,135,1],
 "structKeyModifierNameMapEntry.html":[6,0,136],

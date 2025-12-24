@@ -150,7 +150,7 @@ var NAVTREEINDEX =
 "classdeskflow_1_1server_1_1Config.html#af224d470299368ce6f10fff62bbef68d",
 "functions_func.html",
 "namespacedeskflow.html#a34787a880fd439e02383f336665d7bc2a2942e4107fb2c55256eaf2e96cc36a48",
-"structIScreen_1_1ClipboardInfo.html"
+"structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
