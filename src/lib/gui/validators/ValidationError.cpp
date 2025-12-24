@@ -7,8 +7,6 @@
 
 #include "ValidationError.h"
 
-#include "gui/Styles.h"
-
 #include <QPalette>
 
 namespace validators {
@@ -23,7 +21,7 @@ ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(paren
 
   auto palette = m_label->palette();
   palette.setColor(QPalette::WindowText, Qt::white);
-  palette.setColor(QPalette::Window, deskflow::gui::kColorError);
+  palette.setColor(QPalette::Window, QStringLiteral("crimson"));
   m_label->setPalette(palette);
 }
 
