@@ -7,13 +7,9 @@
 
 #include "LineEditValidator.h"
 
-#include "gui/Styles.h"
-
 #include <QApplication>
 #include <QStyle>
 #include <QValidator>
-
-using namespace deskflow::gui;
 
 namespace validators {
 
@@ -63,10 +59,10 @@ QValidator::State LineEditValidator::validate(QString &input, int &) const
       padVer = 1;
       padHor = 1;
     }
-    m_pLineEdit->setStyleSheet(QStringLiteral("border-radius: %1px; padding: %2px %3px; border: %4px solid %5;")
+    m_pLineEdit->setStyleSheet(QStringLiteral("border-radius: %1px; padding: %2px %3px; border: %4px solid crimson;")
                                    .arg(
                                        QString::number(radius), QString::number(padVer), QString::number(padHor),
-                                       QString::number(borderWidth), kColorError
+                                       QString::number(borderWidth)
                                    ));
   }
 
