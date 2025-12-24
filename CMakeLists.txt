@@ -26,20 +26,26 @@ set(DESKFLOW_VERSION_TWEAK 0)
 if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
   find_package(Git)
   if(GIT_FOUND)
+    # Set a placeholder "most recent tag" so we can check if there are no tags returned
+    set(GIT_LAST_TAG 0)
     execute_process(
       COMMAND ${GIT_EXECUTABLE} rev-parse --short=8 HEAD
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       OUTPUT_VARIABLE GIT_SHA_SHORT
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
+    # Try to get the latest tag
+    # NOTE: Normally we'd use `git for-each-ref --count=1 --format='%(refname:short)' refs/tags`
+    #       to check if there are no tags, but we have a `continuous` tag. So instead we have to
+    #       try to get the latest annotated tag, fail quietly, and check if the variable changed
     execute_process(
-      COMMAND ${GIT_EXECUTABLE} rev-list --tags --count
+      COMMAND ${GIT_EXECUTABLE} --tags --abbrev=0
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-      OUTPUT_VARIABLE GIT_TAG_COUNT
+      OUTPUT_VARIABLE GIT_LATEST_TAG
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 
-    if(${GIT_TAG_COUNT} EQUAL 0)
+    if(GIT_LATEST_TAG EQUAL 0)
       set(DESKFLOW_VERSION_TWEAK "9999")
     else()
       execute_process(
@@ -63,13 +69,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
         set(DESKFLOW_VERSION_TWEAK ${TWEAK})
       elseif(NOT ${GITREV} STREQUAL "")
         execute_process(
-          COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0
-          WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-          OUTPUT_VARIABLE LAST_TAG
-          ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
-        )
-        execute_process(
-          COMMAND ${GIT_EXECUTABLE} rev-list refs/tags/${LAST_TAG}..HEAD --count
+          COMMAND ${GIT_EXECUTABLE} rev-list refs/tags/${GIT_LATEST_TAG}..HEAD --count
           WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
           OUTPUT_VARIABLE COUNT_COMMITS
           ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
