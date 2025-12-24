@@ -39,12 +39,12 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
     #       to check if there are no tags, but we have a `continuous` tag. So instead we have to
     #       try to get the latest annotated tag, fail quietly, and check if the variable changed
     execute_process(
-      COMMAND ${GIT_EXECUTABLE} --tags --abbrev=0
+      COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
       OUTPUT_VARIABLE GIT_LATEST_TAG
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-
+    message(STATUS ${GIT_LATEST_TAG})
     if(GIT_LATEST_TAG EQUAL 0)
       set(DESKFLOW_VERSION_TWEAK "9999")
     else()
@@ -74,6 +74,7 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
           OUTPUT_VARIABLE COUNT_COMMITS
           ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
         )
+        message(STATUS ${COUNT_COMMITS})
         set(DESKFLOW_VERSION_TWEAK ${COUNT_COMMITS})
       endif()
     endif()
