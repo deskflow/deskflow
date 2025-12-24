@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2021 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -8,6 +9,8 @@
 
 #include "gui/Styles.h"
 
+#include <QApplication>
+#include <QStyle>
 #include <QValidator>
 
 using namespace deskflow::gui;
@@ -42,9 +45,29 @@ QValidator::State LineEditValidator::validate(QString &input, int &) const
   }
 
   if (errorMessage.isEmpty()) {
-    m_pLineEdit->setStyleSheet("");
-  } else {
-    m_pLineEdit->setStyleSheet(kStyleLineEditErrorBorder);
+    m_pLineEdit->setStyleSheet({});
+  } else { // The values here are for fusion style
+    int radius = 3;
+    int padVer = 2;
+    int padHor = 0;
+    int borderWidth = 1;
+    if (const auto wStyle = QApplication::style()->name().toLower(); wStyle == QStringLiteral("breeze")) {
+      radius = 6;
+      padVer = 5;
+      padHor = 5;
+    } else if (wStyle == QStringLiteral("macos")) {
+      radius = 4;
+      padVer = 1;
+      borderWidth = 3;
+    } else if (wStyle == QStringLiteral("windows")) {
+      padVer = 1;
+      padHor = 1;
+    }
+    m_pLineEdit->setStyleSheet(QStringLiteral("border-radius: %1px; padding: %2px %3px; border: %4px solid %5;")
+                                   .arg(
+                                       QString::number(radius), QString::number(padVer), QString::number(padHor),
+                                       QString::number(borderWidth), kColorError
+                                   ));
   }
 
   if (m_pError) {
