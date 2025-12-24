@@ -8,7 +8,6 @@
 #include "ScreenSettingsDialog.h"
 #include "ui_ScreenSettingsDialog.h"
 
-#include "gui/Styles.h"
 #include "gui/config/Screen.h"
 #include "validators/AliasValidator.h"
 #include "validators/ScreenNameValidator.h"
@@ -16,7 +15,6 @@
 
 #include <QMessageBox>
 
-using namespace deskflow::gui;
 using enum ScreenConfig::Modifier;
 using enum ScreenConfig::SwitchCorner;
 using enum ScreenConfig::Fix;
@@ -31,9 +29,6 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
 
   ui->setupUi(this);
   ui->buttonBox->button(QDialogButtonBox::Cancel)->setFocus();
-
-  ui->lblAliasError->setStyleSheet(kStyleErrorActiveLabel);
-  ui->lblNameError->setStyleSheet(kStyleErrorActiveLabel);
 
   ui->lineNameEdit->setText(m_screen->name());
 
