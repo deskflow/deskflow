@@ -9,13 +9,22 @@
 
 #include "gui/Styles.h"
 
-using namespace deskflow::gui;
+#include <QPalette>
 
 namespace validators {
 
 ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_label(label)
 {
-  clear();
+  if (!m_label)
+    return;
+
+  m_label->clear();
+  m_label->setContentsMargins(5, 3, 5, 3);
+
+  auto palette = m_label->palette();
+  palette.setColor(QPalette::WindowText, Qt::white);
+  palette.setColor(QPalette::Window, deskflow::gui::kColorError);
+  m_label->setPalette(palette);
 }
 
 const QString &ValidationError::message() const
@@ -33,20 +42,8 @@ void ValidationError::setMessage(const QString &message)
   if (!m_label)
     return;
 
-  if (message.isEmpty()) {
-    clear();
-  } else {
-    m_label->setStyleSheet(kStyleErrorActiveLabel);
-    m_label->setText(message);
-  }
-}
-
-void ValidationError::clear()
-{
-  if (!m_label)
-    return;
-  m_label->setStyleSheet(kStyleErrorInactiveLabel);
-  m_label->setText({});
+  m_label->setAutoFillBackground(!message.isEmpty());
+  m_label->setText(message);
 }
 
 } // namespace validators
