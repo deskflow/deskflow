@@ -372,8 +372,12 @@ Do you want to connect to the server?
         <translation>无法检测到 IP 地址。请检查您的网络连接是否正常。</translation>
     </message>
     <message>
-        <source>Suggested IP: %1</source>
-        <translation>建议 IP：%1</translation>
+        <source>Using IP: </source>
+        <translation type="unfinished">使用IP地址： </translation>
+    </message>
+    <message>
+        <source>Selected as the interface in settings.</source>
+        <translation type="unfinished">在设置中选择为接口。</translation>
     </message>
     <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
@@ -386,6 +390,12 @@ Do you want to connect to the server?
     <message>
         <source>one of the following IPs:&lt;br/&gt;%1</source>
         <translation>以下 IP 地址之一：&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <source>
+A bound IP is now invalid, you may need to restart the server.</source>
+        <translation type="unfinished">
+绑定的IP地址现在无效，您可能需要重启服务器。</translation>
     </message>
     <message>
         <source>%1 is starting...</source>
@@ -530,6 +540,16 @@ Valid names:
  %1</source>
         <translation>客户端：
  %1</translation>
+    </message>
+    <message>
+        <source>
+Interface is not active. Unable to start server.</source>
+        <translation type="unfinished">
+接口未激活。无法启动服务器。</translation>
+    </message>
+    <message>
+        <source>Suggested IP: </source>
+        <translation type="unfinished">建议 IP： </translation>
     </message>
     <message>
         <source>The Core executable could not be successfully started, although it does exist. Please check if you have sufficient permissions to run this program.</source>
@@ -1231,6 +1251,10 @@ Enabling this setting will disable the server config GUI.</source>
     <message>
         <source>Language</source>
         <translation>语言</translation>
+    </message>
+    <message>
+        <source>Any</source>
+        <translation type="unfinished">任何</translation>
     </message>
     <message>
         <source>TLS Certificate Regenerated</source>
