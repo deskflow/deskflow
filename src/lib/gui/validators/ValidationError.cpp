@@ -1,31 +1,28 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "ValidationError.h"
 
-#include "gui/Styles.h"
-
-using namespace deskflow::gui;
+#include <QPalette>
 
 namespace validators {
 
-void clear(QLabel *label)
+ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_label(label)
 {
-  if (label) {
-    label->setStyleSheet(kStyleErrorInactiveLabel);
-    label->setText("");
-  }
-}
+  if (!m_label)
+    return;
 
-ValidationError::ValidationError(QObject *parent, QLabel *label) : QObject(parent), m_pLabel(label)
-{
+  m_label->clear();
+  m_label->setContentsMargins(5, 3, 5, 3);
 
-  if (m_pLabel) {
-    clear(m_pLabel);
-  }
+  auto palette = m_label->palette();
+  palette.setColor(QPalette::WindowText, Qt::white);
+  palette.setColor(QPalette::Window, QStringLiteral("crimson"));
+  m_label->setPalette(palette);
 }
 
 const QString &ValidationError::message() const
@@ -35,16 +32,16 @@ const QString &ValidationError::message() const
 
 void ValidationError::setMessage(const QString &message)
 {
+  if (m_message == message)
+    return;
+
   m_message = message;
 
-  if (m_pLabel) {
-    if (message.isEmpty()) {
-      clear(m_pLabel);
-    } else {
-      m_pLabel->setStyleSheet(kStyleErrorActiveLabel);
-      m_pLabel->setText(message);
-    }
-  }
+  if (!m_label)
+    return;
+
+  m_label->setAutoFillBackground(!message.isEmpty());
+  m_label->setText(message);
 }
 
 } // namespace validators

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -14,13 +15,15 @@ namespace validators {
 
 class ValidationError : public QObject
 {
-  QString m_message;
-  QLabel *m_pLabel = nullptr;
-
 public:
   explicit ValidationError(QObject *parent, QLabel *label = nullptr);
   const QString &message() const;
   void setMessage(const QString &message);
+
+private:
+  void clear();
+  QString m_message;
+  QLabel *m_label = nullptr;
 };
 
 } // namespace validators
