@@ -40,7 +40,9 @@ QValidator::State LineEditValidator::validate(QString &input, int &) const
     }
   }
 
-  if (errorMessage.isEmpty()) {
+  const bool isEmpty = errorMessage.isEmpty();
+
+  if (isEmpty) {
     m_pLineEdit->setStyleSheet({});
   } else { // The values here are for fusion style
     int radius = 3;
@@ -70,7 +72,7 @@ QValidator::State LineEditValidator::validate(QString &input, int &) const
     m_pError->setMessage(errorMessage);
   }
 
-  return errorMessage.isEmpty() ? Acceptable : Intermediate;
+  return isEmpty ? Acceptable : Intermediate;
 }
 
 } // namespace validators
