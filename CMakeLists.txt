@@ -33,39 +33,28 @@ if(EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/.git)
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
     execute_process(
-      COMMAND ${GIT_EXECUTABLE} rev-list --tags --count
+      COMMAND ${GIT_EXECUTABLE} describe --long --match v* --always
       WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-      OUTPUT_VARIABLE GIT_TAG_COUNT
+      OUTPUT_VARIABLE GITREV
       ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-
-    if(${GIT_TAG_COUNT} EQUAL 0)
-      set(DESKFLOW_VERSION_TWEAK "9999")
+    string(FIND "${GITREV}" "v" isRev)
+    if(NOT ${isRev} EQUAL -1)
+      string(REGEX MATCH [0-9]+ MAJOR ${GITREV})
+      string(REGEX MATCH \\.[0-9]+ MINOR ${GITREV})
+      string(REPLACE "." "" MINOR "${MINOR}")
+      string(REGEX MATCH [0-9]+\- PATCH ${GITREV})
+      string(REPLACE "-" "" PATCH "${PATCH}")
+      string(REGEX MATCH \-[0-9]+\- TWEAK ${GITREV})
+      string(REPLACE "-" "" TWEAK "${TWEAK}")
+      set(DESKFLOW_VERSION_MAJOR ${MAJOR})
+      set(DESKFLOW_VERSION_MINOR ${MINOR})
+      set(DESKFLOW_VERSION_PATCH ${PATCH})
+      set(DESKFLOW_VERSION_TWEAK ${TWEAK})
     else()
-      execute_process(
-        COMMAND ${GIT_EXECUTABLE} describe --long --match v* --always
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        OUTPUT_VARIABLE GITREV
-        ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE
-      )
-      string(FIND "${GITREV}" "v" isRev)
-      if(NOT ${isRev} EQUAL -1)
-        string(REGEX MATCH [0-9]+ MAJOR ${GITREV})
-        string(REGEX MATCH \\.[0-9]+ MINOR ${GITREV})
-        string(REPLACE "." "" MINOR "${MINOR}")
-        string(REGEX MATCH [0-9]+\- PATCH ${GITREV})
-        string(REPLACE "-" "" PATCH "${PATCH}")
-        string(REGEX MATCH \-[0-9]+\- TWEAK ${GITREV})
-        string(REPLACE "-" "" TWEAK "${TWEAK}")
-        set(DESKFLOW_VERSION_MAJOR ${MAJOR})
-        set(DESKFLOW_VERSION_MINOR ${MINOR})
-        set(DESKFLOW_VERSION_PATCH ${PATCH})
-        set(DESKFLOW_VERSION_TWEAK ${TWEAK})
-      elseif(NOT ${GITREV} STREQUAL "")
-        set(DESKFLOW_VERSION_TWEAK ${GITREV})
-      endif()
-      unset(GITREV)
+      set(DESKFLOW_VERSION_TWEAK "9999")
     endif()
+    unset(GITREV)
   endif()
 endif()
 
