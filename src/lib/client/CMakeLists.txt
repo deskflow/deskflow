@@ -3,7 +3,6 @@
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
-
 add_library(client STATIC
   Client.cpp
   Client.h
