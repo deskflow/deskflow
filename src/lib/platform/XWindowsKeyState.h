@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "Config.h"
 #include "deskflow/KeyState.h"
+#include "platform/XWindowsConfig.h"
 
 #include <map>
 #include <vector>

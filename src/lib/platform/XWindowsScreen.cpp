@@ -21,12 +21,11 @@
 #include "deskflow/ScreenException.h"
 #include "platform/XDGKeyUtil.h"
 #include "platform/XWindowsClipboard.h"
+#include "platform/XWindowsConfig.h"
 #include "platform/XWindowsEventQueueBuffer.h"
 #include "platform/XWindowsKeyState.h"
 #include "platform/XWindowsScreenSaver.h"
 #include "platform/XWindowsUtil.h"
-
-#include "Config.h"
 
 #include <X11/X.h>
 #include <X11/Xutil.h>

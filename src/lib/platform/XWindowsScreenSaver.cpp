@@ -12,9 +12,8 @@
 
 #include "base/Event.h"
 #include "base/IEventQueue.h"
+#include "platform/XWindowsConfig.h"
 #include "platform/XWindowsUtil.h"
-
-#include "Config.h"
 
 #include <X11/Xatom.h>
 #if HAVE_X11_EXTENSIONS_XTEST_H

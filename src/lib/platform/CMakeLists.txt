@@ -101,6 +101,7 @@ elseif(UNIX)
     XDGKeyUtil.cpp
   )
   if (BUILD_X11_SUPPORT)
+    configure_file(XWindowsConfig.h.in XWindowsConfig.h @ONLY)
     list(APPEND PLATFORM_SOURCES
       XWindowsClipboard.cpp
       XWindowsClipboard.h
@@ -126,6 +127,7 @@ elseif(UNIX)
       XWindowsScreenSaver.h
       XWindowsUtil.cpp
       XWindowsUtil.h
+      ${CMAKE_CURRENT_BINARY_DIR}/XWindowsConfig.h
     )
   endif()
 

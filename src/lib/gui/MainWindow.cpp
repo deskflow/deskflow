@@ -28,10 +28,6 @@
 #include "gui/widgets/LogDock.h"
 #include "net/FingerprintDatabase.h"
 
-#if defined(Q_OS_LINUX)
-#include "Config.h"
-#endif
-
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QFileDialog>

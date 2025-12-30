@@ -11,8 +11,7 @@
 #include "deskflow/KeyMap.h"
 #include "deskflow/PlatformScreen.h"
 #include "platform/XDGPowerManager.h"
-
-#include "Config.h"
+#include "platform/XWindowsConfig.h"
 
 #include <set>
 #include <vector>
