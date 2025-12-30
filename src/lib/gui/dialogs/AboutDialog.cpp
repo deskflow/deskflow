@@ -9,8 +9,8 @@
 #include "AboutDialog.h"
 #include "ui_AboutDialog.h"
 
-#include "VersionInfo.h"
 #include "common/Constants.h"
+#include "common/VersionInfo.h"
 
 #include <QClipboard>
 

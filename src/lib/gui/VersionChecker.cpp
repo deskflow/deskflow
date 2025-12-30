@@ -6,8 +6,8 @@
 
 #include "VersionChecker.h"
 
-#include "VersionInfo.h"
 #include "common/Settings.h"
+#include "common/VersionInfo.h"
 
 #include <QLocale>
 #include <QNetworkAccessManager>

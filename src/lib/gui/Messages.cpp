@@ -7,11 +7,11 @@
 #include "Messages.h"
 
 #include "Logger.h"
-#include "VersionInfo.h"
 
 #include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
+#include "common/VersionInfo.h"
 
 #include <QCheckBox>
 #include <QMessageBox>

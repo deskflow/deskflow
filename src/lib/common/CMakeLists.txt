@@ -7,6 +7,7 @@ if(WIN32)
 endif()
 
 configure_file(Constants.h.in Constants.h @ONLY)
+configure_file(VersionInfo.h.in VersionInfo.h @ONLY)
 
 add_library(common STATIC
   Enums.h
@@ -20,6 +21,7 @@ add_library(common STATIC
   QSettingsProxy.h
   UrlConstants.h
   ${CMAKE_CURRENT_BINARY_DIR}/Constants.h
+  ${CMAKE_CURRENT_BINARY_DIR}/VersionInfo.h
 )
 
 target_link_libraries(common PUBLIC Qt6::Core)

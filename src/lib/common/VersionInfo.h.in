@@ -9,6 +9,6 @@
 
 const auto kVersion = "@CMAKE_PROJECT_VERSION@";
 const auto kVersionGitSha = "@GIT_SHA_SHORT@";
-// clang-format off
-const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@ ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)" : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
-// clang-format on
+const auto kDisplayVersion = @CMAKE_PROJECT_VERSION_TWEAK@
+                           ? "@CMAKE_PROJECT_VERSION@ (@GIT_SHA_SHORT@)"
+                           : "@CMAKE_PROJECT_VERSION_MAJOR@.@CMAKE_PROJECT_VERSION_MINOR@.@CMAKE_PROJECT_VERSION_PATCH@";
