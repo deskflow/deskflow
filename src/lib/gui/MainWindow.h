@@ -231,5 +231,4 @@ private:
   // Server IP strategy optimization
   QList<QHostAddress> m_serverStartIPs;
   QHostAddress m_serverStartSuggestedIP;
-  bool m_currentIPValid;
 };

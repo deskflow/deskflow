@@ -83,8 +83,7 @@ MainWindow::MainWindow()
       m_actionStartCore{new QAction(this)},
       m_actionRestartCore{new QAction(this)},
       m_actionStopCore{new QAction(this)},
-      m_networkMonitor{new NetworkMonitor(this)},
-      m_currentIPValid(true)
+      m_networkMonitor{new NetworkMonitor(this)}
 {
   ui->setupUi(this);
 
@@ -1290,22 +1289,21 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
           ipList.append(address.toString());
       }
 
+      bool IPValid = true;
       QString suggestedIP = m_serverStartSuggestedIP.toString();
       if ((suggestedIP != m_currentIpAddress.toString()) || !addresses.contains(m_serverStartSuggestedIP)) {
-        m_currentIPValid = false;
+        IPValid = false;
         for (const auto &address : std::as_const(m_serverStartIPs)) {
           if (addresses.contains(address)) {
             suggestedIP = address.toString();
             m_currentIpAddress = address;
-            m_currentIPValid = true;
+            IPValid = true;
             break;
           }
         }
-      } else {
-        m_currentIPValid = true;
       }
 
-      if (m_currentIPValid) {
+      if (IPValid) {
         labelText.append(suggestedIP);
       } else {
         labelText.append(colorText.arg(palette().linkVisited().color().name(), suggestedIP));
@@ -1314,8 +1312,7 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
     } else {
       // Server is not running - update normally
       m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-      m_currentIPValid = m_currentIpAddress.isNull();
-      QString displayIP = m_currentIPValid ? m_currentIpAddress.toString() : ipList.first();
+      QString displayIP = m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first();
       labelText.append(displayIP);
     }
 
