@@ -349,6 +349,7 @@ var hierarchy =
       [ "deskflow::gui::CoreProcess", "classdeskflow_1_1gui_1_1CoreProcess.html", null ],
       [ "deskflow::gui::FileTail", "classdeskflow_1_1gui_1_1FileTail.html", null ],
       [ "deskflow::gui::Logger", "classdeskflow_1_1gui_1_1Logger.html", null ],
+      [ "deskflow::gui::NetworkMonitor", "classdeskflow_1_1gui_1_1NetworkMonitor.html", null ],
       [ "deskflow::gui::ServerConnection", "classdeskflow_1_1gui_1_1ServerConnection.html", null ],
       [ "deskflow::gui::ipc::DaemonIpcClient", "classdeskflow_1_1gui_1_1ipc_1_1DaemonIpcClient.html", null ],
       [ "validators::ValidationError", "classvalidators_1_1ValidationError.html", null ]

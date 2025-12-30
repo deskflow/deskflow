@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.15.0"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Deskflow: src/lib/platform -&gt; server Relation</title>
+<title>Deskflow: src/lib/gui/core/NetworkMonitor.cpp File Reference</title>
 <link rel="icon" href="deskflow-logo.png" type="image/x-icon" />
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.120</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.124</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -65,7 +65,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('dir_9d41f2d9dd9f152ba43e738700883d1e.html','',''); });
+$(function(){initNavTree('NetworkMonitor_8cpp.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -90,8 +90,48 @@ $(function(){initNavTree('dir_9d41f2d9dd9f152ba43e738700883d1e.html','',''); });
 </div>
 </div>
 
+<div class="header">
+  <div class="headertitle"><div class="title">NetworkMonitor.cpp File Reference</div></div>
+</div><!--header-->
 <div class="contents">
-<h3>platform &rarr; server Relation</h3><table class="dirtab"><tr class="dirtab"><th class="dirtab">File in src/lib/platform</th><th class="dirtab">Includes file in src/lib/server</th></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="XWindowsKeyState_8h.html">XWindowsKeyState.h</a></td><td class="dirtab"><a class="el" href="Config_8h.html">Config.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="XWindowsScreen_8cpp.html">XWindowsScreen.cpp</a></td><td class="dirtab"><a class="el" href="Config_8h.html">Config.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="XWindowsScreen_8h.html">XWindowsScreen.h</a></td><td class="dirtab"><a class="el" href="Config_8h.html">Config.h</a></td></tr><tr class="dirtab"><td class="dirtab"><a class="el" href="XWindowsScreenSaver_8cpp.html">XWindowsScreenSaver.cpp</a></td><td class="dirtab"><a class="el" href="Config_8h.html">Config.h</a></td></tr></table></div><!-- contents -->
+<div class="textblock"><code>#include &quot;<a class="el" href="NetworkMonitor_8h_source.html">NetworkMonitor.h</a>&quot;</code><br />
+<code>#include &lt;QAbstractSocket&gt;</code><br />
+<code>#include &lt;QList&gt;</code><br />
+<code>#include &lt;QNetworkInterface&gt;</code><br />
+<code>#include &lt;QSet&gt;</code><br />
+<code>#include &lt;QTimer&gt;</code><br />
+</div><div class="textblock"><div class="dynheader">
+Include dependency graph for NetworkMonitor.cpp:</div>
+<div class="dyncontent">
+<div class="center"><img src="NetworkMonitor_8cpp__incl.png" border="0" usemap="#asrc_2lib_2gui_2core_2NetworkMonitor_8cpp" loading="lazy" alt=""/></div>
+<map name="asrc_2lib_2gui_2core_2NetworkMonitor_8cpp" id="asrc_2lib_2gui_2core_2NetworkMonitor_8cpp">
+<area shape="rect" title=" " alt="" coords="359,5,519,44"/>
+<area shape="rect" href="NetworkMonitor_8h.html" title=" " alt="" coords="105,92,229,117"/>
+<area shape="poly" title=" " alt="" coords="371,46,224,90,222,85,375,43"/>
+<area shape="rect" title=" " alt="" coords="237,165,289,189"/>
+<area shape="poly" title=" " alt="" coords="371,43,329,66,294,94,278,121,269,152,265,148,273,119,290,90,327,62,366,46"/>
+<area shape="rect" title=" " alt="" coords="304,92,424,117"/>
+<area shape="poly" title=" " alt="" coords="423,43,388,83,385,78,419,46"/>
+<area shape="rect" title=" " alt="" coords="449,92,581,117"/>
+<area shape="poly" title=" " alt="" coords="458,42,496,81,490,80,457,47"/>
+<area shape="rect" title=" " alt="" coords="605,92,657,117"/>
+<area shape="poly" title=" " alt="" coords="486,42,594,87,588,87,485,47"/>
+<area shape="rect" title=" " alt="" coords="680,92,744,117"/>
+<area shape="poly" title=" " alt="" coords="505,42,668,89,663,90,505,47"/>
+<area shape="rect" title=" " alt="" coords="5,165,113,189"/>
+<area shape="poly" title=" " alt="" coords="152,117,91,158,88,154,147,118"/>
+<area shape="poly" title=" " alt="" coords="184,115,238,155,233,156,182,120"/>
+<area shape="rect" title=" " alt="" coords="136,165,206,189"/>
+<area shape="poly" title=" " alt="" coords="169,115,172,150,167,148,166,119"/>
+</map>
+</div>
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-namespaces" class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:deskflow" id="r_deskflow"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow.html">deskflow</a></td></tr>
+<tr class="memitem:deskflow_3A_3Agui" id="r_deskflow_3A_3Agui"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacedeskflow_1_1gui.html">deskflow::gui</a></td></tr>
+</table>
+</div><!-- contents -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
 <div id="page-nav-resize-handle"></div>
@@ -104,7 +144,7 @@ $(function(){initNavTree('dir_9d41f2d9dd9f152ba43e738700883d1e.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_9d41f2d9dd9f152ba43e738700883d1e.html">platform</a></li>
+    <li class="navelem"><a href="dir_68267d1309a1af8e8297ef4c3efbcdba.html">src</a></li><li class="navelem"><a href="dir_c85d3e3c5052e9ad9ce18c6863244a25.html">lib</a></li><li class="navelem"><a href="dir_1e2980927ba7513c665ee0bc67e39bcf.html">gui</a></li><li class="navelem"><a href="dir_1002216e319566c65ba849e54f5ae169.html">core</a></li><li class="navelem"><a href="NetworkMonitor_8cpp.html">NetworkMonitor.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.15.0 </li>
   </ul>
 </div>

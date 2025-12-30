@@ -1,5 +1,8 @@
 var NAVTREEINDEX16 =
 {
+"classVersionChecker.html#a50c74a07497c4b2bf506f50647361472":[6,0,240,3],
+"classVersionChecker.html#acbfe2ec8122ff39fb65b67a014b2f855":[6,0,240,1],
+"classWlClipboard.html":[6,0,242],
 "classWlClipboard.html#a08322c9e6c1d88a85ce7618c16410692":[6,0,242,10],
 "classWlClipboard.html#a1060583601436f85bbc7935832721274":[6,0,242,2],
 "classWlClipboard.html#a1b170edeb0ff71e832d11d37b28f52b3":[6,0,242,7],
@@ -246,8 +249,5 @@ var NAVTREEINDEX16 =
 "classXWindowsScreen.html#af0af20f62ff51b6bb250011ad592593c":[6,0,255,17],
 "classXWindowsScreen.html#af1e7f83220b4a34343af344c009f9b21":[6,0,255,20],
 "classXWindowsScreen.html#af5ca0d5985bd70d8c26057fd901ced61":[6,0,255,27],
-"classXWindowsScreen.html#afd647f99c32a95d7e55292fbee7981fa":[6,0,255,14],
-"classXWindowsScreen.html#afdb9087193132fee08e0eb3914e0d9cd":[6,0,255,24],
-"classXWindowsScreenSaver.html":[6,0,256],
-"classXWindowsScreenSaver.html#a0eda0eed06e3b4abf3f325c5df70ea36":[6,0,256,12]
+"classXWindowsScreen.html#afd647f99c32a95d7e55292fbee7981fa":[6,0,255,14]
 };

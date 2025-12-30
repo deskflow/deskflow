@@ -1,9 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
 <area shape="rect" id="Node000000" href="$classInputFilter_1_1Condition.html" title=" " alt="" coords="5,61,148,86"/>
 <area shape="rect" id="Node000001" href="$classInputFilter_1_1KeystrokeCondition.html" title=" " alt="" coords="196,5,394,30"/>
-<area shape="poly" id="edge99_Node000000_Node000001" title=" " alt="" coords="138,54,195,39,242,30,237,32,196,44,140,59"/>
+<area shape="poly" id="edge100_Node000000_Node000001" title=" " alt="" coords="138,54,195,39,242,30,237,32,196,44,140,59"/>
 <area shape="rect" id="Node000002" href="$classInputFilter_1_1MouseButtonCondition.html" title=" " alt="" coords="213,54,377,93"/>
-<area shape="poly" id="edge100_Node000000_Node000002" title=" " alt="" coords="163,71,215,73,210,75,164,76"/>
+<area shape="poly" id="edge101_Node000000_Node000002" title=" " alt="" coords="163,71,215,73,210,75,164,76"/>
 <area shape="rect" id="Node000003" href="$classInputFilter_1_1ScreenConnectedCondition.html" title=" " alt="" coords="199,117,390,156"/>
-<area shape="poly" id="edge101_Node000000_Node000003" title=" " alt="" coords="137,88,228,115,223,118,137,94"/>
+<area shape="poly" id="edge102_Node000000_Node000003" title=" " alt="" coords="137,88,228,115,223,118,137,94"/>
 </map>

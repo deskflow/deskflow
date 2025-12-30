@@ -177,6 +177,9 @@ var NAVTREEINDEX3 =
 "NetworkAddress_8cpp.html":[7,0,1,1,8,10],
 "NetworkAddress_8h.html":[7,0,1,1,8,11],
 "NetworkAddress_8h_source.html":[7,0,1,1,8,11],
+"NetworkMonitor_8cpp.html":[7,0,1,1,5,1,6],
+"NetworkMonitor_8h.html":[7,0,1,1,5,1,7],
+"NetworkMonitor_8h_source.html":[7,0,1,1,5,1,7],
 "NetworkProtocol_8h.html":[7,0,1,1,1,22],
 "NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628e":[7,0,1,1,1,22,0],
 "NetworkProtocol_8h.html#a64645c414bdb6cc72fd76678220a628ea48656da7a6e48c6887d94f4c69c731b6":[7,0,1,1,1,22,0,1],
@@ -246,8 +249,5 @@ var NAVTREEINDEX3 =
 "OSXKeyState_8cpp.html":[7,0,1,1,9,65],
 "OSXKeyState_8cpp.html#a386a5935b8ea8f99fbb01f36910abebf":[7,0,1,1,9,65,6],
 "OSXKeyState_8cpp.html#a414483e029b3c8e22aefbbb75325d84a":[7,0,1,1,9,65,3],
-"OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2],
-"OSXKeyState_8cpp.html#a57aa0ad9d6d6748803eeb69cc7460381":[7,0,1,1,9,65,11],
-"OSXKeyState_8cpp.html#a5c181c8c92422e7428a02f3ceee556c0":[7,0,1,1,9,65,12],
-"OSXKeyState_8cpp.html#a5d80ee8e879186619558806ad996f98d":[7,0,1,1,9,65,5]
+"OSXKeyState_8cpp.html#a4b0ad8af86e283641f771684ed7ab7b9":[7,0,1,1,9,65,2]
 };
