@@ -9,7 +9,6 @@ var structSettings_1_1Core =
     [ "PreventSleep", "structSettings_1_1Core.html#a2cbb9afa6b91c1199c6c63ae56712d99", null ],
     [ "ProcessMode", "structSettings_1_1Core.html#a891557b6bbca69ffa39ea6b46278ad5e", null ],
     [ "ScreenName", "structSettings_1_1Core.html#aa9b297403710d920ab1182db9f551508", null ],
-    [ "UpdateUrl", "structSettings_1_1Core.html#ac9abe007912bc0f8cd98d53aa0e267ab", null ],
     [ "UseHooks", "structSettings_1_1Core.html#a3bae5d04175c1df90108e75add4b9d54", null ],
     [ "UseWlClipboard", "structSettings_1_1Core.html#a809849b6eb37dc36a4e6dd9a3a899bda", null ]
 ];

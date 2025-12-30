@@ -10,5 +10,6 @@ var structSettings_1_1Gui =
     [ "ShownFirstConnectedMessage", "structSettings_1_1Gui.html#aabe88e8a490d567b3c0aadad86d8c33a", null ],
     [ "ShownServerFirstStartMessage", "structSettings_1_1Gui.html#adf087c1172fcbfa7bca804d992bfff6a", null ],
     [ "SymbolicTrayIcon", "structSettings_1_1Gui.html#a697d0b950a680594d68211a366bd2405", null ],
+    [ "UpdateCheckUrl", "structSettings_1_1Gui.html#ac26af4403f5db5282eea4a642de42527", null ],
     [ "WindowGeometry", "structSettings_1_1Gui.html#a7b5d5c6beaa38f2eface2cb931d83a1b", null ]
 ];
