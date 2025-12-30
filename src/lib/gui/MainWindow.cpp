@@ -11,7 +11,6 @@
 
 #include "Diagnostic.h"
 #include "StyleUtils.h"
-#include "VersionInfo.h"
 
 #include "dialogs/AboutDialog.h"
 #include "dialogs/FingerprintDialog.h"
@@ -21,6 +20,7 @@
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
+#include "common/VersionInfo.h"
 #include "gui/Messages.h"
 #include "gui/TlsUtility.h"
 #include "gui/core/CoreProcess.h"

@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-#include "VersionInfo.h"
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/I18N.h"
 #include "common/PlatformInfo.h"
 #include "common/UrlConstants.h"
+#include "common/VersionInfo.h"
 #include "gui/Diagnostic.h"
 #include "gui/MainWindow.h"
 #include "gui/Messages.h"

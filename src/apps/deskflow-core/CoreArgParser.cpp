@@ -6,11 +6,11 @@
 
 #include "CoreArgParser.h"
 #include "CoreArgs.h"
-#include "VersionInfo.h"
 
 #include "common/Constants.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
+#include "common/VersionInfo.h"
 #include "deskflow/ProtocolTypes.h"
 
 const QString CoreArgParser::s_headerText = QStringLiteral("%1: %2\n").arg(kCoreBinName, kDisplayVersion);
