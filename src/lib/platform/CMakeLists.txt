@@ -154,11 +154,6 @@ elseif(UNIX)
   endif()
 endif()
 
-if(APPLE)
-  list(APPEND inc /System/Library/Frameworks)
-endif()
-include_directories(${inc})
-
 # wayland.h is included to check for wayland support
 add_library(platform STATIC ${PLATFORM_SOURCES})
 
