@@ -36,7 +36,7 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName) const
   return virtualPatterns.contains(interfaceName, Qt::CaseInsensitive);
 }
 
-NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this)), m_isMonitoring(false)
+NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this))
 {
   connect(m_checkTimer, &QTimer::timeout, this, &NetworkMonitor::updateNetworkState);
 }

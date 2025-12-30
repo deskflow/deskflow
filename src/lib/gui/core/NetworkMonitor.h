@@ -82,7 +82,7 @@ private:
 
   QTimer *m_checkTimer;                ///< Timer for periodic network checks
   QList<QHostAddress> m_lastAddresses; ///< Last known IP addresses
-  bool m_isMonitoring;                 ///< Flag indicating if monitoring is active
+  bool m_isMonitoring = false;         ///< Flag indicating if monitoring is active
 };
 
 } // namespace deskflow::gui
