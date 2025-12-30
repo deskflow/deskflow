@@ -169,8 +169,7 @@ macro(link_wayland_libs)
 
   target_link_libraries(platform ${LIBXKBCOMMON_LINK_LIBRARIES}
                         ${GLIB2_LINK_LIBRARIES} ${LIBM_LIBRARIES}
-                        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES}
-  )
+                        ${LIBEI_LINK_LIBRARIES} ${LIBPORTAL_LINK_LIBRARIES})
 
   target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
 
@@ -186,13 +185,10 @@ if(UNIX)
     ${libs})
 
   if(NOT APPLE)
-
     if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
-
     target_link_libraries(platform Qt6::DBus)
-
     link_wayland_libs()
   endif()
 endif()

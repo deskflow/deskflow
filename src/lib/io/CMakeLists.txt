@@ -4,13 +4,13 @@
 # SPDX-License-Identifier: MIT
 
 add_library(io STATIC
-    IOException.cpp
-    IOException.h
-    IStream.h
-    StreamBuffer.cpp
-    StreamBuffer.h
-    StreamFilter.cpp
-    StreamFilter.h
+  IOException.cpp
+  IOException.h
+  IStream.h
+  StreamBuffer.cpp
+  StreamBuffer.h
+  StreamFilter.cpp
+  StreamFilter.h
 )
 
 target_link_libraries(io PUBLIC common)
