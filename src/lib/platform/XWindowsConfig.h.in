@@ -5,24 +5,22 @@
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
-// clang-format off
+#pragma once
 
 /* Define to 1 if you have the <X11/extensions/Xrandr.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_XRANDR_H @HAVE_X11_EXTENSIONS_XRANDR_H@
+#define HAVE_X11_EXTENSIONS_XRANDR_H @HAVE_X11_EXTENSIONS_XRANDR_H@
 
 /* Define to 1 if you have the <X11/extensions/dpms.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_DPMS_H @HAVE_X11_EXTENSIONS_DPMS_H@
+#define HAVE_X11_EXTENSIONS_DPMS_H @HAVE_X11_EXTENSIONS_DPMS_H@
 
 /* Define to 1 if you have the <X11/extensions/Xinerama.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_XINERAMA_H @HAVE_X11_EXTENSIONS_XINERAMA_H@
+#define HAVE_X11_EXTENSIONS_XINERAMA_H @HAVE_X11_EXTENSIONS_XINERAMA_H@
 
 /* Define to 1 if you have the <X11/extensions/XTest.h> header file. */
-#cmakedefine HAVE_X11_EXTENSIONS_XTEST_H @HAVE_X11_EXTENSIONS_XTEST_H@
+#define HAVE_X11_EXTENSIONS_XTEST_H @HAVE_X11_EXTENSIONS_XTEST_H@
 
 /* Define to 1 if you have the <X11/extensions/XInput2.h> header file. */
-#cmakedefine HAVE_XI2 @HAVE_XI2@
+#define HAVE_XI2 @HAVE_XI2@
 
 /* Define this if the XKB extension is available. */
-#cmakedefine HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@
-
-// clang-format on
+#define HAVE_XKB_EXTENSION @HAVE_XKB_EXTENSION@

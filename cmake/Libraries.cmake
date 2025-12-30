@@ -164,13 +164,7 @@ macro(configure_unix_libs)
     endif()
   endif()
 
-  # Unix only: For config.h, save the results based on a template (config.h.in).
-  # Note that this won't work on Windows because filenames are not case sensitive,
-  # and we have header files named "Config.h" (upper case 'C').
-  configure_file(${CMAKE_SOURCE_DIR}/src/lib/Config.h.in
-                 ${CMAKE_BINARY_DIR}/src/lib/Config.h @ONLY)
-
-  add_definitions(-DSYSAPI_UNIX=1 -DHAVE_CONFIG_H)
+  add_definitions(-DSYSAPI_UNIX=1)
 
 endmacro()
 
