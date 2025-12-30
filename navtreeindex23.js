@@ -1,12 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structKeyEntry.html#a02ebe770c6e8fbcf88c67b4f73493eb7":[6,0,135,0],
-"structKeyEntry.html#afc49b9bb93f34886c09909c6a2a6a32c":[6,0,135,1],
-"structKeyModifierNameMapEntry.html":[6,0,136],
-"structKeyModifierNameMapEntry.html#a589c637305c507e0ac376a0545e813fa":[6,0,136,1],
-"structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,136,0],
-"structKeyNameMapEntry.html":[6,0,137],
-"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e":[6,0,137,1],
 "structKeyNameMapEntry.html#ad73cf6b1ded24dbc17ff9d24f331bacc":[6,0,137,0],
 "structKeyState_1_1AddActiveModifierContext.html":[6,0,140,0],
 "structKeyState_1_1AddActiveModifierContext.html#a2a14649169b1ad6d69a75e978a3026e3":[6,0,140,0,1],

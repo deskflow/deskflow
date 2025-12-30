@@ -1,9 +1,0 @@
-<map id="src/lib/gui/Styles.h" name="src/lib/gui/Styles.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="214,5,344,30"/>
-<area shape="rect" id="Node000002" href="$ScreenSettingsDialog_8cpp.html" title=" " alt="" coords="5,78,182,117"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,36,139,80,137,75,235,37"/>
-<area shape="rect" id="Node000003" href="$LineEditValidator_8cpp.html" title=" " alt="" coords="205,78,352,117"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="281,44,281,79,277,76,277,48"/>
-<area shape="rect" id="Node000004" href="$ValidationError_8cpp.html" title=" " alt="" coords="377,78,514,117"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="318,34,408,77,403,78,317,39"/>
-</map>

@@ -9,6 +9,5 @@ var namespacevalidators =
     [ "ScreenDuplicationsValidator", "classvalidators_1_1ScreenDuplicationsValidator.html", "classvalidators_1_1ScreenDuplicationsValidator" ],
     [ "ScreenNameValidator", "classvalidators_1_1ScreenNameValidator.html", "classvalidators_1_1ScreenNameValidator" ],
     [ "SpacesValidator", "classvalidators_1_1SpacesValidator.html", "classvalidators_1_1SpacesValidator" ],
-    [ "ValidationError", "classvalidators_1_1ValidationError.html", "classvalidators_1_1ValidationError" ],
-    [ "clear", "namespacevalidators.html#a9fffeb91b0908ece43389b7e559c9393", null ]
+    [ "ValidationError", "classvalidators_1_1ValidationError.html", "classvalidators_1_1ValidationError" ]
 ];

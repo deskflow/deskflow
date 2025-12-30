@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.102</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.113</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,35 +96,38 @@ $(function(){initNavTree('ValidationError_8h_source.html','',''); });
 <div class="contents">
 <a href="ValidationError_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &lt;QLabel&gt;</span></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacevalidators.html">validators</a> {</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="foldopen" id="foldopen00015" data-start="{" data-end="};">
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno"><a class="line" href="classvalidators_1_1ValidationError.html">   15</a></span><span class="keyword">class </span><a class="code hl_function" href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">ValidationError</a> : <span class="keyword">public</span> QObject</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>{</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  QString m_message;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  QLabel *m_pLabel = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">ValidationError</a>(QObject *parent, QLabel *label = <span class="keyword">nullptr</span>);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">message</a>() <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classvalidators_1_1ValidationError.html#a1c3626c8d4f652564fe26d575a313cef">setMessage</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">message</a>);</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &lt;QLabel&gt;</span></div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &lt;QObject&gt;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#include &lt;QString&gt;</span></div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="keyword">namespace </span><a class="code hl_namespace" href="namespacevalidators.html">validators</a> {</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="foldopen" id="foldopen00016" data-start="{" data-end="};">
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classvalidators_1_1ValidationError.html">   16</a></span><span class="keyword">class </span><a class="code hl_function" href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">ValidationError</a> : <span class="keyword">public</span> QObject</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>{</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">ValidationError</a>(QObject *parent, QLabel *label = <span class="keyword">nullptr</span>);</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">message</a>() <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classvalidators_1_1ValidationError.html#a1c3626c8d4f652564fe26d575a313cef">setMessage</a>(<span class="keyword">const</span> QString &amp;<a class="code hl_function" href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">message</a>);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="keywordtype">void</span> clear();</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  QString m_message;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>  QLabel *m_label = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>};</div>
 </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>} <span class="comment">// namespace validators</span></div>
-<div class="ttc" id="aclassvalidators_1_1ValidationError_html_a17c8be25ceb1480effda138231ae5215"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">validators::ValidationError::ValidationError</a></div><div class="ttdeci">ValidationError(QObject *parent, QLabel *label=nullptr)</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:23</div></div>
-<div class="ttc" id="aclassvalidators_1_1ValidationError_html_a1c3626c8d4f652564fe26d575a313cef"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#a1c3626c8d4f652564fe26d575a313cef">validators::ValidationError::setMessage</a></div><div class="ttdeci">void setMessage(const QString &amp;message)</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:36</div></div>
-<div class="ttc" id="aclassvalidators_1_1ValidationError_html_aa918e48b39f621bddab7e60bb7073b6f"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">validators::ValidationError::message</a></div><div class="ttdeci">const QString &amp; message() const</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:31</div></div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>} <span class="comment">// namespace validators</span></div>
+<div class="ttc" id="aclassvalidators_1_1ValidationError_html_a17c8be25ceb1480effda138231ae5215"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#a17c8be25ceb1480effda138231ae5215">validators::ValidationError::ValidationError</a></div><div class="ttdeci">ValidationError(QObject *parent, QLabel *label=nullptr)</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:14</div></div>
+<div class="ttc" id="aclassvalidators_1_1ValidationError_html_a1c3626c8d4f652564fe26d575a313cef"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#a1c3626c8d4f652564fe26d575a313cef">validators::ValidationError::setMessage</a></div><div class="ttdeci">void setMessage(const QString &amp;message)</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:33</div></div>
+<div class="ttc" id="aclassvalidators_1_1ValidationError_html_aa918e48b39f621bddab7e60bb7073b6f"><div class="ttname"><a href="classvalidators_1_1ValidationError.html#aa918e48b39f621bddab7e60bb7073b6f">validators::ValidationError::message</a></div><div class="ttdeci">const QString &amp; message() const</div><div class="ttdef"><b>Definition</b> ValidationError.cpp:28</div></div>
 <div class="ttc" id="anamespacevalidators_html"><div class="ttname"><a href="namespacevalidators.html">validators</a></div><div class="ttdef"><b>Definition</b> AliasValidator.cpp:15</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

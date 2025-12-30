@@ -63,6 +63,5 @@ var searchData=
   ['streamfilter_2eh_60',['StreamFilter.h',['../StreamFilter_8h.html',1,'']]],
   ['string_2ecpp_61',['String.cpp',['../String_8cpp.html',1,'']]],
   ['string_2eh_62',['String.h',['../String_8h.html',1,'']]],
-  ['styles_2eh_63',['Styles.h',['../Styles_8h.html',1,'']]],
-  ['styleutils_2eh_64',['StyleUtils.h',['../StyleUtils_8h.html',1,'']]]
+  ['styleutils_2eh_63',['StyleUtils.h',['../StyleUtils_8h.html',1,'']]]
 ];

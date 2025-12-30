@@ -26,7 +26,6 @@ var dir_1e2980927ba7513c665ee0bc67e39bcf =
     [ "OSXHelpers.mm", "OSXHelpers_8mm.html", "OSXHelpers_8mm" ],
     [ "ScreenSetupModel.cpp", "ScreenSetupModel_8cpp.html", null ],
     [ "ScreenSetupModel.h", "ScreenSetupModel_8h.html", "ScreenSetupModel_8h" ],
-    [ "Styles.h", "Styles_8h.html", "Styles_8h" ],
     [ "StyleUtils.h", "StyleUtils_8h.html", "StyleUtils_8h" ],
     [ "TlsUtility.cpp", "TlsUtility_8cpp.html", "TlsUtility_8cpp" ],
     [ "TlsUtility.h", "TlsUtility_8h.html", "TlsUtility_8h" ],

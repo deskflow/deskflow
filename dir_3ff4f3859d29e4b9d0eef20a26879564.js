@@ -18,6 +18,6 @@ var dir_3ff4f3859d29e4b9d0eef20a26879564 =
     [ "ScreenNameValidator.h", "ScreenNameValidator_8h.html", "ScreenNameValidator_8h" ],
     [ "SpacesValidator.cpp", "SpacesValidator_8cpp.html", null ],
     [ "SpacesValidator.h", "SpacesValidator_8h.html", "SpacesValidator_8h" ],
-    [ "ValidationError.cpp", "ValidationError_8cpp.html", "ValidationError_8cpp" ],
+    [ "ValidationError.cpp", "ValidationError_8cpp.html", null ],
     [ "ValidationError.h", "ValidationError_8h.html", "ValidationError_8h" ]
 ];
