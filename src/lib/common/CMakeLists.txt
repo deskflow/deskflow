@@ -8,9 +8,6 @@ endif()
 
 configure_file(Constants.h.in Constants.h @ONLY)
 
-unset(CLIENT_BINARY)
-unset(SERVER_BINARY)
-
 add_library(common STATIC
   Enums.h
   ExitCodes.h
