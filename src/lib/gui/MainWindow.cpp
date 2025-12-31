@@ -1281,8 +1281,6 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
 
   labelText = tr("Suggested IP: ");
   toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
-  static auto s_toolTipSuggestIP = tr("the suggested IP.");
-  static auto s_toolTipIpList = tr("one of the following IPs:<br/>%1");
 
   // Determine which IP to show and tooltip based on server state
   if (m_coreProcess.isStarted()) {
@@ -1316,14 +1314,13 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
   } else {
     // Server is not running - update normally
     m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-    QString displayIP = m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first();
-    labelText.append(displayIP);
+    labelText.append(m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first());
   }
 
   if (ipList.count() < 2) {
-    toolTipText = toolTipText.arg(s_toolTipSuggestIP);
+    toolTipText = toolTipText.arg(tr("the suggested IP."));
   } else {
-    toolTipText = toolTipText.arg(s_toolTipIpList.arg(ipList.join("<br/>")));
+    toolTipText = toolTipText.arg(tr("one of the following IPs:<br/>%1").arg(ipList.join("<br/>")));
   }
 
   ui->lblIpAddresses->setText(labelText);
