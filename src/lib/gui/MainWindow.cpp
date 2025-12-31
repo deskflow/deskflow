@@ -1274,53 +1274,56 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
       labelText.append(colorText.arg(palette().linkVisited().color().name(), ip));
       toolTipText.append(tr("\nInterface is not active. Unable to start server."));
     }
-  } else {
-    labelText = tr("Suggested IP: ");
-    toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
-    static auto s_toolTipSuggestIP = tr("the suggested IP.");
-    static auto s_toolTipIpList = tr("one of the following IPs:<br/>%1");
+    ui->lblIpAddresses->setText(labelText);
+    ui->lblIpAddresses->setToolTip(toolTipText);
+    return;
+  }
 
-    // Determine which IP to show and tooltip based on server state
-    if (m_coreProcess.isStarted()) {
-      // ipList should only include valid ip from servers start
-      ipList.clear();
+  labelText = tr("Suggested IP: ");
+  toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
+  static auto s_toolTipSuggestIP = tr("the suggested IP.");
+  static auto s_toolTipIpList = tr("one of the following IPs:<br/>%1");
+
+  // Determine which IP to show and tooltip based on server state
+  if (m_coreProcess.isStarted()) {
+    // ipList should only include valid ip from servers start
+    ipList.clear();
+    for (const auto &address : std::as_const(m_serverStartIPs)) {
+      if (addresses.contains(address))
+        ipList.append(address.toString());
+    }
+
+    bool IPValid = true;
+    QString suggestedIP = m_serverStartSuggestedIP.toString();
+    if ((suggestedIP != m_currentIpAddress.toString()) || !addresses.contains(m_serverStartSuggestedIP)) {
+      IPValid = false;
       for (const auto &address : std::as_const(m_serverStartIPs)) {
-        if (addresses.contains(address))
-          ipList.append(address.toString());
-      }
-
-      bool IPValid = true;
-      QString suggestedIP = m_serverStartSuggestedIP.toString();
-      if ((suggestedIP != m_currentIpAddress.toString()) || !addresses.contains(m_serverStartSuggestedIP)) {
-        IPValid = false;
-        for (const auto &address : std::as_const(m_serverStartIPs)) {
-          if (addresses.contains(address)) {
-            suggestedIP = address.toString();
-            m_currentIpAddress = address;
-            IPValid = true;
-            break;
-          }
+        if (addresses.contains(address)) {
+          suggestedIP = address.toString();
+          m_currentIpAddress = address;
+          IPValid = true;
+          break;
         }
       }
-
-      if (IPValid) {
-        labelText.append(suggestedIP);
-      } else {
-        labelText.append(colorText.arg(palette().linkVisited().color().name(), suggestedIP));
-        toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
-      }
-    } else {
-      // Server is not running - update normally
-      m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-      QString displayIP = m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first();
-      labelText.append(displayIP);
     }
 
-    if (ipList.count() < 2) {
-      toolTipText = toolTipText.arg(s_toolTipSuggestIP);
+    if (IPValid) {
+      labelText.append(suggestedIP);
     } else {
-      toolTipText = toolTipText.arg(s_toolTipIpList.arg(ipList.join("<br/>")));
+      labelText.append(colorText.arg(palette().linkVisited().color().name(), suggestedIP));
+      toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
     }
+  } else {
+    // Server is not running - update normally
+    m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
+    QString displayIP = m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first();
+    labelText.append(displayIP);
+  }
+
+  if (ipList.count() < 2) {
+    toolTipText = toolTipText.arg(s_toolTipSuggestIP);
+  } else {
+    toolTipText = toolTipText.arg(s_toolTipIpList.arg(ipList.join("<br/>")));
   }
 
   ui->lblIpAddresses->setText(labelText);
