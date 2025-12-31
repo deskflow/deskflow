@@ -98,16 +98,11 @@ QList<QHostAddress> NetworkMonitor::getAvailableIPv4Addresses() const
     }
   }
 
-  auto physicalComparator = [](const QHostAddress &a, const QHostAddress &b) {
-    static const auto localIpFilter = QStringLiteral("192.168/16");
-    if (a.isInSubnet(QHostAddress::parseSubnet(localIpFilter)) !=
-        b.isInSubnet(QHostAddress::parseSubnet(localIpFilter))) {
+  std::sort(physicalIPs.begin(), physicalIPs.end(), [](const QHostAddress &a, const QHostAddress &b) {
+    if (a.isPrivateUse() != b.isPrivateUse())
       return true;
-    }
     return a.toIPv4Address() < b.toIPv4Address();
-  };
-
-  std::sort(physicalIPs.begin(), physicalIPs.end(), physicalComparator);
+  });
 
   std::sort(virtualIPs.begin(), virtualIPs.end(), [](const QHostAddress &a, const QHostAddress &b) {
     return a.toIPv4Address() < b.toIPv4Address();
