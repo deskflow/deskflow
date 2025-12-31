@@ -82,8 +82,7 @@ QList<QHostAddress> NetworkMonitor::getAvailableIPv4Addresses() const
     for (const auto &entry : addressEntries) {
       const QHostAddress address = entry.ip();
 
-      if (address.protocol() != QAbstractSocket::IPv4Protocol ||
-          address.isInSubnet(QHostAddress::parseSubnet(QStringLiteral("169.254/16"))) || address.isLoopback() ||
+      if (address.protocol() != QAbstractSocket::IPv4Protocol || address.isLinkLocal() || address.isLoopback() ||
           uniqueAddresses.contains(address)) {
         continue;
       }
