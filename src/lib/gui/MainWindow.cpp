@@ -1313,10 +1313,9 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
       }
     } else {
       // Server is not running - update normally
-      const auto suggestedIp = m_networkMonitor->getSuggestedIPv4Address();
-      QString displayIP = !suggestedIp.isNull() ? suggestedIp.toString() : ipList.first();
-      m_currentIpAddress = !suggestedIp.isNull() ? suggestedIp : QHostAddress();
-      m_currentIPValid = !suggestedIp.isNull();
+      m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
+      m_currentIPValid = m_currentIpAddress.isNull();
+      QString displayIP = m_currentIPValid ? m_currentIpAddress.toString() : ipList.first();
       labelText.append(displayIP);
     }
 
