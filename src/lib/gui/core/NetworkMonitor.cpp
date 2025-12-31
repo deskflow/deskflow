@@ -97,13 +97,13 @@ QList<QHostAddress> NetworkMonitor::getAvailableIPv4Addresses() const
     }
   }
 
-  std::sort(physicalIPs.begin(), physicalIPs.end(), [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
     if (a.isPrivateUse() != b.isPrivateUse())
       return true;
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
-  std::sort(virtualIPs.begin(), virtualIPs.end(), [](const QHostAddress &a, const QHostAddress &b) {
+  std::ranges::sort(virtualIPs, [](const QHostAddress &a, const QHostAddress &b) {
     return a.toIPv4Address() < b.toIPv4Address();
   });
 
