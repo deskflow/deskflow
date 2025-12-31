@@ -53,7 +53,7 @@ public:
   QList<QHostAddress> getAvailableIPv4Addresses() const;
 
   /**
-   * @brief Get recommended IP address (192.168.x.x preferred)
+   * @brief Get recommended IP address (RFC-1918 addresses preferred)
    * @return Recommended IP address, returns null if none available
    */
   QHostAddress getSuggestedIPv4Address() const;
