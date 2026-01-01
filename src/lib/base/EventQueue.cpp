@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -9,6 +9,7 @@
 #include "base/EventQueue.h"
 
 #include "arch/Arch.h"
+#include "base/EventQueueTimer.h"
 #include "base/Log.h"
 #include "base/SimpleEventQueueBuffer.h"
 #include "mt/Lock.h"
@@ -213,7 +214,7 @@ EventQueueTimer *EventQueue::newTimer(double duration, void *target)
 {
   assert(duration > 0.0);
 
-  EventQueueTimer *timer = m_buffer->newTimer(duration, false);
+  EventQueueTimer *timer = new EventQueueTimer;
   if (target == nullptr) {
     target = timer;
   }
@@ -230,7 +231,7 @@ EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target)
 {
   assert(duration > 0.0);
 
-  EventQueueTimer *timer = m_buffer->newTimer(duration, true);
+  EventQueueTimer *timer = new EventQueueTimer;
   if (target == nullptr) {
     target = timer;
   }
@@ -255,7 +256,7 @@ void EventQueue::deleteTimer(EventQueueTimer *timer)
   if (Timers::iterator index = m_timers.find(timer); index != m_timers.end()) {
     m_timers.erase(index);
   }
-  m_buffer->deleteTimer(timer);
+  delete timer;
 }
 
 void EventQueue::addHandler(EventTypes type, void *target, const EventHandler &handler)

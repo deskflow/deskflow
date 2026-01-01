@@ -8,7 +8,6 @@
 #include "platform/EiEventQueueBuffer.h"
 
 #include "base/Event.h"
-#include "base/EventQueueTimer.h"
 #include "base/EventTypes.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
@@ -131,16 +130,6 @@ bool EiEventQueueBuffer::isEmpty() const
   std::scoped_lock lock{m_mutex};
 
   return m_queue.empty();
-}
-
-EventQueueTimer *EiEventQueueBuffer::newTimer(double, bool) const
-{
-  return new EventQueueTimer;
-}
-
-void EiEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
-{
-  delete timer;
 }
 
 } // namespace deskflow

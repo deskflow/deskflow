@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Stephen Jensen <sjensen313@proton.me>
  * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
@@ -30,8 +31,6 @@ public:
   Type getEvent(Event &event, uint32_t &dataID) override;
   bool addEvent(uint32_t dataID) override;
   bool isEmpty() const override;
-  EventQueueTimer *newTimer(double duration, bool oneShot) const override;
-  void deleteTimer(EventQueueTimer *timer) const override;
 
 private:
   IEventQueue *m_eventQueue;

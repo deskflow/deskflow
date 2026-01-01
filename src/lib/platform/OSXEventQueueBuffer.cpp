@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Stephen Jensen <sjensen313@proton.me>
  * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
@@ -9,7 +10,6 @@
 #include "platform/OSXEventQueueBuffer.h"
 
 #include "base/Event.h"
-#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "base/Log.h"
 
@@ -76,14 +76,4 @@ bool OSXEventQueueBuffer::isEmpty() const
   bool empty = m_dataQueue.empty();
   LOG_DEBUG2("queue is %s", empty ? "empty" : "not empty");
   return empty;
-}
-
-EventQueueTimer *OSXEventQueueBuffer::newTimer(double, bool) const
-{
-  return new EventQueueTimer;
-}
-
-void OSXEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
-{
-  delete timer;
 }

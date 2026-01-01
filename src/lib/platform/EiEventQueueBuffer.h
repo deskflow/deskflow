@@ -32,8 +32,6 @@ public:
   Type getEvent(Event &event, uint32_t &dataID) override;
   bool addEvent(uint32_t dataID) override;
   bool isEmpty() const override;
-  EventQueueTimer *newTimer(double duration, bool oneShot) const override;
-  void deleteTimer(EventQueueTimer *) const override;
 
 private:
   ei *m_ei;

@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,6 @@
 #include "platform/MSWindowsEventQueueBuffer.h"
 
 #include "arch/win32/ArchMiscWindows.h"
-#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 
 //
@@ -96,14 +96,4 @@ bool MSWindowsEventQueueBuffer::addEvent(uint32_t dataID)
 bool MSWindowsEventQueueBuffer::isEmpty() const
 {
   return (HIWORD(GetQueueStatus(m_supportedMessages)) == 0);
-}
-
-EventQueueTimer *MSWindowsEventQueueBuffer::newTimer(double, bool) const
-{
-  return new EventQueueTimer;
-}
-
-void MSWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
-{
-  delete timer;
 }
