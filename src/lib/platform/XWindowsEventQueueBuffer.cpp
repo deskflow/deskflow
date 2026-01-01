@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,7 +9,6 @@
 #include "platform/XWindowsEventQueueBuffer.h"
 
 #include "base/Event.h"
-#include "base/EventQueueTimer.h"
 #include "base/IEventQueue.h"
 #include "mt/Thread.h"
 
@@ -181,16 +181,6 @@ bool XWindowsEventQueueBuffer::isEmpty() const
 {
   std::scoped_lock lock{m_mutex};
   return (XPending(m_display) == 0);
-}
-
-EventQueueTimer *XWindowsEventQueueBuffer::newTimer(double, bool) const
-{
-  return new EventQueueTimer;
-}
-
-void XWindowsEventQueueBuffer::deleteTimer(EventQueueTimer *timer) const
-{
-  delete timer;
 }
 
 void XWindowsEventQueueBuffer::flush()

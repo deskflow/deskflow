@@ -65,29 +65,9 @@ public:
   */
   virtual bool addEvent(uint32_t dataID) = 0;
 
-  //@}
-  //! @name accessors
-  //@{
-
   //! Check if event queue buffer is empty
   /*!
   Return true iff the event queue buffer  is empty.
   */
   virtual bool isEmpty() const = 0;
-
-  //! Create a timer object
-  /*!
-  Create and return a timer object.  The object is opaque and is
-  used only by the buffer but it must be a valid object (i.e.
-  not nullptr).
-  */
-  virtual EventQueueTimer *newTimer(double duration, bool oneShot) const = 0;
-
-  //! Destroy a timer object
-  /*!
-  Destroy a timer object previously returned by \c newTimer().
-  */
-  virtual void deleteTimer(EventQueueTimer *) const = 0;
-
-  //@}
 };

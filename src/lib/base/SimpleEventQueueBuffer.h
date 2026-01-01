@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -35,8 +36,6 @@ public:
   Type getEvent(Event &event, uint32_t &dataID) override;
   bool addEvent(uint32_t dataID) override;
   bool isEmpty() const override;
-  EventQueueTimer *newTimer(double duration, bool oneShot) const override;
-  void deleteTimer(EventQueueTimer *) const override;
 
 private:
   using EventDeque = std::deque<uint32_t>;
