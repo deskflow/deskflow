@@ -214,7 +214,7 @@ EventQueueTimer *EventQueue::newTimer(double duration, void *target)
 {
   assert(duration > 0.0);
 
-  EventQueueTimer *timer = new EventQueueTimer;
+  auto timer = new EventQueueTimer;
   if (target == nullptr) {
     target = timer;
   }
@@ -231,7 +231,7 @@ EventQueueTimer *EventQueue::newOneShotTimer(double duration, void *target)
 {
   assert(duration > 0.0);
 
-  EventQueueTimer *timer = new EventQueueTimer;
+  auto timer = new EventQueueTimer;
   if (target == nullptr) {
     target = timer;
   }
