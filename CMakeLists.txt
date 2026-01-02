@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 - 2025 Deskflow Developers
+# SPDX-FileCopyrightText: 2024 - 2026 Deskflow Developers
 # SPDX-FileCopyrightText: 2012 - 2024 Symless Ltd
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
@@ -79,7 +79,7 @@ project(
 # Define Additional "PROJECT" vars for packaging and metadata
 set(CMAKE_PROJECT_PROPER_NAME "Deskflow")
 set(CMAKE_PROJECT_VENDOR "${CMAKE_PROJECT_PROPER_NAME} Devs")
-set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2025 ${CMAKE_PROJECT_VENDOR}")
+set(CMAKE_PROJECT_COPYRIGHT "(C) 2024-2026 ${CMAKE_PROJECT_VENDOR}")
 set(CMAKE_PROJECT_CONTACT "${CMAKE_PROJECT_PROPER_NAME} <maintainers@deskflow.org>")
 set(CMAKE_PROJECT_REV_FQDN "org.deskflow.deskflow")
 

@@ -1,6 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 Chris Rizzitello <sithord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -155,7 +156,7 @@ private:
   void toggleCanRunCore(bool enableButtons);
   void remoteHostChanged(const QString &newRemoteHost);
   void handleNewClientPromptRequest(const QString &clientName, bool usePeerAuth);
-  void updateIpLabel(const QList<QHostAddress> &addresses);
+  void updateIpLabel(const QStringList &addresses);
 
   /**
    * @brief showClientError
@@ -226,9 +227,9 @@ private:
 
   // Network monitoring
   NetworkMonitor *m_networkMonitor = nullptr;
-  QHostAddress m_currentIpAddress;
+  QString m_currentIpAddress;
 
   // Server IP strategy optimization
-  QList<QHostAddress> m_serverStartIPs;
-  QHostAddress m_serverStartSuggestedIP;
+  QStringList m_serverStartIPs;
+  QString m_serverStartSuggestedIP;
 };

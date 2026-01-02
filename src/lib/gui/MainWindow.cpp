@@ -1,6 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -1241,7 +1242,7 @@ void MainWindow::handleNewClientPromptRequest(const QString &clientName, bool us
   m_serverConnection.handleNewClientResult(clientName, result);
 }
 
-void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
+void MainWindow::updateIpLabel(const QStringList &addresses)
 {
   if (m_coreProcess.mode() != CoreMode::Server) {
     return;
@@ -1255,12 +1256,6 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
     return;
   }
 
-  // Get all available IPs for tooltip
-  QStringList ipList;
-  for (const auto &address : addresses) {
-    ipList.append(address.toString());
-  }
-
   QString labelText;
   QString toolTipText;
 
@@ -1268,7 +1263,7 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
   if (const auto ip = Settings::value(Settings::Core::Interface).toString(); !ip.isEmpty()) {
     labelText = tr("Using IP: ");
     toolTipText = tr("Selected as the interface in settings.");
-    if (ipList.contains(ip, Qt::CaseInsensitive)) {
+    if (addresses.contains(ip, Qt::CaseInsensitive)) {
       labelText.append(ip);
     } else {
       labelText.append(colorText.arg(palette().linkVisited().color().name(), ip));
@@ -1282,26 +1277,22 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
   labelText = tr("Suggested IP: ");
   toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
 
+  // Get all available IPs for tooltip
+  QStringList ipList = addresses;
+
   // Determine which IP to show and tooltip based on server state
   if (m_coreProcess.isStarted()) {
     // ipList should only include valid ip from servers start
-    ipList.clear();
-    for (const auto &address : std::as_const(m_serverStartIPs)) {
-      if (addresses.contains(address))
-        ipList.append(address.toString());
-    }
-
+    const QRegularExpression ipListFilter(QStringLiteral("(%1)").arg(m_serverStartIPs.join("|")));
+    ipList = addresses.filter(ipListFilter);
     bool IPValid = true;
-    QString suggestedIP = m_serverStartSuggestedIP.toString();
-    if ((suggestedIP != m_currentIpAddress.toString()) || !addresses.contains(m_serverStartSuggestedIP)) {
+    QString suggestedIP = m_serverStartSuggestedIP;
+    if ((suggestedIP != m_currentIpAddress) || !ipList.contains(m_serverStartSuggestedIP)) {
       IPValid = false;
-      for (const auto &address : std::as_const(m_serverStartIPs)) {
-        if (addresses.contains(address)) {
-          suggestedIP = address.toString();
-          m_currentIpAddress = address;
-          IPValid = true;
-          break;
-        }
+      if (!ipList.isEmpty()) {
+        suggestedIP = ipList.first();
+        m_currentIpAddress = suggestedIP;
+        IPValid = true;
       }
     }
 
@@ -1314,7 +1305,7 @@ void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
   } else {
     // Server is not running - update normally
     m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-    labelText.append(m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first());
+    labelText.append(m_currentIpAddress.isEmpty() ? m_currentIpAddress : ipList.first());
   }
 
   if (ipList.count() < 2) {
