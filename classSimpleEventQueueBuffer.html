@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.138</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.139</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -138,10 +138,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a34a5b80110085fe4f9e0b0a0a1089bcc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post an event.  <br /></td></tr>
 <tr class="memitem:a555b82c38339b712737b0891ba66a913" id="r_a555b82c38339b712737b0891ba66a913"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a555b82c38339b712737b0891ba66a913">isEmpty</a> () const override</td></tr>
 <tr class="memdesc:a555b82c38339b712737b0891ba66a913"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if event queue buffer is empty.  <br /></td></tr>
-<tr class="memitem:add64dd0746a028710559d60c543c6711" id="r_add64dd0746a028710559d60c543c6711"><td class="memItemLeft" align="right" valign="top"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#add64dd0746a028710559d60c543c6711">newTimer</a> (double duration, bool oneShot) const override</td></tr>
-<tr class="memdesc:add64dd0746a028710559d60c543c6711"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a timer object.  <br /></td></tr>
-<tr class="memitem:ae456c6383bf1c86eff2edc3ab07991d6" id="r_ae456c6383bf1c86eff2edc3ab07991d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ae456c6383bf1c86eff2edc3ab07991d6">deleteTimer</a> (<a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *) const override</td></tr>
-<tr class="memdesc:ae456c6383bf1c86eff2edc3ab07991d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a timer object.  <br /></td></tr>
 <tr class="inherit_header pub_methods_classIEventQueueBuffer"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_classIEventQueueBuffer')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="classIEventQueueBuffer.html">IEventQueueBuffer</a></td></tr>
 <tr class="memitem:a8d1079bc10103312d26d3c41b59a5dfb inherit pub_methods_classIEventQueueBuffer" id="r_a8d1079bc10103312d26d3c41b59a5dfb"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIEventQueueBuffer.html#a8d1079bc10103312d26d3c41b59a5dfb">~IEventQueueBuffer</a> ()=default</td></tr>
 </table><table class="memberdecls">
@@ -280,36 +276,6 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="ae456c6383bf1c86eff2edc3ab07991d6" name="ae456c6383bf1c86eff2edc3ab07991d6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae456c6383bf1c86eff2edc3ab07991d6">&#9670;&#160;</a></span>deleteTimer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SimpleEventQueueBuffer::deleteTimer </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Destroy a timer object. </p>
-<p>Destroy a timer object previously returned by <code><a class="el" href="#add64dd0746a028710559d60c543c6711" title="Create a timer object.">newTimer()</a></code>. </p>
-
-<p>Implements <a class="el" href="classIEventQueueBuffer.html#a2da8721379cbf34b44b5064423efda0a">IEventQueueBuffer</a>.</p>
-
-</div>
-</div>
 <a id="a2c01276cbb3afc0a8772e967e6da5d0f" name="a2c01276cbb3afc0a8772e967e6da5d0f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2c01276cbb3afc0a8772e967e6da5d0f">&#9670;&#160;</a></span>getEvent()</h2>
 
@@ -401,40 +367,6 @@ Additional Inherited Members</h2></td></tr>
 <p>Return true iff the event queue buffer is empty. </p>
 
 <p>Implements <a class="el" href="classIEventQueueBuffer.html#afb18a0323c0016e4a1f71c8fe13db278">IEventQueueBuffer</a>.</p>
-
-</div>
-</div>
-<a id="add64dd0746a028710559d60c543c6711" name="add64dd0746a028710559d60c543c6711"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add64dd0746a028710559d60c543c6711">&#9670;&#160;</a></span>newTimer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> * SimpleEventQueueBuffer::newTimer </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>oneShot</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel override">override</span><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create a timer object. </p>
-<p>Create and return a timer object. The object is opaque and is used only by the buffer but it must be a valid object (i.e. not nullptr). </p>
-
-<p>Implements <a class="el" href="classIEventQueueBuffer.html#a91b4780e066421eafaf6bbf35f0db22b">IEventQueueBuffer</a>.</p>
 
 </div>
 </div>

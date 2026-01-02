@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.138</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.139</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -137,13 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a672cba4fd9f2317f6a144d655aecbd60"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the next event.  <br /></td></tr>
 <tr class="memitem:abc249c7752d7273b50fdd4ca090b9a59" id="r_abc249c7752d7273b50fdd4ca090b9a59"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abc249c7752d7273b50fdd4ca090b9a59">addEvent</a> (uint32_t dataID)=0</td></tr>
 <tr class="memdesc:abc249c7752d7273b50fdd4ca090b9a59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Post an event.  <br /></td></tr>
-<tr id="pub-methods-1" class="groupHeader"><td colspan="2"><div class="groupHeader">accessors</div></td></tr>
 <tr class="memitem:afb18a0323c0016e4a1f71c8fe13db278" id="r_afb18a0323c0016e4a1f71c8fe13db278"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#afb18a0323c0016e4a1f71c8fe13db278">isEmpty</a> () const =0</td></tr>
 <tr class="memdesc:afb18a0323c0016e4a1f71c8fe13db278"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if event queue buffer is empty.  <br /></td></tr>
-<tr class="memitem:a91b4780e066421eafaf6bbf35f0db22b" id="r_a91b4780e066421eafaf6bbf35f0db22b"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a91b4780e066421eafaf6bbf35f0db22b">newTimer</a> (double duration, bool oneShot) const =0</td></tr>
-<tr class="memdesc:a91b4780e066421eafaf6bbf35f0db22b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a timer object.  <br /></td></tr>
-<tr class="memitem:a2da8721379cbf34b44b5064423efda0a" id="r_a2da8721379cbf34b44b5064423efda0a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2da8721379cbf34b44b5064423efda0a">deleteTimer</a> (<a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *) const =0</td></tr>
-<tr class="memdesc:a2da8721379cbf34b44b5064423efda0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy a timer object.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p><a class="el" href="classEvent.html" title="Event.">Event</a> queue buffer interface. </p>
@@ -233,36 +228,6 @@ Public Member Functions</h2></td></tr>
 <p>Add the given event to the end of the queue buffer. This is a user event and <code><a class="el" href="#a672cba4fd9f2317f6a144d655aecbd60" title="Get the next event.">getEvent()</a></code> must be able to identify it as such and return <code class="param">dataID</code>. This method must cause <code><a class="el" href="#a98621a328db156233d47f31b5d6d4eed" title="Block waiting for an event.">waitForEvent()</a></code> to return at some future time if it's blocked waiting on an event. </p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiEventQueueBuffer.html#a51053c293c169b02af324aac3735a2c1">deskflow::EiEventQueueBuffer</a>, <a class="el" href="classMSWindowsEventQueueBuffer.html#a6a9824379cb797d26f5ba98609e81042">MSWindowsEventQueueBuffer</a>, <a class="el" href="classOSXEventQueueBuffer.html#a21ba8204145b44ce61a77971c14a42aa">OSXEventQueueBuffer</a>, <a class="el" href="classSimpleEventQueueBuffer.html#a34a5b80110085fe4f9e0b0a0a1089bcc">SimpleEventQueueBuffer</a>, and <a class="el" href="classXWindowsEventQueueBuffer.html#af0b1e27570133fd9390e892884bfaf51">XWindowsEventQueueBuffer</a>.</p>
-
-</div>
-</div>
-<a id="a2da8721379cbf34b44b5064423efda0a" name="a2da8721379cbf34b44b5064423efda0a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2da8721379cbf34b44b5064423efda0a">&#9670;&#160;</a></span>deleteTimer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void IEventQueueBuffer::deleteTimer </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> *</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Destroy a timer object. </p>
-<p>Destroy a timer object previously returned by <code><a class="el" href="#a91b4780e066421eafaf6bbf35f0db22b" title="Create a timer object.">newTimer()</a></code>. </p>
-
-<p>Implemented in <a class="el" href="classdeskflow_1_1EiEventQueueBuffer.html#a3f277c3275b719fcfb468e6f4d4f67fb">deskflow::EiEventQueueBuffer</a>, <a class="el" href="classMSWindowsEventQueueBuffer.html#aea301c01689bef79a8f360dff08f77a9">MSWindowsEventQueueBuffer</a>, <a class="el" href="classOSXEventQueueBuffer.html#a5eebaea190840fa46f144a4fa378e9e5">OSXEventQueueBuffer</a>, <a class="el" href="classSimpleEventQueueBuffer.html#ae456c6383bf1c86eff2edc3ab07991d6">SimpleEventQueueBuffer</a>, and <a class="el" href="classXWindowsEventQueueBuffer.html#ad56bb4b346f2d98db777770b48a4928b">XWindowsEventQueueBuffer</a>.</p>
 
 </div>
 </div>
@@ -357,40 +322,6 @@ Public Member Functions</h2></td></tr>
 <p>Return true iff the event queue buffer is empty. </p>
 
 <p>Implemented in <a class="el" href="classdeskflow_1_1EiEventQueueBuffer.html#aef64b7176f04c44ebb85e962add49cb1">deskflow::EiEventQueueBuffer</a>, <a class="el" href="classMSWindowsEventQueueBuffer.html#a556d9f5d80b71befb743f5b5cff113d3">MSWindowsEventQueueBuffer</a>, <a class="el" href="classOSXEventQueueBuffer.html#af95c5535d7a01685a4b5075000bc8a47">OSXEventQueueBuffer</a>, <a class="el" href="classSimpleEventQueueBuffer.html#a555b82c38339b712737b0891ba66a913">SimpleEventQueueBuffer</a>, and <a class="el" href="classXWindowsEventQueueBuffer.html#ad8588c9dcf0dfea41703d1ee416f88da">XWindowsEventQueueBuffer</a>.</p>
-
-</div>
-</div>
-<a id="a91b4780e066421eafaf6bbf35f0db22b" name="a91b4780e066421eafaf6bbf35f0db22b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91b4780e066421eafaf6bbf35f0db22b">&#9670;&#160;</a></span>newTimer()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classEventQueueTimer.html">EventQueueTimer</a> * IEventQueueBuffer::newTimer </td>
-          <td>(</td>
-          <td class="paramtype">double</td>          <td class="paramname"><span class="paramname"><em>duration</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>oneShot</em></span>&#160;) const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel pure-virtual">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Create a timer object. </p>
-<p>Create and return a timer object. The object is opaque and is used only by the buffer but it must be a valid object (i.e. not nullptr). </p>
-
-<p>Implemented in <a class="el" href="classdeskflow_1_1EiEventQueueBuffer.html#aaadf65aca634f0e4c3dc2ea810e03c0a">deskflow::EiEventQueueBuffer</a>, <a class="el" href="classMSWindowsEventQueueBuffer.html#ae24b5a634205a0b4a34f54e1bab87d1e">MSWindowsEventQueueBuffer</a>, <a class="el" href="classOSXEventQueueBuffer.html#a3a97d4fcd037503a6907834f7ebfc74b">OSXEventQueueBuffer</a>, <a class="el" href="classSimpleEventQueueBuffer.html#add64dd0746a028710559d60c543c6711">SimpleEventQueueBuffer</a>, and <a class="el" href="classXWindowsEventQueueBuffer.html#a4344657ec997922feefa6512c600bd87">XWindowsEventQueueBuffer</a>.</p>
 
 </div>
 </div>

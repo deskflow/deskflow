@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.138</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.139</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,53 +96,51 @@ $(function(){initNavTree('MSWindowsEventQueueBuffer_8h_source.html','',''); });
 <div class="contents">
 <a href="MSWindowsEventQueueBuffer_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> */</span></div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#pragma once</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span> </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;<a class="code" href="IEventQueueBuffer_8h.html">base/IEventQueueBuffer.h</a>&quot;</span></div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="MSWindowsEventQueueBuffer_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">   12</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">class </span><a class="code hl_class" href="classIEventQueue.html">IEventQueue</a>;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span></div>
-<div class="foldopen" id="foldopen00018" data-start="{" data-end="};">
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html">   18</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#ab1efce376f1fd4d926bff9e5d943f4b8">MSWindowsEventQueueBuffer</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIEventQueueBuffer.html">IEventQueueBuffer</a></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>{</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#ab1efce376f1fd4d926bff9e5d943f4b8">MSWindowsEventQueueBuffer</a>(<a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events);</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html#a900452955e2e14c62cb7314068a1f13f">   22</a></span>  <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a900452955e2e14c62cb7314068a1f13f">~MSWindowsEventQueueBuffer</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>  <span class="comment">// IEventQueueBuffer overrides</span></div>
-<div class="foldopen" id="foldopen00025" data-start="{" data-end="}">
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">   25</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">init</a>()<span class="keyword"> override</span></div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span><span class="keyword">  </span>{</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>  }</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2004 Chris Schoeneman</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="comment"> */</span></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#pragma once</span></div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#include &quot;<a class="code" href="IEventQueueBuffer_8h.html">base/IEventQueueBuffer.h</a>&quot;</span></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="MSWindowsEventQueueBuffer_8h.html#ac7bef5d85e3dcd73eef56ad39ffc84a9">   13</a></span><span class="preprocessor">#define WIN32_LEAN_AND_MEAN</span></div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#include &lt;Windows.h&gt;</span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">class </span><a class="code hl_class" href="classIEventQueue.html">IEventQueue</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span></div>
+<div class="foldopen" id="foldopen00019" data-start="{" data-end="};">
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html">   19</a></span><span class="keyword">class </span><a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#ab1efce376f1fd4d926bff9e5d943f4b8">MSWindowsEventQueueBuffer</a> : <span class="keyword">public</span> <a class="code hl_class" href="classIEventQueueBuffer.html">IEventQueueBuffer</a></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>{</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#ab1efce376f1fd4d926bff9e5d943f4b8">MSWindowsEventQueueBuffer</a>(<a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *events);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html#a900452955e2e14c62cb7314068a1f13f">   23</a></span>  <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a900452955e2e14c62cb7314068a1f13f">~MSWindowsEventQueueBuffer</a>() <span class="keyword">override</span> = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  <span class="comment">// IEventQueueBuffer overrides</span></div>
+<div class="foldopen" id="foldopen00026" data-start="{" data-end="}">
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">   26</a></span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">init</a>()<span class="keyword"> override</span></div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">  </span>{</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  }</div>
 </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aa6461aed3bb7c28db0690efb6850054d">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674">Type</a> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aceb8ec33c9c830b1a11a641d4b548d3d">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a6a9824379cb797d26f5ba98609e81042">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a556d9f5d80b71befb743f5b5cff113d3">isEmpty</a>() <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *<a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#ae24b5a634205a0b4a34f54e1bab87d1e">newTimer</a>(<span class="keywordtype">double</span> duration, <span class="keywordtype">bool</span> oneShot) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aea301c01689bef79a8f360dff08f77a9">deleteTimer</a>(<a class="code hl_class" href="classEventQueueTimer.html">EventQueueTimer</a> *) <span class="keyword">const override</span>;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_thread;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  UINT m_userEvent;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  MSG m_event;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  UINT m_daemonQuit;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>  <span class="keyword">const</span> UINT m_supportedMessages = (QS_ALLINPUT &amp; ~(QS_TOUCH | QS_POINTER));</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aa6461aed3bb7c28db0690efb6850054d">waitForEvent</a>(<span class="keywordtype">double</span> <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a>) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <a class="code hl_enumeration" href="classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674">Type</a> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#aceb8ec33c9c830b1a11a641d4b548d3d">getEvent</a>(<a class="code hl_class" href="classEvent.html">Event</a> &amp;event, uint32_t &amp;dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a6a9824379cb797d26f5ba98609e81042">addEvent</a>(uint32_t dataID) <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keywordtype">bool</span> <a class="code hl_function" href="classMSWindowsEventQueueBuffer.html#a556d9f5d80b71befb743f5b5cff113d3">isEmpty</a>() <span class="keyword">const override</span>;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>  <a class="code hl_variable" href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a> m_thread;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  UINT m_userEvent;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>  MSG m_event;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  UINT m_daemonQuit;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  <a class="code hl_class" href="classIEventQueue.html">IEventQueue</a> *m_events;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>  <span class="keyword">const</span> UINT m_supportedMessages = (QS_ALLINPUT &amp; ~(QS_TOUCH | QS_POINTER));</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>};</div>
 </div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_a268ed61838e67a46467dcebfee0dcbe7"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#a268ed61838e67a46467dcebfee0dcbe7">DWORD</a></div><div class="ttdeci">static const WSAEVENT FAR DWORD</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:55</div></div>
 <div class="ttc" id="aArchNetworkWinsock_8cpp_html_ab81cb286ad3395f720d8b4e645596749"><div class="ttname"><a href="ArchNetworkWinsock_8cpp.html#ab81cb286ad3395f720d8b4e645596749">timeout</a></div><div class="ttdeci">static fd_set FAR fd_set FAR fd_set FAR const struct timeval FAR * timeout</div><div class="ttdef"><b>Definition</b> ArchNetworkWinsock.cpp:40</div></div>
 <div class="ttc" id="aIEventQueueBuffer_8h_html"><div class="ttname"><a href="IEventQueueBuffer_8h.html">IEventQueueBuffer.h</a></div></div>
-<div class="ttc" id="aclassEventQueueTimer_html"><div class="ttname"><a href="classEventQueueTimer.html">EventQueueTimer</a></div><div class="ttdef"><b>Definition</b> EventQueueTimer.h:12</div></div>
 <div class="ttc" id="aclassEvent_html"><div class="ttname"><a href="classEvent.html">Event</a></div><div class="ttdoc">Event.</div><div class="ttdef"><b>Definition</b> Event.h:29</div></div>
 <div class="ttc" id="aclassIEventQueueBuffer_html"><div class="ttname"><a href="classIEventQueueBuffer.html">IEventQueueBuffer</a></div><div class="ttdoc">Event queue buffer interface.</div><div class="ttdef"><b>Definition</b> IEventQueueBuffer.h:22</div></div>
 <div class="ttc" id="aclassIEventQueueBuffer_html_a8a5c8a03b71f5742cfaed72b30648674"><div class="ttname"><a href="classIEventQueueBuffer.html#a8a5c8a03b71f5742cfaed72b30648674">IEventQueueBuffer::Type</a></div><div class="ttdeci">Type</div><div class="ttdef"><b>Definition</b> IEventQueueBuffer.h:26</div></div>
@@ -153,9 +151,7 @@ $(function(){initNavTree('MSWindowsEventQueueBuffer_8h_source.html','',''); });
 <div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_aa6461aed3bb7c28db0690efb6850054d"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#aa6461aed3bb7c28db0690efb6850054d">MSWindowsEventQueueBuffer::waitForEvent</a></div><div class="ttdeci">void waitForEvent(double timeout) override</div><div class="ttdoc">Block waiting for an event.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.cpp:34</div></div>
 <div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_ab1efce376f1fd4d926bff9e5d943f4b8"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#ab1efce376f1fd4d926bff9e5d943f4b8">MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer</a></div><div class="ttdeci">MSWindowsEventQueueBuffer(IEventQueue *events)</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.cpp:18</div></div>
 <div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_aceb8ec33c9c830b1a11a641d4b548d3d"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#aceb8ec33c9c830b1a11a641d4b548d3d">MSWindowsEventQueueBuffer::getEvent</a></div><div class="ttdeci">Type getEvent(Event &amp;event, uint32_t &amp;dataID) override</div><div class="ttdoc">Get the next event.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.cpp:59</div></div>
-<div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_ae24b5a634205a0b4a34f54e1bab87d1e"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#ae24b5a634205a0b4a34f54e1bab87d1e">MSWindowsEventQueueBuffer::newTimer</a></div><div class="ttdeci">EventQueueTimer * newTimer(double duration, bool oneShot) const override</div><div class="ttdoc">Create a timer object.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.cpp:101</div></div>
-<div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_aea301c01689bef79a8f360dff08f77a9"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#aea301c01689bef79a8f360dff08f77a9">MSWindowsEventQueueBuffer::deleteTimer</a></div><div class="ttdeci">void deleteTimer(EventQueueTimer *) const override</div><div class="ttdoc">Destroy a timer object.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.cpp:106</div></div>
-<div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_aec6c8654bdd08ed4a9ad13bee18b310f"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">MSWindowsEventQueueBuffer::init</a></div><div class="ttdeci">void init() override</div><div class="ttdoc">Initialize.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.h:25</div></div>
+<div class="ttc" id="aclassMSWindowsEventQueueBuffer_html_aec6c8654bdd08ed4a9ad13bee18b310f"><div class="ttname"><a href="classMSWindowsEventQueueBuffer.html#aec6c8654bdd08ed4a9ad13bee18b310f">MSWindowsEventQueueBuffer::init</a></div><div class="ttdeci">void init() override</div><div class="ttdoc">Initialize.</div><div class="ttdef"><b>Definition</b> MSWindowsEventQueueBuffer.h:26</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

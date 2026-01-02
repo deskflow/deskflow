@@ -24,7 +24,7 @@ var dir_cd3aacb8a45237fa9a46f471cfa9b1b3 =
     [ "LogOutputters.h", "LogOutputters_8h.html", "LogOutputters_8h" ],
     [ "NetworkProtocol.h", "NetworkProtocol_8h.html", "NetworkProtocol_8h" ],
     [ "PriorityQueue.h", "PriorityQueue_8h.html", "PriorityQueue_8h" ],
-    [ "SimpleEventQueueBuffer.cpp", "SimpleEventQueueBuffer_8cpp.html", "SimpleEventQueueBuffer_8cpp" ],
+    [ "SimpleEventQueueBuffer.cpp", "SimpleEventQueueBuffer_8cpp.html", null ],
     [ "SimpleEventQueueBuffer.h", "SimpleEventQueueBuffer_8h.html", "SimpleEventQueueBuffer_8h" ],
     [ "Stopwatch.cpp", "Stopwatch_8cpp.html", null ],
     [ "Stopwatch.h", "Stopwatch_8h.html", "Stopwatch_8h" ],
