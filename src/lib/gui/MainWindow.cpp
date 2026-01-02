@@ -1282,31 +1282,22 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   QStringList ipList = addresses;
 
   // Determine which IP to show and tooltip based on server state
+  bool IPValid = true;
   if (serverStarted) {
     // ipList should only include valid ip from servers start
     const QRegularExpression ipListFilter(QStringLiteral("(%1)").arg(m_serverStartIPs.join("|")));
     ipList = addresses.filter(ipListFilter);
-    bool IPValid = true;
-    QString suggestedIP = m_serverStartSuggestedIP;
-    if ((suggestedIP != m_currentIpAddress) || !ipList.contains(m_serverStartSuggestedIP)) {
-      IPValid = false;
-      if (!ipList.isEmpty()) {
-        suggestedIP = ipList.first();
-        m_currentIpAddress = suggestedIP;
-        IPValid = true;
-      }
+    if ((m_serverStartSuggestedIP != m_currentIpAddress) || !ipList.contains(m_serverStartSuggestedIP)) {
+      IPValid = !ipList.isEmpty();
     }
+  }
 
-    if (IPValid) {
-      labelText.append(suggestedIP);
-    } else {
-      labelText.append(colorText.arg(palette().linkVisited().color().name(), suggestedIP));
-      toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
-    }
-  } else {
-    // Server is not running - update normally
+  if (IPValid) {
     m_currentIpAddress = ipList.first();
     labelText.append(m_currentIpAddress);
+  } else {
+    labelText.append(colorText.arg(palette().linkVisited().color().name(), m_serverStartSuggestedIP));
+    toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
   }
 
   if (ipList.count() < 2) {
