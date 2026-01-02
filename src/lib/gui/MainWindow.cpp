@@ -1249,8 +1249,9 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   }
 
   static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
+  const bool serverStarted = m_coreProcess.isStarted();
 
-  if (addresses.isEmpty()) {
+  if (addresses.isEmpty() && !serverStarted || (serverStarted && m_serverStartSuggestedIP.isEmpty())) {
     ui->lblIpAddresses->setText(colorText.arg(palette().linkVisited().color().name(), tr("No IP Detected")));
     ui->lblIpAddresses->setToolTip(tr("Unable to detect an IP address. Check your network connection is active."));
     return;
@@ -1281,7 +1282,7 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   QStringList ipList = addresses;
 
   // Determine which IP to show and tooltip based on server state
-  if (m_coreProcess.isStarted()) {
+  if (serverStarted) {
     // ipList should only include valid ip from servers start
     const QRegularExpression ipListFilter(QStringLiteral("(%1)").arg(m_serverStartIPs.join("|")));
     ipList = addresses.filter(ipListFilter);
