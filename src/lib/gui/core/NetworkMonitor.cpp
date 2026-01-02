@@ -117,14 +117,6 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
   return ipList;
 }
 
-QString NetworkMonitor::getSuggestedIPv4Address() const
-{
-  const auto addresses = getAvailableIPv4Addresses();
-  if (addresses.isEmpty())
-    return {};
-  return addresses.first();
-}
-
 void NetworkMonitor::setIpAddresses(const QStringList &newAddresses)
 {
   if (newAddresses == m_lastAddresses)

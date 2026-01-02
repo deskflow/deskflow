@@ -431,7 +431,7 @@ void MainWindow::startCore()
   // Save current IP state when server starts
   if (m_coreProcess.mode() == CoreMode::Server) {
     m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
-    m_serverStartSuggestedIP = m_networkMonitor->getSuggestedIPv4Address();
+    m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
 
   m_coreProcess.start();
@@ -1304,8 +1304,8 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
     }
   } else {
     // Server is not running - update normally
-    m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-    labelText.append(m_currentIpAddress.isEmpty() ? m_currentIpAddress : ipList.first());
+    m_currentIpAddress = ipList.first();
+    labelText.append(m_currentIpAddress);
   }
 
   if (ipList.count() < 2) {
