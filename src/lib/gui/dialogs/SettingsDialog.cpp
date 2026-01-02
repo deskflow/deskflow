@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -52,9 +52,8 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
 
   // Populate the list of IP addresses
   NetworkMonitor networkMonitor(this);
-  const auto addresses = networkMonitor.getAvailableIPv4Addresses();
-  for (const auto &address : addresses) {
-    QString ipString = address.toString();
+  for (const auto &address : networkMonitor.getAvailableIPv4Addresses()) {
+    QString ipString = address;
     if (ui->comboInterface->findText(ipString) == -1) {
       ui->comboInterface->addItem(ipString, ipString);
     }
