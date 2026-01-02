@@ -52,12 +52,6 @@ public:
    */
   QStringList getAvailableIPv4Addresses() const;
 
-  /**
-   * @brief Get recommended IP address (RFC-1918 addresses preferred)
-   * @return Recommended IP address, returns null if none available
-   */
-  QString getSuggestedIPv4Address() const;
-
 Q_SIGNALS:
   /**
    * @brief Emitted when IP addresses change
