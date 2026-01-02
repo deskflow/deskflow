@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.128</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.138</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -138,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:af162cf4b7742bb883e1a1fc986ebfdfa" id="r_af162cf4b7742bb883e1a1fc986ebfdfa"><td class="memItemLeft" align="right" valign="top">QList&lt; QHostAddress &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af162cf4b7742bb883e1a1fc986ebfdfa">getAvailableIPv4Addresses</a> () const</td></tr>
 <tr class="memdesc:af162cf4b7742bb883e1a1fc986ebfdfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IPv4 addresses (excluding local and link-local addresses).  <br /></td></tr>
 <tr class="memitem:a20a9e610b52275866fa5eb39cae785e9" id="r_a20a9e610b52275866fa5eb39cae785e9"><td class="memItemLeft" align="right" valign="top">QHostAddress&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20a9e610b52275866fa5eb39cae785e9">getSuggestedIPv4Address</a> () const</td></tr>
-<tr class="memdesc:a20a9e610b52275866fa5eb39cae785e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get recommended IP address (192.168.x.x preferred).  <br /></td></tr>
+<tr class="memdesc:a20a9e610b52275866fa5eb39cae785e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get recommended IP address (RFC-1918 addresses preferred).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Monitor network activity changes and provide IP address updates. </p>
@@ -240,7 +240,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Get recommended IP address (192.168.x.x preferred). </p>
+<p>Get recommended IP address (RFC-1918 addresses preferred). </p>
 <dl class="section return"><dt>Returns</dt><dd>Recommended IP address, returns null if none available </dd></dl>
 
 </div>

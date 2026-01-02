@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.128</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.138</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -139,12 +139,12 @@ $(function(){initNavTree('NetworkMonitor_8h_source.html','',''); });
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>  QTimer *m_checkTimer;                </div>
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>  QList&lt;QHostAddress&gt; m_lastAddresses; </div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">bool</span> m_isMonitoring;                 </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  <span class="keywordtype">bool</span> m_isMonitoring = <span class="keyword">false</span>;         </div>
 <div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
 </div>
 <div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
 <div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>} <span class="comment">// namespace deskflow::gui</span></div>
-<div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a20a9e610b52275866fa5eb39cae785e9"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a20a9e610b52275866fa5eb39cae785e9">deskflow::gui::NetworkMonitor::getSuggestedIPv4Address</a></div><div class="ttdeci">QHostAddress getSuggestedIPv4Address() const</div><div class="ttdoc">Get recommended IP address (192.168.x.x preferred).</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:122</div></div>
+<div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a20a9e610b52275866fa5eb39cae785e9"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a20a9e610b52275866fa5eb39cae785e9">deskflow::gui::NetworkMonitor::getSuggestedIPv4Address</a></div><div class="ttdeci">QHostAddress getSuggestedIPv4Address() const</div><div class="ttdoc">Get recommended IP address (RFC-1918 addresses preferred).</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:116</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a3ed515cd88c91324c260ff2dac075c68"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a3ed515cd88c91324c260ff2dac075c68">deskflow::gui::NetworkMonitor::~NetworkMonitor</a></div><div class="ttdeci">~NetworkMonitor() override=default</div><div class="ttdoc">Destroy the NetworkMonitor object.</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a60e7fd9af440e7b9d6f5563c9c82e9d6"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a60e7fd9af440e7b9d6f5563c9c82e9d6">deskflow::gui::NetworkMonitor::stopMonitoring</a></div><div class="ttdeci">void stopMonitoring()</div><div class="ttdoc">Stop network monitoring.</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:56</div></div>
 <div class="ttc" id="aclassdeskflow_1_1gui_1_1NetworkMonitor_html_a6385ceb106fbe5394c55cd2336adc216"><div class="ttname"><a href="classdeskflow_1_1gui_1_1NetworkMonitor.html#a6385ceb106fbe5394c55cd2336adc216">deskflow::gui::NetworkMonitor::startMonitoring</a></div><div class="ttdeci">void startMonitoring(int intervalMs=3000)</div><div class="ttdoc">Start network monitoring.</div><div class="ttdef"><b>Definition</b> NetworkMonitor.cpp:44</div></div>
