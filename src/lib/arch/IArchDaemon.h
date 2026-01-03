@@ -50,7 +50,7 @@ public:
     is called when the daemon must exit the main loop and it must cause
     \c runFunc to return.  \c func should return what \c runDaemon()
     returns.  \c func or \c runFunc can call
-    \c ArchMiscWindows::daemonFailed() to indicate startup failure.
+    \c ArchDaemonWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
   virtual int daemonize(DaemonFunc const &func) = 0;
