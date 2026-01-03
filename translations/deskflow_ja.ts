@@ -376,10 +376,6 @@ Do you want to connect to the server?
         <translation type="unfinished">IPアドレスを使用する： </translation>
     </message>
     <message>
-        <source>Selected as the interface in settings.</source>
-        <translation type="unfinished">設定でインターフェースとして選択されています。</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
         <translation>&lt;p&gt;ホスト名での接続が失敗する場合は %1 を試してください。&lt;/p&gt;</translation>
     </message>
@@ -540,12 +536,6 @@ Valid names:
  %1</source>
         <translation>クライアント:
  %1</translation>
-    </message>
-    <message>
-        <source>
-Interface is not active. Unable to start server.</source>
-        <translation type="unfinished">
-インターフェースがアクティブではありません。サーバーを起動できません。</translation>
     </message>
     <message>
         <source>Suggested IP: </source>

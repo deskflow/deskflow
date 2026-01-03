@@ -376,10 +376,6 @@ Do you want to connect to the server?
         <translation type="unfinished">使用IP地址： </translation>
     </message>
     <message>
-        <source>Selected as the interface in settings.</source>
-        <translation type="unfinished">在设置中选择为接口。</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
         <translation>&lt;p&gt;如果通过主机名连接失败，请尝试 %1&lt;/p&gt;</translation>
     </message>
@@ -540,12 +536,6 @@ Valid names:
  %1</source>
         <translation>客户端：
  %1</translation>
-    </message>
-    <message>
-        <source>
-Interface is not active. Unable to start server.</source>
-        <translation type="unfinished">
-接口未激活。无法启动服务器。</translation>
     </message>
     <message>
         <source>Suggested IP: </source>
