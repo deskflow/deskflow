@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -117,12 +118,6 @@ private:
   std::unique_ptr<SocketMultiplexer> m_socketMultiplexer;
   QString m_pname;
 };
-
-#if WINAPI_MSWINDOWS
-#define DAEMON_RUNNING(running_) ArchMiscWindows::daemonRunning(running_)
-#else
-#define DAEMON_RUNNING(running_)
-#endif
 
 #if !defined(WINAPI_LIBEI) && WINAPI_XWINDOWS
 constexpr static auto s_helpNoWayland = //
