@@ -412,10 +412,6 @@ Vuoi connetterti al server?
         <translation type="unfinished">Utilizzo dell&apos;indirizzo IP: </translation>
     </message>
     <message>
-        <source>Selected as the interface in settings.</source>
-        <translation type="unfinished">Selezionata come interfaccia nelle impostazioni.</translation>
-    </message>
-    <message>
         <source>Suggested IP: </source>
         <translation type="unfinished">IP suggerito: </translation>
     </message>
@@ -480,12 +476,6 @@ Nomi validi:
     <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificato non valido, ne viene generato uno nuovo</translation>
-    </message>
-    <message>
-        <source>
-Interface is not active. Unable to start server.</source>
-        <translation type="unfinished">
-L&apos;interfaccia non è attiva. Impossibile avviare il server.</translation>
     </message>
     <message>
         <source>%1 will retry in a moment...</source>
