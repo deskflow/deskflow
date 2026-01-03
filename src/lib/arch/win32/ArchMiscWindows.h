@@ -53,12 +53,6 @@ public:
   */
   static void daemonFailed(int result);
 
-  //! Get daemon quit message
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static UINT getDaemonQuitMessage();
-
   //! Open and return a registry key, closing the parent key
   static HKEY openKey(HKEY parent, const TCHAR *child);
 

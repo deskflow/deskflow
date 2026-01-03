@@ -8,7 +8,7 @@
 
 #include "platform/MSWindowsEventQueueBuffer.h"
 
-#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchDaemonWindows.h"
 #include "base/IEventQueue.h"
 
 //
@@ -24,7 +24,7 @@ MSWindowsEventQueueBuffer::MSWindowsEventQueueBuffer(IEventQueue *events) : m_ev
   m_userEvent = RegisterWindowMessage(L"DESKFLOW_USER_EVENT");
 
   // get message type for daemon quit
-  m_daemonQuit = ArchMiscWindows::getDaemonQuitMessage();
+  m_daemonQuit = ArchDaemonWindows::getDaemonQuitMessage();
 
   // make sure this thread has a message queue
   MSG dummy;

@@ -75,11 +75,6 @@ void ArchMiscWindows::daemonFailed(int result)
   ArchDaemonWindows::daemonFailed(result);
 }
 
-UINT ArchMiscWindows::getDaemonQuitMessage()
-{
-  return ArchDaemonWindows::getDaemonQuitMessage();
-}
-
 HKEY ArchMiscWindows::openKey(HKEY key, const TCHAR *keyName)
 {
   return openKey(key, keyName, false);
