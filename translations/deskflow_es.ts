@@ -424,10 +424,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Usando IP: </translation>
     </message>
     <message>
-        <source>Selected as the interface in settings.</source>
-        <translation type="unfinished">Seleccionado como la interfaz en la configuración.</translation>
-    </message>
-    <message>
         <source>Suggested IP: </source>
         <translation type="unfinished">IP sugerida: </translation>
     </message>
@@ -472,12 +468,6 @@ La dirección IP asignada ahora no es válida; es posible que deba reiniciar el 
     <message>
         <source>invalid certificate, generating a new one</source>
         <translation type="unfinished">certificado no válido, generando uno nuevo</translation>
-    </message>
-    <message>
-        <source>
-Interface is not active. Unable to start server.</source>
-        <translation type="unfinished">
-La interfaz no está activa. No se puede iniciar el servidor.</translation>
     </message>
     <message>
         <source>%1 will retry in a moment...</source>

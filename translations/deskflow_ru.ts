@@ -378,10 +378,6 @@ Do you want to connect to the server?
         <translation type="unfinished">Использование IP-адреса: </translation>
     </message>
     <message>
-        <source>Selected as the interface in settings.</source>
-        <translation type="unfinished">Выбран в качестве интерфейса в настройках.</translation>
-    </message>
-    <message>
         <source>&lt;p&gt;If connecting via the hostname fails, try %1&lt;/p&gt;</source>
         <translation>&lt;p&gt;Если подключение по имени хоста не получается, попробуй %1&lt;/p&gt;</translation>
     </message>
@@ -544,12 +540,6 @@ Valid names:
  %1</source>
         <translation>Клиент:
  %1</translation>
-    </message>
-    <message>
-        <source>
-Interface is not active. Unable to start server.</source>
-        <translation type="unfinished">
-Интерфейс неактивен. Невозможно запустить сервер.</translation>
     </message>
     <message>
         <source>Suggested IP: </source>

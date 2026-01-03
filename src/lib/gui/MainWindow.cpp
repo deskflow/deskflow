@@ -1,6 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2024 - 2026 Chris Rizzitello <sithord48@gmail.com>
  * SPDX-FileCopyrightText: (C) 2012 - 2024 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2008 Volker Lanz <vl@fidra.de>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -428,9 +429,9 @@ void MainWindow::coreProcessError(CoreProcess::Error error)
 void MainWindow::startCore()
 {
   // Save current IP state when server starts
-  if (m_coreProcess.mode() == CoreMode::Server) {
+  if (m_coreProcess.mode() == CoreMode::Server && Settings::value(Settings::Core::Interface).isNull()) {
     m_serverStartIPs = m_networkMonitor->getAvailableIPv4Addresses();
-    m_serverStartSuggestedIP = m_networkMonitor->getSuggestedIPv4Address();
+    m_serverStartSuggestedIP = m_serverStartIPs.isEmpty() ? "" : m_serverStartIPs.first();
   }
 
   m_coreProcess.start();
@@ -705,6 +706,11 @@ void MainWindow::applyConfig()
     ui->lineHostname->setText(Settings::value(Settings::Client::RemoteHost).toString());
   updateLocalFingerprint();
   setTrayIcon();
+
+  if (const auto ip = Settings::value(Settings::Core::Interface).toString(); !ip.isEmpty()) {
+    m_serverStartIPs = {ip};
+    m_serverStartSuggestedIP = ip;
+  }
 
   const auto coreMode = Settings::value(Settings::Core::CoreMode).value<Settings::CoreMode>();
 
@@ -1241,83 +1247,44 @@ void MainWindow::handleNewClientPromptRequest(const QString &clientName, bool us
   m_serverConnection.handleNewClientResult(clientName, result);
 }
 
-void MainWindow::updateIpLabel(const QList<QHostAddress> &addresses)
+void MainWindow::updateIpLabel(const QStringList &addresses)
 {
   if (m_coreProcess.mode() != CoreMode::Server) {
     return;
   }
 
   static const auto colorText = QStringLiteral(R"(<span style="color:%1;">%2</span>)");
+  const bool serverStarted = m_coreProcess.isStarted();
+  const bool fixedIP = !Settings::value(Settings::Core::Interface).isNull();
 
-  if (addresses.isEmpty()) {
+  if (!fixedIP && addresses.isEmpty() && !serverStarted || (serverStarted && m_serverStartSuggestedIP.isEmpty())) {
     ui->lblIpAddresses->setText(colorText.arg(palette().linkVisited().color().name(), tr("No IP Detected")));
     ui->lblIpAddresses->setToolTip(tr("Unable to detect an IP address. Check your network connection is active."));
     return;
   }
 
+  QString labelText = fixedIP ? tr("Using IP: ") : tr("Suggested IP: ");
+  QString toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
+
   // Get all available IPs for tooltip
-  QStringList ipList;
-  for (const auto &address : addresses) {
-    ipList.append(address.toString());
+  const bool filterIpList = (serverStarted || fixedIP);
+  const QRegularExpression ipListFilter(filterIpList ? QStringLiteral("(%1)").arg(m_serverStartIPs.join("|")) : "");
+  const QStringList ipList = addresses.filter(ipListFilter);
+
+  bool IPValid = true;
+  if (filterIpList && (m_serverStartSuggestedIP != m_currentIpAddress) || !ipList.contains(m_serverStartSuggestedIP)) {
+    IPValid = !ipList.isEmpty();
   }
 
-  QString labelText;
-  QString toolTipText;
-
-  // If we have a fixed IP we will use it
-  if (const auto ip = Settings::value(Settings::Core::Interface).toString(); !ip.isEmpty()) {
-    labelText = tr("Using IP: ");
-    toolTipText = tr("Selected as the interface in settings.");
-    if (ipList.contains(ip, Qt::CaseInsensitive)) {
-      labelText.append(ip);
-    } else {
-      labelText.append(colorText.arg(palette().linkVisited().color().name(), ip));
-      toolTipText.append(tr("\nInterface is not active. Unable to start server."));
-    }
-    ui->lblIpAddresses->setText(labelText);
-    ui->lblIpAddresses->setToolTip(toolTipText);
-    return;
-  }
-
-  labelText = tr("Suggested IP: ");
-  toolTipText = tr("<p>If connecting via the hostname fails, try %1</p>");
-
-  // Determine which IP to show and tooltip based on server state
-  if (m_coreProcess.isStarted()) {
-    // ipList should only include valid ip from servers start
-    ipList.clear();
-    for (const auto &address : std::as_const(m_serverStartIPs)) {
-      if (addresses.contains(address))
-        ipList.append(address.toString());
-    }
-
-    bool IPValid = true;
-    QString suggestedIP = m_serverStartSuggestedIP.toString();
-    if ((suggestedIP != m_currentIpAddress.toString()) || !addresses.contains(m_serverStartSuggestedIP)) {
-      IPValid = false;
-      for (const auto &address : std::as_const(m_serverStartIPs)) {
-        if (addresses.contains(address)) {
-          suggestedIP = address.toString();
-          m_currentIpAddress = address;
-          IPValid = true;
-          break;
-        }
-      }
-    }
-
-    if (IPValid) {
-      labelText.append(suggestedIP);
-    } else {
-      labelText.append(colorText.arg(palette().linkVisited().color().name(), suggestedIP));
-      toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
-    }
+  if (IPValid) {
+    m_currentIpAddress = ipList.first();
+    labelText.append(m_currentIpAddress);
   } else {
-    // Server is not running - update normally
-    m_currentIpAddress = m_networkMonitor->getSuggestedIPv4Address();
-    labelText.append(m_currentIpAddress.isNull() ? m_currentIpAddress.toString() : ipList.first());
+    labelText.append(colorText.arg(palette().linkVisited().color().name(), m_serverStartSuggestedIP));
+    toolTipText.append(tr("\nA bound IP is now invalid, you may need to restart the server."));
   }
 
-  if (ipList.count() < 2) {
+  if (ipList.count() < 2 || fixedIP) {
     toolTipText = toolTipText.arg(tr("the suggested IP."));
   } else {
     toolTipText = toolTipText.arg(tr("one of the following IPs:<br/>%1").arg(ipList.join("<br/>")));

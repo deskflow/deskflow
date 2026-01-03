@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -63,7 +63,7 @@ void NetworkMonitor::stopMonitoring()
   m_isMonitoring = false;
 }
 
-QList<QHostAddress> NetworkMonitor::getAvailableIPv4Addresses() const
+QStringList NetworkMonitor::getAvailableIPv4Addresses() const
 {
   QList<QHostAddress> physicalIPs;
   QList<QHostAddress> virtualIPs;
@@ -110,18 +110,14 @@ QList<QHostAddress> NetworkMonitor::getAvailableIPv4Addresses() const
   auto result = physicalIPs;
   result.append(virtualIPs);
 
-  return result;
+  QStringList ipList;
+  for (const auto &host : result) {
+    ipList.append(host.toString());
+  }
+  return ipList;
 }
 
-QHostAddress NetworkMonitor::getSuggestedIPv4Address() const
-{
-  const auto addresses = getAvailableIPv4Addresses();
-  if (addresses.isEmpty())
-    return QHostAddress();
-  return addresses.first();
-}
-
-void NetworkMonitor::setIpAddresses(const QList<QHostAddress> &newAddresses)
+void NetworkMonitor::setIpAddresses(const QStringList &newAddresses)
 {
   if (newAddresses == m_lastAddresses)
     return;

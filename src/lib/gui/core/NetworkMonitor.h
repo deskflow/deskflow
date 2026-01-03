@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -50,23 +50,17 @@ public:
    * @brief Get list of all available IPv4 addresses (excluding local and link-local addresses)
    * @return IPv4 address list
    */
-  QList<QHostAddress> getAvailableIPv4Addresses() const;
-
-  /**
-   * @brief Get recommended IP address (RFC-1918 addresses preferred)
-   * @return Recommended IP address, returns null if none available
-   */
-  QHostAddress getSuggestedIPv4Address() const;
+  QStringList getAvailableIPv4Addresses() const;
 
 Q_SIGNALS:
   /**
    * @brief Emitted when IP addresses change
    * @param addresses New IP address list
    */
-  void ipAddressesChanged(const QList<QHostAddress> &addresses);
+  void ipAddressesChanged(const QStringList &addresses);
 
 private:
-  void setIpAddresses(const QList<QHostAddress> &newAddresses);
+  void setIpAddresses(const QStringList &newAddresses);
 
   /**
    * @brief Check if a network interface is virtual
@@ -80,9 +74,9 @@ private:
    */
   void updateNetworkState();
 
-  QTimer *m_checkTimer;                ///< Timer for periodic network checks
-  QList<QHostAddress> m_lastAddresses; ///< Last known IP addresses
-  bool m_isMonitoring = false;         ///< Flag indicating if monitoring is active
+  QTimer *m_checkTimer;        ///< Timer for periodic network checks
+  QStringList m_lastAddresses; ///< Last known IP addresses
+  bool m_isMonitoring = false; ///< Flag indicating if monitoring is active
 };
 
 } // namespace deskflow::gui
