@@ -17,7 +17,7 @@
 
 #if SYSAPI_WIN32
 
-#include "arch/win32/ArchMiscWindows.h" // IWYU pragma: keep
+#include "arch/win32/ArchDaemonWindows.h"
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -164,7 +164,7 @@ int DaemonApp::daemonLoop()
 {
 #if SYSAPI_WIN32
   // Runs the daemon through the Windows service controller, which controls the program lifecycle.
-  return ArchMiscWindows::runDaemon([this]() { return mainLoop(); });
+  return ArchDaemonWindows::runDaemon([this]() { return mainLoop(); });
 #elif SYSAPI_UNIX
   return mainLoop();
 #endif

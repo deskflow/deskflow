@@ -8,7 +8,6 @@
 
 #include "arch/win32/ArchMiscWindows.h"
 
-#include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Log.h"
 #include "base/String.h"
@@ -63,11 +62,6 @@ void ArchMiscWindows::init()
 {
   // stop windows system error dialogs from showing.
   SetErrorMode(SEM_FAILCRITICALERRORS);
-}
-
-int ArchMiscWindows::runDaemon(RunFunc runFunc)
-{
-  return ArchDaemonWindows::runDaemon(runFunc);
 }
 
 HKEY ArchMiscWindows::openKey(HKEY key, const TCHAR *keyName)
