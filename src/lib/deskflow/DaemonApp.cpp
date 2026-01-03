@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -12,12 +13,11 @@
 #include "base/LogOutputters.h"
 #include "common/ExitCodes.h"
 #include "common/Settings.h"
-#include "deskflow/App.h"
 #include "deskflow/ipc/DaemonIpcServer.h"
 
 #if SYSAPI_WIN32
 
-#include "arch/win32/ArchMiscWindows.h" // IWYU pragma: keep
+#include "arch/win32/ArchDaemonWindows.h"
 #include "deskflow/Screen.h"
 #include "platform/MSWindowsDebugOutputter.h"
 #include "platform/MSWindowsEventQueueBuffer.h"
@@ -164,7 +164,7 @@ int DaemonApp::daemonLoop()
 {
 #if SYSAPI_WIN32
   // Runs the daemon through the Windows service controller, which controls the program lifecycle.
-  return ArchMiscWindows::runDaemon([this]() { return mainLoop(); });
+  return ArchDaemonWindows::runDaemon([this]() { return mainLoop(); });
 #elif SYSAPI_UNIX
   return mainLoop();
 #endif
@@ -177,9 +177,8 @@ int DaemonApp::mainLoop()
     LOG_ERR("watchdog not initialized");
     return s_exitFailed;
   }
+  ArchDaemonWindows::daemonRunning(true);
 #endif
-
-  DAEMON_RUNNING(true);
 
   try {
 #if SYSAPI_WIN32
@@ -211,9 +210,9 @@ int DaemonApp::mainLoop()
   } catch (...) { // NOSONAR - Catching remaining exceptions
     LOG_CRIT("daemon stop watchdog unknown error");
   }
+  ArchDaemonWindows::daemonRunning(false);
 #endif
 
-  DAEMON_RUNNING(false);
   return s_exitSuccess;
 }
 

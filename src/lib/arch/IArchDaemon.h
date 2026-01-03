@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -41,16 +41,16 @@ public:
     Becomes a service.  Argument 0 is the name of the service
     and the rest are the arguments passed to StartService().
     \c func is only called when the service is actually started.
-    \c func must call \c ArchMiscWindows::runDaemon() to finally
+    \c func must call \c ArchDaemonWindows::runDaemon() to finally
     becoming a service.  The \c runFunc function passed to \c runDaemon()
-    must call \c ArchMiscWindows::daemonRunning(true) when it
+    must call \c ArchDaemonWindows::daemonRunning(true) when it
     enters the main loop (i.e. after initialization) and
-    \c ArchMiscWindows::daemonRunning(false) when it leaves
+    \c ArchDaemonWindows::daemonRunning(false) when it leaves
     the main loop.  The \c stopFunc function passed to \c runDaemon()
     is called when the daemon must exit the main loop and it must cause
     \c runFunc to return.  \c func should return what \c runDaemon()
     returns.  \c func or \c runFunc can call
-    \c ArchMiscWindows::daemonFailed() to indicate startup failure.
+    \c ArchDaemonWindows::daemonFailed() to indicate startup failure.
   </ul>
   */
   virtual int daemonize(DaemonFunc const &func) = 0;

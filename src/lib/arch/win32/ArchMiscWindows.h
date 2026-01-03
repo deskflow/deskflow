@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -39,30 +40,6 @@ public:
 
   //! Initialize
   static void init();
-
-  //! Run the daemon
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static int runDaemon(RunFunc runFunc);
-
-  //! Indicate daemon is in main loop
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static void daemonRunning(bool running);
-
-  //! Indicate failure of running daemon
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static void daemonFailed(int result);
-
-  //! Get daemon quit message
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static UINT getDaemonQuitMessage();
 
   //! Open and return a registry key, closing the parent key
   static HKEY openKey(HKEY parent, const TCHAR *child);
