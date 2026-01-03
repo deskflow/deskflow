@@ -65,7 +65,7 @@ int AppUtilWindows::daemonNTMainLoop()
 {
   app().initApp();
 
-  return ArchMiscWindows::runDaemon(mainLoopStatic);
+  return ArchDaemonWindows::runDaemon(mainLoopStatic);
 }
 
 void AppUtilWindows::exitApp(int code)
