@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -8,6 +9,7 @@
 #include "deskflow/win32/AppUtilWindows.h"
 
 #include "arch/Arch.h"
+#include "arch/win32/ArchDaemonWindows.h"
 #include "arch/win32/ArchMiscWindows.h"
 #include "arch/win32/XArchWindows.h"
 #include "base/Event.h"
@@ -71,7 +73,7 @@ void AppUtilWindows::exitApp(int code)
   switch (m_exitMode) {
 
   case kExitModeDaemon:
-    ArchMiscWindows::daemonFailed(code);
+    ArchDaemonWindows::daemonFailed(code);
     break;
 
   default:

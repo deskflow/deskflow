@@ -47,12 +47,6 @@ public:
   */
   static int runDaemon(RunFunc runFunc);
 
-  //! Indicate failure of running daemon
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static void daemonFailed(int result);
-
   //! Open and return a registry key, closing the parent key
   static HKEY openKey(HKEY parent, const TCHAR *child);
 

@@ -70,11 +70,6 @@ int ArchMiscWindows::runDaemon(RunFunc runFunc)
   return ArchDaemonWindows::runDaemon(runFunc);
 }
 
-void ArchMiscWindows::daemonFailed(int result)
-{
-  ArchDaemonWindows::daemonFailed(result);
-}
-
 HKEY ArchMiscWindows::openKey(HKEY key, const TCHAR *keyName)
 {
   return openKey(key, keyName, false);
