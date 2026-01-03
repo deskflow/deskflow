@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2012 Symless Ltd.
  * SPDX-FileCopyrightText: (C) 2002 Chris Schoeneman
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
@@ -23,7 +23,7 @@
 #include "net/TCPSocketFactory.h"
 
 #if SYSAPI_WIN32
-#include "arch/win32/ArchMiscWindows.h"
+#include "arch/win32/ArchDaemonWindows.h"
 #endif
 
 #if WINAPI_MSWINDOWS
@@ -306,7 +306,9 @@ int ClientApp::mainLoop()
   // run event loop.  if startClient() failed we're supposed to retry
   // later.  the timer installed by startClient() will take care of
   // that.
-  DAEMON_RUNNING(true);
+#if SYSAPI_WIN32
+  ArchDaemonWindows::daemonRunning(true);
+#endif
 
 #if WINAPI_CARBON
 
@@ -321,7 +323,9 @@ int ClientApp::mainLoop()
   getEvents()->loop();
 #endif
 
-  DAEMON_RUNNING(false);
+#if SYSAPI_WIN32
+  ArchDaemonWindows::daemonRunning(false);
+#endif
 
   // close down
   LOG_DEBUG1("stopping client");
