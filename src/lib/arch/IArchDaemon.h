@@ -41,7 +41,7 @@ public:
     Becomes a service.  Argument 0 is the name of the service
     and the rest are the arguments passed to StartService().
     \c func is only called when the service is actually started.
-    \c func must call \c ArchMiscWindows::runDaemon() to finally
+    \c func must call \c ArchDaemonWindows::runDaemon() to finally
     becoming a service.  The \c runFunc function passed to \c runDaemon()
     must call \c ArchDaemonWindows::daemonRunning(true) when it
     enters the main loop (i.e. after initialization) and

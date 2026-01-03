@@ -41,12 +41,6 @@ public:
   //! Initialize
   static void init();
 
-  //! Run the daemon
-  /*!
-  Delegates to ArchDaemonWindows.
-  */
-  static int runDaemon(RunFunc runFunc);
-
   //! Open and return a registry key, closing the parent key
   static HKEY openKey(HKEY parent, const TCHAR *child);
 
