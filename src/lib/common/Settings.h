@@ -67,6 +67,7 @@ public:
     inline static const auto AutoStartCore = QStringLiteral("gui/startCoreWithGui");
     inline static const auto AutoUpdateCheck = QStringLiteral("gui/enableUpdateCheck");
     inline static const auto UpdateCheckUrl = QStringLiteral("gui/updateCheckUrl");
+    inline static const auto JoinPopularityContest = QStringLiteral("gui/joinPopularityContest");
     inline static const auto CloseReminder = QStringLiteral("gui/closeReminder");
     inline static const auto CloseToTray = QStringLiteral("gui/closeToTray");
     inline static const auto LogExpanded = QStringLiteral("gui/logExpanded");
@@ -207,6 +208,7 @@ private:
     , Settings::Gui::AutoStartCore
     , Settings::Gui::AutoUpdateCheck
     , Settings::Gui::UpdateCheckUrl
+    , Settings::Gui::JoinPopularityContest
     , Settings::Gui::CloseReminder
     , Settings::Gui::CloseToTray
     , Settings::Gui::LogExpanded
@@ -229,6 +231,7 @@ private:
     , Settings::Gui::AutoStartCore
     , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Gui::ShownServerFirstStartMessage
+    , Settings::Gui::JoinPopularityContest
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
     , Settings::Server::ExternalConfig

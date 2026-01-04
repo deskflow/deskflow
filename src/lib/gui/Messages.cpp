@@ -8,14 +8,18 @@
 
 #include "Logger.h"
 
+#include "VersionChecker.h"
+
 #include "common/Enums.h"
 #include "common/Settings.h"
 #include "common/UrlConstants.h"
 #include "common/VersionInfo.h"
 
 #include <QCheckBox>
+#include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QVBoxLayout>
 #include <memory>
 
 namespace deskflow::gui::messages {
@@ -298,22 +302,94 @@ void showWaylandLibraryError(QWidget *parent)
   );
 }
 
-bool showUpdateCheckOption(QWidget *parent)
+OnlineServicesOptions showOnlineServicesOptions(QWidget *parent)
 {
-  QMessageBox message(parent);
-  message.addButton(QObject::tr("No thanks"), QMessageBox::RejectRole);
-  const auto checkButton = message.addButton(QObject::tr("Check for updates"), QMessageBox::AcceptRole);
-  message.setText(
-      QObject::tr(
-          "<p>Would you like to check for updates when %1 starts?</p>"
-          "<p>Checking for updates requires an Internet connection.</p>"
-          "<p>URL: <pre>%2</pre></p>"
-      )
-          .arg(kAppName, Settings::value(Settings::Gui::UpdateCheckUrl).toString())
-  );
+  QDialog dialog(parent);
+  auto layout = new QVBoxLayout(&dialog);
 
-  message.exec();
-  return message.clickedButton() == checkButton;
+  auto about = new QLabel(
+      QObject::tr(
+          "Some optional %1 features require an Internet connection. "
+          "Would you like to enable them?"
+      )
+          .arg(kAppName)
+  );
+  about->setWordWrap(true);
+  layout->addWidget(about);
+
+  auto prompt = new QLabel(QObject::tr("Choose which features to enable:"));
+  layout->addWidget(prompt);
+
+  auto cbCheckForUpdates = new QCheckBox(QObject::tr("Check for new versions when app starts"));
+  layout->addWidget(cbCheckForUpdates);
+
+  auto cbPopularityContest = new QCheckBox(QObject::tr("Participate in popularity contest"));
+  cbPopularityContest->setEnabled(false);
+  cbPopularityContest->setToolTip(
+      QObject::tr("Requires the version check. The popularity contest is based on the user agent.")
+  );
+  layout->addWidget(cbPopularityContest);
+
+  auto url = new QLabel(
+      QObject::tr("<b>URL:</b>&nbsp;&nbsp;<code>%1</code>")
+          .arg(Settings::value(Settings::Gui::UpdateCheckUrl).toString())
+  );
+  layout->addWidget(url);
+
+  auto userAgent = new QLabel();
+  userAgent->setWordWrap(true);
+  userAgent->setVisible(false);
+  layout->addWidget(userAgent);
+
+  auto buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok);
+  auto cancelButton = buttonBox->addButton(QObject::tr("No thanks"), QDialogButtonBox::RejectRole);
+  layout->addWidget(buttonBox);
+
+  QObject::connect(buttonBox, &QDialogButtonBox::accepted, &dialog, &QDialog::accept);
+  QObject::connect(buttonBox, &QDialogButtonBox::rejected, &dialog, &QDialog::reject);
+
+  auto okButton = buttonBox->button(QDialogButtonBox::Ok);
+  okButton->setEnabled(false);
+
+  auto update = [&]() {
+    // Popularity contest requires update check.
+    cbPopularityContest->setEnabled(cbCheckForUpdates->isChecked());
+    if (!cbCheckForUpdates->isChecked()) {
+      cbPopularityContest->setChecked(false);
+    }
+
+    // Disable accept if no checkbox is checked. This is important because the user may not take the
+    // time understand they need to check at least one option.
+    okButton->setEnabled(cbCheckForUpdates->isChecked() || cbPopularityContest->isChecked());
+
+    const auto static userAgentText = QObject::tr("<b>User agent:</b>&nbsp;&nbsp;<code>%1</code>");
+
+    if (cbPopularityContest->isChecked()) {
+      userAgent->setText(userAgentText.arg(VersionChecker::getUserAgent(true)));
+      userAgent->setVisible(true);
+    } else if (cbCheckForUpdates->isChecked()) {
+      userAgent->setText(userAgentText.arg(VersionChecker::getUserAgent(false)));
+      userAgent->setVisible(true);
+    } else {
+      userAgent->setVisible(false);
+    }
+
+    dialog.adjustSize();
+  };
+
+  QObject::connect(cbCheckForUpdates, &QCheckBox::toggled, update);
+  QObject::connect(cbPopularityContest, &QCheckBox::toggled, update);
+
+  dialog.exec();
+
+  if (dialog.result() != QDialog::Accepted) {
+    return {};
+  }
+
+  OnlineServicesOptions options;
+  options.checkForUpdates = cbCheckForUpdates->isChecked();
+  options.joinPopularityContest = cbPopularityContest->isChecked();
+  return options;
 }
 
 bool showDaemonOffline(QWidget *parent)

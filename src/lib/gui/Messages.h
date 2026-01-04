@@ -15,6 +15,19 @@ class QWidget;
 
 namespace deskflow::gui::messages {
 
+enum class ClientError
+{
+  AlreadyConnected,
+  HostnameError,
+  GenericError
+};
+
+struct OnlineServicesOptions
+{
+  bool checkForUpdates;
+  bool joinPopularityContest;
+};
+
 void messageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 void raiseCriticalDialog();
@@ -35,7 +48,7 @@ void showReadOnlySettings(QWidget *parent, const QString &systemSettingsPath);
 
 void showWaylandLibraryError(QWidget *parent);
 
-bool showUpdateCheckOption(QWidget *parent);
+OnlineServicesOptions showOnlineServicesOptions(QWidget *parent);
 
 bool showDaemonOffline(QWidget *parent);
 
