@@ -947,8 +947,9 @@ void KeyMap::addKeystrokes(
 
   case kKeystrokeRepeat:
     if (deskflow::platform::isWindows()) {
-      // Windows repeat needs this
       keystrokes.push_back(Keystroke(button, false, true, data));
+      keystrokes.push_back(Keystroke(button, true, true, data));
+    } else if (deskflow::platform::isMac()) {
       keystrokes.push_back(Keystroke(button, true, true, data));
     }
     break;
