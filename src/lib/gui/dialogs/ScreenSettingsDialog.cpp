@@ -60,6 +60,9 @@ ScreenSettingsDialog::ScreenSettingsDialog(QWidget *parent, Screen *screen, cons
   ui->chkFixScrollLock->setChecked(m_screen->fix(ScrollLock));
   ui->chkFixXTest->setChecked(m_screen->fix(XTest));
 
+  ui->lineRunEnterScreen->setText(m_screen->m_enterScreenCommand.value_or(QString()));
+  ui->lineRunLeaveScreen->setText(m_screen->m_exitScreenCommand.value_or(QString()));
+
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ScreenSettingsDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ScreenSettingsDialog::reject);
   connect(ui->btnAddAlias, &QPushButton::clicked, this, &ScreenSettingsDialog::addAlias);
@@ -113,6 +116,18 @@ void ScreenSettingsDialog::accept()
   m_screen->setFix(NumLock, ui->chkFixNumLock->isChecked());
   m_screen->setFix(ScrollLock, ui->chkFixScrollLock->isChecked());
   m_screen->setFix(XTest, ui->chkFixXTest->isChecked());
+
+  if (ui->lineRunEnterScreen->text().isEmpty()) {
+    m_screen->m_enterScreenCommand = std::nullopt;
+  } else {
+    m_screen->m_enterScreenCommand = ui->lineRunEnterScreen->text();
+  }
+
+  if (ui->lineRunLeaveScreen->text().isEmpty()) {
+    m_screen->m_exitScreenCommand = std::nullopt;
+  } else {
+    m_screen->m_exitScreenCommand = ui->lineRunLeaveScreen->text();
+  }
 
   QDialog::accept();
 }
