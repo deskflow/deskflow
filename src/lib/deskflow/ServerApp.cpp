@@ -621,13 +621,6 @@ const char *ServerApp::daemonName() const
   return "deskflow-server";
 }
 
-const char *ServerApp::daemonInfo() const
-{
-  if (deskflow::platform::isWindows())
-    return "Shares this computers mouse and keyboard with other computers.";
-  return "";
-}
-
 void ServerApp::startNode()
 {
   // start the server.  if this return false then we've failed and
