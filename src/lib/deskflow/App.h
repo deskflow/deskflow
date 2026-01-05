@@ -74,7 +74,6 @@ public:
   }
 
   int run();
-  int daemonMainLoop(int, const char **);
   void setupFileLogging();
   void loggingFilterWarning() const;
   void initApp() override;

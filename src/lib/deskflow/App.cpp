@@ -101,12 +101,6 @@ int App::run()
   return result;
 }
 
-int App::daemonMainLoop(int, const char **)
-{
-  SystemLogger sysLogger(daemonName(), !deskflow::platform::isWindows());
-  return mainLoop();
-}
-
 void App::setupFileLogging()
 {
   if (Settings::value(Settings::Log::ToFile).toBool()) {
