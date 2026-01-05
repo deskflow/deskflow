@@ -608,11 +608,6 @@ int ServerApp::runInner(StartupFunc startup)
   return result;
 }
 
-int daemonMainLoopStatic()
-{
-  return ServerApp::instance().daemonMainLoop(0, nullptr);
-}
-
 int ServerApp::start()
 {
   initApp();

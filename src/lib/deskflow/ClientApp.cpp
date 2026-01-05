@@ -335,11 +335,6 @@ int ClientApp::mainLoop()
   return s_exitSuccess;
 }
 
-static int daemonMainLoopStatic()
-{
-  return ClientApp::instance().daemonMainLoop(0, nullptr);
-}
-
 int ClientApp::start()
 {
   initApp();
