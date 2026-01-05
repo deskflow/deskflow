@@ -32,7 +32,7 @@ var searchData=
   ['interrupt_29',['interrupt',['../EventQueue_8cpp.html#a3a852b93fae6ddf02f74df9a27f7a488',1,'EventQueue.cpp']]],
   ['invalidhello_30',['invalidHello',['../structdeskflow_1_1client_1_1HelloBack_1_1Deps.html#a28afb3dccfc9ea4bf5d26a8d01fd1703',1,'deskflow::client::HelloBack::Deps']]],
   ['inversetransform_31',['inverseTransform',['../classdeskflow_1_1server_1_1Config_1_1CellEdge.html#a0037cafd7326cdd026cbbad462273e13',1,'deskflow::server::Config::CellEdge']]],
-  ['ipaddresseschanged_32',['ipAddressesChanged',['../classdeskflow_1_1gui_1_1NetworkMonitor.html#ac671757bc9d1fe89131ad14b8e47ac4b',1,'deskflow::gui::NetworkMonitor']]],
+  ['ipaddresseschanged_32',['ipAddressesChanged',['../classdeskflow_1_1gui_1_1NetworkMonitor.html#ad4663600ff5a3e9f822cb2345043d052',1,'deskflow::gui::NetworkMonitor']]],
   ['ipaddressvalidator_33',['IpAddressValidator',['../classvalidators_1_1IpAddressValidator.html#aa7b16a16a3a212ff3fc72999b78f2cd2',1,'validators::IpAddressValidator']]],
   ['iplatformscreen_34',['IPlatformScreen',['../classIPlatformScreen.html#a0b5c4eae26eb869d5ad102eaac9c4444',1,'IPlatformScreen']]],
   ['isactive_35',['isActive',['../classIScreenSaver.html#a0f7217d29f57db8a7c159a440d4c9ad1',1,'IScreenSaver::isActive()'],['../classMSWindowsScreenSaver.html#a994fd74166b3691e351aa8247a58f261',1,'MSWindowsScreenSaver::isActive()'],['../classOSXScreenSaver.html#a2e1a2cce3fa391703fc94bf2348053fe',1,'OSXScreenSaver::isActive()'],['../classdeskflow_1_1PortalInputCapture.html#a6ec5e2d9b13c1b641d2417ea0cfd1114',1,'deskflow::PortalInputCapture::isActive()'],['../classXWindowsScreenSaver.html#acbf8af801ae507aac6aa89128466a03c',1,'XWindowsScreenSaver::isActive()']]],

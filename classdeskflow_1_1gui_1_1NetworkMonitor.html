@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.140</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.146</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -122,8 +122,8 @@ Collaboration diagram for deskflow::gui::NetworkMonitor:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-signals" class="groupheader"><a id="signals" name="signals"></a>
 Signals</h2></td></tr>
-<tr class="memitem:ac671757bc9d1fe89131ad14b8e47ac4b" id="r_ac671757bc9d1fe89131ad14b8e47ac4b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ac671757bc9d1fe89131ad14b8e47ac4b">ipAddressesChanged</a> (const QList&lt; QHostAddress &gt; &amp;addresses)</td></tr>
-<tr class="memdesc:ac671757bc9d1fe89131ad14b8e47ac4b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted when IP addresses change.  <br /></td></tr>
+<tr class="memitem:ad4663600ff5a3e9f822cb2345043d052" id="r_ad4663600ff5a3e9f822cb2345043d052"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad4663600ff5a3e9f822cb2345043d052">ipAddressesChanged</a> (const QStringList &amp;addresses)</td></tr>
+<tr class="memdesc:ad4663600ff5a3e9f822cb2345043d052"><td class="mdescLeft">&#160;</td><td class="mdescRight">Emitted when IP addresses change.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -135,10 +135,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a6385ceb106fbe5394c55cd2336adc216"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start network monitoring.  <br /></td></tr>
 <tr class="memitem:a60e7fd9af440e7b9d6f5563c9c82e9d6" id="r_a60e7fd9af440e7b9d6f5563c9c82e9d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a60e7fd9af440e7b9d6f5563c9c82e9d6">stopMonitoring</a> ()</td></tr>
 <tr class="memdesc:a60e7fd9af440e7b9d6f5563c9c82e9d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop network monitoring.  <br /></td></tr>
-<tr class="memitem:af162cf4b7742bb883e1a1fc986ebfdfa" id="r_af162cf4b7742bb883e1a1fc986ebfdfa"><td class="memItemLeft" align="right" valign="top">QList&lt; QHostAddress &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af162cf4b7742bb883e1a1fc986ebfdfa">getAvailableIPv4Addresses</a> () const</td></tr>
-<tr class="memdesc:af162cf4b7742bb883e1a1fc986ebfdfa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IPv4 addresses (excluding local and link-local addresses).  <br /></td></tr>
-<tr class="memitem:a20a9e610b52275866fa5eb39cae785e9" id="r_a20a9e610b52275866fa5eb39cae785e9"><td class="memItemLeft" align="right" valign="top">QHostAddress&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a20a9e610b52275866fa5eb39cae785e9">getSuggestedIPv4Address</a> () const</td></tr>
-<tr class="memdesc:a20a9e610b52275866fa5eb39cae785e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get recommended IP address (RFC-1918 addresses preferred).  <br /></td></tr>
+<tr class="memitem:aa5f6d6e7a465766256ff667c57e57d22" id="r_aa5f6d6e7a465766256ff667c57e57d22"><td class="memItemLeft" align="right" valign="top">QStringList&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#aa5f6d6e7a465766256ff667c57e57d22">getAvailableIPv4Addresses</a> () const</td></tr>
+<tr class="memdesc:aa5f6d6e7a465766256ff667c57e57d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get list of all available IPv4 addresses (excluding local and link-local addresses).  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Monitor network activity changes and provide IP address updates. </p>
@@ -205,14 +203,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="af162cf4b7742bb883e1a1fc986ebfdfa" name="af162cf4b7742bb883e1a1fc986ebfdfa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af162cf4b7742bb883e1a1fc986ebfdfa">&#9670;&#160;</a></span>getAvailableIPv4Addresses()</h2>
+<a id="aa5f6d6e7a465766256ff667c57e57d22" name="aa5f6d6e7a465766256ff667c57e57d22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5f6d6e7a465766256ff667c57e57d22">&#9670;&#160;</a></span>getAvailableIPv4Addresses()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">QList&lt; QHostAddress &gt; deskflow::gui::NetworkMonitor::getAvailableIPv4Addresses </td>
+          <td class="memname">QStringList deskflow::gui::NetworkMonitor::getAvailableIPv4Addresses </td>
           <td>(</td>
           <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
           <td> const</td>
@@ -225,28 +223,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a20a9e610b52275866fa5eb39cae785e9" name="a20a9e610b52275866fa5eb39cae785e9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20a9e610b52275866fa5eb39cae785e9">&#9670;&#160;</a></span>getSuggestedIPv4Address()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">QHostAddress deskflow::gui::NetworkMonitor::getSuggestedIPv4Address </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Get recommended IP address (RFC-1918 addresses preferred). </p>
-<dl class="section return"><dt>Returns</dt><dd>Recommended IP address, returns null if none available </dd></dl>
-
-</div>
-</div>
-<a id="ac671757bc9d1fe89131ad14b8e47ac4b" name="ac671757bc9d1fe89131ad14b8e47ac4b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac671757bc9d1fe89131ad14b8e47ac4b">&#9670;&#160;</a></span>ipAddressesChanged</h2>
+<a id="ad4663600ff5a3e9f822cb2345043d052" name="ad4663600ff5a3e9f822cb2345043d052"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4663600ff5a3e9f822cb2345043d052">&#9670;&#160;</a></span>ipAddressesChanged</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -257,7 +235,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">void deskflow::gui::NetworkMonitor::ipAddressesChanged </td>
           <td>(</td>
-          <td class="paramtype">const QList&lt; QHostAddress &gt; &amp;</td>          <td class="paramname"><span class="paramname"><em>addresses</em></span></td><td>)</td>
+          <td class="paramtype">const QStringList &amp;</td>          <td class="paramname"><span class="paramname"><em>addresses</em></span></td><td>)</td>
           <td></td>
         </tr>
       </table>
