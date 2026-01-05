@@ -83,13 +83,6 @@ const char *ClientApp::daemonName() const
   return "deskflow-client";
 }
 
-const char *ClientApp::daemonInfo() const
-{
-  if (deskflow::platform::isWindows())
-    return "Allows another computer to share it's keyboard and mouse with this computer.";
-  return "";
-}
-
 deskflow::Screen *ClientApp::createScreen()
 {
   const bool invertScrolling = Settings::value(Settings::Client::InvertScrollDirection).toBool();
