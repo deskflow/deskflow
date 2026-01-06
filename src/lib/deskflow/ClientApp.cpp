@@ -22,10 +22,6 @@
 #include "net/SocketMultiplexer.h"
 #include "net/TCPSocketFactory.h"
 
-#if SYSAPI_WIN32
-#include "arch/win32/ArchDaemonWindows.h"
-#endif
-
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
 #endif
@@ -299,9 +295,6 @@ int ClientApp::mainLoop()
   // run event loop.  if startClient() failed we're supposed to retry
   // later.  the timer installed by startClient() will take care of
   // that.
-#if SYSAPI_WIN32
-  ArchDaemonWindows::daemonRunning(true);
-#endif
 
 #if WINAPI_CARBON
 
@@ -314,10 +307,6 @@ int ClientApp::mainLoop()
   runCocoaApp();
 #else
   getEvents()->loop();
-#endif
-
-#if SYSAPI_WIN32
-  ArchDaemonWindows::daemonRunning(false);
 #endif
 
   // close down

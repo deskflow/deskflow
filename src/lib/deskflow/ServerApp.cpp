@@ -30,10 +30,6 @@
 // must be before screen header includes
 #include <QFileInfo>
 
-#if SYSAPI_WIN32
-#include "arch/win32/ArchDaemonWindows.h"
-#endif
-
 #if WINAPI_MSWINDOWS
 #include "platform/MSWindowsScreen.h"
 #endif
@@ -556,9 +552,6 @@ int ServerApp::mainLoop()
   // run event loop.  if startServer() failed we're supposed to retry
   // later.  the timer installed by startServer() will take care of
   // that.
-#if SYSAPI_WIN32
-  ArchDaemonWindows::daemonRunning(true);
-#endif
 
 #if WINAPI_CARBON
 
@@ -571,10 +564,6 @@ int ServerApp::mainLoop()
   runCocoaApp();
 #else
   getEvents()->loop();
-#endif
-
-#if SYSAPI_WIN32
-  ArchDaemonWindows::daemonRunning(false);
 #endif
 
   // close down
