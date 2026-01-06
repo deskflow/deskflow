@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.146</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.154</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -121,14 +121,6 @@ Public Types</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a1879b7be8bafc875ab8f754395c1a876" id="r_a1879b7be8bafc875ab8f754395c1a876"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1879b7be8bafc875ab8f754395c1a876">init</a> ()</td></tr>
 <tr class="memdesc:a1879b7be8bafc875ab8f754395c1a876"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize.  <br /></td></tr>
-<tr class="memitem:af1c7cebddb8f59ed0b6b1fbf05476350" id="r_af1c7cebddb8f59ed0b6b1fbf05476350"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af1c7cebddb8f59ed0b6b1fbf05476350">runDaemon</a> (<a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a> runFunc)</td></tr>
-<tr class="memdesc:af1c7cebddb8f59ed0b6b1fbf05476350"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run the daemon.  <br /></td></tr>
-<tr class="memitem:a6cde99dc95dcc64c65c317c53a551596" id="r_a6cde99dc95dcc64c65c317c53a551596"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6cde99dc95dcc64c65c317c53a551596">daemonRunning</a> (bool running)</td></tr>
-<tr class="memdesc:a6cde99dc95dcc64c65c317c53a551596"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicate daemon is in main loop.  <br /></td></tr>
-<tr class="memitem:a360732a6f21a223a0595c1a75354dbd0" id="r_a360732a6f21a223a0595c1a75354dbd0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a360732a6f21a223a0595c1a75354dbd0">daemonFailed</a> (<a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> result)</td></tr>
-<tr class="memdesc:a360732a6f21a223a0595c1a75354dbd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicate failure of running daemon.  <br /></td></tr>
-<tr class="memitem:a6b5a02c76621c4201286f457bba3999c" id="r_a6b5a02c76621c4201286f457bba3999c"><td class="memItemLeft" align="right" valign="top">static UINT&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a6b5a02c76621c4201286f457bba3999c">getDaemonQuitMessage</a> ()</td></tr>
-<tr class="memdesc:a6b5a02c76621c4201286f457bba3999c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get daemon quit message.  <br /></td></tr>
 <tr class="memitem:acb3a0e4bd0af6f28cd132963961cb446" id="r_acb3a0e4bd0af6f28cd132963961cb446"><td class="memItemLeft" align="right" valign="top">static HKEY&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acb3a0e4bd0af6f28cd132963961cb446">openKey</a> (HKEY parent, const TCHAR *child)</td></tr>
 <tr class="memdesc:acb3a0e4bd0af6f28cd132963961cb446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open and return a registry key, closing the parent key.  <br /></td></tr>
 <tr class="memitem:ad97fc403cbd20b83a4d755160b67b49c" id="r_ad97fc403cbd20b83a4d755160b67b49c"><td class="memItemLeft" align="right" valign="top">static HKEY&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ad97fc403cbd20b83a4d755160b67b49c">openKey</a> (HKEY parent, const TCHAR *const *keyPath)</td></tr>
@@ -347,62 +339,6 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a360732a6f21a223a0595c1a75354dbd0" name="a360732a6f21a223a0595c1a75354dbd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a360732a6f21a223a0595c1a75354dbd0">&#9670;&#160;</a></span>daemonFailed()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ArchMiscWindows::daemonFailed </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a></td>          <td class="paramname"><span class="paramname"><em>result</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Indicate failure of running daemon. </p>
-<p>Delegates to <a class="el" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon.">ArchDaemonWindows</a>. </p>
-
-</div>
-</div>
-<a id="a6cde99dc95dcc64c65c317c53a551596" name="a6cde99dc95dcc64c65c317c53a551596"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6cde99dc95dcc64c65c317c53a551596">&#9670;&#160;</a></span>daemonRunning()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ArchMiscWindows::daemonRunning </td>
-          <td>(</td>
-          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>running</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Indicate daemon is in main loop. </p>
-<p>Delegates to <a class="el" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon.">ArchDaemonWindows</a>. </p>
-
-</div>
-</div>
 <a id="a7d9328738cdd03178e9046a6ec637206" name="a7d9328738cdd03178e9046a6ec637206"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7d9328738cdd03178e9046a6ec637206">&#9670;&#160;</a></span>deleteKey()</h2>
 
@@ -458,34 +394,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Get the name of the active input desktop. </p>
-
-</div>
-</div>
-<a id="a6b5a02c76621c4201286f457bba3999c" name="a6b5a02c76621c4201286f457bba3999c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b5a02c76621c4201286f457bba3999c">&#9670;&#160;</a></span>getDaemonQuitMessage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">UINT ArchMiscWindows::getDaemonQuitMessage </td>
-          <td>(</td>
-          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get daemon quit message. </p>
-<p>Delegates to <a class="el" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon.">ArchDaemonWindows</a>. </p>
 
 </div>
 </div>
@@ -773,34 +681,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Enable power saving. </p>
-
-</div>
-</div>
-<a id="af1c7cebddb8f59ed0b6b1fbf05476350" name="af1c7cebddb8f59ed0b6b1fbf05476350"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1c7cebddb8f59ed0b6b1fbf05476350">&#9670;&#160;</a></span>runDaemon()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="ArchNetworkWinsock_8cpp.html#ad2573eea84512de995e58415e5512fec">int</a> ArchMiscWindows::runDaemon </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="#a7be4c53b9504a222ea81c1d2e37d00c5">RunFunc</a></td>          <td class="paramname"><span class="paramname"><em>runFunc</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Run the daemon. </p>
-<p>Delegates to <a class="el" href="classArchDaemonWindows.html" title="Win32 implementation of IArchDaemon.">ArchDaemonWindows</a>. </p>
 
 </div>
 </div>

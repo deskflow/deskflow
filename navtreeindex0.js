@@ -37,8 +37,7 @@ var NAVTREEINDEX0 =
 "AppUtil_8h_source.html":[7,0,1,1,4,7],
 "App_8cpp.html":[7,0,1,1,4,4],
 "App_8h.html":[7,0,1,1,4,5],
-"App_8h.html#a250989ede9f9b4639597b6ab4109743c":[7,0,1,1,4,5,2],
-"App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44":[7,0,1,1,4,5,3],
+"App_8h.html#a6fd0eb88c0fcb4cae9f3880bbf63df44":[7,0,1,1,4,5,2],
 "App_8h_source.html":[7,0,1,1,4,5],
 "ArchDaemonNone_8h.html":[7,0,1,1,0,4],
 "ArchDaemonNone_8h.html#a99414cdb74167761d0f444afd670538f":[7,0,1,1,0,4,1],
@@ -153,8 +152,7 @@ var NAVTREEINDEX0 =
 "Chunk_8h.html":[7,0,1,1,4,9],
 "Chunk_8h_source.html":[7,0,1,1,4,9],
 "ClientApp_8cpp.html":[7,0,1,1,4,10],
-"ClientApp_8cpp.html#a6e59e103de7331c3cf3800b48b592f09":[7,0,1,1,4,10,1],
-"ClientApp_8cpp.html#af431d3ea22bde2419f11591d38318379":[7,0,1,1,4,10,0],
+"ClientApp_8cpp.html#a6e59e103de7331c3cf3800b48b592f09":[7,0,1,1,4,10,0],
 "ClientApp_8h.html":[7,0,1,1,4,11],
 "ClientApp_8h_source.html":[7,0,1,1,4,11],
 "ClientConnection_8cpp.html":[7,0,1,1,5,1,0],
@@ -249,5 +247,7 @@ var NAVTREEINDEX0 =
 "DeskflowXkbKeyboard_8cpp.html":[7,0,1,1,4,2,2],
 "DeskflowXkbKeyboard_8h.html":[7,0,1,1,4,2,3],
 "DeskflowXkbKeyboard_8h_source.html":[7,0,1,1,4,2,3],
-"Diagnostic_8cpp.html":[7,0,1,1,5,8]
+"Diagnostic_8cpp.html":[7,0,1,1,5,8],
+"Diagnostic_8h.html":[7,0,1,1,5,9],
+"Diagnostic_8h_source.html":[7,0,1,1,5,9]
 };

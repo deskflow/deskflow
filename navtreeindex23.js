@@ -1,16 +1,5 @@
 var NAVTREEINDEX23 =
 {
-"structKeyModifierNameMapEntry.html#ae232c911f35b2236be83ab93888d3e08":[6,0,136,0],
-"structKeyNameMapEntry.html":[6,0,137],
-"structKeyNameMapEntry.html#a20a386e1901cc1f45d400cbac569ea8e":[6,0,137,1],
-"structKeyNameMapEntry.html#ad73cf6b1ded24dbc17ff9d24f331bacc":[6,0,137,0],
-"structKeyState_1_1AddActiveModifierContext.html":[6,0,140,0],
-"structKeyState_1_1AddActiveModifierContext.html#a2a14649169b1ad6d69a75e978a3026e3":[6,0,140,0,1],
-"structKeyState_1_1AddActiveModifierContext.html#a58a84fd4d96b220c586fb469110e8cc2":[6,0,140,0,2],
-"structKeyState_1_1AddActiveModifierContext.html#a590cb1c49c6269c1cf1f7975e6b11505":[6,0,140,0,3],
-"structKeyState_1_1AddActiveModifierContext.html#a5c424f098c8c85fca4e5a05a196d3f7c":[6,0,140,0,0],
-"structScrollRemainder.html":[6,0,199],
-"structScrollRemainder.html#a06a2eab3d5996e601896b38ea2649c15":[6,0,199,0],
 "structScrollRemainder.html#a62da684f437beaa23780cac83f027fa9":[6,0,199,1],
 "structSettings_1_1Client.html":[6,0,207,0],
 "structSettings_1_1Client.html#a0206e655e7f66ac5bb507e6268826299":[6,0,207,0,3],

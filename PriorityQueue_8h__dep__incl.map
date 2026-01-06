@@ -1,47 +1,45 @@
 <map id="src/lib/base/PriorityQueue.h" name="src/lib/base/PriorityQueue.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="802,5,984,30"/>
-<area shape="rect" id="Node000002" href="$EventQueue_8h.html" title=" " alt="" coords="806,78,980,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="894,44,895,79,891,76,891,48"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="502,5,684,30"/>
+<area shape="rect" id="Node000002" href="$EventQueue_8h.html" title=" " alt="" coords="506,78,680,103"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="594,44,595,79,591,76,591,48"/>
 <area shape="rect" id="Node000003" href="$deskflow-core_8cpp.html" title=" " alt="" coords="5,324,162,363"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="788,94,602,105,491,114,378,128,271,147,176,171,100,201,72,219,51,239,43,259,47,281,57,303,70,323,65,324,52,305,41,282,38,258,47,236,69,215,98,197,174,166,270,141,377,123,490,109,601,100,793,93"/>
-<area shape="rect" id="Node000004" href="$deskflow-daemon_8cpp.html" title=" " alt="" coords="502,151,679,189"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="831,108,664,153,663,147,836,106"/>
-<area shape="rect" id="Node000005" href="$EventQueue_8cpp.html" title=" " alt="" coords="703,158,891,182"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="869,111,812,160,810,155,864,114"/>
-<area shape="rect" id="Node000006" href="$App_8h.html" title=" " alt="" coords="915,158,1065,182"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="919,110,978,158,973,157,918,115"/>
-<area shape="rect" id="Node000011" href="$OSXScreen_8mm.html" title=" " alt="" coords="1643,331,1849,356"/>
-<area shape="poly" id="edge24_Node000002_Node000011" title=" " alt="" coords="996,89,1200,96,1321,105,1444,118,1563,136,1668,161,1714,177,1753,194,1785,214,1810,236,1817,248,1818,262,1806,289,1785,314,1763,333,1761,328,1782,310,1802,286,1812,261,1811,250,1805,239,1782,218,1751,199,1712,182,1667,167,1562,142,1444,123,1320,110,1199,102,996,95"/>
-<area shape="rect" id="Node000020" href="$InputFilter_8cpp.html" title=" " alt="" coords="1898,158,2082,182"/>
-<area shape="poly" id="edge25_Node000002_Node000020" title=" " alt="" coords="996,92,1385,109,1631,125,1880,148,1929,157,1923,157,1879,153,1631,130,1384,114,996,97"/>
-<area shape="rect" id="Node000007" href="$App_8cpp.html" title=" " alt="" coords="1608,244,1772,269"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="1081,176,1315,199,1597,235,1637,244,1631,244,1596,240,1315,204,1081,182"/>
-<area shape="rect" id="Node000008" href="$ClientApp_8h.html" title=" " alt="" coords="802,244,986,269"/>
-<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="968,191,908,247,906,242,964,194"/>
-<area shape="rect" id="Node000010" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="672,324,858,363"/>
-<area shape="poly" id="edge21_Node000006_Node000010" title=" " alt="" coords="924,186,845,212,813,225,792,239,779,259,772,281,766,325,762,322,766,280,774,256,788,235,810,220,843,207,919,187"/>
-<area shape="rect" id="Node000012" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="1331,324,1505,363"/>
-<area shape="poly" id="edge23_Node000006_Node000012" title=" " alt="" coords="1081,169,1268,174,1490,184,1594,192,1683,203,1750,217,1773,226,1787,235,1794,246,1796,257,1787,278,1773,286,1749,295,1678,310,1506,335,1506,329,1677,305,1747,289,1771,282,1783,274,1791,256,1789,248,1783,239,1770,231,1749,223,1682,209,1593,198,1489,189,1268,179,1081,175"/>
-<area shape="rect" id="Node000013" href="$DaemonApp_8cpp.html" title=" " alt="" coords="325,244,538,269"/>
-<area shape="poly" id="edge13_Node000006_Node000013" title=" " alt="" coords="920,186,904,192,727,218,551,240,507,246,506,241,550,235,727,212,903,187,925,185"/>
-<area shape="rect" id="Node000014" href="$PlatformScreen_8cpp.html" title=" " alt="" coords="562,237,728,276"/>
-<area shape="poly" id="edge14_Node000006_Node000014" title=" " alt="" coords="930,186,722,239,721,234,925,187"/>
-<area shape="rect" id="Node000015" href="$ServerApp_8cpp.html" title=" " alt="" coords="186,331,389,356"/>
-<area shape="poly" id="edge15_Node000006_Node000015" title=" " alt="" coords="922,186,904,192,791,197,603,203,417,216,350,226,328,232,315,239,299,260,291,285,289,332,284,329,286,284,295,257,311,235,326,227,349,221,417,210,602,198,791,192,903,187,928,185"/>
-<area shape="rect" id="Node000016" href="$ServerApp_8h.html" title=" " alt="" coords="61,244,250,269"/>
-<area shape="poly" id="edge16_Node000006_Node000016" title=" " alt="" coords="923,186,904,192,726,212,587,218,447,224,269,240,224,246,222,241,269,235,447,219,586,213,725,206,903,187,928,185"/>
-<area shape="rect" id="Node000017" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="1011,237,1161,276"/>
-<area shape="poly" id="edge19_Node000006_Node000017" title=" " alt="" coords="1015,190,1068,237,1062,236,1014,195"/>
-<area shape="rect" id="Node000018" href="$EiScreen_8cpp.html" title=" " alt="" coords="1185,244,1374,269"/>
-<area shape="poly" id="edge20_Node000006_Node000018" title=" " alt="" coords="1045,184,1242,244,1237,244,1044,190"/>
-<area shape="rect" id="Node000019" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1399,237,1584,276"/>
-<area shape="poly" id="edge22_Node000006_Node000019" title=" " alt="" coords="1076,183,1387,235,1401,240,1396,239,1386,240,1075,188"/>
-<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="784,271,740,279,581,292,457,299,333,308,175,327,163,328,162,323,174,321,332,303,456,294,580,287,739,273,789,271"/>
-<area shape="rect" id="Node000009" href="$ClientApp_8cpp.html" title=" " alt="" coords="882,331,1080,356"/>
-<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="917,277,972,332,967,330,915,282"/>
-<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="866,277,794,326,792,321,861,278"/>
-<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="972,269,1000,273,1301,303,1645,334,1640,334,1301,308,999,279,972,275"/>
-<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="977,270,1000,273,1333,328,1328,329,999,279,976,275"/>
-<area shape="poly" id="edge17_Node000016_Node000003" title=" " alt="" coords="139,280,101,326,97,322,134,282"/>
-<area shape="poly" id="edge18_Node000016_Node000015" title=" " alt="" coords="187,275,272,330,267,331,185,280"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="488,96,422,104,346,114,266,130,190,153,144,168,108,182,78,202,51,238,46,260,50,282,59,303,71,323,66,323,54,306,44,284,40,259,46,236,74,198,105,177,142,163,188,148,265,125,345,109,421,98,493,94"/>
+<area shape="rect" id="Node000004" href="$deskflow-daemon_8cpp.html" title=" " alt="" coords="202,151,379,189"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="531,108,364,153,363,147,535,106"/>
+<area shape="rect" id="Node000005" href="$EventQueue_8cpp.html" title=" " alt="" coords="403,158,591,182"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="569,111,512,160,510,155,564,114"/>
+<area shape="rect" id="Node000006" href="$App_8h.html" title=" " alt="" coords="615,158,765,182"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="619,110,678,157,673,157,618,115"/>
+<area shape="rect" id="Node000011" href="$OSXScreen_8mm.html" title=" " alt="" coords="1519,331,1725,356"/>
+<area shape="poly" id="edge23_Node000002_Node000011" title=" " alt="" coords="696,90,915,97,1047,106,1184,119,1315,138,1434,163,1531,195,1569,214,1599,235,1615,258,1623,285,1625,333,1621,329,1618,286,1610,260,1595,239,1566,218,1529,200,1433,168,1314,143,1183,124,1047,111,915,103,696,95"/>
+<area shape="rect" id="Node000019" href="$InputFilter_8cpp.html" title=" " alt="" coords="1660,158,1843,182"/>
+<area shape="poly" id="edge24_Node000002_Node000019" title=" " alt="" coords="696,91,1110,107,1374,124,1641,148,1690,157,1685,157,1641,153,1374,129,1109,113,696,97"/>
+<area shape="rect" id="Node000007" href="$App_8cpp.html" title=" " alt="" coords="1212,244,1376,269"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="781,179,975,202,1201,235,1240,244,1234,244,1200,240,974,208,781,184"/>
+<area shape="rect" id="Node000008" href="$ClientApp_8h.html" title=" " alt="" coords="1401,244,1585,269"/>
+<area shape="poly" id="edge7_Node000006_Node000008" title=" " alt="" coords="781,175,1054,198,1389,235,1433,244,1428,244,1388,240,1053,203,781,180"/>
+<area shape="rect" id="Node000010" href="$MSWindowsScreen_8cpp.html" title=" " alt="" coords="548,324,734,363"/>
+<area shape="poly" id="edge20_Node000006_Node000010" title=" " alt="" coords="628,187,590,210,574,223,562,239,556,256,562,275,582,301,608,324,603,323,578,305,557,277,551,256,557,236,571,219,587,205,623,189"/>
+<area shape="rect" id="Node000012" href="$XWindowsScreen_8cpp.html" title=" " alt="" coords="871,324,1045,363"/>
+<area shape="poly" id="edge22_Node000006_Node000012" title=" " alt="" coords="658,189,631,211,610,232,599,254,600,264,605,274,617,281,639,289,707,304,873,332,868,332,706,309,638,294,615,286,602,278,595,265,594,253,605,228,628,207,653,192"/>
+<area shape="rect" id="Node000013" href="$PlatformScreen_8cpp.html" title=" " alt="" coords="325,237,490,276"/>
+<area shape="poly" id="edge13_Node000006_Node000013" title=" " alt="" coords="639,186,471,239,469,234,634,188"/>
+<area shape="rect" id="Node000014" href="$ServerApp_8cpp.html" title=" " alt="" coords="186,331,389,356"/>
+<area shape="poly" id="edge14_Node000006_Node000014" title=" " alt="" coords="619,187,604,192,538,198,452,204,370,215,338,225,315,239,300,261,292,286,289,332,284,329,287,285,295,258,311,235,335,221,369,210,452,198,537,193,603,187,624,185"/>
+<area shape="rect" id="Node000015" href="$ServerApp_8h.html" title=" " alt="" coords="61,244,250,269"/>
+<area shape="poly" id="edge15_Node000006_Node000015" title=" " alt="" coords="619,187,604,192,437,217,269,240,228,246,227,241,268,235,436,212,603,187,625,185"/>
+<area shape="rect" id="Node000016" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="615,237,765,276"/>
+<area shape="poly" id="edge18_Node000006_Node000016" title=" " alt="" coords="692,196,692,239,688,236,688,200"/>
+<area shape="rect" id="Node000017" href="$EiScreen_8cpp.html" title=" " alt="" coords="789,244,978,269"/>
+<area shape="poly" id="edge19_Node000006_Node000017" title=" " alt="" coords="731,186,859,244,854,244,730,192"/>
+<area shape="rect" id="Node000018" href="$MSWindowsWatchdog_8cpp.html" title=" " alt="" coords="1003,237,1188,276"/>
+<area shape="poly" id="edge21_Node000006_Node000018" title=" " alt="" coords="761,183,1008,236,1003,237,761,189"/>
+<area shape="poly" id="edge8_Node000008_Node000003" title=" " alt="" coords="1421,272,1389,279,1205,294,1048,301,781,300,653,299,515,300,359,309,174,327,162,328,162,323,174,321,358,303,515,295,653,293,781,295,1048,296,1204,289,1389,273,1416,272"/>
+<area shape="rect" id="Node000009" href="$ClientApp_8cpp.html" title=" " alt="" coords="1296,331,1495,356"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="1471,278,1409,333,1407,328,1466,280"/>
+<area shape="poly" id="edge10_Node000008_Node000010" title=" " alt="" coords="1418,272,1389,279,734,337,734,332,1389,273,1413,272"/>
+<area shape="poly" id="edge11_Node000008_Node000011" title=" " alt="" coords="1524,275,1607,331,1602,330,1522,280"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="1415,272,1389,279,1046,332,1045,326,1388,273,1409,272"/>
+<area shape="poly" id="edge16_Node000015_Node000003" title=" " alt="" coords="139,280,101,326,97,322,134,282"/>
+<area shape="poly" id="edge17_Node000015_Node000014" title=" " alt="" coords="187,275,272,330,267,331,185,280"/>
 </map>

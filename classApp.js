@@ -7,8 +7,6 @@ var classApp =
     [ "~App", "classApp.html#acde03ff6767ca35828915a6f327d4b5c", null ],
     [ "appUtil", "classApp.html#a9ebe7c05d696bb7dddd0bad9b51c94e9", null ],
     [ "bye", "classApp.html#ab4f1cdee9e6fa5c0f0fcb34b0beb9048", null ],
-    [ "daemonInfo", "classApp.html#a4af9e4bbb719ae9fce079bd11d263878", null ],
-    [ "daemonMainLoop", "classApp.html#a816a1d7afbf9a655b56a72ac33cafe4c", null ],
     [ "getEvents", "classApp.html#a2999f6b9b1129542847a07bcf5bc7c21", null ],
     [ "getSocketMultiplexer", "classApp.html#a60b51c7e60aa48b222849fbdc68971a0", null ],
     [ "handleScreenError", "classApp.html#ae59ab33fd366ee0609bd4df8e807fab0", null ],

@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.146</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.154</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -229,7 +229,7 @@ Public Member Functions</h2></td></tr>
 <li>
 unix: Detaches from terminal. <code>func</code> gets passed one argument, the name passed to <a class="el" href="#a6644e694fd49213342d4008cba60a516" title="Daemonize the process.">daemonize()</a>. </li>
 <li>
-win32: Becomes a service. Argument 0 is the name of the service and the rest are the arguments passed to StartService(). <code>func</code> is only called when the service is actually started. <code>func</code> must call <code><a class="el" href="classArchMiscWindows.html#af1c7cebddb8f59ed0b6b1fbf05476350" title="Run the daemon.">ArchMiscWindows::runDaemon()</a></code> to finally becoming a service. The <code>runFunc</code> function passed to <code>runDaemon()</code> must call <code>ArchMiscWindows::daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>ArchMiscWindows::daemonRunning(false)</code> when it leaves the main loop. The <code>stopFunc</code> function passed to <code>runDaemon()</code> is called when the daemon must exit the main loop and it must cause <code>runFunc</code> to return. <code>func</code> should return what <code>runDaemon()</code> returns. <code>func</code> or <code>runFunc</code> can call <code><a class="el" href="classArchMiscWindows.html#a360732a6f21a223a0595c1a75354dbd0" title="Indicate failure of running daemon.">ArchMiscWindows::daemonFailed()</a></code> to indicate startup failure. </li>
+win32: Becomes a service. Argument 0 is the name of the service and the rest are the arguments passed to StartService(). <code>func</code> is only called when the service is actually started. <code>func</code> must call <code><a class="el" href="classArchDaemonWindows.html#a961f61cd2833ef65128fcb4574ef04eb" title="Run the daemon.">ArchDaemonWindows::runDaemon()</a></code> to finally becoming a service. The <code>runFunc</code> function passed to <code>runDaemon()</code> must call <code>ArchDaemonWindows::daemonRunning(true)</code> when it enters the main loop (i.e. after initialization) and <code>ArchDaemonWindows::daemonRunning(false)</code> when it leaves the main loop. The <code>stopFunc</code> function passed to <code>runDaemon()</code> is called when the daemon must exit the main loop and it must cause <code>runFunc</code> to return. <code>func</code> should return what <code>runDaemon()</code> returns. <code>func</code> or <code>runFunc</code> can call <code><a class="el" href="classArchDaemonWindows.html#a59e4f68b87e109032cfe590e0eb5f6c1" title="Indicate failure of running daemon.">ArchDaemonWindows::daemonFailed()</a></code> to indicate startup failure. </li>
 </ul>
 
 <p>Implemented in <a class="el" href="classArchDaemonNone.html#aa5b70363a272bbb6417dc75d48516711">ArchDaemonNone</a>, and <a class="el" href="classArchDaemonWindows.html#a50550ba8629f785ca34143d7ef0f14cf">ArchDaemonWindows</a>.</p>

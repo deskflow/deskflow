@@ -5,7 +5,6 @@ var classClientApp =
     [ "closeClient", "classClientApp.html#a775df6522a4da5e6c5ff07db30a974e9", null ],
     [ "closeClientScreen", "classClientApp.html#ac6ff44cd1566cdcfc382d58fda0ab6c8", null ],
     [ "createScreen", "classClientApp.html#aca9f51245a3b5fdb3d9f1080041b1e00", null ],
-    [ "daemonInfo", "classClientApp.html#a45de5fff69e8fab95653e2ffce2e6237", null ],
     [ "daemonName", "classClientApp.html#a6fd5bc186ce674f67a1f644f5f6679a1", null ],
     [ "getClientPtr", "classClientApp.html#ada018e5652bfcbbc0648dc50d8bbe5c5", null ],
     [ "handleClientConnected", "classClientApp.html#a207e31c7d2165d89817fe9901d745ff1", null ],

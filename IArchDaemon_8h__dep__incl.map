@@ -4,8 +4,10 @@
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,41,126,86,123,82,187,38"/>
 <area shape="rect" id="Node000003" href="$ArchDaemonWindows_8h.html" title=" " alt="" coords="235,78,400,117"/>
 <area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="240,36,295,77,290,78,239,42"/>
-<area shape="rect" id="Node000004" href="$ArchDaemonWindows_8cpp.html" title=" " alt="" coords="131,165,310,203"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="287,126,243,166,241,162,282,128"/>
-<area shape="rect" id="Node000005" href="$ArchMiscWindows_8cpp.html" title=" " alt="" coords="334,165,494,203"/>
-<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="351,125,395,165,390,164,349,130"/>
+<area shape="rect" id="Node000004" href="$ArchDaemonWindows_8cpp.html" title=" " alt="" coords="39,165,218,203"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="265,123,171,167,169,162,259,124"/>
+<area shape="rect" id="Node000005" href="$AppUtilWindows_8cpp.html" title=" " alt="" coords="243,165,393,203"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="320,131,320,166,316,163,316,135"/>
+<area shape="rect" id="Node000006" href="$MSWindowsEventQueueBuffer_8cpp.html" title=" " alt="" coords="417,165,602,203"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="375,121,470,164,465,164,374,126"/>
 </map>
