@@ -12,7 +12,12 @@ if(WIN32)
   set(EXE_ICON "IDI_DESKFLOW ICON DISCARDABLE \"${CMAKE_SOURCE_DIR}/src/apps/res/deskflow.ico\"")
   configure_file(${CMAKE_SOURCE_DIR}/src/apps/res/windows.rc.in ${target}.rc)
 
-  add_executable(${target} WIN32 ${target}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
+  add_executable(
+    ${target} WIN32
+    ${target}.cpp
+    DaemonApp.cpp
+    DaemonApp.h
+    ${CMAKE_CURRENT_BINARY_DIR}/${target}.rc)
 
   target_link_libraries(
     ${target}
