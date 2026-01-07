@@ -17,8 +17,6 @@ var dir_eab562ad67ca3101103125078bc563c7 =
     [ "ClipboardChunk.cpp", "ClipboardChunk_8cpp.html", null ],
     [ "ClipboardChunk.h", "ClipboardChunk_8h.html", "ClipboardChunk_8h" ],
     [ "ClipboardTypes.h", "ClipboardTypes_8h.html", "ClipboardTypes_8h" ],
-    [ "DaemonApp.cpp", "DaemonApp_8cpp.html", "DaemonApp_8cpp" ],
-    [ "DaemonApp.h", "DaemonApp_8h.html", "DaemonApp_8h" ],
     [ "DeskflowException.cpp", "DeskflowException_8cpp.html", null ],
     [ "DeskflowException.h", "DeskflowException_8h.html", "DeskflowException_8h" ],
     [ "DisplayInvalidException.h", "DisplayInvalidException_8h.html", "DisplayInvalidException_8h" ],

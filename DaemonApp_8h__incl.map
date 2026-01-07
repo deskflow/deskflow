@@ -1,9 +1,9 @@
-<map id="src/lib/deskflow/DaemonApp.h" name="src/lib/deskflow/DaemonApp.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="18,5,216,30"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,78,59,103"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,30,59,70,56,66,101,31"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="83,78,152,103"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,29,120,64,115,61,116,33"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="176,78,248,103"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="134,28,187,68,182,69,132,33"/>
+<map id="src/apps/deskflow&#45;daemon/DaemonApp.h" name="src/apps/deskflow&#45;daemon/DaemonApp.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="29,5,206,44"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,92,59,117"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,44,58,83,54,79,94,45"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="83,92,152,117"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="119,43,120,77,115,75,116,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="176,92,248,117"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="141,42,189,82,184,82,139,47"/>
 </map>

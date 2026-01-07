@@ -1,9 +1,9 @@
 var namespacedeskflow =
 [
+    [ "core", "namespacedeskflow_1_1core.html", "namespacedeskflow_1_1core" ],
     [ "string", "namespacedeskflow_1_1string.html", "namespacedeskflow_1_1string" ],
     [ "client", "namespacedeskflow_1_1client.html", "namespacedeskflow_1_1client" ],
     [ "platform", "namespacedeskflow_1_1platform.html", "namespacedeskflow_1_1platform" ],
-    [ "core", "namespacedeskflow_1_1core.html", "namespacedeskflow_1_1core" ],
     [ "languages", "namespacedeskflow_1_1languages.html", "namespacedeskflow_1_1languages" ],
     [ "gui", "namespacedeskflow_1_1gui.html", "namespacedeskflow_1_1gui" ],
     [ "server", "namespacedeskflow_1_1server.html", "namespacedeskflow_1_1server" ],

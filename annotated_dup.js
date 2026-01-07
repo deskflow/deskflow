@@ -1,6 +1,11 @@
 var annotated_dup =
 [
     [ "deskflow", "namespacedeskflow.html", [
+      [ "core", "namespacedeskflow_1_1core.html", [
+        [ "ipc", "namespacedeskflow_1_1core_1_1ipc.html", [
+          [ "DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer" ]
+        ] ]
+      ] ],
       [ "string", "namespacedeskflow_1_1string.html", [
         [ "CaselessCmp", "classdeskflow_1_1string_1_1CaselessCmp.html", "classdeskflow_1_1string_1_1CaselessCmp" ]
       ] ],
@@ -9,11 +14,6 @@ var annotated_dup =
       ] ],
       [ "platform", "namespacedeskflow_1_1platform.html", [
         [ "MSWindowsProcess", "classdeskflow_1_1platform_1_1MSWindowsProcess.html", "classdeskflow_1_1platform_1_1MSWindowsProcess" ]
-      ] ],
-      [ "core", "namespacedeskflow_1_1core.html", [
-        [ "ipc", "namespacedeskflow_1_1core_1_1ipc.html", [
-          [ "DaemonIpcServer", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer.html", "classdeskflow_1_1core_1_1ipc_1_1DaemonIpcServer" ]
-        ] ]
       ] ],
       [ "languages", "namespacedeskflow_1_1languages.html", [
         [ "LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", "classdeskflow_1_1languages_1_1LanguageManager" ]
