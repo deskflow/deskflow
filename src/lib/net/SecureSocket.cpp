@@ -384,6 +384,7 @@ void SecureSocket::freeSSL()
   setJob(nullptr);
   if (m_ssl) {
     if (m_ssl->m_ssl != nullptr) {
+      SSL_set_quiet_shutdown(m_ssl->m_ssl, 1);
       SSL_shutdown(m_ssl->m_ssl);
 
       SSL_free(m_ssl->m_ssl);
