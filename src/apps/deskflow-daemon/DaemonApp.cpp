@@ -37,7 +37,7 @@ using namespace deskflow::core;
 void showHelp(int argc, char **argv) // NOSONAR - CLI args
 {
   const auto binName = argc > 0 ? std::filesystem::path(argv[0]).filename().string() : kDaemonBinName;
-  std::cout << "Usage: " << binName << " [-f|--foreground] [--install] [--uninstall]" << std::endl;
+  std::cout << "Usage: " << binName << " [-f|--foreground]" << std::endl;
 }
 
 DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
