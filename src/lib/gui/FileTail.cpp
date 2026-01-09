@@ -1,5 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
@@ -14,11 +15,27 @@
 
 namespace deskflow::gui {
 
-FileTail::FileTail(const QString &filePath, QObject *parent)
-    : QObject(parent),
-      m_file(filePath),
-      m_watcher(new QFileSystemWatcher(this))
+FileTail::FileTail(const QString &filePath, QObject *parent) : QObject(parent), m_watcher(new QFileSystemWatcher(this))
 {
+  setWatchedFile(filePath);
+  connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &FileTail::handleFileChanged);
+}
+
+void FileTail::setWatchedFile(const QString &filePath)
+{
+  if (filePath.isEmpty())
+    return;
+
+  if (m_file.fileName() == filePath)
+    return;
+
+  if (!m_file.fileName().isEmpty()) {
+    m_watcher->removePath(m_file.fileName());
+    m_file.close();
+    m_file.setFileName(filePath);
+  }
+
+  m_file.setFileName(filePath);
   if (!m_file.open(QIODevice::ReadOnly | QIODevice::Text)) {
     qCritical() << "failed to open file for tail:" << filePath;
     return;
@@ -27,8 +44,6 @@ FileTail::FileTail(const QString &filePath, QObject *parent)
   qDebug() << "starting file tail:" << filePath;
   m_watcher->addPath(filePath);
   m_lastPos = m_file.size();
-
-  connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &FileTail::handleFileChanged);
 }
 
 void FileTail::handleFileChanged(const QString &)
