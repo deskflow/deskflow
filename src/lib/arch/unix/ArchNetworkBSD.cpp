@@ -79,6 +79,10 @@ ArchSocket ArchNetworkBSD::newSocket(AddressFamily family, SocketType type)
   }
   try {
     setBlockingOnSocket(fd, false);
+#if defined(__APPLE__)
+    int on = 1;
+    setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
+#endif
   } catch (...) {
     close(fd);
     throw;
@@ -196,6 +200,10 @@ ArchSocket ArchNetworkBSD::acceptSocket(ArchSocket s, ArchNetAddress *addr)
 
   try {
     setBlockingOnSocket(fd, false);
+#if defined(__APPLE__)
+    int on = 1;
+    setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, &on, sizeof(on));
+#endif
   } catch (...) {
     close(fd);
     delete newSocket;
