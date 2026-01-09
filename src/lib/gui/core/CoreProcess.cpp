@@ -530,9 +530,13 @@ QString CoreProcess::requestDaemonLogPath()
     return QString();
   }
 
-  if (QFileInfo logFile(logPath); !logFile.exists() || !logFile.isFile()) {
-    qWarning() << "daemon log path file does not exist:" << logPath;
-    return QString();
+  if (QFileInfo logFile(logPath); !logFile.isFile()) {
+    auto file = QFile(logPath);
+    if (!file.open(QFile::ReadWrite)) {
+      qCritical() << "daemon log path file can not be written:" << logPath;
+      return QString();
+    }
+    file.write(""); // Create an empty file
   }
 
   return logPath;
