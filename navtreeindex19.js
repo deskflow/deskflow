@@ -20,6 +20,8 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1gui_1_1FileTail.html#a35e2143f45482810c79a6d1944e6a9d3":[6,0,0,5,9,0],
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[5,0,0,5,11,1],
 "classdeskflow_1_1gui_1_1FileTail.html#a7eac10adc35f6fd784fb89b9ad3cf458":[6,0,0,5,9,1],
+"classdeskflow_1_1gui_1_1FileTail.html#aeeafbaa9e2a46ff53098fc653251800f":[5,0,0,5,11,2],
+"classdeskflow_1_1gui_1_1FileTail.html#aeeafbaa9e2a46ff53098fc653251800f":[6,0,0,5,9,2],
 "classdeskflow_1_1gui_1_1IServerConfig.html":[5,0,0,5,5],
 "classdeskflow_1_1gui_1_1IServerConfig.html":[6,0,0,5,3],
 "classdeskflow_1_1gui_1_1IServerConfig.html#a2bd289f109f8805535da14105d8e8f44":[5,0,0,5,5,1],
@@ -247,7 +249,5 @@ var NAVTREEINDEX19 =
 "classdeskflow_1_1server_1_1Config.html#af9e192946df0b469b826fec417cb2dfe":[5,0,0,6,0,33],
 "classdeskflow_1_1server_1_1Config.html#af9e192946df0b469b826fec417cb2dfe":[6,0,0,6,0,33],
 "classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe":[5,0,0,6,0,46],
-"classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe":[6,0,0,6,0,46],
-"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e":[5,0,0,6,0,31],
-"classdeskflow_1_1server_1_1Config.html#afb04dc32eaa76da1b5a2c303b516c24e":[6,0,0,6,0,31]
+"classdeskflow_1_1server_1_1Config.html#afaeac95072fceeeff1b2b0e327234ebe":[6,0,0,6,0,46]
 };
