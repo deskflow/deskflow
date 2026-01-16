@@ -40,7 +40,8 @@ App *App::s_instance = nullptr;
 //
 
 App::App(IEventQueue *events, const QString &processName)
-    : m_bye(&exit),
+    : QObject(nullptr),
+      m_bye(&exit),
       m_events(events),
       m_appUtil(events),
       m_pname(processName)
@@ -134,6 +135,8 @@ void App::initApp()
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();
+
+  m_events->setLoopHook([]() { QCoreApplication::processEvents(); });
 
   // setup file logging after parsing args
   setupFileLogging();

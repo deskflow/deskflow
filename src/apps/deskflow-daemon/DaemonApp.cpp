@@ -42,7 +42,7 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
 
 DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
 {
-  // do nothing
+  m_events.setLoopHook([]() { QCoreApplication::processEvents(); });
 }
 
 DaemonApp::~DaemonApp() = default;
