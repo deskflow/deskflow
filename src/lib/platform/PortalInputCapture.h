@@ -14,8 +14,11 @@
 #include <glib.h>
 #include <libportal/inputcapture.h>
 #include <libportal/portal.h>
+#include <memory>
 
 namespace deskflow {
+
+class PortalClipboard;
 
 class PortalInputCapture
 {
@@ -43,6 +46,7 @@ private:
   void
   handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, const GVariant *options);
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
+  void initClipboard(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
@@ -103,6 +107,9 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+
+  // Clipboard support (requires xdg-desktop-portal with InputCapture clipboard support)
+  std::unique_ptr<PortalClipboard> m_clipboard;
 };
 
 } // namespace deskflow

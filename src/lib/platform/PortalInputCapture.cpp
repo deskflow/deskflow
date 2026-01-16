@@ -7,6 +7,7 @@
  */
 
 #include "platform/PortalInputCapture.h"
+#include "platform/PortalClipboard.h"
 #include "base/DirectionTypes.h"
 #include "base/Event.h"
 #include "base/Log.h"
@@ -112,6 +113,12 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
   m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
   m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
+
+  // Initialize clipboard support for InputCapture session
+  // Note: Requires xdg-desktop-portal with ClipboardProvider interface support for InputCapture
+  // See: https://github.com/flatpak/xdg-desktop-portal/discussions/1459
+  initClipboard(parentSession);
+
   handleZonesChanged(m_session, nullptr);
 }
 
@@ -346,6 +353,35 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   } else {
     LOG_WARN("no input capture pointer barriers found");
   }
+}
+
+void PortalInputCapture::initClipboard(XdpSession *session)
+{
+  // Get the session handle (DBus object path) for clipboard initialization
+  const char *sessionPath = xdp_session_get_session_handle(session);
+  if (!sessionPath) {
+    LOG_WARN("Could not get session handle for clipboard initialization");
+    return;
+  }
+
+  LOG_DEBUG("Initializing clipboard for InputCapture session: %s", sessionPath);
+
+  // Create PortalClipboard instance
+  m_clipboard = std::make_unique<PortalClipboard>();
+
+  // Initialize with session handle
+  QDBusObjectPath sessionHandle(QString::fromUtf8(sessionPath));
+  if (!m_clipboard->init(sessionHandle)) {
+    LOG_WARN("Failed to initialize PortalClipboard");
+    m_clipboard.reset();
+    return;
+  }
+
+  // Request clipboard access before session is enabled
+  // This must be called before the session starts per XDG Desktop Portal spec
+  m_clipboard->requestClipboard();
+
+  LOG_INFO("Clipboard initialized for InputCapture session");
 }
 
 void PortalInputCapture::glibThread(const void *)
