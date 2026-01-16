@@ -115,7 +115,7 @@ public:
       kToggle
     };
 
-    explicit KeyboardBroadcastInfo(State state = kToggle) : m_state(state), m_screens()
+    explicit KeyboardBroadcastInfo(State state = kToggle) : m_state(state)
     {
       // do nothing
     }
