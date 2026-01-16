@@ -76,7 +76,11 @@ var hierarchy =
     [ "EventData", "classEventData.html", [
       [ "Chunk", "classChunk.html", [
         [ "ClipboardChunk", "classClipboardChunk.html", null ]
-      ] ]
+      ] ],
+      [ "Server::KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html", null ],
+      [ "Server::LockCursorToScreenInfo", "classServer_1_1LockCursorToScreenInfo.html", null ],
+      [ "Server::SwitchInDirectionInfo", "classServer_1_1SwitchInDirectionInfo.html", null ],
+      [ "Server::SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html", null ]
     ] ],
     [ "Event::EventFlags", "structEvent_1_1EventFlags.html", null ],
     [ "EventQueueTimer", "classEventQueueTimer.html", null ],
@@ -272,7 +276,6 @@ var hierarchy =
       [ "XWindowsClipboardUCS2Converter", "classXWindowsClipboardUCS2Converter.html", null ],
       [ "XWindowsClipboardUTF8Converter", "classXWindowsClipboardUTF8Converter.html", null ]
     ] ],
-    [ "Server::KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html", null ],
     [ "KeyEntry", "structKeyEntry.html", null ],
     [ "IKeyState::KeyInfo", "classIKeyState_1_1KeyInfo.html", null ],
     [ "deskflow::KeyMap::KeyItem", "structdeskflow_1_1KeyMap_1_1KeyItem.html", null ],
@@ -283,7 +286,6 @@ var hierarchy =
     [ "deskflow::KeyMap::Keystroke", "classdeskflow_1_1KeyMap_1_1Keystroke.html", null ],
     [ "deskflow::languages::LanguageManager", "classdeskflow_1_1languages_1_1LanguageManager.html", null ],
     [ "Lock", "classLock.html", null ],
-    [ "Server::LockCursorToScreenInfo", "classServer_1_1LockCursorToScreenInfo.html", null ],
     [ "Log", "classLog.html", null ],
     [ "Settings::Log", "structSettings_1_1Log.html", null ],
     [ "XWindowsClipboard::MotifClipFormat", "classXWindowsClipboard_1_1MotifClipFormat.html", null ],
@@ -462,8 +464,6 @@ var hierarchy =
     [ "Stopwatch", "classStopwatch.html", null ],
     [ "StreamBuffer", "classStreamBuffer.html", null ],
     [ "StreamChunker", "classStreamChunker.html", null ],
-    [ "Server::SwitchInDirectionInfo", "classServer_1_1SwitchInDirectionInfo.html", null ],
-    [ "Server::SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html", null ],
     [ "SystemLogger", "classSystemLogger.html", null ],
     [ "Thread", "classThread.html", null ],
     [ "IEventQueue::TimerEvent", "classIEventQueue_1_1TimerEvent.html", null ],

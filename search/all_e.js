@@ -46,7 +46,7 @@ var searchData=
   ['lockcursormode_43',['lockCursorMode',['../classAction.html#a8c54fd2488054ea37cc5cf4d4a69df79',1,'Action']]],
   ['lockcursortoscreen_44',['lockCursorToScreen',['../classAction.html#a73c42ca584c76fc84ab95f260b7a30c3a935d3ffef92fc997178bbde261bbae4c',1,'Action']]],
   ['lockcursortoscreenaction_45',['LockCursorToScreenAction',['../classInputFilter_1_1LockCursorToScreenAction.html',1,'InputFilter::LockCursorToScreenAction'],['../classInputFilter_1_1LockCursorToScreenAction.html#ada6600cb09b2cf410e262a6032788e7a',1,'InputFilter::LockCursorToScreenAction::LockCursorToScreenAction()']]],
-  ['lockcursortoscreeninfo_46',['LockCursorToScreenInfo',['../classServer_1_1LockCursorToScreenInfo.html',1,'Server']]],
+  ['lockcursortoscreeninfo_46',['LockCursorToScreenInfo',['../classServer_1_1LockCursorToScreenInfo.html',1,'Server::LockCursorToScreenInfo'],['../classServer_1_1LockCursorToScreenInfo.html#a4a42d5c9c072eecb7457011f5a441fd3',1,'Server::LockCursorToScreenInfo::LockCursorToScreenInfo()']]],
   ['lockmutex_47',['lockMutex',['../classIArchMultithread.html#a33055af69f5616d2597b58106cdd89b7',1,'IArchMultithread::lockMutex()'],['../classArchMultithreadPosix.html#aadb6c26e6304b3b1a46dad7e53ac224e',1,'ArchMultithreadPosix::lockMutex()'],['../classArchMultithreadWindows.html#a6f31cc96aa8f2aa514267122a18fc9d9',1,'ArchMultithreadWindows::lockMutex()']]],
   ['locktoscreen_48',['LockToScreen',['../namespaceSettingsKeys.html#a68af0f7b43a00a62f03a9c80142e1545',1,'SettingsKeys']]],
   ['log_49',['LOG',['../Log_8h.html#a5216b78c92cbb3c416d909eb9f3253d1',1,'Log.h']]],

@@ -1,4 +1,4 @@
-/* The standard CSS for doxygen 1.15.0*/
+/* The standard CSS for doxygen 1.16.1*/
 
 html {
 /* page base colors */
@@ -19,7 +19,6 @@ html {
 --header-separator-color: #C4CFE5;
 --group-header-separator-color: #D9E0EE;
 --group-header-color: #354C7B;
---inherit-header-color: gray;
 
 --footer-foreground-color: #2A3D61;
 --footer-logo-width: 75px;
@@ -28,8 +27,6 @@ html {
 
 --title-background-color: white;
 --title-separator-color: #C4CFE5;
---directory-separator-color: #9CAFD4;
---separator-color: #4A6AAA;
 
 --blockquote-background-color: #F7F8FB;
 --blockquote-border-color: #9CAFD4;
@@ -39,10 +36,6 @@ html {
 
 --icon-background-color: #728DC1;
 --icon-foreground-color: white;
-/*
---icon-doc-image: url('doc.svg');
---icon-folder-open-image: url('folderopen.svg');
---icon-folder-closed-image: url('folderclosed.svg');*/
 --icon-folder-open-fill-color: #C4CFE5;
 --icon-folder-fill-color: #D8DFEE;
 --icon-folder-border-color: #4665A2;
@@ -51,7 +44,6 @@ html {
 
 /* brief member declaration list */
 --memdecl-background-color: #F9FAFC;
---memdecl-separator-color: #DEE4F0;
 --memdecl-foreground-color: #555;
 --memdecl-template-color: #4665A2;
 --memdecl-border-color: #D5DDEC;
@@ -61,7 +53,6 @@ html {
 --memdef-title-background-color: #E2E8F2;
 --memdef-proto-background-color: #EEF1F7;
 --memdef-proto-text-color: #253555;
---memdef-doc-background-color: white;
 --memdef-param-name-color: #602020;
 --memdef-template-color: #4665A2;
 
@@ -83,21 +74,17 @@ html {
 --nav-breadcrumb-separator-color: #C4CFE5;
 --nav-breadcrumb-active-bg: #EEF1F7;
 --nav-breadcrumb-color: #354C7B;
---nav-breadcrumb-border-color: #E1E7F2;
 --nav-splitbar-bg-color: #DCE2EF;
 --nav-splitbar-handle-color: #9CAFD4;
 --nav-font-size-level1: 13px;
 --nav-font-size-level2: 10px;
 --nav-font-size-level3: 9px;
 --nav-text-normal-color: #283A5D;
---nav-text-hover-color: white;
---nav-text-active-color: white;
 --nav-menu-button-color: #364D7C;
 --nav-menu-background-color: white;
 --nav-menu-foreground-color: #555555;
 --nav-menu-active-bg: #DCE2EF;
 --nav-menu-active-color: #9CAFD4;
---nav-menu-toggle-color: rgba(255, 255, 255, 0.5);
 --nav-arrow-color: #B6C4DF;
 --nav-arrow-selected-color: #90A5CE;
 
@@ -145,8 +132,6 @@ html {
 --code-vhdl-char-color: #000000;
 --code-vhdl-keyword-color: #700070;
 --code-vhdl-logic-color: #FF0000;
---code-link-color: #4665A2;
---code-external-link-color: #4665A2;
 --fragment-foreground-color: black;
 --fragment-background-color: #FBFCFD;
 --fragment-border-color: #C4CFE5;
@@ -202,6 +187,11 @@ html {
 --invariant-color-bg: #d8f1e3;
 --invariant-color-hl: #44b86f;
 --invariant-color-text: #265532;
+--satisfies-color-hl: #b61825;
+--satisfies-color-bg: #f8d1cc;
+--verifies-color-hl: #b61825;
+--verifies-color-bg: #f8d1cc;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -226,7 +216,6 @@ html {
 --header-separator-color: #141C2E;
 --group-header-separator-color: #1D2A43;
 --group-header-color: #90A5CE;
---inherit-header-color: #A0A0A0;
 
 --footer-foreground-color: #5B7AB7;
 --footer-logo-width: 60px;
@@ -235,8 +224,6 @@ html {
 
 --title-background-color: #090D16;
 --title-separator-color: #212F4B;
---directory-separator-color: #283A5D;
---separator-color: #283A5D;
 
 --blockquote-background-color: #101826;
 --blockquote-border-color: #283A5D;
@@ -254,7 +241,6 @@ html {
 
 /* brief member declaration list */
 --memdecl-background-color: #0B101A;
---memdecl-separator-color: #2C3F65;
 --memdecl-foreground-color: #BBB;
 --memdecl-template-color: #7C95C6;
 --memdecl-border-color: #233250;
@@ -264,7 +250,6 @@ html {
 --memdef-title-background-color: #1B2840;
 --memdef-proto-background-color: #19243A;
 --memdef-proto-text-color: #9DB0D4;
---memdef-doc-background-color: black;
 --memdef-param-name-color: #D28757;
 --memdef-template-color: #7C95C6;
 
@@ -286,21 +271,17 @@ html {
 --nav-breadcrumb-separator-color: #212F4B;
 --nav-breadcrumb-active-bg: #1D2A43;
 --nav-breadcrumb-color: #90A5CE;
---nav-breadcrumb-border-color: #2A3D61;
 --nav-splitbar-bg-color: #283A5D;
 --nav-splitbar-handle-color: #4665A2;
 --nav-font-size-level1: 13px;
 --nav-font-size-level2: 10px;
 --nav-font-size-level3: 9px;
 --nav-text-normal-color: #B6C4DF;
---nav-text-hover-color: #DCE2EF;
---nav-text-active-color: #DCE2EF;
 --nav-menu-button-color: #B6C4DF;
 --nav-menu-background-color: #05070C;
 --nav-menu-foreground-color: #BBBBBB;
 --nav-menu-active-bg: #1D2A43;
 --nav-menu-active-color: #C9D3E7;
---nav-menu-toggle-color: rgba(255, 255, 255, 0.2);
 --nav-arrow-color: #4665A2;
 --nav-arrow-selected-color: #6884BD;
 
@@ -348,8 +329,6 @@ html {
 --code-vhdl-char-color: #C0C0C0;
 --code-vhdl-keyword-color: #CF53C9;
 --code-vhdl-logic-color: #FF0000;
---code-link-color: #79C0FF;
---code-external-link-color: #79C0FF;
 --fragment-foreground-color: #C9D1D9;
 --fragment-background-color: #090D16;
 --fragment-border-color: #30363D;
@@ -405,6 +384,11 @@ html {
 --invariant-color-bg: #303a35;
 --invariant-color-hl: #76ce96;
 --invariant-color-text: #cceed5;
+--satisfies-color-hl: #ad2617;
+--satisfies-color-bg: #2e1917;
+--verifies-color-hl: #ad2617;
+--verifies-color-bg: #2e1917;
+
 }}
 body {
 	background-color: var(--page-background-color);
@@ -485,6 +469,7 @@ dt {
 
 p.startli, p.startdd {
 	margin-top: 2px;
+	margin-bottom: 0px;
 }
 
 th p.starttd, th p.intertd, th p.endtd {
@@ -676,6 +661,11 @@ a.code.hl_event { /* style for links to event names in code snippets */ }
 a.code.hl_sequence { /* style for links to sequence names in code snippets */ }
 a.code.hl_dictionary { /* style for links to dictionary names in code snippets */ }
 
+div.embeddoc {
+	font-family: var(--font-family-monospace);
+	padding-left: 10px;
+}
+
 /* @end */
 
 dl.el {
@@ -683,15 +673,35 @@ dl.el {
 }
 
 ul.check {
-	list-style:none;
-	text-indent: -16px;
-	padding-left: 38px;
+	list-style: none;
+	padding-left: 40px;
+	margin: 0;
 }
-li.unchecked:before {
-	content: "\2610\A0";
+
+ul.check li {
+	position: relative;
 }
-li.checked:before {
-	content: "\2611\A0";
+
+li.unchecked::before, li.checked::before {
+	position: absolute;
+	left: -18px;
+	top: 0;
+}
+
+li.unchecked::before {
+	content: "☐";
+}
+
+li.checked::before {
+	content: "☑";
+}
+
+ul.check li > p {
+	display: inline;
+}
+
+ul.check li > p:not(:first-child) {
+	display: block;
 }
 
 ol {
@@ -1162,6 +1172,8 @@ tr:not(:first-child) > td.ititle {
 	border-bottom: 1px solid var(--memdecl-border-color);
 	padding-left: 10px;
 	transition: none;
+	vertical-align: top;
+	text-align: right;
 }
 
 .memItemRight {
@@ -1170,6 +1182,7 @@ tr:not(:first-child) > td.ititle {
 	border-bottom: 1px solid var(--memdecl-border-color);
 	padding-right: 10px;
 	transition: none;
+	vertical-align: bottom;
 }
 
 tr.heading        + tr[class^='memitem'] td.memItemLeft,
@@ -1723,7 +1736,6 @@ table.fieldtable {
 	text-align: right;
 }
 
-
 .fieldtable td.fielddoc {
 	border-bottom: 1px solid var(--memdef-border-color);
 }
@@ -1751,6 +1763,41 @@ table.fieldtable {
 	border-top-left-radius: 4px;
 	border-top-right-radius: 4px;
 	border-bottom: 1px solid var(--memdef-border-color);
+}
+
+/* style requirements page */
+
+div.req_title {
+        text-decoration-line: underline;
+        text-decoration-style: solid;
+        text-decoration-color: var(--table-cell-border-color);
+        text-decoration-thickness: 1px;
+        font-weight: bold;
+}
+
+table.reqlist tr > td:first-child {
+        text-align: right;
+        font-weight: bold;
+}
+
+div.missing_satisfies {
+        border-left: 8px solid var(--satisfies-color-hl);
+	border-radius: 4px;
+	background: var(--satisfies-color-bg);
+        padding: 10px;
+        margin: 10px 0px;
+        overflow: hidden;
+        margin-left: 0;
+}
+
+div.missing_verifies {
+        border-left: 8px solid var(--verifies-color-hl);
+	border-radius: 4px;
+	background: var(--verifies-color-bg);
+        padding: 10px;
+        margin: 10px 0px;
+        overflow: hidden;
+        margin-left: 0;
 }
 
 /* ----------- navigation breadcrumb styling ----------- */

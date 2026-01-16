@@ -5,8 +5,9 @@ var classServer_1_1KeyboardBroadcastInfo =
       [ "kOn", "classServer_1_1KeyboardBroadcastInfo.html#aef9139c166a7c1c8dd9ebf48d149b5ffaab2f531ca8acdd6ee25ee4af70d43d16", null ],
       [ "kToggle", "classServer_1_1KeyboardBroadcastInfo.html#aef9139c166a7c1c8dd9ebf48d149b5ffaacc8b61cd187e3662c4e6c552a65524c", null ]
     ] ],
-    [ "alloc", "classServer_1_1KeyboardBroadcastInfo.html#ad0ced7fa3f536d379dc49022a613c307", null ],
-    [ "alloc", "classServer_1_1KeyboardBroadcastInfo.html#a5635fda6b96625e5fe39a6c1dbdf26cc", null ],
-    [ "m_screens", "classServer_1_1KeyboardBroadcastInfo.html#ae1b918a15547a363681c8f03c3c8888e", null ],
+    [ "KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html#a44687a4d3c7c8e52208040cb70fa3af2", null ],
+    [ "KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html#a438d0f2e87cf40467a00e8a19ac46966", null ],
+    [ "~KeyboardBroadcastInfo", "classServer_1_1KeyboardBroadcastInfo.html#a403c8af7adf7c094f1cfa08f196deaae", null ],
+    [ "m_screens", "classServer_1_1KeyboardBroadcastInfo.html#aeb6be236af725db4c8e81d0679e4fca7", null ],
     [ "m_state", "classServer_1_1KeyboardBroadcastInfo.html#a19854de5e15219f61ddabf1d8a0edc71", null ]
 ];

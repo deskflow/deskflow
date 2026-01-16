@@ -1,7 +1,15 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classEventData.html" title=" " alt="" coords="5,5,87,30"/>
-<area shape="rect" id="Node000001" href="$classChunk.html" title=" " alt="" coords="135,5,194,30"/>
-<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="102,15,137,17,131,18,102,20"/>
-<area shape="rect" id="Node000002" href="$classClipboardChunk.html" title=" " alt="" coords="242,5,356,30"/>
-<area shape="poly" id="edge13_Node000001_Node000002" title=" " alt="" coords="210,15,244,18,239,18,210,20"/>
+<area shape="rect" id="Node000000" href="$classEventData.html" title=" " alt="" coords="5,104,87,129"/>
+<area shape="rect" id="Node000001" href="$classChunk.html" title=" " alt="" coords="211,5,270,30"/>
+<area shape="poly" id="edge12_Node000000_Node000001" title=" " alt="" coords="68,91,97,64,133,41,173,26,213,20,208,22,174,31,136,45,101,68,72,94"/>
+<area shape="rect" id="Node000003" href="$classServer_1_1KeyboardBroadcastInfo.html" title="Keyboard broadcast data." alt="" coords="140,55,342,79"/>
+<area shape="poly" id="edge14_Node000000_Node000003" title=" " alt="" coords="100,99,134,90,187,78,182,82,135,95,103,103"/>
+<area shape="rect" id="Node000004" href="$classServer_1_1LockCursorToScreenInfo.html" title="Lock cursor to screen data." alt="" coords="135,104,347,129"/>
+<area shape="poly" id="edge15_Node000000_Node000004" title=" " alt="" coords="102,114,137,115,132,118,103,119"/>
+<area shape="rect" id="Node000005" href="$classServer_1_1SwitchInDirectionInfo.html" title="Switch in direction data." alt="" coords="145,153,337,178"/>
+<area shape="poly" id="edge16_Node000000_Node000005" title=" " alt="" coords="101,129,135,138,187,152,182,154,134,143,102,134"/>
+<area shape="rect" id="Node000006" href="$classServer_1_1SwitchToScreenInfo.html" title="Switch to screen data." alt="" coords="149,203,333,227"/>
+<area shape="poly" id="edge17_Node000000_Node000006" title=" " alt="" coords="70,138,101,164,136,187,170,202,164,202,133,192,97,168,69,143"/>
+<area shape="rect" id="Node000002" href="$classClipboardChunk.html" title=" " alt="" coords="395,5,509,30"/>
+<area shape="poly" id="edge13_Node000001_Node000002" title=" " alt="" coords="286,15,397,17,392,19,287,20"/>
 </map>

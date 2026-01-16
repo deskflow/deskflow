@@ -240,11 +240,13 @@ var searchData=
   ['switchdirection_237',['switchDirection',['../classAction.html#aa6a6765e3441eafca75acd43fd0f4e31',1,'Action']]],
   ['switchdoubletap_238',['switchDoubleTap',['../classServerConfig.html#ac6b5e0ff511f9d7738bfe10f52dd62a9',1,'ServerConfig']]],
   ['switchindirectionaction_239',['SwitchInDirectionAction',['../classInputFilter_1_1SwitchInDirectionAction.html#a5445df0e7f478d6e78480ddc81fd997e',1,'InputFilter::SwitchInDirectionAction']]],
-  ['switchscreenname_240',['switchScreenName',['../classAction.html#a7eca6e55b81a112ac170ea9169474854',1,'Action']]],
-  ['switchtonextscreenaction_241',['SwitchToNextScreenAction',['../classInputFilter_1_1SwitchToNextScreenAction.html#a2cf2112cbc5c0f759ac2e9e865256a9c',1,'InputFilter::SwitchToNextScreenAction']]],
-  ['switchtoscreenaction_242',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html#a50a3bc5cbd1fd41164ada3311a437b48',1,'InputFilter::SwitchToScreenAction']]],
-  ['sync_243',['sync',['../classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7',1,'QSettingsProxy']]],
-  ['synchronize_244',['synchronize',['../classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c',1,'OSXClipboard']]],
-  ['systemlogger_245',['SystemLogger',['../classSystemLogger.html#abe78f79167fed819300ffc45ab50775c',1,'SystemLogger::SystemLogger(const QString &amp;title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
-  ['systemlogoutputter_246',['SystemLogOutputter',['../classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1',1,'SystemLogOutputter']]]
+  ['switchindirectioninfo_240',['SwitchInDirectionInfo',['../classServer_1_1SwitchInDirectionInfo.html#a3edefa9a2dbf09840ac1b063e4bcf7a9',1,'Server::SwitchInDirectionInfo']]],
+  ['switchscreenname_241',['switchScreenName',['../classAction.html#a7eca6e55b81a112ac170ea9169474854',1,'Action']]],
+  ['switchtonextscreenaction_242',['SwitchToNextScreenAction',['../classInputFilter_1_1SwitchToNextScreenAction.html#a2cf2112cbc5c0f759ac2e9e865256a9c',1,'InputFilter::SwitchToNextScreenAction']]],
+  ['switchtoscreenaction_243',['SwitchToScreenAction',['../classInputFilter_1_1SwitchToScreenAction.html#a50a3bc5cbd1fd41164ada3311a437b48',1,'InputFilter::SwitchToScreenAction']]],
+  ['switchtoscreeninfo_244',['SwitchToScreenInfo',['../classServer_1_1SwitchToScreenInfo.html#a684e8e0a30bb47c5788f024360ee3fbc',1,'Server::SwitchToScreenInfo']]],
+  ['sync_245',['sync',['../classQSettingsProxy.html#a9a45601615425cccd8ff5585221c63c7',1,'QSettingsProxy']]],
+  ['synchronize_246',['synchronize',['../classOSXClipboard.html#aadef8133e3a05087e6441c7013d3435c',1,'OSXClipboard']]],
+  ['systemlogger_247',['SystemLogger',['../classSystemLogger.html#abe78f79167fed819300ffc45ab50775c',1,'SystemLogger::SystemLogger(const QString &amp;title, bool blockConsole)'],['../classSystemLogger.html#a7d2dde0abb18832bcfb68d6bde9a6cc6',1,'SystemLogger::SystemLogger(SystemLogger const &amp;)=delete'],['../classSystemLogger.html#a2883f2e2afed706ddd742bd8d2bf283b',1,'SystemLogger::SystemLogger(SystemLogger &amp;&amp;)=delete']]],
+  ['systemlogoutputter_248',['SystemLogOutputter',['../classSystemLogOutputter.html#ad50188412c8f8794f24e42ef9d5b0bc1',1,'SystemLogOutputter']]]
 ];

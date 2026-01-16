@@ -1,5 +1,6 @@
 var classServer_1_1SwitchToScreenInfo =
 [
-    [ "alloc", "classServer_1_1SwitchToScreenInfo.html#ad922ff198db7dfb2d86414c64b59a8e6", null ],
-    [ "m_screen", "classServer_1_1SwitchToScreenInfo.html#a119cf00dc1529d5116d80f9ec2d3e95a", null ]
+    [ "SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html#a684e8e0a30bb47c5788f024360ee3fbc", null ],
+    [ "~SwitchToScreenInfo", "classServer_1_1SwitchToScreenInfo.html#ac042f055c5b648751da0fe8a6e44979e", null ],
+    [ "m_screen", "classServer_1_1SwitchToScreenInfo.html#ab94fae5601506ef68bb9a8c05d283ec6", null ]
 ];
