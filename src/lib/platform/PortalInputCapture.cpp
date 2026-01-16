@@ -7,6 +7,7 @@
  */
 
 #include "platform/PortalInputCapture.h"
+#include "platform/PortalClipboardProxy.h"
 #include "platform/PortalClipboard.h"
 #include "base/DirectionTypes.h"
 #include "base/Event.h"
@@ -357,31 +358,35 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
 
 void PortalInputCapture::initClipboard(XdpSession *session)
 {
-  // Get the session handle (DBus object path) for clipboard initialization
-  const char *sessionPath = xdp_session_get_session_handle(session);
-  if (!sessionPath) {
+  const char *sessionHandlePath = xdp_session_get_session_handle(session);
+  if (!sessionHandlePath) {
     LOG_WARN("Could not get session handle for clipboard initialization");
     return;
   }
 
-  LOG_DEBUG("Initializing clipboard for InputCapture session: %s", sessionPath);
+  LOG_DEBUG("Initializing PortalClipboardProxy for session: %s", sessionHandlePath);
 
-  // Create PortalClipboard instance
-  m_clipboard = std::make_unique<PortalClipboard>();
+  m_clipboardProxy = std::make_unique<PortalClipboardProxy>();
 
-  // Initialize with session handle
-  QDBusObjectPath sessionHandle(QString::fromUtf8(sessionPath));
-  if (!m_clipboard->init(sessionHandle)) {
-    LOG_WARN("Failed to initialize PortalClipboard");
-    m_clipboard.reset();
+  if (!m_clipboardProxy->init(QDBusObjectPath(QString::fromUtf8(sessionHandlePath)))) {
+    LOG_WARN("Failed to initialize PortalClipboardProxy");
+    m_clipboardProxy.reset();
     return;
   }
 
+  // Create High-level IClipboard implementation
+  m_clipboard = std::make_unique<PortalClipboard>(m_clipboardProxy.get());
+
   // Request clipboard access before session is enabled
   // This must be called before the session starts per XDG Desktop Portal spec
-  m_clipboard->requestClipboard();
+  m_clipboardProxy->requestClipboard();
 
   LOG_INFO("Clipboard initialized for InputCapture session");
+}
+
+IClipboard *PortalInputCapture::getClipboard() const
+{
+  return m_clipboard.get();
 }
 
 void PortalInputCapture::glibThread(const void *)

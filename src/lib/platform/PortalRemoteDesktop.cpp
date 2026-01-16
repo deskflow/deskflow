@@ -7,6 +7,8 @@
  */
 
 #include "platform/PortalRemoteDesktop.h"
+#include "platform/PortalClipboardProxy.h"
+#include "platform/PortalClipboard.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
@@ -131,6 +133,8 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
   m_session = session;
   ++m_sessionIteration;
 
+  initClipboard(session);
+
   // FIXME: the lambda trick doesn't work here for unknown reasons, we need
   // the static function
   m_sessionSignalId = g_signal_connect(G_OBJECT(session), "closed", G_CALLBACK(handleSessionClosedCallback), this);
@@ -176,6 +180,39 @@ void PortalRemoteDesktop::glibThread(const void *)
     Thread::testCancel();
     g_main_context_iteration(context, true);
   }
+}
+
+void PortalRemoteDesktop::initClipboard(XdpSession *session)
+{
+  const char *sessionHandlePath = xdp_session_get_session_handle(session);
+  if (!sessionHandlePath) {
+    LOG_WARN("Could not get session handle for clipboard initialization");
+    return;
+  }
+
+  LOG_DEBUG("Initializing PortalClipboardProxy for session: %s", sessionHandlePath);
+
+  m_clipboardProxy = std::make_unique<PortalClipboardProxy>();
+
+  if (!m_clipboardProxy->init(QDBusObjectPath(QString::fromUtf8(sessionHandlePath)))) {
+    LOG_WARN("Failed to initialize PortalClipboardProxy");
+    m_clipboardProxy.reset();
+    return;
+  }
+
+  // Create High-level IClipboard implementation
+  m_clipboard = std::make_unique<PortalClipboard>(m_clipboardProxy.get());
+
+  // Request clipboard access before session is enabled
+  // This must be called before the session starts per XDG Desktop Portal spec
+  m_clipboardProxy->requestClipboard();
+
+  LOG_INFO("Clipboard initialized for RemoteDesktop session");
+}
+
+IClipboard *PortalRemoteDesktop::getClipboard() const
+{
+  return m_clipboard.get();
 }
 
 } // namespace deskflow

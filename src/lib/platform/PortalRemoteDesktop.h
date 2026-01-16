@@ -15,11 +15,16 @@
 
 namespace deskflow {
 
+class IClipboard;
+class PortalClipboard;
+class PortalClipboardProxy;
+
 class PortalRemoteDesktop
 {
 public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
   ~PortalRemoteDesktop();
+  IClipboard *getClipboard() const;
 
 private:
   void glibThread(const void *);
@@ -29,6 +34,7 @@ private:
   void handleSessionStarted(GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void reconnect(unsigned int timeout = 1000);
+  void initClipboard(XdpSession *session);
 
   /// g_signal_connect callback wrapper
   static void handleSessionClosedCallback(XdpSession *session, gpointer data)
@@ -51,6 +57,10 @@ private:
 
   /// The number of successful sessions we've had already
   guint m_sessionIteration = 0;
+
+  // Clipboard support
+  std::unique_ptr<PortalClipboardProxy> m_clipboardProxy;
+  std::unique_ptr<PortalClipboard> m_clipboard;
 };
 
 } // namespace deskflow

@@ -149,6 +149,8 @@ elseif(UNIX)
       list(APPEND PLATFORM_SOURCES
         PortalClipboard.cpp
         PortalClipboard.h
+        PortalClipboardProxy.cpp
+        PortalClipboardProxy.h
         PortalInputCapture.cpp
         PortalInputCapture.h
         PortalRemoteDesktop.cpp

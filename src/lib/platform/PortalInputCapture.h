@@ -10,6 +10,7 @@
 
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
+#include "platform/PortalClipboardProxy.h"
 
 #include <glib.h>
 #include <libportal/inputcapture.h>
@@ -18,6 +19,8 @@
 
 namespace deskflow {
 
+class PortalClipboardProxy;
+class IClipboard;
 class PortalClipboard;
 
 class PortalInputCapture
@@ -33,6 +36,7 @@ public:
   {
     return m_isActive;
   }
+  IClipboard *getClipboard() const;
 
 private:
   void glibThread(const void *);
@@ -109,6 +113,7 @@ private:
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
 
   // Clipboard support (requires xdg-desktop-portal with InputCapture clipboard support)
+  std::unique_ptr<PortalClipboardProxy> m_clipboardProxy;
   std::unique_ptr<PortalClipboard> m_clipboard;
 };
 

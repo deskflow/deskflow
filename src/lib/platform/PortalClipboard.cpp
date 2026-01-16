@@ -2,250 +2,177 @@
  * Deskflow -- mouse and keyboard sharing utility
  * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
- *
- * Portal Clipboard - Qt DBus implementation for XDG Desktop Portal Clipboard
  */
 
 #include "PortalClipboard.h"
-
-#include <QDBusInterface>
-#include <QDBusMessage>
-#include <QDBusReply>
-#include <QDebug>
+#include "PortalClipboardProxy.h"
+#include "base/Log.h"
 
 namespace deskflow {
 
-PortalClipboard::PortalClipboard(QObject *parent)
+PortalClipboard::PortalClipboard(PortalClipboardProxy *proxy, QObject *parent)
     : QObject(parent)
-    , m_bus(QDBusConnection::sessionBus())
+    , m_proxy(proxy)
 {
+    connect(m_proxy, &PortalClipboardProxy::selectionOwnerChanged, this, &PortalClipboard::onSelectionOwnerChanged);
+    connect(m_proxy, &PortalClipboardProxy::selectionTransferRequested, this, &PortalClipboard::onSelectionTransferRequested);
 }
 
 PortalClipboard::~PortalClipboard()
 {
-    disconnectSignals();
 }
 
-bool PortalClipboard::init(const QDBusObjectPath &sessionHandle)
+bool PortalClipboard::empty()
 {
-    if (!m_bus.isConnected()) {
-        qWarning() << "PortalClipboard: Session bus not connected";
-        return false;
-    }
-
-    m_sessionHandle = sessionHandle;
-    connectSignals();
+    if (!m_isOpen) return false;
+    
+    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    m_cache.clear();
     return true;
 }
 
-void PortalClipboard::requestClipboard(const QVariantMap &options)
+void PortalClipboard::add(Format format, const std::string &data)
 {
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "RequestClipboard"
-    );
+    if (!m_isOpen) return;
+    
+    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    m_cache[format] = data;
+}
 
-    msg << QVariant::fromValue(m_sessionHandle) << options;
+bool PortalClipboard::open(Time time) const
+{
+    if (m_isOpen) return false;
+    
+    m_isOpen = true;
+    m_time = time;
+    
+    // If we don't own the clipboard, we might want to refresh available types
+    if (!m_portalIsOwner) {
+        updateCacheFromPortal();
+    }
+    
+    return true;
+}
 
-    QDBusPendingReply<> reply = m_bus.asyncCall(msg);
-    reply.waitForFinished();
+void PortalClipboard::close() const
+{
+    if (!m_isOpen) return;
+    
+    // If we modified the cache and it's not empty, notify the portal
+    {
+        std::lock_guard<std::mutex> lock(m_cacheMutex);
+        if (!m_cache.isEmpty() && !m_portalIsOwner) {
+            QStringList mimeTypes;
+            for (auto it = m_cache.begin(); it != m_cache.end(); ++it) {
+                mimeTypes << formatToMimeType(it.key());
+            }
+            m_proxy->setSelection(mimeTypes);
+        }
+    }
+    
+    m_isOpen = false;
+}
 
-    if (reply.isError()) {
-        qWarning() << "PortalClipboard: RequestClipboard failed:" << reply.error().message();
-        Q_EMIT clipboardError(reply.error().message());
+IClipboard::Time PortalClipboard::getTime() const
+{
+    return m_time;
+}
+
+bool PortalClipboard::has(Format format) const
+{
+    if (!m_isOpen) return false;
+    
+    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    if (m_cache.contains(format)) {
+        return true;
+    }
+    
+    // Check if portal has this format
+    QString mimeType = formatToMimeType(format);
+    return m_portalMimeTypes.contains(mimeType);
+}
+
+std::string PortalClipboard::get(Format format) const
+{
+    if (!m_isOpen) return "";
+    
+    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    if (m_cache.contains(format)) {
+        return m_cache[format];
+    }
+    
+    // Fetch from portal if available
+    QString mimeType = formatToMimeType(format);
+    if (m_portalMimeTypes.contains(mimeType)) {
+        QByteArray data = m_proxy->readSelectionData(mimeType);
+        std::string strData(data.constData(), data.size());
+        m_cache[format] = strData;
+        return strData;
+    }
+    
+    return "";
+}
+
+void PortalClipboard::onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner)
+{
+    LOG_DEBUG("Portal clipboard ownership changed: owner=%d, types=%s", sessionIsOwner, mimeTypes.join(", ").toStdString().c_str());
+    
+    std::lock_guard<std::mutex> lock(m_cacheMutex);
+    m_portalMimeTypes = mimeTypes;
+    m_portalIsOwner = sessionIsOwner;
+    
+    if (!sessionIsOwner) {
+        // We lost ownership, clear our local cache of what we "meant" to put on the clipboard
+        m_cache.clear();
+    }
+}
+
+void PortalClipboard::onSelectionTransferRequested(const QString &mimeType, quint32 serial)
+{
+    LOG_DEBUG("Portal requested selection transfer for %s (serial %u)", mimeType.toStdString().c_str(), serial);
+    
+    Format format = mimeTypeToFormat(mimeType);
+    std::string data;
+    
+    {
+        std::lock_guard<std::mutex> lock(m_cacheMutex);
+        if (m_cache.contains(format)) {
+            data = m_cache[format];
+        }
+    }
+    
+    if (!data.empty()) {
+        QByteArray qData(data.data(), data.size());
+        m_proxy->writeSelectionData(serial, qData);
     } else {
-        m_enabled = true;
-        Q_EMIT clipboardEnabled();
+        LOG_WARN("Requested MIME type %s not found in cache", mimeType.toStdString().c_str());
+        m_proxy->selectionWriteDone(serial, false);
     }
 }
 
-void PortalClipboard::setSelection(const QStringList &mimeTypes)
+QString PortalClipboard::formatToMimeType(Format format) const
 {
-    if (!m_enabled) {
-        qWarning() << "PortalClipboard: setSelection called but clipboard not enabled";
-        return;
-    }
-
-    QVariantMap options;
-    options["mime_types"] = mimeTypes;
-
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SetSelection"
-    );
-
-    msg << QVariant::fromValue(m_sessionHandle) << options;
-
-    QDBusPendingReply<> reply = m_bus.asyncCall(msg);
-    reply.waitForFinished();
-
-    if (reply.isError()) {
-        qWarning() << "PortalClipboard: SetSelection failed:" << reply.error().message();
-        Q_EMIT clipboardError(reply.error().message());
-    } else {
-        m_isOwner = true;
-        m_mimeTypes = mimeTypes;
+    switch (format) {
+        case Format::Text:   return "text/plain;charset=utf-8";
+        case Format::HTML:   return "text/html";
+        case Format::Bitmap: return "image/bmp";
+        default:             return "";
     }
 }
 
-QDBusUnixFileDescriptor PortalClipboard::selectionRead(const QString &mimeType)
+IClipboard::Format PortalClipboard::mimeTypeToFormat(const QString &mimeType) const
 {
-    if (!m_enabled) {
-        qWarning() << "PortalClipboard: selectionRead called but clipboard not enabled";
-        return {};
-    }
-
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionRead"
-    );
-
-    msg << QVariant::fromValue(m_sessionHandle) << mimeType;
-
-    QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
-
-    if (!reply.isValid()) {
-        qWarning() << "PortalClipboard: SelectionRead failed:" << reply.error().message();
-        Q_EMIT clipboardError(reply.error().message());
-        return {};
-    }
-
-    return reply.value();
+    if (mimeType.contains("text/plain", Qt::CaseInsensitive)) return Format::Text;
+    if (mimeType.contains("text/html", Qt::CaseInsensitive))  return Format::HTML;
+    if (mimeType.contains("image/bmp", Qt::CaseInsensitive) || 
+        mimeType.contains("image/png", Qt::CaseInsensitive))  return Format::Bitmap;
+    return Format::TotalFormats;
 }
 
-QDBusUnixFileDescriptor PortalClipboard::selectionWrite(quint32 serial)
+void PortalClipboard::updateCacheFromPortal() const
 {
-    if (!m_enabled) {
-        qWarning() << "PortalClipboard: selectionWrite called but clipboard not enabled";
-        return {};
-    }
-
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionWrite"
-    );
-
-    msg << QVariant::fromValue(m_sessionHandle) << serial;
-
-    QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
-
-    if (!reply.isValid()) {
-        qWarning() << "PortalClipboard: SelectionWrite failed:" << reply.error().message();
-        Q_EMIT clipboardError(reply.error().message());
-        return {};
-    }
-
-    return reply.value();
-}
-
-void PortalClipboard::selectionWriteDone(quint32 serial, bool success)
-{
-    if (!m_enabled) {
-        qWarning() << "PortalClipboard: selectionWriteDone called but clipboard not enabled";
-        return;
-    }
-
-    QDBusMessage msg = QDBusMessage::createMethodCall(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionWriteDone"
-    );
-
-    msg << QVariant::fromValue(m_sessionHandle) << serial << success;
-
-    QDBusPendingReply<> reply = m_bus.asyncCall(msg);
-    reply.waitForFinished();
-
-    if (reply.isError()) {
-        qWarning() << "PortalClipboard: SelectionWriteDone failed:" << reply.error().message();
-    }
-}
-
-void PortalClipboard::connectSignals()
-{
-    // Connect to SelectionOwnerChanged signal
-    m_bus.connect(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionOwnerChanged",
-        this,
-        SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
-    );
-
-    // Connect to SelectionTransfer signal
-    m_bus.connect(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionTransfer",
-        this,
-        SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
-    );
-}
-
-void PortalClipboard::disconnectSignals()
-{
-    m_bus.disconnect(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionOwnerChanged",
-        this,
-        SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
-    );
-
-    m_bus.disconnect(
-        PORTAL_SERVICE,
-        PORTAL_PATH,
-        CLIPBOARD_INTERFACE,
-        "SelectionTransfer",
-        this,
-        SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
-    );
-}
-
-void PortalClipboard::onSelectionOwnerChanged(const QDBusObjectPath &sessionHandle, const QVariantMap &options)
-{
-    // Only handle signals for our session
-    if (sessionHandle != m_sessionHandle) {
-        return;
-    }
-
-    QStringList mimeTypes;
-    bool sessionIsOwner = false;
-
-    if (options.contains("mime_types")) {
-        mimeTypes = options["mime_types"].toStringList();
-    }
-
-    if (options.contains("session_is_owner")) {
-        sessionIsOwner = options["session_is_owner"].toBool();
-    }
-
-    m_mimeTypes = mimeTypes;
-    m_isOwner = sessionIsOwner;
-
-    Q_EMIT selectionOwnerChanged(mimeTypes, sessionIsOwner);
-}
-
-void PortalClipboard::onSelectionTransfer(const QDBusObjectPath &sessionHandle, const QString &mimeType, quint32 serial)
-{
-    // Only handle signals for our session
-    if (sessionHandle != m_sessionHandle) {
-        return;
-    }
-
-    Q_EMIT selectionTransferRequested(mimeType, serial);
+    // This is called during open() to ensure we have the latest MIME types
+    // Actually the signals handle this, but if we just initialized we might want to check.
 }
 
 } // namespace deskflow
