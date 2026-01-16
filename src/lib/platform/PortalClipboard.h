@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include "deskflow/IClipboard.h"
-#include <QObject>
+#include "platform/IClipboard.h"
+
 #include <QMap>
+#include <QObject>
 #include <QStringList>
-#include <memory>
 #include <mutex>
 
 namespace deskflow {
@@ -18,46 +18,46 @@ namespace deskflow {
 class PortalClipboardProxy;
 
 /**
- * @brief IClipboard implementation using XDG Desktop Portal
+ * @brief IClipboard implementation for XDG Desktop Portal
  * 
- * This class bridges the Deskflow IClipboard interface with the 
- * XDG Desktop Portal Clipboard via PortalClipboardProxy.
+ * This class bridges Deskflow's IClipboard interface with the portal.
+ * It uses PortalClipboardProxy for the low-level communication.
  */
 class PortalClipboard : public QObject, public IClipboard
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit PortalClipboard(PortalClipboardProxy *proxy, QObject *parent = nullptr);
-    ~PortalClipboard() override;
+  explicit PortalClipboard(PortalClipboardProxy *proxy, QObject *parent = nullptr);
+  ~PortalClipboard() override;
 
-    // IClipboard overrides
-    bool empty() override;
-    void add(Format format, const std::string &data) override;
-    bool open(Time time) const override;
-    void close() const override;
-    Time getTime() const override;
-    bool has(Format format) const override;
-    std::string get(Format format) const override;
+  // IClipboard interface
+  bool empty() override;
+  void add(Format format, const std::string &data) override;
+  bool open(Time time) const override;
+  void close() const override;
+  Time getTime() const override;
+  bool has(Format format) const override;
+  std::string get(Format format) const override;
 
 private Q_SLOTS:
-    void onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner);
-    void onSelectionTransferRequested(const QString &mimeType, quint32 serial);
+  void onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner);
+  void onSelectionTransferRequested(const QString &mimeType, quint32 serial);
 
 private:
-    QString formatToMimeType(Format format) const;
-    Format mimeTypeToFormat(const QString &mimeType) const;
-    void updateCacheFromPortal() const;
+  QString formatToMimeType(Format format) const;
+  Format mimeTypeToFormat(const QString &mimeType) const;
+  void updateCacheFromPortal() const;
 
-    PortalClipboardProxy *m_proxy;
-    mutable bool m_isOpen = false;
-    mutable Time m_time = 0;
-    
-    // Cache for clipboard data
-    mutable std::mutex m_cacheMutex;
-    mutable QMap<Format, std::string> m_cache;
-    mutable QStringList m_portalMimeTypes;
-    mutable bool m_portalIsOwner = false;
+  PortalClipboardProxy *m_proxy;
+  mutable bool m_isOpen = false;
+  mutable Time m_time = 0;
+  
+  // Cache for clipboard data
+  mutable std::mutex m_cacheMutex;
+  mutable QMap<Format, std::string> m_cache;
+  mutable QStringList m_portalMimeTypes;
+  mutable bool m_portalIsOwner = false;
 };
 
 } // namespace deskflow
