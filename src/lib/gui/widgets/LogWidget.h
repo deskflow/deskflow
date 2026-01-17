@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include <QObject>
+#include <QString>
 #include <QWidget>
 
+class QLineEdit;
 class QPlainTextEdit;
-class QTemporaryFile;
 
 class LogWidget : public QWidget
 {
@@ -19,6 +19,11 @@ public:
   explicit LogWidget(QWidget *parent = nullptr);
   void appendLine(const QString &msg);
 
+private Q_SLOTS:
+  void findNext();
+  void findPrevious();
+
 private:
   QPlainTextEdit *m_textLog = nullptr;
+  QLineEdit *m_searchBar = nullptr;
 };
