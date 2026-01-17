@@ -112,6 +112,13 @@
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="cbShowVersion">
+            <property name="text">
+             <string>Include version in the window title</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="cbAutoHide">
             <property name="text">
              <string>Hide the window when the app starts</string>
