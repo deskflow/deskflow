@@ -186,7 +186,7 @@
              <string>&amp;New</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+             <iconset theme="list-add"/>
             </property>
            </widget>
           </item>
@@ -212,7 +212,7 @@
              <string>&amp;Remove</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+             <iconset theme="list-remove"/>
             </property>
            </widget>
           </item>
@@ -255,7 +255,7 @@
              <string>Ne&amp;w</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+             <iconset theme="list-add"/>
             </property>
            </widget>
           </item>
@@ -281,7 +281,7 @@
              <string>Re&amp;move</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+             <iconset theme="list-remove"/>
             </property>
            </widget>
           </item>

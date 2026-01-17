@@ -25,7 +25,7 @@ AboutDialog::AboutDialog(QWidget *parent) : QDialog(parent), ui{std::make_unique
   ui->lblIcon->setPixmap(QPixmap(QIcon::fromTheme(kRevFqdnName).pixmap(QSize().scaled(pixmapSize, Qt::KeepAspectRatio)))
   );
 
-  ui->btnCopyVersion->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::EditCopy));
+  ui->btnCopyVersion->setIcon(QIcon::fromTheme("edit-copy"));
   connect(ui->btnCopyVersion, &QPushButton::clicked, this, &AboutDialog::copyVersionText);
 
   ui->lblVersion->setText(kDisplayVersion);

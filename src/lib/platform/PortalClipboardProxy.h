@@ -97,15 +97,17 @@ Q_SIGNALS:
    * @brief Emitted when clipboard ownership changes
    * @param mimeTypes Available MIME types
    * @param sessionIsOwner Whether our session owns the clipboard
+   * @param type The type of selection (Standard or Primary)
    */
-  void selectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner);
+  void selectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner, SelectionType type);
 
   /**
    * @brief Emitted when clipboard content is requested from us
    * @param mimeType The requested MIME type
    * @param serial Serial to use when responding
+   * @param type The type of selection (Standard or Primary)
    */
-  void selectionTransferRequested(const QString &mimeType, quint32 serial);
+  void selectionTransferRequested(const QString &mimeType, quint32 serial, SelectionType type);
 
   /**
    * @brief Emitted when clipboard becomes available

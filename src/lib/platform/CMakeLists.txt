@@ -9,6 +9,9 @@ if(UNIX AND NOT APPLE)
 
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+  if("${LIBPORTAL_VERSION}" VERSION_GREATER_EQUAL "0.8.0")
+    add_definitions(-DHAVE_LIBPORTAL_INPUTCAPTURE)
+  endif()
 endif()
 
 if(WIN32)
@@ -155,6 +158,8 @@ elseif(UNIX)
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
         PortalRemoteDesktop.h
+        PortalSessionProxy.cpp
+        PortalSessionProxy.h
       )
     endif()
   endif()
@@ -181,7 +186,7 @@ if(UNIX)
     if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
-    target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+    target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL)
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(
       platform

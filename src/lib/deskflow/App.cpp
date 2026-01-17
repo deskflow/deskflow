@@ -7,6 +7,7 @@
 
 #include "deskflow/App.h"
 
+#include <QCoreApplication>
 #include "DisplayInvalidException.h"
 #include "arch/Arch.h"
 #include "base/Log.h"

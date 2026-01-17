@@ -12,10 +12,13 @@
 
 #include <glib.h>
 #include <libportal/portal.h>
-
-namespace deskflow {
+#include <memory>
+#include "platform/PortalSessionProxy.h"
+#include "platform/PortalClipboardProxy.h"
 
 class IClipboard;
+
+namespace deskflow {
 class PortalClipboard;
 class PortalClipboardProxy;
 
@@ -23,10 +26,15 @@ class PortalRemoteDesktop
 {
 public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
-  ~PortalRemoteDesktop();
-  IClipboard *getClipboard() const;
+  virtual ~PortalRemoteDesktop();
+  IClipboard *getClipboard(ClipboardID id) const;
 
-private:
+Q_SIGNALS:
+  void clipboardChanged();
+
+private Q_SLOTS:
+  void onSessionCreated(const QDBusObjectPath &handle);
+  void onSessionStarted(const QString &restoreToken);
   void glibThread(const void *);
   gboolean timeoutHandler() const;
   gboolean initSession();
@@ -34,7 +42,9 @@ private:
   void handleSessionStarted(GObject *object, GAsyncResult *res);
   void handleSessionClosed(XdpSession *session);
   void reconnect(unsigned int timeout = 1000);
-  void initClipboard(XdpSession *session);
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  void initClipboard(const QDBusObjectPath &handle);
+#endif
 
   /// g_signal_connect callback wrapper
   static void handleSessionClosedCallback(XdpSession *session, gpointer data)
@@ -58,9 +68,13 @@ private:
   /// The number of successful sessions we've had already
   guint m_sessionIteration = 0;
 
-  // Clipboard support
+  // Session and Clipboard support
+  std::unique_ptr<PortalSessionProxy> m_sessionProxy;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
   std::unique_ptr<PortalClipboardProxy> m_clipboardProxy;
-  std::unique_ptr<PortalClipboard> m_clipboard;
+  std::unique_ptr<PortalClipboard> m_clipboardStandard;
+  std::unique_ptr<PortalClipboard> m_clipboardPrimary;
+#endif
 };
 
 } // namespace deskflow

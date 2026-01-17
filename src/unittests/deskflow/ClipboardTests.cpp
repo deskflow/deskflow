@@ -84,7 +84,7 @@ void ClipboardTests::longerText()
   // char before the last stores a bit-shifted version of the number, each
   // 1 more power than the last, which is done by bit-shifting [0] by 24,
   // [1] by 16, [2] by 8 ([3] is not bit-shifted).
-  qInfo() << actual;
+  qInfo() << QString::fromStdString(actual);
   QCOMPARE(actual[8], 0);   // 287 >> 24 = 287 / (256^3) = 0
   QCOMPARE(actual[9], 0);   // 287 >> 16 = 287 / (256^2) = 0
   QCOMPARE(actual[10], 1);  // 287 >> 8 = 287 / (256^1) = 1(.121)

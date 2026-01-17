@@ -76,9 +76,10 @@ Settings::Settings(QObject *parent) : QObject(parent)
   qInfo().noquote() << "initial settings file:" << m_settings->fileName();
 
   const auto xdgStateHome = qEnvironmentVariable("XDG_STATE_HOME");
+  const auto stateLocs = QStandardPaths::standardLocations(QStandardPaths::HomeLocation);
   const auto stateBase = !xdgStateHome.isEmpty()
                              ? xdgStateHome
-                             : QStandardPaths::standardLocations(QStandardPaths::GenericStateLocation).at(0);
+                             : (stateLocs.isEmpty() ? QStringLiteral(".") : stateLocs.at(0));
   const auto stateFile = QStringLiteral("%1/%2.state").arg(stateBase, kAppName);
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
@@ -127,9 +128,9 @@ QString Settings::cleanScreenName(const QString &name)
   cleanName.replace(space, underscore);
   cleanName.replace(nameRegex, nothing);
   while (cleanName.startsWith(hyphen) || cleanName.startsWith(underscore) || cleanName.startsWith(period))
-    cleanName.removeFirst();
+    cleanName.remove(0, 1);
   while (cleanName.endsWith(hyphen) || cleanName.endsWith(underscore) || cleanName.endsWith(period))
-    cleanName.removeLast();
+    cleanName.remove(cleanName.size() - 1, 1);
   if (cleanName.length() > 255) {
     cleanName.truncate(255);
     cleanName = cleanScreenName(cleanName);
@@ -139,9 +140,16 @@ QString Settings::cleanScreenName(const QString &name)
 
 int Settings::logLevelToInt(const QString &level)
 {
-  if (level.isEmpty() || !m_logLevels.contains(level, Qt::CaseInsensitive))
+  if (level.isEmpty())
     return 4;
-  return static_cast<int>(m_logLevels.indexOf(level, 0, Qt::CaseInsensitive));
+
+  for (int i = 0; i < m_logLevels.size(); ++i) {
+    if (m_logLevels.at(i).compare(level, Qt::CaseInsensitive) == 0) {
+      return i;
+    }
+  }
+
+  return 4;
 }
 
 QVariant Settings::defaultValue(const QString &key)

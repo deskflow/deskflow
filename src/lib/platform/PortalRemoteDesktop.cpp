@@ -7,8 +7,10 @@
  */
 
 #include "platform/PortalRemoteDesktop.h"
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 #include "platform/PortalClipboardProxy.h"
 #include "platform/PortalClipboard.h"
+#endif
 #include "base/Log.h"
 #include "base/TMethodJob.h"
 #include "common/Settings.h"
@@ -24,6 +26,10 @@ PortalRemoteDesktop::PortalRemoteDesktop(EiScreen *screen, IEventQueue *events)
 
   auto tMethodJob = new TMethodJob<PortalRemoteDesktop>(this, &PortalRemoteDesktop::glibThread);
   m_glibThread = new Thread(tMethodJob);
+
+  m_sessionProxy = std::make_unique<PortalSessionProxy>(PortalSessionProxy::SessionType::RemoteDesktop);
+  connect(m_sessionProxy.get(), &PortalSessionProxy::sessionCreated, this, &PortalRemoteDesktop::onSessionCreated);
+  connect(m_sessionProxy.get(), &PortalSessionProxy::sessionStarted, this, &PortalRemoteDesktop::onSessionStarted);
 
   reconnect(0);
 }
@@ -59,7 +65,12 @@ gboolean PortalRemoteDesktop::timeoutHandler() const
 
 void PortalRemoteDesktop::reconnect(unsigned int timeout)
 {
-  auto initCallback = [](gpointer data) { return static_cast<PortalRemoteDesktop *>(data)->initSession(); };
+  auto initCallback = [](gpointer data) { 
+    auto self = static_cast<PortalRemoteDesktop *>(data);
+    QString token = Settings::value(Settings::Client::XdpRestoreToken).toString();
+    self->m_sessionProxy->createSession(token);
+    return false;
+  };
 
   if (timeout > 0)
     g_timeout_add(timeout, initCallback, this);
@@ -80,29 +91,38 @@ void PortalRemoteDesktop::handleSessionClosed(XdpSession *session)
   reconnect(1000);
 }
 
-void PortalRemoteDesktop::handleSessionStarted(GObject *object, GAsyncResult *res)
+void PortalRemoteDesktop::onSessionCreated(const QDBusObjectPath &handle)
 {
+  LOG_DEBUG("PortalRemoteDesktop: Session handle received: %s", handle.path().toUtf8().constData());
+  
   g_autoptr(GError) error = nullptr;
-  auto session = XDP_SESSION(object);
-  if (!xdp_session_start_finish(session, res, &error)) {
-    LOG_ERR("failed to start portal remote desktop session, quitting: %s", error->message);
-    g_main_loop_quit(m_glibMainLoop);
+  m_session = xdp_session_new_from_handle(m_portal, handle.path().toUtf8().constData(), &error);
+  
+  if (!m_session) {
+    LOG_ERR("PortalRemoteDesktop: Failed to wrap session from handle: %s", error->message);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
 
-  m_sessionRestoreToken = xdp_session_get_restore_token(session);
-  if (m_sessionRestoreToken) {
-    Settings::setValue(Settings::Client::XdpRestoreToken, QString(m_sessionRestoreToken));
+  m_sessionSignalId = g_signal_connect(G_OBJECT(m_session), "closed", G_CALLBACK(handleSessionClosedCallback), this);
+
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  initClipboard(handle);
+#endif
+}
+
+void PortalRemoteDesktop::onSessionStarted(const QString &restoreToken)
+{
+  if (!restoreToken.isEmpty()) {
+    Settings::setValue(Settings::Client::XdpRestoreToken, restoreToken);
   }
 
-  // ConnectToEIS requires version 2 of the xdg-desktop-portal (and the same
-  // version in the impl.portal), i.e. you'll need an updated compositor on
-  // top of everything...
-  auto fd = -1;
-  fd = xdp_session_connect_to_eis(session, &error);
+  LOG_INFO("PortalRemoteDesktop: Session started, connecting to EIS...");
+
+  g_autoptr(GError) error = nullptr;
+  auto fd = xdp_session_connect_to_eis(m_session, &error);
   if (fd < 0) {
-    g_main_loop_quit(m_glibMainLoop);
+    LOG_ERR("PortalRemoteDesktop: Failed to connect to EIS: %s", error->message);
     m_events->addEvent(Event(EventTypes::Quit));
     return;
   }
@@ -133,13 +153,18 @@ void PortalRemoteDesktop::handleInitSession(GObject *object, GAsyncResult *res)
   m_session = session;
   ++m_sessionIteration;
 
-  initClipboard(session);
-
   // FIXME: the lambda trick doesn't work here for unknown reasons, we need
   // the static function
   m_sessionSignalId = g_signal_connect(G_OBJECT(session), "closed", G_CALLBACK(handleSessionClosedCallback), this);
 
-  LOG_DEBUG("portal remote desktop session starting");
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  const char *sessionHandle = xdp_session_get_session_handle(session);
+  LOG_DEBUG("portal remote desktop session started, handle: %s", sessionHandle);
+  initClipboard(session);
+#else
+  LOG_DEBUG("portal remote desktop session started");
+#endif
+
   xdp_session_start(
       session,
       nullptr, // parent
@@ -159,10 +184,9 @@ gboolean PortalRemoteDesktop::initSession()
   }
 
   LOG_DEBUG("setting up remote desktop session with restore token %s", m_sessionRestoreToken);
-  xdp_portal_create_remote_desktop_session_full(
+  xdp_portal_create_remote_desktop_session(
       m_portal, static_cast<XdpDeviceType>(XDP_DEVICE_POINTER | XDP_DEVICE_KEYBOARD), XDP_OUTPUT_NONE,
-      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, XDP_PERSIST_MODE_PERSISTENT, m_sessionRestoreToken,
-      nullptr, // cancellable
+      XDP_REMOTE_DESKTOP_FLAG_NONE, XDP_CURSOR_MODE_HIDDEN, nullptr,
       [](GObject *obj, GAsyncResult *res, gpointer data) {
         static_cast<PortalRemoteDesktop *>(data)->handleInitSession(obj, res);
       },
@@ -182,37 +206,45 @@ void PortalRemoteDesktop::glibThread(const void *)
   }
 }
 
-void PortalRemoteDesktop::initClipboard(XdpSession *session)
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+void PortalRemoteDesktop::initClipboard(const QDBusObjectPath &handle)
 {
-  const char *sessionHandlePath = xdp_session_get_session_handle(session);
-  if (!sessionHandlePath) {
-    LOG_WARN("Could not get session handle for clipboard initialization");
-    return;
-  }
+  LOG_DEBUG("Initializing PortalClipboardProxy for session: %s", handle.path().toUtf8().constData());
 
-  LOG_DEBUG("Initializing PortalClipboardProxy for session: %s", sessionHandlePath);
-
+  // Create low-level DBus proxy for clipboard
   m_clipboardProxy = std::make_unique<PortalClipboardProxy>();
 
-  if (!m_clipboardProxy->init(QDBusObjectPath(QString::fromUtf8(sessionHandlePath)))) {
-    LOG_WARN("Failed to initialize PortalClipboardProxy");
+  if (!m_clipboardProxy->init(handle)) {
+    LOG_ERR("Failed to initialize clipboard proxy");
     m_clipboardProxy.reset();
     return;
   }
 
-  // Create High-level IClipboard implementation
-  m_clipboard = std::make_unique<PortalClipboard>(m_clipboardProxy.get());
+  // Create High-level IClipboard implementations
+  m_clipboardStandard = std::make_unique<PortalClipboard>(m_clipboardProxy.get(), PortalClipboardProxy::Standard);
+  m_clipboardPrimary = std::make_unique<PortalClipboard>(m_clipboardProxy.get(), PortalClipboardProxy::Primary);
+  
+  connect(m_clipboardStandard.get(), &PortalClipboard::changed, this, &PortalRemoteDesktop::clipboardChanged);
+  connect(m_clipboardPrimary.get(), &PortalClipboard::changed, this, &PortalRemoteDesktop::clipboardChanged);
 
-  // Request clipboard access before session is enabled
-  // This must be called before the session starts per XDG Desktop Portal spec
+  // Request clipboard access
   m_clipboardProxy->requestClipboard();
 
-  LOG_INFO("Clipboard initialized for RemoteDesktop session");
+  LOG_INFO("Dual clipboards initialized (Standard + Primary)");
 }
 
-IClipboard *PortalRemoteDesktop::getClipboard() const
+IClipboard *PortalRemoteDesktop::getClipboard(ClipboardID id) const
 {
-  return m_clipboard.get();
+  if (id == kClipboardSelection) {
+    return m_clipboardPrimary.get();
+  }
+  return m_clipboardStandard.get();
 }
+#else
+IClipboard *PortalRemoteDesktop::getClipboard(ClipboardID) const
+{
+  return nullptr;
+}
+#endif
 
 } // namespace deskflow

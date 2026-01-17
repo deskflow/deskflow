@@ -51,7 +51,12 @@ void PortalClipboardProxy::requestClipboard(const QVariantMap &options)
     "RequestClipboard"
   );
 
-  msg << QVariant::fromValue(m_sessionHandle) << options;
+  QVariantMap opts = options;
+  if (m_activationId != 0 && !opts.contains("activation_id")) {
+    opts["activation_id"] = m_activationId;
+  }
+
+  msg << QVariant::fromValue(m_sessionHandle) << opts;
 
   QDBusPendingReply<> reply = m_bus.asyncCall(msg);
   reply.waitForFinished();
@@ -65,7 +70,7 @@ void PortalClipboardProxy::requestClipboard(const QVariantMap &options)
   }
 }
 
-void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
+void PortalClipboardProxy::setSelection(const QStringList &mimeTypes, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: setSelection called but clipboard not enabled");
@@ -74,6 +79,7 @@ void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
 
   QVariantMap options;
   options["mime_types"] = mimeTypes;
+  options["selection_type"] = (uint)type;
 
   QDBusMessage msg = QDBusMessage::createMethodCall(
     PORTAL_SERVICE,
@@ -91,13 +97,30 @@ void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
     LOG_WARN("PortalClipboardProxy: SetSelection failed: %s", reply.error().message().toUtf8().constData());
     Q_EMIT clipboardError(reply.error().message());
   } else {
-    m_isOwner = true;
-    m_mimeTypes = mimeTypes;
+    // Note: m_isOwner and m_mimeTypes are now handled per selection type in signals
   }
 }
 
-QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeType)
+QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeType, SelectionType type)
 {
+  if (!m_enabled) {
+    LOG_WARN("PortalClipboardProxy: selectionRead called but clipboard not enabled");
+    return {};
+  }
+
+  QDBusMessage msg = QDBusMessage::createMethodCall(
+    PORTAL_SERVICE,
+    PORTAL_PATH,
+    CLIPBOARD_INTERFACE,
+    "SelectionRead"
+  );
+
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << mimeType << options;
+
+  QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionRead called but clipboard not enabled");
     return {};
@@ -123,7 +146,7 @@ QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeT
   return reply.value();
 }
 
-QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial)
+QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionWrite called but clipboard not enabled");
@@ -137,7 +160,10 @@ QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial)
     "SelectionWrite"
   );
 
-  msg << QVariant::fromValue(m_sessionHandle) << serial;
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << serial << options;
 
   QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
 
@@ -150,7 +176,7 @@ QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial)
   return reply.value();
 }
 
-void PortalClipboardProxy::selectionWriteDone(quint32 serial, bool success)
+void PortalClipboardProxy::selectionWriteDone(quint32 serial, bool success, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionWriteDone called but clipboard not enabled");
@@ -164,7 +190,10 @@ void PortalClipboardProxy::selectionWriteDone(quint32 serial, bool success)
     "SelectionWriteDone"
   );
 
-  msg << QVariant::fromValue(m_sessionHandle) << serial << success;
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << serial << success << options;
 
   QDBusPendingReply<> reply = m_bus.asyncCall(msg);
   reply.waitForFinished();
@@ -193,7 +222,7 @@ void PortalClipboardProxy::connectSignals()
     CLIPBOARD_INTERFACE,
     "SelectionTransfer",
     this,
-    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
+    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32, QVariantMap))
   );
 }
 
@@ -214,7 +243,7 @@ void PortalClipboardProxy::disconnectSignals()
     CLIPBOARD_INTERFACE,
     "SelectionTransfer",
     this,
-    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
+    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32, QVariantMap))
   );
 }
 
@@ -236,20 +265,32 @@ void PortalClipboardProxy::onSelectionOwnerChanged(const QDBusObjectPath &sessio
     sessionIsOwner = options["session_is_owner"].toBool();
   }
 
-  m_mimeTypes = mimeTypes;
-  m_isOwner = sessionIsOwner;
+  SelectionType type = Standard;
+  if (options.contains("selection_type")) {
+    type = (SelectionType)options["selection_type"].toUInt();
+  }
 
-  Q_EMIT selectionOwnerChanged(mimeTypes, sessionIsOwner);
+  if (type == Standard) {
+    m_mimeTypes = mimeTypes;
+    m_isOwner = sessionIsOwner;
+  }
+
+  Q_EMIT selectionOwnerChanged(mimeTypes, sessionIsOwner, type);
 }
 
-void PortalClipboardProxy::onSelectionTransfer(const QDBusObjectPath &sessionHandle, const QString &mimeType, quint32 serial)
+void PortalClipboardProxy::onSelectionTransfer(const QDBusObjectPath &sessionHandle, const QString &mimeType, quint32 serial, const QVariantMap &options)
 {
   // Only handle signals for our session
   if (sessionHandle != m_sessionHandle) {
     return;
   }
 
-  Q_EMIT selectionTransferRequested(mimeType, serial);
+  SelectionType type = Standard;
+  if (options.contains("selection_type")) {
+    type = (SelectionType)options["selection_type"].toUInt();
+  }
+
+  Q_EMIT selectionTransferRequested(mimeType, serial, type);
 }
 
 QByteArray PortalClipboardProxy::readSelectionData(const QString &mimeType)

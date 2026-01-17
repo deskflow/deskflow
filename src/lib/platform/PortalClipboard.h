@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "platform/IClipboard.h"
+#include "deskflow/IClipboard.h"
 
 #include <QMap>
 #include <QObject>
@@ -23,12 +23,12 @@ class PortalClipboardProxy;
  * This class bridges Deskflow's IClipboard interface with the portal.
  * It uses PortalClipboardProxy for the low-level communication.
  */
-class PortalClipboard : public QObject, public IClipboard
+class PortalClipboard : public QObject, public ::IClipboard
 {
   Q_OBJECT
 
 public:
-  explicit PortalClipboard(PortalClipboardProxy *proxy, QObject *parent = nullptr);
+  explicit PortalClipboard(PortalClipboardProxy *proxy, PortalClipboardProxy::SelectionType type = PortalClipboardProxy::Standard);
   ~PortalClipboard() override;
 
   // IClipboard interface
@@ -41,19 +41,18 @@ public:
   std::string get(Format format) const override;
 
 private Q_SLOTS:
-  void onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner);
-  void onSelectionTransferRequested(const QString &mimeType, quint32 serial);
+  void onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner, PortalClipboardProxy::SelectionType type);
+  void onSelectionTransferRequested(const QString &mimeType, quint32 serial, PortalClipboardProxy::SelectionType type);
+  void onClipboardError(const QString &error);
 
 private:
   QString formatToMimeType(Format format) const;
   Format mimeTypeToFormat(const QString &mimeType) const;
-  void updateCacheFromPortal() const;
 
   PortalClipboardProxy *m_proxy;
+  PortalClipboardProxy::SelectionType m_type;
   mutable bool m_isOpen = false;
   mutable Time m_time = 0;
-  
-  // Cache for clipboard data
   mutable std::mutex m_cacheMutex;
   mutable QMap<Format, std::string> m_cache;
   mutable QStringList m_portalMimeTypes;

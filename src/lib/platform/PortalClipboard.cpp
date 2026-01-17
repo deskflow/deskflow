@@ -10,9 +10,9 @@
 
 namespace deskflow {
 
-PortalClipboard::PortalClipboard(PortalClipboardProxy *proxy, QObject *parent)
-  : QObject(parent)
-  , m_proxy(proxy)
+PortalClipboard::PortalClipboard(PortalClipboardProxy *proxy, PortalClipboardProxy::SelectionType type)
+  : m_proxy(proxy)
+  , m_type(type)
 {
   connect(m_proxy, &PortalClipboardProxy::selectionOwnerChanged, this, &PortalClipboard::onSelectionOwnerChanged);
   connect(m_proxy, &PortalClipboardProxy::selectionTransferRequested, this, &PortalClipboard::onSelectionTransferRequested);
@@ -68,7 +68,7 @@ void PortalClipboard::close() const
       for (auto it = m_cache.begin(); it != m_cache.end(); ++it) {
         mimeTypes << formatToMimeType(it.key());
       }
-      m_proxy->setSelection(mimeTypes);
+      m_proxy->setSelection(mimeTypes, m_type);
     }
   }
   
@@ -108,7 +108,7 @@ std::string PortalClipboard::get(Format format) const
   
   QString mimeType = formatToMimeType(format);
   if (m_portalMimeTypes.contains(mimeType)) {
-    QByteArray data = m_proxy->readSelectionData(mimeType);
+    QByteArray data = m_proxy->readSelectionData(mimeType, m_type);
     std::string strData(data.constData(), (size_t)data.size());
     m_cache[format] = strData;
     return strData;
@@ -117,9 +117,13 @@ std::string PortalClipboard::get(Format format) const
   return "";
 }
 
-void PortalClipboard::onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner)
+void PortalClipboard::onSelectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner, PortalClipboardProxy::SelectionType type)
 {
-  LOG_DEBUG("Portal clipboard ownership changed: owner=%d, types=%s", sessionIsOwner, mimeTypes.join(", ").toStdString().c_str());
+  if (type != m_type) {
+    return;
+  }
+
+  LOG_DEBUG("Portal clipboard (%d) ownership changed: owner=%d, types=%s", (int)m_type, sessionIsOwner, mimeTypes.join(", ").toStdString().c_str());
   
   std::lock_guard<std::mutex> lock(m_cacheMutex);
   m_portalMimeTypes = mimeTypes;
@@ -127,12 +131,17 @@ void PortalClipboard::onSelectionOwnerChanged(const QStringList &mimeTypes, bool
   
   if (!sessionIsOwner) {
     m_cache.clear();
+    Q_EMIT changed();
   }
 }
 
-void PortalClipboard::onSelectionTransferRequested(const QString &mimeType, quint32 serial)
+void PortalClipboard::onSelectionTransferRequested(const QString &mimeType, quint32 serial, PortalClipboardProxy::SelectionType type)
 {
-  LOG_DEBUG("Portal requested selection transfer for %s (serial %u)", mimeType.toStdString().c_str(), serial);
+  if (type != m_type) {
+    return;
+  }
+
+  LOG_DEBUG("Portal requested selection transfer (%d) for %s (serial %u)", (int)m_type, mimeType.toStdString().c_str(), serial);
   
   Format format = mimeTypeToFormat(mimeType);
   std::string data;
@@ -146,11 +155,16 @@ void PortalClipboard::onSelectionTransferRequested(const QString &mimeType, quin
   
   if (!data.empty()) {
     QByteArray qData(data.data(), (int)data.size());
-    m_proxy->writeSelectionData(serial, qData);
+    m_proxy->writeSelectionData(serial, qData, m_type);
   } else {
     LOG_WARN("Requested MIME type %s not found in cache", mimeType.toStdString().c_str());
-    m_proxy->selectionWriteDone(serial, false);
+    m_proxy->selectionWriteDone(serial, false, m_type);
   }
+}
+
+void PortalClipboard::onClipboardError(const QString &error)
+{
+  LOG_ERR("Portal clipboard (%d) error: %s", (int)m_type, error.toUtf8().constData());
 }
 
 QString PortalClipboard::formatToMimeType(Format format) const
@@ -158,7 +172,7 @@ QString PortalClipboard::formatToMimeType(Format format) const
   switch (format) {
     case Format::Text:   return "text/plain;charset=utf-8";
     case Format::HTML:   return "text/html";
-    case Format::Bitmap: return "image/bmp";
+    case Format::Bitmap: return "image/png"; // Standard for Wayland
     default:             return "";
   }
 }
@@ -171,8 +185,9 @@ IClipboard::Format PortalClipboard::mimeTypeToFormat(const QString &mimeType) co
   if (mimeType.contains("text/html", Qt::CaseInsensitive)) {
     return Format::HTML;
   }
-  if (mimeType.contains("image/bmp", Qt::CaseInsensitive) || 
-      mimeType.contains("image/png", Qt::CaseInsensitive)) {
+  if (mimeType.contains("image/png", Qt::CaseInsensitive) || 
+      mimeType.contains("image/jpeg", Qt::CaseInsensitive) ||
+      mimeType.contains("image/bmp", Qt::CaseInsensitive)) {
     return Format::Bitmap;
   }
   return Format::TotalFormats;
