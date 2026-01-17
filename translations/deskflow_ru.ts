@@ -1319,6 +1319,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Automatic</source>
         <translation>Автоматически</translation>
     </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">Включить номер версии в заголовок окна</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

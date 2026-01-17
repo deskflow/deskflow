@@ -1320,6 +1320,10 @@ L&apos;abilitazione di questa impostazione disabiliterà l&apos;interfaccia graf
         <source>Automatic</source>
         <translation type="unfinished">Automatica</translation>
     </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">Includi la versione nel titolo della finestra</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>

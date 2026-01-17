@@ -75,6 +75,7 @@ public:
     inline static const auto ShowGenericClientFailureDialog = QStringLiteral("gui/showGenericClientFailureDialog");
     inline static const auto ShownFirstConnectedMessage = QStringLiteral("gui/shownFirstConnectedMessage");
     inline static const auto ShownServerFirstStartMessage = QStringLiteral("gui/shownServerFirstStartMessage");
+    inline static const auto ShowVersionInTitle = QStringLiteral("gui/showVersionInTitle");
   };
   struct Log
   {
@@ -215,6 +216,7 @@ private:
     , Settings::Gui::ShowGenericClientFailureDialog
     , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Gui::ShownServerFirstStartMessage
+    , Settings::Gui::ShowVersionInTitle
     , Settings::Security::Certificate
     , Settings::Security::CheckPeers
     , Settings::Security::KeySize
@@ -229,6 +231,7 @@ private:
     , Settings::Gui::AutoStartCore
     , Settings::Gui::ShownFirstConnectedMessage
     , Settings::Gui::ShownServerFirstStartMessage
+    , Settings::Gui::ShowVersionInTitle
     , Settings::Core::PreventSleep
     , Settings::Core::UseWlClipboard
     , Settings::Server::ExternalConfig

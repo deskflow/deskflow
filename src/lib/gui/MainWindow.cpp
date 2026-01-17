@@ -195,8 +195,6 @@ void MainWindow::restoreWindow()
 
 void MainWindow::setupControls()
 {
-  setWindowTitle(kAppName);
-
   secureSocket(false);
 
   ui->btnConfigureServer->setIcon(QIcon::fromTheme(QStringLiteral("configure")));
@@ -702,8 +700,15 @@ void MainWindow::setupTrayIcon()
 
 void MainWindow::applyConfig()
 {
+  if (Settings::value(Settings::Gui::ShowVersionInTitle).toBool()) {
+    setWindowTitle(QStringLiteral("%1 - %2").arg(kAppName, kDisplayVersion));
+  } else {
+    setWindowTitle(kAppName);
+  }
+
   if (const auto host = Settings::value(Settings::Client::RemoteHost).toString(); !host.isEmpty())
     ui->lineHostname->setText(host);
+
   updateLocalFingerprint();
   setTrayIcon();
 
