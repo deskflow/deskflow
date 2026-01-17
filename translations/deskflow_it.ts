@@ -884,6 +884,25 @@ Nomi validi:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Ricerca</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">Trova successivo</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">Trova precedente</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">Trova...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
