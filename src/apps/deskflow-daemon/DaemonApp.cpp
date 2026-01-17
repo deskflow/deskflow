@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2026 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2012 - 2025 Symless Ltd.
+ * SPDX-FileCopyrightText: 2026 Deskflow Developers
+ * SPDX-FileCopyrightText: 2012 - 2025 Symless Ltd.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -42,7 +42,7 @@ void showHelp(int argc, char **argv) // NOSONAR - CLI args
 
 DaemonApp::DaemonApp(IEventQueue &events) : m_events(events)
 {
-  // do nothing
+  m_events.setLoopHook([]() { QCoreApplication::processEvents(); });
 }
 
 DaemonApp::~DaemonApp() = default;

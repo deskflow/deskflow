@@ -1,7 +1,7 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2012 - 2016 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2011 Nick Bolton
+ * SPDX-FileCopyrightText: 2012 - 2016 Symless Ltd.
+ * SPDX-FileCopyrightText: 2011 Nick Bolton
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -28,4 +28,5 @@ public:
   MOCK_METHOD(void, deleteTimer, (EventQueueTimer *), (override));
   MOCK_METHOD(void *, getSystemTarget, (), (override));
   MOCK_METHOD(void, waitForReady, (), (const, override));
+  MOCK_METHOD(void, setLoopHook, (std::function<void()>), (override));
 };

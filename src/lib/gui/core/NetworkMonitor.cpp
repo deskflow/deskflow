@@ -33,7 +33,12 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName) const
       QStringLiteral("anpi"),    // Apple network interface
   };
 
-  return virtualPatterns.contains(interfaceName, Qt::CaseInsensitive);
+  for (const auto &pattern : virtualPatterns) {
+    if (pattern.compare(interfaceName, Qt::CaseInsensitive) == 0) {
+      return true;
+    }
+  }
+  return false;
 }
 
 NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this))
@@ -97,8 +102,23 @@ QStringList NetworkMonitor::getAvailableIPv4Addresses() const
     }
   }
 
-  std::ranges::sort(physicalIPs, [](const QHostAddress &a, const QHostAddress &b) {
-    if (a.isPrivateUse() != b.isPrivateUse())
+  // Helper lambda to check if IP is in private RFC1918 range (Qt 6.4 compatible alternative to isPrivateUse())
+  auto isPrivateAddress = [](const QHostAddress &addr) -> bool {
+    quint32 ip = addr.toIPv4Address();
+    // 10.0.0.0/8
+    if ((ip & 0xFF000000) == 0x0A000000)
+      return true;
+    // 172.16.0.0/12
+    if ((ip & 0xFFF00000) == 0xAC100000)
+      return true;
+    // 192.168.0.0/16
+    if ((ip & 0xFFFF0000) == 0xC0A80000)
+      return true;
+    return false;
+  };
+
+  std::ranges::sort(physicalIPs, [&isPrivateAddress](const QHostAddress &a, const QHostAddress &b) {
+    if (isPrivateAddress(a) != isPrivateAddress(b))
       return true;
     return a.toIPv4Address() < b.toIPv4Address();
   });

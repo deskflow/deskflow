@@ -1,18 +1,19 @@
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
- * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
+ * SPDX-FileCopyrightText: 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: 2024 Symless Ltd.
+ * SPDX-FileCopyrightText: 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "platform/PortalInputCapture.h"
-#include "platform/PortalClipboardProxy.h"
-#include "platform/PortalClipboard.h"
 #include "base/DirectionTypes.h"
 #include "base/Event.h"
 #include "base/Log.h"
 #include "base/TMethodJob.h"
+#include "platform/PortalClipboard.h"
+#include "platform/PortalClipboardProxy.h"
 
 #include <sys/socket.h> // for EIS fd hack, remove
 #include <sys/un.h>     // for EIS fd hack, remove
@@ -29,7 +30,16 @@ PortalInputCapture::PortalInputCapture(EiScreen *screen, IEventQueue *events)
   auto tMethodJob = new TMethodJob<PortalInputCapture>(this, &PortalInputCapture::glibThread);
   m_glibThread = new Thread(tMethodJob);
 
-  auto captureCallback = [](gpointer data) { return static_cast<PortalInputCapture *>(data)->initSession(); };
+  m_sessionProxy = std::make_unique<PortalSessionProxy>(PortalSessionProxy::SessionType::InputCapture);
+  connect(m_sessionProxy.get(), &PortalSessionProxy::sessionCreated, this, &PortalInputCapture::onSessionCreated);
+  connect(m_sessionProxy.get(), &PortalSessionProxy::sessionStarted, this, &PortalInputCapture::onSessionStarted);
+
+  auto captureCallback = [](gpointer data) {
+    auto self = static_cast<PortalInputCapture *>(data);
+    QString token = Settings::value(Settings::Client::XdpRestoreToken).toString();
+    self->m_sessionProxy->createSession(token);
+    return false;
+  };
 
   g_idle_add(captureCallback, this);
 }
@@ -106,21 +116,55 @@ void PortalInputCapture::handleInitSession(GObject *object, GAsyncResult *res)
 
   // Socket ownership is transferred to the EiScreen
   m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
+}
+
+void PortalInputCapture::onSessionCreated(const QDBusObjectPath &handle)
+{
+  LOG_DEBUG("PortalInputCapture: Session handle received: %s", handle.path().toUtf8().constData());
+
+  g_autoptr(GError) error = nullptr;
+  m_session = xdp_input_capture_session_new_from_handle(m_portal, handle.path().toUtf8().constData(), &error);
+
+  if (!m_session) {
+    LOG_ERR("PortalInputCapture: Failed to wrap session from handle: %s", error->message);
+    m_events->addEvent(Event(EventTypes::Quit));
+    return;
+  }
 
   using enum Signal;
-  XdpSession *parentSession = xdp_input_capture_session_get_session(session);
-  m_signals.at(Disabled) = g_signal_connect(G_OBJECT(session), "disabled", G_CALLBACK(disabled), this);
+  XdpSession *parentSession = xdp_input_capture_session_get_session(m_session);
+  m_signals.at(Disabled) = g_signal_connect(G_OBJECT(m_session), "disabled", G_CALLBACK(disabled), this);
   m_signals.at(Activated) = g_signal_connect(G_OBJECT(m_session), "activated", G_CALLBACK(activated), this);
   m_signals.at(Deactivated) = g_signal_connect(G_OBJECT(m_session), "deactivated", G_CALLBACK(deactivated), this);
   m_signals.at(ZonesChanged) = g_signal_connect(G_OBJECT(m_session), "zones-changed", G_CALLBACK(zonesChanged), this);
   m_signals.at(SessionClosed) = g_signal_connect(G_OBJECT(parentSession), "closed", G_CALLBACK(sessionClosed), this);
 
-  // Initialize clipboard support for InputCapture session
-  // Note: Requires xdg-desktop-portal with ClipboardProvider interface support for InputCapture
-  // See: https://github.com/flatpak/xdg-desktop-portal/discussions/1459
-  initClipboard(parentSession);
+  initClipboard(handle);
+}
+
+void PortalInputCapture::onSessionStarted(const QString &restoreToken)
+{
+  if (!restoreToken.isEmpty()) {
+    Settings::setValue(Settings::Client::XdpRestoreToken, restoreToken);
+  } else {
+    LOG_WARN("PortalInputCapture: No restore token received. Session will not persist (Input Capture limitation).");
+  }
+
+  LOG_INFO("PortalInputCapture: Session started, connecting to EIS...");
+
+  g_autoptr(GError) error = nullptr;
+  auto fd = xdp_input_capture_session_connect_to_eis(m_session, &error);
+  if (fd < 0) {
+    LOG_ERR("PortalInputCapture: Failed to connect to EIS: %s", error->message);
+    m_events->addEvent(Event(EventTypes::Quit));
+    return;
+  }
+
+  // Socket ownership is transferred to the EiScreen
+  m_events->addEvent(Event(EventTypes::EIConnected, m_screen->getEventTarget(), EiScreen::EiConnectInfo::alloc(fd)));
 
   handleZonesChanged(m_session, nullptr);
+  enable();
 }
 
 void PortalInputCapture::handleSetPointerBarriers(const GObject *, GAsyncResult *res)
@@ -356,37 +400,38 @@ void PortalInputCapture::handleZonesChanged(XdpInputCaptureSession *session, con
   }
 }
 
-void PortalInputCapture::initClipboard(XdpSession *session)
+void PortalInputCapture::initClipboard(const QDBusObjectPath &handle)
 {
-  const char *sessionHandlePath = xdp_session_get_session_handle(session);
-  if (!sessionHandlePath) {
-    LOG_WARN("Could not get session handle for clipboard initialization");
-    return;
-  }
-
+  const char *sessionHandlePath = handle.path().toUtf8().constData();
   LOG_DEBUG("Initializing PortalClipboardProxy for session: %s", sessionHandlePath);
 
   m_clipboardProxy = std::make_unique<PortalClipboardProxy>();
 
-  if (!m_clipboardProxy->init(QDBusObjectPath(QString::fromUtf8(sessionHandlePath)))) {
+  if (!m_clipboardProxy->init(handle)) {
     LOG_WARN("Failed to initialize PortalClipboardProxy");
     m_clipboardProxy.reset();
     return;
   }
 
-  // Create High-level IClipboard implementation
-  m_clipboard = std::make_unique<PortalClipboard>(m_clipboardProxy.get());
+  // Create High-level IClipboard implementations for both Standard and Primary
+  m_clipboardStandard = std::make_unique<PortalClipboard>(m_clipboardProxy.get(), PortalClipboardProxy::Standard);
+  m_clipboardPrimary = std::make_unique<PortalClipboard>(m_clipboardProxy.get(), PortalClipboardProxy::Primary);
 
-  // Request clipboard access before session is enabled
-  // This must be called before the session starts per XDG Desktop Portal spec
+  connect(m_clipboardStandard.get(), &PortalClipboard::changed, this, &PortalInputCapture::clipboardChanged);
+  connect(m_clipboardPrimary.get(), &PortalClipboard::changed, this, &PortalInputCapture::clipboardChanged);
+
+  // Request clipboard access
   m_clipboardProxy->requestClipboard();
 
-  LOG_INFO("Clipboard initialized for InputCapture session");
+  LOG_INFO("Dual clipboards initialized (Standard + Primary)");
 }
 
-IClipboard *PortalInputCapture::getClipboard() const
+IClipboard *PortalInputCapture::getClipboard(ClipboardID id) const
 {
-  return m_clipboard.get();
+  if (id == kClipboardSelection) {
+    return m_clipboardPrimary.get();
+  }
+  return m_clipboardStandard.get();
 }
 
 void PortalInputCapture::glibThread(const void *)
@@ -404,3 +449,4 @@ void PortalInputCapture::glibThread(const void *)
 }
 
 } // namespace deskflow
+#endif

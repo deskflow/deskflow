@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: 2025 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  *
  * Portal Clipboard - Qt DBus interface for XDG Desktop Portal Clipboard
@@ -9,10 +9,10 @@
 
 #pragma once
 
-#include <QObject>
 #include <QDBusConnection>
 #include <QDBusObjectPath>
 #include <QDBusUnixFileDescriptor>
+#include <QObject>
 #include <QStringList>
 #include <QVariantMap>
 
@@ -30,9 +30,15 @@ class PortalClipboardProxy : public QObject
   Q_OBJECT
 
 public:
-  static constexpr const char* PORTAL_SERVICE = "org.freedesktop.portal.Desktop";
-  static constexpr const char* PORTAL_PATH = "/org/freedesktop/portal/desktop";
-  static constexpr const char* CLIPBOARD_INTERFACE = "org.freedesktop.portal.Clipboard";
+  static constexpr const char *PORTAL_SERVICE = "org.freedesktop.portal.Desktop";
+  static constexpr const char *PORTAL_PATH = "/org/freedesktop/portal/desktop";
+  static constexpr const char *CLIPBOARD_INTERFACE = "org.freedesktop.portal.Clipboard";
+
+  enum SelectionType
+  {
+    Standard = 0,
+    Primary = 1
+  };
 
   explicit PortalClipboardProxy(QObject *parent = nullptr);
   ~PortalClipboardProxy() override;
@@ -54,38 +60,38 @@ public:
    * @brief Set the clipboard selection
    * @param mimeTypes List of available MIME types
    */
-  void setSelection(const QStringList &mimeTypes);
+  void setSelection(const QStringList &mimeTypes, SelectionType type = Standard);
 
   /**
    * @brief Request to read clipboard data
    * @param mimeType The requested MIME type
    * @return A file descriptor to read from
    */
-  QDBusUnixFileDescriptor selectionRead(const QString &mimeType);
+  QDBusUnixFileDescriptor selectionRead(const QString &mimeType, SelectionType type = Standard);
 
   /**
    * @brief Request to write clipboard data (responding to transfer request)
    * @param serial The transfer serial
    * @return A file descriptor to write to
    */
-  QDBusUnixFileDescriptor selectionWrite(quint32 serial);
+  QDBusUnixFileDescriptor selectionWrite(quint32 serial, SelectionType type = Standard);
 
   /**
    * @brief Signal that writing is finished
    * @param serial The transfer serial
    * @param success Whether the write was successful
    */
-  void selectionWriteDone(quint32 serial, bool success);
+  void selectionWriteDone(quint32 serial, bool success, SelectionType type = Standard);
 
   /**
    * @brief Helper to read all data from a selection FD
    */
-  QByteArray readSelectionData(const QString &mimeType);
+  QByteArray readSelectionData(const QString &mimeType, SelectionType type = Standard);
 
   /**
    * @brief Helper to write all data to a selection FD
    */
-  bool writeSelectionData(quint32 serial, const QByteArray &data);
+  bool writeSelectionData(quint32 serial, const QByteArray &data, SelectionType type = Standard);
 
   // Getters
   bool isEnabled() const;
@@ -97,15 +103,17 @@ Q_SIGNALS:
    * @brief Emitted when clipboard ownership changes
    * @param mimeTypes Available MIME types
    * @param sessionIsOwner Whether our session owns the clipboard
+   * @param type The type of selection (Standard or Primary)
    */
-  void selectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner);
+  void selectionOwnerChanged(const QStringList &mimeTypes, bool sessionIsOwner, SelectionType type);
 
   /**
    * @brief Emitted when clipboard content is requested from us
    * @param mimeType The requested MIME type
    * @param serial Serial to use when responding
+   * @param type The type of selection (Standard or Primary)
    */
-  void selectionTransferRequested(const QString &mimeType, quint32 serial);
+  void selectionTransferRequested(const QString &mimeType, quint32 serial, SelectionType type);
 
   /**
    * @brief Emitted when clipboard becomes available

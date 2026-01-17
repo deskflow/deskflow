@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: 2025 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  *
  * Portal Clipboard - Qt DBus implementation for XDG Desktop Portal Clipboard
@@ -13,15 +13,13 @@
 #include <QDBusMessage>
 #include <QDBusReply>
 #include <QFile>
-#include <unistd.h>
 #include <errno.h>
 #include <poll.h>
+#include <unistd.h>
 
 namespace deskflow {
 
-PortalClipboardProxy::PortalClipboardProxy(QObject *parent)
-  : QObject(parent)
-  , m_bus(QDBusConnection::sessionBus())
+PortalClipboardProxy::PortalClipboardProxy(QObject *parent) : QObject(parent), m_bus(QDBusConnection::sessionBus())
 {
 }
 
@@ -44,14 +42,15 @@ bool PortalClipboardProxy::init(const QDBusObjectPath &sessionHandle)
 
 void PortalClipboardProxy::requestClipboard(const QVariantMap &options)
 {
-  QDBusMessage msg = QDBusMessage::createMethodCall(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "RequestClipboard"
-  );
+  QDBusMessage msg =
+      QDBusMessage::createMethodCall(PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "RequestClipboard");
 
-  msg << QVariant::fromValue(m_sessionHandle) << options;
+  QVariantMap opts = options;
+  if (m_activationId != 0 && !opts.contains("activation_id")) {
+    opts["activation_id"] = m_activationId;
+  }
+
+  msg << QVariant::fromValue(m_sessionHandle) << opts;
 
   QDBusPendingReply<> reply = m_bus.asyncCall(msg);
   reply.waitForFinished();
@@ -65,7 +64,7 @@ void PortalClipboardProxy::requestClipboard(const QVariantMap &options)
   }
 }
 
-void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
+void PortalClipboardProxy::setSelection(const QStringList &mimeTypes, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: setSelection called but clipboard not enabled");
@@ -74,13 +73,9 @@ void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
 
   QVariantMap options;
   options["mime_types"] = mimeTypes;
+  options["selection_type"] = (uint)type;
 
-  QDBusMessage msg = QDBusMessage::createMethodCall(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SetSelection"
-  );
+  QDBusMessage msg = QDBusMessage::createMethodCall(PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SetSelection");
 
   msg << QVariant::fromValue(m_sessionHandle) << options;
 
@@ -91,26 +86,23 @@ void PortalClipboardProxy::setSelection(const QStringList &mimeTypes)
     LOG_WARN("PortalClipboardProxy: SetSelection failed: %s", reply.error().message().toUtf8().constData());
     Q_EMIT clipboardError(reply.error().message());
   } else {
-    m_isOwner = true;
-    m_mimeTypes = mimeTypes;
+    // Note: m_isOwner and m_mimeTypes are now handled per selection type in signals
   }
 }
 
-QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeType)
+QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeType, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionRead called but clipboard not enabled");
     return {};
   }
 
-  QDBusMessage msg = QDBusMessage::createMethodCall(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionRead"
-  );
+  QDBusMessage msg = QDBusMessage::createMethodCall(PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionRead");
 
-  msg << QVariant::fromValue(m_sessionHandle) << mimeType;
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << mimeType << options;
 
   QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
 
@@ -123,21 +115,19 @@ QDBusUnixFileDescriptor PortalClipboardProxy::selectionRead(const QString &mimeT
   return reply.value();
 }
 
-QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial)
+QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionWrite called but clipboard not enabled");
     return {};
   }
 
-  QDBusMessage msg = QDBusMessage::createMethodCall(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionWrite"
-  );
+  QDBusMessage msg = QDBusMessage::createMethodCall(PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionWrite");
 
-  msg << QVariant::fromValue(m_sessionHandle) << serial;
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << serial << options;
 
   QDBusReply<QDBusUnixFileDescriptor> reply = m_bus.call(msg);
 
@@ -150,21 +140,20 @@ QDBusUnixFileDescriptor PortalClipboardProxy::selectionWrite(quint32 serial)
   return reply.value();
 }
 
-void PortalClipboardProxy::selectionWriteDone(quint32 serial, bool success)
+void PortalClipboardProxy::selectionWriteDone(quint32 serial, bool success, SelectionType type)
 {
   if (!m_enabled) {
     LOG_WARN("PortalClipboardProxy: selectionWriteDone called but clipboard not enabled");
     return;
   }
 
-  QDBusMessage msg = QDBusMessage::createMethodCall(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionWriteDone"
-  );
+  QDBusMessage msg =
+      QDBusMessage::createMethodCall(PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionWriteDone");
 
-  msg << QVariant::fromValue(m_sessionHandle) << serial << success;
+  QVariantMap options;
+  options["selection_type"] = (uint)type;
+
+  msg << QVariant::fromValue(m_sessionHandle) << serial << success << options;
 
   QDBusPendingReply<> reply = m_bus.asyncCall(msg);
   reply.waitForFinished();
@@ -178,43 +167,27 @@ void PortalClipboardProxy::connectSignals()
 {
   // Connect to SelectionOwnerChanged signal
   m_bus.connect(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionOwnerChanged",
-    this,
-    SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
+      PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionOwnerChanged", this,
+      SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
   );
 
   // Connect to SelectionTransfer signal
   m_bus.connect(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionTransfer",
-    this,
-    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
+      PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionTransfer", this,
+      SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32, QVariantMap))
   );
 }
 
 void PortalClipboardProxy::disconnectSignals()
 {
   m_bus.disconnect(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionOwnerChanged",
-    this,
-    SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
+      PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionOwnerChanged", this,
+      SLOT(onSelectionOwnerChanged(QDBusObjectPath, QVariantMap))
   );
 
   m_bus.disconnect(
-    PORTAL_SERVICE,
-    PORTAL_PATH,
-    CLIPBOARD_INTERFACE,
-    "SelectionTransfer",
-    this,
-    SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32))
+      PORTAL_SERVICE, PORTAL_PATH, CLIPBOARD_INTERFACE, "SelectionTransfer", this,
+      SLOT(onSelectionTransfer(QDBusObjectPath, QString, quint32, QVariantMap))
   );
 }
 
@@ -236,52 +209,66 @@ void PortalClipboardProxy::onSelectionOwnerChanged(const QDBusObjectPath &sessio
     sessionIsOwner = options["session_is_owner"].toBool();
   }
 
-  m_mimeTypes = mimeTypes;
-  m_isOwner = sessionIsOwner;
+  SelectionType type = Standard;
+  if (options.contains("selection_type")) {
+    type = (SelectionType)options["selection_type"].toUInt();
+  }
 
-  Q_EMIT selectionOwnerChanged(mimeTypes, sessionIsOwner);
+  if (type == Standard) {
+    m_mimeTypes = mimeTypes;
+    m_isOwner = sessionIsOwner;
+  }
+
+  Q_EMIT selectionOwnerChanged(mimeTypes, sessionIsOwner, type);
 }
 
-void PortalClipboardProxy::onSelectionTransfer(const QDBusObjectPath &sessionHandle, const QString &mimeType, quint32 serial)
+void PortalClipboardProxy::onSelectionTransfer(
+    const QDBusObjectPath &sessionHandle, const QString &mimeType, quint32 serial, const QVariantMap &options
+)
 {
   // Only handle signals for our session
   if (sessionHandle != m_sessionHandle) {
     return;
   }
 
-  Q_EMIT selectionTransferRequested(mimeType, serial);
+  SelectionType type = Standard;
+  if (options.contains("selection_type")) {
+    type = (SelectionType)options["selection_type"].toUInt();
+  }
+
+  Q_EMIT selectionTransferRequested(mimeType, serial, type);
 }
 
-QByteArray PortalClipboardProxy::readSelectionData(const QString &mimeType)
+QByteArray PortalClipboardProxy::readSelectionData(const QString &mimeType, SelectionType type)
 {
-  QDBusUnixFileDescriptor fdWrapper = selectionRead(mimeType);
+  QDBusUnixFileDescriptor fdWrapper = selectionRead(mimeType, type);
   if (!fdWrapper.isValid()) {
     return {};
   }
 
   int fd = fdWrapper.fileDescriptor();
   QByteArray data = readAllFromFd(fd);
-  
+
   // QDBusUnixFileDescriptor doesn't always close the FD on destruction
   // depending on ownership. We should close it if we're done.
   ::close(fd);
-  
+
   return data;
 }
 
-bool PortalClipboardProxy::writeSelectionData(quint32 serial, const QByteArray &data)
+bool PortalClipboardProxy::writeSelectionData(quint32 serial, const QByteArray &data, SelectionType type)
 {
-  QDBusUnixFileDescriptor fdWrapper = selectionWrite(serial);
+  QDBusUnixFileDescriptor fdWrapper = selectionWrite(serial, type);
   if (!fdWrapper.isValid()) {
     return false;
   }
 
   int fd = fdWrapper.fileDescriptor();
   bool success = writeAllToFd(fd, data);
-  
+
   ::close(fd);
-  
-  selectionWriteDone(serial, success);
+
+  selectionWriteDone(serial, success, type);
   return success;
 }
 
@@ -310,6 +297,30 @@ QByteArray PortalClipboardProxy::readAllFromFd(int fd)
 }
 
 bool PortalClipboardProxy::writeAllToFd(int fd, const QByteArray &data)
+{
+  const char *ptr = data.data();
+  size_t remaining = data.size();
+  ssize_t n;
+
+  while (remaining > 0) {
+    n = ::write(fd, ptr, remaining);
+    if (n > 0) {
+      ptr += n;
+      remaining -= n;
+    } else if (n < 0) {
+      if (errno == EINTR || errno == EAGAIN) {
+        continue;
+      }
+      LOG_WARN("PortalClipboardProxy: write error to FD %d: %s", fd, strerror(errno));
+      return false;
+    } else {
+      break; // Should not happen with write
+    }
+  }
+
+  return true;
+}
+
 {
   const char *ptr = data.constData();
   size_t remaining = (size_t)data.size();

@@ -48,6 +48,7 @@ public:
   void removeHandlers(void *target) override;
   void *getSystemTarget() override;
   void waitForReady() const override;
+  void setLoopHook(std::function<void()> hook) override;
 
 private:
   const EventHandler *getHandler(EventTypes type, void *target) const;
@@ -121,4 +122,5 @@ private:
   Mutex *m_readyMutex = nullptr;
   CondVar<bool> *m_readyCondVar = nullptr;
   std::queue<Event> m_pending;
+  std::function<void()> m_loopHook;
 };

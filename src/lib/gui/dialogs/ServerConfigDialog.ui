@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2025 Deskflow Developers
+SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+-->
 <ui version="4.0">
  <class>ServerConfigDialog</class>
  <widget class="QDialog" name="ServerConfigDialog">
@@ -186,7 +190,7 @@
              <string>&amp;New</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+             <iconset theme="list-add"/>
             </property>
            </widget>
           </item>
@@ -212,7 +216,7 @@
              <string>&amp;Remove</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+             <iconset theme="list-remove"/>
             </property>
            </widget>
           </item>
@@ -255,7 +259,7 @@
              <string>Ne&amp;w</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListAdd"/>
+             <iconset theme="list-add"/>
             </property>
            </widget>
           </item>
@@ -281,7 +285,7 @@
              <string>Re&amp;move</string>
             </property>
             <property name="icon">
-             <iconset theme="QIcon::ThemeIcon::ListRemove"/>
+             <iconset theme="list-remove"/>
             </property>
            </widget>
           </item>

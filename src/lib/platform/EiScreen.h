@@ -26,7 +26,9 @@ namespace deskflow {
 class WlClipboardCollection;
 class EiKeyState;
 class PortalRemoteDesktop;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 class PortalInputCapture;
+#endif
 
 using ClipboardInfo = IScreen::ClipboardInfo;
 
@@ -39,7 +41,7 @@ public:
 
   // IScreen overrides
   void *getEventTarget() const final;
-  bool getClipboard(ClipboardID id, IClipboard *) const override;
+  bool getClipboard(ClipboardID id, IClipboard *clipboard) const override;
   void getShape(std::int32_t &x, std::int32_t &y, std::int32_t &width, std::int32_t &height) const override;
   void getCursorPos(std::int32_t &x, std::int32_t &y) const override;
 
@@ -107,6 +109,7 @@ private:
 
   void handleConnectedToEisEvent(const Event &event);
   void handlePortalSessionClosed();
+  void onPortalClipboardChanged();
 
   static void handleEiLogEvent(ei *ei, const ei_log_priority priority, const char *message, ei_log_context *)
   {
@@ -155,7 +158,9 @@ private:
   mutable std::mutex m_mutex;
 
   PortalRemoteDesktop *m_portalRemoteDesktop = nullptr;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
   PortalInputCapture *m_portalInputCapture = nullptr;
+#endif
 
   struct HotKeyItem
   {

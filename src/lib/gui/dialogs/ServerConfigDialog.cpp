@@ -64,7 +64,7 @@ ServerConfigDialog::ServerConfigDialog(QWidget *parent, ServerConfig &config)
   // the developer was looking at, and it's easy to accidentally save that.
   ui->tabWidget->setCurrentIndex(0);
 
-  ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::DocumentOpen));
+  ui->btnBrowseConfigFile->setIcon(QIcon::fromTheme("document-open"));
   ui->lineConfigFile->setText(serverConfig().configFile());
 
   ui->rbProtocolSynergy->setChecked(serverConfig().protocol() == NetworkProtocol::Synergy);

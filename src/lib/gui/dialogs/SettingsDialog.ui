@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2025 Deskflow Developers
+SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+-->
 <ui version="4.0">
  <class>SettingsDialog</class>
  <widget class="QDialog" name="SettingsDialog">
@@ -232,7 +236,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+                <iconset theme="document-open"/>
                </property>
                <property name="flat">
                 <bool>true</bool>
@@ -293,7 +297,7 @@
                <string>Regenerate certificate</string>
               </property>
               <property name="icon">
-               <iconset theme="QIcon::ThemeIcon::ViewRefresh"/>
+               <iconset theme="view-refresh"/>
               </property>
              </widget>
             </item>
@@ -589,7 +593,7 @@
                 <string/>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+                <iconset theme="document-open"/>
                </property>
                <property name="flat">
                 <bool>true</bool>

@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+SPDX-FileCopyrightText: 2025 Deskflow Developers
+SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
+-->
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
@@ -270,7 +274,7 @@
                 <string>Export server configuration</string>
                </property>
                <property name="icon">
-                <iconset theme="QIcon::ThemeIcon::DocumentSaveAs"/>
+                <iconset theme="document-save-as"/>
                </property>
               </widget>
              </item>

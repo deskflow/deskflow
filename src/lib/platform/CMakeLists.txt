@@ -3,12 +3,15 @@
 # SPDX-FileCopyrightText: 2009 - 2012 Nick Bolton
 # SPDX-License-Identifier: MIT
 
-if(UNIX AND NOT APPLE)
-  pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
+if (UNIX AND NOT APPLE)
+pkg_check_modules(LIBEI REQUIRED QUIET "libei-1.0 >= ${REQUIRED_LIBEI_VERSION}")
   message(STATUS "libei version: ${LIBEI_VERSION}")
 
   pkg_check_modules(LIBPORTAL REQUIRED QUIET "libportal >= ${REQUIRED_LIBPORTAL_VERSION}")
   message(STATUS "libportal version: ${LIBPORTAL_VERSION}")
+  if("${LIBPORTAL_VERSION}" VERSION_GREATER_EQUAL "0.8.0")
+    add_definitions(-DHAVE_LIBPORTAL_INPUTCAPTURE)
+  endif()
 endif()
 
 if(WIN32)
@@ -144,7 +147,7 @@ elseif(UNIX)
       WlClipboard.cpp
       WlClipboard.h
     )
-    # The Portal sources also require EI.
+#The Portal sources also require EI.
     if(LIBPORTAL_FOUND)
       list(APPEND PLATFORM_SOURCES
         PortalClipboard.cpp
@@ -155,12 +158,14 @@ elseif(UNIX)
         PortalInputCapture.h
         PortalRemoteDesktop.cpp
         PortalRemoteDesktop.h
+        PortalSessionProxy.cpp
+        PortalSessionProxy.h
       )
     endif()
   endif()
 endif()
 
-# wayland.h is included to check for wayland support
+#wayland.h is included to check for wayland support
 add_library(platform STATIC ${PLATFORM_SOURCES})
 
 target_link_libraries(platform client ${libs})
@@ -181,7 +186,7 @@ if(UNIX)
     if(${LIBXKBCOMMON_VERSION} VERSION_GREATER_EQUAL "1.10")
       target_compile_definitions(platform PRIVATE HAVE_XKB_KEYMAP_MOD_GET_MASK=1)
     endif()
-    target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL HAVE_LIBPORTAL_INPUTCAPTURE)
+    target_compile_definitions(platform PUBLIC WINAPI_LIBEI WINAPI_LIBPORTAL)
     target_include_directories(platform PUBLIC ${LIBEI_INCLUDE_DIRS} ${LIBPORTAL_INCLUDE_DIRS})
     target_link_libraries(
       platform

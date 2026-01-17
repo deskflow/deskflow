@@ -57,12 +57,20 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool inv
       handleConnectedToEisEvent(e);
     });
     if (isPrimary) {
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
       m_portalInputCapture = new PortalInputCapture(this, m_events);
+      QObject::connect(m_portalInputCapture, &PortalInputCapture::clipboardChanged, [this]() {
+        onPortalClipboardChanged();
+      });
+#endif
     } else {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
       });
       m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
+      QObject::connect(m_portalRemoteDesktop, &PortalRemoteDesktop::clipboardChanged, [this]() {
+        onPortalClipboardChanged();
+      });
     }
   } else {
     // Note: socket backend does not support reconnections
@@ -90,6 +98,9 @@ EiScreen::~EiScreen()
   delete m_clipboard;
 
   delete m_portalRemoteDesktop;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  delete m_portalInputCapture;
+#endif
 }
 
 void EiScreen::eiLogEvent(ei_log_priority priority, const char *message) const
@@ -165,6 +176,22 @@ void *EiScreen::getEventTarget() const
 
 bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
 {
+  // Try portal clipboard first (preferred for Wayland)
+  IClipboard *portalClipboard = nullptr;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  if (m_portalInputCapture) {
+    portalClipboard = m_portalInputCapture->getClipboard(id);
+  }
+#endif
+  if (!portalClipboard && m_portalRemoteDesktop) {
+    portalClipboard = m_portalRemoteDesktop->getClipboard(id);
+  }
+
+  if (portalClipboard) {
+    return IClipboard::copy(clipboard, portalClipboard);
+  }
+
+  // Fallback to wl-clipboard CLI
   if (!m_clipboard || !m_clipboard->isAvailable()) {
     return false;
   }
@@ -370,7 +397,9 @@ void EiScreen::enter()
     }
   } else {
     LOG_DEBUG("releasing input capture at x=%i y=%i", m_cursorX, m_cursorY);
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
     m_portalInputCapture->release(m_cursorX, m_cursorY);
+#endif
   }
 }
 
@@ -398,7 +427,27 @@ void EiScreen::leave()
 
 bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 {
-  if (!clipboard || !m_clipboard || !m_clipboard->isAvailable()) {
+  if (!clipboard) {
+    return false;
+  }
+
+  // Try portal clipboard first
+  IClipboard *portalClipboard = nullptr;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  if (m_portalInputCapture) {
+    portalClipboard = m_portalInputCapture->getClipboard(id);
+  }
+#endif
+  if (!portalClipboard && m_portalRemoteDesktop) {
+    portalClipboard = m_portalRemoteDesktop->getClipboard(id);
+  }
+
+  if (portalClipboard) {
+    return IClipboard::copy(portalClipboard, clipboard);
+  }
+
+  // Fallback to wl-clipboard CLI
+  if (!m_clipboard || !m_clipboard->isAvailable()) {
     return false;
   }
 
@@ -412,7 +461,21 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
 
 void EiScreen::checkClipboards()
 {
-  // do nothing, we're always up to date
+  // Check portal clipboard first
+  IClipboard *portalClipboard = nullptr;
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
+  if (m_portalInputCapture) {
+    portalClipboard = m_portalInputCapture->getClipboard();
+  }
+#endif
+  if (!portalClipboard && m_portalRemoteDesktop) {
+    portalClipboard = m_portalRemoteDesktop->getClipboard();
+  }
+
+  // For portals, we rely on signals (onSelectionOwnerChanged) which logic
+  // is handled inside PortalClipboard, but we might need to trigger
+  // change detection if the base class expects it.
+
   if (!m_clipboard || !m_clipboard->isAvailable()) {
     return;
   }
@@ -734,9 +797,11 @@ void EiScreen::onMotionEvent(ei_event *event)
   if (m_isOnScreen) {
     LOG_DEBUG("event: motion on primary x=%i y=%i)", m_cursorX, m_cursorY);
     sendEvent(EventTypes::PrimaryScreenMotionOnPrimary, MotionInfo::alloc(m_cursorX, m_cursorY));
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
     if (m_portalInputCapture->isActive()) {
       m_portalInputCapture->release();
     }
+#endif
   } else {
     m_bufferDX += dx;
     m_bufferDY += dy;
@@ -829,6 +894,7 @@ void EiScreen::handleSystemEvent(const Event &)
       LOG_WARN("disconnected from eis, will afterwards commence attempt to reconnect");
       if (m_isPrimary) {
         LOG_DEBUG("re-allocating portal input capture connection and releasing active captures");
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
         if (m_portalInputCapture) {
           if (m_portalInputCapture->isActive()) {
             m_portalInputCapture->release();
@@ -836,6 +902,7 @@ void EiScreen::handleSystemEvent(const Event &)
           delete m_portalInputCapture;
           m_portalInputCapture = new PortalInputCapture(this, this->m_events);
         }
+#endif
       }
       this->handlePortalSessionClosed();
       break;
@@ -945,6 +1012,14 @@ std::uint32_t EiScreen::HotKeySet::findByMask(std::uint32_t mask) const
     }
   }
   return 0;
+}
+
+void EiScreen::onPortalClipboardChanged()
+{
+  LOG_DEBUG("Portal clipboard changed notification received");
+  for (ClipboardID id = 0; id < kClipboardEnd; ++id) {
+    sendClipboardEvent(EventTypes::ClipboardChanged, id);
+  }
 }
 
 } // namespace deskflow
