@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['handleclientconnected_0',['handleClientConnected',['../classClientApp.html#a207e31c7d2165d89817fe9901d745ff1',1,'ClientApp::handleClientConnected()'],['../classServerApp.html#abd33f314e99b27442d62efd62fb6506a',1,'ServerApp::handleClientConnected()']]],
+  ['handleclientconnected_0',['handleClientConnected',['../classClientApp.html#ad16f594f75ae844f0f7d155af2a748a0',1,'ClientApp::handleClientConnected()'],['../classServerApp.html#abd33f314e99b27442d62efd62fb6506a',1,'ServerApp::handleClientConnected()']]],
   ['handleclientdisconnected_1',['handleClientDisconnected',['../classClientApp.html#a573297fb43edfe71eec4156c6b535de8',1,'ClientApp']]],
   ['handleclientfailed_2',['handleClientFailed',['../classClientApp.html#aafa40e2e47be311b5b5cfa16d4d2eea2',1,'ClientApp']]],
   ['handleclientrefused_3',['handleClientRefused',['../classClientApp.html#a49de08e2beda98b19641d57d26e2a89a',1,'ClientApp']]],

@@ -35,5 +35,6 @@ var classClient =
     [ "screensaver", "classClient.html#a573b3aeb13815c7b6d25c74c67652640", null ],
     [ "setClipboard", "classClient.html#ae44078a3d819acfaa96e4d6c211ccac8", null ],
     [ "setClipboardDirty", "classClient.html#ac834b744de41e209680bd076a2f8821e", null ],
-    [ "setOptions", "classClient.html#a5d48b7109b96d2132fc855b758f8e6b1", null ]
+    [ "setOptions", "classClient.html#a5d48b7109b96d2132fc855b758f8e6b1", null ],
+    [ "setServerAddress", "classClient.html#afa440c0e5eb21bdf18b0464fd9bb51c7", null ]
 ];

@@ -1,5 +1,6 @@
 var NAVTREEINDEX14 =
 {
+"classScreenSetupView.html#a5d961a6170b235b199a3a1999bc25908":[6,0,197,6],
 "classScreenSetupView.html#a662a0fb0cde7495c00c9b9f703f26d09":[6,0,197,3],
 "classScreenSetupView.html#a6f2c425ae11e8bc2b8ced368ff5748f0":[6,0,197,1],
 "classScreenSetupView.html#a8624dca9318567301a2d27c87d1a8cd0":[6,0,197,4],
@@ -248,6 +249,5 @@ var NAVTREEINDEX14 =
 "classSettingsDialog.html#a2ae5c7308d4e1598e0f13a5800a8f51e":[6,0,208,3],
 "classSettingsDialog.html#a45cdb6ea744257215afd5fed9d9030e0":[6,0,208,0],
 "classSettingsDialog.html#a51343308438b7adbcc13facba2249ab0":[6,0,208,4],
-"classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,208,1],
-"classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,208,2]
+"classSettingsDialog.html#aa2f631d029bfc6a055934d4d0cd1b7c6":[6,0,208,1]
 };

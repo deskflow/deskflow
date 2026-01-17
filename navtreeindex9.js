@@ -1,5 +1,6 @@
 var NAVTREEINDEX9 =
 {
+"classIApp.html#a165504789fa07702277cb59a237c928c":[6,0,100,3],
 "classIApp.html#a3cbebd403525f13bc83387aab36c4010":[6,0,100,10],
 "classIApp.html#a5c774bcc1a09378adc87ed05e1b616d7":[6,0,100,1],
 "classIApp.html#a6297786c4ddfd86affa9a8368b42e473":[6,0,100,5],
@@ -248,6 +249,5 @@ var NAVTREEINDEX9 =
 "classIOSXKeyResource.html#ae1eafdf487463708c08a86c0cc81e30d":[6,0,124,0],
 "classIOWouldBlockException.html":[6,0,125],
 "classIOWouldBlockException.html#abf4141a52547ecc2d95e3d027e243b1d":[6,0,125,0],
-"classIPlatformScreen.html":[6,0,126],
-"classIPlatformScreen.html#a0b5c4eae26eb869d5ad102eaac9c4444":[6,0,126,0]
+"classIPlatformScreen.html":[6,0,126]
 };

@@ -1,5 +1,6 @@
 var NAVTREEINDEX15 =
 {
+"classSettingsDialog.html#aa5b8beee34cdf30792233744634512ee":[6,0,208,2],
 "classSimpleEventQueueBuffer.html":[6,0,209],
 "classSimpleEventQueueBuffer.html#a1660098f79ed1c822ff0f8680e04da6a":[6,0,209,8],
 "classSimpleEventQueueBuffer.html#a1a95764f38fa13112b303ff6eb0c3e44":[6,0,209,3],
@@ -248,6 +249,5 @@ var NAVTREEINDEX15 =
 "classWlClipboard.html#a2d60523b3e860f2e1b787cbf2c9840ab":[6,0,242,6],
 "classWlClipboard.html#a5b9416cd75a951eae35cac4814be4907":[6,0,242,12],
 "classWlClipboard.html#a7058817b86ba58c0ed24375dbf70794e":[6,0,242,3],
-"classWlClipboard.html#a79ec4c40c4a6147a56287014353501f8":[6,0,242,14],
-"classWlClipboard.html#a800eda286858c65927da71a2a09f3cce":[6,0,242,18]
+"classWlClipboard.html#a79ec4c40c4a6147a56287014353501f8":[6,0,242,14]
 };
