@@ -28,6 +28,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
       ui->comboActionType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ActionDialog::actionTypeChanged
   );
   connect(ui->listScreens, &QListWidget::itemChanged, this, &ActionDialog::itemToggled);
+  connect(ui->listToggleScreenOrder, &QListWidget::itemChanged, this, &ActionDialog::itemToggled);
   connect(ui->buttonBox, &QDialogButtonBox::accepted, this, &ActionDialog::accept);
   connect(ui->buttonBox, &QDialogButtonBox::rejected, this, &ActionDialog::reject);
 
@@ -51,6 +52,14 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
     ui->listScreens->addItem(newListItem);
 
+    // Also add to toggle screen order list with checkbox
+    auto *toggleListItem = new QListWidgetItem(screen.name());
+    toggleListItem->setCheckState(Qt::Checked);
+    if ((m_action.typeScreenNames().indexOf(screen.name()) == -1) &&
+        (m_action.haveScreens() && !m_action.typeScreenNames().isEmpty()))
+      toggleListItem->setCheckState(Qt::Unchecked);
+    ui->listToggleScreenOrder->addItem(toggleListItem);
+
     ui->comboSwitchToScreen->addItem(tr("Switch to %1").arg(screen.name()));
     if (screen.name() == m_action.switchScreenName())
       ui->comboSwitchToScreen->setCurrentIndex(ui->comboSwitchToScreen->count() - 1);
@@ -58,6 +67,7 @@ ActionDialog::ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &
 
   ui->keySequenceWidget->setVisible(false);
   ui->groupScreens->setVisible(false);
+  ui->groupToggleScreenOrder->setVisible(false);
   ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
   ui->comboSwitchToScreen->setVisible(false);
   ui->comboSwitchInDirection->setVisible(false);
@@ -76,10 +86,15 @@ void ActionDialog::accept()
 
   m_action.typeScreenNames().clear();
 
-  int screenCount = ui->listScreens->count();
+  // For toggle screen action, use the toggle screen order list
+  // For other actions, use the standard screens list
+  QListWidget *sourceList =
+      isToggleScreenAction(ui->comboActionType->currentIndex()) ? ui->listToggleScreenOrder : ui->listScreens;
 
-  for (int i = 0; i < ui->listScreens->count(); i++) {
-    const auto &item = ui->listScreens->item(i);
+  int screenCount = sourceList->count();
+
+  for (int i = 0; i < sourceList->count(); i++) {
+    const auto &item = sourceList->item(i);
     m_action.typeScreenNames().append(item->text());
     if (item->checkState() == Qt::Unchecked) {
       screenCount--;
@@ -87,7 +102,7 @@ void ActionDialog::accept()
     }
   }
 
-  if (screenCount == ui->listScreens->count())
+  if (screenCount == sourceList->count())
     m_action.typeScreenNames().clear();
 
   m_action.setHaveScreens(screenCount);
@@ -105,7 +120,7 @@ void ActionDialog::updateSize()
 {
   setMaximumSize(QSize(16777215, 1677215));
   adjustSize();
-  if (!isKeyAction(ui->comboActionType->currentIndex()))
+  if (!isKeyAction(ui->comboActionType->currentIndex()) && !isToggleScreenAction(ui->comboActionType->currentIndex()))
     setMaximumSize(size());
 }
 
@@ -124,8 +139,17 @@ void ActionDialog::actionTypeChanged(int index)
 {
   ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(canSave());
   ui->keySequenceWidget->setVisible(isKeyAction(index));
+
+  // Show standard list for key actions, hide for toggle screen
   ui->groupScreens->setVisible(isKeyAction(index));
-  ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  // Show toggle screen order list only for toggle screen action
+  ui->groupToggleScreenOrder->setVisible(isToggleScreenAction(index));
+
+  if (isKeyAction(index)) {
+    ui->listScreens->setEnabled(!ui->keySequenceWidget->keySequence().isMouseButton());
+  } else {
+    ui->listScreens->setEnabled(true);
+  }
   ui->comboSwitchToScreen->setVisible(index == ActionTypes::SwitchTo);
   ui->comboSwitchInDirection->setVisible(index == ActionTypes::SwitchInDirection);
   ui->comboLockCursorToScreen->setVisible(index == ActionTypes::ModifyCursorLock);
@@ -135,6 +159,11 @@ void ActionDialog::actionTypeChanged(int index)
 bool ActionDialog::isKeyAction(int index) const
 {
   return ((index == ActionTypes::PressKey) || (index == ActionTypes::ReleaseKey) || (index == ActionTypes::ToggleKey));
+}
+
+bool ActionDialog::isToggleScreenAction(int index) const
+{
+  return (index == ActionTypes::ToggleScreen);
 }
 
 bool ActionDialog::canSave() const
@@ -148,6 +177,17 @@ bool ActionDialog::canSave() const
     }
     return (!ui->keySequenceWidget->keySequence().toString().isEmpty() && (totalChecked > 0));
   }
+
+  if (isToggleScreenAction(ui->comboActionType->currentIndex())) {
+    const QList<QListWidgetItem *> items = ui->listToggleScreenOrder->findItems("*", Qt::MatchWildcard);
+    int totalChecked = 0;
+    for (const auto &item : items) {
+      if (item->checkState() == Qt::Checked)
+        totalChecked++;
+    }
+    return (totalChecked > 0);
+  }
+
   return true;
 }
 
