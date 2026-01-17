@@ -882,6 +882,25 @@ Valid names:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Поиск</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">Найти следующее</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">Найти предыдущее</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">Поиск...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
