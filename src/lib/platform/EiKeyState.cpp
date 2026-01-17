@@ -120,35 +120,15 @@ std::uint32_t EiKeyState::convertModMask(xkb_mod_mask_t xkbModMaskIn) const
   for (xkb_mod_index_t xkbModIdx = 0; xkbModIdx < xkb_keymap_num_mods(m_xkbKeymap); xkbModIdx++) {
     const char *name = xkb_keymap_mod_get_name(m_xkbKeymap, xkbModIdx);
 
-#ifdef HAVE_XKB_KEYMAP_MOD_GET_MASK
     // Available since xkbcommon v1.10
     // Note: xkb_keymap_mod_get_mask2 was added in v1.11 which accepts xkb_mod_index_t.
     const auto xkbModMask = xkb_keymap_mod_get_mask(m_xkbKeymap, name);
-#else
-    // HACK: in older xkbcommon we need to create the mask manually from the index.
-    const xkb_mod_mask_t xkbModMask = (1 << xkbModIdx);
-#endif
 
     // Skip modifiers that have no XKB mask (not mapped to any real modifier)
     // or are inactive. Without the xkbModMask == 0 check, modifiers with mask 0
     // incorrectly pass the test (0 & 0 == 0) and get processed as "active".
     if (xkbModMask == 0 || (xkbModMaskIn & xkbModMask) != xkbModMask)
       continue;
-
-    /* added in libxkbcommon 1.8.0 in the same commit so we have all or none */
-#ifndef XKB_VMOD_NAME_ALT
-    static const auto XKB_VMOD_NAME_ALT = "Alt";
-    static const auto XKB_VMOD_NAME_LEVEL3 = "LevelThree";
-    static const auto XKB_VMOD_NAME_LEVEL5 = "LevelFive";
-    static const auto XKB_VMOD_NAME_META = "Meta";
-    static const auto XKB_VMOD_NAME_NUM = "NumLock";
-    static const auto XKB_VMOD_NAME_SCROLL = "ScrollLock";
-    static const auto XKB_VMOD_NAME_SUPER = "Super";
-    static const auto XKB_VMOD_NAME_HYPER = "Hyper";
-    static const auto XKB_MOD_NAME_MOD2 = "Mod2";
-    static const auto XKB_MOD_NAME_MOD3 = "Mod3";
-    static const auto XKB_MOD_NAME_MOD5 = "Mod5";
-#endif
 
     // From wismill (xkbcommon maintainer):
     // Meta is usually encoded like Alt, i.e. to Mod1. In that case, both share the same state.
