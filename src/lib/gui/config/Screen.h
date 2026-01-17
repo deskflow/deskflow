@@ -160,7 +160,7 @@ private:
   QPixmap m_Pixmap = QIcon::fromTheme("video-display").pixmap(QSize(96, 96));
   QString m_Name = {};
   QStringList m_Aliases = {};
-  QList<int> m_Modifiers = {0, 1, 2, 3, 4, 5};
+  QList<int> m_Modifiers = {0, 1, 2, 3, 4, 5, 6};
   QList<bool> m_SwitchCorners = {false, false, false, false};
   int m_SwitchCornerSize = 0;
   QList<bool> m_Fixes{false, false, false, false};
