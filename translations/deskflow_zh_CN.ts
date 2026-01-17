@@ -885,6 +885,25 @@ Valid names:
     </message>
 </context>
 <context>
+    <name>SearchWidget</name>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">搜索</translation>
+    </message>
+    <message>
+        <source>Find next</source>
+        <translation type="unfinished">查找下一个</translation>
+    </message>
+    <message>
+        <source>Find previous</source>
+        <translation type="unfinished">查找上一个</translation>
+    </message>
+    <message>
+        <source>Find...</source>
+        <translation type="unfinished">寻找...</translation>
+    </message>
+</context>
+<context>
     <name>ServerConfigDialog</name>
     <message>
         <source>Server Configuration</source>
