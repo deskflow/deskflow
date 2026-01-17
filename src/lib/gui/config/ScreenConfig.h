@@ -25,6 +25,7 @@ public:
     Alt,
     Meta,
     Super,
+    AltGr,
     None,
     NumModifiers
   };

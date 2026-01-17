@@ -7,7 +7,7 @@
 
 #include "ScreenConfig.h"
 
-const char *ScreenConfig::m_ModifierNames[] = {"shift", "ctrl", "alt", "meta", "super", "none"};
+const char *ScreenConfig::m_ModifierNames[] = {"shift", "ctrl", "alt", "meta", "super", "altgr", "none"};
 
 const char *ScreenConfig::m_FixNames[] = {
     "halfDuplexCapsLock", "halfDuplexNumLock", "halfDuplexScrollLock", "xtestIsXineramaUnaware"
