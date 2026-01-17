@@ -46,6 +46,7 @@
 #include <QScrollBar>
 
 #include <memory>
+#include <cstdlib>
 
 #if defined(Q_OS_MACOS)
 #include <ApplicationServices/ApplicationServices.h>
@@ -195,7 +196,12 @@ void MainWindow::restoreWindow()
 
 void MainWindow::setupControls()
 {
-  setWindowTitle(kAppName);
+  QString title = kAppName;
+  if (const char *showVersion = std::getenv("DESKFLOW_SHOW_FULL_VERSION");
+      showVersion && (QString(showVersion) == "1" || QString(showVersion).toLower() == "true")) {
+    title = QString("%1 - %2").arg(kAppName, kDisplayVersion);
+  }
+  setWindowTitle(title);
 
   secureSocket(false);
 
