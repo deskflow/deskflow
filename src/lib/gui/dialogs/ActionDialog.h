@@ -35,12 +35,13 @@ public:
     inline static const auto SwitchToNextScreen = 5;
     inline static const auto ModifyCursorLock = 6;
     inline static const auto RestartServer = 7;
+    inline static const auto ToggleScreen = 8;
   };
 
   ActionDialog(QWidget *parent, const ServerConfig &config, Hotkey &hotkey, Action &action);
   ~ActionDialog() override;
 
-protected Q_SLOTS:
+protected:
   void accept() override;
 
 private:
@@ -49,6 +50,7 @@ private:
   void itemToggled() const;
   void actionTypeChanged(int index);
   bool isKeyAction(int index) const;
+  bool isToggleScreenAction(int index) const;
   bool canSave() const;
 
   std::unique_ptr<Ui::ActionDialog> ui;

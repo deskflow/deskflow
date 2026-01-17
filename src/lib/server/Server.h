@@ -77,6 +77,20 @@ public:
     std::string m_screen;
   };
 
+  //! Toggle screen data
+  class ToggleScreenInfo : public EventData
+  {
+  public:
+    explicit ToggleScreenInfo(const std::vector<std::string> &screens) : m_screens(screens)
+    {
+      // do nothing
+    }
+    ~ToggleScreenInfo() override = default; // do nothing
+
+  public:
+    std::vector<std::string> m_screens;
+  };
+
   //! Switch in direction data
   class SwitchInDirectionInfo : public EventData
   {
@@ -318,7 +332,7 @@ private:
   void handleClientCloseTimeout(BaseClientProxy *client);
   void handleSwitchToScreenEvent(const Event &event);
   void handleSwitchInDirectionEvent(const Event &event);
-  void handleToggleScreenEvent(const Event &);
+  void handleToggleScreenEvent(const Event &event);
   void handleKeyboardBroadcastEvent(const Event &event);
   void handleLockCursorToScreenEvent(const Event &event);
 

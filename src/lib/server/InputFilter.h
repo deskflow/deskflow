@@ -224,6 +224,24 @@ public:
     IEventQueue *m_events;
   };
 
+  // ToggleScreenAction
+  class ToggleScreenAction : public Action
+  {
+  public:
+    explicit ToggleScreenAction(IEventQueue *events, const std::vector<std::string> &screens);
+
+    const std::vector<std::string> &getScreens() const;
+
+    // Action overrides
+    Action *clone() const override;
+    std::string format() const override;
+    void perform(const Event &) override;
+
+  private:
+    std::vector<std::string> m_screens;
+    IEventQueue *m_events;
+  };
+
   // KeyboardBroadcastAction
   class KeyboardBroadcastAction : public Action
   {
