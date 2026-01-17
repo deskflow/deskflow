@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: 2025 Deskflow Developers
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  *
  * Portal Clipboard - Qt DBus interface for XDG Desktop Portal Clipboard
@@ -39,6 +39,7 @@ public:
     Standard = 0,
     Primary = 1
   };
+  Q_ENUM(SelectionType)
 
   explicit PortalClipboardProxy(QObject *parent = nullptr);
   ~PortalClipboardProxy() override;
