@@ -56,20 +56,18 @@ EiScreen::EiScreen(bool isPrimary, IEventQueue *events, bool usePortal, bool inv
     m_events->addHandler(EventTypes::EIConnected, getEventTarget(), [this](const auto &e) {
       handleConnectedToEisEvent(e);
     });
-    if (isPrimary) {
+    m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
+    QObject::connect(m_portalRemoteDesktop, &PortalRemoteDesktop::clipboardChanged, [this]() {
+      onPortalClipboardChanged();
+    });
+
 #ifdef HAVE_LIBPORTAL_INPUTCAPTURE
-      m_portalInputCapture = new PortalInputCapture(this, m_events);
-      QObject::connect(m_portalInputCapture, &PortalInputCapture::clipboardChanged, [this]() {
-        onPortalClipboardChanged();
-      });
+    m_portalInputCapture = new PortalInputCapture(this, m_events);
 #endif
-    } else {
+
+    if (!isPrimary) {
       m_events->addHandler(EventTypes::EISessionClosed, getEventTarget(), [this](const auto &) {
         handlePortalSessionClosed();
-      });
-      m_portalRemoteDesktop = new PortalRemoteDesktop(this, m_events);
-      QObject::connect(m_portalRemoteDesktop, &PortalRemoteDesktop::clipboardChanged, [this]() {
-        onPortalClipboardChanged();
       });
     }
   } else {
@@ -184,7 +182,7 @@ bool EiScreen::getClipboard(ClipboardID id, IClipboard *clipboard) const
   }
 #endif
   if (!portalClipboard && m_portalRemoteDesktop) {
-    portalClipboard = m_portalRemoteDesktop->getClipboard(id);
+    portalClipboard = m_portalRemoteDesktop->getClipboard();
   }
 
   if (portalClipboard) {
@@ -439,7 +437,7 @@ bool EiScreen::setClipboard(ClipboardID id, const IClipboard *clipboard)
   }
 #endif
   if (!portalClipboard && m_portalRemoteDesktop) {
-    portalClipboard = m_portalRemoteDesktop->getClipboard(id);
+    portalClipboard = m_portalRemoteDesktop->getClipboard();
   }
 
   if (portalClipboard) {
