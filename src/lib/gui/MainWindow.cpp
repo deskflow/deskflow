@@ -56,35 +56,38 @@ using namespace deskflow::gui;
 using CoreConnectionState = CoreProcess::ConnectionState;
 using CoreProcessState = CoreProcess::ProcessState;
 
-MainWindow::MainWindow()
-    : ui{std::make_unique<Ui::MainWindow>()},
+MainWindow::MainWindow(bool showFullVersion)
+    : ui(new Ui::MainWindow),
+      m_fingerprint(),
+      m_serverConfig(),
       m_coreProcess(m_serverConfig),
       m_serverConnection(this, m_serverConfig),
       m_clientConnection(this),
-      m_trayIcon{new QSystemTrayIcon(this)},
-      m_guiDupeChecker{new QLocalServer(this)},
-      m_daemonIpcClient{new ipc::DaemonIpcClient(this)},
-      m_logDock{new LogDock(this)},
-      m_lblSecurityStatus{new QLabel(this)},
-      m_lblStatus{new QLabel(this)},
-      m_btnFingerprint{new QPushButton(this)},
-      m_btnUpdate{new QPushButton(this)},
-      m_menuFile{new QMenu(this)},
-      m_menuEdit{new QMenu(this)},
-      m_menuView{new QMenu(this)},
-      m_menuHelp{new QMenu(this)},
-      m_actionAbout{new QAction(this)},
-      m_actionClearSettings{new QAction(this)},
-      m_actionReportBug{new QAction(this)},
-      m_actionMinimize{new QAction(this)},
-      m_actionQuit{new QAction(this)},
-      m_actionTrayQuit{new QAction(this)},
-      m_actionRestore{new QAction(this)},
-      m_actionSettings{new QAction(this)},
-      m_actionStartCore{new QAction(this)},
-      m_actionRestartCore{new QAction(this)},
-      m_actionStopCore{new QAction(this)},
-      m_networkMonitor{new NetworkMonitor(this)}
+      m_trayIcon(new QSystemTrayIcon(this)),
+      m_guiDupeChecker(new QLocalServer(this)),
+      m_daemonIpcClient(new ipc::DaemonIpcClient(this)),
+      m_logDock(new LogDock(this)),
+      m_lblSecurityStatus(new QLabel(this)),
+      m_lblStatus(new QLabel(this)),
+      m_btnFingerprint(new QPushButton(this)),
+      m_btnUpdate(new QPushButton(this)),
+      m_menuFile(new QMenu(this)),
+      m_menuEdit(new QMenu(this)),
+      m_menuView(new QMenu(this)),
+      m_menuHelp(new QMenu(this)),
+      m_actionAbout(new QAction(this)),
+      m_actionClearSettings(new QAction(this)),
+      m_actionReportBug(new QAction(this)),
+      m_actionMinimize(new QAction(this)),
+      m_actionQuit(new QAction(this)),
+      m_actionTrayQuit(new QAction(this)),
+      m_actionRestore(new QAction(this)),
+      m_actionSettings(new QAction(this)),
+      m_actionStartCore(new QAction(this)),
+      m_actionRestartCore(new QAction(this)),
+      m_actionStopCore(new QAction(this)),
+      m_networkMonitor(new NetworkMonitor(this)),
+      m_showFullVersion(showFullVersion)
 {
   ui->setupUi(this);
 
@@ -195,7 +198,11 @@ void MainWindow::restoreWindow()
 
 void MainWindow::setupControls()
 {
-  setWindowTitle(kAppName);
+  if (m_showFullVersion) {
+    setWindowTitle(QStringLiteral("%1 v%2").arg(kAppName, kDisplayVersion));
+  } else {
+    setWindowTitle(kAppName);
+  }
 
   secureSocket(false);
 

@@ -76,7 +76,7 @@ public:
   };
 
 public:
-  explicit MainWindow();
+  explicit MainWindow(bool showFullVersion = false);
   ~MainWindow() override;
 
   [[nodiscard]] CoreMode coreMode() const
@@ -232,4 +232,5 @@ private:
   // Server IP strategy optimization
   QStringList m_serverStartIPs;
   QString m_serverStartSuggestedIP;
+  bool m_showFullVersion = false;
 };

@@ -69,12 +69,14 @@ int main(int argc, char *argv[])
   // Add Command Line Options
   auto helpOption = QCommandLineOption({"h", "help"}, "Display Help on the command line");
   auto versionOption = QCommandLineOption({"v", "version"}, "Display version information");
+  auto showFullVersionOption = QCommandLineOption({"S", "show-full-version"}, "Show full version in window title");
   auto resetOption = QCommandLineOption("reset", "Reset all settings");
 
   QCommandLineParser parser;
   parser.setSingleDashWordOptionMode(QCommandLineParser::ParseAsLongOptions);
   parser.addOption(helpOption);
   parser.addOption(versionOption);
+  parser.addOption(showFullVersionOption);
   parser.addOption(resetOption);
   parser.parse(QCoreApplication::arguments());
 
@@ -149,7 +151,9 @@ int main(int argc, char *argv[])
     diagnostic::clearSettings(false);
   }
 
-  MainWindow mainWindow;
+  bool showFullVersion = parser.isSet(showFullVersionOption) || qEnvironmentVariableIsSet("DESKFLOW_SHOW_FULL_VERSION");
+
+  MainWindow mainWindow(showFullVersion);
   mainWindow.open();
 
   return QApplication::exec();
