@@ -639,7 +639,11 @@ void MainWindow::open()
   QTimer::singleShot(kCriticalDialogDelay, this, &messages::raiseCriticalDialog);
 
   if (!Settings::value(Settings::Gui::AutoUpdateCheck).isValid()) {
-    Settings::setValue(Settings::Gui::AutoUpdateCheck, messages::showUpdateCheckOption(this));
+    const auto onlineServices = messages::showOnlineServicesOptions(this);
+    qDebug() << "check for updates:" << onlineServices.checkForUpdates;
+    qDebug() << "join popularity contest:" << onlineServices.joinPopularityContest;
+    Settings::setValue(Settings::Gui::AutoUpdateCheck, onlineServices.checkForUpdates);
+    Settings::setValue(Settings::Gui::JoinPopularityContest, onlineServices.joinPopularityContest);
   }
 
   if (Settings::value(Settings::Gui::AutoUpdateCheck).toBool()) {
