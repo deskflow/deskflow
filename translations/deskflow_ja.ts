@@ -1321,6 +1321,10 @@ Enabling this setting will disable the server config GUI.</source>
         <source>Automatic</source>
         <translation type="unfinished">自動</translation>
     </message>
+    <message>
+        <source>Include version in the window title</source>
+        <translation type="unfinished">ウィンドウタイトルにバージョン情報を含める</translation>
+    </message>
 </context>
 <context>
     <name>i18n</name>
