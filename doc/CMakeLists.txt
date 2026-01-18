@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2019 - 2025 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: (C) 2019 - 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
 find_package(Doxygen QUIET)

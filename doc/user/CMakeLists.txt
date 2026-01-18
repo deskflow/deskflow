@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2025 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
 # SPDX-License-Identifier: MIT
 
 set(DOXYGEN_USE_MDFILE_AS_MAINPAGE mainpage.md)

@@ -1,9 +1,9 @@
 # SOURCE https://github.com/bilke/cmake-modules/blob/master/CodeCoverage.cmake
-# SPDX-FileCopyrightText: 2020 Bob Apthrope
-# SPDX-FileCopyrightText: 2019 Anatolii Kurotych
-# SPDX-FileCopyrightText: 2019 - 2020 Frank Dana
-# SPDX-FileCopyrightText: 2013 Joakim Söderberg
-# SPDX-FileCopyrightText: 2012 - 2017 Lars Bilke
+# SPDX-FileCopyrightText: (C) 2020 Bob Apthrope
+# SPDX-FileCopyrightText: (C) 2019 Anatolii Kurotych
+# SPDX-FileCopyrightText: (C) 2019 - 2020 Frank Dana
+# SPDX-FileCopyrightText: (C) 2013 Joakim Söderberg
+# SPDX-FileCopyrightText: (C) 2012 - 2017 Lars Bilke
 # SPDX-License-Identifier: MIT
 
 # USAGE:
