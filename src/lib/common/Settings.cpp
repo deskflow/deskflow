@@ -94,7 +94,7 @@ void Settings::cleanSettings()
       continue;
     if (!m_validKeys.contains(key))
       m_settings->remove(key);
-    if (m_settings->value(key).toString().isEmpty() && !m_settings->value(key).isValid())
+    if (m_settings->value(key).toString().isEmpty())
       m_settings->remove(key);
   }
 }
@@ -105,7 +105,7 @@ void Settings::cleanStateSettings()
   for (const QString &key : keys) {
     if (!m_stateKeys.contains(key))
       m_stateSettings->remove(key);
-    if (m_stateSettings->value(key).toString().isEmpty() && !m_stateSettings->value(key).isValid())
+    if (m_stateSettings->value(key).toString().isEmpty())
       m_stateSettings->remove(key);
   }
 }
