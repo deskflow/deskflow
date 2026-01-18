@@ -110,7 +110,7 @@ void Settings::cleanStateSettings()
 
 void Settings::setupScreenName()
 {
-  if (m_settings->value(Settings::Core::ScreenName).isNull())
+  if (m_settings->value(Settings::Core::ScreenName).toString().isEmpty())
     m_settings->setValue(Settings::Core::ScreenName, cleanScreenName(QSysInfo::machineHostName()));
 }
 
