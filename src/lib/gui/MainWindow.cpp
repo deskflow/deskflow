@@ -1257,6 +1257,13 @@ void MainWindow::updateIpLabel(const QStringList &addresses)
   const bool serverStarted = m_coreProcess.isStarted();
   const bool fixedIP = !Settings::value(Settings::Core::Interface).isNull();
 
+  // If server is running but we didn't capture IPs at start (race condition),
+  // update them now when addresses become available. Fixes #9333.
+  if (serverStarted && !fixedIP && m_serverStartSuggestedIP.isEmpty() && !addresses.isEmpty()) {
+    m_serverStartIPs = addresses;
+    m_serverStartSuggestedIP = addresses.first();
+  }
+
   if (!fixedIP && addresses.isEmpty() && !serverStarted || (serverStarted && m_serverStartSuggestedIP.isEmpty())) {
     ui->lblIpAddresses->setText(colorText.arg(palette().linkVisited().color().name(), tr("No IP Detected")));
     ui->lblIpAddresses->setToolTip(tr("Unable to detect an IP address. Check your network connection is active."));
