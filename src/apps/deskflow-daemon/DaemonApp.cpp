@@ -96,10 +96,10 @@ void DaemonApp::clearWatchdogCommand()
 void DaemonApp::clearSettings() const
 {
   LOG_INFO("clearing daemon settings");
-  Settings::setValue(Settings::Daemon::Command, QVariant());
-  Settings::setValue(Settings::Daemon::Elevate, QVariant());
-  Settings::setValue(Settings::Daemon::LogFile, QVariant());
-  Settings::setValue(Settings::Daemon::LogLevel, QVariant());
+  Settings::setValue(Settings::Daemon::Command);
+  Settings::setValue(Settings::Daemon::Elevate);
+  Settings::setValue(Settings::Daemon::LogFile);
+  Settings::setValue(Settings::Daemon::LogLevel);
 }
 
 void DaemonApp::connectIpcServer(const ipc::DaemonIpcServer *ipcServer) const

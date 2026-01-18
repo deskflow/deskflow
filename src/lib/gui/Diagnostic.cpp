@@ -36,7 +36,7 @@ void clearSettings(bool enableRestart)
   Settings::proxy().clear();
 
   // Reset the windowGeometry
-  Settings::setValue(Settings::Gui::WindowGeometry, QVariant());
+  Settings::setValue(Settings::Gui::WindowGeometry);
 
   // save but do not emit saving signal which will prevent the current state of
   // the app config and server configs from being applied.
