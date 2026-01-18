@@ -82,7 +82,7 @@ I18N::I18N(QObject *parent) : QObject{parent}
 
   static const auto s_prefix = QStringLiteral("_");
 
-  if (Settings::value(Settings::Core::Language).isNull()) {
+  if (Settings::value(Settings::Core::Language).toString().isEmpty()) {
     auto appTranslator = new QTranslator(this);
     if (appTranslator->load(QLocale(), kAppId, s_prefix, m_appTrPath)) {
       m_currentTranslations.append(appTranslator);
