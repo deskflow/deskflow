@@ -83,6 +83,8 @@ Settings::Settings(QObject *parent) : QObject(parent)
 
   m_stateSettings = new QSettings(stateFile, QSettings::IniFormat, this);
 
+  cleanSettings();
+  cleanStateSettings();
   setupScreenName();
 }
 
