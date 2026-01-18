@@ -67,7 +67,7 @@ void SettingsTests::checkValidSettings()
     QCOMPARE(qvariant_cast<QString>(spy.first().at(0)), setting);
     QCOMPARE(Settings::value(setting).toString(), "NEW_VALUE");
 
-    Settings::setValue(setting, QVariant());
+    Settings::setValue(setting);
     QCOMPARE(spy.count(), 2);
     QCOMPARE(Settings::value(setting).toString(), value);
 
