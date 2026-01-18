@@ -152,9 +152,6 @@ QVariant Settings::defaultValue(const QString &key)
   if (m_defaultTrueValues.contains(key))
     return true;
 
-  if (key == Gui::WindowGeometry)
-    return QRect();
-
   if (key == Security::Certificate)
     return QStringLiteral("%1/%2.pem").arg(Settings::tlsDir(), kAppId);
 
