@@ -68,7 +68,7 @@ void ClientApp::parseArgs()
       try {
         NetworkAddress netAddr(trimmedAddr.toStdString(), port);
         netAddr.resolve();
-        m_serverAddresses.push_back(std::move(netAddr));
+        m_serverAddresses.append(netAddr);
         LOG_DEBUG("added server address: %s", qPrintable(trimmedAddr));
       } catch (SocketAddressException &e) {
         // allow an address that we can't look up if we're restartable.
@@ -80,7 +80,7 @@ void ClientApp::parseArgs()
         } else {
           // Still add it - we'll try to resolve later
           NetworkAddress netAddr(trimmedAddr.toStdString(), port);
-          m_serverAddresses.push_back(std::move(netAddr));
+          m_serverAddresses.append(netAddr);
           LOG_WARN("could not resolve address '%s': %s (will retry later)", qPrintable(trimmedAddr), e.what());
         }
       }
