@@ -724,10 +724,12 @@ Valid names:
     </message>
     <message>
         <source>failed to read key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation>не удалось прочитать ключ из файла сертификата: %1</translation>
     </message>
     <message>
         <source>failed to parse certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation>не удалось разобрать файл сертификата: %1</translation>
     </message>
     <message>
@@ -736,6 +738,7 @@ Valid names:
     </message>
     <message>
         <source>failed to read RSA key from certificate file: %1</source>
+        <extracomment>%1 will be replaced by the certificate path</extracomment>
         <translation>не удалось прочитать RSA-ключ из файла сертификата: %1</translation>
     </message>
 </context>
