@@ -122,10 +122,10 @@ QString formatSSLFingerprintColumns(const QByteArray &fingerprint)
     formattedString.append(hex.first(take));
     hex.remove(0, take);
     if (formattedString.endsWith(QLatin1Char(':')))
-      formattedString.removeLast();
+      formattedString.remove(formattedString.size() - 1, 1);
     formattedString.append(QLatin1Char('\n'));
   }
-  formattedString.removeLast();
+  formattedString.remove(formattedString.size() - 1, 1);
   return formattedString;
 }
 

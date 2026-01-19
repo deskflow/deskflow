@@ -32,11 +32,8 @@ void showHelp(const CoreArgParser &parser)
 
 int main(int argc, char **argv)
 {
+  QCoreApplication qtApp(argc, argv);
 #if SYSAPI_WIN32
-  // HACK to make sure settings gets the correct qApp path
-  QCoreApplication m(argc, argv);
-  m.deleteLater();
-
   ArchMiscWindows::setInstanceWin32(GetModuleHandle(nullptr));
 #endif
 

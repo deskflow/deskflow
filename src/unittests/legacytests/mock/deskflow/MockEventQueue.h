@@ -28,4 +28,5 @@ public:
   MOCK_METHOD(void, deleteTimer, (EventQueueTimer *), (override));
   MOCK_METHOD(void *, getSystemTarget, (), (override));
   MOCK_METHOD(void, waitForReady, (), (const, override));
+  MOCK_METHOD(void, setLoopHook, (std::function<void()>), (override));
 };

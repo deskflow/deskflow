@@ -40,7 +40,7 @@ SettingsDialog::SettingsDialog(QWidget *parent, const IServerConfig &serverConfi
   updateText();
 
   ui->comboTlsKeyLength->setItemIcon(0, QIcon::fromTheme(QStringLiteral("security-medium")));
-  ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh));
+  ui->comboTlsKeyLength->setItemIcon(1, QIcon::fromTheme("security-high"));
   ui->lblTlsCertInfo->setFixedSize(28, 28);
 
   ui->rbIconMono->setIcon(QIcon::fromTheme(QStringLiteral("%1-symbolic").arg(kRevFqdnName)));
@@ -283,11 +283,11 @@ void SettingsDialog::updateKeyLengthOnFile(const QString &path)
   }
 
   auto length = TlsUtility::getCertKeyLength(path);
-  auto labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityLow).pixmap(24, 24));
+  auto labelIcon = QPixmap(QIcon::fromTheme("security-low").pixmap(24, 24));
   if (length == 2048)
     labelIcon = QPixmap(QIcon::fromTheme(QStringLiteral("security-medium")).pixmap(24, 24));
   if (length == 4096)
-    labelIcon = QPixmap(QIcon::fromTheme(QIcon::ThemeIcon::SecurityHigh).pixmap(24, 24));
+    labelIcon = QPixmap(QIcon::fromTheme("security-high").pixmap(24, 24));
 
   ui->lblTlsCertInfo->setPixmap(labelIcon);
   ui->lblTlsCertInfo->setToolTip(QStringLiteral("Key length: %1 bits").arg(QString::number(length)));

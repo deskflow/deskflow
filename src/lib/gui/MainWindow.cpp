@@ -94,7 +94,7 @@ MainWindow::MainWindow()
 
   // Setup Actions
   m_actionAbout->setMenuRole(QAction::AboutRole);
-  m_actionAbout->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::HelpAbout));
+  m_actionAbout->setIcon(QIcon::fromTheme("help-about"));
 
   m_actionMinimize->setIcon(QIcon::fromTheme(QStringLiteral("window-minimize-pip")));
   m_actionRestore->setIcon(QIcon::fromTheme(QStringLiteral("window-restore-pip")));
@@ -123,7 +123,7 @@ MainWindow::MainWindow()
   m_actionRestartCore->setIcon(QIcon::fromTheme(QStringLiteral("view-refresh")));
   m_actionRestartCore->setMenuRole(QAction::NoRole);
 
-  m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
+  m_actionStopCore->setIcon(QIcon::fromTheme("process-stop"));
   m_actionStopCore->setMenuRole(QAction::NoRole);
 
   m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
@@ -567,7 +567,7 @@ void MainWindow::updateModeControlLabels()
     startText = tr("Start");
     stopText = tr("Stop");
     startIcon = QIcon::fromTheme(QStringLiteral("system-run"));
-    stopIcon = QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop);
+    stopIcon = QIcon::fromTheme("process-stop");
   } else {
     startText = tr("Connect");
     stopText = tr("Disconnect");
@@ -601,7 +601,7 @@ void MainWindow::updateSecurityIcon(bool visible)
       secureSocket ? tr("%1 Encryption Enabled").arg(m_coreProcess.secureSocketVersion()) : tr("Encryption Disabled");
   m_lblSecurityStatus->setToolTip(txt);
 
-  const auto icon = QIcon::fromTheme(secureSocket ? QIcon::ThemeIcon::SecurityHigh : QIcon::ThemeIcon::SecurityLow);
+  const auto icon = QIcon::fromTheme(secureSocket ? "security-high" : "security-low");
   m_lblSecurityStatus->setPixmap(icon.pixmap(QSize(32, 32)));
 }
 

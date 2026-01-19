@@ -10,13 +10,23 @@
 
 #include "mt/Thread.h"
 #include "platform/EiScreen.h"
+#include "platform/PortalClipboardProxy.h"
+#include "platform/PortalSessionProxy.h"
 
-#include <glib.h>
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 #include <libportal/inputcapture.h>
+#endif
 #include <libportal/portal.h>
+#include <memory>
+
+class IClipboard;
 
 namespace deskflow {
 
+class PortalClipboardProxy;
+class PortalClipboard;
+
+#ifdef HAVE_LIBPORTAL_INPUTCAPTURE
 class PortalInputCapture
 {
 public:
@@ -30,6 +40,10 @@ public:
   {
     return m_isActive;
   }
+  IClipboard *getClipboard() const;
+
+Q_SIGNALS:
+  void clipboardChanged();
 
 private:
   void glibThread(const void *);
@@ -40,9 +54,14 @@ private:
   void handleSessionClosed(XdpSession *session);
   void handleDisabled(const XdpInputCaptureSession *session, const GVariant *option);
   void handleActivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, GVariant *options);
+  void handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, GVariant *options);
+  void handleReleased(const XdpInputCaptureSession *session, const std::uint32_t activationId, GVariant *options);
   void
-  handleDeactivated(const XdpInputCaptureSession *session, const std::uint32_t activationId, const GVariant *options);
+  handlePointerBarrierFired(const XdpInputCaptureSession *session, const std::uint32_t activationId, GVariant *options);
   void handleZonesChanged(XdpInputCaptureSession *session, const GVariant *options);
+  void onSessionCreated(const QDBusObjectPath &handle);
+  void onSessionStarted(const QString &restoreToken);
+  void initClipboard(const QDBusObjectPath &handle);
 
   /// g_signal_connect callback wrapper
   static void sessionClosed(XdpSession *session, const gpointer data)
@@ -103,6 +122,13 @@ private:
   std::uint32_t m_activationId = 0;
 
   std::vector<XdpInputCapturePointerBarrier *> m_barriers;
+
+  // Session and Clipboard support
+  std::unique_ptr<PortalSessionProxy> m_sessionProxy;
+  std::unique_ptr<PortalClipboardProxy> m_clipboardProxy;
+  std::unique_ptr<PortalClipboard> m_clipboardStandard;
+  std::unique_ptr<PortalClipboard> m_clipboardPrimary;
 };
+#endif
 
 } // namespace deskflow

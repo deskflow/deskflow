@@ -156,5 +156,12 @@ public:
   */
   virtual void *getSystemTarget() = 0;
 
+  //! Register a hook to be called during the main loop
+  /*!
+  The hook is called when the loop is idle or waiting for events.
+  This can be used to integrate other event loops (like Qt).
+  */
+  virtual void setLoopHook(std::function<void()> hook) = 0;
+
   //@}
 };

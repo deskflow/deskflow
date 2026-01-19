@@ -15,6 +15,7 @@
 #include "common/PlatformInfo.h"
 #include "common/Settings.h"
 #include "deskflow/DeskflowException.h"
+#include <QCoreApplication>
 
 #if SYSAPI_WIN32
 #include "base/IEventQueue.h"
@@ -40,7 +41,8 @@ App *App::s_instance = nullptr;
 //
 
 App::App(IEventQueue *events, const QString &processName)
-    : m_bye(&exit),
+    : QObject(nullptr),
+      m_bye(&exit),
       m_events(events),
       m_appUtil(events),
       m_pname(processName)
@@ -134,6 +136,8 @@ void App::initApp()
     m_bye(s_exitArgs);
   }
   loggingFilterWarning();
+
+  m_events->setLoopHook([]() { QCoreApplication::processEvents(); });
 
   // setup file logging after parsing args
   setupFileLogging();

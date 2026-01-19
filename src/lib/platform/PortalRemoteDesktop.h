@@ -1,56 +1,42 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
+ * SPDX-FileCopyrightText: (C) 2025 Deskflow Developers
  * SPDX-FileCopyrightText: (C) 2024 Symless Ltd.
- * SPDX-FileCopyrightText: (C) 2022 Red Hat, Inc.
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #pragma once
 
-#include "mt/Thread.h"
-#include "platform/EiScreen.h"
-
-#include <glib.h>
-#include <libportal/portal.h>
+#include <QObject>
+#include <memory>
 
 namespace deskflow {
 
-class PortalRemoteDesktop
+class EiScreen;
+class IClipboard;
+class IEventQueue;
+class PortalSessionProxy;
+class PortalClipboard;
+
+class PortalRemoteDesktop : public QObject
 {
+  Q_OBJECT
+
 public:
   PortalRemoteDesktop(EiScreen *screen, IEventQueue *events);
-  ~PortalRemoteDesktop();
+  ~PortalRemoteDesktop() override;
 
-private:
-  void glibThread(const void *);
-  gboolean timeoutHandler() const;
-  gboolean initSession();
-  void handleInitSession(GObject *object, GAsyncResult *res);
-  void handleSessionStarted(GObject *object, GAsyncResult *res);
-  void handleSessionClosed(XdpSession *session);
-  void reconnect(unsigned int timeout = 1000);
+  IClipboard *getClipboard() const;
 
-  /// g_signal_connect callback wrapper
-  static void handleSessionClosedCallback(XdpSession *session, gpointer data)
-  {
-    static_cast<PortalRemoteDesktop *>(data)->handleSessionClosed(session);
-  }
+signals:
+  void clipboardChanged();
 
 private:
   EiScreen *m_screen;
   IEventQueue *m_events;
 
-  Thread *m_glibThread;
-  GMainLoop *m_glibMainLoop = nullptr;
-
-  XdpPortal *m_portal = nullptr;
-  XdpSession *m_session = nullptr;
-  char *m_sessionRestoreToken = nullptr;
-
-  guint m_sessionSignalId = 0;
-
-  /// The number of successful sessions we've had already
-  guint m_sessionIteration = 0;
+  std::unique_ptr<PortalSessionProxy> m_sessionProxy;
+  std::unique_ptr<PortalClipboard> m_clipboard;
 };
 
 } // namespace deskflow
