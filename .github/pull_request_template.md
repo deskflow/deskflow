@@ -1,7 +1,7 @@
 ## Description
 <!--- Describe your what your changes do -->
 
-## Use Of AI Discloure
+## Disclosure of AI use
 <!--- Disclouse your use of AI Tools used to make this pr -->
 <!--- If any AI tools were used to crate the code let us know -->
 
