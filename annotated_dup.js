@@ -265,6 +265,7 @@ var annotated_dup =
     [ "ScreenSetupView", "classScreenSetupView.html", "classScreenSetupView" ],
     [ "ScreenUnavailableException", "classScreenUnavailableException.html", "classScreenUnavailableException" ],
     [ "ScrollRemainder", "structScrollRemainder.html", "structScrollRemainder" ],
+    [ "SearchWidget", "classSearchWidget.html", "classSearchWidget" ],
     [ "SecureListenSocket", "classSecureListenSocket.html", "classSecureListenSocket" ],
     [ "SecureSocket", "classSecureSocket.html", "classSecureSocket" ],
     [ "Server", "classServer.html", "classServer" ],

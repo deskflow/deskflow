@@ -370,7 +370,8 @@ var hierarchy =
       ] ]
     ] ],
     [ "QWidget", null, [
-      [ "LogWidget", "classLogWidget.html", null ]
+      [ "LogWidget", "classLogWidget.html", null ],
+      [ "SearchWidget", "classSearchWidget.html", null ]
     ] ],
     [ "XWindowsClipboard::Reply", "classXWindowsClipboard_1_1Reply.html", null ],
     [ "InputFilter::Rule", "classInputFilter_1_1Rule.html", null ],

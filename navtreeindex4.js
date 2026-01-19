@@ -170,6 +170,9 @@ var NAVTREEINDEX4 =
 "ScreenSetupView_8cpp.html":[7,0,1,1,5,5,10],
 "ScreenSetupView_8h.html":[7,0,1,1,5,5,11],
 "ScreenSetupView_8h_source.html":[7,0,1,1,5,5,11],
+"SearchWidget_8cpp.html":[7,0,1,1,5,5,12],
+"SearchWidget_8h.html":[7,0,1,1,5,5,13],
+"SearchWidget_8h_source.html":[7,0,1,1,5,5,13],
 "SecureListenSocket_8cpp.html":[7,0,1,1,8,12],
 "SecureListenSocket_8h.html":[7,0,1,1,8,13],
 "SecureListenSocket_8h_source.html":[7,0,1,1,8,13],
@@ -246,8 +249,5 @@ var NAVTREEINDEX4 =
 "SocketMultiplexer_8h.html":[7,0,1,1,8,22],
 "SocketMultiplexer_8h_source.html":[7,0,1,1,8,22],
 "SpacesValidator_8cpp.html":[7,0,1,1,5,4,16],
-"SpacesValidator_8h.html":[7,0,1,1,5,4,17],
-"SpacesValidator_8h_source.html":[7,0,1,1,5,4,17],
-"SslLogger_8cpp.html":[7,0,1,1,8,23],
-"SslLogger_8h.html":[7,0,1,1,8,24]
+"SpacesValidator_8h.html":[7,0,1,1,5,4,17]
 };

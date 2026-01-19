@@ -1,5 +1,8 @@
 var NAVTREEINDEX11 =
 {
+"classInvalidProtocolException.html":[6,0,118],
+"classInvalidProtocolException.html#a02a62f10f28d4ff099613e67d1482f79":[6,0,118,0],
+"classKeySequence.html":[6,0,138],
 "classKeySequence.html#a263d2491392ab81d826abdfbd43c6004":[6,0,138,2],
 "classKeySequence.html#a3922ee75c8ef490a9d6a56053c57e667":[6,0,138,3],
 "classKeySequence.html#a698579551c4f6c97e0cb584de244b5ff":[6,0,138,7],
@@ -92,8 +95,10 @@ var NAVTREEINDEX11 =
 "classLogDock.html#ae195a05f4d0679325b19489c8e120d17":[6,0,143,0],
 "classLogDock.html#afc732c157993b0f116694ae2a020deb6":[6,0,143,4],
 "classLogWidget.html":[6,0,144],
+"classLogWidget.html#a218f65bb1b3724579952cfdc2fc89941":[6,0,144,2],
 "classLogWidget.html#a46782c113d9636b91dec16c178cd40ea":[6,0,144,1],
 "classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e":[6,0,144,0],
+"classLogWidget.html#acae13034eeee9da0b4fb48f120956027":[6,0,144,3],
 "classMSWindowsClipboard.html":[6,0,146],
 "classMSWindowsClipboard.html#a05e7bf2345789064f00ca591aa25a5da":[6,0,146,0],
 "classMSWindowsClipboard.html#a1bc83f8deef69d8032ffeebb86da5754":[6,0,146,6],
@@ -244,10 +249,5 @@ var NAVTREEINDEX11 =
 "classMSWindowsScreen.html#a33af023fc02f55588c735749623273e9":[6,0,159,8],
 "classMSWindowsScreen.html#a3d804755a4632c7af7064d3fc13684c5":[6,0,159,43],
 "classMSWindowsScreen.html#a3eb0a27687fab4beded9e48c65b71ad7":[6,0,159,1],
-"classMSWindowsScreen.html#a407ab83fad280d82cb3d9f35e897b057":[6,0,159,32],
-"classMSWindowsScreen.html#a4bd50c26515edc3551699f61366fa116":[6,0,159,7],
-"classMSWindowsScreen.html#a52cf6d35a6a05011f55f7ad3cf3a1b9a":[6,0,159,10],
-"classMSWindowsScreen.html#a572e5c869596bea2f2d498fa3c4cd303":[6,0,159,31],
-"classMSWindowsScreen.html#a60cef8266489495b174b9710c3aefa67":[6,0,159,23],
-"classMSWindowsScreen.html#a628e5ed225fa31c0181091357f499726":[6,0,159,13]
+"classMSWindowsScreen.html#a407ab83fad280d82cb3d9f35e897b057":[6,0,159,32]
 };

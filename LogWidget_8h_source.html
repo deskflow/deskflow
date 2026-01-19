@@ -28,7 +28,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="deskflow-logo.png"/></td>
   <td id="projectalign">
-   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.171</span>
+   <div id="projectname">Deskflow<span id="projectnumber">&#160;1.25.0.173</span>
    </div>
    <div id="projectbrief">Keyboard and mouse sharing utility</div>
   </td>
@@ -96,7 +96,7 @@ $(function(){initNavTree('LogWidget_8h_source.html','',''); });
 <div class="contents">
 <a href="LogWidget_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">/*</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment"> * Deskflow -- mouse and keyboard sharing utility</span></div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello &lt;sithlord48@gmail.com&gt;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment"> * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello &lt;sithlord48@gmail.com&gt;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment"> * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception</span></div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="comment"> */</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
@@ -115,13 +115,17 @@ $(function(){initNavTree('LogWidget_8h_source.html','',''); });
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  <span class="keyword">explicit</span> <a class="code hl_function" href="classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e">LogWidget</a>(QWidget *parent = <span class="keyword">nullptr</span>);</div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLogWidget.html#a46782c113d9636b91dec16c178cd40ea">appendLine</a>(<span class="keyword">const</span> QString &amp;msg);</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>  QPlainTextEdit *m_textLog = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>};</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLogWidget.html#a218f65bb1b3724579952cfdc2fc89941">findNext</a>(<span class="keyword">const</span> QString &amp;text);</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>  <span class="keywordtype">void</span> <a class="code hl_function" href="classLogWidget.html#acae13034eeee9da0b4fb48f120956027">findPrevious</a>(<span class="keyword">const</span> QString &amp;text);</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  QPlainTextEdit *m_textLog = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
 </div>
+<div class="ttc" id="aclassLogWidget_html_a218f65bb1b3724579952cfdc2fc89941"><div class="ttname"><a href="classLogWidget.html#a218f65bb1b3724579952cfdc2fc89941">LogWidget::findNext</a></div><div class="ttdeci">void findNext(const QString &amp;text)</div><div class="ttdef"><b>Definition</b> LogWidget.cpp:45</div></div>
 <div class="ttc" id="aclassLogWidget_html_a46782c113d9636b91dec16c178cd40ea"><div class="ttname"><a href="classLogWidget.html#a46782c113d9636b91dec16c178cd40ea">LogWidget::appendLine</a></div><div class="ttdeci">void appendLine(const QString &amp;msg)</div><div class="ttdef"><b>Definition</b> LogWidget.cpp:40</div></div>
 <div class="ttc" id="aclassLogWidget_html_aa9299a01d5164aac988df2a52721aa0e"><div class="ttname"><a href="classLogWidget.html#aa9299a01d5164aac988df2a52721aa0e">LogWidget::LogWidget</a></div><div class="ttdeci">LogWidget(QWidget *parent=nullptr)</div><div class="ttdef"><b>Definition</b> LogWidget.cpp:15</div></div>
+<div class="ttc" id="aclassLogWidget_html_acae13034eeee9da0b4fb48f120956027"><div class="ttname"><a href="classLogWidget.html#acae13034eeee9da0b4fb48f120956027">LogWidget::findPrevious</a></div><div class="ttdeci">void findPrevious(const QString &amp;text)</div><div class="ttdef"><b>Definition</b> LogWidget.cpp:56</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

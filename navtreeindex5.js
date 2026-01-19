@@ -1,5 +1,8 @@
 var NAVTREEINDEX5 =
 {
+"SpacesValidator_8h_source.html":[7,0,1,1,5,4,17],
+"SslLogger_8cpp.html":[7,0,1,1,8,23],
+"SslLogger_8h.html":[7,0,1,1,8,24],
 "SslLogger_8h_source.html":[7,0,1,1,8,24],
 "Stopwatch_8cpp.html":[7,0,1,1,1,26],
 "Stopwatch_8h.html":[7,0,1,1,1,27],
@@ -41,9 +44,9 @@ var NAVTREEINDEX5 =
 "TlsUtility_8cpp.html":[7,0,1,1,5,27],
 "TlsUtility_8h.html":[7,0,1,1,5,28],
 "TlsUtility_8h_source.html":[7,0,1,1,5,28],
-"TrashScreenWidget_8cpp.html":[7,0,1,1,5,5,12],
-"TrashScreenWidget_8h.html":[7,0,1,1,5,5,13],
-"TrashScreenWidget_8h_source.html":[7,0,1,1,5,5,13],
+"TrashScreenWidget_8cpp.html":[7,0,1,1,5,5,14],
+"TrashScreenWidget_8h.html":[7,0,1,1,5,5,15],
+"TrashScreenWidget_8h_source.html":[7,0,1,1,5,5,15],
 "Unicode_8cpp.html":[7,0,1,1,1,31],
 "Unicode_8cpp.html#a4994c6864cc0b82a10676b85ab373e58":[7,0,1,1,1,31,1],
 "Unicode_8cpp.html#a679447a6b06df2d2e9e4d55ea7f55a60":[7,0,1,1,1,31,2],
@@ -246,8 +249,5 @@ var NAVTREEINDEX5 =
 "classAppUtil.html#a8d56a438b43003ad64c03a2f08ee47b3":[6,0,7,9],
 "classAppUtil.html#a92e87ecf583104d6c1db090033fdab9b":[6,0,7,3],
 "classAppUtil.html#ab25364eccf20280b7038ba939096fcc8":[6,0,7,10],
-"classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784":[6,0,7,8],
-"classAppUtil.html#ac93b079bc128e2513fc28862914cb89c":[6,0,7,2],
-"classAppUtil.html#ae085a35d29cc924390fc784d865fa3bd":[6,0,7,6],
-"classAppUtil.html#aff79fd6fc709bd41bb9a2d2a84ee9e53":[6,0,7,5]
+"classAppUtil.html#ab7c207d8d1f99f7d0429a945473c9784":[6,0,7,8]
 };

@@ -12,6 +12,8 @@ var dir_f4d7a2d7e0cddc98a37df9ffb775e48b =
     [ "NewScreenWidget.h", "NewScreenWidget_8h.html", "NewScreenWidget_8h" ],
     [ "ScreenSetupView.cpp", "ScreenSetupView_8cpp.html", null ],
     [ "ScreenSetupView.h", "ScreenSetupView_8h.html", "ScreenSetupView_8h" ],
+    [ "SearchWidget.cpp", "SearchWidget_8cpp.html", null ],
+    [ "SearchWidget.h", "SearchWidget_8h.html", "SearchWidget_8h" ],
     [ "TrashScreenWidget.cpp", "TrashScreenWidget_8cpp.html", null ],
     [ "TrashScreenWidget.h", "TrashScreenWidget_8h.html", "TrashScreenWidget_8h" ]
 ];
