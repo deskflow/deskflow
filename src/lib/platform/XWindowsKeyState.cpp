@@ -246,17 +246,17 @@ bool XWindowsKeyState::setCurrentLanguageWithDBus(int32_t group) const
   if (!reply.isValid()) {
     auto qerror = reply.error();
     LOG((CLOG_WARN "keyboard layout fail %s : %s", qPrintable(qerror.name()), qPrintable(qerror.message())));
-    return true;
+    return false;
   }
 
   if (reply.isError()) {
     LOG_WARN("keyboard layout fail. reply contains error");
-    return true;
+    return false;
   }
 
   if (!reply.argumentAt<0>() || reply.argumentAt<1>() != QString("")) {
     LOG_WARN("keyboard layout fail. Reply is unexpected!");
-    return true;
+    return false;
   }
 
   return true;
