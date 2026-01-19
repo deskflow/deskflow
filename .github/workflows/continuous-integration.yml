@@ -277,6 +277,14 @@ jobs:
             cd ..
           fi
 
+      - name: Check for unexpected repo changes
+        shell: bash
+        run: |
+          if [[ `git status --porcelain` ]]; then
+            echo "Unexpected changes to the repo, Often caused by forgetting to commit the updated translation files"
+            exit 1
+          fi
+
       - name: Tests
         uses: ./.github/actions/run-tests
         timeout-minutes: 2
