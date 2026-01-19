@@ -358,6 +358,47 @@ void InputFilter::SwitchToNextScreenAction::perform(const Event &event)
   );
 }
 
+InputFilter::ToggleScreenAction::ToggleScreenAction(IEventQueue *events, const std::vector<std::string> &screens)
+    : m_screens(screens),
+      m_events(events)
+{
+  // do nothing
+}
+
+const std::vector<std::string> &InputFilter::ToggleScreenAction::getScreens() const
+{
+  return m_screens;
+}
+
+InputFilter::Action *InputFilter::ToggleScreenAction::clone() const
+{
+  return new ToggleScreenAction(*this);
+}
+
+std::string InputFilter::ToggleScreenAction::format() const
+{
+  if (m_screens.empty()) {
+    return "toggleScreen()";
+  }
+  std::string s = "toggleScreen(";
+  for (size_t i = 0; i < m_screens.size(); ++i) {
+    if (i > 0) {
+      s += ",";
+    }
+    s += m_screens[i];
+  }
+  s += ")";
+  return s;
+}
+
+void InputFilter::ToggleScreenAction::perform(const Event &event)
+{
+  auto *info = new Server::ToggleScreenInfo(m_screens);
+  m_events->addEvent(
+      Event(EventTypes::ServerToggleScreen, event.getTarget(), info, Event::EventFlags::DeliverImmediately)
+  );
+}
+
 InputFilter::KeyboardBroadcastAction::KeyboardBroadcastAction(IEventQueue *events, Mode mode)
     : m_mode(mode),
       m_events(events)

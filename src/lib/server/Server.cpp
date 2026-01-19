@@ -1333,13 +1333,32 @@ void Server::handleSwitchInDirectionEvent(const Event &event)
   }
 }
 
-void Server::handleToggleScreenEvent(const Event &)
+void Server::handleToggleScreenEvent(const Event &event)
 {
-  // Get the list of connected screens in config order
   std::vector<std::string> screens;
-  getClients(screens);
+  const auto *info = static_cast<const ToggleScreenInfo *>(event.getData());
+
+  if (info) {
+    // specific list of screens
+    screens = info->m_screens;
+  } else {
+    // Get the list of connected screens in config order (legacy/default behavior)
+    getClients(screens);
+  }
 
   if (screens.size() < 2) {
+    // If explicit list has < 2, we can't really toggle unless we toggle to the single one (if distinct from current?)
+    // InputLeap logic usually requires 2+ for a useful toggle.
+    // If only 1 screen is in the list, just switch to it?
+    if (screens.size() == 1) {
+      // Just jump to the single screen
+      std::string target = screens[0];
+      ClientList::const_iterator clientIt = m_clients.find(target);
+      if (clientIt != m_clients.end()) {
+        jumpToScreen(clientIt->second);
+      }
+      return;
+    }
     LOG_ERR("not enough screens to toggle");
     return;
   }
@@ -1347,21 +1366,26 @@ void Server::handleToggleScreenEvent(const Event &)
   // Find the current active screen
   std::string currentScreen = getName(m_active);
   auto it = std::ranges::find(screens, currentScreen);
-  if (it == screens.end()) {
-    LOG_ERR("current screen not found in list");
-    return;
-  }
 
-  // Find the next screen
-  auto nextIt = it + 1;
-  if (nextIt == screens.end()) {
-    nextIt = screens.begin();
+  std::string nextScreenName;
+  if (it == screens.end()) {
+    // Current screen not in the list.
+    // If we have a specific list, switch to the first one in the list.
+    // If we are using all screens, this shouldn't happen unless m_active is somehow not in the client list?
+    nextScreenName = screens[0];
+  } else {
+    // Find the next screen
+    auto nextIt = it + 1;
+    if (nextIt == screens.end()) {
+      nextIt = screens.begin();
+    }
+    nextScreenName = *nextIt;
   }
 
   // Find the client for the next screen
-  ClientList::const_iterator clientIt = m_clients.find(*nextIt);
+  ClientList::const_iterator clientIt = m_clients.find(nextScreenName);
   if (clientIt == m_clients.end()) {
-    LOG_ERR("next screen not active");
+    LOG_ERR("screen \"%s\" not active", nextScreenName.c_str());
     return;
   }
 
