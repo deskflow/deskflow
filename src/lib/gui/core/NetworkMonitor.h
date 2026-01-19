@@ -8,6 +8,7 @@
 
 #include <QHostAddress>
 #include <QList>
+#include <QNetworkInformation>
 #include <QObject>
 
 class QTimer;
@@ -16,8 +17,9 @@ namespace deskflow::gui {
 /**
  * @brief Monitor network activity changes and provide IP address updates
  *
- * The NetworkMonitor class monitors IP address changes
- * It periodically checks network status and emits signals when changes are detected.
+ * The NetworkMonitor class monitors IP address changes using both native OS
+ * notifications (via QNetworkInformation) and periodic polling as a fallback.
+ * It emits signals when changes are detected.
  */
 class NetworkMonitor : public QObject
 {
@@ -74,9 +76,15 @@ private:
    */
   void updateNetworkState();
 
-  QTimer *m_checkTimer;        ///< Timer for periodic network checks
-  QStringList m_lastAddresses; ///< Last known IP addresses
-  bool m_isMonitoring = false; ///< Flag indicating if monitoring is active
+  /**
+   * @brief Initialize QNetworkInformation for native network change detection
+   */
+  void initNetworkInformation();
+
+  QTimer *m_checkTimer;                  ///< Timer for periodic network checks
+  QStringList m_lastAddresses;           ///< Last known IP addresses
+  bool m_isMonitoring = false;           ///< Flag indicating if monitoring is active
+  bool m_networkInfoInitialized = false; ///< Flag indicating if QNetworkInformation was loaded
 };
 
 } // namespace deskflow::gui

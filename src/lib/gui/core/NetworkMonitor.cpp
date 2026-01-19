@@ -8,6 +8,7 @@
 
 #include <QAbstractSocket>
 #include <QList>
+#include <QNetworkInformation>
 #include <QNetworkInterface>
 #include <QSet>
 #include <QTimer>
@@ -39,6 +40,24 @@ bool NetworkMonitor::isVirtualInterface(const QString &interfaceName) const
 NetworkMonitor::NetworkMonitor(QObject *parent) : QObject(parent), m_checkTimer(new QTimer(this))
 {
   connect(m_checkTimer, &QTimer::timeout, this, &NetworkMonitor::updateNetworkState);
+  initNetworkInformation();
+}
+
+void NetworkMonitor::initNetworkInformation()
+{
+  // Try to load a QNetworkInformation backend for native network change notifications
+  // This provides immediate detection of network changes instead of relying solely on polling
+  if (QNetworkInformation::loadDefaultBackend() ||
+      QNetworkInformation::loadBackendByFeatures(QNetworkInformation::Feature::Reachability)) {
+    auto *networkInfo = QNetworkInformation::instance();
+    if (networkInfo) {
+      // Use a small delay when reachability changes to allow the OS to fully update interface list
+      connect(networkInfo, &QNetworkInformation::reachabilityChanged, this, [this]() {
+        QTimer::singleShot(500, this, &NetworkMonitor::updateNetworkState);
+      });
+      m_networkInfoInitialized = true;
+    }
+  }
 }
 
 void NetworkMonitor::startMonitoring(int intervalMs)
