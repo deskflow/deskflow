@@ -79,6 +79,11 @@ Client::~Client()
   delete m_socketFactory;
 }
 
+void Client::setServerAddress(const NetworkAddress &address)
+{
+  m_serverAddress = address;
+}
+
 void Client::connect(size_t addressIndex)
 {
   if (m_stream != nullptr) {

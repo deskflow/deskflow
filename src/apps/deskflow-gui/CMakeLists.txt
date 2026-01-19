@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
-# SPDX-FileCopyrightText: 2024 Symless Ltd
+# SPDX-FileCopyrightText: (C) 2024 - 2025 Chris Rizzitello <sithlord48@gmail.com>
+# SPDX-FileCopyrightText: (C) 2024 Symless Ltd
 # SPDX-License-Identifier: MIT
 
 if(APPLE)

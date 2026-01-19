@@ -1,5 +1,5 @@
-# SPDX-FileCopyrightText: 2024 Deskflow Developers
-# SPDX-FileCopyrightText: 2024 Symless Ltd
+# SPDX-FileCopyrightText: (C) 2024 Deskflow Developers
+# SPDX-FileCopyrightText: (C) 2024 Symless Ltd
 # SPDX-License-Identifier: MIT
 
 set(target gui)

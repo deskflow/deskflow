@@ -472,7 +472,7 @@ void Server::switchScreen(BaseClientProxy *dst, int32_t x, int32_t y, bool forSc
       }
     }
 
-    Server::SwitchToScreenInfo *info = Server::SwitchToScreenInfo::alloc(m_active->getName());
+    auto *info = new Server::SwitchToScreenInfo(m_active->getName());
     m_events->addEvent(Event(EventTypes::ServerScreenSwitched, this, info));
   } else {
     m_active->mouseMove(x, y);
@@ -1312,7 +1312,7 @@ void Server::handleSwitchToScreenEvent(const Event &event)
 
   ClientList::const_iterator index = m_clients.find(info->m_screen);
   if (index == m_clients.end()) {
-    LOG_DEBUG1("screen \"%s\" not active", info->m_screen);
+    LOG_DEBUG1("screen \"%s\" not active", info->m_screen.c_str());
   } else {
     jumpToScreen(index->second);
   }
@@ -1370,7 +1370,7 @@ void Server::handleToggleScreenEvent(const Event &)
 
 void Server::handleKeyboardBroadcastEvent(const Event &event)
 {
-  const auto *info = (KeyboardBroadcastInfo *)event.getData();
+  const auto *info = static_cast<KeyboardBroadcastInfo *>(event.getData());
 
   // choose new state
   bool newState;
@@ -1402,7 +1402,7 @@ void Server::handleKeyboardBroadcastEvent(const Event &event)
 
 void Server::handleLockCursorToScreenEvent(const Event &event)
 {
-  const auto *info = (LockCursorToScreenInfo *)event.getData();
+  const auto *info = static_cast<LockCursorToScreenInfo *>(event.getData());
 
   // choose new state
   bool newState;
@@ -2060,57 +2060,4 @@ void Server::forceLeaveClient(const BaseClientProxy *client)
 
   // tell primary client about the active sides
   m_primaryClient->reconfigure(getActivePrimarySides());
-}
-
-//
-// Server::LockCursorToScreenInfo
-//
-
-Server::LockCursorToScreenInfo *Server::LockCursorToScreenInfo::alloc(State state)
-{
-  auto *info = (LockCursorToScreenInfo *)malloc(sizeof(LockCursorToScreenInfo));
-  info->m_state = state;
-  return info;
-}
-
-//
-// Server::SwitchToScreenInfo
-//
-
-Server::SwitchToScreenInfo *Server::SwitchToScreenInfo::alloc(const std::string &screen)
-{
-  auto *info = (SwitchToScreenInfo *)malloc(sizeof(SwitchToScreenInfo) + screen.size());
-  std::copy(screen.c_str(), screen.c_str() + screen.size() + 1, info->m_screen);
-  return info;
-}
-
-//
-// Server::SwitchInDirectionInfo
-//
-
-Server::SwitchInDirectionInfo *Server::SwitchInDirectionInfo::alloc(Direction direction)
-{
-  auto *info = (SwitchInDirectionInfo *)malloc(sizeof(SwitchInDirectionInfo));
-  info->m_direction = direction;
-  return info;
-}
-
-//
-// Server::KeyboardBroadcastInfo
-//
-
-Server::KeyboardBroadcastInfo *Server::KeyboardBroadcastInfo::alloc(State state)
-{
-  auto *info = (KeyboardBroadcastInfo *)malloc(sizeof(KeyboardBroadcastInfo));
-  info->m_state = state;
-  info->m_screens[0] = '\0';
-  return info;
-}
-
-Server::KeyboardBroadcastInfo *Server::KeyboardBroadcastInfo::alloc(State state, const std::string &screens)
-{
-  auto *info = (KeyboardBroadcastInfo *)malloc(sizeof(KeyboardBroadcastInfo) + screens.size());
-  info->m_state = state;
-  std::copy(screens.c_str(), screens.c_str() + screens.size() + 1, info->m_screens);
-  return info;
 }

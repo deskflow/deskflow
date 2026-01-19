@@ -11,15 +11,17 @@
 
 void ServerTests::SwitchToScreenInfo_alloc_screen()
 {
-  auto actual = Server::SwitchToScreenInfo::alloc("test");
+  auto actual = new Server::SwitchToScreenInfo("test");
   QCOMPARE(actual->m_screen, "test");
+  delete actual;
 }
 
 void ServerTests::KeyboardBroadcastInfo_alloc_stateAndSceens()
 {
-  auto info = Server::KeyboardBroadcastInfo::alloc(Server::KeyboardBroadcastInfo::State::kOn, "test");
+  auto info = new Server::KeyboardBroadcastInfo(Server::KeyboardBroadcastInfo::State::kOn, "test");
   QCOMPARE(info->m_state, Server::KeyboardBroadcastInfo::State::kOn);
   QCOMPARE(info->m_screens, "test");
+  delete info;
 }
 
 QTEST_MAIN(ServerTests)

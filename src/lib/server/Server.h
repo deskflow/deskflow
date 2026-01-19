@@ -43,7 +43,7 @@ class Server
 
 public:
   //! Lock cursor to screen data
-  class LockCursorToScreenInfo
+  class LockCursorToScreenInfo : public EventData
   {
   public:
     enum State
@@ -53,28 +53,39 @@ public:
       kToggle
     };
 
-    static LockCursorToScreenInfo *alloc(State state = kToggle);
+    explicit LockCursorToScreenInfo(State state = kToggle) : m_state(state)
+    {
+      // do nothing
+    }
+    ~LockCursorToScreenInfo() override = default; // do nothing
 
   public:
     State m_state;
   };
 
   //! Switch to screen data
-  class SwitchToScreenInfo
+  class SwitchToScreenInfo : public EventData
   {
   public:
-    static SwitchToScreenInfo *alloc(const std::string &screen);
+    explicit SwitchToScreenInfo(const std::string &screen) : m_screen(screen)
+    {
+      // do nothing
+    }
+    ~SwitchToScreenInfo() override = default; // do nothing
 
   public:
-    // this is a C-string;  this type is a variable size structure
-    char m_screen[1];
+    std::string m_screen;
   };
 
   //! Switch in direction data
-  class SwitchInDirectionInfo
+  class SwitchInDirectionInfo : public EventData
   {
   public:
-    static SwitchInDirectionInfo *alloc(Direction direction);
+    explicit SwitchInDirectionInfo(Direction direction) : m_direction(direction)
+    {
+      // do nothing
+    }
+    ~SwitchInDirectionInfo() override = default; // do nothing
 
   public:
     Direction m_direction;
@@ -94,7 +105,7 @@ public:
   };
 
   //! Keyboard broadcast data
-  class KeyboardBroadcastInfo
+  class KeyboardBroadcastInfo : public EventData
   {
   public:
     enum State
@@ -104,12 +115,19 @@ public:
       kToggle
     };
 
-    static KeyboardBroadcastInfo *alloc(State state = kToggle);
-    static KeyboardBroadcastInfo *alloc(State state, const std::string &screens);
+    explicit KeyboardBroadcastInfo(State state = kToggle) : m_state(state), m_screens()
+    {
+      // do nothing
+    }
+    KeyboardBroadcastInfo(State state, const std::string &screens) : m_state(state), m_screens(screens)
+    {
+      // do nothing
+    }
+    ~KeyboardBroadcastInfo() override = default; // do nothing
 
   public:
     State m_state;
-    char m_screens[1];
+    std::string m_screens;
   };
 
   /*!
