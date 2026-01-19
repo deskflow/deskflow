@@ -104,10 +104,10 @@ MainWindow::MainWindow()
     m_actionTrayQuit->setShortcut(QKeySequence::Quit);
   }
 
-  m_actionQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionQuit->setIcon(QIcon::fromTheme("application-exit"));
   m_actionQuit->setMenuRole(QAction::QuitRole);
 
-  m_actionTrayQuit->setIcon(QIcon(QIcon::fromTheme("application-exit")));
+  m_actionTrayQuit->setIcon(QIcon::fromTheme("application-exit"));
   m_actionTrayQuit->setMenuRole(QAction::NoRole);
 
   m_actionClearSettings->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear-all")));
@@ -126,7 +126,7 @@ MainWindow::MainWindow()
   m_actionStopCore->setIcon(QIcon::fromTheme(QIcon::ThemeIcon::ProcessStop));
   m_actionStopCore->setMenuRole(QAction::NoRole);
 
-  m_actionReportBug->setIcon(QIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug"))));
+  m_actionReportBug->setIcon(QIcon::fromTheme(QStringLiteral("tools-report-bug")));
   m_actionReportBug->setMenuRole(QAction::NoRole);
 
   // Setup the Instance Checking
@@ -486,7 +486,7 @@ void MainWindow::openHelpUrl() const
 
 void MainWindow::openGetNewVersionUrl() const
 {
-  QDesktopServices::openUrl(kUrlDownload);
+  QDesktopServices::openUrl(QUrl(kUrlDownload));
 }
 
 void MainWindow::openSettings()
