@@ -1,11 +1,12 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
 #include "LogDock.h"
 #include "LogWidget.h"
+#include "SearchWidget.h"
 
 #include <QEvent>
 #include <QHBoxLayout>
@@ -18,8 +19,12 @@ LogDock::LogDock(QWidget *parent)
       m_textLog{new LogWidget(this)},
       m_btnClose{new QPushButton(this)},
       m_btnFloat{new QPushButton(this)},
-      m_lblTitle{new QLabel(tr("Log"), this)}
+      m_lblTitle{new QLabel(tr("Log"), this)},
+      m_searchWidget{new SearchWidget(this)}
 {
+  connect(m_searchWidget, &SearchWidget::findNext, m_textLog, &LogWidget::findNext);
+  connect(m_searchWidget, &SearchWidget::findPrevious, m_textLog, &LogWidget::findPrevious);
+
   const auto iconSize = QSize(fontMetrics().height() - 2, fontMetrics().height() - 2);
   const auto maxBtnSize = QSize(fontMetrics().height() + 2, fontMetrics().height() + 2);
 
@@ -44,6 +49,7 @@ LogDock::LogDock(QWidget *parent)
   auto titleLayout = new QHBoxLayout(titleWidget);
   titleLayout->addWidget(m_lblTitle, Qt::AlignLeft | Qt::AlignVCenter);
   titleLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Fixed));
+  titleLayout->addWidget(m_searchWidget, Qt::AlignRight | Qt::AlignVCenter);
   titleLayout->addWidget(m_btnFloat, Qt::AlignRight | Qt::AlignVCenter);
   titleLayout->addWidget(m_btnClose, Qt::AlignRight | Qt::AlignVCenter);
   setTitleBarWidget(titleWidget);

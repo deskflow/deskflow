@@ -1,6 +1,6 @@
 /*
  * Deskflow -- mouse and keyboard sharing utility
- * SPDX-FileCopyrightText: (C) 2025 Chris Rizzitello <sithlord48@gmail.com>
+ * SPDX-FileCopyrightText: (C) 2025 - 2026 Chris Rizzitello <sithlord48@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-only WITH LicenseRef-OpenSSL-Exception
  */
 
@@ -40,4 +40,26 @@ LogWidget::LogWidget(QWidget *parent) : QWidget{parent}, m_textLog{new QPlainTex
 void LogWidget::appendLine(const QString &msg)
 {
   m_textLog->appendPlainText(msg);
+}
+
+void LogWidget::findNext(const QString &text)
+{
+  if (text.isEmpty())
+    return;
+
+  if (!m_textLog->find(text)) {
+    m_textLog->moveCursor(QTextCursor::Start);
+    m_textLog->find(text);
+  }
+}
+
+void LogWidget::findPrevious(const QString &text)
+{
+  if (text.isEmpty())
+    return;
+
+  if (!m_textLog->find(text, QTextDocument::FindBackward)) {
+    m_textLog->moveCursor(QTextCursor::End);
+    m_textLog->find(text, QTextDocument::FindBackward);
+  }
 }

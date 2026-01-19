@@ -116,6 +116,8 @@ add_library(${target} STATIC
   widgets/NewScreenWidget.h
   widgets/ScreenSetupView.cpp
   widgets/ScreenSetupView.h
+  widgets/SearchWidget.h
+  widgets/SearchWidget.cpp
   widgets/TrashScreenWidget.cpp
   widgets/TrashScreenWidget.h
 )
