@@ -452,6 +452,20 @@ void MainWindow::clearSettings()
     return;
   }
 
+  // Disconnect all signals to this object to prevent crashes during app restart.
+  // This is necessary because QCoreApplication::exit() continues processing events,
+  // and during destruction, queued signal invocations could try to invoke slots on a
+  // partially-destroyed MainWindow object (Qt6 asserts on this in debug builds).
+  disconnect(Settings::instance(), nullptr, this, nullptr);
+  disconnect(&m_coreProcess, nullptr, this, nullptr);
+  disconnect(&m_serverConnection, nullptr, this, nullptr);
+  disconnect(&m_clientConnection, nullptr, this, nullptr);
+  disconnect(&m_versionChecker, nullptr, this, nullptr);
+  disconnect(m_trayIcon, nullptr, this, nullptr);
+  disconnect(m_guiDupeChecker, nullptr, this, nullptr);
+  disconnect(m_networkMonitor, nullptr, this, nullptr);
+  disconnect(m_logDock->toggleViewAction(), nullptr, this, nullptr);
+
   m_coreProcess.stop();
   m_coreProcess.clearSettings();
 
