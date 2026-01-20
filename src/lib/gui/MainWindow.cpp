@@ -452,6 +452,16 @@ void MainWindow::clearSettings()
     return;
   }
 
+  m_networkMonitor->stopMonitoring();
+
+  disconnect(&m_coreProcess, nullptr, this, nullptr);
+  disconnect(&m_serverConnection, nullptr, this, nullptr);
+  disconnect(&m_clientConnection, nullptr, this, nullptr);
+  disconnect(&m_versionChecker, nullptr, this, nullptr);
+  disconnect(m_guiDupeChecker, nullptr, this, nullptr);
+  disconnect(m_trayIcon, nullptr, this, nullptr);
+  disconnect(m_logDock->toggleViewAction(), nullptr, this, nullptr);
+
   m_coreProcess.stop();
   m_coreProcess.clearSettings();
 
